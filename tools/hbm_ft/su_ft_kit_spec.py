@@ -51,7 +51,7 @@ s = json.loads(json.dumps(S))
 s['name'] = a.name
 s['top'] = v
 s['sources'] = [a.variant_sv] + [x for x in S['sources'] if not x.endswith('ot_hbm_su_static_pgslice_rgf_lp.sv')] + \
-               ['rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
+               ['rtl/hbm_accel/die_glue/ot_hbm_ft_stn.sv', 'rtl/lib/ot_rst_relay.sv']
 s['outline'] = dict(w=W, h=H, exact=True)
 s['child_lattice_um'] = 21.6
 s['children'] = children
@@ -84,7 +84,7 @@ s['ft'] = dict(ftspec=a.ftspec, fastroute_tcl=f'{d}/{v}.fastroute.tcl', pins_tcl
                audit_tcl=f'{d}/{v}.ft_audit.tcl', base_top='ot_hbm_su_static_pgslice_rgf_lp',
                base_kit='rtl/hbm_accel/generic/adapters/static_su/top/lp/ot_hbm_su_static_pgslice_rgf_lp.sv')
 s['ft_note'] = (f'FT-HBM-SU 10-23 pilot = su_SW3 gain lanes on the stream die clock: {len(F["paths"])} ft paths, '
-                f'{F["ft_bits"]} b, {F["ft_bit_stages"]} station flops (ot_hbm_rly, the die relay function) on ck_ft; '
+                f'{F["ft_bits"]} b, {F["ft_bit_stages"]} station flops (ot_hbm_ft_stn = the die relay function, clears relayed per <= 32 flops) on ck_ft; '
                 'ft ports are the FT-TOOL plan_v2 die-aligned ranges (equal die offsets at the neighbours); '
                 'base logic byte-identical (tools/hbm_ft/su_ft_kit.py check)')
 j = s['job']
@@ -93,7 +93,7 @@ j.update(owner='Claude:FT-HBM-SU', branch='claude/ft-hbm-su-1023', tag='f1',
                  '1797.12 x 2825.28 + su_SW3 gain/stream ft lanes on M8/M9 (in+out registered, <= 1.0 mm hops), '
                  'PG M7, signals M2-M7',
          record_to=f'results/rtl/ref_tile/{a.name}', views_to=f'physical/ref_tile/{a.name}/views')
-j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {d, 'tools/hbm_ft', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv',
+j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {d, 'tools/hbm_ft', 'rtl/hbm_accel/die_glue/ot_hbm_ft_stn.sv',
                                                            'rtl/lib/ot_rst_relay.sv', 'rtl/hbm_accel/generic/adapters/static_su/top/lp'})
 os.makedirs(a.kit_dir, exist_ok=True)
 json.dump(s, open(os.path.join(a.kit_dir, 'spec.json'), 'w'), indent=1)

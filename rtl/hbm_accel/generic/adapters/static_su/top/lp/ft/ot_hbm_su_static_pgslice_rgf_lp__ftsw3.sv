@@ -524,699 +524,740 @@ module ot_hbm_su_static_pgslice_rgf_lp__ftsw3 #(
     ot_hbm_su_static_kind0_lat4_leaf1_physical u_ln_r3_7 (.clk_stage_0(ck_r3), .clk_stage_1(ck_r3), .clk_stage_2(ck_r3), .clk_stage_3(ck_r3), .clk_stage_4(ck_r3), .clk_stage_5(ck_r3), .clk_stage_6(ck_r3), .clk_stage_7(ck_r3), .clk_insert_0(ck_r3), .clk_insert_1(ck_r3), .clk_insert_2(ck_r3), .clk_insert_3(ck_r3), .rst_n(lpr_c_u_ln_r3_7), .lane_id(lid_r3[87:77]), .ld(ctl_r3_7[1741]), .ld_bank(ctl_r3_7[1740]), .ld_c({ctl_r3_7[1667:1500],ctl_r3_7[1427:1260],ctl_r3_7[1187:1020],ctl_r3_7[947:780],ctl_r3_7[707:540]}), .emit(ctl_r3_7[539]), .bank(ctl_r3_7[538]), .o_v(ctl_r3_7[537:514]), .i_v(ctl_r3_7[513:490]), .no(ctl_r3_7[489:466]), .ni(ctl_r3_7[465:442]), .ls(ctl_r3_7[441:438]), .lvw(ctl_r3_7[437:434]), .vb(ctl_r3_7[433:314]), .krow(ctl_r3_7[313:290]), .obase(ctl_r3_7[289:266]), .aibase(ctl_r3_7[265:242]), .aind(ctl_r3_7[241:240]), .gsh(ctl_r3_7[239:235]), .cpair(ctl_r3_7[234]), .dst(ctl_r3_7[233:232]), .srcs(ctl_r3_7[231:224]), .cx_arnd(ctl_r3_7[223]), .cx_arelu(ctl_r3_7[222]), .cx_amin(ctl_r3_7[221]), .cx_cclip(ctl_r3_7[220]), .cx_imm3(ctl_r3_7[219:188]), .cp_m1(ctl_r3_7[187:185]), .cp_imm1(ctl_r3_7[184:153]), .cm_m1(ctl_r3_7[152:150]), .cm_m2(ctl_r3_7[149:148]), .cm_qm(ctl_r3_7[147:145]), .cm_imm1(ctl_r3_7[144:113]), .ca_ad(ctl_r3_7[112:110]), .ca_imm2(ctl_r3_7[109:78]), .ci_sfu(ctl_r3_7[77:75]), .cs_sfu(ctl_r3_7[74:72]), .cs_e1(ctl_r3_7[71:69]), .cs_imm2(ctl_r3_7[68:37]), .ce_e2(ctl_r3_7[36:35]), .ce_imm1(ctl_r3_7[34:3]), .co_rnd(ctl_r3_7[2]), .co_dst(ctl_r3_7[1:0]), .cx_srcs(ctl_r3_7[231:224]), .vi_q(bq_r3[1503:1472]), .rd_q(rdq_r3[1023:896]), .vi_re(lo_r3[2255]), .vm_we(lo_r3[2254]), .kv_we(lo_r3[2253]), .ro_v(lo_r3[2252]), .fault(lo_r3[2251]), .coll(lo_r3[2250]), .vi_addr(lo_r3[2249:2226]), .vm_waddr(lo_r3[2225:2202]), .kv_waddr(lo_r3[2201:2178]), .rd_addr(lo_r3[2177:2082]), .rd_re(lo_r3[2081:2078]), .rd_src(lo_r3[2077:2070]), .vm_wdata(lo_r3[2069:2038]), .kv_wdata(lo_r3[2037:2006]), .ro_x(lo_r3[2005:1974]), .side_v(), .side_x(), .side_y(32'd0));   // region r3, t = 4
     ot_hbm_su_static_bank6_clock_physical u_bk_r3_7 (.clk(ck_r3), .clk_rd(ck_r3), .clk_ws(ck_r3), .clk_macro0(ck_r3), .clk_macro1(ck_r3), .clk_macro2(ck_r3), .clk_macro3(ck_r3), .clk_macro4(ck_r3), .clk_macro5(ck_r3), .rst_n(lpr_c_u_bk_r3_7), .read_v(brv_r3[47:42]), .read_addr(bra_r3[431:378]), .read_data(bq_r3[1535:1344]), .read_return(), .write_v(bwv_r3[7]), .write_addr(bwa_r3[71:63]), .write_data(bwd_r3[255:224]));   // region r3, t = 4
 // >>> FT-HBM ft stations (tools/hbm_ft/su_ft_kit.py from physical/hbm_ft/su_sw3_pilot/su_sw3_pilot.ftspec.json)
-    // 104 ft paths, 8846 bits, 344 stations (28630 flops), 38 reset regions
-    wire [37:0] ft_rn;
-    wire [1:0] ft_rg;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst (.clk(ck_ft), .rst_n_in(rs_ft), .rst_n(ft_rg));
-    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst_0 (.clk(ck_ft), .rst_n_in(ft_rg[0]), .rst_n(ft_rn[29:0]));
-    ot_rst_relay #(.REGIONS(8), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst_1 (.clk(ck_ft), .rst_n_in(ft_rg[1]), .rst_n(ft_rn[37:30]));
+    // 104 ft paths, 8846 bits, 344 stations (28630 flops), 1176 reset groups of <= 32 flops, ot_rst_relay levels [2, 40, 1176]
+    wire [1:0] ft_rn0;
+    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst0_0 (.clk(ck_ft), .rst_n_in(rs_ft), .rst_n(ft_rn0[1:0]));
+    wire [39:0] ft_rn1;
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst1_0 (.clk(ck_ft), .rst_n_in(ft_rn0[0]), .rst_n(ft_rn1[29:0]));
+    ot_rst_relay #(.REGIONS(10), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst1_1 (.clk(ck_ft), .rst_n_in(ft_rn0[1]), .rst_n(ft_rn1[39:30]));
+    wire [1175:0] ft_rn2;
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_0 (.clk(ck_ft), .rst_n_in(ft_rn1[0]), .rst_n(ft_rn2[29:0]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_1 (.clk(ck_ft), .rst_n_in(ft_rn1[1]), .rst_n(ft_rn2[59:30]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_2 (.clk(ck_ft), .rst_n_in(ft_rn1[2]), .rst_n(ft_rn2[89:60]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_3 (.clk(ck_ft), .rst_n_in(ft_rn1[3]), .rst_n(ft_rn2[119:90]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_4 (.clk(ck_ft), .rst_n_in(ft_rn1[4]), .rst_n(ft_rn2[149:120]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_5 (.clk(ck_ft), .rst_n_in(ft_rn1[5]), .rst_n(ft_rn2[179:150]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_6 (.clk(ck_ft), .rst_n_in(ft_rn1[6]), .rst_n(ft_rn2[209:180]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_7 (.clk(ck_ft), .rst_n_in(ft_rn1[7]), .rst_n(ft_rn2[239:210]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_8 (.clk(ck_ft), .rst_n_in(ft_rn1[8]), .rst_n(ft_rn2[269:240]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_9 (.clk(ck_ft), .rst_n_in(ft_rn1[9]), .rst_n(ft_rn2[299:270]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_10 (.clk(ck_ft), .rst_n_in(ft_rn1[10]), .rst_n(ft_rn2[329:300]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_11 (.clk(ck_ft), .rst_n_in(ft_rn1[11]), .rst_n(ft_rn2[359:330]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_12 (.clk(ck_ft), .rst_n_in(ft_rn1[12]), .rst_n(ft_rn2[389:360]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_13 (.clk(ck_ft), .rst_n_in(ft_rn1[13]), .rst_n(ft_rn2[419:390]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_14 (.clk(ck_ft), .rst_n_in(ft_rn1[14]), .rst_n(ft_rn2[449:420]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_15 (.clk(ck_ft), .rst_n_in(ft_rn1[15]), .rst_n(ft_rn2[479:450]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_16 (.clk(ck_ft), .rst_n_in(ft_rn1[16]), .rst_n(ft_rn2[509:480]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_17 (.clk(ck_ft), .rst_n_in(ft_rn1[17]), .rst_n(ft_rn2[539:510]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_18 (.clk(ck_ft), .rst_n_in(ft_rn1[18]), .rst_n(ft_rn2[569:540]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_19 (.clk(ck_ft), .rst_n_in(ft_rn1[19]), .rst_n(ft_rn2[599:570]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_20 (.clk(ck_ft), .rst_n_in(ft_rn1[20]), .rst_n(ft_rn2[629:600]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_21 (.clk(ck_ft), .rst_n_in(ft_rn1[21]), .rst_n(ft_rn2[659:630]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_22 (.clk(ck_ft), .rst_n_in(ft_rn1[22]), .rst_n(ft_rn2[689:660]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_23 (.clk(ck_ft), .rst_n_in(ft_rn1[23]), .rst_n(ft_rn2[719:690]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_24 (.clk(ck_ft), .rst_n_in(ft_rn1[24]), .rst_n(ft_rn2[749:720]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_25 (.clk(ck_ft), .rst_n_in(ft_rn1[25]), .rst_n(ft_rn2[779:750]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_26 (.clk(ck_ft), .rst_n_in(ft_rn1[26]), .rst_n(ft_rn2[809:780]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_27 (.clk(ck_ft), .rst_n_in(ft_rn1[27]), .rst_n(ft_rn2[839:810]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_28 (.clk(ck_ft), .rst_n_in(ft_rn1[28]), .rst_n(ft_rn2[869:840]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_29 (.clk(ck_ft), .rst_n_in(ft_rn1[29]), .rst_n(ft_rn2[899:870]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_30 (.clk(ck_ft), .rst_n_in(ft_rn1[30]), .rst_n(ft_rn2[929:900]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_31 (.clk(ck_ft), .rst_n_in(ft_rn1[31]), .rst_n(ft_rn2[959:930]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_32 (.clk(ck_ft), .rst_n_in(ft_rn1[32]), .rst_n(ft_rn2[989:960]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_33 (.clk(ck_ft), .rst_n_in(ft_rn1[33]), .rst_n(ft_rn2[1019:990]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_34 (.clk(ck_ft), .rst_n_in(ft_rn1[34]), .rst_n(ft_rn2[1049:1020]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_35 (.clk(ck_ft), .rst_n_in(ft_rn1[35]), .rst_n(ft_rn2[1079:1050]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_36 (.clk(ck_ft), .rst_n_in(ft_rn1[36]), .rst_n(ft_rn2[1109:1080]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_37 (.clk(ck_ft), .rst_n_in(ft_rn1[37]), .rst_n(ft_rn2[1139:1110]));
+    ot_rst_relay #(.REGIONS(30), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_38 (.clk(ck_ft), .rst_n_in(ft_rn1[38]), .rst_n(ft_rn2[1169:1140]));
+    ot_rst_relay #(.REGIONS(6), .SYNC_STAGES(2), .TREE_STAGES(1)) u_ft_rst2_39 (.clk(ck_ft), .rst_n_in(ft_rn1[39]), .rst_n(ft_rn2[1175:1170]));
     // ft0: hb_idx__ctl/index_rr -> hb_idx__op_SW/vm_rr, 2057 b, 4 regs over 2825.3 um (regs_um [[91.0, 2805.3], [91.0, 1876.9], [91.0, 948.4], [91.0, 20.0]]), 6 repeater sites
     wire [2056:0] ft0_p1;
     wire [2056:0] ft0_p2;
     wire [2056:0] ft0_p3;
-    ot_hbm_rly #(.W(2057), .RS_RELAY(1)) ft0_s0 (.ck(ck_ft), .rs(ft_rn[0]), .i(ft0_i), .o(ft0_p1));
-    ot_hbm_rly #(.W(2057), .RS_RELAY(1)) ft0_s1 (.ck(ck_ft), .rs(ft_rn[0]), .i(ft0_p1), .o(ft0_p2));
-    ot_hbm_rly #(.W(2057), .RS_RELAY(1)) ft0_s2 (.ck(ck_ft), .rs(ft_rn[1]), .i(ft0_p2), .o(ft0_p3));
-    ot_hbm_rly #(.W(2057), .RS_RELAY(1)) ft0_s3 (.ck(ck_ft), .rs(ft_rn[1]), .i(ft0_p3), .o(ft0_o));
+    ot_hbm_ft_stn #(.W(2057), .GB(32)) ft0_s0 (.ck(ck_ft), .rn(ft_rn2[64:0]), .i(ft0_i), .o(ft0_p1));
+    ot_hbm_ft_stn #(.W(2057), .GB(32)) ft0_s1 (.ck(ck_ft), .rn(ft_rn2[129:65]), .i(ft0_p1), .o(ft0_p2));
+    ot_hbm_ft_stn #(.W(2057), .GB(32)) ft0_s2 (.ck(ck_ft), .rn(ft_rn2[194:130]), .i(ft0_p2), .o(ft0_p3));
+    ot_hbm_ft_stn #(.W(2057), .GB(32)) ft0_s3 (.ck(ck_ft), .rn(ft_rn2[259:195]), .i(ft0_p3), .o(ft0_o));
     // ft3: hc_SW/lg_wq -> hc_SW2/c_wq, 563 b, 3 regs over 1797.1 um (regs_um [[1777.1, 614.1], [898.6, 614.1], [20.0, 614.1]]), 2 repeater sites
     wire [562:0] ft3_p1;
     wire [562:0] ft3_p2;
-    ot_hbm_rly #(.W(563), .RS_RELAY(1)) ft3_s0 (.ck(ck_ft), .rs(ft_rn[1]), .i(ft3_i), .o(ft3_p1));
-    ot_hbm_rly #(.W(563), .RS_RELAY(1)) ft3_s1 (.ck(ck_ft), .rs(ft_rn[1]), .i(ft3_p1), .o(ft3_p2));
-    ot_hbm_rly #(.W(563), .RS_RELAY(1)) ft3_s2 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft3_p2), .o(ft3_o));
+    ot_hbm_ft_stn #(.W(563), .GB(32)) ft3_s0 (.ck(ck_ft), .rn(ft_rn2[277:260]), .i(ft3_i), .o(ft3_p1));
+    ot_hbm_ft_stn #(.W(563), .GB(32)) ft3_s1 (.ck(ck_ft), .rn(ft_rn2[295:278]), .i(ft3_p1), .o(ft3_p2));
+    ot_hbm_ft_stn #(.W(563), .GB(32)) ft3_s2 (.ck(ck_ft), .rn(ft_rn2[313:296]), .i(ft3_p2), .o(ft3_o));
     // ft4: hc_SW2/c_rr -> hc_SW/lg_rr, 515 b, 3 regs over 1797.1 um (regs_um [[20.0, 879.4], [898.6, 879.4], [1777.2, 879.4]]), 2 repeater sites
     wire [514:0] ft4_p1;
     wire [514:0] ft4_p2;
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft4_s0 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft4_i), .o(ft4_p1));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft4_s1 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft4_p1), .o(ft4_p2));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft4_s2 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft4_p2), .o(ft4_o));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft4_s0 (.ck(ck_ft), .rn(ft_rn2[330:314]), .i(ft4_i), .o(ft4_p1));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft4_s1 (.ck(ck_ft), .rn(ft_rn2[347:331]), .i(ft4_p1), .o(ft4_p2));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft4_s2 (.ck(ck_ft), .rn(ft_rn2[364:348]), .i(ft4_p2), .o(ft4_o));
     // ft5: hc_SW1/c_rr -> hc_SW/lg_rr, 515 b, 3 regs over 1797.1 um (regs_um [[20.0, 1016.8], [898.6, 1016.8], [1777.1, 1016.8]]), 2 repeater sites
     wire [514:0] ft5_p1;
     wire [514:0] ft5_p2;
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft5_s0 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft5_i), .o(ft5_p1));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft5_s1 (.ck(ck_ft), .rs(ft_rn[2]), .i(ft5_p1), .o(ft5_p2));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft5_s2 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft5_p2), .o(ft5_o));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft5_s0 (.ck(ck_ft), .rn(ft_rn2[381:365]), .i(ft5_i), .o(ft5_p1));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft5_s1 (.ck(ck_ft), .rn(ft_rn2[398:382]), .i(ft5_p1), .o(ft5_p2));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft5_s2 (.ck(ck_ft), .rn(ft_rn2[415:399]), .i(ft5_p2), .o(ft5_o));
     // ft9: vmb_SW5/rr4 -> hb_idx__ctl/vm_rr, 258 b, 3 regs over 1797.1 um (regs_um [[20.0, 455.9], [898.5, 455.9], [1777.1, 455.9]]), 2 repeater sites
     wire [257:0] ft9_p1;
     wire [257:0] ft9_p2;
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft9_s0 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft9_i), .o(ft9_p1));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft9_s1 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft9_p1), .o(ft9_p2));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft9_s2 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft9_p2), .o(ft9_o));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft9_s0 (.ck(ck_ft), .rn(ft_rn2[424:416]), .i(ft9_i), .o(ft9_p1));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft9_s1 (.ck(ck_ft), .rn(ft_rn2[433:425]), .i(ft9_p1), .o(ft9_p2));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft9_s2 (.ck(ck_ft), .rn(ft_rn2[442:434]), .i(ft9_p2), .o(ft9_o));
     // ft15: hc_SW3/c_rr -> hc_SW/lg_rr, 515 b, 3 regs over 1797.1 um (regs_um [[20.0, 810.7], [898.5, 810.7], [1777.1, 810.7]]), 2 repeater sites
     wire [514:0] ft15_p1;
     wire [514:0] ft15_p2;
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft15_s0 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft15_i), .o(ft15_p1));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft15_s1 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft15_p1), .o(ft15_p2));
-    ot_hbm_rly #(.W(515), .RS_RELAY(1)) ft15_s2 (.ck(ck_ft), .rs(ft_rn[3]), .i(ft15_p2), .o(ft15_o));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft15_s0 (.ck(ck_ft), .rn(ft_rn2[459:443]), .i(ft15_i), .o(ft15_p1));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft15_s1 (.ck(ck_ft), .rn(ft_rn2[476:460]), .i(ft15_p1), .o(ft15_p2));
+    ot_hbm_ft_stn #(.W(515), .GB(32)) ft15_s2 (.ck(ck_ft), .rn(ft_rn2[493:477]), .i(ft15_p2), .o(ft15_o));
     // ft16: vmb_SW5/pr -> hb_vms_SW/b5_pr, 267 b, 3 regs over 1797.1 um (regs_um [[20.0, 336.0], [898.5, 336.0], [1777.1, 336.0]]), 2 repeater sites
     wire [266:0] ft16_p1;
     wire [266:0] ft16_p2;
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft16_s0 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft16_i), .o(ft16_p1));
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft16_s1 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft16_p1), .o(ft16_p2));
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft16_s2 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft16_p2), .o(ft16_o));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft16_s0 (.ck(ck_ft), .rn(ft_rn2[502:494]), .i(ft16_i), .o(ft16_p1));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft16_s1 (.ck(ck_ft), .rn(ft_rn2[511:503]), .i(ft16_p1), .o(ft16_p2));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft16_s2 (.ck(ck_ft), .rn(ft_rn2[520:512]), .i(ft16_p2), .o(ft16_o));
     // ft17: col_idx/prm -> hb_idx__s_SW/keep_bitmap, 172 b, 3 regs over 2033.5 um (regs_um [[1777.2, 1873.0], [1636.7, 1016.7], [1636.7, 20.0]]), 4 repeater sites
     wire [171:0] ft17_p1;
     wire [171:0] ft17_p2;
-    ot_hbm_rly #(.W(172), .RS_RELAY(1)) ft17_s0 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft17_i), .o(ft17_p1));
-    ot_hbm_rly #(.W(172), .RS_RELAY(1)) ft17_s1 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft17_p1), .o(ft17_p2));
-    ot_hbm_rly #(.W(172), .RS_RELAY(1)) ft17_s2 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft17_p2), .o(ft17_o));
+    ot_hbm_ft_stn #(.W(172), .GB(32)) ft17_s0 (.ck(ck_ft), .rn(ft_rn2[526:521]), .i(ft17_i), .o(ft17_p1));
+    ot_hbm_ft_stn #(.W(172), .GB(32)) ft17_s1 (.ck(ck_ft), .rn(ft_rn2[532:527]), .i(ft17_p1), .o(ft17_p2));
+    ot_hbm_ft_stn #(.W(172), .GB(32)) ft17_s2 (.ck(ck_ft), .rn(ft_rn2[538:533]), .i(ft17_p2), .o(ft17_o));
     // ft19: vmb_SW1/rr3 -> hcollrs_SW/vm_rr, 258 b, 3 regs over 1797.1 um (regs_um [[20.0, 2318.9], [898.6, 2318.9], [1777.1, 2318.9]]), 2 repeater sites
     wire [257:0] ft19_p1;
     wire [257:0] ft19_p2;
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft19_s0 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft19_i), .o(ft19_p1));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft19_s1 (.ck(ck_ft), .rs(ft_rn[4]), .i(ft19_p1), .o(ft19_p2));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft19_s2 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft19_p2), .o(ft19_o));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft19_s0 (.ck(ck_ft), .rn(ft_rn2[547:539]), .i(ft19_i), .o(ft19_p1));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft19_s1 (.ck(ck_ft), .rn(ft_rn2[556:548]), .i(ft19_p1), .o(ft19_p2));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft19_s2 (.ck(ck_ft), .rn(ft_rn2[565:557]), .i(ft19_p2), .o(ft19_o));
     // ft20: vmb_SW5/rr1 -> hb_dbk_SW/rr, 258 b, 3 regs over 1797.1 um (regs_um [[20.0, 380.7], [898.5, 380.7], [1777.1, 380.7]]), 2 repeater sites
     wire [257:0] ft20_p1;
     wire [257:0] ft20_p2;
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft20_s0 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft20_i), .o(ft20_p1));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft20_s1 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft20_p1), .o(ft20_p2));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft20_s2 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft20_p2), .o(ft20_o));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft20_s0 (.ck(ck_ft), .rn(ft_rn2[574:566]), .i(ft20_i), .o(ft20_p1));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft20_s1 (.ck(ck_ft), .rn(ft_rn2[583:575]), .i(ft20_p1), .o(ft20_p2));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft20_s2 (.ck(ck_ft), .rn(ft_rn2[592:584]), .i(ft20_p2), .o(ft20_o));
     // ft21: hcollks_SW_p2/vm_kq -> vmb_SW4/kq, 282 b, 3 regs over 1797.1 um (regs_um [[1777.1, 2076.1], [898.6, 2076.1], [20.0, 2076.1]]), 2 repeater sites
     wire [281:0] ft21_p1;
     wire [281:0] ft21_p2;
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft21_s0 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft21_i), .o(ft21_p1));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft21_s1 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft21_p1), .o(ft21_p2));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft21_s2 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft21_p2), .o(ft21_o));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft21_s0 (.ck(ck_ft), .rn(ft_rn2[601:593]), .i(ft21_i), .o(ft21_p1));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft21_s1 (.ck(ck_ft), .rn(ft_rn2[610:602]), .i(ft21_p1), .o(ft21_p2));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft21_s2 (.ck(ck_ft), .rn(ft_rn2[619:611]), .i(ft21_p2), .o(ft21_o));
     // ft23: hcollks_SW_p2/vm_kq -> vmb_SW5/kq, 282 b, 3 regs over 1797.1 um (regs_um [[1777.1, 2038.5], [898.6, 2038.5], [20.0, 2038.5]]), 2 repeater sites
     wire [281:0] ft23_p1;
     wire [281:0] ft23_p2;
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft23_s0 (.ck(ck_ft), .rs(ft_rn[5]), .i(ft23_i), .o(ft23_p1));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft23_s1 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft23_p1), .o(ft23_p2));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft23_s2 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft23_p2), .o(ft23_o));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft23_s0 (.ck(ck_ft), .rn(ft_rn2[628:620]), .i(ft23_i), .o(ft23_p1));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft23_s1 (.ck(ck_ft), .rn(ft_rn2[637:629]), .i(ft23_p1), .o(ft23_p2));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft23_s2 (.ck(ck_ft), .rn(ft_rn2[646:638]), .i(ft23_p2), .o(ft23_o));
     // ft26: hb_vms_SW/b7_pq -> vmb_SW7/pq, 286 b, 3 regs over 1797.1 um (regs_um [[1777.1, 299.1], [898.5, 299.1], [20.0, 299.1]]), 2 repeater sites
     wire [285:0] ft26_p1;
     wire [285:0] ft26_p2;
-    ot_hbm_rly #(.W(286), .RS_RELAY(1)) ft26_s0 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft26_i), .o(ft26_p1));
-    ot_hbm_rly #(.W(286), .RS_RELAY(1)) ft26_s1 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft26_p1), .o(ft26_p2));
-    ot_hbm_rly #(.W(286), .RS_RELAY(1)) ft26_s2 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft26_p2), .o(ft26_o));
+    ot_hbm_ft_stn #(.W(286), .GB(32)) ft26_s0 (.ck(ck_ft), .rn(ft_rn2[655:647]), .i(ft26_i), .o(ft26_p1));
+    ot_hbm_ft_stn #(.W(286), .GB(32)) ft26_s1 (.ck(ck_ft), .rn(ft_rn2[664:656]), .i(ft26_p1), .o(ft26_p2));
+    ot_hbm_ft_stn #(.W(286), .GB(32)) ft26_s2 (.ck(ck_ft), .rn(ft_rn2[673:665]), .i(ft26_p2), .o(ft26_o));
     // ft27: hcollks_SW_p1/vm_kq -> vmb_SW3/kq, 282 b, 3 regs over 1797.1 um (regs_um [[1777.1, 1978.5], [898.5, 1978.5], [20.0, 1978.5]]), 2 repeater sites
     wire [281:0] ft27_p1;
     wire [281:0] ft27_p2;
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft27_s0 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft27_i), .o(ft27_p1));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft27_s1 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft27_p1), .o(ft27_p2));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft27_s2 (.ck(ck_ft), .rs(ft_rn[6]), .i(ft27_p2), .o(ft27_o));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft27_s0 (.ck(ck_ft), .rn(ft_rn2[682:674]), .i(ft27_i), .o(ft27_p1));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft27_s1 (.ck(ck_ft), .rn(ft_rn2[691:683]), .i(ft27_p1), .o(ft27_p2));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft27_s2 (.ck(ck_ft), .rn(ft_rn2[700:692]), .i(ft27_p2), .o(ft27_o));
     // ft29: vmb_SW7/pr -> hb_vms_SW/b7_pr, 267 b, 3 regs over 1797.1 um (regs_um [[20.0, 415.7], [898.5, 415.7], [1777.1, 415.7]]), 2 repeater sites
     wire [266:0] ft29_p1;
     wire [266:0] ft29_p2;
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft29_s0 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft29_i), .o(ft29_p1));
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft29_s1 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft29_p1), .o(ft29_p2));
-    ot_hbm_rly #(.W(267), .RS_RELAY(1)) ft29_s2 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft29_p2), .o(ft29_o));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft29_s0 (.ck(ck_ft), .rn(ft_rn2[709:701]), .i(ft29_i), .o(ft29_p1));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft29_s1 (.ck(ck_ft), .rn(ft_rn2[718:710]), .i(ft29_p1), .o(ft29_p2));
+    ot_hbm_ft_stn #(.W(267), .GB(32)) ft29_s2 (.ck(ck_ft), .rn(ft_rn2[727:719]), .i(ft29_p2), .o(ft29_o));
     // ft31: vmb_SW2/rr3 -> hcollrs_SW/vm_rr, 258 b, 3 regs over 1797.1 um (regs_um [[20.0, 2250.1], [898.6, 2250.1], [1777.2, 2250.1]]), 2 repeater sites
     wire [257:0] ft31_p1;
     wire [257:0] ft31_p2;
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft31_s0 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft31_i), .o(ft31_p1));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft31_s1 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft31_p1), .o(ft31_p2));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft31_s2 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft31_p2), .o(ft31_o));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft31_s0 (.ck(ck_ft), .rn(ft_rn2[736:728]), .i(ft31_i), .o(ft31_p1));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft31_s1 (.ck(ck_ft), .rn(ft_rn2[745:737]), .i(ft31_p1), .o(ft31_p2));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft31_s2 (.ck(ck_ft), .rn(ft_rn2[754:746]), .i(ft31_p2), .o(ft31_o));
     // ft32: vmb_SW3/rr3 -> hcollrs_SW/vm_rr, 258 b, 3 regs over 1797.1 um (regs_um [[20.0, 2215.7], [898.6, 2215.7], [1777.2, 2215.7]]), 2 repeater sites
     wire [257:0] ft32_p1;
     wire [257:0] ft32_p2;
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft32_s0 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft32_i), .o(ft32_p1));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft32_s1 (.ck(ck_ft), .rs(ft_rn[7]), .i(ft32_p1), .o(ft32_p2));
-    ot_hbm_rly #(.W(258), .RS_RELAY(1)) ft32_s2 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft32_p2), .o(ft32_o));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft32_s0 (.ck(ck_ft), .rn(ft_rn2[763:755]), .i(ft32_i), .o(ft32_p1));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft32_s1 (.ck(ck_ft), .rn(ft_rn2[772:764]), .i(ft32_p1), .o(ft32_p2));
+    ot_hbm_ft_stn #(.W(258), .GB(32)) ft32_s2 (.ck(ck_ft), .rn(ft_rn2[781:773]), .i(ft32_p2), .o(ft32_o));
     // ft36: hcollks_SW_p3/vm_kq -> vmb_SW6/kq, 282 b, 3 regs over 1797.1 um (regs_um [[1777.2, 1770.8], [898.6, 1770.8], [20.0, 1770.8]]), 2 repeater sites
     wire [281:0] ft36_p1;
     wire [281:0] ft36_p2;
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft36_s0 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft36_i), .o(ft36_p1));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft36_s1 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft36_p1), .o(ft36_p2));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft36_s2 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft36_p2), .o(ft36_o));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft36_s0 (.ck(ck_ft), .rn(ft_rn2[790:782]), .i(ft36_i), .o(ft36_p1));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft36_s1 (.ck(ck_ft), .rn(ft_rn2[799:791]), .i(ft36_p1), .o(ft36_p2));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft36_s2 (.ck(ck_ft), .rn(ft_rn2[808:800]), .i(ft36_p2), .o(ft36_o));
     // ft37: hcollks_SW_p3/vm_kq -> vmb_SW7/kq, 282 b, 3 regs over 1797.1 um (regs_um [[1777.2, 1733.2], [898.6, 1733.2], [20.0, 1733.2]]), 2 repeater sites
     wire [281:0] ft37_p1;
     wire [281:0] ft37_p2;
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft37_s0 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft37_i), .o(ft37_p1));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft37_s1 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft37_p1), .o(ft37_p2));
-    ot_hbm_rly #(.W(282), .RS_RELAY(1)) ft37_s2 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft37_p2), .o(ft37_o));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft37_s0 (.ck(ck_ft), .rn(ft_rn2[817:809]), .i(ft37_i), .o(ft37_p1));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft37_s1 (.ck(ck_ft), .rn(ft_rn2[826:818]), .i(ft37_p1), .o(ft37_p2));
+    ot_hbm_ft_stn #(.W(282), .GB(32)) ft37_s2 (.ck(ck_ft), .rn(ft_rn2[835:827]), .i(ft37_p2), .o(ft37_o));
     // ft40: hb_idx__link/tx -> cij_SW/idx_tx_h, 133 b, 2 regs over 642.0 um (regs_um [[1757.1, 2805.3], [1777.1, 2223.3]]), 1 repeater sites
     wire [132:0] ft40_p1;
-    ot_hbm_rly #(.W(133), .RS_RELAY(1)) ft40_s0 (.ck(ck_ft), .rs(ft_rn[8]), .i(ft40_i), .o(ft40_p1));
-    ot_hbm_rly #(.W(133), .RS_RELAY(1)) ft40_s1 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft40_p1), .o(ft40_o));
+    ot_hbm_ft_stn #(.W(133), .GB(32)) ft40_s0 (.ck(ck_ft), .rn(ft_rn2[840:836]), .i(ft40_i), .o(ft40_p1));
+    ot_hbm_ft_stn #(.W(133), .GB(32)) ft40_s1 (.ck(ck_ft), .rn(ft_rn2[845:841]), .i(ft40_p1), .o(ft40_o));
     // ft41: hb_idx__link/tx -> cij_SW/idx_tx_h_r1, 133 b, 2 regs over 638.9 um (regs_um [[1739.3, 2805.3], [1777.1, 2244.2]]), 1 repeater sites
     wire [132:0] ft41_p1;
-    ot_hbm_rly #(.W(133), .RS_RELAY(1)) ft41_s0 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft41_i), .o(ft41_p1));
-    ot_hbm_rly #(.W(133), .RS_RELAY(1)) ft41_s1 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft41_p1), .o(ft41_o));
+    ot_hbm_ft_stn #(.W(133), .GB(32)) ft41_s0 (.ck(ck_ft), .rn(ft_rn2[850:846]), .i(ft41_i), .o(ft41_p1));
+    ot_hbm_ft_stn #(.W(133), .GB(32)) ft41_s1 (.ck(ck_ft), .rn(ft_rn2[855:851]), .i(ft41_p1), .o(ft41_o));
     // ft43: cic_SW/inj_addr_o -> cij_SW/inj_addr_r1, 161 b, 4 regs over 2559.9 um (regs_um [[1511.7, 20.0], [1511.7, 860.0], [1511.7, 1700.0], [1777.2, 2274.5]]), 3 repeater sites
     wire [160:0] ft43_p1;
     wire [160:0] ft43_p2;
     wire [160:0] ft43_p3;
-    ot_hbm_rly #(.W(161), .RS_RELAY(1)) ft43_s0 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft43_i), .o(ft43_p1));
-    ot_hbm_rly #(.W(161), .RS_RELAY(1)) ft43_s1 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft43_p1), .o(ft43_p2));
-    ot_hbm_rly #(.W(161), .RS_RELAY(1)) ft43_s2 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft43_p2), .o(ft43_p3));
-    ot_hbm_rly #(.W(161), .RS_RELAY(1)) ft43_s3 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft43_p3), .o(ft43_o));
+    ot_hbm_ft_stn #(.W(161), .GB(32)) ft43_s0 (.ck(ck_ft), .rn(ft_rn2[861:856]), .i(ft43_i), .o(ft43_p1));
+    ot_hbm_ft_stn #(.W(161), .GB(32)) ft43_s1 (.ck(ck_ft), .rn(ft_rn2[867:862]), .i(ft43_p1), .o(ft43_p2));
+    ot_hbm_ft_stn #(.W(161), .GB(32)) ft43_s2 (.ck(ck_ft), .rn(ft_rn2[873:868]), .i(ft43_p2), .o(ft43_p3));
+    ot_hbm_ft_stn #(.W(161), .GB(32)) ft43_s3 (.ck(ck_ft), .rn(ft_rn2[879:874]), .i(ft43_p3), .o(ft43_o));
     // ft44: sfucore_SW/local_rq -> sfu_SW2/c_wq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.1, 762.8], [898.6, 762.8], [20.0, 762.8]]), 2 repeater sites
     wire [34:0] ft44_p1;
     wire [34:0] ft44_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft44_s0 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft44_i), .o(ft44_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft44_s1 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft44_p1), .o(ft44_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft44_s2 (.ck(ck_ft), .rs(ft_rn[9]), .i(ft44_p2), .o(ft44_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft44_s0 (.ck(ck_ft), .rn(ft_rn2[881:880]), .i(ft44_i), .o(ft44_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft44_s1 (.ck(ck_ft), .rn(ft_rn2[883:882]), .i(ft44_p1), .o(ft44_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft44_s2 (.ck(ck_ft), .rn(ft_rn2[885:884]), .i(ft44_p2), .o(ft44_o));
     // ft45: sfucore_SW/local_rq -> sfu_SW2/c_rq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.2, 758.1], [898.6, 758.1], [20.0, 758.1]]), 2 repeater sites
     wire [34:0] ft45_p1;
     wire [34:0] ft45_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft45_s0 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft45_i), .o(ft45_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft45_s1 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft45_p1), .o(ft45_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft45_s2 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft45_p2), .o(ft45_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft45_s0 (.ck(ck_ft), .rn(ft_rn2[887:886]), .i(ft45_i), .o(ft45_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft45_s1 (.ck(ck_ft), .rn(ft_rn2[889:888]), .i(ft45_p1), .o(ft45_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft45_s2 (.ck(ck_ft), .rn(ft_rn2[891:890]), .i(ft45_p2), .o(ft45_o));
     // ft46: sfucore_SW/local_wq -> sfu_SW2/c_rq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.1, 574.2], [898.6, 574.2], [20.0, 574.2]]), 2 repeater sites
     wire [34:0] ft46_p1;
     wire [34:0] ft46_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft46_s0 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft46_i), .o(ft46_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft46_s1 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft46_p1), .o(ft46_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft46_s2 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft46_p2), .o(ft46_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft46_s0 (.ck(ck_ft), .rn(ft_rn2[893:892]), .i(ft46_i), .o(ft46_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft46_s1 (.ck(ck_ft), .rn(ft_rn2[895:894]), .i(ft46_p1), .o(ft46_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft46_s2 (.ck(ck_ft), .rn(ft_rn2[897:896]), .i(ft46_p2), .o(ft46_o));
     // ft49: hb_idx__ctl/vm_rq -> vmb_SW5/rq4, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 418.5], [898.6, 418.5], [20.0, 418.5]]), 2 repeater sites
     wire [17:0] ft49_p1;
     wire [17:0] ft49_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft49_s0 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft49_i), .o(ft49_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft49_s1 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft49_p1), .o(ft49_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft49_s2 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft49_p2), .o(ft49_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft49_s0 (.ck(ck_ft), .rn(ft_rn2[898:898]), .i(ft49_i), .o(ft49_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft49_s1 (.ck(ck_ft), .rn(ft_rn2[899:899]), .i(ft49_p1), .o(ft49_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft49_s2 (.ck(ck_ft), .rn(ft_rn2[900:900]), .i(ft49_p2), .o(ft49_o));
     // ft51: hb_idx__qctl_NW/nq -> hb_idx__s_NW/nkeys, 13 b, 4 regs over 3021.1 um (regs_um [[1777.1, 775.4], [825.9, 817.9], [825.9, 1811.6], [825.9, 2805.3]]), 6 repeater sites
     wire [12:0] ft51_p1;
     wire [12:0] ft51_p2;
     wire [12:0] ft51_p3;
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft51_s0 (.ck(ck_ft), .rs(ft_rn[10]), .i(ft51_i), .o(ft51_p1));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft51_s1 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft51_p1), .o(ft51_p2));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft51_s2 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft51_p2), .o(ft51_p3));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft51_s3 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft51_p3), .o(ft51_o));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft51_s0 (.ck(ck_ft), .rn(ft_rn2[901:901]), .i(ft51_i), .o(ft51_p1));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft51_s1 (.ck(ck_ft), .rn(ft_rn2[902:902]), .i(ft51_p1), .o(ft51_p2));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft51_s2 (.ck(ck_ft), .rn(ft_rn2[903:903]), .i(ft51_p2), .o(ft51_p3));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft51_s3 (.ck(ck_ft), .rn(ft_rn2[904:904]), .i(ft51_p3), .o(ft51_o));
     // ft52: hb_idx__qctl_SW/nq -> hb_idx__s_SW/nkeys, 13 b, 4 regs over 2825.3 um (regs_um [[489.0, 2805.2], [489.0, 1876.8], [489.0, 948.4], [489.0, 20.0]]), 6 repeater sites
     wire [12:0] ft52_p1;
     wire [12:0] ft52_p2;
     wire [12:0] ft52_p3;
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft52_s0 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft52_i), .o(ft52_p1));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft52_s1 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft52_p1), .o(ft52_p2));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft52_s2 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft52_p2), .o(ft52_p3));
-    ot_hbm_rly #(.W(13), .RS_RELAY(1)) ft52_s3 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft52_p3), .o(ft52_o));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft52_s0 (.ck(ck_ft), .rn(ft_rn2[905:905]), .i(ft52_i), .o(ft52_p1));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft52_s1 (.ck(ck_ft), .rn(ft_rn2[906:906]), .i(ft52_p1), .o(ft52_p2));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft52_s2 (.ck(ck_ft), .rn(ft_rn2[907:907]), .i(ft52_p2), .o(ft52_p3));
+    ot_hbm_ft_stn #(.W(13), .GB(32)) ft52_s3 (.ck(ck_ft), .rn(ft_rn2[908:908]), .i(ft52_p3), .o(ft52_o));
     // ft54: hcollrs_SW/vm_rq -> vmb_SW1/rq3, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 2194.9], [898.6, 2194.9], [20.0, 2194.9]]), 2 repeater sites
     wire [17:0] ft54_p1;
     wire [17:0] ft54_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft54_s0 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft54_i), .o(ft54_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft54_s1 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft54_p1), .o(ft54_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft54_s2 (.ck(ck_ft), .rs(ft_rn[11]), .i(ft54_p2), .o(ft54_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft54_s0 (.ck(ck_ft), .rn(ft_rn2[909:909]), .i(ft54_i), .o(ft54_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft54_s1 (.ck(ck_ft), .rn(ft_rn2[910:910]), .i(ft54_p1), .o(ft54_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft54_s2 (.ck(ck_ft), .rn(ft_rn2[911:911]), .i(ft54_p2), .o(ft54_o));
     // ft56: hb_dbk_SW/rq -> vmb_SW5/rq1, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 554.0], [898.6, 554.0], [20.0, 554.0]]), 2 repeater sites
     wire [17:0] ft56_p1;
     wire [17:0] ft56_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft56_s0 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft56_i), .o(ft56_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft56_s1 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft56_p1), .o(ft56_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft56_s2 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft56_p2), .o(ft56_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft56_s0 (.ck(ck_ft), .rn(ft_rn2[912:912]), .i(ft56_i), .o(ft56_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft56_s1 (.ck(ck_ft), .rn(ft_rn2[913:913]), .i(ft56_p1), .o(ft56_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft56_s2 (.ck(ck_ft), .rn(ft_rn2[914:914]), .i(ft56_p2), .o(ft56_o));
     // ft58: hb_dbk_SW/rq -> vmb_SW4/rq1, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 556.4], [898.6, 556.4], [20.0, 556.4]]), 2 repeater sites
     wire [17:0] ft58_p1;
     wire [17:0] ft58_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft58_s0 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft58_i), .o(ft58_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft58_s1 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft58_p1), .o(ft58_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft58_s2 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft58_p2), .o(ft58_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft58_s0 (.ck(ck_ft), .rn(ft_rn2[915:915]), .i(ft58_i), .o(ft58_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft58_s1 (.ck(ck_ft), .rn(ft_rn2[916:916]), .i(ft58_p1), .o(ft58_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft58_s2 (.ck(ck_ft), .rn(ft_rn2[917:917]), .i(ft58_p2), .o(ft58_o));
     // ft59: sfucore_SW/local_rq -> sfu_SW3/c_wq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.1, 569.5], [898.5, 569.5], [20.0, 569.5]]), 2 repeater sites
     wire [34:0] ft59_p1;
     wire [34:0] ft59_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft59_s0 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft59_i), .o(ft59_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft59_s1 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft59_p1), .o(ft59_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft59_s2 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft59_p2), .o(ft59_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft59_s0 (.ck(ck_ft), .rn(ft_rn2[919:918]), .i(ft59_i), .o(ft59_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft59_s1 (.ck(ck_ft), .rn(ft_rn2[921:920]), .i(ft59_p1), .o(ft59_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft59_s2 (.ck(ck_ft), .rn(ft_rn2[923:922]), .i(ft59_p2), .o(ft59_o));
     // ft60: sfucore_SW/local_rq -> sfu_SW3/c_rq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.1, 564.8], [898.6, 564.8], [20.0, 564.8]]), 2 repeater sites
     wire [34:0] ft60_p1;
     wire [34:0] ft60_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft60_s0 (.ck(ck_ft), .rs(ft_rn[12]), .i(ft60_i), .o(ft60_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft60_s1 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft60_p1), .o(ft60_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft60_s2 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft60_p2), .o(ft60_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft60_s0 (.ck(ck_ft), .rn(ft_rn2[925:924]), .i(ft60_i), .o(ft60_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft60_s1 (.ck(ck_ft), .rn(ft_rn2[927:926]), .i(ft60_p1), .o(ft60_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft60_s2 (.ck(ck_ft), .rn(ft_rn2[929:928]), .i(ft60_p2), .o(ft60_o));
     // ft61: sfucore_SW/local_wq -> sfu_SW3/c_rq, 35 b, 3 regs over 1797.1 um (regs_um [[1777.1, 560.0], [898.5, 560.0], [20.0, 560.0]]), 2 repeater sites
     wire [34:0] ft61_p1;
     wire [34:0] ft61_p2;
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft61_s0 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft61_i), .o(ft61_p1));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft61_s1 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft61_p1), .o(ft61_p2));
-    ot_hbm_rly #(.W(35), .RS_RELAY(1)) ft61_s2 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft61_p2), .o(ft61_o));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft61_s0 (.ck(ck_ft), .rn(ft_rn2[931:930]), .i(ft61_i), .o(ft61_p1));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft61_s1 (.ck(ck_ft), .rn(ft_rn2[933:932]), .i(ft61_p1), .o(ft61_p2));
+    ot_hbm_ft_stn #(.W(35), .GB(32)) ft61_s2 (.ck(ck_ft), .rn(ft_rn2[935:934]), .i(ft61_p2), .o(ft61_o));
     // ft66: hb_idx__qctl_NW/key_index -> hb_idx__s_NW/beat_index, 9 b, 4 regs over 3021.1 um (regs_um [[1777.1, 774.0], [827.4, 817.9], [827.4, 1811.6], [827.4, 2805.2]]), 6 repeater sites
     wire [8:0] ft66_p1;
     wire [8:0] ft66_p2;
     wire [8:0] ft66_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft66_s0 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft66_i), .o(ft66_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft66_s1 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft66_p1), .o(ft66_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft66_s2 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft66_p2), .o(ft66_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft66_s3 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft66_p3), .o(ft66_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft66_s0 (.ck(ck_ft), .rn(ft_rn2[936:936]), .i(ft66_i), .o(ft66_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft66_s1 (.ck(ck_ft), .rn(ft_rn2[937:937]), .i(ft66_p1), .o(ft66_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft66_s2 (.ck(ck_ft), .rn(ft_rn2[938:938]), .i(ft66_p2), .o(ft66_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft66_s3 (.ck(ck_ft), .rn(ft_rn2[939:939]), .i(ft66_p3), .o(ft66_o));
     // ft67: hb_idx__qctl_NW/nq -> hb_idx__s_NW/beat_index, 9 b, 4 regs over 3018.4 um (regs_um [[1777.1, 775.4], [828.6, 819.7], [828.6, 1812.5], [828.6, 2805.3]]), 6 repeater sites
     wire [8:0] ft67_p1;
     wire [8:0] ft67_p2;
     wire [8:0] ft67_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft67_s0 (.ck(ck_ft), .rs(ft_rn[13]), .i(ft67_i), .o(ft67_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft67_s1 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft67_p1), .o(ft67_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft67_s2 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft67_p2), .o(ft67_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft67_s3 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft67_p3), .o(ft67_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft67_s0 (.ck(ck_ft), .rn(ft_rn2[940:940]), .i(ft67_i), .o(ft67_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft67_s1 (.ck(ck_ft), .rn(ft_rn2[941:941]), .i(ft67_p1), .o(ft67_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft67_s2 (.ck(ck_ft), .rn(ft_rn2[942:942]), .i(ft67_p2), .o(ft67_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft67_s3 (.ck(ck_ft), .rn(ft_rn2[943:943]), .i(ft67_p3), .o(ft67_o));
     // ft68: hb_idx__qctl_NW/key_index -> hb_idx__s_NW/nkeys, 9 b, 4 regs over 3018.7 um (regs_um [[1777.1, 774.0], [829.8, 819.5], [829.8, 1812.4], [829.8, 2805.2]]), 6 repeater sites
     wire [8:0] ft68_p1;
     wire [8:0] ft68_p2;
     wire [8:0] ft68_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft68_s0 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft68_i), .o(ft68_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft68_s1 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft68_p1), .o(ft68_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft68_s2 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft68_p2), .o(ft68_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft68_s3 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft68_p3), .o(ft68_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft68_s0 (.ck(ck_ft), .rn(ft_rn2[944:944]), .i(ft68_i), .o(ft68_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft68_s1 (.ck(ck_ft), .rn(ft_rn2[945:945]), .i(ft68_p1), .o(ft68_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft68_s2 (.ck(ck_ft), .rn(ft_rn2[946:946]), .i(ft68_p2), .o(ft68_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft68_s3 (.ck(ck_ft), .rn(ft_rn2[947:947]), .i(ft68_p3), .o(ft68_o));
     // ft69: hcollrs_SW/vm_rq -> vmb_SW4/rq3, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 360.5], [898.5, 360.5], [20.0, 360.5]]), 2 repeater sites
     wire [17:0] ft69_p1;
     wire [17:0] ft69_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft69_s0 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft69_i), .o(ft69_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft69_s1 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft69_p1), .o(ft69_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft69_s2 (.ck(ck_ft), .rs(ft_rn[14]), .i(ft69_p2), .o(ft69_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft69_s0 (.ck(ck_ft), .rn(ft_rn2[948:948]), .i(ft69_i), .o(ft69_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft69_s1 (.ck(ck_ft), .rn(ft_rn2[949:949]), .i(ft69_p1), .o(ft69_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft69_s2 (.ck(ck_ft), .rn(ft_rn2[950:950]), .i(ft69_p2), .o(ft69_o));
     // ft70: col_idx/prm -> hb_idx__s_SW/rank, 9 b, 3 regs over 2021.4 um (regs_um [[1777.2, 1873.0], [1648.7, 1010.7], [1648.7, 20.0]]), 4 repeater sites
     wire [8:0] ft70_p1;
     wire [8:0] ft70_p2;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft70_s0 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft70_i), .o(ft70_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft70_s1 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft70_p1), .o(ft70_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft70_s2 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft70_p2), .o(ft70_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft70_s0 (.ck(ck_ft), .rn(ft_rn2[951:951]), .i(ft70_i), .o(ft70_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft70_s1 (.ck(ck_ft), .rn(ft_rn2[952:952]), .i(ft70_p1), .o(ft70_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft70_s2 (.ck(ck_ft), .rn(ft_rn2[953:953]), .i(ft70_p2), .o(ft70_o));
     // ft71: hb_idx__qctl_SW/nq -> hb_idx__s_SW/beat_index, 9 b, 4 regs over 2825.3 um (regs_um [[487.1, 2805.3], [487.1, 1876.8], [487.1, 948.4], [487.1, 20.0]]), 6 repeater sites
     wire [8:0] ft71_p1;
     wire [8:0] ft71_p2;
     wire [8:0] ft71_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft71_s0 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft71_i), .o(ft71_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft71_s1 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft71_p1), .o(ft71_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft71_s2 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft71_p2), .o(ft71_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft71_s3 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft71_p3), .o(ft71_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft71_s0 (.ck(ck_ft), .rn(ft_rn2[954:954]), .i(ft71_i), .o(ft71_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft71_s1 (.ck(ck_ft), .rn(ft_rn2[955:955]), .i(ft71_p1), .o(ft71_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft71_s2 (.ck(ck_ft), .rn(ft_rn2[956:956]), .i(ft71_p2), .o(ft71_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft71_s3 (.ck(ck_ft), .rn(ft_rn2[957:957]), .i(ft71_p3), .o(ft71_o));
     // ft72: hb_idx__qctl_SW/key_index -> hb_idx__s_SW/beat_index, 9 b, 4 regs over 2066.3 um (regs_um [[1777.1, 755.2], [1101.7, 755.2], [485.9, 695.4], [485.9, 20.0]]), 3 repeater sites
     wire [8:0] ft72_p1;
     wire [8:0] ft72_p2;
     wire [8:0] ft72_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft72_s0 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft72_i), .o(ft72_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft72_s1 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft72_p1), .o(ft72_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft72_s2 (.ck(ck_ft), .rs(ft_rn[15]), .i(ft72_p2), .o(ft72_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft72_s3 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft72_p3), .o(ft72_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft72_s0 (.ck(ck_ft), .rn(ft_rn2[958:958]), .i(ft72_i), .o(ft72_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft72_s1 (.ck(ck_ft), .rn(ft_rn2[959:959]), .i(ft72_p1), .o(ft72_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft72_s2 (.ck(ck_ft), .rn(ft_rn2[960:960]), .i(ft72_p2), .o(ft72_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft72_s3 (.ck(ck_ft), .rn(ft_rn2[961:961]), .i(ft72_p3), .o(ft72_o));
     // ft73: hb_idx__qctl_SW/key_index -> hb_idx__s_SW/nkeys, 9 b, 4 regs over 2061.8 um (regs_um [[1777.1, 755.2], [1103.2, 755.2], [490.5, 694.0], [490.5, 20.0]]), 3 repeater sites
     wire [8:0] ft73_p1;
     wire [8:0] ft73_p2;
     wire [8:0] ft73_p3;
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft73_s0 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft73_i), .o(ft73_p1));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft73_s1 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft73_p1), .o(ft73_p2));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft73_s2 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft73_p2), .o(ft73_p3));
-    ot_hbm_rly #(.W(9), .RS_RELAY(1)) ft73_s3 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft73_p3), .o(ft73_o));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft73_s0 (.ck(ck_ft), .rn(ft_rn2[962:962]), .i(ft73_i), .o(ft73_p1));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft73_s1 (.ck(ck_ft), .rn(ft_rn2[963:963]), .i(ft73_p1), .o(ft73_p2));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft73_s2 (.ck(ck_ft), .rn(ft_rn2[964:964]), .i(ft73_p2), .o(ft73_p3));
+    ot_hbm_ft_stn #(.W(9), .GB(32)) ft73_s3 (.ck(ck_ft), .rn(ft_rn2[965:965]), .i(ft73_p3), .o(ft73_o));
     // ft74: hcollrs_SW/vm_rq -> vmb_SW5/rq3, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 2187.0], [898.6, 2187.0], [20.0, 2187.0]]), 2 repeater sites
     wire [17:0] ft74_p1;
     wire [17:0] ft74_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft74_s0 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft74_i), .o(ft74_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft74_s1 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft74_p1), .o(ft74_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft74_s2 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft74_p2), .o(ft74_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft74_s0 (.ck(ck_ft), .rn(ft_rn2[966:966]), .i(ft74_i), .o(ft74_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft74_s1 (.ck(ck_ft), .rn(ft_rn2[967:967]), .i(ft74_p1), .o(ft74_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft74_s2 (.ck(ck_ft), .rn(ft_rn2[968:968]), .i(ft74_p2), .o(ft74_o));
     // ft77: hcollrs_SW/vm_rq -> vmb_SW3/rq3, 18 b, 3 regs over 1797.1 um (regs_um [[1777.1, 2182.2], [898.6, 2182.2], [20.0, 2182.2]]), 2 repeater sites
     wire [17:0] ft77_p1;
     wire [17:0] ft77_p2;
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft77_s0 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft77_i), .o(ft77_p1));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft77_s1 (.ck(ck_ft), .rs(ft_rn[16]), .i(ft77_p1), .o(ft77_p2));
-    ot_hbm_rly #(.W(18), .RS_RELAY(1)) ft77_s2 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft77_p2), .o(ft77_o));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft77_s0 (.ck(ck_ft), .rn(ft_rn2[969:969]), .i(ft77_i), .o(ft77_p1));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft77_s1 (.ck(ck_ft), .rn(ft_rn2[970:970]), .i(ft77_p1), .o(ft77_p2));
+    ot_hbm_ft_stn #(.W(18), .GB(32)) ft77_s2 (.ck(ck_ft), .rn(ft_rn2[971:971]), .i(ft77_p2), .o(ft77_o));
     // ft79: hb_idx__qctl_SW/query_index -> hb_idx__op_SW/query_index, 8 b, 5 regs over 3788.7 um (regs_um [[1777.2, 2184.0], [840.0, 2184.0], [192.5, 1894.3], [192.5, 957.2], [192.5, 20.0]]), 8 repeater sites
     wire [7:0] ft79_p1;
     wire [7:0] ft79_p2;
     wire [7:0] ft79_p3;
     wire [7:0] ft79_p4;
-    ot_hbm_rly #(.W(8), .RS_RELAY(1)) ft79_s0 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft79_i), .o(ft79_p1));
-    ot_hbm_rly #(.W(8), .RS_RELAY(1)) ft79_s1 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft79_p1), .o(ft79_p2));
-    ot_hbm_rly #(.W(8), .RS_RELAY(1)) ft79_s2 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft79_p2), .o(ft79_p3));
-    ot_hbm_rly #(.W(8), .RS_RELAY(1)) ft79_s3 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft79_p3), .o(ft79_p4));
-    ot_hbm_rly #(.W(8), .RS_RELAY(1)) ft79_s4 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft79_p4), .o(ft79_o));
+    ot_hbm_ft_stn #(.W(8), .GB(32)) ft79_s0 (.ck(ck_ft), .rn(ft_rn2[972:972]), .i(ft79_i), .o(ft79_p1));
+    ot_hbm_ft_stn #(.W(8), .GB(32)) ft79_s1 (.ck(ck_ft), .rn(ft_rn2[973:973]), .i(ft79_p1), .o(ft79_p2));
+    ot_hbm_ft_stn #(.W(8), .GB(32)) ft79_s2 (.ck(ck_ft), .rn(ft_rn2[974:974]), .i(ft79_p2), .o(ft79_p3));
+    ot_hbm_ft_stn #(.W(8), .GB(32)) ft79_s3 (.ck(ck_ft), .rn(ft_rn2[975:975]), .i(ft79_p3), .o(ft79_p4));
+    ot_hbm_ft_stn #(.W(8), .GB(32)) ft79_s4 (.ck(ck_ft), .rn(ft_rn2[976:976]), .i(ft79_p4), .o(ft79_o));
     // ft87: calendar_SW/lg_local_read -> hc_SW2/local_read, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 996.1], [898.6, 996.1], [20.0, 996.1]]), 2 repeater sites
     wire [2:0] ft87_p1;
     wire [2:0] ft87_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft87_s0 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft87_i), .o(ft87_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft87_s1 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft87_p1), .o(ft87_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft87_s2 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft87_p2), .o(ft87_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft87_s0 (.ck(ck_ft), .rn(ft_rn2[977:977]), .i(ft87_i), .o(ft87_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft87_s1 (.ck(ck_ft), .rn(ft_rn2[978:978]), .i(ft87_p1), .o(ft87_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft87_s2 (.ck(ck_ft), .rn(ft_rn2[979:979]), .i(ft87_p2), .o(ft87_o));
     // ft88: calendar_SW/lg_local_write -> hc_SW2/local_read, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 996.1], [898.6, 996.1], [20.0, 996.1]]), 2 repeater sites
     wire [2:0] ft88_p1;
     wire [2:0] ft88_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft88_s0 (.ck(ck_ft), .rs(ft_rn[17]), .i(ft88_i), .o(ft88_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft88_s1 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft88_p1), .o(ft88_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft88_s2 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft88_p2), .o(ft88_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft88_s0 (.ck(ck_ft), .rn(ft_rn2[980:980]), .i(ft88_i), .o(ft88_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft88_s1 (.ck(ck_ft), .rn(ft_rn2[981:981]), .i(ft88_p1), .o(ft88_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft88_s2 (.ck(ck_ft), .rn(ft_rn2[982:982]), .i(ft88_p2), .o(ft88_o));
     // ft89: hc_SW2/c_w_done -> hc_SW/lg_w_done, 3 b, 3 regs over 1797.1 um (regs_um [[20.0, 991.7], [898.6, 991.7], [1777.2, 991.7]]), 2 repeater sites
     wire [2:0] ft89_p1;
     wire [2:0] ft89_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft89_s0 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft89_i), .o(ft89_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft89_s1 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft89_p1), .o(ft89_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft89_s2 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft89_p2), .o(ft89_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft89_s0 (.ck(ck_ft), .rn(ft_rn2[983:983]), .i(ft89_i), .o(ft89_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft89_s1 (.ck(ck_ft), .rn(ft_rn2[984:984]), .i(ft89_p1), .o(ft89_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft89_s2 (.ck(ck_ft), .rn(ft_rn2[985:985]), .i(ft89_p2), .o(ft89_o));
     // ft90: hb_idx__op_NW/fault -> hb_idx__qctl_NW/vf, 2 b, 4 regs over 2251.4 um (regs_um [[192.5, 2805.3], [302.9, 2178.5], [1040.0, 2178.5], [1777.2, 2178.5]]), 3 repeater sites
     wire [1:0] ft90_p1;
     wire [1:0] ft90_p2;
     wire [1:0] ft90_p3;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft90_s0 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft90_i), .o(ft90_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft90_s1 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft90_p1), .o(ft90_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft90_s2 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft90_p2), .o(ft90_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft90_s3 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft90_p3), .o(ft90_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft90_s0 (.ck(ck_ft), .rn(ft_rn2[986:986]), .i(ft90_i), .o(ft90_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft90_s1 (.ck(ck_ft), .rn(ft_rn2[987:987]), .i(ft90_p1), .o(ft90_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft90_s2 (.ck(ck_ft), .rn(ft_rn2[988:988]), .i(ft90_p2), .o(ft90_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft90_s3 (.ck(ck_ft), .rn(ft_rn2[989:989]), .i(ft90_p3), .o(ft90_o));
     // ft96: hb_idx__qctl_NW/key_index -> hb_idx__s_NW/beat_v, 2 b, 3 regs over 1953.8 um (regs_um [[1777.2, 2180.6], [820.2, 2180.6], [488.0, 2805.3]]), 4 repeater sites
     wire [1:0] ft96_p1;
     wire [1:0] ft96_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft96_s0 (.ck(ck_ft), .rs(ft_rn[18]), .i(ft96_i), .o(ft96_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft96_s1 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft96_p1), .o(ft96_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft96_s2 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft96_p2), .o(ft96_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft96_s0 (.ck(ck_ft), .rn(ft_rn2[990:990]), .i(ft96_i), .o(ft96_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft96_s1 (.ck(ck_ft), .rn(ft_rn2[991:991]), .i(ft96_p1), .o(ft96_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft96_s2 (.ck(ck_ft), .rn(ft_rn2[992:992]), .i(ft96_p2), .o(ft96_o));
     // ft97: hb_idx__qctl_NW/key_slot -> hb_idx__s_NW/beat_index, 2 b, 3 regs over 1953.9 um (regs_um [[1777.2, 2181.3], [820.2, 2181.3], [487.2, 2805.3]]), 4 repeater sites
     wire [1:0] ft97_p1;
     wire [1:0] ft97_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft97_s0 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft97_i), .o(ft97_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft97_s1 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft97_p1), .o(ft97_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft97_s2 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft97_p2), .o(ft97_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft97_s0 (.ck(ck_ft), .rn(ft_rn2[993:993]), .i(ft97_i), .o(ft97_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft97_s1 (.ck(ck_ft), .rn(ft_rn2[994:994]), .i(ft97_p1), .o(ft97_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft97_s2 (.ck(ck_ft), .rn(ft_rn2[995:995]), .i(ft97_p2), .o(ft97_o));
     // ft98: hb_idx__qctl_NW/key_slot -> hb_idx__s_NW/beat_v, 2 b, 3 regs over 1953.1 um (regs_um [[1777.2, 2181.3], [820.6, 2181.3], [488.0, 2805.3]]), 4 repeater sites
     wire [1:0] ft98_p1;
     wire [1:0] ft98_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft98_s0 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft98_i), .o(ft98_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft98_s1 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft98_p1), .o(ft98_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft98_s2 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft98_p2), .o(ft98_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft98_s0 (.ck(ck_ft), .rn(ft_rn2[996:996]), .i(ft98_i), .o(ft98_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft98_s1 (.ck(ck_ft), .rn(ft_rn2[997:997]), .i(ft98_p1), .o(ft98_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft98_s2 (.ck(ck_ft), .rn(ft_rn2[998:998]), .i(ft98_p2), .o(ft98_o));
     // ft99: hb_idx__qctl_NW/key_slot -> hb_idx__s_NW/nkeys, 2 b, 3 regs over 1952.0 um (regs_um [[1777.2, 2181.3], [821.1, 2181.3], [489.1, 2805.3]]), 4 repeater sites
     wire [1:0] ft99_p1;
     wire [1:0] ft99_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft99_s0 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft99_i), .o(ft99_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft99_s1 (.ck(ck_ft), .rs(ft_rn[19]), .i(ft99_p1), .o(ft99_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft99_s2 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft99_p2), .o(ft99_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft99_s0 (.ck(ck_ft), .rn(ft_rn2[999:999]), .i(ft99_i), .o(ft99_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft99_s1 (.ck(ck_ft), .rn(ft_rn2[1000:1000]), .i(ft99_p1), .o(ft99_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft99_s2 (.ck(ck_ft), .rn(ft_rn2[1001:1001]), .i(ft99_p2), .o(ft99_o));
     // ft100: hb_idx__qctl_NW/nq -> hb_idx__s_NW/beat_v, 2 b, 3 regs over 1952.0 um (regs_um [[1777.2, 2182.4], [821.1, 2182.4], [488.0, 2805.3]]), 4 repeater sites
     wire [1:0] ft100_p1;
     wire [1:0] ft100_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft100_s0 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft100_i), .o(ft100_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft100_s1 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft100_p1), .o(ft100_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft100_s2 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft100_p2), .o(ft100_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft100_s0 (.ck(ck_ft), .rn(ft_rn2[1002:1002]), .i(ft100_i), .o(ft100_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft100_s1 (.ck(ck_ft), .rn(ft_rn2[1003:1003]), .i(ft100_p1), .o(ft100_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft100_s2 (.ck(ck_ft), .rn(ft_rn2[1004:1004]), .i(ft100_p2), .o(ft100_o));
     // ft101: hb_idx__s_NW/fault -> hb_idx__qctl_NW/scf, 2 b, 3 regs over 1915.6 um (regs_um [[512.1, 2805.3], [839.3, 2194.7], [1777.2, 2194.7]]), 4 repeater sites
     wire [1:0] ft101_p1;
     wire [1:0] ft101_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft101_s0 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft101_i), .o(ft101_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft101_s1 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft101_p1), .o(ft101_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft101_s2 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft101_p2), .o(ft101_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft101_s0 (.ck(ck_ft), .rn(ft_rn2[1005:1005]), .i(ft101_i), .o(ft101_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft101_s1 (.ck(ck_ft), .rn(ft_rn2[1006:1006]), .i(ft101_p1), .o(ft101_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft101_s2 (.ck(ck_ft), .rn(ft_rn2[1007:1007]), .i(ft101_p2), .o(ft101_o));
     // ft102: col_idx/prm -> hb_idx__s_SW/keep_en, 2 b, 4 regs over 2228.1 um (regs_um [[1777.2, 2053.2], [1622.3, 1478.7], [1622.3, 749.4], [1622.3, 20.0]]), 3 repeater sites
     wire [1:0] ft102_p1;
     wire [1:0] ft102_p2;
     wire [1:0] ft102_p3;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft102_s0 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft102_i), .o(ft102_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft102_s1 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft102_p1), .o(ft102_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft102_s2 (.ck(ck_ft), .rs(ft_rn[20]), .i(ft102_p2), .o(ft102_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft102_s3 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft102_p3), .o(ft102_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft102_s0 (.ck(ck_ft), .rn(ft_rn2[1008:1008]), .i(ft102_i), .o(ft102_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft102_s1 (.ck(ck_ft), .rn(ft_rn2[1009:1009]), .i(ft102_p1), .o(ft102_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft102_s2 (.ck(ck_ft), .rn(ft_rn2[1010:1010]), .i(ft102_p2), .o(ft102_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft102_s3 (.ck(ck_ft), .rn(ft_rn2[1011:1011]), .i(ft102_p3), .o(ft102_o));
     // ft103: hb_idx__qctl_SW/nq -> hb_idx__s_SW/beat_v, 2 b, 5 regs over 3491.6 um (regs_um [[1777.2, 2182.4], [914.3, 2182.4], [488.0, 1745.8], [488.0, 882.9], [488.0, 20.0]]), 4 repeater sites
     wire [1:0] ft103_p1;
     wire [1:0] ft103_p2;
     wire [1:0] ft103_p3;
     wire [1:0] ft103_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft103_s0 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft103_i), .o(ft103_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft103_s1 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft103_p1), .o(ft103_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft103_s2 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft103_p2), .o(ft103_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft103_s3 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft103_p3), .o(ft103_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft103_s4 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft103_p4), .o(ft103_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft103_s0 (.ck(ck_ft), .rn(ft_rn2[1012:1012]), .i(ft103_i), .o(ft103_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft103_s1 (.ck(ck_ft), .rn(ft_rn2[1013:1013]), .i(ft103_p1), .o(ft103_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft103_s2 (.ck(ck_ft), .rn(ft_rn2[1014:1014]), .i(ft103_p2), .o(ft103_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft103_s3 (.ck(ck_ft), .rn(ft_rn2[1015:1015]), .i(ft103_p3), .o(ft103_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft103_s4 (.ck(ck_ft), .rn(ft_rn2[1016:1016]), .i(ft103_p4), .o(ft103_o));
     // ft104: hb_idx__qctl_SW/key_slot -> hb_idx__s_SW/beat_index, 2 b, 5 regs over 3491.3 um (regs_um [[1777.2, 2181.3], [914.3, 2181.3], [487.2, 1745.6], [487.2, 882.8], [487.2, 20.0]]), 4 repeater sites
     wire [1:0] ft104_p1;
     wire [1:0] ft104_p2;
     wire [1:0] ft104_p3;
     wire [1:0] ft104_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft104_s0 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft104_i), .o(ft104_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft104_s1 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft104_p1), .o(ft104_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft104_s2 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft104_p2), .o(ft104_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft104_s3 (.ck(ck_ft), .rs(ft_rn[21]), .i(ft104_p3), .o(ft104_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft104_s4 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft104_p4), .o(ft104_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft104_s0 (.ck(ck_ft), .rn(ft_rn2[1017:1017]), .i(ft104_i), .o(ft104_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft104_s1 (.ck(ck_ft), .rn(ft_rn2[1018:1018]), .i(ft104_p1), .o(ft104_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft104_s2 (.ck(ck_ft), .rn(ft_rn2[1019:1019]), .i(ft104_p2), .o(ft104_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft104_s3 (.ck(ck_ft), .rn(ft_rn2[1020:1020]), .i(ft104_p3), .o(ft104_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft104_s4 (.ck(ck_ft), .rn(ft_rn2[1021:1021]), .i(ft104_p4), .o(ft104_o));
     // ft105: hb_idx__qctl_SW/key_slot -> hb_idx__s_SW/beat_v, 2 b, 5 regs over 3490.5 um (regs_um [[1777.2, 2181.3], [914.5, 2181.3], [488.0, 1745.2], [488.0, 882.6], [488.0, 20.0]]), 4 repeater sites
     wire [1:0] ft105_p1;
     wire [1:0] ft105_p2;
     wire [1:0] ft105_p3;
     wire [1:0] ft105_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft105_s0 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft105_i), .o(ft105_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft105_s1 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft105_p1), .o(ft105_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft105_s2 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft105_p2), .o(ft105_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft105_s3 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft105_p3), .o(ft105_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft105_s4 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft105_p4), .o(ft105_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft105_s0 (.ck(ck_ft), .rn(ft_rn2[1022:1022]), .i(ft105_i), .o(ft105_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft105_s1 (.ck(ck_ft), .rn(ft_rn2[1023:1023]), .i(ft105_p1), .o(ft105_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft105_s2 (.ck(ck_ft), .rn(ft_rn2[1024:1024]), .i(ft105_p2), .o(ft105_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft105_s3 (.ck(ck_ft), .rn(ft_rn2[1025:1025]), .i(ft105_p3), .o(ft105_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft105_s4 (.ck(ck_ft), .rn(ft_rn2[1026:1026]), .i(ft105_p4), .o(ft105_o));
     // ft106: hb_idx__qctl_SW/key_index -> hb_idx__s_SW/beat_v, 2 b, 5 regs over 3489.8 um (regs_um [[1777.2, 2180.6], [914.7, 2180.6], [488.0, 1744.9], [488.0, 882.4], [488.0, 20.0]]), 4 repeater sites
     wire [1:0] ft106_p1;
     wire [1:0] ft106_p2;
     wire [1:0] ft106_p3;
     wire [1:0] ft106_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft106_s0 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft106_i), .o(ft106_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft106_s1 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft106_p1), .o(ft106_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft106_s2 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft106_p2), .o(ft106_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft106_s3 (.ck(ck_ft), .rs(ft_rn[22]), .i(ft106_p3), .o(ft106_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft106_s4 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft106_p4), .o(ft106_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft106_s0 (.ck(ck_ft), .rn(ft_rn2[1027:1027]), .i(ft106_i), .o(ft106_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft106_s1 (.ck(ck_ft), .rn(ft_rn2[1028:1028]), .i(ft106_p1), .o(ft106_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft106_s2 (.ck(ck_ft), .rn(ft_rn2[1029:1029]), .i(ft106_p2), .o(ft106_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft106_s3 (.ck(ck_ft), .rn(ft_rn2[1030:1030]), .i(ft106_p3), .o(ft106_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft106_s4 (.ck(ck_ft), .rn(ft_rn2[1031:1031]), .i(ft106_p4), .o(ft106_o));
     // ft107: hb_idx__qctl_SW/key_slot -> hb_idx__s_SW/nkeys, 2 b, 5 regs over 3489.4 um (regs_um [[1777.2, 2181.3], [914.8, 2181.3], [489.1, 1744.7], [489.1, 882.3], [489.1, 20.0]]), 4 repeater sites
     wire [1:0] ft107_p1;
     wire [1:0] ft107_p2;
     wire [1:0] ft107_p3;
     wire [1:0] ft107_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft107_s0 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft107_i), .o(ft107_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft107_s1 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft107_p1), .o(ft107_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft107_s2 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft107_p2), .o(ft107_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft107_s3 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft107_p3), .o(ft107_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft107_s4 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft107_p4), .o(ft107_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft107_s0 (.ck(ck_ft), .rn(ft_rn2[1032:1032]), .i(ft107_i), .o(ft107_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft107_s1 (.ck(ck_ft), .rn(ft_rn2[1033:1033]), .i(ft107_p1), .o(ft107_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft107_s2 (.ck(ck_ft), .rn(ft_rn2[1034:1034]), .i(ft107_p2), .o(ft107_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft107_s3 (.ck(ck_ft), .rn(ft_rn2[1035:1035]), .i(ft107_p3), .o(ft107_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft107_s4 (.ck(ck_ft), .rn(ft_rn2[1036:1036]), .i(ft107_p4), .o(ft107_o));
     // ft108: hb_idx__s_SW/fault -> hb_idx__qctl_SW/scf, 2 b, 5 regs over 3479.8 um (regs_um [[512.1, 20.0], [512.1, 879.9], [512.1, 1739.9], [917.2, 2194.7], [1777.2, 2194.7]]), 4 repeater sites
     wire [1:0] ft108_p1;
     wire [1:0] ft108_p2;
     wire [1:0] ft108_p3;
     wire [1:0] ft108_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft108_s0 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft108_i), .o(ft108_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft108_s1 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft108_p1), .o(ft108_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft108_s2 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft108_p2), .o(ft108_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft108_s3 (.ck(ck_ft), .rs(ft_rn[23]), .i(ft108_p3), .o(ft108_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft108_s4 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft108_p4), .o(ft108_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft108_s0 (.ck(ck_ft), .rn(ft_rn2[1037:1037]), .i(ft108_i), .o(ft108_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft108_s1 (.ck(ck_ft), .rn(ft_rn2[1038:1038]), .i(ft108_p1), .o(ft108_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft108_s2 (.ck(ck_ft), .rn(ft_rn2[1039:1039]), .i(ft108_p2), .o(ft108_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft108_s3 (.ck(ck_ft), .rn(ft_rn2[1040:1040]), .i(ft108_p3), .o(ft108_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft108_s4 (.ck(ck_ft), .rn(ft_rn2[1041:1041]), .i(ft108_p4), .o(ft108_o));
     // ft109: calendar_SW/lg_local_read -> su_SW2/lg_write, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 98.1], [898.6, 98.1], [20.0, 98.1]]), 2 repeater sites
     wire [2:0] ft109_p1;
     wire [2:0] ft109_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft109_s0 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft109_i), .o(ft109_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft109_s1 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft109_p1), .o(ft109_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft109_s2 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft109_p2), .o(ft109_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft109_s0 (.ck(ck_ft), .rn(ft_rn2[1042:1042]), .i(ft109_i), .o(ft109_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft109_s1 (.ck(ck_ft), .rn(ft_rn2[1043:1043]), .i(ft109_p1), .o(ft109_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft109_s2 (.ck(ck_ft), .rn(ft_rn2[1044:1044]), .i(ft109_p2), .o(ft109_o));
     // ft110: calendar_SW/lg_local_read -> su_SW2/lg_read, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 97.8], [898.6, 97.8], [20.0, 97.8]]), 2 repeater sites
     wire [2:0] ft110_p1;
     wire [2:0] ft110_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft110_s0 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft110_i), .o(ft110_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft110_s1 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft110_p1), .o(ft110_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft110_s2 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft110_p2), .o(ft110_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft110_s0 (.ck(ck_ft), .rn(ft_rn2[1045:1045]), .i(ft110_i), .o(ft110_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft110_s1 (.ck(ck_ft), .rn(ft_rn2[1046:1046]), .i(ft110_p1), .o(ft110_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft110_s2 (.ck(ck_ft), .rn(ft_rn2[1047:1047]), .i(ft110_p2), .o(ft110_o));
     // ft111: calendar_SW/lg_local_write -> su_SW2/lg_write, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 98.1], [898.6, 98.1], [20.0, 98.1]]), 2 repeater sites
     wire [2:0] ft111_p1;
     wire [2:0] ft111_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft111_s0 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft111_i), .o(ft111_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft111_s1 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft111_p1), .o(ft111_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft111_s2 (.ck(ck_ft), .rs(ft_rn[24]), .i(ft111_p2), .o(ft111_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft111_s0 (.ck(ck_ft), .rn(ft_rn2[1048:1048]), .i(ft111_i), .o(ft111_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft111_s1 (.ck(ck_ft), .rn(ft_rn2[1049:1049]), .i(ft111_p1), .o(ft111_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft111_s2 (.ck(ck_ft), .rn(ft_rn2[1050:1050]), .i(ft111_p2), .o(ft111_o));
     // ft112: calendar_SW/lg_local_write -> su_SW2/lg_read, 3 b, 3 regs over 1797.1 um (regs_um [[1777.2, 97.8], [898.6, 97.8], [20.0, 97.8]]), 2 repeater sites
     wire [2:0] ft112_p1;
     wire [2:0] ft112_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft112_s0 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft112_i), .o(ft112_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft112_s1 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft112_p1), .o(ft112_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft112_s2 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft112_p2), .o(ft112_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft112_s0 (.ck(ck_ft), .rn(ft_rn2[1051:1051]), .i(ft112_i), .o(ft112_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft112_s1 (.ck(ck_ft), .rn(ft_rn2[1052:1052]), .i(ft112_p1), .o(ft112_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft112_s2 (.ck(ck_ft), .rn(ft_rn2[1053:1053]), .i(ft112_p2), .o(ft112_o));
     // ft113: hb_idx__qctl_SW/weight_slot -> hb_idx__op_SW/weight_slot, 2 b, 5 regs over 3789.5 um (regs_um [[1777.2, 2184.8], [839.8, 2184.8], [192.5, 1894.7], [192.5, 957.4], [192.5, 20.0]]), 8 repeater sites
     wire [1:0] ft113_p1;
     wire [1:0] ft113_p2;
     wire [1:0] ft113_p3;
     wire [1:0] ft113_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft113_s0 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft113_i), .o(ft113_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft113_s1 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft113_p1), .o(ft113_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft113_s2 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft113_p2), .o(ft113_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft113_s3 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft113_p3), .o(ft113_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft113_s4 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft113_p4), .o(ft113_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft113_s0 (.ck(ck_ft), .rn(ft_rn2[1054:1054]), .i(ft113_i), .o(ft113_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft113_s1 (.ck(ck_ft), .rn(ft_rn2[1055:1055]), .i(ft113_p1), .o(ft113_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft113_s2 (.ck(ck_ft), .rn(ft_rn2[1056:1056]), .i(ft113_p2), .o(ft113_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft113_s3 (.ck(ck_ft), .rn(ft_rn2[1057:1057]), .i(ft113_p3), .o(ft113_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft113_s4 (.ck(ck_ft), .rn(ft_rn2[1058:1058]), .i(ft113_p4), .o(ft113_o));
     // ft114: hb_idx__qctl_SW/query_slot -> hb_idx__op_SW/weight_slot, 2 b, 5 regs over 3789.3 um (regs_um [[1777.2, 2184.6], [839.8, 2184.6], [192.5, 1894.6], [192.5, 957.3], [192.5, 20.0]]), 8 repeater sites
     wire [1:0] ft114_p1;
     wire [1:0] ft114_p2;
     wire [1:0] ft114_p3;
     wire [1:0] ft114_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft114_s0 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft114_i), .o(ft114_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft114_s1 (.ck(ck_ft), .rs(ft_rn[25]), .i(ft114_p1), .o(ft114_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft114_s2 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft114_p2), .o(ft114_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft114_s3 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft114_p3), .o(ft114_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft114_s4 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft114_p4), .o(ft114_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft114_s0 (.ck(ck_ft), .rn(ft_rn2[1059:1059]), .i(ft114_i), .o(ft114_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft114_s1 (.ck(ck_ft), .rn(ft_rn2[1060:1060]), .i(ft114_p1), .o(ft114_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft114_s2 (.ck(ck_ft), .rn(ft_rn2[1061:1061]), .i(ft114_p2), .o(ft114_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft114_s3 (.ck(ck_ft), .rn(ft_rn2[1062:1062]), .i(ft114_p3), .o(ft114_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft114_s4 (.ck(ck_ft), .rn(ft_rn2[1063:1063]), .i(ft114_p4), .o(ft114_o));
     // ft115: hb_idx__qctl_SW/query_emit_head -> hb_idx__q_SW/emit_v, 2 b, 3 regs over 1797.1 um (regs_um [[1777.2, 2179.5], [898.6, 2179.5], [20.0, 2179.5]]), 2 repeater sites
     wire [1:0] ft115_p1;
     wire [1:0] ft115_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft115_s0 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft115_i), .o(ft115_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft115_s1 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft115_p1), .o(ft115_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft115_s2 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft115_p2), .o(ft115_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft115_s0 (.ck(ck_ft), .rn(ft_rn2[1064:1064]), .i(ft115_i), .o(ft115_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft115_s1 (.ck(ck_ft), .rn(ft_rn2[1065:1065]), .i(ft115_p1), .o(ft115_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft115_s2 (.ck(ck_ft), .rn(ft_rn2[1066:1066]), .i(ft115_p2), .o(ft115_o));
     // ft116: hb_idx__qctl_SW/query_emit -> hb_idx__q_SW/emit_v, 2 b, 3 regs over 1797.1 um (regs_um [[1777.2, 2179.0], [898.6, 2179.0], [20.0, 2179.0]]), 2 repeater sites
     wire [1:0] ft116_p1;
     wire [1:0] ft116_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft116_s0 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft116_i), .o(ft116_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft116_s1 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft116_p1), .o(ft116_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft116_s2 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft116_p2), .o(ft116_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft116_s0 (.ck(ck_ft), .rn(ft_rn2[1067:1067]), .i(ft116_i), .o(ft116_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft116_s1 (.ck(ck_ft), .rn(ft_rn2[1068:1068]), .i(ft116_p1), .o(ft116_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft116_s2 (.ck(ck_ft), .rn(ft_rn2[1069:1069]), .i(ft116_p2), .o(ft116_o));
     // ft117: hb_idx__qctl_SW/frame_start -> hb_idx__q_SW/emit_v, 2 b, 3 regs over 1797.1 um (regs_um [[1777.2, 2178.8], [898.6, 2178.8], [20.0, 2178.8]]), 2 repeater sites
     wire [1:0] ft117_p1;
     wire [1:0] ft117_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft117_s0 (.ck(ck_ft), .rs(ft_rn[26]), .i(ft117_i), .o(ft117_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft117_s1 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft117_p1), .o(ft117_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft117_s2 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft117_p2), .o(ft117_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft117_s0 (.ck(ck_ft), .rn(ft_rn2[1070:1070]), .i(ft117_i), .o(ft117_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft117_s1 (.ck(ck_ft), .rn(ft_rn2[1071:1071]), .i(ft117_p1), .o(ft117_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft117_s2 (.ck(ck_ft), .rn(ft_rn2[1072:1072]), .i(ft117_p2), .o(ft117_o));
     // ft118: hb_idx__q_SW/fault -> hb_idx__qctl_SW/qf, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2178.6], [898.6, 2178.6], [1777.2, 2178.6]]), 2 repeater sites
     wire [1:0] ft118_p1;
     wire [1:0] ft118_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft118_s0 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft118_i), .o(ft118_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft118_s1 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft118_p1), .o(ft118_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft118_s2 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft118_p2), .o(ft118_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft118_s0 (.ck(ck_ft), .rn(ft_rn2[1073:1073]), .i(ft118_i), .o(ft118_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft118_s1 (.ck(ck_ft), .rn(ft_rn2[1074:1074]), .i(ft118_p1), .o(ft118_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft118_s2 (.ck(ck_ft), .rn(ft_rn2[1075:1075]), .i(ft118_p2), .o(ft118_o));
     // ft119: hb_idx__s_SW/score -> obs_SW/obs, 2 b, 5 regs over 3604.6 um (regs_um [[214.5, 20.0], [214.5, 911.1], [214.5, 1802.3], [886.0, 2021.9], [1777.2, 2021.9]]), 4 repeater sites
     wire [1:0] ft119_p1;
     wire [1:0] ft119_p2;
     wire [1:0] ft119_p3;
     wire [1:0] ft119_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft119_s0 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft119_i), .o(ft119_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft119_s1 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft119_p1), .o(ft119_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft119_s2 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft119_p2), .o(ft119_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft119_s3 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft119_p3), .o(ft119_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft119_s4 (.ck(ck_ft), .rs(ft_rn[27]), .i(ft119_p4), .o(ft119_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft119_s0 (.ck(ck_ft), .rn(ft_rn2[1076:1076]), .i(ft119_i), .o(ft119_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft119_s1 (.ck(ck_ft), .rn(ft_rn2[1077:1077]), .i(ft119_p1), .o(ft119_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft119_s2 (.ck(ck_ft), .rn(ft_rn2[1078:1078]), .i(ft119_p2), .o(ft119_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft119_s3 (.ck(ck_ft), .rn(ft_rn2[1079:1079]), .i(ft119_p3), .o(ft119_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft119_s4 (.ck(ck_ft), .rn(ft_rn2[1080:1080]), .i(ft119_p4), .o(ft119_o));
     // ft120: hb_idx__op_SW/fault -> hb_idx__qctl_SW/vf, 2 b, 5 regs over 3783.2 um (regs_um [[192.5, 20.0], [192.5, 955.8], [192.5, 1891.6], [841.4, 2178.5], [1777.2, 2178.5]]), 8 repeater sites
     wire [1:0] ft120_p1;
     wire [1:0] ft120_p2;
     wire [1:0] ft120_p3;
     wire [1:0] ft120_p4;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft120_s0 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft120_i), .o(ft120_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft120_s1 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft120_p1), .o(ft120_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft120_s2 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft120_p2), .o(ft120_p3));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft120_s3 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft120_p3), .o(ft120_p4));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft120_s4 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft120_p4), .o(ft120_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft120_s0 (.ck(ck_ft), .rn(ft_rn2[1081:1081]), .i(ft120_i), .o(ft120_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft120_s1 (.ck(ck_ft), .rn(ft_rn2[1082:1082]), .i(ft120_p1), .o(ft120_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft120_s2 (.ck(ck_ft), .rn(ft_rn2[1083:1083]), .i(ft120_p2), .o(ft120_p3));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft120_s3 (.ck(ck_ft), .rn(ft_rn2[1084:1084]), .i(ft120_p3), .o(ft120_p4));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft120_s4 (.ck(ck_ft), .rn(ft_rn2[1085:1085]), .i(ft120_p4), .o(ft120_o));
     // ft121: hc_SW1/c_w_done -> hc_SW/lg_w_done, 3 b, 3 regs over 1797.1 um (regs_um [[20.0, 460.1], [898.6, 460.1], [1777.2, 460.1]]), 2 repeater sites
     wire [2:0] ft121_p1;
     wire [2:0] ft121_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft121_s0 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft121_i), .o(ft121_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft121_s1 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft121_p1), .o(ft121_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft121_s2 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft121_p2), .o(ft121_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft121_s0 (.ck(ck_ft), .rn(ft_rn2[1086:1086]), .i(ft121_i), .o(ft121_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft121_s1 (.ck(ck_ft), .rn(ft_rn2[1087:1087]), .i(ft121_p1), .o(ft121_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft121_s2 (.ck(ck_ft), .rn(ft_rn2[1088:1088]), .i(ft121_p2), .o(ft121_o));
     // ft124: vmb_SW0/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft124_p1;
     wire [1:0] ft124_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft124_s0 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft124_i), .o(ft124_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft124_s1 (.ck(ck_ft), .rs(ft_rn[28]), .i(ft124_p1), .o(ft124_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft124_s2 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft124_p2), .o(ft124_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft124_s0 (.ck(ck_ft), .rn(ft_rn2[1089:1089]), .i(ft124_i), .o(ft124_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft124_s1 (.ck(ck_ft), .rn(ft_rn2[1090:1090]), .i(ft124_p1), .o(ft124_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft124_s2 (.ck(ck_ft), .rn(ft_rn2[1091:1091]), .i(ft124_p2), .o(ft124_o));
     // ft125: vmb_SW0/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft125_p1;
     wire [1:0] ft125_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft125_s0 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft125_i), .o(ft125_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft125_s1 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft125_p1), .o(ft125_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft125_s2 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft125_p2), .o(ft125_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft125_s0 (.ck(ck_ft), .rn(ft_rn2[1092:1092]), .i(ft125_i), .o(ft125_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft125_s1 (.ck(ck_ft), .rn(ft_rn2[1093:1093]), .i(ft125_p1), .o(ft125_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft125_s2 (.ck(ck_ft), .rn(ft_rn2[1094:1094]), .i(ft125_p2), .o(ft125_o));
     // ft126: vmb_SW0/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft126_p1;
     wire [1:0] ft126_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft126_s0 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft126_i), .o(ft126_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft126_s1 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft126_p1), .o(ft126_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft126_s2 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft126_p2), .o(ft126_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft126_s0 (.ck(ck_ft), .rn(ft_rn2[1095:1095]), .i(ft126_i), .o(ft126_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft126_s1 (.ck(ck_ft), .rn(ft_rn2[1096:1096]), .i(ft126_p1), .o(ft126_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft126_s2 (.ck(ck_ft), .rn(ft_rn2[1097:1097]), .i(ft126_p2), .o(ft126_o));
     // ft127: vmb_SW1/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft127_p1;
     wire [1:0] ft127_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft127_s0 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft127_i), .o(ft127_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft127_s1 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft127_p1), .o(ft127_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft127_s2 (.ck(ck_ft), .rs(ft_rn[29]), .i(ft127_p2), .o(ft127_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft127_s0 (.ck(ck_ft), .rn(ft_rn2[1098:1098]), .i(ft127_i), .o(ft127_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft127_s1 (.ck(ck_ft), .rn(ft_rn2[1099:1099]), .i(ft127_p1), .o(ft127_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft127_s2 (.ck(ck_ft), .rn(ft_rn2[1100:1100]), .i(ft127_p2), .o(ft127_o));
     // ft128: vmb_SW1/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft128_p1;
     wire [1:0] ft128_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft128_s0 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft128_i), .o(ft128_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft128_s1 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft128_p1), .o(ft128_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft128_s2 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft128_p2), .o(ft128_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft128_s0 (.ck(ck_ft), .rn(ft_rn2[1101:1101]), .i(ft128_i), .o(ft128_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft128_s1 (.ck(ck_ft), .rn(ft_rn2[1102:1102]), .i(ft128_p1), .o(ft128_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft128_s2 (.ck(ck_ft), .rn(ft_rn2[1103:1103]), .i(ft128_p2), .o(ft128_o));
     // ft129: vmb_SW1/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft129_p1;
     wire [1:0] ft129_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft129_s0 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft129_i), .o(ft129_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft129_s1 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft129_p1), .o(ft129_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft129_s2 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft129_p2), .o(ft129_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft129_s0 (.ck(ck_ft), .rn(ft_rn2[1104:1104]), .i(ft129_i), .o(ft129_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft129_s1 (.ck(ck_ft), .rn(ft_rn2[1105:1105]), .i(ft129_p1), .o(ft129_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft129_s2 (.ck(ck_ft), .rn(ft_rn2[1106:1106]), .i(ft129_p2), .o(ft129_o));
     // ft130: hc_SW3/c_w_done -> hc_SW/lg_w_done, 3 b, 3 regs over 1797.1 um (regs_um [[20.0, 991.7], [898.6, 991.7], [1777.2, 991.7]]), 2 repeater sites
     wire [2:0] ft130_p1;
     wire [2:0] ft130_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft130_s0 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft130_i), .o(ft130_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft130_s1 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft130_p1), .o(ft130_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft130_s2 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft130_p2), .o(ft130_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft130_s0 (.ck(ck_ft), .rn(ft_rn2[1107:1107]), .i(ft130_i), .o(ft130_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft130_s1 (.ck(ck_ft), .rn(ft_rn2[1108:1108]), .i(ft130_p1), .o(ft130_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft130_s2 (.ck(ck_ft), .rn(ft_rn2[1109:1109]), .i(ft130_p2), .o(ft130_o));
     // ft131: vmb_SW4/xq2_done -> hb_vms_SW/b4_status, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 104.6], [898.6, 104.6], [1777.2, 104.6]]), 2 repeater sites
     wire [1:0] ft131_p1;
     wire [1:0] ft131_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft131_s0 (.ck(ck_ft), .rs(ft_rn[30]), .i(ft131_i), .o(ft131_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft131_s1 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft131_p1), .o(ft131_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft131_s2 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft131_p2), .o(ft131_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft131_s0 (.ck(ck_ft), .rn(ft_rn2[1110:1110]), .i(ft131_i), .o(ft131_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft131_s1 (.ck(ck_ft), .rn(ft_rn2[1111:1111]), .i(ft131_p1), .o(ft131_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft131_s2 (.ck(ck_ft), .rn(ft_rn2[1112:1112]), .i(ft131_p2), .o(ft131_o));
     // ft132: vmb_SW4/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft132_p1;
     wire [1:0] ft132_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft132_s0 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft132_i), .o(ft132_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft132_s1 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft132_p1), .o(ft132_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft132_s2 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft132_p2), .o(ft132_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft132_s0 (.ck(ck_ft), .rn(ft_rn2[1113:1113]), .i(ft132_i), .o(ft132_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft132_s1 (.ck(ck_ft), .rn(ft_rn2[1114:1114]), .i(ft132_p1), .o(ft132_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft132_s2 (.ck(ck_ft), .rn(ft_rn2[1115:1115]), .i(ft132_p2), .o(ft132_o));
     // ft133: vmb_SW4/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft133_p1;
     wire [1:0] ft133_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft133_s0 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft133_i), .o(ft133_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft133_s1 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft133_p1), .o(ft133_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft133_s2 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft133_p2), .o(ft133_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft133_s0 (.ck(ck_ft), .rn(ft_rn2[1116:1116]), .i(ft133_i), .o(ft133_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft133_s1 (.ck(ck_ft), .rn(ft_rn2[1117:1117]), .i(ft133_p1), .o(ft133_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft133_s2 (.ck(ck_ft), .rn(ft_rn2[1118:1118]), .i(ft133_p2), .o(ft133_o));
     // ft134: vmb_SW4/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft134_p1;
     wire [1:0] ft134_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft134_s0 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft134_i), .o(ft134_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft134_s1 (.ck(ck_ft), .rs(ft_rn[31]), .i(ft134_p1), .o(ft134_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft134_s2 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft134_p2), .o(ft134_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft134_s0 (.ck(ck_ft), .rn(ft_rn2[1119:1119]), .i(ft134_i), .o(ft134_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft134_s1 (.ck(ck_ft), .rn(ft_rn2[1120:1120]), .i(ft134_p1), .o(ft134_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft134_s2 (.ck(ck_ft), .rn(ft_rn2[1121:1121]), .i(ft134_p2), .o(ft134_o));
     // ft135: vmb_SW5/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft135_p1;
     wire [1:0] ft135_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft135_s0 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft135_i), .o(ft135_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft135_s1 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft135_p1), .o(ft135_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft135_s2 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft135_p2), .o(ft135_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft135_s0 (.ck(ck_ft), .rn(ft_rn2[1122:1122]), .i(ft135_i), .o(ft135_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft135_s1 (.ck(ck_ft), .rn(ft_rn2[1123:1123]), .i(ft135_p1), .o(ft135_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft135_s2 (.ck(ck_ft), .rn(ft_rn2[1124:1124]), .i(ft135_p2), .o(ft135_o));
     // ft136: vmb_SW5/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft136_p1;
     wire [1:0] ft136_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft136_s0 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft136_i), .o(ft136_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft136_s1 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft136_p1), .o(ft136_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft136_s2 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft136_p2), .o(ft136_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft136_s0 (.ck(ck_ft), .rn(ft_rn2[1125:1125]), .i(ft136_i), .o(ft136_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft136_s1 (.ck(ck_ft), .rn(ft_rn2[1126:1126]), .i(ft136_p1), .o(ft136_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft136_s2 (.ck(ck_ft), .rn(ft_rn2[1127:1127]), .i(ft136_p2), .o(ft136_o));
     // ft137: vmb_SW5/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft137_p1;
     wire [1:0] ft137_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft137_s0 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft137_i), .o(ft137_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft137_s1 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft137_p1), .o(ft137_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft137_s2 (.ck(ck_ft), .rs(ft_rn[32]), .i(ft137_p2), .o(ft137_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft137_s0 (.ck(ck_ft), .rn(ft_rn2[1128:1128]), .i(ft137_i), .o(ft137_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft137_s1 (.ck(ck_ft), .rn(ft_rn2[1129:1129]), .i(ft137_p1), .o(ft137_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft137_s2 (.ck(ck_ft), .rn(ft_rn2[1130:1130]), .i(ft137_p2), .o(ft137_o));
     // ft138: vmb_SW2/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft138_p1;
     wire [1:0] ft138_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft138_s0 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft138_i), .o(ft138_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft138_s1 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft138_p1), .o(ft138_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft138_s2 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft138_p2), .o(ft138_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft138_s0 (.ck(ck_ft), .rn(ft_rn2[1131:1131]), .i(ft138_i), .o(ft138_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft138_s1 (.ck(ck_ft), .rn(ft_rn2[1132:1132]), .i(ft138_p1), .o(ft138_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft138_s2 (.ck(ck_ft), .rn(ft_rn2[1133:1133]), .i(ft138_p2), .o(ft138_o));
     // ft139: vmb_SW2/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft139_p1;
     wire [1:0] ft139_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft139_s0 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft139_i), .o(ft139_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft139_s1 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft139_p1), .o(ft139_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft139_s2 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft139_p2), .o(ft139_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft139_s0 (.ck(ck_ft), .rn(ft_rn2[1134:1134]), .i(ft139_i), .o(ft139_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft139_s1 (.ck(ck_ft), .rn(ft_rn2[1135:1135]), .i(ft139_p1), .o(ft139_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft139_s2 (.ck(ck_ft), .rn(ft_rn2[1136:1136]), .i(ft139_p2), .o(ft139_o));
     // ft140: vmb_SW2/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft140_p1;
     wire [1:0] ft140_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft140_s0 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft140_i), .o(ft140_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft140_s1 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft140_p1), .o(ft140_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft140_s2 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft140_p2), .o(ft140_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft140_s0 (.ck(ck_ft), .rn(ft_rn2[1137:1137]), .i(ft140_i), .o(ft140_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft140_s1 (.ck(ck_ft), .rn(ft_rn2[1138:1138]), .i(ft140_p1), .o(ft140_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft140_s2 (.ck(ck_ft), .rn(ft_rn2[1139:1139]), .i(ft140_p2), .o(ft140_o));
     // ft141: vmb_SW3/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft141_p1;
     wire [1:0] ft141_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft141_s0 (.ck(ck_ft), .rs(ft_rn[33]), .i(ft141_i), .o(ft141_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft141_s1 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft141_p1), .o(ft141_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft141_s2 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft141_p2), .o(ft141_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft141_s0 (.ck(ck_ft), .rn(ft_rn2[1140:1140]), .i(ft141_i), .o(ft141_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft141_s1 (.ck(ck_ft), .rn(ft_rn2[1141:1141]), .i(ft141_p1), .o(ft141_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft141_s2 (.ck(ck_ft), .rn(ft_rn2[1142:1142]), .i(ft141_p2), .o(ft141_o));
     // ft142: vmb_SW3/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft142_p1;
     wire [1:0] ft142_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft142_s0 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft142_i), .o(ft142_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft142_s1 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft142_p1), .o(ft142_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft142_s2 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft142_p2), .o(ft142_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft142_s0 (.ck(ck_ft), .rn(ft_rn2[1143:1143]), .i(ft142_i), .o(ft142_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft142_s1 (.ck(ck_ft), .rn(ft_rn2[1144:1144]), .i(ft142_p1), .o(ft142_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft142_s2 (.ck(ck_ft), .rn(ft_rn2[1145:1145]), .i(ft142_p2), .o(ft142_o));
     // ft143: vmb_SW3/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft143_p1;
     wire [1:0] ft143_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft143_s0 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft143_i), .o(ft143_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft143_s1 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft143_p1), .o(ft143_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft143_s2 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft143_p2), .o(ft143_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft143_s0 (.ck(ck_ft), .rn(ft_rn2[1146:1146]), .i(ft143_i), .o(ft143_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft143_s1 (.ck(ck_ft), .rn(ft_rn2[1147:1147]), .i(ft143_p1), .o(ft143_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft143_s2 (.ck(ck_ft), .rn(ft_rn2[1148:1148]), .i(ft143_p2), .o(ft143_o));
     // ft144: sfu_SW3/c_w_done -> sfucore_SW/local_rr, 3 b, 3 regs over 1797.1 um (regs_um [[20.0, 780.1], [898.6, 780.1], [1777.2, 780.1]]), 2 repeater sites
     wire [2:0] ft144_p1;
     wire [2:0] ft144_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft144_s0 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft144_i), .o(ft144_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft144_s1 (.ck(ck_ft), .rs(ft_rn[34]), .i(ft144_p1), .o(ft144_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft144_s2 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft144_p2), .o(ft144_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft144_s0 (.ck(ck_ft), .rn(ft_rn2[1149:1149]), .i(ft144_i), .o(ft144_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft144_s1 (.ck(ck_ft), .rn(ft_rn2[1150:1150]), .i(ft144_p1), .o(ft144_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft144_s2 (.ck(ck_ft), .rn(ft_rn2[1151:1151]), .i(ft144_p2), .o(ft144_o));
     // ft145: sfu_SW3/c_rr -> sfucore_SW/local_w_done, 3 b, 3 regs over 1797.1 um (regs_um [[20.0, 780.1], [898.6, 780.1], [1777.2, 780.1]]), 2 repeater sites
     wire [2:0] ft145_p1;
     wire [2:0] ft145_p2;
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft145_s0 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft145_i), .o(ft145_p1));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft145_s1 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft145_p1), .o(ft145_p2));
-    ot_hbm_rly #(.W(3), .RS_RELAY(1)) ft145_s2 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft145_p2), .o(ft145_o));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft145_s0 (.ck(ck_ft), .rn(ft_rn2[1152:1152]), .i(ft145_i), .o(ft145_p1));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft145_s1 (.ck(ck_ft), .rn(ft_rn2[1153:1153]), .i(ft145_p1), .o(ft145_p2));
+    ot_hbm_ft_stn #(.W(3), .GB(32)) ft145_s2 (.ck(ck_ft), .rn(ft_rn2[1154:1154]), .i(ft145_p2), .o(ft145_o));
     // ft147: vmb_SW6/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft147_p1;
     wire [1:0] ft147_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft147_s0 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft147_i), .o(ft147_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft147_s1 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft147_p1), .o(ft147_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft147_s2 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft147_p2), .o(ft147_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft147_s0 (.ck(ck_ft), .rn(ft_rn2[1155:1155]), .i(ft147_i), .o(ft147_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft147_s1 (.ck(ck_ft), .rn(ft_rn2[1156:1156]), .i(ft147_p1), .o(ft147_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft147_s2 (.ck(ck_ft), .rn(ft_rn2[1157:1157]), .i(ft147_p2), .o(ft147_o));
     // ft148: vmb_SW6/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft148_p1;
     wire [1:0] ft148_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft148_s0 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft148_i), .o(ft148_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft148_s1 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft148_p1), .o(ft148_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft148_s2 (.ck(ck_ft), .rs(ft_rn[35]), .i(ft148_p2), .o(ft148_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft148_s0 (.ck(ck_ft), .rn(ft_rn2[1158:1158]), .i(ft148_i), .o(ft148_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft148_s1 (.ck(ck_ft), .rn(ft_rn2[1159:1159]), .i(ft148_p1), .o(ft148_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft148_s2 (.ck(ck_ft), .rn(ft_rn2[1160:1160]), .i(ft148_p2), .o(ft148_o));
     // ft149: vmb_SW6/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft149_p1;
     wire [1:0] ft149_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft149_s0 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft149_i), .o(ft149_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft149_s1 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft149_p1), .o(ft149_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft149_s2 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft149_p2), .o(ft149_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft149_s0 (.ck(ck_ft), .rn(ft_rn2[1161:1161]), .i(ft149_i), .o(ft149_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft149_s1 (.ck(ck_ft), .rn(ft_rn2[1162:1162]), .i(ft149_p1), .o(ft149_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft149_s2 (.ck(ck_ft), .rn(ft_rn2[1163:1163]), .i(ft149_p2), .o(ft149_o));
     // ft150: vmb_SW7/dq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft150_p1;
     wire [1:0] ft150_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft150_s0 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft150_i), .o(ft150_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft150_s1 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft150_p1), .o(ft150_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft150_s2 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft150_p2), .o(ft150_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft150_s0 (.ck(ck_ft), .rn(ft_rn2[1164:1164]), .i(ft150_i), .o(ft150_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft150_s1 (.ck(ck_ft), .rn(ft_rn2[1165:1165]), .i(ft150_p1), .o(ft150_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft150_s2 (.ck(ck_ft), .rn(ft_rn2[1166:1166]), .i(ft150_p2), .o(ft150_o));
     // ft151: vmb_SW7/wq_done1 -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft151_p1;
     wire [1:0] ft151_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft151_s0 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft151_i), .o(ft151_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft151_s1 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft151_p1), .o(ft151_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft151_s2 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft151_p2), .o(ft151_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft151_s0 (.ck(ck_ft), .rn(ft_rn2[1167:1167]), .i(ft151_i), .o(ft151_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft151_s1 (.ck(ck_ft), .rn(ft_rn2[1168:1168]), .i(ft151_p1), .o(ft151_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft151_s2 (.ck(ck_ft), .rn(ft_rn2[1169:1169]), .i(ft151_p2), .o(ft151_o));
     // ft152: vmb_SW7/kq_done -> obs_SW/obs, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 2021.9], [898.6, 2021.9], [1777.2, 2021.9]]), 2 repeater sites
     wire [1:0] ft152_p1;
     wire [1:0] ft152_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft152_s0 (.ck(ck_ft), .rs(ft_rn[36]), .i(ft152_i), .o(ft152_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft152_s1 (.ck(ck_ft), .rs(ft_rn[37]), .i(ft152_p1), .o(ft152_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft152_s2 (.ck(ck_ft), .rs(ft_rn[37]), .i(ft152_p2), .o(ft152_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft152_s0 (.ck(ck_ft), .rn(ft_rn2[1170:1170]), .i(ft152_i), .o(ft152_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft152_s1 (.ck(ck_ft), .rn(ft_rn2[1171:1171]), .i(ft152_p1), .o(ft152_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft152_s2 (.ck(ck_ft), .rn(ft_rn2[1172:1172]), .i(ft152_p2), .o(ft152_o));
     // ft157: fl_SW3/fault -> fr_SW/in, 2 b, 3 regs over 1797.1 um (regs_um [[20.0, 632.1], [898.6, 632.1], [1777.2, 632.1]]), 2 repeater sites
     wire [1:0] ft157_p1;
     wire [1:0] ft157_p2;
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft157_s0 (.ck(ck_ft), .rs(ft_rn[37]), .i(ft157_i), .o(ft157_p1));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft157_s1 (.ck(ck_ft), .rs(ft_rn[37]), .i(ft157_p1), .o(ft157_p2));
-    ot_hbm_rly #(.W(2), .RS_RELAY(1)) ft157_s2 (.ck(ck_ft), .rs(ft_rn[37]), .i(ft157_p2), .o(ft157_o));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft157_s0 (.ck(ck_ft), .rn(ft_rn2[1173:1173]), .i(ft157_i), .o(ft157_p1));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft157_s1 (.ck(ck_ft), .rn(ft_rn2[1174:1174]), .i(ft157_p1), .o(ft157_p2));
+    ot_hbm_ft_stn #(.W(2), .GB(32)) ft157_s2 (.ck(ck_ft), .rn(ft_rn2[1175:1175]), .i(ft157_p2), .o(ft157_o));
 // <<< FT-HBM ft stations
 endmodule

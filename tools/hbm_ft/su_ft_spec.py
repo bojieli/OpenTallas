@@ -114,8 +114,13 @@ out['notes'] = {
               'cycles incl. the pin regs; N-S 2825 um: 4 regs), repeater sites <= 450 um (rep_sites per path; block P&R inserts them). '
               'latency_cycles per path = regs (each register is one die-relay stage moved inside the block: static schedule takes '
               'FT-TOOL hbm_schedule.tsv stages_new).',
- 'stations': 'ot_hbm_rly #(W, RS_RELAY 1) = the hbfd_rly die relay function (posedge, async clear, 3-edge reset release), '
-             'reset rs_ft through a 2-level ot_rst_relay (<= 32 loads a net).',
+ 'stations': 'ot_hbm_ft_stn #(W) = the hbfd_rly die relay function (posedge, async clear), one relayed clear per <= 32 '
+             'flops; rs_ft -> 3 ot_rst_relay levels (2 / 40 / 1,176 groups for the pilot, <= 32 loads a net, native census); '
+             'release 9 ck_ft edges after rs_ft (die relay 3): lanes carry zeros until then.',
+ 'blocker': 'pre_route_gate native census (<= 32 loads) on the light base rgf_lp REFUSES before floorplan: 282 base-kit nets over '
+            '32 (u_lpl_*_r.rc read counters up to 4,181 loads, u_sout.dd 512, u_rg*.src1_c 64, KIND0 vm_we 93-96, pos_r* 41-49, '
+            'ck_r* as data 40); base kit is functionally frozen and predates the census: needs a fanout/replication fix by the '
+            'light-kit owner (claude/hbm-pglg-d4h-1021) before any rgf_lp kit (with or without ft) can harden.',
  'kit': 'physical/ref_tile/hbm_su_pgslice_lg_ft_d4g: light landed-region slice (rgf_lp, 32 KIND0 + 32 CLOSED bank6_clock) re-laid in '
         'the die slot 1797.12 x 2825.28 (the light kit 1235.52 x 3045.6 did not fit); children 2.52 mm2 = 49.6% of the slot, '
         'parent fill ~52-55% with glue + ft (below the 60-70% target because the hard children are themselves ~45% dense; a '

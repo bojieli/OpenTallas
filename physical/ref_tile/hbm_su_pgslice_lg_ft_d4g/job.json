@@ -20,7 +20,7 @@
    "results/closure_loop/hbm_su_static_bank6_clock7_1015-r12-0a5f7732e",
    "results/closure_loop/hbm_su_static_kind0_l4_leaf1_1015-r2-18978c835",
    "results/rtl/tw_hbm_pglg_1019",
-   "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+   "rtl/hbm_accel/die_glue/ot_hbm_ft_stn.sv",
    "rtl/hbm_accel/generic/adapters/static_su/arithmetic",
    "rtl/hbm_accel/generic/adapters/static_su/data_store",
    "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_bank_leaf_s.sv",
@@ -45,7 +45,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pgslice_rgf_lp__ftsw3 #(.QID(1), .G(2), .STRAP(1), .PRETREE(0), .GMUT(0), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/lp/ft/ot_hbm_su_static_pgslice_rgf_lp__ftsw3.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_pgslice_rgf_lp__ftsw3 #(.QID(1), .G(2), .STRAP(1), .PRETREE(0), .GMUT(0), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/top/lp/ft/ot_hbm_su_static_pgslice_rgf_lp__ftsw3.sv rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_pgrg_parts.sv rtl/common/landed_parent/ot_pl_land.sv rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hbm_accel/die_glue/ot_hbm_ft_stn.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
