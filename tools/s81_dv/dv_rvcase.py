@@ -578,7 +578,7 @@ def main():
     ap.add_argument('--pin-window', type=float, default=3.0)
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
-    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8', 'M9'), default='M7', help='M8/M9 carry die signals (M9 opt-in, COORD 10-22: probe cap24 21.09M -> 0.74M overflow; M9 PG mesh ~4%% of tracks)')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
@@ -1143,7 +1143,7 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
+set_global_routing_layer_adjustment M6-{min(a.signal_top_layer, 'M8')} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
