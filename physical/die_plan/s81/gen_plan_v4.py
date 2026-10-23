@@ -133,10 +133,8 @@ def frame_hard_cores(contents, buses):
     m, b = contents[0]["module"].split(".")
     mac = json.load(open(FRAME_BAND_MACROS))["masters"][m.replace("_l4_lp", "")][b]
     nx = b == "r0" and "xo_o0" not in {x["name"] for x in buses}
-    # the chain-end variant col_<M>_l4_lp_r0_nx wraps col_<M>_l4_lp_r0 as u_r0: one more hierarchy level
-    # ... and drops the x-forward stations u_xo<j> (they only drive xo, which a chain end does not have: synthesis
-    # removes them, so they are not placed)
-    return [dict(inst=("u_r0." + e["inst"]) if nx else e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
+    # the chain-end variant col_<M>_l4_lp_r0_nx is r0 without the x-forward stations u_xo<j> (no xo bus)
+    return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
                  origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac
             if not (nx and re.match(r"u_r0\.u_xo\d+$", e["inst"]))]
 
