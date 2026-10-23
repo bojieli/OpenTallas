@@ -1,0 +1,24 @@
+{
+  "reason": "actual H1 write reach407um Euclidean549umManhattan; H0 tall-column clock spread108..129ps",
+  "old_outline": [
+    237.6,
+    432
+  ],
+  "folded_outline": [
+    475.2,
+    237.6
+  ],
+  "old_area_um2": 102643.2,
+  "folded_area_um2": 112907.51999999999,
+  "macros": 4,
+  "cycle_delta_from_READ_STAGE1": 0,
+  "interfaces_unchanged": true,
+  "macro_write_pin_banks": "g0/g1 W by row;g2/g3 E by row",
+  "pin_layers": [
+    "M4",
+    "M5"
+  ],
+  "added_pin_layers": false,
+  "parent_XN_requirement": "Retain strip above; group units0/1 writes in left third and units2/3 right third, <=43.2um intertile gap; validate actual parent reach <=405um",
+  "adopted": false
+}
