@@ -114,10 +114,8 @@ def main():
     done, skipped = {}, {}
     for tn, t in sorted(plan['partition_types'].items()):
         for c in t.get('hard_cores', []):
-            if 'pins_file' in c and 'pins_plan' in c['pins_file']:
-                continue
-            if 'pins_file' in c:
-                continue
+            if 'pins_file' in c and 'pins_plan' not in c['pins_file']:
+                continue                                # as-built pins that land on the plan tracks
             mod, (w, h) = c['module'], c['outline_um']
             note = c.get('note', '')
             key = f'{mod}@{w}x{h}'

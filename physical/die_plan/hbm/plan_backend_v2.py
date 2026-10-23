@@ -628,6 +628,14 @@ def xland_a(other_part):
     return XLAND == 'a' and other_part is not None and not re.match(r'^(NW|NE|SW|SE)_svc\d$', other_part)
 
 
+STEPC_MASTER = {
+    # COORD R6 (3) QUANT x4 (HBM-P4-QUANT claude/hbm-p4-quant-1023 @690e86d3d): the NW programme leaf has target 48
+    # hard-wired; every quadrant's engine needs its own target (0x30+Q), so all 4 use the strapped leaf.
+    'ot_hgi_qdq_nw_program_leaf': ('ot_hgi_qdq_q_program_leaf', 'new',
+                                   'Step C QUANT x4: ot_hgi_qdq_q_program_leaf (TGT 0x30+Q strap, 415 pins); no view yet'),
+}
+
+
 def nearest_sub(inst, other_part, P):
     if inst in SPLIT_LAND and other_part is not None and not xland_a(other_part):
         return SPLIT_LAND[inst]
@@ -1312,7 +1320,10 @@ def types_and_plan(parts, insts, where, em):
             if p['op'] in ('MX', 'R'):
                 ly = h_ - ly - I['h']
             st, note = status(I['fam'])
-            cont.append(dict(inst=i, module=I['fam'], status=st, origin_um=[round(lx, 3), round(ly, 3)],
+            mod_ = I['fam']
+            if mod_ in STEPC_MASTER:                   # P4: Step C quadrant-parameterised replacement master
+                mod_, st, note = STEPC_MASTER[mod_]
+            cont.append(dict(inst=i, module=mod_, status=st, origin_um=[round(lx, 3), round(ly, 3)],
                              outline_um=[I['w'], I['h']], note=note))
         # type-local content names (identical across mirrored instances): u<k> by module + type-frame origin
         cont.sort(key=lambda c: (c['module'], c['origin_um'][0], c['origin_um'][1]))

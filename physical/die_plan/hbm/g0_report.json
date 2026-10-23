@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/scratch/hbm-p4-1023/gen_p4b/die_plan.json",
+ "plan": "/home/ubuntu/scratch/hbm-p4-1023/gen_fcb/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 914,
+ "warnings": 950,
  "summary": {
   "die": "hbm_d4g",
   "partitions": 187,
@@ -20,9 +20,9 @@
   "lanes": 8632,
   "bits": 1954848,
   "taps_cores": {
-   "taps": 1327,
-   "hard_cores": 646,
-   "core_pins": 591539,
+   "taps": 1376,
+   "hard_cores": 694,
+   "core_pins": 614948,
    "core_pins_off_track": 0
   },
   "geometry": {
@@ -12582,7 +12582,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/scratch/hbm-p4-1023/gen_p4b/g0/die_plan.png"
+  "png": "/home/ubuntu/scratch/hbm-p4-1023/gen_fcb/g0/die_plan.png"
  },
  "findings": [
   {
@@ -12633,643 +12633,931 @@
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u2_hc_tail0_s0: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail0_sk_step0: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u2_hc_tail0_s1: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail0_sk_steady: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u2_hc_tail1_s0: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail0_rest: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u2_hc_tail1_s1: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail1_sk_step0: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u2_hcp_sys10: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail1_sk_steady: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part0: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_tail1_rest: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part1: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u2_hcp_sys1: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part2: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile0: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part3: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile1: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part4: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile2: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part5: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile3: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part6: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile4: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part7: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile5: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part8: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile6: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part9: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile7: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part10: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile8: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part11: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile9: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part12: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile10: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part13: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile11: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part14: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile12: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part15: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile13: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part16: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile14: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part17: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile15: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type c0 core u18_part18: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile16: no pins listed; track alignment unchecked",
    "type": "c0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc0 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type c0 core u18_tile17: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile18: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile19: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile20: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile21: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile22: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile23: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile24: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile25: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile26: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile27: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile28: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile29: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile30: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_tile31: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_root: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc0 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc0 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc0 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc0 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc0 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc1 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc1 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc1 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc1 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc1 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc1 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc2 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc2 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc2 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc2 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc2 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc2 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc3 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc3 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc3 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc3 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc3 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc3 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc4 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc4 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc4 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc4 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc4 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc4 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc5 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc5 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc5"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc5 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc5 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc5"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc5 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc5 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc5"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc6 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc6 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc6"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc6 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc6 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc6"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc6 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc6 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc6"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc7 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_hc7 core u0_lanes0_2: no pins listed; track alignment unchecked",
    "type": "q_hc7"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc7 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_hc7 core u0_lanes3_5: no pins listed; track alignment unchecked",
    "type": "q_hc7"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_hc7 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_hc7 core u0_lanes6_7_bank: no pins listed; track alignment unchecked",
    "type": "q_hc7"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k0h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k0h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k1h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part3: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k1h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part4: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k2h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part5: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k2h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part6: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k3h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part7: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c0_k3h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part8: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k0h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part9: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k0h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part10: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k1h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part11: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k1h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part12: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k2h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part13: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k2h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part14: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k3h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part15: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c1_k3h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part16: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k0h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part17: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k0h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part18: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k1h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part19: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k1h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part20: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k2h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part21: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k2h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part22: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k3h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part23: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c2_k3h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part24: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k0h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part25: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k0h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part26: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k1h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part27: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k1h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part28: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k2h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part29: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k2h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part30: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k3h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part31: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r0c3_k3h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part32: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r1c0_k0h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part33: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r1c0_k0h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part34: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r1c0_k1h0: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_os2 core u0_part35: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r1c0_k1h1: no pins listed; track alignment unchecked",
    "type": "q_os2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4 core u5_ring_ag0: no pins listed; track alignment unchecked",
+   "msg": "type q_os2 core u0_r1c0_k2h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c0_k2h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c0_k3h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c0_k3h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k0h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k0h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k1h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k1h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k2h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k2h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k3h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c1_k3h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k0h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k0h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k1h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k1h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k2h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k2h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k3h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c2_k3h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k0h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k0h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k1h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k1h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k2h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k2h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k3h0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_r1c3_k3h1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_tail0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_tail1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4 core u5_ring_ag: no pins listed; track alignment unchecked",
    "type": "q_rc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4 core u5_reduce0: no pins listed; track alignment unchecked",
+   "msg": "type q_rc4 core u5_reduce: no pins listed; track alignment unchecked",
    "type": "q_rc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4 core u5_body0: no pins listed; track alignment unchecked",
+   "msg": "type q_rc4 core u5_body: no pins listed; track alignment unchecked",
    "type": "q_rc4"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4_v1 core u5_ring_ag0: no pins listed; track alignment unchecked",
+   "msg": "type q_rc4_v1 core u5_ring_ag: no pins listed; track alignment unchecked",
    "type": "q_rc4_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4_v1 core u5_reduce0: no pins listed; track alignment unchecked",
+   "msg": "type q_rc4_v1 core u5_reduce: no pins listed; track alignment unchecked",
    "type": "q_rc4_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_rc4_v1 core u5_body0: no pins listed; track alignment unchecked",
+   "msg": "type q_rc4_v1 core u5_body: no pins listed; track alignment unchecked",
    "type": "q_rc4_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part0: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane0: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part1: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane1: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part2: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane2: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part3: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane3: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part4: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane4: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part5: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane5: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part6: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane6: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part7: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane7: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part8: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane8: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part9: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane9: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part10: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane10: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part11: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane11: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part12: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane12: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part13: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane13: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part14: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane14: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part15: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_lane15: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_sfuc core u7_part16: no pins listed; track alignment unchecked",
+   "msg": "type q_sfuc core u7_opstore_a: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_opstore_b: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_ctl: no pins listed; track alignment unchecked",
    "type": "q_sfuc"
   },
   {
@@ -14661,49 +14949,49 @@
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_lane_exp_l0: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_lane_exp_l: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_lanes_plain0_3: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_lanes_plain4_7: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_lanes_plain8_11: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_lanes_plain12_15: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_side0_s0: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_side_softplus: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_side0_s1: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_side_rest: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su0 core u0_pretree0: no pins listed; track alignment unchecked",
+   "msg": "type q_su0 core u0_pretree: no pins listed; track alignment unchecked",
    "type": "q_su0"
   },
   {
@@ -14799,284 +15087,212 @@
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_lane_exp_l0: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_lane_exp_l: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_lanes_plain0_3: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_lanes_plain4_7: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_lanes_plain8_11: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_lanes_plain12_15: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_side0_s0: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_side_softplus: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_side0_s1: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_side_rest: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su1 core u0_pretree0: no pins listed; track alignment unchecked",
+   "msg": "type q_su1 core u0_pretree: no pins listed; track alignment unchecked",
    "type": "q_su1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes0_3: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes4_7: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes8_11: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes12_15: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes16_19: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes20_23: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes24_27: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_lanes28_31: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su2 core u0_pretree0: no pins listed; track alignment unchecked",
+   "msg": "type q_su2 core u0_pretree: no pins listed; track alignment unchecked",
    "type": "q_su2"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes0_3: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes4_7: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes8_11: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes12_15: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes16_19: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes20_23: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes24_27: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_lanes28_31: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3 core u0_pretree0: no pins listed; track alignment unchecked",
+   "msg": "type q_su3 core u0_pretree: no pins listed; track alignment unchecked",
    "type": "q_su3"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes0_3: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes4_7: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes8_11: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes12_15: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes16_19: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes20_23: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes24_27: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_lanes28_31: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "type q_su3_v1 core u0_pretree0: no pins listed; track alignment unchecked",
+   "msg": "type q_su3_v1 core u0_pretree: no pins listed; track alignment unchecked",
    "type": "q_su3_v1"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u30: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u33: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u34: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u35: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u36: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u37: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u38: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u39: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u40: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u41: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u42: no pins listed; track alignment unchecked",
-   "type": "q_vm"
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "type q_vm core u57: no pins listed; track alignment unchecked",
-   "type": "q_vm"
   },
   {
    "level": "WARN",

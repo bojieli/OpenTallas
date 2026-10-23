@@ -255,6 +255,14 @@ def apply(plan, out_dir, where, ft=None):
                  a_cell_um2=ev_all['a_cell_um2'], types={}, over_cap=[], pins_files=[])
     pins_used = set()
     pp_used = set()
+    OCS = {}                                            # (type, module) -> measured split (over_cap_split/)
+    oci = os.path.join(HERE, 'over_cap_split', 'index.json')
+    if os.path.exists(oci):
+        for mst, e in json.load(open(oci))['masters'].items():
+            sp = json.load(open(os.path.join(HERE, 'over_cap_split', e['file'])))
+            sp['_file'] = e['file']
+            for tn_ in e.get('plan_types', []):
+                OCS[(tn_, re.sub(r'__pv\d+$', '', mst))] = sp
     ppi = os.path.join(HERE, 'cores', 'pins_plan', 'index.json')
     PP = ({k: v['file'] for k, v in json.load(open(ppi))['done'].items()} if os.path.exists(ppi) else {})
     for tn in sorted(types):
@@ -317,7 +325,15 @@ def apply(plan, out_dir, where, ft=None):
                 else:
                     key = c['module'] if c['module'] in SPL else None
                 groups = []
-                if key:
+                osp = OCS.get((tn, c['module']))
+                if osp:                                     # P4: measured connectivity split (HBM-P4-SPLIT)
+                    groups = [(cr['core_label'], cr['cells'],
+                               f"{cr['module']} ({cr['cells']} Yosys; {osp['status']})") for cr in osp['cores']]
+                    sub_glue = osp.get('glue_cells') or 0
+                    sbasis = f"YOSYS {osp['basis']}"
+                    snote = (f"over_cap_split/{osp['_file']} {osp['status']}: {len(groups)} cores by connectivity, "
+                             f"max {max(g[1] for g in groups)}")
+                elif key:
                     sp = SPL[key]
                     for nm, n, each in sp['parts']:
                         per = max(1, CORE_BUDGET // each) if each <= CORE_BUDGET else 0
@@ -431,7 +447,8 @@ def apply(plan, out_dir, where, ft=None):
         for c in cores:                                 # P4: plan-derived pins (pins_plan_v2.py) where none exist
             if 'pins_file' in c:
                 continue
-            fn = PP.get(f"{c['module']}@{c['outline_um'][0]:g}x{c['outline_um'][1]:g}")
+            fn = PP.get(f"{c['module']}@{c['outline_um'][0]}x{c['outline_um'][1]}") or \
+                PP.get(f"{c['module']}@{c['outline_um'][0]:g}x{c['outline_um'][1]:g}")
             if fn and not re.match(r'sm_(lx|tp)\d', c['inst']):
                 c['pins_file'] = f'cores/pins_plan/{fn}'
                 c['track_offset_um'] = [0.0, 0.0]

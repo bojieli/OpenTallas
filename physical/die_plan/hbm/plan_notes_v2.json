@@ -641,10 +641,10 @@
    "cells": 1514498,
    "inst": "u2",
    "master": "ot_hbm_hc_root_static",
-   "max_sub_core": 336605,
+   "max_sub_core": 302248,
    "module": "ot_hbm_hc_root_static",
-   "proposal": "2 x ot_hbm_hc_tail_unit_static 673k (each OVER the cap: the 10-23 L1 study lists hbm_hc_tail_child 0.63-0.68M as never closed) -> each tail must split again (RTL: tail stage halves) ",
-   "split_into": 5,
+   "proposal": "over_cap_split/ot_hbm_hc_root_static.split.json CUT-ONLY: 7 cores by connectivity, max 302248",
+   "split_into": 7,
    "type": "c0"
   },
   {
@@ -652,10 +652,10 @@
    "cells": 6614494,
    "inst": "u18",
    "master": "ot_hgi_coll_tkm_m_tp192",
-   "max_sub_core": 348132,
+   "max_sub_core": 260110,
    "module": "ot_hgi_coll_tkm_m_tp192",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 19-way split by area is a PROPOSAL; the RTL owner partitions it into 19 cores of <= 350k; its 2 SRAM macros go with the sub-cores",
-   "split_into": 19,
+   "proposal": "over_cap_split/ot_hgi_coll_tkm_m_tp192.split.json DONE: 33 cores by connectivity, max 260110",
+   "split_into": 33,
    "type": "c0"
   },
   {
@@ -663,9 +663,9 @@
    "cells": 846145,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq0_static",
-   "max_sub_core": 282049,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq0_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq0_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc0"
   },
@@ -674,9 +674,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc1"
   },
@@ -685,9 +685,9 @@
    "cells": 828986,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_ft_static",
-   "max_sub_core": 276329,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_ft_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_ft_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc2"
   },
@@ -696,9 +696,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc3"
   },
@@ -707,9 +707,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc4"
   },
@@ -718,9 +718,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc5"
   },
@@ -729,9 +729,9 @@
    "cells": 828986,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_ft_static",
-   "max_sub_core": 276329,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_ft_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_ft_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc6"
   },
@@ -740,9 +740,9 @@
    "cells": 839887,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_term_static",
-   "max_sub_core": 279963,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_term_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_term_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc7"
   },
@@ -751,10 +751,10 @@
    "cells": 12422337,
    "inst": "u0",
    "master": "ot_hbm_idx_score_quarter_static",
-   "max_sub_core": 345065,
+   "max_sub_core": 195127,
    "module": "ot_hbm_idx_score_quarter_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 36-way split by area is a PROPOSAL; the RTL owner partitions it into 36 cores of <= 350k",
-   "split_into": 36,
+   "proposal": "over_cap_split/ot_hbm_idx_score_quarter_static.split.json DONE: 66 cores by connectivity, max 195127",
+   "split_into": 66,
    "type": "q_os2"
   },
   {
@@ -764,7 +764,7 @@
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4"
   },
@@ -775,7 +775,7 @@
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4_v1"
   },
@@ -784,10 +784,10 @@
    "cells": 5718505,
    "inst": "u7",
    "master": "ot_hgi_sfu_core_split3",
-   "max_sub_core": 336383,
+   "max_sub_core": 306861,
    "module": "ot_hgi_sfu_core_split3",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 17-way split by area is a PROPOSAL; the RTL owner partitions it into 17 cores of <= 350k; its 80 SRAM macros go with the sub-cores",
-   "split_into": 17,
+   "proposal": "over_cap_split/ot_hgi_sfu_core_split3.split.json CUT-ONLY: 19 cores by connectivity, max 306861",
+   "split_into": 19,
    "type": "q_sfuc"
   },
   {
@@ -797,7 +797,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv2",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su0"
   },
@@ -808,7 +808,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv6",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su1"
   },
@@ -819,7 +819,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv10",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su2"
   },
@@ -830,7 +830,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv14",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3"
   },
@@ -841,7 +841,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv15",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3_v1"
   }
@@ -883,10 +883,14 @@
   "ot_hbm_sm_attn_front_static__362.88x319.68.json",
   "ot_hbm_sm_attn_native_col__362.88x319.68.json",
   "ot_hbm_sm_attn_native_col__362.88x406.08.json",
+  "ot_hbm_su_static_cxport_ij_q__216x388.8.json",
   "ot_hbm_su_static_qcore_r13__302.4x280.8.json",
   "ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
   "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
+  "ot_hbm_svc_vmdel_lane_n__257.04x108.json",
+  "ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
   "ot_hgi_coll_gq_land__237.6x237.6.json",
+  "ot_hgi_qw_dec__260x260.json",
   "ot_hgi_sm_xload_cl2_bfqg__302.4x298.08.json",
   "ot_hgi_sm_xload_xq_pegress__369.36x369.36.json",
   "ot_smh_static_front__362.88x319.68.json"
@@ -897,12 +901,12 @@
   "core_overlaps": 0,
   "cores_over_cap": [],
   "glue_over_cap": [],
-  "hard_cores": 646,
+  "hard_cores": 694,
   "leaves_split": 19,
   "max_core_cells": 394328,
   "max_core_type": "io",
-  "max_glue_cells": 298918,
-  "max_glue_type": "q_vm",
+  "max_glue_cells": 389962,
+  "max_glue_type": "q_os2",
   "max_nn_tap_um": 1062.7,
   "max_point_to_tap_um": 1123.2,
   "sm_types": [
@@ -925,7 +929,7 @@
    "q_sm3c",
    "q_sm3d"
   ],
-  "taps": 1327,
+  "taps": 1376,
   "types": 56,
   "types_with_taps": 56
  },
@@ -933,8 +937,8 @@
  "tap_reach_um": 600.0,
  "types": {
   "c0": {
-   "core_cells_max": 348132,
-   "core_cells_total": 8629817,
+   "core_cells_max": 302248,
+   "core_cells_total": 10376390,
    "core_overlaps": 0,
    "cores": [
     {
@@ -948,29 +952,39 @@
      "module": "ot_hbm_argmax_static_sw_vm_r2"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail0_s0",
-     "module": "ot_hbm_hc_root_static__hc_tail0_s0"
+     "cells": 302248,
+     "inst": "u2_tail0_sk_step0",
+     "module": "ot_hbm_hc_root_static__tail0_sk_step0"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail0_s1",
-     "module": "ot_hbm_hc_root_static__hc_tail0_s1"
+     "cells": 267115,
+     "inst": "u2_tail0_sk_steady",
+     "module": "ot_hbm_hc_root_static__tail0_sk_steady"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail1_s0",
-     "module": "ot_hbm_hc_root_static__hc_tail1_s0"
+     "cells": 105730,
+     "inst": "u2_tail0_rest",
+     "module": "ot_hbm_hc_root_static__tail0_rest"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail1_s1",
-     "module": "ot_hbm_hc_root_static__hc_tail1_s1"
+     "cells": 302248,
+     "inst": "u2_tail1_sk_step0",
+     "module": "ot_hbm_hc_root_static__tail1_sk_step0"
+    },
+    {
+     "cells": 267115,
+     "inst": "u2_tail1_sk_steady",
+     "module": "ot_hbm_hc_root_static__tail1_sk_steady"
+    },
+    {
+     "cells": 105730,
+     "inst": "u2_tail1_rest",
+     "module": "ot_hbm_hc_root_static__tail1_rest"
     },
     {
      "cells": 56692,
-     "inst": "u2_hcp_sys10",
-     "module": "ot_hbm_hc_root_static__hcp_sys10"
+     "inst": "u2_hcp_sys1",
+     "module": "ot_hbm_hc_root_static__hcp_sys1"
     },
     {
      "cells": 43647,
@@ -998,104 +1012,174 @@
      "module": "ot_hbm_static_cfg_collar_idx256r"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part0",
-     "module": "ot_hgi_coll_tkm_m_tp192__part0"
+     "cells": 260110,
+     "inst": "u18_tile0",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile0"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part1",
-     "module": "ot_hgi_coll_tkm_m_tp192__part1"
+     "cells": 260110,
+     "inst": "u18_tile1",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile1"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part2",
-     "module": "ot_hgi_coll_tkm_m_tp192__part2"
+     "cells": 260110,
+     "inst": "u18_tile2",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile2"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part3",
-     "module": "ot_hgi_coll_tkm_m_tp192__part3"
+     "cells": 260110,
+     "inst": "u18_tile3",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile3"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part4",
-     "module": "ot_hgi_coll_tkm_m_tp192__part4"
+     "cells": 260110,
+     "inst": "u18_tile4",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile4"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part5",
-     "module": "ot_hgi_coll_tkm_m_tp192__part5"
+     "cells": 260110,
+     "inst": "u18_tile5",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile5"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part6",
-     "module": "ot_hgi_coll_tkm_m_tp192__part6"
+     "cells": 260110,
+     "inst": "u18_tile6",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile6"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part7",
-     "module": "ot_hgi_coll_tkm_m_tp192__part7"
+     "cells": 260110,
+     "inst": "u18_tile7",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile7"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part8",
-     "module": "ot_hgi_coll_tkm_m_tp192__part8"
+     "cells": 260110,
+     "inst": "u18_tile8",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile8"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part9",
-     "module": "ot_hgi_coll_tkm_m_tp192__part9"
+     "cells": 260110,
+     "inst": "u18_tile9",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile9"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part10",
-     "module": "ot_hgi_coll_tkm_m_tp192__part10"
+     "cells": 260110,
+     "inst": "u18_tile10",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile10"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part11",
-     "module": "ot_hgi_coll_tkm_m_tp192__part11"
+     "cells": 260110,
+     "inst": "u18_tile11",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile11"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part12",
-     "module": "ot_hgi_coll_tkm_m_tp192__part12"
+     "cells": 260110,
+     "inst": "u18_tile12",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile12"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part13",
-     "module": "ot_hgi_coll_tkm_m_tp192__part13"
+     "cells": 260110,
+     "inst": "u18_tile13",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile13"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part14",
-     "module": "ot_hgi_coll_tkm_m_tp192__part14"
+     "cells": 260110,
+     "inst": "u18_tile14",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile14"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part15",
-     "module": "ot_hgi_coll_tkm_m_tp192__part15"
+     "cells": 260110,
+     "inst": "u18_tile15",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile15"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part16",
-     "module": "ot_hgi_coll_tkm_m_tp192__part16"
+     "cells": 260110,
+     "inst": "u18_tile16",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile16"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part17",
-     "module": "ot_hgi_coll_tkm_m_tp192__part17"
+     "cells": 260110,
+     "inst": "u18_tile17",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile17"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part18",
-     "module": "ot_hgi_coll_tkm_m_tp192__part18"
+     "cells": 260110,
+     "inst": "u18_tile18",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile18"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile19",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile19"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile20",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile20"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile21",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile21"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile22",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile22"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile23",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile23"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile24",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile24"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile25",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile25"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile26",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile26"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile27",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile27"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile28",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile28"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile29",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile29"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile30",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile30"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile31",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile31"
+    },
+    {
+     "cells": 33795,
+     "inst": "u18_root",
+     "module": "ot_hgi_coll_tkm_m_tp192__root"
     }
    ],
    "flattened": [
     {
-     "cells": 95748,
+     "cells": 111386,
      "inst": "u2_glue",
      "module": "ot_hbm_hc_root_static (top + pinned banks)"
     },
@@ -1161,8 +1245,8 @@
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 59392 + station 0 + fork 0 bits) + flattened leaves",
-   "glue_cells": 280505,
-   "glue_flat_leaf_cells": 161721,
+   "glue_cells": 296143,
+   "glue_flat_leaf_cells": 177359,
    "glue_regs_cells": 118784,
    "instances": 1,
    "leaves": [
@@ -1191,7 +1275,7 @@
      "macros": 2,
      "master": "ot_hbm_hc_root_static",
      "module": "ot_hbm_hc_root_static",
-     "split": 5,
+     "split": 7,
      "status": "rework"
     },
     {
@@ -1246,11 +1330,11 @@
      "macros": 2,
      "master": "ot_hgi_coll_tkm_m_tp192",
      "module": "ot_hgi_coll_tkm_m_tp192",
-     "split": 19,
+     "split": 33,
      "status": "rework"
     }
    ],
-   "n_cores": 31,
+   "n_cores": 47,
    "orients": [
     "R0"
    ],
@@ -1262,10 +1346,10 @@
     "connected": true,
     "max_nn_tap_um": 576.0,
     "max_point_to_tap_um": 576.0,
-    "n": 63
+    "n": 79
    },
    "taps_kinds": {
-    "core": 31,
+    "core": 47,
     "glue": 32
    }
   },
@@ -1492,24 +1576,24 @@
    }
   },
   "q_hc0": {
-   "core_cells_max": 282049,
-   "core_cells_total": 846147,
+   "core_cells_max": 288852,
+   "core_cells_total": 797404,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 282049,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq0_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq0_static__lanes0_2"
     },
     {
-     "cells": 282049,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq0_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq0_static__lanes3_5"
     },
     {
-     "cells": 282049,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq0_static__part2"
+     "cells": 219700,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq0_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1553,24 +1637,24 @@
    }
   },
   "q_hc1": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1614,24 +1698,24 @@
    }
   },
   "q_hc2": {
-   "core_cells_max": 276329,
-   "core_cells_total": 828987,
+   "core_cells_max": 288852,
+   "core_cells_total": 786154,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 276329,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_ft_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes0_2"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_ft_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes3_5"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_ft_static__part2"
+     "cells": 208450,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1675,24 +1759,24 @@
    }
   },
   "q_hc3": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1736,24 +1820,24 @@
    }
   },
   "q_hc4": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1797,24 +1881,24 @@
    }
   },
   "q_hc5": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1858,24 +1942,24 @@
    }
   },
   "q_hc6": {
-   "core_cells_max": 276329,
-   "core_cells_total": 828987,
+   "core_cells_max": 288852,
+   "core_cells_total": 786154,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 276329,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_ft_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes0_2"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_ft_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes3_5"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_ft_static__part2"
+     "cells": 208450,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -1919,24 +2003,24 @@
    }
   },
   "q_hc7": {
-   "core_cells_max": 279963,
-   "core_cells_total": 839889,
+   "core_cells_max": 288852,
+   "core_cells_total": 793307,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279963,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_term_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_term_static__lanes0_2"
     },
     {
-     "cells": 279963,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_term_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_term_static__lanes3_5"
     },
     {
-     "cells": 279963,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_term_static__part2"
+     "cells": 215603,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_term_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
@@ -2074,195 +2158,351 @@
    }
   },
   "q_os2": {
-   "core_cells_max": 345065,
-   "core_cells_total": 12422340,
+   "core_cells_max": 195127,
+   "core_cells_total": 12313880,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 345065,
-     "inst": "u0_part0",
-     "module": "ot_hbm_idx_score_quarter_static__part0"
+     "cells": 195127,
+     "inst": "u0_r0c0_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part1",
-     "module": "ot_hbm_idx_score_quarter_static__part1"
+     "cells": 186410,
+     "inst": "u0_r0c0_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part2",
-     "module": "ot_hbm_idx_score_quarter_static__part2"
+     "cells": 195127,
+     "inst": "u0_r0c0_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part3",
-     "module": "ot_hbm_idx_score_quarter_static__part3"
+     "cells": 186410,
+     "inst": "u0_r0c0_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part4",
-     "module": "ot_hbm_idx_score_quarter_static__part4"
+     "cells": 195127,
+     "inst": "u0_r0c0_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part5",
-     "module": "ot_hbm_idx_score_quarter_static__part5"
+     "cells": 186410,
+     "inst": "u0_r0c0_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part6",
-     "module": "ot_hbm_idx_score_quarter_static__part6"
+     "cells": 195127,
+     "inst": "u0_r0c0_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part7",
-     "module": "ot_hbm_idx_score_quarter_static__part7"
+     "cells": 186410,
+     "inst": "u0_r0c0_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part8",
-     "module": "ot_hbm_idx_score_quarter_static__part8"
+     "cells": 195127,
+     "inst": "u0_r0c1_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part9",
-     "module": "ot_hbm_idx_score_quarter_static__part9"
+     "cells": 186410,
+     "inst": "u0_r0c1_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part10",
-     "module": "ot_hbm_idx_score_quarter_static__part10"
+     "cells": 195127,
+     "inst": "u0_r0c1_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part11",
-     "module": "ot_hbm_idx_score_quarter_static__part11"
+     "cells": 186410,
+     "inst": "u0_r0c1_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part12",
-     "module": "ot_hbm_idx_score_quarter_static__part12"
+     "cells": 195127,
+     "inst": "u0_r0c1_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part13",
-     "module": "ot_hbm_idx_score_quarter_static__part13"
+     "cells": 186410,
+     "inst": "u0_r0c1_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part14",
-     "module": "ot_hbm_idx_score_quarter_static__part14"
+     "cells": 195127,
+     "inst": "u0_r0c1_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part15",
-     "module": "ot_hbm_idx_score_quarter_static__part15"
+     "cells": 186410,
+     "inst": "u0_r0c1_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part16",
-     "module": "ot_hbm_idx_score_quarter_static__part16"
+     "cells": 195127,
+     "inst": "u0_r0c2_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part17",
-     "module": "ot_hbm_idx_score_quarter_static__part17"
+     "cells": 186410,
+     "inst": "u0_r0c2_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part18",
-     "module": "ot_hbm_idx_score_quarter_static__part18"
+     "cells": 195127,
+     "inst": "u0_r0c2_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part19",
-     "module": "ot_hbm_idx_score_quarter_static__part19"
+     "cells": 186410,
+     "inst": "u0_r0c2_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part20",
-     "module": "ot_hbm_idx_score_quarter_static__part20"
+     "cells": 195127,
+     "inst": "u0_r0c2_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part21",
-     "module": "ot_hbm_idx_score_quarter_static__part21"
+     "cells": 186410,
+     "inst": "u0_r0c2_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part22",
-     "module": "ot_hbm_idx_score_quarter_static__part22"
+     "cells": 195127,
+     "inst": "u0_r0c2_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part23",
-     "module": "ot_hbm_idx_score_quarter_static__part23"
+     "cells": 186410,
+     "inst": "u0_r0c2_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part24",
-     "module": "ot_hbm_idx_score_quarter_static__part24"
+     "cells": 195127,
+     "inst": "u0_r0c3_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part25",
-     "module": "ot_hbm_idx_score_quarter_static__part25"
+     "cells": 186410,
+     "inst": "u0_r0c3_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part26",
-     "module": "ot_hbm_idx_score_quarter_static__part26"
+     "cells": 195127,
+     "inst": "u0_r0c3_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part27",
-     "module": "ot_hbm_idx_score_quarter_static__part27"
+     "cells": 186410,
+     "inst": "u0_r0c3_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part28",
-     "module": "ot_hbm_idx_score_quarter_static__part28"
+     "cells": 195127,
+     "inst": "u0_r0c3_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part29",
-     "module": "ot_hbm_idx_score_quarter_static__part29"
+     "cells": 186410,
+     "inst": "u0_r0c3_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part30",
-     "module": "ot_hbm_idx_score_quarter_static__part30"
+     "cells": 195127,
+     "inst": "u0_r0c3_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part31",
-     "module": "ot_hbm_idx_score_quarter_static__part31"
+     "cells": 186410,
+     "inst": "u0_r0c3_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part32",
-     "module": "ot_hbm_idx_score_quarter_static__part32"
+     "cells": 195127,
+     "inst": "u0_r1c0_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part33",
-     "module": "ot_hbm_idx_score_quarter_static__part33"
+     "cells": 186410,
+     "inst": "u0_r1c0_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part34",
-     "module": "ot_hbm_idx_score_quarter_static__part34"
+     "cells": 195127,
+     "inst": "u0_r1c0_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part35",
-     "module": "ot_hbm_idx_score_quarter_static__part35"
+     "cells": 186410,
+     "inst": "u0_r1c0_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c0_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c0_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c0_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c0_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h1"
+    },
+    {
+     "cells": 52348,
+     "inst": "u0_tail0",
+     "module": "ot_hbm_idx_score_quarter_static__tail0"
+    },
+    {
+     "cells": 52348,
+     "inst": "u0_tail1",
+     "module": "ot_hbm_idx_score_quarter_static__tail1"
     }
    ],
-   "flattened": [],
+   "flattened": [
+    {
+     "cells": 213320,
+     "inst": "u0_glue",
+     "module": "ot_hbm_idx_score_quarter_static (top + pinned banks)"
+    }
+   ],
    "glue_basis": "EST 2 cells/bit x (boundary 8188 + station 77447 + fork 2686 bits) + flattened leaves",
-   "glue_cells": 176642,
-   "glue_flat_leaf_cells": 0,
+   "glue_cells": 389962,
+   "glue_flat_leaf_cells": 213320,
    "glue_regs_cells": 176642,
    "instances": 4,
    "leaves": [
@@ -2273,11 +2513,11 @@
      "macros": 0,
      "master": "ot_hbm_idx_score_quarter_static",
      "module": "ot_hbm_idx_score_quarter_static",
-     "split": 36,
+     "split": 66,
      "status": "rework"
     }
    ],
-   "n_cores": 36,
+   "n_cores": 66,
    "orients": [
     "MX",
     "MY",
@@ -2292,11 +2532,11 @@
     "connected": true,
     "max_nn_tap_um": 580.3,
     "max_point_to_tap_um": 581.8,
-    "n": 59
+    "n": 90
    },
    "taps_kinds": {
-    "core": 36,
-    "glue": 23
+    "core": 66,
+    "glue": 24
    }
   },
   "q_os3": {
@@ -2697,18 +2937,18 @@
     },
     {
      "cells": 121663,
-     "inst": "u5_ring_ag0",
-     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+     "inst": "u5_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce0",
-     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+     "inst": "u5_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body0",
-     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+     "inst": "u5_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
@@ -2858,18 +3098,18 @@
     },
     {
      "cells": 121663,
-     "inst": "u5_ring_ag0",
-     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+     "inst": "u5_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce0",
-     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+     "inst": "u5_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body0",
-     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+     "inst": "u5_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
@@ -3008,8 +3248,8 @@
    }
   },
   "q_sfuc": {
-   "core_cells_max": 336383,
-   "core_cells_total": 5737083,
+   "core_cells_max": 306861,
+   "core_cells_total": 5534562,
    "core_overlaps": 0,
    "cores": [
     {
@@ -3018,89 +3258,99 @@
      "module": "ot_hbm_su_static_sfustore_hw"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part0",
-     "module": "ot_hgi_sfu_core_split3__part0"
+     "cells": 306861,
+     "inst": "u7_lane0",
+     "module": "ot_hgi_sfu_core_split3__lane0"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part1",
-     "module": "ot_hgi_sfu_core_split3__part1"
+     "cells": 306861,
+     "inst": "u7_lane1",
+     "module": "ot_hgi_sfu_core_split3__lane1"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part2",
-     "module": "ot_hgi_sfu_core_split3__part2"
+     "cells": 306861,
+     "inst": "u7_lane2",
+     "module": "ot_hgi_sfu_core_split3__lane2"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part3",
-     "module": "ot_hgi_sfu_core_split3__part3"
+     "cells": 306861,
+     "inst": "u7_lane3",
+     "module": "ot_hgi_sfu_core_split3__lane3"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part4",
-     "module": "ot_hgi_sfu_core_split3__part4"
+     "cells": 306861,
+     "inst": "u7_lane4",
+     "module": "ot_hgi_sfu_core_split3__lane4"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part5",
-     "module": "ot_hgi_sfu_core_split3__part5"
+     "cells": 306861,
+     "inst": "u7_lane5",
+     "module": "ot_hgi_sfu_core_split3__lane5"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part6",
-     "module": "ot_hgi_sfu_core_split3__part6"
+     "cells": 306861,
+     "inst": "u7_lane6",
+     "module": "ot_hgi_sfu_core_split3__lane6"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part7",
-     "module": "ot_hgi_sfu_core_split3__part7"
+     "cells": 306861,
+     "inst": "u7_lane7",
+     "module": "ot_hgi_sfu_core_split3__lane7"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part8",
-     "module": "ot_hgi_sfu_core_split3__part8"
+     "cells": 306861,
+     "inst": "u7_lane8",
+     "module": "ot_hgi_sfu_core_split3__lane8"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part9",
-     "module": "ot_hgi_sfu_core_split3__part9"
+     "cells": 306861,
+     "inst": "u7_lane9",
+     "module": "ot_hgi_sfu_core_split3__lane9"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part10",
-     "module": "ot_hgi_sfu_core_split3__part10"
+     "cells": 306861,
+     "inst": "u7_lane10",
+     "module": "ot_hgi_sfu_core_split3__lane10"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part11",
-     "module": "ot_hgi_sfu_core_split3__part11"
+     "cells": 306861,
+     "inst": "u7_lane11",
+     "module": "ot_hgi_sfu_core_split3__lane11"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part12",
-     "module": "ot_hgi_sfu_core_split3__part12"
+     "cells": 306861,
+     "inst": "u7_lane12",
+     "module": "ot_hgi_sfu_core_split3__lane12"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part13",
-     "module": "ot_hgi_sfu_core_split3__part13"
+     "cells": 306861,
+     "inst": "u7_lane13",
+     "module": "ot_hgi_sfu_core_split3__lane13"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part14",
-     "module": "ot_hgi_sfu_core_split3__part14"
+     "cells": 306861,
+     "inst": "u7_lane14",
+     "module": "ot_hgi_sfu_core_split3__lane14"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part15",
-     "module": "ot_hgi_sfu_core_split3__part15"
+     "cells": 306861,
+     "inst": "u7_lane15",
+     "module": "ot_hgi_sfu_core_split3__lane15"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part16",
-     "module": "ot_hgi_sfu_core_split3__part16"
+     "cells": 240918,
+     "inst": "u7_opstore_a",
+     "module": "ot_hgi_sfu_core_split3__opstore_a"
+    },
+    {
+     "cells": 288099,
+     "inst": "u7_opstore_b",
+     "module": "ot_hgi_sfu_core_split3__opstore_b"
+    },
+    {
+     "cells": 77197,
+     "inst": "u7_ctl",
+     "module": "ot_hgi_sfu_core_split3__ctl"
     }
    ],
    "flattened": [
@@ -3197,11 +3447,11 @@
      "macros": 80,
      "master": "ot_hgi_sfu_core_split3",
      "module": "ot_hgi_sfu_core_split3",
-     "split": 17,
+     "split": 19,
      "status": "rework"
     }
    ],
-   "n_cores": 18,
+   "n_cores": 20,
    "orients": [
     "MX",
     "MY",
@@ -3216,10 +3466,10 @@
     "connected": true,
     "max_nn_tap_um": 482.1,
     "max_point_to_tap_um": 532.7,
-    "n": 36
+    "n": 38
    },
    "taps_kinds": {
-    "core": 18,
+    "core": 20,
     "glue": 18
    }
   },
@@ -5911,55 +6161,55 @@
     },
     {
      "cells": 234742,
-     "inst": "u0_lane_exp_l0",
-     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+     "inst": "u0_lane_exp_l",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes_plain0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes_plain4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes_plain8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes_plain12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s0",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+     "cells": 223122,
+     "inst": "u0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s1",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+     "cells": 189664,
+     "inst": "u0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest"
     },
     {
      "cells": 211003,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 36980,
+     "cells": 63629,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 6940 + station 32455 + fork 0 bits) + flattened leaves",
-   "glue_cells": 115770,
-   "glue_flat_leaf_cells": 36980,
+   "glue_cells": 142419,
+   "glue_flat_leaf_cells": 63629,
    "glue_regs_cells": 78790,
    "instances": 4,
    "leaves": [
@@ -6078,55 +6328,55 @@
     },
     {
      "cells": 234742,
-     "inst": "u0_lane_exp_l0",
-     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+     "inst": "u0_lane_exp_l",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes_plain0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes_plain4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes_plain8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes_plain12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s0",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+     "cells": 223122,
+     "inst": "u0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s1",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+     "cells": 189664,
+     "inst": "u0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest"
     },
     {
      "cells": 211003,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 36980,
+     "cells": 63629,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 11178 + station 52743 + fork 2539 bits) + flattened leaves",
-   "glue_cells": 169900,
-   "glue_flat_leaf_cells": 36980,
+   "glue_cells": 196549,
+   "glue_flat_leaf_cells": 63629,
    "glue_regs_cells": 132920,
    "instances": 4,
    "leaves": [
@@ -6170,60 +6420,60 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 12928 + station 50415 + fork 3833 bits) + flattened leaves",
-   "glue_cells": 171478,
-   "glue_flat_leaf_cells": 37126,
+   "glue_cells": 198130,
+   "glue_flat_leaf_cells": 63778,
    "glue_regs_cells": 134352,
    "instances": 4,
    "leaves": [
@@ -6267,60 +6517,60 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
-   "glue_cells": 94410,
-   "glue_flat_leaf_cells": 37126,
+   "glue_cells": 121062,
+   "glue_flat_leaf_cells": 63778,
    "glue_regs_cells": 57284,
    "instances": 2,
    "leaves": [
@@ -6362,60 +6612,60 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
-   "glue_cells": 94410,
-   "glue_flat_leaf_cells": 37126,
+   "glue_cells": 121062,
+   "glue_flat_leaf_cells": 63778,
    "glue_regs_cells": 57284,
    "instances": 2,
    "leaves": [
@@ -6861,19 +7111,14 @@
      "module": "ot_hbm_svc_wbw_copy"
     },
     {
-     "cells": 19101,
-     "inst": "u15",
-     "module": "ot_hgi_qdq_nw_program_leaf"
-    },
-    {
      "cells": 3523,
      "inst": "u18",
      "module": "ot_static_run_target"
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 16323 + station 90 + fork 70 bits) + flattened leaves",
-   "glue_cells": 61716,
-   "glue_flat_leaf_cells": 28750,
+   "glue_cells": 42615,
+   "glue_flat_leaf_cells": 9649,
    "glue_regs_cells": 32966,
    "instances": 4,
    "leaves": [
