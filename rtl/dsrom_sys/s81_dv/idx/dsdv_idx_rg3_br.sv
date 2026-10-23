@@ -75,6 +75,7 @@ module dsdv_idx_rg3_br #(
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin qr[0] <= 1'b0; sr[0] <= 1'b0; end
         else begin qr[0] <= qih[0]; sr[0] <= sih[0]; end
+    always @(posedge ck) begin qr[512:1] <= qih[512:1]; sr[275:1] <= sih[275:1]; end
     // pin copies: pop (budget counter + copies), query valid (payload counters)
     wire [3:0] rkc = xr_i[67:64];                  // X band pin copies of the pops
     (* keep = "true" *) reg [2:0]  qvk;             // [2]: leftk replica (S81-IDXRD-1021)

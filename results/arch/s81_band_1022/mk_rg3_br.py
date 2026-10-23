@@ -63,6 +63,9 @@ sub("    reg [3:0][271:0] rrr;                           // response lanes at th
     "    wire [3:0][15:0] rrr;                           // X band rrr[u][15:0] = {tag10, beat 4, pop, v}\n"
     "    assign rrr = xr_i[63:0];\n")
 cut("    // S81-COLLECT2/L20KIT: RH response relay hops", "rrr[3][271:2] <= rrh[1087:818];\n    end\n", "")
+# that block also held the q / s data capture (qr / sr [n:1]): keep it (10-22 lpc0 / probe: qo data 0, the regression)
+sub("        else begin qr[0] <= qih[0]; sr[0] <= sih[0]; end\n",
+    "        else begin qr[0] <= qih[0]; sr[0] <= sih[0]; end\n    always @(posedge ck) begin qr[512:1] <= qih[512:1]; sr[275:1] <= sih[275:1]; end\n")
 cut("    (* keep = \"true\" *) reg [3:0]  rkc;\n", "    always @(posedge ck) begin\n        rkc <= {rrh[817], rrh[545], rrh[273], rrh[1]};\n        qvk <= {3{qih[0]}};\n    end\n",
     "    wire [3:0] rkc = xr_i[67:64];                  // X band pin copies of the pops\n"
     "    (* keep = \"true\" *) reg [2:0]  qvk;             // [2]: leftk replica (S81-IDXRD-1021)\n"
@@ -96,6 +99,8 @@ sub("if (warm_n == 8'(EL + KR + 2)) warm <= 1'b1;", "if (warm_n == 8'(EL + KR + 
 # ---- status leaves to S23
 sub("if (!rl[39]) begin fc <= 8'd0; st <= 10'd0; end else begin fc <= fc | fc_set | fw; st <= {fc, act, fault}; end",
     "if (!rl[39]) begin fc <= 8'd0; st_o <= 10'd0; end else begin fc <= fc | fc_set | fw; st_o <= {fc, act, fault}; end")
+if "qr[512:1] <= qih[512:1]" not in out or "sr[275:1] <= sih[275:1]" not in out:
+    sys.exit("mk_rg3_br: q / s data capture missing")
 for bad in ("rdd", "lw_d", "lw_a", "lw_h1", "k_key", "h0q", "g_ch", "u_t ", "OH", "rrh", "g_khop"):
     body = out[out.find("module dsdv_idx_rg3_br"):]
     body = re.sub(r"//[^\n]*", "", body)
