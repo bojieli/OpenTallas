@@ -185,7 +185,7 @@ def main():
             j.update(owner='Claude:KDIE5-RTL', branch='claude/kdie5-rtl-1022', tag=f'r2{var}', purpose=s['purpose'],
                      views_to=f'physical/ref_tile/{kit}/views', record_to=f'results/rtl/ref_tile/{kit}')
             j['benches'] = [bench(k, kit, mm) for mm in range(5)]
-            j['extra_paths'] = sorted(set([x for x in j['extra_paths'] if 'kdie5_tv_1022' not in x] + [WIT]))
+            j['extra_paths'] = sorted(set([x for x in j['extra_paths'] if 'kdie5_tv_1022' not in x] + [WIT, "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible"]))
             (kd / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
             print(kit, s['top'], len(s['sources']), 'relays' if var == 'b' else 'gpl')
 
