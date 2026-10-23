@@ -192,6 +192,61 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1023 10-23 batch 14: claude/gate-layout-review-1023 (COORD batch 14; OWNER 10-23 tile visual review).
+    # The gate now FAILs std-cell fill < 20 % of free area / pin->register p90 > 150 um (layout_review) -> a real
+    # TIGHTENING for every kit: a gate run before it carries no review.png / review_stats.json and is re-gated (the
+    # owner wants every unclosed tile rendered and judged).  0cf7fc33f relaxes parents to macro packing; cc59663f0 lets a
+    # GEOM-REVIEW PASS excuse fill (relaxing) but no longer lets fill reasons excuse far pin registers (tightening).
+    "52ac3504776512d603f25edc462ba58f07a34839": dict(
+        kind="tightening", rule="layout-review",
+        paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/layout_review.tcl', 'tools/ref_tile/pre_route_gate.py',
+               'tools/ref_tile/layout_dump.tcl'),
+        what="layout_review FAIL on low std fill / far pin registers + mandatory review render (new FAIL, all kits)"),
+    "0cf7fc33ffe923df8d16d9772fdc1fd58a6cffd2": dict(
+        kind="relaxing", paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/pre_route_gate.py'),
+        what="layout_review: parents/clusters judged by macro packing, not std-cell fill (relative to 52ac35047)"),
+    "cc59663f0755702f133bd72229f81516d3f7929e": dict(
+        kind="tightening", rule="layout-review",
+        paths=('tools/ref_tile/layout_review.py', 'tools/ref_tile/pre_route_gate.py'),
+        what="layout_review: fill reasons no longer excuse pin-register p90 > 150 um; GEOM FAIL revokes parent fill reasons"),
+    # ROOT-MERGE-1023 10-23 batch 13: claude/ft-qc-1023 (COORD 02:35 approved).  Both changes act only on a spec with
+    # pg_contract == "m7_passthrough" (new opt-in, first used by the do-not-bind pilot qfd_c_b8_ft1); default contract,
+    # PDN text and gate layer audit unchanged for every older kit.
+    "db3885a1d0a9f2c9c894d70cb6c89c36aa158fc0": dict(
+        kind="neutral", paths=('tools/ref_tile/pre_route_gate.py',),
+        what="pre_route_gate layer audit: want_pg M7 only for opt-in pg_contract m7_passthrough clusters"),
+    "0d25e46372e3bd0117c24752ba398169ba0ee3ad": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="ref_tile layer_contract/gen_pdn m7_passthrough branch (opt-in pg_contract only)"),
+    # ROOT-MERGE-1023 10-23 batch 13: claude/tile-flow-1023 (COORD 02:33 approved).  Every new rule (content outline,
+    # face fence, outline_ratio FAIL, pin_regs wrapper refusal, macro array plan) is behind tile_plan_on(spec): recipe 5
+    # leaf tiles or an explicit "tile_plan" opt-in.  No kit gated before this merge has either (RECIPE_LATEST was 4),
+    # and test_tile_plan_off_keeps_recipe_4_behaviour pins the legacy path -> no older gate verdict can change.
+    "867781db8cfa5e9c87f418b6361e2d37738f3e8e": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl', 'tools/ref_tile/outline_audit.py',
+                               'tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW recipe 5 / tile_plan (opt-in, new kits only); legacy recipe <= 4 kits unchanged"),
+    "c861553eb5133e82baac953f5ad790722797fe28": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW tile_plan macro column abutment + outline reason (tile_plan kits only)"),
+    "59174ca777cae5c92619b66679f2958469c36cc5": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence_after.tcl',),
+        what="TILE-FLOW face fence chaining hook (sourced only by tile_plan kits)"),
+    "a786d230d791823dfe8fa15ac08e50c8aabd6506": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl', 'tools/ref_tile/outline_audit.py'),
+        what="TILE-FLOW face fence globals (tile_plan kits only) + audit report tool"),
+    "2a1910a6233bc25a40124aee4b16ffd45bcd548a": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl',),
+        what="TILE-FLOW face fence keeps FIRM pin flops (tile_plan kits only)"),
+    # ROOT-MERGE-1023 10-23 batch 12: claude/geom-review-gate-1023 (COORD 02:02/02:15 approved, enforcing).  The GEOM-REVIEW
+    # intake check is a separate submit-time policy keyed on review verdicts + kit content hash, judged by the CURRENT
+    # code at every intake; it changes no pre_route_gate verdict, so an older gate stays as valid as before.
+    "bfc589005a25959d56e7646c8da5c7f314a6ea9b": dict(
+        kind="neutral", paths=('tools/closure_loop/closure_loop.py', 'tools/closure_loop/geom_review_gate.py'),
+        what="GEOM-REVIEW route intake gate (new module + intake/validate hook); no gate report verdict changes"),
+    "99d25d3f279399b207389f9a52df85178a479052": dict(
+        kind="neutral", paths=('tools/closure_loop/geom_review_gate.py',),
+        what="GEOM-REVIEW PASS-CONDITIONAL verdict class (intake only); no gate report verdict changes"),
     # ROOT-MERGE-1022 10-22 batch 9: STW-S81c-TOK5 20:38 + STEWARD-S81c 20:05 GATE_RULE_GUARD asks (collect auto-merge refusals)
     "127356adf225c23173c42e606c0215e7a041af36": dict(
         kind="neutral", paths=('tools/ref_tile/specs_pl_gunit/respec_lp4.py',),

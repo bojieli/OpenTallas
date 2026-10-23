@@ -1,0 +1,7 @@
+{"schema": "opentallas.ft_kv_pv_chain.v1", "date": "2026-10-23",
+ "tool": "tools/die_feedthrough plan.py @1d83f2821 (straight, ft_reg inout, occupancy 0.6, reach 1200, ft M8/M9); census kv_census (sqc3s f9b69ebb3)",
+ "rewrite": "tools/qwen_kv_die/ft_kv_pv_chain.py: 12,096 vport.vo -> pv-slice groups (364,392 b) -> 1,280 chain groups (274,432 b): per port entry 1,088 b, 15 row hops (734 um) carrying chunks ahead + 64-b e, 4 taps a row (banks lane, lane^4; 144 b)",
+ "before": {"lanes": 95484, "track_overflow_lanes": 24272, "overflow_bits": 1448252, "H_track_mm": 7150391, "V_track_mm": 7080583, "cap_track_mm_per_dir": 4859491, "H_util": 1.47, "V_util": 1.46, "pv_vo_track_mm": 5463393, "channel_relays_new": 181007, "stages_bitw_new": 3.0},
+ "after": {"lanes": 84668, "track_overflow_lanes": 14142, "overflow_bits": 1018634, "H_track_mm": 4424563, "V_track_mm": 4661793, "H_util": 0.91, "V_util": 0.96, "pv_vo_track_mm": 923048, "channel_relays_new": 124684, "stages_bitw_new": 1.83},
+ "pv_arrival_stages": {"old_max_per_port": "72-103", "new_entry": "3-7", "new_sink_min_max": "5-52 (plan inout ft regs: 2 per crossed tile; single-station rows give <= 25)"},
+ "remaining_overflow_top": ["head dr_o/f_t0-3/kp (head trees)", "hst ti_b", "astk response_data", "pvw ts/cmd"]}

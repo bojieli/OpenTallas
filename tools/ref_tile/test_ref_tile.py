@@ -277,6 +277,10 @@ class Recipe(unittest.TestCase):
         if kw.pop("recipe4_default", False) is False:
             kw.setdefault("hold_budget", "tile")
             kw.setdefault("hold_budget_reason", "recipe-2/3 pad mechanics under test")
+        # recipe 5 (TILE-FLOW) adds tile_plan (content outline, face fence); these tests exercise the recipe-2..4
+        # mechanics, which stay valid with tile_plan off.  TilePlan in test_tile_plan.py covers the default.
+        if kw.pop("recipe5_default", False) is False:
+            kw.setdefault("tile_plan", False)
         r = RT.gen(spec(self.EXN, **kw), commit="c" * 40, out_root=Path(root))
         d = Path(root) / r["kit"]
         return {f.name: f.read_text() for f in d.iterdir()}
@@ -391,14 +395,14 @@ class Recipe(unittest.TestCase):
     def test_recipe_4_hold_budget_default(self):
         # FLOW-HOLD (coordinator 2026-10-16): a NEW leaf kit takes recipe 4 = hold_budget "die": flop-first pins, no pads
         with tempfile.TemporaryDirectory() as a:
-            k = self.kit(a, name="rcp4", recipe4_default=True)
+            k = self.kit(a, name="rcp4", recipe4_default=True, recipe=4)
             sp = json.loads(k["spec.json"])
             self.assertEqual((sp["recipe"], sp["hold_budget"], sp["inhold"], sp["outhold"]), (4, "die", False, False))
             self.assertIn("OT_IO_HOLD_BUDGET=die", k["kit.env"])
             self.assertNotIn("OT_INHOLD_MASTER", k["kit.env"])
             self.assertIn("set ::env(OT_IO_HOLD_BUDGET) die", k["signoff.sdc"])
             with self.assertRaises(RT.SpecError):        # opting out needs a reason
-                self.kit(a, name="rcp4b", recipe4_default=True, hold_budget="tile")
+                self.kit(a, name="rcp4b", recipe4_default=True, recipe=4, hold_budget="tile")
 
     def test_io_hold_margin_split(self):
         # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off

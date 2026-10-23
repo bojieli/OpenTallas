@@ -1,0 +1,11 @@
+{
+ "element": "qfd_tt_ctlm_dv",
+ "kit": "physical/ref_tile/qfd_hp13_cpub39_rp_alt@dc9347ecd",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "5e1ce63a787c18eac884f20a86e67381824598436200eec4a2264106fccc2dea",
+ "reasons": "Independent visual inspection of placed r4 alt image, inherited geometry unchanged by r5 spine-only kit diff. Two compact macro columns, contiguous W/S core with connected centre/E channels, no isolated logic island. Measured fill of free 28.7% MAIN / 26.7% ALT, buf/inv 36%/35%; compact square outline within 1.3x content. r5 replaces failed TritonCTS with actual clock spine without changing roots, phases or schedule. Images are pre-spine placement, so geometry permission is conditional and establishes no clock closure.",
+ "fixes": "Obtain current r5 placed/CTS render and pin-register p90 <=30um; demonstrate both real roots pin-flop spread <=80ps at TT and FF, native reset/landing fanout <=32 and neighbour match. Explain ties if >100. No physical qualification from old r4 clock failures. Retain r4 obligation: remove or list the 69 load-less bits.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:56:43-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

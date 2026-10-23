@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_grp",
+ "kit": "physical/ref_tile/qkd_kvs_grp_r4b@f7ab3cbb6",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "e6b6067e8119f60474bc6f6b5b54f86bfbb8b637ed1e01956bc44a1d2303d8f6",
+ "reasons": "FALLBACK only: est fill 19.7% at the 20% floor; same plan as r4a with pin pitch 4.97/um. pin-bound by the 2171-bit E bus on M4 (5.49/um a, 4.97/um b, under the 6/um limit); 4-macro stack pins face the E band; W band = PC-word pin regs; macro-column ends above/below are contiguous placement (no island); est fill a 24.9% (grp) / 20.8% (grp_h). CONDITION: placed fill >=20% and E pin->reg p90 <=30 at the first gate image; W PC words at y 115-280 detour ~80 um around the stack - record it in the plan; the die-side E-bus split / grp-into-PC merge stays open at COORD as the real fix of the low fill",
+ "fixes": "if placed fill <20%, drop b; keep width 151.2 (the E band growth 32.6 -> 45.4 um has no demand behind it)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:24:29-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

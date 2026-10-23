@@ -17,6 +17,7 @@ DEF=""; case $M in hops) DEF="+define+OT_S81SL_XR_MUT_HOPS";; row) DEF="+define+
   porder) DEF="+define+OT_S81SL_XR_MUT_PORDER";; nocol) DEF="+define+OT_S81SL_XR_MUT_NOCOL";;
   bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
 [ "${XR_FOREG:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_FOREG"
+[ "${XR_PDC:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_PDC"   # STW-S81c-COLLA 10-22: pin predecode (XR8)
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GSEED=$S -GNC=$N --top-module tb_s81sl_xr \
   -Mdir $O/obj rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv $O/tb_s81sl_xrt.sv --build-jobs ${J:-4} \
   -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }

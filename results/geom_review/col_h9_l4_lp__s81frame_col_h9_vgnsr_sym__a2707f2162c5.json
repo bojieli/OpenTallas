@@ -1,0 +1,11 @@
+{
+ "element": "col_h9_l4_lp",
+ "kit": "physical/ref_tile/s81frame_col_h9_vgnsr_sym@f745d0ec6",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "a2707f2162c59a994cde3633e2d661cd68edb2402b627c2ca4eefc492f833a58",
+ "reasons": "SPINE-SYM measurement pair of vgnsr (OT_SPINE_SYM=1 only). frame geometry unchanged from vgsr (COORD OK-PARENT: dense macro grid, 220 hard = 50%, std fill 2.1% by construction; aspect 2.35 = die frame slot); only RTL change = lp n32 landing writer + 20 regional reset copies (<=32 loads) - structurally the right direction. Placed render (vgsr 3_5_place_dp): logic in the row channels beside the children, no islands. CONDITIONS: (1) TIE-OFF CHECK: 19,263 TIEHI/TIELO -> list what the ties drive (ROM/cfg constants OK, tied functional inputs violate the no-tie-off rule); (2) buf/inv 229.7k of 323k std cells (71%) from GPL/repair_design on frame-length landing/ret nets: post the top repaired nets and their register-to-register lengths; any unregistered segment > 405 um (or > ~1 mm on M8/M9 with repeaters) must be landed, not buffered; (3) CTS: ck_r0 insertion 2.5-2.6 ns with 52k pad buffers - the clock rule is boundary match (pin-flop spread <=80 TT+FF at neighbour boundaries); _sym measures the spine",
+ "fixes": "same conditions",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:37:56-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

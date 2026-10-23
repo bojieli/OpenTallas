@@ -1,0 +1,11 @@
+{
+ "element": "qfd_collective_static_io_production",
+ "kit": "physical/ref_tile/qfd_cb16c_s0_fl@4c54514a7",
+ "verdict": "FAIL",
+ "hash": "8b688bb0aef40761737cc456c1ab02e31c3d65a61bfdcc325c23500271e655f2",
+ "reasons": "author demand numbers (COLLIO-F 02:41): col A gap2 0.78, N 0.63, col B gap1/gap2 0.64, spine 0.55-0.89 > 0.6 -> condition (1) failed; fl must not route",
+ "fixes": "flx is MAIN; a future fl-size kit only with gaps widened from demand",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:28:34-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

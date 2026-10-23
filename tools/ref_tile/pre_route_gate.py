@@ -889,7 +889,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
     elif rl is not None and spec["kind"] == "cluster":
         if RT.cluster_level(spec) == 2:      # two-level cluster (Q-CLUSTER 2026-10-17): signals M7, PG M8
-            cap, grant, want_pg = "M7", None, "M8"
+            cap, grant, want_pg = "M7", None, ("M7" if spec.get("pg_contract") == "m7_passthrough" else "M8")
         else:
             (cap, grant), want_pg = RT.cluster_signal_cap(spec, RT.contract_slot(spec)), "M7"
         if rl.group(1) != cap or lc.get("pg_layer") != want_pg:
@@ -1478,6 +1478,54 @@ def pin_demand(d: dict) -> list:
     return out
 
 
+def geom_review_verdict(kd: Path) -> dict | None:
+    """GEOM-REVIEW verdict recorded for this kit directory's content hash (tools/closure_loop/geom_review_gate.py: verdict
+    JSONs in $GEOM_REVIEW_DIR / the coordination dir / <repo>/results/geom_review + lanes/GEOM-REVIEW.md VERDICT lines),
+    latest wins; None when the module or no matching verdict is available (never raises)."""
+    try:
+        cl = str(Path(__file__).resolve().parent.parent / "closure_loop")
+        if cl not in sys.path:
+            sys.path.insert(0, cl)
+        import geom_review_gate as GR
+        h = GR.kit_hash_fs(str(kd))
+        if not h:
+            return None
+        return GR.verdict_for(h, GR.load_verdicts(repo=str(Path(__file__).resolve().parents[2])))
+    except Exception:  # noqa: BLE001 -- the review lookup must never break a gate
+        return None
+
+
+def layout_review(g: Gate, dumps: dict, od: Path, spec: dict, title: str, imgs: dict, kd: Path | None = None,
+                  gv: dict | None = None):
+    """PD REVIEW PICTURE + STATS (TILE-REVIEW 2026-10-23, owner-ordered visual review of every unclosed tile): ALWAYS
+    write <kit>/gate_layout/review.png + review_stats.json from the placed dump (else the floorplan dump), and FAIL when
+    the std-cell fill of the free (non-macro) area is < 20 % or the pin -> pin-register p90 distance is > 150 um.
+    Exemptions (WARN): fill -- spec "low_fill_reason", a measured lattice/channel band, or a GEOM-REVIEW PASS /
+    PASS-CONDITIONAL for this kit's content hash; pin->reg -- only that GEOM-REVIEW verdict or a spec "pin_reg_reason"
+    (COORD 10-23).  Floorplan-only dumps are pictured, not judged."""
+    import layout_review as LR
+    d = dumps.get("placed") or dumps.get("floorplan")
+    if not d:
+        return
+    mb = getattr(g, "measured_band_fill", None) or {}
+    band = (f"measured lattice/channel band {mb.get('band_area_um2', 0):.1f} um2 at density "
+            f"{mb.get('band_density', 0):.0%}") if mb.get("valid") else ""
+    if gv is None and kd is not None:
+        gv = geom_review_verdict(kd)
+    try:
+        st, png, items = LR.review(d, od, f"{title} layout review (gate)", dict(spec), parent=is_parent_kit(spec),
+                                   geom_review=gv, band_reason=band)
+    except Exception as ex:  # noqa: BLE001
+        g.add("WARN", "layout_review", f"layout review failed: {type(ex).__name__}: {ex}")
+        return
+    imgs["review"] = png
+    g.layout_images = dict(getattr(g, "layout_images", None) or {}, review=png)
+    g.add("INFO", "layout_images", f"LOOK at the PD review picture: review {png}")
+    g.layout_review = {k: v for k, v in st.items() if k not in ("macro_obs", "verdict_items")}
+    for sev, check, msg, fix in items:
+        g.add(sev, check, msg, fix)
+
+
 def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
     """LAYOUT IMAGES + FILL + TRIAL ROUTE (OWNER RULE 20:45 PT 2026-10-15): render the gate's layout dumps to PNG in
     <kit>/gate_layout/ (floorplan, post-place density, GRT congestion), judge fill of parent / cluster kits and the
@@ -1522,6 +1570,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
         g.add("WARN", "layout_images", "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log")
     parent = is_parent_kit(spec)
     fpd = dumps.get("floorplan")
+    gv = geom_review_verdict(kd)
     if parent and (spec.get("fill_reason") or {}).get("lattice_channel_bound") is not None and not fpd:
         g.measured_band_fill = {"valid": False, "errors": ["missing actual floorplan dump"]}
         g.add("FAIL", "measured_band_fill", "missing actual floorplan dump",
@@ -1546,7 +1595,11 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                 reason = ""  # pin-bound text cannot override an invalid structural claim
                 g.add("FAIL", "measured_band_fill", "; ".join(measured["errors"]),
                       "fix actual placement/row envelope; preserve this failed receipt")
-        if fill < FILL_FAIL and not reason:
+        if reason and fill < FILL_FAIL and gv and gv.get("verdict") == "FAIL":
+            # COORD 10-23: a pin-bound / band reason must not carry a parent the visual review FAILED for this content
+            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%}; reason '{reason}' revoked: GEOM-REVIEW FAIL for this kit's "
+                  f"content hash {str(gv.get('hash'))[:12]})", "apply the GEOM-REVIEW fixes (lanes/GEOM-REVIEW.md) and re-REQ")
+        elif fill < FILL_FAIL and not reason:
             g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "do not shrink for area: regroup the macros / children "
                   "so links stay short, or record "
                   "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
@@ -1559,6 +1612,7 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
             g.add("WARN", "fill", msg + f" (> {FILL_HI:.0%})", "enlarge the outline toward fill 0.50-0.55")
         else:
             g.add("INFO", "fill", msg)
+    layout_review(g, dumps, od, spec, title, imgs, kd, gv)
     if "GATE_GRT_RC=" in out:
         # TRIAL ROUTE for EVERY kit (ROOT-0330-GRT 10-18; parent / cluster kits since 10-15): overflow > 0 FAILs with the
         # hotspot (worst gcell / layer / bbox from the congestion report) and the congestion PNG
@@ -2739,6 +2793,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
         out["measured_band_fill"] = g.measured_band_fill
     if getattr(g, "trial_route", None):
         out["trial_route"] = g.trial_route      # a gate without this record predates the every-kit trial GRT
+    if getattr(g, "layout_review", None):
+        out["layout_review"] = g.layout_review  # absent: the gate predates the TILE-REVIEW rule (10-23)
     if getattr(g, "port_latency", None):
         out["port_latency"] = g.port_latency
     if getattr(g, "reset_landing", None):

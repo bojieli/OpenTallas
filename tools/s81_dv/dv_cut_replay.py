@@ -255,6 +255,10 @@ def ctl_beat(T, ev, die, inst):
     beat = int(T[ti]['beat'], 16)
     if (beat >> 4) & 0x1F:
         raise ValueError(f'template {ti} carries hops {(beat >> 4) & 0x1F}: only line-default (0) beats are modelled')
+    if ev['port'] == 'vi':
+        # TOKd-S81 10-23 (c14/G9 entry job22, u_s_4N.vi on w_tvN_seqhost_lnd): a V-rung beat is the seq_host packer's
+        # word itself (hops 0, src 4); the stop rewrites hops / src only when it re-injects the beat on its line.
+        return beat, ti, (beat >> 4) & 0x1F, (beat >> 9) & 0xF
     col, tier = int(inst[4]), inst[5]
     hops = col + 1 if ev['port'] == 'ri_e' else 8 - col
     src = die.sid(f'u_s_{LINE_INJECT_COL}{tier}')
@@ -751,7 +755,13 @@ def seqhost_live(die, cut, idle_run):
     (10-18 G8 cut_3S_ctl L0: header words at 64/69 dropped, rn up at ~80 -> issuer fault code 4, no job)."""
     pb = die.port_bits('u_seqhost', 't_host')
     nb = pb[76] if len(pb) > 76 else None
-    lk = next((k for k, L in die.links.items() if nb and nb in L['src_bits']), None)
+    # t_host's alive bit fans out to several lanes (c14: ht_7N age 38 and hbc_reverse_l0 age 22) and die.links is built
+    # from a set, so next() picked either one run to run (live 99 or 98, alive landed 138 or 121).  Take the host
+    # return lane ht_* (it lands beside the forward host lanes hf_*, whose landing gates the boot stream; its age gives
+    # the measured unit edge: t_host alive at the pin at 100 = live 99 + 1), then the name order: deterministic.
+    lks = sorted((k for k, L in die.links.items() if nb and nb in L['src_bits'] and cut.out_by_net.get(L['out_net'])),
+                 key=lambda k: (not k.startswith('ht_'), k))
+    lk = lks[0] if lks else next((k for k, L in die.links.items() if nb and nb in L['src_bits']), None)
     if lk is None:
         raise SystemExit('--idle-run: u_seqhost.t_host alive bit has no lane in this build')
     L = die.links[lk]
@@ -765,6 +775,17 @@ def seqhost_live(die, cut, idle_run):
         if len(f) == 3 and int(f[1]) == port['index'] and (int(f[2], 16) >> bit) & 1:
             return dict(lane=lk, age=L['age'], alive_landed=int(f[0]), live=int(f[0]) - L['age'] - 1, trace=str(tr))
     raise SystemExit(f'--idle-run: t_host alive never seen on {port["port"]} in {tr}')
+
+
+def calendar_start_phase(hs):
+    """start_phase pw_d[8:7] of the calendar header (CSR 0x10 word with pw_d[27:26] == 3, begin form pw_d[25] == 0)."""
+    for w in hs:
+        d = w >> 1
+        if w & 1 and (w >> 513) & 3 == 0 and d & 0xFF == 0x10:
+            p = (d >> 32) & ((1 << 28) - 1)
+            if p >> 26 == 3 and not (p >> 25) & 1:
+                return (p >> 7) & 3
+    return None
 
 
 def host_boot_words(a, die, prog, S, words, cut=None):
@@ -781,12 +802,26 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     hs = [int(x, 16) for x in (prog / 'prog/host_boot.memh').read_text().split()]
     live = seqhost_live(die, cut, a.idle_run) if getattr(a, 'idle_run', None) else None
     if live is not None:
+        # TOKd-S81 10-23 (cap14 c14fx cut_3S_ctl, job15 CTL monitor): u_seqhost's own rn (live 99) is NOT the binding
+        # edge.  The forward host lane's landing (ld_hf_7N_l*, on the receiving frame's landing reset, released later
+        # since the chained-frame calendar fix v2) dropped every word landing before ~139 while t_host alive landed at
+        # 138: the 0x11 length + calendar header were lost -> walk_issue code 4, no job, no V CTL.  The boot stream
+        # therefore starts after BOTH edges: seqhost live + 8 and the landed t_host alive edge + 8.
+        floor = max(live['live'] + 8, live['alive_landed'] + 8)
         if a.host_boot is None:
-            a.host_boot = live['live'] + 8
+            a.host_boot = floor
         if a.host_boot < live['live'] + 2:
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
+        if a.host_boot < live['alive_landed'] + 4:
+            raise SystemExit(f'--host-boot {a.host_boot} lands before the host lane landing is live (t_host alive '
+                             f'landed {live["alive_landed"]}): the boot header would be dropped; use >= {floor}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
+    # walk_issue accepts a start only when (phase_q + 1) == start_phase at its sampling edge (else code 5, no job);
+    # phase_q = edges since the issuer's own relayed reset, mod 4, which the lane-age model does not pin (measured
+    # 10-23: c14 accepts (KS - live) % 4 == 3, G9 == 0).  The default KS is therefore phase-blind: callers measure
+    # it (run_entry_replay --ks-probe) and pass --ks.
+    sp = calendar_start_phase(hs)
     a.t0 = ks + 5
     from ks_descriptor import encode as encode_ks, fixture_word
     meta_path = getattr(a, 'ks_fixture_meta', None)
@@ -824,6 +859,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
+                     start_phase=sp, ks_explicit=a.ks is not None,
                      ks_word=f'{ksw:x}', ks_provenance=provenance, t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
