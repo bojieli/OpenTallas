@@ -1494,7 +1494,7 @@ def layout_review(g: Gate, dumps: dict, od: Path, spec: dict, title: str, imgs: 
         rspec["low_fill_reason"] = (f"measured lattice/channel band {mb.get('band_area_um2', 0):.1f} um2 at density "
                                     f"{mb.get('band_density', 0):.0%}")
     try:
-        st, png, items = LR.review(d, od, f"{title} layout review (gate)", rspec)
+        st, png, items = LR.review(d, od, f"{title} layout review (gate)", rspec, parent=is_parent_kit(spec))
     except Exception as ex:  # noqa: BLE001
         g.add("WARN", "layout_review", f"layout review failed: {type(ex).__name__}: {ex}")
         return
