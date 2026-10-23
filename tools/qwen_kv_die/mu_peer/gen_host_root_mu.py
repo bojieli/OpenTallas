@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from mkmu import build  # noqa: E402
+from hoist_gmu_decls import fix as hoist  # noqa: E402
 
 OUT_REL = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
 HEAD = '''`timescale 1ns/1ps
@@ -40,7 +41,7 @@ SPECS = [
         ('qkd_host_guard_fifo #(.W(64))markers(', 'qkd_host_guard_fifo #(.W(64),.SRAM_FIFO(1))markers(')]),
     ('rtl/qwen_sys/host_integrated_20261014/qkd_host_packet_bundle_admission.sv', 'qkd_host_packet_bundle_admission', [
         ('qkd_host_ctrl_token_service_packet_collected #(.STRAPPED(1),',
-         'qkd_host_ctrl_token_service_packet_collected_mu #(.MU(1),.STRAPPED(1),')]),
+         'qkd_host_ctrl_token_service_packet_collected_mu #(.MU(1),.HCW(HCW),.STRAPPED(1),')]),
     ('rtl/qwen_sys/host_integrated_20261014/qkd_host_control_packet_admission.sv', 'qkd_host_control_packet_admission', [
         ('qkd_host_packet_bundle_admission #(', 'qkd_host_packet_bundle_admission_mu #(.MU(1),'),
         ('qkd_host_control_prompt_observed #(', 'qkd_host_control_prompt_observed #(.MU(1),')]),
@@ -54,6 +55,21 @@ SPECS = [
         ('qkd_host_tp8_coordinator u_coordinator(', 'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(1))u_coordinator('),
         ('qkd_host_record_port u_records(', 'qkd_host_record_port_mu #(.MU(1))u_records(')]),
 ]
+
+
+# KV-P3-RTL 10-23 (owner: no tie-offs / no constants padded into ports): per-module parameter + header edits applied to
+# the generated text (each must apply exactly once).  qkd_host_packet_bundle_admission_mu gets HCW (default 182 = the
+# original ports and logic): its cmd_hc / hc are HCW wide and passed to the transport u_ctrl (gen_peer_mu.py HCW);
+# HCW 39 = START only (MU 1), used by the OBSX START-only admission composition (gen_host_root_obs.py --ext), which
+# fed the 182-bit transport {143'd0,cmd_hc}.
+POST = {
+    'qkd_host_packet_bundle_admission': ('parameter integer MU=1,parameter integer HCW=182', [
+        ('input wire cmd_v,input wire[181:0]cmd_hc,output wire cmd_cr,\n output wire[181:0]hc,',
+         'input wire cmd_v,input wire[HCW-1:0]cmd_hc,output wire cmd_cr,\n output wire[HCW-1:0]hc,'),
+        ('generate if(MU==0)begin:g_plain',
+         'initial if(HCW!=182&&(MU==0||HCW!=39))$fatal(1,"qkd_host_packet_bundle_admission_mu: HCW must be 182, '
+         'or 39 (START only, MU 1)");\ngenerate if(MU==0)begin:g_plain')]),
+}
 
 
 def one_module(src, mod):
@@ -71,8 +87,15 @@ def generate(root):
     out = []
     for rel, mod, edits in SPECS:
         src = one_module((root / rel).read_text(), mod)
-        out.append(build(src, mod, HEAD.format(src=rel, mod=mod), edits))
-    return ''.join(out)
+        extra, post = POST.get(mod, ('parameter integer MU=1', []))
+        text = build(src, mod, HEAD.format(src=rel, mod=mod), edits, extra_param=extra)
+        for x, y in post:
+            if text.count(x) != 1:
+                raise ValueError(f'{mod}: post edit applies {text.count(x)} times: {x[:60]}')
+            text = text.replace(x, y)
+        out.append(text)
+    # KV-PEER13 2e44e9138 committed the g_mu declarations hoisted (hoist_gmu_decls.py --fix); generate == committed
+    return hoist(''.join(out))[0]
 
 
 def main(argv):
