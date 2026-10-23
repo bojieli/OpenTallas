@@ -1,0 +1,35 @@
+GATE WARN macro_grid: ot_s81hd_lsc_t9#0: origin (789.696, 34.56) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN macro_grid: ot_s81hd_lsc_t9#0: origin (789.696, 120.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN macro_grid: ot_s81hd_lsc_t9#0: origin (789.696, 207.36) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN macro_grid: ot_s81hd_lsc_t8#0: origin (789.696, 293.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN macro_grid: ot_s81hd_lsc_r0m#0: origin (789.696, 380.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN macro_grid: ot_s81hd_lsc_r1m#0: origin (789.696, 509.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'dsfd_coll_lane_w_safe8_ntf': 'M5', 'ot_s81hd_lsc_t9': 'M5', 'ot_s81hd_lsc_t8': 'M5', 'ot_s81hd_lsc_r0m': 'M5', 'ot_s81hd_lsc_r1m': 'M5'}
+GATE INFO remote: ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81hd_lane_p9m_20261022-183559.source_snapshot.json
+GATE INFO remote: ot-agidock128 did not admit the gate within 900 s; same archive re-shipped to ot-pve1
+GATE INFO remote: ot-pve1 did not admit the gate within 900 s; same archive re-shipped to ot-epyc5
+GATE INFO remote: remote log /tmp/ref_gate_s81hd_lane_p9m_20261022-183559.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81hd_lane_p9m-20261022-183559
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=5
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 59 s (gate total 2025 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 2141, 'pin_rectangles': 2141, 'pin_track_checked': 2141, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 7d28e2eab2f7ff4dbd5d85fe5dec0080370040cf78fca5911d4cc78cda5f2fc3
+GATE INFO util: synthesized std area 2 um2 + macros 466187 in core 594920: util 0% (std-cell density 0.0% of placeable 118562 um2; total fill 78.4%)
+GATE INFO textbook: PASS ot_s81hd_lane cells 18 flops 5 depth 11.7 ps util 0.7836 reach 0.0 um (0.1 s)
+GATE INFO cts_calibration: ss insertion all 251.6..1224.5 ps (spread 972.9), boundary mean 1008.3; tt insertion all 194.8..887.1 ps (spread 692.3), boundary mean 739.6; ff insertion all 160.0..688.3 ps (spread 528.3), boundary mean 580.0; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: spine built on port ck
+GATE INFO clock_spine: OT_SPINE iter 2 (coarse) leaves 11 sinks 12 cells 278 leaf arrival 859.3..893.2 ps (spread 33.9) pad 22.1 / 14.0 ps
+GATE INFO clock_spine: OT_SPINE iter 3 (fine) leaves 11 sinks 12 cells 280 leaf arrival 867.5..893.2 ps (spread 25.7) pad 22.1 / 23.3 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81hd_lane_p9m/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      130 paths, worst slack -36.3 ps (e.g. tx[398])
+GATE INFO path_classes: in->reg       169 paths, worst slack -2.7 ps (e.g. u_ot_pr_core.u_ln/rx[81])
+GATE INFO path_classes: macro->reg      2 paths, worst slack 110.5 ps (e.g. u_ot_pr_core.u_ln/lo_d[457])
+GATE INFO path_classes: reg->reg        2 paths, worst slack 443.9 ps (e.g. u_ot_pr_core.rxen_w$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -3.634681444708576e-11 hold WNS 3.740896481474465e-11
+GATE WARN clock_rule: root port:ck: 12 sinks on the largest root; measured TT insertion 917.1 ps, FF insertion 728.7 ps, TT pin-flop spread 41.4 ps, FF pin-flop spread 43.7 ps; WARN: insertion 917.1 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/s81hd-lane-sc/physical/ref_tile/s81hd_lane_p9m/gate_layout/floorplan.png; density /home/ubuntu/wt/s81hd-lane-sc/physical/ref_tile/s81hd_lane_p9m/gate_layout/density.png
+GATE INFO fill: fill 78% = (hard macros 466186.8 + synthesized std cells 2.3) / outline 601675.8 um2; pin demand per face: S 42 pins over 221.4/898.6 um (25%), N 0 pins over 0.0/898.6 um (0%), W 1088 pins over 574.0/669.6 um (86%), E 1177 pins over 578.4/669.6 um (86%)
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M2 1.21% used; GRT 43 s
+PRE_ROUTE_GATE: WARN (0 fail, 7 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81hd-lane-sc/physical/ref_tile/s81hd_lane_p9m/source_binding_history/812cad9bc53517cedcfe19468542de230a3bcf60e0c6f4ad7e8101a9477d392b.json
+GATE: s81hd_lane_p9m/gate_result.json written (exact staged source binding; commit it with the kit)

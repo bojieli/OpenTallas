@@ -32,5 +32,12 @@
   },
   "s8ng_native_result": "PASS under same-region direct pin guidance; launch494.5 and capture438.9 are measured, not standalone failures",
   "actual_parent_context": "Accepted rx relay station gates9dc073dee p9m/p9f retain tx398 reg->out -36.3/-80.1. Standard native s8ng ETM launch494.5 tx398 plus parent ring and80fF load fails actual parent setup. Placement-only beat_tx W-face anchoring is necessary; no registers or edges added.",
-  "s12h": "Different CORE_CRED12; not a substitute, not used to justify s8ng reclosure"
+  "s12h": "Different CORE_CRED12; not a substitute, not used to justify s8ng reclosure",
+  "parent_gate_logs": [
+    "results/rtl/s81_headlane_pin_budget_1022/gate_s81hd_lane_p9m.log",
+    "results/rtl/s81_headlane_pin_budget_1022/gate_s81hd_lane_p9f.log"
+  ],
+  "parent_gate_result_commit": "9dc073dee",
+  "parent_structural_source": "1785c1c68",
+  "note": "These original current-gate logs record -36.3/-80.1 ps reg->out tx398 after the rx relay station fix; earlier full-clock reports retained separately are historical."
 }
