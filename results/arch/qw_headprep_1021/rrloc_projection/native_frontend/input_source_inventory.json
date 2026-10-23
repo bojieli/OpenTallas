@@ -62,7 +62,7 @@
     "rtl/common/landed_parent/ot_pl_land_n32.sv": "f65e61ea0f42b7eb10e3fa9af434e456927134504479043a0d8b3b1332bd1edf",
     "rtl/qwen_dv/qfd_dv_typed_witness_control.sv": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7",
     "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13.sv": "f7026e816f1ca533e56886bdcdc5b77dcab9d56557ab79151a0d2871935c05c4",
-    "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv": "930b8c417a2fe61fb00ab26be2d39991977d7f9e7054f7d9d42746f3ab165ca9",
+    "rtl/qwen_dv/headprep13/qfd_tt_ctlm_dv_lpf_hp13_parts.sv": "ccce2a8874869a928911ad53fa39daa7fec897b7eb7dcffcb47c40d635991c95",
     "rtl/qwen_dv/headprep13/lp/qfd_tt_ctlm_dv_lpf_hp13_lp.sv": "0f86c241395c56cdccdc683c57444538d88c96c6850a9ae34b7437b25b26cff1",
     "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
     "physical_abstracts.v": "14e6f6903f224e64b44ef803dea59d1a8dca03947d5c81d06adf3d42c959eea3",
@@ -80,5 +80,11 @@
     "retain_all_comb": true,
     "fuse_ao": true
   },
-  "scope": "Actual frontend and native32 structural construction only; source functional/local age/native mapped load audit and new view remain owed."
+  "scope": "Actual frontend and native32 structural construction only; source functional/local age/native mapped load audit and new view remain owed.",
+  "regenerated": {
+    "by": "QDIE5-HP13 10-22",
+    "previous_inventory_sha256": "29d6f21d40ca66248ccb2d102446aea167cf208e4b7151273dbb0329ab76b673",
+    "change": "qfd_tt_ctlm_dv_lpf_hp13_parts.sv 930b8c41 -> ccce2a88 (main 4b215c0b3 QW-SEGCAL go port); every other input byte-identical; params unchanged",
+    "native32_sha256": "22b5059010fb02abbca2bb9bce1d8773b3e372c1917d2e8ef01164d4da0cbe16"
+  }
 }
