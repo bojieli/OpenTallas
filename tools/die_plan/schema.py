@@ -183,6 +183,9 @@ SCHEMA = {
                                        "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
+                        # (OT_TAP_CHECK FAIL suggests it); default budgets.tap_pitch_um
+                        "tap_pitch_um": _pos,
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -597,6 +600,11 @@ class Plan:
         return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
 
 
+def tap_pitch(P, tn):
+    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um."""
+    return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 600.0)))
+
+
 def tap_grid(P, tn):
     """COORD 10-23 R4: the partition's clock taps, [(port, x, y)] in the type frame (unsnapped).  A grid of
     ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 600), so every sink is
@@ -604,7 +612,7 @@ def tap_grid(P, tn):
     'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
     t = P.types[tn]
     w, h = t["outline_um"]
-    pitch = float(P.budgets.get("tap_pitch_um", 600.0))
+    pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
     if nx == 1 and ny == 1:
         x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
