@@ -388,7 +388,8 @@
   "tools/landed_parent/lp_fence_release.tcl"
  ],
  "orfs_vars": {
-  "OT_OFLOP_PORT_RE": "^(selected_v_[0-3]|selected_line_[0-3]|fault)$"
+  "OT_OFLOP_PORT_RE": "^(selected_v_[0-3]|selected_line_[0-3]|fault)$",
+  "MAX_PLACE_STEP_COEF": "1.03"
  },
  "safe_design_checklist": {
   "1_pins": "every input lands in its pa flop inside the W/S face band fence, every output leaves its fd flop inside the E/S band fence (c18 had no fence on inputs)",
@@ -414,5 +415,6 @@
  "notes_c18": "HBMc/TILES4 10-22: c17a gate FAIL clock_rule pin-flop spread TT 120 / FF 101 ps on every quadrant root: ck_q0..3 entered at the S-face centre, ~400-600 um from their W/E face pin-register spans. c18 moves each quadrant clock entry to the middle of its own face span (q0/q2 W at 497.6/150.4, q1/q3 E). RTL unchanged, 0 edges.",
  "purpose": "c19b (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. FB: 86.4-um mid channel (crossing/landing room)",
  "notes_c19": "c19b (STEWARD-HBMe/IDX 10-23, coordinator tile review: c18 BAD = 734x648, input pin registers floated into the 130-um column gap, p90 pin->reg 506-534 um, quadrant roots spread 400-700 um -> clock_rule FAIL x4). GEOMETRY + FENCES ONLY on the c18 RTL (FACE=1 OUTST=2, 0 edges): 2x2 children on the 43.2 lattice with an 86.4 row gap holding u_ctl at the centre (child lattice 21.6 for u_ctl only; the gap is also a horizontal crossing channel), W band 43.2 / mid channel / E band; EXCLUSIVE band fences for every pin register (W: in pa + direct pr; mid: crossing pr + crossing fr; E: fd + direct fr; S: ctl pa + fault fd) and for the c13 landings beside their child's ctl pins; every W->E crossing is one registered hop routed on M6/M7 over the child. FB: 86.4-um mid channel (crossing/landing room)",
- "child_lattice_um": 21.6
+ "child_lattice_um": 21.6,
+ "gpl_note": "c19b first gate (ep7 20261023-015704): GPL-0307 RePlAce divergence at overflow 0.27 (top-level region, fences converged) -> MAX_PLACE_STEP_COEF 1.05 -> 1.03 as the tool advises; c19a with the same fences diverged once and reverted to its min-HPWL snapshot."
 }
