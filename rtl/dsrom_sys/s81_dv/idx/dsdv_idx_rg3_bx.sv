@@ -187,25 +187,25 @@ module dsdv_idx_rg3_bxmh #(
         // the scale-select capture: the RAW {su_b, s_lo} land in pin flops beside the S-face sx_i pins and the 32-way
         // decode follows them (cycle-identical to registering the decoded ssel; gate 10-22 20:4x: the 32 decoded ssel
         // flops sat at the SRAM read channel as boundary flops, TT 369..419 ps vs 325..347 for the S pin band)
-        // native census: a shared select (one copy: the decode drove 59 / 38 loads; 8 copies x 4 bits: abc maps the
-        // 32:1 select to a mux tree, so each copy's s_lo[0] drove 34..62 mux selects; 32 copies: the sx_i[12:11] input
-        // ports drove 42).  16 raw-select copies, each for 2 k_sc bits: a 32:1 tree needs <= 16 loads per select bit
-        // and output bit (<= 32 per copy), and every sx_i bit feeds <= 16 copies + the c_hi / cu / read-row capture.
-        (* keep = "true" *) reg [79:0] sl_r;               // copy c = sl_r[5c +: 5] = {su_b, s_lo}
-        always @(posedge ck) sl_r <= {16{su_b, s_lo}};
+        // native census (gates 10-22 20:3x..21:0x): a raw {su_b, s_lo} capture maps (abc) to a flat 32-minterm AND-OR,
+        // so every raw select bit drives 32 loads PER k_sc bit (1 copy: 59; 8 copies x 4 b: 34..62; 16 x 2 b: 64; 32 x
+        // 1 b: the sx_i[12:11] ports drive 42).  Only a ONE-HOT select is census-safe: the decoded selects land in pin
+        // flops (two copies, each serving 16 k_sc bits -> 16 loads per flop; the ports feed a 4 + 8 predecode).
+        // Cycle-identical to the raw capture.
+        (* keep = "true" *) reg [31:0] ss0, ss1;          // one-hot {su_b, s_lo}; ss0 -> k_sc[15:0], ss1 -> k_sc[31:16]
+        wire [31:0] sdec;
+        genvar ga;
+        for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
+            assign sdec[ga] = su_b == 2'(ga / 8) && s_lo == 3'(ga % 8);
+        end
+        always @(posedge ck) begin ss0 <= sdec; ss1 <= sdec; end
         reg [31:0] k_sc;
-        genvar gc, gb;
-        for (gc = 0; gc < 16; gc = gc + 1) begin : g_sc16
-            wire [4:0] sl = sl_r[5 * gc +: 5];
-            for (gb = 0; gb < 2; gb = gb + 1) begin : g_b
-                localparam integer B = 2 * gc + gb;
-                wire [31:0] col;
-                genvar ga;
-                for (ga = 0; ga < 32; ga = ga + 1) begin : g_col
-                    assign col[ga] = hq[ga / 8][32 * (ga % 8) + B];
-                end
-                always @(posedge ck) k_sc[B] <= col[sl];
-            end
+        always @(posedge ck) begin : g_scr
+            reg [31:0] x; integer a_;
+            x = 32'd0;
+            for (a_ = 0; a_ < 32; a_ = a_ + 1)
+                x = x | {{16{ss1[a_]}} & hq[a_ / 8][32 * (a_ % 8) + 16 +: 16], {16{ss0[a_]}} & hq[a_ / 8][32 * (a_ % 8) +: 16]};
+            k_sc <= x;
         end
         (* keep = "true" *) reg [287:0] kq;         // S face pin flops
         always @(posedge ck) kq <= {k_sc, k_key};
