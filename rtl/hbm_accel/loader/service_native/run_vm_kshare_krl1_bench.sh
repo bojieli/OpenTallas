@@ -26,4 +26,14 @@ run split_pos_fast "+WINDOWS=8 +HBM_HALF=400 +STR_HALF=700" -P tb_hbm_svc_vm_ksh
 run split_pos_slow "+WINDOWS=8 +HBM_HALF=700 +STR_HALF=400" -P tb_hbm_svc_vm_kshare.SPLIT=1 -P tb_hbm_svc_vm_kshare.KRL1=1 &
 run split_mut_depth2 "+WINDOWS=8" -P tb_hbm_svc_vm_kshare.SPLIT=1 -P tb_hbm_svc_vm_kshare.KRL1=1 -P tb_hbm_svc_vm_kshare.MUT=6 &
 run split_mut_hbmstrap "+WINDOWS=8" -P tb_hbm_svc_vm_kshare.SPLIT=1 -P tb_hbm_svc_vm_kshare.KRL1=1 -P tb_hbm_svc_vm_kshare.MUT=7 &
+# split_pr_* (STEWARD-HBMd/PINREG-KS 10-23, r6): the same on the PINREG=1 top (every data/valid input in one pin flop):
+# split_pr_pos / _fast / _slow -> PASS; split_pr_mut_depth2 (MUT 6: C ring 4 -> 3), split_pr_mut_hbmstrap (MUT 7),
+# split_pr_mut_ring2 (MUT 9: A/E rings 3 -> 2) -> FAIL.
+PR="-P tb_hbm_svc_vm_kshare.SPLIT=1 -P tb_hbm_svc_vm_kshare.KRL1=1 -P tb_hbm_svc_vm_kshare.PINREG=1"
+run split_pr_pos "+WINDOWS=8" $PR &
+run split_pr_pos_fast "+WINDOWS=8 +HBM_HALF=400 +STR_HALF=700" $PR &
+run split_pr_pos_slow "+WINDOWS=8 +HBM_HALF=700 +STR_HALF=400" $PR &
+run split_pr_mut_depth2 "+WINDOWS=8" $PR -P tb_hbm_svc_vm_kshare.MUT=6 &
+run split_pr_mut_hbmstrap "+WINDOWS=8" $PR -P tb_hbm_svc_vm_kshare.MUT=7 &
+run split_pr_mut_ring2 "+WINDOWS=8" $PR -P tb_hbm_svc_vm_kshare.MUT=9 &
 wait

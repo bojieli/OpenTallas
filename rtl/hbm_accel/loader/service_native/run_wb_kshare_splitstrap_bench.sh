@@ -20,7 +20,10 @@ for c in "${cases[@]}"; do
  # raw_<case> (HBMA-SVC 10-17): build the mutant <case> but judge it as a baseline, so a mutant bench exits non-zero
  # (closure-loop "expect": "fail") and prints its assertion line
  raw=0; if [[ "$c" == raw_* ]]; then raw=1; c=${c#raw_}; fi
- case "$c" in streamstrap) args=(-GKSMUT=8);; hbmstrap) args=(-GKSMUT=7);; overlap) args=(-GKSMUT=3);; address) args=(-GKSMUT=4);; premature) args=(-GWBMUT=1);; esac
+ # pr_<case> (STEWARD-HBMd/PINREG-KS 10-23): the same case on the PINREG=1 kshare (r6 pin flops); pr_ring2 = MUT 9
+ pr=0; if [[ "$c" == pr_* ]]; then pr=1; c=${c#pr_}; fi
+ case "$c" in streamstrap) args=(-GKSMUT=8);; hbmstrap) args=(-GKSMUT=7);; overlap) args=(-GKSMUT=3);; address) args=(-GKSMUT=4);; premature) args=(-GWBMUT=1);; ring2) args=(-GKSMUT=9);; esac
+ if ((pr)); then args+=(-GPINREG=1); c=pr_$c; fi
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_svc_wb_kshare_splitstrap_q --Mdir "$out/obj-$c" -o sim "${args[@]}" "${src[@]}" > "$out/build-$c.log" 2>&1
  rc=0
@@ -28,7 +31,7 @@ for c in "${cases[@]}"; do
  if ((raw)); then
   echo "RAW $c rc=$rc"; grep -E 'WB_INTEGRITY|^PASS' "$out/$c.log" | head -3 || true
   if [[ "$rc" != 0 ]] || ! grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"; then echo "RAW_FAIL $c"; rm -rf "$out/obj-$c"; exit 1; fi
- elif [[ "$c" == baseline ]]; then
+ elif [[ "$c" == baseline || "$c" == pr_baseline ]]; then
   test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' "$out/$c.log"
  else
   test "$rc" != 0 && grep -q 'WB_INTEGRITY' "$out/$c.log"

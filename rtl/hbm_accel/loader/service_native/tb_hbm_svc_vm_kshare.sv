@@ -8,7 +8,7 @@
 // slots 0..63 of each PC exactly once with data = f(VM address of the slot), its bank/epoch; no fault.
 // Plusargs: +HBM_HALF=<ps> +STR_HALF=<ps> +WINDOWS=<n>.  Exit: "PASS" line, else "FAIL".
 module tb_hbm_svc_vm_kshare;
- parameter integer SM=2, MUT=0, KRL1=0, TBL1=KRL1, SPLIT=0;   // TBL1: controller model ready-latency-1 (PC H9b)
+ parameter integer SM=2, MUT=0, KRL1=0, TBL1=KRL1, SPLIT=0, PINREG=0;   // TBL1: controller model ready-latency-1 (PC H9b); PINREG: SPLIT top only
  integer HBM_HALF=600, STR_HALF=500, WINDOWS=6;
  reg hbm_clk=0,stream_clk=0,hbm_rst_n=0,stream_rst_n=0;
  always #(HBM_HALF*1ps) hbm_clk=~hbm_clk;
@@ -21,7 +21,7 @@ module tb_hbm_svc_vm_kshare;
  wire[3:0]fill_v,fill_bank;wire[23:0]fill_slot;wire[63:0]fill_epoch;wire[1023:0]fill_data;wire fault;
  // SPLIT=1 (SVC-SMALL 10-18): the die kit top ot_hbm_svc_vm_kshare_splitstrap (both strap pins tied to SM)
  generate if(SPLIT!=0)begin:g_split
- ot_hbm_svc_vm_kshare_splitstrap #(.MUT(MUT),.KRL1(KRL1)) dut(.sm_stream(3'(SM)),.sm_hbm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
+ ot_hbm_svc_vm_kshare_splitstrap #(.MUT(MUT),.KRL1(KRL1),.PINREG(PINREG)) dut(.sm_stream(3'(SM)),.sm_hbm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
   .g_k_v(g_k_v),.g_k_rdy(g_k_rdy),.g_k_addr(g_k_addr),.g_k_len(g_k_len),.g_k_tag(g_k_tag),.g_k_we(4'b0),.g_k_wdata(1024'b0),.g_k_wstrb(128'b0),
   .g_k_wr_done(g_k_wr_done),.g_kr_v(g_kr_v),.g_kr_rdy(g_kr_rdy),.g_kr_tag(g_kr_tag),.g_kr_beat(g_kr_beat),.g_kr_data(g_kr_data),
   .c_k_v(c_k_v),.c_k_rdy(c_k_rdy),.c_k_addr(c_k_addr),.c_k_len(c_k_len),.c_k_tag(c_k_tag),.c_k_we(c_k_we),.c_k_wdata(c_k_wdata),
@@ -140,7 +140,7 @@ s=fill_slot[6*l+:6];
   repeat(50)@(posedge stream_clk);
   for(l=0;l<4;l=l+1)if(gdone[l]!=GN||fills[l]!=64*WINDOWS)begin errors=errors+1;$display("lane %0d group done %0d/%0d fills %0d/%0d",l,gdone[l],GN,fills[l],64*WINDOWS);end
   if(fault)begin errors=errors+1;$display("fault raised");end
-  if(errors==0)$display("PASS tb_hbm_svc_vm_kshare SM=%0d MUT=%0d hbm_half=%0d str_half=%0d windows=%0d group_reads=%0d fills=%0d",SM,MUT,HBM_HALF,STR_HALF,WINDOWS,4*GN,fills[0]+fills[1]+fills[2]+fills[3]);
+  if(errors==0)$display("PASS tb_hbm_svc_vm_kshare SM=%0d MUT=%0d PINREG=%0d hbm_half=%0d str_half=%0d windows=%0d group_reads=%0d fills=%0d",SM,MUT,PINREG,HBM_HALF,STR_HALF,WINDOWS,4*GN,fills[0]+fills[1]+fills[2]+fills[3]);
   else $display("FAIL tb_hbm_svc_vm_kshare MUT=%0d errors=%0d",MUT,errors);
   $finish;
  end

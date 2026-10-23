@@ -63,7 +63,10 @@ endmodule
 // cnt / cnt_next / fault from one control copy), sliced: each SW-bit (12: r4a census 16-bit rp / write decode 33..35) slice owns kept wp/rp copies; the shared in_v / pop
 // reach a slice through one kept AND with the slice's reset leaf (reset-gated: while a leaf is low the slice pointers
 // clear anyway and the unreset entries are don't-care).  rst_n[0] = control; slice s on leaf 1+s/4 (<= 4 slices x 6 pins).
-module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=12,NS=(WIDTH+SW-1)/SW,NR=1+(NS+3)/4)(
+// PINREG (STEWARD-HBMd/PINREG-KS 2026-10-23): DEPTH may be 2..4 (entry e3 exists only for DEPTH 4), and GRP > 0 routes
+// the shared in_v / pop through ceil(NS/GRP) kept group ANDs (leaf of the group's first slice) before the per-slice ANDs,
+// so a ring with > ~28 slices keeps in_v / pop <= 32 loads.  GRP 0 / DEPTH <= 3 = the r5a structure unchanged.
+module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=12,NS=(WIDTH+SW-1)/SW,NR=1+(NS+3)/4,GRP=0)(
  input wire clk,input wire [NR-1:0]rst_n,
  input wire in_v,input wire [WIDTH-1:0]in_data,
  output wire out_v,input wire pop,output wire [WIDTH-1:0]out_data,
@@ -77,15 +80,26 @@ module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=12,NS=(WIDTH+SW
    cnt<=cnt_next;
    if((in_v&&!pop&&cnt==DEPTH)||(pop&&cnt==0)) fault<=1'b1;
   end
- genvar s;
- generate for(s=0;s<NS;s=s+1)begin:g_s
+ localparam integer GD=(GRP>0)?GRP:1,NGR=(GRP>0)?(NS+GD-1)/GD:1;
+ wire [NGR-1:0]gin,gpop;
+ genvar s,g;
+ generate if(GRP>0)begin:g_grp
+  for(g=0;g<NGR;g=g+1)begin:g_g
+   (* keep="true" *) ot_hbm_svc_ks_and2 u_gw(.a(in_v),.b(rst_n[1+(g*GD)/4]),.y(gin[g]));
+   (* keep="true" *) ot_hbm_svc_ks_and2 u_gp(.a(pop),.b(rst_n[1+(g*GD)/4]),.y(gpop[g]));
+  end
+ end else begin:g_nogrp
+  assign gin[0]=in_v;assign gpop[0]=pop;
+ end
+ for(s=0;s<NS;s=s+1)begin:g_s
   localparam integer B=(WIDTH-s*SW<SW)?WIDTH-s*SW:SW;
+  localparam integer GI=(GRP>0)?s/GD:0;
   wire rl=rst_n[1+s/4];
   (* keep="true" *) reg [1:0]wp,rp;
   reg [B-1:0]e0,e1,e2;
   wire wv,pv;
-  (* keep="true" *) ot_hbm_svc_ks_and2 u_wv(.a(in_v),.b(rl),.y(wv));
-  (* keep="true" *) ot_hbm_svc_ks_and2 u_pv(.a(pop),.b(rl),.y(pv));
+  (* keep="true" *) ot_hbm_svc_ks_and2 u_wv(.a(gin[GI]),.b(rl),.y(wv));
+  (* keep="true" *) ot_hbm_svc_ks_and2 u_pv(.a(gpop[GI]),.b(rl),.y(pv));
   always @(posedge clk)begin
    if(wv&&wp==2'd0)e0<=in_data[s*SW+:B];
    if(wv&&wp==2'd1)e1<=in_data[s*SW+:B];
@@ -97,7 +111,13 @@ module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=12,NS=(WIDTH+SW
     if(wv)wp<=(wp==DEPTH-1)?2'd0:wp+2'd1;
     if(pv)rp<=(rp==DEPTH-1)?2'd0:rp+2'd1;
    end
-  assign out_data[s*SW+:B]=(rp==2'd0)?e0:(rp==2'd1)?e1:e2;
+  if(DEPTH>3)begin:g_d4
+   reg [B-1:0]e3;
+   always @(posedge clk)if(wv&&wp==2'd3)e3<=in_data[s*SW+:B];
+   assign out_data[s*SW+:B]=(rp==2'd0)?e0:(rp==2'd1)?e1:(rp==2'd2)?e2:e3;
+  end else begin:g_d3
+   assign out_data[s*SW+:B]=(rp==2'd0)?e0:(rp==2'd1)?e1:e2;
+  end
  end endgenerate
 endmodule
 

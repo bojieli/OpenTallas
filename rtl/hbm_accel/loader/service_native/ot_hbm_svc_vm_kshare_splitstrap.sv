@@ -63,7 +63,22 @@
 //   registers through kept per-group ANDs; we2/wb2/wt2 have one kept copy per lane pair; resets land in a 2-level kept
 //   leaf tree per domain (hrst_q / srst_q -> R1 -> leaves, every leaf <= 32 pins, distinct leaves per FIFO slice).
 //   Cycle behaviour of every port is unchanged except reset release (+2 edges per domain, uniform for all state).
-module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
+// PINREG (STEWARD-HBMd/PINREG-KS 2026-10-23, r6; default 0 = r5a behaviour and structure): the r5a review found every
+//   OUTPUT flop-driven but every K data/valid INPUT entering a skid entry through the head/tail D-mux, so no capture
+//   flop could be anchored at the face.  PINREG=1: every data/valid input pin (g_k_*, w_k_*, c_kr_*, c_k_wr_done) lands
+//   in ONE plain flop (data free-running, no enable, no reset; valid async-cleared from a lane leaf); the ready value
+//   the sender saw at that edge is kept beside it, so the push is (pin-flop valid && kept ready) one edge later.
+//   Group request skid A and WB skid E become 3-entry rings (ot_hbm_svc_ring_sl, 12-bit slices, kept group/slice ANDs)
+//   with g_k_rdy / w_k_rdy = a flop (ring occupancy after this edge <= 1): a transfer at edge t is in the pin flop at t
+//   and in the ring at t+1, so <= 3 entries are ever held and steady streaming stays II=1.  The sender handshake (transfer
+//   when v && rdy at the same edge) is unchanged.  Response ring C: KRL1=1 depth 3 -> 4, KRL1=0 skid -> 3-entry ring,
+//   c_kr_rdy a flop.  c_k_wr_done lands in a pin flop.  Ready INPUTS c_k_rdy / g_kr_rdy stay direct (8 pins, named
+//   exception: registering them changes the controller / svg protocol).  Added fixed latency, +1 hbm edge each: group
+//   request -> controller, WB write -> controller, controller response -> group, controller VM beat -> fill CDC,
+//   c_k_wr_done -> g_k_wr_done / w_k_wr_done.  Stream pins unchanged.
+//   MUT list: 1..8 as above (6 = C ring one entry short in either PINREG); 9 (PINREG=1) = A / E rings depth 2 ->
+//   overflow fault under back-pressure.
+module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0,PINREG=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
  // for all 32 instances; the strap lands in one pin flop per clock domain (static value, no CDC timing on it).
@@ -192,15 +207,48 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire cm_bank=cmd_q[CMW-1];wire[15:0]cm_epoch=cmd_q[34:19];wire[14:0]cm_row=cmd_q[18:4];wire[3:0]cm_col=cmd_q[3:0];
   // group-side request pin skid (A) and controller-side request skid (B)
   wire a_v,a_r;wire[KW-1:0]a_d;
-  ot_hbm_svc_skid2_sl #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hl[1:0]),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
-   .in_data({g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]}),
-   .out_v(a_v),.out_r(a_r),.out_data(a_d));
+  wire e_v,e_r;wire[285:0]e_d;
+  wire[KW-1:0]g_in={g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]};
+  wire[285:0]w_in={w_k_addr[30*l+:30],w_k_wdata[256*l+:256]};
+  wire[RW-1:0]c_in={c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]};
+  wire a_ring_fault,e_ring_fault;
+  // PINREG leaves (hr1[4l+1], unused by r5a): [8:0] A ring, [15:9] E ring, [16] pin valid / ready-history flops
+  wire[16:0]hp;
+  wire wd;                               // c_k_wr_done of this lane as the window logic sees it
+  if(PINREG!=0)begin:g_pr
+   ot_rst_fanout #(.N(17)) u_hp(.clk(hbm_clk),.rst_n_in(hr1[4*l+1]),.rst_n(hp));
+   // pin flops: data free-running (no enable, no reset), valid async-cleared from leaf hp[16]; the ready each sender
+   // saw at the transfer edge is kept beside (ard/erd), so a pin flop's D is the pin itself (pin -> flop, no gate)
+   reg[KW-1:0]pa_d;reg[285:0]pe_d;
+   always @(posedge hbm_clk)begin pa_d<=g_in;pe_d<=w_in;end
+   reg pa_v,ard_q,a_rdy_q,pe_v,erd_q,e_rdy_q,wd_q;
+   wire[2:0]a_cnt,a_cnt_next,e_cnt,e_cnt_next;
+   always @(posedge hbm_clk or negedge hp[16])
+    if(!hp[16])begin pa_v<=0;ard_q<=0;a_rdy_q<=0;pe_v<=0;erd_q<=0;e_rdy_q<=0;wd_q<=0;end
+    else begin
+     pa_v<=g_k_v[l];ard_q<=a_rdy_q;a_rdy_q<=a_cnt_next<=3'd1;
+     pe_v<=w_k_v[l];erd_q<=e_rdy_q;e_rdy_q<=e_cnt_next<=3'd1;
+     wd_q<=c_k_wr_done[l];
+    end
+   assign g_k_rdy[l]=a_rdy_q;assign w_k_rdy[l]=e_rdy_q;assign wd=wd_q;
+   // A / E: 3-entry rings (MUT 9: depth 2 -> overflow fault); rdy = registered (occupancy after this edge <= 1): a
+   // transfer at edge t lands in the pin flop at t and in the ring at t+1, so <= 3 entries are ever held
+   ot_hbm_svc_ring_sl #(.WIDTH(KW),.DEPTH((MUT==9)?2:3),.GRP(16)) u_a(.clk(hbm_clk),.rst_n(hp[8:0]),.in_v(pa_v&&ard_q),
+    .in_data(pa_d),.out_v(a_v),.pop(a_v&&a_r),.out_data(a_d),.cnt(a_cnt),.cnt_next(a_cnt_next),.fault(a_ring_fault));
+   ot_hbm_svc_ring_sl #(.WIDTH(286),.DEPTH((MUT==9)?2:3),.GRP(16)) u_e(.clk(hbm_clk),.rst_n(hp[15:9]),.in_v(pe_v&&erd_q),
+    .in_data(pe_d),.out_v(e_v),.pop(e_v&&e_r),.out_data(e_d),.cnt(e_cnt),.cnt_next(e_cnt_next),.fault(e_ring_fault));
+  end else begin:g_nopr
+   assign hp=17'd0;assign wd=c_k_wr_done[l];assign a_ring_fault=1'b0;assign e_ring_fault=1'b0;
+   ot_hbm_svc_skid2_sl #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hl[1:0]),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
+    .in_data(g_in),.out_v(a_v),.out_r(a_r),.out_data(a_d));
+  end
   reg[2:0]st,st_nx;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
   wire[7:0]wn=wcmd_q[8*l+:8];
-  // WB-side request pin skid (E)
-  wire e_v,e_r;wire[285:0]e_d;
-  ot_hbm_svc_skid2_sl #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hl[5:4]),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
-   .in_data({w_k_addr[30*l+:30],w_k_wdata[256*l+:256]}),.out_v(e_v),.out_r(e_r),.out_data(e_d));
+  // WB-side request pin skid (E) (PINREG: ring u_e in g_pr above)
+  if(PINREG==0)begin:g_e_nopr
+   ot_hbm_svc_skid2_sl #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hl[5:4]),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
+    .in_data(w_in),.out_v(e_v),.out_r(e_r),.out_data(e_d));
+  end
   wire wb_st=st==WB;
   wire w_more=wb_st&&wsent!=wn;
   wire[29:0]e_a=e_d[285:256];
@@ -238,10 +286,24 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   // controller-side response pin skid (C) -> group response skid (D) or the VM CDC FIFO
   wire c_v,c_r;wire[RW-1:0]c_d;
   wire c_ring_fault;
-  if(KRL1!=0)begin:g_c_rl1
+  if(PINREG!=0)begin:g_c_pr
+   // PINREG: c_kr_v / tag / beat / data land in one pin flop each (data free-running, valid on leaf hl[19]); the ring
+   // takes the beat one edge later.  KRL1=1: the controller transfers on the c_kr_rdy it sampled one edge earlier,
+   // so <= 3 beats arrive after c_kr_rdy falls -> depth 4; KRL1=0 (same-edge ready): <= 2 -> depth 3.  MUT 6: one
+   // entry fewer -> overflow fault under back-pressure.
+   reg c_rdy_q,c_rdy_seen,crd_q,pc_v; reg[RW-1:0]pc_d; wire[2:0]c_cnt,c_cnt_next;
+   always @(posedge hbm_clk)pc_d<=c_in;
+   ot_hbm_svc_ring_sl #(.WIDTH(RW),.DEPTH(3+((KRL1!=0)?1:0)-((MUT==6)?1:0))) u_c(.clk(hbm_clk),.rst_n(hl[14:8]),
+    .in_v(pc_v&&crd_q),.in_data(pc_d),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
+    .cnt(c_cnt),.cnt_next(c_cnt_next),.fault(c_ring_fault));
+   always @(posedge hbm_clk or negedge hl[19])
+    if(!hl[19])begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;crd_q<=1'b0;pc_v<=1'b0;end
+    else begin c_rdy_q<=c_cnt_next<=3'd1;c_rdy_seen<=c_rdy_q;crd_q<=(KRL1!=0)?c_rdy_seen:c_rdy_q;pc_v<=c_kr_v[l];end
+   assign c_kr_rdy[l]=c_rdy_q;
+  end else if(KRL1!=0)begin:g_c_rl1
    reg c_rdy_q,c_rdy_seen; wire[2:0]c_cnt,c_cnt_next;
    ot_hbm_svc_ring_sl #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hl[14:8]),.in_v(c_kr_v[l]&&c_rdy_seen),
-    .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
+    .in_data(c_in),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
     .cnt(c_cnt),.cnt_next(c_cnt_next),.fault(c_ring_fault));
    always @(posedge hbm_clk)
     if(!hl[19])begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
@@ -250,7 +312,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   end else begin:g_c_rl0
    assign c_ring_fault=1'b0;
    ot_hbm_svc_skid2_sl #(.WIDTH(RW)) u_c(.clk(hbm_clk),.rst_n(hl[9:8]),.in_v(c_kr_v[l]),.in_r(c_kr_rdy[l]),
-    .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.out_r(c_r),.out_data(c_d));
+    .in_data(c_in),.out_v(c_v),.out_r(c_r),.out_data(c_d));
   end
   wire vm_phase=(st==ISSUE||st==WAIT)^(MUT==1&&st==PEND);
   wire d_r,f_r;
@@ -271,7 +333,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire drained=!b_v&&g_rd_out==0&&g_wr_out==0;
   // Controller queue holds 32 writes and KREG holds two more: count needs six bits.
   wire wdrained=!b_v&&(g_wr_out==0||MUT==3);
-  wire g_done=c_k_wr_done[l]&&!wb_st;
+  wire g_done=wd&&!wb_st;
   always @*begin
    st_nx=st;
    case(st)
@@ -291,7 +353,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     g_rd_out<=g_rd_out+rd_beats[7:0]-{7'd0,c_pop_grp};
     if(g_done&&g_wr_out==0)hf<=1;
     if(w_push&&e_bad)hf<=1;
-    if(c_k_wr_done[l]&&wb_st&&wdone==wsent)hf<=1;
+    if(wd&&wb_st&&wdone==wsent)hf<=1;
     if(c_pop_grp&&g_rd_out==0&&!(MUT==1))hf<=1;
     if(c_pop_vm&&!tag_ok)hf<=1;
     if(st==NORM&&take_cmd)begin j<=0;got<=0;end
@@ -306,12 +368,12 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     if(st==NORM&&!take_cmd&&take_wb)begin wsent<=0;wdone<=0;end
     else begin
      if(w_push)wsent<=wsent+1'b1;
-     if(c_k_wr_done[l]&&wb_st)wdone<=wdone+1'b1;
+     if(wd&&wb_st)wdone<=wdone+1'b1;
     end
-    g_k_wr_done[l]<=g_done;w_k_wr_done[l]<=c_k_wr_done[l]&&wb_st;
+    g_k_wr_done[l]<=g_done;w_k_wr_done[l]<=wd&&wb_st;
    end
   end
-  assign norm_l[l]=st==NORM;assign hfault_l[l]=hf||f_ov||c_ring_fault;
+  assign norm_l[l]=st==NORM;assign hfault_l[l]=hf||f_ov||c_ring_fault||a_ring_fault||e_ring_fault;
  end endgenerate
  assign all_norm=&norm_l;
  // ---------------------------------------------------------------- stream side: fills + fault

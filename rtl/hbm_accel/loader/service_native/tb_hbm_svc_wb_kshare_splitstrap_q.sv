@@ -16,7 +16,7 @@
 // from fill start to the completing wa).
 // Params: KSMUT (kshare MUT), WBMUT (wb_kport MUT), WOPEN.  Exit: "PASS" line, else "FAIL".
 module tb_hbm_svc_wb_kshare_splitstrap_q;
- parameter integer KSMUT=0, WBMUT=0, WOPEN=0;
+ parameter integer KSMUT=0, WBMUT=0, WOPEN=0, PINREG=0;   // PINREG: kshare r6 pin flops (run script pr_<case>)
  localparam [31:0] K_BASE=32'h28800000;localparam integer K_MEM=65536;localparam [1:0] STK=2'd2;
  reg hbm=0,stream=0,hrst=0,srst=0;
  always #512 hbm=~hbm;
@@ -41,7 +41,7 @@ module tb_hbm_svc_wb_kshare_splitstrap_q;
  wire[31:0]fill_v,fill_bank;wire[191:0]fill_slot;wire[511:0]fill_epoch;wire[8191:0]fill_data;wire[7:0]ks_fault;
  genvar k;
  generate for(k=0;k<8;k=k+1)begin:gks
-  ot_hbm_svc_vm_kshare_splitstrap #(.MUT(KSMUT)) u(.sm_stream(3'(k)),.sm_hbm(3'(k)),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_clk(stream),.stream_rst_n(srst),
+  ot_hbm_svc_vm_kshare_splitstrap #(.MUT(KSMUT),.PINREG(PINREG)) u(.sm_stream(3'(k)),.sm_hbm(3'(k)),.hbm_clk(hbm),.hbm_rst_n(hrst),.stream_clk(stream),.stream_rst_n(srst),
    .g_k_v(g_k_v[4*k+:4]),.g_k_rdy(g_k_rdy[4*k+:4]),.g_k_addr(g_k_addr[120*k+:120]),.g_k_len(g_k_len[16*k+:16]),.g_k_tag(g_k_tag[68*k+:68]),
    .g_k_we(g_k_we[4*k+:4]),.g_k_wdata(g_k_wdata[1024*k+:1024]),.g_k_wstrb(g_k_wstrb[128*k+:128]),.g_k_wr_done(g_k_wr_done[4*k+:4]),
    .g_kr_v(g_kr_v[4*k+:4]),.g_kr_rdy(g_kr_rdy[4*k+:4]),.g_kr_tag(g_kr_tag[68*k+:68]),.g_kr_beat(g_kr_beat[16*k+:16]),.g_kr_data(g_kr_data[1024*k+:1024]),
@@ -251,7 +251,7 @@ module tb_hbm_svc_wb_kshare_splitstrap_q;
   if(fault_wb||(|ks_fault)||ctl_fault)begin errors=errors+1;$display("fault: wb_kport %b kshare %b controller %b",fault_wb,ks_fault,ctl_fault);end
   for(b=0;b<blk_done;b=b+1)$display("WB_BLOCK %0d sectors %0d fence_stream_edges %0d window_hbm_edges max %0d mean %0d",
    b,btot[b],fence[b],winmax[b],winsum[b]/32);
-  if(errors==0)$display("PASS tb_hbm_svc_wb_kshare_splitstrap_q KSMUT=%0d WBMUT=%0d WOPEN=%0d blocks=%0d group_req=%0d vm_windows=4",KSMUT,WBMUT,WOPEN,NB,32*GN);
+  if(errors==0)$display("PASS tb_hbm_svc_wb_kshare_splitstrap_q KSMUT=%0d WBMUT=%0d WOPEN=%0d PINREG=%0d blocks=%0d group_req=%0d vm_windows=4",KSMUT,WBMUT,WOPEN,PINREG,NB,32*GN);
   else $fatal(1,"FAIL tb_hbm_svc_wb_kshare_splitstrap_q KSMUT=%0d WBMUT=%0d WOPEN=%0d errors=%0d",KSMUT,WBMUT,WOPEN,errors);
   $finish;
  end
