@@ -155,15 +155,18 @@ xn.update(kind="tile", sources=SRC + [BAND], params={"RH": 1}, outline={"w": 475
 xn["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
 xn["job"]["benches"] = [LSWX, LSWX_M]
 specs[xn["name"]] = xn
-def xm_spec(name, ck_range, purpose, note, unclustered=True, ck_face="S"):
+def xm_spec(name, ck_range, purpose, note, unclustered=True, ck_face="S", sx_face="W"):
     m = common(name, "dsdv_idx_rg3_bxm", purpose)
     m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1}, outline={"w": 475.2, "h": 432.0, "exact": True},
              macros=[dict(view=SRAM, inst=f"u_c{h}.g_land[{u}].u_h.g_m.u_mem", at=[[43.2, 257.04][h], round(43.2 + 90.72 * u, 2)],
                           orient=["R0", "MY"][h]) for h in range(2) for u in range(4)],
-             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"] + (["ck"] if ck_face == "W" else []),
-                         "S": ["kq_o"] + (["ck"] if ck_face == "S" else [])},
+             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"],
+                         "W": (["sx_i", "rst"] if sx_face == "W" else []) + (["ck"] if ck_face == "W" else []),
+                         "S": ["kq_o"] + (["sx_i", "rst"] if sx_face == "S" else []) + (["ck"] if ck_face == "S" else [])},
              pin_ranges={"lw_v": [21.6, 453.6], "lw_h1": [21.6, 453.6], "lw_a": [21.6, 453.6], "lw_d": [21.6, 453.6],
-                         "sx_i": [86.4, 172.8], "rst": [86.4, 172.8], "kq_o": [21.6, 453.6], "ck": ck_range},
+                         "sx_i": [86.4, 172.8] if sx_face == "W" else [243.0, 259.2],
+                         "rst": [86.4, 172.8] if sx_face == "W" else [243.0, 259.2],
+                         "kq_o": [21.6, 453.6] if sx_face == "W" else [21.6, 453.6], "ck": ck_range},
              layer_cap="M5", defines=[], std_area_um2=2000,
              why_floorplan="SRAM tile of the X cluster (475.2 x 432 under xn): 8 SRAM in 2 columns x 4 rows (90.72 pitch: 20-um "
                            "channels, the v1 SRAM LEF only sits on the snapped macro lattice so it cannot abut; y 43.2 .. 385.8: "
@@ -206,6 +209,14 @@ for h in range(2):
     m["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
     m["job"]["benches"] = [LSWX, LSWX_M]
     specs[m["name"]] = m
+# gate 10-22 20:0x, per-sink dump of xmh1 (TT): the EARLY pin flops (234 ps) are the ~14 sx_i capture flops (c_hi / cu / c_v)
+# at the W face, the LATE ones (321 ps) the kq bank right beside the S-centre clock pin -> pin flops on two faces again.
+# Structural fix: sx_i (+ rst) move onto the S face beside the clock, so every pin flop sits in ONE band (kq + the S-stage
+# capture) at the clock entry.  xm3 = default tree, xm3u = the unclustered recipe.
+xm_spec("s81dv_rg3b_xm3", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band (kq + sx capture on S), default CTS",
+        "with the S-stage capture flops (sx_i pins beside the clock) in the same band; default tree.", unclustered=False, sx_face="S")
+xm_spec("s81dv_rg3b_xm3u", [234.36, 240.84], "banded idx rg3 X successor: SRAM / key tile, ONE pin-flop band (kq + sx capture on S), unclustered CTS",
+        "with the S-stage capture flops (sx_i pins beside the clock) in the same band; unclustered tree.", unclustered=True, sx_face="S")
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]
