@@ -226,6 +226,8 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
+        # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
+        "census": {"type": ["array", "object"]},
         "budgets": {"type": "object", "additionalProperties": False, "properties": {
             k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
     },
@@ -604,6 +606,27 @@ def spread(A, n, lo, hi):
         return [(m - 1) // 2]
     lowh = [((j * (m - 1)) // (n - 1)) for j in range(n // 2)]
     return lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
+
+
+def usable_tracks(L, ln, lo, hi):
+    """number of tracks of layer ln (dict L: pitch_um, offset_um) inside [lo, hi] off the partition PG bands."""
+    p, off = L["pitch_um"], L["offset_um"]
+    k0 = math.ceil((lo - off) / p - 1e-9)
+    k1 = math.floor((hi - off) / p + 1e-9)
+    return sum(1 for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p))
+
+
+def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
+    """helper for plan generators: the smallest hi (on a 0.016-um step) so that `pins` pins over the layer list `names`
+    fit [lo, hi] at <= per_um pins/um and <= track_max of the usable (PG-band-free) tracks on every layer."""
+    layers = layers or {L["name"]: L for L in ASAP7_LAYERS}
+    nl = len(names)
+    need = [len(range(i, pins, nl)) for i in range(nl)]
+    hi = lo + max(pins / per_um, 0.016)
+    while True:
+        if all(usable_tracks(layers[ln], ln, lo, hi) * track_max >= n for ln, n in zip(names, need)):
+            return round(hi, 4)
+        hi += 0.016
 
 
 def pin_positions(port, layers):

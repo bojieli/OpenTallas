@@ -148,3 +148,12 @@ def test_spread_uniform_at_budget_density():
         gaps = [b - a for a, b in zip(cs, cs[1:])]
         near = sum(1 for g in gaps if abs(g - 1 / 3.0) <= 0.065)
         assert near >= 0.6 * len(gaps), (ln, near, len(gaps))
+
+
+def test_window_for_fits_after_pg_bands():
+    L = {x["name"]: x for x in schema.ASAP7_LAYERS}
+    for lo in (2.0, 4.1, 100.3):
+        for n in (1, 2, 9, 141):
+            hi = schema.window_for(lo, n, ["M7", "M5"])
+            port = dict(id="t", width=n, window_um=[lo, hi], layers=["M7", "M5"], epoch=False)
+            assert len(schema.pin_positions(port, L)) == n
