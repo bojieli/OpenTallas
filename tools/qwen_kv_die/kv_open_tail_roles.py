@@ -90,7 +90,10 @@ SOURCES = {
 # Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
 # SQC-KDIE4 10-22: re-pin after merging codex/kdie-2000-1021 (RoPE OVL / S6C, opt-in) into the sqk2 variant-C line
 # (KC_INNER / PC_SR13 / STRIP_EXTRA / SEAM_LAND_MIN1, opt-in): conflict only in the PC slot size switch (either knob).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '451274ba0c2a4384c3afe1b9085d2dcdafac999996eb04529b7bcbe1933204dd')
+# STEWARD-QKd 10-23: GENERATOR re-pinned (was 451274ba...) after the opt-in KDIE5-RTL kv_static_die switches (GRP_R2 / NATIVE32 /
+# CTL_NC32 / POR_LOCK, rv5 archive binding, rope+native32 suffix composition; all default off); GEN_ASSERT strings re-checked
+# at the release-line flags (relm + GRP_R2/NATIVE32/CTL_NC32/C32=2/POR_LOCK) with check_sources: PASS.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'e463ae4c0fa0e18d91f3eaeb47f6336028e10a1645ffdee9fc9c7991bd1c64a7')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -276,6 +279,25 @@ if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1' and not (
     SOURCES.pop(_T0)
     for _k, _items in ASSERT.items():
         ASSERT[_k] = [(TILES if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
+# STEWARD-QKd 10-23 (OT_KV_CTL_NC32=1, KDIE5-RTL; default off: nothing below runs): the die binds the generated tile
+# file WITHOUT the ctl body (kv_static_die RTL_FILE '..._n32_pj_nc32.sv') plus the standalone ctl (CTL_NC32_RTL, same master
+# qkd_kvs_ctl / 62 ports).  Roles and chain ends are unchanged; the ASSERT strings are re-checked on the files the die
+# actually binds: qkd_kvs_ctl strings on CTL_NC32_RTL, every other module on the nc32 tile file.  Pinned only for the
+# HROOT_LAND + EMB N32/PJ point (the KV release line); any other NC32 point refuses (unproved).
+if __import__('os').environ.get('OT_KV_CTL_NC32', '0') == '1' and __import__('os').environ.get('OT_KV_GRP_S6C', '0') != '1':
+    _NC32_TILES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv': (
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv',
+        '3e24be88a5a79a4559c71f49b579940502903b3cde1a7c925cf8d740765380ab')}
+    if TILES not in _NC32_TILES or __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
+        raise ValueError('kv_open_tail_roles: OT_KV_CTL_NC32=1 is pinned for the HROOT_LAND N32/PJ point only: ' + TILES)
+    _T0 = TILES
+    TILES, _h = _NC32_TILES[_T0]
+    _CTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv'
+    SOURCES.pop(_T0)
+    SOURCES[TILES] = _h
+    SOURCES[_CTL] = '2edc45dffcad72bb9ed5f38185f9a92b08780a3643de8d35f87bf0d7cc255556'
+    for _k, _items in ASSERT.items():
+        ASSERT[_k] = [((_CTL if m_ == 'qkd_kvs_ctl' else TILES) if r_ == _T0 else r_, m_, list(ss)) for r_, m_, ss in _items]
 if __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1':
     _T0 = TILES
     TILES = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_ds_rl_sr.sv'
