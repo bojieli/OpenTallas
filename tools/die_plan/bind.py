@@ -449,6 +449,16 @@ class Binder:
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
         self.rewire, self.rewire_stats = {}, {}
+        # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
+        self.die_port_name = {}
+        if self.ab.get("port_names"):
+            f = self.ab["port_names"]
+            f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
+            for v in json.loads(Path(f).read_text()).get("masters", {}).values():
+                for bd in v.get("bundles", {}).values():
+                    if len(bd.get("die_ports", [])) == 1 and len(bd.get("rtl_ports", [])) == 1 and \
+                            bd["die_ports"][0] != bd["rtl_ports"][0]:
+                        self.die_port_name[(v.get("module"), bd["rtl_ports"][0])] = bd["die_ports"][0]
         if self.ab.get("rewires"):
             self.apply_rewires(base or str(E.REPO))
         self.pc = None
@@ -887,9 +897,11 @@ class Binder:
                 srel = self.rel_of(sci)
                 sinks = self.cross_sinks[(sp, dp, sci, spn)]
                 ak = self._aff(f"{F.cells[sci].path}.{spn}")
+                dpn = self.die_port_name.get((F.cells[sci].module, spn))
+                ak2 = self._aff(f"{F.cells[sci].path}.{dpn}") if dpn else None
 
                 def score(L):
-                    s = 4 * affine(L, ak)
+                    s = 4 * (affine(L, ak) or (ak2 is not None and affine(L, ak2)))
                     if L["sleaf"]:
                         s += 4 * (self._norm(L["sleaf"]) == self._norm(f"{srel}.{spn}")) + \
                             2 * (L["sleaf"].rpartition(".")[2] == spn)

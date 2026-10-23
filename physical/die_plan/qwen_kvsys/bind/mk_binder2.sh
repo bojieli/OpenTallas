@@ -10,5 +10,9 @@
 #    models + ASAP7 stdcell verilog (ORFS asap7 platform, gate-level grp_r2c leaves), rst_region transport regex,
 #    substitute_inst (class-C chain heads + ep_s_e), map_file with [partition, canonical local name] from stage1_v33 'where',
 #    plan_cells = bind/plan_cell_conns_v34.json (KV-P4 claude/kv-p4-1023 @1cb50b545: ID lanes, ot_dp_efault, u_fch, hub_C tree),
-#    lint_split (one Verilator run per partition module; the whole die in one run is OOM at 128 GB).
+#    lint_split (one Verilator run per partition module; the whole die in one run is OOM at 128 GB),
+#    rewires = bind/plan_rewires_v34.json (KV-P4 @a73f158f5) classes astk_ectl_relabel + hsl_S_orientation with
+#      port_map/port_names = KVB/bound_netlist.json (die port -> RTL port); hsl chain-end variant on hsl_*_0 in all quads,
+#    reset_spines host.(die_rst_n|hbm_rst_n|host_rst_n) (clocks_v32 reset_root), pll keep_leaf (hub_C content),
+#    map asbuilt_map_binder2.json (+ serdes shim AND glue -> hub_Wi).
 # 4. python3 tools/die_plan/bind.py all physical/die_plan/qwen_kvsys/die_plan.json --asbuilt asbuilt_binder2.json --out OUT

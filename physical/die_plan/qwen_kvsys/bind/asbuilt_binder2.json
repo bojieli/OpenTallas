@@ -211,7 +211,9 @@
     "pll_host": "clk_host",
     "pll_ingest": "clk_ingest",
     "pll_fwd": "clk_fwd"
-   }
+   },
+   "keep_leaf": true,
+   "keep_leaf_note": "KV-P4 14:02: pll is a hub_C content in v3.4; locked stays a leaf output (host.pll_locked lane L1798, kvs_ctl.por_n hub_C-local); its clock outputs are the clock spines (bound top clk_* ports)"
   }
  ],
  "resets_note": "plan reset root = host.die_rst_n (hub_Wi) -> every partition synchroniser (clocks_v32.json reset_root); the as-built qkd_rst_region sequencer chain is transport above",
@@ -257,9 +259,9 @@
    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
   },
   {
-   "inst": "hsl_(?:[EW]S_31|[EW]N_0)",
+   "inst": "hsl_[EW][NS]_0",
    "module": "qkd_host_pc_slice_die_head",
-   "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023); S chains re-headed (plan_rewires hsl_S_orientation): the chain end is hsl_*_0 in all four quadrants"
   },
   {
    "inst": "kvpc_[EW][NS]_0",
@@ -270,5 +272,22 @@
  "files_note": "BINDER2: ASAP7 std-cell verilog models (ORFS asap7 platform verilog/stdcell) for the gate-level qkd_kvs_grp_r2c / grp_h_r2c leaves (lint closure)",
  "lint_split": true,
  "lint_jobs": 6,
- "plan_cells": "physical/die_plan/qwen_kvsys/bind/plan_cell_conns_v34.json"
+ "plan_cells": "physical/die_plan/qwen_kvsys/bind/plan_cell_conns_v34.json",
+ "rewires": {
+  "file": "physical/die_plan/qwen_kvsys/bind/plan_rewires_v34.json",
+  "classes": [
+   "astk_ectl_relabel",
+   "hsl_S_orientation"
+  ],
+  "note": "hsl_S_orientation module substitution qkd_hslice -> qkd_hslice_dn is a no-op at RTL level: both GEN wrappers bind to qkd_host_pc_slice_die with identity port bundles (kv_bound bound_netlist.json masters); phy_slices / fdi_split are the asbuilt substitute shims",
+  "port_map": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json"
+ },
+ "reset_spines": [
+  {
+   "pin": "host\\.(die_rst_n|hbm_rst_n|host_rst_n)",
+   "sync_stages": 2,
+   "note": "clocks_v32.json reset_root: host.die_rst_n (hub_Wi) -> every partition, async assert / 2-stage sync release (KV-P4 14:02: the remaining hub_Wi 1 b/partition reset bits are this spine)"
+  }
+ ],
+ "port_names": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json"
 }
