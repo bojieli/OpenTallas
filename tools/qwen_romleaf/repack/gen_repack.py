@@ -156,32 +156,58 @@ def pins_tcl(kit, nk, var):
 
 # ---- soft-root fences (same groups / regexes as rc13 nk_rc13_regions.tcl; new boxes; L9 writers FREE) ---------------
 LO = "([0-9]|[1-9][0-9]|[1-4][0-9][0-9]|50[0-9]|51[01])"
+HALO = 5.6          # kit macro_halo_um 5.4 (+0.2): a fence inside a child's halo has no row capacity (rp*-r1 tx3 FAIL)
+
 def tx_box(gg):
+    """TX rung / landing fence on the LSL's pin face, outside its halo: 15.4 um (A/B) or 14.2 um (C, E band) wide"""
     x, r, o = LSL_AT[gg]
     y0 = Y_LSL[r]
     if o == "MY":          # pins W: fence in the chW lane at the pin face
-        return (round(x - 14.0, 3), y0, round(x - 0.5, 3), round(y0 + LSL_H, 3))
+        return (round(x - HALO - 15.4, 3), y0, round(x - HALO, 3), round(y0 + LSL_H, 3))
     xe = x + LSL_W
-    return (round(xe + 0.5, 3), y0, round(xe + (14.0 if x == X_B else 12.0), 3), round(y0 + LSL_H, 3))
+    wd = 15.4 if x == X_B else min(14.2, W - CM - 0.3 - (xe + HALO))
+    return (round(xe + HALO, 3), y0, round(xe + HALO + wd, 3), round(y0 + LSL_H, 3))
+
+DEC_W = 5.4         # rc15 local request decoder box (5.4 x 5.4 at each leaf's any_d), first lane outside the halo
 
 def chan_boxes(var):
-    """x-ranges (rw_w, d_w, rw_e, d_e): the L1 ring writer lane on each ROM column's pin face, the operand-reader /
-    L9-writer lane beside it (MAIN: the rest of the 54-um channel; FALLBACK: the two middle lanes of the spine)"""
+    """x-ranges per ROM column, from its pin face outward: [halo 5.6][request decoder 5.4][L1 ring writer lane][operand
+    reader lane].  rpm: rw 12 um, the reader lane takes the rest of the 54-um channel; rpf: rw 10 um, the reader lane
+    runs to the spine centre (L9 writers move to the hub pocket, the spine has no room for them)."""
     rx = rom_x(var)
+    rw = 12.0 if var == "m" else 10.0
     if var == "m":
         w_pin = rx[0][0]; e_pin = rx[1][0] + ROM_W
-        return (w_pin - 15.6, w_pin - 0.4), (CM + 0.4, w_pin - 16.4), (e_pin + 0.4, e_pin + 15.6), (e_pin + 16.4, W - CM - 0.4)
+        dw = w_pin - HALO - DEC_W - 0.2
+        de = e_pin + HALO + DEC_W + 0.2
+        return {"dec": ((w_pin - HALO - DEC_W, w_pin - HALO), (e_pin + HALO, e_pin + HALO + DEC_W)),
+                "rw": ((dw - rw, dw), (de, de + rw)), "d": ((CM + 0.4, dw - rw - 0.4), (de + rw + 0.4, W - CM - 0.4))}
     w_pin = rx[0][0] + ROM_W; e_pin = rx[1][0]
     mid = (w_pin + e_pin) / 2
-    return (w_pin + 0.4, w_pin + 15.6), (w_pin + 16.4, mid - 0.4), (e_pin - 15.6, e_pin - 0.4), (mid + 0.4, e_pin - 16.4)
+    dw = w_pin + HALO + DEC_W + 0.2
+    de = e_pin - HALO - DEC_W - 0.2
+    return {"dec": ((w_pin + HALO, w_pin + HALO + DEC_W), (e_pin - HALO - DEC_W, e_pin - HALO)),
+            "rw": ((dw, dw + rw), (de - rw, de)), "d": ((dw + rw + 0.4, mid - 0.2), (mid + 0.2, de - rw - 0.4))}
 
 def regions_tcl(kit, nk, var):
-    (rw0, rw1), (dw0, dw1), (re0, re1), (de0, de1) = chan_boxes(var)
+    cb = chan_boxes(var)
+    (rw0, rw1), (re0, re1) = cb["rw"]
+    (dw0, dw1), (de0, de1) = cb["d"]
     s_lo, s_hi = Y_ROM[0] + 10.0, Y_ROM[2] + ROM_H - 10.0
-    n_lo, n_hi = Y_ROM[3] + 10.0, Y_ROM[4] + ROM_H - 10.0
-    d_lo, d_hi = Y_ROM[2] + 20.0, Y_ROM[3] + ROM_H     # operand readers between the S and N ring writers
-    l9_lo, l9_hi = Y_ROM[4] + 20.0, ROM_TOP + 8.0      # L9 ring writers at the band (one compact block per operand root)
-    hub = (X_B + 10.0, Y_LSL[0] + 10.0, X_B + LSL_W - 10.0, Y_LSL[0] + LSL_H - 40.0)
+    n_lo, n_hi = Y_ROM[2] + ROM_H + 4.0, ROM_TOP + 6.0
+    px0, px1 = X_B + HALO, X_C - HALO                     # hub pocket (LSL B row 0 slot + ch2), outside the halos
+    py0, py1 = ROM_TOP + HALO, Y_LSL[1] - HALO
+    if var == "m":
+        d_lo, d_hi = Y_ROM[2] + 20.0, Y_ROM[3] + 60.0      # operand readers between the S and N ring writers
+        l9w = (dw0, Y_ROM[3] + 60.0, dw1, ROM_TOP + 8.0)    # L9 ring writers above them, in the same channel
+        l9e = (de0, Y_ROM[3] + 60.0, de1, ROM_TOP + 8.0)
+        hub = (px0 + 10.0, Y_LSL[0] + 10.0, px1 - 10.0, Y_LSL[0] + 100.0)
+    else:
+        d_lo, d_hi = Y_ROM[3], ROM_TOP + 6.0              # rpf: readers at the spine top (N group side), <= ~200 um below
+        mx = (px0 + px1) / 2                              #      the L9 writers in the bottom of the hub pocket
+        l9w = (px0, py0 + 2.0, mx - 1.0, py0 + 70.0)
+        l9e = (mx + 1.0, py0 + 2.0, px1, py0 + 70.0)
+        hub = (px0 + 10.0, py0 + 74.0, px1 - 10.0, py0 + 150.0)
     f = lambda b: "{{" + " ".join(f"{v:.3f}" for v in b) + "}}"
     tx = []
     for gg in range(8):
@@ -196,8 +222,8 @@ def regions_tcl(kit, nk, var):
       f"  [dict create name rne type EXCLUSIVE regex {{(g_col_land\\.u_qlw1ne\\.|(g_rqr\\.(genblk[0-9]+\\.g_col_roots\\.gn|gn_q)\\[|g_rph\\.g_rb\\[[34]\\]\\.g_single\\.g_col\\[1\\]\\.g_lrr\\.rq))}} boxes {f((re0, n_lo, re1, n_hi))} min 1 max 100000] \\",
       f"  [dict create name dw type EXCLUSIVE regex {{(g_col_land\\.u_qlr1[sn]w\\.|u_me\\.s2_w\\[([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|10[01][0-9]|102[0-3])\\]|(g_hd\\.g_tx\\.g_r\\[0\\]\\.di\\[(16[0-9]|17[0-5]|19[2-9]|20[0-7]|22[4-9]|23[0-9]|25[6-9]|26[0-9]|27[01])\\]|u_me\\.g_operand_rr\\.g_lsel\\.s1b_(wsrc_w|gm_w\\[)|u_me\\.g_operand_rr\\.g_csel\\.(wsrc_q|gm_q)\\[([0-9]|1[0-5])\\]|u_me\\.mq_wrom\\[{LO}\\]|g_hd\\.g_tx\\.tc\\[(12[89]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])\\]))}} boxes {f((dw0, d_lo, dw1, d_hi))} min 1 max 100000] \\",
       f"  [dict create name de type EXCLUSIVE regex {{(g_col_land\\.u_qlr1[sn]e\\.|u_me\\.s2_w\\[|(g_hd\\.g_tx\\.g_r\\[0\\]\\.di\\[(28[89]|29[0-9]|30[0-3]|32[0-9]|33[0-5]|35[2-9]|36[0-7]|38[4-9]|39[0-9])\\]|u_me\\.g_operand_rr\\.g_lsel\\.s1b_(wsrc_e|gm_e\\[)|u_me\\.g_operand_rr\\.g_csel\\.(wsrc_q|gm_q)\\[|u_me\\.mq_wrom\\[|g_hd\\.g_tx\\.tc\\[(25[6-9]|2[6-9][0-9]|3[0-7][0-9]|38[0-3])\\]))}} boxes {f((de0, d_lo, de1, d_hi))} min 1 max 100000] \\",
-      f"  [dict create name dwr type EXCLUSIVE regex {{\\.g_tx9\\.u_qlw2w\\.}} boxes {f((dw0, l9_lo, dw1, l9_hi))} min 1 max 100000] \\",
-      f"  [dict create name der type EXCLUSIVE regex {{\\.g_tx9\\.u_qlw2e\\.}} boxes {f((de0, l9_lo, de1, l9_hi))} min 1 max 100000] \\",
+      f"  [dict create name dwr type EXCLUSIVE regex {{\\.g_tx9\\.u_qlw2w\\.}} boxes {f(l9w)} min 1 max 100000] \\",
+      f"  [dict create name der type EXCLUSIVE regex {{\\.g_tx9\\.u_qlw2e\\.}} boxes {f(l9e)} min 1 max 100000] \\",
       "  [dict create name land_top type FREE regex {^(u_ot_pr_core\\.)?u_g\\.u_tile\\.(n_va|fault_q)$} boxes {} min 0 max 4] \\",
       "  [dict create name land_rings type FREE regex {\\.(g_l2c\\.u_qlw2c|g_xm9\\.u_xr|g_out9\\.u_qlr3)\\.} boxes {} min 1 max 100000] \\",
       f"  [dict create name hub type EXCLUSIVE regex {{^(u_ot_pr_core\\.)?u_g\\.u_tile\\.}} boxes {f(hub)} min 1 max 100000] \\",
@@ -216,13 +242,7 @@ def regions_tcl(kit, nk, var):
 def request_decode_tcl(var):
     """rc15 local request decoder fence, re-pointed at the re-packed ROM pin lanes (same checks, same 5.4 x 5.4 box)."""
     src = (ROOT / "tools/qwen_romleaf/rc15_2000/local_request_decode.tcl").read_text()
-    rx = rom_x(var)
-    if var == "m":
-        w_pin = rx[0][0]; e_pin = rx[1][0] + ROM_W
-        x0w, x1w, x0e, x1e = w_pin - 6.0, w_pin - 0.6, e_pin + 0.6, e_pin + 6.0
-    else:
-        w_pin = rx[0][0] + ROM_W; e_pin = rx[1][0]
-        x0w, x1w, x0e, x1e = w_pin + 0.6, w_pin + 6.0, e_pin - 6.0, e_pin - 0.6
+    (x0w, x1w), (x0e, x1e) = chan_boxes(var)["dec"]
     old = " if {$col==0} {set x0 232.2;set x1 237.6} else {set x0 583.2;set x1 588.6}"
     assert old in src
     new = f" if {{$col==0}} {{set x0 {x0w:.3f};set x1 {x1w:.3f}}} else {{set x0 {x0e:.3f};set x1 {x1e:.3f}}}"

@@ -20,7 +20,7 @@ foreach scope [dict keys $qr15_members] {
  regexp {g_rb\[([0-9]+)\]\.g_single\.g_col\[([01])\]$} $scope -> bank col
  # ROM any_d is at local y=21.564 um; MY changes X only.
  set cy [expr {[$bb yMin]/double($qr15_dbu)+21.564}]
- if {$col==0} {set x0 195.864;set x1 201.264} else {set x0 256.656;set x1 262.056}
+ if {$col==0} {set x0 200.864;set x1 206.264} else {set x0 251.656;set x1 257.056}
  set y0 [expr {$cy-2.7}];set y1 [expr {$cy+2.7}]
  set capacity 0.0
  foreach row [$qr15_block getRows] {
