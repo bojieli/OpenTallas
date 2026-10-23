@@ -360,7 +360,8 @@ FX = {
     # ALT (parallel fallback route): same arrangement, +21.6 spine, +10.8 every channel (routing room first)
     'alt': dict(W=518.4, H=388.8, ax=43.2, bx=302.4, rx=27.0, b0=140.4, tx=259.2, b1=27.0, b2=153.9, b3=280.8, rxo='R0'),
 }
-HARDG = {'s0': 'g_s0', 'p': 'g_p', 's1': 'g_s1', 's2': 'g_s2', 'r': 'g_r'}
+# yosys names of the else-if generate chain in qfd_coll_face_cx (measured from the first fx synth)
+HARDG = {'s0': 'g_s0', 'p': 'genblk1.g_p', 's1': 'genblk1.genblk1.g_s1', 's2': 'genblk1.genblk1.genblk1.g_s2', 'r': 'g_r'}
 FXSRC = 'rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_fx.sv'
 
 

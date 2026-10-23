@@ -212,7 +212,7 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
-   "inst": "u_face.g_s2.u_core.u_body.u_rx.u_mem",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_rx.u_mem",
    "count": 1,
    "at": [
     43.2,
@@ -222,7 +222,7 @@
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram",
    "count": 1,
    "at": [
     43.2,
@@ -232,7 +232,7 @@
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
-   "inst": "u_face.g_s2.u_core.u_body.u_tx.u_mem",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_tx.u_mem",
    "count": 1,
    "at": [
     43.2,
@@ -242,7 +242,7 @@
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram",
    "count": 1,
    "at": [
     280.8,
@@ -252,7 +252,7 @@
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram",
    "count": 1,
    "at": [
     280.8,
@@ -262,7 +262,7 @@
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram",
+   "inst": "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram",
    "count": 1,
    "at": [
     280.8,
@@ -567,34 +567,34 @@
   "ot_sram_1r1w_64x512_m1_r2c2"
  ],
  "soft_root_macro_bindings": {
-  "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "clock_pin": "clk",
    "root": "codec1"
   },
-  "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "clock_pin": "clk",
    "root": "codec2"
   },
-  "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "clock_pin": "clk",
    "root": "codec3"
   },
-  "u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "clock_pin": "clk",
    "root": "codec4"
   },
-  "u_face.g_s2.u_core.u_body.u_rx.u_mem": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_rx.u_mem": {
    "master": "ot_sram_1r1w2c_64x546_m1",
    "clock_pins": {
     "wclk": "rx_wck",
     "rclk": "rx_rck"
    }
   },
-  "u_face.g_s2.u_core.u_body.u_tx.u_mem": {
+  "u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_tx.u_mem": {
    "master": "ot_sram_1r1w2c_64x546_m1",
    "clock_pins": {
     "wclk": "tx_wck",

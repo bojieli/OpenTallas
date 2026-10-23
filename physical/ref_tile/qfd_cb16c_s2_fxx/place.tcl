@@ -32,22 +32,22 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_64x546_m1 {u_face.g_s2.u_core.u_body.u_rx.u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_64x546_m1 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_rx.u_mem}]
 $i setOrient R0; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_64x546_m1 at 43.2 25.92 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram}]
 $i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(140.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 43.2 140.4 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_64x546_m1 {u_face.g_s2.u_core.u_body.u_tx.u_mem}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w2c_64x546_m1 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.u_tx.u_mem}]
 $i setOrient MY; $i setLocation [expr {round(43.2 * $dbu)}] [expr {round(259.2 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w2c_64x546_m1 at 43.2 259.2 MY"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram}]
 $i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 302.4 25.92 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram}]
 $i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(153.36 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 302.4 153.36 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_face.genblk1.genblk1.genblk1.g_s2.u_core.u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram}]
 $i setOrient R0; $i setLocation [expr {round(302.4 * $dbu)}] [expr {round(280.8 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 302.4 280.8 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
