@@ -312,10 +312,18 @@ module ot_s81dv_norm_finish_sram #(
     ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rc[7]), .v(mq_v), .vd(ve));
     // N8: the eps sum's KEPT copy mek feeds the rsqrt seed path (census R33: me drove m_half + seed, 34-39 loads)
     wire [31:0] mek;
+`ifdef OT_S81DV_XFIN_N24
+    // N24: a second kept copy me2 feeds m_half's decode (DUALIN); me itself keeps m_half's lower norm byte / bundle.
+    wire [31:0] me2;
+    ot_s81dv_qadd_n32 #(.LAT(LA), .NYC(2)) u_eps (.clk(clk), .rst_n(rst_n), .v(mq_v), .a(mq), .b(eps_c), .y(me), .fault(f_eps),
+        .yc({me2, mek}));
+`else
     ot_s81dv_qadd_n32 #(.LAT(LA), .NYC(1)) u_eps (.clk(clk), .rst_n(rst_n), .v(mq_v), .a(mq), .b(eps_c), .y(me), .fault(f_eps),
         .yc(mek));
+    wire [31:0] me2 = me;
+`endif
     assign me_v = ve[LA];
-    ot_s81dv_rsqrt_n32 #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .xk(mek), .y(rr), .vo(rr_v), .fault(f_rsq));
+    ot_s81dv_rsqrt_n32 #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rst_n), .v(me_v), .x(me), .xk(mek), .x2(me2), .y(rr), .vo(rr_v), .fault(f_rsq));
     reg r_v_o; reg [31:0] r_o; reg flt;
     always @(posedge clk or negedge rc[7])
         if (!rc[7]) begin r_v_o <= 1'b0; flt <= 1'b0; end
