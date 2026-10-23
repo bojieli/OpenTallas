@@ -1,0 +1,6 @@
+# s81sl_lepwd_r5f (DRIVE-S81-LEP 10-20)
+DRIVE-S81-LEP r5e (r4m lepnh twin gate: GRT 0 but clock spread TT 114.6 / FF 106.8 at km K8 and setup macro->reg -94.9 (RX SRAM rd_out -> ri pin flop, RX banks in two N rows at x 43..440 drive ri pins on the E face up to ~900 um away) plus reg->out -76): wide-bus repartition, 0 added cycles: the 10 RX landing SRAMs (g_rx[0] banks 0-4, g_rx[1] banks 0-4) move into ONE column beside the E face (x 475.2, y 43.2 + 43.2k, orient MY so rd_out faces the ri pins); the 1104-bit RX read bus stays inside a 35-um E strip, the long W->E RX hop is the flop->flop li pin flop (dq) -> LOCAL_WD register / SRAM write (registered both ends); TX columns unchanged (rd_out on their W edge facing lo, TX read stage qd). Outline 475.2 x 561.6 -> 561.6 x 518.4 (W/E 4.3/um, S 705 pins/561.6). Clock (r5f = r5e floorplan): NO km split, one TritonCTS tree (LEPNH 10-20: KM-8 unequal cluster depths gave lep_nh r4m 115/107; pre-native one-tree lepnh 40.2/36.8). Same RTL, ports, cycles, SDC.
+
+## SLICECOL 10-21 clock fallback (r5u)
+r5e (km K16) gate FAIL only on clock_rule: TT/FF pin-flop spread 91.9/89.6 (GRT 0, macro->reg -6, native32 PASS). r5f (one tree) pre-repair 88/83.
+This kit = r5f floorplan/RTL/pins unchanged, CTS recipe changed only (see spec route.cts_sink). Checklist 1-6, 8 as r5e; 7 = this CTS variant, gate measures.
