@@ -1,10 +1,10 @@
 {
- "variant": "A",
- "partitions": 956,
- "types": 65,
+ "variant": "B",
+ "partitions": 380,
+ "types": 48,
  "types_merged": 148,
- "ports": 5516,
- "lanes": 3585,
+ "ports": 3234,
+ "lanes": 1997,
  "die_um": [
   31216.32,
   25228.8
@@ -12,250 +12,97 @@
  "die_mm2": 787.6,
  "content_status_per_instance": {
   "reuse": 1715,
-  "rework": 901,
-  "new": 951
+  "rework": 906,
+  "new": 375
  },
  "max_cells_type": [
-  900000,
-  "coll"
+  782764,
+  "cbx_q10"
  ],
  "cells_per_type": {
-  "cbf_00": {
-   "cells": 195691,
+  "cbf_q00": {
+   "cells": 782764,
    "instances": 23,
    "outline_um": [
-    622.08,
-    1313.28
+    1235.52,
+    2609.28
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_00_s2": {
-   "cells": 195691,
+  "cbf_q00_s2": {
+   "cells": 782764,
    "instances": 1,
    "outline_um": [
-    622.08,
-    1313.28
+    1235.52,
+    2609.28
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_01": {
-   "cells": 195691,
+  "cbf_q01": {
+   "cells": 782764,
    "instances": 23,
    "outline_um": [
-    622.08,
-    1296.0
+    1235.52,
+    2617.92
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_01_s2": {
-   "cells": 195691,
+  "cbf_q01_s2": {
+   "cells": 782764,
    "instances": 1,
    "outline_um": [
-    622.08,
-    1296.0
+    1235.52,
+    2617.92
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_02": {
-   "cells": 195691,
-   "instances": 23,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbf_02_s2": {
-   "cells": 195691,
-   "instances": 1,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbf_03": {
-   "cells": 195691,
+  "cbf_q11": {
+   "cells": 782764,
    "instances": 24,
    "outline_um": [
-    622.08,
-    1321.92
+    1235.52,
+    2617.92
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_13": {
-   "cells": 195691,
+  "cbn_q00": {
+   "cells": 782764,
    "instances": 24,
    "outline_um": [
-    613.44,
-    1321.92
+    1235.52,
+    2609.28
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_23": {
-   "cells": 195691,
+  "cbn_q01": {
+   "cells": 782764,
    "instances": 24,
    "outline_um": [
-    613.44,
-    1321.92
+    1235.52,
+    2617.92
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbf_33": {
-   "cells": 195691,
+  "cbn_q11": {
+   "cells": 782764,
    "instances": 24,
    "outline_um": [
-    622.08,
-    1321.92
+    1235.52,
+    2617.92
    ],
-   "macros": 10
+   "macros": 40
   },
-  "cbn_00": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    622.08,
-    1313.28
-   ],
-   "macros": 10
-  },
-  "cbn_01": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbn_02": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbn_03": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    622.08,
-    1321.92
-   ],
-   "macros": 10
-  },
-  "cbn_13": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    613.44,
-    1321.92
-   ],
-   "macros": 10
-  },
-  "cbn_23": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    613.44,
-    1321.92
-   ],
-   "macros": 10
-  },
-  "cbn_33": {
-   "cells": 195691,
-   "instances": 24,
-   "outline_um": [
-    622.08,
-    1321.92
-   ],
-   "macros": 10
-  },
-  "cbx_10": {
-   "cells": 195691,
+  "cbx_q10": {
+   "cells": 782764,
    "instances": 48,
    "outline_um": [
-    613.44,
-    1313.28
+    1235.52,
+    2609.28
    ],
-   "macros": 10
-  },
-  "cbx_11": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    613.44,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbx_12": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    613.44,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbx_20": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    613.44,
-    1313.28
-   ],
-   "macros": 10
-  },
-  "cbx_21": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    613.44,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbx_22": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    613.44,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbx_30": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    622.08,
-    1313.28
-   ],
-   "macros": 10
-  },
-  "cbx_31": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
-  },
-  "cbx_32": {
-   "cells": 195691,
-   "instances": 48,
-   "outline_um": [
-    622.08,
-    1296.0
-   ],
-   "macros": 10
+   "macros": 40
   },
   "coll": {
-   "cells": 900000,
+   "cells": 150000,
    "instances": 1,
    "outline_um": [
     786.24,
@@ -310,16 +157,34 @@
   },
   "sle_ctl": {
    "cells": 183360,
-   "instances": 6,
+   "instances": 12,
    "outline_um": [
     613.44,
     1080.0
    ],
    "macros": 0
   },
-  "sle_fe": {
+  "sle_fe_v1": {
    "cells": 50000,
-   "instances": 6,
+   "instances": 3,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_fe_v2": {
+   "cells": 50000,
+   "instances": 2,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "sle_fe_v3": {
+   "cells": 50000,
+   "instances": 1,
    "outline_um": [
     622.08,
     1080.0
@@ -328,7 +193,7 @@
   },
   "sle_fw_v1": {
    "cells": 60000,
-   "instances": 5,
+   "instances": 3,
    "outline_um": [
     622.08,
     1080.0
@@ -337,7 +202,7 @@
   },
   "sle_fw_v2": {
    "cells": 60000,
-   "instances": 1,
+   "instances": 3,
    "outline_um": [
     622.08,
     1080.0
@@ -382,7 +247,7 @@
   },
   "sle_sc": {
    "cells": 40000,
-   "instances": 6,
+   "instances": 12,
    "outline_um": [
     613.44,
     1080.0
@@ -409,7 +274,7 @@
   },
   "sle_stm": {
    "cells": 270598,
-   "instances": 6,
+   "instances": 12,
    "outline_um": [
     613.44,
     1080.0
@@ -445,25 +310,25 @@
   },
   "sle_tap": {
    "cells": 70000,
-   "instances": 6,
+   "instances": 12,
    "outline_um": [
     613.44,
     1080.0
    ],
    "macros": 0
   },
-  "slw_ctl": {
-   "cells": 183360,
-   "instances": 6,
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "macros": 0
-  },
-  "slw_fe": {
+  "slw_fe_v1": {
    "cells": 50000,
-   "instances": 6,
+   "instances": 3,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fe_v2": {
+   "cells": 50000,
+   "instances": 3,
    "outline_um": [
     622.08,
     1080.0
@@ -472,7 +337,7 @@
   },
   "slw_fw_v1": {
    "cells": 60000,
-   "instances": 5,
+   "instances": 3,
    "outline_um": [
     622.08,
     1080.0
@@ -480,6 +345,15 @@
    "macros": 0
   },
   "slw_fw_v2": {
+   "cells": 60000,
+   "instances": 2,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fw_v3": {
    "cells": 60000,
    "instances": 1,
    "outline_um": [
@@ -524,15 +398,6 @@
    ],
    "macros": 0
   },
-  "slw_sc": {
-   "cells": 40000,
-   "instances": 6,
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "macros": 0
-  },
   "slw_st_a": {
    "cells": 141126,
    "instances": 6,
@@ -547,15 +412,6 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1080.0
-   ],
-   "macros": 0
-  },
-  "slw_stm": {
-   "cells": 270598,
-   "instances": 6,
-   "outline_um": [
-    613.44,
     1080.0
    ],
    "macros": 0
@@ -587,15 +443,6 @@
    ],
    "macros": 0
   },
-  "slw_tap": {
-   "cells": 70000,
-   "instances": 6,
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "macros": 0
-  },
   "tt_ctlm": {
    "cells": 190000,
    "instances": 1,
@@ -606,47 +453,161 @@
    "macros": 0
   }
  },
- "internal_bits_absorbed": {},
+ "internal_bits_absorbed": {
+  "bc00": 24768,
+  "bc02": 24768,
+  "bc10": 24768,
+  "bc12": 24768,
+  "bc20": 24768,
+  "bc22": 24768,
+  "bc30": 24768,
+  "bc32": 24768,
+  "t00": 24672,
+  "t30": 24672,
+  "t01": 24672,
+  "t31": 24672,
+  "t02": 24672,
+  "t32": 24672,
+  "t03": 24672,
+  "t33": 24672,
+  "l1a": 24672,
+  "l1b": 24672,
+  "l1c": 24672,
+  "l1d": 24672,
+  "l1e": 24672,
+  "l1f": 24672,
+  "l1g": 24672,
+  "l1h": 24672,
+  "l2a": 24672,
+  "l2c": 24672
+ },
  "cell_estimate_method": "A0 = 187991 cells (NL rpf synth_stat incl. 10 ROM leaf macros); other leaves = outline area x 0.6 / 0.52 um2 per cell (A0 calibration); soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
- "census_dropped_bits": {
-  "d2d|flt|ctl": 8,
-  "dvs|dvs|ctl": 99,
-  "dvs|dvs|data": 57809,
-  "dvs|io|ctl": 5,
-  "dvs|io|data": 592,
-  "dvs|native59|data": 548,
-  "dvs|tt|data": 117,
-  "flt|flt|ctl": 484,
-  "flt|sys|ctl": 1,
-  "io|dvs|ctl": 6,
-  "io|dvs|data": 512,
-  "io|flt|ctl": 70,
-  "mu|flt|ctl": 2,
-  "native59|dvs|data": 520,
-  "reset|d2d_rom|ucie_kv": 1,
-  "reset|rstseq_rom|ckdiv_coll_blk": 1,
-  "reset|rstseq_rom|dvs_E0": 1,
-  "reset|rstseq_rom|dvs_E1": 1,
-  "reset|rstseq_rom|dvs_E2": 1,
-  "reset|rstseq_rom|dvs_E3": 1,
-  "reset|rstseq_rom|dvs_E4": 1,
-  "reset|rstseq_rom|dvs_E5": 1,
-  "reset|rstseq_rom|dvs_W0": 1,
-  "reset|rstseq_rom|dvs_W1": 1,
-  "reset|rstseq_rom|dvs_W2": 1,
-  "reset|rstseq_rom|dvs_W3": 1,
-  "reset|rstseq_rom|dvs_W4": 1,
-  "reset|rstseq_rom|dvs_W5": 1,
-  "reset|rstseq_rom|io_collective": 1,
-  "reset|rstseq_rom|io_serdes": 1,
-  "reset|rstseq_rom|io_serdes_1": 1,
-  "reset|rstseq_rom|io_serdes_2": 1,
-  "reset|rstseq_rom|io_ucie": 1,
-  "reset|rstseq_rom|native59": 1,
-  "reset|rstseq_rom|tt_ctlm": 1,
-  "rstseq|flt|reset": 485,
-  "sys|flt|ctl": 1,
-  "tt|dvs|data": 1657,
-  "tt|flt|ctl": 1
- }
+ "census_coverage": {
+  "census_bits": 213290,
+  "dropped": 0,
+  "fault_tree": 567,
+  "internal": 4922,
+  "planned": 70415,
+  "planned_cb": 136080,
+  "replaced_clock": 24,
+  "replaced_reset": 1282,
+  "accounted": 213290,
+  "unaccounted": 0,
+  "fault_sources": [
+   "d2d_rom",
+   "io_collective",
+   "mu_ctxrx",
+   "mu_dhobs",
+   "sys_face",
+   "tt_ctlm"
+  ],
+  "fault_sources_without_plan_lane": [],
+  "l9_face_flip_buses": [
+   "l9_eo",
+   "l9_wi"
+  ],
+  "cb_mismatches": []
+ },
+ "planned_cores": [
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s1",
+   "inst": "u_coll_face_s1",
+   "rtl_path": "u_io_collective.u_io.g[3].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    8.64
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s2",
+   "inst": "u_coll_face_s2",
+   "rtl_path": "u_io_collective.u_io.g[4].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    267.84,
+    406.08
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_p",
+   "inst": "u_coll_face_p",
+   "rtl_path": "u_io_collective.u_io.g[0].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    4199.04
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_r",
+   "inst": "u_coll_face_r",
+   "rtl_path": "u_io_collective.u_io.g[1].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    5382.72
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  },
+  {
+   "partition_type": "coll",
+   "core": "coll_face_s0",
+   "inst": "u_coll_face_s0",
+   "rtl_path": "u_io_collective.u_io.g[2].u_face",
+   "module": "qfd_coll_static_face",
+   "origin_um": [
+    8.64,
+    8700.48
+   ],
+   "outline_um": [
+    518.4,
+    388.8
+   ],
+   "cells_est": 116000
+  }
+ ],
+ "leaf_params": {
+  "tt_ctlm": {
+   "ot_qfd_tt_ctlm_static_hr": {
+    "SEGCAL": 1,
+    "STAGE_ME": 1
+   },
+   "qfd_tt_ctlm_head_static": {
+    "SEGCAL": 1
+   },
+   "check": "every instance of these modules under the tt_ctlm partition carries these values (binder + elaborated-netlist grep)"
+  }
+ },
+ "coll_split": {
+  "cores": 6,
+  "max_core_cells_est": 116000,
+  "glue_cells_est": 150000,
+  "cap": 400000,
+  "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits (std ~15k um2 each); glue = collective core + gearbox + share + clkrx + land (estimate; a synth count is owed)"
+ },
+ "census_dropped_bits": {}
 }
