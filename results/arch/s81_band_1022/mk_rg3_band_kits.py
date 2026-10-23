@@ -68,6 +68,7 @@ r.update(kind="tile", sources=SRC + [BR], params={"SRAM_MACRO": 1, "KR": 1, "IH"
                        "the q / s chain, query load and status out down to the S bands' top input stages (2.2 pins/um) + sc "
                        "in at the SE corner, E face to X across the 43-um landing channel (S stage out, response control in).")
 r["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+r["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}   # sparse SRAM tile, pin-band sinks (qkd_d2d_static recipe); R gate 10-22: clustered tree 462..725 ps
 specs[r["name"]] = r
 x = common("s81dv_rg3b_x", "dsdv_idx_rg3_bx", "banded idx rg3 MAIN: X band (response lanes, landing SRAMs, key mux)")
 x.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "RH": 1},
@@ -83,6 +84,7 @@ x.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1, "RH": 1},
                        "x 4 rows (unit u), so the 4-way key mux (SRAM read -> kq) spans <= ~400 um (a 4 x 2 row of SRAM "
                        "over 994 um put 800-um wires in that one cycle); kq on the S face toward both S bands, W face to R.")
 x["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+x["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}   # sparse SRAM tile, pin-band sinks (qkd_d2d_static recipe); R gate 10-22: clustered tree 462..725 ps
 specs[x["name"]] = x
 for nm, top, extra_pins, cap in (("s81dv_rg3b_s01", "dsdv_idx_rg3_bs01", {"N": ["kq_i", "qoi_i", "ql_i"], "W": ["rst", "ck"],
                                                                          "E": ["a0_o"]}, "M5"),

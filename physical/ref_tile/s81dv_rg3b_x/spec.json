@@ -10,6 +10,10 @@
    "group_max": 1,
    "h": "M4",
    "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false,
+   "extra": "-no_obstruction_aware"
   }
  },
  "keep_pin_regs": true,

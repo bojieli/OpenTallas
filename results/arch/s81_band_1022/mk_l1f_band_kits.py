@@ -23,6 +23,8 @@ def kit(name, top, purpose, outline, macros, pins, pin_ranges, why):
     s = {k: copy.deepcopy(base[k]) for k in ("recipe", "clock", "hold_budget", "inter", "inhold", "outhold", "io_flop_at_pins",
                                              "keep_pin_regs", "reset_landing", "defines")}
     s["route"] = copy.deepcopy(base["route"]); s["route"]["peak_ram_gb"] = 48
+    if top != "dsdv_gunit_l1f_bf":   # the A bands hold no store / decode: only the select-network keeps apply
+        s["route"]["synth_keep_modules"] = [m for m in s["route"]["synth_keep_modules"] if m.startswith("dsdv_seln")]
     j = copy.deepcopy(base["job"])
     j.update(owner="Claude:STW-S81c-TOK4-BAND", branch="claude/s81-band-1022", tag=name, purpose=purpose, benches=[BENCH],
              views_to=f"physical/ref_tile/{name}/views", record_to=f"results/rtl/ref_tile/{name}")
