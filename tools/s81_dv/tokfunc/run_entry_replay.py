@@ -48,7 +48,10 @@ def line_check(src, die_v, cut, prog, run):
     T = {t['i']: t for t in json.loads((prog / 'prog/ctl_templates.json').read_text())['templates']}
     tb = json.loads((cut / 'tb_ports.json').read_text())
     sp = json.loads((cut / 'slice_ports.json').read_text())['ports']
-    evs = sorted((e for e in S['events'] if e['kind'] == 'CTL' and e['dir'] == 'in'), key=lambda e: e['cycle'])
+    # only S-tier beats reach the cut's S line faces (TOKd-S81 10-23: jobs 17/22 carry 51 S + 51 N beats; the N-tier
+    # line is outside cut_3S_ctl, its rung word is checked by the bench on w_tvN_seqhost_lnd)
+    evs = sorted((e for e in S['events'] if e['kind'] == 'CTL' and e['dir'] == 'in' and e['inst'][5:6] == 'S'),
+                 key=lambda e: e['cycle'])
     res = {}
     for face, (pre, inst, port) in FACES.items():
         idx = {p['index']: int(sp[p['port']]['net'][len(pre):].split('_')[0]) for p in tb
@@ -79,6 +82,29 @@ def line_check(src, die_v, cut, prog, run):
     return res
 
 
+def host_status(cut, replay, run):
+    """u_seqhost t_host status {alive, fault, wf 4, sq 6 = {fault, code 4, busy}} changes, read on the landed lane
+    the replay derived seqhost_live from; accepted = the issuer went busy with no fault."""
+    lv = (replay.get('host_boot') or {}).get('seqhost_live')
+    if not lv:
+        return None
+    tb = json.loads((cut / 'tb_ports.json').read_text()); sp = json.loads((cut / 'slice_ports.json').read_text())['ports']
+    ports = [p for p in tb if p['dir'] == 'output' and sp[p['port']]['net'] == f'w_{lv["lane"]}_lnd']
+    if not ports or not (run / 'trace.txt').exists():
+        return None
+    idx, ch, last = ports[0]['index'], [], None
+    for ln in (run / 'trace.txt').read_text().split('\n'):
+        f = ln.split()
+        if len(f) == 3 and int(f[1]) == idx:
+            st = (int(f[2], 16) >> 65) & 0xFFF
+            if st != last:
+                ch.append((int(f[0]), st)); last = st
+    busy = any(st & 1 for _, st in ch)
+    fault = any((st >> 10) & 1 for _, st in ch)
+    code = next(((st >> 1) & 15 for _, st in ch if (st >> 10) & 1), 0)
+    return dict(changes=[(c, f'{st:03x}') for c, st in ch], accepted=busy and not fault, fault_code=code)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for k in ('src', 'die-v', 'cut', 'kit', 'obj', 'idle-run', 'progs', 'fixture-meta', 'out'):
@@ -86,6 +112,10 @@ def main():
     p.add_argument('--ks-user', type=int, required=True)
     p.add_argument('--jobs', type=int, nargs='*')
     p.add_argument('--mutant', action='append', default=[], help='JOB:SPEC (dv_cut_replay --mutant), must FAIL')
+    p.add_argument('--ks', type=int, default=None, help='landed f_ks edge for every job (dv_cut_replay gen --ks)')
+    p.add_argument('--ks-probe', action='store_true',
+                   help='measure the issuer start phase first: replay the first job with KS = default + 0..3 and take the '
+                        'one u_seqhost accepts (t_host sq busy, no fault); every job then uses that --ks')
     a = p.parse_args()
     src, out = a.src.resolve(), a.out.resolve()
     if not (a.obj / 'sim').exists():
@@ -108,16 +138,19 @@ def main():
 
     env = dict(os.environ, OBJ=str(a.obj.resolve()))
 
-    def one(job, mutant=None):
-        name = f'job{job}' + (f'_mut_{mutant.replace(":", "_")}' if mutant else '')
+    def one(job, mutant=None, name=None, ks=None, probe=False):
+        name = name or (f'job{job}' + (f'_mut_{mutant.replace(":", "_")}' if mutant else ''))
         d = out / name
         d.mkdir()
+        ks = a.ks if ks is None else ks
         row = dict(job=job, mutant=mutant, dir=str(d))
         gen = ['python3', src / 'tools/s81_dv/dv_cut_replay.py', 'gen', '--die-v', a.die_v,
                '--prog', a.progs / f'replay_job{job}', '--cut', a.cut, '--out', d,
                '--idle-run', a.idle_run, '--ks-fixture-meta', a.fixture_meta, '--ks-user', a.ks_user]
         if mutant:
             gen += ['--mutant', mutant]
+        if ks is not None:
+            gen += ['--ks', ks]
         row['gen_rc'] = sh(gen, d / 'gen.log', src)
         if row['gen_rc']:
             row.update(verdict='FAIL', reason='generator refused: ' + (d / 'gen.log').read_text()[-400:])
@@ -130,8 +163,13 @@ def main():
         row['sim_rc'] = sh(['bash', src / 'tools/s81_dv/run_dv_slice.sh', a.kit, d / 'run', f'+IN={d}/in.txt',
                             f'+OUT={d}/out.txt', f'+TRACE={d}/run/trace.txt', f'+NCYC={r["ncyc"]}'],
                            d / 'sim.log', src, env)
+        if probe:
+            row['t_host'] = host_status(a.cut, r, d / 'run')
+            return row
         row['check_rc'] = sh(['python3', src / 'tools/s81_dv/dv_cut_replay.py', 'check', '--replay', d,
                               '--run', d / 'run', '--out', d / 'check.json'], d / 'check.log', src)
+        if row['check_rc'] and (d / 'check.log').exists():
+            row['check_error'] = (d / 'check.log').read_text().strip().split('\n')[-1][-300:]
         if (d / 'check.json').exists():
             c = json.loads((d / 'check.json').read_text())
             row['check'] = {k: c.get(k) for k in ('verdict', 'checked', 'mismatch', 'missing', 'extra',
@@ -159,6 +197,22 @@ def main():
         return row
 
     save()
+    if a.ks_probe and a.ks is None:
+        from concurrent.futures import ThreadPoolExecutor
+        base = None
+        with ThreadPoolExecutor(1) as ex:
+            r0 = ex.submit(one, jobs[0], None, 'probe_default', None, True).result()
+        if r0.get('gen_rc') or not r0.get('host_boot'):
+            rep.update(verdict='FAIL', reason='KS phase probe: generator refused'); save(); return 1
+        base = r0['host_boot']['ks']
+        with ThreadPoolExecutor(3) as ex:
+            rows = [r0] + list(ex.map(lambda k: one(jobs[0], None, f'probe_ks{base + k}', base + k, True), (1, 2, 3)))
+        rep['ks_probe'] = [dict(ks=r['host_boot']['ks'], t_host=r['t_host']) for r in rows]
+        acc = [r['host_boot']['ks'] for r in rows if r['t_host'] and r['t_host']['accepted']]
+        if len(acc) != 1:
+            rep.update(verdict='FAIL', reason=f'KS phase probe: {len(acc)} of 4 phases accepted ({acc})'); save()
+            print('ENTRY_REPLAY FAIL ks probe', rep['ks_probe']); return 1
+        a.ks = acc[0]; rep['ks'] = a.ks; save()
     for j in jobs:
         rep['jobs'].append(one(j)); save()
     for m in a.mutant:
