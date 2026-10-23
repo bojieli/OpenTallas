@@ -347,7 +347,7 @@ def main(argv=None):
         if a.types:
             sel = [(t, None, None) for t in a.types.split(",")]
         else:
-            R, summ = check.run(raw)
+            R, summ = check.run(raw, plan_dir=Path(a.plan).resolve().parent)
             sel = worst_types(P, summ, a.worst)
         for tn, sc, dn in sel:
             dirs.append(part_probe(P, tn, out / f"part_{tn}", a.adjust, a.mem or 32))

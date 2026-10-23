@@ -179,3 +179,22 @@ def test_spread_mirror_equivariant_on_ties():
         a = sorted(round(c, 3) for _, _, c in schema.pin_positions(p, L))
         b = sorted(round(W - c, 3) for _, _, c in schema.pin_positions(q, L))
         assert a == b, (ln, a, b)
+
+
+def test_part_cli_resolves_census_beside_plan(tmp_path, monkeypatch):
+    """Worst-type selection must read plan-relative census files from any cwd."""
+    import copy
+    raw = copy.deepcopy(PAIR)
+    plan_dir = tmp_path / "plan"
+    plan_dir.mkdir()
+    (plan_dir / "census.json").write_text("[]")
+    (plan_dir / "map.json").write_text('{"parts": {}}')
+    raw["census"] = [{"rows": "census.json", "map": "map.json"}]
+    plan = plan_dir / "die_plan.json"
+    plan.write_text(json.dumps(raw))
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    out = tmp_path / "probes"
+    assert g2.main(["part", str(plan), "--out", str(out), "--worst", "1"]) == 0
+    assert len(list(out.glob("part_*/probe.json"))) == 1
