@@ -17,6 +17,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               line against the tracks (partition ft layers M4-M7 x ft_track_frac + die layers x cut_avail); full
               line and per partition segment <= cut_ratio_max; M8/M9-only ratio reported (research sweep form)
   hops        every register-to-register hop of every lane <= reach (lane.reach_um or die.reach_um)
+  types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
+              them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
@@ -76,6 +78,12 @@ def on_track(c, L):
 
 # --------------------------------------------------------------------------------------------------- geometry
 def check_geometry(P, R):
+    g = P.grid
+    for nm, base in [("ORFS base lattice", S.BASE_LATTICE_UM)] + \
+            [(f"{L} pitch", P.layers[L]["pitch_um"]) for L in sorted(P.layers) if int(L[1:]) >= 4]:
+        k = g / base
+        if abs(k - round(k)) > 1e-6:
+            R.err("geometry", f"die.grid_um {g:g} is not a multiple of the {nm} {base:g} um")
     W, H = P.W, P.H
     rects = {n: P.rect(n) for n in P.parts}
     for n, (x0, y0, x1, y1) in rects.items():
@@ -102,22 +110,40 @@ def check_geometry(P, R):
                 R.err("geometry", f"partitions {a} and {b} overlap", part=a, other=b)
             j += 1
     area = sum((r[2] - r[0]) * (r[3] - r[1]) for r in rects.values())
-    chan = sum((c["rect_um"][2] - c["rect_um"][0]) * (c["rect_um"][3] - c["rect_um"][1])
-               for c in P.die.get("channels", []))
+    chan = 0.0
+    chans = []
+    for c in P.die.get("channels", []):
+        r = P.channel_rect(c)
+        chan += max(0.0, r[2] - r[0]) * max(0.0, r[3] - r[1])
+        if "ports" in c:
+            vert = (r[2] - r[0]) < (r[3] - r[1])            # vertical channel: wires cross it horizontally
+            along, wdir = ((r[3] - r[1]), "H") if vert else ((r[2] - r[0]), "V")
+            tr = sum(along / P.layers[L]["pitch_um"] for L in c["layers"] if P.layers[L]["dir"] == wdir)
+            bits = sum(S.port_pins_count(P.ports[q]) for q in c["ports"])
+            ratio = bits / tr if tr else math.inf
+            if abs((r[2] - r[0] if vert else r[3] - r[1]) - c["width_um"]) > 1e-3:
+                R.err("geometry", f"channel {c.get('name', '?')}: gap between {c['between']} is "
+                      f"{(r[2] - r[0] if vert else r[3] - r[1]):g} um, width_um {c['width_um']:g}")
+            if ratio > P.budgets["cut_ratio_max"] + EPS:
+                R.err("cuts", f"channel {c.get('name', '?')}: {bits} pins on {tr:.0f} {wdir} tracks = {ratio:.2f} > "
+                      f"{P.budgets['cut_ratio_max']}")
+            chans.append(dict(name=c.get("name"), between=c["between"], rect_um=[round(v, 4) for v in r],
+                              width_um=c["width_um"], area_mm2=round((r[2] - r[0]) * (r[3] - r[1]) / 1e6, 5),
+                              bits=bits, tracks=round(tr), ratio=round(ratio, 4)))
     gap = W * H - area - chan
     if gap > 0.001 * W * H:
         R.warn("geometry", f"{gap / 1e6:.3f} mm2 ({100 * gap / (W * H):.1f}% of the die) is neither partition nor a "
                "die.channels entry with a reason")
-    for n in P.parts:
-        t = P.ptype(n)
+    for tn, t in P.types.items():
         w, h = t["outline_um"]
-        lim = P.reach
-        if max(w, h) > lim + EPS and not any(s.get("stations", 1) > 1 for s in t.get("ft_slots", [])) and \
-                t.get("ft_slots"):
-            R.warn("geometry", f"partition {n} ({w}x{h}) is larger than one hop ({lim}) but its ft slots have one "
-                   "station each (see hops)", part=n)
+        for sl in t.get("ft_slots", []):
+            fs = {sl["in_face"], sl["out_face"]}
+            span = w if fs == {"E", "W"} else h if fs == {"N", "S"} else (w + h) / 2.0
+            if span > P.reach * sl.get("stations", 1) + EPS:
+                R.warn("geometry", f"type {tn} slot {sl['name']}: crossing ~{span:.0f} um > {sl.get('stations', 1)} "
+                       f"station(s) x reach {P.reach:.0f} (see hops)", type=tn)
     return dict(partition_area_mm2=area / 1e6, channel_area_mm2=chan / 1e6, uncovered_mm2=max(gap, 0) / 1e6,
-                fill=area / (W * H))
+                fill=area / (W * H), planned_channels=chans)
 
 
 def fmt_rect(r):
@@ -154,7 +180,19 @@ def check_abutment(P, R):
             if lo < a - EPS or hi > b + EPS:
                 R.err("abutment", f"port {pid}: window [{lo:g},{hi:g}] outside the {df} face [{a:g},{b:g}] of "
                       f"{e['part']}", port=pid)
-        if len(lines) == 2 and abs(lines[0][3] - lines[1][3]) > EPS:
+        ch = P.channel_of(pid)
+        if ch and len(lines) == 2:
+            if {pr["src"]["part"], pr["dst"]["part"]} != set(ch["between"]):
+                R.err("abutment", f"port {pid}: in channel {ch.get('name', '?')} but its ends are not "
+                      f"{ch['between']}", port=pid)
+            elif abs(abs(lines[0][3] - lines[1][3]) - ch["width_um"]) > 1e-3:
+                R.err("abutment", f"port {pid}: faces {lines[0][3]:g} / {lines[1][3]:g} are not one channel width "
+                      f"({ch['width_um']:g}) apart", port=pid)
+            for ln in pr["layers"]:
+                if ln not in ch["layers"]:
+                    R.err("abutment", f"port {pid}: pin layer {ln} not a layer of channel {ch.get('name', '?')} "
+                          f"{ch['layers']}", port=pid)
+        elif len(lines) == 2 and abs(lines[0][3] - lines[1][3]) > EPS:
             R.err("abutment", f"port {pid}: {lines[0][1]}.{lines[0][2]} at {lines[0][3]:g} and {lines[1][1]}."
                   f"{lines[1][2]} at {lines[1][3]:g} do not abut", port=pid)
         if DIE_PART in (pr["src"]["part"], pr["dst"]["part"]) and lines:
@@ -364,6 +402,20 @@ def check_cuts(P, R, geo):
                 sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
                     loc.append((sb / seg_cap if seg_cap else math.inf, pn, sb, seg_cap))
+            for ch in P.die.get("channels", []):          # planned channels: their own layers are die-route tracks
+                if "ports" not in ch:
+                    continue
+                r = P.channel_rect(ch)
+                lo, hi, a0, a1 = (r[1], r[3], r[0], r[2]) if orient == "vertical" else (r[0], r[2], r[1], r[3])
+                if not (a0 < c - EPS and a1 > c + EPS):
+                    continue
+                cden = sum(1.0 / P.layers[L]["pitch_um"] for L in ch["layers"] if P.layers[L]["dir"] == wire_dir
+                           and L not in dl)
+                seg_cap = (hi - lo) * (cden + die_den)
+                parts_cap += (hi - lo) * cden
+                sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
+                if sb:
+                    loc.append((sb / seg_cap if seg_cap else math.inf, f"channel:{ch.get('name', '?')}", sb, seg_cap))
             cap += parts_cap
             ratio = bits / cap if cap else (math.inf if bits else 0.0)
             m89 = bits / (along * die_den_raw) if die_den_raw else 0.0
@@ -438,6 +490,64 @@ def check_clock_reset(P, R):
                       type=tn)
 
 
+# ------------------------------------------------------------------------------------------------------ types
+def check_seams(P, R):
+    """Seam-net invariant (COORD 10-23, OpenROAD abutment semantics): every inter-partition port bit is ONE 2-pin net,
+    boundary flop to boundary flop -- one out bus (src boundary flop or ft station) to one in bus (dst boundary flop or
+    station), same layer and coordinate on both sides, no fan-out, no die-port tap, no clock / reset kind.  Abutted
+    seams must be pin-to-pin same-layer overlaps (dbNet::isConnectedByAbutment); planned-channel seams are the die
+    route's only signal nets.  Returns per partition pair {abutted, channel} pin counts = the audit's expected nets."""
+    seen = defaultdict(list)
+    pairs = defaultdict(lambda: dict(abutted=0, channel=0))
+    for pid, pr in P.ports.items():
+        a, b = pr["src"]["part"], pr["dst"]["part"]
+        if DIE_PART in (a, b):
+            continue
+        for side in ("src", "dst"):
+            e = pr[side]
+            seen[(e["part"], e["bus"])].append(pid)
+            bus = P.buses(e["part"]).get(e["bus"], {})
+            if bus.get("kind", "data") not in ("data", "ctl"):
+                R.err("seams", f"port {pid}: {e['part']}.{e['bus']} is kind {bus.get('kind')}; a seam carries only "
+                      "registered data / ctl (clock and reset come from the die spine taps)", port=pid)
+        n = S.port_pins_count(pr)
+        key = "|".join(sorted((a, b)))
+        pairs[key]["channel" if P.channel_of(pid) else "abutted"] += n
+    for (part, bus), pids in seen.items():
+        if len(pids) > 1:
+            R.err("seams", f"{part}.{bus} is an end of {len(pids)} seam ports {pids}: fan-out on a seam", part=part)
+    tot = dict(abutted=sum(v["abutted"] for v in pairs.values()), channel=sum(v["channel"] for v in pairs.values()))
+    return dict(nets=tot, pairs=dict(pairs))
+
+
+def check_types(P, R):
+    """type count, instances per type, and near-duplicate types: same outline + same bus interface (name, dir, width,
+    kind) + same ft slots (faces, width, stations), differing only in pin offsets / contents.  Such types should be
+    ONE type placed with orient / lattice shifts and pins declared on the type (type-frame windows)."""
+    inst = defaultdict(int)
+    for p in P.parts.values():
+        inst[p["type"]] += 1
+    sig = defaultdict(list)
+    for tn, t in P.types.items():
+        k = (tuple(t["outline_um"]),
+             tuple(sorted((b["name"], b["dir"], b["width"], b.get("kind", "data")) for b in t.get("buses", []))),
+             tuple(sorted((s["in_face"], s["out_face"], s["width"], s.get("stations", 1))
+                          for s in t.get("ft_slots", []))))
+        sig[k].append(tn)
+    groups = [sorted(v) for v in sig.values() if len(v) > 1]
+    for g in groups:
+        R.warn("types", f"near-duplicate types {g[:8]}{'...' if len(g) > 8 else ''} ({len(g)}): same outline, buses and "
+               "slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)")
+    no_geo = [tn for tn, t in P.types.items() if inst[tn] > 1 and any(
+        "window_um" not in b for b in t.get("buses", []))]
+    if no_geo:
+        R.warn("types", f"{len(no_geo)} replicated types without type-frame pin windows on their buses (e.g. "
+               f"{no_geo[:5]}): declare face/window_um/layers on the type so every instance shares one pin table")
+    return dict(types=len(P.types), partitions=len(P.parts), singleton_types=sum(1 for v in inst.values() if v == 1),
+                max_instances=max(inst.values()) if inst else 0, near_duplicate_groups=len(groups),
+                near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
+
+
 # ------------------------------------------------------------------------------------------------------- run
 def run(raw, png=None):
     R = Report()
@@ -449,6 +559,7 @@ def run(raw, png=None):
     P = S.Plan(raw)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
+    summ["types"] = check_types(P, R)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
@@ -457,6 +568,7 @@ def run(raw, png=None):
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     check_clock_reset(P, R)
+    summ["seams"] = check_seams(P, R)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -488,7 +600,9 @@ def main(argv=None):
         if len(R.items) > 200:
             print(f"... {len(R.items) - 200} more in g0_report.json")
     c = summ.get("cuts", {})
-    print(f"G0 {rep['verdict']}: {ne} errors, {nw} warnings; worst cut {c.get('worst_full')}, worst partition "
+    ty = summ.get("types", {})
+    print(f"G0 {rep['verdict']}: {ne} errors, {nw} warnings; {ty.get('types')} types / {ty.get('partitions')} "
+          f"partitions ({ty.get('near_duplicate_types')} in near-duplicate groups); worst cut {c.get('worst_full')}, worst partition "
           f"segment {c.get('worst_partition_segment')}; report {out / 'g0_report.json'}")
     return 0 if ok else 1
 

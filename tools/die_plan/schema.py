@@ -41,15 +41,24 @@ STATUS = ("reuse", "rework", "new")
 ASAP7_LAYERS = [
     dict(name="M2", dir="H", pitch_um=0.036, offset_um=0.045),
     dict(name="M3", dir="V", pitch_um=0.036, offset_um=0.009),
-    dict(name="M4", dir="H", pitch_um=0.048, offset_um=0.012),
-    dict(name="M5", dir="V", pitch_um=0.048, offset_um=0.012),
-    dict(name="M6", dir="H", pitch_um=0.064, offset_um=0.016),
-    dict(name="M7", dir="V", pitch_um=0.064, offset_um=0.016),
-    dict(name="M8", dir="H", pitch_um=0.080, offset_um=0.116),
-    dict(name="M9", dir="V", pitch_um=0.080, offset_um=0.116),
+    dict(name="M4", dir="H", pitch_um=0.048, offset_um=0.024),
+    dict(name="M5", dir="V", pitch_um=0.048, offset_um=0.024),
+    dict(name="M6", dir="H", pitch_um=0.064, offset_um=0.032),
+    dict(name="M7", dir="V", pitch_um=0.064, offset_um=0.032),
+    dict(name="M8", dir="H", pitch_um=0.080, offset_um=0.040),
+    dict(name="M9", dir="V", pitch_um=0.080, offset_um=0.040),
 ]
-# 8.64 um = lcm(row 0.27, site 0.054, M4..M9 pitches): partition origins/outlines on this grid keep rows, sites and
-# tracks identical in the die and partition frames (also the PG stripe pitch of the closed S81 kits).
+# M4-M9 (the pin layers) use SYMMETRIC tracks, offset = pitch / 2 (platform make_tracks: 0.012 / 0.016 / 0.116).  With
+# partition origins and outlines on the die lattice (GRID_UM, a multiple of every pitch), a track at offset + k*p in the
+# type frame lands on a die track for R0, MX, MY and R180 instances alike (h - (p/2 + k p) = p/2 + (h/p - k - 1) p),
+# so mirrored / shifted copies of one partition type share one pin table and one hardened view.  The generated
+# partition and die kits write these tracks (gen_phys.make_tracks_tcl); M1-M3 keep the platform cell-access tracks.
+# 8.64 um = lcm(row 0.27, site 0.054, M2..M9 pitches, PG 4.32/8.64): the DIE LATTICE.  Partition origins and outlines
+# on it keep rows, sites, tracks and PG identical in the die and every partition frame, for every orient.
+# ORFS base unit (COORD 10-23, mock-array): 2.16 um = 45 x 0.048 = 40 x 0.054 = 8 x 0.27.  grid_um must be a multiple of
+# it AND of every pin-layer pitch: 2.16 alone is NOT a multiple of the M6/M7 pitch 0.064 (33.75 tracks), so pins on
+# M6/M7 need the 8.64 lattice (4 base units).  Channel widths are multiples of grid_um (8.64 = 4 units, 17.28 = 8).
+BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
@@ -69,6 +78,9 @@ _wh = {"type": "array", "items": _pos, "minItems": 2, "maxItems": 2}
 _rect = {"type": "array", "items": _num, "minItems": 4, "maxItems": 4}
 _name = {"type": "string", "minLength": 1}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
+_win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
+_lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2}
+_order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
 
@@ -90,7 +102,7 @@ SCHEMA = {
                 "outline_um": _wh, "period_ps": _pos,
                 "reach_um": _pos,                    # measured one-cycle hop (REACH-M89): S81 1500, KV 1200, QC 1000, HBM 1000
                 "rep_um": _pos,                      # repeater spacing (450)
-                "grid_um": _pos,                     # partition origin / outline grid (8.64)
+                "grid_um": _pos,                     # the die lattice: partition origins + outlines (8.64)
                 "rows": {"type": "object", "additionalProperties": False,
                          "properties": {"site": _name, "height_um": _pos, "site_w_um": _pos}},
                 "layers": {"type": "array", "items": {
@@ -105,8 +117,16 @@ SCHEMA = {
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
-                    "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
-                    "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
+                    # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
+                    # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
+                    # on both sides; their pins keep the same along-face windows; rect_um is derived
+                    "type": "object", "required": ["reason"], "additionalProperties": False,
+                    "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3},
+                                   "name": _name,
+                                   "between": {"type": "array", "items": _name, "minItems": 2, "maxItems": 2},
+                                   "width_um": _pos,
+                                   "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                   "ports": {"type": "array", "items": _name}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
                     "grid": {"type": "array", "items": {
@@ -130,6 +150,10 @@ SCHEMA = {
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "kind": {"enum": list(KINDS)},
                                        "leaf": {"type": "string"},      # "<inst>.<port>" the bus binds to inside
+                                       # pin geometry in the TYPE frame (then ports need no window: every instance
+                                       # of the type, in any orient, derives its die window from it)
+                                       "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
+                                       "order": _order,
                                        "note": {"type": "string"}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
@@ -139,7 +163,9 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
-                                       "layer": _layer}}},                          # in-partition ft layer (<= M7)
+                                       "layer": _layer,                             # in-partition ft layer (<= M7)
+                                       "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
+                                       "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
@@ -149,6 +175,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
@@ -168,7 +195,7 @@ SCHEMA = {
             "properties": {"name": _name, "type": _name, "origin_um": _xy, "orient": {"enum": list(ORIENTS)},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
-            "type": "object", "required": ["id", "src", "dst", "width", "face", "layers", "window_um"],
+            "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
             "additionalProperties": False,
             "properties": {"id": _name, "src": _end, "dst": _end, "width": {"type": "integer", "minimum": 1},
                            "kind": {"enum": list(KINDS)}, "face": {"enum": list(FACES)},
@@ -286,11 +313,69 @@ class Plan:
         self.layer_budget = dict(DEFAULT_LAYER_BUDGET, **d.get("layer_budget", {}))
         self.types = raw["partition_types"]
         self.parts = {p["name"]: p for p in raw["partitions"]}
-        self.ports = {p["id"]: p for p in raw["ports"]}
+        self.ports = {p["id"]: self._resolve_port(p) for p in raw["ports"]}
         self.lanes = {l["id"]: l for l in raw["lanes"]}
         self.clock = dict(DEFAULT_CLOCK, **raw.get("clock", {}))
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
+
+    # -- port geometry from the type's bus declaration
+    def _type_geom(self, part, bus):
+        """(type face, window, layers, order) declared on the partition's type for `bus`, or None."""
+        if part == DIE_PART or part not in self.parts or self.parts[part]["type"] not in self.types:
+            return None
+        t = self.types[self.parts[part]["type"]]
+        for b in t.get("buses", []):
+            if b["name"] == bus and "window_um" in b and "face" in b and "layers" in b:
+                return b["face"], b["window_um"], b["layers"], b.get("order", "lsb_low")
+        for s_ in t.get("ft_slots", []):
+            for sfx, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
+                if bus == s_["name"] + sfx and wk in s_ and "layers" in s_:
+                    return s_[fk], s_[wk], s_["layers"], s_.get("order", "lsb_low")
+        return None
+
+    def geom_to_die(self, part, g):
+        """type-frame (face, window, layers, order) -> die-frame (face, window, layers, order) for one instance."""
+        tf, (a, b), lays, order = g
+        p = self.parts[part]
+        w, h = self.types[p["type"]]["outline_um"]
+        o = p.get("orient", "R0")
+        df = self.die_face(part, tf)
+        if tf in "EW":
+            base, ext, flip = p["origin_um"][1], h, o in ("MX", "R180")
+        else:
+            base, ext, flip = p["origin_um"][0], w, o in ("MY", "R180")
+        if flip:
+            a, b = ext - b, ext - a
+            order = "lsb_high" if order == "lsb_low" else "lsb_low"
+        return df, [round(base + a, 6), round(base + b, 6)], list(lays), order
+
+    def port_geom_from(self, pr, side):
+        g = self._type_geom(pr[side]["part"], pr[side]["bus"])
+        if g is None:
+            return None
+        df, win, lays, order = self.geom_to_die(pr[side]["part"], g)
+        if side == "dst" and pr["src"]["part"] != DIE_PART:
+            df = OPP[df]
+        return df, win, lays, order
+
+    def _resolve_port(self, pr):
+        if all(k in pr for k in ("face", "layers", "window_um")):
+            return pr
+        for side in ("src", "dst"):
+            try:
+                g = self.port_geom_from(pr, side)
+            except (KeyError, TypeError):
+                g = None
+            if g:
+                q = dict(pr)
+                q.setdefault("face", g[0])
+                q.setdefault("window_um", g[1])
+                q.setdefault("layers", g[2])
+                q.setdefault("order", g[3])
+                q["_geom_from"] = side
+                return q
+        return pr
 
     # -- partitions
     def ptype(self, part):
@@ -298,6 +383,26 @@ class Plan:
 
     def orient(self, part):
         return self.parts[part].get("orient", "R0")
+
+    def channel_of(self, pid):
+        """the planned die.channels entry carrying port pid (or None = abutted)."""
+        if not hasattr(self, "_chan_of"):
+            self._chan_of = {}
+            for c in self.die.get("channels", []):
+                for q in c.get("ports", []):
+                    self._chan_of[q] = c
+        return self._chan_of.get(pid)
+
+    def channel_rect(self, c):
+        """rect of a channel: rect_um, or the gap between its two partitions' facing faces."""
+        if "rect_um" in c:
+            return tuple(c["rect_um"])
+        a, b = (self.rect(n) for n in c["between"])
+        if a[2] <= b[0] + 1e-6 or b[2] <= a[0] + 1e-6:          # side by side: vertical channel
+            l, r = (a, b) if a[2] <= b[0] + 1e-6 else (b, a)
+            return (l[2], max(l[1], r[1]), r[0], min(l[3], r[3]))
+        lo, hi = (a, b) if a[3] <= b[1] + 1e-6 else (b, a)
+        return (max(lo[0], hi[0]), lo[3], min(lo[2], hi[2]), hi[1])
 
     def rect(self, part):
         """placed bbox in the die frame: (x0, y0, x1, y1)."""
@@ -366,7 +471,24 @@ class Plan:
 
     # -- ports
     def port_pins(self, pid):
-        return pin_positions(self.ports[pid], self.layers)
+        """[(bit, layer, die coordinate along the face)].  A port whose geometry comes from a TYPE declaration gets its
+        pins computed in that type's frame and transformed to the die: the pin table is a property of the type, so
+        every instance (any orient, any lattice origin) carries the identical hardened pins."""
+        pr = self.ports[pid]
+        side = pr.get("_geom_from")
+        if not side:
+            return pin_positions(pr, self.layers)
+        part = pr[side]["part"]
+        tf, win, lays, order = self._type_geom(part, pr[side]["bus"])
+        tp = dict(pr, face=tf, window_um=win, layers=lays, order=order)
+        p = self.parts[part]
+        w, h = self.types[p["type"]]["outline_um"]
+        o = p.get("orient", "R0")
+        if tf in "EW":
+            base, ext, flip = p["origin_um"][1], h, o in ("MX", "R180")
+        else:
+            base, ext, flip = p["origin_um"][0], w, o in ("MY", "R180")
+        return sorted((b, ln, round(base + (ext - c if flip else c), 6)) for b, ln, c in pin_positions(tp, self.layers))
 
     def port_point(self, pid):
         """centre of the port window on its face, die frame."""
@@ -445,8 +567,14 @@ def pin_positions(port, layers):
         ntr = k1 - k0 + 1
         if ntr < n:
             raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {max(ntr, 0)}")
+        # the used tracks are placed symmetrically about the window's centre track (mirror-invariant: a mirrored
+        # instance of a type maps every pin back onto the same type-frame track); a step parity fix keeps the
+        # centre exact, except for an exactly full window with the wrong parity (then the span sits half a track low)
         step = max(1, ntr // n)
-        first = k0 + (ntr - step * (n - 1) - 1) // 2      # centre the used span in the window
+        twoc = k0 + k1
+        if (twoc - (n - 1) * step) % 2 and step > 1:
+            step -= 1
+        first = (twoc - (n - 1) * step) // 2
         for j, b in enumerate(bits):
             slot = (n - 1 - j) if rev else j
             out.append((b, ln, round(off + (first + slot * step) * p, 6)))
@@ -494,6 +622,27 @@ def validate(raw):
             errs.append(f"partition {p['name']}: unknown type '{p['type']}'")
         if p["name"] == DIE_PART:
             errs.append(f"partition name '{DIE_PART}' is reserved")
+    pids = {pr["id"] for pr in raw["ports"]}
+    owned = {}
+    for i, c in enumerate(raw["die"].get("channels", [])):
+        nm = c.get("name", f"channels[{i}]")
+        planned = any(k in c for k in ("between", "width_um", "layers", "ports"))
+        if not planned and "rect_um" not in c:
+            errs.append(f"die channel {nm}: needs rect_um (reserved gap) or between/width_um/layers/ports (planned)")
+        if planned:
+            miss = [k for k in ("between", "width_um", "layers", "ports") if k not in c]
+            if miss:
+                errs.append(f"die channel {nm}: planned channel lacks {miss}")
+                continue
+            for n in c["between"]:
+                if n not in P.parts:
+                    errs.append(f"die channel {nm}: unknown partition '{n}'")
+            for q in c["ports"]:
+                if q not in pids:
+                    errs.append(f"die channel {nm}: unknown port '{q}'")
+                elif q in owned:
+                    errs.append(f"die channel {nm}: port '{q}' already in channel {owned[q]}")
+                owned[q] = nm
     if errs:
         return errs
     # ports: endpoints, buses, widths, directions
@@ -518,6 +667,28 @@ def validate(raw):
             errs.append(f"port {pid}: both ends on {DIE_PART}")
         if pr["src"]["part"] == pr["dst"]["part"]:
             errs.append(f"port {pid}: src and dst are the same partition")
+        rp = P.ports[pid]
+        if not all(k in rp for k in ("face", "layers", "window_um")):
+            errs.append(f"port {pid}: no pin geometry (give face/layers/window_um on the port, or face/window_um/"
+                        "layers on the src or dst type's bus / slot)")
+            continue
+        # a geometry declared on both sides (port and/or both types) must agree in the die frame
+        decl = []
+        if all(k in pr for k in ("face", "layers", "window_um")):
+            decl.append(("port", (pr["face"], [float(v) for v in pr["window_um"]], list(pr["layers"]),
+                                  pr.get("order", "lsb_low"))))
+        for side in ("src", "dst"):
+            try:
+                g = P.port_geom_from(pr, side)
+            except (KeyError, TypeError):
+                g = None
+            if g:
+                decl.append((f"{side} type", (g[0], [float(v) for v in g[1]], list(g[2]), g[3])))
+        for (na, ga), (nb, gb) in zip(decl, decl[1:]):
+            if ga[0] != gb[0] or ga[2] != gb[2] or ga[3] != gb[3] or \
+                    any(abs(x - y) > 1e-6 for x, y in zip(ga[1], gb[1])):
+                errs.append(f"port {pid}: {na} geometry {ga} != {nb} geometry {gb} in the die frame")
+        pr = rp
         if pr["window_um"][0] >= pr["window_um"][1]:
             errs.append(f"port {pid}: window lo >= hi")
         for ln in pr["layers"]:

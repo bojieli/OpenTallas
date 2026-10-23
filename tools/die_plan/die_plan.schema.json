@@ -158,7 +158,6 @@
      "items": {
       "type": "object",
       "required": [
-       "rect_um",
        "reason"
       ],
       "additionalProperties": false,
@@ -174,6 +173,38 @@
        "reason": {
         "type": "string",
         "minLength": 3
+       },
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "between": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "width_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "layers": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "minItems": 1
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
        }
       }
      }
@@ -297,6 +328,37 @@
         "leaf": {
          "type": "string"
         },
+        "face": {
+         "enum": [
+          "N",
+          "S",
+          "E",
+          "W"
+         ]
+        },
+        "window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 2
+        },
+        "order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
+        },
         "note": {
          "type": "string"
         }
@@ -357,6 +419,37 @@
         "layer": {
          "type": "string",
          "pattern": "^M[1-9]$"
+        },
+        "in_window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "out_window_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1,
+         "maxItems": 2
+        },
+        "order": {
+         "enum": [
+          "lsb_low",
+          "lsb_high"
+         ]
         }
        }
       }
@@ -456,6 +549,10 @@
         },
         "note": {
          "type": "string"
+        },
+        "obs_max": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
         },
         "bind": {
          "type": "object",
@@ -585,10 +682,7 @@
      "id",
      "src",
      "dst",
-     "width",
-     "face",
-     "layers",
-     "window_um"
+     "width"
     ],
     "additionalProperties": false,
     "properties": {

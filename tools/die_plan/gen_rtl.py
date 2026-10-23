@@ -142,8 +142,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
             (f", leaf {b['leaf']}" if b.get("leaf") else "")
         ports.append((f"{d} wire [{w - 1}:0] {sv_id(b['name'])}", note))
     for s in slots:
-        w = s["width"] + (1 if epochs.get((tn, s["name"] + "_i"), True) else 0)
         for sfx, d in (("_i", "input "), ("_o", "output")):
+            w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
             ports.append((f"{d} wire [{w - 1}:0] {sv_id(s['name'] + sfx)}", f"ft slot {s['name']} "
                           f"({s['in_face']} -> {s['out_face']}, {s.get('stations', 1)} station(s))"))
     body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({ns})) u_rst_sync "
@@ -169,13 +169,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
             sig[f"bus:{b['name']}"] = f"{n}_d"
     for s in slots:
         n, W, k = sv_id(s["name"]), s["width"], int(s.get("stations", 1))
-        ep = epochs.get((tn, s["name"] + "_i"), True)
-        d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep else "rst_n")
+        ep_i = epochs.get((tn, s["name"] + "_i"), True)
+        ep_o = epochs.get((tn, s["name"] + "_o"), True)
+        d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else "rst_n")
         for j in range(k):
             last = j == k - 1
             if last:
-                q, eq = f"{n}_o[{W - 1}:0]", (f"{n}_o[{W}]" if ep else f"{n}_s{j}_eq")
-                if not ep:
+                q, eq = f"{n}_o[{W - 1}:0]", (f"{n}_o[{W}]" if ep_o else f"{n}_s{j}_eq")
+                if not ep_o:
                     decl.append(f"    wire {n}_s{j}_eq;")
             else:
                 q, eq = f"{n}_s{j}_q", f"{n}_s{j}_eq"

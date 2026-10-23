@@ -12,6 +12,8 @@ import schema as S  # noqa: E402
 
 
 def render(P, geo, R, out_png, title=None):
+    import warnings
+    warnings.filterwarnings("ignore", message="Unable to import Axes3D")
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -27,8 +29,9 @@ def render(P, geo, R, out_png, title=None):
     bad_lanes = {i.get("lane") for i in (R.errors() if R else []) if i.get("lane")}
     ax.add_patch(Rectangle((0, 0), W, H, fill=False, lw=1.2, ec="black"))
     for c in P.die.get("channels", []):
-        x0, y0, x1, y1 = c["rect_um"]
-        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc="none", ec="grey", hatch="//", lw=0.4))
+        x0, y0, x1, y1 = P.channel_rect(c)
+        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc="khaki" if "ports" in c else "none", ec="grey",
+                               hatch="//", lw=0.4))
     small = len(P.parts) <= 120
     for n, p in P.parts.items():
         x0, y0, x1, y1 = P.rect(n)
