@@ -5366,6 +5366,14 @@ RST_PAD64 = 'qfd_rst_rep_p62'
 RST_PAD64_VARIANT = os.environ.get('OT_RST_PAD64', '')
 if RST_PAD64_VARIANT not in ('', 'a', 'b'):
     raise ValueError('OT_RST_PAD64 must be empty, a, or b')
+# QDIE-R56 10-22 (r55 FINAL_GEN_FAIL: rst_field pad chain of 75 levels, no free site for the compact 43.2 x 12.96 pad):
+# OT_RST_PAD64_MIXED=1 = mixed legal reset palette.  Each compact PAD62 cell (32 levels = 64 cycles) is placed where it
+# legally fits; where it has no legal site the SAME 32 levels are emitted in the original composition (6 x qfd_rst_rep_p8
+# = 30 levels / 60 cycles + 2 x qfd_rst_rep = 2 levels / 4 cycles = 64 cycles).  Edge counts, ages and equal depth are
+# unchanged by construction (the reset_sync / calendar audits re-check them per cell master).  Off by default.
+RST_PAD64_MIXED = os.environ.get('OT_RST_PAD64_MIXED', '0') == '1'
+if RST_PAD64_MIXED and not RST_PAD64_VARIANT:
+    raise ValueError('OT_RST_PAD64_MIXED=1 needs OT_RST_PAD64=a or b')
 RST_PAD_LV = 5                   # one pad cell = 5 repeater levels (10 cycles)
 RST_W, RST_H = 5.184, 2.16       # 12 GX x 1 GY (<= 5.4 x 2.16: 96 sites x 8 rows), M1-M3
 # Q-DIE13 10-18: OT_RST_REP_VIEW=closed plans the CLOSED qfd_rst_rep / _p8 frames (physical/ref_tile/qfd_rst_rep*,
@@ -5734,6 +5742,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         bid = net['bid']
         pads = {RST_REP: 0, RST_PAD: 0, RST_PAD64: 0}
         pad_moved = [0]
+        pad_fallback = [0]
 
         def chain(k, lv, p=None, pxy=None):
             """pad chain of lv levels in front of node k; returns the node that takes k's place in its parent's net.
@@ -5744,7 +5753,9 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             re-checked at RST_OK_UM by _reset_reach_gate as before).  Same levels / cycles / equal depth."""
             head, prev = None, None
             compact, remaining = divmod(lv, 32) if RST_PAD64_VARIANT else (0, lv)
-            for mst in [RST_PAD64] * compact + [RST_PAD] * (remaining // RST_PAD_LV) + [RST_REP] * (remaining % RST_PAD_LV):
+            queue = [RST_PAD64] * compact + [RST_PAD] * (remaining // RST_PAD_LV) + [RST_REP] * (remaining % RST_PAD_LV)
+            while queue:
+                mst = queue.pop(0)
                 far = c_(p) if p is not None else pxy
                 a = None
                 if _rst_pad_cluster:
@@ -5787,6 +5798,11 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
                         if a is not None:
                             pad_moved[0] += 1
                             break
+                if a is None and mst == RST_PAD64 and RST_PAD64_MIXED:
+                    # same 32 levels / 64 cycles on this edge in the original palette (see RST_PAD64_MIXED)
+                    queue[:0] = [RST_PAD] * 6 + [RST_REP] * 2
+                    pad_fallback[0] += 1
+                    continue
                 if a is None:
                     raise ValueError(f'reset tree: {bid} pad chain of {lv} levels has no free site within one net of '
                                      f'child {[round(q, 1) for q in c_(k)]} / parent {None if far is None else [round(q, 1) for q in far]}')
@@ -5830,6 +5846,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         per[bid] = dict(dom=net['dom'], sinks=len(net['sinks']), repeaters=len(N) - sum(pads.values()), pad_rep=pads[RST_REP],
                         pad_p8=pads[RST_PAD], pad_p62=pads[RST_PAD64], pad_gap_um=RST_PAD_GAP_UM, pad_on_edge=pad_moved[0], nets=nn + 1, max_net_um=round(mx, 1), levels=ht[root] + 1,
                         depth_cycles=sorted(dep))
+        if RST_PAD64_MIXED:
+            per[bid]['pad_p62_fallback'] = pad_fallback[0]
     return cells, wires, per, errors
 
 
@@ -6021,7 +6039,7 @@ def _reset_tree(v, m):
     # centroid for a leaf, the node it pads / fans out for a pad or auxiliary cell) to the legal site taken
     moved = sorted(c[5] for c in cells)
     rec.update(repeaters=sum(r['repeaters'] for r in per.values()), pad_rep=sum(r['pad_rep'] for r in per.values()),
-               pad_p8=sum(r['pad_p8'] for r in per.values()), pad_p62=sum(r['pad_p62'] for r in per.values()), cells=len(cells), nets=len(wires), max_net_um=round(mx, 1),
+               pad_p8=sum(r['pad_p8'] for r in per.values()), pad_p62=sum(r['pad_p62'] for r in per.values()), **({'pad_p62_fallback': sum(r.get('pad_p62_fallback', 0) for r in per.values())} if RST_PAD64_MIXED else {}), cells=len(cells), nets=len(wires), max_net_um=round(mx, 1),
                depth_cycles={d_: sorted(s) for d_, s in deps.items()}, max_depth_cycles=max(max(s) for s in deps.values()),
                pads='pad chains on slack edges: optional qfd_rst_rep_p62 (64 cycles), qfd_rst_rep_p8 (10 cycles), qfd_rst_rep (2 cycles)',
                masters=[RST_REP, RST_PAD] + ([RST_PAD64] if RST_PAD64_VARIANT else []), compact_variant=RST_PAD64_VARIANT, compact_frame_um=list(_rst_frame(RST_PAD64)) if RST_PAD64_VARIANT else None, frame_um=[RST_W, RST_H], gap_um=RST_GAP_UM, lattice_um=RST_PITCH_UM,
