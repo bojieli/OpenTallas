@@ -1,0 +1,180 @@
+{
+ "cells": 53966,
+ "flops": 15558,
+ "icgs": 0,
+ "macros": 4,
+ "findings": {
+  "clock_domain": [
+   "clock root port ck: 14,966 flops > 8,000 spread over a 218 x 1183 um outline (> 600 um) (+0 ICGs, 4 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine"
+  ],
+  "high_fanout": [
+   "port hrst_n: 325 loads (324 flops, e.g. u_ot_pr_core.u_bcdc0.applied_hbm$_DFFE_PN0P_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast"
+  ],
+  "boundary": [
+   "306 output bit(s) combinational from input ports (e.g. x__tok[9]->y__tok[9] 0 lv, x__tok[8]->y__tok[8] 0 lv, x__tok[7]->y__tok[7] 0 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um",
+   "4860 input->register endpoint(s) > 3 levels (worst i_ctl[186]->u_ot_pr_core.u_bcdc1.u_fifo.wr_full$_DFF_PN0_/D 8 lv, i_ctl[184]->u_ot_pr_core.u_bcdc0.u_fifo.wr_full$_DFF_PN0_/D 8 lv, i_ctl[190]->u_ot_pr_core.u_bcdc3.u_fifo.wr_full$_DFF_PN0_/D 7 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um"
+  ],
+  "wire_reach": [
+   "1 stage(s) beyond 500 um reach: insert relay flops",
+   "register u_ot_pr_core.u_cf1.fault$_DFF_PN0_: its fixed terminals pin i_pc0[290] and pin o_ctl[141] put it >= 631 um from one of them (> 500 um per stage)"
+  ]
+ },
+ "refuse": {
+  "boundary": [
+   "306 combinational input->output bit(s)"
+  ],
+  "wire_reach": [
+   "1 stage(s) beyond 500 um reach: insert relay flops",
+   "register u_ot_pr_core.u_cf1.fault$_DFF_PN0_: its fixed terminals pin i_pc0[290] and pin o_ctl[141] put it >= 631 um from one of them (> 500 um per stage)"
+  ]
+ },
+ "metrics": {
+  "core_um": [
+   218.2,
+   1183.4
+  ],
+  "clock_roots": [
+   {
+    "root": "port:ck",
+    "ff": 14966,
+    "icg": 0,
+    "macro_pins": 4,
+    "example": "rst_n__ot_rl0$_DFF_P_"
+   },
+   {
+    "root": "port:hck",
+    "ff": 592,
+    "icg": 0,
+    "macro_pins": 0,
+    "example": "u_ot_pr_core.u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   }
+  ],
+  "hier_subblocks": 0,
+  "clock_max_root_sinks": 14970,
+  "clock_max_root": "port:ck",
+  "high_fanout_top": [
+   {
+    "net": "u_ot_pr_core.u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 394,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 394,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 394,
+    "flops": 0
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 393,
+    "flops": 0
+   },
+   {
+    "net": "port hrst_n",
+    "loads": 325,
+    "flops": 324
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295
+   },
+   {
+    "net": "u_ot_pr_core.u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295
+   }
+  ],
+  "hf_max_port": 325,
+  "hf_max_reset": 0,
+  "hf_max_net": 394,
+  "reset_landing": [
+   {
+    "port": "rst_n",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   }
+  ],
+  "in_to_out_bits": 306,
+  "in_to_reg_levels": 8,
+  "reg_to_out_levels": 0,
+  "icg_enable_from_port": 0,
+  "depth_ps": 523.4,
+  "depth_path": [
+   "u_ot_pr_core.u_lcal.vpass$_DFFE_PN0P_",
+   "u_ot_pr_core.u_lcal.d[12]$_DFFE_PN0P_/D"
+  ],
+  "depth_levels": 14,
+  "reach_worst_um": 630.6,
+  "reach_violations": 1,
+  "util": 0.0898,
+  "std_density": 0.0316,
+  "total_fill": 0.0898,
+  "narrow_channels": 0,
+  "narrow_channel_min_um": null
+ },
+ "top": "qkd_kvs_grp_h",
+ "netlist": "/work/results/asap7/opentallas_qkd_kvs_grp_h_asap7_ref_qkd_kvs_grp_h_r1_r1_92dad39e6/base/1_2_yosys.v",
+ "seconds": 2.8,
+ "thresholds": {
+  "clk_sinks_max": 15000,
+  "clk_span_um": 600.0,
+  "clk_span_sinks": 8000,
+  "clk_sinks_refuse": 110000,
+  "hf_report": 256,
+  "hf_max": 3000,
+  "hf_port_refuse": 2048,
+  "hf_reset_refuse": 8000,
+  "hf_refuse": 50000,
+  "rst_land_max": 2,
+  "bnd_levels": 3,
+  "bnd_in_levels_refuse": 9,
+  "bnd_out_levels_refuse": 3,
+  "bnd_in_to_out_refuse": 1,
+  "bnd_icg_port_refuse": 1,
+  "bnd_strict_pin_regs": 0,
+  "depth_scale": 1.667,
+  "depth_ps_warn": 600.0,
+  "depth_ps_max": 700.0,
+  "reach_um": 500.0,
+  "reach_min_count": 1,
+  "util_min": 0.4,
+  "util_max": 0.6,
+  "fill_max": 0.9,
+  "macro_halo_um": 2.16,
+  "channel_um": 20.0,
+  "reset_ports": "rst_n"
+ },
+ "clock_rule": {
+  "max_root_sinks": 14970,
+  "root": "port:ck",
+  "ok": true,
+  "text": "14,970 sinks on the largest root; no measured clock tree (no --cts gate evidence)",
+  "enforce": true,
+  "closed_stands": false,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  }
+ },
+ "would_refuse": [
+  "wire_reach"
+ ],
+ "waived": [],
+ "verdict": "REFUSE",
+ "refusing_checks": [
+  "wire_reach"
+ ],
+ "summary": "clock_domain: clock root port ck: 14,966 flops > 8,000 spread over a 218 x 1183 um outline (> 600 um) (+0 ICGs, 4 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine | high_fanout: port hrst_n: 325 loads (324 flops, e.g. u_ot_pr_core.u_bcdc0.applied_hbm$_DFFE_PN0P_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast | boundary: 306 output bit(s) combinational from input ports (e.g. x__tok[9]->y__tok[9] 0 lv, x__tok[8]->y__tok[8] 0 lv, x__tok[7]->y__tok[7] 0 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um | wire_reach: 1 stage(s) beyond 500 um reach: insert relay flops"
+}
