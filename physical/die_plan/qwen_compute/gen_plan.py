@@ -169,6 +169,7 @@ def shared_face(P, a, b, quiet=False):
 
 
 PITCH = {"M4": (0.048, 0.024), "M5": (0.048, 0.024), "M6": (0.064, 0.032), "M7": (0.064, 0.032)}
+NEG_PIN_UM = float(__import__("os").environ.get("QC_NEG_PIN_UM", "5.1"))   # slice negotiation face capacity (QC-P5 10-23: 5.0 -> 5.1 pins/um, G0 face budget 6; frees the detours that padded R8 classes)
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
 FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
 _QL = {}
@@ -472,6 +473,10 @@ BCAST = {  # broadcast nets of the slice record -> plan forwarding trees (regist
     ("r_tap", "hw"): [("tap", "hc2"), ("hc2", "hc1"), ("hc1", "hc0"), ("hc2", "hc3")],
     ("r_stm", "tw_data"): [("stm", "ctl"), ("ctl", "st_a")],
 }
+# QC-P5 10-23 (COORD R8 pad budget): the tw control bits travel WITH tw_data (same as-built cycle, same readers u_rp /
+# u_btab).  As separate x flows they lost the full stm|ctl face and detoured 6 hops (12 cycles), so the whole tw class
+# padded to 17 (331k pad flops).  One broadcast bundle keeps them on the 1-hop tree.
+BCAST_ALIAS = {("r_stm", n): ("r_stm", "tw_data") for n in ("tw_addr", "tw_kind", "tw_we")}
 
 
 def directed_slice_landings(record, su_directed):
@@ -490,6 +495,7 @@ def slice_internal_links(P, geo, record, su_split, su_directed):
     for k in range(NCOL):
         agg = collections.Counter()
         trees = collections.Counter()
+        nets = {}                           # broadcast key -> {net: width} (bundle = sum of its nets)
         for ld in directed_slice_landings(record, su_directed):
             s, d = (REGION_OF.get(ld[x], ld[x]) for x in ("src_region", "dst_region"))
             if ld["net"] in ("cs0", "cs1", "cs2", "cs3"):
@@ -497,10 +503,13 @@ def slice_internal_links(P, geo, record, su_split, su_directed):
             if s == d:
                 continue
             bk = (ld["src_region"], ld["net"])
-            if bk in BCAST:
-                trees[bk] = max(trees[bk], ld["width"])
+            if bk in BCAST or bk in BCAST_ALIAS:
+                kk = BCAST_ALIAS.get(bk, bk)
+                nets.setdefault(kk, {})[ld["net"]] = max(nets.setdefault(kk, {}).get(ld["net"], 0), ld["width"])
                 continue
             agg[(s, d)] += ld["width"]
+        for kk, nw in nets.items():
+            trees[kk] = sum(nw.values())
         for row in su_directed["internal"]:
             agg[(row["src"], row["dst"])] += row["bits"]
         flows = [(f"b_{bk[1]}_{a}_{b}", a, b, w, f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i", f"u_pstn.{bk[1]}_fwd",
@@ -522,7 +531,7 @@ def negotiate(P, geo, k, flows, iters=300):
         for m in names[i + 1:]:
             sf = shared_face(P, n, m, quiet=True)
             if sf:
-                cap = (sf[2] - sf[1] - 2 * EDGE) * 5.0
+                cap = (sf[2] - sf[1] - 2 * EDGE) * NEG_PIN_UM
                 d = abs(P.centre(n)[0] - P.centre(m)[0]) + abs(P.centre(n)[1] - P.centre(m)[1])
                 nb[n].append((m, cap, d))
                 nb[m].append((n, cap, d))
@@ -1371,7 +1380,62 @@ def materialize(P):
             if g["order"] != "lsb_low":
                 s["order"] = g["order"]
         P.types[tn]["ft_slots"].append(s)
+    stagger_coll_ft_stations(P)
     return ports, lanes
+
+
+def stagger_coll_ft_stations(P, tap_clear=24.0):
+    """QC-P5 10-23 (coll_ftc GRT probe: overflow 368, all at the partition centre): in the single-instance coll ft
+    segments every k=2 slot put its station 1 at L/2 of a midpoint-Z / L route, so the straight slots shared one jog
+    column and the turn slots met there too, on top of the clock/reset tap.  Here station 1 of each 2-station slot gets
+    an explicit site (regs_um, honoured by face_flops.tcl) at a STAGGERED fraction of its own route (first leg normal to
+    the in face, as the tool routes it), widest slots first, kept >= tap_clear um off the clock/reset tap; station 0
+    stays at the in-face pin centre.  Every hop stays <= ST_LEN."""
+    fr = [0.50, 0.38, 0.62, 0.44, 0.56, 0.32, 0.68, 0.41, 0.59, 0.35, 0.65, 0.47, 0.53]
+    for tn in sorted({P.parts[p]["type"] for p in FT_COLL if p in P.parts}):
+        t = P.types[tn]
+        W, H = t["outline_um"]
+        tap = t.get("clock", {}).get("tap_um", [W / 2, H / 2])
+        slots = [s for s in t["ft_slots"] if int(s.get("stations", 1)) == 2 and s.get("out_window_um")]
+        slots.sort(key=lambda s: -s["width"])
+        for i, s in enumerate(slots):
+            gi = P.in_geo.get((tn, s["name"] + "_i"))
+            if not gi:
+                continue
+            fi, fo = s["in_face"], s["out_face"]
+            ci, co = sum(gi["window_um"]) / 2, sum(s["out_window_um"]) / 2
+            pin = {"E": (W, ci), "W": (0.0, ci), "N": (ci, H), "S": (ci, 0.0)}
+            pout = {"E": (W, co), "W": (0.0, co), "N": (co, H), "S": (co, 0.0)}
+            a, b = pin[fi], pout[fo]
+            # route corners: first leg normal to the in face
+            if fi in "EW":
+                corner = (b[0], a[1]) if fo in "NS" else ((a[0] + b[0]) / 2, a[1])
+            else:
+                corner = (a[0], b[1]) if fo in "EW" else (a[0], (a[1] + b[1]) / 2)
+            pts = [a, corner] + ([] if fo in ("NS" if fi in "EW" else "EW") else
+                                 [(corner[0], b[1]) if fi in "EW" else (b[0], corner[1])]) + [b]
+            segs = [(p, q, abs(p[0] - q[0]) + abs(p[1] - q[1])) for p, q in zip(pts, pts[1:])]
+            L = sum(x[2] for x in segs)
+
+            def at(u):
+                for p, q, l in segs:
+                    if u <= l or (p, q, l) == segs[-1]:
+                        r = 0 if l == 0 else min(1.0, u / l)
+                        return (p[0] + (q[0] - p[0]) * r, p[1] + (q[1] - p[1]) * r)
+                    u -= l
+            site = None
+            for j in range(len(fr)):
+                f_ = fr[(i + j) % len(fr)]
+                if f_ * L > ST_LEN or (1 - f_) * L > ST_LEN:
+                    continue
+                x, y = at(f_ * L)
+                if abs(x - tap[0]) + abs(y - tap[1]) >= tap_clear:
+                    site = (round(x, 3), round(y, 3))
+                    break
+            if site is None:
+                continue
+            s0 = (round(min(max(a[0], 1.0), W - 1.0), 3), round(min(max(a[1], 1.0), H - 1.0), 3))
+            s["regs_um"] = [list(s0), list(site)]
 
 
 def ft_fracs(P):
@@ -1671,12 +1735,14 @@ def write_census(P, geo, census, record, outdir, su_directed):
                 continue
             s_, d_ = ld["src_region"], ld["dst_region"]
             bk = (s_, ld["net"])
-            if bk in BCAST:
+            if bk in BCAST or bk in BCAST_ALIAS:
                 continue
             rows1.append(dict(src=f"{nm}/{s_}", src_bus=ld["net"], dst=f"{nm}/{d_}", dst_bus=ld["net"], kind="data",
                               bits=ld["width"]))
         for bk, hops in BCAST.items():
-            w = max((ld["width"] for ld in record["landings"] if (ld["src_region"], ld["net"]) == bk), default=0)
+            grp = [bk] + [a_ for a_, b_ in BCAST_ALIAS.items() if b_ == bk]
+            w = sum(max((ld["width"] for ld in record["landings"] if (ld["src_region"], ld["net"]) == g), default=0)
+                    for g in grp)
             for a, b in hops:
                 rows1.append(dict(src=f"{nm}/tree_{a}", src_bus=bk[1], dst=f"{nm}/tree_{b}", dst_bus=bk[1],
                                   kind="data", bits=w))
