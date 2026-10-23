@@ -1,0 +1,204 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING ORD-2011] LEF master DFFHQNx1_ASAP7_75t_R has no liberty cell.
+[WARNING ORD-2011] LEF master BUFx24_ASAP7_75t_R has no liberty cell.
+[INFO IFP-0001] Added 3968 rows of 11200 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 613.440 1080.000 ) um
+[INFO IFP-0101] Core BBox: (  4.320  4.320 ) ( 609.120 1075.680 ) um
+[INFO IFP-0102] Core area:                       647958.528 um^2
+[INFO IFP-0103] Total instances area:              3679.117 um^2
+[INFO IFP-0104] Effective utilization:                0.006
+[INFO IFP-0105] Number of instances:                  12616
+[INFO DPL-0006] Core area: 647958.53 um^2
+[INFO DPL-0007] Movable instances area: 3679.12 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.00 um^2
+[INFO DPL-0009] Utilization: 0.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 7407 sites horizontally, +/- 1481 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-7407 sites, +/-1481 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 12616 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        338 |        76 |       262
+        1 |        120 |         6 |       114
+        2 |         78 |         4 |        74
+        3 |         42 |         2 |        40
+        4 |         42 |         2 |        40
+        5 |         42 |         2 |        40
+        6 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 6.
+[INFO DPL-0500] Runtime: 2.55s
+Placement Analysis
+---------------------------------
+total displacement       9239.6 u
+average displacement        0.7 u
+max displacement            2.8 u
+original HPWL         7104642.9 u
+legalized HPWL        7105051.9 u
+delta HPWL                    0 %
+
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 37842
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 2
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   29746802      14249109          52.10%
+M3         Vertical     32256720      15957990          50.53%
+M4         Horizontal   24187500      11965825          50.53%
+M5         Vertical     24192540      11969439          50.52%
+M6         Horizontal   18140625       8147425          55.09%
+M7         Vertical     18144405       8149365          55.09%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 66629
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 129529
+[INFO GRT-0112] Final usage 3D: 12843922
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2            14249109       2963473           20.80%             0 /  0 /  0
+M3            15957990       4987091           31.25%             0 /  0 /  0
+M4            11965825       2203289           18.41%             0 /  0 /  0
+M5            11969439       1440363           12.03%             0 /  0 /  0
+M6             8147425        467376            5.74%             0 /  0 /  0
+M7             8149365        393743            4.83%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         70439153       12455335           17.68%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 7131711 um
+[INFO GRT-0014] Routed nets: 20669
+[INFO GRT-0303] Global routing runtime = 00:01:00
+OT_GRT_S 60
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ftprobe
+Die area:                 ( 0 0 ) ( 613440 1080000 )
+Number of track patterns: 30
+Number of DEF vias:       0
+Number of components:     12616
+Number of terminals:      16693
+Number of snets:          0
+Number of nets:           21256
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 5.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0020]   Complete 10000 terms.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 580270.
+[INFO DRT-0033] V1 shape region query size = 113526.
+[INFO DRT-0033] M2 shape region query size = 37842.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 0.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 5335.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 3000.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 5348.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 3010.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0078]   Complete 24 pins.
+[INFO DRT-0081]   Complete 5 unique inst patterns.
+[INFO DRT-0084]   Complete 8717 groups.
+#scanned instances     = 12616
+#unique  instances     = 5
+#stdCellGenAp          = 142
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 120
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 25232
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:04:50, elapsed time = 00:04:48, memory = 4923.86 (MB), peak = 4922.21 (MB)
+OT_DONE

@@ -25,7 +25,23 @@ Paths are relative to the plan file. The instance map JSON:
      "forward_routes": [{"src": "host", "src_bus": "link_rst_n", "dst": "serdes_E", "dst_bus": "rst_n",
                          "lanes": ["L745", "L746", "L747"]}],  optional exact control-route witnesses;
                                                              validated lane/slot identity, not an exemption
-     "collapse_broadcast": true}                              count one driver bus once per sink partition/group
+     "collapse_broadcast": true,                              count one driver bus once per sink partition/group
+     "bit_rules": [{"inst": "<regex>", "port": "<regex>", "lo": 0, "hi": 521, "part": "<partition>"}],
+                                                              bitcon only: a destination split over partitions by bit
+     "tree_lanes": {"<src inst>.<src port>": ["L1", ...]}}    bitcon only: tap-tree lanes of one source bus (lanes whose
+                                                              note starts 'tap_tree <src inst>.<src port>' count too)
+    and the census source may add  "bitcon": "<bitcon.json[.gz]>"  (as-built BIT pairs: {"conns": [{"s", "sp", "d",
+    "dp", "pairs": [[src bit, dst bit], ...]}]}, e.g. KV bind/bitcon.py).
+
+Bit-level tap-tree audit (COORD 10-23 R5; KV-P3b taptree_audit_v32 pattern): forward_via credit treats a tree as a
+BROADCAST (the widest chain carries every destination).  A split bus on a shared trunk (bits 0-521 to A, 522-1043 to
+B) needs the UNION on the trunk; the census rows have no bit ranges, so that was a silent false PASS (KV L663).  With
+`bitcon`, every tree lane must be at least as wide as the union of source bits needed by the destinations downstream
+of it (ERROR 'taptree' per deficit).  forward_via credit WITHOUT a bitcon is an ERROR.
+
+Off-die traffic (COORD 10-23, S81-P5): map the as-built pad / PMA / PHY memory-side endpoints (e.g. SerDes PMA pads,
+HBM DQ/CA) to "@die"; those bits are then checked like any pair against the plan's @die ports, and G0 check_die_io
+requires each @die port in a die.io pad / bump window over its host partition.
 
 How the check works:
 - Every census row whose endpoints map to different partitions (or groups) is inter-partition traffic. For each
@@ -330,7 +346,7 @@ def coverage(P, plan_dir, R):
                         best[v] = c
                         heapq.heappush(hq, (-c, v))
             return 0
-        dropped, forwarded = {}, 0
+        dropped, forwarded, fwd_tree = {}, 0, 0
         for pair, b in asb.items():
             have = pg.get(pair, 0)
             explicit = sum(w for w, _ in proven.get(pair, []))
@@ -361,6 +377,7 @@ def coverage(P, plan_dir, R):
                 f = bottleneck(*pair, graph)
                 if f > have:
                     forwarded += min(b - explicit, f) - have
+                    fwd_tree += min(b - explicit, f) - have
                     have = max(have, f)
             forwarded += min(explicit, max(0, b - have))
             have += explicit
@@ -376,7 +393,13 @@ def coverage(P, plan_dir, R):
         for g, n in sorted(multi.items()):
             R.warn("census", f"census[{k}] group {g} spans {n} partitions: traffic inside it is unchecked by this "
                    "census (cover it with a finer census)")
-        out["sources"].append(dict(rows=src["rows"], map=src["map"], census_rows=len(rows),
+        tt = None
+        if src.get("bitcon"):
+            tt = taptree_audit(P, Path(plan_dir) / src["bitcon"], mp, where, R, k)
+        elif fwd_tree:
+            R.err("census", f"census[{k}]: {fwd_tree} bits credited through forward_via without a bit-level tap-tree "
+                  "audit: add the as-built bit pairs as census[].bitcon (R5)")
+        out["sources"].append(dict(rows=src["rows"], map=src["map"], census_rows=len(rows), taptree=tt,
                                    inter_bits=sum(asb.values()), intra_bits=intra, planned_pairs=len(pg),
                                    dropped_bits=tot, dropped_pairs=len(dropped), unmapped_instances=len(unmapped),
                                    forwarded_bits=forwarded, broadcast_collapsed_bits=collapsed,
@@ -384,3 +407,65 @@ def coverage(P, plan_dir, R):
                                    groups_spanning=multi))
     out["dropped_bits"] = sum(s["dropped_bits"] for s in out["sources"])
     return out
+
+
+def taptree_audit(P, path, mp, where, R, k):
+    """R5: every tap-tree lane carries the union of the source bits its downstream destinations need."""
+    path = Path(path)
+    bc = json.load(gzip.open(path, "rt")) if path.name.endswith(".gz") else json.loads(path.read_text())
+    brules = [(re.compile(r["inst"]), re.compile(r.get("port", ".*")), int(r.get("lo", 0)),
+               int(r.get("hi", 1 << 30)), r["part"]) for r in mp.get("bit_rules", [])]
+
+    def dparts(d, dp, db):
+        hit = [pt for ri, rp, lo, hi, pt in brules if ri.fullmatch(d) and rp.fullmatch(dp) and lo <= db <= hi]
+        if hit:
+            return hit
+        w = where(d)
+        return [w] if w else []
+    trees = defaultdict(set)
+    for lid, ln in P.lanes.items():
+        note = ln.get("note", "")
+        if note.startswith("tap_tree "):
+            trees[note.split()[1]].add(lid)
+    for src, lids in mp.get("tree_lanes", {}).items():
+        trees[src] |= {l for l in lids if l in P.lanes}
+    if not trees:
+        R.warn("census", f"census[{k}] bitcon: no tap-tree lanes (note 'tap_tree <src>.<port>' or map tree_lanes)")
+    want = set(trees)
+    need = defaultdict(lambda: defaultdict(set))
+    for c in bc["conns"]:
+        key = f"{c['s']}.{c['sp']}"
+        if key not in want:
+            continue
+        for sb, db in c["pairs"]:
+            for pt in dparts(c["d"], c["dp"], db):
+                need[key][pt].add(sb)
+    lanes_n, bad, deficit = 0, 0, 0
+    worst = []
+    for src, lids in sorted(trees.items()):
+        edges = {}
+        for lid in lids:
+            ch = P.lanes[lid]["ports"]
+            edges[lid] = (P.ports[ch[0]]["src"]["part"], P.ports[ch[-1]]["dst"]["part"],
+                          min(int(P.ports[q]["width"]) for q in ch))
+        nxt = defaultdict(list)
+        for lid, (a, b, w) in edges.items():
+            nxt[a].append(b)
+        nd = need.get(src, {})
+        for lid, (a, b, w) in sorted(edges.items()):
+            down, todo = {b}, [b]
+            while todo:
+                for v in nxt.get(todo.pop(), []):
+                    if v not in down:
+                        down.add(v)
+                        todo.append(v)
+            bits = set().union(*(nd.get(p, set()) for p in down)) if down else set()
+            lanes_n += 1
+            if len(bits) > w:
+                bad += 1
+                deficit += len(bits) - w
+                worst.append((len(bits) - w, src, lid, a, b, w, len(bits)))
+    for d, src, lid, a, b, w, n in sorted(worst, reverse=True)[:30]:
+        R.err("census", f"census[{k}] taptree {src}: lane {lid} {a} -> {b} is {w} b, downstream needs {n} source "
+              f"bits (deficit {d}; split bus on a shared trunk)")
+    return dict(bitcon=str(path.name), trees=len(trees), lanes=lanes_n, under_carrying_lanes=bad, deficit_bits=deficit)

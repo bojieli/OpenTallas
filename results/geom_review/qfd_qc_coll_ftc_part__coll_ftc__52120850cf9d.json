@@ -1,0 +1,11 @@
+{
+ "element": "qfd_qc_coll_ftc_part",
+ "kit": "scratch/qc-p3/g3d/coll_ftc (gen.py phys of qwen_compute@ffdcc9159)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "52120850cf9d599b",
+ "reasons": "[10-23 11:57] [GEOM-REVIEW4 G3 re-REQ] coll_ftc_kit.png viewed; pins, ft_stations.txt and SDC checked; kit hash re-computed by me (cat-sorted scheme) = 52120850cf9d599b. FIXED vs my 10:35 FAIL: (a) straight E/W slots now run nearly horizontal. Per-slot worst span is 716-1066 um (was 870-1231). Every slot has 2 stations except out_data_rd_wi (1 station, 716 um), so hops are L/k <= 533 um, under the R3 750 um. (b) Stations are FIRM at L*j/k pre-GPL (tool R3), with ft SDC in 0.75T / out 0.25T. (c) cmd/hr now have 2 stations. (d) E/W pins alternate M6/M4 (1995/1985, 1427/1422), max 60 per 10 um (<= 6/um); W now 284-1024, E 307-1015. Remaining: the E->S turn slots (ard/art/cc*/flte, ~600 b) still cross diagonally from E y 400-510 to S x 240-270, about 1 mm, because the S windows are partner-bound. bit-mm is 4,512, about 30% over a corner-turn ideal. rst_n still fans out to 48 epoch flops from one u_rst_sync. The render is a kit plan render, not placed.",
+ "fixes": "GRT-only probe allowed now. For the full PASS: (1) a placed render plus a flop histogram per slot showing s0 at the in face and s1 at L/2 (no stacking); (2) the reset epoch fan-out <= 32 per copy (PLAN-TOOL2 tool item: 2 sync copies or a declared buffered tree); (3) next re-window of coll_f5/S partner: move the E<->S turn windows toward the SE corner (about -1k bit-mm). That is optional if the GRT probe shows no hot spot at the crossing.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T11:57:32-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

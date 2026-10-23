@@ -1,0 +1,27 @@
+  3097168 3.53E+05        2    0.087 ot_hdc_v41x_attn_tile_s
+   774281 8.83E+04    30225 4.01E+03 ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g
+   183981 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g.g_h[0].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g.g_h[1].u_hdp
+   183926 2.07E+04    24851 2.94E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g.g_h[2].u_hdp
+   183880  20720.6    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g.g_h[3].u_hdp
+   774184 8.83E+04    30065 4.01E+03 ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g
+   183928 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g.g_h[0].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g.g_h[1].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g.g_h[2].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g.g_h[3].u_hdp
+   774424 8.83E+04    30272 4.02E+03 ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g.g_h[0].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g.g_h[1].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g.g_h[2].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g.g_h[3].u_hdp
+   774277 8.83E+04    30125 4.01E+03 ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g.g_h[0].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g.g_h[1].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g.g_h[2].u_hdp
+   183961 2.07E+04    24541 2.91E+03   ot_hdc_v41x_attn_hdp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g.g_h[3].u_hdp
+        1 8.83E+04        1        -   ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[0].u_g
+        1 8.83E+04        1        -   ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[1].u_g
+        1 8.83E+04        1        -   ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[2].u_g
+        1 8.83E+04        1        -   ot_hdc_v41x_attn_hgrp_s$ot_hdc_v41x_attn_tile_s.g_g[3].u_g
+   Chip area for top module '\ot_hdc_v41x_attn_tile_s': 353318.627160
+# full report: ot-epyc9:/srv/opentallas-scratch/claude/plan-s81v4-syn2/jobs/svc_tile/flow_out/reports/asap7/svc_tile/base/synth_stat.txt sha256 5b69e27e4ba2211452f944db69e7528dc1ad203983a9e9fd7f24786ef6644f38 (openroad/orfs:asap7lock, CORNER WC, SYNTH_HIERARCHICAL=1, KEEP 5000; srcs = main ec60540e6 kit + patched dsdv_svc_att.sv)

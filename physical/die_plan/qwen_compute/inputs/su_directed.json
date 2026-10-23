@@ -1,0 +1,3446 @@
+{
+  "scope": "actual s8 parent directed SU inter-group data; no RTL/physical closure",
+  "sources": {
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv": "519209293cea4584f70e3785ba50bc3838cbb9b0577bb89391ddbb3570a16281",
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv": "067bba95d84c1cc401596d19e1be92228eb6503fd59c2968f3ef90ad70109bfa",
+    "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv": "825eaf6a1a50517ba0796e9d8903654d4a97b7e4cb0442b28ba2f46fdcb77e64"
+  },
+  "selected": [
+    {
+      "inst": "u_suvm",
+      "module": "qfd_dv_s8_suvm_rp1",
+      "group": "su_c"
+    },
+    {
+      "inst": "u_red",
+      "module": "qfd_dv_s5_red2_leaf",
+      "group": "su_c"
+    },
+    {
+      "inst": "u_lrly0",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l0"
+    },
+    {
+      "inst": "u_lrly1",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l0"
+    },
+    {
+      "inst": "u_lrly2",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l0"
+    },
+    {
+      "inst": "u_lrly3",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l0"
+    },
+    {
+      "inst": "u_lrly4",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l1"
+    },
+    {
+      "inst": "u_lrly5",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l1"
+    },
+    {
+      "inst": "u_lrly6",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l1"
+    },
+    {
+      "inst": "u_lrly7",
+      "module": "qfd_dv_s5_lrly",
+      "group": "su_l1"
+    }
+  ],
+  "all_lane_instances": [
+    "u_lrly0",
+    "u_head0",
+    "u_exp0",
+    "u_rcp0",
+    "u_rsq0",
+    "u_lrly1",
+    "u_head1",
+    "u_exp1",
+    "u_rcp1",
+    "u_rsq1",
+    "u_lrly2",
+    "u_head2",
+    "u_exp2",
+    "u_rcp2",
+    "u_rsq2",
+    "u_lrly3",
+    "u_head3",
+    "u_exp3",
+    "u_rcp3",
+    "u_rsq3",
+    "u_lrly4",
+    "u_head4",
+    "u_exp4",
+    "u_rcp4",
+    "u_rsq4",
+    "u_lrly5",
+    "u_head5",
+    "u_exp5",
+    "u_rcp5",
+    "u_rsq5",
+    "u_lrly6",
+    "u_head6",
+    "u_exp6",
+    "u_rcp6",
+    "u_rsq6",
+    "u_lrly7",
+    "u_head7",
+    "u_exp7",
+    "u_rcp7",
+    "u_rsq7"
+  ],
+  "all_lane_shared_signals_excluding_clock": {
+    "rst_n": 1,
+    "gb": 500,
+    "gv": 3
+  },
+  "directed_bits": {
+    "su_c->su_l0": 1531,
+    "su_c->su_l1": 1531,
+    "su_l0->su_c": 903,
+    "su_l1->su_c": 876
+  },
+  "common_lane_inputs_excluding_clock": {
+    "gb": 500,
+    "gv": 3,
+    "rst_n": 1
+  },
+  "lane_to_lane_bits": 0,
+  "internal": [
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "cr_q",
+      "bits": 256
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "gb",
+      "bits": 500
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "gv",
+      "bits": 3
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "lv1",
+      "bits": 4
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "pd1",
+      "bits": 384
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "va_q",
+      "bits": 128
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "vb_q",
+      "bits": 128
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l0",
+      "net": "vc_q",
+      "bits": 128
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "cr_q",
+      "bits": 256
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "gb",
+      "bits": 500
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "gv",
+      "bits": 3
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "lv1",
+      "bits": 4
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "pd1",
+      "bits": 384
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "va_q",
+      "bits": 128
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "vb_q",
+      "bits": 128
+    },
+    {
+      "src": "su_c",
+      "dst": "su_l1",
+      "net": "vc_q",
+      "bits": 128
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_crom_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_crom_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_kv_we",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_fault",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_last",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_out",
+      "bits": 128
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_ov",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_raddr",
+      "bits": 24
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_red",
+      "bits": 2
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_l_redsq",
+      "bits": 1
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_retire",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_va_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_va_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vb_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vb_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vc_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vc_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vm_waddr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vm_wdata",
+      "bits": 128
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_vm_we",
+      "bits": 4
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_wrom_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l0",
+      "dst": "su_c",
+      "net": "L_wrom_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_crom_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_crom_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_kv_we",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_l_fault",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_l_last",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_l_out",
+      "bits": 128
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_l_ov",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_retire",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_va_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_va_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vb_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vb_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vc_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vc_re",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vm_waddr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vm_wdata",
+      "bits": 128
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_vm_we",
+      "bits": 4
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_wrom_addr",
+      "bits": 96
+    },
+    {
+      "src": "su_l1",
+      "dst": "su_c",
+      "net": "L_wrom_re",
+      "bits": 4
+    }
+  ],
+  "external": [
+    {
+      "landing": "46",
+      "net": "L_vm_we",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 4
+    },
+    {
+      "landing": "46",
+      "net": "L_vm_we",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 4
+    },
+    {
+      "landing": "47",
+      "net": "L_vm_waddr",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 96
+    },
+    {
+      "landing": "47",
+      "net": "L_vm_waddr",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 96
+    },
+    {
+      "landing": "48",
+      "net": "L_vm_wdata",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 128
+    },
+    {
+      "landing": "48",
+      "net": "L_vm_wdata",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 128
+    },
+    {
+      "landing": "49",
+      "net": "L_kv_we",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 4
+    },
+    {
+      "landing": "49",
+      "net": "L_kv_we",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 4
+    },
+    {
+      "landing": "50",
+      "net": "L_kv_waddr",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 96
+    },
+    {
+      "landing": "50",
+      "net": "L_kv_waddr",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 96
+    },
+    {
+      "landing": "51",
+      "net": "L_kv_wdata",
+      "src": "su_l0",
+      "dst": "r_ctl",
+      "bits": 128
+    },
+    {
+      "landing": "51",
+      "net": "L_kv_wdata",
+      "src": "su_l1",
+      "dst": "r_ctl",
+      "bits": 128
+    },
+    {
+      "landing": "52",
+      "net": "su_nr",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 1
+    },
+    {
+      "landing": "53",
+      "net": "su_idle",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 1
+    },
+    {
+      "landing": "54",
+      "net": "su_fault",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 1
+    },
+    {
+      "landing": "55",
+      "net": "su_prog",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 16
+    },
+    {
+      "landing": "56",
+      "net": "su_rows",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 16
+    },
+    {
+      "landing": "57",
+      "net": "vm_fault",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 1
+    },
+    {
+      "landing": "58",
+      "net": "red_we",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 1
+    },
+    {
+      "landing": "59",
+      "net": "red_addr",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 24
+    },
+    {
+      "landing": "60",
+      "net": "red_data",
+      "src": "su_c",
+      "dst": "r_ctl",
+      "bits": 32
+    },
+    {
+      "landing": "75",
+      "net": "su_cmd",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 10
+    },
+    {
+      "landing": "76",
+      "net": "w16_we",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 1
+    },
+    {
+      "landing": "77",
+      "net": "w16_addr",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 24
+    },
+    {
+      "landing": "78",
+      "net": "w16_data",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 512
+    },
+    {
+      "landing": "79",
+      "net": "w1_we",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 1
+    },
+    {
+      "landing": "80",
+      "net": "w1_addr",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 24
+    },
+    {
+      "landing": "81",
+      "net": "w1_data",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 32
+    },
+    {
+      "landing": "82",
+      "net": "rp_tw_we",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 1
+    },
+    {
+      "landing": "83",
+      "net": "rp_tw_kind",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 2
+    },
+    {
+      "landing": "84",
+      "net": "rp_tw_addr",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 24
+    },
+    {
+      "landing": "85",
+      "net": "rp_tw_data",
+      "src": "r_ctl",
+      "dst": "su_c",
+      "bits": 1024
+    },
+    {
+      "landing": "89",
+      "net": "red_we",
+      "src": "su_c",
+      "dst": "r_sc",
+      "bits": 1
+    },
+    {
+      "landing": "90",
+      "net": "red_addr",
+      "src": "su_c",
+      "dst": "r_sc",
+      "bits": 24
+    },
+    {
+      "landing": "91",
+      "net": "red_data",
+      "src": "su_c",
+      "dst": "r_sc",
+      "bits": 32
+    },
+    {
+      "landing": "92",
+      "net": "L_vm_we",
+      "src": "su_l0",
+      "dst": "r_sc",
+      "bits": 4
+    },
+    {
+      "landing": "92",
+      "net": "L_vm_we",
+      "src": "su_l1",
+      "dst": "r_sc",
+      "bits": 4
+    },
+    {
+      "landing": "93",
+      "net": "sc_win0",
+      "src": "su_l0",
+      "dst": "r_sc",
+      "bits": 2
+    },
+    {
+      "landing": "94",
+      "net": "sc_wd0",
+      "src": "su_l0",
+      "dst": "r_sc",
+      "bits": 32
+    },
+    {
+      "landing": "103",
+      "net": "L_vm_we",
+      "src": "su_l0",
+      "dst": "r_stm",
+      "bits": 4
+    },
+    {
+      "landing": "103",
+      "net": "L_vm_we",
+      "src": "su_l1",
+      "dst": "r_stm",
+      "bits": 4
+    },
+    {
+      "landing": "104",
+      "net": "L_vm_waddr",
+      "src": "su_l0",
+      "dst": "r_stm",
+      "bits": 96
+    },
+    {
+      "landing": "104",
+      "net": "L_vm_waddr",
+      "src": "su_l1",
+      "dst": "r_stm",
+      "bits": 96
+    },
+    {
+      "landing": "105",
+      "net": "L_vm_wdata",
+      "src": "su_l0",
+      "dst": "r_stm",
+      "bits": 128
+    },
+    {
+      "landing": "105",
+      "net": "L_vm_wdata",
+      "src": "su_l1",
+      "dst": "r_stm",
+      "bits": 128
+    }
+  ],
+  "old_cut_counts": {
+    "core_L0": 2435,
+    "core_L1": 2408,
+    "L0_L1": 504,
+    "meaning": "undirected data totals plus one shared reset; shared input overlap is not a driven lane"
+  },
+  "age_contract": {
+    "core_boundary": "u_suvm gb/gv/lv1/pd1 are group-stage publications; VM answers retain actual VM read age",
+    "lane_input": "lrly control244/gv/pd1/lv1/answers delay1 then IREG1; gb low256 bypass inbound delay then IREG1",
+    "lane_output": "lrly head output OREG1; five read requests addRD-1=1, other outputs addRD=2",
+    "plan": "every new inter-partition lane uses normal source/destination boundary flops and stations; regenerate schedule from produced latency; no original cycle claim"
+  },
+  "source_rows": [
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "cr_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "cr_q",
+      "bits": 64,
+      "parent_nets": [
+        "cr_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gb",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "gb",
+      "bits": 500,
+      "parent_nets": [
+        "gb"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "gv",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "gv",
+      "bits": 3,
+      "parent_nets": [
+        "gv"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "lv1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "lv1",
+      "bits": 1,
+      "parent_nets": [
+        "lv1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "pd1",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "pd1",
+      "bits": 96,
+      "parent_nets": [
+        "pd1"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "va_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "va_q",
+      "bits": 32,
+      "parent_nets": [
+        "va_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vb_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "vb_q",
+      "bits": 32,
+      "parent_nets": [
+        "vb_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly0",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly1",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly2",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l0",
+      "dst_inst": "u_lrly3",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly4",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly5",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly6",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_c",
+      "src_inst": "u_suvm",
+      "src_port": "vc_q",
+      "dst_group": "su_l1",
+      "dst_inst": "u_lrly7",
+      "dst_port": "vc_q",
+      "bits": 32,
+      "parent_nets": [
+        "vc_q"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_last0",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_raddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_raddr0",
+      "bits": 24,
+      "parent_nets": [
+        "L_l_raddr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_red",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_red0",
+      "bits": 2,
+      "parent_nets": [
+        "L_l_red"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "l_redsq",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_redsq0",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_redsq"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly0",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly1",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly2",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l0",
+      "src_inst": "u_lrly3",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly4",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly5",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly6",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "crom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_crom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "crom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "cr_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_crom_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "kv_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "kv_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_kv_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "l_fault",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_fault",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_fault"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "l_last",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_last",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_last"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "l_out",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_out",
+      "bits": 32,
+      "parent_nets": [
+        "L_l_out"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "l_ov",
+      "dst_group": "su_c",
+      "dst_inst": "u_red",
+      "dst_port": "l_ov",
+      "bits": 1,
+      "parent_nets": [
+        "L_l_ov"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "retire",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_retire",
+      "bits": 1,
+      "parent_nets": [
+        "L_retire"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "va_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_va_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "va_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "va_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_va_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vb_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vb_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vb_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vb_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vb_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vc_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vc_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vc_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vc_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_vc_re"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vm_waddr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_waddr",
+      "bits": 24,
+      "parent_nets": [
+        "L_vm_waddr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vm_wdata",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_wdata",
+      "bits": 32,
+      "parent_nets": [
+        "L_vm_wdata"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "vm_we",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "vm_we",
+      "bits": 1,
+      "parent_nets": [
+        "L_vm_we"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "wrom_addr",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_addr",
+      "bits": 24,
+      "parent_nets": [
+        "L_wrom_addr"
+      ]
+    },
+    {
+      "src_group": "su_l1",
+      "src_inst": "u_lrly7",
+      "src_port": "wrom_re",
+      "dst_group": "su_c",
+      "dst_inst": "u_suvm",
+      "dst_port": "l_wrom_re",
+      "bits": 1,
+      "parent_nets": [
+        "L_wrom_re"
+      ]
+    }
+  ],
+  "external_directed_bits": {
+    "su_l0->r_ctl": 456,
+    "su_l1->r_ctl": 456,
+    "su_c->r_ctl": 93,
+    "r_ctl->su_c": 1655,
+    "su_c->r_sc": 57,
+    "su_l0->r_sc": 38,
+    "su_l1->r_sc": 4,
+    "su_l0->r_stm": 228,
+    "su_l1->r_stm": 228
+  }
+}
