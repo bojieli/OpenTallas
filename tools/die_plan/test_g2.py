@@ -69,10 +69,10 @@ def test_assembly_die_flow():
         kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
         kd = Path(d) / "die"
         tcl = (kd / "die_flow.tcl").read_text()
-        assert "place_inst -name pfb -location {1434.24 0}" in tcl and "detailed_route" in tcl
+        assert "place_macro -macro_name pfb -location {1434.24 0} -orientation R0 -exact" in tcl and "detailed_route" in tcl
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
-        assert (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
+        assert (kd / "seams.json").is_file() and (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
 
 
 def test_coincident_taps_split():
@@ -86,3 +86,27 @@ def test_coincident_taps_split():
     tn = t.get("name") or next(iter(P.types))
     a, b = gen_phys.tap_points(P, tn)
     assert a != b and abs(a[1] - b[1]) > 8
+
+
+def test_seam_audit_catches_or11810():
+    """OR#11810: an M4 pin touching an M5 pin counts as 'abutted' on images without #11814; the seam audit must FAIL it
+    and PASS the same-layer seam.  Needs docker + openroad/orfs:asap7lock (skipped otherwise)."""
+    import shutil
+    import subprocess
+    import pytest
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    with tempfile.TemporaryDirectory() as d:
+        src = HERE / "examples" / "abut_layer_bug"
+        for f in ("blk.lef", "t.v", "t.tcl", "seams.json"):
+            shutil.copy(src / f, d)
+        shutil.copy(HERE / "abut_audit.py", d)
+        cmd = ("source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl >/dev/null 2>&1; "
+               "ODB=/w/t.odb SEAMS=/w/seams.json OUT=/w/a.json DRC=/none openroad -python -exit /w/abut_audit.py; "
+               "chmod -R a+rwX /w")
+        r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                            "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+        if r.returncode and "Unable to find image" in r.stderr:
+            pytest.skip("image missing")
+        a = json.loads((Path(d) / "a.json").read_text())
+        assert a["ok"] == 1 and a["fails"] == {"abut_no_same_layer_overlap": 1}
