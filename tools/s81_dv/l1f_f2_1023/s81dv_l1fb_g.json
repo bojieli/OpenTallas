@@ -1,0 +1,302 @@
+{
+ "recipe": 4,
+ "clock": "cts",
+ "hold_budget": "die",
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "defines": [
+  "OT_S81_GUNIT_FWDOWN"
+ ],
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "pin_min_tracks": 4,
+  "synth_keep_modules": [
+   "dsdv_l1f_wdec8",
+   "dsdv_l1f_term8",
+   "dsdv_l1f_or8",
+   "dsdv_l1f_mux8",
+   "dsdv_l1f_dec64",
+   "dsdv_l1f_dec7",
+   "dsdv_seln_gt40",
+   "dsdv_seln_cmp4",
+   "dsdv_seln_mux1"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "name": "s81dv_l1fb_g",
+ "top": "dsdv_gunit_l1f_bf2",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel_n32.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_band.sv",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f_bf2.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "children": [],
+ "pins": {
+  "W": [
+   "sa_r",
+   "sa_d",
+   "sb_r",
+   "sb_d",
+   "we",
+   "c_go",
+   "c_fw",
+   "c_l",
+   "c_bn",
+   "c_lvn",
+   "rst_n",
+   "clk"
+  ],
+  "E": [
+   "g_go",
+   "g_hit",
+   "g_a",
+   "o_v",
+   "o_f",
+   "o_l",
+   "o_g",
+   "o_d",
+   "o_flt"
+  ],
+  "S": [
+   "sv_lo",
+   "ctl_lo",
+   "s0a",
+   "s0b",
+   "sf0",
+   "vf_lo"
+  ],
+  "N": [
+   "sv_hi",
+   "ctl_hi",
+   "s1a",
+   "s1b",
+   "vf_hi"
+  ]
+ },
+ "pin_ranges": {
+  "sa_r": [
+   10.8,
+   205.2
+  ],
+  "sa_d": [
+   10.8,
+   205.2
+  ],
+  "sb_r": [
+   10.8,
+   205.2
+  ],
+  "sb_d": [
+   10.8,
+   205.2
+  ],
+  "we": [
+   10.8,
+   205.2
+  ],
+  "c_go": [
+   10.8,
+   205.2
+  ],
+  "c_fw": [
+   10.8,
+   205.2
+  ],
+  "c_l": [
+   10.8,
+   205.2
+  ],
+  "c_bn": [
+   10.8,
+   205.2
+  ],
+  "c_lvn": [
+   10.8,
+   205.2
+  ],
+  "rst_n": [
+   111.24,
+   117.72
+  ],
+  "clk": [
+   104.76,
+   111.24
+  ],
+  "g_go": [
+   10.8,
+   205.2
+  ],
+  "g_hit": [
+   10.8,
+   205.2
+  ],
+  "g_a": [
+   10.8,
+   205.2
+  ],
+  "o_v": [
+   10.8,
+   205.2
+  ],
+  "o_f": [
+   10.8,
+   205.2
+  ],
+  "o_l": [
+   10.8,
+   205.2
+  ],
+  "o_g": [
+   10.8,
+   205.2
+  ],
+  "o_d": [
+   10.8,
+   205.2
+  ],
+  "o_flt": [
+   10.8,
+   205.2
+  ],
+  "sv_lo": [
+   21.6,
+   410.4
+  ],
+  "ctl_lo": [
+   21.6,
+   410.4
+  ],
+  "s0a": [
+   21.6,
+   410.4
+  ],
+  "s0b": [
+   21.6,
+   410.4
+  ],
+  "sf0": [
+   21.6,
+   410.4
+  ],
+  "vf_lo": [
+   21.6,
+   410.4
+  ],
+  "sv_hi": [
+   21.6,
+   410.4
+  ],
+  "ctl_hi": [
+   21.6,
+   410.4
+  ],
+  "s1a": [
+   21.6,
+   410.4
+  ],
+  "s1b": [
+   21.6,
+   410.4
+  ],
+  "vf_hi": [
+   21.6,
+   410.4
+  ]
+ },
+ "outline": {
+  "w": 432.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "structural_change": "STW-S81e-FP 10-23 (COORD tile review, S81.STA.PAR.3): F2 = F band with SEAM PIN FLOPS.  l1fb_f gate (18:41) classified: (a) s0a[42] -> fold compare (14 levels, ~570 ps cells, < 60 ps wire) -> m1b -615 ps SS = LOGIC DEPTH behind 1,312+51 unregistered seam pins (the A bands' sort / adder flops feed the fold through the abutted seam); (b) ctl_lo[4] -153 ps = WIRE (one s_bn flop drives an S AND an N pin).  RTL dsdv_gunit_l1f_bf2: every seam input lands in a face flop (+1 edge on the merge path, booked MU.S81.CAL), ctl_hi gets its own kept flop copy.  Floorplan: the 18:41 placement used x < 324 only (pd 0.4 packs 15.8k um2 into 55% of the core) and cut x=108 carried 6,368 nets over 172.8 um (~5.5k usable horizontal M2+M4 tracks: bits/tracks 1.16); fb/fc (pd 0.22, full spread, 172.8) still overflowed M4 15.9k at the fold (x~250).  F2 spreads the fold by its face flops along both seams (x 21.6..410.4) and sizes the height from the tracks: 216 um (+25% horizontal tracks; l1f stack 518.4).  Clock W-face middle, default CTS tree.",
+ "why_floorplan": "middle row band (432 wide = the CLOSED A bands): W face = stack inputs (W input flops at the face), SC store + write decode + beat read in the W half, fold / m1 / cx8_2 spread along the seam pin flops (S = A_lo sort, N = A_hi sort, x 21.6..410.4), gather + the 246-b output stage under the E pins; per-face ctl flops.",
+ "job": {
+  "owner": "Claude:STW-S81e-FP",
+  "branch": "claude/s81e-fp-l1f-1023",
+  "tag": "s81dv_l1fb_g",
+  "purpose": "banded gunit l1f F2 band (seam pin flops, +1 merge edge): MAIN 432 x 216",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/lib",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "physical/ref_tile_specs/s81dv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv"
+  ],
+  "benches": [
+   {
+    "name": "l1f_band2_lsw",
+    "cmd": "bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band2.sh {RUN} 8 '0 1'",
+    "expect": "pass",
+    "pass_regex": "^L1F_LSW PASS",
+    "threads": 12,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "l1f_band2_bandmut",
+    "cmd": "BANDMUT=1 bash rtl/dsrom_sys/s81_dv/unit/test/run_l1f_band2.sh {RUN} 8 '0'",
+    "expect": "fail",
+    "fail_regex": "^L1F_LSW FAIL band mutant caught",
+    "threads": 12,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_l1fb_g/views",
+  "record_to": "results/rtl/ref_tile/s81dv_l1fb_g"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "source-registered faces (F2): every band input lands in a flop (W input flops, seam face flops s0a_q / s1a_q / sf0_q / vf*_q, gather ghc / gac) and every output leaves a flop (s_val, s_lv, per-face ctl copies, o_*); io_flop_at_pins places them at their pins; a recipe pin stage would add another unpriced edge."
+ }
+}

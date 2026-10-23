@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_gunit_l1f_bf2",
+ "enable": false,
+ "reason": "source-registered faces (F2): every band input lands in a flop (W input flops, seam face flops s0a_q / s1a_q / sf0_q / vf*_q, gather ghc / gac) and every output leaves a flop (s_val, s_lv, per-face ctl copies, o_*); io_flop_at_pins places them at their pins; a recipe pin stage would add another unpriced edge."
+}
