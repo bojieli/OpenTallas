@@ -6,7 +6,8 @@
 // (tb rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv).  Face outputs pass wires-only children in their face regions.
 // =====================================================================================================================
 module qfd_dv_slice2_e_lpf #(parameter integer SL_MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1,
-                            parameter integer MU_NU = 4) (   // MU-QWEN R4: the 4-user LM-head argmax (MU-ADOPT-SLICE)
+                            parameter integer MU_NU = 4,     // MU-QWEN R4: the 4-user LM-head argmax (MU-ADOPT-SLICE)
+                            parameter integer ARF = 0, parameter integer RP = 0) (   // QW-LAYERGAP AR framer / RoPE row (kits bind 1)
     input  wire ck,
     input  wire rst_n,
     input  wire [115:0] cmd_ei,
@@ -86,7 +87,7 @@ module qfd_dv_slice2_e_lpf #(parameter integer SL_MUT = 0, parameter integer SU_
     wire [23:0]   h_sw_a;
     wire [64*32-1:0] h_sw_d;
     wire [515:0]  h_n0, h_n1, h_n2, h_n3, h_s0, h_s1, h_s2, h_s3;
-    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),
+    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .ARF(ARF), .RP(RP), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),
         .cmd_i(cmd_ei), .cmd_o(c_cmd_o), .hr_i(hr_ei), .hr_o(c_hr_o),
         .rs_s0(rs_s0), .rs_s1(rs_s1), .rs_n0(rs_n0), .rs_n1(rs_n1), .l9_i(l9_wi), .l9_o(c_l9_o),
         .st_up_i(st_ei), .st_up_o(c_st_up_o), .st_dn_i(st_wi), .st_dn_o(c_st_dn_o),

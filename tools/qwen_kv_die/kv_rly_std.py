@@ -130,6 +130,15 @@ def net_bits(expr, wires):
         hi = int(b.group(2))
         lo = int(b.group(3)) if b.group(3) else hi
         return [f'{b.group(1)}[{i}]' for i in range(lo, hi + 1)]
+    if expr.startswith('{') and expr.endswith('}') and "'" not in expr:
+        # a concatenation of die-net bit refs / ranges (a bit-select fork seated on its own relay, OT_KV_PINFIX_ROUTE):
+        # MSB first in Verilog -> LSB-first bit list; constants (tie pads) stay refused
+        out = []
+        for part in reversed([p for p in expr[1:-1].split(',') if p.strip()]):
+            if not re.fullmatch(r'\s*\S+\[\d+(?::\d+)?\]\s*', part):
+                raise ValueError(f'relay connection {expr!r}: concatenation element {part!r} is not a die-net bit ref')
+            out += net_bits(part, wires)
+        return out
     if expr.startswith('{') or "'" in expr:
         raise ValueError(f'relay connection {expr!r}: expected a plain die net')
     return [f'{expr}[{i}]' for i in range(wires.get(expr, 1))]

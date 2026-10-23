@@ -8,6 +8,9 @@
 // routed reach and die-level calendar checks remain required before adoption.
 module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
     parameter integer MUT = 0,
+    // No production clock book is implied by physical source binding.
+    // Enable only with the compiled identity, phase and return-arrival authority.
+    parameter integer HBC_ENABLE=0,
     parameter integer HBC_LOCAL_STAGE=255,HBC_LOCAL_RANK=4,HBC_PHASE_BOUND=0,
     parameter [63:0] HBC_CLOCK_RESET_ID=0,
     parameter [47:0] HBC_BOOT_HEADER_EDGE=48'hffffffffffff,HBC_BOOT_COMMIT_EDGE=48'hffffffffffff,
@@ -147,7 +150,7 @@ module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
     // The unused external-return arm of RETURN_LOCAL=1 reads actual local_ro;
     // the selected return emitter exclusively captures the real landed status.
     wire [47:0] hb_receiver_edge,hb_boot_edge;
-    dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(HBC_LOCAL_STAGE),.LOCAL_RANK(HBC_LOCAL_RANK),
+    dsdv_hostb_stage_hbc #(.ENABLE(HBC_ENABLE),.LOCAL_STAGE(HBC_LOCAL_STAGE),.LOCAL_RANK(HBC_LOCAL_RANK),
       .PHASE_BOUND(HBC_PHASE_BOUND),.CLOCK_RESET_ID(HBC_CLOCK_RESET_ID),
       .BOOT_HEADER_EDGE(HBC_BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(HBC_BOOT_COMMIT_EDGE),
       .VARIABLE_WORDS(1),.ALLOW_RELOAD(1),.RETURN_LOCAL(1),.RETURN_REQUIRE_KIT(1),.RETURN_ARRIVAL_DEADLINE(HBC_RETURN_ARRIVAL_DEADLINE)) u_hbc(

@@ -1,0 +1,42 @@
+[
+  {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "rtl": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+    "rtl_sha256": "e95e85e7b41551258e3b50b5bed95806d7968a548540d2dffedfc1af59fb8806",
+    "cf": {
+      "output": "cf",
+      "net": "n_3011",
+      "driver": "u_9160",
+      "clock_net": "n_3160",
+      "clock_port": "ck_hr",
+      "driver_statement": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_pn0 #(.ID(0)) u_9160(.C(n_3160),.D(n_19931),.Q(n_3011),.R(n_89166));"
+    },
+    "emb_start_token_position_user": {
+      "bits": 39,
+      "publisher": "u_core_emb_publish",
+      "clock_port": "ck_core",
+      "publisher_edges": 1
+    },
+    "die_root_binding": "QK selected ck_core actualnative59.ck feed; ck_hr actualW5HR receivingfeed; actual root IDs/landing E/K are GEN obligations, no direct-cross-root assertion"
+  },
+  {
+    "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2",
+    "rtl": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+    "rtl_sha256": "6b6c3fa18de62ec8528099c0edae4db6f3069f91976f81dd23eda29fbcbbb974",
+    "cf": {
+      "output": "cf",
+      "net": "n_3011",
+      "driver": "u_9160",
+      "clock_net": "n_3160",
+      "clock_port": "ck_hr",
+      "driver_statement": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_bmath_dff_pn0 #(.ID(0)) u_9160(.C(n_3160),.D(n_19931),.Q(n_3011),.R(n_89166));"
+    },
+    "emb_start_token_position_user": {
+      "bits": 39,
+      "publisher": "u_core_emb_publish",
+      "clock_port": "ck_core",
+      "publisher_edges": 2
+    },
+    "die_root_binding": "QK selected ck_core actualnative59.ck feed; ck_hr actualW5HR receivingfeed; actual root IDs/landing E/K are GEN obligations, no direct-cross-root assertion"
+  }
+]

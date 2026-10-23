@@ -66,8 +66,40 @@ WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59_dv_service.sv'),
             'tt_ctlm': ('qfd_tt_ctlm_dv', 'rtl/qwen_dv/qfd_tt_ctlm_dv.sv'),
             'sys_face': ('qfd_sys_face', 'rtl/qwen_split/qfd_sys_face.sv')}
+# Source-complete recurring RoPE authority integration. Historical 595 masters remain default.
+HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+if FAULT_FACE and not HEAD_PREP:
+    raise ValueError('fault1 requires coherent head-prepare source')
+if STATUS_OBS and not HEAD_PREP:
+    raise ValueError('STATUS observer v1 requires the coherent head-prepare source')
+if HEAD_PREP:
+    from qwen_split import headprep_source as HP13
+    WCOL_RTL['tt_ctlm'] = HP13.select(WCOL_RTL['tt_ctlm'], Path(__file__).resolve().parents[2])
+    if os.environ.get('OT_QWEN_ROPE', '0') != '1':
+        raise ValueError('OT_QWEN_HEAD_PREP requires the sole 73-item RoPE programme')
+    WCOL_RTL['native59'] = ('qfd_native59_dv_headprep', 'rtl/qwen_split/qfd_native59_dv_headprep.sv')
+    WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl', 'rtl/qwen_split/qfd_sys_face_ovl.sv')
+    if FAULT_FACE:
+        WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl_fault1', 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv')
+    if STATUS_OBS:
+        WCOL_RTL['native59'] = ('qfd_native59_dv_headprep_obs1', 'rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv')
+    from qwen_split.sysface_lctx_source import select as select_lctx_source
+    WCOL_RTL['sys_face'] = select_lctx_source(WCOL_RTL['sys_face'], Path(__file__).resolve().parents[2])
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
+# QW-GRT4 10-20 (Q.GRT, rN die_repeaters over_reach 544 > 425 um, 391 of them on sys_face nets): the die binds the CLOSED
+# qfd_sys_face view (physical/ref_tile/qfd_sys_face, N-face M5 pins) while the GEN drew top-down W-face M4 pins, so every
+# planned sys_face hop grew by the bind's pin_centroid_move (up to 321 um; status_epoch16 first relay 590 um).  The relay
+# plan must be made on the pins the die binds: OT_SPLIT_DV_WCOL_VIEW=sys_face[,...] draws those W-column masters from their
+# closed view (closed_view.install_master; RTL / view mismatch fails closed) instead of assign_pins.
+for _i in [x.strip() for x in os.environ.get('OT_SPLIT_DV_WCOL_VIEW', '').split(',') if x.strip()]:
+    if HEAD_PREP and _i in ('native59', 'sys_face', 'tt_ctlm'):
+        continue  # changed source ABI has no compatible historical CLOSED view
+    if _i not in WCOL_RTL:
+        raise ValueError(f'OT_SPLIT_DV_WCOL_VIEW: {_i} is not a re-ported W-column instance ({sorted(WCOL_RTL)})')
+    WCOL_VIEW[_i] = WCOL_RTL.pop(_i)
 # one regional clock / reset per re-ported master (the pre-DV multi-root pins fold onto them)
 WCOL_REN = {'rsi': 'rst_n'}
 # MU-DQ-DHUSER 10-19 (COORD 0kg item 2: no constant strap on qfd_tt_ctlm_dv.dh_user): on the multi-user die
@@ -91,6 +123,9 @@ DHOBS_DX = 259.2
 # prog_rx_v, rx_payload) as one more endpoint on the face's clock / reset, and drives qfd_tt_ctlm_dv.ctx_x (129 b, the
 # boot-record layout; the ctlm takes it with CTX_SRC 1, die_params).  ctx_user / mu_fault stay open observability outputs.
 CTXRX = ('mu_ctxrx', 'qfd_mu_ctx_rx_die', 'rtl/qwen_split/mu/qfd_mu_ctx_rx.sv')
+if STATUS_OBS:
+    DHOBS = ('mu_dhobs', 'qfd_sys_face_mu_dhobs_obs1', 'rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv')
+    CTXRX = ('mu_ctxrx', 'qfd_mu_ctx_rx_die_obs1', 'rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv')
 CTXRX_WH = (43.2, 97.2)          # outline (um): ~135 flops; 550 RX inputs on its faces (<= 6 / um)
 CTXRX_GAP = 4.32                 # above sys_face's N face
 CTXRX_IN = ('prog_context_slot', 'prog_rx_v', 'rx_payload')
@@ -155,6 +190,9 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
                 e2.append((i_, p_))
         out[j] = (bid, cl, bits, e2)
     out[:] = [b for b in out if len(b[3]) > 1]
+    if HEAD_PREP:
+        from qwen_split.hp13_clock_bind import apply as bind_hp13_clocks
+        bind_hp13_clocks(m, out, keep, wrtl['tt_ctlm'][2])
     used = {(i_, p_) for b in out for i_, p_ in b[3]}
     for inst, (mst, src, rp) in wrtl.items():
         pj = m.get('port_join', {})
@@ -221,7 +259,8 @@ def _dhobs_buses(m, out, dh_crt, has):
     out[j] = (b0, c0, n0, list(e0) + [(n_, 'seq_dh')])
     out.append((f'dvw_{n_}_dh_user', 'spine_local', 2, [(n_, 'dh_user'), ('tt_ctlm', 'dh_user')]))
     m['q3h']['dv_dhobs'].update(seq_dh_bus=b0, dh_user_bus=f'dvw_{n_}_dh_user', clock_reset=dict(
-        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())), open_outputs=['res_user', 'mu_fault'])
+        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())),
+        open_outputs=['mu_fault'] if STATUS_OBS else ['res_user', 'mu_fault'])
 
 
 def _ctxrx_inst(v, m, keep):
@@ -283,7 +322,7 @@ def _ctxrx_buses(m, out, cx_crt, has):
     out.append((f'dvw_{n_}_ctx_x', 'spine_local', 129, [(n_, 'ctx_x'), ('tt_ctlm', 'ctx_x')]))
     m['q3h']['dv_ctxrx'].update(rx_buses={p: out[j][0] for p, j in js.items()}, ctx_x_bus=f'dvw_{n_}_ctx_x',
                                 clock_reset=dict((f'{k[1]}', v_) for k, v_ in sorted(cx_crt.items())),
-                                open_outputs=['ctx_user', 'mu_fault'])
+                                open_outputs=['mu_fault'] if STATUS_OBS else ['ctx_user', 'mu_fault'])
 
 
 def apply_dv(v, m):
@@ -367,6 +406,15 @@ def apply_dv(v, m):
         if orient.get('ucie_kv') in ('MX', 'R0'):
             fc = (fc[0], 389.1)
         uk['x'] = max(0.0, round(round((dd['x'] + fc[0] - fc[1]) / 0.216) * 0.216, 3))
+        if os.environ.get('OT_PIN_PEER_PIN', '0') == '1':
+            # SQC-QDIE4 10-22: the d2d_rom FDI pins were ASSIGNED (static_link_bind peer-pin wishes) facing the ucie_kv
+            # PHY pins at the GEN's home positions; keep that home x offset (not the old closed view's FDI centres
+            # 238.0 / 389.1), so the assigned groups stay face to face (r44: tx 117 um apart with the old constants)
+            hb_ = {i.name: i for i in m['insts']}
+            if 'd2d_rom' in hb_ and 'ucie_kv' in hb_:
+                uk['x'] = max(0.0, round(round((dd['x'] + hb_['ucie_kv'].x - hb_['d2d_rom'].x) / 0.216) * 0.216, 3))
+                print(f'PEER_PIN dv: ucie_kv x {uk["x"]} = d2d_rom x {dd["x"]} + home offset '
+                      f'{hb_["ucie_kv"].x - hb_["d2d_rom"].x:.3f}', flush=True)
         bumps = [DI[b_] for b_ in ('ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst') if b_ in DI]
         if bumps:
             sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))
@@ -400,6 +448,13 @@ def apply_dv(v, m):
                 i.w, i.h = DI[n]['w'], DI[n]['h']
                 if n != 'io_collective' and coll and DI[n]['y'] >= coll['y'] + coll['h'] - 1e-3:
                     i.orient = 'MX'
+    # Native track/site placement must be visible to the relay occupancy model.
+    # Opt-in source-pinned plans fail closed when the seed geometry changes.
+    if os.environ.get('OT_SPLIT_DV_NATIVE_ORIGINS'):
+        from qwen_split.native_origins import apply as apply_native_origins
+        native_plan = json.loads(Path(os.environ['OT_SPLIT_DV_NATIVE_ORIGINS']).read_text())
+        m['native_origin_plan'] = apply_native_origins(m['insts'], native_plan, source_positions=DI)
+        print('NATIVE_ORIGINS applied', len(m['native_origin_plan']['moved']), flush=True)
     M = v.masters(m, 1)
     if tall:
         # the frozen master set (b2 / q3h wrappers) still holds the collective / PHY frames of the old outline
@@ -814,6 +869,35 @@ def apply_dv(v, m):
                 out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
+        if HEAD_PREP:
+            if STATUS_OBS:
+                for si_, p_, bits_ in [('mu_ctxrx', 'obs_ctx', 62), ('mu_dhobs', 'obs_res', 47),
+                                       ('native59', 'obs_native', 60)]:
+                    if not (has(si_, p_) and has('d2d_rom', p_)):
+                        raise ValueError(f'STATUS observer lacks actual source endpoint {si_}.{p_}')
+                    if any(M[by[i_].master].ports[p_][1] != bits_ for i_ in (si_, 'd2d_rom')):
+                        raise ValueError(f'STATUS observer source width mismatch {p_}')
+                    out.append((f'status_{p_}', 'spine_local', bits_, [(si_, p_), ('d2d_rom', p_)]))
+            for p_ in ('tx_user', 'rx_user'):
+                if not (has('d2d_rom', p_) and has('native59', p_)):
+                    raise ValueError(f'head user requires actual d2d_rom.{p_}->native59.{p_}')
+                if any(M[by[i_].master].ports[p_][1] != 2 for i_ in ('d2d_rom', 'native59')):
+                    raise ValueError(f'head user requires two-bit source ABI: {p_}')
+                out.append((f'lnk_{p_}', 'spine_local', 2, [('d2d_rom', p_), ('native59', p_)]))
+            hp_tt_ports = rtl_ports(root / WCOL_RTL['tt_ctlm'][1], by['tt_ctlm'].master)
+            hp_native_ports = rtl_ports(root / WCOL_RTL['native59'][1], by['native59'].master)
+            hp_joins = HP13.prepare_joins(by['tt_ctlm'].master, hp_tt_ports, hp_native_ports)
+            for bid_, kind_, width_, eps_ in hp_joins:
+                if not all(has(i_,p_) and M[by[i_].master].ports[p_][1]==width_ for i_,p_ in eps_):
+                    raise ValueError('actual installed head-prepare master/port differs: '+bid_)
+                out.append((bid_,kind_,width_,eps_))
+            # Native is still the historical master during the earlier compute-spine bind.
+            # Join these ports only after the exact DV-native source ABI is installed above.
+            for p_ in ('head_descriptor_v','head_descriptor_tag','head_descriptor_generation'):
+                if not (has('native59',p_) and has('sys_face',p_)):
+                    raise ValueError(f'head descriptor requires actual native59.{p_}->sys_face.{p_}')
+                out.append((f'hp_native_{p_}', 'spine_local', M[by['native59'].master].ports[p_][1],
+                            [('native59',p_),('sys_face',p_)]))
         if dhobs is not None:
             _dhobs_buses(m, out, dh_crt, has)
         if ctxrx is not None:
@@ -821,6 +905,18 @@ def apply_dv(v, m):
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)
+        if HEAD_PREP:
+            expected = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'}
+            debt = set(m.get('sys_face_bind', {}).get('deferred_inputs', []))
+            remaining = {'obs_fault'} if FAULT_FACE else set()
+            if debt != expected | remaining:
+                raise ValueError(f'actual DV head descriptor debt mismatch {debt} vs {expected}')
+            for p_ in expected:
+                actual = [es for _,_,_,es in out if ('sys_face',p_) in es]
+                if len(actual)!=1 or actual[0] != [('native59',p_),('sys_face',p_)]:
+                    raise ValueError(f'head descriptor lacks one exact actual producer: {p_} {actual}')
+            m['sys_face_bind']['deferred_inputs'] = sorted(remaining)
+            m['sys_face_bind']['head_descriptor_bound'] = sorted(expected)
         # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
         # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --
         # only where no bus lands.  QLB-C4b 10-18: W5 st_wi is NOT a chain-end idle input any more (tt_ctlm.tl drives
@@ -859,6 +955,33 @@ def apply_dv(v, m):
             out.append((bid, cl, bits, kept2))
         conn.update(tuple(e) for e in kept2)
         m.setdefault('dv_partial_buses', []).append(dict(bus=bid, endpoints=[list(e) for e in kept2], removed=gone))
+    if os.environ.get('OT_SPLIT_DV_ONE_NET_PER_DRIVER', '1') == '1':
+        # SQC-QDIE4 10-22 (r45 strict bind: DUPLICATE_PORT tt_ctlm.emb_start/emb_token, d2d_rom.tx_user + undriven
+        # n_dvw_tt_ctlm_emb_*/n_sf_prog_head_context_user): the HP13 head-prepare joins and the head-user link add a
+        # second net on an output that the W5/sys_face binds already drive.  One net per driver port: the later bus's
+        # sinks join the first bus (the relay plan fans a multi-sink bus out into <bus>__fo<k> legs).
+        first, merged, out2 = {}, [], []
+        for b_ in out:
+            bid_, cl_, n_, eps_ = b_
+            if cl_ in ('clock_trunk', 'reset', 'constant') or len(eps_) < 2:
+                out2.append(b_)
+                continue
+            d_ = tuple(eps_[0])
+            if d_ not in first:
+                first[d_] = len(out2)
+                out2.append(b_)
+                continue
+            j_ = first[d_]
+            b0, c0, n0, e0 = out2[j_]
+            if n0 != n_:
+                raise ValueError(f'one driver port, two nets of different width: {d_} {b0}({n0}) {bid_}({n_})')
+            have = {tuple(e) for e in e0}
+            out2[j_] = (b0, c0, n0, list(e0) + [e for e in eps_[1:] if tuple(e) not in have])
+            merged.append(dict(driver=list(d_), kept=b0, merged=bid_, sinks=[list(e) for e in eps_[1:]]))
+        if merged:
+            out[:] = out2
+            m['dv_one_net_per_driver'] = merged
+            print('DV_ONE_NET_PER_DRIVER', [(r_['kept'], r_['merged']) for r_ in merged], flush=True)
     m['buses'] = out
     # relay routing on the dv array (b3r2 _poly0): field-to-field links stay in their band gap / the W|E seam
     m['dv_gap_route'] = True
@@ -900,4 +1023,7 @@ def apply_dv(v, m):
     def fixed(model, k=1, port_bits=None):
         return dict(M)
     v.masters = fixed
+    if m.get('native_origin_plan'):
+        from qwen_split.native_origins import verify as verify_native_origins
+        print('NATIVE_ORIGINS final verified', verify_native_origins(m['insts'], m['native_origin_plan']), flush=True)
     return m['q3h']['dv']

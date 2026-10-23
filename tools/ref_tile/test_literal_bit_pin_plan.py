@@ -46,6 +46,12 @@ class LiteralPinPlan(unittest.TestCase):
         for field in ['io_tcl','m6_pin_grant']:
             s=copy.deepcopy(self.s);s.pop(field)
             with self.subTest(field=field),self.assertRaises(RT.SpecError):self.valid(s)
+    def test_m5_only_plan_needs_no_grant(self):
+        (self.root/'pins.tcl').write_text(self.io.replace(' M6 ',' M5 '))
+        s=copy.deepcopy(self.s);s.pop('m6_pin_grant')
+        self.assertEqual(6,len(self.valid(s)))
+        (self.root/'pins.tcl').write_text(self.io)
+        with self.assertRaises(RT.SpecError):self.valid(s)
     def test_io_face_missing_duplicate_and_ungranted_m6_fail(self):
         for bad in [self.io.replace('M6 W 4.000000','M6 E 4.000000'),self.io.replace('ot_assigned_pin_exact {d[7]} M6 W 5.000000\n',''),self.io+'ot_assigned_pin_exact {clk} M4 S 1.000000\n',self.io.replace('{clk} M4','{clk} M6')]:
             (self.root/'pins.tcl').write_text(bad)

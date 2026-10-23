@@ -1,4 +1,5 @@
 """One registered unchanged W6/equality/merge diagnostic, no VM engine RTL."""
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 from pathlib import Path
 import argparse,gzip,hashlib,importlib.util,json,re,subprocess,time
 ROOT=Path(__file__).resolve().parents[1]
@@ -42,7 +43,7 @@ z=x[255:0];for(k=0;k<8;k=k+1)if(x[512+k])z[32*k+:32]=x[256+32*k+:32];merge=z;end
         sv.write_text(f'module leaf(input clk,input [{iw}] din,output reg [{ow}] q);\nreg [{iw}] d;\n{fun}\nalways @(posedge clk) begin d<=din;q<={expr};end\nendmodule\n')
         script=work/'map.ys';mapped=work/'mapped.v'
         script.write_text(f'read_liberty -lib {lib}\nread_verilog -sv {sv}\nhierarchy -top leaf\nproc\nflatten\nopt\ntechmap\nopt\ndfflibmap -liberty {lib}\nabc -liberty {lib}\nclean\ncheck -assert\nwrite_verilog -noattr {mapped}\nwrite_json {work/"mapped.json"}\n')
-        elapsed=run(['yosys','-s',str(script)],work,work/'map.log')
+        elapsed=run([pinned_yosys(),'-s',str(script)],work,work/'map.log')
         graph=json.loads((work/'mapped.json').read_text())['modules']['leaf']['cells']
         counts={}
         for v in graph.values():counts[v['type']]=counts.get(v['type'],0)+1

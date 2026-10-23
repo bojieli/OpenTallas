@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_rg3_bxn",
+ "enable": false,
+ "reason": "band of the banded idx rg3: source-registered faces (every band input lands in a flop, every output leaves one: the landed parent's ring / read halves sit outside); a recipe pin stage would add an unpriced edge on the landed schedule (lp record)."
+}

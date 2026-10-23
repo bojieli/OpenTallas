@@ -84,7 +84,7 @@ endmodule
 
 // Codec with a separate PHY pin-register region (phy_ck): same ports as ot_qwen_static_slot_link plus phy_ck.
 module ot_qwen_static_slot_link_pl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1, BLOCAL=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1, BLOCAL=0, UP_SYNC=0
 )(
     input wire [4:0] ck,
     input wire phy_ck,
@@ -162,12 +162,24 @@ module ot_qwen_static_slot_link_pl #(
     wire [1:0] rs_p;
     ot_qwen_slot_reset_copies #(.COPIES(3)) u_rs_c(.clk(ck[0]),.rst_n(rst_n),.released(rs_c));
     ot_qwen_slot_reset_copies #(.COPIES(2)) u_rs_p(.clk(phy_ck),.rst_n(rst_n),.released(rs_p));
+    // PHY-up crosses from its producing PHY clock as a level. Capture it
+    // twice on THIS face's codec0p root before carrying it through the existing
+    // mesochronous ring to codec0. No shared global-clock status register.
+    wire up_phy_local;
+    if(UP_SYNC)begin:g_up_sync
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_meta;
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_sync;
+        always @(posedge phy_ck)begin up_meta<=p_tx_up;up_sync<=up_meta;end
+        assign up_phy_local=up_sync;
+    end else begin:g_up_direct
+        assign up_phy_local=p_tx_up;
+    end
     // RX: pins -> ring (phy_ck) -> controller pin registers (ck[0]); +LK edges
     wire [PW-1:0] rx_flit_l;
     wire rx_v_l, up_l;
     ot_coll_meso_ring #(.W(PW+2),.D(LD),.K(LK),.C(2),.REG_OUT(0)) u_rx_land(
         .ck_w(phy_ck),.rs_w(rs_p[0]),.ck_r(ck[0]),.rs_r(rs_c[0]),
-        .d({p_rx_flit,p_tx_up,p_rx_v}),.q({rx_flit_l,up_l,rx_v_l}));
+        .d({p_rx_flit,up_phy_local,p_rx_v}),.q({rx_flit_l,up_l,rx_v_l}));
     // the expected-frame tokens follow the landed frame by the same LK edges (control bit reset)
     reg [LK-1:0] ev_q;
     reg [6*LK-1:0] es_q;

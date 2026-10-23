@@ -110,7 +110,8 @@ HP_PIN = dict(a=[0.042, 10.812], b=[0.042, 10.956], q=[21.558, 10.812])
 # KV-BIND4 10-19: exported health sources (kv_static_die HEALTH_SRC buses) whose die-frame pin is INOUT / group-named: the RTL
 # direction (qkd_ctrl_strip.sv qkd_ctrl_kc `output kf`; qkd_d2d_cal_seq_bc4.sv `output reg fault` = die group flt, kv_die
 # dcal_binding) overrides the frame so the source's own pin is never counted as its reader; PIN_ALIAS = the LEF pin name.
-SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'))
+SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'),
+                qkd_kvs_emb_rope=dict(emb_fault='OUTPUT'))
 PIN_ALIAS = dict(qkd_dcal=dict(flt='fault'))
 
 
@@ -243,6 +244,8 @@ def inventory(die):
                                         'flt; OT_KV_DCAL_FLT=1 routes it to afr d[8])'))
         else:
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
+    if 'kvs_emb' in die.cells and die.cells['kvs_emb'][0] == 'qkd_kvs_emb_rope':
+        add('kvs_emb', 'emb_fault', 'ck', 'rst_n', True, owner='KV RoPE accepted context / HBM join / row transmitter')
     # KV-BIND4: PC fault export family (pc__hfx, sticky per bit)
     pport, pw = PC_HFX
     for i, (m, p, c) in sorted(die.cells.items()):

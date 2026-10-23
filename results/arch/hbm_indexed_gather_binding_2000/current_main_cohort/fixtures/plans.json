@@ -1,0 +1,1265 @@
+{
+  "scope": "MINIMUM SOURCE COMPONENT; current die binding and live producer dates open",
+  "cases": [
+    {
+      "layer": "L00",
+      "tag": "route.gather0",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88704,
+            "score_base": 87552,
+            "dest_word": 88768,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather0",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "298419607aeb2cb6b77858790cd4be60c17b977468b8a257ac3cb355da30b756",
+      "fixture_input_I_sha": "4b4c91edbeecd267c6d7d7e0b8737c80c7277e8bdcc24d91e034c3359f166664",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "298419607aeb2cb6b77858790cd4be60c17b977468b8a257ac3cb355da30b756",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L00",
+      "tag": "route.gather1",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8115000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88705,
+            "score_base": 87552,
+            "dest_word": 88769,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather1",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "dfd01753b1685b4b838a0a5f8728aab3ff1a684fec5deb7a1d63ff0334b33162",
+      "fixture_input_I_sha": "4fd33dcde4707d09696a8430402a149b74cc4d9d8ecbfb4037ca44ea024c9fa1",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "dfd01753b1685b4b838a0a5f8728aab3ff1a684fec5deb7a1d63ff0334b33162",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L00",
+      "tag": "route.gather2",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8215000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac201000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88706,
+            "score_base": 87552,
+            "dest_word": 88770,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather2",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "cd68845080fd85dcc862913dc868f14a1203f024b5c2df7cd8533d14d0c5fb81",
+      "fixture_input_I_sha": "d3fe97979d0fbe3bf464e5001637443d72b890242a801cc221b1c8a169a69761",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "cd68845080fd85dcc862913dc868f14a1203f024b5c2df7cd8533d14d0c5fb81",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L00",
+      "tag": "route.gather3",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8315000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac301000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88707,
+            "score_base": 87552,
+            "dest_word": 88771,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather3",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "5bdb7cc0c5e090c01a67ee77ff30220b1ee8fb10e950cd27caa62109bd424482",
+      "fixture_input_I_sha": "eed72f47b9a4ba7d6f139f8f731768824bb7a19f9a3882d1db4337da657a0c76",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "5bdb7cc0c5e090c01a67ee77ff30220b1ee8fb10e950cd27caa62109bd424482",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L00",
+      "tag": "route.gather4",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8415000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac401000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88708,
+            "score_base": 87552,
+            "dest_word": 88772,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather4",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "6ad820ba38e5964161ef2e59cafe8d990b4f29d52ad3567fb0db8193cbb1e802",
+      "fixture_input_I_sha": "e731f334a4bb51f3adfd1d57d561bd2a8af7a9bb8d377e2fcc7924df5326e47a",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "6ad820ba38e5964161ef2e59cafe8d990b4f29d52ad3567fb0db8193cbb1e802",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L00",
+      "tag": "route.gather5",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8515000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac501000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88709,
+            "score_base": 87552,
+            "dest_word": 88773,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather5",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "95b726c90a7d60e8737245e7ea5a1a754bac1614badfaa94999020315bb38492",
+      "fixture_input_I_sha": "14905f7bda5ef2d000061639889834fd8c662960d9c2f0dc4e5df52f70134159",
+      "score_window_input_sha": "68ce84264ee4c6d2537758aece72e02154c45b5692b784cae178fc6129d27796",
+      "expected_O_sha": "95b726c90a7d60e8737245e7ea5a1a754bac1614badfaa94999020315bb38492",
+      "programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+      "fixture_metadata_sha256": "03f4fca3102a6a6c224041ff33ef5797e76c15a30f65be307d4102b3a14f4dd9"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather0",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88704,
+            "score_base": 87552,
+            "dest_word": 88768,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather0",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "2365c3684ab47e5054383d81e0fa937e2cffa4cbe271f00c36ba013ca3b086d7",
+      "fixture_input_I_sha": "9a090610d0aa9445db0890179a9dea330334e3b9086987e93af97dbc978fe311",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "2365c3684ab47e5054383d81e0fa937e2cffa4cbe271f00c36ba013ca3b086d7",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather1",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8115000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88705,
+            "score_base": 87552,
+            "dest_word": 88769,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather1",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "f87dc09c23e8fd4b4354afd6730460e83f3dcdd80f285b5c797024878aaf5746",
+      "fixture_input_I_sha": "de6d696c194fb883fd153e435f68d0283ebcf1a28c46cba524df6a8c0807084a",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "f87dc09c23e8fd4b4354afd6730460e83f3dcdd80f285b5c797024878aaf5746",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather2",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8215000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac201000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88706,
+            "score_base": 87552,
+            "dest_word": 88770,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather2",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "437b89a7b8620c9942bc5a5922b3f6bc6e05821b64f284d45fd6a183ede414e1",
+      "fixture_input_I_sha": "c53f1704adf845d67931ad941e40ba39e0f6c5e577a3ed12019cbf72db1451bf",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "437b89a7b8620c9942bc5a5922b3f6bc6e05821b64f284d45fd6a183ede414e1",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather3",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8315000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac301000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88707,
+            "score_base": 87552,
+            "dest_word": 88771,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather3",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "7b8678946d98ccd772f2ff85576e07a18534b5b1e3e3b0f27ef6473ad7a16c65",
+      "fixture_input_I_sha": "19d9f3bd93224272d6985347452e9208efd8a038acfebe8cf75820574d8dbb4a",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "7b8678946d98ccd772f2ff85576e07a18534b5b1e3e3b0f27ef6473ad7a16c65",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather4",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8415000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac401000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88708,
+            "score_base": 87552,
+            "dest_word": 88772,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather4",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "2629672eea07d3c0a2766af72597b1fe01818757de68cd0afe3d0b810953871c",
+      "fixture_input_I_sha": "df45056ea2b22d55696ca2c95d2063e8e0fbdfd3ed57c690e0e7d59291cca2c1",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "2629672eea07d3c0a2766af72597b1fe01818757de68cd0afe3d0b810953871c",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L02",
+      "tag": "route.gather5",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8515000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac501000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88709,
+            "score_base": 87552,
+            "dest_word": 88773,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather5",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "35ac74baa2a74b32b39a9cb9a913000500a92b4a81b84866bb4493043c1c3802",
+      "fixture_input_I_sha": "2bf4af0634c6ec9ba8dfb9df0c8eb2dc285530f5764b28cd12e947728088c62e",
+      "score_window_input_sha": "89e307dc1179e63a27cfde56daada9850e4f9fb17bbe998ca69958c0c59147f7",
+      "expected_O_sha": "35ac74baa2a74b32b39a9cb9a913000500a92b4a81b84866bb4493043c1c3802",
+      "programme_sha256": "08f39c9845a798b928b513ceab406b19c7e7170a3735da40b5687090d1691f63",
+      "fixture_metadata_sha256": "b76ee2eddc3b2f508991c517a8654a118de53e4329630484853b04d7e7a22311"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather0",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88704,
+            "score_base": 87552,
+            "dest_word": 88768,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather0",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "29595488f20d5dee5972a97479c2cb4583b34bbe54c144c00b6abd37779b4c11",
+      "fixture_input_I_sha": "3ef3bd3d6658c0dfdfdd7aa65e3d92bf1da9a04678a4ed2a5d84ed824ec91775",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "29595488f20d5dee5972a97479c2cb4583b34bbe54c144c00b6abd37779b4c11",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather1",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8115000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88705,
+            "score_base": 87552,
+            "dest_word": 88769,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather1",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "99174ba8c41745acf507255d9e4c5d2dd55f41d42e3a4120ef3aa34cdafcf428",
+      "fixture_input_I_sha": "ad497f997ead95db601f7d7ed72a7a624ba52ce6f4145a6dc7ec10d1f03876a9",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "99174ba8c41745acf507255d9e4c5d2dd55f41d42e3a4120ef3aa34cdafcf428",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather2",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8215000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac201000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88706,
+            "score_base": 87552,
+            "dest_word": 88770,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather2",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "bceeb051a6566ad116b2e9d53e7073051ecbfe88b0c3301de6f48bf0e9742e70",
+      "fixture_input_I_sha": "d877bf4e5023a6df5262218800a7162e240c84e44696bb2c3ad1c5e756f3dac1",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "bceeb051a6566ad116b2e9d53e7073051ecbfe88b0c3301de6f48bf0e9742e70",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather3",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8315000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac301000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88707,
+            "score_base": 87552,
+            "dest_word": 88771,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather3",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "5ddcbd1f585849e462ef7bcdd717ba47c484e7f5beb250a378a0c0b66d79afdd",
+      "fixture_input_I_sha": "10e39f6489dd137dfd75a85143577a057ec560ea8f054bfe7e2f35268ddf9c58",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "5ddcbd1f585849e462ef7bcdd717ba47c484e7f5beb250a378a0c0b66d79afdd",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather4",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8415000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac401000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88708,
+            "score_base": 87552,
+            "dest_word": 88772,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather4",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "0328d0da58a0c13fbb03adac842f22cf0d959bdd3007ff9bb409549818adaab8",
+      "fixture_input_I_sha": "e48a578d1bc6e32b8c4f9dcb39cf9560b49e4cd5c47e92e0e41a0b8ad53788ce",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "0328d0da58a0c13fbb03adac842f22cf0d959bdd3007ff9bb409549818adaab8",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    },
+    {
+      "layer": "L14",
+      "tag": "route.gather5",
+      "raw_dispatch": "00000100000000000000000000000000000000000000000000001000010000015a8515000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000010000015ac501000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000010000100000156004100000000000000000000000000000000000000000000000000000010000000002000000a300000000000000000000000",
+      "candidate": {
+        "status": "candidate_requires_binding",
+        "sut": {
+          "a_src": 0,
+          "a_ind": 0,
+          "b_src": 0,
+          "b_half": 0,
+          "c_src": 0,
+          "c_pair": 0,
+          "d_src": 0,
+          "a_rnd": 0,
+          "a_relu": 0,
+          "a_min": 0,
+          "c_clip": 0,
+          "m1": 0,
+          "m2": 0,
+          "qm": 0,
+          "ad": 0,
+          "sfu": 0,
+          "e1": 0,
+          "e2": 0,
+          "rnd": 0,
+          "dst": 1,
+          "red": 0,
+          "red_sq": 0,
+          "red_whole": 0,
+          "red_rnd": 0,
+          "su_vec": 0,
+          "red_tree": 0,
+          "imm1": 0,
+          "imm2": 0,
+          "imm3": 0
+        },
+        "reasons": [
+          "existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases"
+        ],
+        "lowering": {
+          "supported": false,
+          "owner": "HBM-SU-GATHER-2000"
+        },
+        "qualifies_native_layer": false,
+        "qualifies_native_chain": false,
+        "native_gather": {
+          "engine": "ot_hbm_su_indexed_scalar",
+          "source": "rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv",
+          "source_ref": "865ad748e",
+          "descriptor": {
+            "index_word": 88709,
+            "score_base": 87552,
+            "dest_word": 88773,
+            "dyn_mul": 1,
+            "score_limit": 87936
+          },
+          "tag": "route.gather5",
+          "address_expression": "score_base + U32(live VM[index_word])",
+          "input_index_resolved_on_host": false,
+          "output_injected": false
+        }
+      },
+      "fixture_input_A_sha": "30007f901bb5c2180296e53ada795be5b3e6a563a28b290119f82884bfc022b6",
+      "fixture_input_I_sha": "2bf4af0634c6ec9ba8dfb9df0c8eb2dc285530f5764b28cd12e947728088c62e",
+      "score_window_input_sha": "2862bfb89b37d2f81a65afe2dc71514cbd842f34ab92ccba3540a54fa1a02642",
+      "expected_O_sha": "30007f901bb5c2180296e53ada795be5b3e6a563a28b290119f82884bfc022b6",
+      "programme_sha256": "c4cad8ef0c3a672c9fc8793ae2aef44a4ed60ef99ea6a4469c7d59f85e3c9161",
+      "fixture_metadata_sha256": "6e71bf5c8249c566642fd382cd11a9b2a86b00d1004a02f8d058ae94afde1629"
+    }
+  ]
+}

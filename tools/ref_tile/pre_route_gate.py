@@ -1078,7 +1078,7 @@ fi
 # incremental re-route: ~2 min instead of ~25); parent / cluster kits keep the full trial.
 if [ "{TRIAL}" = 1 ]; then
   GT0=$(date +%s)
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 {GRTX}grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
+  ot_capped gate_grt_${{R##*/}} python3 tools/run_abi3_physical.py gate-trial-grt --case "$C" --results "$B" --source "$R/src" --image {IMG} --container gate_grt_${{R##*/}} --make-args "{GRTX}" --log "$R/grt.log"; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -2277,6 +2277,15 @@ def cross_region_links(graph: dict, cdc: dict | None = None) -> tuple:
         if any(RESET_RUN_RE.fullmatch(i) for i in mm) and \
                 len({insts[i]["root"] for i in mm if not RESET_RUN_RE.fullmatch(i)}) <= 1:
             continue                                    # reset run hop: crosses only between reset-run stages
+        # STW-S81c-DIE-FRAME 10-22: a RESET SYNCHRONISER landing into a preserved forwarded clock (S81 frames FRRST:
+        # rst_n__frl on ck_r0 -> ot_reset_sync u_xrl<k> on xk[k] -> u_xo<k>.rs): the synchroniser's clock is a forwarded
+        # port (no region root), the net reaches it ONLY on its async_rst_n pin (async assert / 2-flop release on the
+        # receiving clock = the reset landing itself), and every other member sits on one root.
+        syncs = [i for i in mm if insts[i]["root"] is None and insts[i].get("module") == "ot_reset_sync"
+                 and graph.get("pinsof", {}).get((net, i)) == {"async_rst_n"}]
+        if syncs and len({insts[i]["root"] for i in mm if i not in syncs}) <= 1 and \
+                all(insts[i]["root"] is not None for i in mm if i not in syncs):
+            continue
         issues.append(f"unlanded cross-region link {net}: " + ", ".join(f"{i} ({insts[i]['root']})" for i in mm))
     ring_of = {}                            # share_rings: read-half base -> its ring's base (net with one w + r halves)
     for net, members in nets.items():

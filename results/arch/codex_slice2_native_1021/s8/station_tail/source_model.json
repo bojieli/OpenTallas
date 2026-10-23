@@ -1,0 +1,40 @@
+{
+  "scope": "Selected S8 genuine runtime LASTK-word ABI repair; no hardware campaign",
+  "source_sha256": "0df355922c8752f382766ad8d88d89d1a9bb16bae2224099b5d86c1e218fe5ef",
+  "module": "qfd_dv_s8_station_tail1",
+  "baseline": "qfd_dv_redstn2_region in rtl/qwen_dv/qfd_dv_redstn2_regional.sv",
+  "bug": "Both stream end-of-K comparators fixed at JB-1=7 despite cfg_nwords tail3; KC8 producer24words cannot reach finalK under old counter.",
+  "repair": "3-bit word_last latches min(positive cfg_nwords,JB)-1 at same cfg_final[6] edge as nwords; both eblo/ebhi compare word_last. Zero retains legacy wrap8 and is not newly adopted.",
+  "stages_added": 0,
+  "state_added_bits": 3,
+  "ABI_ports_changed": false,
+  "cases": [
+    {
+      "name": "LM production tail",
+      "rows": [
+        18944,
+        18992
+      ],
+      "words_per_K": 3,
+      "KC": 8,
+      "actual_partial_words": 24,
+      "word_last": 2
+    },
+    {
+      "name": "L7 nwords16",
+      "cfg_nwords": 16,
+      "word_last": 7,
+      "rule": "Full blocks retain8; no globalcfg wordcount replacement"
+    }
+  ],
+  "exact_producer_witness": {
+    "bench_source": "da6100d9fe9d690f885e52c690cc590a0d292ef2",
+    "old_monolith": "c0f8097f3",
+    "old_Vtb_sha256": "e0c6b5e2fc002c45f7c216fdbacc5a4f6988c2423762ea2864e1ce33db3041f5",
+    "owner": "/root/token_delivery/qw_tokens",
+    "details": "ownership lm_head split512/25 rounds, finalblock14848rows, real per-K FP32 recurrence, no padding"
+  },
+  "selected_source": "u_r0..7 in qfd_dv_s8_flat now use new station module; LP audit187 unchanged",
+  "physical_status": "UNCLOSED new source; slice11_kit refuses missing new station view; old CLOSED regional view alias forbidden",
+  "proof_status": "Source/API/word-count classification complete. Actual numeric tail fixture and new mapped/physical qualification still owed; token owner investigating existing-binary final witness."
+}

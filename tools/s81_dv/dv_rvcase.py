@@ -42,6 +42,7 @@ from frame_bind import orientation, orient_point, orient_face
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
 import abstract_pin_windows as APW   # noqa: E402
+import geo_clock as GC   # noqa: E402  (S81.CLK geometric regional roots)
 from die_safety import corners as DSC, gen_check as DSG, kit_pins as DSK, m8 as DSM   # noqa: E402  (ROOT14 10-20)
 
 GITDIR = DC.GITDIR
@@ -417,6 +418,7 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
     """ROOT14 10-20: GEN safety facts (opentallas.die_gen_safety_facts.v1) of a real-view S81 die case"""
     region = {}
     roots = {}
+    abut_region = {}
     for mst, nm, _, _ in insts:
         if not nm.startswith('u_'):
             continue
@@ -426,11 +428,25 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
         r_ = n_ or f'?{nm}'
         region[nm[2:]] = r_
         roots[r_] = n_ if (n_ in top and n_.startswith('ck_')) else None
+        # S81.CLK2 (10-22): an ABUTTED face (master 'abut': plan_ports realised as named connections to the peer, e.g.
+        # dsfd_ctrl_rg3 dfi0/dfi1 -> HBM PHY k_*/kr_*) is IO of the master's clk_peer clock (ctrl ckh = ck_hbm: the
+        # core <-> hclk CDC is the closed tile's async FIFO, physical/ref_tile/s81ctrl_rg3 clock.sdc) -> its region is the
+        # peer clock net, not the core clk
+        tm = T['masters'].get(mod2master.get(mst, ''), {})
+        ab = tm.get('abut') or {}
+        for cp in tm.get('clk_peer') or []:
+            pn = next((x for x, _ in ibits[nm].get(cp.get('port'), []) if x in top and x.startswith('ck_')), None)
+            if pn and cp.get('master') == ab.get('peer'):
+                for pp in ab.get('plan_ports', []):
+                    abut_region[(nm[2:], pp.split('.')[0])] = pn
+                    roots[pn] = pn
     lp = {r['link']: r for r in LP['links']}
     crossings, wires = [], []
     for ln, L in sorted(links.items()):
         wires.append(dict(id=ln, kind=L['cls'], pts=[list(L['sxy'])] + [list(p) for p in L['pts']] + [list(L['dxy'])]))
         rs, rd = region.get(L['src'], f"?{L['src']}"), region.get(L['dst'], f"?{L['dst']}")
+        rs = abut_region.get((L['src'], L.get('sport')), rs)
+        rd = abut_region.get((L['dst'], L.get('dport')), rd)
         roots.setdefault(rs, None); roots.setdefault(rd, None)
         if rs == rd:
             continue
@@ -448,6 +464,109 @@ def gen_safety_facts(insts, ibits, T, mod2master, top, links, LP, loc, kind, blo
                 crossings=crossings, wires=wires)
 
 
+def clock_regions_report(insts, ibits, T, mod2master, top, loc, links, LP, plan, bc, reach):
+    """S81.CLK (10-21): geometric regional roots of the bound die (tools/s81_dv/geo_clock.py).
+    Returns (report, landed): per core root (top ck_* not a declared clock domain) its PLACED sink count / bbox against
+    the region extent (+ reach) -> gate; the landed crossings for die_clock_check --landed (reset release crossings =
+    parent station -> the receiving region's <child>_xk stage; lanes landed by a ring whose two block roots differ);
+    the 0-stage block pairs across roots (unlanded neighbour boundaries, judged at 80 ps, never claimed landed) and the
+    reset-leaf -> station / landing reads across roots (counted, not claimed landed)."""
+    W, H = plan['facts']['die_um']
+    cr = bc.get('clock_regions') or {}
+    domains = set(T.get('clock_domains', {}))
+    core = sorted(n for n in top if n.startswith('ck_') and n not in domains)
+    pin_root = {}                     # inst -> its clock-pin root (first core / domain top net on its clock pin)
+    for mst, nm, _, _ in insts:
+        if nm.startswith('u_'):
+            cps = [T['masters'].get(mod2master.get(mst, ''), {}).get('clk')]
+        elif mst.startswith('dsfd_dvland_') or mst.startswith('dsfd_rly_1') or nm.startswith('st_rs') or nm.startswith('rst_root'):
+            cps = ['ck']
+        else:
+            cps = ['CLK', 'A', 'ck']
+        for cp in cps:
+            got = [n_ for n_, _ in ibits[nm].get(cp, []) if n_ in top and n_.startswith('ck_')] if cp else []
+            if got:
+                pin_root[nm] = got[0]
+                break
+    sinks = collections.defaultdict(list)
+    for mst, nm, _, cm in insts:
+        if nm not in loc:
+            continue
+        x, y, w_, h_, _ = loc[nm]
+        for p_, bits in ibits[nm].items():
+            for n_ in {b_[0] for b_ in bits} & set(core):
+                sinks[n_[3:]].append((nm, x + w_ / 2, y + h_ / 2))
+    if cr.get('mode') == 'geometric':
+        grid = GC.Grid.from_spec(cr['grid'])
+        reg = {b: (f'b_{b}' if r['kind'] == 'own_root' else r['cell']) for b, r in cr['blocks'].items()}
+        ext = GC.extents(grid, plan['blocks'], reg, [b for b, r in cr['blocks'].items() if r['kind'] == 'table_clock'])
+        spec = grid.spec()
+    else:
+        ext, spec = {}, dict(mode=cr.get('mode', 'logical (bind before S81.CLK)'))
+    gate = GC.root_gate({r: sorted(set(v)) for r, v in sinks.items()}, ext, reach)
+    # ---- landed crossings
+    landed_pairs, rx = [], (bc.get('reset') or {}).get('crossings', [])
+    for x_ in rx:
+        landed_pairs.append([x_['parent'], x_['stage'], 'reset_release_crossing'])
+    lp = {r['link'] for r in LP['links']}
+    bkind = {b['name']: b.get('kind') for b in plan['blocks']}
+    by_pair = collections.defaultdict(list)
+    for ln, L in links.items():
+        if L['src'] == L['dst']:
+            continue
+        ra, rb = pin_root.get(f'u_{L["src"]}'), pin_root.get(f'u_{L["dst"]}')
+        ring = (f'ld_{ln}' in loc) or (ln in lp and bkind.get(L['dst']) == 'frame' and bool(L['pts']))
+        by_pair[tuple(sorted((f'u_{L["src"]}', f'u_{L["dst"]}')))].append((ln, ra != rb, ring, L['cls']))
+    unlanded, async_pairs = [], 0
+    asyn = {k for k, v in T.get('clock_domains', {}).items() if v.get('asynchronous_to_core')}
+    for (a_, b_), rows in sorted(by_pair.items()):
+        if not any(c for _, c, _, _ in rows):
+            continue
+        if pin_root.get(a_) in asyn or pin_root.get(b_) in asyn:
+            async_pairs += 1          # declared asynchronous domain (PHY ck_hbm, async FIFO): CDC, not a region crossing
+            continue
+        if all(r for _, c, r, _ in rows if c):
+            landed_pairs.append([a_, b_, 'lane_ring'])
+        else:
+            unlanded.append(dict(a=a_, b=b_, links=[ln for ln, c, r, _ in rows if c and not r],
+                                 classes=sorted({k for _, c, r, k in rows if c and not r})))
+    # reset leaf reads across roots (station / landing rs from a station of another root), xk pairs excluded
+    drv = {}
+    for mst, nm, _, _ in insts:
+        if nm.startswith('st_rs') or nm.startswith('rst_root'):
+            for n_, _ in ibits[nm].get('o', []):
+                drv[n_] = nm
+    xk = {(x_['parent'], x_['stage']) for x_ in rx}
+    sink_x = collections.Counter()
+    for mst, nm, _, _ in insts:
+        if 'rs' not in ibits[nm] or nm not in pin_root:
+            continue
+        for n_, _ in ibits[nm]['rs']:
+            d_ = drv.get(n_)
+            if d_ and pin_root.get(d_) and pin_root[d_] != pin_root[nm] and (d_, nm) not in xk:
+                sink_x['reset_station' if nm.startswith('st_rs') else 'landing' if nm.startswith('ld_') else 'other'] += 1
+    rep_ = dict(mode=cr.get('mode', 'logical'), grid=spec, core_roots=len(core),
+                own_roots=sorted(b for b, r in (cr.get('blocks') or {}).items() if r['kind'] == 'own_root'),
+                gate=dict(verdict=gate['verdict'], fails=gate['fails'], reach_um=reach, max_span_um=gate['max_span_um'],
+                          rule='every non-frame root: placed sink bbox inside its extent (cell U member blocks | own block) + reach'),
+                regions=gate['roots'],
+                crossings=dict(reset_release_landed=len(rx), lane_ring_landed_pairs=sum(1 for p_ in landed_pairs if p_[2] == 'lane_ring'),
+                               unlanded_neighbour_pairs=len(unlanded), async_domain_pairs=async_pairs,
+                               unlanded_by_class=dict(collections.Counter(k for u in unlanded for k in u['classes'])),
+                               unlanded_first=unlanded[:20],
+                               reset_reads_across_roots=dict(sink_x),
+                               max_reset_crossings_on_path=(bc.get('reset') or {}).get('max_crossings_on_path')),
+                landed_rule='reset release crossing = one extra registered stage <child>_xk on the receiving region root '
+                            '(release depth +1 per crossing, bind reset calendar); lane crossing = dsfd_dvland ring / frame crs4; '
+                            '0-stage neighbour pairs stay judged at the 80 ps neighbour budget (not claimed landed)')
+    landed = dict(schema='opentallas.s81_dv.landed.v1', pairs=[p_[:2] for p_ in landed_pairs],
+                  kinds=dict(collections.Counter(p_[2] for p_ in landed_pairs)),
+                  regions=[],      # never a whole-region exemption: 0-stage neighbour pairs between two roots stay judged
+                  region_info={r: dict(sinks=v['sinks'], bbox=v['bbox'], extent=v.get('extent')) for r, v in gate['roots'].items()},
+                  grid=spec)
+    return rep_, landed
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--plan', required=True, type=Path)
@@ -459,7 +578,7 @@ def main():
     ap.add_argument('--pin-window', type=float, default=3.0)
     ap.add_argument('--die-repair', action='store_true')
     ap.add_argument('--dieflow-ref', default='origin/main')
-    ap.add_argument('--signal-top-layer', choices=('M7', 'M8'), default='M7', help='M8 is die signals only; M9 stays clock/PG')
+    ap.add_argument('--signal-top-layer', choices=('M7', 'M8', 'M9'), default='M7', help='M8/M9 carry die signals (M9 opt-in, COORD 10-22: probe cap24 21.09M -> 0.74M overflow; M9 PG mesh ~4%% of tracks)')
     ap.add_argument('--dcc-ref', default='origin/main', help='ref of tools/die_clock_check.{py,tcl} (+ hbm_die_v15/die_clock_tree.py)')
     ap.add_argument('--corners', nargs='+', choices=('tt', 'ff', 'ss'), default=['tt', 'ff'])
     ap.add_argument('--congestion-iterations', type=int, default=30)
@@ -474,6 +593,9 @@ def main():
     ap.add_argument('--gen-safety-diag', metavar='REASON',
                     help='ROOT14: run past a GEN safety FAIL (crossing without landing/root, wire hop > 405 um) as a '
                          'labelled diagnostic (NOT_A_DIE_RESULT); default = the GEN fails')
+    ap.add_argument('--clock-region-diag', metavar='REASON',
+                    help='S81.CLK: run past a clock-region gate FAIL (a non-frame root whose placed sink bbox leaves its '
+                         'geometric extent + reach, e.g. a pre-S81.CLK logical bind) as a labelled diagnostic')
     ap.add_argument('--reach-um', type=float, default=DSG.REACH_UM, help='GEN safety planning reach (owner 405 um)')
     ap.add_argument('--no-ir', metavar='REASON', help='skip the die IR-drop step in run_all.sh (labelled NOT_A_DIE_RESULT)')
     a = ap.parse_args()
@@ -491,12 +613,20 @@ def main():
     W, H = plan['facts']['die_um']
     blocks = {b['name']: b for b in plan['blocks']}
     mod2master = {m.get('module'): k for k, m in T['masters'].items() if m.get('module')}
+    # S81.CLK2 (10-22): a chain-end variant module (e.g. u_irg_07 = dsdv_idx_rg3_nq, the qo-less IDX tail) is bound in
+    # place of its plan master; without this its stand-in had no clock pin rule (lib with no timing arcs) and gen_safety
+    # put it on no root (C2 '?u_irg_07')
+    for k, m in T['masters'].items():
+        ce = (m.get('chain_end') or {}).get('module')
+        if ce:
+            mod2master.setdefault(ce, k)
     links = {}
     for l in plan['links']:
-        (bi0, _, x0, y0, _), (bi1, _, x1, y1, _) = l['e']
+        (bi0, sp0, x0, y0, _), (bi1, sp1, x1, y1, _) = l['e']
         n0, n1 = plan['blocks'][bi0]['name'], plan['blocks'][bi1]['name']
         pts = [tuple(p) for p in l['sp']] if 'sp' in l else [(h[2], h[3]) for h in l['h'][:-1]]
-        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'])
+        links[l['i'].replace('-', '_')] = dict(src=n0, dst=n1, sxy=(x0, y0), dxy=(x1, y1), bits=l['b'], pts=pts, cls=l['c'], hops=l['h'],
+                                               sport=sp0, dport=sp1)
 
     # ------------------------------------------------------------------ netlist
     nets, tin, tout, insts = DPB.parse_die(a.bind_dir / 'die.v', 'dv_die')
@@ -905,6 +1035,19 @@ def main():
                              + ' -- fix the plan (landings / roots / relay sites), or --gen-safety-diag REASON for a labelled diagnostic')
         (out / 'NOT_A_DIE_RESULT').write_text(f'GEN_SAFETY_FAIL_DIAGNOSTIC_ONLY: {a.gen_safety_diag}\n')
 
+    # ------------------------------------------------------------------ S81.CLK geometric clock regions + landed crossings
+    ckr, landed = clock_regions_report(insts, ibits, T, mod2master, top, loc, links, LP, plan, bc, a.reach_um)
+    (out / 'landed.json').write_text(json.dumps(landed, indent=1) + '\n')
+    print('CLOCK_REGIONS', json.dumps({k: ckr[k] for k in ('mode', 'core_roots', 'gate', 'crossings')})[:2000], flush=True)
+    if ckr['gate']['verdict'] != 'PASS':
+        if not a.clock_region_diag:
+            raise SystemExit(f"dv_rvcase: CLOCK REGION GATE FAIL ({len(ckr['gate']['fails'])} roots, e.g. "
+                             f"{ckr['gate']['fails'][:5]}): rebind with geometric clock regions (dv_bind S81.CLK), or "
+                             '--clock-region-diag REASON for a labelled diagnostic')
+        ckr['diagnostic'] = a.clock_region_diag
+        with open(out / 'NOT_A_DIE_RESULT', 'a') as fh:
+            fh.write(f'CLOCK_REGION_GATE_FAIL_DIAGNOSTIC_ONLY: {a.clock_region_diag}\n')
+
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer=M8['repeater_rc_layer'], skip=()) if a.die_repair else '# no die repair\n'
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
@@ -1000,7 +1143,7 @@ puts "OT_SPECIAL_TOP_NETS $nsp"
 set_routing_layers -signal M2-{a.signal_top_layer} -clock M5-M9
 set_global_routing_layer_adjustment M2-M3 0.50
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-{a.signal_top_layer} 0.20
+set_global_routing_layer_adjustment M6-{min(a.signal_top_layer, 'M8')} 0.20
 set t0 [clock seconds]
 global_route -congestion_iterations {a.congestion_iterations} -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -1090,7 +1233,7 @@ puts OT_STA_DONE
 ''')
     runs = ' && '.join(f'/usr/bin/time -v openroad -threads ${{CPUS:-8}} -no_init -exit /work/sta_{c}.tcl > /work/sta/sta_{c}.log 2>&1' for c in a.corners)
     dccs = '\n'.join(f'python3 $D/dcc/tools/die_clock_check.py report $D/sta/die_clock_dump_{c}.tsv --out $D/sta/die_clock_check_{c}.json '
-                     f'--pairs $D/pairs.json > $D/sta/die_clock_check_{c}.log 2>&1' for c in a.corners)
+                     f'--pairs $D/pairs.json --landed $D/landed.json > $D/sta/die_clock_check_{c}.log 2>&1' for c in a.corners)
     (out / 'sta.sh').write_text(f'''#!/bin/bash
 # S81-DIE7 real-view die STA {' / '.join(a.corners)} + die_clock_check + classify (needs out/grt.odb)
 D=$(cd $(dirname $0) && pwd); N=dvrvsta-$$; mkdir -p $D/sta
@@ -1143,6 +1286,7 @@ CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $s
                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
                 tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
                 land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
+                clock_regions=ckr,
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
                        + ' (no closed view yet); closed = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('closed:')}))),
                 memory_note='case_p4l_r (stand-in die netlist) GRT 38.6 GB / 24 min, STA 24 GB / 3.3 min per corner (s81die6, ot-epyc5)',

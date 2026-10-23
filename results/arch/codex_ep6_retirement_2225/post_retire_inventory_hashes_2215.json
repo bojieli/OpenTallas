@@ -1,0 +1,59 @@
+{
+ "at": "2026-10-21T22:15:37.304862-07:00",
+ "files": {
+  "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/hosts.json": {
+   "sha256": "6040f0d62de0a636095496aa2d5679a1079550133fcc45df077223b1cf497321",
+   "mode": "0o664",
+   "backup_sha256": "b033eb2c97bc7f8d5f8c943fdb78b1bf09cea7da6ad6a8ffefe6e5e422f714a5",
+   "matches_precheck": false
+  },
+  "/home/ubuntu/bin/ot-run": {
+   "sha256": "7ed23ab748ff2ec8550ed61a186458ef102c6b82374339995243282261f70c86",
+   "mode": "0o775",
+   "backup_sha256": "65abe32dbc01919c5f56ad2c695d1214b7175d8b1dbc144f2b6394e653bcaa96",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/bin/ot-sizes-sync": {
+   "sha256": "788ae3c4dfc1f7faf2e7cdd428d3f656da1397534559394a098b3760064af436",
+   "mode": "0o755",
+   "backup_sha256": "f9fb522afd1e530a1a96274a4bd6a90331284f696ebbc8e8cbf457fff68220ef",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/.config/ot-run/held_hosts": {
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+   "mode": "0o664",
+   "backup_sha256": "1a832987593904c05c6d68a54eae13a2f8d12a2cc332aaa32ee13d1754e768b3",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/bin/ot-reaper.py": {
+   "sha256": "4e02cf6cb6c324541bc0d941f78193252c505dd328ceaf55f93e08bad856f3ce",
+   "mode": "0o775",
+   "backup_sha256": "44db01caacf8c236fbcb41990313ce97b0ae5f2335885b54b231919495a442b7",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/.local/share/fleet-viz/fleet_hosts.json": {
+   "sha256": "4dad8736200ab5636651045183a611db9410085a5e4a0c6b85fc5f73f83adbba",
+   "mode": "0o664",
+   "backup_sha256": "8639a59ce294de344d51f154dc11fe2c4554c8a7004494659a18af6bf20bc3cf",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/.ssh/config": {
+   "sha256": "c9e07646af8686b8f1ed7e990093562ed78e2833b2bd357795e7f8843edb65b9",
+   "mode": "0o600",
+   "backup_sha256": "1039f17ea8db875cf406a611b0144828c286410adaa2d16ebbe7c0dd3312623f",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/bin/ssh-mux-heal": {
+   "sha256": "e9c3fd0504653134808028e9f172ae5a80d361a5cac137473f6fc4451be477d5",
+   "mode": "0o775",
+   "backup_sha256": "f3326d65175a06c595b09c44bfc6199861dba9a7c523e7e75d2d9f05ab4dbfd8",
+   "matches_precheck": true
+  },
+  "/home/ubuntu/bin/fleet-objtrim": {
+   "sha256": "93c0b5c7c437dbb2ad2a75c7265df2c8d85b176bbdf30aa65708357d5d015dab",
+   "mode": "0o775",
+   "backup_sha256": "b07a0483ce2b0570e52de99789f896118752f3e6e02dd77b511bfc4a6482a10e",
+   "matches_precheck": true
+  }
+ }
+}

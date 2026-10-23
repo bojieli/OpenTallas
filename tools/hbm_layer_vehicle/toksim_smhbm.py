@@ -325,6 +325,12 @@ def compile_qwen(tags, seed=20261019, wide=False):
     prev_go, prev_len, prev_lines = None, 0, 0
     cur_abs = last_cmd_abs
     epoch = 1
+    # TOKc-HBM2 10-22: the svg residency model of smb_unit (in-order reserve, LANDING banks, fetch FLAT + line rate,
+    # OPEN_IL cache banks, copy drain) plus the refresh hazard bound, applied when the caller supplies absolute refresh
+    # windows (S.REFRESH: slice lowering).  Without S.REFRESH the historical pace-only schedule is emitted unchanged.
+    resmodel = S.RESMODEL and S.REFRESH is not None
+    ref_wins = S.refresh_windows(1 << 20) if resmodel else []
+    rm = dict(res=[], rdy=[], opn=[], dend=[], ret=[])
     for r in recs:
         nx = len(r["xw"]) * S.MV.NBEAT
         x0 = max(cur_abs + 32, desc_install_t + 2 * len(descs) + 4)
@@ -344,6 +350,18 @@ def compile_qwen(tags, seed=20261019, wide=False):
                          prev_go + (S.PACE_NUM * prev_lines + S.PACE_DEN - 1) // S.PACE_DEN + S.PACE_ADD)
             if bi == 0:
                 lo = max(lo, x_end + S.X_GAP - rc0 - S.LAT_GO, cur_abs + S.OP_GAP - rc0 - S.LAT_GO)
+            if resmodel:
+                n = len(rm["res"])
+                L_ = b["n_lines"]
+                rs = max(rm["res"][n - 1] + 3 if n else 0, rm["dend"][n - S.LANDING] + 2 if n >= S.LANDING else 0)
+                rd = max(rs + S.FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * S.RES_LINE_NUM // S.RES_LINE_DEN))
+                rd = S.refresh_ready(max(rs, rm["rdy"][n - 1] if n else 0), rd, ref_wins)   # this block's fetch interval
+                op_ = max(rd, rm["ret"][n - 2] if n >= 2 else 0, rm["dend"][n - 1] if n else 0) + 1
+                de = op_ + S._drain_edges(L_) + 2
+                lo = max(lo, de + S.RMARGIN)
+                rm["res"].append(rs); rm["rdy"].append(rd); rm["opn"].append(op_); rm["dend"].append(de)
+                rm["ret"].append(lo + S.LAT_GO + b["nwords"] + 2)
+                b["res_model"] = dict(reserve=rs, ready=rd, open=op_, drained=de)
             b.update(go_at=lo, first_cmd_abs=rc0 + lo + S.LAT_GO, landing=b["desc_i"] % S.LANDING, epoch=epoch,
                      tag_base=(b["desc_i"] % 16) * 64)
             epoch += 1

@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: ot-epyc9       admits    42 GB (avail 160, growth 130, headroom 0, waiters 0/0 GB) load 96/128 running 33 disk 1804 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-qcore-r17-2000
+ot-run: -> ot-epyc9
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 8 = 6 GB, admissible -47 GB: available 151 GB, growth charged 184 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 163 GB at x1), young 0 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2445534-1792642447 after 122 s
+QCORE_RG PASS checks=9104 scalars=312 valid_reads=5918 fault_lags=0 fault_edges=9094
+- rtl/test/hbm_qcore_physical_1016/tb_qcore_r13_lockstep.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 91us; walltime 0.449 s; speed 203.490 us/s
+- Verilator: cpu 0.448 s on 1 threads; allocated 11 MB
+QCORE_ROW2 MUT256 REJECTED actual_rc=0
+QCORE_ROW2 MUT128 REJECTED actual_rc=0
+QCORE_ROW2 GATE PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2445534-1792642447): exit 0

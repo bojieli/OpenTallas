@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Actual static duplex relay mapping; native pin sizing only, never signoff."""
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parents[1])); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse, collections, hashlib, json, re, subprocess
 from pathlib import Path
 TOP='dsfd_vm_static_relay128_b8'
@@ -14,11 +15,11 @@ def main():
   if sha(p)!=EXPECTED_SHA256[n]:raise ValueError('source pin mismatch: '+n)
  libs=sorted(Path('/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM').glob('*RVT_TT_nldm*.lib'));assert len(libs)==5
  seq=next(p for p in libs if 'SEQ_' in p.name);flags=' '.join('-liberty '+str(p) for p in libs)
- provenance={'source_commit':SOURCE_COMMIT,'measurement_script_sha256':sha(Path(__file__)),'sources_sha256':{n:sha(p) for n,p in zip(SOURCES,src)},'libraries_sha256':{p.name:sha(p) for p in libs},'lef_sha256':sha(v.lef),'tool':subprocess.check_output(['yosys','-V'],text=True).strip(),'parameters':{'NBANK':4 if TOP.endswith('b4') else 8 if TOP.endswith('b8') else 16},'scope':'Actual full native-pin-register leaf RVT TT ABC mapping and cell census only; no route/timing/parent adoption'}
+ provenance={'source_commit':SOURCE_COMMIT,'measurement_script_sha256':sha(Path(__file__)),'sources_sha256':{n:sha(p) for n,p in zip(SOURCES,src)},'libraries_sha256':{p.name:sha(p) for p in libs},'lef_sha256':sha(v.lef),'tool':subprocess.check_output([pinned_yosys(),'-V'],text=True).strip(),'parameters':{'NBANK':4 if TOP.endswith('b4') else 8 if TOP.endswith('b8') else 16},'scope':'Actual full native-pin-register leaf RVT TT ABC mapping and cell census only; no route/timing/parent adoption'}
  (v.out/'provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
  ys='read_verilog -sv -DSYNTHESIS '+' '.join(map(str,src))+f'\nhierarchy -check -top {TOP}\nsynth -top {TOP} -flatten -noabc\n'+''.join('read_liberty -lib '+str(p)+'\n' for p in libs)+f'dfflibmap -liberty {seq}\nabc {flags} -D 833\nclean\ncheck -assert\nstat {flags}\nwrite_json {v.out}/mapped.json\n'
  (v.out/'map.ys').write_text(ys)
- with (v.out/'map.log').open('w') as log:r=subprocess.run(['yosys','-s',str(v.out/'map.ys')],stdout=log,stderr=subprocess.STDOUT)
+ with (v.out/'map.log').open('w') as log:r=subprocess.run([pinned_yosys(),'-s',str(v.out/'map.ys')],stdout=log,stderr=subprocess.STDOUT)
  if r.returncode:raise SystemExit(r.returncode)
  mod=json.loads((v.out/'mapped.json').read_text())['modules'][TOP];cells=collections.Counter(c['type'] for c in mod['cells'].values() if c['type']!='$scopeinfo');areas={}
  for m in re.finditer(r'MACRO\s+(\S+)\s+(.*?)(?=\nMACRO|\Z)',v.lef.read_text(),re.S):

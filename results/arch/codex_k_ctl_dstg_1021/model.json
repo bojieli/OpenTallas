@@ -1,0 +1,33 @@
+{
+ "block": "qkd_kvs_ctl",
+ "mechanism": "DSTG=1 accepted target and payload register before held write selects",
+ "production_token_cycles_added": 0,
+ "boot_image_write_edges_added": 1,
+ "raw_accept_sequence_edges_added": 0,
+ "mu_gap_validation_edges_added": 0,
+ "upper_bound_added_register_bits": 255,
+ "runtime_indexed_flop_storage_added_bits": 0,
+ "boot_dispatch_max_words_per_edge": 1,
+ "boot_dispatch_payload_bits_per_edge": 64,
+ "boot_dispatch_address_bits_per_edge": 10,
+ "boundary_protocol": "Static write strobes. Every configuration write data/strobe pair is uniformly delayed one edge. No credits or arbitration. Normal layer programme prices unchanged. Actual sink configured/sealed feedback still gates setup_ready.",
+ "floorplans": [
+  {
+   "kit": "c32i",
+   "outline_um": [
+    475.2,
+    864.0
+   ],
+   "max_WE_pins_per_um": 3.069
+  },
+  {
+   "kit": "c32j",
+   "outline_um": [
+    518.4,
+    907.2
+   ],
+   "max_WE_pins_per_um": 2.923
+  }
+ ],
+ "status": "Qualification pending; raw acceptance stage remains to be measured; no timing or throughput claim"
+}

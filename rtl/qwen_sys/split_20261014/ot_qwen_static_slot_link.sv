@@ -8,7 +8,7 @@
 // Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
 // CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
 module ot_qwen_static_slot_ctl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, UP_SYNC=0
 )(
     input wire clk,
     input wire rst_n, epoch_begin,
@@ -60,11 +60,24 @@ module ot_qwen_static_slot_ctl #(
     wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
         (written_at_cmd && !(v1 && s1==cmd_ws)));
     wire unread_slot=v1 && !written_at_s1 && !(cmd_wv && cmd_ws==s1);
+    // PHY-up is a level, never a packet issue/credit signal. Each codec
+    // controller captures it on its OWN clk. These two flops are intentionally
+    // unreset: launch validity is reset, and clocks run throughout cold reset.
+    // The level settles in two local edges; loss diagnostics gain two edges.
+    wire p_tx_up_local;
+    if(UP_SYNC)begin:g_up_sync
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_meta;
+        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_sync;
+        always @(posedge clk)begin up_meta<=p_tx_up;up_sync<=up_meta;end
+        assign p_tx_up_local=up_sync;
+    end else begin:g_up_direct
+        assign p_tx_up_local=p_tx_up;
+    end
     wire phy_fault;
     if(SAFE)begin:g_phy_pin
         reg up_q;
         reg launched_q;
-        always @(posedge clk)up_q<=p_tx_up;
+        always @(posedge clk)up_q<=p_tx_up_local;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)launched_q<=0;else launched_q<=v3 && !epoch_abort && !epoch_begin;
         // Sample PHY-up at the actual TX launch edge, then report the loss
@@ -75,7 +88,7 @@ module ot_qwen_static_slot_ctl #(
         assign phy_fault=launched_q && !up_q;
 `endif
     end else begin:g_phy_direct
-        assign phy_fault=v3 && !p_tx_up;
+        assign phy_fault=v3 && !p_tx_up_local;
     end
     wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,phy_fault,
                           rv && !ev,ev && !rv,slot_bad,crc_bad};
@@ -188,7 +201,7 @@ endmodule
 // Frame: {CRC, 0, epoch8, 0, data-valid1, slot8, payloadFW}; slot8 < 64.
 // CRC16/CCITT or CRC32/IEEE, MSB first, all-ones seed, no final complement.
 module ot_qwen_static_slot_link #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, UP_SYNC=0
 )(
     input wire [4:0] ck,
     input wire rst_n, epoch_begin,
@@ -226,7 +239,7 @@ module ot_qwen_static_slot_link #(
             .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
             .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
     end
-    ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW),.SAFE(SAFE)) u_ctl (
+    ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW),.SAFE(SAFE),.UP_SYNC(UP_SYNC)) u_ctl (
         .clk(ck[0]),.q_data(rd[FW-1:0]),
         .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch), .wr_v(wr_v), .wr_observed_v(wr_observed_v), .wr_slot(wr_slot), .rd_v(rd_v), .rd_slot(rd_slot), .rx_expect_v(rx_expect_v), .rx_expect_slot(rx_expect_slot), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .epoch_abort(epoch_abort), .fault_cause(fault_cause));
 endmodule
