@@ -541,6 +541,10 @@
         "type": "number",
         "minimum": 0
        },
+       "tap_pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
        "taps": {
         "type": "array",
         "items": {
