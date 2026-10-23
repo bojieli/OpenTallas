@@ -4715,7 +4715,46 @@ def masters(m, k=1, port_bits=None):
     for name, ports in m.get('assigned_ports', {}).items():
         if name in M:
             M[name].ports.update({p: tuple(v) for p, v in ports.items() if p in M[name].ports})
+    if OBS_CONTRACT:
+        apply_obs_contract(M)
     return M
+
+
+# FT-KV 10-23 (FT-PLAN, owner-approved layer budget): every planned abstract above got obs_top 7, and lef_text writes ONE
+# full-footprint OBS rectangle per layer M1..obs_top, so 198 of the die's 241 big blocks blanked M6 / M7 although their
+# hardened kits route signals only to M5 (tools/ref_tile/specs layer_cap).  OT_KV_OBS_CONTRACT=1 lowers obs_top to the
+# kit's signal layer cap; layers above are die / feedthrough layers.  A cluster whose own PG straps sit one layer up gets
+# those straps (measured pattern of its closed view) as OBS instead of a blanket.  Default off: abstracts byte-identical.
+OBS_CONTRACT = os.environ.get('OT_KV_OBS_CONTRACT', '0') == '1'
+# master -> (signal obs_top, [(layer, x0, pitch, width, y0, y1_from_top)] PG strap OBS on the layer above, or [])
+KV_OBS_CONTRACT = {
+    # layer_cap M5: tools/ref_tile/specs/qkd_kvs_pc_sr7b.json, qkd_kvs_pc_h_sr7b, qkd_kvs_grp_k1, qkd_kvs_grp_h_k1,
+    # physical/ref_tile/qkd_hslice/spec.json (closed view OBS M1-M5 only), qkd_kvs_ctl, qkd_embgw, qkd_ctrl_kc
+    'qkd_kvs_pc': (5, []), 'qkd_kvs_pc_h': (5, []), 'qkd_kvs_grp': (5, []), 'qkd_kvs_grp_h': (5, []),
+    'qkd_hslice': (5, []), 'qkd_hslice_dn': (5, []), 'qkd_kvs_ctl': (5, []), 'qkd_embgw': (5, []), 'qkd_ctrl_kc': (5, []),
+    # physical/ref_tile/qkd_ectl3_kiss_st/spec.json: signal_max_layer M6, pg_layer M7; its closed view's M7 = vertical
+    # VDD / VSS straps 0.288 wide every 5.4 um from x 3.016, y 2.151 .. H - 2.151 (5.3 % of M7)
+    'qkd_ectlk': (6, [('M7', 3.016, 5.4, 0.288, 2.151, 2.151)]),
+}
+
+
+def apply_obs_contract(M):
+    for name, (top, pg) in KV_OBS_CONTRACT.items():
+        mm = M.get(name)
+        if mm is None:
+            continue
+        bad = [p for p, sp in mm.ports.items() if sp[0] == 'face'
+               and any(top < int(ly[1:]) <= 7 for ly in str(sp[3]).split('+') if ly[:1] == 'M')]
+        if bad:
+            raise ValueError(f'OT_KV_OBS_CONTRACT: {name} face pins above its M{top} contract: {bad[:6]}')
+        mm.obs_top = min(mm.obs_top, top)
+        rects = []
+        for ly, x0, pitch, wd, y0, y1t in pg:
+            x = x0
+            while x + wd <= mm.w + 1e-6:
+                rects.append((ly, (round(x, 3), y0, round(x + wd, 3), round(mm.h - y1t, 3))))
+                x += pitch
+        mm.obs_extra = rects
 
 
 # kvsys v1.1: die-assigned pins of the native head frame and the three-leaf control frame (top-down, owner 10-13).
