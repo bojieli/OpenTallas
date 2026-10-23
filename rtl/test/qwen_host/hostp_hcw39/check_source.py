@@ -10,4 +10,7 @@ for exact in ["assign hc={raw_hc[181:39],transport_hc[38:0]};",
               "assign pr=(replay_target==0)?raw_pr:143'b0;"]:
     assert exact in packet, f'OBSX source cone changed: {exact}'
 assert "143'd0,raw_hc[38:0]" not in packet, 'OBSX still ties the station raw_hc'
-print('HOSTP_SOURCE_BOUND PASS obsx START-only station HCW39 + hc[181:39] bypass')
+# KV-P3-RTL 10-23: the START-only transport below the station (u_packet / u_ctrl HCW 39), no {143'd0,cmd_hc} pad
+assert "qkd_host_packet_bundle_admission_mu #(.MU(1),.HCW(39)," in packet and "wire[38:0]transport_hc;" in packet, 'OBSX transport not HCW 39'
+assert "143'd0,cmd_hc" not in packet, 'OBSX still pads the transport cmd_hc'
+print('HOSTP_SOURCE_BOUND PASS obsx START-only station + transport HCW39 + hc[181:39] bypass')

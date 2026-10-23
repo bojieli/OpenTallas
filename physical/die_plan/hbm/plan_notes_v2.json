@@ -1,0 +1,7835 @@
+{
+ "a_cell_um2": 0.11,
+ "c0_tree": {
+  "c0": {
+   "lane_endpoints": 556,
+   "partition": "C0",
+   "roots": {
+    "u1": {
+     "dst_parts": [
+      "NE_vm",
+      "NW_vm",
+      "SE_vm",
+      "SW_vm"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 104,
+     "max_cycles": 20,
+     "max_hops": 7,
+     "module": "ot_hbm_argmax_static_sw_vm_r2",
+     "out_bits": 12672,
+     "out_buses": 104,
+     "per_quadrant": {
+      "NE": {
+       "bits": 3168,
+       "buses": 26
+      },
+      "NW": {
+       "bits": 3168,
+       "buses": 26
+      },
+      "SE": {
+       "bits": 3168,
+       "buses": 26
+      },
+      "SW": {
+       "bits": 3168,
+       "buses": 26
+      }
+     }
+    },
+    "u11": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 104,
+     "in_buses": 8,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_obs_leaf",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u12": {
+     "dst_parts": [
+      "NE_svc0",
+      "NE_svc1",
+      "NW_svc0",
+      "NW_svc1",
+      "SE_svc0",
+      "SE_svc1",
+      "SW_svc0",
+      "SW_svc1"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 36,
+     "in_buses": 4,
+     "lanes": 8,
+     "max_cycles": 55,
+     "max_hops": 16,
+     "module": "ot_hbm_router_ids_static",
+     "out_bits": 388,
+     "out_buses": 8,
+     "per_quadrant": {
+      "NE": {
+       "bits": 97,
+       "buses": 2
+      },
+      "NW": {
+       "bits": 97,
+       "buses": 2
+      },
+      "SE": {
+       "bits": 97,
+       "buses": 2
+      },
+      "SW": {
+       "bits": 97,
+       "buses": 2
+      }
+     }
+    },
+    "u13": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 8,
+     "in_buses": 4,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_static_cfg_collar",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u14": {
+     "dst_parts": [
+      "NE_rc4",
+      "NE_svc2",
+      "NW_rc4",
+      "NW_svc2",
+      "SE_rc4",
+      "SE_svc2",
+      "SW_rc4",
+      "SW_svc2"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1116,
+     "in_buses": 16,
+     "lanes": 140,
+     "max_cycles": 49,
+     "max_hops": 17,
+     "module": "ot_hbm_static_cfg_collar_idx256r",
+     "out_bits": 15908,
+     "out_buses": 140,
+     "per_quadrant": {
+      "NE": {
+       "bits": 3977,
+       "buses": 35
+      },
+      "NW": {
+       "bits": 3977,
+       "buses": 35
+      },
+      "SE": {
+       "bits": 3977,
+       "buses": 35
+      },
+      "SW": {
+       "bits": 3977,
+       "buses": 35
+      }
+     }
+    },
+    "u15": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 316,
+     "in_buses": 12,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_status_join_fa",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u17": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 7065,
+     "in_buses": 57,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_su_stree_root",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u18": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 2481,
+     "in_buses": 20,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hgi_coll_tkm_m_tp192",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u2": {
+     "dst_parts": [
+      "NE_hcq",
+      "NW_hcq",
+      "SE_hcq",
+      "SW_hcq"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 564,
+     "in_buses": 12,
+     "lanes": 40,
+     "max_cycles": 7,
+     "max_hops": 3,
+     "module": "ot_hbm_hc_root_static",
+     "out_bits": 4524,
+     "out_buses": 40,
+     "per_quadrant": {
+      "NE": {
+       "bits": 1131,
+       "buses": 10
+      },
+      "NW": {
+       "bits": 1131,
+       "buses": 10
+      },
+      "SE": {
+       "bits": 1131,
+       "buses": 10
+      },
+      "SW": {
+       "bits": 1131,
+       "buses": 10
+      }
+     }
+    },
+    "u4": {
+     "dst_parts": [
+      "NE_rc4",
+      "NW_rc4",
+      "SE_rc4",
+      "SW_rc4"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 200,
+     "in_buses": 8,
+     "lanes": 16,
+     "max_cycles": 11,
+     "max_hops": 5,
+     "module": "ot_hbm_host_static_ingress_obs",
+     "out_bits": 1408,
+     "out_buses": 16,
+     "per_quadrant": {
+      "NE": {
+       "bits": 352,
+       "buses": 4
+      },
+      "NW": {
+       "bits": 352,
+       "buses": 4
+      },
+      "SE": {
+       "bits": 352,
+       "buses": 4
+      },
+      "SW": {
+       "bits": 352,
+       "buses": 4
+      }
+     }
+    },
+    "u5": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 11414,
+     "in_buses": 95,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_idx_rootctl_static_am",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u9": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1188,
+     "in_buses": 12,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_idx_xq_node_static",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    }
+   }
+  },
+  "q_vm": {
+   "lane_endpoints": 445,
+   "partition": "NW_vm",
+   "roots": {
+    "u0": {
+     "dst_parts": [
+      "NW_rc4",
+      "NW_su2",
+      "NW_svc2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 369,
+     "in_buses": 7,
+     "lanes": 36,
+     "max_cycles": 22,
+     "max_hops": 7,
+     "module": "hfd_hgi_vm_calendar_f20",
+     "out_bits": 4305,
+     "out_buses": 36,
+     "per_quadrant": {}
+    },
+    "u1": {
+     "dst_parts": [
+      "NE_vm",
+      "SW_vm"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 7604,
+     "in_buses": 61,
+     "lanes": 36,
+     "max_cycles": 22,
+     "max_hops": 9,
+     "module": "hfd_hgi_vms_glue_nw_t",
+     "out_bits": 4448,
+     "out_buses": 36,
+     "per_quadrant": {}
+    },
+    "u18": {
+     "dst_parts": [
+      "C0"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 249,
+     "in_buses": 4,
+     "lanes": 1,
+     "max_cycles": 16,
+     "max_hops": 7,
+     "module": "ot_hbm_fault_leaf",
+     "out_bits": 4,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "u19": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 16,
+     "in_buses": 3,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_fault_leaf",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u20": {
+     "dst_parts": [
+      "NW_os2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 6,
+     "max_cycles": 13,
+     "max_hops": 4,
+     "module": "ot_hbm_idx_query_static",
+     "out_bits": 596,
+     "out_buses": 6,
+     "per_quadrant": {}
+    },
+    "u21": {
+     "dst_parts": [
+      "C0"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 171,
+     "in_buses": 2,
+     "lanes": 6,
+     "max_cycles": 14,
+     "max_hops": 5,
+     "module": "ot_hbm_idx_vm_query_static_n12",
+     "out_bits": 703,
+     "out_buses": 6,
+     "per_quadrant": {}
+    },
+    "u23": {
+     "dst_parts": [
+      "C0"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1454,
+     "in_buses": 22,
+     "lanes": 1,
+     "max_cycles": 21,
+     "max_hops": 7,
+     "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+     "out_bits": 3,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "u24": {
+     "dst_parts": [
+      "NW_su2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 10,
+     "max_hops": 3,
+     "module": "ot_hbm_su_bridge_release_s",
+     "out_bits": 1,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "u25": {
+     "dst_parts": [
+      "NW_rc4",
+      "NW_su2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 16,
+     "max_cycles": 21,
+     "max_hops": 7,
+     "module": "ot_hbm_su_programme_pslice_c5",
+     "out_bits": 1906,
+     "out_buses": 16,
+     "per_quadrant": {}
+    },
+    "u26": {
+     "dst_parts": [
+      "NW_su2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 14,
+     "max_cycles": 6,
+     "max_hops": 3,
+     "module": "ot_hbm_su_static_cxport_dl_q",
+     "out_bits": 1566,
+     "out_buses": 14,
+     "per_quadrant": {}
+    },
+    "u27": {
+     "dst_parts": [
+      "NW_su1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 14,
+     "max_cycles": 12,
+     "max_hops": 3,
+     "module": "ot_hbm_su_static_cxport_dl_q",
+     "out_bits": 1566,
+     "out_buses": 14,
+     "per_quadrant": {}
+    },
+    "u29": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1338,
+     "in_buses": 12,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_su_static_cxport_dl_s",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u3": {
+     "dst_parts": [
+      "NW_su3"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 6,
+     "max_cycles": 14,
+     "max_hops": 4,
+     "module": "hfd_vms_bank_native_q0_faces",
+     "out_bits": 518,
+     "out_buses": 6,
+     "per_quadrant": {}
+    },
+    "u30": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 6876,
+     "in_buses": 56,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_su_static_cxport_ij_q",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u32": {
+     "dst_parts": [
+      "NW_sfuc",
+      "NW_su2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 288,
+     "in_buses": 3,
+     "lanes": 8,
+     "max_cycles": 2,
+     "max_hops": 1,
+     "module": "ot_hbm_su_static_qcore_r13",
+     "out_bits": 502,
+     "out_buses": 8,
+     "per_quadrant": {}
+    },
+    "u34": {
+     "dst_parts": [],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 2272,
+     "in_buses": 19,
+     "lanes": 0,
+     "max_cycles": 0,
+     "max_hops": 0,
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "out_bits": 0,
+     "out_buses": 0,
+     "per_quadrant": {}
+    },
+    "u38": {
+     "dst_parts": [
+      "NW_svc1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1305,
+     "in_buses": 12,
+     "lanes": 1,
+     "max_cycles": 23,
+     "max_hops": 6,
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "out_bits": 8,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "u42": {
+     "dst_parts": [
+      "NW_svc1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 6,
+     "max_cycles": 31,
+     "max_hops": 8,
+     "module": "ot_hbm_xp_aq_tree13_fmt",
+     "out_bits": 655,
+     "out_buses": 6,
+     "per_quadrant": {}
+    },
+    "u43": {
+     "dst_parts": [
+      "NW_su2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 2704,
+     "in_buses": 22,
+     "lanes": 3,
+     "max_cycles": 6,
+     "max_hops": 3,
+     "module": "ot_hgi_coll_inj_copy",
+     "out_bits": 166,
+     "out_buses": 3,
+     "per_quadrant": {}
+    },
+    "u5": {
+     "dst_parts": [
+      "NW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 17,
+     "max_cycles": 22,
+     "max_hops": 8,
+     "module": "hfd_vms_bank_native_q0_faces",
+     "out_bits": 2056,
+     "out_buses": 17,
+     "per_quadrant": {}
+    },
+    "u65": {
+     "dst_parts": [
+      "NW_svc1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 8,
+     "max_cycles": 29,
+     "max_hops": 7,
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "out_bits": 1024,
+     "out_buses": 8,
+     "per_quadrant": {}
+    },
+    "u66": {
+     "dst_parts": [
+      "NW_svc1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 36,
+     "max_hops": 9,
+     "module": "ot_hgi_sm_xload_cl2_ctlx",
+     "out_bits": 47,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "u9": {
+     "dst_parts": [
+      "NW_su0",
+      "NW_svc2"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 1256,
+     "in_buses": 10,
+     "lanes": 31,
+     "max_cycles": 30,
+     "max_hops": 8,
+     "module": "hfd_vms_bank_native_q0_faces",
+     "out_bits": 3598,
+     "out_buses": 31,
+     "per_quadrant": {}
+    }
+   }
+  }
+ },
+ "cap_cells": 400000,
+ "core_budget_cells": 350000,
+ "glue_cells_per_bit": 2,
+ "harden_min_cells": 20000,
+ "over_cap": [
+  {
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_root_static/ot_hbm_hc_root_static.stat",
+   "cells": 1514498,
+   "inst": "u2",
+   "master": "ot_hbm_hc_root_static",
+   "max_sub_core": 336605,
+   "module": "ot_hbm_hc_root_static",
+   "proposal": "2 x ot_hbm_hc_tail_unit_static 673k (each OVER the cap: the 10-23 L1 study lists hbm_hc_tail_child 0.63-0.68M as never closed) -> each tail must split again (RTL: tail stage halves) ",
+   "split_into": 5,
+   "type": "c0"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_tkm_m_tp192/meta.json std_area 727594 um2 / 0.11 um2",
+   "cells": 6614494,
+   "inst": "u18",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "max_sub_core": 348132,
+   "module": "ot_hgi_coll_tkm_m_tp192",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 19-way split by area is a PROPOSAL; the RTL owner partitions it into 19 cores of <= 350k; its 2 SRAM macros go with the sub-cores",
+   "split_into": 19,
+   "type": "c0"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq0_static/meta.json std_area 93076 um2 / 0.11 um2",
+   "cells": 846145,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq0_static",
+   "max_sub_core": 282049,
+   "module": "ot_hbm_hc_bankq0_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc0"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+   "cells": 839978,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_static",
+   "max_sub_core": 279993,
+   "module": "ot_hbm_hc_bankq_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc1"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_ft_static/meta.json std_area 91189 um2 / 0.11 um2",
+   "cells": 828986,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "max_sub_core": 276329,
+   "module": "ot_hbm_hc_bankq_ft_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc2"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+   "cells": 839978,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_static",
+   "max_sub_core": 279993,
+   "module": "ot_hbm_hc_bankq_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc3"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+   "cells": 839978,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_static",
+   "max_sub_core": 279993,
+   "module": "ot_hbm_hc_bankq_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc4"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+   "cells": 839978,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_static",
+   "max_sub_core": 279993,
+   "module": "ot_hbm_hc_bankq_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc5"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_ft_static/meta.json std_area 91189 um2 / 0.11 um2",
+   "cells": 828986,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "max_sub_core": 276329,
+   "module": "ot_hbm_hc_bankq_ft_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc6"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_term_static/meta.json std_area 92388 um2 / 0.11 um2",
+   "cells": 839887,
+   "inst": "u0",
+   "master": "ot_hbm_hc_bankq_term_static",
+   "max_sub_core": 279963,
+   "module": "ot_hbm_hc_bankq_term_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "split_into": 3,
+   "type": "q_hc7"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_score_quarter_static/meta.json std_area 1366457 um2 / 0.11 um2",
+   "cells": 12422337,
+   "inst": "u0",
+   "master": "ot_hbm_idx_score_quarter_static",
+   "max_sub_core": 345065,
+   "module": "ot_hbm_idx_score_quarter_static",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 36-way split by area is a PROPOSAL; the RTL owner partitions it into 36 cores of <= 350k",
+   "split_into": 36,
+   "type": "q_os2"
+  },
+  {
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "cells": 465018,
+   "inst": "u5",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "max_sub_core": 222636,
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "split_into": 3,
+   "type": "q_rc4"
+  },
+  {
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "cells": 465018,
+   "inst": "u5",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "max_sub_core": 222636,
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "split_into": 3,
+   "type": "q_rc4_v1"
+  },
+  {
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_core_split3/meta.json std_area 629035 um2 / 0.11 um2",
+   "cells": 5718505,
+   "inst": "u7",
+   "master": "ot_hgi_sfu_core_split3",
+   "max_sub_core": 336383,
+   "module": "ot_hgi_sfu_core_split3",
+   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 17-way split by area is a PROPOSAL; the RTL owner partitions it into 17 cores of <= 350k; its 80 SRAM macros go with the sub-cores",
+   "split_into": 17,
+   "type": "q_sfuc"
+  },
+  {
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+   "cells": 5299387,
+   "inst": "u0",
+   "master": "ot_hbm_su_static_pgslice_lg__pv2",
+   "max_sub_core": 308480,
+   "module": "ot_hbm_su_static_pgslice_lg",
+   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "split_into": 23,
+   "type": "q_su0"
+  },
+  {
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv5/ot_hbm_su_static_pgslice_lg__pv5.stat",
+   "cells": 4864261,
+   "inst": "u0",
+   "master": "ot_hbm_su_static_pgslice_lg__pv6",
+   "max_sub_core": 308480,
+   "module": "ot_hbm_su_static_pgslice_lg",
+   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "split_into": 23,
+   "type": "q_su1"
+  },
+  {
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv8/ot_hbm_su_static_pgslice_lg__pv8.stat",
+   "cells": 2745321,
+   "inst": "u0",
+   "master": "ot_hbm_su_static_pgslice_lg__pv10",
+   "max_sub_core": 308632,
+   "module": "ot_hbm_su_static_pgslice_lg",
+   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "split_into": 9,
+   "type": "q_su2"
+  },
+  {
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv12/ot_hbm_su_static_pgslice_lg__pv12.stat",
+   "cells": 2745404,
+   "inst": "u0",
+   "master": "ot_hbm_su_static_pgslice_lg__pv14",
+   "max_sub_core": 308632,
+   "module": "ot_hbm_su_static_pgslice_lg",
+   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "split_into": 9,
+   "type": "q_su3"
+  },
+  {
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv15/ot_hbm_su_static_pgslice_lg__pv15.stat",
+   "cells": 2745167,
+   "inst": "u0",
+   "master": "ot_hbm_su_static_pgslice_lg__pv15",
+   "max_sub_core": 308632,
+   "module": "ot_hbm_su_static_pgslice_lg",
+   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "split_into": 9,
+   "type": "q_su3_v1"
+  }
+ ],
+ "pins_files": [
+  "hfd_ep_static",
+  "hfd_hgi_vm_calendar_f20",
+  "hfd_hgi_vm_calendar_f20_role__pv0",
+  "hfd_hgi_vm_calendar_f20_role__pv1",
+  "hfd_hgi_vm_calendar_f20_role__pv2",
+  "hfd_hgi_vms_glue_nw_t",
+  "hfd_vms_bank_native_q0_faces",
+  "ot_hbm_argmax_static_sw_vm_r2",
+  "ot_hbm_hc_qhub_static",
+  "ot_hbm_host_cp_rxs",
+  "ot_hbm_idx_qctl_static",
+  "ot_hbm_idx_query_static",
+  "ot_hbm_idx_rootctl_static_am",
+  "ot_hbm_idx_selector_static_sel",
+  "ot_hbm_idx_topk_link_static",
+  "ot_hbm_idx_vm_query_static_n12",
+  "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "ot_hbm_static_cfg_collar_idx256r",
+  "ot_hbm_su_programme_pslice_c5",
+  "ot_hbm_svc_sm_group_rel_id",
+  "ot_hbm_svc_sm_xcal_rel_t",
+  "ot_hbm_svc_vm_kshare_splitstrap",
+  "ot_hbm_svc_wb_kport_q",
+  "ot_hgi_coll_gq_issue",
+  "ot_hgi_coll_inj_idx_join_rg",
+  "ot_hgi_dma_back_static_vp4_banks_cp",
+  "ot_hgi_sfu_programme_store_r10",
+  "ot_hgi_sm_xload_cl2_bdring",
+  "ot_hgi_sm_xload_cl2_ctlx",
+  "ot_pdie_serdes"
+ ],
+ "scope": "HBM-P3-TAPS post-pass (taps_cores_v2.py); plan stage only, no P&R claim",
+ "summary": {
+  "all_tap_graphs_connected": false,
+  "core_overlaps": 0,
+  "cores_over_cap": [],
+  "glue_over_cap": [],
+  "hard_cores": 646,
+  "leaves_split": 19,
+  "max_core_cells": 394328,
+  "max_core_type": "io",
+  "max_glue_cells": 298918,
+  "max_glue_type": "q_vm",
+  "max_nn_tap_um": 1062.7,
+  "max_point_to_tap_um": 1123.2,
+  "sm_types": [
+   "q_sm0a",
+   "q_sm0b",
+   "q_sm0c",
+   "q_sm0d",
+   "q_sm1a",
+   "q_sm1b",
+   "q_sm1c",
+   "q_sm1d",
+   "q_sm2a",
+   "q_sm2b",
+   "q_sm2c",
+   "q_sm2d",
+   "q_sm3a",
+   "q_sm3a_v1",
+   "q_sm3b",
+   "q_sm3b_v1",
+   "q_sm3c",
+   "q_sm3d"
+  ],
+  "taps": 1301,
+  "types": 56,
+  "types_with_taps": 56
+ },
+ "tap_metric": "L1 (Manhattan) um",
+ "tap_reach_um": 600.0,
+ "types": {
+  "c0": {
+   "core_cells_max": 348132,
+   "core_cells_total": 8629817,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 46785,
+     "inst": "u0",
+     "module": "hfd_ep_static"
+    },
+    {
+     "cells": 38967,
+     "inst": "u1",
+     "module": "ot_hbm_argmax_static_sw_vm_r2"
+    },
+    {
+     "cells": 336605,
+     "inst": "u2_hc_tail0_s0",
+     "module": "ot_hbm_hc_root_static__hc_tail0_s0"
+    },
+    {
+     "cells": 336605,
+     "inst": "u2_hc_tail0_s1",
+     "module": "ot_hbm_hc_root_static__hc_tail0_s1"
+    },
+    {
+     "cells": 336605,
+     "inst": "u2_hc_tail1_s0",
+     "module": "ot_hbm_hc_root_static__hc_tail1_s0"
+    },
+    {
+     "cells": 336605,
+     "inst": "u2_hc_tail1_s1",
+     "module": "ot_hbm_hc_root_static__hc_tail1_s1"
+    },
+    {
+     "cells": 56692,
+     "inst": "u2_hcp_sys10",
+     "module": "ot_hbm_hc_root_static__hcp_sys10"
+    },
+    {
+     "cells": 43647,
+     "inst": "u3",
+     "module": "ot_hbm_host_cp_rxs"
+    },
+    {
+     "cells": 63487,
+     "inst": "u5",
+     "module": "ot_hbm_idx_rootctl_static_am"
+    },
+    {
+     "cells": 205021,
+     "inst": "u6",
+     "module": "ot_hbm_idx_selector_static_sel"
+    },
+    {
+     "cells": 189951,
+     "inst": "u7",
+     "module": "ot_hbm_idx_topk_link_static"
+    },
+    {
+     "cells": 24339,
+     "inst": "u14",
+     "module": "ot_hbm_static_cfg_collar_idx256r"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part0",
+     "module": "ot_hgi_coll_tkm_m_tp192__part0"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part1",
+     "module": "ot_hgi_coll_tkm_m_tp192__part1"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part2",
+     "module": "ot_hgi_coll_tkm_m_tp192__part2"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part3",
+     "module": "ot_hgi_coll_tkm_m_tp192__part3"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part4",
+     "module": "ot_hgi_coll_tkm_m_tp192__part4"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part5",
+     "module": "ot_hgi_coll_tkm_m_tp192__part5"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part6",
+     "module": "ot_hgi_coll_tkm_m_tp192__part6"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part7",
+     "module": "ot_hgi_coll_tkm_m_tp192__part7"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part8",
+     "module": "ot_hgi_coll_tkm_m_tp192__part8"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part9",
+     "module": "ot_hgi_coll_tkm_m_tp192__part9"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part10",
+     "module": "ot_hgi_coll_tkm_m_tp192__part10"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part11",
+     "module": "ot_hgi_coll_tkm_m_tp192__part11"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part12",
+     "module": "ot_hgi_coll_tkm_m_tp192__part12"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part13",
+     "module": "ot_hgi_coll_tkm_m_tp192__part13"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part14",
+     "module": "ot_hgi_coll_tkm_m_tp192__part14"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part15",
+     "module": "ot_hgi_coll_tkm_m_tp192__part15"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part16",
+     "module": "ot_hgi_coll_tkm_m_tp192__part16"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part17",
+     "module": "ot_hgi_coll_tkm_m_tp192__part17"
+    },
+    {
+     "cells": 348132,
+     "inst": "u18_part18",
+     "module": "ot_hgi_coll_tkm_m_tp192__part18"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 95748,
+     "inst": "u2_glue",
+     "module": "ot_hbm_hc_root_static (top + pinned banks)"
+    },
+    {
+     "cells": 4765,
+     "inst": "u4",
+     "module": "ot_hbm_host_static_ingress_obs"
+    },
+    {
+     "cells": 12138,
+     "inst": "u8",
+     "module": "ot_hbm_idx_xq_node_static"
+    },
+    {
+     "cells": 12138,
+     "inst": "u9",
+     "module": "ot_hbm_idx_xq_node_static"
+    },
+    {
+     "cells": 12138,
+     "inst": "u10",
+     "module": "ot_hbm_idx_xq_node_static"
+    },
+    {
+     "cells": 1165,
+     "inst": "u11",
+     "module": "ot_hbm_obs_leaf"
+    },
+    {
+     "cells": 2117,
+     "inst": "u12",
+     "module": "ot_hbm_router_ids_static"
+    },
+    {
+     "cells": 4739,
+     "inst": "u13",
+     "module": "ot_hbm_static_cfg_collar"
+    },
+    {
+     "cells": 1815,
+     "inst": "u15",
+     "module": "ot_hbm_status_join_fa"
+    },
+    {
+     "cells": 1190,
+     "inst": "u16",
+     "module": "ot_hbm_su_programme_root_h5"
+    },
+    {
+     "cells": 2575,
+     "inst": "u17",
+     "module": "ot_hbm_su_stree_root"
+    },
+    {
+     "cells": 10333,
+     "inst": "u19",
+     "module": "ot_pdie_ucie_col"
+    },
+    {
+     "cells": 860,
+     "inst": "u20",
+     "module": "ot_vms_status4_static"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 59392 + station 0 + fork 0 bits) + flattened leaves",
+   "glue_cells": 280505,
+   "glue_flat_leaf_cells": 161721,
+   "glue_regs_cells": 118784,
+   "instances": 1,
+   "leaves": [
+    {
+     "basis": "CLOSED hep_static_w5b_1016-w5b-ec8a8d6f7 std cells (die 161507 um2)",
+     "cells": 46785,
+     "inst": "u0",
+     "macros": 4,
+     "master": "hfd_ep_static",
+     "module": "hfd_ep_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33 std cells (die 14113.4 um2)",
+     "cells": 38967,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hbm_argmax_static_sw_vm_r2",
+     "module": "ot_hbm_argmax_static_sw_vm_r2",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_root_static/ot_hbm_hc_root_static.stat",
+     "cells": 1514498,
+     "inst": "u2",
+     "macros": 2,
+     "master": "ot_hbm_hc_root_static",
+     "module": "ot_hbm_hc_root_static",
+     "split": 5,
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_host_cp_rxs/meta.json std_area 4801 um2 / 0.11 um2",
+     "cells": 43647,
+     "inst": "u3",
+     "macros": 6,
+     "master": "ot_hbm_host_cp_rxs",
+     "module": "ot_hbm_host_cp_rxs",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_idx_rootctl_static_am/ot_hbm_idx_rootctl_static_am.stat",
+     "cells": 63487,
+     "inst": "u5",
+     "macros": 1,
+     "master": "ot_hbm_idx_rootctl_static_am",
+     "module": "ot_hbm_idx_rootctl_static_am",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_selector_static_sel/meta.json std_area 22552 um2 / 0.11 um2",
+     "cells": 205021,
+     "inst": "u6",
+     "macros": 12,
+     "master": "ot_hbm_idx_selector_static_sel",
+     "module": "ot_hbm_idx_selector_static_sel",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_topk_link_static/meta.json std_area 20895 um2 / 0.11 um2",
+     "cells": 189951,
+     "inst": "u7",
+     "macros": 8,
+     "master": "ot_hbm_idx_topk_link_static",
+     "module": "ot_hbm_idx_topk_link_static",
+     "status": "rework"
+    },
+    {
+     "basis": "CLOSED hdie_col_idx256r_b-rb1-a22fe0816 std cells (die 11664 um2)",
+     "cells": 24339,
+     "inst": "u14",
+     "macros": 0,
+     "master": "ot_hbm_static_cfg_collar_idx256r",
+     "module": "ot_hbm_static_cfg_collar_idx256r",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_tkm_m_tp192/meta.json std_area 727594 um2 / 0.11 um2",
+     "cells": 6614494,
+     "inst": "u18",
+     "macros": 2,
+     "master": "ot_hgi_coll_tkm_m_tp192",
+     "module": "ot_hgi_coll_tkm_m_tp192",
+     "split": 19,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 31,
+   "orients": [
+    "R0"
+   ],
+   "outline_um": [
+    3456.0,
+    3456.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 576.0,
+    "max_point_to_tap_um": 576.0,
+    "n": 63
+   },
+   "taps_kinds": {
+    "core": 31,
+    "glue": 32
+   }
+  },
+  "io": {
+   "core_cells_max": 394328,
+   "core_cells_total": 452198,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 46785,
+     "inst": "u0",
+     "module": "hfd_ep_static"
+    },
+    {
+     "cells": 11085,
+     "inst": "u1",
+     "module": "hfd_hgi_vm_calendar_f20_role"
+    },
+    {
+     "cells": 394328,
+     "inst": "u2",
+     "module": "ot_pdie_serdes"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 2870 + station 0 + fork 0 bits) + flattened leaves",
+   "glue_cells": 5740,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 5740,
+   "instances": 3,
+   "leaves": [
+    {
+     "basis": "CLOSED hep_static_w5b_1016-w5b-ec8a8d6f7 std cells (die 161507 um2)",
+     "cells": 46785,
+     "inst": "u0",
+     "macros": 4,
+     "master": "hfd_ep_static",
+     "module": "hfd_ep_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv0/meta.json std_area 1219 um2 / 0.11 um2",
+     "cells": 11085,
+     "inst": "u1",
+     "macros": 1,
+     "master": "hfd_hgi_vm_calendar_f20_role__pv0",
+     "module": "hfd_hgi_vm_calendar_f20_role",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_pdie_serdes/meta.json std_area 43376 um2 / 0.11 um2",
+     "cells": 394328,
+     "inst": "u2",
+     "macros": 2,
+     "master": "ot_pdie_serdes",
+     "module": "ot_pdie_serdes",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1987.2,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 496.8,
+    "max_point_to_tap_um": 536.4,
+    "n": 15
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 12
+   }
+  },
+  "io_v1": {
+   "core_cells_max": 394328,
+   "core_cells_total": 893388,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 46785,
+     "inst": "u0",
+     "module": "hfd_ep_static"
+    },
+    {
+     "cells": 46785,
+     "inst": "u1",
+     "module": "hfd_ep_static"
+    },
+    {
+     "cells": 11162,
+     "inst": "u2",
+     "module": "hfd_hgi_vm_calendar_f20_role"
+    },
+    {
+     "cells": 394328,
+     "inst": "u3",
+     "module": "ot_pdie_serdes"
+    },
+    {
+     "cells": 394328,
+     "inst": "u4",
+     "module": "ot_pdie_serdes"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 2870 + station 0 + fork 0 bits) + flattened leaves",
+   "glue_cells": 5740,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 5740,
+   "instances": 1,
+   "leaves": [
+    {
+     "basis": "CLOSED hep_static_w5b_1016-w5b-ec8a8d6f7 std cells (die 161507 um2)",
+     "cells": 46785,
+     "inst": "u0",
+     "macros": 4,
+     "master": "hfd_ep_static",
+     "module": "hfd_ep_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hep_static_w5b_1016-w5b-ec8a8d6f7 std cells (die 161507 um2)",
+     "cells": 46785,
+     "inst": "u1",
+     "macros": 4,
+     "master": "hfd_ep_static",
+     "module": "hfd_ep_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv1/meta.json std_area 1228 um2 / 0.11 um2",
+     "cells": 11162,
+     "inst": "u2",
+     "macros": 1,
+     "master": "hfd_hgi_vm_calendar_f20_role__pv1",
+     "module": "hfd_hgi_vm_calendar_f20_role",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_pdie_serdes/meta.json std_area 43376 um2 / 0.11 um2",
+     "cells": 394328,
+     "inst": "u3",
+     "macros": 2,
+     "master": "ot_pdie_serdes",
+     "module": "ot_pdie_serdes",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_pdie_serdes/meta.json std_area 43376 um2 / 0.11 um2",
+     "cells": 394328,
+     "inst": "u4",
+     "macros": 2,
+     "master": "ot_pdie_serdes",
+     "module": "ot_pdie_serdes",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 5,
+   "orients": [
+    "MX"
+   ],
+   "outline_um": [
+    1987.2,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 496.8,
+    "max_point_to_tap_um": 536.4,
+    "n": 17
+   },
+   "taps_kinds": {
+    "core": 5,
+    "glue": 12
+   }
+  },
+  "phy": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 14880 + station 0 + fork 8 bits) + flattened leaves",
+   "glue_cells": 29776,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 29776,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "NONE (no closed run, no synthesis area)",
+     "cells": null,
+     "hard_ip": true,
+     "inst": "u0",
+     "macros": 0,
+     "master": "ot_hbm3e_phy_rc_e8p5",
+     "module": "ot_hbm3e_phy_rc_e8p5",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "R0"
+   ],
+   "outline_um": [
+    8501.76,
+    1183.68
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 1062.7,
+    "max_point_to_tap_um": 1123.2,
+    "n": 8
+   },
+   "taps_kinds": {
+    "leaf": 8
+   }
+  },
+  "q_hc0": {
+   "core_cells_max": 282049,
+   "core_cells_total": 846147,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 282049,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq0_static__part0"
+    },
+    {
+     "cells": 282049,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq0_static__part1"
+    },
+    {
+     "cells": 282049,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq0_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 6537 + station 7209 + fork 0 bits) + flattened leaves",
+   "glue_cells": 27492,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 27492,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq0_static/meta.json std_area 93076 um2 / 0.11 um2",
+     "cells": 846145,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq0_static",
+     "module": "ot_hbm_hc_bankq0_static",
+     "split": 3,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc1": {
+   "core_cells_max": 279993,
+   "core_cells_total": 839979,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 279993,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_static__part0"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_static__part1"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 7720 + fork 0 bits) + flattened leaves",
+   "glue_cells": 24386,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 24386,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+     "cells": 839978,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_static",
+     "module": "ot_hbm_hc_bankq_static",
+     "split": 3,
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc2": {
+   "core_cells_max": 276329,
+   "core_cells_total": 828987,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 276329,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_ft_static__part0"
+    },
+    {
+     "cells": 276329,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_ft_static__part1"
+    },
+    {
+     "cells": 276329,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_ft_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 6084 + station 5412 + fork 483 bits) + flattened leaves",
+   "glue_cells": 23958,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 23958,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_ft_static/meta.json std_area 91189 um2 / 0.11 um2",
+     "cells": 828986,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_ft_static",
+     "module": "ot_hbm_hc_bankq_ft_static",
+     "split": 3,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc3": {
+   "core_cells_max": 279993,
+   "core_cells_total": 839979,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 279993,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_static__part0"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_static__part1"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 4524 + station 6851 + fork 0 bits) + flattened leaves",
+   "glue_cells": 22750,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 22750,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+     "cells": 839978,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_static",
+     "module": "ot_hbm_hc_bankq_static",
+     "split": 3,
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc4": {
+   "core_cells_max": 279993,
+   "core_cells_total": 839979,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 279993,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_static__part0"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_static__part1"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 4644 + station 6853 + fork 150 bits) + flattened leaves",
+   "glue_cells": 23294,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 23294,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+     "cells": 839978,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_static",
+     "module": "ot_hbm_hc_bankq_static",
+     "split": 3,
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc5": {
+   "core_cells_max": 279993,
+   "core_cells_total": 839979,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 279993,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_static__part0"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_static__part1"
+    },
+    {
+     "cells": 279993,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 4927 + station 6910 + fork 433 bits) + flattened leaves",
+   "glue_cells": 24540,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 24540,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+     "cells": 839978,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_static",
+     "module": "ot_hbm_hc_bankq_static",
+     "split": 3,
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc6": {
+   "core_cells_max": 276329,
+   "core_cells_total": 828987,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 276329,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_ft_static__part0"
+    },
+    {
+     "cells": 276329,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_ft_static__part1"
+    },
+    {
+     "cells": 276329,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_ft_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 7022 + fork 0 bits) + flattened leaves",
+   "glue_cells": 25246,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 25246,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_ft_static/meta.json std_area 91189 um2 / 0.11 um2",
+     "cells": 828986,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_ft_static",
+     "module": "ot_hbm_hc_bankq_ft_static",
+     "split": 3,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hc7": {
+   "core_cells_max": 279963,
+   "core_cells_total": 839889,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 279963,
+     "inst": "u0_part0",
+     "module": "ot_hbm_hc_bankq_term_static__part0"
+    },
+    {
+     "cells": 279963,
+     "inst": "u0_part1",
+     "module": "ot_hbm_hc_bankq_term_static__part1"
+    },
+    {
+     "cells": 279963,
+     "inst": "u0_part2",
+     "module": "ot_hbm_hc_bankq_term_static__part2"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 9103 + fork 0 bits) + flattened leaves",
+   "glue_cells": 27136,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 27136,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_term_static/meta.json std_area 92388 um2 / 0.11 um2",
+     "cells": 839887,
+     "inst": "u0",
+     "macros": 12,
+     "master": "ot_hbm_hc_bankq_term_static",
+     "module": "ot_hbm_hc_bankq_term_static",
+     "split": 3,
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 3,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 371.5,
+    "max_point_to_tap_um": 401.8,
+    "n": 7
+   },
+   "taps_kinds": {
+    "core": 3,
+    "glue": 4
+   }
+  },
+  "q_hcq": {
+   "core_cells_max": 305805,
+   "core_cells_total": 305805,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 305805,
+     "inst": "u0",
+     "module": "ot_hbm_hc_qhub_static"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 11241 + station 2468 + fork 570 bits) + flattened leaves",
+   "glue_cells": 28558,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 28558,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_qhub_static/meta.json std_area 33639 um2 / 0.11 um2",
+     "cells": 305805,
+     "inst": "u0",
+     "macros": 1,
+     "master": "ot_hbm_hc_qhub_static",
+     "module": "ot_hbm_hc_qhub_static",
+     "status": "rework"
+    }
+   ],
+   "n_cores": 1,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    803.52,
+    803.52
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 559.4,
+    "max_point_to_tap_um": 477.4,
+    "n": 5
+   },
+   "taps_kinds": {
+    "core": 1,
+    "glue": 4
+   }
+  },
+  "q_os1": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [
+    {
+     "cells": 12066,
+     "inst": "u0",
+     "module": "ot_hbm_su_static_cxport_dl_q"
+    },
+    {
+     "cells": 7125,
+     "inst": "u1",
+     "module": "ot_hbm_su_static_cxport_dl_s"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 2746 + station 75451 + fork 268 bits) + flattened leaves",
+   "glue_cells": 176121,
+   "glue_flat_leaf_cells": 19191,
+   "glue_regs_cells": 156930,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    3473.28
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 578.9,
+    "max_point_to_tap_um": 581.0,
+    "n": 24
+   },
+   "taps_kinds": {
+    "glue": 24
+   }
+  },
+  "q_os2": {
+   "core_cells_max": 345065,
+   "core_cells_total": 12422340,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 345065,
+     "inst": "u0_part0",
+     "module": "ot_hbm_idx_score_quarter_static__part0"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part1",
+     "module": "ot_hbm_idx_score_quarter_static__part1"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part2",
+     "module": "ot_hbm_idx_score_quarter_static__part2"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part3",
+     "module": "ot_hbm_idx_score_quarter_static__part3"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part4",
+     "module": "ot_hbm_idx_score_quarter_static__part4"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part5",
+     "module": "ot_hbm_idx_score_quarter_static__part5"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part6",
+     "module": "ot_hbm_idx_score_quarter_static__part6"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part7",
+     "module": "ot_hbm_idx_score_quarter_static__part7"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part8",
+     "module": "ot_hbm_idx_score_quarter_static__part8"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part9",
+     "module": "ot_hbm_idx_score_quarter_static__part9"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part10",
+     "module": "ot_hbm_idx_score_quarter_static__part10"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part11",
+     "module": "ot_hbm_idx_score_quarter_static__part11"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part12",
+     "module": "ot_hbm_idx_score_quarter_static__part12"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part13",
+     "module": "ot_hbm_idx_score_quarter_static__part13"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part14",
+     "module": "ot_hbm_idx_score_quarter_static__part14"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part15",
+     "module": "ot_hbm_idx_score_quarter_static__part15"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part16",
+     "module": "ot_hbm_idx_score_quarter_static__part16"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part17",
+     "module": "ot_hbm_idx_score_quarter_static__part17"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part18",
+     "module": "ot_hbm_idx_score_quarter_static__part18"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part19",
+     "module": "ot_hbm_idx_score_quarter_static__part19"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part20",
+     "module": "ot_hbm_idx_score_quarter_static__part20"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part21",
+     "module": "ot_hbm_idx_score_quarter_static__part21"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part22",
+     "module": "ot_hbm_idx_score_quarter_static__part22"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part23",
+     "module": "ot_hbm_idx_score_quarter_static__part23"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part24",
+     "module": "ot_hbm_idx_score_quarter_static__part24"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part25",
+     "module": "ot_hbm_idx_score_quarter_static__part25"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part26",
+     "module": "ot_hbm_idx_score_quarter_static__part26"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part27",
+     "module": "ot_hbm_idx_score_quarter_static__part27"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part28",
+     "module": "ot_hbm_idx_score_quarter_static__part28"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part29",
+     "module": "ot_hbm_idx_score_quarter_static__part29"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part30",
+     "module": "ot_hbm_idx_score_quarter_static__part30"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part31",
+     "module": "ot_hbm_idx_score_quarter_static__part31"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part32",
+     "module": "ot_hbm_idx_score_quarter_static__part32"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part33",
+     "module": "ot_hbm_idx_score_quarter_static__part33"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part34",
+     "module": "ot_hbm_idx_score_quarter_static__part34"
+    },
+    {
+     "cells": 345065,
+     "inst": "u0_part35",
+     "module": "ot_hbm_idx_score_quarter_static__part35"
+    }
+   ],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 8067 + station 77265 + fork 2565 bits) + flattened leaves",
+   "glue_cells": 175794,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 175794,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_score_quarter_static/meta.json std_area 1366457 um2 / 0.11 um2",
+     "cells": 12422337,
+     "inst": "u0",
+     "macros": 0,
+     "master": "ot_hbm_idx_score_quarter_static",
+     "module": "ot_hbm_idx_score_quarter_static",
+     "split": 36,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 36,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    3481.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 580.3,
+    "max_point_to_tap_um": 581.8,
+    "n": 59
+   },
+   "taps_kinds": {
+    "core": 36,
+    "glue": 23
+   }
+  },
+  "q_os3": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 28006 + fork 0 bits) + flattened leaves",
+   "glue_cells": 56012,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 56012,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 440.6,
+    "max_point_to_tap_um": 511.9,
+    "n": 12
+   },
+   "taps_kinds": {
+    "glue": 12
+   }
+  },
+  "q_r1c": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 41 + station 34938 + fork 41 bits) + flattened leaves",
+   "glue_cells": 70040,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 70040,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    3888.0,
+    2410.56
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 482.1,
+    "max_point_to_tap_um": 518.8,
+    "n": 34
+   },
+   "taps_kinds": {
+    "glue": 34
+   }
+  },
+  "q_r1e": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [
+    {
+     "cells": 12066,
+     "inst": "u0",
+     "module": "ot_hbm_su_static_cxport_dl_q"
+    },
+    {
+     "cells": 4240,
+     "inst": "u1",
+     "module": "ot_hbm_su_static_cxport_dl_s"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 4066 + station 31567 + fork 1642 bits) + flattened leaves",
+   "glue_cells": 90856,
+   "glue_flat_leaf_cells": 16306,
+   "glue_regs_cells": 74550,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1477.44,
+    2410.56
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 482.1,
+    "max_point_to_tap_um": 487.3,
+    "n": 14
+   },
+   "taps_kinds": {
+    "glue": 14
+   }
+  },
+  "q_r1e_v1": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [
+    {
+     "cells": 12066,
+     "inst": "u0",
+     "module": "ot_hbm_su_static_cxport_dl_q"
+    },
+    {
+     "cells": 4241,
+     "inst": "u1",
+     "module": "ot_hbm_su_static_cxport_dl_s"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 4066 + station 31567 + fork 1642 bits) + flattened leaves",
+   "glue_cells": 90857,
+   "glue_flat_leaf_cells": 16307,
+   "glue_regs_cells": 74550,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MY",
+    "R180"
+   ],
+   "outline_um": [
+    1477.44,
+    2410.56
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 482.1,
+    "max_point_to_tap_um": 487.3,
+    "n": 14
+   },
+   "taps_kinds": {
+    "glue": 14
+   }
+  },
+  "q_r5a": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 11732 + fork 0 bits) + flattened leaves",
+   "glue_cells": 23464,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 23464,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2928.96,
+    1183.68
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 585.8,
+    "max_point_to_tap_um": 588.8,
+    "n": 10
+   },
+   "taps_kinds": {
+    "glue": 10
+   }
+  },
+  "q_r5b": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 896 + station 23972 + fork 896 bits) + flattened leaves",
+   "glue_cells": 51528,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 51528,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2928.96,
+    1183.68
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 585.8,
+    "max_point_to_tap_um": 588.8,
+    "n": 10
+   },
+   "taps_kinds": {
+    "glue": 10
+   }
+  },
+  "q_rc2": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 17200 + fork 299 bits) + flattened leaves",
+   "glue_cells": 35596,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 35596,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MY",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 486.0,
+    "max_point_to_tap_um": 531.0,
+    "n": 12
+   },
+   "taps_kinds": {
+    "glue": 12
+   }
+  },
+  "q_rc2_v1": {
+   "core_cells_max": 0,
+   "core_cells_total": 0,
+   "core_overlaps": 0,
+   "cores": [],
+   "flattened": [],
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 17200 + fork 299 bits) + flattened leaves",
+   "glue_cells": 35596,
+   "glue_flat_leaf_cells": 0,
+   "glue_regs_cells": 35596,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 0,
+   "orients": [
+    "MX",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 486.0,
+    "max_point_to_tap_um": 531.0,
+    "n": 12
+   },
+   "taps_kinds": {
+    "glue": 12
+   }
+  },
+  "q_rc3": {
+   "core_cells_max": 79683,
+   "core_cells_total": 79683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 79683,
+     "inst": "u1",
+     "module": "ot_hgi_sfu_programme_store_r10"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 7233,
+     "inst": "u0",
+     "module": "ot_hbm_static_cfg_collar"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 2836 + station 39918 + fork 31 bits) + flattened leaves",
+   "glue_cells": 92803,
+   "glue_flat_leaf_cells": 7233,
+   "glue_regs_cells": 85570,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_programme_store_r10/meta.json std_area 8765 um2 / 0.11 um2",
+     "cells": 79683,
+     "inst": "u1",
+     "macros": 44,
+     "master": "ot_hgi_sfu_programme_store_r10",
+     "module": "ot_hgi_sfu_programme_store_r10",
+     "status": "rework"
+    }
+   ],
+   "n_cores": 1,
+   "orients": [
+    "MY",
+    "R0"
+   ],
+   "outline_um": [
+    2332.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 671.8,
+    "max_point_to_tap_um": 579.6,
+    "n": 14
+   },
+   "taps_kinds": {
+    "core": 1,
+    "glue": 13
+   }
+  },
+  "q_rc3_v1": {
+   "core_cells_max": 79683,
+   "core_cells_total": 79683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 79683,
+     "inst": "u1",
+     "module": "ot_hgi_sfu_programme_store_r10"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 7233,
+     "inst": "u0",
+     "module": "ot_hbm_static_cfg_collar"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 2836 + station 39918 + fork 31 bits) + flattened leaves",
+   "glue_cells": 92803,
+   "glue_flat_leaf_cells": 7233,
+   "glue_regs_cells": 85570,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_programme_store_r10/meta.json std_area 8765 um2 / 0.11 um2",
+     "cells": 79683,
+     "inst": "u1",
+     "macros": 44,
+     "master": "ot_hgi_sfu_programme_store_r10",
+     "module": "ot_hgi_sfu_programme_store_r10",
+     "status": "rework"
+    }
+   ],
+   "n_cores": 1,
+   "orients": [
+    "MX",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 669.6,
+    "max_point_to_tap_um": 579.6,
+    "n": 14
+   },
+   "taps_kinds": {
+    "core": 1,
+    "glue": 13
+   }
+  },
+  "q_rc4": {
+   "core_cells_max": 222636,
+   "core_cells_total": 753679,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 1632,
+     "inst": "u0",
+     "module": "ot_hbm_idx_qctl_static"
+    },
+    {
+     "cells": 121663,
+     "inst": "u5_ring_ag0",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+    },
+    {
+     "cells": 120719,
+     "inst": "u5_reduce0",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+    },
+    {
+     "cells": 222636,
+     "inst": "u5_body0",
+     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+    },
+    {
+     "cells": 163041,
+     "inst": "u6",
+     "module": "ot_hgi_coll_gq_issue"
+    },
+    {
+     "cells": 49024,
+     "inst": "u7",
+     "module": "ot_hgi_coll_gq_land"
+    },
+    {
+     "cells": 74964,
+     "inst": "u8",
+     "module": "ot_hgi_coll_inj_idx_join_rg"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 4853,
+     "inst": "u1",
+     "module": "ot_hbm_idx_vm_share2_static_r"
+    },
+    {
+     "cells": 1,
+     "inst": "u2",
+     "module": "ot_hbm_kqs_fault_or4"
+    },
+    {
+     "cells": 2214,
+     "inst": "u3",
+     "module": "ot_hbm_obs_leaf"
+    },
+    {
+     "cells": 861,
+     "inst": "u4",
+     "module": "ot_hbm_su_stree_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u9",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u10",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u11",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u12",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 17601,
+     "inst": "u13",
+     "module": "ot_hgi_coll_ring_b_stop"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 24630 + station 72 + fork 1356 bits) + flattened leaves",
+   "glue_cells": 99166,
+   "glue_flat_leaf_cells": 47050,
+   "glue_regs_cells": 52116,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
+     "cells": 1632,
+     "inst": "u0",
+     "macros": 1,
+     "master": "ot_hbm_idx_qctl_static",
+     "module": "ot_hbm_idx_qctl_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+     "cells": 465018,
+     "inst": "u5",
+     "macros": 15,
+     "master": "ot_hfd_coll_q2_hard_v8g",
+     "module": "ot_hfd_coll_q2_hard_v8g",
+     "split": 3,
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
+     "cells": 163041,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_issue",
+     "module": "ot_hgi_coll_gq_issue",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
+     "cells": 49024,
+     "inst": "u7",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_land",
+     "module": "ot_hgi_coll_gq_land",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
+     "cells": 74964,
+     "inst": "u8",
+     "macros": 0,
+     "master": "ot_hgi_coll_inj_idx_join_rg",
+     "module": "ot_hgi_coll_inj_idx_join_rg",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 7,
+   "orients": [
+    "MY",
+    "R0"
+   ],
+   "outline_um": [
+    2116.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 529.2,
+    "max_point_to_tap_um": 552.6,
+    "n": 19
+   },
+   "taps_kinds": {
+    "core": 7,
+    "glue": 12
+   }
+  },
+  "q_rc4_v1": {
+   "core_cells_max": 222636,
+   "core_cells_total": 753679,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 1632,
+     "inst": "u0",
+     "module": "ot_hbm_idx_qctl_static"
+    },
+    {
+     "cells": 121663,
+     "inst": "u5_ring_ag0",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+    },
+    {
+     "cells": 120719,
+     "inst": "u5_reduce0",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+    },
+    {
+     "cells": 222636,
+     "inst": "u5_body0",
+     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+    },
+    {
+     "cells": 163041,
+     "inst": "u6",
+     "module": "ot_hgi_coll_gq_issue"
+    },
+    {
+     "cells": 49024,
+     "inst": "u7",
+     "module": "ot_hgi_coll_gq_land"
+    },
+    {
+     "cells": 74964,
+     "inst": "u8",
+     "module": "ot_hgi_coll_inj_idx_join_rg"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 4853,
+     "inst": "u1",
+     "module": "ot_hbm_idx_vm_share2_static_r"
+    },
+    {
+     "cells": 1,
+     "inst": "u2",
+     "module": "ot_hbm_kqs_fault_or4"
+    },
+    {
+     "cells": 2205,
+     "inst": "u3",
+     "module": "ot_hbm_obs_leaf"
+    },
+    {
+     "cells": 861,
+     "inst": "u4",
+     "module": "ot_hbm_su_stree_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u9",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u10",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u11",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u12",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 17601,
+     "inst": "u13",
+     "module": "ot_hgi_coll_ring_b_stop"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 24630 + station 72 + fork 1356 bits) + flattened leaves",
+   "glue_cells": 99157,
+   "glue_flat_leaf_cells": 47041,
+   "glue_regs_cells": 52116,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
+     "cells": 1632,
+     "inst": "u0",
+     "macros": 1,
+     "master": "ot_hbm_idx_qctl_static",
+     "module": "ot_hbm_idx_qctl_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+     "cells": 465018,
+     "inst": "u5",
+     "macros": 15,
+     "master": "ot_hfd_coll_q2_hard_v8g",
+     "module": "ot_hfd_coll_q2_hard_v8g",
+     "split": 3,
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
+     "cells": 163041,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_issue",
+     "module": "ot_hgi_coll_gq_issue",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
+     "cells": 49024,
+     "inst": "u7",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_land",
+     "module": "ot_hgi_coll_gq_land",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
+     "cells": 74964,
+     "inst": "u8",
+     "macros": 0,
+     "master": "ot_hgi_coll_inj_idx_join_rg",
+     "module": "ot_hgi_coll_inj_idx_join_rg",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 7,
+   "orients": [
+    "MX",
+    "R180"
+   ],
+   "outline_um": [
+    2116.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 529.2,
+    "max_point_to_tap_um": 552.6,
+    "n": 19
+   },
+   "taps_kinds": {
+    "core": 7,
+    "glue": 12
+   }
+  },
+  "q_sfuc": {
+   "core_cells_max": 336383,
+   "core_cells_total": 5737083,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 18572,
+     "inst": "u6",
+     "module": "ot_hbm_su_static_sfustore_hw"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part0",
+     "module": "ot_hgi_sfu_core_split3__part0"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part1",
+     "module": "ot_hgi_sfu_core_split3__part1"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part2",
+     "module": "ot_hgi_sfu_core_split3__part2"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part3",
+     "module": "ot_hgi_sfu_core_split3__part3"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part4",
+     "module": "ot_hgi_sfu_core_split3__part4"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part5",
+     "module": "ot_hgi_sfu_core_split3__part5"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part6",
+     "module": "ot_hgi_sfu_core_split3__part6"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part7",
+     "module": "ot_hgi_sfu_core_split3__part7"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part8",
+     "module": "ot_hgi_sfu_core_split3__part8"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part9",
+     "module": "ot_hgi_sfu_core_split3__part9"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part10",
+     "module": "ot_hgi_sfu_core_split3__part10"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part11",
+     "module": "ot_hgi_sfu_core_split3__part11"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part12",
+     "module": "ot_hgi_sfu_core_split3__part12"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part13",
+     "module": "ot_hgi_sfu_core_split3__part13"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part14",
+     "module": "ot_hgi_sfu_core_split3__part14"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part15",
+     "module": "ot_hgi_sfu_core_split3__part15"
+    },
+    {
+     "cells": 336383,
+     "inst": "u7_part16",
+     "module": "ot_hgi_sfu_core_split3__part16"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 40,
+     "inst": "u0",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 40,
+     "inst": "u1",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 40,
+     "inst": "u2",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 40,
+     "inst": "u3",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 11730,
+     "inst": "u4",
+     "module": "ot_hbm_su_static_cxport_rc_q"
+    },
+    {
+     "cells": 17220,
+     "inst": "u5",
+     "module": "ot_hbm_su_static_cxport_rc_s"
+    },
+    {
+     "cells": 18785,
+     "inst": "u8",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf"
+    },
+    {
+     "cells": 18785,
+     "inst": "u9",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf"
+    },
+    {
+     "cells": 18785,
+     "inst": "u10",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf"
+    },
+    {
+     "cells": 18785,
+     "inst": "u11",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf"
+    },
+    {
+     "cells": 13345,
+     "inst": "u12",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
+    },
+    {
+     "cells": 13345,
+     "inst": "u13",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
+    },
+    {
+     "cells": 13345,
+     "inst": "u14",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
+    },
+    {
+     "cells": 13345,
+     "inst": "u15",
+     "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 14261 + station 47203 + fork 269 bits) + flattened leaves",
+   "glue_cells": 281096,
+   "glue_flat_leaf_cells": 157630,
+   "glue_regs_cells": 123466,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "CLOSED hbm_su_sfustore_hw_1018-r3-9767724e6 std cells (die 155271 um2)",
+     "cells": 18572,
+     "inst": "u6",
+     "macros": 16,
+     "master": "ot_hbm_su_static_sfustore_hw",
+     "module": "ot_hbm_su_static_sfustore_hw",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_core_split3/meta.json std_area 629035 um2 / 0.11 um2",
+     "cells": 5718505,
+     "inst": "u7",
+     "macros": 80,
+     "master": "ot_hgi_sfu_core_split3",
+     "module": "ot_hgi_sfu_core_split3",
+     "split": 17,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 18,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    2410.56
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 482.1,
+    "max_point_to_tap_um": 532.7,
+    "n": 36
+   },
+   "taps_kinds": {
+    "core": 18,
+    "glue": 18
+   }
+  },
+  "q_sm0a": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83458,
+     "inst": "sm_glue",
+     "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8572 + station 27348 + fork 8393 bits) + flattened leaves",
+   "glue_cells": 172084,
+   "glue_flat_leaf_cells": 83458,
+   "glue_regs_cells": 88626,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm0b": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83185,
+     "inst": "sm_glue",
+     "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9422 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 164997,
+   "glue_flat_leaf_cells": 83185,
+   "glue_regs_cells": 81812,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm0c": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3411683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 165789,
+     "inst": "sm_fs20",
+     "module": "ot_smh_static_front"
+    },
+    {
+     "cells": 163494,
+     "inst": "sm_fa21",
+     "module": "ot_hbm_sm_attn_front_static"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 130306,
+     "inst": "sm_glue",
+     "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 20987 + station 13303 + fork 17285 bits) + flattened leaves",
+   "glue_cells": 233456,
+   "glue_flat_leaf_cells": 130306,
+   "glue_regs_cells": 103150,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 22,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 383.4,
+    "max_point_to_tap_um": 532.4,
+    "n": 32
+   },
+   "taps_kinds": {
+    "core": 22,
+    "glue": 10
+   }
+  },
+  "q_sm0d": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 90294,
+     "inst": "sm_glue",
+     "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 26399 + fork 7604 bits) + flattened leaves",
+   "glue_cells": 173508,
+   "glue_flat_leaf_cells": 90294,
+   "glue_regs_cells": 83214,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1745.28
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 384.5,
+    "max_point_to_tap_um": 410.4,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm1a": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83458,
+     "inst": "sm_glue",
+     "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8630 + station 31462 + fork 8630 bits) + flattened leaves",
+   "glue_cells": 180902,
+   "glue_flat_leaf_cells": 83458,
+   "glue_regs_cells": 97444,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm1b": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83185,
+     "inst": "sm_glue",
+     "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9427 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 165007,
+   "glue_flat_leaf_cells": 83185,
+   "glue_regs_cells": 81822,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm1c": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3411683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 165789,
+     "inst": "sm_fs20",
+     "module": "ot_smh_static_front"
+    },
+    {
+     "cells": 163494,
+     "inst": "sm_fa21",
+     "module": "ot_hbm_sm_attn_front_static"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 130306,
+     "inst": "sm_glue",
+     "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 19429 + station 11897 + fork 15727 bits) + flattened leaves",
+   "glue_cells": 224412,
+   "glue_flat_leaf_cells": 130306,
+   "glue_regs_cells": 94106,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 22,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 383.4,
+    "max_point_to_tap_um": 532.4,
+    "n": 32
+   },
+   "taps_kinds": {
+    "core": 22,
+    "glue": 10
+   }
+  },
+  "q_sm1d": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 90294,
+     "inst": "sm_glue",
+     "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7943 + station 23246 + fork 7943 bits) + flattened leaves",
+   "glue_cells": 168558,
+   "glue_flat_leaf_cells": 90294,
+   "glue_regs_cells": 78264,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1745.28
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 384.5,
+    "max_point_to_tap_um": 410.4,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm2a": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83458,
+     "inst": "sm_glue",
+     "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 27434 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 169718,
+   "glue_flat_leaf_cells": 83458,
+   "glue_regs_cells": 86260,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm2b": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83185,
+     "inst": "sm_glue",
+     "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 8927 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 164007,
+   "glue_flat_leaf_cells": 83185,
+   "glue_regs_cells": 80822,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm2c": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3411683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 165789,
+     "inst": "sm_fs20",
+     "module": "ot_smh_static_front"
+    },
+    {
+     "cells": 163494,
+     "inst": "sm_fa21",
+     "module": "ot_hbm_sm_attn_front_static"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 130306,
+     "inst": "sm_glue",
+     "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 21487 + station 4423 + fork 17785 bits) + flattened leaves",
+   "glue_cells": 217696,
+   "glue_flat_leaf_cells": 130306,
+   "glue_regs_cells": 87390,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 22,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 383.4,
+    "max_point_to_tap_um": 532.4,
+    "n": 32
+   },
+   "taps_kinds": {
+    "core": 22,
+    "glue": 10
+   }
+  },
+  "q_sm2d": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 90294,
+     "inst": "sm_glue",
+     "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7822 + station 30883 + fork 7822 bits) + flattened leaves",
+   "glue_cells": 183348,
+   "glue_flat_leaf_cells": 90294,
+   "glue_regs_cells": 93054,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1745.28
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 384.5,
+    "max_point_to_tap_um": 410.4,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3a": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83458,
+     "inst": "sm_glue",
+     "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 15197 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 145244,
+   "glue_flat_leaf_cells": 83458,
+   "glue_regs_cells": 61786,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3a_v1": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83458,
+     "inst": "sm_glue",
+     "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 15197 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 145244,
+   "glue_flat_leaf_cells": 83458,
+   "glue_regs_cells": 61786,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MY",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3b": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83185,
+     "inst": "sm_glue",
+     "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 4897 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 155947,
+   "glue_flat_leaf_cells": 83185,
+   "glue_regs_cells": 72762,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3b_v1": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 83185,
+     "inst": "sm_glue",
+     "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 4897 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 155947,
+   "glue_flat_leaf_cells": 83185,
+   "glue_regs_cells": 72762,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MY",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 388.8,
+    "max_point_to_tap_um": 401.8,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3c": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3411683,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 165789,
+     "inst": "sm_fs20",
+     "module": "ot_smh_static_front"
+    },
+    {
+     "cells": 163494,
+     "inst": "sm_fa21",
+     "module": "ot_hbm_sm_attn_front_static"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 130306,
+     "inst": "sm_glue",
+     "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 20149 + station 87 + fork 16447 bits) + flattened leaves",
+   "glue_cells": 203672,
+   "glue_flat_leaf_cells": 130306,
+   "glue_regs_cells": 73366,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 22,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1736.64
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 383.4,
+    "max_point_to_tap_um": 532.4,
+    "n": 32
+   },
+   "taps_kinds": {
+    "core": 22,
+    "glue": 10
+   }
+  },
+  "q_sm3d": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 90294,
+     "inst": "sm_glue",
+     "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7577 + station 9616 + fork 7577 bits) + flattened leaves",
+   "glue_cells": 139834,
+   "glue_flat_leaf_cells": 90294,
+   "glue_regs_cells": 49540,
+   "instances": 4,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1745.28
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 384.5,
+    "max_point_to_tap_um": 410.4,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_su0": {
+   "core_cells_max": 308480,
+   "core_cells_total": 5235566,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp0",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp0"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp1",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp1"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp2",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp2"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp3"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp4",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp4"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp5",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp5"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp6",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp6"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp7"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp8",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp8"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp9",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp9"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp10",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp10"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp11"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp12",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp12"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp13",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp13"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp14",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp14"
+    },
+    {
+     "cells": 234742,
+     "inst": "u0_lane_exp_l0",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+    },
+    {
+     "cells": 206393,
+     "inst": "u0_side0_s0",
+     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+    },
+    {
+     "cells": 206393,
+     "inst": "u0_side0_s1",
+     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+    },
+    {
+     "cells": 211003,
+     "inst": "u0_pretree0",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 36980,
+     "inst": "u0_glue",
+     "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 6940 + station 26300 + fork 0 bits) + flattened leaves",
+   "glue_cells": 103460,
+   "glue_flat_leaf_cells": 36980,
+   "glue_regs_cells": 66480,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+     "cells": 5299387,
+     "inst": "u0",
+     "macros": 192,
+     "master": "ot_hbm_su_static_pgslice_lg__pv2",
+     "module": "ot_hbm_su_static_pgslice_lg",
+     "split": 23,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 23,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    2894.4
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 461.2,
+    "max_point_to_tap_um": 532.4,
+    "n": 39
+   },
+   "taps_kinds": {
+    "core": 23,
+    "glue": 16
+   }
+  },
+  "q_su1": {
+   "core_cells_max": 308480,
+   "core_cells_total": 5235566,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp0",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp0"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp1",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp1"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp2",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp2"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp3"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp4",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp4"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp5",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp5"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp6",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp6"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp7"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp8",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp8"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp9",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp9"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp10",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp10"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp11"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp12",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp12"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp13",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp13"
+    },
+    {
+     "cells": 209541,
+     "inst": "u0_lane_exp14",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp14"
+    },
+    {
+     "cells": 234742,
+     "inst": "u0_lane_exp_l0",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+    },
+    {
+     "cells": 308480,
+     "inst": "u0_lane12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+    },
+    {
+     "cells": 206393,
+     "inst": "u0_side0_s0",
+     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+    },
+    {
+     "cells": 206393,
+     "inst": "u0_side0_s1",
+     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+    },
+    {
+     "cells": 211003,
+     "inst": "u0_pretree0",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 36980,
+     "inst": "u0_glue",
+     "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 11483 + station 47846 + fork 2628 bits) + flattened leaves",
+   "glue_cells": 160894,
+   "glue_flat_leaf_cells": 36980,
+   "glue_regs_cells": 123914,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv5/ot_hbm_su_static_pgslice_lg__pv5.stat",
+     "cells": 4864261,
+     "inst": "u0",
+     "macros": 192,
+     "master": "ot_hbm_su_static_pgslice_lg__pv6",
+     "module": "ot_hbm_su_static_pgslice_lg",
+     "split": 23,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 23,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    2894.4
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 461.2,
+    "max_point_to_tap_um": 532.4,
+    "n": 39
+   },
+   "taps_kinds": {
+    "core": 23,
+    "glue": 16
+   }
+  },
+  "q_su2": {
+   "core_cells_max": 308632,
+   "core_cells_total": 2681351,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 308632,
+     "inst": "u0_lane0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+    },
+    {
+     "cells": 212295,
+     "inst": "u0_pretree0",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 37126,
+     "inst": "u0_glue",
+     "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 12859 + station 49343 + fork 3658 bits) + flattened leaves",
+   "glue_cells": 168846,
+   "glue_flat_leaf_cells": 37126,
+   "glue_regs_cells": 131720,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv8/ot_hbm_su_static_pgslice_lg__pv8.stat",
+     "cells": 2745321,
+     "inst": "u0",
+     "macros": 192,
+     "master": "ot_hbm_su_static_pgslice_lg__pv10",
+     "module": "ot_hbm_su_static_pgslice_lg",
+     "split": 9,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 9,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    2894.4
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 596.2,
+    "max_point_to_tap_um": 743.0,
+    "n": 23
+   },
+   "taps_kinds": {
+    "core": 9,
+    "glue": 14
+   }
+  },
+  "q_su3": {
+   "core_cells_max": 308632,
+   "core_cells_total": 2681351,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 308632,
+     "inst": "u0_lane0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+    },
+    {
+     "cells": 212295,
+     "inst": "u0_pretree0",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 37126,
+     "inst": "u0_glue",
+     "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7144 + station 22377 + fork 208 bits) + flattened leaves",
+   "glue_cells": 96584,
+   "glue_flat_leaf_cells": 37126,
+   "glue_regs_cells": 59458,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv12/ot_hbm_su_static_pgslice_lg__pv12.stat",
+     "cells": 2745404,
+     "inst": "u0",
+     "macros": 192,
+     "master": "ot_hbm_su_static_pgslice_lg__pv14",
+     "module": "ot_hbm_su_static_pgslice_lg",
+     "split": 9,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 9,
+   "orients": [
+    "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    2894.4
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 596.2,
+    "max_point_to_tap_um": 743.0,
+    "n": 23
+   },
+   "taps_kinds": {
+    "core": 9,
+    "glue": 14
+   }
+  },
+  "q_su3_v1": {
+   "core_cells_max": 308632,
+   "core_cells_total": 2681351,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 308632,
+     "inst": "u0_lane0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+    },
+    {
+     "cells": 308632,
+     "inst": "u0_lane28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+    },
+    {
+     "cells": 212295,
+     "inst": "u0_pretree0",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 37126,
+     "inst": "u0_glue",
+     "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7144 + station 22377 + fork 208 bits) + flattened leaves",
+   "glue_cells": 96584,
+   "glue_flat_leaf_cells": 37126,
+   "glue_regs_cells": 59458,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv15/ot_hbm_su_static_pgslice_lg__pv15.stat",
+     "cells": 2745167,
+     "inst": "u0",
+     "macros": 192,
+     "master": "ot_hbm_su_static_pgslice_lg__pv15",
+     "module": "ot_hbm_su_static_pgslice_lg",
+     "split": 9,
+     "status": "rework"
+    }
+   ],
+   "n_cores": 9,
+   "orients": [
+    "MY",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    2894.4
+   ],
+   "taps": {
+    "connected": false,
+    "max_nn_tap_um": 596.2,
+    "max_point_to_tap_um": 743.0,
+    "n": 23
+   },
+   "taps_kinds": {
+    "core": 9,
+    "glue": 14
+   }
+  },
+  "q_svc0": {
+   "core_cells_max": 220378,
+   "core_cells_total": 600503,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 63509,
+     "inst": "u0",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u1",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u2",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u3",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 220378,
+     "inst": "u4",
+     "module": "ot_hbm_svc_sm_group_rel_id"
+    },
+    {
+     "cells": 10366,
+     "inst": "u5",
+     "module": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+     "cells": 115723,
+     "inst": "u6",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 3523,
+     "inst": "u7",
+     "module": "ot_static_run_target"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8265 + station 9758 + fork 898 bits) + flattened leaves",
+   "glue_cells": 41365,
+   "glue_flat_leaf_cells": 3523,
+   "glue_regs_cells": 37842,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u0",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u2",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u3",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+     "cells": 220378,
+     "inst": "u4",
+     "macros": 17,
+     "master": "ot_hbm_svc_sm_group_rel_id",
+     "module": "ot_hbm_svc_sm_group_rel_id",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+     "cells": 10366,
+     "inst": "u5",
+     "macros": 4,
+     "master": "ot_hbm_svc_sm_xcal_rel_t",
+     "module": "ot_hbm_svc_sm_xcal_rel_t",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+     "cells": 115723,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hbm_svc_vm_kshare_splitstrap",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 7,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 495.8,
+    "max_point_to_tap_um": 489.3,
+    "n": 19
+   },
+   "taps_kinds": {
+    "core": 7,
+    "glue": 12
+   }
+  },
+  "q_svc1": {
+   "core_cells_max": 220378,
+   "core_cells_total": 742296,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 63509,
+     "inst": "u1",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u2",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u3",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u4",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 220378,
+     "inst": "u5",
+     "module": "ot_hbm_svc_sm_group_rel_id"
+    },
+    {
+     "cells": 10366,
+     "inst": "u6",
+     "module": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+     "cells": 115723,
+     "inst": "u8",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap"
+    },
+    {
+     "cells": 85191,
+     "inst": "u9",
+     "module": "ot_hgi_sm_xload_cl2_bdring"
+    },
+    {
+     "cells": 56602,
+     "inst": "u10",
+     "module": "ot_hgi_sm_xload_xq_pegress"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 36,
+     "inst": "u0",
+     "module": "ot_hbm_fault_leaf_n8_s0"
+    },
+    {
+     "cells": 1188,
+     "inst": "u7",
+     "module": "ot_hbm_svc_stack_fault"
+    },
+    {
+     "cells": 3523,
+     "inst": "u11",
+     "module": "ot_static_run_target"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 14381 + station 6209 + fork 3141 bits) + flattened leaves",
+   "glue_cells": 52209,
+   "glue_flat_leaf_cells": 4747,
+   "glue_regs_cells": 47462,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u2",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u3",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u4",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+     "cells": 220378,
+     "inst": "u5",
+     "macros": 17,
+     "master": "ot_hbm_svc_sm_group_rel_id",
+     "module": "ot_hbm_svc_sm_group_rel_id",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+     "cells": 10366,
+     "inst": "u6",
+     "macros": 4,
+     "master": "ot_hbm_svc_sm_xcal_rel_t",
+     "module": "ot_hbm_svc_sm_xcal_rel_t",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+     "cells": 115723,
+     "inst": "u8",
+     "macros": 0,
+     "master": "ot_hbm_svc_vm_kshare_splitstrap",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
+     "cells": 85191,
+     "inst": "u9",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_cl2_bdring",
+     "module": "ot_hgi_sm_xload_cl2_bdring",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
+     "cells": 56602,
+     "inst": "u10",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_xq_pegress",
+     "module": "ot_hgi_sm_xload_xq_pegress",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 9,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 495.8,
+    "max_point_to_tap_um": 489.3,
+    "n": 21
+   },
+   "taps_kinds": {
+    "core": 9,
+    "glue": 12
+   }
+  },
+  "q_svc2": {
+   "core_cells_max": 321528,
+   "core_cells_total": 1113014,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 11323,
+     "inst": "u2",
+     "module": "hfd_hgi_vm_calendar_f20_role"
+    },
+    {
+     "cells": 63509,
+     "inst": "u5",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u6",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u7",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u8",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 220378,
+     "inst": "u9",
+     "module": "ot_hbm_svc_sm_group_rel_id"
+    },
+    {
+     "cells": 10366,
+     "inst": "u10",
+     "module": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+     "cells": 115723,
+     "inst": "u11",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap"
+    },
+    {
+     "cells": 321528,
+     "inst": "u12",
+     "module": "ot_hbm_svc_wb_kport_q"
+    },
+    {
+     "cells": 37867,
+     "inst": "u14",
+     "module": "ot_hgi_dma_back_static_vp4_banks_cp"
+    },
+    {
+     "cells": 85191,
+     "inst": "u16",
+     "module": "ot_hgi_sm_xload_cl2_bdring"
+    },
+    {
+     "cells": 56602,
+     "inst": "u17",
+     "module": "ot_hgi_sm_xload_xq_pegress"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 1,
+     "inst": "u0",
+     "module": "hbfd_qdq_split_and"
+    },
+    {
+     "cells": 1,
+     "inst": "u1",
+     "module": "hbfd_qdq_split_or"
+    },
+    {
+     "cells": 3695,
+     "inst": "u3",
+     "module": "ot_hbm_host_cfg_leaf_nw"
+    },
+    {
+     "cells": 1652,
+     "inst": "u4",
+     "module": "ot_hbm_pc_refresh_cfg"
+    },
+    {
+     "cells": 777,
+     "inst": "u13",
+     "module": "ot_hbm_svc_wbw_copy"
+    },
+    {
+     "cells": 19101,
+     "inst": "u15",
+     "module": "ot_hgi_qdq_nw_program_leaf"
+    },
+    {
+     "cells": 3523,
+     "inst": "u18",
+     "module": "ot_static_run_target"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 16350 + station 465 + fork 97 bits) + flattened leaves",
+   "glue_cells": 62574,
+   "glue_flat_leaf_cells": 28750,
+   "glue_regs_cells": 33824,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv2/meta.json std_area 1246 um2 / 0.11 um2",
+     "cells": 11323,
+     "inst": "u2",
+     "macros": 1,
+     "master": "hfd_hgi_vm_calendar_f20_role__pv2",
+     "module": "hfd_hgi_vm_calendar_f20_role",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u5",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u7",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u8",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+     "cells": 220378,
+     "inst": "u9",
+     "macros": 17,
+     "master": "ot_hbm_svc_sm_group_rel_id",
+     "module": "ot_hbm_svc_sm_group_rel_id",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+     "cells": 10366,
+     "inst": "u10",
+     "macros": 4,
+     "master": "ot_hbm_svc_sm_xcal_rel_t",
+     "module": "ot_hbm_svc_sm_xcal_rel_t",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+     "cells": 115723,
+     "inst": "u11",
+     "macros": 0,
+     "master": "ot_hbm_svc_vm_kshare_splitstrap",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_wb_kport_q/meta.json std_area 35368 um2 / 0.11 um2",
+     "cells": 321528,
+     "inst": "u12",
+     "macros": 32,
+     "master": "ot_hbm_svc_wb_kport_q",
+     "module": "ot_hbm_svc_wb_kport_q",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_dma_back_static_vp4_banks_cp/meta.json std_area 4165 um2 / 0.11 um2",
+     "cells": 37867,
+     "inst": "u14",
+     "macros": 10,
+     "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+     "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
+     "cells": 85191,
+     "inst": "u16",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_cl2_bdring",
+     "module": "ot_hgi_sm_xload_cl2_bdring",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
+     "cells": 56602,
+     "inst": "u17",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_xq_pegress",
+     "module": "ot_hgi_sm_xload_xq_pegress",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 12,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 486.0,
+    "max_point_to_tap_um": 489.3,
+    "n": 24
+   },
+   "taps_kinds": {
+    "core": 12,
+    "glue": 12
+   }
+  },
+  "q_svc3": {
+   "core_cells_max": 220378,
+   "core_cells_total": 600503,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 63509,
+     "inst": "u0",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u1",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u2",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u3",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 220378,
+     "inst": "u4",
+     "module": "ot_hbm_svc_sm_group_rel_id"
+    },
+    {
+     "cells": 10366,
+     "inst": "u5",
+     "module": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+     "cells": 115723,
+     "inst": "u6",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 3523,
+     "inst": "u7",
+     "module": "ot_static_run_target"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8388 + station 0 + fork 1028 bits) + flattened leaves",
+   "glue_cells": 22355,
+   "glue_flat_leaf_cells": 3523,
+   "glue_regs_cells": 18832,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u0",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u2",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u3",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+     "cells": 220378,
+     "inst": "u4",
+     "macros": 17,
+     "master": "ot_hbm_svc_sm_group_rel_id",
+     "module": "ot_hbm_svc_sm_group_rel_id",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+     "cells": 10366,
+     "inst": "u5",
+     "macros": 4,
+     "master": "ot_hbm_svc_sm_xcal_rel_t",
+     "module": "ot_hbm_svc_sm_xcal_rel_t",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+     "cells": 115723,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hbm_svc_vm_kshare_splitstrap",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 7,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    1944.0,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 495.8,
+    "max_point_to_tap_um": 489.3,
+    "n": 19
+   },
+   "taps_kinds": {
+    "core": 7,
+    "glue": 12
+   }
+  },
+  "q_vm": {
+   "core_cells_max": 168514,
+   "core_cells_total": 1808360,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 23959,
+     "inst": "u0",
+     "module": "hfd_hgi_vm_calendar_f20"
+    },
+    {
+     "cells": 133859,
+     "inst": "u1",
+     "module": "hfd_hgi_vms_glue_nw_t"
+    },
+    {
+     "cells": 64722,
+     "inst": "u2",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u3",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u4",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u5",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u6",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u7",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u8",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 64722,
+     "inst": "u9",
+     "module": "hfd_vms_bank_native_q0_faces"
+    },
+    {
+     "cells": 95793,
+     "inst": "u20",
+     "module": "ot_hbm_idx_query_static"
+    },
+    {
+     "cells": 47385,
+     "inst": "u21",
+     "module": "ot_hbm_idx_vm_query_static_n12"
+    },
+    {
+     "cells": 48877,
+     "inst": "u23",
+     "module": "ot_hbm_sm_vm_wr_q_t_lanes4"
+    },
+    {
+     "cells": 78181,
+     "inst": "u25",
+     "module": "ot_hbm_su_programme_pslice_c5"
+    },
+    {
+     "cells": 39043,
+     "inst": "u30",
+     "module": "ot_hbm_su_static_cxport_ij_q"
+    },
+    {
+     "cells": 168514,
+     "inst": "u32",
+     "module": "ot_hbm_su_static_qcore_r13"
+    },
+    {
+     "cells": 9991,
+     "inst": "u33",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u34",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u35",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u36",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u37",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u38",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u39",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 9991,
+     "inst": "u40",
+     "module": "ot_hbm_svc_vmdel_lane_n"
+    },
+    {
+     "cells": 81491,
+     "inst": "u41",
+     "module": "ot_hbm_xp_aq_tree13_fmt"
+    },
+    {
+     "cells": 81491,
+     "inst": "u42",
+     "module": "ot_hbm_xp_aq_tree13_fmt"
+    },
+    {
+     "cells": 160001,
+     "inst": "u57",
+     "module": "ot_hgi_qw_dec"
+    },
+    {
+     "cells": 20345,
+     "inst": "u58",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u59",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u60",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u61",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u62",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u63",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u64",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 20345,
+     "inst": "u65",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 89302,
+     "inst": "u66",
+     "module": "ot_hgi_sm_xload_cl2_ctlx"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 5610,
+     "inst": "u10",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u11",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u12",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u13",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u14",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u15",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u16",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 5610,
+     "inst": "u17",
+     "module": "hfd_vms_wq2_merge"
+    },
+    {
+     "cells": 64,
+     "inst": "u18",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 64,
+     "inst": "u19",
+     "module": "ot_hbm_fault_leaf"
+    },
+    {
+     "cells": 4853,
+     "inst": "u22",
+     "module": "ot_hbm_idx_vm_share2_static_r"
+    },
+    {
+     "cells": 55,
+     "inst": "u24",
+     "module": "ot_hbm_su_bridge_release_s"
+    },
+    {
+     "cells": 12066,
+     "inst": "u26",
+     "module": "ot_hbm_su_static_cxport_dl_q"
+    },
+    {
+     "cells": 12066,
+     "inst": "u27",
+     "module": "ot_hbm_su_static_cxport_dl_q"
+    },
+    {
+     "cells": 4774,
+     "inst": "u28",
+     "module": "ot_hbm_su_static_cxport_dl_s"
+    },
+    {
+     "cells": 4774,
+     "inst": "u29",
+     "module": "ot_hbm_su_static_cxport_dl_s"
+    },
+    {
+     "cells": 5184,
+     "inst": "u31",
+     "module": "ot_hbm_su_static_cxport_ij_s"
+    },
+    {
+     "cells": 1376,
+     "inst": "u43",
+     "module": "ot_hgi_coll_inj_copy"
+    },
+    {
+     "cells": 13219,
+     "inst": "u44",
+     "module": "ot_hgi_qdq_lg_port_group_r2"
+    },
+    {
+     "cells": 13219,
+     "inst": "u45",
+     "module": "ot_hgi_qdq_lg_port_group_r2"
+    },
+    {
+     "cells": 13219,
+     "inst": "u46",
+     "module": "ot_hgi_qdq_lg_port_group_r2"
+    },
+    {
+     "cells": 13219,
+     "inst": "u47",
+     "module": "ot_hgi_qdq_lg_port_group_r2"
+    },
+    {
+     "cells": 6950,
+     "inst": "u48",
+     "module": "ot_hgi_qdq_transport_ctl_r4"
+    },
+    {
+     "cells": 8190,
+     "inst": "u49",
+     "module": "ot_hgi_qdq_transport_rslice"
+    },
+    {
+     "cells": 8190,
+     "inst": "u50",
+     "module": "ot_hgi_qdq_transport_rslice"
+    },
+    {
+     "cells": 8190,
+     "inst": "u51",
+     "module": "ot_hgi_qdq_transport_rslice"
+    },
+    {
+     "cells": 8190,
+     "inst": "u52",
+     "module": "ot_hgi_qdq_transport_rslice"
+    },
+    {
+     "cells": 4257,
+     "inst": "u53",
+     "module": "ot_hgi_qdq_transport_wslice"
+    },
+    {
+     "cells": 4257,
+     "inst": "u54",
+     "module": "ot_hgi_qdq_transport_wslice"
+    },
+    {
+     "cells": 4257,
+     "inst": "u55",
+     "module": "ot_hgi_qdq_transport_wslice"
+    },
+    {
+     "cells": 4257,
+     "inst": "u56",
+     "module": "ot_hgi_qdq_transport_wslice"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 49574 + station 0 + fork 0 bits) + flattened leaves",
+   "glue_cells": 298918,
+   "glue_flat_leaf_cells": 199770,
+   "glue_regs_cells": 99148,
+   "instances": 4,
+   "leaves": [
+    {
+     "basis": "CLOSED hv16_vm_cal_f20_ww-ww0900-ad9c630eb std cells (die 28217.5 um2)",
+     "cells": 23959,
+     "inst": "u0",
+     "macros": 1,
+     "master": "hfd_hgi_vm_calendar_f20",
+     "module": "hfd_hgi_vm_calendar_f20",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vms_glue_nw_t/meta.json std_area 14725 um2 / 0.11 um2",
+     "cells": 133859,
+     "inst": "u1",
+     "macros": 0,
+     "master": "hfd_hgi_vms_glue_nw_t",
+     "module": "hfd_hgi_vms_glue_nw_t",
+     "status": "rework"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u2",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u3",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u4",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u5",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u6",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u7",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u8",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+     "cells": 64722,
+     "inst": "u9",
+     "macros": 3,
+     "master": "hfd_vms_bank_native_q0_faces",
+     "module": "hfd_vms_bank_native_q0_faces",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hidx_q_r4-r4-05854d3ef std cells (die 28012.3 um2)",
+     "cells": 95793,
+     "inst": "u20",
+     "macros": 5,
+     "master": "ot_hbm_idx_query_static",
+     "module": "ot_hbm_idx_query_static",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hidx_op_n12_1018-n12-7bfb8c78c std cells (die 23328 um2)",
+     "cells": 47385,
+     "inst": "u21",
+     "macros": 0,
+     "master": "ot_hbm_idx_vm_query_static_n12",
+     "module": "ot_hbm_idx_vm_query_static_n12",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hsm_smvm_wrq_t4_r1-q4-bf8dd74e8 std cells (die 55427.3 um2)",
+     "cells": 48877,
+     "inst": "u23",
+     "macros": 1,
+     "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+     "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_programme_pslice_c5/ot_hbm_su_programme_pslice_c5.stat",
+     "cells": 78181,
+     "inst": "u25",
+     "macros": 100,
+     "master": "ot_hbm_su_programme_pslice_c5",
+     "module": "ot_hbm_su_programme_pslice_c5",
+     "status": "rework"
+    },
+    {
+     "basis": "CLOSED hbm_su_cx_ijq_1019t-t1-5a6486280 std cells (die 83980.8 um2)",
+     "cells": 39043,
+     "inst": "u30",
+     "macros": 0,
+     "master": "ot_hbm_su_static_cxport_ij_q",
+     "module": "ot_hbm_su_static_cxport_ij_q",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hbm_su_qcore_r19b_1022-r19b-042177969 std cells (die 84913.9 um2)",
+     "cells": 168514,
+     "inst": "u32",
+     "macros": 2,
+     "master": "ot_hbm_su_static_qcore_r13",
+     "module": "ot_hbm_su_static_qcore_r13",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u33",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u34",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u35",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u36",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u37",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u38",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u39",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+     "cells": 9991,
+     "inst": "u40",
+     "macros": 2,
+     "master": "ot_hbm_svc_vmdel_lane_n",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hxp_aq13_fmt-f1-2680d87a9 std cells (die 19828.8 um2)",
+     "cells": 81491,
+     "inst": "u41",
+     "macros": 0,
+     "master": "ot_hbm_xp_aq_tree13_fmt",
+     "module": "ot_hbm_xp_aq_tree13_fmt",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hxp_aq13_fmt-f1-2680d87a9 std cells (die 19828.8 um2)",
+     "cells": 81491,
+     "inst": "u42",
+     "macros": 0,
+     "master": "ot_hbm_xp_aq_tree13_fmt",
+     "module": "ot_hbm_xp_aq_tree13_fmt",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_qw_dec_s260-ac62227e1-tc-cl std cells (die 67600 um2)",
+     "cells": 160001,
+     "inst": "u57",
+     "macros": 0,
+     "master": "ot_hgi_qw_dec",
+     "module": "ot_hgi_qw_dec",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u58",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u59",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u60",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u61",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u62",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u63",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u64",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u65",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_ctlx_bl-b1-f3b542177 std cells (die 151165 um2)",
+     "cells": 89302,
+     "inst": "u66",
+     "macros": 1,
+     "master": "ot_hgi_sm_xload_cl2_ctlx",
+     "module": "ot_hgi_sm_xload_cl2_ctlx",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 36,
+   "orients": [
+    "MX",
+    "MY",
+    "R0",
+    "R180"
+   ],
+   "outline_um": [
+    2332.8,
+    2894.4
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 586.4,
+    "max_point_to_tap_um": 581.0,
+    "n": 56
+   },
+   "taps_kinds": {
+    "core": 36,
+    "glue": 20
+   }
+  }
+ }
+}

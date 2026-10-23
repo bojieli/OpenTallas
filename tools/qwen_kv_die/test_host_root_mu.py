@@ -35,14 +35,14 @@ class HostRootMu(unittest.TestCase):
             p0, a0 = ports_params(rel, mod)
             p1, a1 = ports_params(G.OUT_REL, mod + '_mu')
             self.assertEqual(p0, p1, mod)
-            self.assertEqual(a0 + ['MU'], a1, mod)
+            self.assertEqual(a0 + re.findall(r'(\w+)\s*=', G.POST.get(mod, ('MU=1',))[0]), a1, mod)  # + MU (+ HCW)
 
     def test_mu1_children(self):
         t = (ROOT / G.OUT_REL).read_text()
         for s in ('qkd_host_native_token_endpoint_cancel_mu #(.ENABLE_NATIVE(ENABLE_NATIVE),.MU(1))u_native(',
                   'qkd_host_guard_fifo #(.W(64),.SRAM_FIFO(1))markers(',
                   'qkd_host_tp8_coordinator_mu #(.MU(1),.POST_UID_SLOT(1))u_coordinator(',
-                  'qkd_host_ctrl_token_service_packet_collected_mu #(.MU(1),.STRAPPED(1),'):
+                  'qkd_host_ctrl_token_service_packet_collected_mu #(.MU(1),.HCW(HCW),.STRAPPED(1),'):
             self.assertEqual(t.count(s), 1, s)
         co = (ROOT / 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_tp8_coordinator_mu.sv').read_text()
         self.assertIn('parameter integer POST_UID_SLOT=0', co)
