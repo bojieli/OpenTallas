@@ -192,6 +192,26 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1023 10-23 batch 13: claude/tile-flow-1023 (COORD 02:33 approved).  Every new rule (content outline,
+    # face fence, outline_ratio FAIL, pin_regs wrapper refusal, macro array plan) is behind tile_plan_on(spec): recipe 5
+    # leaf tiles or an explicit "tile_plan" opt-in.  No kit gated before this merge has either (RECIPE_LATEST was 4),
+    # and test_tile_plan_off_keeps_recipe_4_behaviour pins the legacy path -> no older gate verdict can change.
+    "867781db8cfa5e9c87f418b6361e2d37738f3e8e": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl', 'tools/ref_tile/outline_audit.py',
+                               'tools/ref_tile/ref_tile.py', 'tools/ref_tile/tile_plan.py'),
+        what="TILE-FLOW recipe 5 / tile_plan (opt-in, new kits only); legacy recipe <= 4 kits unchanged"),
+    "c861553eb5133e82baac953f5ad790722797fe28": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="TILE-FLOW tile_plan macro column abutment + outline reason (tile_plan kits only)"),
+    "59174ca777cae5c92619b66679f2958469c36cc5": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence_after.tcl',),
+        what="TILE-FLOW face fence chaining hook (sourced only by tile_plan kits)"),
+    "a786d230d791823dfe8fa15ac08e50c8aabd6506": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl', 'tools/ref_tile/outline_audit.py'),
+        what="TILE-FLOW face fence globals (tile_plan kits only) + audit report tool"),
+    "2a1910a6233bc25a40124aee4b16ffd45bcd548a": dict(
+        kind="neutral", paths=('physical/common_flow/pin_reg_face_fence.tcl',),
+        what="TILE-FLOW face fence keeps FIRM pin flops (tile_plan kits only)"),
     # ROOT-MERGE-1023 10-23 batch 12: claude/geom-review-gate-1023 (COORD 02:02/02:15 approved, enforcing).  The GEOM-REVIEW
     # intake check is a separate submit-time policy keyed on review verdicts + kit content hash, judged by the CURRENT
     # code at every intake; it changes no pre_route_gate verdict, so an older gate stays as valid as before.
