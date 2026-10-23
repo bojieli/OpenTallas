@@ -140,24 +140,32 @@ def build(ab):
     add(Part("seqhost", "unit", 10, 5, contents=[C("u_seqhost", "dsdv_seq_host_mux", "rework",
                                                   params={"TAP_K": "8'h00", "SINK_K": "8'h00", "SELECT_HBE": "1'b0"})],
              ckey="seqhost", note="GEOM-REVIEW2: seqhost beside the svc band; its slice/svc fan-out = ID rings"))
-    # svc 2 x 8 as 8 column partitions svc_k (col 7+k, rows 1-4): rsv_2k + rsv_2k+1 (fold pair) + ctrl_2k/2k+1 +
-    # etap_2k/2k+1.  Pin-limited, not area-limited: the fold bus (up to 7.8 kb) cannot cross one 1.44-mm face and the
-    # two attn rails (2k<->2k+2, 2k+1<->2k+3) carry up to 14.2 kb across a column boundary, which needs >= 3.94 mm of
-    # E/W face at 0.6 -> 1 x 4 cells = 1442.88 x 4907.52 (~3.3 mm2 content).  The one partition over 1.5 mm: internal
-    # rail/ft stations at <= reach; the ctrl/etap HBM-side interface sits in the bottom cell next to the PHY row.
+    # svc 2 x 8 -> 8 columns svc_k (col 7+k, rows 1-4) of FOUR 1-cell partitions svc_k_q0..q3 (L1 + COORD 05:44 (1)).
+    # The attn ladder (rails 2k<->2k+2, 2k+1<->2k+3: up to 14.2 kb across a column boundary; fold rung up to 7.8 kb)
+    # does not fit one 1.44-mm face, so the svc attn datapath of the fold pair (rsv_2k + rsv_2k+1) is BIT-SLICED x4:
+    # cell q holds bits [q*W/4, (q+1)*W/4) of both rsv of the pair -> the rung stays inside each cell and every rail
+    # crosses four cell faces (one quarter each, same latency).  q0 (next to the PHY row) also holds ctrl_2k/2k+1,
+    # etap_2k/2k+1 and irg_k (HBM side); a column spine (q <-> q+1) carries the control/sequencing broadcast.
+    svcg = {}
     for k in range(8):
         ma, mb = blk["rsv_%02d" % (2 * k)]["master"], blk["rsv_%02d" % (2 * k + 1)]["master"]
-        add(Part("svc_%d" % k, "svc", 7 + k, 1, nr=4, orient="R0" if k < 4 else "MY",
-                 contents=[C("u_rsv_a", ma, "rework", note="svc 2k (1.49 mm2 est.: svc + su_sm share)"),
-                           C("u_rsv_b", mb, "rework", note="svc 2k+1; fold bus to u_rsv_a is internal"),
-                           C("u_ctrl_a", "dsfd_ctrl_rg3_native32", "reuse"),
-                           C("u_ctrl_b", "dsfd_ctrl_rg3_native32", "reuse"),
-                           C("u_etap_a", "dsdv_eng_tap_w" if k == 0 else "dsdv_eng_tap", "reuse"),
-                           C("u_etap_b", "dsdv_eng_tap", "reuse"),
-                           C("u_irg", "dsdv_idx_rg3", "reuse",
-                             note="irg_k serves etap_2k/2k+1: merged into svc_k (its 3.3 kb etap links are internal; "
-                                  "the irg chain becomes a svc_k -> svc_k+1 lane)")],
-                 ckey="svc_%s_%s%s" % (ma, mb, "_w" if k == 0 else "")))
+        segs = {}
+        for q in range(4):
+            cont = [C("u_rsv_a", "%s.bs%d" % (ma, q), "rework",
+                      note="svc 2k attn datapath bit slice %d/4 (+ its share of the svc control)" % q),
+                    C("u_rsv_b", "%s.bs%d" % (mb, q), "rework",
+                      note="svc 2k+1 bit slice %d/4; the fold rung of this slice is internal" % q)]
+            if q == 0:
+                cont += [C("u_ctrl_a", "dsfd_ctrl_rg3_native32", "reuse"),
+                         C("u_ctrl_b", "dsfd_ctrl_rg3_native32", "reuse"),
+                         C("u_etap_a", "dsdv_eng_tap_w" if k == 0 else "dsdv_eng_tap", "reuse"),
+                         C("u_etap_b", "dsdv_eng_tap", "reuse"),
+                         C("u_irg", "dsdv_idx_rg3", "reuse",
+                           note="irg_k serves etap_2k/2k+1: merged into svc_k_q0 (its etap links are internal)")]
+            segs[(0, q)] = add(Part("svc_%d_q%d" % (k, q), "svc", 7 + k, 1 + q, orient="R0" if k < 4 else "MY",
+                                    contents=cont, ckey="svc_q%d_%s_%s%s" % (q, ma, mb, "_w" if (k == 0 and q == 0)
+                                                                              else ""), group="svc_%d" % k))
+        svcg["svc_%d" % k] = dict(segs=segs)
     # slices: S halves rows 5..11 (7), N halves rows 12..18 (7); columns s_0 6-7, s_1..s_6 8..13, s_7 14-15
     slices = {}
     colmap = {0: (6, 2), 1: (8, 1), 2: (9, 1), 3: (10, 1), 4: (11, 1), 5: (12, 1), 6: (13, 1), 7: (14, 2)}
@@ -203,7 +211,7 @@ def build(ab):
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
              for c, r in ((0, 0), (20, 0), (20, 19))]
-    return parts, frames, serdes, slices, chans
+    return parts, frames, serdes, slices, chans, svcg
 
 
 # ---------------------------------------------------------------------------------------------- logical lanes
@@ -351,8 +359,20 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
         agg[(ps, pd, "ctl")] = [b, ps, pd]
     for (ps, pd, c), (b, s0, d0) in agg.items():
         kind = "ctl" if c == "ctl" else "data"
+        if c == "attn" and ps.startswith("svc_") and pd.startswith("svc_"):
+            for q in range(4):      # bit-sliced attn rail: quarter q between the q cells
+                wq = b // 4 + (1 if q < b % 4 else 0)
+                L("%s__%s__%s__q%d" % (c, ps, pd, q), "%s_q%d" % (ps, q), "%s_%s_o" % (c, pd), "%s_q%d" % (pd, q),
+                  "%s_%s_i" % (c, ps), wq, kind=kind, cls=c, role=c)
+            continue
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), b, kind=kind, cls=c,
           role=c)
+    # ---- svc column spine (control/sequencing broadcast between the bit slices; budget 276 b each way) ----
+    for k in range(8):
+        for q in range(3):
+            a_, b_ = "svc_%d_q%d" % (k, q), "svc_%d_q%d" % (k, q + 1)
+            L("sc_%d_%d_u" % (k, q), a_, "scu_o", b_, "scu_i", 276, cls="svccol", role="svccol_up")
+            L("sc_%d_%d_d" % (k, q), b_, "scd_o", a_, "scd_i", 276, cls="svccol", role="svccol_dn")
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = ["s_%dS" % k for k in range(7, -1, -1)] + ["s_%dN" % k for k in range(8)]
     ring = ["seqhost"] + order_s + ["seqhost"]
@@ -874,7 +894,7 @@ def main():
     a = ap.parse_args()
     ab = json.load(open(a.asbuilt))
     census = list(csv.DictReader(open(a.census), delimiter="\t"))
-    parts, frames, serdes, slices, chans = build(ab)
+    parts, frames, serdes, slices, chans, svcg = build(ab)
     lanes, fmap = lanes_all(ab, census, parts, frames, serdes, slices)
     grid = Grid(parts)
     # every cell covered or a channel
@@ -888,7 +908,7 @@ def main():
                     chan_cells.add((c, r))
     miss = [(c, r) for c in range(NC) for r in range(NR) if (c, r) not in grid.owner and (c, r) not in chan_cells]
     assert not miss, miss
-    routes = route(grid, lanes, slices)
+    routes = route(grid, lanes, dict(slices, **svcg))
     stats = emit(parts, lanes, routes, chans, fmap, Path(a.out))
     print(json.dumps({k: v for k, v in stats.items() if k != "instances_per_type"}, indent=1, default=str))
 
