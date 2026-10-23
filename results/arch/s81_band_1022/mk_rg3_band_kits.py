@@ -128,7 +128,61 @@ for nm, top, extra_pins, cap in (("s81dv_rg3b_s01", "dsdv_idx_rg3_bs01", {"N": [
                             + ("; layer cap M5 so the R -> S23 landings cross this band on M6." if cap == "M5" else
                                "; q / s / st output stage spans the band W -> E above the columns (E pins = the reader's qo / so / st).")))
     specs[nm] = s
+# ---- X successor (gate 10-22 18:2x: flat X FAIL TT / FF pin-flop spread 230.6 / 201.2 ps, 4,021 sinks: the N rri pin flops
+# and the S kq pin flops sat 432 um apart around 8 SRAM covering ~60 % of the tile, one root).  STRUCTURAL: X is cut at its
+# existing registers into two hard tiles under a wires-only X cluster (475.2 x 518.4, parent grows 86.4 at the top):
+#   xn  dsdv_idx_rg3_bxn  475.2 x 86.4 landing strip, NO macros: rri pin flops N, registered landing writes lw_* S, xr_o W
+#   xm  dsdv_idx_rg3_bxm  475.2 x 432: the 8 SRAM + read / key, ONE pin-flop band (kq, S face) on the clock-entry side;
+#       h0 column R0 (read pins on the W channel), h1 column MY (read pins on the E channel): each key half is column-local,
+#       write pins of both columns face the 39-um centre gap under the lw_* N face (macro inputs, no flops)
+#   xmb FB of xm: same tile, clock at the SW corner of the kq face (rb's geometry) instead of the S-face centre
+# Cycle-exact to the flat X (tb_dsdv_idx_rg3_bx_lsw: 2 seeds x 20k edges 0 mismatches; MUT 5 caught).
+LSWX = dict(name="rg3b_bx_lsw", cmd="bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 0", expect="pass",
+            pass_regex="^BX_LSW PASS$", threads=4, peak_ram_gb=8, needs=["verilator"])
+LSWX_M = dict(name="rg3b_bx_lsw_mut5", cmd="bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 5", expect="fail",
+              fail_regex="^BX_LSW MUTANT_CAUGHT$", threads=4, peak_ram_gb=8, needs=["verilator"])
+xn = common("s81dv_rg3b_xn", "dsdv_idx_rg3_bxn", "banded idx rg3 X successor: landing strip (rri pin flops, lane register, landing writes)")
+xn.update(kind="tile", sources=SRC + [BAND], params={"RH": 1}, outline={"w": 475.2, "h": 86.4, "exact": True}, macros=[],
+          children=[], pins={"N": ["rri"], "S": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["xr_o", "rst", "ck"]},
+          pin_ranges={"rri": [21.6, 453.6], "lw_v": [21.6, 453.6], "lw_h1": [21.6, 453.6], "lw_a": [21.6, 453.6],
+                      "lw_d": [21.6, 453.6], "xr_o": [10.8, 75.6], "rst": [10.8, 75.6], "ck": [40.0, 46.4]},
+          layer_cap="M5", defines=[], std_area_um2=2500,
+          why_floorplan="top strip of the X cluster (475.2 x 86.4): ~3.3k flops in two pin bands 86 um apart (rri N 2.5 pins/um "
+                        "from the die response lanes, lw_* S 2.5 pins/um straight down onto the SRAM write pins of xm), "
+                        "xr_o W toward R, clock at the W-face middle; no macros, so the tree spans 86 um.")
+xn["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+xn["job"]["benches"] = [LSWX, LSWX_M]
+specs[xn["name"]] = xn
+def xm_spec(name, ck_range, purpose, note):
+    m = common(name, "dsdv_idx_rg3_bxm", purpose)
+    m.update(kind="tile", sources=SRC + [BAND], params={"SRAM_MACRO": 1}, outline={"w": 475.2, "h": 432.0, "exact": True},
+             macros=[dict(view=SRAM, inst=f"u_c{h}.g_land[{u}].u_h.g_m.u_mem", at=[[43.2, 257.04][h], round(43.2 + 90.72 * u, 2)],
+                          orient=["R0", "MY"][h]) for h in range(2) for u in range(4)],
+             children=[], pins={"N": ["lw_v", "lw_h1", "lw_a", "lw_d"], "W": ["sx_i", "rst"], "S": ["kq_o", "ck"]},
+             pin_ranges={"lw_v": [21.6, 453.6], "lw_h1": [21.6, 453.6], "lw_a": [21.6, 453.6], "lw_d": [21.6, 453.6],
+                         "sx_i": [86.4, 172.8], "rst": [86.4, 172.8], "kq_o": [21.6, 453.6], "ck": ck_range},
+             layer_cap="M5", defines=[], std_area_um2=2000,
+             why_floorplan="SRAM tile of the X cluster (475.2 x 432 under xn): 8 SRAM in 2 columns x 4 rows (90.72 pitch: 20-um "
+                           "channels, the v1 SRAM LEF only sits on the snapped macro lattice so it cannot abut; y 43.2 .. 385.8: "
+                           "43-um S halo over the kq pin band, 46-um N halo under the lw_* face); h0 column R0 "
+                           "at x 43.2 (read pins on the 43-um W channel), h1 column MY at x 257.04 (read pins on the E channel): "
+                           "each key half reads only its own column, so its mux runs down its own channel to the kq pin flops; "
+                           "write pins of both columns face the 39-um centre gap.  The ONLY pin-flop band is kq on the S face, "
+                           + note)
+    m["route"]["pin_balance"] = {"group_max": 1, "h": "M4", "v": "M5"}
+    m["route"]["cts_sink"] = {"sink_clustering": False, "extra": "-no_obstruction_aware"}
+    m["job"]["benches"] = [LSWX, LSWX_M]
+    specs[name] = m
+xm_spec("s81dv_rg3b_xm", [234.36, 240.84], "banded idx rg3 X successor MAIN: SRAM / key tile, clock at the kq face centre",
+        "clock entry at its centre.")
+xm_spec("s81dv_rg3b_xmb", [10.8, 17.28], "banded idx rg3 X successor FB: SRAM / key tile, clock at the SW corner of the kq face",
+        "clock entry at its SW corner (the rb geometry that passed R at 52 / 79 ps).")
+ONLY = None
+if "--only" in sys.argv:
+    i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]
 for nm, s in specs.items():
+    if ONLY is not None and nm not in ONLY:
+        continue
     d = ROOT / "physical/ref_tile" / nm
     d.mkdir(parents=True, exist_ok=True)
     (d / "spec.json").write_text(json.dumps(s, indent=1) + "\n")

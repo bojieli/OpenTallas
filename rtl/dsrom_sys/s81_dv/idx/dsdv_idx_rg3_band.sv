@@ -16,6 +16,15 @@
 // ---------------------------------------------------------------------------------------------------------------------
 
 // ===================================================================================================================== X
+// X is itself two (MAIN) or three (FB) hard tiles under a wires-only X cluster (gate 10-22 18:2x: the flat X tile hung the
+// N rri pin flops and the S kq pin flops 432 um apart around 8 SRAM on ONE root, TT / FF pin-flop spread 230 / 201 ps):
+//   dsdv_idx_rg3_bxn      landing strip: rri pin flops (RH relays), rrr lane register, rkc, the registered landing writes
+//                         lw_* (S face = the SRAM write ports below; source-registered) and xr_o
+//   dsdv_idx_rg3_bxmh #H  one landing-SRAM column (h0 or h1 of every unit) + its read stages + its half of the key mux and
+//                         of kq (H 0 also the scale select k_sc); the key mux is column-local (key half H reads only hH)
+//   dsdv_idx_rg3_bxm      both columns (MAIN hard tile); FB hardens the two bxmh columns separately
+// Cut at existing registers only (lw_* / rrr / kq / the S stage in R): cycle-exact to the flat X of 2e189d817
+// (tb_dsdv_idx_rg3_bx_lsw); each tile carries its own copy of X's reset forest (same depth -> same release edge).
 module dsdv_idx_rg3_bx #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
@@ -28,13 +37,33 @@ module dsdv_idx_rg3_bx #(
     output wire [67:0]   xr_o,          // {rkc[3:0], rrr[3][15:0], .., rrr[0][15:0]}
     output wire [543:0]  kq_o           // key word, one edge after the K stage (= the old kr[0])
 );
+    wire [3:0] lw_v, lw_h1; wire [39:0] lw_a; wire [1023:0] lw_d;
+    dsdv_idx_rg3_bxn #(.MUT(MUT), .RH(RH)) u_n (.ck(ck), .rst(rst), .rri(rri), .xr_o(xr_o),
+        .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d));
+    dsdv_idx_rg3_bxm #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO)) u_m (.ck(ck), .rst(rst), .sx_i(sx_i),
+        .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(kq_o));
+endmodule
+
+module dsdv_idx_rg3_bxn #(
+    parameter integer MUT = 0,
+    parameter integer RH = 1
+) (
+    input  wire          ck,
+    input  wire          rst,
+    input  wire [1087:0] rri,
+    output wire [67:0]   xr_o,
+    output wire [3:0]    lw_v,          // landing write valid (reset rl[1])
+    output wire [3:0]    lw_h1,         // write the h1 column (else h0)
+    output wire [39:0]   lw_a,          // {lw_a[3], .., lw_a[0]} 10 b each
+    output wire [1023:0] lw_d           // {lw_d[3], .., lw_d[0]} 256 b each
+);
     // reset: same forest depth as dsdv_idx_rg3 (rs 2 + u_r0 3 + u_r1 3 edges) -> same release edge
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire       r0;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r0 (.clk(ck), .rst_n_in(rs[1]), .rst_n(r0));
-    wire [2:0] rl;                                  // [0] rrr valid / pop (rg3 rl[1]), [1] lw_v (rl[22]), [2] c_v (rl[25])
-    ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0), .rst_n(rl));
+    wire [1:0] rl;                                  // [0] rrr valid / pop (rg3 rl[1]), [1] lw_v (rl[22])
+    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0), .rst_n(rl));
     // response relay hops (rh[0] = the N pin flops) and the landing-side lane register
     wire [1087:0] rrh;
     generate if (RH == 0) begin : g_khrz
@@ -69,75 +98,124 @@ module dsdv_idx_rg3_bx #(
         assign rb[gu] = rrr[gu][5:2];
         assign mine[gu] = rrr[gu][0] && !(MUT == 5 && rt[gu][7]);
     end endgenerate
-    reg  [3:0]  lw_v, lw_h1;
-    reg  [3:0][9:0] lw_a;
-    reg  [3:0][255:0] lw_d;
+    reg  [3:0]  lw_vr, lw_h1r;
+    reg  [3:0][9:0] lw_ar;
+    reg  [3:0][255:0] lw_dr;
     integer u;
     always @(posedge ck) for (u = 0; u < 4; u = u + 1) begin : g_rsp
         reg g; reg [3:0] s_; reg [3:0] cl; reg sc; reg [3:0] bt;
         g = rt[u][14]; s_ = {rt[u][5], rt[u][13:11]}; cl = rt[u][10:7]; sc = rt[u][6]; bt = rb[u];
-        lw_d[u] <= rrr[u][271:16];
-        lw_h1[u] <= !sc && bt[0];
-        if (!sc) lw_a[u] <= {2'b00, s_, g ? cl : cl + {3'd0, bt[1]}};
-        else if (!g) lw_a[u] <= {5'b01000, s_, bt[0]};
-        else lw_a[u] <= {2'b10, s_, cl};
+        lw_dr[u] <= rrr[u][271:16];
+        lw_h1r[u] <= !sc && bt[0];
+        if (!sc) lw_ar[u] <= {2'b00, s_, g ? cl : cl + {3'd0, bt[1]}};
+        else if (!g) lw_ar[u] <= {5'b01000, s_, bt[0]};
+        else lw_ar[u] <= {2'b10, s_, cl};
     end
-    always @(posedge ck or negedge rl[1]) if (!rl[1]) lw_v <= 4'd0; else lw_v <= mine;
-    // read side: R's S stage, the C stage copy, the landing SRAMs, scale / key selects (as dsdv_idx_rg3)
+    always @(posedge ck or negedge rl[1]) if (!rl[1]) lw_vr <= 4'd0; else lw_vr <= mine;
+    assign lw_v = lw_vr; assign lw_h1 = lw_h1r; assign lw_a = lw_ar; assign lw_d = lw_dr;
+endmodule
+
+module dsdv_idx_rg3_bxm #(
+    parameter integer MUT = 0,
+    parameter bit SRAM_MACRO = 0
+) (
+    input  wire          ck,
+    input  wire          rst,
+    input  wire [17:0]   sx_i,
+    input  wire [3:0]    lw_v,
+    input  wire [3:0]    lw_h1,
+    input  wire [39:0]   lw_a,
+    input  wire [1023:0] lw_d,
+    output wire [543:0]  kq_o
+);
+    wire [287:0] k0;                                // {k_sc, key[255:0]}
+    wire [255:0] k1;                                // key[511:256]
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(0)) u_c0 (.ck(ck), .rst(rst), .sx_i(sx_i),
+        .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k0));
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(1)) u_c1 (.ck(ck), .rst(rst), .sx_i(sx_i),
+        .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k1));
+    assign kq_o = {k0[287:256], k1, k0[255:0]};
+endmodule
+
+// one landing-SRAM column: H 0 = the h0 SRAM of every unit (S and C reads; key[255:0] + the scale select), H 1 = h1 (C reads;
+// key[511:256]).  kq_o = H 0: {k_sc, key[255:0]} (288 b), H 1: key[511:256] (256 b).
+module dsdv_idx_rg3_bxmh #(
+    parameter integer MUT = 0,
+    parameter bit SRAM_MACRO = 0,
+    parameter integer H = 0
+) (
+    input  wire          ck,
+    input  wire          rst,
+    input  wire [17:0]   sx_i,
+    input  wire [3:0]    lw_v,
+    input  wire [3:0]    lw_h1,
+    input  wire [39:0]   lw_a,
+    input  wire [1023:0] lw_d,
+    output wire [(H ? 256 : 288)-1:0] kq_o
+);
+    reg [1:0] rs;
+    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
+    wire       r0, rl2;                             // rl2 = c_v (rg3 rl[25])
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r0 (.clk(ck), .rst_n_in(rs[1]), .rst_n(r0));
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0), .rst_n(rl2));
+    // read side: R's S stage, the C stage copy, this column's landing SRAMs
     wire        gatk1 = sx_i[17];
     wire [3:0]  s_vx  = sx_i[16:13];
     wire [34:25] s_hi = sx_i[12:3];
     wire [2:0]  s_lo  = sx_i[2:0];
     reg         c_v;
     reg  [34:25] c_hi;
-    always @(posedge ck or negedge rl[2]) if (!rl[2]) c_v <= 1'b0; else c_v <= s_vx[0];
+    always @(posedge ck or negedge rl2) if (!rl2) c_v <= 1'b0; else c_v <= s_vx[0];
     always @(posedge ck) c_hi <= s_hi;
-    wire [1:0]  su_b = s_hi[34:33];                 // == R's su_a / su_b (registered from ih[34:33] with s_it)
+    wire [1:0]  su_b = s_hi[34:33];
     wire [1:0]  c_u  = c_hi[34:33];
     wire [9:0]  s_row = gatk1 ? {2'b10, s_hi[32:29], s_hi[28:25]} : {5'b01000, s_hi[32:29], s_hi[28]};
     wire [9:0]  c_row = {2'b00, c_hi[32:29], c_hi[28:25]};
-    wire [3:0][255:0] h0q, h1q;
+    wire [3:0][255:0] hq;
+    genvar gu;
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_land
-        wire rs0 = s_vx[gu] && su_b == 2'(gu);
+        wire rs0 = H == 0 && s_vx[gu] && su_b == 2'(gu);
         wire rc  = c_v && c_u == 2'(gu);
-        dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h0 (
-            .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(h0q[gu]),
-            .we(lw_v[gu] && !lw_h1[gu]), .wa(lw_a[gu]), .wd(lw_d[gu]));
-        dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h1 (
-            .ck(ck), .re(rc), .ra(c_row), .rd(h1q[gu]),
-            .we(lw_v[gu] && lw_h1[gu]), .wa(lw_a[gu]), .wd(lw_d[gu]));
+        wire we  = lw_v[gu] && (H ? lw_h1[gu] : !lw_h1[gu]);
+        dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h (
+            .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(hq[gu]),
+            .we(we), .wa(lw_a[10 * gu +: 10]), .wd(lw_d[256 * gu +: 256]));
     end endgenerate
-    (* keep = "true" *) reg [31:0] ssel;
-    always @(posedge ck) begin : g_ss
-        integer a_;
-        for (a_ = 0; a_ < 32; a_ = a_ + 1) ssel[a_] <= su_b == 2'(a_ / 8) && s_lo == 3'(a_ % 8);
-    end
-    reg [31:0] k_sc;
-    always @(posedge ck) begin : g_sc
-        reg [31:0] x; integer a_;
-        x = 32'd0;
-        for (a_ = 0; a_ < 32; a_ = a_ + 1) x = x | ({32{ssel[a_]}} & h0q[a_ / 8][32 * (a_ % 8) +: 32]);
-        k_sc <= x;
-    end
-    (* keep = "true" *) reg [1:0] cu_a, cu_b;
-    (* keep = "true" *) reg [31:0] ks0, ks1, ks2, ks3;
+    // key half H: lane gk = 16 H + j reads hH of the unit its select names (select from cu = the old cu_a (H 0) / cu_b (H 1))
+    (* keep = "true" *) reg [1:0] cu;
+    (* keep = "true" *) reg [15:0] ks0, ks1, ks2, ks3;
     always @(posedge ck) begin
-        cu_a <= s_hi[34:33]; cu_b <= s_hi[34:33];
-        ks0 <= {{16{cu_b == 2'd0}}, {16{cu_a == 2'd0}}}; ks1 <= {{16{cu_b == 2'd1}}, {16{cu_a == 2'd1}}};
-        ks2 <= {{16{cu_b == 2'd2}}, {16{cu_a == 2'd2}}}; ks3 <= {{16{cu_b == 2'd3}}, {16{cu_a == 2'd3}}};
+        cu <= s_hi[34:33];
+        ks0 <= {16{cu == 2'd0}}; ks1 <= {16{cu == 2'd1}}; ks2 <= {16{cu == 2'd2}}; ks3 <= {16{cu == 2'd3}};
     end
-    wire [543:0] k_key;
+    wire [255:0] k_key;
     genvar gk;
-    generate for (gk = 0; gk < 32; gk = gk + 1) begin : g_km
-        localparam integer H = gk / 16, O = 16 * (gk % 16);
-        wire [15:0] d0_ = ({16{ks0[gk]}} & (H ? h1q[0][O +: 16] : h0q[0][O +: 16])) | ({16{ks1[gk]}} & (H ? h1q[1][O +: 16] : h0q[1][O +: 16])) |
-                          ({16{ks2[gk]}} & (H ? h1q[2][O +: 16] : h0q[2][O +: 16])) | ({16{ks3[gk]}} & (H ? h1q[3][O +: 16] : h0q[3][O +: 16]));
-        assign k_key[256 * H + O +: 16] = d0_;
+    generate for (gk = 0; gk < 16; gk = gk + 1) begin : g_km
+        localparam integer O = 16 * gk;
+        assign k_key[O +: 16] = ({16{ks0[gk]}} & hq[0][O +: 16]) | ({16{ks1[gk]}} & hq[1][O +: 16]) |
+                                ({16{ks2[gk]}} & hq[2][O +: 16]) | ({16{ks3[gk]}} & hq[3][O +: 16]);
     end endgenerate
-    assign k_key[543:512] = k_sc;
-    (* keep = "true" *) reg [543:0] kq;            // the old kr[0] of every column, one copy (S face)
-    always @(posedge ck) kq <= k_key;
-    assign kq_o = kq;
+    generate if (H == 0) begin : g_sc
+        (* keep = "true" *) reg [31:0] ssel;
+        always @(posedge ck) begin : g_ss
+            integer a_;
+            for (a_ = 0; a_ < 32; a_ = a_ + 1) ssel[a_] <= su_b == 2'(a_ / 8) && s_lo == 3'(a_ % 8);
+        end
+        reg [31:0] k_sc;
+        always @(posedge ck) begin : g_scr
+            reg [31:0] x; integer a_;
+            x = 32'd0;
+            for (a_ = 0; a_ < 32; a_ = a_ + 1) x = x | ({32{ssel[a_]}} & hq[a_ / 8][32 * (a_ % 8) +: 32]);
+            k_sc <= x;
+        end
+        (* keep = "true" *) reg [287:0] kq;         // S face pin flops
+        always @(posedge ck) kq <= {k_sc, k_key};
+        assign kq_o = kq;
+    end else begin : g_nsc
+        (* keep = "true" *) reg [255:0] kq;
+        always @(posedge ck) kq <= k_key;
+        assign kq_o = kq;
+    end endgenerate
 endmodule
 
 // ============================================================================ S: shared column inputs + chunk columns
