@@ -188,20 +188,24 @@ module dsdv_idx_rg3_bxmh #(
         // decode follows them (cycle-identical to registering the decoded ssel; gate 10-22 20:4x: the 32 decoded ssel
         // flops sat at the SRAM read channel as boundary flops, TT 369..419 ps vs 325..347 for the S pin band)
         // native census: a shared select (one copy: the decode drove 59 / 38 loads; 8 copies x 4 bits: abc maps the
-        // 32:1 select to a mux tree, so each copy's s_lo[0] drove 34..62 mux selects).  One raw-select copy per k_sc
-        // bit (32 x 5 keep pin flops): a 32:1 tree needs at most 16 loads per select bit.  Cycle-identical.
-        (* keep = "true" *) reg [159:0] sl_r;              // copy b = sl_r[5b +: 5] = {su_b, s_lo}
-        always @(posedge ck) sl_r <= {32{su_b, s_lo}};
+        // 32:1 select to a mux tree, so each copy's s_lo[0] drove 34..62 mux selects; 32 copies: the sx_i[12:11] input
+        // ports drove 42).  16 raw-select copies, each for 2 k_sc bits: a 32:1 tree needs <= 16 loads per select bit
+        // and output bit (<= 32 per copy), and every sx_i bit feeds <= 16 copies + the c_hi / cu / read-row capture.
+        (* keep = "true" *) reg [79:0] sl_r;               // copy c = sl_r[5c +: 5] = {su_b, s_lo}
+        always @(posedge ck) sl_r <= {16{su_b, s_lo}};
         reg [31:0] k_sc;
-        genvar gc;
-        for (gc = 0; gc < 32; gc = gc + 1) begin : g_sc32
+        genvar gc, gb;
+        for (gc = 0; gc < 16; gc = gc + 1) begin : g_sc16
             wire [4:0] sl = sl_r[5 * gc +: 5];
-            wire [31:0] col;
-            genvar ga;
-            for (ga = 0; ga < 32; ga = ga + 1) begin : g_col
-                assign col[ga] = hq[ga / 8][32 * (ga % 8) + gc];
+            for (gb = 0; gb < 2; gb = gb + 1) begin : g_b
+                localparam integer B = 2 * gc + gb;
+                wire [31:0] col;
+                genvar ga;
+                for (ga = 0; ga < 32; ga = ga + 1) begin : g_col
+                    assign col[ga] = hq[ga / 8][32 * (ga % 8) + B];
+                end
+                always @(posedge ck) k_sc[B] <= col[sl];
             end
-            always @(posedge ck) k_sc[gc] <= col[sl];
         end
         (* keep = "true" *) reg [287:0] kq;         // S face pin flops
         always @(posedge ck) kq <= {k_sc, k_key};
