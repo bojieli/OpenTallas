@@ -44,9 +44,9 @@ SNAP = 0.192
 TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
           M8=(0.080, 0.040), M9=(0.080, 0.040))   # pitch, offset (PLAN-TOOL symmetric tracks)
 # COORD S81 ruling (1)(b) 10-23 07:43: the svc fold faces (svc_2k N | svc_2k+1 S, ~9.0 kb on a 1.44-mm face) take a
-# third pin layer from the reserved die budget.  The fold face is N/S, so its crossing layer is the vertical die layer
-# M9 (M8 is horizontal: an M8 pin on an N/S face would be wrong-way).  Granted in die.layer_budget.face_grants.
-FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M9"]
+# third pin layer from the reserved die budget: M8 (PLAN-TOOL @7f9f10e1d partition_types.<t>.face_layers; M8 pins
+# avoid the die M8 PG bands; the kit routes M2-M8).  On the N/S fold face an M8 pin is reached by via7 down to M7.
+FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M8"]
 STATS_V4 = {}
 
 
@@ -1126,10 +1126,11 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 if ln in FOLD_GRANT:
                     gr[(tn, sl["in_face"])].add(ln)
                     gr[(tn, sl["out_face"])].add(ln)
-    FACE_GRANTS = [dict(type=tn, face=f, layers=sorted(v),
-                        reason="svc fold face (svc_2k | svc_2k+1 attn ladder rung, ~9.0 kb on 1.44 mm): third pin "
-                               "layer from the reserved die budget (COORD S81 ruling (1)(b) 10-23 07:43)")
-                   for (tn, f), v in sorted(gr.items())]
+    FACE_GRANTS = []
+    for (tn, f), v in sorted(gr.items()):
+        base = ["M6", "M4"] if f in "EW" else ["M7", "M5"]
+        out_types[tn].setdefault("face_layers", {})[f] = base + sorted(v)
+        FACE_GRANTS.append(dict(type=tn, face=f, layers=base + sorted(v)))
     oparts = [dict(name=p.name, type=ptype[p.name], origin_um=[round(p.x0, 4), round(p.y0, 4)], orient=p.orient)
               for p in parts]
     oports = []
@@ -1176,8 +1177,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
-    if FACE_GRANTS:
-        plan["die"]["layer_budget"]["face_grants"] = FACE_GRANTS
+    STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     census_map(plan, lanes, fmap, out)
