@@ -677,6 +677,7 @@ def main():
               open(os.path.join(a.out, 'census', 'map_v2.json'), 'w'), indent=0)
     plan['census'] = [dict(rows='census/hbm_r18h5_rows.tsv.gz', map='census/map_v2.json',
                            note='r18h5 FT census (hbm_census.json.gz, 35075 groups); SM = group of 4 stacked partitions')]
+    __import__('taps_cores_v2').apply(plan, a.out, where)   # HBM-P3-TAPS post-pass: hard cores, cells, clock taps
     json.dump(plan, open(os.path.join(a.out, 'die_plan.json'), 'w'), indent=None, separators=(',', ':'))
     mem = {}
     for oi, m in enumerate(orb):

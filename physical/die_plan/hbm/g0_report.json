@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/codex-plan-g2-path-0858-1023/physical/die_plan/hbm/die_plan.json",
+ "plan": "physical/die_plan/hbm/die_plan.json (run_v2.sh clean export of claude/hbm-p3-1023)",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 392,
+ "warnings": 1005,
  "summary": {
   "die": "hbm_d4g",
   "partitions": 187,
@@ -20,9 +20,9 @@
   "lanes": 5600,
   "bits": 1443604,
   "taps_cores": {
-   "taps": 0,
-   "hard_cores": 0,
-   "core_pins": 0,
+   "taps": 915,
+   "hard_cores": 675,
+   "core_pins": 236999,
    "core_pins_off_track": 0
   },
   "geometry": {
@@ -9445,7 +9445,8 @@
     }
    ],
    "dropped_bits": 0
-  }
+  },
+  "png": "/home/ubuntu/scratch/hbm-p3-taps/exp/out/g0/die_plan.png"
  },
  "findings": [
   {
@@ -9502,6 +9503,3684 @@
    "level": "WARN",
    "check": "types",
    "msg": "43 replicated types without type-frame pin windows on their buses (e.g. ['io', 'phy', 'q_hc0', 'q_hc1', 'q_hc2']): declare face/window_um/layers on the type so every instance shares one pin table"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u2_hc_tail0_s0: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u2_hc_tail0_s1: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u2_hc_tail1_s0: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u2_hc_tail1_s1: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u2_hcp_sys10: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part0: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part1: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part2: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part3: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part4: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part5: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part6: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part7: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part8: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part9: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part10: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part11: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part12: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part13: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part14: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part15: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part16: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part17: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type c0 core u18_part18: no pins listed; track alignment unchecked",
+   "type": "c0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type io core u0: no pins listed; track alignment unchecked",
+   "type": "io"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc0 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc0 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc0 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc1 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc1 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc1 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc2 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc2 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc2 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc3 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc3 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc3 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc4 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc4 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc4 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc5 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc5"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc5 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc5"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc5 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc5"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc6 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc6"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc6 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc6"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc6 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc6"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc7 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_hc7"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc7 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_hc7"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_hc7 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_hc7"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part0: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part1: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part2: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part3: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part4: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part5: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part6: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part7: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part8: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part9: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part10: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part11: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part12: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part13: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part14: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part15: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part16: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part17: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part18: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part19: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part20: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part21: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part22: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part23: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part24: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part25: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part26: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part27: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part28: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part29: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part30: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part31: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part32: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part33: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part34: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_os2 core u0_part35: no pins listed; track alignment unchecked",
+   "type": "q_os2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4 core u5_ring_ag0: no pins listed; track alignment unchecked",
+   "type": "q_rc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4 core u5_reduce0: no pins listed; track alignment unchecked",
+   "type": "q_rc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4 core u5_body0: no pins listed; track alignment unchecked",
+   "type": "q_rc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4 core u7: no pins listed; track alignment unchecked",
+   "type": "q_rc4"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4_v1 core u5_ring_ag0: no pins listed; track alignment unchecked",
+   "type": "q_rc4_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4_v1 core u5_reduce0: no pins listed; track alignment unchecked",
+   "type": "q_rc4_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4_v1 core u5_body0: no pins listed; track alignment unchecked",
+   "type": "q_rc4_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_rc4_v1 core u7: no pins listed; track alignment unchecked",
+   "type": "q_rc4_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u6: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part0: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part1: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part2: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part3: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part4: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part5: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part6: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part7: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part8: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part9: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part10: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part11: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part12: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part13: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part14: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part15: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sfuc core u7_part16: no pins listed; track alignment unchecked",
+   "type": "q_sfuc"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0a core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm0a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0b core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm0b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_fs20: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0c core sm_fa21: no pins listed; track alignment unchecked",
+   "type": "q_sm0c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm0d core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm0d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1a core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm1a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1b core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm1b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_fs20: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1c core sm_fa21: no pins listed; track alignment unchecked",
+   "type": "q_sm1c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm1d core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm1d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2a core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm2a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2b core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm2b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_fs20: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2c core sm_fa21: no pins listed; track alignment unchecked",
+   "type": "q_sm2c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm2d core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm2d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3a"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3a_v1 core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3a_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3b"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3b_v1 core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3b_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_fs20: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c core sm_fa21: no pins listed; track alignment unchecked",
+   "type": "q_sm3c"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_fs20: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3c_v1 core sm_fa21: no pins listed; track alignment unchecked",
+   "type": "q_sm3c_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln0: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx1: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln2: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx3: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_tp4: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln5: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx6: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln7: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx8: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_tp9: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln10: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx11: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln12: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx13: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_tp14: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln15: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx16: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_ln17: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_lx18: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_sm3d core sm_tp19: no pins listed; track alignment unchecked",
+   "type": "q_sm3d"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp0: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp1: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp2: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp3: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp4: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp5: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp6: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp7: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp8: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp9: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp10: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp11: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp12: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp13: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp14: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane_exp_l0: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_side0_s0: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_side0_s1: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su0 core u0_pretree0: no pins listed; track alignment unchecked",
+   "type": "q_su0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp0: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp1: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp2: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp3: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp4: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp5: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp6: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp7: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp8: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp9: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp10: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp11: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp12: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp13: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp14: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane_exp_l0: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_side0_s0: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_side0_s1: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su1 core u0_pretree0: no pins listed; track alignment unchecked",
+   "type": "q_su1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su2 core u0_pretree0: no pins listed; track alignment unchecked",
+   "type": "q_su2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3 core u0_pretree0: no pins listed; track alignment unchecked",
+   "type": "q_su3"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane0_3: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane4_7: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane8_11: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane12_15: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane16_19: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane20_23: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane24_27: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_lane28_31: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_su3_v1 core u0_pretree0: no pins listed; track alignment unchecked",
+   "type": "q_su3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc0 core u0: no pins listed; track alignment unchecked",
+   "type": "q_svc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc0 core u1: no pins listed; track alignment unchecked",
+   "type": "q_svc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc0 core u2: no pins listed; track alignment unchecked",
+   "type": "q_svc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc0 core u3: no pins listed; track alignment unchecked",
+   "type": "q_svc0"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc1 core u1: no pins listed; track alignment unchecked",
+   "type": "q_svc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc1 core u2: no pins listed; track alignment unchecked",
+   "type": "q_svc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc1 core u3: no pins listed; track alignment unchecked",
+   "type": "q_svc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc1 core u4: no pins listed; track alignment unchecked",
+   "type": "q_svc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc1 core u10: no pins listed; track alignment unchecked",
+   "type": "q_svc1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc2 core u5: no pins listed; track alignment unchecked",
+   "type": "q_svc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc2 core u6: no pins listed; track alignment unchecked",
+   "type": "q_svc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc2 core u7: no pins listed; track alignment unchecked",
+   "type": "q_svc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc2 core u8: no pins listed; track alignment unchecked",
+   "type": "q_svc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc2 core u17: no pins listed; track alignment unchecked",
+   "type": "q_svc2"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc3_v1 core u0: no pins listed; track alignment unchecked",
+   "type": "q_svc3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc3_v1 core u1: no pins listed; track alignment unchecked",
+   "type": "q_svc3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc3_v1 core u2: no pins listed; track alignment unchecked",
+   "type": "q_svc3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_svc3_v1 core u3: no pins listed; track alignment unchecked",
+   "type": "q_svc3_v1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u30: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u32: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u33: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u34: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u35: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u36: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u37: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u38: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u39: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u40: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u41: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u42: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u57: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u58: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u59: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u60: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u61: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u62: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u63: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u64: no pins listed; track alignment unchecked",
+   "type": "q_vm"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type q_vm core u65: no pins listed; track alignment unchecked",
+   "type": "q_vm"
   },
   {
    "level": "WARN",

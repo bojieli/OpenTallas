@@ -1,23 +1,30 @@
 {
  "scope": "plan stage only; not G3 ready and no RTL/physical closure claim",
  "python_hash_seed": 0,
- "plan_sha256": "5117214f6ebcfe8046dd4186aa455bcf205765a5afaab61b456391e82712d593",
- "prior_candidate_sha256": "011f4a80f3fb8ca3b70bb6e82d5f6a5e077a1406f4d8e649ba12f2ff96394576",
+ "plan_sha256": "10f48947b87c1bfee852d4d3cb9a3455c2a07af8d4450f55f57a6de3d53c90a0",
+ "prior_candidate_sha256": "5117214f6ebcfe8046dd4186aa455bcf205765a5afaab61b456391e82712d593",
  "logical_lane_members_unchanged": true,
  "inputs": {
   "census/hbm_census.json.gz": "010b8944b9a5711ad314852e545445d485eb8234d63d52e89008de4f701ceb6d",
   "dumps/dump-hbm/blocks.tsv": "35a824aa76d6cf7870fddea31c289d10029455d961060b85677bfbb4144831fb",
-  "dumps/dump-hbm/mpins.tsv.gz": "9a36ca54bbf5e6233a4fb51f34ee77a5dc65cc8c17922a8a2dec37dc4571d441"
+  "dumps/dump-hbm/mpins.tsv.gz": "9a36ca54bbf5e6233a4fb51f34ee77a5dc65cc8c17922a8a2dec37dc4571d441",
+  "inputs/cells_evidence.json": "cf840de65fc0da5c406b32ccf42783141138b22667bca4e921fb5181bd579f81",
+  "inputs/sm_split_cores.json": "364f802290cb9a0e656bfdf4249a2adf83a0d22e5f948e906d2004e36df9ccac",
+  "cores/pins/*.json (31 files, sha256 of \"name:sha\" lines)": "389cfaf194c3f721742e411bd95791109028326bf51e794513b67df1b01fe251"
  },
  "generators": {
-  "gen_plan_v2.py": "aec36ee32d3c37d0261f6aa904f80ef083dc5b9651f36a26391c1356656749c8",
-  "plan_backend_v2.py": "2273c5d7e1a316f7b8494382ecefdbdf65ff2241a8b2a6e463bc1901fbc036f5"
+  "gen_plan_v2.py": "030ab24fc6dfc8757d801cfd4b765afbf31d8153cdaa0e4a7191b14b047c4c6c",
+  "plan_backend_v2.py": "2273c5d7e1a316f7b8494382ecefdbdf65ff2241a8b2a6e463bc1901fbc036f5",
+  "taps_cores_v2.py": "ace23ea911260c9c1289bc25c340a3a5668df90a2747e15c6e5000667fa7bca7",
+  "collect_cells_v2.py": "d2dfae189e04d65747b4975ef0bd237cf8abe48609c67fc7bce9bd285924494c"
  },
  "conditions": [
-  "independent exact-source G1",
+  "independent exact-source G1 of taps/cores",
   "source-bound exact-pin G2",
-  "large-region clock/core/pin budgets",
+  "RTL splits of the over-cap leaves (plan_notes_v2.json over_cap) and SM R1-R4",
+  "M3-pinned as-built cores re-pinned (no pins_file)",
   "internal SM census and RTL binding",
   "CP1 and per-partition G3"
- ]
+ ],
+ "taps_cores_post_pass": "HBM-P3-TAPS 10-23: plan = prior plan + clock.taps[] + hard_cores[] + type note cell budget (partitions/buses/ports/lanes/latency byte-identical to 5117214f); plan_notes_v2.json has cells, splits, tap metrics, C0 tree"
 }
