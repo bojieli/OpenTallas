@@ -27,6 +27,8 @@ TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
 MU_ARGS=()
 [ "${D2D_ROPE:-0}" = 1 ] && MU_ARGS+=(--rope)
+# Match the current source-derived STATUS slot selected by layer_compile.
+[ -n "${D2D_STATUS_OFS:-}" ] && MU_ARGS+=(--status-ofs "$D2D_STATUS_OFS")
 [ -n "${D2D_HEAD_PREPARE_EDGES:-}" ] && MU_ARGS+=(--head-prepare-edges "$D2D_HEAD_PREPARE_EDGES")
 [ "${D2D_MU:-0}" = 1 ] && MU_ARGS+=(--mu)
 # KV-DCAL2 10-19 (KV-EMB2): D2D_CTX_HOST_REQ=<measured HOST RESULT->context edges> moves the token-run CONTEXT slot after
