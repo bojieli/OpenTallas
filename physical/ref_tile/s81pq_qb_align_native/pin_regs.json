@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81_pq_qb_align_native",
- "enable": false,
- "reason": "The tile IS a pin-register pair: every input lands in hr0/bt0 and every output launches from hr1/bt1 (plain DFF, p3); a wrapper flop would add 2 edges to the fixed QB/IX/CTL alignment for no gain."
-}

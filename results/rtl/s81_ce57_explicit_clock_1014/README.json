@@ -1,3 +1,0 @@
-{"bench":"tb_s81ph_coll_sys (CE57) four-die explicit-clock (OT_S81PH_COLL_CES_ENTRIES) split ceh build","source_commit":"bec9f720bd67467b8b00f9c025cd778e2cb3e66d","host":"ot-epyc4",
- "exact":"PASS dut_last 2791 coverage 4+12 parents","mutants":{"OT_S81PH_MUT_CESX":"FAIL errs 1010","OT_S81PH_MUT_CESL":"FAIL errs 743","OT_S81PH_MUT_LOCKSTEP+NOASSERT":"FAIL errs 1590 + coverage refusal"},
- "runner":"ce57.sh (rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh with the dscoll_ces spec base defines)"}

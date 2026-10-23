@@ -1,4 +1,0 @@
-textbook_lint: WARN qfd_tt_ctlm_dv_hp13_rrloc_native32 cells 168,147 flops 24,386 depth 718.5 ps util None reach None um (9.0 s)
-textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n[0]","sinks":1,"flops":1,"macros":0}]}
-textbook_lint: INFO clock_roots max_root_sinks=12344 root=port:ck_hr[0] rule=PASS: 12,344 sinks on the largest root; no measured clock tree (no --cts gate evidence)
-textbook_lint: WARN(refuse-tier) logic_depth: reg->reg stage u_8680._2_ -> u_1323._2_/D: ~718 ps estimated (24 logic levels) > 600 ps: pipeline / restructure the stage

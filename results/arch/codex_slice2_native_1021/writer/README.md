@@ -1,5 +1,0 @@
-Opt-in n32_split writer extends the existing n32 local writer to the existing vector-reset grouping. lp.py formerly ignored landing_writer=n32 for split landings; the explicit option now selects this module. Default output and schedule remain unchanged. No change to original landing library modules.
-
-Fleet Verilator5.050: D4/E2 and D8/E4, W1031 (44 chunks/two reset groups), random data, repeated reset and unequal reset-group offsets:1396 comparisons each PASS, all valid banks/epochs/read outputs identical. Wrong selector rotation mutant fails LAND_FAULT, committed witness mut.log. Unwritten banks are intentionally unconstrained, as for existing n32 writer.
-
-Largest local mapped selector case W24/D8 synthesized in pinned ORFS image16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29, Yosys0.68, five exact ASAP7 RVT TT libraries. Native census PASS max26 loads,0violations,0role errors. Native source/log/netlist/census retained. This is component fanout evidence; parent census, all new source qualification and parent geometry/clock/STA remain owed. No gate/route/REVIEW/submit authorized by these results.

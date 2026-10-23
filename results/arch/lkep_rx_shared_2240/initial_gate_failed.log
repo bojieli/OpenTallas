@@ -1,7 +1,0 @@
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE INFO oflop: N face 16.9 pins/um (oh_vt, oh_dt_flat): recipe-2 hold stages take 3.7 um behind the face, the pin flops need gap 4.7 um and 33 columns (derived in the flow)
-GATE INFO remote: ot-run selected ot-epyc4 for 16 GB; inputs ship there before admission
-GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_lkep_rx_shared_ref_20261014-021917.source_snapshot.json
-GATE INFO remote: remote log /tmp/ref_gate_lkep_rx_shared_ref_20261014-021917.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/lkep_rx_shared_ref-20261014-021917
-GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS synthesis failed with exit 2:  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
-PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

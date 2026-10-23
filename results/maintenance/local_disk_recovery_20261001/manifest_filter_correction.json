@@ -1,6 +1,0 @@
-{
-  "finding": "Initial bulk audit text-extension allowlist excluded .manifest extension. Corrected audit includes all304 discovered .manifest files plus refreshed queue copies before further deletion.",
-  "risk_controls": "Every prior removed path was independently freshly checked against local process cwd/cmdline/open files/maps, owner retirement or clean merged baseline, and retained complete HEAD/dirty commits. Queue snapshot checked for previously removed paths; live source pins remain protected.",
-  "initial_filter": "json txt tmp jsonl yaml yml tsv",
-  "corrected_extension": ".manifest"
-}

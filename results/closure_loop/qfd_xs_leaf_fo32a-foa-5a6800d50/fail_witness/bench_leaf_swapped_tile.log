@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_xs_leaf_fo32a-foa-5a6800d50 bench bench_leaf_swapped_tile host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qfd_xs_leaf_fo32a-foa-5a6800d50 log cl/bench_leaf_swapped_tile.a1b1.log captured 2026-10-22T08:30:20-07:00
-# fail_regex '^MISMATCH answer'
-MISMATCH answer edge=22 ref=1/133f1320130a1306/0 dut=1/113f1120110a1106/1
-MISMATCH answer edge=30 ref=1/133400001307132f/0 dut=1/113400001107112f/1
-MISMATCH answer edge=38 ref=1/b5a70000964d133d/0 dut=1/112000001104113d/1
-MISMATCH answer edge=46 ref=1/1233e6e1121e1201/1 dut=1/103310052c102f25/1
-FAIL errors=485 edges=4028 answers=996

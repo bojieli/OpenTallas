@@ -1,8 +1,0 @@
-TREE XTK=3 XMK=0 XMF=16 XLO=0 XQR=0 me_consumers=218 me_toggles=0 me_t_checks=0 pctl_changes=4277 xline_changes=0
-WQ SQD=4 max_waiting mx=2 rd=1 seq=2 waits=147 model_overflow=0 dut_overflow=0 WDIR=0
-PASS qfd_vm_bv_ports NRB=16 SW=8 VL=15 su_reads=60170 row_reads=9427 tuples=2683 bursts=1612 land_steps=1603 cycles=40000
-- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:495: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 41us; walltime 3.210 s; speed 12.871 us/s
-- Verilator: cpu 3.054 s on 1 threads; allocated 11 MB
-maxrss_kb=6332 wall=3.21

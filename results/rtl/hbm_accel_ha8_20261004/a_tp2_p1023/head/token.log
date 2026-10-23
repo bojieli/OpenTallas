@@ -1,9 +1,0 @@
-images loaded in 9.0 s
-stream: total_words=0 preroll=0 ctl_cycles; words_ready_at_start=0/0
-models constructed in 9.3 s (tiles/die=1536 nodes/die=1440)
-progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=1s passes=3
-progress tick=4096 cyc=4097 pc_base=0/0 me_busy=3873/3873 wall=757s passes=11931
-STAGE head done cycles=4634 start_cyc=7 end_cyc=4641 me_busy=4399/4399 next_token=12147/12147 next_val=41f41df1/41f41df1 seq_fault=0 core_fault=0 coll_fault=0 me_writes=0 su_writes=4097 wall=861s
-HBMSTAT head die0 hbm_wait=0 kv_wait=0 matmul=4302 attention=0 collective=16 stream_unit=295 other=22 ctl_cycles=3775 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=4461 hbm_fault=0 wst_fault=0
-HBMSTAT head die1 hbm_wait=0 kv_wait=0 matmul=4302 attention=0 collective=16 stream_unit=295 other=22 ctl_cycles=3775 rd=0 room_block=0 desc_gap=0 words_done=0 last_wread_cyc=4461 hbm_fault=0 wst_fault=0
-QWEN_HBMACC_TOKEN PASS stages=1 token=12147 val=41f41df1 die1_token=12147 cycles=4641 edges=4641 settle_max=2 wall_s=861.5 RSS_KiB=1293684 threads=4 ctl_cycles=3776 preroll=0

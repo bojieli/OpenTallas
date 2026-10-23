@@ -1,5 +1,0 @@
---- ds_native.py
-+++ ds_native.py MUT_W13_ORDER
-@@
--                for mat, start in (("w1", 2 * lo), ("w3", lo + hi)):
-+                for mat, start in (("w3", 2 * lo), ("w1", lo + hi)):

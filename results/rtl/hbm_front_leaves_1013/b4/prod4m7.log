@@ -1,4 +1,0 @@
-FAIL load f 4 m 1 n 4096: done 0 fault 0
-[200024000] %Fatal: tb_hgi_dma_front_qwen_load4b.sv:137: Assertion failed in tb_hgi_dma_front_qwen_load4b.load: FATAL front never ready (previous load stuck)
-%Error: rtl/hbm_accel/generic/peers/tb_hgi_dma_front_qwen_load4b.sv:137: Verilog $stop
-Aborting...

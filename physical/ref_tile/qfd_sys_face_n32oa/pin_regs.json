@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_sys_face_n32_bounded_p192",
- "enable": false,
- "reason": "RTL registers every pin: qfd_sys_face_n32_bounded carries the captured actual pin wrapper of the closed MU1/MU_HEAD1 gate (every input one qfd_bmath_dff_p capture, +35 same-edge producer copies, every output from a kept FF; obs_fault captured by u_obs_pin); native boundary inventory 2651 boundary bits PASS (448cd5a2f). Flow pin regs OFF to avoid double wrapping"
-}

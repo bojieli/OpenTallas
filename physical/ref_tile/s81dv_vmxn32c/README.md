@@ -1,1 +1,0 @@
-SAFE8 unchanged from a/b pinbound geometry/registered2edges/native28/GRT0. RESET FIX: rawreset onlyrs0, kept3secondstagecopies reset fromrs0 andsample rs0; previous4rawresetloads removed. Release remainsedge2, asynchronous assertion propagates viafirststage. Actual census/pairedcorner/gate must qualify; prior sourcepositive appliesonlyoldreset, newbench runs inparallel.

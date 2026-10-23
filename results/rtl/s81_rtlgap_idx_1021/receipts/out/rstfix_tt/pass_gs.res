@@ -1,1 +1,0 @@
-IDXRD_CASE BAD rstfix_tt/pass_gs: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 256 keys 2048 words 128 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 2072 end_to_last 1991 nerr 95 nopen 95 qerr 0 slice_err 16 | maxrss_kb=188504 wall=2:48.76

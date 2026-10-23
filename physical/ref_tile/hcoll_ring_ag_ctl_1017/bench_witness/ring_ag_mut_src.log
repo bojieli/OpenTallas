@@ -1,8 +1,0 @@
-# fail witness (SUBMIT-FIX 2026-10-18): stdout+stderr of the job.json bench cmd, run verbatim on ot-epyc4 from a git-archive export of 6b2f5be93
-RING_AG data q0 d0 cyc5 src0/2 tag0/0
-RING_AG data q1 d0 cyc5 src1/0 tag0/0
-RING_AG data q2 d0 cyc5 src2/3 tag0/0
-RING_AG data q3 d0 cyc5 src3/1 tag0/0
-RING_AG data q0 d1 cyc6 src0/1 tag1/1
-RING_AG FAIL errors=2688 checked=0 expected=2688
-BENCH_EXIT 1

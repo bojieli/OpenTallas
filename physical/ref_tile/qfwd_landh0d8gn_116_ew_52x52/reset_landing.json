@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qfd_landh0d8gn_116_EW_52x52",
- "enable": false,
- "reason": "RTL face landing (RSL=1, QW-LANDW3 10-20): rs reaches exactly 2 kept face flops (rs0 -> rs1/regions, rs0c -> per-copy rs1 of <=8 calendar copies), then the second stage fans out at equal depth (each copy releases rs -> rs0|rs0c -> rs1 -> rc on the same edges as the d8f masters). A flow-inserted landing would add 2 release edges the K strap/calendar does not price."
-}

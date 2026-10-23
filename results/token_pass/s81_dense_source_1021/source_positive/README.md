@@ -1,1 +1,0 @@
-Exact fleet source snapshots used for the successful replay. The publication lower_xs additionally copies the qualified frame_schedule into new vectors and records its hash; this metadata-only addition was made after this immutable replay. The successful vector model was copied explicitly before replay. No arithmetic or hardware source changed.

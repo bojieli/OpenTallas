@@ -1,7 +1,0 @@
-xpad2 mismatch cyc 9
-xpad2 mismatch cyc 10
-xpad2 mismatch cyc 11
-FAIL qfd_vm_xpad2 MUT=2 errors=3991 of 3991
-[40006000] %Fatal: tb_qfd_vm_xpad2.sv:36: Assertion failed in tb_qfd_vm_xpad2: FAIL
-%Error: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv:36: Verilog $stop
-Aborting...

@@ -1,7 +1,0 @@
-# Explicit forwarded real-clock phase correction
-
-The unchanged tiny fixture fails under the old mixed metric with474.4ps spread. Raw current-scene `ot_forwarded_0` tags establish f0 rise42.952544/fall459.619455, f1 rise46.924586/fall463.591500; the fall values include source waveform half-period416.6669ps. Soft rs0/rs1 already use phase-normalized clock values21.797607/19.183778. Raw source-labelled tags and original FAIL are retained in arrival_basis_original.log; probe_arrival_basis.py reruns that observation.
-
-For exact `forwarded_soft_clocks` ports only, hard-child arrivals now use the identical existing `ot_ce_clock_wire` metric as soft sinks. It matches current-scene actual clock identity, subtracts the actual source-edge waveform phase, preserves rising pin-transition reference (fall-only permitted), and fails nonfinite/missing/ambiguous tags. Original insertion min/max, 80ps spread rule, linked timing and all STA opposite-edge functional obligations remain intact. All ports outside that exact opt-in contract retain original data-only visitor semantics.
-
-The causal mixed_phase fixture restores the old hard query alone, retaining placement, waveform, source references, clock ownership and all acceptance limits. It must FAIL the actual spread rule while positive and fresh-CTS cases PASS; source/membership and missing-init negatives remain required. Five static tests PASS locally; actual fleet checks and paired suites are delegated to root_integration before publication/adoption.

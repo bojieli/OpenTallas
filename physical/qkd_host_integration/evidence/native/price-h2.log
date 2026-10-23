@@ -1,6 +1,0 @@
-HING descs=8 beats=2048/2048 sectors=2048 reads=0 errors=0 oob=0 dones=8/8 tag_err=0 fault_words=0 fault=0 ck_cycles=5117 timeout=0 share=0 first_o=579 last_o=4712 marks=0 mark_bad=0
-PASS NATIVE_INGEST sectors=2048 ck=5117
-- rtl/test/qwen_host/tb_qkd_host_native_ingest.sv:172: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4us; walltime 0.021 s; speed 207.695 us/s
-- Verilator: cpu 0.021 s on 1 threads; allocated 8 MB

@@ -1,8 +1,0 @@
-KNORM mismatch copy 0 rs_h 3fc7e017/4095ef56 rs_k 4095ef56/3fc7e017
-KNORM mismatch copy 1 rs_h 3f9f02b5/40d1c17b rs_k 40d1c17b/3f9f02b5
-KNORM mismatch copy 2 rs_h 3f9aacf2/4070552f rs_k 4070552f/3f9aacf2
-KNORM mismatch copy 3 rs_h 3f077a55/4117e778 rs_k 4117e778/3f077a55
-KNORM copies=4 bad=4 fault=0 norm_latency=73 gates=4
-[428000] %Fatal: tb_s81sl_eg_knorm.sv:38: Assertion failed in tb_s81sl_eg_knorm: KNORM FAIL
-%Error: /srv/opentallas-scratch/claude/rtlgap-sukv-1021/src/rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_eg_knorm.sv:38: Verilog $stop
-Aborting...

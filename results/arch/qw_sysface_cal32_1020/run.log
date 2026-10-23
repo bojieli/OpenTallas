@@ -1,8 +1,0 @@
-SYSCAL32_CASE_PASS NE=16 MUT=0 checks=2593 events=342
-SYSCAL32_CASE_PASS NE=32 MUT=0 checks=5025 events=667
-SYSCAL32_CASE_PASS NE=64 MUT=0 checks=9889 events=1315
-SYSCAL32_PASS
-- /srv/opentallas-scratch/claude/codex-qw-syscal32-1020/src/rtl/test/qwen_split/tb_qwen_syscal32.sv:65: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 99us; walltime 0.029 s; speed 3.414 ms/s
-- Verilator: cpu 0.029 s on 1 threads; allocated 7 MB

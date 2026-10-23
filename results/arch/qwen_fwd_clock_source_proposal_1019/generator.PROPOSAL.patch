@@ -1,5 +1,0 @@
---- a/tools/qwen_rom_fulldie_b3r2.py
-+++ b/tools/qwen_rom_fulldie_b3r2.py
-@@ -6841 +6841 @@
--            ln['src_ck'] = net.get((h0, 'ck'), net.get((h0, 'ck_s'), ln.get('src_ck')))
-+            ln['src_ck'] = net.get((h0, 'ck_s'), net.get((h0, 'ck'), ln.get('src_ck')))

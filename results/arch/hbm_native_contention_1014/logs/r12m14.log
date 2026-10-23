@@ -1,5 +1,0 @@
-THREEPRODUCER_SU_START load0 mode0 range0:65535 cycle8
-THREEOWNER_BAD_APERTURE offered_new_mirrorf held_metadata0 pending_SU_writes96 before_returned_ACK
-[18333000] %Fatal: tb_hbm_native_threeproducer.sv:144: Assertion failed in tb_hbm_native_threeproducer: FATAL actual native hardware queue00000000 router00 lease0 parent00000000000000000000000000000000ffffffff DMAbridge00000000000000000 status000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 su0
-%Error: /srv/opentallas-scratch/hbm-native-threeproducer-1014/r12m14/src/rtl/test/hbm_accel/generic/native_contention/tb_hbm_native_threeproducer.sv:144: Verilog $stop
-Aborting...

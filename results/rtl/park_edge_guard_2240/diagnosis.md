@@ -1,5 +1,0 @@
-# PARK residual edge hypothesis
-
-Bank-row Q2 actual route still failed GRT-0116 with 43 total overflow (prior 12629), at 21.35% global usage. Of 41 diagnostic markers, 40 have zero capacity, 30 lie within 1.2um and 37 within 1.8um of a vertical SRAM edge. This is a routing-cell edge hypothesis, not a proved net diagnosis; failed ODB was removed before the attempted read-only query. Apply the published whole-GCell 1.2um M5 SRAM-edge guard before GRT and remove after DRT. Preserve all 12 actual macros, real PG/OBS, FIFO512x545 state, packet/clock/reset epochs and bank-row topology. Q3 has separately failed its prior local-clock route; it uses this distinct bank-row guarded successor. No gate relaxation, no catalog changes, no native fit claim; measured CTS/routing must test this hypothesis.
-
-The failed ODB retrieval exited 1 because the terminal archive no longer contained the database. This does not establish which individual nets caused the residual congestion. The source-ready guarded candidates require new real CTS and routing evidence.

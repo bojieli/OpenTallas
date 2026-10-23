@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_dv_s5_ctl_repair4_leaf",
- "enable": false,
- "reason": "the RTL registers every input at its pin (HARD 1 pin registers, no reset) and launches every output from a flop; a flow wrapper would add a second, unpriced +1"
-}

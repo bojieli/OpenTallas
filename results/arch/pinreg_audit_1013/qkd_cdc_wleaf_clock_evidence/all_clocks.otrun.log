@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: ot-epyc4       free   849 GB (avail 1013, growth 116, headroom 48, waiters 0/0 GB) running 8 disk 1429 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/scratch/claude/codex-takeover-1013/clock-ref/qkd_cdc_wleaf
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1864672-1791915581 after 1 s
-CK_SS_MEAN=210 CK_SS_ALL_MEAN=203 CK_SS_MIN=191 CK_SS_ALL_MIN=189 CK_SS_MAX=238 CK_SS_ALL_MAX=238 CK_TT_MEAN=210 CK_TT_ALL_MEAN=203 CK_TT_MIN=191 CK_TT_ALL_MIN=189 CK_TT_MAX=238 CK_TT_ALL_MAX=238 CK_FF_MEAN=174 CK_FF_ALL_MEAN=167 CK_FF_MIN=156 CK_FF_ALL_MIN=153 CK_FF_MAX=201 CK_FF_ALL_MAX=201 CK_SSLIB_MEAN=269 CK_SSLIB_MIN=248 CK_SSLIB_MAX=298 CK_SSLIB_ALL_MEAN=261 CK_SSLIB_ALL_MIN=246 CK_SSLIB_ALL_MAX=298 CK_ROUTE_REF=TT
-CK_SS_MEAN=278 CK_SS_ALL_MEAN=281 CK_SS_MIN=267 CK_SS_ALL_MIN=265 CK_SS_MAX=312 CK_SS_ALL_MAX=318 CK_TT_MEAN=278 CK_TT_ALL_MEAN=281 CK_TT_MIN=267 CK_TT_ALL_MIN=265 CK_TT_MAX=312 CK_TT_ALL_MAX=318 CK_FF_MEAN=223 CK_FF_ALL_MEAN=224 CK_FF_MIN=212 CK_FF_ALL_MIN=211 CK_FF_MAX=255 CK_FF_ALL_MAX=260 CK_SSLIB_MEAN=366 CK_SSLIB_MIN=354 CK_SSLIB_MAX=403 CK_SSLIB_ALL_MEAN=370 CK_SSLIB_ALL_MIN=352 CK_SSLIB_ALL_MAX=409 CK_ROUTE_REF=TT
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1864672-1791915581): exit 0

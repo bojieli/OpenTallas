@@ -1,9 +1,0 @@
-BENCH MUT=0 inj_idx_join MUT=0 idx_words=64 su_words=148 mismatches=0 faultA=0 faultB=1 PASS 
-BENCH MUT=1 inj_idx_join MUT=1 idx_words=64 su_words=148 mismatches=212 faultA=0 faultB=1 FAIL 
-BENCH MUT=2 inj_idx_join MUT=2 idx_words=64 su_words=148 mismatches=212 faultA=0 faultB=1 FAIL 
-BENCH MUT=3 inj_idx_join MUT=3 idx_words=64 su_words=148 mismatches=64 faultA=1 faultB=1 FAIL 
-BENCH MUT=4 inj_idx_join MUT=4 idx_words=64 su_words=148 mismatches=0 faultA=0 faultB=0 FAIL 
-LOCKSTEP MUT=0 CIJ_RG_LOCKSTEP PASS checks=30000 fault_edges=29989 
-LOCKSTEP MUT=1 CIJ_RG_LOCKSTEP FAIL checks=30000 errors=30000 
-LOCKSTEP MUT=2 CIJ_RG_LOCKSTEP FAIL checks=30000 errors=22339 
-INJ_IDX_JOIN_RG_BENCH PASS

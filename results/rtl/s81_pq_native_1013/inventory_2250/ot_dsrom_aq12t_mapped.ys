@@ -1,6 +1,0 @@
-read_json /var/tmp/s81rom2250/src/results/rtl/s81_pq_native_1013/inventory_2250/ot_dsrom_aq12t.json
-dffunmap
-dfflibmap -liberty /var/tmp/s81rom2250/libs/merged.lib
-abc -liberty /var/tmp/s81rom2250/libs/merged.lib
-stat -liberty /var/tmp/s81rom2250/libs/merged.lib
-write_json /var/tmp/s81rom2250/src/results/rtl/s81_pq_native_1013/inventory_2250/ot_dsrom_aq12t_mapped.json

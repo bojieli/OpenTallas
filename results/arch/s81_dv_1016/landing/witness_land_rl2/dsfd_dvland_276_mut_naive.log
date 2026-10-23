@@ -1,6 +1,0 @@
-# PO-SUBMIT 10-19 fleet bench (ot-run, iverilog sim; lint Verilator 5.050): python3 tools/s81_dv/land_bench.py --tile dsfd_dvland_276 --rst-land 2 --variant mut_naive, branch claude/po-submit-1019
-mut_naive FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w276': [0, 1], 'dL_halfT/w276': [4], 'dL_T_wrap_age1/w276': [7, 8], 'dL_2T_wrap_16hop/w276': [17, 18]}
-BENCH PASS out/dsfd_dvland_276_mut_naive/bench.json
-LAND_BENCH FAIL dsfd_dvland_276 mut_naive D=4 KW=3 sweep 0/36 slip-fault 4/4 latency {'dL0_wrap/w276': [0, 1], 'dL_halfT/w276': [4], 'dL_T_wrap_age1/w276': [7, 8], 'dL_2T_wrap_16hop/w276': [17, 18]}
-EXIT 1
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-415282-1792407064)

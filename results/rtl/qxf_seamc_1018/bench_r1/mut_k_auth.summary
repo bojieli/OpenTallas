@@ -1,6 +1,0 @@
-mut_k_auth expect=FAIL got=FAIL -> OK  (slice C.rx_record valid age 3, SF.rx_record valid age 5)
-    QXF_CFG EXP_C=3 EXP_SF=5 results=12 begin=0 auth=1 witness=1 emb=1 lat_c=4 lat_sf=-1 jf=1 wf=0
-    QXF_SEAM FAIL 123 errors in 316 checks; first: sys_face record port slot_fault (rx_v !== auth | context: SF.rx_record torn)
-    QXF_ERR t=1082000 sys_face record port slot_fault (rx_v !== auth | context: SF.rx_record torn)
-    QXF_ERR t=1092000 sys_face record port slot_fault (rx_v !== auth | context: SF.rx_record torn)
-    QXF_ERR t=1102000 sys_face record port slot_fault (rx_v !== auth | context: SF.rx_record torn)

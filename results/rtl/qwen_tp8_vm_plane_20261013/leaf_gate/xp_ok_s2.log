@@ -1,6 +1,0 @@
-PASS qfd_vm_xplane NRB=64 XPR=10 exact 2923 checks, 501 range-edge beats, 744 stalls, +11 engine edges
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xplane.sv:88: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 30us; walltime 0.462 s; speed 64.964 us/s
-- Verilator: cpu 0.462 s on 1 threads; allocated 11 MB
-maxrss_kb=7392 wall=0.46

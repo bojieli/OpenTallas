@@ -1,6 +1,0 @@
-Verilator 5.050 2026-07-01 rev v5.050
-IDX_SCORE_FAULT_PASS cases=37 all8lanes valid/keyvalid guards oldprotocol sticky
-[26000] %Fatal: tb_idx_score_fault.sv:12: Assertion failed in tb_idx_score_fault.run_case: IDX_SCORE_FAULT_FAIL valid=1 kv=01 fl=01 pf=0 got=0 expected=1
-[146000] %Fatal: tb_idx_score_fault.sv:12: Assertion failed in tb_idx_score_fault.run_case: IDX_SCORE_FAULT_FAIL valid=1 kv=00 fl=01 pf=0 got=1 expected=0
-[86000] %Fatal: tb_idx_score_fault.sv:12: Assertion failed in tb_idx_score_fault.run_case: IDX_SCORE_FAULT_FAIL valid=0 kv=01 fl=01 pf=0 got=1 expected=0
-IDX_TAIL_FAULT_PASS cases=4 finite4.0 fault-to-zero actual-overflow invalid-key-ignored

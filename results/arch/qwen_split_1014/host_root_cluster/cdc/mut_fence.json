@@ -1,8 +1,0 @@
-[
- {
-  "mutant": "unfix qkd_host_visibility_fence (1 instance(s) of qkd_hr_visibility_fence_cdc bind the original)",
-  "refusal": "reviewed_gray_fifos cross-family asynchronous control host_rst_n (core) -> service_faults_host[3]/u_rank__fence_fault/u_rank__u_fence.fault/u_rank__u_fence.g_on.fault_q (host); only an ot_reset_sync pipe may take it",
-  "top": "qkd_hr_cdc_host",
-  "verdict": "REFUSED"
- }
-]

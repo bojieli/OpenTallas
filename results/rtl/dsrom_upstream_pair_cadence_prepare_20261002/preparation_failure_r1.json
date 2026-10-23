@@ -1,6 +1,0 @@
-{
-  "status": "STATIC_PREPARATION_ASSERTION_FAILED_NO_HDL",
-  "error": "assert len(f.words[2])==8 and not f.words[3]",
-  "profile": "existing_fast8",
-  "cause": "Existing PP reorder writes explicit zero words to idle macro; generic profile uses sparse empty dictionary. Both represent same logical ROM image. Fix preparation validation to require every idle word zero, not dictionary emptiness. No source or expected arithmetic changed."
-}

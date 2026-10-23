@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/s81-fld-ranks-proof-1014
-ot-run: ot-epyc4       admits   439 GB (avail 666, growth 178, headroom 48, waiters 0/0 GB) load 61/128 running 14 disk 824 GB 
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-fld-ranks-proof-1014
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-fld-ranks-proof-1014
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2624837-1791981896 after 0 s
-ARB_PASS checks=16384 finalptr=16 finalreq=1024 elapsed=16384000
-rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_fld_parallel_arb.sv:27: $finish called at 16384000 (1ps)
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2624837-1791981896): exit 0

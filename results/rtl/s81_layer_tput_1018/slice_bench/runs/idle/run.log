@@ -1,8 +1,0 @@
-DV_SLICE_T0=1792345407.561834364
-DV_SLICE_T1=1792345442.676135942
-DV_SLICE cycles=2000 in_events=0 out_checks=0 mismatches=0 fault_cycles=1962 first_fault=37
-TB_DV_SLICE FAIL
-- tb/tb_slice_top.sv:392: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 37.153 s; speed 46.332 ns/s
-- Verilator: cpu 37.145 s on 1 threads; allocated 315 MB

@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hcoll_ring_b_stop_1018-r1-912978cd9 bench bench_ring_b_stop_mut_ttl host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hcoll_ring_b_stop_1018-r1-912978cd9-bench log cl/bench_ring_b_stop_mut_ttl.a1b1.log captured 2026-10-18T05:25:24-07:00
-# fail_regex 'RING_B_STOP FAIL mutant='
-RING_AG2 unexpected fault cycle7 A0 Bf
-RING_AG2 unexpected fault cycle8 A0 Bf
-RING_AG2 unexpected fault cycle9 A0 Bf
-RING_AG2 unexpected fault cycle10 A0 Bf
-RING_AG2 unexpected fault cycle11 A0 Bf
-RING_B_STOP FAIL mutant=ttl: RING_AG2 unexpected fault cycle7 A0 Bf
