@@ -222,7 +222,14 @@ def whole_tile(r, master, vm, kit, src, spec, charge, KSD):
     r.update(kit_tile_file=None, die_tile_file=b.get('file'), identity='whole_tile')
     if b.get('module') != vm or b.get('file') != wf[0]:
         return dict(r, verdict='REFUSE', why=f'die binds {b.get("module")} from {b.get("file")}, the view is {vm} from {wf[0]}')
-    changed = [s for s in spec.get('sources', []) if blob(src, s) is None or blob(src, s) != blob('HEAD', s)]
+    try:
+        aliases = KSD.selected_view_source_map(kit=kit, master=master, source_commit=src)
+    except (ValueError, OSError) as error:
+        return dict(r, verdict='REFUSE', why=f'selected source identity refused: {error}')
+    if aliases:
+        r['selected_source_identity'] = dict(view_source_commit=src, paths=aliases)
+    changed = [s for s in spec.get('sources', [])
+               if blob(src, s) is None or blob(src, s) != blob('HEAD', aliases.get(s, s))]
     if changed:
         return dict(r, verdict='REFUSE', why=f'kit sources changed since the view source {src[:9]}: {changed[:6]}')
     kp = {k: str(v) for k, v in (spec.get('params') or spec.get('parameters') or {}).items()}

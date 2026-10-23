@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.kv.rv5_selected_source.v1",
+  "kit": "qkd_kvs_attn_rv5",
+  "master": "qkd_kvs_attn",
+  "source_commit": "2cdc6bb28a6a757666f337936a674a49726ac210",
+  "canonical_source": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "selected_source": "rtl/qwen_sys/static_kv_die_20261017/rv5_frozen_1022/qkd_native_attention_record.sv",
+  "sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+  "parameter_defaults": {
+    "KV_SIDE": 1,
+    "MUT": 0
+  },
+  "top_parameters": {
+    "RETIRE_STATIC": 1,
+    "STATUS_DELAY": 213
+  }
+}

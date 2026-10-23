@@ -1871,7 +1871,16 @@ def sources():
         s.add(RESET_SYNC_RTL)
     if PC_SRAM:
         s.update(PC_SRAM_RTL)
-    return sorted(s)
+    aliases = selected_view_source_map()
+    return sorted({aliases.get(path, path) for path in s} | set(aliases.values()))
+
+
+def selected_view_source_map(kit=None, master=None, source_commit=None):
+    from kv_rv5_source import selected_source_map
+    return selected_source_map(ROOT, os.environ.get('OT_KV_ATTN_RV5_FROZEN', '0') == '1',
+        active=ON and ATTN_R16 and 'kvs_attn' in FACE_LAND_SEL
+               and FACE_LAND_TILES['kvs_attn']['kit'] == 'qkd_kvs_attn_rv5',
+        params=ATTN_R16_PARAMS, kit=kit, master=master, source_commit=source_commit)
 
 
 # ------------------------------------------------------------------------------------------------ die bindings
