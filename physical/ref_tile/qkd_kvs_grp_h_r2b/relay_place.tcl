@@ -14,7 +14,7 @@ set ot_rl_list {}
 foreach i [$ot_rl_blk getInsts] {
   if {[[$i getMaster] isBlock]} continue
   set name [string map {\ {}} [$i getName]]
-  if {![regexp {^u(\d+)_c\d+[/.]u_cell$} $name -> ci]} continue
+  if {![regexp {^u(\d+)_c\d+([/.]u_cell)?$} $name -> ci]} continue
   if {![info exists ot_rl_pt($ci)]} continue
   if {[$i isFixed]} continue
   lassign $ot_rl_pt($ci) x y

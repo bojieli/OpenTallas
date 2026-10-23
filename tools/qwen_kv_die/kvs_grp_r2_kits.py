@@ -77,7 +77,7 @@ set ot_rl_list {{}}
 foreach i [$ot_rl_blk getInsts] {{
   if {{[[$i getMaster] isBlock]}} continue
   set name [string map {{\\ {{}}}} [$i getName]]
-  if {{![regexp {{^u(\d+)_c\d+[/.]u_cell$}} $name -> ci]}} continue
+  if {{![regexp {{^u(\d+)_c\d+([/.]u_cell)?$}} $name -> ci]}} continue
   if {{![info exists ot_rl_pt($ci)]}} continue
   if {{[$i isFixed]}} continue
   lassign $ot_rl_pt($ci) x y
@@ -149,7 +149,7 @@ def main():
                 hits = [m for m in cert['macros'] if __import__('fnmatch').fnmatchcase(m['original'], slot['inst'])]
                 if len(hits) != 1:
                     raise ValueError(f"macro identity mapping is not unique: {slot['inst']}: {hits}")
-                slot['inst'] = hits[0]['instance']
+                slot['inst'] = hits[0]['instance'].split('.')[0] + '*'  # OpenDB may collapse a one-cell wrapper
 
             # hclk boundary: every o_ctl bit is now a core-clock exit flop (own status re-registered on ck)
             for kind_, ext in (('sdc', '_hck.sdc'), ('tcl', '_hck_boundary.tcl')):
