@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:06:01.926916-07:00",
+  "gate_commit": "2026-10-22T21:55:20-0700",
+  "geometry_sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf",
+    "components": {
+      "outline": "eae217f09dfa700dc502d3117ef542dd1e3433e31d48790a9bda7a43db173688",
+      "macros": "1a8813a35a39bd874c7dc404980990c6113f129f5949b2421f0c5b9fe1206a44",
+      "pins": "499b6eb65d248f9901a5b7a20e65715def8ab3fff2ea99e23b7d33219ad36c56",
+      "clock_entry": "3d550c6537bbeac89d73dcc93e7d865ab05bba2fc85cf4ba3db6a681a1f597d3"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Viewed twenty SRAM macros in two five-high TX columns and ten-high east RX column; explicit regular macro lattice and85.08um channel separation. Existing frozen-interface geometry retained.",
+    "std_cell_band": "Viewed floorplan+density; continuous broad centre band with horizontal cross channels, no power island or red density region.",
+    "pin_spread": "7424 actual signal/clock pins accessible, zero missing/outside/inaccessible. Maximum face2386 over604.8um below6/um. Low19% fill justified by pin and channel capacity.",
+    "clock_entry": "West centre entry adjacent register band. TT/FF pin spread25.7/24.6ps, raw26.7/25.2ps.23221sinks/insertion630/502.9ps guidance retained.",
+    "shape": "648x604.8um, aspect1.071; outline chosen for real face demand and SRAM escape channels, accepted."
+  },
+  "scope": "Normal parallel route submission only; no CLOSED or parent/die qualification until actual route. Preserve w16 structural alternatives and all original failures. No source-binding or benchmark waiver.",
+  "diagnostics": "WARN0FAIL; native maximum32 and GRT0. Placement macro-reg-16.2ps, reg-reg-7.7ps and hold-8.35ps retained; routed STA decides.",
+  "gate_result_sha256": "de2de08a4700869332996f16b234359ec5f0b903603414b1bd56e6cf6352b8c6",
+  "archive_sha256": "baeb8f0d299e9bedcd8cdec7ea12988de385aed16b36492ebecb07b96588c546",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
