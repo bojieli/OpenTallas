@@ -228,3 +228,22 @@ def test_census_forwarded_and_broadcast():
         assert s["dropped_bits"] == 64
         e, s = _census_case(d, bc, dict(MAP, collapse_broadcast=True))
         assert s["dropped_bits"] == 0 and s["sources"][0]["broadcast_collapsed_bits"] == 64
+
+
+def test_face_layers_m8_and_spare_slots():
+    def m8(p, fl=True):
+        port(p, "x0")["layers"] = ["M8", "M4"]
+        if fl:
+            p["partition_types"]["src"]["face_layers"] = {"E": ["M8", "M6", "M4"]}
+            p["partition_types"]["mid"]["face_layers"] = {"W": ["M8", "M6", "M4"], "E": ["M6", "M4"]}
+    assert any("above partition_signal_max" in m for m in errs(lambda p: m8(p, False), "layers"))
+    assert errs(m8, "layers") == []
+    assert any("not in pa's face_layers" in m for m in errs(
+        lambda p: p["partition_types"]["src"].__setitem__("face_layers", {"E": ["M4"]}), "layers"))
+
+    def spare(lo, hi):
+        return lambda p: p["partition_types"]["src"].__setitem__(
+            "spare_slots", [dict(name="sp0", face="E", window_um=[lo, hi], layers=["M6"])])
+    assert any("spare slot sp0" in m for m in errs(spare(400, 420), "abutment"))
+    assert errs(spare(700, 720), "abutment") == []
+    assert any("outside face" in m for m in errs(spare(860, 900), "abutment"))

@@ -189,7 +189,24 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
         srcs.append(f"/work/rtl/{Path(f).name}")
     pins = type_pins(P, tn)
     (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
-    (kd / "pdn.tcl").write_text(PDN)
+    top = P.type_top_layer(tn)
+    pdn = PDN
+    if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
+        # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
+        # so the die grid's M8 stripes run over the partition without shorts
+        pitch, cen, half = S.PART_PG_BANDS[top]
+        obs = ["", f"# face_layers {top}: obstruct the die {top} PG bands in the partition (die stripes cross it)",
+               "set blk [ord::get_db_block]", f"set lay [[ord::get_db_tech] findLayer {top}]",
+               "set dbu [$blk getDbUnitsPerMicron]"]
+        k = math.floor((0 - cen) / pitch)
+        while cen + k * pitch - half < h:
+            y0, y1 = max(0.0, cen + k * pitch - half), min(h, cen + k * pitch + half)
+            if y1 > y0:
+                obs.append(f"odb::dbObstruction_create $blk $lay 0 [expr {{round({y0:.4f}*$dbu)}}] "
+                           f"[expr {{round({w:g}*$dbu)}}] [expr {{round({y1:.4f}*$dbu)}}]")
+            k += 1
+        pdn = PDN + "\n".join(obs) + "\n"
+    (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     m = CORE_MARGIN_UM
@@ -206,7 +223,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
            "export PDN_TCL = /work/pdn.tcl",
            "export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
-           f"export MAX_ROUTING_LAYER = {P.layer_budget['partition_signal_max']}",
+           f"export MAX_ROUTING_LAYER = {top}",
            f"export PLACE_DENSITY = {util:g}",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
@@ -220,7 +237,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
-               signal_max=P.layer_budget["partition_signal_max"],
+               signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
                           insertion_tol_ps=P.clock["insertion_tol_ps"]),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
