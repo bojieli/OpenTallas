@@ -61,7 +61,9 @@ if {[info exists ::env(OT_GRT_CLOCK_NDR)] && $::env(OT_GRT_CLOCK_NDR) == 1} {
   }
 }
 set_global_routing_layer_adjustment M4-M5 0.30
-set_global_routing_layer_adjustment M6-M9 0.05
+# OWNER 10-22: remaining horizontal die hot spots use M6-M8 adjustment 0.10.
+set_global_routing_layer_adjustment M6-M8 0.10
+set_global_routing_layer_adjustment M9 0.05
 # r22 adjfix: no PG-proxy region adjustments (the physical r5 PDN is in the odb; 0.146 = 0.05 via + 2 x 0.0439 PG proxy double-counted it)
 step special {
   # die clock / reset / forwarded-clock nets are built by the die clock tree (CTS), not the signal router
