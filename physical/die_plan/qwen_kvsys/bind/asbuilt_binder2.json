@@ -289,5 +289,6 @@
    "note": "clocks_v32.json reset_root: host.die_rst_n (hub_Wi) -> every partition, async assert / 2-stage sync release (KV-P4 14:02: the remaining hub_Wi 1 b/partition reset bits are this spine)"
   }
  ],
- "port_names": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json"
+ "port_names": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json",
+ "land_align": "cell"
 }
