@@ -175,6 +175,9 @@ def test_kit_overrides_platform_tracks():
         assert "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl" in cfg
         assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
+        # COORD 10-23: tap trees balanced to the plan insertion after CTS
+        assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
+        assert (kd / "tap_balance.tcl").is_file()
 
 
 def test_die_sta_flat_in_opensta_etm_with_tech():
@@ -283,3 +286,37 @@ def test_kit_places_content_macros(tmp_path):
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
+
+
+def test_sdc_units_match_liberty():
+    """KV-P3b 10-23 12:17: the ASAP7 libs are in ps; an SDC written in ns gave every plan kit a 0.833-ps clock.  Read
+    the platform lib time / cap units and check the kit, assembly and die-STA SDCs against them."""
+    import gzip
+    import re
+    import subprocess
+    import gen_phys
+    import pytest
+    lib = "results/rtl/s81_ph_20261006/gather/root_selective_model_20261007/libs/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+    try:
+        raw_lib = subprocess.run(["git", "-C", str(HERE), "show", f"HEAD:{lib}"], capture_output=True, check=True).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pytest.skip("platform liberty not in the repo history")
+    head = gzip.decompress(raw_lib)[:20000].decode()
+    tu = re.search(r'time_unit\s*:\s*"1(ps|ns)"', head).group(1)
+    cu = re.search(r"capacitive_load_unit\s*\(\s*1\s*,\s*(fF|pF|ff|pf)\s*\)", head).group(1).lower()
+    assert (tu, cu) == ("ps", "ff") and gen_phys.LIB_TIME_UNIT_PS == 1.0 and gen_phys.LIB_CAP_UNIT_FF == 1.0
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    per = float(P.die["period_ps"])
+    sdc = gen_phys.sdc(P, "src", [])
+    m = re.search(r"create_clock -name clk -period ([0-9.]+)", sdc)
+    assert abs(float(m.group(1)) - per) < 1e-3, sdc
+    assert f"set_clock_uncertainty {gen_phys.UNC_SETUP_PS:.4f} -setup" in sdc
+    assert abs(float(re.search(r"set_clock_latency -source ([0-9.]+)", sdc).group(1)) - P.clock["insertion_ps"]) < 1e-3
+    assert "set_load 2 [all_outputs]" in sdc
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "views").mkdir()
+        gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
+        Q = schema.Plan(PAIR)
+        for f in ("constraint.sdc", "sta_die.tcl"):
+            t = (Path(d) / "die" / f).read_text()
+            assert abs(float(re.search(r"-period ([0-9.]+)", t).group(1)) - float(Q.die["period_ps"])) < 1e-3, f

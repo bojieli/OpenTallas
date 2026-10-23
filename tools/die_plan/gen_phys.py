@@ -164,6 +164,19 @@ add_pdn_connect -grid {top} -layers {M6 M7}
 """
 
 
+# ASAP7 liberty units (asap7sc7p5t_*.lib: time_unit "1ps", capacitive_load_unit (1,fF)): every SDC value below is in
+# ps / fF.  Until 10-23 12:17 the SDCs wrote ns values (period 0.833 = a 0.833-PS clock; KV-P3b), which voided every
+# earlier plan-kit / CP1 timing and repair number.
+LIB_TIME_UNIT_PS = 1.0
+LIB_CAP_UNIT_FF = 1.0
+UNC_SETUP_PS, UNC_HOLD_PS, IO_LOAD_FF = 60.0, 25.0, 2.0
+
+
+def t_lib(ps):
+    """a time in ps -> liberty / SDC time units."""
+    return float(ps) / LIB_TIME_UNIT_PS
+
+
 FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
 
 
@@ -172,8 +185,8 @@ def sdc(P, tn, pins):
     hop share): the last station drives its out port over the slot's last L/k segment, so the out port keeps only the
     neighbour's face share (output delay FT_HOP_IN_SHARE x T) and the in port arrives after the upstream partition's
     last segment (input delay (1 - FT_HOP_IN_SHARE) x T) into this side's face-registered station 0."""
-    per = float(P.die["period_ps"]) / 1000.0
-    lat = float(P.clock["insertion_ps"]) / 1000.0
+    per = t_lib(P.die["period_ps"])
+    lat = t_lib(P.clock["insertion_ps"])
     io = IO_BUDGET * per
     cks = [n for n, _, _ in clock_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
@@ -185,8 +198,8 @@ def sdc(P, tn, pins):
            f"# neighbour boundary flops run on the budgeted insertion ({P.clock['insertion_ps']:g} ps): virtual IO clock\n"
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
-           "set_clock_uncertainty 0.060 -setup [all_clocks]\n"
-           "set_clock_uncertainty 0.025 -hold [all_clocks]\n"
+           f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
+           f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
            f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
            f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n")
@@ -194,7 +207,7 @@ def sdc(P, tn, pins):
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
                 f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
-    return out + ("set_load 0.002 [all_outputs]\n"
+    return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
@@ -309,12 +322,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
+           "export POST_CTS_TCL = /work/tap_balance.tcl",
+           f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
@@ -449,10 +465,10 @@ def write_assembly(raw, out, views, rtl_root=None):
             if f.is_file():
                 shutil.copyfile(f, kd / f.name)
             lst.append(f"/work/{t['module']}{ext}")
-    per = float(P.die["period_ps"]) / 1000.0
+    per = t_lib(P.die["period_ps"])
     (kd / "constraint.sdc").write_text(f"create_clock -name clk -period {per:.4f} [get_ports clk]\n"
-                                       "set_clock_uncertainty 0.060 -setup [all_clocks]\n"
-                                       "set_clock_uncertainty 0.025 -hold [all_clocks]\n")
+                                       f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
+                                       f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n")
     cfg = [f"# GENERATED by tools/die_plan/gen.py assembly: die {P.name}. Do not edit.",
            f"export DESIGN_NICKNAME = dp_{P.name}_die",
            f"export DESIGN_NAME = {gen_rtl.sv_id(P.name)}_top",
@@ -503,7 +519,7 @@ def sta_die_tcl(P):
     DIE (dir with the die's 6_final.v|.spef, optional), OUT."""
     import gen_rtl
     top = f"{gen_rtl.sv_id(P.name)}_top"
-    per = float(P.die["period_ps"]) / 1000.0
+    per = t_lib(P.die["period_ps"])
     lines = ["# GENERATED by tools/die_plan/gen.py assembly: die STA on the routed partitions (abutment proof).",
              "# MODE flat: partition 6_final.v + read_spef -path per instance (mock-array load_mock_array style, no -hier)",
              "# MODE etm : the partitions' generate_abstract timing models (.lib) under the die netlist + die SPEF",
@@ -539,8 +555,8 @@ def sta_die_tcl(P):
     lines += ["if {[info exists ::env(DIE)] && [file exists $::env(DIE)/6_final.spef]} { read_spef $::env(DIE)/6_final.spef }",
               f"create_clock -name clk -period {per:.4f} [get_ports clk]",
               "set_propagated_clock [get_clocks clk]",
-              "set_clock_uncertainty 0.060 -setup [all_clocks]",
-              "set_clock_uncertainty 0.025 -hold [all_clocks]",
+              f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]",
+              f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]",
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",

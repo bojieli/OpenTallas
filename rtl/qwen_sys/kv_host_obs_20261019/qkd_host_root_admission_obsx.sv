@@ -171,7 +171,7 @@ qkd_host_control_prompt_observed #(.MU(1),.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),
 .ck_ctl(ck_ctl),
 .ck_prompt(ck_prompt),
 .physical_fault(physical_fault));
-wire[181:0]transport_hc;
+wire[38:0]transport_hc;
 assign hc={raw_hc[181:39],transport_hc[38:0]};
 qkd_host_hc_station #(.MUT(HC_MUT),.HCW(39))u_hc(.ck(ck_hc),.rst_n(host_rst_n),.die_id(die_id),.raw_hc(raw_hc[38:0]),.cmd_cr(cmd_cr),
  .cmd_v(cmd_v),.cmd_hc(cmd_hc),.source_cr(source_cr),.available(available),.fault(source_fault));
@@ -193,14 +193,14 @@ wire  u_s_arready;
 wire  u_s_rvalid;
 wire [31:0] u_s_rdata;
 wire [1:0] u_s_rresp;
-qkd_host_packet_bundle_admission_mu #(.MU(1),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.TOKEN_MUT(TOKEN_MUT))u_packet(.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.ck_rx(ck_rx),.ck_tx(ck_tx),.ck_axi(ck_axi),.ck_ctrl(ck_ctrl),.rst_n(host_rst_n),.die_id(die_id),
+qkd_host_packet_bundle_admission_mu #(.MU(1),.HCW(39),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN),.TOKEN_MUT(TOKEN_MUT))u_packet(.native_reserved(native_reserved),.ownership_valid(ownership_valid),.host_admission_open(host_admission_open),.host_launch_quiet(host_launch_quiet),.host_deferred(host_deferred),.ck_rx(ck_rx),.ck_tx(ck_tx),.ck_axi(ck_axi),.ck_ctrl(ck_ctrl),.rst_n(host_rst_n),.die_id(die_id),
  .por_n(por_n),.token_allocator_fault(token_allocator_fault),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(token_request_valid),.token_request_ready(token_request_ready),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_generation(token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),.cancel_valid(cancel_valid),.cancel_tag(cancel_tag),.cancel_generation(cancel_generation),.cancel_done(cancel_done),.cancel_fault(cancel_fault),.cancel_drained(cancel_drained),.terminal_accepted(terminal_accepted),
 .rx_v(rx_v),.rx_d(rx_d),.rx_cr(rx_cr),.tx_v(tx_v),.tx_d(tx_d),.tx_cr(tx_cr),.irq(irq),
  .startup_allowed(startup_allowed),.local_service_ready(service_ready),.local_service_epoch(local_service_epoch),
 .begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(begin_cr),.begin_available(ctrl_begin_available),
 .service_begin_v(service_begin_v),.service_begin_epoch(service_begin_epoch),.pending_advertised(pending_advertised),.pending_epoch(pending_epoch),
 .service_ready8(service_ready8),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.ingest_permission(ingest_permission),
-.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc({143'd0,cmd_hc}),.cmd_cr(cmd_cr),
+.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(cmd_cr),
  .hc(transport_hc),.tk8(tk8),.kst8(kst8),.boot8(boot8),.seen(seen),
  .ing_v(ing_v),.ing_cls(ing_cls),.ing_d(ing_d),.ing_crn(ing_crn),.ing_t_v(ing_t_v),.ing_t_d(ing_t_d),.ing_t_cr(ing_t_cr),.faults(packet_faults),
 .s_awvalid(u_s_awvalid),

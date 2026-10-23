@@ -11,13 +11,16 @@
 //     - peers (role != 0): a token frame needs hc pos[15:13] == 0 and epoch[1:0] == hc pos[17:16]; epoch freshness is
 //       per user (seq14 = epoch[15:2] strictly increasing per user; users interleave).
 //   Commands, credits and broadcast order are the original's (one command at a time, in host order).  Faults sticky.
-module qkd_host_ctrl_token_service_packet_collected_mu #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,parameter integer MU=1)(
+//   HCW (KV-P3-RTL 10-23, default 182 = unchanged): width of the hc command field.  39 = START only (hc[38:0] =
+//     start,gen,token,pos), MU 1 only: no PW/DW command field or event logic; the link frame's PW/DW field (229:87)
+//     is reserved zero and a peer faults on a frame that sets it.  Used by the OBSX START-only admission composition.
+module qkd_host_ctrl_token_service_packet_collected_mu #(parameter integer DIE=0,MUT=0,STRAPPED=0,ENABLE_SERVICE=0,ENABLE_TOKEN=0,parameter integer MU=1,parameter integer HCW=182)(
  input wire ck,rst_n,input wire[2:0]die_id,
  input wire rx_v,input wire[511:0]rx_d,output reg rx_cr,
  output reg tx_v,output reg[511:0]tx_d,input wire tx_cr,
  input wire[92:0] local_tk,input wire[9:0]local_kst,input wire[1:0]local_boot,
- input wire cmd_v,input wire[181:0]cmd_hc,output reg cmd_cr,
- output reg[181:0]hc,
+ input wire cmd_v,input wire[HCW-1:0]cmd_hc,output reg cmd_cr,
+ output reg[HCW-1:0]hc,
  output reg[743:0]tk8,output reg[79:0]kst8,output reg[15:0]boot8,output reg[7:0]seen,
  output reg fault,
  input wire startup_allowed,input wire local_service_ready,input wire[15:0]local_service_epoch,
@@ -41,6 +44,7 @@ module qkd_host_ctrl_token_service_packet_collected_mu #(parameter integer DIE=0
  output reg cancel_valid,output reg[58:0]cancel_tag,output reg[1:0]cancel_generation,
  output reg cancel_done,cancel_fault,output reg[3:0]cancel_drained,input wire terminal_accepted
 );
+initial if(HCW!=182&&(MU==0||HCW!=39))$fatal(1,"qkd_host_ctrl_token_service_packet_collected_mu: HCW must be 182, or 39 (START only, MU 1)");
 generate if(MU==0)begin:g_plain
  wire w_rx_cr;
  wire w_tx_v;
@@ -90,19 +94,20 @@ end else begin:g_mu
  wire[1:0] cu;
  wire cu_latest;
  wire[15:0] cu_epoch;
+ wire hc_rsv_ok;
  reg[2:0] did_q,die_capture;
  reg role_valid,die_sampled;
  wire[2:0] role;
  reg rv,tc,cv;
  reg[511:0] rd;
- reg[181:0] cd;
+ reg[HCW-1:0] cd;
  reg[92:0] lt;
  reg[9:0] lk;
  reg[1:0] lb;
  reg[511:0] q[0:3];
  reg[1:0] wp,rp;
  reg[2:0] count;
- reg[181:0] cq[0:3];
+ reg[HCW-1:0] cq[0:3];
  reg[1:0] cw,cr;
  reg[2:0] cn;
  reg[7:0] credits;
@@ -138,7 +143,7 @@ end else begin:g_mu
  wire grant_take;
  reg busy;
  reg[3:0] dst;
- reg[181:0] active;
+ reg[HCW-1:0] active;
  reg[92:0] last_tk;
  reg[9:0] last_kst;
  reg[1:0] last_boot;
@@ -163,6 +168,9 @@ end else begin:g_mu
  assign cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;   // the retained user an abort cancels next
  assign cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
  assign cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
+ localparam[HCW-1:0]START_EV=HCW'(1)<<38;                  // hc START event (both widths)
+ localparam[HCW-1:0]PWDW_EV=(HCW'(1)<<113)|(HCW'(1)<<181);   // hc PW / DW events: HCW 182 only (39: none)
+ assign hc_rsv_ok=(h[229:48]>>HCW)==0;                          // HCW 39: frame PW/DW field reserved zero
 
  
  assign role=STRAPPED?did_q:3'(DIE);
@@ -181,7 +189,7 @@ end else begin:g_mu
  
  assign peer_epoch_fresh=MUT==11||!pe_seen[h[231:230]]||h[245:232]>pe_last[h[231:230]];
  assign peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role]))&&(MUT==21||!ENABLE_SERVICE||!epoch_active||peer_permit));
- assign peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[63:61]==0&&h[231:230]==h[65:64]&&h[83:66]<18'd151936;
+ assign peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&hc_rsv_ok&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[63:61]==0&&h[231:230]==h[65:64]&&h[83:66]<18'd151936;
  assign peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&peer_service_fresh&&!(abort_seen||abort_q||reset_abort_seen);
  always @(posedge ck or negedge por_n)begin
   if(!por_n)begin rr<=0;rr_seen<=0;u_granted<=0;reset_abort_seen<=0;for(integer k=0;k<4;k=k+1)begin job_tok[k]<=0;job_pos[k]<=0;job_gen[k]<=0;u_ep[k]<=0;end end
@@ -283,7 +291,7 @@ end else begin:g_mu
    die_capture<=die_id;die_sampled<=1;if(!role_valid&&die_sampled)begin did_q<=die_capture;role_valid<=1;end
    if(role_valid&&STRAPPED&&die_capture!=did_q)fault<=1;rv<=rx_v;tc<=tx_cr;cv<=cmd_v;lt<=local_tk;lk<=local_kst;lb<=local_boot;rx_cr<=take;cmd_cr<=0;tx_v<=0;
    // Pulse fields must be cleared each edge; token/generation/write data persist.
-   hc[38]<=0;hc[113]<=0;hc[181]<=0;
+   hc<=hc&~(START_EV|PWDW_EV);
    tk8[role*93+:93]<=lt;kst8[role*10+:10]<=lk;boot8[role*2+:2]<=lb;seen[role]<=1;
    if(tc)begin if(credits==4)fault<=1;else credits<=credits+1'b1;end
    if(rv&&!fault)begin if(count==4)fault<=1;else wp<=wp+1'b1;end
@@ -316,8 +324,8 @@ end else begin:g_mu
    // copies and an as-yet undelivered local event retain PW/DW with START low.
    if(ENABLE_TOKEN&&(abort_seen||abort_q||reset_abort_seen)&&busy&&active[38]&&MUT!=12)begin
     active[38]<=0;active_epoch_valid<=0;grant_wait<=0;
-    if(active[113]||active[181])begin
-     if(!local_emitted)begin hc<=active;hc[38]<=0;if(MUT==18)begin hc[113]<=0;hc[181]<=0;end local_emitted<=1;end
+    if(|(active&PWDW_EV))begin
+     if(!local_emitted)begin hc<=active&~START_EV&~(MUT==18?PWDW_EV:HCW'(0)); local_emitted<=1;end
     end else begin busy<=0;cmd_cr<=1;end
    end
    if(load_cmd)begin
@@ -325,8 +333,8 @@ end else begin:g_mu
     active_epoch_valid<=0;
     if(ENABLE_TOKEN&&cq[cr][38])begin
      if(abort_seen||abort_q||reset_abort_seen)begin
-      active<=cq[cr]&~(182'd1<<38);hc<=cq[cr]&~(182'd1<<38);local_emitted<=1;grant_wait<=0;
-      if(!cq[cr][113]&&!cq[cr][181])begin busy<=0;cmd_cr<=1;end
+      active<=cq[cr]&~START_EV;hc<=cq[cr]&~START_EV;local_emitted<=1;grant_wait<=0;
+      if(!(|(cq[cr]&PWDW_EV)))begin busy<=0;cmd_cr<=1;end
      end else begin
       request_accepted<=0;cancel_consumed<=0;
       if(cq[cr][15:13]!=0||cq[cr][35:18]>=18'd151936)fault<=1;
@@ -367,12 +375,12 @@ end else begin:g_mu
       service_begin_v<=1;service_begin_epoch<=h[63:48];
       seq_seen[src]<=1;seq_rx[src*16+:16]<=rs;
      end
-    end else if(h[7:0]==8'h22&&role!=0&&src==0&&
+    end else if(h[7:0]==8'h22&&role!=0&&src==0&&hc_rsv_ok&&
       ((!ENABLE_TOKEN&&h[15:8]==1&&h[511:230]==0)||
        (ENABLE_TOKEN&&((!h[86]&&h[15:8]==1&&h[511:230]==0)||
         (h[86]&&h[15:8]==2&&h[246]&&h[511:263]==0&&h[63:61]==0&&h[231:230]==h[65:64]&&h[83:66]<18'd151936)))))begin
      if(ENABLE_TOKEN&&h[86]&&((abort_seen||abort_q||reset_abort_seen)||!peer_epoch_fresh||!peer_service_fresh))fault<=1;
-     else begin hc<=h[229:48];token_epoch_valid<=ENABLE_TOKEN&&h[246];token_epoch<=h[245:230];end
+     else begin hc<=h[48+:HCW];token_epoch_valid<=ENABLE_TOKEN&&h[246];token_epoch<=h[245:230];end
      seq_seen[src]<=1;seq_rx[src*16+:16]<=rs;
     end else fault<=1;
    end
