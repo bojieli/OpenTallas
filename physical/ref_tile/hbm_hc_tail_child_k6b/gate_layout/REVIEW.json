@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T22:23:39.381484-07:00",
+  "gate_commit": "2026-10-22T22:21:10-0700",
+  "geometry_sha256": "d5feb17f14eccde67f3781fc3bbd7addbdfd19199fa53590dedaf079cfa93670",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "d5feb17f14eccde67f3781fc3bbd7addbdfd19199fa53590dedaf079cfa93670",
+    "components": {
+      "outline": "0d09d120ce6a973be4188e6c1841c9c274d5daf7f1d5ecb53f728d4742c01301",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "c1cc6bf1d1fd85815697e544427815e7d6cc246a02665e05135ec67c58f16e5a",
+      "clock_entry": "3d550c6537bbeac89d73dcc93e7d865ab05bba2fc85cf4ba3db6a681a1f597d3"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "No hard macros; lattice not applicable. Viewed full-face floorplan and actual cell-density image.",
+    "std_cell_band": "Single continuous cell region, mostly green with limited northwest orange bins, no blockage or power island.",
+    "pin_spread": "2549 full-face pins in the exact gate; normal pin geometry/native checks mandatory. About35% fill is roomy and accepted.",
+    "clock_entry": "Personally viewed alternate south-centre clock entry. Actual TT/FF pin spread22.2/17.4ps and raw32.4/26.3ps; insertion436.3/345ps and sink count are disclosed guidance. LEAF_N16 kept; no constraint relaxation.",
+    "shape": "388.8um square; no macro obstacles, continuous available placement area."
+  },
+  "scope": "Approve k6b normal route in parallel with k6 after all exact source/behavioural/native checks and actual witness packaging pass. Actual alternate images personally viewed; no source waiver, CLOSED or die credit.",
+  "diagnostics": "WARN0FAIL, native maximum24 in exact packet, trialGRT0 worstM2usage38.38%. Same Sinkhorn RTL timing risk retained; owner collects actual path diagnostics and route decides timing.",
+  "gate_result_sha256": "971f5c16a39ce57b82068b7991f5a7c9010708b113b4ea43039834e532ddc232",
+  "archive_sha256": "bbeaf0e27c554f91385db924bc479794d81cf19aff321dc17d290b20cbae57b3",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
