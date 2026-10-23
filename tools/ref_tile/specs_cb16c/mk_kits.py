@@ -374,10 +374,10 @@ def _pack(lo, names, step=3.24, gap=2.16, wide=None):
     return out
 
 
-def fx_spec(prof, variant):
+def fx_spec(prof, variant, landed=False):
     g = FX[variant]
     s, _src = body_spec(prof)
-    name = f'qfd_cb16c_{prof}_fx' + ('x' if variant == 'alt' else '')
+    name = f'qfd_cb16c_{prof}_' + ('fl' if landed else 'fx') + ('x' if variant == 'alt' else '')
     s = json.loads(json.dumps(s).replace(f'physical/ref_tile/qfd_cb16c_{prof}_body/', f'physical/ref_tile/{name}/'))
     s['name'] = name
     s['top'] = f'qfd_coll_face_{prof}_fx'
@@ -389,7 +389,7 @@ def fx_spec(prof, variant):
     s['macros'] = [
         {'view': M546, 'inst': pre + 'u_body.u_rx.u_mem', 'count': 1, 'at': [g['ax'], g['rx']], 'orient': g['rxo']},
         {'view': M512, 'inst': bk(0), 'count': 1, 'at': [g['ax'], g['b0']], 'orient': 'MY'},
-        {'view': M546, 'inst': pre + 'u_body.u_tx.u_mem', 'count': 1, 'at': [g['ax'], g['tx']], 'orient': 'MY'},
+        {'view': M546, 'inst': pre + 'u_body.u_tx.u_mem', 'count': 1, 'at': [g['ax'], g['tx']], 'orient': 'R0' if landed else 'MY'},
         {'view': M512, 'inst': bk(1), 'count': 1, 'at': [g['bx'], g['b1']], 'orient': 'R0'},
         {'view': M512, 'inst': bk(2), 'count': 1, 'at': [g['bx'], g['b2']], 'orient': 'R0'},
         {'view': M512, 'inst': bk(3), 'count': 1, 'at': [g['bx'], g['b3']], 'orient': 'R0'}]
@@ -397,10 +397,17 @@ def fx_spec(prof, variant):
     W, H = g['W'], g['H']
     # N: tx_data over u_tx (col A) + the cal_ck / tx entries and tx control beside it
     nr = {'tx_data': [48.6, 210.6]}
-    nr.update(_pack(221.4, ['tx_valid', 'tx_slot', 'peer_slot', 'cal_ck', 'tx_wck', 'tx_rck', 'cal_lck']))
+    if landed:   # COLLIO-F: tx / cal entries at the NW corner over the W tx band; cal_lck moves W beside its band
+        nr = {**_pack(10.8, ['tx_wck', 'tx_rck', 'cal_ck']), **nr, **_pack(221.4, ['tx_valid', 'tx_slot', 'peer_slot'])}
+    else:
+        nr.update(_pack(221.4, ['tx_valid', 'tx_slot', 'peer_slot', 'cal_ck', 'tx_wck', 'tx_rck', 'cal_lck']))
     # W: rx_data beside u_rx + its entries and the core faults / reset
     wr = {'rx_data': [16.2, 199.8]}
-    wr.update(_pack(210.6, ['rx_valid', 'rx_rck', 'rx_wck', 'rst_n', 'cdc_fault'], wide={'cdc_fault': 10.8}))
+    if landed:   # COLLIO-F: rst_n / cdc_fault (cal_ck boundary flops) at the NW corner beside the tx_data pin registers
+        wr.update(_pack(210.6, ['rx_valid', 'rx_rck', 'rx_wck', 'cal_lck']))
+        wr.update(_pack(round(H - 20.52, 2), ['rst_n', 'cdc_fault'], wide={'cdc_fault': 10.8}))
+    else:
+        wr.update(_pack(210.6, ['rx_valid', 'rx_rck', 'rx_wck', 'rst_n', 'cdc_fault'], wide={'cdc_fault': 10.8}))
     # E: phy_rx low, phy_tx high, PHY control / codec0p between them
     e1 = round(H * 0.42, 1)
     er = {'phy_rx': [16.2, e1], 'phy_tx': [round(H - 16.2 - (e1 - 16.2), 1), round(H - 16.2, 1)]}
@@ -408,9 +415,11 @@ def fx_spec(prof, variant):
                                 'phy_tx_valid'], wide={'fault_cause': 10.8}))
     assert er['phy_tx_valid'][1] < er['phy_tx'][0], er
     # S: bank / codec entries under their macros (codec1 = bank0 col A, codec2..4 = bank1..3 col B, codec0 = spine)
-    sr = {'codec1': [g['ax'] + 86.4, g['ax'] + 89.64], 'codec0': [g['bx'] - 32.4, g['bx'] - 29.16],
+    sr0 = {'codec1': [g['ax'] + 86.4, g['ax'] + 89.64], 'codec0': [g['bx'] - 32.4, g['bx'] - 29.16],
           'codec2': [g['bx'] + 54.0, g['bx'] + 57.24], 'codec3': [g['bx'] + 86.4, g['bx'] + 89.64],
           'codec4': [g['bx'] + 118.8, g['bx'] + 122.04]}
+    # COLLIO-F: every codec entry at the bottom of the spine that holds its landing band
+    sr = _pack(round(g['ax'] + 183.6, 2), ['codec1', 'codec0', 'codec2', 'codec3', 'codec4']) if landed else sr0
     s['pins'] = {'N': list(nr), 'W': list(wr), 'E': list(er), 'S': list(sr)}
     s['pin_ranges'] = {**nr, **wr, **er, **sr}
     # domains: tx_data is captured by the cal_ck pin register (edge slice), rx_data launched by rx_rck, phy by codec0p
@@ -439,13 +448,200 @@ def fx_spec(prof, variant):
     s['job'] = dict(s['job'], tag=f'{prof}fx' + ('x' if variant == 'alt' else ''),
                     purpose=f'COLLIO-SR2: {prof.upper()} compact face tile ({variant.upper()})')
     s['job']['benches'] = [lint(s['top'], s['sources'], '-DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL')] + s['job']['benches'][1:]
+    if landed:
+        s['pin_hook_after_flops'] = [f'physical/ref_tile/{name}/seq_landing.tcl']
+        s['pre_dpl_extra'] = [f'physical/ref_tile/{name}/seq_release.tcl']
+        bands, subs = fl_bands(variant)
+        s['structural_change'] = (
+            f'COLLIO-F 10-23: fx geometry with ONE LANDING BAND PER CLOCK ROOT (RTL / cycles unchanged, L+2 as benched, '
+            f'witnesses {WIT}/{prof}_m*.log). All 10 fx gates failed CTS pin-flop spread (84-154 ps > 80): with the band fences '
+            f'dropped, GPL split each root into 2+ clusters 150-450 um apart (tx_wck wd on the N face vs its control in the spine; '
+            f'cal_ck txs vs W-face cdc_fault/rst flops; codec0 core in the col-B channels vs codec_data at SW). Now every '
+            f'source-owned sequential cell of a root is FIRM-landed in one band beside that root\'s macro clock/pin edge and entry '
+            f'(old body method, exact counts): W channel = rx | cal | lcal | tx (u_tx flipped MY->R0 so its clock/read/write-control '
+            f'edge faces the W channel like u_rx), spine = bank0 strip | codec | bank1-3 strips, E channel = phy (codec0p) + lcal PHY '
+            f'slots; rst_n/cdc_fault pins moved to the NW corner beside the tx_data pin registers (cal_ck boundary set compact), '
+            f'tx/cal entries NW, cal_lck W, codec entries at the spine foot. Outline unchanged {W} x {H}.')
+        s['job'] = dict(s['job'], owner='Claude:COLLIO-F', tag=f'{prof}fl' + ('x' if variant == 'alt' else ''),
+                        purpose=f'COLLIO-F: {prof.upper()} compact face tile, landed roots ({variant.upper()})')
+        s['landing_plan'] = {'bands': [[n, p, bx] for n, p, bx in bands], 'subs': [[n, pa, rx, bx] for n, pa, rx, bx in subs],
+                             'counts': FLCNT[prof]}
     return s
+
+
+# ---------------------------------------------------------------------------------------------- COLLIO-F landed fx tiles
+# One landing band per clock root on the fx outline (boxes in um; halo 10.8 around every macro is kept free):
+#   W channel x 12.96/2.16 .. ax-10.8: rx (u_rx clock edge) | cal | lcal | tx (u_tx R0 clock edge)  (+ NW corner cal_io)
+#   spine     ax+171.3+10.8 .. bx-10.8: bank0 strip (bank0 MY pin edge) | codec core | bank1..3 strips (their W pin edges)
+#   E channel bx+171.3+10.8 .. W-2.16: phy (codec0p) + lcal PHY-slot sub-band at the slot pins
+# Members = every sequential cell reached from the root port through BUF/INV/HB (exact counts below, fixed pin flops counted
+# but left where io_flop_at_pins put them); sub-bands split a root by regex (name without backslashes).
+def fl_bands(variant):
+    g = FX[variant]
+    W, H, ax, bx, h = g['W'], g['H'], g['ax'], g['bx'], 10.8
+    a1 = round(ax + 178.632 + h, 2)          # spine left edge (u_rx / u_tx halo)
+    b0x = round(ax + 171.288 + h, 2)         # bank0 (MY) pin-edge halo
+    sr = round(bx - h, 2)                    # spine right edge (col B halo)
+    ex0, ex1 = round(bx + 171.288 + h, 2), round(W - 2.16, 2)
+    wl, wr_, wf = 12.96, round(ax - h, 2), 2.16
+    b0, tx = g['b0'], g['tx']
+    bk = lambda y: [round(y, 2), round(y + 77.784, 2)]
+    bands = [
+        ('rx', ['rx_wck', 'rx_rck'], [wl, 10.8, wr_, round(b0 - h, 2)]),
+        ('cal', ['cal_ck'], [wl, round(b0 - h, 2), wr_, round(b0 + 64.8, 2)]),
+        ('lcal', ['cal_lck'], [wl, round(b0 + 64.8, 2), wr_, tx]),
+        ('tx', ['tx_wck', 'tx_rck'], [wf, tx, wr_, round(H - 21.6, 2)]),
+        ('bank0', ['codec1'], [b0x, *bk(b0)][:1] + [bk(b0)[0], round(b0x + 9.0, 2), bk(b0)[1]]),
+        ('codec', ['codec0'], [round(b0x + 9.0, 2), 16.2, round(sr - 9.0, 2), round(H - 16.2, 2)]),
+        ('bank1', ['codec2'], [round(sr - 9.0, 2), bk(g['b1'])[0], sr, bk(g['b1'])[1]]),
+        ('bank2', ['codec3'], [round(sr - 9.0, 2), bk(g['b2'])[0], sr, bk(g['b2'])[1]]),
+        ('bank3', ['codec4'], [round(sr - 9.0, 2), bk(g['b3'])[0], sr, bk(g['b3'])[1]]),
+        ('phy', ['codec0p'], [ex0, 10.8, ex1, round(H - 10.8, 2)])]
+    e1 = round(H * 0.42, 1)
+    subs = [
+        ('cal_io', 'cal', r'^(cdc_fault\[|rst_n__ot_rl\d)', [wf, round(H - 21.6, 2), 40.0, round(H - 2.16, 2)]),
+        ('lcal_e', 'lcal', r'(g_safe_phy_slots\.|ot_prs_|phy_(tx|rx)_slot\$)', [ex0, round(e1 - 5.4, 2), ex1, round(e1 + 43.2, 2)])]
+    for n, _, bx_ in bands:
+        assert bx_[2] > bx_[0] + 5 and bx_[3] > bx_[1] + 5, (variant, n, bx_)
+    return bands, subs
+
+
+# exact member counts per band / sub-band (all source-owned sequential cells incl. fixed pin flops), measured on the fx
+# netlists (same RTL / synthesis as the landed kits) by the COLLIO-F membership probe on 3_place.odb (fx gates 10-23)
+FLCNT = {
+    's0': {"rx": 2111, "cal_io": 6, "cal": 1263, "lcal_e": 25, "lcal": 697, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
+    'p': {"rx": 2111, "cal_io": 6, "cal": 714, "lcal_e": 25, "lcal": 144, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
+    's1': {"rx": 2111, "cal_io": 6, "cal": 1263, "lcal_e": 25, "lcal": 672, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
+    's2': {"rx": 2111, "cal_io": 6, "cal": 1244, "lcal_e": 25, "lcal": 686, "tx": 2111, "bank0": 596, "codec": 3920, "bank1": 596, "bank2": 596, "bank3": 588, "phy": 3203},
+    'r': {"rx": 2015, "cal_io": 6, "cal": 682, "lcal_e": 25, "lcal": 144, "tx": 2015, "bank0": 596, "codec": 3715, "bank1": 596, "bank2": 596, "bank3": 454, "phy": 3030},
+}
+
+
+FL_TCL = r'''# COLLIO-F 10-23: one landing band per clock root (fx compact face, %(variant)s).  Exact source-owned sequential members of
+# every root (fixed pin flops counted, left in place); all counts reported at once on a mismatch.
+set ot_cl_spec {
+%(bands)s
+}
+set ot_cl_sub {
+%(subs)s
+}
+source /src/physical/common_flow/anchor_row_packing.tcl
+namespace eval ot_coll_land {}
+proc ot_coll_land::target {inst tx ty rows} {
+ set m [$inst getMaster];set width [$m getWidth];set height [$m getHeight]
+ set right [ot_anchor_pack::lower $rows $ty];set left [expr {$right-1}];set score Inf;set best {}
+ while {$left>=0 || $right<[llength $rows]} {
+  set lc Inf;set rc Inf
+  if {$left>=0} {set lc [expr {abs([lindex $rows $left 0]-$ty)}]}
+  if {$right<[llength $rows]} {set rc [expr {abs([lindex $rows $right 0]-$ty)}]}
+  if {min($lc,$rc)>$score} break
+  if {$lc<=$rc} {set ri $left;incr left -1} else {set ri $right;incr right}
+  lassign [lindex $rows $ri] y x0 x1 ey pitch orient
+  if {$ey-$y!=$height} continue
+  set hi [expr {$x0+floor(double($x1-$width-$x0)/$pitch)*$pitch}]
+  if {$hi<$x0} continue
+  set x [expr {max($x0,min($hi,$x0+round(double($tx-$x0)/$pitch)*$pitch))}]
+  set cost [expr {abs($x-$tx)+abs($y-$ty)}]
+  if {$cost<$score} {set score $cost;set best [list $x $y $orient]}
+ }
+ if {$best eq ""} {error "OT_COLL_LAND no actual legal row for [$inst getName]"}
+ lassign $best x y orient
+ $inst setPlacementStatus PLACED;$inst setOrient $orient;$inst setLocation [expr {round($x)}] $y;$inst setPlacementStatus FIRM
+}
+set ot_cl_b [ord::get_db_block];set ot_cl_dbu [$ot_cl_b getDbUnitsPerMicron];set ot_cl_rows {}
+foreach row [$ot_cl_b getRows] {set bb [$row getBBox];if {[$bb yMax]>[$bb yMin] && [$row getSpacing]>0} {lappend ot_cl_rows [list [$bb yMin] [$bb xMin] [$bb xMax] [$bb yMax] [$row getSpacing] [$row getOrient]]}}
+set ot_cl_rows [lsort -integer -index 0 $ot_cl_rows]
+if {![llength $ot_cl_rows]} {error {OT_COLL_LAND no legal rows}}
+set ot_cl_owned {};set ot_cl_by {};set ot_cl_boxes {};set ot_cl_seen_cells {};set ot_cl_miss {};set ot_cl_fixed 0;set ot_cl_plan {}
+foreach {name ports box expected} $ot_cl_spec {
+ set queue {};set seen {};set members {}
+ foreach port $ports {set bt [$ot_cl_b findBTerm $port];if {$bt eq "NULL" || [$bt getNet] eq "NULL"} {error "OT_COLL_LAND missing root $port"};lappend queue [$bt getNet]}
+ for {set k 0} {$k<[llength $queue]} {incr k} {
+  set net [lindex $queue $k];if {[dict exists $seen $net]} continue;dict set seen $net 1
+  foreach it [$net getITerms] {
+   if {![$it isInputSignal]} continue
+   set inst [$it getInst];set m [$inst getMaster]
+   if {[$m isBlock]} continue
+   if {[$m isSequential]} {
+    set n [$inst getName]
+    if {[dict exists $ot_cl_seen_cells $n]} {error "OT_COLL_LAND duplicate sequential owner $n"}
+    dict set ot_cl_seen_cells $n 1;lappend members $n
+   } elseif {[regexp {^(BUF|INV|HB)} [$m getName]]} {foreach pin [$inst getITerms] {if {[$pin isOutputSignal] && [$pin getNet] ne "NULL"} {lappend queue [$pin getNet]}}}
+  }
+ }
+ set groups [list $name [lsort -dictionary $members] $box $expected]
+ foreach {sn sp sre sbox sexp} $ot_cl_sub {
+  if {$sp ne $name} continue
+  set sm {};set rest {}
+  foreach n [lindex $groups 1] {if {[regexp $sre [string map {\\ {}} $n]]} {lappend sm $n} else {lappend rest $n}}
+  lset groups 1 $rest;lappend groups $sn $sm $sbox $sexp
+ }
+ foreach {gname gm gbox gexp} $groups {
+  if {[llength $gm]!=$gexp} {lappend ot_cl_miss "$gname actual [llength $gm] expected $gexp"}
+  lappend ot_cl_plan $gname $gm $gbox
+ }
+}
+if {[llength $ot_cl_miss]} {error "OT_COLL_LAND counts differ from the measured source counts: [join $ot_cl_miss {; }]"}
+set pitch [lindex [lindex $ot_cl_rows 0] 4]
+foreach {name all box} $ot_cl_plan {
+ set members {}
+ foreach n $all {set i [$ot_cl_b findInst $n];if {[$i isFixed]} {incr ot_cl_fixed} else {lappend members $n}}
+ dict set ot_cl_by $name $members;dict set ot_cl_boxes $name $box
+ if {![llength $members]} {puts "OT_COLL_LAND planned $name cells=0 (all [llength $all] fixed pin flops)";continue}
+ set mw 0;set mh 0
+ foreach n $members {set m [[$ot_cl_b findInst $n] getMaster];set mw [expr {max($mw,[$m getWidth])}];set mh [expr {max($mh,[$m getHeight])}]}
+ lassign $box a b c d
+ set x0 [expr {$a*$ot_cl_dbu}];set y0 [expr {$b*$ot_cl_dbu}];set width [expr {($c-$a)*$ot_cl_dbu}];set height [expr {($d-$b)*$ot_cl_dbu}]
+ set cols [expr {max(1,int(floor($width/($mw+4*$pitch))))}];set nr [expr {int(ceil(double([llength $members])/$cols))}]
+ if {$height/$nr<$mh+2*$pitch} {error "OT_COLL_LAND $name insufficient landing rows"}
+ set k 0
+ foreach n $members {
+  set i [$ot_cl_b findInst $n]
+  set tx [expr {$x0+$pitch+($k%%$cols)*($width-$mw-2*$pitch)/max(1,$cols-1)}]
+  set ty [expr {$y0+(int($k/$cols)+0.5)*$height/$nr-$mh/2.0}]
+  ot_coll_land::target $i $tx $ty $ot_cl_rows
+  lappend ot_cl_owned $n;incr k
+ }
+ puts "OT_COLL_LAND planned $name cells=[llength $members] fixed=[expr {[llength $all]-[llength $members]}] columns=$cols rows=$nr box=$box"
+}
+ot_anchor_pack::repair $ot_cl_b $ot_cl_owned
+set fh [open $::env(RESULTS_DIR)/ot_coll_seq_landing.txt w]
+dict for {name members} $ot_cl_by {
+ lassign [dict get $ot_cl_boxes $name] x0 y0 x1 y1;set ax Inf;set ay Inf;set bx -Inf;set by -Inf
+ foreach n $members {
+  set i [$ot_cl_b findInst $n];set bb [$i getBBox]
+  set a [expr {[$bb xMin]/double($ot_cl_dbu)}];set b [expr {[$bb yMin]/double($ot_cl_dbu)}];set c [expr {[$bb xMax]/double($ot_cl_dbu)}];set d [expr {[$bb yMax]/double($ot_cl_dbu)}]
+  if {$a<$x0-2.16 || $b<$y0-2.16 || $c>$x1+2.16 || $d>$y1+2.16} {error "OT_COLL_LAND $name left its legal landing band: $n {$a $b $c $d}"}
+  if {[$i getPlacementStatus] ne "FIRM"} {error "OT_COLL_LAND not FIRM: $n"}
+  set ax [expr {min($ax,$a)}];set ay [expr {min($ay,$b)}];set bx [expr {max($bx,$c)}];set by [expr {max($by,$d)}]
+  puts $fh $n
+ }
+ puts "OT_COLL_LAND actual $name cells=[llength $members] bbox={$ax $ay $bx $by}"
+}
+close $fh
+puts "OT_COLL_LAND PASS [llength $ot_cl_owned] landed + $ot_cl_fixed fixed pin flops, exact source-owned sequential cells, one band per clock root (COLLIO-F %(variant)s); zero exclusion regions"
+'''
+
+
+def fl_land(prof, variant):
+    bands, subs = fl_bands(variant)
+    cnt = FLCNT[prof]
+    assert cnt, prof
+    bl = '\n'.join(' %s {%s} {%s} %d' % (n, ' '.join(p), ' '.join('%.6f' % v for v in bx), cnt[n]) for n, p, bx in bands)
+    sl = '\n'.join(' %s %s {%s} {%s} %d' % (n, pa, rx, ' '.join('%.6f' % v for v in bx), cnt[n]) for n, pa, rx, bx in subs)
+    return FL_TCL % {'variant': variant, 'bands': bl, 'subs': sl}
 
 if __name__ == '__main__':
     if len(sys.argv) > 2 and sys.argv[2] == 'fx':
         for prof in sys.argv[3:] or ('s0', 'p', 's1', 's2', 'r'):
             for v in ('main', 'alt'):
                 write(fx_spec(prof, v))
+        sys.exit(0)
+    if len(sys.argv) > 2 and sys.argv[2] == 'fl':
+        rel = (RT / 'qfd_coll_face_s0_regional7_main' / 'seq_release.tcl').read_text()
+        for prof in sys.argv[3:] or ('s0', 'p', 's1', 's2', 'r'):
+            for v in ('main', 'alt'):
+                write(fx_spec(prof, v, landed=True), {'seq_landing.tcl': fl_land(prof, v), 'seq_release.tcl': rel})
         sys.exit(0)
     if len(sys.argv) > 2 and sys.argv[2] == 'cx':
         for prof in sys.argv[3:] or ('s0', 'p'):
