@@ -1,0 +1,32 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-22T21:42:09.386152-07:00",
+  "gate_commit": "2026-10-22T19:16:46-0700",
+  "geometry_sha256": "797e4c47a14a69607ac26874c0b8091dd436f7228b64ef2c39dec177a6f1f12a",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "797e4c47a14a69607ac26874c0b8091dd436f7228b64ef2c39dec177a6f1f12a",
+    "components": {
+      "outline": "ca563d8852f0b878811bfa3f932e54c4c605e919b47b659e6d5c0038e4c0c841",
+      "macros": "bf00fc0aa950655015edf178946f3b6861846f1367467300c455f99144fd47cf",
+      "pins": "ef261a4f251c88e7608f68f5953b9a643e5f8d204b26294efd323df2050a33d2",
+      "clock_entry": "fc4c0aca2d18bc91e1492164e1a9b49b55a7db6190bc4b445c402fbcd48b011b"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Reviewed exact existing macro locations and track-accessible pins; existing SRAM placement geometry accepted under frozen owner die-results policy. No new lattice requirement.",
+    "std_cell_band": "Viewed floorplan and density PNGs; connected cell area around hard blocks and through centre; no isolated power island.",
+    "pin_spread": "846/846 physical signal-clock pins accessible, no missing/outside rectangles; N/S face density below 6 pins/um.",
+    "clock_entry": "TT/FF pin-flop spread 28.9/20.6 ps; actual spine. Insertion715.1ps disclosed as guidance.",
+    "shape": "626.4 x561.6 um; total fill36.3%; roomy geometry accepted; ten SRAM."
+  },
+  "scope": "Normal route submission only; no timing closure or die binding credit. Preserve original failures and source-binding refusal; exact submit checks must pass.",
+  "diagnostics": "TT placement reg-reg -69.8ps and hold+15.0ps; route decides timing. Source-drift preflight remains required.",
+  "gate_result_sha256": "7cbddf3195b1edce7120e6b31873f3abd48f15f5372a2282d2370796ecf602aa",
+  "archive_sha256": "86fb4edf7f796b2a1a51366953dac744520820b6fd23683f4e792d1e0a8884ea",
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ]
+}
