@@ -2078,9 +2078,8 @@ def build(*args, **kwargs):
             m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
             _fr = m['bundle_eq']['bundles'].get('A.hub_fr') or {}
             print(f"kv die AHUB_FR: {_fr}", file=sys.stderr)
-            if ((_fr.get('members') or {}).get('kvs_attn.pvfst->pvfin') or {}).get('pads'):
-                raise ValueError(f'kv die AHUB_FR FAIL: the hub FR_OFS needs a ks_pvfst pad ({_fr}), which tears '
-                                 'PVFIN_ALIGN: re-plan ks_ahs / ks_ahfr shorter or re-harden the hub FR_OFS')
+            m = ahub_fr_realign(m, KSD.ahub_ofs_bound(), lambda m_: kv_k_rt_eq.equalize_pvfin_start(sys.modules[__name__], m_),
+                                KSD.ahub_ages)
     if LANDSLOT and kwargs.get('split', len(args) > 7 and args[7]):
         if os.environ.get('OT_KV_RLY_STD', '0') != '1' or not SEAM:
             raise ValueError('OT_KV_LANDSLOT=1 needs OT_KV_RLY_STD=1 and OT_KV_SEAM=1 (landing slots are relay-standard rows '
@@ -2092,6 +2091,38 @@ def build(*args, **kwargs):
               file=sys.stderr)
         if ls_['legality']['overlaps'] or ls_['legality']['outside']:
             raise ValueError(f"kv die LANDSLOT: landing frames overlap / outside: {ls_['legality']}")
+    return m
+
+
+# FT-KV-DIE 10-23 (OT_KV_AHUB_FR_REALIGN=1, default off = the fail-closed AHUB_FR refusal unchanged): with short die hops
+# (REACH-M89 1.2 mm) the closed a7 hub's fixed AP_OFS pads ks_ahs up (+ the ap words) and FR_OFS then needs a ks_pvfst pad
+# (gen_r1200: pvfst 12 natural, hub offset 35 -> 23 pads).  The pad is legal static-schedule padding if PVFIN_ALIGN is
+# re-solved AFTER it: the PV stream starts (ks_pvp_0/1) take the same pads at their sink end, pvfst stays the longest
+# member (no further pvfst pad), and the hub offsets are re-checked exactly on the final stage table (fail closed).
+AHUB_FR_REALIGN = os.environ.get('OT_KV_AHUB_FR_REALIGN', '0') == '1'
+
+
+def ahub_fr_realign(m, target, realign_fn, ages_fn, on=None):
+    on = AHUB_FR_REALIGN if on is None else on
+    fr_ = (m.get('bundle_eq') or {}).get('bundles', {}).get('A.hub_fr') or {}
+    pads = ((fr_.get('members') or {}).get('kvs_attn.pvfst->pvfin') or {}).get('pads')
+    if not pads:
+        return m
+    if not on:
+        raise ValueError(f'kv die AHUB_FR FAIL: the hub FR_OFS needs a ks_pvfst pad ({fr_}), which tears '
+                         'PVFIN_ALIGN: re-plan ks_ahs / ks_ahfr shorter or re-harden the hub FR_OFS')
+    pre = m.get('pvfin_align')
+    m = realign_fn(m)
+    post = m.get('pvfin_align') or {}
+    if (post.get('pads') or {}).get('pvfst'):
+        raise ValueError(f'kv die AHUB_FR_REALIGN FAIL: PVFIN re-align padded ks_pvfst again ({post.get("pads")})')
+    a = ages_fn(m)
+    if int(a['FR_OFS']) != int(target['FR_OFS']) or [int(x) for x in a['AP_OFS']] != [int(x) for x in target['AP_OFS']]:
+        raise ValueError(f'kv die AHUB_FR_REALIGN FAIL: hub offsets FR {a["FR_OFS"]} AP {a["AP_OFS"]} != '
+                         f'{target["FR_OFS"]} {target["AP_OFS"]} after the PVFIN re-align')
+    m['pvfin_align']['ahub_fr_realign'] = dict(pvfst_pads=pads, pre=pre and {k: pre.get(k) for k in ('before', 'pads', 'after')})
+    print(f"kv die AHUB_FR_REALIGN: ks_pvfst +{pads} (hub FR_OFS {target['FR_OFS']}), PVFIN re-aligned pads "
+          f"{post.get('pads')} -> {post.get('after')}", file=sys.stderr)
     return m
 
 
