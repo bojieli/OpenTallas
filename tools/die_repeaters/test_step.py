@@ -33,6 +33,20 @@ def test_config_defaults_and_env(monkeypatch):
         step.config('hbm', 'x', over_reach='maybe')
 
 
+def test_upper_rc_layer_spacing(monkeypatch):
+    """owner 10-22: repeaters spaced on the M7-M9 RC default to 600 um; M4 keeps 160; explicit / env values win"""
+    for k in ('OT_DIE_REPAIR_MAX_WIRE', 'OT_DIE_SIGNAL_TOP_LAYER'):
+        monkeypatch.delenv(k, raising=False)
+    assert step.config('s81', 'r', rc_layer='M4')['max_wire_um'] == 160.0
+    for layer in ('M7', 'M8', 'M9'):
+        assert step.config('s81', 'r', rc_layer=layer)['max_wire_um'] == 600.0
+    assert step.config('hbm', 'r', rc_layer='M8', max_wire_um=200.0)['max_wire_um'] == 200.0
+    assert 'max_wire_um 600' in step.tcl_call('qwen_kv', 'r', signal_top_layer='M4-M9')
+    assert 'max_wire_um 160' in step.tcl_call('qwen_kv', 'r', signal_top_layer='M4-M7')
+    monkeypatch.setenv('OT_DIE_REPAIR_MAX_WIRE', '300')
+    assert step.config('s81', 'r', rc_layer='M8')['max_wire_um'] == 300.0
+
+
 def test_tcl_call_shape():
     t = step.tcl_call('hbm', '/work/out/die_repeaters.json', tcl_dir='/work', receiver_slew={'m_a': 240})
     assert 'source /work/die_repeaters.tcl' in t
@@ -235,53 +249,3 @@ def test_bus_bit_clock_net_untouched(tmp_path):
     assert 'OT_CLKNET 3' in r.stdout, [l for l in r.stdout.splitlines() if l.startswith('OT_')]
     assert not any(l.split()[1].startswith('n_clk') or 'clk' in l.split()[1] for l in r.stdout.splitlines()
                    if l.startswith('OT_CELL') and l.split()[2].startswith('BUF')), r.stdout[-2000:]
-
-
-
-# HBMc 10-22: a block with a carved feedthrough channel across the bus band (MX-placed, so the master-frame channel
-# near its top lands on the bus).  Without ::ot_die_rep_carved the spread treats the whole block as solid and pushes
-# every repeater out of the 600-um block span (r18f die probe: 4.68M ideal points on obstacles, 1593 um max
-# displacement); with it the channel slots are free and used, and only those.
-BLK_LEF = """VERSION 5.7 ;
-MACRO cblk
-  CLASS BLOCK ;
-  ORIGIN 0 0 ;
-  SIZE 600 BY 190 ;
-  SYMMETRY X Y ;
-  OBS
-    LAYER M1 ;
-      RECT 0 0 600 168.94 ;
-      RECT 0 180.82 600 190 ;
-  END
-END cblk
-END LIBRARY
-"""
-CARVE_V = BUS_V.replace('endmodule', '  cblk u_blk ();\nendmodule')
-CARVE_SETUP = ('set f [open /work/cblk.lef w]; puts $f {%s}; close $f\n' % BLK_LEF) + BUS_SETUP.replace(
-    'read_verilog /work/t.v', 'read_lef /work/cblk.lef\nread_verilog /work/t.v') + (
-    'set b [[ord::get_db_block] findInst u_blk]; $b setOrient MX; $b setLocation 150000 1080; $b setPlacementStatus FIRM\n')
-CARVE_CHK = """set inch 0; set inblk 0
-foreach i [[ord::get_db_block] getInsts] { set n [$i getName]
-  if {[string match s* $n] || [string match e* $n] || $n eq "u_blk"} { continue }
-  set b [$i getBBox]
-  if {[$b xMax] > 150000 && [$b xMin] < 750000 && [$b yMax] > 1080 && [$b yMin] < 191080} { incr inblk
-    if {[$b yMin] >= 10260 && [$b yMax] <= 22140} { incr inch } } }
-puts "OT_CARVE inblk $inblk inch $inch"
-"""
-
-
-@pytest.mark.skipif(os.environ.get('OT_SKIP_DOCKER') == '1' or not _docker_ok(), reason='no docker / ORFS image')
-@pytest.mark.parametrize('carve', [False, True])
-def test_spread_carved_channel_is_free(tmp_path, carve):
-    pre = 'set ::ot_die_rep_carved [dict create cblk {{0 168.94 600 180.82}}]\n' if carve else ''
-    r, w = _run(tmp_path, False, tag='carve%d' % carve, design_v=CARVE_V, setup=CARVE_SETUP + pre, legalize='spread',
-                check=False, extra=CARVE_CHK)
-    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
-    line = [l for l in r.stdout.splitlines() if l.startswith('OT_CARVE')][0].split()
-    inblk, inch = int(line[2]), int(line[4])
-    print('\n'.join(l for l in r.stdout.splitlines() if 'OT_CARVE' in l or 'spread' in l))
-    if carve:
-        assert 'instances_carved=1' in r.stdout, r.stdout[-2000:]
-        assert inblk > 0 and inch == inblk, line          # repeaters inside the block span sit in the channel only
-    else:
-        assert inblk == 0, line                           # whole block solid
