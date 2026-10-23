@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits     2 GB (avail 435, growth 283, headroom 0, waiters 1/160 GB) load 32/128 running 25 disk 585 GB 
+ot-run: -> ot-epyc5 (will queue: admits 2 GB < 96 GB)
+ot-heavy: request 96G is charged 28G (class 'run_sfu_split_equiv.sh' measured peak 18.6G, n=6+0 proved); the cap stays 96G
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 28 = 20 GB, admissible 3 GB: available 435 GB, growth charged 283 GB (v16 measured reserve, running growth cap 25 % of available, settled floor 23 GB; pending 275 GB at x1), young 135 GB, floor 57 GB; invariant: committed 1067 GB (in use 698, other 416, units max(now, peak) 449, + reserve 27 + fresh 174) vs physical - 64 = 1069 GB -> headroom 3 GB; class 'run_sfu_split_equiv.sh' measured peak 18.6G, n=6+0 proved
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3263632-1792718876 after 261 s
+SFU_SPLIT_EQUIV PASS edges=6687 active_output_edges=6519 delay_core=3 delay_status=2 lg_path=24 wq_extra=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:368: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 184.553 s; speed 30.386 ns/s
+- Verilator: cpu 184.540 s on 1 threads; allocated 156 MB
+SFU_SPLIT_GATE POSITIVE PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3263632-1792718876): exit 0
+BENCH_EXIT 0
