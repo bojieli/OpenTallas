@@ -1,0 +1,264 @@
+{
+ "name": "qkd_kvs_grp_h_r2db",
+ "top": "qkd_kvs_grp_h_r2d",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2d.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "hrst_n"
+ ],
+ "outline": {
+  "w": 222.576,
+  "h": 1187.976,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u48559_c0*",
+   "at": [
+    85.5,
+    82.248
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u50000_c0*",
+   "at": [
+    85.5,
+    368.328
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u51441_c0*",
+   "at": [
+    85.5,
+    694.056
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u52882_c0*",
+   "at": [
+    85.5,
+    980.136
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_dn",
+   "o_ctl"
+  ],
+  "E": [
+   "kreq",
+   "krsp",
+   "rsp",
+   "vreq"
+  ],
+  "W": [
+   "i_pc0",
+   "o_pc0",
+   "i_pc1",
+   "o_pc1",
+   "ck",
+   "hck",
+   "af__fault",
+   "afk",
+   "afv",
+   "hrst_n",
+   "rst_n",
+   "slg__cfg_group",
+   "slg__cfg_stack",
+   "x__est",
+   "x__tep",
+   "x__tok",
+   "y__est__0_1",
+   "y__tok",
+   "y__tep",
+   "i_pc2",
+   "o_pc2",
+   "i_pc3",
+   "o_pc3"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp_h for the release KV die (FB)",
+ "job": {
+  "owner": "Claude:KDIE5-RTL2",
+  "branch": "claude/kdie5-r2d-1022",
+  "tag": "r2db",
+  "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp_h for the release KV die (FB)",
+  "benches": [
+   {
+    "name": "grp_h_r2d_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m0 grp_h 0 all 4000 r2d",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d .* failing=0 .* mut=0$",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m0.log"
+   },
+   {
+    "name": "grp_h_r2d_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m1 grp_h 1 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=1$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m1.log"
+   },
+   {
+    "name": "grp_h_r2d_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m2 grp_h 2 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=2$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m2.log"
+   },
+   {
+    "name": "grp_h_r2d_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m3 grp_h 3 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=3$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m3.log"
+   },
+   {
+    "name": "grp_h_r2d_mut4",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m4 grp_h 4 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=4$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m4.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits",
+   "results/arch",
+   "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible",
+   "results/rtl/qwen_kv_die/kdie5_rtl2_1022",
+   "results/rtl/qwen_kv_die/kdie5_rtl_1022",
+   "rtl",
+   "tools/qwen_kv_die"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_grp_h_r2db/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_grp_h_r2db"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KDIE5-RTL: the r2 RTL registers every pass word at both pins (entry / exit face flops + mid-span relays); a flow pin stage would add an uncounted edge"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KDIE5-RTL2 10-22: top qkd_kvs_grp_h_r2d = qkd_kvs_grp_h_r2c + one exit flop copy per additional output word sharing an r2c exit flop (krsp vs rsp 1056 bits, o_pc1..3 vs o_pc0 56 bits each; kv_grp_portcopy.py, 0 edges): r2c gate d957 placement reg->out rsp[37] -714 ps / grp_h krsp[944] -1638 ps = one flop fixed at one pin driving a second pin ~0.5-1 mm away. KDIE5-RTL 10-22: top qkd_kvs_grp_h_r2c = bounded-driver structural copy (kv_grp_safe5.py, max 32 loads) of the ORFS mapped netlist of qkd_kvs_grp_h_r2 = the UNCHANGED release module qkd_kvs_grp_h (n32_pj) as u_core + face registers: no combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan word +29, gather own +3 / +4 a hop, cf1 fault inputs +2, EST / tok / tep +2). Frame, pins, macros, spine, reset landing = qkd_kvs_grp_h_r1. FB: cf1 fault relays f1 + own-status relays o1 / o2 FIRM on the W-mid -> N path (relay_place.tcl).",
+ "kits_b": {
+  "frame": [
+   222.0,
+   1188.0
+  ],
+  "kit_outline": [
+   220.32,
+   1185.84
+  ],
+  "count": 4,
+  "rep_instance": "slg_WS_4",
+  "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+  "hck_inputs": [
+   "hrst_n"
+  ],
+  "hck_outputs": [],
+  "mixed_domain_ports": [
+   "o_ctl",
+   "o_pc0",
+   "o_pc1",
+   "o_pc2",
+   "o_pc3"
+  ],
+  "critical": null
+ },
+ "sdc_extra": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_r2db_hck.sdc"
+ ],
+ "io_tcl": "physical/qkd_kvs_kits/qkd_kvs_grp_h_r2db_io.tcl",
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_r2db_hck_boundary.tcl"
+ ],
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck,hck"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "KDIE5-RTL: the r2 RTL lands both resets (rst_n: cr0 -> cr1 on ck, hrst_n: hr0 -> hr1 on hck; async assert, release +2 own-clock edges) and the mapped structural copy preserves them (replicated landing copies, <= 32 loads each); benched in lockstep; a flow landing would add 2 more unbenched edges"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qkd_kvs_grp_h_r2db/relay_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/qkd_kvs_grp_h_r2db/relay_release.tcl"
+ ],
+ "fill_reason": {
+  "pin_bound": "Measured gate d957: E 2211 pins occupies1172/1188um (99%); W1869 pins occupies1062/1188um (89%). Frozen release slot222.576x1187.976um sets the perimeter; macro+std fill8-10% cannot shrink the E/W faces."
+ }
+}

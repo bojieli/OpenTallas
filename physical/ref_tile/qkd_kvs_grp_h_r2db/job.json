@@ -1,0 +1,161 @@
+{
+ "name": "qkd_kvs_grp_h_r2db-r2db-COMMIT",
+ "block": "qkd_kvs_grp_h_r2d",
+ "ref_tile": true,
+ "owner": "Claude:KDIE5-RTL2",
+ "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp_h for the release KV die (FB)",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/kdie5-r2d-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits",
+   "results/arch",
+   "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible",
+   "results/rtl/qwen_kv_die/kdie5_rtl2_1022",
+   "results/rtl/qwen_kv_die/kdie5_rtl_1022",
+   "rtl",
+   "tools/qwen_kv_die"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_grp_h_r2d u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2d.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "grp_h_r2d_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m0 grp_h 0 all 4000 r2d",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d .* failing=0 .* mut=0$",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m0.log"
+   },
+   {
+    "name": "grp_h_r2d_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m1 grp_h 1 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=1$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m1.log"
+   },
+   {
+    "name": "grp_h_r2d_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m2 grp_h 2 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=2$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m2.log"
+   },
+   {
+    "name": "grp_h_r2d_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m3 grp_h 3 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=3$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m3.log"
+   },
+   {
+    "name": "grp_h_r2d_mut4",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m4 grp_h 4 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=4$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_grp_h_r2db/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_grp_h_r2db/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_grp_h_r2db --out {RUN}/record/views/qkd_kvs_grp_h_r2d --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_grp_h_r2db/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_grp_h_r2db/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_grp_h_r2db/qkd_kvs_grp_h_r2db-r2db-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KDIE5-RTL2 10-22: top qkd_kvs_grp_h_r2d = qkd_kvs_grp_h_r2c + one exit flop copy per additional output word sharing an r2c exit flop (krsp vs rsp 1056 bits, o_pc1..3 vs o_pc0 56 bits each; kv_grp_portcopy.py, 0 edges): r2c gate d957 placement reg->out rsp[37] -714 ps / grp_h krsp[944] -1638 ps = one flop fixed at one pin driving a second pin ~0.5-1 mm away. KDIE5-RTL 10-22: top qkd_kvs_grp_h_r2c = bounded-driver structural copy (kv_grp_safe5.py, max 32 loads) of the ORFS mapped netlist of qkd_kvs_grp_h_r2 = the UNCHANGED release module qkd_kvs_grp_h (n32_pj) as u_core + face registers: no combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan word +29, gather own +3 / +4 a hop, cf1 fault inputs +2, EST / tok / tep +2). Frame, pins, macros, spine, reset landing = qkd_kvs_grp_h_r1. FB: cf1 fault relays f1 + own-status relays o1 / o2 FIRM on the W-mid -> N path (relay_place.tcl)."
+}

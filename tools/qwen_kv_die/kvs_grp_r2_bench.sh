@@ -4,7 +4,8 @@
 # module on delayed inputs (tb/tb_qkd_kvs_grp_r2_eq.sv), Verilator 5.050.  One GRP_R2 line; exit 0 only on PASS.
 set -u
 O=$1; K=$2; M=${3:-0}; G=${4:-}; E=${5:-4000}
-[ "${6:-}" = struct ] && STRUCT=1     # 6th argument "struct" = STRUCT=1
+[ "${6:-}" = struct ] && STRUCT=1 && SV=r2c     # 6th argument "struct" = STRUCT=1 (r2c)
+[ "${6:-}" = r2d ] && STRUCT=1 && SV=r2d        # KDIE5-RTL2: "r2d" = the per-port exit-copy successor (kv_grp_portcopy.py)
 mkdir -p "$O"
 for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do [ -d "$_d" ] && export PATH="$_d:$PATH"; done
 D=rtl/qwen_sys/static_kv_20261014
@@ -25,8 +26,8 @@ if [ -n "${STRUCT:-}" ]; then
       -e 's/^module DFFASRHQNx1_ASAP7_75t_R(input CLK,D,RESETN,SETN,output reg QN);/module DFFASRHQNx1_ASAP7_75t_R(input CLK,D,RESETN,SETN,output reg QN = 1'"'"'b1);/' \
       results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v > "$LIBM"
   [ "$(grep -c "output reg QN = 1'b1)" "$LIBM")" = 2 ] || { echo "GRP_R2 FAIL tile=$K mut=$M library-model init patch"; exit 1; }
-  SRC="$(echo "$SRC" | sed 's#rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv##') rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_${K}_r2c.sv $LIBM"
-  DEF="$DEF +define+DUT_G=qkd_kvs_grp_r2c +define+DUT_H=qkd_kvs_grp_h_r2c +define+OM=$M"
+  SRC="$(echo "$SRC" | sed 's#rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv##') rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_${K}_${SV}.sv $LIBM"
+  DEF="$DEF +define+DUT_G=qkd_kvs_grp_${SV} +define+DUT_H=qkd_kvs_grp_h_${SV} +define+OM=$M"
 else
   [ "$M" != 0 ] && DEF="$DEF +define+KVS_GRP_R2_MUT$M"
 fi
@@ -45,5 +46,5 @@ for g in $GS; do
   c=$(echo "$line" | sed -n 's/.*checks=\([0-9]*\).*/\1/p'); tot=$((tot + ${c:-0}))
 done
 v=PASS; [ $bad -ne 0 ] && v=FAIL
-echo "GRP_R2 $v tile=${K}_r2${STRUCT:+c} straps=$(echo $GS | wc -w) failing=$bad checks=$tot mut=$M"
+echo "GRP_R2 $v tile=${K}_${SV:-r2} straps=$(echo $GS | wc -w) failing=$bad checks=$tot mut=$M"
 [ $v = PASS ]

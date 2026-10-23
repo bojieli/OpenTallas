@@ -29,8 +29,13 @@ PLAN = {
               (r'^o2\[(\d+)\]\$_DFF', 18, (130.0, 1060.0))],
 }
 SPREAD = 0.3
-R2C = {'grp': 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2c.sv',
-       'grp_h': 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2c.sv'}
+# KDIE5-RTL2 10-22: SUCC=r2d (argv[1] == 'r2d') = the per-port exit-copy successor (tools/qwen_kv_die/kv_grp_portcopy.py:
+# every additional output word sharing an r2c exit flop gets its own flop + INV; 0 edges), kits <m>_r2da / <m>_r2db
+SUCC = sys.argv[1] if len(sys.argv) > 1 else 'r2c'
+assert SUCC in ('r2c', 'r2d'), SUCC
+R2C = {'grp': f'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_{SUCC}.sv',
+       'grp_h': f'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_{SUCC}.sv'}
+WIT2 = 'results/rtl/qwen_kv_die/kdie5_rtl2_1022'
 MAPPED = {k: f'{WIT}/inputs/qkd_kvs_{k}_r2.input.mapped.v.gz' for k in ('grp', 'grp_h')}
 MACRO_BB = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v'
 
@@ -121,13 +126,15 @@ def bench(k, kit, m):
              cmd=f'bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {{RUN}}/bench/{k}_m{m} {k} {m} all 4000',
              expect='pass' if m == 0 else 'fail', threads=2, peak_ram_gb=8, needs=['verilator'],
              pass_regex=f'^GRP_R2 PASS tile={k}_r2 .* failing=0 .* mut={m}$' if m == 0 else f'^GRP_R2 PASS tile={k}_r2 ')
-    b['cmd'] += ' struct'
+    b['cmd'] += ' struct' if SUCC == 'r2c' else ' r2d'
     b.update(threads=2, peak_ram_gb=16)
-    b['pass_regex'] = b['pass_regex'].replace('_r2 ', '_r2c ')
+    b['pass_regex'] = b['pass_regex'].replace('_r2 ', f'_{SUCC} ')
+    w = WIT if SUCC == 'r2c' else WIT2
+    b['name'] = b['name'].replace('_r2_', f'_{SUCC}_') if SUCC != 'r2c' else b['name']
     if m == 0:
-        b.update(min_count_regex=r'checks=(\d+)', pass_witness=f'{WIT}/{k}_r2c_m0.log')
+        b.update(min_count_regex=r'checks=(\d+)', pass_witness=f'{w}/{k}_{SUCC}_m0.log')
     else:
-        b.update(fail_regex=f'^GRP_R2 FAIL tile={k}_r2c .* mut={m}$', fail_witness=f'{WIT}/{k}_r2c_m{m}.log')
+        b.update(fail_regex=f'^GRP_R2 FAIL tile={k}_{SUCC} .* mut={m}$', fail_witness=f'{w}/{k}_{SUCC}_m{m}.log')
     return b
 
 
@@ -136,12 +143,12 @@ def main():
         m = f'qkd_kvs_{k}'; r1 = f'{m}_r1'
         base = json.loads((WT / f'physical/ref_tile/{r1}/spec.json').read_text())
         for var in ('a', 'b'):
-            kit = f'{m}_r2{var}'
+            kit = f'{m}_r2{var}' if SUCC == 'r2c' else f'{m}_r2d{var}'
             s = json.loads(json.dumps(base))
             s['name'] = kit
             # the bounded-driver structural copy of the r2 RTL (native census <= 32 by replication); only the macro
             # black box beside it (the copy is flat mapped cells + keep_hierarchy cell wrappers)
-            s['top'] = f'{m}_r2c'
+            s['top'] = f'{m}_{SUCC}'
             assert MACRO_BB in s['sources'], s['sources']
             s['sources'] = [R2C[k], MACRO_BB]
             cert = json.loads((WT / R2C[k]).with_suffix('.json').read_text())
@@ -180,6 +187,10 @@ def main():
                 s['pin_hook_before_flops'] = s.get('pin_hook_before_flops', []) + [f'physical/ref_tile/{kit}/relay_place.tcl']
                 s['pre_dpl_extra'] = s.get('pre_dpl_extra', []) + [f'physical/ref_tile/{kit}/relay_release.tcl']
             s['structural_change'] = (
+                (f'KDIE5-RTL2 10-22: top {m}_r2d = {m}_r2c + one exit flop copy per additional output word sharing an r2c '
+                 'exit flop (krsp vs rsp 1056 bits, o_pc1..3 vs o_pc0 56 bits each; kv_grp_portcopy.py, 0 edges): r2c gate '
+                 'd957 placement reg->out rsp[37] -714 ps / grp_h krsp[944] -1638 ps = one flop fixed at one pin driving a '
+                 'second pin ~0.5-1 mm away. ' if SUCC == 'r2d' else '') +
                 f'KDIE5-RTL 10-22: top {m}_r2c = bounded-driver structural copy (kv_grp_safe5.py, max 32 loads) of '
                 f'the ORFS mapped netlist of {m}_r2 = the UNCHANGED release module {m} (n32_pj) as u_core + face registers: no '
                 'combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan '
@@ -190,10 +201,11 @@ def main():
             s['fill_reason'] = dict(pin_bound='Measured gate d957: E 2211 pins occupies1172/1188um (99%); W1869 pins occupies1062/1188um (89%). Frozen release slot222.576x1187.976um sets the perimeter; macro+std fill8-10% cannot shrink the E/W faces.')
             s['purpose'] = f'KDIE5-RTL 10-22: pin-registered successor of {m} for the release KV die ({"MAIN" if var == "a" else "FB"})'
             j = s['job']
-            j.update(owner='Claude:KDIE5-RTL', branch='claude/kdie5-rtl-1022', tag=f'r2{var}', purpose=s['purpose'],
+            j.update(owner='Claude:KDIE5-RTL' if SUCC == 'r2c' else 'Claude:KDIE5-RTL2',
+                     branch='claude/kdie5-rtl-1022' if SUCC == 'r2c' else 'claude/kdie5-r2d-1022', tag=(f'r2{var}' if SUCC == 'r2c' else f'r2d{var}'), purpose=s['purpose'],
                      views_to=f'physical/ref_tile/{kit}/views', record_to=f'results/rtl/ref_tile/{kit}')
             j['benches'] = [bench(k, kit, mm) for mm in range(5)]
-            j['extra_paths'] = sorted(set([x for x in j['extra_paths'] if 'kdie5_tv_1022' not in x] + [WIT, "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible"]))
+            j['extra_paths'] = sorted(set([x for x in j['extra_paths'] if 'kdie5_tv_1022' not in x] + [WIT, "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible"] + ([WIT2] if SUCC == 'r2d' else [])))
             (kd / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
             print(kit, s['top'], len(s['sources']), 'relays' if var == 'b' else 'gpl')
 
