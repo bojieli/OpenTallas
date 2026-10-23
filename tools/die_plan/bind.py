@@ -203,6 +203,7 @@ class Graph:
         self.kind = []                     # per cell: leaf | glue | transport | reducer | source
         self.spec = []
         self.dirs = []
+        self.leaf_src = {}                 # source cells kept as leaves (rule keep_leaf): ci -> rule
         for ci, c in enumerate(F.cells):
             t = rules.transport_of(c.module)
             r = rules.reducer_of(c.module) if t is None else None
@@ -211,6 +212,11 @@ class Graph:
                 k, sp = "transport", t
             elif r is not None:
                 k, sp = "reducer", r
+            elif s is not None and s.get("keep_leaf") and c.kind == "leaf":
+                # a plan content (e.g. the PLL in its partition): instantiated as a leaf; the outputs its rule names
+                # are still clock / reset sources (the bound die takes those from its top ports), the rest are pins
+                k, sp = "leaf", None
+                self.leaf_src[ci] = s
             elif s is not None:
                 k, sp = "source", s
             elif c.kind == "unknown":
@@ -332,6 +338,9 @@ class Graph:
                     res = ("clock", o[1])
                 else:
                     res = ("reset", o[1], 0)
+            elif ci in self.leaf_src and _src_out(self.leaf_src[ci], pn) is not None:
+                o = _src_out(self.leaf_src[ci], pn)
+                res = ("clock", o[1]) if o[0] == "clock" else ("reset", o[1], 0)
             elif k == "glue" and c.ytype in ("$not", "$pos", "$buf") and pn == "Y" and bit < len(c.ports.get("A", [])):
                 # a constant expression of the as-built die (e.g. far_n = ~far): folded, so a declared strap stays a
                 # strap (partition parameter) on the far side of the inverter
@@ -448,57 +457,101 @@ class Binder:
         G = self.G
         byp = {c.path: ci for ci, c in enumerate(self.F.cells)}
         st = defaultdict(int)
+        # die-port -> RTL port translation (GEN bundle-wrapper masters bound to RTL modules: a die port is a slice of an
+        # RTL port; equal-width die ports of one bundle, in order)
+        pmap = defaultdict(dict)                     # RTL module -> die port -> (rtl port, offset, width)
+        if rw.get("port_map"):
+            pm = rw["port_map"] if Path(rw["port_map"]).is_absolute() else str(Path(base) / rw["port_map"])
+            pmd = json.loads(Path(pm).read_text())
+            for gm, v in pmd.get("masters", {}).items():
+                for bn, bd in v.get("bundles", {}).items():
+                    dps, rps = bd.get("die_ports", []), bd.get("rtl_ports", [])
+                    if len(rps) != 1 or not dps or bd.get("die_bits", 0) % len(dps):
+                        continue
+                    w = bd["die_bits"] // len(dps)
+                    for k, dp in enumerate(dps):
+                        pmap[v.get("module")][dp] = (rps[0], k * w, w if len(dps) > 1 else None)
 
-        def asb_map(e):
-            """as-built bits of edge e: {sink bit i: (source bit, stages)}"""
-            sc, dc = byp.get(e["s"]), byp.get(e["d"])
-            if sc is None or dc is None or e["dp"] not in self.F.cells[dc].ports:
+        def tr(block, port):
+            ci = byp.get(block)
+            if ci is None:
+                return None, (port, 0, None)
+            c = self.F.cells[ci]
+            if port in c.ports:
+                return ci, (port, 0, None)
+            return ci, pmap.get(c.module, {}).get(port, (port, 0, None))
+
+        def edge(e):
+            sc, (sp, so, sw) = tr(e["s"], e["sp"])
+            dc, (dp, do, dw) = tr(e["d"], e["dp"])
+            return dict(e, sc=sc, dc=dc, rsp=sp, so=so, sw=sw, rdp=dp, do=do, dw=dw)
+
+        def asb_map(x):
+            """as-built bits of edge x: {sink bit (relative): (source bit (relative), stages)}"""
+            sc, dc = x["sc"], x["dc"]
+            if sc is None or dc is None or x["rdp"] not in self.F.cells[dc].ports:
                 return None
             m = {}
-            for i, b in enumerate(self.F.cells[dc].ports[e["dp"]]):
+            for i, b in enumerate(self.F.cells[dc].ports[x["rdp"]]):
+                if i < x["do"] or (x["dw"] and i >= x["do"] + x["dw"]):
+                    continue
                 src = G.source(b)
-                if src[0] == "pin" and src[1] == sc and src[2] == e["sp"]:
-                    m[i] = (src[3], src[4])
+                if src[0] == "pin" and src[1] == sc and src[2] == x["rsp"] and src[3] >= x["so"] and \
+                        (not x["sw"] or src[3] < x["so"] + x["sw"]):
+                    m[i - x["do"]] = (src[3] - x["so"], src[4])
             return m
         for cl in rw.get("classes", []):
             c = doc["classes"].get(cl)
             if c is None:
                 self.errors.append(f"REWIRE_CLASS {cl}: not in {rw['file']}")
                 continue
-            rem = c["removed"]
+            rem = [edge(e) for e in c["removed"]]
             by_sport = defaultdict(list)
             by_dport = defaultdict(list)
             for e in rem:
                 by_sport[(e["s"], e["sp"], e["dp"])].append(e)
                 by_dport[(e["d"], e["dp"])].append(e)
             covered = set()
-            for e in c["added"]:
-                sc, dc = byp.get(e["s"]), byp.get(e["d"])
+            for e in map(edge, c["added"]):
+                sc, dc = e["sc"], e["dc"]
                 if sc is None or dc is None:
                     self.errors.append(f"REWIRE_BLOCK {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: no such instance")
                     continue
-                tmpl = [t for t in by_sport.get((e["s"], e["sp"], e["dp"]), []) if t["d"] != e["d"]]
-                same = False
-                if not tmpl:
-                    tmpl = [t for t in by_dport.get((e["d"], e["dp"]), []) if t["sp"] == e["sp"]]
-                    same = True
-                m = asb_map(tmpl[0]) if tmpl else None
+                cands = [(t, False) for t in by_sport.get((e["s"], e["sp"], e["dp"]), []) if t["d"] != e["d"]] + \
+                    [(t, True) for t in by_dport.get((e["d"], e["dp"]), []) if t["sp"] == e["sp"]]
+                m, tmpl, same = None, [], False
+                for t, sm in cands:             # first template whose as-built bits survive (a variant may drop a port)
+                    m = asb_map(t)
+                    if m:
+                        tmpl, same = [t], sm
+                        break
                 if not m:
                     self.errors.append(f"REWIRE_NO_TEMPLATE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}")
                     continue
                 if len(m) != e["bits"]:
                     self.errors.append(f"REWIRE_WIDTH {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: template "
                                        f"{tmpl[0]['s']}->{tmpl[0]['d']} maps {len(m)} b, edge says {e['bits']}")
+                cs = self.F.cells[sc]
+                if e["rsp"] not in cs.ports:
+                    # an output the as-built leaves open (e.g. the tail of a chain the plan reverses): give it nets
+                    tc = self.F.cells[tmpl[0]["sc"]]
+                    w = len(tc.ports.get(tmpl[0]["rsp"], [])) or (max(sb for sb, _ in m.values()) + 1)
+                    if not hasattr(self, "_rw_net"):
+                        self._rw_net = 1 + max((b for c2 in self.F.cells for bs in c2.ports.values() for b in bs
+                                                if not isinstance(b, str)), default=0)
+                    cs.ports[e["rsp"]] = list(range(self._rw_net, self._rw_net + w))
+                    self._rw_net += w
+                    G.dirs[sc][e["rsp"]] = "output"
+                    st["opened outputs"] += 1
                 for i, (sb, stg) in m.items():
-                    self.rewire[(dc, e["dp"], i)] = ("pin", sc, e["sp"], sb, stg)
-                    covered.add((dc, e["dp"], i))
+                    k = (dc, e["rdp"], e["do"] + i)
+                    self.rewire[k] = ("pin", sc, e["rsp"], e["so"] + sb, stg)
+                    covered.add(k)
                 st[cl + (" (same-sink template)" if same else "")] += len(m)
             dropped = 0
             for e in rem:
-                m = asb_map(e)
-                dc = byp.get(e["d"])
-                for i in (m or {}):
-                    if (dc, e["dp"], i) not in covered:
+                for i in (asb_map(e) or {}):
+                    if (e["dc"], e["rdp"], e["do"] + i) not in covered:
                         dropped += 1
                         if dropped <= 20:
                             self.errors.append(f"REWIRE_DROPPED {cl}: {e['d']}.{e['dp']}[{i}] loses {e['s']}.{e['sp']} "
@@ -1123,6 +1176,7 @@ class Binder:
         (out / "bind_cells.sv").write_text(CELLS)
         files = [out / "bind_cells.sv"]
         self.pnames = {}
+        self.io_used = {}
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
             txt, pnames = self.emit_type(tn, ps[0])
@@ -1167,6 +1221,19 @@ class Binder:
                 pdecl.append(f"    parameter {nm} = {vals[0]}")
                 pnames[k] = (nm, None)
         ports = ["    input  wire clk", "    input  wire arst_n"]
+        # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
+        io = set()
+        for ci in self.members[p]:
+            for pn, bits in F.cells[ci].ports.items():
+                if G.dirs[ci].get(pn) == "input":
+                    for i in range(len(bits)):
+                        d = self.sinks[(ci, pn, i)]
+                        for x in (d[1] if d[0] == "or" else [d]):
+                            if x[0] == "top":
+                                io.add(x[1])
+        self.io_used[tn] = sorted(io)
+        for n in sorted(io):
+            ports.append(f"    input  wire [{len(F.top_ports[n][1]) - 1}:0] io_{sv_id(n)}   // die IO {n}")
         doms = sorted(self.clk_dom[p] - {self.default_domain(p)})
         for d in doms:
             ports.append(f"    input  wire clk_{sv_id(d)}")
@@ -1257,6 +1324,8 @@ class Binder:
                 if render is None:
                     raise BindError(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
                 return render(d[1])
+            if k == "top" and d[1] in F.top_ports:
+                return f"io_{sv_id(d[1])}[{d[2]}]"
             if k in ("tied", "top", "err"):
                 # never a constant: an unresolved bit stays an undriven wire, reported (bind_report proof)
                 nm = f"ub_{len(ub)}"
@@ -1320,6 +1389,8 @@ class Binder:
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
+        ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
         wires, insts = [], []
         conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
@@ -1350,6 +1421,8 @@ class Binder:
             cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
             for d in sorted(self.clk_dom[p] - {dd}):
                 cs.append(f"        .clk_{sv_id(d)}(clk_{sv_id(d)})")
+            for n in self.io_used.get(tn, []):
+                cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
             for port, w in sorted(conn[p]):
                 cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""

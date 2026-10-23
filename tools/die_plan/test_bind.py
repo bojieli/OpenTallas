@@ -218,3 +218,36 @@ def test_rewires_swap(tmp_path):
     sinks = json.loads((out / "bind_sinks.json").read_text())
     assert sinks["snk.d0[3]"][1] == "p1.u_b.o[3]" and sinks["snk.d1[3]"][1] == "p0.u_b.o[3]"
     assert verify(out)["verdict"] == "PASS"
+
+
+def test_die_io_and_kept_source_leaf(tmp_path):
+    """die IO pads become bound-top inputs routed to the partitions that read them (io_<pad>); a source rule with
+    keep_leaf instantiates the source (here the clock receiver) as a leaf of its partition while its clock output
+    stays the partition clock"""
+    src = tmp_path / "src"
+    src.mkdir()
+    for f in ("leaves.sv", "par.sv"):
+        shutil.copy(EX / f, src / f)
+    die = (EX / "die.v").read_text().replace("module tdie ();", "module tdie (input wire pad_ref, input wire [3:0] pad_id);")
+    die = die.replace(".pll(1'b0)", ".pll(pad_ref)").replace(".id(4'd5)", ".id(pad_id)")
+    (src / "die.v").write_text(die)
+    (src / "clk.sv").write_text("module tclkrx (input wire pll, output wire ck);\n  assign ck = pll;\nendmodule\n")
+    p = json.loads((EX / "die_plan.json").read_text())
+    a = p["asbuilt"]
+    a["base"] = str(src)
+    a["files"] = a["files"] + ["clk.sv"]
+    for r in a["sources"]:
+        if r["module"] == "tclkrx":
+            r["keep_leaf"] = True
+            r.pop("drop_in", None)
+    a["map"]["parts"]["clk_rx"] = "S"
+    f = tmp_path / "die_plan.json"
+    f.write_text(json.dumps(p))
+    out = tmp_path / "o"
+    assert run(f, out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r, v = report(out), verify(out)
+    assert r["n_errors"] == 0 and r["load_bits"]["die_io"] == 5 and r["proof"]["straps"] == 4
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    assert "input  wire [3:0] pad_id;" in top and ".io_pad_id(pad_id)" in top and ".io_pad_ref(pad_ref)" in top
+    assert "tclkrx u_clk_rx" in (out / "rtl" / "bt_ts.sv").read_text()
+    assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])

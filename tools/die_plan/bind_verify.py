@@ -40,13 +40,13 @@ def verilator():
     return None
 
 
-def lint(out, top, files, defines=(), waive=()):
+def lint(out, top, files, defines=(), waive=(), incs=()):
     v = verilator()
     if not v:
         return dict(ran=False, reason="no verilator")
     cmd = [v, "--lint-only", "-Wno-fatal", "-Wno-DECLFILENAME", "-Wno-UNUSEDSIGNAL", "-Wno-PINCONNECTEMPTY",
            "--top-module", top] + [f"+define+{d}" for d in defines] + \
-        sorted({f"-I{Path(f).parent}" for f in files}) + [str(f) for f in files]
+        sorted({f"-I{Path(f).parent}" for f in list(files) + list(incs)}) + [str(f) for f in files]
     (Path(out) / "verilator_lint.f").write_text("\n".join(cmd[1:]) + "\n")
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=out)
     errs = [ln for ln in r.stderr.splitlines() if ln.startswith("%Error") and not ln.startswith("%Error: Exiting")]
@@ -86,7 +86,8 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         name, files = item
         d = ldir / name
         d.mkdir(exist_ok=True)
-        return name, lint(d, top if name == "top" else name, files, defines, waive)
+        # the top run reads leaf stubs, which keep the leaves' `include lines: their source directories are include dirs
+        return name, lint(d, top if name == "top" else name, files, defines, waive, lib if name == "top" else ())
     res = dict(ThreadPoolExecutor(int(ab0.get("lint_jobs", 4))).map(one, sorted(runs.items())))
     errs = sum(r.get("errors", 0) for r in res.values() if r.get("ran"))
     first = [f"[{n}] {e}" for n, r in sorted(res.items()) for e in r.get("first_errors", [])][:20]
