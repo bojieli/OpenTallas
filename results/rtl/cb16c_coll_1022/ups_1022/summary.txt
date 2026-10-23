@@ -1,0 +1,30 @@
+CB16c-COLL2-UPS 10-22: split rebased onto main UP_SYNC d3c0391ef (merge ddd19dba0), sources = this commit; Verilator 5.050 bench, yosys 0.68
+yosys read_verilog -sv -DSYNTHESIS -DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL -DOT_QFD_FACE_HARD; hierarchy -check -top <t>:
+PASS hierarchy -check qfd_coll_face_cx -chparam HARD 1
+PASS hierarchy -check qfd_coll_face_cx -chparam HARD 2 -chparam PHY 20 -chparam L 58 -chparam R 5
+PASS hierarchy -check qfd_coll_face_s0_cxb
+PASS hierarchy -check qfd_coll_face_p_cxb
+PASS hierarchy -check qfd_coll_eslice182
+PASS hierarchy -check qfd_coll_eslice199
+PASS hierarchy -check qfd_coll_face_cx -chparam HARD 0 -chparam UP_SYNC 1 -chparam PHY 350 -chparam L 383
+flattened netlist (proc; flatten; opt_clean -purge; write_verilog -noattr, internal _N_ names normalised + sorted) vs cfc200bfb:
+  qfd_coll_face_s0_cxb IDENTICAL (14492 lines)
+  qfd_coll_face_p_cxb IDENTICAL (12556 lines)
+  stat qfd_coll_eslice182 IDENTICAL
+  stat qfd_coll_eslice199 IDENTICAL
+  stat qfd_coll_face_cx_-chparam_HARD_1 IDENTICAL
+  stat qfd_coll_face_cx_-chparam_HARD_2_-chparam_PHY_20_-chparam_L_58_-chparam_R_5 IDENTICAL
+  stat qfd_coll_face_p_cxb IDENTICAL
+  stat qfd_coll_face_s0_cxb IDENTICAL
+UP_SYNC=1 generic body (HARD 0): 6407 cells vs HARD 1 6405 (+2 phy_ck capture flops)
+bench:
+CB16C_COLL_BENCH PASS MUT=0 PROFILE=p
+CB16C_COLL_BENCH FAIL MUT=1 PROFILE=p
+CB16C_COLL_BENCH FAIL MUT=2 PROFILE=p
+CB16C_COLL_BENCH FAIL MUT=3 PROFILE=p
+CB16C_COLL_BENCH FAIL MUT=4 PROFILE=p
+CB16C_COLL_BENCH PASS MUT=0 PROFILE=s0
+CB16C_COLL_BENCH FAIL MUT=1 PROFILE=s0
+CB16C_COLL_BENCH FAIL MUT=2 PROFILE=s0
+CB16C_COLL_BENCH FAIL MUT=3 PROFILE=s0
+CB16C_COLL_BENCH FAIL MUT=4 PROFILE=s0

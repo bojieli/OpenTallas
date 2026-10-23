@@ -67,7 +67,7 @@ module qfd_coll_face_p_cxb(
 endmodule
 
 // Face parent (wires only).  HARD 1 = S0 body, 2 = P body, 0 = generic body (bench partner faces with any profile).
-module qfd_coll_face_cx #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2, PLK=1, HARD=1)(
+module qfd_coll_face_cx #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2, PLK=1, HARD=1, UP_SYNC=0)(
  input wire cal_ck,cal_lck,tx_wck,tx_rck,rx_wck,rx_rck,
  input wire codec0,codec1,codec2,codec3,codec4,codec0p,input wire rst_n,
  input wire cal_ck_t0,cal_ck_t1,cal_ck_t2,rx_rck_r0,rx_rck_r1,rx_rck_r2,
@@ -87,12 +87,14 @@ module qfd_coll_face_cx #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2
  .phy_up(phy_up),.phy_rx_valid(phy_rx_valid),.phy_rx(b_prx),.phy_tx_valid(phy_tx_valid),.phy_tx(b_ptx),\
  .phy_tx_slot(phy_tx_slot),.phy_rx_slot(phy_rx_slot),.cdc_fault(cdc_fault),.epoch_abort(epoch_abort),.fault_cause(fault_cause)
  initial if (HARD != 0 && (PLD != 2 || PLK != 1)) $error("qfd_coll_face_cx: hard bodies are PLD 2 / PLK 1");
+ // UP_SYNC (d3c0391ef, opt-in): the hard bodies are built UP_SYNC 0 (production); UP_SYNC 1 = generic body (HARD 0)
+ initial if (HARD != 0 && UP_SYNC != 0) $error("qfd_coll_face_cx: hard bodies are UP_SYNC 0; use HARD 0 for UP_SYNC 1");
  if (HARD == 1) begin : g_s0
   qfd_coll_face_s0_cxb u_core(`CB16C_BODY_PORTS);   // hard master: PLD 2 / PLK 1 fixed
  end else if (HARD == 2) begin : g_p
   qfd_coll_face_p_cxb u_core(`CB16C_BODY_PORTS);   // hard master: PLD 2 / PLK 1 fixed
  end else begin : g_gen
-  qfd_coll_face_gen_cxb #(.PHY(PHY),.L(L),.R(R),.PEER_R(PEER_R),.PLD(PLD),.PLK(PLK)) u_core(`CB16C_BODY_PORTS);
+  qfd_coll_face_gen_cxb #(.PHY(PHY),.L(L),.R(R),.PEER_R(PEER_R),.PLD(PLD),.PLK(PLK),.UP_SYNC(UP_SYNC)) u_core(`CB16C_BODY_PORTS);
  end
 `undef CB16C_BODY_PORTS
  // W edge: tx_data in (cal_ck entries) and rx_data out (rx_rck entries), 182 bits per slice, bit order kept
@@ -124,7 +126,7 @@ module qfd_coll_face_cx #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2
 endmodule
 
 // Generic body (bench partner faces with any profile; not a hardened master) (any profile), same as the hard bodies with parameters.
-module qfd_coll_face_gen_cxb #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2, PLK=1)(
+module qfd_coll_face_gen_cxb #(parameter integer PHY=350, L=383, R=0, PEER_R=5, PLD=2, PLK=1, UP_SYNC=0)(
  input wire cal_ck,cal_lck,tx_wck,tx_rck,rx_wck,rx_rck,
  input wire codec0,codec1,codec2,codec3,codec4,codec0p,input wire rst_n,
  input wire tx_slot,peer_slot,input wire tx_valid,input wire[545:0]tx_data,
@@ -134,6 +136,6 @@ module qfd_coll_face_gen_cxb #(parameter integer PHY=350, L=383, R=0, PEER_R=5, 
  output wire phy_tx_slot,phy_rx_slot,
  output wire[3:0]cdc_fault,output wire epoch_abort,output wire[7:0]fault_cause
 );
- qfd_coll_static_face_x #(.FW(546),.PHY(PHY),.L(L),.R(R),.PEER_R(PEER_R),.TOK_REG(1),.SAFE(1),.PLAND(1),.PLD(PLD),.PLK(PLK),.XT(1),.XR(1))u_body(
+ qfd_coll_static_face_x #(.FW(546),.PHY(PHY),.L(L),.R(R),.PEER_R(PEER_R),.TOK_REG(1),.SAFE(1),.PLAND(1),.PLD(PLD),.PLK(PLK),.UP_SYNC(UP_SYNC),.XT(1),.XR(1))u_body(
  .codec_ck({codec4,codec3,codec2,codec1,codec0}),.codec_phy_ck(codec0p),.cal_ck(cal_ck),.cal_lck(cal_lck),.tx_wck(tx_wck),.tx_rck(tx_rck),.rx_wck(rx_wck),.rx_rck(rx_rck),.rst_n(rst_n),.tx_slot(tx_slot),.peer_slot(peer_slot),.tx_valid(tx_valid),.tx_data(tx_data),.rx_valid(rx_valid),.rx_data(rx_data),.phy_up(phy_up),.phy_rx_valid(phy_rx_valid),.phy_rx(phy_rx),.phy_tx_valid(phy_tx_valid),.phy_tx(phy_tx),.phy_tx_slot(phy_tx_slot),.phy_rx_slot(phy_rx_slot),.cdc_fault(cdc_fault),.epoch_abort(epoch_abort),.fault_cause(fault_cause));
 endmodule
