@@ -53,9 +53,9 @@ grep -qE "qkd_(rlysh0?|landsh0?)_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_fw
 if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
   KT=$(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(S.RTL_FILE)' 2>/dev/null | tail -1)
   [ -n "$KT" ] && [ -f "$R/$KT" ] && F+=(--rtl-file "$R/$KT")
-  # The active S6C assembly deliberately omits the native registered groups.
+  # The active S6C assembly deliberately omits the native registered groups (KDIE5-RTL: and OT_KV_CTL_NC32 the ctl body).
   # Pass their actual source files to BOTH strict compilation/hierarchy passes.
-  for NATIVE in $(cd "$R/tools/qwen_kv_die" && python3 -c 'import kv_static_die as S; print(" ".join(sorted(S.GRP_S6C_RTL.values())) if S.GRP_S6C else "")'); do
+  for NATIVE in $(cd "$R/tools/qwen_kv_die" && python3 -c 'import kv_static_die as S; print(" ".join(sorted(S.GRP_S6C_RTL.values()) if S.GRP_S6C else []) + (" " + S.CTL_NC32_RTL if S.CTL_NC32 else ""))'); do
     [ -f "$R/$NATIVE" ] || { echo "missing selected native RTL: $NATIVE"; exit 3; }
     F+=(--rtl-file "$R/$NATIVE")
   done

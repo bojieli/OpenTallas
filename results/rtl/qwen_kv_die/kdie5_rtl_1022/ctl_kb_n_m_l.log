@@ -1,0 +1,4 @@
+boot: 471 words through qkd_static_kv_boot_dispatch_mu, layer programme configured, GAP[1][1] 3701
+[3040000] %Fatal: qkd_kv_ctl_nc32_face.sv:1046: Assertion failed in tb_mu_kv_boot.dut.u_lprg: qkd_static_kv_layer_programme_nc32: E-face copy differs from its original
+%Error: rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv:1046: Verilog $stop
+Aborting...
