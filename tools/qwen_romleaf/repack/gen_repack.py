@@ -246,8 +246,15 @@ def request_decode_tcl(var):
     old = " if {$col==0} {set x0 232.2;set x1 237.6} else {set x0 583.2;set x1 588.6}"
     assert old in src
     new = f" if {{$col==0}} {{set x0 {x0w:.3f};set x1 {x1w:.3f}}} else {{set x0 {x0e:.3f};set x1 {x1e:.3f}}}"
+    lk_old = " set leaf [$qr15_block findInst ${scope}.u_leaf]"
+    assert lk_old in src
+    lk_new = (" set leaf NULL\n"
+              " regsub {^u_ot_pr_core\\.} $scope {} qr15_lscope\n"
+              " foreach qr15_c [$qr15_block getInsts] {if {[[$qr15_c getMaster] isBlock] && [string map [list \"\\\\\" \"\"] [$qr15_c getName]] in [list \"${qr15_lscope}.u_leaf\" \"${scope}.u_leaf\"]} {set leaf $qr15_c;break}}")
     return ("# A0-REPACK 10-23 (gen_repack.py): tools/qwen_romleaf/rc15_2000/local_request_decode.tcl with the decoder boxes\n"
-            "# on the re-packed ROM pin lanes; nothing else changed.\n" + src.replace(old, new))
+            "# on the re-packed ROM pin lanes, and the leaf lookup fixed: reset_landing wraps the soft logic in u_ot_pr_core.\n"
+            "# but the hard leaves keep their names, and odb names carry backslash escapes (rc15a GPL hook FAIL 'no matching\n"
+            "# hard leaf').  Nothing else changed.\n" + src.replace(old, new).replace(lk_old, lk_new))
 
 # ---- spec ----------------------------------------------------------------------------------------------------------
 def spec(nk, var):

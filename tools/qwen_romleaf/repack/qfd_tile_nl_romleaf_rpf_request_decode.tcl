@@ -1,5 +1,7 @@
 # A0-REPACK 10-23 (gen_repack.py): tools/qwen_romleaf/rc15_2000/local_request_decode.tcl with the decoder boxes
-# on the re-packed ROM pin lanes; nothing else changed.
+# on the re-packed ROM pin lanes, and the leaf lookup fixed: reset_landing wraps the soft logic in u_ot_pr_core.
+# but the hard leaves keep their names, and odb names carry backslash escapes (rc15a GPL hook FAIL 'no matching
+# hard leaf').  Nothing else changed.
 # Private combinational request decoders in the existing free macro gutters.
 # Source state, source/capture clock entries, hard children and edges are unchanged.
 # qrl_* reservations are released by the existing rc14 hook before DPL.
@@ -14,7 +16,9 @@ foreach inst [$qr15_block getInsts] {
 }
 if {[dict size $qr15_members] != 10} {error "A0 local request decoders: expected 10 physical leaves, found [dict size $qr15_members]"}
 foreach scope [dict keys $qr15_members] {
- set leaf [$qr15_block findInst ${scope}.u_leaf]
+ set leaf NULL
+ regsub {^u_ot_pr_core\.} $scope {} qr15_lscope
+ foreach qr15_c [$qr15_block getInsts] {if {[[$qr15_c getMaster] isBlock] && [string map [list "\\" ""] [$qr15_c getName]] in [list "${qr15_lscope}.u_leaf" "${scope}.u_leaf"]} {set leaf $qr15_c;break}}
  if {$leaf eq "NULL" || $leaf eq ""} {error "A0 request decoder has no matching hard leaf: $scope"}
  set bb [$leaf getBBox]
  regexp {g_rb\[([0-9]+)\]\.g_single\.g_col\[([01])\]$} $scope -> bank col
