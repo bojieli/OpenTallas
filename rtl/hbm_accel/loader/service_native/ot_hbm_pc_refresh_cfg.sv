@@ -27,11 +27,18 @@
 // only ot_rst_relay (2 sync flops + 1 relay flop, async assert); every stream-domain flop resets from rs_n. Release
 // takes RST_RELEASE = 3 rising clk edges after the port (compiler/host boot: the first F20 frame to this target may
 // not arrive within 3 stream edges of rst_n release -- boot frames come >= tens of edges later). No other cycle change.
+// Release hold (HBMc/CHAIN2 2026-10-22, freeze class 3 functional): on the die refresh_reload reaches each controller
+//   through 3..28 HBM-clock relay stages (r18h contract rf2043..rf2106), while pc_rst_n is one wire and every controller
+//   loads ref_c <= refresh_reload only while held in reset. Releasing 3 edges after `loaded` let 51-56 of 64 PCs latch
+//   the relays' pre-load contents (reset value 0, outside RMIN..RMAX). pc_rst_n now stays low REL_HOLD more HBM edges
+//   after the synchronised `loaded` (default 64 >= 2x the deepest chain); REL_HOLD = 0 is the previous release.
+//   Boot-time only (one-shot, ~64 ns); the production schedule is unchanged.
 // MUT (bench only): 1 range check off, 2 release ignores loaded, 3 rewrite after load accepted, 4 PC byte order swapped.
 module ot_hbm_pc_refresh_cfg #(
     parameter integer NPC  = 32,
     parameter integer RMIN = 118,
     parameter integer RMAX = 236,
+    parameter integer REL_HOLD = 64,
     parameter integer MUT  = 0
 )(
     input  wire clk, rst_n,              // stream (F20 ingress) domain
@@ -77,10 +84,16 @@ module ot_hbm_pc_refresh_cfg #(
         end
     end
     // ---- release into the HBM domain
-    reg [1:0] ls; reg prst;
+    localparam integer HW = (REL_HOLD < 1) ? 1 : $clog2(REL_HOLD + 1);
+    reg [1:0] ls; reg prst; reg [HW-1:0] hold_c;
+    wire held = (hold_c == HW'(REL_HOLD));
     always @(posedge clk_hbm or negedge rst_hbm_n)
-        if (!rst_hbm_n) begin ls <= 2'b00; prst <= 1'b0; end
-        else begin ls <= {ls[0], (MUT == 2) ? 1'b1 : loaded}; prst <= ls[1]; end
+        if (!rst_hbm_n) begin ls <= 2'b00; prst <= 1'b0; hold_c <= {HW{1'b0}}; end
+        else begin
+            ls <= {ls[0], (MUT == 2) ? 1'b1 : loaded};
+            if (ls[1] && !held) hold_c <= hold_c + 1'b1;
+            prst <= ls[1] && held;
+        end
     assign pc_rst_n = prst;
     // ---- status (release observed back in the stream domain)
     always @(posedge clk or negedge rs_n)
