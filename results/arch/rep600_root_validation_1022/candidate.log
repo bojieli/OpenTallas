@@ -1,0 +1,51 @@
+................................................................ [ 26%]
+......................................................... [ 50%]
+............E.................................................... [ 77%]
+...................................................... [ 99%]
+.                                                                        [100%]
+==================================== ERRORS ====================================
+_______ ERROR collecting tools/hbm_die_v15/test_ep_calendar_host_2330.py _______
+tools/hbm_die_v15/test_ep_calendar_host_2330.py:33: in <module>
+    subprocess.run(['iverilog','-g2012','-s','tb_hbm_ep_calendar_host','-Ptb_hbm_ep_calendar_host.MUT='+str(m),
+/usr/lib/python3.10/subprocess.py:526: in run
+    raise CalledProcessError(retcode, process.args,
+E   subprocess.CalledProcessError: Command '['iverilog', '-g2012', '-s', 'tb_hbm_ep_calendar_host', '-Ptb_hbm_ep_calendar_host.MUT=0', '-o', '/tmp/hbm-epcal-1c0zqcr5/sim', '/home/ubuntu/wt/root-merge-1022c/rtl/hbm_accel/host_static_20261015/tb_hbm_ep_calendar_host.sv', '/home/ubuntu/wt/root-merge-1022c/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv', '/home/ubuntu/wt/root-merge-1022c/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv', '/home/ubuntu/wt/root-merge-1022c/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv', '/home/ubuntu/wt/root-merge-1022c/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v']' returned non-zero exit status 2.
+------------------------------- Captured stdout --------------------------------
+EP_CALENDAR_MAPPING PASS171 bits/9 endpoints
+------------------------------- Captured stderr --------------------------------
+/home/ubuntu/wt/root-merge-1022c/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv:43: error: Unknown module type: ot_vms_calendar_static_xcap
+2 error(s) during elaboration.
+*** These modules were missing:
+        ot_vms_calendar_static_xcap referenced 1 times.
+***
+________________________ ERROR at setup of test_gu_prop ________________________
+file /home/ubuntu/wt/root-merge-1022c/tools/s81_dv/layer_prog/test_gu_prop.py, line 46
+  def test_gu_prop(topo, R=4):
+E       fixture 'topo' not found
+>       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, hydra_restore_singletons, hydra_sweep_runner, hydra_task_runner, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/ubuntu/wt/root-merge-1022c/tools/s81_dv/layer_prog/test_gu_prop.py:46
+=============================== warnings summary ===============================
+tools/s81_dv/test_dv_layer_compile.py::test_previous_pre_source
+  /home/ubuntu/.local/lib/python3.10/site-packages/_pytest/python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tools/s81_dv/test_dv_layer_compile.py::test_previous_pre_source returned <class 'dict'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tools/s81_dv/test_dv_layer_compile.py::test_compile_l0
+  /home/ubuntu/.local/lib/python3.10/site-packages/_pytest/python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tools/s81_dv/test_dv_layer_compile.py::test_compile_l0 returned <class 'dict'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tools/s81_dv/test_dv_layer_compile.py::test_events_g8
+  /home/ubuntu/.local/lib/python3.10/site-packages/_pytest/python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tools/s81_dv/test_dv_layer_compile.py::test_events_g8 returned <class 'dict'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tools/hbm_die_v15/test_ep_calendar_host_2330.py - subprocess.CalledProc...
+ERROR tools/s81_dv/layer_prog/test_gu_prop.py::test_gu_prop

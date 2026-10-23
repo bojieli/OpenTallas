@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.hp13.selected_source_archive.v1",
+  "source_commit": "00ff9c80b",
+  "source_evidence": "results/arch/qdie5_hp13_1022/GENERATED.json",
+  "qualification": "Selected source fixture only; canonical main is unqualified until its exact RTL SHA matches the selected receipt.",
+  "files": [
+    {
+      "canonical_path": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+      "archive_path": "results/arch/hp13_corepub39_regen_1022/selected_sources/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+      "sha256": "5d45a822fe5a7550e98e274ebb7d19f4c27ac1f3e3352daefa0258b9a29b5b04"
+    },
+    {
+      "canonical_path": "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+      "archive_path": "results/arch/hp13_corepub39_regen_1022/selected_sources/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv",
+      "sha256": "fc00de4fcc3ddf6c31e1fc8ddcfd9231958812b433b9a46d6af8d43562eef8f0"
+    },
+    {
+      "canonical_path": "rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv",
+      "archive_path": "results/arch/hp13_corepub39_regen_1022/selected_sources/qfd_hp13_corepub39.sv",
+      "sha256": "7db853e9efab5755151aa9b8da28175614031b5ad7fe6e2d1a1a7fbd4b47f69c"
+    },
+    {
+      "canonical_path": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "archive_path": "results/arch/hp13_corepub39_regen_1022/selected_sources/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+      "sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f"
+    }
+  ]
+}

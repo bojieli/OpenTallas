@@ -1,0 +1,12 @@
+== trace hp13_imgh vs dv-form ref_imgh
+TRACE_LOCKSTEP PASS compared=27987 ref_cycles=27987 dut_cycles=27987 mismatches=0
+== trace hp13_img0 vs dv-form ref_img0
+TRACE_LOCKSTEP PASS compared=24852 ref_cycles=24852 dut_cycles=24852 mismatches=0
+== trace hp13_seg0_imgh vs dv-form ref_imgh
+TRACE_LOCKSTEP FAIL compared=27987 ref_cycles=27987 dut_cycles=27987 mismatches=3321
+  first mismatch cycle 24667 last 27987 command_stage at first mismatch 37
+  stages with mismatches [37]
+  field csr: 3321 cycles, first 24667
+  field dc: 3320 cycles, first 24668
+  field cf: 3320 cycles, first 24668
+  field hr: 1 cycles, first 24765

@@ -1,0 +1,30 @@
+{
+  "remote": "ot-gold2:/srv/opentallas-scratch/claude/stw-s81c-die4-rrd/r160",
+  "exit": 0,
+  "scope": "Actual 160um repeater/controller regression stops explicitly before forwarded-clock equalization and does not write a repaired ODB. It is not full fclk/GRT/STA/IR qualification.",
+  "elapsed": "1:39:19",
+  "max_rss_kib": 66951312,
+  "actual_helper_sha256": "11f14365223cb0f14257e631251d1459adff125187a90da15be78e8572799dfd",
+  "actual_log_sha256": "133036065dc7c1faea3897d05b6bf80d94fa1e164ae5136484f1c6be8ca4b739",
+  "old_vs_pin_escape_paths": {
+    "calls": 64,
+    "old_failures": 0,
+    "different": 0
+  },
+  "published_default_geometry_replay": {
+    "source_sha256": "383c604140ce0e8611aa6791e430c2b20e302df145c90d5c9d6408411dfa66e2",
+    "cases": 64,
+    "different": 0,
+    "pitch_option": "unset; default 120um preserved"
+  },
+  "controller": {
+    "rule": "Actual controller RRD legal perimeter buffers; no added protocol edges",
+    "roots": 8704,
+    "nets_traced": 30458,
+    "repaired_branches": 64,
+    "buffers": 272,
+    "unplaced": 0,
+    "segments_over160": 0,
+    "max_segment_um": 129.296
+  }
+}
