@@ -110,6 +110,12 @@ module dsdv_tx_priority_mux #(parameter integer W=10,OFF=0,ID=0)(
  end
 endmodule
 
+// OT_TXGRP_SOFT: the soft dsdv_idx_txm_grp module name (renamed under OT_DSDV_TXGA_HARD, see dsdv_idx_txm_grp)
+`ifdef OT_DSDV_TXGA_HARD
+`define OT_TXGRP_SOFT dsdv_idx_txm_grp_b
+`else
+`define OT_TXGRP_SOFT dsdv_idx_txm_grp
+`endif
 module dsdv_idx_txm_n32 #(
     parameter integer D = 8192,
     parameter bit SRAM_MACRO = 0,
@@ -133,7 +139,12 @@ module dsdv_idx_txm_n32 #(
     // (dsdv_idx_txm_grp: banks [0, WCB) = column A, a hardened child with its own clock root; banks [WCB, NB) = column B
     // in the parent).  Each group lands its read/write ports (RIL/WDL), captures rd_out (RDL) and ORs its banks under its
     // own bank-select copies; the parent ORs the two partial words into rd.  Same function, same edges (0 cycles).
-    parameter integer SPLIT = 0
+    parameter integer SPLIT = 0,
+    // STW-S81c-TOK5 10-22 (x r3 gate: placement reg->reg -69.8 ps g_b[6].g_ril.re_l/D = lk_go/ra from the centre to the
+    // far bank's RIL landing, the v/w reject class): RIC = 1 (with RIL, SPLIT = 0) lands re/ra first in ONE kept copy a
+    // macro column (banks < WCB / >= WCB) and the per-bank RIL landing then decodes from its column copy: +1 lookup edge
+    // (reference LPX + 1), the bank select and the consumer pipe follow like RIL.
+    parameter integer RIC = 0
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -154,10 +165,14 @@ module dsdv_idx_txm_n32 #(
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
         wire [255:0] pa, pb;
         // column A (banks 0..WCB-1): the hardened child (own clock root)
+`ifdef OT_DSDV_TXGA_HARD
+        dsdv_idx_txm_grp u_ga (   // hard view: hardened with D, B0 0, NG WCB, RDL, WDL, RIL, RIL_MUT, POUT 1
+`else
         dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_ga (
+`endif
             .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
         // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
-        dsdv_idx_txm_grp #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
+        `OT_TXGRP_SOFT #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
             .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
             .wm_next(wm_next), .p(pb));
         always @* rd = pa | pb;  // POUT = 1: pa / pb are the groups' pin flops (same edge as the former rd register)
@@ -166,7 +181,11 @@ module dsdv_idx_txm_n32 #(
     generate if (SRAM_MACRO && SPLIT == 0) begin : g_m
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm_n32: D must be a multiple of 1024");
+        initial if (RIC != 0 && RIL == 0) $fatal(1, "dsdv_idx_txm_n32: RIC needs RIL");
         wire [255:0] q [0:NB-1];
+        // RIC: one kept re/ra copy a macro column (0 = banks < WCB, 1 = banks >= WCB)
+        (* keep = "true" *) reg re_c [0:1]; (* keep = "true" *) reg [AW-1:0] ra_c [0:1];
+        always @(posedge ck) begin re_c[0] <= re; re_c[1] <= re; ra_c[0] <= ra; ra_c[1] <= ra; end
         genvar b, c;
         for (b = 0; b < NB; b = b + 1) begin : g_b
             wire[255:0]wm_bank;
@@ -194,9 +213,11 @@ module dsdv_idx_txm_n32 #(
             end
             wire [255:0] q_raw;
             wire re_m; wire [9:0] ra_m;
+            wire re_s = (RIC != 0) ? re_c[(b >= WCB) ? 1 : 0] : re;
+            wire [AW-1:0] ra_s = (RIC != 0) ? ra_c[(b >= WCB) ? 1 : 0] : ra;
             if (RIL != 0) begin : g_ril
                 (* keep = "true" *) reg re_l; (* keep = "true" *) reg [9:0] ra_l;
-                always @(posedge ck) begin re_l <= re && (NB == 1 || ra[AW-1:10] == b); ra_l <= ra[9:0]; end
+                always @(posedge ck) begin re_l <= re_s && (NB == 1 || ra_s[AW-1:10] == b); ra_l <= ra_s[9:0]; end
                 assign re_m = re_l; assign ra_m = ra_l;
             end else begin : g_ri0
                 assign re_m = re && (NB == 1 || ra[AW-1:10] == b); assign ra_m = ra[9:0];
@@ -220,7 +241,13 @@ module dsdv_idx_txm_n32 #(
         if (RIL != 0) begin : g_rabs
             reg [AW-1:0] ra_q;                       // RIL: the read reaches the macros one edge later
             always @(posedge ck) ra_q <= ra;
-            assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+            if (RIC != 0) begin : g_ric
+                reg [AW-1:0] ra_q2;                  // RIC: and one more (the column copy)
+                always @(posedge ck) ra_q2 <= ra_q;
+                assign ra_bs = (RIL_MUT != 0) ? ra_q : ra_q2;
+            end else begin : g_noric
+                assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+            end
         end else begin : g_rabs0
             assign ra_bs = ra;
         end
@@ -262,7 +289,10 @@ endmodule
 // capture), plus this group's own bank-select copies; p = OR over the group's banks of (captured word AND bank select):
 // the parent registers pa | pb into rd.  Every input lands in a flop of this group before any logic (re/ra/we/wa/wd/
 // wm_next), every output comes from flops through one AND-OR: a clean hardened child with its own clock root.
-module dsdv_idx_txm_grp #(
+// OT_DSDV_TXGA_HARD (TOPK TX y parent s81dv_idxtxn32y): u_ga is the hardened s81dv_idxtxga view (module dsdv_idx_txm_grp,
+// no parameters); the soft column B group keeps this body under the name dsdv_idx_txm_grp_b.  Without the define the
+// module is dsdv_idx_txm_grp exactly as before (the ga view and every other user unchanged).
+module `OT_TXGRP_SOFT #(
     parameter integer D = 8192,
     parameter integer B0 = 0,
     parameter integer NG = 5,
@@ -393,7 +423,8 @@ module dsdv_idx_tx_n32 #(
     parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
     parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
-    parameter integer SPLIT = 0     // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer SPLIT = 0,    // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
+    parameter integer RIC = 0       // STW-S81c-TOK5 10-22: read issue landed once a macro column before the bank landing (+1 lookup edge)
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -563,10 +594,10 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
-    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
+    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0) + ((RIC != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
     reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
@@ -690,6 +721,15 @@ module dsdv_idx_tx_n32 #(
     end else begin : g_popk0
         assign rf_pop_k = rf_pop_h;
     end endgenerate
+    // TOPK TX y (SPLIT, STW-S81c-TOK5 10-22; y gate census rf_pop 33 loads > 32): fifth pop predicate instance for the
+    // window open enables (g_valid / g_addr, 12 loads).  Same function, same edge; SPLIT = 0 keeps rf_pop there.
+    wire        rf_pop_e;
+    generate if (SPLIT != 0) begin : g_pope
+        dsdv_tx_pop_pred #(.ID(7004)) u_pope (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+            .flush_ok(flush_ok), .pop(rf_pop_e));
+    end else begin : g_pope0
+        assign rf_pop_e = rf_pop;
+    end endgenerate
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
     wire        o_ctl_c = okk[7];            // control copy
@@ -784,13 +824,13 @@ module dsdv_idx_tx_n32 #(
         wire acc=(b==0)?t_acc0:t_acc1;
         for(genvar f=0;f<4;f=f+1)begin:g_valid
             wire open;
-            dsdv_tx_open_enable #(.BANK(b),.ID(4*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
+            dsdv_tx_open_enable #(.BANK(b),.ID(4*b+f))u_enable(.pop(rf_pop_e),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_valid #(.ID(4*b+f))u(.ck(ck),.open(open),.acc(acc),.mask(r_oh[4*f+:4]),.q(wlvb[b][4*f+:4]));
         end
         wire[19:0]base={r_i[19:4],4'd0};
         for(genvar f=0;f<2;f=f+1)begin:g_addr
             wire open;
-            dsdv_tx_open_enable #(.BANK(b),.ID(100+2*b+f))u_enable(.pop(rf_pop),.inwin(r_in),.target(nb_t),.en(open));
+            dsdv_tx_open_enable #(.BANK(b),.ID(100+2*b+f))u_enable(.pop(rf_pop_e),.inwin(r_in),.target(nb_t),.en(open));
             dsdv_tx_window_addr #(.ID(2*b+f))u(.ck(ck),.open(open),.d(base[10*f+:10]),.q(w0b[b][10*f+:10]));
         end
     end endgenerate

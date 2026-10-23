@@ -1,0 +1,126 @@
+{
+ "name": "s81dv_idxtxn32y-y-COMMIT",
+ "block": "dsdv_idx_tx_n32",
+ "ref_tile": true,
+ "owner": "STW-S81c-TOK5",
+ "purpose": "TX FB y parent: SPLIT=1 (column A = CLOSED child s81dv_idxtxga POUT, column B + core in the parent), 0 cycles vs x; ports == reference LPX 2",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-topk-txy-pout-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "tools/s81_dv/tx_export_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_idx_tx_n32 #(.V(276), .IK(4), .EK(5), .UID(92), .D(8192), .IB(64), .SRAM_MACRO(1), .MUT(0), .RDL(1), .WDL(1), .WDC(1), .SCS(1), .RIL(1), .RHP(1), .SPLIT(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_DSDV_TXGA_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tx_y_lockstep",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2 -GSPLIT=1' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_y_lockstep 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TX_MITER_PASS$"
+   },
+   {
+    "name": "tx_y_mut5_bank_sel",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2 -GSPLIT=1' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_y_mut5_bank_sel 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   },
+   {
+    "name": "tx_y_mut4_wmask",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2 -GSPLIT=1' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_y_mut4_wmask 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81dv_idxtxn32y/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81dv_idxtxn32y/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81dv_idxtxn32y --out {RUN}/record/views/dsdv_idx_tx_n32 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/ref_tile/s81dv_idxtxga/views/dsdv_idx_txm_grp > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81dv_idxtxn32y/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/s81dv_idxtxga/views/dsdv_idx_txm_grp"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81dv_idxtxn32y/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81dv_idxtxn32y/s81dv_idxtxn32y-y-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "s81dv_idxtxn32y (TOPK TX y FB parent, STW-S81c-TOK5 10-22): dsdv_idx_tx_n32 SPLIT=1 over the x outline; column A hardened as s81dv_idxtxga (CLOSED, POUT=1 RTL 390b726a1) so the parent's clock root no longer spans 626 um of flops + 10 macros (x: 9,904 sinks, 715 ps insertion over one root); same function, 0 cycles vs x."
+}
