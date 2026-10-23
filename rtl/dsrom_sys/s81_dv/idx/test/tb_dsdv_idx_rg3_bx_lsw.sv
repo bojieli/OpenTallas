@@ -4,13 +4,17 @@
 // the split copy only (the run must then report mismatches).  Prints BX_LSW PASS / FAIL.
 module tb_dsdv_idx_rg3_bx_lsw;
     parameter integer MUTN = 0;
+    parameter bit READ_STAGE = 0;
     parameter integer N = 20000;
     reg ck = 0, rst = 0;
     always #1 ck = ~ck;
     reg [1087:0] rri; reg [17:0] sx;
     wire [67:0] xr_a, xr_b; wire [543:0] kq_a, kq_b;
-    dsdv_idx_rg3_bx     #(.MUT(MUTN), .SRAM_MACRO(1), .RH(1)) u_b (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_b), .kq_o(kq_b));
+    dsdv_idx_rg3_bx     #(.MUT(MUTN), .READ_STAGE(READ_STAGE), .SRAM_MACRO(1), .RH(1)) u_b (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_b), .kq_o(kq_b));
     dsdv_idx_rg3_bx_ref #(.MUT(0),    .SRAM_MACRO(1), .RH(1)) u_a (.ck(ck), .rst(rst), .rri(rri), .sx_i(sx), .xr_o(xr_a), .kq_o(kq_a));
+    reg [543:0] kq_prev;
+    always @(posedge ck) kq_prev <= kq_a;
+    wire [543:0] kq_expected = READ_STAGE ? kq_prev : kq_a;
     integer i, k, bad = 0, live = 0, wr = 0, seed = 1;
     initial begin
         rri = 0; sx = 0;
@@ -27,9 +31,9 @@ module tb_dsdv_idx_rg3_bx_lsw;
             sx[16:13] = {4{($random(seed) & 1)}};
             @(posedge ck); #0.1;
             if (rst && i > 40) begin
-                if (xr_a !== xr_b || kq_a !== kq_b) begin
+                if (xr_a !== xr_b || kq_expected !== kq_b) begin
                     bad = bad + 1;
-                    if (bad <= 4) $display("BX_LSW MISMATCH cycle %0d xr_eq %0d kq_eq %0d", i, xr_a === xr_b, kq_a === kq_b);
+                    if (bad <= 4) $display("BX_LSW MISMATCH cycle %0d xr_eq %0d kq_eq %0d", i, xr_a === xr_b, kq_expected === kq_b);
                 end
                 if (|kq_a[511:0]) live = live + 1;
                 if (|u_a.lw_v) wr = wr + 1;

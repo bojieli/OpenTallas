@@ -16,6 +16,7 @@
 module dsdv_idx_rg3_bx #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
+    parameter bit READ_STAGE = 0,
     parameter integer RH = 1
 ) (
     input  wire          ck,
@@ -28,7 +29,7 @@ module dsdv_idx_rg3_bx #(
     wire [3:0] lw_v, lw_h1; wire [39:0] lw_a; wire [1023:0] lw_d;
     dsdv_idx_rg3_bxn #(.MUT(MUT), .RH(RH)) u_n (.ck(ck), .rst(rst), .rri(rri), .xr_o(xr_o),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d));
-    dsdv_idx_rg3_bxm #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO)) u_m (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxm #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .READ_STAGE(READ_STAGE)) u_m (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(kq_o));
 endmodule
 
@@ -105,7 +106,8 @@ endmodule
 
 module dsdv_idx_rg3_bxm #(
     parameter integer MUT = 0,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter bit READ_STAGE = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -118,9 +120,9 @@ module dsdv_idx_rg3_bxm #(
 );
     wire [287:0] k0;                                // {k_sc, key[255:0]}
     wire [255:0] k1;                                // key[511:256]
-    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(0)) u_c0 (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .READ_STAGE(READ_STAGE), .H(0)) u_c0 (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k0));
-    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .H(1)) u_c1 (.ck(ck), .rst(rst), .sx_i(sx_i),
+    dsdv_idx_rg3_bxmh #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .READ_STAGE(READ_STAGE), .H(1)) u_c1 (.ck(ck), .rst(rst), .sx_i(sx_i),
         .lw_v(lw_v), .lw_h1(lw_h1), .lw_a(lw_a), .lw_d(lw_d), .kq_o(k1));
     assign kq_o = {k0[287:256], k1, k0[255:0]};
 endmodule
@@ -130,6 +132,7 @@ endmodule
 module dsdv_idx_rg3_bxmh #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 0,
+    parameter bit READ_STAGE = 0,
     parameter integer H = 0
 ) (
     input  wire          ck,
@@ -159,15 +162,24 @@ module dsdv_idx_rg3_bxmh #(
     wire [1:0]  c_u  = c_hi[34:33];
     wire [9:0]  s_row = gatk1 ? {2'b10, s_hi[32:29], s_hi[28:25]} : {5'b01000, s_hi[32:29], s_hi[28]};
     wire [9:0]  c_row = {2'b00, c_hi[32:29], c_hi[28:25]};
-    wire [3:0][255:0] hq;
+    wire [3:0][255:0] hq_raw, hq;
     genvar gu;
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_land
         wire rs0 = H == 0 && s_vx[gu] && su_b == 2'(gu);
         wire rc  = c_v && c_u == 2'(gu);
         wire we  = lw_v[gu] && (H ? lw_h1[gu] : !lw_h1[gu]);
         dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_h (
-            .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(hq[gu]),
+            .ck(ck), .re(rs0 || rc), .ra(rs0 ? s_row : c_row), .rd(hq_raw[gu]),
             .we(we), .wa(lw_a[10 * gu +: 10]), .wd(lw_d[256 * gu +: 256]));
+        if (READ_STAGE) begin : g_readcap
+            // One unreset capture bank beside each SRAM read face. This removes
+            // the SRAM access + wide mux from the path to the S-face output.
+            (* keep = "true" *) reg [255:0] q;
+            always @(posedge ck) q <= hq_raw[gu];
+            assign hq[gu] = q;
+        end else begin : g_noreadcap
+            assign hq[gu] = hq_raw[gu];
+        end
     end endgenerate
     // key half H: lane gk = 16 H + j reads hH of the unit its select names (select from cu = the old cu_a (H 0) / cu_b (H 1))
     (* keep = "true" *) reg [1:0] cu;
@@ -176,12 +188,20 @@ module dsdv_idx_rg3_bxmh #(
         cu <= s_hi[34:33];
         ks0 <= {16{cu == 2'd0}}; ks1 <= {16{cu == 2'd1}}; ks2 <= {16{cu == 2'd2}}; ks3 <= {16{cu == 2'd3}};
     end
+    wire [15:0] km0, km1, km2, km3;
+    generate if (READ_STAGE) begin : g_keysel_delay
+        (* keep = "true" *) reg [15:0] d0,d1,d2,d3;
+        always @(posedge ck) begin d0<=ks0; d1<=ks1; d2<=ks2; d3<=ks3; end
+        assign km0=d0; assign km1=d1; assign km2=d2; assign km3=d3;
+    end else begin : g_keysel_direct
+        assign km0=ks0; assign km1=ks1; assign km2=ks2; assign km3=ks3;
+    end endgenerate
     wire [255:0] k_key;
     genvar gk;
     generate for (gk = 0; gk < 16; gk = gk + 1) begin : g_km
         localparam integer O = 16 * gk;
-        assign k_key[O +: 16] = ({16{ks0[gk]}} & hq[0][O +: 16]) | ({16{ks1[gk]}} & hq[1][O +: 16]) |
-                                ({16{ks2[gk]}} & hq[2][O +: 16]) | ({16{ks3[gk]}} & hq[3][O +: 16]);
+        assign k_key[O +: 16] = ({16{km0[gk]}} & hq[0][O +: 16]) | ({16{km1[gk]}} & hq[1][O +: 16]) |
+                                ({16{km2[gk]}} & hq[2][O +: 16]) | ({16{km3[gk]}} & hq[3][O +: 16]);
     end endgenerate
     generate if (H == 0) begin : g_sc
         // the scale-select capture: the RAW {su_b, s_lo} land in pin flops beside the S-face sx_i pins and the 32-way
@@ -199,12 +219,20 @@ module dsdv_idx_rg3_bxmh #(
             assign sdec[ga] = su_b == 2'(ga / 8) && s_lo == 3'(ga % 8);
         end
         always @(posedge ck) begin ss0 <= sdec; ss1 <= sdec; end
+        wire [31:0] sm0,sm1;
+        if (READ_STAGE) begin : g_scsel_delay
+            (* keep = "true" *) reg [31:0] d0,d1;
+            always @(posedge ck) begin d0<=ss0; d1<=ss1; end
+            assign sm0=d0; assign sm1=d1;
+        end else begin : g_scsel_direct
+            assign sm0=ss0; assign sm1=ss1;
+        end
         reg [31:0] k_sc;
         always @(posedge ck) begin : g_scr
             reg [31:0] x; integer a_;
             x = 32'd0;
             for (a_ = 0; a_ < 32; a_ = a_ + 1)
-                x = x | {{16{ss1[a_]}} & hq[a_ / 8][32 * (a_ % 8) + 16 +: 16], {16{ss0[a_]}} & hq[a_ / 8][32 * (a_ % 8) +: 16]};
+                x = x | {{16{sm1[a_]}} & hq[a_ / 8][32 * (a_ % 8) + 16 +: 16], {16{sm0[a_]}} & hq[a_ / 8][32 * (a_ % 8) +: 16]};
             k_sc <= x;
         end
         (* keep = "true" *) reg [287:0] kq;         // S face pin flops
