@@ -3,7 +3,7 @@
 # recipe b = M4-M5 0.30 / M6-M8 0.10 / M9 0.05, coarse 4.8 um tiles; same as SQC-QDIE5 grt_probe_np.sh 'bs').
 # usage: ODB OUT VARIANT   VARIANT: p4 = p2 + slice2 OBS M1-M7 full (real slice contract) | p0 = baseline | p1 = b16 OBS M1-M7 (M8/M9 open) | p2 = p1 + qfd_rst_rep* removed
 #                                   p3 = p2 + landh0 removed (landing halves pushed into clusters)
-I=$1; O=$2; V=$3; mkdir -p $O; cp $(dirname $0)/b16_ft.lef $O/
+I=$1; O=$2; V=$3; mkdir -p $O; zcat $(dirname $0)/b16_ft.lef.gz > $O/b16_ft.lef
 cat > $O/grt_probe.tcl <<T
 set_thread_count 16
 read_db /in/in.odb
