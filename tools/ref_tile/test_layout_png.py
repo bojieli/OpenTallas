@@ -40,7 +40,7 @@ def test_gate_layout_fill_and_trial(tmp_path):
     g = PG.Gate()
     PG.gate_layout(g, tmp_path, {"name": "t", "macros": [1, 2, 3, 4]}, out)
     sev = {i["check"]: i["severity"] for i in g.items}
-    assert sev == {"layout_images": "INFO", "fill": "FAIL", "trial_route": "INFO"}
+    assert sev == {"layout_images": "INFO", "fill": "FAIL", "trial_route": "INFO", "layout_review": "INFO"}  # TILE-REVIEW 10-23: review always written
     g = PG.Gate()
     PG.gate_layout(g, tmp_path, {"name": "t", "macros": [1, 2, 3, 4], "fill_reason": {"pin_bound": "edges full"}},
                    out.replace("0 /  0 /  0\nGATE_DONE", "1 /  2 /  3\nGATE_DONE"))
@@ -49,7 +49,7 @@ def test_gate_layout_fill_and_trial(tmp_path):
     g = PG.Gate()
     PG.gate_layout(g, tmp_path, {"name": "leaf", "macros": []}, out)
     sev = {i["check"]: i["severity"] for i in g.items}
-    assert sev == {"layout_images": "INFO", "trial_route": "INFO"}  # a leaf tile: no fill judgement, trial GRT judged
+    assert sev == {"layout_images": "INFO", "trial_route": "INFO", "layout_review": "INFO"}  # a leaf tile: no fill judgement, trial GRT judged
     assert g.trial_route["overflow"] == 0 and g.trial_route["kind"] == "tile"
 
 
