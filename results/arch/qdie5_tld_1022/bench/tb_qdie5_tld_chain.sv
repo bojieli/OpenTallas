@@ -14,7 +14,8 @@
 //          slot) on every one of the 88 slots, at the closed qfd_dv_slice_tload contract age (first write 5 edges after
 //          the request edge): the golden = programme_store.py logical images of the committed compact table manifest
 //          (sha c63242ab..., QW-TLOAD2 fixture, b8e6c6f86) = the right per-layer slice constants;
-//   FAULT  no slice tload fault (collision / loader fault).
+//   FAULT  no slice tload fault (collision / loader fault);
+//   SETID  the slice's runtime SETID enumeration id (sid_q) equals its mask set k: table_s<k> is bound to chain position k.
 // VAR (one build each): 0 consumer as built (must PASS); 1 no consumer (old qfd_dv_slice2_w / _e: no loads -> layers
 // 2..36 keep stale constants); 2 treq hop of one edge (QW-F16PROG4 / s8_lp form, cmd hop is 2); 3 treq die lane one edge
 // longer than cmd (ctlm -> W5); 4 loader stage bit 0 dropped (qfd_dv_slice_tload MUT 2); 5 the stage-17 table_req
@@ -76,7 +77,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
             tld_dly #(116, DHOP) u_c (.ck(ck), .i(c_out[k - 1]), .o(c_in[k]));
             tld_dly #(9, DHOP) u_t (.ck(ck), .i(t_out[k - 1]), .o(t_in[k]));
         end
-        wire mwe, mfault; wire [1:0] mkind; wire [23:0] maddr; wire [1023:0] mdata; wire swe;
+        wire mwe, mfault, sok; wire [3:0] sid; wire [1:0] mkind; wire [23:0] maddr; wire [1023:0] mdata; wire swe;
         if (VAR == 1) begin : g_old
             if (k < 6) begin : g_w
                 qfd_dv_slice2_w #(.MU_NU(4), .ARF(1), .RP(1)) u_s (.ck(ck), .rst_n(rst_n), .cmd_wi(c_in[k]), .cmd_eo(c_out[k]),
@@ -85,6 +86,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
                     .rl_wi(1'b0), .rd_wi(512'd0), .dr_wi(520'd0), .ag_ei(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
+                assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = 1'b0; assign swe = 1'b0;
             end else begin : g_e
                 qfd_dv_slice2_e #(.MU_NU(4), .ARF(1), .RP(1)) u_s (.ck(ck), .rst_n(rst_n), .cmd_ei(c_in[k]), .cmd_wo(c_out[k]),
@@ -93,6 +95,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
                     .rl_ei(1'b0), .rd_ei(512'd0), .dr_ei(520'd0), .ag_wi(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
+                assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = 1'b0; assign swe = 1'b0;
             end
             assign t_out[k] = 9'd0;
@@ -106,6 +109,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
                     .rl_wi(1'b0), .rd_wi(512'd0), .dr_wi(520'd0), .ag_ei(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
+                assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = u_s.u_core.tld_fault; assign swe = u_s.u_core.stm_tw_we;
             end else begin : g_e
                 qfd_dv_slice2_et #(.MU_NU(4), .ARF(1), .RP(1), .TSLICE(k), .TQ_MUT(TQ)) u_s (.ck(ck), .rst_n(rst_n),
@@ -115,6 +119,7 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
                     .rl_ei(1'b0), .rd_ei(512'd0), .dr_ei(520'd0), .ag_wi(10'd0), .l9_wi(514'd0), .rs_n0(514'd0), .rs_n1(514'd0),
                     .rs_s0(514'd0), .rs_s1(514'd0));
                 assign mwe = u_s.u_core.tw_we; assign mkind = u_s.u_core.tw_kind; assign maddr = u_s.u_core.tw_addr;
+                assign sid = u_s.u_core.sid_q; assign sok = u_s.u_core.sid_ok;
                 assign mdata = u_s.u_core.tw_data; assign mfault = u_s.u_core.tld_fault; assign swe = u_s.u_core.stm_tw_we;
             end
         end
@@ -190,11 +195,11 @@ module tb_qdie5_tld_chain #(parameter integer NS = 12, parameter integer VAR = 0
     // summary printer
     generate for (k = 0; k < NS; k = k + 1) begin : g_sum
         always @(negedge ck) if (tr_n > 0 && tr_i >= tr_n && cyc == tr_c[tr_n - 1] - ofs + 590) begin
-            $display("SLICE %0d TSLICE=%0d cmd_lane=%0d cmd_checks=%0d bad_cmd=%0d loads=%0d bad_align=%0d bad_order=%0d table_edges=%0d bad_table=%0d stages2_36_loaded=%0d faults=%0d stream_tw=%0d",
+            $display("SLICE %0d TSLICE=%0d cmd_lane=%0d cmd_checks=%0d bad_cmd=%0d loads=%0d bad_align=%0d bad_order=%0d table_edges=%0d bad_table=%0d stages2_36_loaded=%0d faults=%0d stream_tw=%0d setid=%0d/%0d",
                 k, k, g_s[k].dcmd, g_s[k].ncmd, g_s[k].bad_cmd, g_s[k].nld, g_s[k].bad_align, g_s[k].bad_order, g_s[k].nedge, g_s[k].bad_tab,
-                g_s[k].st_ok2, g_s[k].bad_flt, g_s[k].bad_coll);
+                g_s[k].st_ok2, g_s[k].bad_flt, g_s[k].bad_coll, g_s[k].sok, g_s[k].sid);
             if (g_s[k].bad_cmd || g_s[k].bad_align || g_s[k].bad_order || g_s[k].bad_tab || g_s[k].bad_flt || g_s[k].bad_coll
-                || g_s[k].nld != 36 || g_s[k].st_ok2 != 35 || g_s[k].nedge != 36 * 88)
+                || g_s[k].nld != 36 || !g_s[k].sok || g_s[k].sid != 4'(k) || g_s[k].st_ok2 != 35 || g_s[k].nedge != 36 * 88)
             begin $display("SLICE_FAIL %0d", k); sfail[k] = 1; end
         end
     end endgenerate
