@@ -52,6 +52,15 @@ def main():
         L.append(f'        if ({d} !== {r}) begin if (nseam < 8) $display("FAULT SEAM_MISMATCH lpl_{n} edge %0d", edge_n); '
                  'nseam = nseam + 1; end')
     L.append('    end')
+    # activity: a seam whose output never toggles cannot show a re-timing; report toggles per seam at the end
+    for n in sorted(ref_b):
+        d = f'dut.u_f.{dut_b[n]}.u_lpl_{n}_r.o'
+        L.append(f'    logic [$bits({d})-1:0] sa_pv_{n}; integer sa_tg_{n} = 0;')
+        L.append(f'    always @(posedge clk) begin if ({d} !== sa_pv_{n}) sa_tg_{n} = sa_tg_{n} + 1; sa_pv_{n} <= {d}; end')
+    L.append('    final begin')
+    for n in sorted(ref_b):
+        L.append(f'        $display("SEAM_ACT lpl_{n} toggles %0d", sa_tg_{n});')
+    L.append('    end')
     Path(a.out_svh).write_text('\n'.join(L) + '\n')
     print(f'seams compared: {len(ref_b)}')
 
