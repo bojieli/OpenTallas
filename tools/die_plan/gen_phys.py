@@ -565,7 +565,14 @@ def sta_die_tcl(P):
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",
-              "puts $fh \"mode $MODE corner $::env(CORNER)\""]
+              "puts $fh \"mode $MODE corner $::env(CORNER)\"",
+              # R4 revised: seam skew on RC = rise-edge clock arrival at the capture CK minus the launch CK (OpenSTA
+              # arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2)
+              "proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq \"\"} { return \"\" }; "
+              "set h [expr {[get_property [get_clocks clk] period] / 2.0}]; if {$a >= $h} { set a [expr {$a - $h}] }; return $a }",
+              "proc ot_skew {p} { set s [get_property $p startpoint]; set e [get_property $p endpoint_clock_pin]; "
+              "if {[catch {set a [ot_ck $s]; set b [ot_ck $e]}] || $a eq \"\" || $b eq \"\"} { return NA }; "
+              "return [format %.1f [expr {$b - $a}]] }"]
     # every abutment port: the worst setup + hold path through its destination pins
     for pid, pr in sorted(P.ports.items()):
         if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
@@ -574,7 +581,7 @@ def sta_die_tcl(P):
         for dly in ("max", "min"):
             lines.append(f"set ps [find_timing_paths -through [get_pins {thr}] -path_delay {dly} -group_path_count 1]")
             lines.append(f"foreach p $ps {{ puts $fh \"PORT {pid} {dly} slack [get_property $p slack] "
-                         f"from [get_full_name [get_property $p startpoint]] to "
+                         f"skew [ot_skew $p] from [get_full_name [get_property $p startpoint]] to "
                          f"[get_full_name [get_property $p endpoint]]\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
