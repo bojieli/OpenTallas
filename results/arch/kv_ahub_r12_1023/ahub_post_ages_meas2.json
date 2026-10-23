@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.qwen_kv.ahub_post_ages.v1",
+ "mode": "measure (OT_KV_AHUB_MEASURE=1, no pads)",
+ "ages": {
+  "ks_ahs": 12,
+  "ks_ahfr": 0,
+  "ks_pvfst": 12,
+  "ap_WS": 3,
+  "ap_WN": 7,
+  "ap_ES": 4,
+  "ap_EN": 9
+ },
+ "problems": [],
+ "offsets": {
+  "AP_OFS": [
+   -7,
+   -3,
+   -6,
+   -1
+  ],
+  "FR_OFS": -1,
+  "PV_LEAD": 0,
+  "stacks": [
+   "WS",
+   "WN",
+   "ES",
+   "EN"
+  ],
+  "AP_OFS_hex": "{16'hffff, 16'hfffa, 16'hfffd, 16'hfff9}"
+ }
+}
