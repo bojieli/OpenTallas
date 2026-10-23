@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.die_feedthrough.ftspec.v1",
+ "die": "s81", "block": "u_blk", "master": "blk_m", "variant": "blk_m__ft0a1b2c3d",
+ "outline": [200.0, 120.0], "orient": "R0",
+ "layer_contract": {"signal_max": "M7", "ft_layers": ["M8", "M9"], "pg_max": "M7"},
+ "clock": "forwarded", "reach_um": 1500.0, "rep_um": 450.0, "ft_reg": "inout",
+ "ports": [
+  {"name": "ft0_i", "path": 0, "dir": "input",  "face": "W", "lo": 40.0, "hi": 42.0, "layer": "M8", "bits": 8},
+  {"name": "ft0_o", "path": 0, "dir": "output", "face": "E", "lo": 40.0, "hi": 42.0, "layer": "M8", "bits": 8},
+  {"name": "ft1_i", "path": 1, "dir": "input",  "face": "S", "lo": 100.0, "hi": 101.5, "layer": "M9", "bits": 4},
+  {"name": "ft1_o", "path": 1, "dir": "output", "face": "N", "lo": 100.0, "hi": 101.5, "layer": "M9", "bits": 4},
+  {"name": "ft2_i", "path": 2, "dir": "input",  "face": "W", "lo": 80.0, "hi": 81.0, "layer": "M8", "bits": 3},
+  {"name": "ft2_o", "path": 2, "dir": "output", "face": "N", "lo": 150.0, "hi": 151.0, "layer": "M9", "bits": 3}
+ ],
+ "paths": [
+  {"path": 0, "lane": "L7", "src": "u_a/x", "dst": "u_c/x", "in": "ft0_i", "out": "ft0_o", "bits": 8, "stages": 2,
+   "len_um": 200.0, "rep_sites": 1, "regs_um": [[10.0, 41.0], [190.0, 41.0]]},
+  {"path": 1, "lane": "L9", "src": "u_s/y", "dst": "u_n/y", "in": "ft1_i", "out": "ft1_o", "bits": 4, "stages": 1,
+   "len_um": 120.0, "rep_sites": 0, "regs_um": [[100.7, 60.0]]},
+  {"path": 2, "lane": "L11", "src": "u_w/z", "dst": "u_n/z", "in": "ft2_i", "out": "ft2_o", "bits": 3, "stages": 2,
+   "len_um": 190.0, "rep_sites": 1, "regs_um": [[10.0, 80.5], [150.5, 110.0]]}
+ ]
+}
