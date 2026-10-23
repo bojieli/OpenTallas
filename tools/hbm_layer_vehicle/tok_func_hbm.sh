@@ -140,7 +140,7 @@ say "TOK_FUNC_HBM mode=$MODE src=$SRC_REV contract=$CONTRACT ($(sha256sum "$CONT
 if [ "$MODE" = source ]; then
   L12O=${L12_OVERLAY:-results/arch/hbm_die_d4g/gen2e4r11_1020/l12_budget_r11.json}
   OVA=(); if [ -n "$L12O" ]; then git -C "$REPO" show "$SRC_REV:$L12O" > "$OUT/l12_overlay.json" 2>/dev/null || cp "$L12O" "$OUT/l12_overlay.json"; OVA=(--budget-overlay "$OUT/l12_overlay.json"); fi
-  (cd "$SRCWT" && python3 tools/hbm_die_v16/d4g_layers/l12_banklat.py "$CONTRACT" "$OUT/contract_func.json" --report "$OUT/l12.json" "${OVA[@]}") > "$L/l12.log" 2>&1 \
+  (cd "$SRCWT" && python3 tools/hbm_die_v16/d4g_layers/l12_banklat.py "$CONTRACT" "$OUT/contract_func.json" --report "$OUT/l12.json" "${OVA[@]}" ${L12_ARGS:-}) > "$L/l12.log" 2>&1 \
     || { say "L12_FAIL"; tail -5 "$L/l12.log"; exit 3; }
   say "$(tail -1 "$L/l12.log")"
   FC=$OUT/contract_func.json
