@@ -739,7 +739,7 @@
   "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits (std ~15k um2 each); glue = collective core + gearbox + share + clkrx + land (estimate; a synth count is owed)"
  },
  "clock_taps": {
-  "rule": "COORD 10-23 07:24 ruling (2): one spine tap per planned core or landed glue region; die_plan clock.tap_um = the partition H-tap root (centre), the taps below are its matched M8/M9 branch leaves (schema clock.taps[] requested from PLAN-TOOL)",
+  "rule": "COORD 10-23 07:24 ruling (2): one spine tap per planned core or landed glue region; die_plan clock.tap_um = the partition H-tap root (centre), the taps below are its declared M8/M9 branch leaves, also carried verbatim in schema clock.taps[] (insertion values remain estimates)",
   "insertion_model": "insertion estimate ins(R) = 78 ps + 224 ps/mm x R (R = Manhattan tap -> farthest sink of its region): a line through the PLAN-TOOL CP1 kit (one centre tap, 1.43 x 3.67 mm near-empty partition, ~650 ps at R 2.55 mm) and a ~0.1-mm leaf tree (~100 ps).  Hard cores carry their own budget below their ck pin.  To be replaced by the G3 measurement of each type.",
   "types": {
    "cbf_q00": {

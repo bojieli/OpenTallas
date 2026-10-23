@@ -390,7 +390,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -603,7 +712,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -867,7 +1085,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t20.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t30.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t21.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 832.3
+     },
+     {
+      "name": "u_t31.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1080,7 +1407,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 662.6
+     },
+     {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1394,7 +1830,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1674,7 +2219,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -1921,7 +2575,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 662.6
+     },
+     {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -2614,7 +3377,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -3295,7 +4071,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -3940,7 +4729,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -4250,7 +5052,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -4723,7 +5538,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -5199,7 +6027,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -5504,7 +6345,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -5823,7 +6677,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -6172,7 +7039,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -6870,7 +7750,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -7498,7 +8391,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -7878,7 +8784,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -8247,7 +9166,31 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       267.84
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       812.16
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 276.5
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -8592,7 +9535,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -8811,7 +9767,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -9195,7 +10164,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -9582,7 +10564,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -9798,7 +10793,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -10118,7 +11126,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -10612,7 +11633,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -11043,7 +12077,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -11392,7 +12439,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -12073,7 +13133,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -12483,7 +13556,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -12815,7 +13901,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -13460,7 +14559,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -13840,7 +14952,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -14209,7 +15334,31 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       267.84
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       812.16
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 276.5
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -14554,7 +15703,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -15251,7 +16413,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -15879,7 +17054,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -16167,7 +17355,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -16733,7 +17934,44 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_coll_face_s1.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       207.36
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 311.0
+     },
+     {
+      "name": "u_coll_face_s2.ck",
+      "kind": "core",
+      "xy": [
+       527.04,
+       604.8
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 345.6
+     },
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -16836,7 +18074,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       501.12
+      ],
+      "insertion_ps": 279,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -17437,7 +18688,67 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_coll_face_p.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       207.36
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 708.5
+     },
+     {
+      "name": "u_coll_face_r.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       1382.4
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 708.5
+     },
+     {
+      "name": "u_io_ucie.ck",
+      "kind": "core",
+      "xy": [
+       388.8,
+       794.88
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       1192.32
+      ],
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -17791,7 +19102,31 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       302.4
+      ],
+      "insertion_ps": 235,
+      "insertion_tol_ps": 40,
+      "from_root_um": 311.0
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       907.2
+      ],
+      "insertion_ps": 235,
+      "insertion_tol_ps": 40,
+      "from_root_um": 311.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -18183,7 +19518,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       518.4
+      ],
+      "insertion_ps": 283,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -18257,7 +19605,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       345.6
+      ],
+      "insertion_ps": 244,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -18445,7 +19806,32 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_coll_face_s0.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       587.52
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 311.0
+     },
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -19807,7 +21193,31 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       302.4
+      ],
+      "insertion_ps": 233,
+      "insertion_tol_ps": 40,
+      "from_root_um": 302.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       907.2
+      ],
+      "insertion_ps": 233,
+      "insertion_tol_ps": 40,
+      "from_root_um": 302.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -21009,7 +22419,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       259.2
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -21640,7 +23063,20 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       259.2
+      ],
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -21930,7 +23366,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [
@@ -22304,7 +23849,116 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "insertion_tol_ps": 40
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ]
    },
    "reset": {
     "tap_um": [

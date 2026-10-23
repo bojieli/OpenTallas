@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/codex-plan-g2-path-0858-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/home/ubuntu/wt/codex-qc-taps-0931-1023/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
  "warnings": 84,
@@ -20,7 +20,7 @@
   "lanes": 2005,
   "bits": 1346028,
   "taps_cores": {
-   "taps": 0,
+   "taps": 134,
    "hard_cores": 0,
    "core_pins": 0,
    "core_pins_off_track": 0
@@ -7017,7 +7017,8 @@
     }
    ],
    "dropped_bits": 0
-  }
+  },
+  "png": "/home/ubuntu/wt/codex-qc-taps-0931-1023/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {
