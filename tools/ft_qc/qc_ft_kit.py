@@ -30,17 +30,17 @@ from pathlib import Path
 HOP_UM = 400.0          # in-cluster reach (signals <= M7: the 405-um M4-M7 reach rule)
 
 
+A0_W, A0_H = 820.8, 907.2
+
+
 def region_of(x, y, tiles, ncol):
-    """clock region (c, r) of a point: column by the corridor-A centre line, row by the A0 tile row bands."""
-    xs = sorted({t[0] for t in tiles})
-    mid = (xs[0] + xs[-1] + 820.8) / 2 if ncol == 2 else None
-    c = 0 if x < mid else 1
+    """clock region (c, r) of a point: column = nearest A0 tile-column centre, row = A0 tile-row band (boundaries
+    halfway through each inter-row gap).  Works for CB8 (2 x 4) and CB16 (4 x 4)."""
+    cols = sorted({t[0] for t in tiles})
+    c = min(range(len(cols)), key=lambda i: (abs(cols[i] + A0_W / 2 - x), i))
     rows = sorted({t[1] for t in tiles})
-    tops = [r + 907.2 for r in rows]
-    # boundaries halfway through each inter-row gap
-    bounds = [(tops[i] + rows[i + 1]) / 2 for i in range(len(rows) - 1)]
-    r = sum(1 for b in bounds if y >= b)
-    return c, r
+    bounds = [(rows[i] + A0_H + rows[i + 1]) / 2 for i in range(len(rows) - 1)]
+    return c, sum(1 for b in bounds if y >= b)
 
 
 def chain_points(path, n):
@@ -61,7 +61,8 @@ def chain_points(path, n):
 
 
 def plan_tree(rpins, land, corridor_x, edge_x, H, tiles, ncol):
-    """per region an L/U path in the std-cell corridors: S band -> (W edge | E edge | corridor A) -> region pin."""
+    """per region an L/U path in the std-cell corridors: S band -> (W edge | E edge | nearest inter-column corridor)
+    -> region pin.  corridor_x: list of inter-column corridor centre lines."""
     plans = {}
     sband_y = land[1]
     for q, (x, y) in sorted(rpins.items()):
@@ -71,8 +72,9 @@ def plan_tree(rpins, land, corridor_x, edge_x, H, tiles, ncol):
             path = [land, (edge_x[0], sband_y), (edge_x[0], y), (x, y)]
         elif x > edge_x[1] - 100:                      # E edge regions
             path = [land, (edge_x[1], sband_y), (edge_x[1], y), (x, y)]
-        else:                                          # N band regions: up corridor A, then along the N band
-            path = [land, (corridor_x, sband_y), (corridor_x, y), (x, y)]
+        else:                                          # interior / N band: up the nearest inter-column corridor
+            cx = min(corridor_x, key=lambda c: abs(c - x))
+            path = [land, (cx, sband_y), (cx, y), (x, y)]
         plans[q] = path
     lens = {q: sum(abs(p[i + 1][0] - p[i][0]) + abs(p[i + 1][1] - p[i][1]) for i in range(len(p) - 1))
             for q, p in plans.items()}
@@ -147,7 +149,7 @@ def main():
     land = rpins['c0r0']
     land = (land[0] + 21.6, land[1])                                  # beside the old c0r0 pin register
     xs = sorted({t[0] for t in tiles})
-    corridor_x = (xs[0] + 820.8 + xs[-1]) / 2                         # corridor A centre between the A0 columns
+    corridor_x = [(xs[i] + A0_W + xs[i + 1]) / 2 for i in range(len(xs) - 1)]   # inter-column corridor centres
     edge_x = (86.4, W - 86.4)
     D, plans, lens, tree = plan_tree(rpins, land, corridor_x, edge_x, H, tiles, ncol)
 
