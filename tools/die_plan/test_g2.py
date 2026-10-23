@@ -168,9 +168,10 @@ def test_kit_overrides_platform_tracks():
         cfg = (kd / "config.mk").read_text()
         assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in cfg
         # CP1 10-23: pin registers FIRM at their faces through GPL, released before DPL
-        assert "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl" in cfg
-        assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
+        assert "export PRE_GLOBAL_PLACE_TCL = /work/pre_gpl.tcl" in cfg
+        assert "export PRE_DETAIL_PLACE_TCL = /work/pre_dpl.tcl" in cfg
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
+        assert (kd / "ft_stations.tcl").is_file() and "face_flops.tcl" in (kd / "pre_gpl.tcl").read_text()
 
 
 def test_die_sta_flat_in_opensta_etm_with_tech():

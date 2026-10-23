@@ -70,6 +70,8 @@ foreach pass {INPUT OUTPUT} {
     if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne $pass} continue
     set nm [$bt getName]
     if {[lsearch -exact $ff_skip $nm] >= 0} continue
+    # ft slot ports: their stations are placed at the plan L*j/k points by ft_stations.tcl
+    if {[info exists ::ot_ft_ports] && [dict exists $::ot_ft_ports $nm]} continue
     set f [expr {$pass eq "INPUT" ? [ff_from_in [$bt getNet] 0] : [ff_from_out [$bt getNet] 0]}]
     if {$f eq ""} { incr ff_miss; continue }
     if {[dict exists $ff_done [$f getName]]} continue
