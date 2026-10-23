@@ -2,8 +2,8 @@
 # Use as spec.pre_cts_extra AFTER canonical clock_spine.tcl/spine_ins.tcl.
 # Related clocks keep the original propagated ck and all data timing checks.
 set ::ot_sp_internal_roots [dict create \
-  ga [list u_sm.g_s.g_ring.u_ck_a/u_ck/Y BUFx24_ASAP7_75t_R A ck] \
-  gb [list u_sm.g_s.g_ring.u_ck_b/u_ck/Y BUFx24_ASAP7_75t_R A ck]]
+  ga [list u_ot_pr_core.u_sm.g_s.g_ring.u_ck_a/u_ck/Y BUFx24_ASAP7_75t_R A ck] \
+  gb [list u_ot_pr_core.u_sm.g_s.g_ring.u_ck_b/u_ck/Y BUFx24_ASAP7_75t_R A ck]]
 set ::env(OT_SPINE_PORTS) {ck,ga,gb}
 set ::env(OT_SPINE_CTS_REST) 0
 set ::env(OT_SPINE_MACRO_LEAF) 1

@@ -15,6 +15,14 @@ module tb_tx_miter;
  dsdv_idx_tx_n32 #(.D(8192),.IB(64),.SRAM_MACRO(1),.MUT(MUT),.RDL(RDL),.WDL(WDL),.WDC(WDC),.SCS(SCS),.RIL(RIL),.RHP(RHP),.SPLIT(SPLIT),.RIC(RIC),.RING(RING),.RING_D(RING_D),.RING_K(RING_K))dut(.ck(ck),.rst(rn),.vi(vi),.vo(vo),.lo(lo),.st(st));
  dsdv_idx_tx #(.D(8192),.IB(64),.SRAM_MACRO(1),.LPX(REF_LPX))reference_dut(.ck(ck),.rst(reference_entry),.vi(vi),.vo(vo),.lo(ref_lo),.st(ref_st));
  integer cycle=0,checks=0,beats=0,done_n=0,epochs=0;
+ integer ga_edges=0;
+ generate if(RING!=0 && SPLIT!=0)begin:g_clock_coverage
+  always @(posedge dut.u_sm.g_s.ck_ga)ga_edges=ga_edges+1;
+  final begin
+   $display("TX_CLOCK_EDGES parent=%0d ga=%0d",cycle,ga_edges);
+   if(ga_edges<cycle-2)$error("TX_PHASE_CLOCK_DROPPED parent=%0d ga=%0d",cycle,ga_edges);
+  end
+ end endgenerate
  always @(posedge ck)begin
   #1;cycle=cycle+1;
   if(st!==ref_st||lo[0]!==ref_lo[0]||(ref_lo[0]&&lo!==ref_lo))begin

@@ -5,7 +5,7 @@ reg src=0,dst=0,rn=0;
 initial begin #10;forever #5 src=~src;end
 initial begin #(15.0+PH*0.001);forever begin dst=1;#5;dst=0;#5;end end
 integer wi=0,ri=0,checks=0;wire[15:0]q;
-dsdv_tx_ring_slice #(.W(16),.D(D),.K(K))u(.src_ck(src),.dst_ck(dst),.rn(rn),.d(16'(wi)),.q(q));
+dsdv_tx_ring_slice #(.W(16),.D(D),.K(K))u(.src_ck(src),.dst_ck(dst),.src_rn(rn),.dst_rn(rn),.d(16'(wi)),.q(q));
 always @(posedge src)if(!rn)wi<=0;else wi<=wi+1;
 always @(posedge dst)begin
  if(!rn)ri<=0;
