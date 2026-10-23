@@ -1,0 +1,212 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "name": "s81dv_rg3b_xrc0w",
+ "top": "dsdv_idx_rg3_bxmh",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "structural_change": "SRAM read-face capture before key/scale mux removes -150..-344ps macro-to-kq cone. Exact +1 kq edge, xr unchanged; default READ_STAGE=0 preserved. Booked with DIE4 and RTLGAP. Clock structural fix after xrc0 gate: force the 64 combinational-decoded scale capture flops into the S input/output band; keep W read capture banks as the alternate orientation.",
+ "job": {
+  "owner": "Codex:CODEX-S81-COLLA-2140-1022",
+  "branch": "codex/s81-colla-2140-1022",
+  "tag": "s81dv_rg3b_xrc0w",
+  "purpose": "X SRAM column structural read-stage closure, +1 kq edge; actual source-bound native-first gate",
+  "views_to": "physical/ref_tile/s81dv_rg3b_xrc0w/views",
+  "record_to": "results/rtl/ref_tile/s81dv_rg3b_xrc0w",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_dv/unit/bk",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "tools/landed_parent",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/ot_hdc_v41x_idx_hslice_m5",
+   "physical/ref_tile/s81dv_rg3b_xrc0w/readcap_place.tcl",
+   "physical/ref_tile/s81dv_rg3b_xrc0w/readcap_release.tcl"
+  ],
+  "benches": [
+   {
+    "name": "rg3b_bx_lsw",
+    "cmd": "READ_STAGE=1 bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 0",
+    "expect": "pass",
+    "pass_regex": "^BX_LSW PASS$",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg3b_bx_lsw_mut5",
+    "cmd": "READ_STAGE=1 bash rtl/dsrom_sys/s81_dv/idx/test/run_rg3_bx_lsw.sh {RUN} 20000 5",
+    "expect": "fail",
+    "fail_regex": "^BX_LSW MUTANT_CAUGHT$",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "band of the banded idx rg3: source-registered faces (every band input lands in a flop, every output leaves one: the landed parent's ring / read halves sit outside); a recipe pin stage would add an unpriced edge on the landed schedule (lp record)."
+ },
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_bx.sv"
+ ],
+ "params": {
+  "SRAM_MACRO": 1,
+  "H": 0,
+  "READ_STAGE": 1
+ },
+ "outline": {
+  "w": 237.6,
+  "h": 432.0,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[0].u_h.g_m.u_mem",
+   "at": [
+    38.88,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[1].u_h.g_m.u_mem",
+   "at": [
+    38.88,
+    133.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[2].u_h.g_m.u_mem",
+   "at": [
+    38.88,
+    224.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_land[3].u_h.g_m.u_mem",
+   "at": [
+    38.88,
+    315.36
+   ],
+   "orient": "R0"
+  }
+ ],
+ "children": [],
+ "pins": {
+  "N": [
+   "lw_v",
+   "lw_h1",
+   "lw_a",
+   "lw_d"
+  ],
+  "S": [
+   "kq_o",
+   "ck",
+   "sx_i",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "lw_v": [
+   10.8,
+   226.8
+  ],
+  "lw_h1": [
+   10.8,
+   226.8
+  ],
+  "lw_a": [
+   10.8,
+   226.8
+  ],
+  "lw_d": [
+   10.8,
+   226.8
+  ],
+  "sx_i": [
+   124.2,
+   140.4
+  ],
+  "rst": [
+   124.2,
+   140.4
+  ],
+  "kq_o": [
+   10.8,
+   226.8
+  ],
+  "ck": [
+   115.56,
+   122.04
+  ]
+ },
+ "layer_cap": "M5",
+ "defines": [],
+ "std_area_um2": 820.9,
+ "why_floorplan": "column h0 of the X SRAM tile as its own hard tile (237.6 x 432): 4 SRAM R0 at x 38.88 (read pins on the 37-um W channel), 90.72 pitch from y 43.2; its key half muxes down that channel to its kq pin band on the S face; clock at the S-face centre. sx_i / rst on the S face beside the clock (one pin-flop band; the W-face capture was the early 234-ps group of xmh1). Added 1024 local read capture flops (unreset), 64/128 one-hot delay bits. Readcap gates are placed beside macro read face; no new macro or boundary pin.",
+ "hold_budget": "die",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/s81dv_rg3b_xrc0w/readcap_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/s81dv_rg3b_xrc0w/readcap_release.tcl"
+ ]
+}
