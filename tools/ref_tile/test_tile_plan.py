@@ -264,6 +264,11 @@ class Recipe5(unittest.TestCase):
             r, k = self.gen(a, name="tp5_u", std_area_um2=3000.0, outline=None,
                             unregistered_ok={"sr": "status strap read by the die once at boot"})
             self.assertIn("OT_FENCE_UNREG_OK=sr", k["kit.env"])
+            # a stale derived value carried in the spec's orfs_vars never wins over unregistered_ok
+            r, k = self.gen(a, name="tp5_v", std_area_um2=3000.0, outline=None, orfs_vars={"OT_FENCE_UNREG_OK": "old"},
+                            unregistered_ok={"sr": "status strap read by the die once at boot"})
+            self.assertIn("OT_FENCE_UNREG_OK=sr", k["kit.env"])
+            self.assertNotIn("OT_FENCE_UNREG_OK=old", k["kit.env"])
 
     def test_explicit_big_outline_fails_without_reason(self):
         with tempfile.TemporaryDirectory() as a:

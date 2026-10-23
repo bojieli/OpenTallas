@@ -327,12 +327,14 @@ def apply_tile_plan_hooks(s: dict) -> None:
     if TILE_PLAN_FENCE_TCL not in hooks:
         hooks.append(TILE_PLAN_FENCE_TCL)
     s["pin_hook_after_flops"] = hooks
+    # derived from the spec keys every time (STW-S81e-XR 10-23: setdefault kept a stale OT_FENCE_UNREG_OK that a kit
+    # spec.json carried back, so a later unregistered_ok edit was silently ignored)
     ov = s.setdefault("orfs_vars", {})
     ok = sorted(unregistered_ok(s))
-    ov.setdefault("OT_FENCE_UNREG_OK", "|".join(re.escape(k) for k in ok))
-    ov.setdefault("OT_FENCE_STRICT", "1" if tp.get("strict", True) else "0")
+    ov["OT_FENCE_UNREG_OK"] = "|".join(re.escape(k) for k in ok)
+    ov["OT_FENCE_STRICT"] = "1" if tp.get("strict", True) else "0"
     clocks = [s["clock_port"]] + [c for c in (s.get("clock_ports") or []) if c != s["clock_port"]]
-    ov.setdefault("OT_FENCE_CLOCKS", ",".join(clocks))
+    ov["OT_FENCE_CLOCKS"] = ",".join(clocks)
 
 
 def pin_regs_plan(s: dict) -> dict | None:
