@@ -18,7 +18,7 @@ Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
   substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
-  map           {"parts": {path prefix: partition}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
+  map           {"parts": {path prefix: partition | [partition, local name]}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
                 as-built die maps to exactly one partition (longest prefix, then the first rule)
 
 Outputs (DIR): one module per partition TYPE (`<type.module>.sv`; replicated instances share it, per-instance values are
@@ -151,19 +151,33 @@ class Rules:
     def is_strap(self, pin):
         return any(rx.fullmatch(pin) for rx in self.straps)
 
-    def part_of(self, path):
-        p = path
-        while True:
-            if p in self.parts:
-                return self.parts[p]
-            if "." not in p:
-                break
-            p = p.rsplit(".", 1)[0]
+    def _lookup(self, path):
+        """(partition, local name or None).  map.parts values are a partition or [partition, local instance name]
+        (the plan's canonical content name, identical across the replicas of a type); a parent's local name extends
+        to its descendants.  Paths through a substitution shim (`.u_sub.`) also match the map key without it."""
+        for cand in (path, path.replace(".u_sub.", ".")) if ".u_sub." in path else (path,):
+            p, tail = cand, ""
+            while True:
+                if p in self.parts:
+                    v = self.parts[p]
+                    if isinstance(v, list):
+                        return v[0], (v[1] + tail if len(v) > 1 and v[1] else None)
+                    return v, None
+                if "." not in p:
+                    break
+                p, last = p.rsplit(".", 1)
+                tail = "." + last + tail
         for rx, part in self.rules:
             m = rx.fullmatch(path)
             if m:
-                return m.expand(part) if "\\" in part else part
-        return None
+                return (m.expand(part) if "\\" in part else part), None
+        return None, None
+
+    def part_of(self, path):
+        return self._lookup(path)[0]
+
+    def local_of(self, path):
+        return self._lookup(path)[1]
 
 
 def _bitlist(spec):
@@ -470,6 +484,7 @@ class Binder:
     def map_cells(self):
         G, F = self.G, self.F
         self.cpart = {}
+        self.local = {}
         self.members = defaultdict(list)
         unmapped = []
         for ci, c in enumerate(F.cells):
@@ -484,6 +499,9 @@ class Binder:
                 continue
             self.cpart[ci] = p
             self.members[p].append(ci)
+            lo = self.R.local_of(c.path)
+            if lo:
+                self.local[ci] = lo
         for u in unmapped[:200]:
             self.errors.append(f"UNMAPPED {u} ({F.cells[[c.path for c in F.cells].index(u)].module})")
         if len(unmapped) > 200:
@@ -491,8 +509,17 @@ class Binder:
         self.n_unmapped = len(unmapped)
         self.root = {p: (F.cells[m[0]].path if len(m) == 1 else common_root([F.cells[ci].path for ci in m]))
                      for p, m in self.members.items()}
+        for p, m in self.members.items():
+            seen = defaultdict(list)
+            for ci in m:
+                seen[self.rel_of(ci)].append(F.cells[ci].path)
+            for k, v in seen.items():
+                if len(v) > 1:
+                    self.errors.append(f"LOCAL_NAME_CLASH {p}: {k} <- {v[:4]}")
 
     def rel_of(self, ci):
+        if ci in self.local:
+            return self.local[ci]
         p = self.cpart[ci]
         if self.F.cells[ci].path == self.root[p]:
             return "core"           # a one-leaf partition: type-invariant instance name
