@@ -36,6 +36,10 @@ module qfd_qc_coll_ftm_part (
     output wire [1:0] fltc_o,   // ft fltc: 1 station(s)
     input  wire [1:0] fltk_i,   // ft fltk lane coll_n__fltk: coll_n -> coll_core
     output wire [1:0] fltk_o,   // ft fltk: 2 station(s)
+    input  wire [12:0] fltv_i,   // ft fltv lane coll_n__fltv: coll_n -> coll_core
+    output wire [12:0] fltv_o,   // ft fltv: 2 station(s)
+    input  wire [69:0] fltvc_i,   // ft fltvc lane coll_core__fltvc: coll_core -> glue
+    output wire [69:0] fltvc_o,   // ft fltvc: 1 station(s)
     input  wire [512:0] out_data_rd_wi_i,   // ft out_data_rd_wi lane coll_core__out_data_rd_wi: coll_core -> sl_W5_fw
     output wire [512:0] out_data_rd_wi_o,   // ft out_data_rd_wi: 2 station(s)
     input  wire [1:0] out_err_re_wi_i,   // ft out_err_re_wi lane coll_core__out_err_re_wi: coll_core -> sl_W5_fw
@@ -61,6 +65,7 @@ module qfd_qc_coll_ftm_part (
     wire [547:0] crec_rx_s0_o_s0;
     wire [548:0] crec_tx_s0_o_s0;
     wire [1:0] fltk_o_s0;
+    wire [12:0] fltv_o_s0;
     wire [512:0] out_data_rd_wi_o_s0;
     wire [1:0] out_err_re_wi_o_s0;
     wire [1:0] out_last_rl_wi_o_s0;
@@ -95,6 +100,9 @@ module qfd_qc_coll_ftm_part (
     ot_dp_st #(.W(1)) u_ft_fltc_o_0 (.clk(clk), .rst_n(rst_n), .d(fltc_i[0:0]), .ea(fltc_i[1]), .q(fltc_o[0:0]), .eq(fltc_o[1]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_0 (.clk(clk), .rst_n(rst_n), .d(fltk_i[0:0]), .ea(fltk_i[1]), .q(fltk_o_s0[0:0]), .eq(fltk_o_s0[1]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_1 (.clk(clk), .rst_n(rst_n), .d(fltk_o_s0[0:0]), .ea(fltk_o_s0[1]), .q(fltk_o[0:0]), .eq(fltk_o[1]));
+    ot_dp_st #(.W(12)) u_ft_fltv_o_0 (.clk(clk), .rst_n(rst_n), .d(fltv_i[11:0]), .ea(fltv_i[12]), .q(fltv_o_s0[11:0]), .eq(fltv_o_s0[12]));
+    ot_dp_st #(.W(12)) u_ft_fltv_o_1 (.clk(clk), .rst_n(rst_n), .d(fltv_o_s0[11:0]), .ea(fltv_o_s0[12]), .q(fltv_o[11:0]), .eq(fltv_o[12]));
+    ot_dp_st #(.W(69)) u_ft_fltvc_o_0 (.clk(clk), .rst_n(rst_n), .d(fltvc_i[68:0]), .ea(fltvc_i[69]), .q(fltvc_o[68:0]), .eq(fltvc_o[69]));
     ot_dp_st #(.W(512)) u_ft_out_data_rd_wi_o_0 (.clk(clk), .rst_n(rst_n), .d(out_data_rd_wi_i[511:0]), .ea(out_data_rd_wi_i[512]), .q(out_data_rd_wi_o_s0[511:0]), .eq(out_data_rd_wi_o_s0[512]));
     ot_dp_st #(.W(512)) u_ft_out_data_rd_wi_o_1 (.clk(clk), .rst_n(rst_n), .d(out_data_rd_wi_o_s0[511:0]), .ea(out_data_rd_wi_o_s0[512]), .q(out_data_rd_wi_o[511:0]), .eq(out_data_rd_wi_o[512]));
     ot_dp_st #(.W(1)) u_ft_out_err_re_wi_o_0 (.clk(clk), .rst_n(rst_n), .d(out_err_re_wi_i[0:0]), .ea(out_err_re_wi_i[1]), .q(out_err_re_wi_o_s0[0:0]), .eq(out_err_re_wi_o_s0[1]));

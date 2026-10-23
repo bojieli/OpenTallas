@@ -866,6 +866,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_coll_f3_fault_io_fault_o_glue;  // lane coll_core__fault_io_fault
     wire [1:0] x_coll_core_flt_o_coll_f3;  // lane coll_core__fltc
     wire [1:0] x_coll_f3_fltc_o_glue;  // lane coll_core__fltc
+    wire [69:0] x_coll_core_fltv_o_coll_f3;  // lane coll_core__fltvc
+    wire [69:0] x_coll_f3_fltvc_o_glue;  // lane coll_core__fltvc
     wire [512:0] x_coll_core_io_collective_out_data_coll_f3;  // lane coll_core__out_data_rd_wi
     wire [512:0] x_coll_f3_out_data_rd_wi_o_coll_f4;  // lane coll_core__out_data_rd_wi
     wire [512:0] x_coll_f4_out_data_rd_wi_o_sl_W5_fw;  // lane coll_core__out_data_rd_wi
@@ -891,6 +893,10 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_coll_f5_fltk_o_coll_f4;  // lane coll_n__fltk
     wire [1:0] x_coll_f4_fltk_o_coll_f3;  // lane coll_n__fltk
     wire [1:0] x_coll_f3_fltk_o_coll_core;  // lane coll_n__fltk
+    wire [12:0] x_coll_n_fltv_o_coll_f5;  // lane coll_n__fltv
+    wire [12:0] x_coll_f5_fltv_o_coll_f4;  // lane coll_n__fltv
+    wire [12:0] x_coll_f4_fltv_o_coll_f3;  // lane coll_n__fltv
+    wire [12:0] x_coll_f3_fltv_o_coll_core;  // lane coll_n__fltv
     wire [597:0] x_coll_n_io_collective_serdes_tx_io_serdes;  // lane coll_n__serdes_tx_tx_flit
     wire [1:0] x_coll_n_io_collective_serdes_tx_valid_io_serdes;  // lane coll_n__serdes_tx_valid_tx_v
     wire [547:0] x_coll_s_rec_rx_s1_coll_f0;  // lane coll_s__crec_rx_s1
@@ -905,6 +911,10 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_coll_f0_fltk_o_coll_f1;  // lane coll_s__fltk
     wire [1:0] x_coll_f1_fltk_o_coll_f2;  // lane coll_s__fltk
     wire [1:0] x_coll_f2_fltk_o_coll_core;  // lane coll_s__fltk
+    wire [25:0] x_coll_s_fltv_o_coll_f0;  // lane coll_s__fltv
+    wire [25:0] x_coll_f0_fltv_o_coll_f1;  // lane coll_s__fltv
+    wire [25:0] x_coll_f1_fltv_o_coll_f2;  // lane coll_s__fltv
+    wire [25:0] x_coll_f2_fltv_o_coll_core;  // lane coll_s__fltv
     wire [597:0] x_coll_s_io_collective_serdes_tx_to_io_serdes_1_tx_flit_io_serdes_1;  // lane coll_s__serdes_tx_tx_flit
     wire [597:0] x_coll_s_io_collective_serdes_tx_to_io_serdes_2_tx_flit_c_W5_bf_00;  // lane coll_s__serdes_tx_tx_flit_2
     wire [597:0] x_c_W5_bf_00_serdes_tx_tx_flit_o_c_W5_bf_01;  // lane coll_s__serdes_tx_tx_flit_2
@@ -930,6 +940,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [2:0] x_glue_sys_face_kv_word_index_native59;  // lane glue__kv_word_index_kv_word_index
     wire [1:0] x_glue_sys_face_kv_word_slot_native59;  // lane glue__kv_word_slot_kv_word_slot
     wire [1:0] x_glue_d2d_rom_kv_x3_slot_native59;  // lane glue__kv_x3_slot_kv_x3_slot
+    wire [1:0] x_glue_kv_phy_rst_o_ucie_kv;  // lane glue__kvrst
+    wire [2:0] x_glue_mu_flt_o_native59;  // lane glue__mufl
+    wire [2:0] x_native59_mufl_o_tt_ctlm;  // lane glue__mufl
     wire [5:0] x_glue_d2d_rom_native_rx_slot_beat_native59;  // lane glue__native_rx_slot_beat_rx_slot_beat
     wire [4:0] x_glue_d2d_rom_native_rx_slot_kind_native59;  // lane glue__native_rx_slot_kind_rx_slot_kind
     wire [1:0] x_glue_d2d_rom_native_rx_slot_native59;  // lane glue__native_rx_slot_rx_slot
@@ -1242,15 +1255,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_E1_su_c_x_fw_sc_o_sl_E1_su_l0;  // lane sl_E1_fw__x_fw_sc
     wire [48:0] x_sl_E1_su_l0_x_fw_sc_o_sl_E1_fe;  // lane sl_E1_fw__x_fw_sc
     wire [48:0] x_sl_E1_fe_x_fw_sc_o_sl_E1_sc;  // lane sl_E1_fw__x_fw_sc
-    wire [258:0] x_sl_E1_fw_x_st_a_o_sl_E1_stm;  // lane sl_E1_fw__x_fw_st_a
-    wire [258:0] x_sl_E1_stm_x_fw_st_a_o_sl_E1_sc;  // lane sl_E1_fw__x_fw_st_a
-    wire [258:0] x_sl_E1_sc_x_fw_st_a_o_sl_E1_fe;  // lane sl_E1_fw__x_fw_st_a
-    wire [258:0] x_sl_E1_fe_x_fw_st_a_o_sl_E1_st_a;  // lane sl_E1_fw__x_fw_st_a
-    wire [258:0] x_sl_E1_fw_x_st_b_o_sl_E1_su_l1;  // lane sl_E1_fw__x_fw_st_b
-    wire [258:0] x_sl_E1_su_l1_x_fw_st_b_o_sl_E1_su_c;  // lane sl_E1_fw__x_fw_st_b
-    wire [258:0] x_sl_E1_su_c_x_fw_st_b_o_sl_E1_stm;  // lane sl_E1_fw__x_fw_st_b
-    wire [258:0] x_sl_E1_stm_x_fw_st_b_o_sl_E1_ctl;  // lane sl_E1_fw__x_fw_st_b
-    wire [258:0] x_sl_E1_ctl_x_fw_st_b_o_sl_E1_st_b;  // lane sl_E1_fw__x_fw_st_b
     wire [1097:0] x_sl_E1_fw_x_stm_o_sl_E1_stm;  // lane sl_E1_fw__x_fw_stm
     wire [453:0] x_sl_E1_fw_x_tap_o_sl_E1_su_l1;  // lane sl_E1_fw__x_fw_tap
     wire [453:0] x_sl_E1_su_l1_x_fw_tap_o_sl_E1_su_c;  // lane sl_E1_fw__x_fw_tap
@@ -1637,15 +1641,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_E3_su_c_x_fw_sc_o_sl_E3_su_l0;  // lane sl_E3_fw__x_fw_sc
     wire [48:0] x_sl_E3_su_l0_x_fw_sc_o_sl_E3_fe;  // lane sl_E3_fw__x_fw_sc
     wire [48:0] x_sl_E3_fe_x_fw_sc_o_sl_E3_sc;  // lane sl_E3_fw__x_fw_sc
-    wire [258:0] x_sl_E3_fw_x_st_a_o_sl_E3_stm;  // lane sl_E3_fw__x_fw_st_a
-    wire [258:0] x_sl_E3_stm_x_fw_st_a_o_sl_E3_sc;  // lane sl_E3_fw__x_fw_st_a
-    wire [258:0] x_sl_E3_sc_x_fw_st_a_o_sl_E3_fe;  // lane sl_E3_fw__x_fw_st_a
-    wire [258:0] x_sl_E3_fe_x_fw_st_a_o_sl_E3_st_a;  // lane sl_E3_fw__x_fw_st_a
-    wire [258:0] x_sl_E3_fw_x_st_b_o_sl_E3_su_l1;  // lane sl_E3_fw__x_fw_st_b
-    wire [258:0] x_sl_E3_su_l1_x_fw_st_b_o_sl_E3_su_c;  // lane sl_E3_fw__x_fw_st_b
-    wire [258:0] x_sl_E3_su_c_x_fw_st_b_o_sl_E3_stm;  // lane sl_E3_fw__x_fw_st_b
-    wire [258:0] x_sl_E3_stm_x_fw_st_b_o_sl_E3_ctl;  // lane sl_E3_fw__x_fw_st_b
-    wire [258:0] x_sl_E3_ctl_x_fw_st_b_o_sl_E3_st_b;  // lane sl_E3_fw__x_fw_st_b
     wire [1097:0] x_sl_E3_fw_x_stm_o_sl_E3_stm;  // lane sl_E3_fw__x_fw_stm
     wire [453:0] x_sl_E3_fw_x_tap_o_sl_E3_su_l1;  // lane sl_E3_fw__x_fw_tap
     wire [453:0] x_sl_E3_su_l1_x_fw_tap_o_sl_E3_su_c;  // lane sl_E3_fw__x_fw_tap
@@ -1996,12 +1991,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [514:0] x_sl_E4_fe_l9_eo_l9_wi_o_sl_E4_sc;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E4_sc_l9_eo_l9_wi_o_sl_E4_stm;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E4_stm_l9_eo_l9_wi_o_sl_E4_fw;  // lane sl_E5_fe__l9_eo_l9_wi
-    wire [1105:0] x_sl_E5_fe_x_fw_o_sl_E5_sc;  // lane sl_E5_fe__x_fe_fw
-    wire [1105:0] x_sl_E5_sc_x_fe_fw_o_sl_E5_stm;  // lane sl_E5_fe__x_fe_fw
-    wire [1105:0] x_sl_E5_stm_x_fe_fw_o_sl_E5_fw;  // lane sl_E5_fe__x_fe_fw
     wire [47:0] x_sl_E5_fe_x_sc_o_sl_E5_sc;  // lane sl_E5_fe__x_fe_sc
-    wire [1088:0] x_sl_E5_fe_x_stm_o_sl_E5_sc;  // lane sl_E5_fe__x_fe_stm
-    wire [1088:0] x_sl_E5_sc_x_fe_stm_o_sl_E5_stm;  // lane sl_E5_fe__x_fe_stm
     wire [10:0] x_sl_E5_fw_ag_eo_sl_E4_fe;  // lane sl_E5_fw__ag_eo_ag_wi
     wire [512:0] x_sl_E5_fw_ard_eo_sl_E4_fe;  // lane sl_E5_fw__ard_eo_ard_wi
     wire [1:0] x_sl_E5_fw_arl_eo_sl_E4_fe;  // lane sl_E5_fw__arl_eo_arl_wi
@@ -2022,15 +2012,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_E5_su_c_x_fw_sc_o_sl_E5_su_l0;  // lane sl_E5_fw__x_fw_sc
     wire [48:0] x_sl_E5_su_l0_x_fw_sc_o_sl_E5_fe;  // lane sl_E5_fw__x_fw_sc
     wire [48:0] x_sl_E5_fe_x_fw_sc_o_sl_E5_sc;  // lane sl_E5_fw__x_fw_sc
-    wire [258:0] x_sl_E5_fw_x_st_a_o_sl_E5_stm;  // lane sl_E5_fw__x_fw_st_a
-    wire [258:0] x_sl_E5_stm_x_fw_st_a_o_sl_E5_sc;  // lane sl_E5_fw__x_fw_st_a
-    wire [258:0] x_sl_E5_sc_x_fw_st_a_o_sl_E5_fe;  // lane sl_E5_fw__x_fw_st_a
-    wire [258:0] x_sl_E5_fe_x_fw_st_a_o_sl_E5_st_a;  // lane sl_E5_fw__x_fw_st_a
-    wire [258:0] x_sl_E5_fw_x_st_b_o_sl_E5_su_l1;  // lane sl_E5_fw__x_fw_st_b
-    wire [258:0] x_sl_E5_su_l1_x_fw_st_b_o_sl_E5_su_c;  // lane sl_E5_fw__x_fw_st_b
-    wire [258:0] x_sl_E5_su_c_x_fw_st_b_o_sl_E5_stm;  // lane sl_E5_fw__x_fw_st_b
-    wire [258:0] x_sl_E5_stm_x_fw_st_b_o_sl_E5_ctl;  // lane sl_E5_fw__x_fw_st_b
-    wire [258:0] x_sl_E5_ctl_x_fw_st_b_o_sl_E5_st_b;  // lane sl_E5_fw__x_fw_st_b
     wire [1097:0] x_sl_E5_fw_x_stm_o_sl_E5_stm;  // lane sl_E5_fw__x_fw_stm
     wire [453:0] x_sl_E5_fw_x_tap_o_sl_E5_su_l1;  // lane sl_E5_fw__x_fw_tap
     wire [453:0] x_sl_E5_su_l1_x_fw_tap_o_sl_E5_su_c;  // lane sl_E5_fw__x_fw_tap
@@ -2411,15 +2392,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_W1_su_c_x_fw_sc_o_sl_W1_su_l0;  // lane sl_W1_fw__x_fw_sc
     wire [48:0] x_sl_W1_su_l0_x_fw_sc_o_sl_W1_fe;  // lane sl_W1_fw__x_fw_sc
     wire [48:0] x_sl_W1_fe_x_fw_sc_o_sl_W1_sc;  // lane sl_W1_fw__x_fw_sc
-    wire [258:0] x_sl_W1_fw_x_st_a_o_sl_W1_stm;  // lane sl_W1_fw__x_fw_st_a
-    wire [258:0] x_sl_W1_stm_x_fw_st_a_o_sl_W1_sc;  // lane sl_W1_fw__x_fw_st_a
-    wire [258:0] x_sl_W1_sc_x_fw_st_a_o_sl_W1_fe;  // lane sl_W1_fw__x_fw_st_a
-    wire [258:0] x_sl_W1_fe_x_fw_st_a_o_sl_W1_st_a;  // lane sl_W1_fw__x_fw_st_a
-    wire [258:0] x_sl_W1_fw_x_st_b_o_sl_W1_su_l1;  // lane sl_W1_fw__x_fw_st_b
-    wire [258:0] x_sl_W1_su_l1_x_fw_st_b_o_sl_W1_su_c;  // lane sl_W1_fw__x_fw_st_b
-    wire [258:0] x_sl_W1_su_c_x_fw_st_b_o_sl_W1_stm;  // lane sl_W1_fw__x_fw_st_b
-    wire [258:0] x_sl_W1_stm_x_fw_st_b_o_sl_W1_ctl;  // lane sl_W1_fw__x_fw_st_b
-    wire [258:0] x_sl_W1_ctl_x_fw_st_b_o_sl_W1_st_b;  // lane sl_W1_fw__x_fw_st_b
     wire [1097:0] x_sl_W1_fw_x_stm_o_sl_W1_stm;  // lane sl_W1_fw__x_fw_stm
     wire [453:0] x_sl_W1_fw_x_tap_o_sl_W1_su_l1;  // lane sl_W1_fw__x_fw_tap
     wire [453:0] x_sl_W1_su_l1_x_fw_tap_o_sl_W1_su_c;  // lane sl_W1_fw__x_fw_tap
@@ -2800,15 +2772,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_W3_su_c_x_fw_sc_o_sl_W3_su_l0;  // lane sl_W3_fw__x_fw_sc
     wire [48:0] x_sl_W3_su_l0_x_fw_sc_o_sl_W3_fe;  // lane sl_W3_fw__x_fw_sc
     wire [48:0] x_sl_W3_fe_x_fw_sc_o_sl_W3_sc;  // lane sl_W3_fw__x_fw_sc
-    wire [258:0] x_sl_W3_fw_x_st_a_o_sl_W3_stm;  // lane sl_W3_fw__x_fw_st_a
-    wire [258:0] x_sl_W3_stm_x_fw_st_a_o_sl_W3_sc;  // lane sl_W3_fw__x_fw_st_a
-    wire [258:0] x_sl_W3_sc_x_fw_st_a_o_sl_W3_fe;  // lane sl_W3_fw__x_fw_st_a
-    wire [258:0] x_sl_W3_fe_x_fw_st_a_o_sl_W3_st_a;  // lane sl_W3_fw__x_fw_st_a
-    wire [258:0] x_sl_W3_fw_x_st_b_o_sl_W3_su_l1;  // lane sl_W3_fw__x_fw_st_b
-    wire [258:0] x_sl_W3_su_l1_x_fw_st_b_o_sl_W3_su_c;  // lane sl_W3_fw__x_fw_st_b
-    wire [258:0] x_sl_W3_su_c_x_fw_st_b_o_sl_W3_stm;  // lane sl_W3_fw__x_fw_st_b
-    wire [258:0] x_sl_W3_stm_x_fw_st_b_o_sl_W3_ctl;  // lane sl_W3_fw__x_fw_st_b
-    wire [258:0] x_sl_W3_ctl_x_fw_st_b_o_sl_W3_st_b;  // lane sl_W3_fw__x_fw_st_b
     wire [1097:0] x_sl_W3_fw_x_stm_o_sl_W3_stm;  // lane sl_W3_fw__x_fw_stm
     wire [453:0] x_sl_W3_fw_x_tap_o_sl_W3_su_l1;  // lane sl_W3_fw__x_fw_tap
     wire [453:0] x_sl_W3_su_l1_x_fw_tap_o_sl_W3_su_c;  // lane sl_W3_fw__x_fw_tap
@@ -3212,15 +3175,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [48:0] x_sl_W5_su_c_x_fw_sc_o_sl_W5_su_l0;  // lane sl_W5_fw__x_fw_sc
     wire [48:0] x_sl_W5_su_l0_x_fw_sc_o_sl_W5_fe;  // lane sl_W5_fw__x_fw_sc
     wire [48:0] x_sl_W5_fe_x_fw_sc_o_sl_W5_sc;  // lane sl_W5_fw__x_fw_sc
-    wire [258:0] x_sl_W5_fw_x_st_a_o_sl_W5_stm;  // lane sl_W5_fw__x_fw_st_a
-    wire [258:0] x_sl_W5_stm_x_fw_st_a_o_sl_W5_sc;  // lane sl_W5_fw__x_fw_st_a
-    wire [258:0] x_sl_W5_sc_x_fw_st_a_o_sl_W5_fe;  // lane sl_W5_fw__x_fw_st_a
-    wire [258:0] x_sl_W5_fe_x_fw_st_a_o_sl_W5_st_a;  // lane sl_W5_fw__x_fw_st_a
-    wire [258:0] x_sl_W5_fw_x_st_b_o_sl_W5_su_l1;  // lane sl_W5_fw__x_fw_st_b
-    wire [258:0] x_sl_W5_su_l1_x_fw_st_b_o_sl_W5_su_c;  // lane sl_W5_fw__x_fw_st_b
-    wire [258:0] x_sl_W5_su_c_x_fw_st_b_o_sl_W5_stm;  // lane sl_W5_fw__x_fw_st_b
-    wire [258:0] x_sl_W5_stm_x_fw_st_b_o_sl_W5_ctl;  // lane sl_W5_fw__x_fw_st_b
-    wire [258:0] x_sl_W5_ctl_x_fw_st_b_o_sl_W5_st_b;  // lane sl_W5_fw__x_fw_st_b
     wire [1097:0] x_sl_W5_fw_x_stm_o_sl_W5_stm;  // lane sl_W5_fw__x_fw_stm
     wire [453:0] x_sl_W5_fw_x_tap_o_sl_W5_su_l1;  // lane sl_W5_fw__x_fw_tap
     wire [453:0] x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c;  // lane sl_W5_fw__x_fw_tap
@@ -3394,30 +3348,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [583:0] x_ucie_kv_rx_flit_glue;  // lane ucie_kv__rx_flit_fdi_rx_flit
     wire [1:0] x_ucie_kv_rx_v_glue;  // lane ucie_kv__rx_v_fdi_rx_v
     wire [1:0] x_ucie_kv_tx_up_glue;  // lane ucie_kv__tx_up_fdi_tx_up
-    wire [2:0] x_coll_core_xo_io_collective_u_io_g_face_0_u_face_cdc_fault_glue;
-    wire [1:0] x_coll_core_xo_io_collective_u_io_g_face_0_u_face_epoch_abort_glue;
-    wire [8:0] x_coll_core_xo_io_collective_u_io_g_face_0_u_face_fault_cause_glue;
-    wire [4:0] x_coll_core_xo_io_collective_u_io_g_face_1_u_face_cdc_fault_glue;
-    wire [1:0] x_coll_core_xo_io_collective_u_io_g_face_1_u_face_epoch_abort_glue;
-    wire [8:0] x_coll_core_xo_io_collective_u_io_g_face_1_u_face_fault_cause_glue;
-    wire [1:0] x_coll_core_xo_io_collective_u_io_u_collective_cmd_free_glue;
-    wire [5:0] x_coll_core_xo_io_collective_u_io_u_collective_fault_code_glue;
-    wire [3:0] x_coll_n_xo_core_rx_data_coll_core;
-    wire [1:0] x_coll_n_xo_core_rx_valid_coll_core;
-    wire [4:0] x_coll_n_xo_core_cdc_fault_glue;
-    wire [1:0] x_coll_n_xo_core_epoch_abort_glue;
-    wire [8:0] x_coll_n_xo_core_fault_cause_glue;
-    wire [8:0] x_coll_s_xo_g_face_4_u_face_rx_data_coll_core;
-    wire [1:0] x_coll_s_xo_g_face_4_u_face_rx_valid_coll_core;
-    wire [4:0] x_coll_s_xo_g_face_3_u_face_cdc_fault_glue;
-    wire [1:0] x_coll_s_xo_g_face_3_u_face_epoch_abort_glue;
-    wire [8:0] x_coll_s_xo_g_face_3_u_face_fault_cause_glue;
-    wire [4:0] x_coll_s_xo_g_face_4_u_face_cdc_fault_glue;
-    wire [1:0] x_coll_s_xo_g_face_4_u_face_epoch_abort_glue;
-    wire [8:0] x_coll_s_xo_g_face_4_u_face_fault_cause_glue;
-    wire [2:0] x_glue_xo_sys_face_tt_pw_tt_ctlm;
-    wire [1:0] x_glue_xo_d2d_rom_phy_rst_n_ucie_kv;
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000110000000), .S_u_t_0_1_tile_id(16'b0000000110000000), .S_u_t_1_0_tile_id(16'b0000000110000000), .S_u_t_1_1_tile_id(16'b0000000110000000)) c_E0_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000110000000), .S_u_t_0_1_tile_id(16'b0000000110000000), .S_u_t_1_0_tile_id(16'b0000000110000000), .S_u_t_1_1_tile_id(16'b0000000110000000)) c_E0_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E0_bn_01_bc_o03_c_E0_bf_00),
@@ -3460,7 +3391,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E0_bf_11_y_o22_c_E0_bf_01),
         .y_o23(x_c_E0_bf_11_y_o23_c_E0_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000110010000), .S_u_t_0_1_tile_id(16'b0000000110010000), .S_u_t_1_0_tile_id(16'b0000000110010000), .S_u_t_1_1_tile_id(16'b0000000110010000)) c_E0_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000110010000), .S_u_t_0_1_tile_id(16'b0000000110010000), .S_u_t_1_0_tile_id(16'b0000000110010000), .S_u_t_1_1_tile_id(16'b0000000110010000)) c_E0_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E0_su_l1_cws0_o_c_E0_bn_00),
@@ -3511,7 +3442,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E0_bn_11_y_o22_c_E0_bn_01),
         .y_o23(x_c_E0_bn_11_y_o23_c_E0_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000110110000), .S_u_t_0_1_tile_id(16'b0000000110110000), .S_u_t_1_0_tile_id(16'b0000000110110000), .S_u_t_1_1_tile_id(16'b0000000110110000)) c_E0_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000110110000), .S_u_t_0_1_tile_id(16'b0000000110110000), .S_u_t_1_0_tile_id(16'b0000000110110000), .S_u_t_1_1_tile_id(16'b0000000110110000)) c_E0_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E0_tn_01_bc_o03_c_E0_tf_00),
@@ -3554,7 +3485,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E0_tf_11_y_o22_c_E0_tf_01),
         .y_o23(x_c_E0_tf_11_y_o23_c_E0_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000110100000), .S_u_t_0_1_tile_id(16'b0000000110100000), .S_u_t_1_0_tile_id(16'b0000000110100000), .S_u_t_1_1_tile_id(16'b0000000110100000)) c_E0_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000110100000), .S_u_t_0_1_tile_id(16'b0000000110100000), .S_u_t_1_0_tile_id(16'b0000000110100000), .S_u_t_1_1_tile_id(16'b0000000110100000)) c_E0_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E0_hc0_cw_n0_c_E0_tn_00),
@@ -3605,7 +3536,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E0_tn_11_y_o22_c_E0_tn_01),
         .y_o23(x_c_E0_tn_11_y_o23_c_E0_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000111000000), .S_u_t_0_1_tile_id(16'b0000000111000000), .S_u_t_1_0_tile_id(16'b0000000111000000), .S_u_t_1_1_tile_id(16'b0000000111000000)) c_E1_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000111000000), .S_u_t_0_1_tile_id(16'b0000000111000000), .S_u_t_1_0_tile_id(16'b0000000111000000), .S_u_t_1_1_tile_id(16'b0000000111000000)) c_E1_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E1_bn_01_bc_o03_c_E1_bf_00),
@@ -3648,7 +3579,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E1_bf_11_y_o22_c_E1_bf_01),
         .y_o23(x_c_E1_bf_11_y_o23_c_E1_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000111010000), .S_u_t_0_1_tile_id(16'b0000000111010000), .S_u_t_1_0_tile_id(16'b0000000111010000), .S_u_t_1_1_tile_id(16'b0000000111010000)) c_E1_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000111010000), .S_u_t_0_1_tile_id(16'b0000000111010000), .S_u_t_1_0_tile_id(16'b0000000111010000), .S_u_t_1_1_tile_id(16'b0000000111010000)) c_E1_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E1_su_l1_cws0_o_c_E1_bn_00),
@@ -3699,7 +3630,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E1_bn_11_y_o22_c_E1_bn_01),
         .y_o23(x_c_E1_bn_11_y_o23_c_E1_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000111110000), .S_u_t_0_1_tile_id(16'b0000000111110000), .S_u_t_1_0_tile_id(16'b0000000111110000), .S_u_t_1_1_tile_id(16'b0000000111110000)) c_E1_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000111110000), .S_u_t_0_1_tile_id(16'b0000000111110000), .S_u_t_1_0_tile_id(16'b0000000111110000), .S_u_t_1_1_tile_id(16'b0000000111110000)) c_E1_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E1_tn_01_bc_o03_c_E1_tf_00),
@@ -3742,7 +3673,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E1_tf_11_y_o22_c_E1_tf_01),
         .y_o23(x_c_E1_tf_11_y_o23_c_E1_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000111100000), .S_u_t_0_1_tile_id(16'b0000000111100000), .S_u_t_1_0_tile_id(16'b0000000111100000), .S_u_t_1_1_tile_id(16'b0000000111100000)) c_E1_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000111100000), .S_u_t_0_1_tile_id(16'b0000000111100000), .S_u_t_1_0_tile_id(16'b0000000111100000), .S_u_t_1_1_tile_id(16'b0000000111100000)) c_E1_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E1_hc0_cw_n0_c_E1_tn_00),
@@ -3793,7 +3724,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E1_tn_11_y_o22_c_E1_tn_01),
         .y_o23(x_c_E1_tn_11_y_o23_c_E1_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001000000000), .S_u_t_0_1_tile_id(16'b0000001000000000), .S_u_t_1_0_tile_id(16'b0000001000000000), .S_u_t_1_1_tile_id(16'b0000001000000000)) c_E2_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001000000000), .S_u_t_0_1_tile_id(16'b0000001000000000), .S_u_t_1_0_tile_id(16'b0000001000000000), .S_u_t_1_1_tile_id(16'b0000001000000000)) c_E2_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E2_bn_01_bc_o03_c_E2_bf_00),
@@ -3836,7 +3767,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E2_bf_11_y_o22_c_E2_bf_01),
         .y_o23(x_c_E2_bf_11_y_o23_c_E2_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001000010000), .S_u_t_0_1_tile_id(16'b0000001000010000), .S_u_t_1_0_tile_id(16'b0000001000010000), .S_u_t_1_1_tile_id(16'b0000001000010000)) c_E2_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001000010000), .S_u_t_0_1_tile_id(16'b0000001000010000), .S_u_t_1_0_tile_id(16'b0000001000010000), .S_u_t_1_1_tile_id(16'b0000001000010000)) c_E2_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E2_su_l1_cws0_o_c_E2_bn_00),
@@ -3887,7 +3818,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E2_bn_11_y_o22_c_E2_bn_01),
         .y_o23(x_c_E2_bn_11_y_o23_c_E2_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001000110000), .S_u_t_0_1_tile_id(16'b0000001000110000), .S_u_t_1_0_tile_id(16'b0000001000110000), .S_u_t_1_1_tile_id(16'b0000001000110000)) c_E2_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001000110000), .S_u_t_0_1_tile_id(16'b0000001000110000), .S_u_t_1_0_tile_id(16'b0000001000110000), .S_u_t_1_1_tile_id(16'b0000001000110000)) c_E2_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E2_tn_01_bc_o03_c_E2_tf_00),
@@ -3930,7 +3861,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E2_tf_11_y_o22_c_E2_tf_01),
         .y_o23(x_c_E2_tf_11_y_o23_c_E2_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001000100000), .S_u_t_0_1_tile_id(16'b0000001000100000), .S_u_t_1_0_tile_id(16'b0000001000100000), .S_u_t_1_1_tile_id(16'b0000001000100000)) c_E2_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001000100000), .S_u_t_0_1_tile_id(16'b0000001000100000), .S_u_t_1_0_tile_id(16'b0000001000100000), .S_u_t_1_1_tile_id(16'b0000001000100000)) c_E2_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E2_hc0_cw_n0_c_E2_tn_00),
@@ -3981,7 +3912,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E2_tn_11_y_o22_c_E2_tn_01),
         .y_o23(x_c_E2_tn_11_y_o23_c_E2_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001001000000), .S_u_t_0_1_tile_id(16'b0000001001000000), .S_u_t_1_0_tile_id(16'b0000001001000000), .S_u_t_1_1_tile_id(16'b0000001001000000)) c_E3_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001001000000), .S_u_t_0_1_tile_id(16'b0000001001000000), .S_u_t_1_0_tile_id(16'b0000001001000000), .S_u_t_1_1_tile_id(16'b0000001001000000)) c_E3_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E3_bn_01_bc_o03_c_E3_bf_00),
@@ -4024,7 +3955,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E3_bf_11_y_o22_c_E3_bf_01),
         .y_o23(x_c_E3_bf_11_y_o23_c_E3_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001001010000), .S_u_t_0_1_tile_id(16'b0000001001010000), .S_u_t_1_0_tile_id(16'b0000001001010000), .S_u_t_1_1_tile_id(16'b0000001001010000)) c_E3_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001001010000), .S_u_t_0_1_tile_id(16'b0000001001010000), .S_u_t_1_0_tile_id(16'b0000001001010000), .S_u_t_1_1_tile_id(16'b0000001001010000)) c_E3_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E3_su_l1_cws0_o_c_E3_bn_00),
@@ -4075,7 +4006,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E3_bn_11_y_o22_c_E3_bn_01),
         .y_o23(x_c_E3_bn_11_y_o23_c_E3_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001001110000), .S_u_t_0_1_tile_id(16'b0000001001110000), .S_u_t_1_0_tile_id(16'b0000001001110000), .S_u_t_1_1_tile_id(16'b0000001001110000)) c_E3_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001001110000), .S_u_t_0_1_tile_id(16'b0000001001110000), .S_u_t_1_0_tile_id(16'b0000001001110000), .S_u_t_1_1_tile_id(16'b0000001001110000)) c_E3_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E3_tn_01_bc_o03_c_E3_tf_00),
@@ -4118,7 +4049,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E3_tf_11_y_o22_c_E3_tf_01),
         .y_o23(x_c_E3_tf_11_y_o23_c_E3_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001001100000), .S_u_t_0_1_tile_id(16'b0000001001100000), .S_u_t_1_0_tile_id(16'b0000001001100000), .S_u_t_1_1_tile_id(16'b0000001001100000)) c_E3_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001001100000), .S_u_t_0_1_tile_id(16'b0000001001100000), .S_u_t_1_0_tile_id(16'b0000001001100000), .S_u_t_1_1_tile_id(16'b0000001001100000)) c_E3_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E3_hc0_cw_n0_c_E3_tn_00),
@@ -4169,7 +4100,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E3_tn_11_y_o22_c_E3_tn_01),
         .y_o23(x_c_E3_tn_11_y_o23_c_E3_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001010000000), .S_u_t_0_1_tile_id(16'b0000001010000000), .S_u_t_1_0_tile_id(16'b0000001010000000), .S_u_t_1_1_tile_id(16'b0000001010000000)) c_E4_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001010000000), .S_u_t_0_1_tile_id(16'b0000001010000000), .S_u_t_1_0_tile_id(16'b0000001010000000), .S_u_t_1_1_tile_id(16'b0000001010000000)) c_E4_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E4_bn_01_bc_o03_c_E4_bf_00),
@@ -4212,7 +4143,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E4_bf_11_y_o22_c_E4_bf_01),
         .y_o23(x_c_E4_bf_11_y_o23_c_E4_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001010010000), .S_u_t_0_1_tile_id(16'b0000001010010000), .S_u_t_1_0_tile_id(16'b0000001010010000), .S_u_t_1_1_tile_id(16'b0000001010010000)) c_E4_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001010010000), .S_u_t_0_1_tile_id(16'b0000001010010000), .S_u_t_1_0_tile_id(16'b0000001010010000), .S_u_t_1_1_tile_id(16'b0000001010010000)) c_E4_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E4_su_l1_cws0_o_c_E4_bn_00),
@@ -4263,7 +4194,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E4_bn_11_y_o22_c_E4_bn_01),
         .y_o23(x_c_E4_bn_11_y_o23_c_E4_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001010110000), .S_u_t_0_1_tile_id(16'b0000001010110000), .S_u_t_1_0_tile_id(16'b0000001010110000), .S_u_t_1_1_tile_id(16'b0000001010110000)) c_E4_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001010110000), .S_u_t_0_1_tile_id(16'b0000001010110000), .S_u_t_1_0_tile_id(16'b0000001010110000), .S_u_t_1_1_tile_id(16'b0000001010110000)) c_E4_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E4_tn_01_bc_o03_c_E4_tf_00),
@@ -4306,7 +4237,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E4_tf_11_y_o22_c_E4_tf_01),
         .y_o23(x_c_E4_tf_11_y_o23_c_E4_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001010100000), .S_u_t_0_1_tile_id(16'b0000001010100000), .S_u_t_1_0_tile_id(16'b0000001010100000), .S_u_t_1_1_tile_id(16'b0000001010100000)) c_E4_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001010100000), .S_u_t_0_1_tile_id(16'b0000001010100000), .S_u_t_1_0_tile_id(16'b0000001010100000), .S_u_t_1_1_tile_id(16'b0000001010100000)) c_E4_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E4_hc0_cw_n0_c_E4_tn_00),
@@ -4357,7 +4288,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E4_tn_11_y_o22_c_E4_tn_01),
         .y_o23(x_c_E4_tn_11_y_o23_c_E4_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001011000000), .S_u_t_0_1_tile_id(16'b0000001011000000), .S_u_t_1_0_tile_id(16'b0000001011000000), .S_u_t_1_1_tile_id(16'b0000001011000000)) c_E5_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001011000000), .S_u_t_0_1_tile_id(16'b0000001011000000), .S_u_t_1_0_tile_id(16'b0000001011000000), .S_u_t_1_1_tile_id(16'b0000001011000000)) c_E5_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E5_bn_01_bc_o03_c_E5_bf_00),
@@ -4400,7 +4331,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E5_bf_11_y_o22_c_E5_bf_01),
         .y_o23(x_c_E5_bf_11_y_o23_c_E5_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001011010000), .S_u_t_0_1_tile_id(16'b0000001011010000), .S_u_t_1_0_tile_id(16'b0000001011010000), .S_u_t_1_1_tile_id(16'b0000001011010000)) c_E5_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001011010000), .S_u_t_0_1_tile_id(16'b0000001011010000), .S_u_t_1_0_tile_id(16'b0000001011010000), .S_u_t_1_1_tile_id(16'b0000001011010000)) c_E5_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E5_su_l1_cws0_o_c_E5_bn_00),
@@ -4451,7 +4382,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E5_bn_11_y_o22_c_E5_bn_01),
         .y_o23(x_c_E5_bn_11_y_o23_c_E5_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001011110000), .S_u_t_0_1_tile_id(16'b0000001011110000), .S_u_t_1_0_tile_id(16'b0000001011110000), .S_u_t_1_1_tile_id(16'b0000001011110000)) c_E5_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000001011110000), .S_u_t_0_1_tile_id(16'b0000001011110000), .S_u_t_1_0_tile_id(16'b0000001011110000), .S_u_t_1_1_tile_id(16'b0000001011110000)) c_E5_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_E5_tn_01_bc_o03_c_E5_tf_00),
@@ -4494,7 +4425,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E5_tf_11_y_o22_c_E5_tf_01),
         .y_o23(x_c_E5_tf_11_y_o23_c_E5_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001011100000), .S_u_t_0_1_tile_id(16'b0000001011100000), .S_u_t_1_0_tile_id(16'b0000001011100000), .S_u_t_1_1_tile_id(16'b0000001011100000)) c_E5_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000001011100000), .S_u_t_0_1_tile_id(16'b0000001011100000), .S_u_t_1_0_tile_id(16'b0000001011100000), .S_u_t_1_1_tile_id(16'b0000001011100000)) c_E5_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_E5_hc0_cw_n0_c_E5_tn_00),
@@ -4545,7 +4476,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_E5_tn_11_y_o22_c_E5_tn_01),
         .y_o23(x_c_E5_tn_11_y_o23_c_E5_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000101000000), .S_u_t_0_1_tile_id(16'b0000000101000000), .S_u_t_1_0_tile_id(16'b0000000101000000), .S_u_t_1_1_tile_id(16'b0000000101000000)) c_W0_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000101000000), .S_u_t_0_1_tile_id(16'b0000000101000000), .S_u_t_1_0_tile_id(16'b0000000101000000), .S_u_t_1_1_tile_id(16'b0000000101000000)) c_W0_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W0_bn_01_bc_o03_c_W0_bf_00),
@@ -4588,7 +4519,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W0_bf_11_y_o22_c_W0_bf_01),
         .y_o23(x_c_W0_bf_11_y_o23_c_W0_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000101010000), .S_u_t_0_1_tile_id(16'b0000000101010000), .S_u_t_1_0_tile_id(16'b0000000101010000), .S_u_t_1_1_tile_id(16'b0000000101010000)) c_W0_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000101010000), .S_u_t_0_1_tile_id(16'b0000000101010000), .S_u_t_1_0_tile_id(16'b0000000101010000), .S_u_t_1_1_tile_id(16'b0000000101010000)) c_W0_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W0_su_l1_cws0_o_c_W0_bn_00),
@@ -4639,7 +4570,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W0_bn_11_y_o22_c_W0_bn_01),
         .y_o23(x_c_W0_bn_11_y_o23_c_W0_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000101110000), .S_u_t_0_1_tile_id(16'b0000000101110000), .S_u_t_1_0_tile_id(16'b0000000101110000), .S_u_t_1_1_tile_id(16'b0000000101110000)) c_W0_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000101110000), .S_u_t_0_1_tile_id(16'b0000000101110000), .S_u_t_1_0_tile_id(16'b0000000101110000), .S_u_t_1_1_tile_id(16'b0000000101110000)) c_W0_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W0_tn_01_bc_o03_c_W0_tf_00),
@@ -4682,7 +4613,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W0_tf_11_y_o22_c_W0_tf_01),
         .y_o23(x_c_W0_tf_11_y_o23_c_W0_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000101100000), .S_u_t_0_1_tile_id(16'b0000000101100000), .S_u_t_1_0_tile_id(16'b0000000101100000), .S_u_t_1_1_tile_id(16'b0000000101100000)) c_W0_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000101100000), .S_u_t_0_1_tile_id(16'b0000000101100000), .S_u_t_1_0_tile_id(16'b0000000101100000), .S_u_t_1_1_tile_id(16'b0000000101100000)) c_W0_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W0_hc0_cw_n0_c_W0_tn_00),
@@ -4733,7 +4664,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W0_tn_11_y_o22_c_W0_tn_01),
         .y_o23(x_c_W0_tn_11_y_o23_c_W0_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000100000000), .S_u_t_0_1_tile_id(16'b0000000100000000), .S_u_t_1_0_tile_id(16'b0000000100000000), .S_u_t_1_1_tile_id(16'b0000000100000000)) c_W1_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000100000000), .S_u_t_0_1_tile_id(16'b0000000100000000), .S_u_t_1_0_tile_id(16'b0000000100000000), .S_u_t_1_1_tile_id(16'b0000000100000000)) c_W1_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W1_bn_01_bc_o03_c_W1_bf_00),
@@ -4776,7 +4707,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W1_bf_11_y_o22_c_W1_bf_01),
         .y_o23(x_c_W1_bf_11_y_o23_c_W1_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000100010000), .S_u_t_0_1_tile_id(16'b0000000100010000), .S_u_t_1_0_tile_id(16'b0000000100010000), .S_u_t_1_1_tile_id(16'b0000000100010000)) c_W1_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000100010000), .S_u_t_0_1_tile_id(16'b0000000100010000), .S_u_t_1_0_tile_id(16'b0000000100010000), .S_u_t_1_1_tile_id(16'b0000000100010000)) c_W1_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W1_su_l1_cws0_o_c_W1_bn_00),
@@ -4827,7 +4758,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W1_bn_11_y_o22_c_W1_bn_01),
         .y_o23(x_c_W1_bn_11_y_o23_c_W1_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000100110000), .S_u_t_0_1_tile_id(16'b0000000100110000), .S_u_t_1_0_tile_id(16'b0000000100110000), .S_u_t_1_1_tile_id(16'b0000000100110000)) c_W1_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000100110000), .S_u_t_0_1_tile_id(16'b0000000100110000), .S_u_t_1_0_tile_id(16'b0000000100110000), .S_u_t_1_1_tile_id(16'b0000000100110000)) c_W1_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W1_tn_01_bc_o03_c_W1_tf_00),
@@ -4870,7 +4801,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W1_tf_11_y_o22_c_W1_tf_01),
         .y_o23(x_c_W1_tf_11_y_o23_c_W1_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000100100000), .S_u_t_0_1_tile_id(16'b0000000100100000), .S_u_t_1_0_tile_id(16'b0000000100100000), .S_u_t_1_1_tile_id(16'b0000000100100000)) c_W1_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000100100000), .S_u_t_0_1_tile_id(16'b0000000100100000), .S_u_t_1_0_tile_id(16'b0000000100100000), .S_u_t_1_1_tile_id(16'b0000000100100000)) c_W1_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W1_hc0_cw_n0_c_W1_tn_00),
@@ -4921,7 +4852,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W1_tn_11_y_o22_c_W1_tn_01),
         .y_o23(x_c_W1_tn_11_y_o23_c_W1_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000011000000), .S_u_t_0_1_tile_id(16'b0000000011000000), .S_u_t_1_0_tile_id(16'b0000000011000000), .S_u_t_1_1_tile_id(16'b0000000011000000)) c_W2_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000011000000), .S_u_t_0_1_tile_id(16'b0000000011000000), .S_u_t_1_0_tile_id(16'b0000000011000000), .S_u_t_1_1_tile_id(16'b0000000011000000)) c_W2_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W2_bn_01_bc_o03_c_W2_bf_00),
@@ -4964,7 +4895,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W2_bf_11_y_o22_c_W2_bf_01),
         .y_o23(x_c_W2_bf_11_y_o23_c_W2_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000011010000), .S_u_t_0_1_tile_id(16'b0000000011010000), .S_u_t_1_0_tile_id(16'b0000000011010000), .S_u_t_1_1_tile_id(16'b0000000011010000)) c_W2_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000011010000), .S_u_t_0_1_tile_id(16'b0000000011010000), .S_u_t_1_0_tile_id(16'b0000000011010000), .S_u_t_1_1_tile_id(16'b0000000011010000)) c_W2_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W2_su_l1_cws0_o_c_W2_bn_00),
@@ -5015,7 +4946,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W2_bn_11_y_o22_c_W2_bn_01),
         .y_o23(x_c_W2_bn_11_y_o23_c_W2_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000011110000), .S_u_t_0_1_tile_id(16'b0000000011110000), .S_u_t_1_0_tile_id(16'b0000000011110000), .S_u_t_1_1_tile_id(16'b0000000011110000)) c_W2_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000011110000), .S_u_t_0_1_tile_id(16'b0000000011110000), .S_u_t_1_0_tile_id(16'b0000000011110000), .S_u_t_1_1_tile_id(16'b0000000011110000)) c_W2_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W2_tn_01_bc_o03_c_W2_tf_00),
@@ -5058,7 +4989,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W2_tf_11_y_o22_c_W2_tf_01),
         .y_o23(x_c_W2_tf_11_y_o23_c_W2_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000011100000), .S_u_t_0_1_tile_id(16'b0000000011100000), .S_u_t_1_0_tile_id(16'b0000000011100000), .S_u_t_1_1_tile_id(16'b0000000011100000)) c_W2_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000011100000), .S_u_t_0_1_tile_id(16'b0000000011100000), .S_u_t_1_0_tile_id(16'b0000000011100000), .S_u_t_1_1_tile_id(16'b0000000011100000)) c_W2_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W2_hc0_cw_n0_c_W2_tn_00),
@@ -5109,7 +5040,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W2_tn_11_y_o22_c_W2_tn_01),
         .y_o23(x_c_W2_tn_11_y_o23_c_W2_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000010000000), .S_u_t_0_1_tile_id(16'b0000000010000000), .S_u_t_1_0_tile_id(16'b0000000010000000), .S_u_t_1_1_tile_id(16'b0000000010000000)) c_W3_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000010000000), .S_u_t_0_1_tile_id(16'b0000000010000000), .S_u_t_1_0_tile_id(16'b0000000010000000), .S_u_t_1_1_tile_id(16'b0000000010000000)) c_W3_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W3_bn_01_bc_o03_c_W3_bf_00),
@@ -5152,7 +5083,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W3_bf_11_y_o22_c_W3_bf_01),
         .y_o23(x_c_W3_bf_11_y_o23_c_W3_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000010010000), .S_u_t_0_1_tile_id(16'b0000000010010000), .S_u_t_1_0_tile_id(16'b0000000010010000), .S_u_t_1_1_tile_id(16'b0000000010010000)) c_W3_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000010010000), .S_u_t_0_1_tile_id(16'b0000000010010000), .S_u_t_1_0_tile_id(16'b0000000010010000), .S_u_t_1_1_tile_id(16'b0000000010010000)) c_W3_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W3_su_l1_cws0_o_c_W3_bn_00),
@@ -5203,7 +5134,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W3_bn_11_y_o22_c_W3_bn_01),
         .y_o23(x_c_W3_bn_11_y_o23_c_W3_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000010110000), .S_u_t_0_1_tile_id(16'b0000000010110000), .S_u_t_1_0_tile_id(16'b0000000010110000), .S_u_t_1_1_tile_id(16'b0000000010110000)) c_W3_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000010110000), .S_u_t_0_1_tile_id(16'b0000000010110000), .S_u_t_1_0_tile_id(16'b0000000010110000), .S_u_t_1_1_tile_id(16'b0000000010110000)) c_W3_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W3_tn_01_bc_o03_c_W3_tf_00),
@@ -5246,7 +5177,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W3_tf_11_y_o22_c_W3_tf_01),
         .y_o23(x_c_W3_tf_11_y_o23_c_W3_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000010100000), .S_u_t_0_1_tile_id(16'b0000000010100000), .S_u_t_1_0_tile_id(16'b0000000010100000), .S_u_t_1_1_tile_id(16'b0000000010100000)) c_W3_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000010100000), .S_u_t_0_1_tile_id(16'b0000000010100000), .S_u_t_1_0_tile_id(16'b0000000010100000), .S_u_t_1_1_tile_id(16'b0000000010100000)) c_W3_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W3_hc0_cw_n0_c_W3_tn_00),
@@ -5297,7 +5228,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W3_tn_11_y_o22_c_W3_tn_01),
         .y_o23(x_c_W3_tn_11_y_o23_c_W3_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000001000000), .S_u_t_0_1_tile_id(16'b0000000001000000), .S_u_t_1_0_tile_id(16'b0000000001000000), .S_u_t_1_1_tile_id(16'b0000000001000000)) c_W4_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000001000000), .S_u_t_0_1_tile_id(16'b0000000001000000), .S_u_t_1_0_tile_id(16'b0000000001000000), .S_u_t_1_1_tile_id(16'b0000000001000000)) c_W4_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W4_bn_01_bc_o03_c_W4_bf_00),
@@ -5340,7 +5271,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W4_bf_11_y_o22_c_W4_bf_01),
         .y_o23(x_c_W4_bf_11_y_o23_c_W4_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000001010000), .S_u_t_0_1_tile_id(16'b0000000001010000), .S_u_t_1_0_tile_id(16'b0000000001010000), .S_u_t_1_1_tile_id(16'b0000000001010000)) c_W4_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000001010000), .S_u_t_0_1_tile_id(16'b0000000001010000), .S_u_t_1_0_tile_id(16'b0000000001010000), .S_u_t_1_1_tile_id(16'b0000000001010000)) c_W4_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W4_su_l1_cws0_o_c_W4_bn_00),
@@ -5391,7 +5322,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W4_bn_11_y_o22_c_W4_bn_01),
         .y_o23(x_c_W4_bn_11_y_o23_c_W4_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000001110000), .S_u_t_0_1_tile_id(16'b0000000001110000), .S_u_t_1_0_tile_id(16'b0000000001110000), .S_u_t_1_1_tile_id(16'b0000000001110000)) c_W4_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000001110000), .S_u_t_0_1_tile_id(16'b0000000001110000), .S_u_t_1_0_tile_id(16'b0000000001110000), .S_u_t_1_1_tile_id(16'b0000000001110000)) c_W4_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W4_tn_01_bc_o03_c_W4_tf_00),
@@ -5434,7 +5365,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W4_tf_11_y_o22_c_W4_tf_01),
         .y_o23(x_c_W4_tf_11_y_o23_c_W4_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000001100000), .S_u_t_0_1_tile_id(16'b0000000001100000), .S_u_t_1_0_tile_id(16'b0000000001100000), .S_u_t_1_1_tile_id(16'b0000000001100000)) c_W4_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000001100000), .S_u_t_0_1_tile_id(16'b0000000001100000), .S_u_t_1_0_tile_id(16'b0000000001100000), .S_u_t_1_1_tile_id(16'b0000000001100000)) c_W4_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W4_hc0_cw_n0_c_W4_tn_00),
@@ -5485,7 +5416,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W4_tn_11_y_o22_c_W4_tn_01),
         .y_o23(x_c_W4_tn_11_y_o23_c_W4_tn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00_s2 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000000000000), .S_u_t_0_1_tile_id(16'b0000000000000000), .S_u_t_1_0_tile_id(16'b0000000000000000), .S_u_t_1_1_tile_id(16'b0000000000000000)) c_W5_bf_00 (
+    qfd_qc_cb_f_q00__cbf_q00_s2 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000000000000), .S_u_t_0_1_tile_id(16'b0000000000000000), .S_u_t_1_0_tile_id(16'b0000000000000000), .S_u_t_1_1_tile_id(16'b0000000000000000)) c_W5_bf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W5_bn_01_bc_o03_c_W5_bf_00),
@@ -5548,7 +5479,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W5_bf_11_y_o22_c_W5_bf_01),
         .y_o23(x_c_W5_bf_11_y_o23_c_W5_bf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000000010000), .S_u_t_0_1_tile_id(16'b0000000000010000), .S_u_t_1_0_tile_id(16'b0000000000010000), .S_u_t_1_1_tile_id(16'b0000000000010000)) c_W5_bn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000000010000), .S_u_t_0_1_tile_id(16'b0000000000010000), .S_u_t_1_0_tile_id(16'b0000000000010000), .S_u_t_1_1_tile_id(16'b0000000000010000)) c_W5_bn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W5_su_l1_cws0_o_c_W5_bn_00),
@@ -5599,7 +5530,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W5_bn_11_y_o22_c_W5_bn_01),
         .y_o23(x_c_W5_bn_11_y_o23_c_W5_bn_01)
     );
-    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000000110000), .S_u_t_0_1_tile_id(16'b0000000000110000), .S_u_t_1_0_tile_id(16'b0000000000110000), .S_u_t_1_1_tile_id(16'b0000000000110000)) c_W5_tf_00 (
+    qfd_qc_cb_f_q00__cbf_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b1), .S_u_fab_u_x_0_0_sidx(3'b111), .S_u_fab_u_x_0_1_sidx(3'b110), .S_u_fab_u_x_1_0_sidx(3'b111), .S_u_fab_u_x_1_1_sidx(3'b110), .S_u_t_0_0_tile_id(16'b0000000000110000), .S_u_t_0_1_tile_id(16'b0000000000110000), .S_u_t_1_0_tile_id(16'b0000000000110000), .S_u_t_1_1_tile_id(16'b0000000000110000)) c_W5_tf_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_c_W5_tn_01_bc_o03_c_W5_tf_00),
@@ -5642,7 +5573,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .y_o22(x_c_W5_tf_11_y_o22_c_W5_tf_01),
         .y_o23(x_c_W5_tf_11_y_o23_c_W5_tf_01)
     );
-    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_2425_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000000100000), .S_u_t_0_1_tile_id(16'b0000000000100000), .S_u_t_1_0_tile_id(16'b0000000000100000), .S_u_t_1_1_tile_id(16'b0000000000100000)) c_W5_tn_00 (
+    qfd_qc_cb_n_q00 #(.S_u_fab_not_qfd_c_b16_dv_fabric_sv_155_15_A(1'b0), .S_u_fab_u_x_0_0_sidx(3'b000), .S_u_fab_u_x_0_1_sidx(3'b001), .S_u_fab_u_x_1_0_sidx(3'b000), .S_u_fab_u_x_1_1_sidx(3'b001), .S_u_t_0_0_tile_id(16'b0000000000100000), .S_u_t_0_1_tile_id(16'b0000000000100000), .S_u_t_1_0_tile_id(16'b0000000000100000), .S_u_t_1_1_tile_id(16'b0000000000100000)) c_W5_tn_00 (
         .clk(clk_core),
         .arst_n(rst_n),
         .bc_i00(x_sl_W5_hc0_cw_n0_c_W5_tn_00),
@@ -5701,6 +5632,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_n_i(x_coll_f3_fltk_o_coll_core),
         .flt_o(x_coll_core_flt_o_coll_f3),
         .flt_s_i(x_coll_f2_fltk_o_coll_core),
+        .fltv_n_i(x_coll_f3_fltv_o_coll_core),
+        .fltv_o(x_coll_core_fltv_o_coll_f3),
+        .fltv_s_i(x_coll_f2_fltv_o_coll_core),
         .io_collective__cmd_free(x_coll_core_io_collective_cmd_free_coll_f3),
         .io_collective__cmd_mode(x_coll_f3_ccm_wo_cmd_mode_o_coll_core),
         .io_collective__cmd_tag(x_coll_f3_cct_wo_cmd_tag_o_coll_core),
@@ -5723,19 +5657,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rec_rx_s2_i(x_coll_f2_crec_rx_s2_o_coll_core),
         .rec_tx_s0(x_coll_core_rec_tx_s0_coll_f3),
         .rec_tx_s1(x_coll_core_rec_tx_s1_coll_f2),
-        .rec_tx_s2(x_coll_core_rec_tx_s2_coll_f2),
-        .xi_io_collective_u_io_u_collective_sr0_rec(x_coll_n_xo_core_rx_data_coll_core),
-        .xi_io_collective_u_io_u_collective_sr0_valid(x_coll_n_xo_core_rx_valid_coll_core),
-        .xi_io_collective_u_io_u_collective_sr2_rec(x_coll_s_xo_g_face_4_u_face_rx_data_coll_core),
-        .xi_io_collective_u_io_u_collective_sr2_valid(x_coll_s_xo_g_face_4_u_face_rx_valid_coll_core),
-        .xo_io_collective_u_io_g_face_0_u_face_cdc_fault(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_cdc_fault_glue),
-        .xo_io_collective_u_io_g_face_0_u_face_epoch_abort(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_epoch_abort_glue),
-        .xo_io_collective_u_io_g_face_0_u_face_fault_cause(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_fault_cause_glue),
-        .xo_io_collective_u_io_g_face_1_u_face_cdc_fault(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_cdc_fault_glue),
-        .xo_io_collective_u_io_g_face_1_u_face_epoch_abort(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_epoch_abort_glue),
-        .xo_io_collective_u_io_g_face_1_u_face_fault_cause(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_fault_cause_glue),
-        .xo_io_collective_u_io_u_collective_cmd_free(x_coll_core_xo_io_collective_u_io_u_collective_cmd_free_glue),
-        .xo_io_collective_u_io_u_collective_fault_code(x_coll_core_xo_io_collective_u_io_u_collective_fault_code_glue)
+        .rec_tx_s2(x_coll_core_rec_tx_s2_coll_f2)
     );
     qfd_qc_coll_ft_part coll_f0 (
         .clk(clk_core),
@@ -5749,7 +5671,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .crec_tx_s2_i(x_coll_f1_crec_tx_s2_o_coll_f0),
         .crec_tx_s2_o(x_coll_f0_crec_tx_s2_o_coll_s),
         .fltk_i(x_coll_s_flt_o_coll_f0),
-        .fltk_o(x_coll_f0_fltk_o_coll_f1)
+        .fltk_o(x_coll_f0_fltk_o_coll_f1),
+        .fltv_i(x_coll_s_fltv_o_coll_f0),
+        .fltv_o(x_coll_f0_fltv_o_coll_f1)
     );
     qfd_qc_coll_ft_part coll_f1 (
         .clk(clk_core),
@@ -5763,7 +5687,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .crec_tx_s2_i(x_coll_f2_crec_tx_s2_o_coll_f1),
         .crec_tx_s2_o(x_coll_f1_crec_tx_s2_o_coll_f0),
         .fltk_i(x_coll_f0_fltk_o_coll_f1),
-        .fltk_o(x_coll_f1_fltk_o_coll_f2)
+        .fltk_o(x_coll_f1_fltk_o_coll_f2),
+        .fltv_i(x_coll_f0_fltv_o_coll_f1),
+        .fltv_o(x_coll_f1_fltv_o_coll_f2)
     );
     qfd_qc_coll_ft_part coll_f2 (
         .clk(clk_core),
@@ -5777,7 +5703,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .crec_tx_s2_i(x_coll_core_rec_tx_s2_coll_f2),
         .crec_tx_s2_o(x_coll_f2_crec_tx_s2_o_coll_f1),
         .fltk_i(x_coll_f1_fltk_o_coll_f2),
-        .fltk_o(x_coll_f2_fltk_o_coll_core)
+        .fltk_o(x_coll_f2_fltk_o_coll_core),
+        .fltv_i(x_coll_f1_fltv_o_coll_f2),
+        .fltv_o(x_coll_f2_fltv_o_coll_core)
     );
     qfd_qc_coll_ftm_part coll_f3 (
         .clk(clk_core),
@@ -5812,6 +5740,10 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .fltc_o(x_coll_f3_fltc_o_glue),
         .fltk_i(x_coll_f4_fltk_o_coll_f3),
         .fltk_o(x_coll_f3_fltk_o_coll_core),
+        .fltv_i(x_coll_f4_fltv_o_coll_f3),
+        .fltv_o(x_coll_f3_fltv_o_coll_core),
+        .fltvc_i(x_coll_core_fltv_o_coll_f3),
+        .fltvc_o(x_coll_f3_fltvc_o_glue),
         .out_data_rd_wi_i(x_coll_core_io_collective_out_data_coll_f3),
         .out_data_rd_wi_o(x_coll_f3_out_data_rd_wi_o_coll_f4),
         .out_err_re_wi_i(x_coll_core_io_collective_out_err_coll_f3),
@@ -5860,6 +5792,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .dr_o_dr_wi_o(x_coll_f4_dr_o_dr_wi_o_sl_W5_fw),
         .fltk_i(x_coll_f5_fltk_o_coll_f4),
         .fltk_o(x_coll_f4_fltk_o_coll_f3),
+        .fltv_i(x_coll_f5_fltv_o_coll_f4),
+        .fltv_o(x_coll_f4_fltv_o_coll_f3),
         .hr_hr_wi_i(x_tt_ctlm_hr_coll_f4),
         .hr_hr_wi_o(x_coll_f4_hr_hr_wi_o_sl_W5_fw),
         .out_data_rd_wi_i(x_coll_f3_out_data_rd_wi_o_coll_f4),
@@ -5885,7 +5819,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .crec_tx_s0_i(x_coll_f4_crec_tx_s0_o_coll_f5),
         .crec_tx_s0_o(x_coll_f5_crec_tx_s0_o_coll_n),
         .fltk_i(x_coll_n_flt_o_coll_f5),
-        .fltk_o(x_coll_f5_fltk_o_coll_f4)
+        .fltk_o(x_coll_f5_fltk_o_coll_f4),
+        .fltv_i(x_coll_n_fltv_o_coll_f5),
+        .fltv_o(x_coll_f5_fltv_o_coll_f4)
     );
     qfd_qc_coll_n_part coll_n (
         .clk(clk_core),
@@ -5893,18 +5829,14 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .clk_coll(clk_coll),
         .clk_serdes(clk_serdes),
         .flt_o(x_coll_n_flt_o_coll_f5),
+        .fltv_o(x_coll_n_fltv_o_coll_f5),
         .io_collective__serdes_rx(x_io_serdes_rx_flit_coll_n),
         .io_collective__serdes_rx_valid(x_io_serdes_rx_v_coll_n),
         .io_collective__serdes_tx(x_coll_n_io_collective_serdes_tx_io_serdes),
         .io_collective__serdes_tx_valid(x_coll_n_io_collective_serdes_tx_valid_io_serdes),
         .io_collective__serdes_up(x_io_serdes_tx_up_coll_n),
         .rec_rx_s0(x_coll_n_rec_rx_s0_coll_f5),
-        .rec_tx_s0_i(x_coll_f5_crec_tx_s0_o_coll_n),
-        .xo_core_cdc_fault(x_coll_n_xo_core_cdc_fault_glue),
-        .xo_core_epoch_abort(x_coll_n_xo_core_epoch_abort_glue),
-        .xo_core_fault_cause(x_coll_n_xo_core_fault_cause_glue),
-        .xo_core_rx_data(x_coll_n_xo_core_rx_data_coll_core),
-        .xo_core_rx_valid(x_coll_n_xo_core_rx_valid_coll_core)
+        .rec_tx_s0_i(x_coll_f5_crec_tx_s0_o_coll_n)
     );
     qfd_qc_coll_s_part coll_s (
         .clk(clk_core),
@@ -5912,6 +5844,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .clk_coll(clk_coll),
         .clk_serdes(clk_serdes),
         .flt_o(x_coll_s_flt_o_coll_f0),
+        .fltv_o(x_coll_s_fltv_o_coll_f0),
         .io_collective__serdes_rx__from_io_serdes_1(x_io_serdes_1_rx_flit_coll_s),
         .io_collective__serdes_rx__from_io_serdes_2(x_c_W5_bf_00_rx_flit_serdes_rx_o_coll_s),
         .io_collective__serdes_rx_valid__from_io_serdes_1(x_io_serdes_1_rx_v_coll_s),
@@ -5925,21 +5858,14 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rec_rx_s1(x_coll_s_rec_rx_s1_coll_f0),
         .rec_rx_s2(x_coll_s_rec_rx_s2_coll_f0),
         .rec_tx_s1_i(x_coll_f0_crec_tx_s1_o_coll_s),
-        .rec_tx_s2_i(x_coll_f0_crec_tx_s2_o_coll_s),
-        .xo_g_face_3_u_face_cdc_fault(x_coll_s_xo_g_face_3_u_face_cdc_fault_glue),
-        .xo_g_face_3_u_face_epoch_abort(x_coll_s_xo_g_face_3_u_face_epoch_abort_glue),
-        .xo_g_face_3_u_face_fault_cause(x_coll_s_xo_g_face_3_u_face_fault_cause_glue),
-        .xo_g_face_4_u_face_cdc_fault(x_coll_s_xo_g_face_4_u_face_cdc_fault_glue),
-        .xo_g_face_4_u_face_epoch_abort(x_coll_s_xo_g_face_4_u_face_epoch_abort_glue),
-        .xo_g_face_4_u_face_fault_cause(x_coll_s_xo_g_face_4_u_face_fault_cause_glue),
-        .xo_g_face_4_u_face_rx_data(x_coll_s_xo_g_face_4_u_face_rx_data_coll_core),
-        .xo_g_face_4_u_face_rx_valid(x_coll_s_xo_g_face_4_u_face_rx_valid_coll_core)
+        .rec_tx_s2_i(x_coll_f0_crec_tx_s2_o_coll_s)
     );
     qfd_qc_glue_part glue (
         .clk(clk_core),
         .arst_n(rst_n),
         .clk_d2d(clk_d2d),
         .coll_flt_i(x_coll_f3_fltc_o_glue),
+        .coll_fltv_i(x_coll_f3_fltvc_o_glue),
         .ctlm_flt_i(x_native59_fltt_o_glue),
         .d2d_rom__fdi_rx_flit(x_ucie_kv_rx_flit_glue),
         .d2d_rom__fdi_rx_v(x_ucie_kv_rx_v_glue),
@@ -5971,8 +5897,10 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .embed_prov__embed_scale_addr(x_native59_emb_scale_addr_glue),
         .embed_prov__embed_scale_q(x_glue_embed_prov_embed_scale_q_native59),
         .embed_prov__embed_scale_re(x_native59_emb_scale_re_glue),
+        .kv_phy_rst_o(x_glue_kv_phy_rst_o_ucie_kv),
         .mu_ctxrx__ctx_x(x_glue_mu_ctxrx_ctx_x_native59),
         .mu_dhobs__dh_user(x_glue_mu_dhobs_dh_user_native59),
+        .mu_flt_o(x_glue_mu_flt_o_native59),
         .sys_face__complete_slot(x_glue_sys_face_complete_slot_native59),
         .sys_face__head_descriptor_generation(x_native59_head_descriptor_generation_glue),
         .sys_face__head_descriptor_tag(x_native59_head_descriptor_tag_glue),
@@ -6005,26 +5933,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sys_face__tt_native_tok(x_native59_native_tok_tt_native_tok_o_glue),
         .sys_face__tt_program_obs(x_native59_program_obs_tt_program_obs_o_glue),
         .sys_face__tt_pw(x_glue_sys_face_tt_pw_native59),
-        .sys_face__visibility_slot(x_glue_sys_face_visibility_slot_native59),
-        .xi_sys_face_io_cmd_free(x_coll_core_xo_io_collective_u_io_u_collective_cmd_free_glue),
-        .xi_sys_face_obs_fault__0(x_coll_n_xo_core_cdc_fault_glue),
-        .xi_sys_face_obs_fault__1(x_coll_n_xo_core_epoch_abort_glue),
-        .xi_sys_face_obs_fault__10(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_epoch_abort_glue),
-        .xi_sys_face_obs_fault__11(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_fault_cause_glue),
-        .xi_sys_face_obs_fault__12(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_cdc_fault_glue),
-        .xi_sys_face_obs_fault__13(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_epoch_abort_glue),
-        .xi_sys_face_obs_fault__14(x_coll_core_xo_io_collective_u_io_g_face_1_u_face_fault_cause_glue),
-        .xi_sys_face_obs_fault__15(x_coll_core_xo_io_collective_u_io_u_collective_fault_code_glue),
-        .xi_sys_face_obs_fault__2(x_coll_n_xo_core_fault_cause_glue),
-        .xi_sys_face_obs_fault__3(x_coll_s_xo_g_face_3_u_face_cdc_fault_glue),
-        .xi_sys_face_obs_fault__4(x_coll_s_xo_g_face_3_u_face_epoch_abort_glue),
-        .xi_sys_face_obs_fault__5(x_coll_s_xo_g_face_3_u_face_fault_cause_glue),
-        .xi_sys_face_obs_fault__6(x_coll_s_xo_g_face_4_u_face_cdc_fault_glue),
-        .xi_sys_face_obs_fault__7(x_coll_s_xo_g_face_4_u_face_epoch_abort_glue),
-        .xi_sys_face_obs_fault__8(x_coll_s_xo_g_face_4_u_face_fault_cause_glue),
-        .xi_sys_face_obs_fault__9(x_coll_core_xo_io_collective_u_io_g_face_0_u_face_cdc_fault_glue),
-        .xo_d2d_rom_phy_rst_n(x_glue_xo_d2d_rom_phy_rst_n_ucie_kv),
-        .xo_sys_face_tt_pw(x_glue_xo_sys_face_tt_pw_tt_ctlm)
+        .sys_face__visibility_slot(x_glue_sys_face_visibility_slot_native59)
     );
     ot_qfd_serdes_112g_x12_phy_s597__phy_serdes io_serdes (
         .clk(clk_serdes),
@@ -6107,6 +6016,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .layer_context_v(x_tt_ctlm_layer_context_v_to_native59_layer_context_v_native59),
         .layer_context_v_tt_layer_context_v_i(x_tt_ctlm_layer_context_v_to_glue_sys_face_tt_layer_context_v_native59),
         .layer_context_v_tt_layer_context_v_o(x_native59_layer_context_v_tt_layer_context_v_o_glue),
+        .mufl_i(x_glue_mu_flt_o_native59),
+        .mufl_o(x_native59_mufl_o_tt_ctlm),
         .native_cmd(x_tt_ctlm_native_cmd_native59),
         .native_pos_tt_native_pos_i(x_tt_ctlm_native_pos_to_glue_sys_face_tt_native_pos_native59),
         .native_pos_tt_native_pos_o(x_native59_native_pos_tt_native_pos_o_glue),
@@ -6618,7 +6529,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_E0_sc_x_su_l1_ctl_o_sl_E0_tap),
         .x_su_l1_ctl_o(x_sl_E0_tap_x_su_l1_ctl_o_sl_E0_ctl)
     );
-    qfd_qc_sle_ctl sl_E1_ctl (
+    qfd_qc_sle_ctl_v1 sl_E1_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E1_stm_b_tw_data_ctl_o_sl_E1_ctl),
@@ -6628,8 +6539,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_E1_ctl_flt_o_sl_E1_stm),
         .x_fw_i(x_sl_E1_st_b_x_fw_ctl_o_sl_E1_ctl),
         .x_fw_o(x_sl_E1_ctl_x_fw_o_sl_E1_st_b),
-        .x_fw_st_b_i(x_sl_E1_stm_x_fw_st_b_o_sl_E1_ctl),
-        .x_fw_st_b_o(x_sl_E1_ctl_x_fw_st_b_o_sl_E1_st_b),
         .x_hc0_i(x_sl_E1_hc1_x_hc0_ctl_o_sl_E1_ctl),
         .x_hc1_st_b_i(x_sl_E1_hc1_x_st_b_o_sl_E1_ctl),
         .x_hc1_st_b_o(x_sl_E1_ctl_x_hc1_st_b_o_sl_E1_st_b),
@@ -6691,8 +6600,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_o(x_sl_E1_fe_x_fw_o_sl_E1_sc),
         .x_fw_sc_i(x_sl_E1_su_l0_x_fw_sc_o_sl_E1_fe),
         .x_fw_sc_o(x_sl_E1_fe_x_fw_sc_o_sl_E1_sc),
-        .x_fw_st_a_i(x_sl_E1_sc_x_fw_st_a_o_sl_E1_fe),
-        .x_fw_st_a_o(x_sl_E1_fe_x_fw_st_a_o_sl_E1_st_a),
         .x_fw_tap_i(x_sl_E1_su_l0_x_fw_tap_o_sl_E1_fe),
         .x_fw_tap_o(x_sl_E1_fe_x_fw_tap_o_sl_E1_st_a),
         .x_sc_i(x_sl_E1_sc_x_fe_o_sl_E1_fe),
@@ -6746,8 +6653,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_E1_fw_x_fe_o_sl_E1_stm),
         .x_sc_i(x_sl_E1_su_l1_x_sc_fw_o_sl_E1_fw),
         .x_sc_o(x_sl_E1_fw_x_sc_o_sl_E1_su_l1),
-        .x_st_a_o(x_sl_E1_fw_x_st_a_o_sl_E1_stm),
-        .x_st_b_o(x_sl_E1_fw_x_st_b_o_sl_E1_su_l1),
         .x_stm_i(x_sl_E1_stm_x_fw_o_sl_E1_fw),
         .x_stm_o(x_sl_E1_fw_x_stm_o_sl_E1_stm),
         .x_su_c_ctl_i(x_sl_E1_su_l1_x_su_c_ctl_o_sl_E1_fw),
@@ -6847,7 +6752,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_E1_hc2_x_tap_hc3_o_sl_E1_hc3),
         .x_tap_o(x_sl_E1_hc3_x_tap_o_sl_E1_hc2)
     );
-    qfd_qc_sle_sc sl_E1_sc (
+    qfd_qc_sle_sc_v1 sl_E1_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_E1_tap_cws2_o_sl_E1_sc),
@@ -6869,8 +6774,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_E1_sc_x_fw_fe_o_sl_E1_fe),
         .x_fw_i(x_sl_E1_fe_x_fw_sc_o_sl_E1_sc),
         .x_fw_o(x_sl_E1_sc_x_fw_o_sl_E1_su_c),
-        .x_fw_st_a_i(x_sl_E1_stm_x_fw_st_a_o_sl_E1_sc),
-        .x_fw_st_a_o(x_sl_E1_sc_x_fw_st_a_o_sl_E1_fe),
         .x_st_b_fe_i(x_sl_E1_tap_x_st_b_fe_o_sl_E1_sc),
         .x_st_b_fe_o(x_sl_E1_sc_x_st_b_fe_o_sl_E1_su_c),
         .x_stm_fe_i(x_sl_E1_stm_x_fe_o_sl_E1_sc),
@@ -6881,7 +6784,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_E1_sc_x_su_l1_ctl_o_sl_E1_tap),
         .x_su_l1_i(x_sl_E1_su_c_x_su_l1_sc_o_sl_E1_sc)
     );
-    qfd_qc_sle_st_a sl_E1_st_a (
+    qfd_qc_sle_st_a_v1 sl_E1_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E1_tap_b_tw_data_ctl_st_a_o_sl_E1_st_a),
@@ -6893,7 +6796,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_E1_hc3_x_ctl_st_a_o_sl_E1_st_a),
         .x_ctl_o(x_sl_E1_st_a_x_ctl_o_sl_E1_hc3),
         .x_fe_o(x_sl_E1_st_a_x_fe_o_sl_E1_fe),
-        .x_fw_i(x_sl_E1_fe_x_fw_st_a_o_sl_E1_st_a),
         .x_fw_tap_i(x_sl_E1_fe_x_fw_tap_o_sl_E1_st_a),
         .x_fw_tap_o(x_sl_E1_st_a_x_fw_tap_o_sl_E1_tap),
         .x_hc1_i(x_sl_E1_hc3_x_hc1_st_a_o_sl_E1_st_a),
@@ -6905,7 +6807,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_E1_fe_x_su_l0_ctl_o_sl_E1_st_a),
         .x_su_l0_ctl_o(x_sl_E1_st_a_x_su_l0_ctl_o_sl_E1_tap)
     );
-    qfd_qc_sle_st_b sl_E1_st_b (
+    qfd_qc_sle_st_b_v1 sl_E1_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E1_hc0_cw_s0_sl_E1_st_b),
@@ -6919,14 +6821,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_E1_st_b_x_fe_o_sl_E1_ctl),
         .x_fw_ctl_i(x_sl_E1_fw_x_ctl_o_sl_E1_st_b),
         .x_fw_ctl_o(x_sl_E1_st_b_x_fw_ctl_o_sl_E1_ctl),
-        .x_fw_i(x_sl_E1_ctl_x_fw_st_b_o_sl_E1_st_b),
         .x_hc1_i(x_sl_E1_ctl_x_hc1_st_b_o_sl_E1_st_b),
         .x_st_a_i(x_sl_E1_ctl_x_st_a_st_b_o_sl_E1_st_b),
         .x_st_a_o(x_sl_E1_st_b_x_st_a_o_sl_E1_ctl),
         .x_su_c_ctl_i(x_sl_E1_fw_x_su_c_ctl_o_sl_E1_st_b),
         .x_su_c_ctl_o(x_sl_E1_st_b_x_su_c_ctl_o_sl_E1_ctl)
     );
-    qfd_qc_sle_stm sl_E1_stm (
+    qfd_qc_sle_stm_v1 sl_E1_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_E1_stm_b_tw_data_ctl_o_sl_E1_ctl),
@@ -6948,16 +6849,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_E1_stm_x_fw_fe_o_sl_E1_sc),
         .x_fw_i(x_sl_E1_fw_x_stm_o_sl_E1_stm),
         .x_fw_o(x_sl_E1_stm_x_fw_o_sl_E1_fw),
-        .x_fw_st_a_i(x_sl_E1_fw_x_st_a_o_sl_E1_stm),
-        .x_fw_st_a_o(x_sl_E1_stm_x_fw_st_a_o_sl_E1_sc),
-        .x_fw_st_b_i(x_sl_E1_su_c_x_fw_st_b_o_sl_E1_stm),
-        .x_fw_st_b_o(x_sl_E1_stm_x_fw_st_b_o_sl_E1_ctl),
         .x_st_a_o(x_sl_E1_stm_x_st_a_o_sl_E1_su_c),
         .x_su_l0_i(x_sl_E1_su_c_x_su_l0_stm_o_sl_E1_stm),
         .x_su_l1_i(x_sl_E1_su_c_x_su_l1_stm_o_sl_E1_stm),
         .x_tap_o(x_sl_E1_stm_x_tap_o_sl_E1_ctl)
     );
-    qfd_qc_sle_su_c sl_E1_su_c (
+    qfd_qc_sle_su_c_v1 sl_E1_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_E1_stm_cws1_o_sl_E1_su_c),
@@ -6974,8 +6871,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E1_su_c_x_ctl_o_sl_E1_su_l1),
         .x_fw_sc_i(x_sl_E1_su_l1_x_fw_sc_o_sl_E1_su_c),
         .x_fw_sc_o(x_sl_E1_su_c_x_fw_sc_o_sl_E1_su_l0),
-        .x_fw_st_b_i(x_sl_E1_su_l1_x_fw_st_b_o_sl_E1_su_c),
-        .x_fw_st_b_o(x_sl_E1_su_c_x_fw_st_b_o_sl_E1_stm),
         .x_fw_tap_i(x_sl_E1_su_l1_x_fw_tap_o_sl_E1_su_c),
         .x_fw_tap_o(x_sl_E1_su_c_x_fw_tap_o_sl_E1_su_l0),
         .x_sc_fw_i(x_sl_E1_sc_x_fw_o_sl_E1_su_c),
@@ -7026,7 +6921,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_E1_su_c_x_su_l0_o_sl_E1_su_l0),
         .x_su_c_o(x_sl_E1_su_l0_x_su_c_o_sl_E1_su_c)
     );
-    qfd_qc_sle_su_l1 sl_E1_su_l1 (
+    qfd_qc_sle_su_l1_v1 sl_E1_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E1_fw_cws0_o_sl_E1_su_l1),
@@ -7039,8 +6934,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E1_su_l1_x_ctl_o_sl_E1_su_c),
         .x_fw_sc_i(x_sl_E1_fw_x_sc_o_sl_E1_su_l1),
         .x_fw_sc_o(x_sl_E1_su_l1_x_fw_sc_o_sl_E1_su_c),
-        .x_fw_st_b_i(x_sl_E1_fw_x_st_b_o_sl_E1_su_l1),
-        .x_fw_st_b_o(x_sl_E1_su_l1_x_fw_st_b_o_sl_E1_su_c),
         .x_fw_tap_i(x_sl_E1_fw_x_tap_o_sl_E1_su_l1),
         .x_fw_tap_o(x_sl_E1_su_l1_x_fw_tap_o_sl_E1_su_c),
         .x_sc_fw_i(x_sl_E1_su_c_x_sc_fw_o_sl_E1_su_l1),
@@ -7182,7 +7075,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_sc_i(x_sl_E2_su_l0_x_sc_o_sl_E2_fe),
         .x_su_l0_sc_o(x_sl_E2_fe_x_su_l0_sc_o_sl_E2_sc)
     );
-    qfd_qc_sle_fw__sle_fw_v1 sl_E2_fw (
+    qfd_qc_sle_fw_v1__sle_fw_v1_v1 sl_E2_fw (
         .clk(clk_core),
         .arst_n(rst_n),
         .ag_eo(x_sl_E2_fw_ag_eo_sl_E1_fe),
@@ -7560,7 +7453,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_E2_sc_x_su_l1_ctl_o_sl_E2_tap),
         .x_su_l1_ctl_o(x_sl_E2_tap_x_su_l1_ctl_o_sl_E2_ctl)
     );
-    qfd_qc_sle_ctl sl_E3_ctl (
+    qfd_qc_sle_ctl_v1 sl_E3_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E3_stm_b_tw_data_ctl_o_sl_E3_ctl),
@@ -7570,8 +7463,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_E3_ctl_flt_o_sl_E3_stm),
         .x_fw_i(x_sl_E3_st_b_x_fw_ctl_o_sl_E3_ctl),
         .x_fw_o(x_sl_E3_ctl_x_fw_o_sl_E3_st_b),
-        .x_fw_st_b_i(x_sl_E3_stm_x_fw_st_b_o_sl_E3_ctl),
-        .x_fw_st_b_o(x_sl_E3_ctl_x_fw_st_b_o_sl_E3_st_b),
         .x_hc0_i(x_sl_E3_hc1_x_hc0_ctl_o_sl_E3_ctl),
         .x_hc1_st_b_i(x_sl_E3_hc1_x_st_b_o_sl_E3_ctl),
         .x_hc1_st_b_o(x_sl_E3_ctl_x_hc1_st_b_o_sl_E3_st_b),
@@ -7633,8 +7524,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_o(x_sl_E3_fe_x_fw_o_sl_E3_sc),
         .x_fw_sc_i(x_sl_E3_su_l0_x_fw_sc_o_sl_E3_fe),
         .x_fw_sc_o(x_sl_E3_fe_x_fw_sc_o_sl_E3_sc),
-        .x_fw_st_a_i(x_sl_E3_sc_x_fw_st_a_o_sl_E3_fe),
-        .x_fw_st_a_o(x_sl_E3_fe_x_fw_st_a_o_sl_E3_st_a),
         .x_fw_tap_i(x_sl_E3_su_l0_x_fw_tap_o_sl_E3_fe),
         .x_fw_tap_o(x_sl_E3_fe_x_fw_tap_o_sl_E3_st_a),
         .x_sc_i(x_sl_E3_sc_x_fe_o_sl_E3_fe),
@@ -7688,8 +7577,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_E3_fw_x_fe_o_sl_E3_stm),
         .x_sc_i(x_sl_E3_su_l1_x_sc_fw_o_sl_E3_fw),
         .x_sc_o(x_sl_E3_fw_x_sc_o_sl_E3_su_l1),
-        .x_st_a_o(x_sl_E3_fw_x_st_a_o_sl_E3_stm),
-        .x_st_b_o(x_sl_E3_fw_x_st_b_o_sl_E3_su_l1),
         .x_stm_i(x_sl_E3_stm_x_fw_o_sl_E3_fw),
         .x_stm_o(x_sl_E3_fw_x_stm_o_sl_E3_stm),
         .x_su_c_ctl_i(x_sl_E3_su_l1_x_su_c_ctl_o_sl_E3_fw),
@@ -7789,7 +7676,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_E3_hc2_x_tap_hc3_o_sl_E3_hc3),
         .x_tap_o(x_sl_E3_hc3_x_tap_o_sl_E3_hc2)
     );
-    qfd_qc_sle_sc sl_E3_sc (
+    qfd_qc_sle_sc_v1 sl_E3_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_E3_tap_cws2_o_sl_E3_sc),
@@ -7811,8 +7698,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_E3_sc_x_fw_fe_o_sl_E3_fe),
         .x_fw_i(x_sl_E3_fe_x_fw_sc_o_sl_E3_sc),
         .x_fw_o(x_sl_E3_sc_x_fw_o_sl_E3_su_c),
-        .x_fw_st_a_i(x_sl_E3_stm_x_fw_st_a_o_sl_E3_sc),
-        .x_fw_st_a_o(x_sl_E3_sc_x_fw_st_a_o_sl_E3_fe),
         .x_st_b_fe_i(x_sl_E3_tap_x_st_b_fe_o_sl_E3_sc),
         .x_st_b_fe_o(x_sl_E3_sc_x_st_b_fe_o_sl_E3_su_c),
         .x_stm_fe_i(x_sl_E3_stm_x_fe_o_sl_E3_sc),
@@ -7823,7 +7708,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_E3_sc_x_su_l1_ctl_o_sl_E3_tap),
         .x_su_l1_i(x_sl_E3_su_c_x_su_l1_sc_o_sl_E3_sc)
     );
-    qfd_qc_sle_st_a sl_E3_st_a (
+    qfd_qc_sle_st_a_v1 sl_E3_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E3_tap_b_tw_data_ctl_st_a_o_sl_E3_st_a),
@@ -7835,7 +7720,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_E3_hc3_x_ctl_st_a_o_sl_E3_st_a),
         .x_ctl_o(x_sl_E3_st_a_x_ctl_o_sl_E3_hc3),
         .x_fe_o(x_sl_E3_st_a_x_fe_o_sl_E3_fe),
-        .x_fw_i(x_sl_E3_fe_x_fw_st_a_o_sl_E3_st_a),
         .x_fw_tap_i(x_sl_E3_fe_x_fw_tap_o_sl_E3_st_a),
         .x_fw_tap_o(x_sl_E3_st_a_x_fw_tap_o_sl_E3_tap),
         .x_hc1_i(x_sl_E3_hc3_x_hc1_st_a_o_sl_E3_st_a),
@@ -7847,7 +7731,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_E3_fe_x_su_l0_ctl_o_sl_E3_st_a),
         .x_su_l0_ctl_o(x_sl_E3_st_a_x_su_l0_ctl_o_sl_E3_tap)
     );
-    qfd_qc_sle_st_b sl_E3_st_b (
+    qfd_qc_sle_st_b_v1 sl_E3_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E3_hc0_cw_s0_sl_E3_st_b),
@@ -7861,14 +7745,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_E3_st_b_x_fe_o_sl_E3_ctl),
         .x_fw_ctl_i(x_sl_E3_fw_x_ctl_o_sl_E3_st_b),
         .x_fw_ctl_o(x_sl_E3_st_b_x_fw_ctl_o_sl_E3_ctl),
-        .x_fw_i(x_sl_E3_ctl_x_fw_st_b_o_sl_E3_st_b),
         .x_hc1_i(x_sl_E3_ctl_x_hc1_st_b_o_sl_E3_st_b),
         .x_st_a_i(x_sl_E3_ctl_x_st_a_st_b_o_sl_E3_st_b),
         .x_st_a_o(x_sl_E3_st_b_x_st_a_o_sl_E3_ctl),
         .x_su_c_ctl_i(x_sl_E3_fw_x_su_c_ctl_o_sl_E3_st_b),
         .x_su_c_ctl_o(x_sl_E3_st_b_x_su_c_ctl_o_sl_E3_ctl)
     );
-    qfd_qc_sle_stm sl_E3_stm (
+    qfd_qc_sle_stm_v1 sl_E3_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_E3_stm_b_tw_data_ctl_o_sl_E3_ctl),
@@ -7890,16 +7773,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_E3_stm_x_fw_fe_o_sl_E3_sc),
         .x_fw_i(x_sl_E3_fw_x_stm_o_sl_E3_stm),
         .x_fw_o(x_sl_E3_stm_x_fw_o_sl_E3_fw),
-        .x_fw_st_a_i(x_sl_E3_fw_x_st_a_o_sl_E3_stm),
-        .x_fw_st_a_o(x_sl_E3_stm_x_fw_st_a_o_sl_E3_sc),
-        .x_fw_st_b_i(x_sl_E3_su_c_x_fw_st_b_o_sl_E3_stm),
-        .x_fw_st_b_o(x_sl_E3_stm_x_fw_st_b_o_sl_E3_ctl),
         .x_st_a_o(x_sl_E3_stm_x_st_a_o_sl_E3_su_c),
         .x_su_l0_i(x_sl_E3_su_c_x_su_l0_stm_o_sl_E3_stm),
         .x_su_l1_i(x_sl_E3_su_c_x_su_l1_stm_o_sl_E3_stm),
         .x_tap_o(x_sl_E3_stm_x_tap_o_sl_E3_ctl)
     );
-    qfd_qc_sle_su_c sl_E3_su_c (
+    qfd_qc_sle_su_c_v1 sl_E3_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_E3_stm_cws1_o_sl_E3_su_c),
@@ -7916,8 +7795,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E3_su_c_x_ctl_o_sl_E3_su_l1),
         .x_fw_sc_i(x_sl_E3_su_l1_x_fw_sc_o_sl_E3_su_c),
         .x_fw_sc_o(x_sl_E3_su_c_x_fw_sc_o_sl_E3_su_l0),
-        .x_fw_st_b_i(x_sl_E3_su_l1_x_fw_st_b_o_sl_E3_su_c),
-        .x_fw_st_b_o(x_sl_E3_su_c_x_fw_st_b_o_sl_E3_stm),
         .x_fw_tap_i(x_sl_E3_su_l1_x_fw_tap_o_sl_E3_su_c),
         .x_fw_tap_o(x_sl_E3_su_c_x_fw_tap_o_sl_E3_su_l0),
         .x_sc_fw_i(x_sl_E3_sc_x_fw_o_sl_E3_su_c),
@@ -7968,7 +7845,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_E3_su_c_x_su_l0_o_sl_E3_su_l0),
         .x_su_c_o(x_sl_E3_su_l0_x_su_c_o_sl_E3_su_c)
     );
-    qfd_qc_sle_su_l1 sl_E3_su_l1 (
+    qfd_qc_sle_su_l1_v1 sl_E3_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E3_fw_cws0_o_sl_E3_su_l1),
@@ -7981,8 +7858,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E3_su_l1_x_ctl_o_sl_E3_su_c),
         .x_fw_sc_i(x_sl_E3_fw_x_sc_o_sl_E3_su_l1),
         .x_fw_sc_o(x_sl_E3_su_l1_x_fw_sc_o_sl_E3_su_c),
-        .x_fw_st_b_i(x_sl_E3_fw_x_st_b_o_sl_E3_su_l1),
-        .x_fw_st_b_o(x_sl_E3_su_l1_x_fw_st_b_o_sl_E3_su_c),
         .x_fw_tap_i(x_sl_E3_fw_x_tap_o_sl_E3_su_l1),
         .x_fw_tap_o(x_sl_E3_su_l1_x_fw_tap_o_sl_E3_su_c),
         .x_sc_fw_i(x_sl_E3_su_c_x_sc_fw_o_sl_E3_su_l1),
@@ -8124,7 +7999,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_sc_i(x_sl_E4_su_l0_x_sc_o_sl_E4_fe),
         .x_su_l0_sc_o(x_sl_E4_fe_x_su_l0_sc_o_sl_E4_sc)
     );
-    qfd_qc_sle_fw__sle_fw_v1 sl_E4_fw (
+    qfd_qc_sle_fw_v1__sle_fw_v1_v1 sl_E4_fw (
         .clk(clk_core),
         .arst_n(rst_n),
         .ag_eo(x_sl_E4_fw_ag_eo_sl_E3_fe),
@@ -8502,7 +8377,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_E4_sc_x_su_l1_ctl_o_sl_E4_tap),
         .x_su_l1_ctl_o(x_sl_E4_tap_x_su_l1_ctl_o_sl_E4_ctl)
     );
-    qfd_qc_sle_ctl sl_E5_ctl (
+    qfd_qc_sle_ctl_v2 sl_E5_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E5_stm_b_tw_data_ctl_o_sl_E5_ctl),
@@ -8512,8 +8387,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_E5_ctl_flt_o_sl_E5_stm),
         .x_fw_i(x_sl_E5_st_b_x_fw_ctl_o_sl_E5_ctl),
         .x_fw_o(x_sl_E5_ctl_x_fw_o_sl_E5_st_b),
-        .x_fw_st_b_i(x_sl_E5_stm_x_fw_st_b_o_sl_E5_ctl),
-        .x_fw_st_b_o(x_sl_E5_ctl_x_fw_st_b_o_sl_E5_st_b),
         .x_hc0_i(x_sl_E5_hc1_x_hc0_ctl_o_sl_E5_ctl),
         .x_hc1_st_b_i(x_sl_E5_hc1_x_st_b_o_sl_E5_ctl),
         .x_hc1_st_b_o(x_sl_E5_ctl_x_hc1_st_b_o_sl_E5_st_b),
@@ -8552,11 +8425,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rsn_i(x_sl_E5_su_l0_rsn_o_sl_E5_fe),
         .rsn_o(x_sl_E5_fe_rsn_o_sl_E5_st_a),
         .x_fw_i(x_sl_E5_sc_x_fw_fe_o_sl_E5_fe),
-        .x_fw_o(x_sl_E5_fe_x_fw_o_sl_E5_sc),
         .x_fw_sc_i(x_sl_E5_su_l0_x_fw_sc_o_sl_E5_fe),
         .x_fw_sc_o(x_sl_E5_fe_x_fw_sc_o_sl_E5_sc),
-        .x_fw_st_a_i(x_sl_E5_sc_x_fw_st_a_o_sl_E5_fe),
-        .x_fw_st_a_o(x_sl_E5_fe_x_fw_st_a_o_sl_E5_st_a),
         .x_fw_tap_i(x_sl_E5_su_l0_x_fw_tap_o_sl_E5_fe),
         .x_fw_tap_o(x_sl_E5_fe_x_fw_tap_o_sl_E5_st_a),
         .x_sc_i(x_sl_E5_sc_x_fe_o_sl_E5_fe),
@@ -8566,7 +8436,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_stm_ctl_i(x_sl_E5_su_l0_x_stm_ctl_o_sl_E5_fe),
         .x_stm_ctl_o(x_sl_E5_fe_x_stm_ctl_o_sl_E5_st_a),
         .x_stm_i(x_sl_E5_sc_x_stm_fe_o_sl_E5_fe),
-        .x_stm_o(x_sl_E5_fe_x_stm_o_sl_E5_sc),
         .x_stm_st_a_i(x_sl_E5_su_l0_x_stm_st_a_o_sl_E5_fe),
         .x_stm_st_a_o(x_sl_E5_fe_x_stm_st_a_o_sl_E5_st_a),
         .x_su_l0_ctl_i(x_sl_E5_su_l0_x_ctl_o_sl_E5_fe),
@@ -8574,7 +8443,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_sc_i(x_sl_E5_su_l0_x_sc_o_sl_E5_fe),
         .x_su_l0_sc_o(x_sl_E5_fe_x_su_l0_sc_o_sl_E5_sc)
     );
-    qfd_qc_sle_fw__sle_fw_v2 sl_E5_fw (
+    qfd_qc_sle_fw_v1__sle_fw_v2_v1 sl_E5_fw (
         .clk(clk_core),
         .arst_n(rst_n),
         .ag_eo(x_sl_E5_fw_ag_eo_sl_E4_fe),
@@ -8606,12 +8475,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E5_fw_x_ctl_o_sl_E5_st_b),
         .x_ctl_stm_i(x_sl_E5_st_b_x_ctl_stm_o_sl_E5_fw),
         .x_ctl_stm_o(x_sl_E5_fw_x_ctl_stm_o_sl_E5_stm),
-        .x_fe_i(x_sl_E5_stm_x_fe_fw_o_sl_E5_fw),
         .x_fe_o(x_sl_E5_fw_x_fe_o_sl_E5_stm),
         .x_sc_i(x_sl_E5_su_l1_x_sc_fw_o_sl_E5_fw),
         .x_sc_o(x_sl_E5_fw_x_sc_o_sl_E5_su_l1),
-        .x_st_a_o(x_sl_E5_fw_x_st_a_o_sl_E5_stm),
-        .x_st_b_o(x_sl_E5_fw_x_st_b_o_sl_E5_su_l1),
         .x_stm_i(x_sl_E5_stm_x_fw_o_sl_E5_fw),
         .x_stm_o(x_sl_E5_fw_x_stm_o_sl_E5_stm),
         .x_su_c_ctl_i(x_sl_E5_su_l1_x_su_c_ctl_o_sl_E5_fw),
@@ -8711,7 +8577,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_E5_hc2_x_tap_hc3_o_sl_E5_hc3),
         .x_tap_o(x_sl_E5_hc3_x_tap_o_sl_E5_hc2)
     );
-    qfd_qc_sle_sc sl_E5_sc (
+    qfd_qc_sle_sc_v2 sl_E5_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_E5_tap_cws2_o_sl_E5_sc),
@@ -8723,18 +8589,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E5_sc_x_ctl_o_sl_E5_tap),
         .x_ctl_su_c_i(x_sl_E5_tap_x_ctl_su_c_o_sl_E5_sc),
         .x_ctl_su_c_o(x_sl_E5_sc_x_ctl_su_c_o_sl_E5_su_c),
-        .x_fe_fw_i(x_sl_E5_fe_x_fw_o_sl_E5_sc),
-        .x_fe_fw_o(x_sl_E5_sc_x_fe_fw_o_sl_E5_stm),
         .x_fe_i(x_sl_E5_fe_x_sc_o_sl_E5_sc),
         .x_fe_o(x_sl_E5_sc_x_fe_o_sl_E5_fe),
-        .x_fe_stm_i(x_sl_E5_fe_x_stm_o_sl_E5_sc),
-        .x_fe_stm_o(x_sl_E5_sc_x_fe_stm_o_sl_E5_stm),
         .x_fw_fe_i(x_sl_E5_stm_x_fw_fe_o_sl_E5_sc),
         .x_fw_fe_o(x_sl_E5_sc_x_fw_fe_o_sl_E5_fe),
         .x_fw_i(x_sl_E5_fe_x_fw_sc_o_sl_E5_sc),
         .x_fw_o(x_sl_E5_sc_x_fw_o_sl_E5_su_c),
-        .x_fw_st_a_i(x_sl_E5_stm_x_fw_st_a_o_sl_E5_sc),
-        .x_fw_st_a_o(x_sl_E5_sc_x_fw_st_a_o_sl_E5_fe),
         .x_st_b_fe_i(x_sl_E5_tap_x_st_b_fe_o_sl_E5_sc),
         .x_st_b_fe_o(x_sl_E5_sc_x_st_b_fe_o_sl_E5_su_c),
         .x_stm_fe_i(x_sl_E5_stm_x_fe_o_sl_E5_sc),
@@ -8745,7 +8605,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_E5_sc_x_su_l1_ctl_o_sl_E5_tap),
         .x_su_l1_i(x_sl_E5_su_c_x_su_l1_sc_o_sl_E5_sc)
     );
-    qfd_qc_sle_st_a sl_E5_st_a (
+    qfd_qc_sle_st_a_v1 sl_E5_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_E5_tap_b_tw_data_ctl_st_a_o_sl_E5_st_a),
@@ -8757,7 +8617,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_E5_hc3_x_ctl_st_a_o_sl_E5_st_a),
         .x_ctl_o(x_sl_E5_st_a_x_ctl_o_sl_E5_hc3),
         .x_fe_o(x_sl_E5_st_a_x_fe_o_sl_E5_fe),
-        .x_fw_i(x_sl_E5_fe_x_fw_st_a_o_sl_E5_st_a),
         .x_fw_tap_i(x_sl_E5_fe_x_fw_tap_o_sl_E5_st_a),
         .x_fw_tap_o(x_sl_E5_st_a_x_fw_tap_o_sl_E5_tap),
         .x_hc1_i(x_sl_E5_hc3_x_hc1_st_a_o_sl_E5_st_a),
@@ -8769,7 +8628,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_E5_fe_x_su_l0_ctl_o_sl_E5_st_a),
         .x_su_l0_ctl_o(x_sl_E5_st_a_x_su_l0_ctl_o_sl_E5_tap)
     );
-    qfd_qc_sle_st_b sl_E5_st_b (
+    qfd_qc_sle_st_b_v1 sl_E5_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E5_hc0_cw_s0_sl_E5_st_b),
@@ -8783,14 +8642,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_E5_st_b_x_fe_o_sl_E5_ctl),
         .x_fw_ctl_i(x_sl_E5_fw_x_ctl_o_sl_E5_st_b),
         .x_fw_ctl_o(x_sl_E5_st_b_x_fw_ctl_o_sl_E5_ctl),
-        .x_fw_i(x_sl_E5_ctl_x_fw_st_b_o_sl_E5_st_b),
         .x_hc1_i(x_sl_E5_ctl_x_hc1_st_b_o_sl_E5_st_b),
         .x_st_a_i(x_sl_E5_ctl_x_st_a_st_b_o_sl_E5_st_b),
         .x_st_a_o(x_sl_E5_st_b_x_st_a_o_sl_E5_ctl),
         .x_su_c_ctl_i(x_sl_E5_fw_x_su_c_ctl_o_sl_E5_st_b),
         .x_su_c_ctl_o(x_sl_E5_st_b_x_su_c_ctl_o_sl_E5_ctl)
     );
-    qfd_qc_sle_stm sl_E5_stm (
+    qfd_qc_sle_stm_v2 sl_E5_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_E5_stm_b_tw_data_ctl_o_sl_E5_ctl),
@@ -8804,24 +8662,17 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E5_stm_x_ctl_o_sl_E5_su_c),
         .x_ctl_sc_i(x_sl_E5_ctl_x_sc_o_sl_E5_stm),
         .x_ctl_sc_o(x_sl_E5_stm_x_ctl_sc_o_sl_E5_sc),
-        .x_fe_fw_i(x_sl_E5_sc_x_fe_fw_o_sl_E5_stm),
-        .x_fe_fw_o(x_sl_E5_stm_x_fe_fw_o_sl_E5_fw),
-        .x_fe_i(x_sl_E5_sc_x_fe_stm_o_sl_E5_stm),
         .x_fe_o(x_sl_E5_stm_x_fe_o_sl_E5_sc),
         .x_fw_fe_i(x_sl_E5_fw_x_fe_o_sl_E5_stm),
         .x_fw_fe_o(x_sl_E5_stm_x_fw_fe_o_sl_E5_sc),
         .x_fw_i(x_sl_E5_fw_x_stm_o_sl_E5_stm),
         .x_fw_o(x_sl_E5_stm_x_fw_o_sl_E5_fw),
-        .x_fw_st_a_i(x_sl_E5_fw_x_st_a_o_sl_E5_stm),
-        .x_fw_st_a_o(x_sl_E5_stm_x_fw_st_a_o_sl_E5_sc),
-        .x_fw_st_b_i(x_sl_E5_su_c_x_fw_st_b_o_sl_E5_stm),
-        .x_fw_st_b_o(x_sl_E5_stm_x_fw_st_b_o_sl_E5_ctl),
         .x_st_a_o(x_sl_E5_stm_x_st_a_o_sl_E5_su_c),
         .x_su_l0_i(x_sl_E5_su_c_x_su_l0_stm_o_sl_E5_stm),
         .x_su_l1_i(x_sl_E5_su_c_x_su_l1_stm_o_sl_E5_stm),
         .x_tap_o(x_sl_E5_stm_x_tap_o_sl_E5_ctl)
     );
-    qfd_qc_sle_su_c sl_E5_su_c (
+    qfd_qc_sle_su_c_v1 sl_E5_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_E5_stm_cws1_o_sl_E5_su_c),
@@ -8838,8 +8689,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E5_su_c_x_ctl_o_sl_E5_su_l1),
         .x_fw_sc_i(x_sl_E5_su_l1_x_fw_sc_o_sl_E5_su_c),
         .x_fw_sc_o(x_sl_E5_su_c_x_fw_sc_o_sl_E5_su_l0),
-        .x_fw_st_b_i(x_sl_E5_su_l1_x_fw_st_b_o_sl_E5_su_c),
-        .x_fw_st_b_o(x_sl_E5_su_c_x_fw_st_b_o_sl_E5_stm),
         .x_fw_tap_i(x_sl_E5_su_l1_x_fw_tap_o_sl_E5_su_c),
         .x_fw_tap_o(x_sl_E5_su_c_x_fw_tap_o_sl_E5_su_l0),
         .x_sc_fw_i(x_sl_E5_sc_x_fw_o_sl_E5_su_c),
@@ -8890,7 +8739,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_E5_su_c_x_su_l0_o_sl_E5_su_l0),
         .x_su_c_o(x_sl_E5_su_l0_x_su_c_o_sl_E5_su_c)
     );
-    qfd_qc_sle_su_l1 sl_E5_su_l1 (
+    qfd_qc_sle_su_l1_v1 sl_E5_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_E5_fw_cws0_o_sl_E5_su_l1),
@@ -8903,8 +8752,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_E5_su_l1_x_ctl_o_sl_E5_su_c),
         .x_fw_sc_i(x_sl_E5_fw_x_sc_o_sl_E5_su_l1),
         .x_fw_sc_o(x_sl_E5_su_l1_x_fw_sc_o_sl_E5_su_c),
-        .x_fw_st_b_i(x_sl_E5_fw_x_st_b_o_sl_E5_su_l1),
-        .x_fw_st_b_o(x_sl_E5_su_l1_x_fw_st_b_o_sl_E5_su_c),
         .x_fw_tap_i(x_sl_E5_fw_x_tap_o_sl_E5_su_l1),
         .x_fw_tap_o(x_sl_E5_su_l1_x_fw_tap_o_sl_E5_su_c),
         .x_sc_fw_i(x_sl_E5_su_c_x_sc_fw_o_sl_E5_su_l1),
@@ -9418,7 +9265,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_W0_sc_x_su_l1_ctl_o_sl_W0_tap),
         .x_su_l1_ctl_o(x_sl_W0_tap_x_su_l1_ctl_o_sl_W0_ctl)
     );
-    qfd_qc_sle_ctl sl_W1_ctl (
+    qfd_qc_sle_ctl_v1 sl_W1_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W1_stm_b_tw_data_ctl_o_sl_W1_ctl),
@@ -9428,8 +9275,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_W1_ctl_flt_o_sl_W1_stm),
         .x_fw_i(x_sl_W1_st_b_x_fw_ctl_o_sl_W1_ctl),
         .x_fw_o(x_sl_W1_ctl_x_fw_o_sl_W1_st_b),
-        .x_fw_st_b_i(x_sl_W1_stm_x_fw_st_b_o_sl_W1_ctl),
-        .x_fw_st_b_o(x_sl_W1_ctl_x_fw_st_b_o_sl_W1_st_b),
         .x_hc0_i(x_sl_W1_hc1_x_hc0_ctl_o_sl_W1_ctl),
         .x_hc1_st_b_i(x_sl_W1_hc1_x_st_b_o_sl_W1_ctl),
         .x_hc1_st_b_o(x_sl_W1_ctl_x_hc1_st_b_o_sl_W1_st_b),
@@ -9491,8 +9336,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_o(x_sl_W1_fe_x_fw_o_sl_W1_sc),
         .x_fw_sc_i(x_sl_W1_su_l0_x_fw_sc_o_sl_W1_fe),
         .x_fw_sc_o(x_sl_W1_fe_x_fw_sc_o_sl_W1_sc),
-        .x_fw_st_a_i(x_sl_W1_sc_x_fw_st_a_o_sl_W1_fe),
-        .x_fw_st_a_o(x_sl_W1_fe_x_fw_st_a_o_sl_W1_st_a),
         .x_fw_tap_i(x_sl_W1_su_l0_x_fw_tap_o_sl_W1_fe),
         .x_fw_tap_o(x_sl_W1_fe_x_fw_tap_o_sl_W1_st_a),
         .x_sc_i(x_sl_W1_sc_x_fe_o_sl_W1_fe),
@@ -9544,8 +9387,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W1_fw_x_fe_o_sl_W1_stm),
         .x_sc_i(x_sl_W1_su_l1_x_sc_fw_o_sl_W1_fw),
         .x_sc_o(x_sl_W1_fw_x_sc_o_sl_W1_su_l1),
-        .x_st_a_o(x_sl_W1_fw_x_st_a_o_sl_W1_stm),
-        .x_st_b_o(x_sl_W1_fw_x_st_b_o_sl_W1_su_l1),
         .x_stm_i(x_sl_W1_stm_x_fw_o_sl_W1_fw),
         .x_stm_o(x_sl_W1_fw_x_stm_o_sl_W1_stm),
         .x_su_c_ctl_i(x_sl_W1_su_l1_x_su_c_ctl_o_sl_W1_fw),
@@ -9645,7 +9486,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_W1_hc2_x_tap_hc3_o_sl_W1_hc3),
         .x_tap_o(x_sl_W1_hc3_x_tap_o_sl_W1_hc2)
     );
-    qfd_qc_slw_sc sl_W1_sc (
+    qfd_qc_slw_sc_v1 sl_W1_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_W1_tap_cws2_o_sl_W1_sc),
@@ -9665,8 +9506,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W1_sc_x_fw_fe_o_sl_W1_fe),
         .x_fw_i(x_sl_W1_fe_x_fw_sc_o_sl_W1_sc),
         .x_fw_o(x_sl_W1_sc_x_fw_o_sl_W1_su_c),
-        .x_fw_st_a_i(x_sl_W1_stm_x_fw_st_a_o_sl_W1_sc),
-        .x_fw_st_a_o(x_sl_W1_sc_x_fw_st_a_o_sl_W1_fe),
         .x_st_b_fe_i(x_sl_W1_tap_x_st_b_fe_o_sl_W1_sc),
         .x_st_b_fe_o(x_sl_W1_sc_x_st_b_fe_o_sl_W1_su_c),
         .x_stm_fe_i(x_sl_W1_stm_x_fe_o_sl_W1_sc),
@@ -9677,7 +9516,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_W1_sc_x_su_l1_ctl_o_sl_W1_tap),
         .x_su_l1_i(x_sl_W1_su_c_x_su_l1_sc_o_sl_W1_sc)
     );
-    qfd_qc_slw_st_a sl_W1_st_a (
+    qfd_qc_slw_st_a_v1 sl_W1_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W1_tap_b_tw_data_ctl_st_a_o_sl_W1_st_a),
@@ -9689,7 +9528,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_W1_hc3_x_ctl_st_a_o_sl_W1_st_a),
         .x_ctl_o(x_sl_W1_st_a_x_ctl_o_sl_W1_hc3),
         .x_fe_o(x_sl_W1_st_a_x_fe_o_sl_W1_fe),
-        .x_fw_i(x_sl_W1_fe_x_fw_st_a_o_sl_W1_st_a),
         .x_fw_tap_i(x_sl_W1_fe_x_fw_tap_o_sl_W1_st_a),
         .x_fw_tap_o(x_sl_W1_st_a_x_fw_tap_o_sl_W1_tap),
         .x_hc1_i(x_sl_W1_hc3_x_hc1_st_a_o_sl_W1_st_a),
@@ -9701,7 +9539,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_W1_fe_x_su_l0_ctl_o_sl_W1_st_a),
         .x_su_l0_ctl_o(x_sl_W1_st_a_x_su_l0_ctl_o_sl_W1_tap)
     );
-    qfd_qc_slw_st_b sl_W1_st_b (
+    qfd_qc_slw_st_b_v1 sl_W1_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W1_hc0_cw_s0_sl_W1_st_b),
@@ -9715,14 +9553,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W1_st_b_x_fe_o_sl_W1_ctl),
         .x_fw_ctl_i(x_sl_W1_fw_x_ctl_o_sl_W1_st_b),
         .x_fw_ctl_o(x_sl_W1_st_b_x_fw_ctl_o_sl_W1_ctl),
-        .x_fw_i(x_sl_W1_ctl_x_fw_st_b_o_sl_W1_st_b),
         .x_hc1_i(x_sl_W1_ctl_x_hc1_st_b_o_sl_W1_st_b),
         .x_st_a_i(x_sl_W1_ctl_x_st_a_st_b_o_sl_W1_st_b),
         .x_st_a_o(x_sl_W1_st_b_x_st_a_o_sl_W1_ctl),
         .x_su_c_ctl_i(x_sl_W1_fw_x_su_c_ctl_o_sl_W1_st_b),
         .x_su_c_ctl_o(x_sl_W1_st_b_x_su_c_ctl_o_sl_W1_ctl)
     );
-    qfd_qc_slw_stm sl_W1_stm (
+    qfd_qc_slw_stm_v1 sl_W1_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_W1_stm_b_tw_data_ctl_o_sl_W1_ctl),
@@ -9742,16 +9579,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W1_stm_x_fw_fe_o_sl_W1_sc),
         .x_fw_i(x_sl_W1_fw_x_stm_o_sl_W1_stm),
         .x_fw_o(x_sl_W1_stm_x_fw_o_sl_W1_fw),
-        .x_fw_st_a_i(x_sl_W1_fw_x_st_a_o_sl_W1_stm),
-        .x_fw_st_a_o(x_sl_W1_stm_x_fw_st_a_o_sl_W1_sc),
-        .x_fw_st_b_i(x_sl_W1_su_c_x_fw_st_b_o_sl_W1_stm),
-        .x_fw_st_b_o(x_sl_W1_stm_x_fw_st_b_o_sl_W1_ctl),
         .x_st_a_o(x_sl_W1_stm_x_st_a_o_sl_W1_su_c),
         .x_su_l0_i(x_sl_W1_su_c_x_su_l0_stm_o_sl_W1_stm),
         .x_su_l1_i(x_sl_W1_su_c_x_su_l1_stm_o_sl_W1_stm),
         .x_tap_o(x_sl_W1_stm_x_tap_o_sl_W1_ctl)
     );
-    qfd_qc_slw_su_c sl_W1_su_c (
+    qfd_qc_slw_su_c_v1 sl_W1_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_W1_stm_cws1_o_sl_W1_su_c),
@@ -9768,8 +9601,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W1_su_c_x_ctl_o_sl_W1_su_l1),
         .x_fw_sc_i(x_sl_W1_su_l1_x_fw_sc_o_sl_W1_su_c),
         .x_fw_sc_o(x_sl_W1_su_c_x_fw_sc_o_sl_W1_su_l0),
-        .x_fw_st_b_i(x_sl_W1_su_l1_x_fw_st_b_o_sl_W1_su_c),
-        .x_fw_st_b_o(x_sl_W1_su_c_x_fw_st_b_o_sl_W1_stm),
         .x_fw_tap_i(x_sl_W1_su_l1_x_fw_tap_o_sl_W1_su_c),
         .x_fw_tap_o(x_sl_W1_su_c_x_fw_tap_o_sl_W1_su_l0),
         .x_sc_fw_i(x_sl_W1_sc_x_fw_o_sl_W1_su_c),
@@ -9820,7 +9651,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_W1_su_c_x_su_l0_o_sl_W1_su_l0),
         .x_su_c_o(x_sl_W1_su_l0_x_su_c_o_sl_W1_su_c)
     );
-    qfd_qc_slw_su_l1 sl_W1_su_l1 (
+    qfd_qc_slw_su_l1_v1 sl_W1_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W1_fw_cws0_o_sl_W1_su_l1),
@@ -9833,8 +9664,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W1_su_l1_x_ctl_o_sl_W1_su_c),
         .x_fw_sc_i(x_sl_W1_fw_x_sc_o_sl_W1_su_l1),
         .x_fw_sc_o(x_sl_W1_su_l1_x_fw_sc_o_sl_W1_su_c),
-        .x_fw_st_b_i(x_sl_W1_fw_x_st_b_o_sl_W1_su_l1),
-        .x_fw_st_b_o(x_sl_W1_su_l1_x_fw_st_b_o_sl_W1_su_c),
         .x_fw_tap_i(x_sl_W1_fw_x_tap_o_sl_W1_su_l1),
         .x_fw_tap_o(x_sl_W1_su_l1_x_fw_tap_o_sl_W1_su_c),
         .x_sc_fw_i(x_sl_W1_su_c_x_sc_fw_o_sl_W1_su_l1),
@@ -10348,7 +10177,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_W2_sc_x_su_l1_ctl_o_sl_W2_tap),
         .x_su_l1_ctl_o(x_sl_W2_tap_x_su_l1_ctl_o_sl_W2_ctl)
     );
-    qfd_qc_sle_ctl sl_W3_ctl (
+    qfd_qc_sle_ctl_v1 sl_W3_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W3_stm_b_tw_data_ctl_o_sl_W3_ctl),
@@ -10358,8 +10187,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_W3_ctl_flt_o_sl_W3_stm),
         .x_fw_i(x_sl_W3_st_b_x_fw_ctl_o_sl_W3_ctl),
         .x_fw_o(x_sl_W3_ctl_x_fw_o_sl_W3_st_b),
-        .x_fw_st_b_i(x_sl_W3_stm_x_fw_st_b_o_sl_W3_ctl),
-        .x_fw_st_b_o(x_sl_W3_ctl_x_fw_st_b_o_sl_W3_st_b),
         .x_hc0_i(x_sl_W3_hc1_x_hc0_ctl_o_sl_W3_ctl),
         .x_hc1_st_b_i(x_sl_W3_hc1_x_st_b_o_sl_W3_ctl),
         .x_hc1_st_b_o(x_sl_W3_ctl_x_hc1_st_b_o_sl_W3_st_b),
@@ -10421,8 +10248,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_o(x_sl_W3_fe_x_fw_o_sl_W3_sc),
         .x_fw_sc_i(x_sl_W3_su_l0_x_fw_sc_o_sl_W3_fe),
         .x_fw_sc_o(x_sl_W3_fe_x_fw_sc_o_sl_W3_sc),
-        .x_fw_st_a_i(x_sl_W3_sc_x_fw_st_a_o_sl_W3_fe),
-        .x_fw_st_a_o(x_sl_W3_fe_x_fw_st_a_o_sl_W3_st_a),
         .x_fw_tap_i(x_sl_W3_su_l0_x_fw_tap_o_sl_W3_fe),
         .x_fw_tap_o(x_sl_W3_fe_x_fw_tap_o_sl_W3_st_a),
         .x_sc_i(x_sl_W3_sc_x_fe_o_sl_W3_fe),
@@ -10474,8 +10299,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W3_fw_x_fe_o_sl_W3_stm),
         .x_sc_i(x_sl_W3_su_l1_x_sc_fw_o_sl_W3_fw),
         .x_sc_o(x_sl_W3_fw_x_sc_o_sl_W3_su_l1),
-        .x_st_a_o(x_sl_W3_fw_x_st_a_o_sl_W3_stm),
-        .x_st_b_o(x_sl_W3_fw_x_st_b_o_sl_W3_su_l1),
         .x_stm_i(x_sl_W3_stm_x_fw_o_sl_W3_fw),
         .x_stm_o(x_sl_W3_fw_x_stm_o_sl_W3_stm),
         .x_su_c_ctl_i(x_sl_W3_su_l1_x_su_c_ctl_o_sl_W3_fw),
@@ -10575,7 +10398,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_W3_hc2_x_tap_hc3_o_sl_W3_hc3),
         .x_tap_o(x_sl_W3_hc3_x_tap_o_sl_W3_hc2)
     );
-    qfd_qc_slw_sc sl_W3_sc (
+    qfd_qc_slw_sc_v1 sl_W3_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_W3_tap_cws2_o_sl_W3_sc),
@@ -10595,8 +10418,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W3_sc_x_fw_fe_o_sl_W3_fe),
         .x_fw_i(x_sl_W3_fe_x_fw_sc_o_sl_W3_sc),
         .x_fw_o(x_sl_W3_sc_x_fw_o_sl_W3_su_c),
-        .x_fw_st_a_i(x_sl_W3_stm_x_fw_st_a_o_sl_W3_sc),
-        .x_fw_st_a_o(x_sl_W3_sc_x_fw_st_a_o_sl_W3_fe),
         .x_st_b_fe_i(x_sl_W3_tap_x_st_b_fe_o_sl_W3_sc),
         .x_st_b_fe_o(x_sl_W3_sc_x_st_b_fe_o_sl_W3_su_c),
         .x_stm_fe_i(x_sl_W3_stm_x_fe_o_sl_W3_sc),
@@ -10607,7 +10428,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_W3_sc_x_su_l1_ctl_o_sl_W3_tap),
         .x_su_l1_i(x_sl_W3_su_c_x_su_l1_sc_o_sl_W3_sc)
     );
-    qfd_qc_slw_st_a sl_W3_st_a (
+    qfd_qc_slw_st_a_v1 sl_W3_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W3_tap_b_tw_data_ctl_st_a_o_sl_W3_st_a),
@@ -10619,7 +10440,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_W3_hc3_x_ctl_st_a_o_sl_W3_st_a),
         .x_ctl_o(x_sl_W3_st_a_x_ctl_o_sl_W3_hc3),
         .x_fe_o(x_sl_W3_st_a_x_fe_o_sl_W3_fe),
-        .x_fw_i(x_sl_W3_fe_x_fw_st_a_o_sl_W3_st_a),
         .x_fw_tap_i(x_sl_W3_fe_x_fw_tap_o_sl_W3_st_a),
         .x_fw_tap_o(x_sl_W3_st_a_x_fw_tap_o_sl_W3_tap),
         .x_hc1_i(x_sl_W3_hc3_x_hc1_st_a_o_sl_W3_st_a),
@@ -10631,7 +10451,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_W3_fe_x_su_l0_ctl_o_sl_W3_st_a),
         .x_su_l0_ctl_o(x_sl_W3_st_a_x_su_l0_ctl_o_sl_W3_tap)
     );
-    qfd_qc_slw_st_b sl_W3_st_b (
+    qfd_qc_slw_st_b_v1 sl_W3_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W3_hc0_cw_s0_sl_W3_st_b),
@@ -10645,14 +10465,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W3_st_b_x_fe_o_sl_W3_ctl),
         .x_fw_ctl_i(x_sl_W3_fw_x_ctl_o_sl_W3_st_b),
         .x_fw_ctl_o(x_sl_W3_st_b_x_fw_ctl_o_sl_W3_ctl),
-        .x_fw_i(x_sl_W3_ctl_x_fw_st_b_o_sl_W3_st_b),
         .x_hc1_i(x_sl_W3_ctl_x_hc1_st_b_o_sl_W3_st_b),
         .x_st_a_i(x_sl_W3_ctl_x_st_a_st_b_o_sl_W3_st_b),
         .x_st_a_o(x_sl_W3_st_b_x_st_a_o_sl_W3_ctl),
         .x_su_c_ctl_i(x_sl_W3_fw_x_su_c_ctl_o_sl_W3_st_b),
         .x_su_c_ctl_o(x_sl_W3_st_b_x_su_c_ctl_o_sl_W3_ctl)
     );
-    qfd_qc_slw_stm sl_W3_stm (
+    qfd_qc_slw_stm_v1 sl_W3_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_W3_stm_b_tw_data_ctl_o_sl_W3_ctl),
@@ -10672,16 +10491,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W3_stm_x_fw_fe_o_sl_W3_sc),
         .x_fw_i(x_sl_W3_fw_x_stm_o_sl_W3_stm),
         .x_fw_o(x_sl_W3_stm_x_fw_o_sl_W3_fw),
-        .x_fw_st_a_i(x_sl_W3_fw_x_st_a_o_sl_W3_stm),
-        .x_fw_st_a_o(x_sl_W3_stm_x_fw_st_a_o_sl_W3_sc),
-        .x_fw_st_b_i(x_sl_W3_su_c_x_fw_st_b_o_sl_W3_stm),
-        .x_fw_st_b_o(x_sl_W3_stm_x_fw_st_b_o_sl_W3_ctl),
         .x_st_a_o(x_sl_W3_stm_x_st_a_o_sl_W3_su_c),
         .x_su_l0_i(x_sl_W3_su_c_x_su_l0_stm_o_sl_W3_stm),
         .x_su_l1_i(x_sl_W3_su_c_x_su_l1_stm_o_sl_W3_stm),
         .x_tap_o(x_sl_W3_stm_x_tap_o_sl_W3_ctl)
     );
-    qfd_qc_slw_su_c sl_W3_su_c (
+    qfd_qc_slw_su_c_v1 sl_W3_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_W3_stm_cws1_o_sl_W3_su_c),
@@ -10698,8 +10513,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W3_su_c_x_ctl_o_sl_W3_su_l1),
         .x_fw_sc_i(x_sl_W3_su_l1_x_fw_sc_o_sl_W3_su_c),
         .x_fw_sc_o(x_sl_W3_su_c_x_fw_sc_o_sl_W3_su_l0),
-        .x_fw_st_b_i(x_sl_W3_su_l1_x_fw_st_b_o_sl_W3_su_c),
-        .x_fw_st_b_o(x_sl_W3_su_c_x_fw_st_b_o_sl_W3_stm),
         .x_fw_tap_i(x_sl_W3_su_l1_x_fw_tap_o_sl_W3_su_c),
         .x_fw_tap_o(x_sl_W3_su_c_x_fw_tap_o_sl_W3_su_l0),
         .x_sc_fw_i(x_sl_W3_sc_x_fw_o_sl_W3_su_c),
@@ -10750,7 +10563,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_W3_su_c_x_su_l0_o_sl_W3_su_l0),
         .x_su_c_o(x_sl_W3_su_l0_x_su_c_o_sl_W3_su_c)
     );
-    qfd_qc_slw_su_l1 sl_W3_su_l1 (
+    qfd_qc_slw_su_l1_v1 sl_W3_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W3_fw_cws0_o_sl_W3_su_l1),
@@ -10763,8 +10576,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W3_su_l1_x_ctl_o_sl_W3_su_c),
         .x_fw_sc_i(x_sl_W3_fw_x_sc_o_sl_W3_su_l1),
         .x_fw_sc_o(x_sl_W3_su_l1_x_fw_sc_o_sl_W3_su_c),
-        .x_fw_st_b_i(x_sl_W3_fw_x_st_b_o_sl_W3_su_l1),
-        .x_fw_st_b_o(x_sl_W3_su_l1_x_fw_st_b_o_sl_W3_su_c),
         .x_fw_tap_i(x_sl_W3_fw_x_tap_o_sl_W3_su_l1),
         .x_fw_tap_o(x_sl_W3_su_l1_x_fw_tap_o_sl_W3_su_c),
         .x_sc_fw_i(x_sl_W3_su_c_x_sc_fw_o_sl_W3_su_l1),
@@ -11278,7 +11089,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_W4_sc_x_su_l1_ctl_o_sl_W4_tap),
         .x_su_l1_ctl_o(x_sl_W4_tap_x_su_l1_ctl_o_sl_W4_ctl)
     );
-    qfd_qc_sle_ctl sl_W5_ctl (
+    qfd_qc_sle_ctl_v1 sl_W5_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W5_stm_b_tw_data_ctl_o_sl_W5_ctl),
@@ -11288,8 +11099,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .flt_o(x_sl_W5_ctl_flt_o_sl_W5_stm),
         .x_fw_i(x_sl_W5_st_b_x_fw_ctl_o_sl_W5_ctl),
         .x_fw_o(x_sl_W5_ctl_x_fw_o_sl_W5_st_b),
-        .x_fw_st_b_i(x_sl_W5_stm_x_fw_st_b_o_sl_W5_ctl),
-        .x_fw_st_b_o(x_sl_W5_ctl_x_fw_st_b_o_sl_W5_st_b),
         .x_hc0_i(x_sl_W5_hc1_x_hc0_ctl_o_sl_W5_ctl),
         .x_hc1_st_b_i(x_sl_W5_hc1_x_st_b_o_sl_W5_ctl),
         .x_hc1_st_b_o(x_sl_W5_ctl_x_hc1_st_b_o_sl_W5_st_b),
@@ -11351,8 +11160,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_o(x_sl_W5_fe_x_fw_o_sl_W5_sc),
         .x_fw_sc_i(x_sl_W5_su_l0_x_fw_sc_o_sl_W5_fe),
         .x_fw_sc_o(x_sl_W5_fe_x_fw_sc_o_sl_W5_sc),
-        .x_fw_st_a_i(x_sl_W5_sc_x_fw_st_a_o_sl_W5_fe),
-        .x_fw_st_a_o(x_sl_W5_fe_x_fw_st_a_o_sl_W5_st_a),
         .x_fw_tap_i(x_sl_W5_su_l0_x_fw_tap_o_sl_W5_fe),
         .x_fw_tap_o(x_sl_W5_fe_x_fw_tap_o_sl_W5_st_a),
         .x_sc_i(x_sl_W5_sc_x_fe_o_sl_W5_fe),
@@ -11405,8 +11212,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W5_fw_x_fe_o_sl_W5_stm),
         .x_sc_i(x_sl_W5_su_l1_x_sc_fw_o_sl_W5_fw),
         .x_sc_o(x_sl_W5_fw_x_sc_o_sl_W5_su_l1),
-        .x_st_a_o(x_sl_W5_fw_x_st_a_o_sl_W5_stm),
-        .x_st_b_o(x_sl_W5_fw_x_st_b_o_sl_W5_su_l1),
         .x_stm_i(x_sl_W5_stm_x_fw_o_sl_W5_fw),
         .x_stm_o(x_sl_W5_fw_x_stm_o_sl_W5_stm),
         .x_su_c_ctl_i(x_sl_W5_su_l1_x_su_c_ctl_o_sl_W5_fw),
@@ -11506,7 +11311,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_W5_hc2_x_tap_hc3_o_sl_W5_hc3),
         .x_tap_o(x_sl_W5_hc3_x_tap_o_sl_W5_hc2)
     );
-    qfd_qc_slw_sc sl_W5_sc (
+    qfd_qc_slw_sc_v1 sl_W5_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_W5_tap_cws2_o_sl_W5_sc),
@@ -11526,8 +11331,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W5_sc_x_fw_fe_o_sl_W5_fe),
         .x_fw_i(x_sl_W5_fe_x_fw_sc_o_sl_W5_sc),
         .x_fw_o(x_sl_W5_sc_x_fw_o_sl_W5_su_c),
-        .x_fw_st_a_i(x_sl_W5_stm_x_fw_st_a_o_sl_W5_sc),
-        .x_fw_st_a_o(x_sl_W5_sc_x_fw_st_a_o_sl_W5_fe),
         .x_st_b_fe_i(x_sl_W5_tap_x_st_b_fe_o_sl_W5_sc),
         .x_st_b_fe_o(x_sl_W5_sc_x_st_b_fe_o_sl_W5_su_c),
         .x_stm_fe_i(x_sl_W5_stm_x_fe_o_sl_W5_sc),
@@ -11538,7 +11341,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_o(x_sl_W5_sc_x_su_l1_ctl_o_sl_W5_tap),
         .x_su_l1_i(x_sl_W5_su_c_x_su_l1_sc_o_sl_W5_sc)
     );
-    qfd_qc_slw_st_a sl_W5_st_a (
+    qfd_qc_slw_st_a_v1 sl_W5_st_a (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W5_tap_b_tw_data_ctl_st_a_o_sl_W5_st_a),
@@ -11550,7 +11353,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_i(x_sl_W5_hc3_x_ctl_st_a_o_sl_W5_st_a),
         .x_ctl_o(x_sl_W5_st_a_x_ctl_o_sl_W5_hc3),
         .x_fe_o(x_sl_W5_st_a_x_fe_o_sl_W5_fe),
-        .x_fw_i(x_sl_W5_fe_x_fw_st_a_o_sl_W5_st_a),
         .x_fw_tap_i(x_sl_W5_fe_x_fw_tap_o_sl_W5_st_a),
         .x_fw_tap_o(x_sl_W5_st_a_x_fw_tap_o_sl_W5_tap),
         .x_hc1_i(x_sl_W5_hc3_x_hc1_st_a_o_sl_W5_st_a),
@@ -11562,7 +11364,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l0_ctl_i(x_sl_W5_fe_x_su_l0_ctl_o_sl_W5_st_a),
         .x_su_l0_ctl_o(x_sl_W5_st_a_x_su_l0_ctl_o_sl_W5_tap)
     );
-    qfd_qc_slw_st_b sl_W5_st_b (
+    qfd_qc_slw_st_b_v1 sl_W5_st_b (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W5_hc0_cw_s0_sl_W5_st_b),
@@ -11576,14 +11378,13 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_o(x_sl_W5_st_b_x_fe_o_sl_W5_ctl),
         .x_fw_ctl_i(x_sl_W5_fw_x_ctl_o_sl_W5_st_b),
         .x_fw_ctl_o(x_sl_W5_st_b_x_fw_ctl_o_sl_W5_ctl),
-        .x_fw_i(x_sl_W5_ctl_x_fw_st_b_o_sl_W5_st_b),
         .x_hc1_i(x_sl_W5_ctl_x_hc1_st_b_o_sl_W5_st_b),
         .x_st_a_i(x_sl_W5_ctl_x_st_a_st_b_o_sl_W5_st_b),
         .x_st_a_o(x_sl_W5_st_b_x_st_a_o_sl_W5_ctl),
         .x_su_c_ctl_i(x_sl_W5_fw_x_su_c_ctl_o_sl_W5_st_b),
         .x_su_c_ctl_o(x_sl_W5_st_b_x_su_c_ctl_o_sl_W5_ctl)
     );
-    qfd_qc_slw_stm sl_W5_stm (
+    qfd_qc_slw_stm_v1 sl_W5_stm (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_ctl_o(x_sl_W5_stm_b_tw_data_ctl_o_sl_W5_ctl),
@@ -11603,16 +11404,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_fe_o(x_sl_W5_stm_x_fw_fe_o_sl_W5_sc),
         .x_fw_i(x_sl_W5_fw_x_stm_o_sl_W5_stm),
         .x_fw_o(x_sl_W5_stm_x_fw_o_sl_W5_fw),
-        .x_fw_st_a_i(x_sl_W5_fw_x_st_a_o_sl_W5_stm),
-        .x_fw_st_a_o(x_sl_W5_stm_x_fw_st_a_o_sl_W5_sc),
-        .x_fw_st_b_i(x_sl_W5_su_c_x_fw_st_b_o_sl_W5_stm),
-        .x_fw_st_b_o(x_sl_W5_stm_x_fw_st_b_o_sl_W5_ctl),
         .x_st_a_o(x_sl_W5_stm_x_st_a_o_sl_W5_su_c),
         .x_su_l0_i(x_sl_W5_su_c_x_su_l0_stm_o_sl_W5_stm),
         .x_su_l1_i(x_sl_W5_su_c_x_su_l1_stm_o_sl_W5_stm),
         .x_tap_o(x_sl_W5_stm_x_tap_o_sl_W5_ctl)
     );
-    qfd_qc_slw_su_c sl_W5_su_c (
+    qfd_qc_slw_su_c_v1 sl_W5_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_W5_stm_cws1_o_sl_W5_su_c),
@@ -11629,8 +11426,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W5_su_c_x_ctl_o_sl_W5_su_l1),
         .x_fw_sc_i(x_sl_W5_su_l1_x_fw_sc_o_sl_W5_su_c),
         .x_fw_sc_o(x_sl_W5_su_c_x_fw_sc_o_sl_W5_su_l0),
-        .x_fw_st_b_i(x_sl_W5_su_l1_x_fw_st_b_o_sl_W5_su_c),
-        .x_fw_st_b_o(x_sl_W5_su_c_x_fw_st_b_o_sl_W5_stm),
         .x_fw_tap_i(x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c),
         .x_fw_tap_o(x_sl_W5_su_c_x_fw_tap_o_sl_W5_su_l0),
         .x_sc_fw_i(x_sl_W5_sc_x_fw_o_sl_W5_su_c),
@@ -11681,7 +11476,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_W5_su_c_x_su_l0_o_sl_W5_su_l0),
         .x_su_c_o(x_sl_W5_su_l0_x_su_c_o_sl_W5_su_c)
     );
-    qfd_qc_slw_su_l1 sl_W5_su_l1 (
+    qfd_qc_slw_su_l1_v1 sl_W5_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W5_fw_cws0_o_sl_W5_su_l1),
@@ -11694,8 +11489,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_ctl_o(x_sl_W5_su_l1_x_ctl_o_sl_W5_su_c),
         .x_fw_sc_i(x_sl_W5_fw_x_sc_o_sl_W5_su_l1),
         .x_fw_sc_o(x_sl_W5_su_l1_x_fw_sc_o_sl_W5_su_c),
-        .x_fw_st_b_i(x_sl_W5_fw_x_st_b_o_sl_W5_su_l1),
-        .x_fw_st_b_o(x_sl_W5_su_l1_x_fw_st_b_o_sl_W5_su_c),
         .x_fw_tap_i(x_sl_W5_fw_x_tap_o_sl_W5_su_l1),
         .x_fw_tap_o(x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c),
         .x_sc_fw_i(x_sl_W5_su_c_x_sc_fw_o_sl_W5_su_l1),
@@ -11772,6 +11565,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .kwd(x_native59_tt_kwd_kwd_o_tt_ctlm),
         .layer_context_v__to_glue__sys_face__tt_layer_context_v(x_tt_ctlm_layer_context_v_to_glue_sys_face_tt_layer_context_v_native59),
         .layer_context_v__to_native59__layer_context_v(x_tt_ctlm_layer_context_v_to_native59_layer_context_v_native59),
+        .mu_flt_i(x_native59_mufl_o_tt_ctlm),
         .native_cmd(x_tt_ctlm_native_cmd_native59),
         .native_pos__to_glue__sys_face__tt_native_pos(x_tt_ctlm_native_pos_to_glue_sys_face_tt_native_pos_native59),
         .native_pos__to_native59__native_position(x_tt_ctlm_native_pos_to_native59_native_position_native59),
@@ -11781,18 +11575,17 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .program_obs(x_tt_ctlm_program_obs_native59),
         .pw(x_native59_tt_pw_pw_o_tt_ctlm),
         .ss5(x_coll_f4_ss_wo_ss5_o_tt_ctlm),
-        .tl(x_tt_ctlm_tl_coll_f4),
-        .xi_core_pw(x_glue_xo_sys_face_tt_pw_tt_ctlm)
+        .tl(x_tt_ctlm_tl_coll_f4)
     );
     ot_qkvd_ucie_x64_phy_part ucie_kv (
         .clk(clk_d2d),
         .arst_n(rst_n),
+        .phy_rst_i(x_glue_kv_phy_rst_o_ucie_kv),
         .rx_flit(x_ucie_kv_rx_flit_glue),
         .rx_v(x_ucie_kv_rx_v_glue),
         .tx_flit(x_glue_d2d_rom_fdi_tx_flit_ucie_kv),
         .tx_up(x_ucie_kv_tx_up_glue),
-        .tx_v(x_glue_d2d_rom_fdi_tx_v_ucie_kv),
-        .xi_core_rst_n(x_glue_xo_d2d_rom_phy_rst_n_ucie_kv)
+        .tx_v(x_glue_d2d_rom_fdi_tx_v_ucie_kv)
     );
 endmodule
 `default_nettype wire
