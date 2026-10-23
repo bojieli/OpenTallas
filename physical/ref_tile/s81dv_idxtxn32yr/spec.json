@@ -157,7 +157,7 @@
    "rtl/lib",
    "tools/s81_dv/tx_export_1021",
    "tools/s81_dv/tx_internal_clock_1022",
-   "results/arch/s81_tx_region_ring_1022/current"
+   "results/arch/s81_tx_region_ring_1022/source6"
   ],
   "benches": [
    {
@@ -181,7 +181,7 @@
      "verilator"
     ],
     "fail_regex": "^TX_MISMATCH ",
-    "fail_witness": "results/arch/s81_tx_region_ring_1022/current/mut7.run.log"
+    "fail_witness": "results/arch/s81_tx_region_ring_1022/source6/main_m7_p0/run.log"
    }
   ]
  },

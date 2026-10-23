@@ -1,0 +1,76 @@
+{
+  "source_commit": "5c359fe7d",
+  "defaults": "RING0; no schedule adoption",
+  "main": {
+    "D": 4,
+    "K": 2,
+    "added_lookup_edges": 6,
+    "reference_LPX": 8
+  },
+  "alternate": {
+    "D": 8,
+    "K": 3,
+    "added_lookup_edges": 8,
+    "reference_LPX": 10
+  },
+  "cases": {
+    "alt_m0_p0": {
+      "result": "PASS",
+      "parent_edges": 2522,
+      "ga_edges": 2522
+    },
+    "alt_m0_p9000": {
+      "result": "PASS",
+      "parent_edges": 2522,
+      "ga_edges": 2521
+    },
+    "alt_m7_p0": {
+      "result": "CAUGHT",
+      "parent_edges": null,
+      "ga_edges": null
+    },
+    "main_m0_p0": {
+      "result": "PASS",
+      "parent_edges": 2522,
+      "ga_edges": 2522
+    },
+    "main_m0_p1000": {
+      "result": "PASS",
+      "parent_edges": 2522,
+      "ga_edges": 2522
+    },
+    "main_m0_p9000": {
+      "result": "PASS",
+      "parent_edges": 2522,
+      "ga_edges": 2521
+    },
+    "main_m7_p0": {
+      "result": "CAUGHT",
+      "parent_edges": null,
+      "ga_edges": null
+    }
+  },
+  "files": {
+    "alt_m0_p0/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "alt_m0_p0/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "alt_m0_p0/run.log": "a268934ac2d3cde475777dfc934930c4a2560a97e72c90ab2a06549dec11af37",
+    "alt_m0_p9000/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "alt_m0_p9000/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "alt_m0_p9000/run.log": "bc956094ec011a860d3c41c1899b19491061b30ecaa559582dccaa282b335a39",
+    "alt_m7_p0/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "alt_m7_p0/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "alt_m7_p0/run.log": "c7525aba7037969b14209209625ceb2a40b7acff39bba70228bf89b91aa01440",
+    "main_m0_p0/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "main_m0_p0/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "main_m0_p0/run.log": "de9a52bc89b369cbb420b36ce11028c6e9b1bf630546c4fcab67beb4edf4f32d",
+    "main_m0_p1000/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "main_m0_p1000/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "main_m0_p1000/run.log": "db81a1f500b22d6f98ac75519c630a334200a14788ed459c8efaedd0ab109928",
+    "main_m0_p9000/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "main_m0_p9000/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "main_m0_p9000/run.log": "171b047a8e93260b74d3df68cac44e94d6f31d303184bc5cabdd097216a84e03",
+    "main_m7_p0/sources.sha256": "5744f2351cfd8ba43c48cb910164174b5f45fd743f3d04ec54ce8e6923638a59",
+    "main_m7_p0/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "main_m7_p0/run.log": "c7525aba7037969b14209209625ceb2a40b7acff39bba70228bf89b91aa01440"
+  }
+}
