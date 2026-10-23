@@ -157,3 +157,16 @@ def test_window_for_fits_after_pg_bands():
             hi = schema.window_for(lo, n, ["M7", "M5"])
             port = dict(id="t", width=n, window_um=[lo, hi], layers=["M7", "M5"], epoch=False)
             assert len(schema.pin_positions(port, L)) == n
+
+
+def test_spread_mirror_equivariant_on_ties():
+    """PLAN-HBMv2: windows with edges between tracks put targets exactly half-way between two tracks; the pick must
+    not depend on floating-point noise (die frame x vs W - x) and the odd middle pin must mirror."""
+    L = {l["name"]: l for l in schema.ASAP7_LAYERS}
+    W = 20217.6
+    for ln, (lo, hi), n in (("M5", (4182.576, 4183.536), 2), ("M7", (4167.936, 4172.544), 13)):
+        p = dict(id="t", window_um=[lo, hi], layers=[ln], width=n, epoch=False)
+        q = dict(p, window_um=[W - hi, W - lo])
+        a = sorted(round(c, 3) for _, _, c in schema.pin_positions(p, L))
+        b = sorted(round(W - c, 3) for _, _, c in schema.pin_positions(q, L))
+        assert a == b, (ln, a, b)
