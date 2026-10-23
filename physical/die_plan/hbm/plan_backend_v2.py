@@ -587,7 +587,7 @@ def build_graph(parts):
     for (a, b), s_ in segs.items():
         s_["cap"] = WIN_PER_UM * s_["len"] * 0.80     # routing margin for slice rounding
         if fl3(a, b, s_['o']):
-            s_["cap"] *= 1.5                            # 3 pin layers (M7/M5 + die M9): 9/um
+            s_["cap"] *= OS3_CAP                        # 3 pin layers (M7/M5 + die M9): up to 9/um; router margin
         adj[a].append((b, (a, b))); adj[b].append((a, (a, b)))
     return segs, adj
 
@@ -603,7 +603,9 @@ def md(p, q):
 # ------------------------------------------------------------------------------------------------ lanes
 SPLIT_OF = {}
 SPLIT_LAND = {}          # P3 (COORD R6 R2-alt): every external SM lane lands on the front quarter c
-SM_MODE = os.environ.get('OT_HBM_SM_MODE', 'off')     # off (published) | inner: COORD R6 rule, G0 FAIL on the current floorplan | strict: no route
+SM_MODE = os.environ.get('OT_HBM_SM_MODE', 'inner_c')  # inner_c (published, COORD option C+A) | off: pre-R6 | inner: COORD R6 rule, G0 FAIL on the current floorplan | strict: no route
+# | inner_c: COORD option (C) 10-23 -- SM ports on c, SM-internal lanes planned, die ft may use the inner SM faces up to
+#   their free capacity (the SM-internal lanes are routed first-class and share the face budget), plus (A) os M9 faces
 
 
 def sm_part(v):
@@ -716,7 +718,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
                     continue
                 if allow is not None and v != t and quadn(v) not in allow:
                     continue
-                if not smint and SM_MODE != 'off' and sm_pair(u, v):
+                if not smint and SM_MODE in ('inner', 'inner_d', 'strict') and sm_pair(u, v):
                     continue                    # COORD R6 (2): die lanes stay off the inner SM faces
                 if SM_MODE == 'strict' and v != t and sm_part(v) and not smint:
                     continue                    # strict: no die feedthrough in any SM quarter
@@ -876,6 +878,7 @@ NOHIST = False
 
 
 OS3 = os.environ.get('OT_HBM_OS3', '1') == '1' and SM_MODE != 'off'   # COORD 10-23 option (A)
+OS3_CAP = float(os.environ.get('OT_HBM_OS3_CAP', '1.2'))
 
 
 def os_part(n):
