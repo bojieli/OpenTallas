@@ -144,9 +144,11 @@ module dsdv_idx_txm_n32 #(
     // far bank's RIL landing, the v/w reject class): RIC = 1 (with RIL, SPLIT = 0) lands re/ra first in ONE kept copy a
     // macro column (banks < WCB / >= WCB) and the per-bank RIL landing then decodes from its column copy: +1 lookup edge
     // (reference LPX + 1), the bank select and the consumer pipe follow like RIL.
-    parameter integer RIC = 0
+    parameter integer RIC = 0,
+    parameter integer RING = 0, RING_D = 4, RING_K = 2
 ) (
     input  wire                 ck,
+    input  wire                 rn,
     input  wire                 re,
     input  wire [$clog2(D)-1:0] ra,
     output reg  [255:0]         rd,
@@ -163,19 +165,46 @@ module dsdv_idx_txm_n32 #(
     generate if (SRAM_MACRO && SPLIT != 0) begin : g_s
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || NB <= WCB) $fatal(1, "dsdv_idx_txm_n32 SPLIT: D must be a multiple of 1024 with NB > WCB");
-        wire [255:0] pa, pb;
-        // column A (banks 0..WCB-1): the hardened child (own clock root)
+        wire [255:0] pa, pb,pa_raw,pb_raw;
+        wire ck_ga,ck_gb;
+        wire re_a,re_b,we_a,we_bb;
+        wire[AW-1:0]ra_a,ra_b,wa_a,wa_bb;
+        wire[255:0]wd_a,wd_bb;
+        wire[15:0]wm_a,wm_b;
+        if(RING!=0)begin:g_ring
+            localparam integer BW=2+2*AW+256+16;
+            wire[BW-1:0]a_i={re,ra,we,wa,wd,wm_next};
+            wire[BW-1:0]b_i={re,ra,(WDC!=0)?we_b:we,(WDC!=0)?wa_b:wa,(WDC!=0)?wd_b:wd,wm_next};
+            wire[BW-1:0]a_o,b_o;
+            wire[3:0]rr;
+            ot_rst_relay #(.REGIONS(4))u_rr(.clk(ck),.rst_n_in(rn),.rst_n(rr));
+            dsdv_tx_clock_branch #(.ID(1))u_ck_a(.ck(ck),.ck_o(ck_ga));
+            dsdv_tx_clock_branch #(.ID(2))u_ck_b(.ck(ck),.ck_o(ck_gb));
+            dsdv_tx_region_ring #(.W(BW),.D(RING_D),.K(RING_K),.ID(100))u_in_a(
+                .src_ck(ck),.dst_ck(ck_ga),.rn(rr[0]),.d(a_i),.q(a_o));
+            dsdv_tx_region_ring #(.W(BW),.D(RING_D),.K(RING_K),.ID(200))u_in_b(
+                .src_ck(ck),.dst_ck(ck_gb),.rn(rr[1]),.d(b_i),.q(b_o));
+            assign {re_a,ra_a,we_a,wa_a,wd_a,wm_a}=a_o;
+            assign {re_b,ra_b,we_bb,wa_bb,wd_bb,wm_b}=b_o;
+            dsdv_tx_region_ring #(.W(256),.D(RING_D),.K(RING_K),.ID(300))u_out_a(
+                .src_ck(ck_ga),.dst_ck(ck),.rn(rr[2]),.d(pa_raw),.q(pa));
+            dsdv_tx_region_ring #(.W(256),.D(RING_D),.K(RING_K),.ID(400))u_out_b(
+                .src_ck(ck_gb),.dst_ck(ck),.rn(rr[3]),.d(pb_raw),.q(pb));
+        end else begin:g_direct
+            assign ck_ga=ck;assign ck_gb=ck;
+            assign {re_a,ra_a,we_a,wa_a,wd_a,wm_a}={re,ra,we,wa,wd,wm_next};
+            assign {re_b,ra_b,we_bb,wa_bb,wd_bb,wm_b}={re,ra,(WDC!=0)?we_b:we,(WDC!=0)?wa_b:wa,(WDC!=0)?wd_b:wd,wm_next};
+            assign pa=pa_raw;assign pb=pb_raw;
+        end
 `ifdef OT_DSDV_TXGA_HARD
-        dsdv_idx_txm_grp u_ga (   // hard view: hardened with D, B0 0, NG WCB, RDL, WDL, RIL, RIL_MUT, POUT 1
+        dsdv_idx_txm_grp u_ga (
 `else
-        dsdv_idx_txm_grp #(.D(D), .B0(0), .NG(WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_ga (
+        dsdv_idx_txm_grp #(.D(D),.B0(0),.NG(WCB),.RDL(RDL),.WDL(WDL),.RIL(RIL),.RIL_MUT(RIL_MUT),.POUT(1))u_ga(
 `endif
-            .ck(ck), .re(re), .ra(ra), .we(we), .wa(wa), .wd(wd), .wm_next(wm_next), .p(pa));
-        // column B (banks WCB..NB-1, fed by the WDC copy of the write port when WDC = 1)
-        `OT_TXGRP_SOFT #(.D(D), .B0(WCB), .NG(NB - WCB), .RDL(RDL), .WDL(WDL), .RIL(RIL), .RIL_MUT(RIL_MUT), .POUT(1)) u_gb (
-            .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
-            .wm_next(wm_next), .p(pb));
-        always @* rd = pa | pb;  // POUT = 1: pa / pb are the groups' pin flops (same edge as the former rd register)
+            .ck(ck_ga),.re(re_a),.ra(ra_a),.we(we_a),.wa(wa_a),.wd(wd_a),.wm_next(wm_a),.p(pa_raw));
+        `OT_TXGRP_SOFT #(.D(D),.B0(WCB),.NG(NB-WCB),.RDL(RDL),.WDL(WDL),.RIL(RIL),.RIL_MUT(RIL_MUT),.POUT(1))u_gb(
+            .ck(ck_gb),.re(re_b),.ra(ra_b),.we(we_bb),.wa(wa_bb),.wd(wd_bb),.wm_next(wm_b),.p(pb_raw));
+        always @* rd=pa|pb;
     end endgenerate
     // STW-S81c-TOK4 10-22: independent generate ifs (yosys named an else-if branch genblk1.g_m -> kit macro paths u_sm.g_m.* not found)
     generate if (SRAM_MACRO && SPLIT == 0) begin : g_m
@@ -424,7 +453,8 @@ module dsdv_idx_tx_n32 #(
     parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
     parameter integer RHP = 0,      // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
     parameter integer SPLIT = 0,    // STW-S81c-TOK4 10-22: score store as two bank groups (column A hardened child), 0 cycles
-    parameter integer RIC = 0       // STW-S81c-TOK5 10-22: read issue landed once a macro column before the bank landing (+1 lookup edge)
+    parameter integer RIC = 0,
+    parameter integer RING = 0, RING_D=4, RING_K=2 // STW-S81c-TOK5 10-22: read issue landed once a macro column before the bank landing (+1 lookup edge)
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -594,10 +624,10 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5), .SPLIT(SPLIT), .RIC(RIC),.RING((MUT==7)?0:RING),.RING_D(RING_D),.RING_K(RING_K)) u_sm (.rn(rl[0]),.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
-    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0) + ((RIC != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
+    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0) + ((RIC != 0) ? 1 : 0) + ((RING != 0) ? 2*(RING_K+1) : 0);   // lookup pipe: issue -> rd valid
     reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
