@@ -121,6 +121,16 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
+                # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
+                # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
+                # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).
+                "io": {"type": "array", "items": {
+                    "type": "object", "required": ["name", "kind", "rect_um", "sites", "part", "ports"],
+                    "additionalProperties": False,
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                                   "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
+                                   "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
+                                   "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops

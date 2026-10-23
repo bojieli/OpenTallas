@@ -39,6 +39,10 @@ B) needs the UNION on the trunk; the census rows have no bit ranges, so that was
 `bitcon`, every tree lane must be at least as wide as the union of source bits needed by the destinations downstream
 of it (ERROR 'taptree' per deficit).  forward_via credit WITHOUT a bitcon is an ERROR.
 
+Off-die traffic (COORD 10-23, S81-P5): map the as-built pad / PMA / PHY memory-side endpoints (e.g. SerDes PMA pads,
+HBM DQ/CA) to "@die"; those bits are then checked like any pair against the plan's @die ports, and G0 check_die_io
+requires each @die port in a die.io pad / bump window over its host partition.
+
 How the check works:
 - Every census row whose endpoints map to different partitions (or groups) is inter-partition traffic. For each
   directed pair (A, B), the plan must carry at least the as-built bits on lanes that start on A and end on B.

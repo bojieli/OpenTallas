@@ -377,3 +377,13 @@ def test_zroute_turn_is_L():
     assert check.zroute((0, 10), (50, 100), "W", "N") == [(0, 10), (50, 10), (50, 100)]
     assert check.zroute((10, 0), (100, 50), "S", "E") == [(10, 0), (10, 50), (100, 50)]
     assert check.zroute((0, 10), (100, 30), "W", "E") == [(0, 10), (50.0, 10), (50.0, 30), (100, 30)]
+
+
+def test_die_io_windows():
+    """COORD 10-23 (S81-P5): off-die ports need a pad / bump window over their host partition with enough sites."""
+    assert errs(lambda p: None, "die_io") == []
+    assert any("no pad / bump window" in m for m in errs(lambda p: p["die"]["io"].pop(), "die_io"))
+    assert any("> 20 sites" in m for m in errs(lambda p: p["die"]["io"][0].__setitem__("sites", 20), "die_io"))
+    assert any("not inside its host" in m for m in errs(
+        lambda p: p["die"]["io"][0].__setitem__("rect_um", [900, 8.64, 950, 50]), "die_io"))
+    assert any("not the host" in m for m in errs(lambda p: p["die"]["io"][0].__setitem__("ports", ["dout"]), "die_io"))

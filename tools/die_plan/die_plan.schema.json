@@ -153,6 +153,69 @@
       }
      }
     },
+    "io": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name",
+       "kind",
+       "rect_um",
+       "sites",
+       "part",
+       "ports"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "kind": {
+        "enum": [
+         "bump",
+         "pad",
+         "phy_macro"
+        ]
+       },
+       "rect_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 4,
+        "maxItems": 4
+       },
+       "sites": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "layer": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        },
+        "minItems": 1
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
+    },
     "channels": {
      "type": "array",
      "items": {

@@ -636,6 +636,46 @@ def check_taps_cores(P, R, plan_dir=None):
 
 
 # ------------------------------------------------------------------------------------------------------ types
+def check_die_io(P, R):
+    """COORD 10-23 (S81-P5): every off-die port lands in a declared pad / bump window over its host partition."""
+    io = P.die.get("io")
+    die_ports = {pid: pr for pid, pr in P.ports.items() if DIE_PART in (pr["src"]["part"], pr["dst"]["part"])}
+    if not io:
+        if die_ports:
+            R.warn("die_io", f"{len(die_ports)} die IO ports ({sum(int(p['width']) for p in die_ports.values())} b) "
+                   "and no die.io pad / bump windows: off-die pads (SerDes PMA, HBM PHY memory side, host) unplanned")
+        return dict(windows=0, ports=len(die_ports))
+    seen = {}
+    for w in io:
+        x0, y0, x1, y1 = w["rect_um"]
+        if not (0 <= x0 < x1 <= P.W + EPS and 0 <= y0 < y1 <= P.H + EPS):
+            R.err("die_io", f"io window {w['name']}: rect {w['rect_um']} outside the die")
+        if w["part"] not in P.parts:
+            R.err("die_io", f"io window {w['name']}: unknown host partition {w['part']}")
+            continue
+        px0, py0, px1, py1 = P.rect(w["part"])
+        if x0 < px0 - EPS or y0 < py0 - EPS or x1 > px1 + EPS or y1 > py1 + EPS:
+            R.err("die_io", f"io window {w['name']}: not inside its host partition {w['part']}")
+        bits = 0
+        for pid in w["ports"]:
+            pr = P.ports.get(pid)
+            if pr is None or pid not in die_ports:
+                R.err("die_io", f"io window {w['name']}: {pid} is not a die IO port")
+                continue
+            if pid in seen:
+                R.err("die_io", f"die IO port {pid} in two windows ({seen[pid]}, {w['name']})")
+            seen[pid] = w["name"]
+            end = pr["dst"]["part"] if pr["src"]["part"] == DIE_PART else pr["src"]["part"]
+            if end != w["part"]:
+                R.err("die_io", f"io window {w['name']}: port {pid} ends in {end}, not the host {w['part']}")
+            bits += S.port_pins_count(pr)
+        if bits > w["sites"]:
+            R.err("die_io", f"io window {w['name']}: {bits} signal bits > {w['sites']} sites")
+    for pid in sorted(set(die_ports) - set(seen)):
+        R.err("die_io", f"die IO port {pid} ({die_ports[pid]['width']} b) has no pad / bump window (die.io)")
+    return dict(windows=len(io), ports=len(die_ports), placed=len(seen))
+
+
 def check_seams(P, R):
     """Seam-net invariant (COORD 10-23, OpenROAD abutment semantics): every inter-partition port bit is ONE 2-pin net,
     boundary flop to boundary flop -- one out bus (src boundary flop or ft station) to one in bus (dst boundary flop or
@@ -715,6 +755,7 @@ def run(raw, png=None, plan_dir=None):
     summ["latency"] = check_latency(P, R)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
+    summ["die_io"] = check_die_io(P, R)
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:
