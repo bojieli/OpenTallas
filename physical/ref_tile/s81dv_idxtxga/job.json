@@ -2,12 +2,12 @@
  "name": "s81dv_idxtxga-ga-COMMIT",
  "block": "dsdv_idx_txm_grp",
  "ref_tile": true,
- "owner": "STW-S81c-TOK4",
+ "owner": "STW-S81c-TOK5",
  "purpose": "TX y FB child: score-store column A (5 banks), own clock root",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81-topk-tx-x-1022",
+  "branch": "claude/s81-topk-txy-pout-1022",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
