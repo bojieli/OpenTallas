@@ -1,0 +1,95 @@
+{
+  "status": "ACTUAL_POSTPIN_DISPATCH_TO_SOURCE_AND_NATIVE_F16_WITNESS_PASS",
+  "selected_slice_commit": "7b4d2392e",
+  "source_method": "Exact actual SETID/target/valid/kind/PROG PC decoder cut after existing command pin-register/regional reset; twelve cut instances enumerated through real SETID, never fixed SID ties. One actual unicast selected read event may join per edge; >1 is fatal, no event dropped. Full arithmetic/PROG data storage excluded from this minimum observer proof.",
+  "observer": "Actual selected read-enable/PC/slice ID -> registered38b typed event, one edge. Canonical PIDX128 derives user from actual selectedPC[8:7].",
+  "context_scope": "Actual command context stage/token is supplied by immutable stimulus here; upstream real calendar identity output and GEN transport still open.",
+  "runs": [
+    {
+      "unit": "oth-ubuntu-3249490-1792732754",
+      "face": "source qfd_tt_ctlm_dv_wtn SAFE_PHYS"
+    },
+    {
+      "unit": "oth-ubuntu-3272918-1792732955",
+      "face": "actual qfd_tt_ctlm_dv_wtn_native32 from TLD7b"
+    }
+  ],
+  "verilator": "5.050",
+  "mem_gb": 24,
+  "threads": 2,
+  "nominal": {
+    "edges": 26823,
+    "groups": 65,
+    "retired": 5,
+    "starts": 5,
+    "maxlive": 4,
+    "mismatches": 0,
+    "reference_fault": 0,
+    "actual_face_fault": 0
+  },
+  "begin": "PASS actual face withdraws while reference remains clean",
+  "causals": {
+    "TAP_WRONG_PC": "Actual dispatched wrong identity reaches face fault and TAP_CAUSAL_REJECT nonzero",
+    "TAP_WRONG_USER": "Actual dispatched wrong identity reaches face fault and TAP_CAUSAL_REJECT nonzero",
+    "TAP_INSTALLED_EPOCH": "Actual dispatched wrong identity reaches face fault and TAP_CAUSAL_REJECT nonzero"
+  },
+  "limits": [
+    "One immutable nominal fixture plus BEGIN and three actual dispatch-side causal runs per face; generated27other stimulus files were not executed here.",
+    "Retire/ME_XPF_retired remains supplied stimulus: no final-read receipt or whole programme/token claim.",
+    "No whole slice hierarchy, upstream actual calendar-context generation, static return collector, GEN distance, native mapping of new slice lane or physical qualification."
+  ],
+  "sources": [
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/actual_wtn_helpers.sv",
+      "sha256": "c1c5e26f95ada846c977db103d2beb744a764b0a3ee0876b3d3aec90e3688da3"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/actual_wtn_native32.sv",
+      "sha256": "151bb2ec657e9002cb5e1c3930085dc6c1981dd3e57afd304d309cbd27e7cd49"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/model_pw.hex",
+      "sha256": "6a8549d158c7879189833f438b5cdd2574b868430d33140b71da300efc3d1525"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/postpin_cut.sv",
+      "sha256": "6f651e66744cf528fcaae61a04173e4560c7a14ea73719ac1dc4886faaa20a6f"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/qfd_dv_typed_su_observer.sv",
+      "sha256": "7b2dac2c2a1f75b1af928f09f0821b90a43df7c7a21fe2681c5046604f48a339"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/qfd_dv_typed_witness_control.sv",
+      "sha256": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/qfd_tt_ctlm_dv_wtn.sv",
+      "sha256": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/run_integrated.sh",
+      "sha256": "5ac543c08487f3d955418c351c098b188731c58c4e682ca4cf77d8f69878f7d9"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/run_integrated_native.sh",
+      "sha256": "64e07cc43e1515640873381a570ffaec0b6b8046f27f10776572b81e8afca7e3"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/tb_actual_face.sv",
+      "sha256": "62b2d6375d8f02b9e30267d982e960c1247d8c9391049d6ebca819ceba816596"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/tb_actual_nativeface.sv",
+      "sha256": "0f44840c31948a97c7d63a11aee56d3a711c3c1ae488c0323ce04f5a3a1969ca"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/tb_qwen_typed_witness_control.sv",
+      "sha256": "476f39b2b793b2a6ae221b9dc9815c00cb58a8866691f9a0070677555333869d"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/issue/integrated/typed_witness_control_vectors.py",
+      "sha256": "e0822b91ac8570d6213418f5bab2eaf1a25e5fc2dc950731d7262ba28f9d0ad6"
+    }
+  ]
+}

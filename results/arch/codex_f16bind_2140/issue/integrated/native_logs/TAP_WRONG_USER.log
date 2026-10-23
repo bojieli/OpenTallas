@@ -1,0 +1,7 @@
+F16_FACE_EDGE_MISMATCH t=2276000 face=10006 ctl=00007
+TWC_SUMMARY en=1 fault=0 obs_fault=0 ready_seen=1 ready_end=1 completions=65 retired=5 starts=5 max_live=4 active_end=0000 first_fault=-1 edges=26823
+TWC_RESULT_CLEAN
+F16_FACE_SUMMARY fmut=0 mismatched_edges=25693 face_fault_seen=1
+[53661000] %Fatal: tb_actual_nativeface.sv:247: Assertion failed in tb_qwen_typed_witness_control.unnamedblk4: TAP_CAUSAL_REJECT actual dispatch reached real F16 witness fault
+%Error: results/arch/codex_f16bind_2140/issue/integrated/tb_actual_nativeface.sv:247: Verilog $stop
+Aborting...
