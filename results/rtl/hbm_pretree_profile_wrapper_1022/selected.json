@@ -1,0 +1,42 @@
+{
+ "contract_sha256": "f99c1577b4c97f67467b9cdf784b196599743bfd4b028b13208339edeb7e4af4",
+ "sources": {
+  "slice": {
+   "path": "/home/ubuntu/scratch/codex-hbm-token-2140-1022/profile_check/run/slice.sv",
+   "module": "ot_hbm_su_red_pretree_s_m164",
+   "sha256": "fd3122ffe108d9311099e21600e8b59aa5f37691822e05014338f11c0eccf149",
+   "actual_parent": "su_SW0",
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "parent_params": {
+    "QID": 0,
+    "G": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "MUT": 0,
+    "MULTIRATE": 1,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "instantiation_params": ".LAT(6)"
+  },
+  "join": {
+   "path": "/home/ubuntu/scratch/codex-hbm-token-2140-1022/profile_check/run/join.sv",
+   "module": "ot_hbm_su_red_pretree_j_r13_m165",
+   "sha256": "1b470268e6bbb56f0d70b1eeda1cf9abd80efb3438835ba2576c743342458488",
+   "actual_parent": "sucore_SW",
+   "master": "ot_hbm_su_static_qcore_r13",
+   "parent_params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   },
+   "instantiation_params": ".LAT(6),.MUT((0==1024)?2:0)"
+  }
+ }
+}

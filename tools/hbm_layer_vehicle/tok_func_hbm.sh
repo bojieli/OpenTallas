@@ -178,10 +178,15 @@ cp "$T/check_slice_run.py" "$OUT/bundle/"
 RLX=${RELAY_RE:-'^(l12p_|rf\d+_|rh\d+_)'}
 python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" "${CUT_ARGS[@]}" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
 say "$(grep -m1 '^SLICE' "$L/cut.log")"
+[ "${ASSEMBLY_ONLY:-0}" != 1 ] || { say "ASSEMBLY_ONLY complete; no programme emitted"; exit 0; }
 
 # 3. replays (compiler of record on the die's own SU timing) ----------------------------------------------------------
 read RR WR RFL < <(python3 -c "import json,sys; p=json.load(open(sys.argv[1]))['instances']['su_SW0']['params']; print(p['READ_RETURN'], p['WRITE_RETURN'], p.get('RF_LOCAL', 0))" "$FC")
 SU2_ARGS=(); [ "$SU_LOWER2" = 1 ] && SU2_ARGS=(--su-lower2 --rf-local "$RFL" --nev "${PAY_NEV:-11651}")
+if [ -n "${SU_PRETREE_PROFILE:-}" ]; then
+  [ "$SU_LOWER2" = 1 ] || { say "PRETREE_PROFILE_REQUIRES_SU_LOWER2"; exit 3; }
+  SU2_ARGS+=(--su-pretree-profile "$SU_PRETREE_PROFILE")
+fi
 say "SU native timing READ_RETURN=$RR WRITE_RETURN=$WR (contract su_SW0)"
 B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 CXR=""
