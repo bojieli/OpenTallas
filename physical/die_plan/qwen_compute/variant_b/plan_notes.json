@@ -1,8 +1,8 @@
 {
  "variant": "B",
  "partitions": 380,
- "types": 47,
- "types_merged": 149,
+ "types": 48,
+ "types_merged": 148,
  "ports": 2967,
  "lanes": 1761,
  "die_um": [
@@ -13,7 +13,7 @@
  "content_status_per_instance": {
   "reuse": 1715,
   "rework": 901,
-  "new": 374
+  "new": 375
  },
  "max_cells_type": [
   900000,
@@ -317,9 +317,18 @@
    ],
    "macros": 0
   },
-  "slw_fw": {
+  "slw_fw_v1": {
    "cells": 60000,
-   "instances": 6,
+   "instances": 5,
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_fw_v2": {
+   "cells": 60000,
+   "instances": 1,
    "outline_um": [
     622.08,
     1080.0

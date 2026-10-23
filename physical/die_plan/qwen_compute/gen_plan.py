@@ -628,6 +628,10 @@ def build_west(P, census_blocks):
                 cont.append({"inst": f"u_{i}", "module": census_blocks.get(i, i), "status": "reuse",
                              "note": "collective + die clock receiver; COLLIO re-derivation into <= 1-mm plan "
                                      "partitions is open (COORD ruling 05:32)"})
+            cont.append({"inst": "u_codec_pl_land", "module": "qfd_coll_codec_pl_land", "status": "new",
+                         "note": "COLLIO carry-over (fl2/flx all FAIL, STEWARD-QK 06:26): landed register bank at the "
+                                 "codec_pl clock-domain boundary (ot_entry_6 -> ot_entry_11 cross-clock setup -50 to "
+                                 "-117 ps in P/S0); the crossing becomes landed + 1 cycle, scheduled statically"})
             cont.append({"inst": "u_io_ucie", "module": "ot_qfd_ucie_x64_phy", "status": "reuse",
                          "outline_um": [777.6, 777.6], "origin_um": [0.0, 4596.48],
                          "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits inside the coll "
@@ -640,9 +644,15 @@ def build_west(P, census_blocks):
         else:
             cont.append({"inst": f"u_{n}", "module": mod, "status": "reuse",
                          "note": "hard IP used as-is (die-edge PHY)" if hard else "reuse candidate"})
+        note = f"west strip: {n}"
+        if n == "io_collective":
+            note += ("; COLLIO re-derivation OPEN (~900k est. > 400k L1 cap: >= 3 planned cores, one per face group "
+                     "P/R/S0-S2). Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow "
+                     "x471 y162; E face 1,217 pins at 92%) -> E/W seam pins on M6 only (no M4), ft_track_frac 0.25; "
+                     "(2) codec_pl cross-clock ot_entry_6 -> ot_entry_11 -> landed register u_codec_pl_land")
         if tn not in P.types:
             P.add_type(tn, wh, mod if hard else f"qfd_qc_{tn}_part", cont, hard=hard,
-                       note=f"west strip: {n}", cells=0 if hard else WS_CELLS.get(tn, 50000))
+                       note=note, cells=0 if hard else WS_CELLS.get(tn, 50000))
         P.add_part(n, tn, *xy, orient)
 
 
@@ -851,7 +861,8 @@ def materialize(P):
             db = lk["dst_bus"] if i == len(path) - 2 else f"{role}_i"
             pid = f"{lid}__{i}"
             pr = {"id": pid, "src": {"part": a, "bus": sb}, "dst": {"part": b, "bus": db}, "width": w,
-                  "kind": lk["kind"], "face": f, "layers": ["M6", "M4"] if f in "EW" else ["M7", "M5"]}
+                  "kind": lk["kind"], "face": f,
+                  "layers": (["M6"] if "io_collective" in (a, b) else ["M6", "M4"]) if f in "EW" else ["M7", "M5"]}
             ports.append(pr)
             facepairs[(a, b) if a < b else (b, a)].append(pr)
             pids.append(pid)
@@ -966,7 +977,7 @@ def materialize(P):
 def ft_fracs(P):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
     for tn, t in P.types.items():
-        if t.get("hard"):
+        if t.get("hard") or tn == "coll":
             continue
         w, h = t["outline_um"]
         cells = P.cells.get(tn) or 0

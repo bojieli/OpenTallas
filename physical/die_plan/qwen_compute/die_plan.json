@@ -4423,6 +4423,363 @@
    },
    "ft_track_frac": 0.4
   },
+  "slw_fw_v2": {
+   "module": "qfd_qc_slw_fw",
+   "outline_um": [
+    622.08,
+    1080.0
+   ],
+   "buses": [
+    {
+     "name": "x_fe_i",
+     "dir": "in",
+     "width": 1105,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_i",
+     "face": "S",
+     "window_um": [
+      106.128,
+      318.528
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_i",
+     "dir": "in",
+     "width": 1262,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_i",
+     "face": "N",
+     "window_um": [
+      106.128,
+      348.864
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_i",
+     "dir": "in",
+     "width": 1088,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_i",
+     "face": "E",
+     "window_um": [
+      401.568,
+      610.896
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_i",
+     "dir": "in",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.x_sc_i",
+     "face": "E",
+     "window_um": [
+      324.496,
+      332.96
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_fe_o",
+     "dir": "out",
+     "width": 1616,
+     "kind": "data",
+     "leaf": "u_pstn.x_fe_o",
+     "face": "E",
+     "window_um": [
+      12.832,
+      323.536
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_ctl_o",
+     "dir": "out",
+     "width": 1155,
+     "kind": "data",
+     "leaf": "u_pstn.x_ctl_o",
+     "face": "N",
+     "window_um": [
+      349.824,
+      571.824
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_sc_o",
+     "dir": "out",
+     "width": 48,
+     "kind": "data",
+     "leaf": "u_pstn.x_sc_o",
+     "face": "E",
+     "window_um": [
+      333.92,
+      342.384
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_stm_o",
+     "dir": "out",
+     "width": 1097,
+     "kind": "data",
+     "leaf": "u_pstn.x_stm_o",
+     "face": "E",
+     "window_um": [
+      611.856,
+      822.72
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_a_o",
+     "dir": "out",
+     "width": 264,
+     "kind": "data",
+     "leaf": "u_pstn.x_st_a_o",
+     "face": "E",
+     "window_um": [
+      343.344,
+      394.464
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_st_b_o",
+     "dir": "out",
+     "width": 264,
+     "kind": "data",
+     "leaf": "u_pstn.x_st_b_o",
+     "face": "S",
+     "window_um": [
+      319.488,
+      370.608
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "x_tap_o",
+     "dir": "out",
+     "width": 453,
+     "kind": "data",
+     "leaf": "u_pstn.x_tap_o",
+     "face": "E",
+     "window_um": [
+      829.472,
+      916.688
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_su_l1_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_su_l1_i",
+     "face": "S",
+     "window_um": [
+      104.784,
+      105.168
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_stm_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_stm_i",
+     "face": "E",
+     "window_um": [
+      4.32,
+      4.704
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_st_b_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_st_b_i",
+     "face": "N",
+     "window_um": [
+      104.784,
+      105.168
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_wo",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_wo",
+     "face": "W",
+     "window_um": [
+      4.32,
+      4.704
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "cws0",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 516,
+     "stations": 2,
+     "out_window_um": [
+      4.32,
+      103.824
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_stm_ctl",
+     "in_face": "E",
+     "out_face": "N",
+     "width": 29,
+     "stations": 1,
+     "out_window_um": [
+      579.952,
+      585.136
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "x_ctl_stm",
+     "in_face": "N",
+     "out_face": "E",
+     "width": 35,
+     "stations": 2,
+     "out_window_um": [
+      5.664,
+      11.872
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "x_stm_st_a",
+     "in_face": "E",
+     "out_face": "N",
+     "width": 27,
+     "stations": 1,
+     "out_window_um": [
+      586.096,
+      590.928
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "contents": [
+    {
+     "inst": "u_fdn",
+     "module": "slice s8 u_fdn",
+     "status": "rework",
+     "note": "slice glue re-derived per region partition"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "slw_fw_v2_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "slice region partition fw (W slice, landed region fw); est. std-cell fill 0.08 at util 0.6: 40% of M4-M7 to ft",
+   "clock": {
+    "tap_um": [
+     311.04,
+     535.68
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40
+   },
+   "reset": {
+    "tap_um": [
+     311.04,
+     535.68
+    ],
+    "sync_stages": 2
+   },
+   "ft_track_frac": 0.4
+  },
   "slw_hc0": {
    "module": "qfd_qc_slw_hc0",
    "outline_um": [
@@ -7580,7 +7937,7 @@
    },
    "ft_track_frac": 0.4
   },
-  "slw_fw": {
+  "slw_fw_v1": {
    "module": "qfd_qc_slw_fw",
    "outline_um": [
     622.08,
@@ -7914,7 +8271,7 @@
     },
     {
      "inst": "u_pstn",
-     "module": "slw_fw_pstn",
+     "module": "slw_fw_v1_pstn",
      "status": "new",
      "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
     }
@@ -15907,8 +16264,7 @@
       5380.128
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -15924,8 +16280,7 @@
       5381.472
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -15971,12 +16326,11 @@
      "leaf": "u_io_collective.serdes_tx",
      "face": "E",
      "window_um": [
-      121.488,
-      236.352
+      121.424,
+      236.224
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16022,12 +16376,11 @@
      "leaf": "u_io_collective.serdes_tx_valid",
      "face": "E",
      "window_um": [
-      237.312,
-      237.696
+      237.184,
+      237.568
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16043,8 +16396,7 @@
       5382.816
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16159,11 +16511,10 @@
      "face": "E",
      "window_um": [
       4.32,
-      119.184
+      119.12
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16175,12 +16526,11 @@
      "leaf": "u_io_collective.serdes_rx_valid",
      "face": "E",
      "window_um": [
-      120.144,
-      120.528
+      120.08,
+      120.464
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16192,12 +16542,11 @@
      "leaf": "u_io_collective.serdes_up",
      "face": "E",
      "window_um": [
-      238.656,
-      239.04
+      238.528,
+      238.912
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16213,8 +16562,7 @@
       6890.784
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16230,8 +16578,7 @@
       5378.784
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     }
@@ -16281,6 +16628,12 @@
      "note": "collective + die clock receiver; COLLIO re-derivation into <= 1-mm plan partitions is open (COORD ruling 05:32)"
     },
     {
+     "inst": "u_codec_pl_land",
+     "module": "qfd_coll_codec_pl_land",
+     "status": "new",
+     "note": "COLLIO carry-over (fl2/flx all FAIL, STEWARD-QK 06:26): landed register bank at the codec_pl clock-domain boundary (ot_entry_6 -> ot_entry_11 cross-clock setup -50 to -117 ps in P/S0); the crossing becomes landed + 1 cycle, scheduled statically"
+    },
+    {
      "inst": "u_io_ucie",
      "module": "ot_qfd_ucie_x64_phy",
      "status": "reuse",
@@ -16295,7 +16648,7 @@
      "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits inside the coll partition, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)"
     }
    ],
-   "note": "west strip: io_collective; est. std-cell fill 0.11 at util 0.6: 40% of M4-M7 to ft",
+   "note": "west strip: io_collective; COLLIO re-derivation OPEN (~900k est. > 400k L1 cap: >= 3 planned cores, one per face group P/R/S0-S2). Carry-over defects: (1) M4 congestion hotspot on the PHY/E side (flx R GRT overflow x471 y162; E face 1,217 pins at 92%) -> E/W seam pins on M6 only (no M4), ft_track_frac 0.25; (2) codec_pl cross-clock ot_entry_6 -> ot_entry_11 -> landed register u_codec_pl_land",
    "clock": {
     "tap_um": [
      388.8,
@@ -16311,8 +16664,7 @@
      4544.64
     ],
     "sync_stages": 2
-   },
-   "ft_track_frac": 0.4
+   }
   },
   "phy_ucie_kv": {
    "module": "ot_qkvd_ucie_x64_phy",
@@ -16709,8 +17061,7 @@
       6.048
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16726,8 +17077,7 @@
       7.392
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -16743,8 +17093,7 @@
       8.736
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -17559,8 +17908,7 @@
       4.704
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -20172,12 +20520,11 @@
      "width": 597,
      "stations": 2,
      "out_window_um": [
-      459.696,
+      459.76,
       574.56
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_high"
     },
@@ -20188,12 +20535,11 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      458.352,
-      458.736
+      458.416,
+      458.8
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_high"
     },
@@ -20204,12 +20550,11 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      339.84,
-      340.224
+      339.968,
+      340.352
      ],
      "layers": [
-      "M6",
-      "M4"
+      "M6"
      ],
      "order": "lsb_high"
     }
@@ -27252,7 +27597,7 @@
   },
   {
    "name": "sl_W5_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v2",
    "origin_um": [
     1563.84,
     11534.4
@@ -27387,7 +27732,7 @@
   },
   {
    "name": "sl_W4_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v1",
    "origin_um": [
     4034.88,
     11534.4
@@ -27522,7 +27867,7 @@
   },
   {
    "name": "sl_W3_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v1",
    "origin_um": [
     6505.92,
     11534.4
@@ -27657,7 +28002,7 @@
   },
   {
    "name": "sl_W2_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v1",
    "origin_um": [
     8976.96,
     11534.4
@@ -27792,7 +28137,7 @@
   },
   {
    "name": "sl_W1_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v1",
    "origin_um": [
     11448.0,
     11534.4
@@ -27927,7 +28272,7 @@
   },
   {
    "name": "sl_W0_fw",
-   "type": "slw_fw",
+   "type": "slw_fw_v1",
    "origin_um": [
     13919.04,
     11534.4

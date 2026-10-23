@@ -1,20 +1,20 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/scratch/plan-qcv2/B/die_plan.json",
+ "plan": "/home/ubuntu/scratch/plan-qcv2/B2/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 2,
+ "warnings": 3,
  "summary": {
   "die": "qwen_compute",
   "partitions": 380,
   "types": {
-   "types": 47,
+   "types": 48,
    "partitions": 380,
-   "singleton_types": 9,
+   "singleton_types": 10,
    "max_instances": 48,
-   "near_duplicate_groups": 1,
-   "near_duplicate_types": 2,
-   "mergeable_saving": 1
+   "near_duplicate_groups": 2,
+   "near_duplicate_types": 4,
+   "mergeable_saving": 2
   },
   "ports": 2967,
   "lanes": 1761,
@@ -162,21 +162,21 @@
     {
      "at_um": 1000,
      "bits": 0,
-     "tracks": 385445,
+     "tracks": 335691,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
     {
      "at_um": 1250,
      "bits": 0,
-     "tracks": 385445,
+     "tracks": 335691,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
     {
      "at_um": 1500,
      "bits": 0,
-     "tracks": 385445,
+     "tracks": 335691,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
@@ -1521,7 +1521,7 @@
     {
      "at_um": 4750,
      "bits": 600,
-     "tracks": 678020,
+     "tracks": 673721,
      "ratio": 0.0009,
      "m89_only_ratio": 0.0015,
      "worst_part": "c_W5_bf_00",
@@ -1531,15 +1531,15 @@
     {
      "at_um": 5000,
      "bits": 0,
-     "tracks": 678020,
+     "tracks": 673721,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
     {
      "at_um": 5250,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1548,8 +1548,8 @@
     {
      "at_um": 5500,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1558,8 +1558,8 @@
     {
      "at_um": 5750,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1568,8 +1568,8 @@
     {
      "at_um": 6000,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1578,8 +1578,8 @@
     {
      "at_um": 6250,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1588,8 +1588,8 @@
     {
      "at_um": 6500,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1598,8 +1598,8 @@
     {
      "at_um": 6750,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1608,8 +1608,8 @@
     {
      "at_um": 7000,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1618,8 +1618,8 @@
     {
      "at_um": 7250,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1628,8 +1628,8 @@
     {
      "at_um": 7500,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1638,8 +1638,8 @@
     {
      "at_um": 7750,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_01",
      "worst_part_ratio": 0.0188,
@@ -1648,8 +1648,8 @@
     {
      "at_um": 8000,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1658,8 +1658,8 @@
     {
      "at_um": 8250,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1668,8 +1668,8 @@
     {
      "at_um": 8500,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1678,8 +1678,8 @@
     {
      "at_um": 8750,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1688,8 +1688,8 @@
     {
      "at_um": 9000,
      "bits": 6168,
-     "tracks": 678020,
-     "ratio": 0.0091,
+     "tracks": 673721,
+     "ratio": 0.0092,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1698,8 +1698,8 @@
     {
      "at_um": 9250,
      "bits": 6168,
-     "tracks": 685108,
-     "ratio": 0.009,
+     "tracks": 680808,
+     "ratio": 0.0091,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1708,8 +1708,8 @@
     {
      "at_um": 9500,
      "bits": 6168,
-     "tracks": 685108,
-     "ratio": 0.009,
+     "tracks": 680808,
+     "ratio": 0.0091,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1718,8 +1718,8 @@
     {
      "at_um": 9750,
      "bits": 6168,
-     "tracks": 685108,
-     "ratio": 0.009,
+     "tracks": 680808,
+     "ratio": 0.0091,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1728,8 +1728,8 @@
     {
      "at_um": 10000,
      "bits": 6168,
-     "tracks": 685108,
-     "ratio": 0.009,
+     "tracks": 680808,
+     "ratio": 0.0091,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1738,8 +1738,8 @@
     {
      "at_um": 10250,
      "bits": 6168,
-     "tracks": 689360,
-     "ratio": 0.0089,
+     "tracks": 685061,
+     "ratio": 0.009,
      "m89_only_ratio": 0.0158,
      "worst_part": "c_W4_bn_00",
      "worst_part_ratio": 0.0188,
@@ -1748,8 +1748,8 @@
     {
      "at_um": 10500,
      "bits": 37104,
-     "tracks": 527198,
-     "ratio": 0.0704,
+     "tracks": 522899,
+     "ratio": 0.071,
      "m89_only_ratio": 0.0951,
      "worst_part": "sl_W4_su_l1",
      "worst_part_ratio": 0.1494,
@@ -1758,8 +1758,8 @@
     {
      "at_um": 10750,
      "bits": 55452,
-     "tracks": 527198,
-     "ratio": 0.1052,
+     "tracks": 522899,
+     "ratio": 0.106,
      "m89_only_ratio": 0.1421,
      "worst_part": "sl_E5_su_l0",
      "worst_part_ratio": 0.2563,
@@ -1768,8 +1768,8 @@
     {
      "at_um": 11000,
      "bits": 77316,
-     "tracks": 527198,
-     "ratio": 0.1467,
+     "tracks": 522899,
+     "ratio": 0.1479,
      "m89_only_ratio": 0.1981,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2873,
@@ -1778,8 +1778,8 @@
     {
      "at_um": 11250,
      "bits": 78054,
-     "tracks": 527198,
-     "ratio": 0.1481,
+     "tracks": 522899,
+     "ratio": 0.1493,
      "m89_only_ratio": 0.2,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2718,
@@ -1788,8 +1788,8 @@
     {
      "at_um": 11500,
      "bits": 78054,
-     "tracks": 527198,
-     "ratio": 0.1481,
+     "tracks": 522899,
+     "ratio": 0.1493,
      "m89_only_ratio": 0.2,
      "worst_part": "sl_W5_su_l0",
      "worst_part_ratio": 0.2718,
@@ -1798,8 +1798,8 @@
     {
      "at_um": 11750,
      "bits": 113778,
-     "tracks": 649103,
-     "ratio": 0.1753,
+     "tracks": 644804,
+     "ratio": 0.1765,
      "m89_only_ratio": 0.2916,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.4246,
@@ -1808,8 +1808,8 @@
     {
      "at_um": 12000,
      "bits": 118734,
-     "tracks": 644851,
-     "ratio": 0.1841,
+     "tracks": 640551,
+     "ratio": 0.1854,
      "m89_only_ratio": 0.3043,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.4598,
@@ -1818,8 +1818,8 @@
     {
      "at_um": 12250,
      "bits": 80334,
-     "tracks": 644851,
-     "ratio": 0.1246,
+     "tracks": 640551,
+     "ratio": 0.1254,
      "m89_only_ratio": 0.2059,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.2874,
@@ -1828,8 +1828,8 @@
     {
      "at_um": 12500,
      "bits": 83808,
-     "tracks": 637763,
-     "ratio": 0.1314,
+     "tracks": 633464,
+     "ratio": 0.1323,
      "m89_only_ratio": 0.2148,
      "worst_part": "sl_E5_sc",
      "worst_part_ratio": 0.2132,
@@ -1838,8 +1838,8 @@
     {
      "at_um": 12750,
      "bits": 95718,
-     "tracks": 678020,
-     "ratio": 0.1412,
+     "tracks": 673721,
+     "ratio": 0.1421,
      "m89_only_ratio": 0.2453,
      "worst_part": "sl_W3_tap",
      "worst_part_ratio": 0.208,
@@ -1848,8 +1848,8 @@
     {
      "at_um": 13000,
      "bits": 81576,
-     "tracks": 678020,
-     "ratio": 0.1203,
+     "tracks": 673721,
+     "ratio": 0.1211,
      "m89_only_ratio": 0.2091,
      "worst_part": "sl_W3_tap",
      "worst_part_ratio": 0.3402,
@@ -1858,8 +1858,8 @@
     {
      "at_um": 13250,
      "bits": 63870,
-     "tracks": 678020,
-     "ratio": 0.0942,
+     "tracks": 673721,
+     "ratio": 0.0948,
      "m89_only_ratio": 0.1637,
      "worst_part": "sl_E5_tap",
      "worst_part_ratio": 0.2201,
@@ -1868,8 +1868,8 @@
     {
      "at_um": 13500,
      "bits": 60090,
-     "tracks": 678020,
-     "ratio": 0.0886,
+     "tracks": 673721,
+     "ratio": 0.0892,
      "m89_only_ratio": 0.154,
      "worst_part": "sl_W4_ctl",
      "worst_part_ratio": 0.1712,
@@ -2277,7 +2277,7 @@
     }
    ],
    "worst_full": {
-    "ratio": 0.1841,
+    "ratio": 0.1854,
     "at": "horizontal@12000"
    },
    "worst_partition_segment": {
@@ -6606,9 +6606,14 @@
     }
    }
   },
-  "png": "B/g0/die_plan.png"
+  "png": "B2/g0/die_plan.png"
  },
  "findings": [
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['slw_fw_v1', 'slw_fw_v2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
   {
    "level": "WARN",
    "check": "types",
