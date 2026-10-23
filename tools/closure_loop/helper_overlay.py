@@ -192,6 +192,15 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1023 10-23 batch 13: claude/ft-qc-1023 (COORD 02:35 approved).  Both changes act only on a spec with
+    # pg_contract == "m7_passthrough" (new opt-in, first used by the do-not-bind pilot qfd_c_b8_ft1); default contract,
+    # PDN text and gate layer audit unchanged for every older kit.
+    "db3885a1d0a9f2c9c894d70cb6c89c36aa158fc0": dict(
+        kind="neutral", paths=('tools/ref_tile/pre_route_gate.py',),
+        what="pre_route_gate layer audit: want_pg M7 only for opt-in pg_contract m7_passthrough clusters"),
+    "0d25e46372e3bd0117c24752ba398169ba0ee3ad": dict(
+        kind="neutral", paths=('tools/ref_tile/ref_tile.py',),
+        what="ref_tile layer_contract/gen_pdn m7_passthrough branch (opt-in pg_contract only)"),
     # ROOT-MERGE-1023 10-23 batch 13: claude/tile-flow-1023 (COORD 02:33 approved).  Every new rule (content outline,
     # face fence, outline_ratio FAIL, pin_regs wrapper refusal, macro array plan) is behind tile_plan_on(spec): recipe 5
     # leaf tiles or an explicit "tile_plan" opt-in.  No kit gated before this merge has either (RECIPE_LATEST was 4),
