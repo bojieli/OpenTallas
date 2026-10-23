@@ -12,9 +12,12 @@ from their pins.  This module makes the pre-route gate ALWAYS write
                                          counts, pins per face and per um, pin -> register median / p90, empty-area %,
                                          pin / macro OBS layers, suspicion flags
 
-and judges two rules (FAIL unless the kit spec carries a non-empty "low_fill_reason"):
-    * std-cell fill of the free (non-macro) area < 20 %   (FILL_FREE_FAIL)
-    * pin -> pin-register p90 distance > 150 um            (PIN_REG_P90_FAIL)
+and judges two rules:
+    * std-cell fill of the free (non-macro) area < 20 %   (FILL_FREE_FAIL; WARN with a spec "low_fill_reason", a
+                                                           measured parent band, or a GEOM-REVIEW PASS/PASS-CONDITIONAL
+                                                           for the kit's content hash)
+    * pin -> pin-register p90 distance > 150 um            (PIN_REG_P90_FAIL; WARN only with a GEOM-REVIEW PASS /
+                                                           PASS-CONDITIONAL for the content hash or a spec "pin_reg_reason")
 
 Input: a tools/ref_tile/layout_dump.tcl JSON dump (opentallas.layout.occupancy.v1) of a PLACED design; the dump's
 optional "pin_regs" [[pin, kind R|M|N, px, py, fx, fy, depth]] and "clock_roots" [[inst, master, x0, y0, x1, y1, level]]
@@ -203,31 +206,46 @@ def flags(st: dict) -> list:
     return out
 
 
-def judge(st: dict, spec: dict, parent: bool = False) -> list:
-    """[(level, item, msg, fix)] for the gate: FAIL on fill < 20 % of free or pin->register p90 > 150 um, unless the
-    kit spec carries a non-empty "low_fill_reason"; floorplan-only (unplaced) dumps are not judged.  Parents / clusters
-    (hard children) are judged by macro packing and the existing parent fill rule, not by std-cell fill (TILE-REVIEW
-    coordinator 10-23): only the pin-register rule applies to them here."""
+def judge(st: dict, spec: dict, parent: bool = False, review: dict | None = None, band_reason: str = "") -> list:
+    """[(level, item, msg, fix)] for the gate: FAIL on fill < 20 % of free or pin->register p90 > 150 um; floorplan-only
+    (unplaced) dumps are not judged.  Parents / clusters (hard children) are judged by macro packing and the existing
+    parent fill rule, not by std-cell fill (TILE-REVIEW coordinator 10-23): only the pin-register rule applies to them.
+
+    Exemptions (WARN instead of FAIL), per rule:
+      * low fill  : the kit spec's non-empty "low_fill_reason", a measured lattice / channel band (band_reason), or a
+                    GEOM-REVIEW PASS / PASS-CONDITIONAL verdict recorded for THIS kit's content hash (review);
+      * pin->reg  : only a GEOM-REVIEW PASS / PASS-CONDITIONAL for this content hash or an explicit spec
+                    "pin_reg_reason" -- a fill reason or a measured band never excuses far pin registers (COORD 10-23:
+                    the parent band exemption must not let a BAD parent through).  A GEOM-REVIEW FAIL excuses nothing."""
     if not st.get("placed"):
         return [("INFO", "layout_review", "floorplan-only dump: review picture written, fill / pin-register not judged", "")]
-    reason = str(spec.get("low_fill_reason") or "").strip()
+    rv = review if review and review.get("verdict") in ("PASS", "PASS-CONDITIONAL") else None
+    rv_txt = (f"GEOM-REVIEW {rv['verdict']} hash {str(rv.get('hash'))[:12]} ({rv.get('kit', '')})" if rv else "")
+    fill_reason = str(spec.get("low_fill_reason") or "").strip() or band_reason or rv_txt
+    reg_reason = rv_txt or str(spec.get("pin_reg_reason") or "").strip()
     out = []
     f = st.get("std_fill_of_free")
     p = st.get("pin_to_reg_p90_um")
-    bad = []
+    fails, warns = [], []
     if f is not None and f < FILL_FREE_FAIL and not parent:
-        bad.append(f"std-cell fill {100 * f:.1f}% of the free (non-macro) area < {100 * FILL_FREE_FAIL:.0f}% "
-                   f"({st['std_area_um2']} um2 std cells in {st['outline_um'][0]}x{st['outline_um'][1]} um, macros "
-                   f"{st['macro_area_pct']}%)")
+        m = (f"std-cell fill {100 * f:.1f}% of the free (non-macro) area < {100 * FILL_FREE_FAIL:.0f}% "
+             f"({st['std_area_um2']} um2 std cells in {st['outline_um'][0]}x{st['outline_um'][1]} um, macros "
+             f"{st['macro_area_pct']}%)")
+        (warns.append(m + f" (reason: {fill_reason})") if fill_reason else fails.append(m))
     if p is not None and p > PIN_REG_P90_FAIL:
-        bad.append(f"pin->pin-register p90 {p:.0f} um > {PIN_REG_P90_FAIL:.0f} um (median {st['pin_to_reg_median_um']} um, "
-                   f"{st['pins_registered']} registered pins)")
-    if bad and reason:
-        out.append(("WARN", "layout_review", "; ".join(bad) + f" (low_fill_reason: {reason})", ""))
-    elif bad:
-        out.append(("FAIL", "layout_review", "; ".join(bad),
+        m = (f"pin->pin-register p90 {p:.0f} um > {PIN_REG_P90_FAIL:.0f} um (median {st['pin_to_reg_median_um']} um, "
+             f"{st['pins_registered']} registered pins)")
+        (warns.append(m + f" (reason: {reg_reason})") if reg_reason else fails.append(m))
+    if warns:
+        out.append(("WARN", "layout_review", "; ".join(warns), ""))
+    if fails:
+        out.append(("FAIL", "layout_review", "; ".join(fails),
                     "shrink the outline / regroup macros so the logic fills its area and pin registers sit at their pins, "
-                    "or record \"low_fill_reason\": \"<why>\" in the kit spec"))
+                    "or record \"low_fill_reason\" in the kit spec (fill only) / get a GEOM-REVIEW PASS for this kit "
+                    "(lanes/GEOM-REVIEW.md)"))
+    if review and review.get("verdict") == "FAIL":
+        out.append(("INFO", "layout_review", f"GEOM-REVIEW FAIL recorded for this content hash ({review.get('kit', '')}): "
+                                             "no exemption", ""))
     msg = ((f"parent: macro packing {st['macro_area_pct']}% of outline, " if parent else "") + f"{st['outline_um'][0]}x{st['outline_um'][1]} um, fill {None if f is None else round(100 * f, 1)}% of free, "
            f"empty {None if st.get('empty_area') is None else round(100 * st['empty_area'])}%, buf/inv "
            f"{None if st.get('buf_share') is None else round(100 * st['buf_share'])}%, pin->reg p50/p90 "
@@ -292,7 +310,8 @@ def render_review(d: dict, st: dict, out, title: str = "") -> str:
     return c.save(out)
 
 
-def review(d: dict, outdir, title: str = "", spec: dict | None = None, parent: bool = False):
+def review(d: dict, outdir, title: str = "", spec: dict | None = None, parent: bool = False,
+           geom_review: dict | None = None, band_reason: str = ""):
     """write review.png + review_stats.json into outdir; return (stats, png path, judge items)"""
     od = Path(outdir)
     od.mkdir(parents=True, exist_ok=True)
@@ -300,7 +319,9 @@ def review(d: dict, outdir, title: str = "", spec: dict | None = None, parent: b
     png = render_review(d, st, od / "review.png", title)
     st["png"] = png
     st["kind"] = "parent" if parent else "tile"
-    items = judge(st, spec or {}, parent)
+    items = judge(st, spec or {}, parent, geom_review, band_reason)
+    if geom_review:
+        st["geom_review"] = {k: geom_review.get(k) for k in ("verdict", "hash", "kit", "element", "src")}
     st["verdict_items"] = [list(x) for x in items]
     (od / "review_stats.json").write_text(json.dumps(st, indent=1) + "\n")
     return st, png, items

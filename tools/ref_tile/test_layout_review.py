@@ -111,3 +111,92 @@ def test_parent_not_judged_on_std_fill():
     assert "FAIL" not in [x[0] for x in LR.judge(st, {}, parent=True)]
     st = LR.review_stats(_dump(cells_um2=960.0, pin_reg_um=200.0))
     assert LR.judge(st, {}, parent=True)[0][0] == "FAIL"           # pin-register rule still applies
+
+
+def test_geom_review_verdict_excuses_fill_and_pin_regs():
+    st = LR.review_stats(_dump(cells_um2=960.0, pin_reg_um=200.0))          # low fill AND far pin registers
+    pas = {"verdict": "PASS-CONDITIONAL", "hash": "ab" * 32, "kit": "physical/ref_tile/k@c"}
+    items = LR.judge(st, {}, review=pas)
+    assert "FAIL" not in [x[0] for x in items] and "GEOM-REVIEW PASS-CONDITIONAL" in items[0][2]
+    items = LR.judge(st, {}, review=dict(pas, verdict="FAIL"))               # a FAIL verdict excuses nothing
+    assert items[0][0] == "FAIL" and any("no exemption" in x[2] for x in items)
+
+
+def test_fill_reason_and_band_never_excuse_far_pin_regs():
+    st = LR.review_stats(_dump(cells_um2=960.0, pin_reg_um=200.0))
+    items = LR.judge(st, {"low_fill_reason": "pin-bound"})
+    assert [x[0] for x in items][:2] == ["WARN", "FAIL"] and "p90 200" in items[1][2]
+    # BAD parent with a measured lattice/channel band: the band no longer waives the pin-register rule
+    items = LR.judge(st, {}, parent=True, band_reason="measured lattice/channel band 100 um2 at density 60%")
+    assert items[0][0] == "FAIL" and "p90 200" in items[0][2]
+    assert "FAIL" not in [x[0] for x in LR.judge(st, {"pin_reg_reason": "pins land on a hard child edge"}, parent=True)]
+    st = LR.review_stats(_dump(cells_um2=960.0))
+    assert "FAIL" not in [x[0] for x in LR.judge(st, {}, band_reason="measured band")]   # band excuses fill
+
+
+def test_gate_layout_hook_honours_geom_review(tmp_path, monkeypatch):
+    def b64(d):
+        return base64.b64encode(zlib.compress(json.dumps(d).encode())).decode()
+    out = (f"GATE_LAYOUT_B64 floorplan {b64(_dump(cells_um2=960.0, placed=False))}\n"
+           f"GATE_LAYOUT_B64 placed {b64(_dump(cells_um2=960.0))}\nGATE_DONE\n")
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    seen = []
+    monkeypatch.setattr(PG, "geom_review_verdict", lambda k: seen.append(k) or {"verdict": "PASS", "hash": "cd" * 32,
+                                                                                "kit": "physical/ref_tile/kit@x"})
+    g = PG.Gate()
+    PG.gate_layout(g, kd, {"name": "kit", "kind": "tile"}, out)
+    assert seen == [kd] and not any(i["severity"] == "FAIL" and i["check"] == "layout_review" for i in g.items)
+    assert g.layout_review["geom_review"]["verdict"] == "PASS"
+    monkeypatch.setattr(PG, "geom_review_verdict", lambda k: None)
+    g = PG.Gate()
+    PG.gate_layout(g, kd, {"name": "kit", "kind": "tile"}, out)
+    assert any(i["severity"] == "FAIL" and i["check"] == "layout_review" for i in g.items)
+
+
+def test_geom_review_verdict_lookup_by_content_hash(tmp_path, monkeypatch):
+    import importlib
+    kd = tmp_path / "physical" / "ref_tile" / "kk"
+    kd.mkdir(parents=True)
+    (kd / "spec.json").write_text("{}\n")
+    (kd / "gate_layout").mkdir()
+    (kd / "gate_layout" / "review.png").write_bytes(b"x")                    # excluded from the content hash
+    vd = tmp_path / "verdicts"
+    vd.mkdir()
+    monkeypatch.setenv("GEOM_REVIEW_DIR", str(vd))
+    monkeypatch.setenv("GEOM_REVIEW_LANE", str(tmp_path / "lane.md"))
+    sys.path.insert(0, str(Path(PG.__file__).resolve().parent.parent / "closure_loop"))
+    try:
+        GR = importlib.import_module("geom_review_gate")
+    except ImportError:
+        import pytest
+        pytest.skip("geom_review_gate not on this branch yet (merged on main)")
+    monkeypatch.setattr(GR, "VERDICT_DIR", vd)
+    monkeypatch.setattr(GR, "LANE", tmp_path / "lane.md")
+    assert PG.geom_review_verdict(kd) is None
+    h = GR.kit_hash_fs(str(kd))
+    (vd / "e__kk.json").write_text(json.dumps({"element": "e", "kit": "physical/ref_tile/kk@c", "verdict": "PASS",
+                                               "hash": h, "at": "2026-10-23T03:00:00-07:00"}))
+    assert PG.geom_review_verdict(kd)["verdict"] == "PASS"
+    (kd / "spec.json").write_text('{"changed": 1}\n')                           # content changed -> verdict no longer applies
+    assert PG.geom_review_verdict(kd) is None
+
+
+def test_parent_fill_reason_revoked_by_geom_review_fail(tmp_path, monkeypatch):
+    def b64(d):
+        return base64.b64encode(zlib.compress(json.dumps(d).encode())).decode()
+    fp = _dump(cells_um2=960.0, placed=False)
+    fp["stats"] = {"fill": 0.10, "block_area": 400, "std_area": 960, "die_area": 10000}
+    out = f"GATE_LAYOUT_B64 floorplan {b64(fp)}\nGATE_LAYOUT_B64 placed {b64(_dump(cells_um2=960.0))}\nGATE_DONE\n"
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    spec = {"name": "kit", "kind": "cluster", "children": [{"view": "v"}], "fill_reason": {"pin_bound": "edges full"}}
+    monkeypatch.setattr(PG, "is_parent_kit", lambda s: True)
+    monkeypatch.setattr(PG, "geom_review_verdict", lambda k: None)
+    g = PG.Gate()
+    PG.gate_layout(g, kd, spec, out)
+    assert not any(i["severity"] == "FAIL" and i["check"] == "fill" for i in g.items)        # pin-bound text: WARN
+    monkeypatch.setattr(PG, "geom_review_verdict", lambda k: {"verdict": "FAIL", "hash": "ef" * 32, "kit": "kit@x"})
+    g = PG.Gate()
+    PG.gate_layout(g, kd, spec, out)
+    assert any(i["severity"] == "FAIL" and i["check"] == "fill" and "revoked" in i["message"] for i in g.items)
