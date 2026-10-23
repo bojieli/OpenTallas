@@ -37,7 +37,11 @@ def lint(top, srcs, defs=''):
 WIT = 'results/rtl/cb16c_coll_1022'
 # measured per-band source-owned sequential counts of each body netlist (None = the S0 face's counts, first gate reports)
 COUNTS = {'s0': {'codec': 3920, 'phy': 1426, 'cal': 715, 'lcal': 720, 'tx': 1565, 'rx': 1018},
-          'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018}}
+          'p': {'codec': 3920, 'phy': 1426, 'cal': 166, 'lcal': 167, 'tx': 1565, 'rx': 1018},
+          # CB16c-COLL2-SR: R body (FW 514) measured by its first gate (75579d191, ot-pve1); bank3 holds the top 514-b bits
+          's1': {'codec': 3920, 'phy': 1426, 'cal': 715, 'lcal': 695, 'tx': 1565, 'rx': 1018},   # first gate 75579d191
+          's2': {'codec': 3920, 'phy': 1426, 'cal': 696, 'lcal': 709, 'tx': 1565, 'rx': 1018},   # first gate 75579d191
+          'r': {'codec': 3715, 'phy': 1349, 'cal': 166, 'lcal': 167, 'tx': 1501, 'rx': 986, 'bank3': 454}}
 
 
 # CB16c-COLL2-SR: R-face masters (514 = 2 x 257 W, 565 = 5 x 113 E): outline height / pin span per width, bench profile
