@@ -555,8 +555,11 @@ class Parent:
             raise SystemExit("regional_reset_copies must be an explicit boolean")
         # S81-CAPRST 10-21: regional_reset_copies now combines with regional_reset_ports (per-region landed reset port,
         # last stage as kept copies); specs that set only one of the two emit byte-identical text.
-        if self.rcopies and (self.reset_forest or self.reset_lead or spec.get("reset_net")):
-            raise SystemExit("regional_reset_copies excludes landing_reset_forest / landing_reset_lead / reset_net")
+        # FT-S81 10-23: reset_net (child-generated reset, reschedule mode) is allowed: the copies replace only the LAST
+        # regional stage fed from lpr_root (which already takes reset_net as its d), and the copy plan counts the child
+        # reset pads on self.rst (= reset_net) as loads; specs without both options emit byte-identical text.
+        if self.rcopies and (self.reset_forest or self.reset_lead):
+            raise SystemExit("regional_reset_copies excludes landing_reset_forest / landing_reset_lead")
         if type(self.mcp) is not bool:
             raise SystemExit("landing_mcp must be an explicit boolean")
         if type(self.reset_forest) is not bool:

@@ -6,6 +6,7 @@ hard-child instance of the frame top this traces each reset pin (rs / rst / rst_
 reset primitives to the clock that releases it, and compares that clock with the child's clock pins:
 
   * ot_pl_pad (.ck C, N >= 1)            the reset is released by C (N = 0 is a wire: follow d);
+  * ot_pl_land_rst_copy (.ck C)          one kept regional-reset copy flop, released by C (lp regional_reset_copies);
   * ot_pl_land_reset_forest* (.ck C)     released by C (its first stage samples d on C: d may come from another
                                          region's root flop -- that hop is reported as a FOREST crossing, landed by
                                          the forest's own >= 2 stages on C);
@@ -78,6 +79,8 @@ def main():
             drv[base(c['q'])] = ('pad' if stages else 'wire', c['ck'], inst, c['d'])
         elif master.startswith('ot_pl_land_reset_forest'):
             drv[base(c['q'])] = ('forest', c['ck'], inst, c['d'])
+        elif master == 'ot_pl_land_rst_copy':     # FT-S81 10-23: lp regional_reset_copies -- one kept flop on .ck
+            drv[base(c['q'])] = ('pad', c['ck'], inst, c['d'])
         elif master == 'ot_reset_sync':
             drv[c['sync_rst_n'].strip()] = ('sync', c['clk'], inst, c['async_rst_n'])
         elif master.startswith('ot_pl_land'):
@@ -119,7 +122,7 @@ def main():
             rows.append(dict(inst=inst, master=master, pin=p, net=c[p], released_by=ck, via=kind, path=path,
                              child_clocks=cl, verdict='OK' if ok else 'FOREIGN'))
     for b, (kind, ck, inst, d) in drv.items():     # crossings INTO a forest / synchroniser (landed on the receiver)
-        if kind in ('forest', 'sync'):
+        if kind in ('forest', 'sync') or kind == 'pad' and d:     # (pad: a regional run hop landed on its first stage)
             k2, ck2, _ = release(d)
             if ck2 != ck and k2 != 'port':
                 forest_x.append(dict(inst=inst, kind=kind, src=ck2, dst=ck))
