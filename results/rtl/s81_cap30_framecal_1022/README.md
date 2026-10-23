@@ -1,0 +1,23 @@
+# Cap30 chained-frame reset calendar correction
+
+The current cap30 chain opens some source-frame forwarded clocks after the receiving frame has already begun its landing read epoch. The calendar-v2 correction delays only that receiving frame rst_n on its actual ck_r0. Existing ICG enables, return-lane resets, relay connections, data ports and frame RTL remain byte-identical. A restoration assertion verifies the complete source mutation envelope; a second inspection requires all diagnosed chained-frame deficits to be gone.
+
+The source-specific correction is 22 one-bit stations across nine frames: 0L03 +3, 0R13 +1, 2L13 +3, 2R03 +3, 3L03 +3, 4R03 +3, 5R13 +1, 6R13 +2, 7R03 +3. Source die64d4be888d3fefb3f35e0144be3555fd75d7b1587c0af7321013d0331cf33e25 becomes3b4b975d3a46beb3788c28bffbf21d29023aa1776d0b67e2ecc516123b8b3f75. The frozen source has one forwarded frame hop; the helper refuses an unrepresented deeper chain. It also refuses unresolved lanes, unknown upstream frames and cyclic reset paths.
+
+The actual minimal common-phase vehicle extracts the required original and corrected reset stations and ICG enables from these die sources, retains lane half-cycle parity and instantiates 36 real ot_s81_land rings with the actual source-snapshot ot_s81_rly and ot_s81_land bodies. Positive: all nine frames, 36 exercised lanes, no real landing epoch fault. Same binary +MUT=1 selects the original receiving reset: real landing epoch fault is caught. This proves the reset/calendar mechanism without a whole frame/slice build. It does not qualify physical skew, arithmetic, a complete token, or the newly generated die physical flow. The earlier current native producer result102/102 at c90c02419 remains separate.
+
+The physical hints put each new station2um outside the receiving frame's nearest face, spaced0.5um along that face. The helper checks every point against all hard-body bounding boxes in the exact GEN plan and requires every new source/load Manhattan hop <=405um. On this plan, maximum new source hop2um and final load hop3um. All stations keep the actual receiving regional clock. Existing long reset-placement diagnostics are unchanged and remain DIE-owned; final detailed legalization/physical closure still belongs to the next GEN.
+
+Changed metadata includes exact source/new die and plan hashes, each new station coordinate/root, corrected frame_hop0_gates read_epoch/frame_rst and G-minus-R0, accumulated frame epoch delay, and frame_actual_release_depth. No data pipeline stage is added, but read epochs change by the recorded reset delays; token schedules must consume the new epochs before transferring old latency claims.
+
+Fleet evidence: corrected source generation Gold2 unit2386134-1792731568; actual5.050 positive and same-binary causal witness unit2398906-1792731724 (8GiB admission, two compiler workers); legal geometry generation unit2403774-1792731828. Initial probe attempt refused a guessed rst_sync1 root; corrected probe uses the executed cone's actual rst_n root, and the original refusal remains remote. Physical jobs on original cap29/cap30 stayed unchanged. Original-parser strict bind replay is separately recorded when it lands.
+
+Remote artifacts are at ot-gold2:/srv/opentallas-scratch/claude/codex-s81-cap30-framecal-1022. corrected_final/ contains the final die and metadata overlay. probe2/ contains source bodies, binary, objects, full generated probe, positive and mutant logs. The corrected_final die is byte-identical to the die used for the actual probe and strict-bind replay; final helper updates after the probe only add legal placement hints and consistent epoch metadata.
+
+For the next GEN, after dv_diecase and before dv_rvcase, run:
+
+```sh
+python3 tools/s81_dv/frame_chain_reset_v2.py --bind-dir "$W/bind/bind" --plan "$W/plan.json" --out-dir "$W/framecal_overlay"
+```
+
+Overlay only die.v, bind_case.json and place_hints.json into that freshly generated, owned bind directory; retain frame_chain_reset_v2.json as the receipt. Rerun the existing recorded port_bind_cmd on this new die before proceeding to dv_rvcase. The helper never edits its input directory. Preserve current running physical receipts and source directories. The GEN reference census must account explicitly for the22 additional one-bit reset masters. The source/data changes are restricted to the frame-reset correction; this does not repair unrelated old reset-placement misses.
