@@ -165,3 +165,26 @@ PASS means every probe finished, total overflow is 0, and no pin is without acce
 Probes are read-only diagnostics, run directly in docker with `--memory` equal to `--memory-swap`. Memory is set by
 `--mem`: 64 GB by default for the die probe, 32 GB for a partition probe. The S81 frame-sized fa probe peaked at 33 GB
 (GRT about 4 min), so run it with `--mem 48` on a host that keeps at least 64 GB free.
+
+## G0 census coverage (`census_cov.py`, mandatory from COORD 10-23 06:45)
+
+Every plan declares `census`. It is either `[{rows, map, note}]` (paths relative to the plan) or `{"none": reason}`.
+`none` is only for synthetic or proof plans, and it raises a WARN. Leaving `census` out is an ERROR.
+
+**`rows`** is an FT census (`tools/die_feedthrough` census JSON `groups[]`, or the `<die>_lanes.tsv`). Each row has
+`src, src_bus, dst, dst_bus, kind, bits`.
+
+**`map`** is a JSON file with these keys:
+- `parts`: instance to partition (exact names);
+- `rules`: `[[regex, partition|group]]`;
+- `groups`: a group to partition list, used when a census block is re-derived as several partitions;
+- `collapse`: pass-through regexes, such as `^ld_` landing cells;
+- `exempt`: `[{match, kind: clock|reset, replaced_by, reason}]`.
+
+G0 checks:
+1. Unmapped instance is an ERROR.
+2. For each directed partition pair, planned lane bits (data width; an ft lane counts once) must be at least the
+   as-built bits. Otherwise the shortfall is reported as `dropped` (ERROR).
+3. Reset or clock rows count as dropped unless an explicit `exempt` entry lists them. Exempt totals appear in the
+   summary.
+4. A group spanning several partitions gets a WARN: the traffic inside it needs a finer census.
