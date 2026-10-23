@@ -213,10 +213,20 @@ module dsdv_idx_rg3_bxmh #(
         // flops (two copies, each serving 16 k_sc bits -> 16 loads per flop; the ports feed a 4 + 8 predecode).
         // Cycle-identical to the raw capture.
         (* keep = "true" *) reg [31:0] ss0, ss1;          // one-hot {su_b, s_lo}; ss0 -> k_sc[15:0], ss1 -> k_sc[31:16]
+        // Preserve the 4+8 predecode boundary through ABC. Without keep,
+        // mapping may flatten 32 minterms onto sx_i[12:11] (36 loads).
+        (* keep = "true" *) wire [3:0] spre_u;
+        (* keep = "true" *) wire [7:0] spre_l;
+        for (genvar u = 0; u < 4; u = u + 1) begin : g_su_pre
+            assign spre_u[u] = su_b == 2'(u);
+        end
+        for (genvar l = 0; l < 8; l = l + 1) begin : g_sl_pre
+            assign spre_l[l] = s_lo == 3'(l);
+        end
         wire [31:0] sdec;
         genvar ga;
         for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
-            assign sdec[ga] = su_b == 2'(ga / 8) && s_lo == 3'(ga % 8);
+            assign sdec[ga] = spre_u[ga / 8] && spre_l[ga % 8];
         end
         always @(posedge ck) begin ss0 <= sdec; ss1 <= sdec; end
         wire [31:0] sm0,sm1;

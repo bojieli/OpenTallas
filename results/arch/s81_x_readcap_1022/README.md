@@ -15,3 +15,5 @@ Checklist before native-first gates:
 8. Schedule: kq +1, xr +0; notified DIE4/RTLGAP, adoption requires exact consumer calendar. No performance credit claimed.
 
 Proof compares delayed kq against the original flat X for 20000 randomized changing-data cycles, reset pulses, and a dropped-write mutant. Default READ_STAGE=0 also runs unchanged.
+
+Initial xrc0 native census rejected sx_i[12:11] at 36 loads: ABC flattened 32 select minterms plus read-address logic. Keep the 4+8 combinational predecode wires as mapped partition boundaries; no added edge or value change. xrc1 native PASS preserved. Re-run changed xrc0 and aggregate alternate on the corrected source.
