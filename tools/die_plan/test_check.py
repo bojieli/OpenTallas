@@ -387,3 +387,27 @@ def test_die_io_windows():
     assert any("not inside its host" in m for m in errs(
         lambda p: p["die"]["io"][0].__setitem__("rect_um", [900, 8.64, 950, 50]), "die_io"))
     assert any("not the host" in m for m in errs(lambda p: p["die"]["io"][0].__setitem__("ports", ["dout"]), "die_io"))
+
+
+def test_latency_groups_pad_to_slowest():
+    """R8 (COORD 10-23, QC xt1 0/64): the lanes of one as-built bus arrive in one cycle; pads are realised as type
+    stages at the destination in bus; unequal table cycles in a group or per-type pad conflicts fail G0."""
+    import gen_rtl
+    p = copy.deepcopy(EX)
+    p["latency_groups"] = [dict(name="xbus", kind="bus", lanes=["x", "cfg23"], source="BINDER2 test")]
+    P = schema.Plan(p)
+    assert P.lane_latency("cfg23")["cycles"] == 4 and P.lane_latency("cfg23")["pad"] == 2
+    assert P.bus_pads() == ({("sink", "cfg_i"): 2}, [])
+    p["latency"]["lanes"] = gen.latency_table(P)
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert [i["msg"] for i in R.errors() if i["check"] == "latency"] == []
+    stale = copy.deepcopy(p)
+    stale["latency"]["lanes"]["cfg23"]["cycles"] = 2
+    R, _ = g0(lambda q: q.update(copy.deepcopy(stale)))
+    assert any("unequal delays" in i["msg"] for i in R.errors())
+    rtl = gen_rtl.wrapper(schema.Plan(p), "sink", gen_rtl.bus_epochs(schema.Plan(p)))
+    assert "u_bin_cfg_i_pad0" in rtl and "u_bin_cfg_i_pad1" in rtl and "u_bin_cfg_i_pad2" not in rtl
+    # pads are a TYPE property: pm1 and pm2 (both 'mid') would need different cfg_i pads
+    c = copy.deepcopy(EX)
+    c["latency_groups"] = [dict(name="bad", lanes=["x", "cfg12"])]
+    assert schema.Plan(c).bus_pads()[1]
