@@ -465,12 +465,24 @@ BCAST = {  # broadcast nets of the slice record -> plan forwarding trees (regist
 }
 
 
-def slice_internal_links(P, geo, record, su_split):
+def directed_slice_landings(record, su_directed):
+    """Split the former r_su group using exact s8 child-pin source directions.
+
+    The old L0|L1=504 was shared gb/gv/reset input overlap, not a driven lane.
+    Preserve every external landing bit; count actual internal SU directions.
+    """
+    rows = [r for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
+    rows += [dict(src_region=r["src"], dst_region=r["dst"], net=r["net"], width=r["bits"])
+             for r in su_directed["external"]]
+    return rows
+
+
+def slice_internal_links(P, geo, record, su_split, su_directed):
     for k in range(NCOL):
         agg = collections.Counter()
         trees = collections.Counter()
-        for ld in record["landings"]:
-            s, d = REGION_OF[ld["src_region"]], REGION_OF[ld["dst_region"]]
+        for ld in directed_slice_landings(record, su_directed):
+            s, d = (REGION_OF.get(ld[x], ld[x]) for x in ("src_region", "dst_region"))
             if ld["net"] in ("cs0", "cs1", "cs2", "cs3"):
                 continue                    # cs_c -> u_fs -> cw_s_c: replaced by the plan lane hc_c -> S face
             if s == d:
@@ -480,12 +492,12 @@ def slice_internal_links(P, geo, record, su_split):
                 trees[bk] = max(trees[bk], ld["width"])
                 continue
             agg[(s, d)] += ld["width"]
+        for row in su_directed["internal"]:
+            agg[(row["src"], row["dst"])] += row["bits"]
         flows = [(f"b_{bk[1]}_{a}_{b}", a, b, w, f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i", f"u_pstn.{bk[1]}_fwd",
                   f"u_{b}.{bk[1]}") for bk, w in trees.items() for a, b in BCAST[bk]]
         flows += [(f"x_{a}_{b}", a, b, w, f"x_{b}_o", f"x_{a}_i", f"u_{a}.x_{b}", f"u_{b}.x_{a}")
                   for (a, b), w in agg.items()]
-        flows += [(f"x_su_c_{g}", "su_c", g, su_split[f"core|L{g[-1]}"], f"x_{g}_o", "x_su_c_i",
-                   f"u_suvm.lane_{g}", "u_lanes.core") for g in ("su_l0", "su_l1")]
         paths = negotiate(P, geo, k, [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3]) for f in flows])
         for f, pth in zip(flows, paths):
             P.link(f[0], pth, f[4], f[5], f[3], src_leaf=f[6], dst_leaf=f[7])
@@ -1413,7 +1425,7 @@ def _tsv(path, rows):
             fh.write("\t".join(str(r[k]) for k in ("src", "src_bus", "dst", "dst_bus", "kind", "bits")) + "\n")
 
 
-def write_census(P, geo, census, record, outdir):
+def write_census(P, geo, census, record, outdir, su_directed):
     """three census sources for tools/die_plan/census_cov.py:
     [0] the as-built die census (inputs/qc_census.json.gz, every row) with three edits only: rows touching the
         as-built fault OR network (flt_*) -> kind 'fault' (replaced by the plan 1-bit OR tree, exempted with reason),
@@ -1422,8 +1434,8 @@ def write_census(P, geo, census, record, outdir):
         quads).  Slices, CB16 clusters and io_collective are GROUPS (one census block -> several partitions).
     [1] slice regions (inputs/s8_lp_record.json landings, the 210 region crossings), one copy per slice: covers the
         traffic inside the slice groups.  cs0-3 (cs -> u_fs -> cw_s forwarder) are the plan cw lanes, checked in [0];
-        broadcast nets (BCAST) are counted per tree hop.  r_su stays one group (su_c + su_l0 + su_l1): the record does
-        not split the SU block.
+        broadcast nets (BCAST) are counted per tree hop. The former r_su is split by source-bound child-pin
+        directions in inputs/su_directed.json; actual internal SU rows are a finer census, not a hidden group.
     [2] io_collective internals (rtl/physical/ot_qfd_collective_static_io.sv): face <-> core records, R face <-> share
         frames, face <-> PHY flits, core <-> slice / sys_face: covers the traffic inside the coll group."""
     cdir = Path(outdir) / "census"
@@ -1472,7 +1484,7 @@ def write_census(P, geo, census, record, outdir):
     # [1] slice regions
     rows1, parts1, groups1 = [], {}, {}
     for k, nm in enumerate(cname):
-        for ld in record["landings"]:
+        for ld in directed_slice_landings(record, su_directed):
             if ld["net"] in ("cs0", "cs1", "cs2", "cs3"):
                 continue
             s_, d_ = ld["src_region"], ld["dst_region"]
@@ -1489,8 +1501,13 @@ def write_census(P, geo, census, record, outdir):
                 for x in (a, b):
                     parts1[f"{nm}/tree_{x}"] = sl(geo, k, x)
         for rg, reg in REGION_OF.items():
-            parts1[f"{nm}/{rg}"] = f"su_{nm}" if rg == "r_su" else sl(geo, k, reg)
-        groups1[f"su_{nm}"] = [sl(geo, k, x) for x in ("su_c", "su_l0", "su_l1")]
+            if rg != "r_su":
+                parts1[f"{nm}/{rg}"] = sl(geo, k, reg)
+        for reg in ("su_c", "su_l0", "su_l1"):
+            parts1[f"{nm}/{reg}"] = sl(geo, k, reg)
+        for row in su_directed["internal"]:
+            rows1.append(dict(src=f"{nm}/{row['src']}", src_bus=row["net"],
+                              dst=f"{nm}/{row['dst']}", dst_bus=row["net"], kind="data", bits=row["bits"]))
     _tsv(cdir / "slice_rows.tsv.gz", rows1)
     json.dump({"note": "QC-FIX slice-region census map (gen_plan.py write_census [1])", "parts": parts1,
                "groups": groups1}, open(cdir / "slice_map.json", "w"), indent=1)
@@ -1555,6 +1572,7 @@ def main():
     fp_pins = {s: {b: f for f, bs in fp[s]["pins"].items() for b in bs} for s in "we"}
     record = json.loads(Path(a.slice_record).read_text())
     su_split = json.loads(Path(a.su_split).read_text())["su_split_bits"]
+    su_directed = json.loads(Path(a.su_split).with_name("su_directed.json").read_text())
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}
     P = Plan()
     P.cov = collections.defaultdict(list)
@@ -1571,7 +1589,7 @@ def main():
     clone_s2_types(P)
     cb_links(P, a.variant, geo)
     slice_cluster_links(P, a.variant, geo)
-    slice_internal_links(P, geo, record, su_split)
+    slice_internal_links(P, geo, record, su_split, su_directed)
     face_map = json.loads(Path(a.slice_face_map).read_text())
     dropped = census_links(P, geo, census, fp_pins, face_map)
     P.coll_rows = coll_internal_links(P)
@@ -1591,7 +1609,7 @@ def main():
               "reason": f"west strip above serdes S3: IO content (16.07 mm tall) is shorter than the compute "
                         f"column ({H / 1000:.2f} mm); strip width = serdes PHY depth. Bump/decap field; spare for the "
                         f"KV-die UCIe second port if the TP8 pair needs it"}]
-    census_decl = write_census(P, geo, census, record, Path(a.out).parent)
+    census_decl = write_census(P, geo, census, record, Path(a.out).parent, su_directed)
     taps = clock_taps(P)
     declare_clock_taps(P, taps)
     nbrs = neighbours(P)
