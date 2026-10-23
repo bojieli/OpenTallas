@@ -176,7 +176,7 @@ def sdc(P, tn, pins):
 
 
 
-def write_type_kit(P, tn, out, rtl_files, util=0.5):
+def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
     t = P.types[tn]
     w, h = t["outline_um"]
     kd = Path(out) / tn
@@ -214,6 +214,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5):
            "export HOLD_SLACK_MARGIN = 0",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
+           *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
+              "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
            "export TNS_END_PERCENT = 100"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
@@ -254,7 +256,7 @@ exit $rc
 """
 
 
-def write_phys(raw, out, rtl_root=None, types=None, util=0.5):
+def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False):
     import gen_rtl
     P = S.Plan(raw)
     out = Path(out)
@@ -268,7 +270,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5):
         if t.get("hard") or (types and tn not in types):
             continue
         mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
-        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util))
+        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

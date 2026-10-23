@@ -1,0 +1,108 @@
+{
+ "RESPONSE_LAT": {
+  "plan": 10,
+  "plan_min": 10,
+  "brief_natural": 18,
+  "v1": 12,
+  "v2": 10,
+  "rtl6": 80
+ },
+ "RL": {
+  "plan": 52,
+  "plan_min": 46,
+  "O_max": 13,
+  "WP_max": 13,
+  "brief_natural": 48,
+  "v1": 61,
+  "v2": 50,
+  "rtl6": 112
+ },
+ "F_DLY": {
+  "plan": 2,
+  "law": "1 + D(pvp) + D(fin) + face_land_fin",
+  "D_pvp": 0,
+  "D_fin": 0,
+  "face_land_fin": 1,
+  "note": "pvfin, kvs_attn and both pvw RH_r0 heads in hub_C; v2 value 1 was a fallback (no pvfin lane in dest_lat) that dropped the fin face landing; 1 only with the unlanded kvs_attn_r17",
+  "brief_natural": 14,
+  "v1": 17,
+  "v2": 1,
+  "rtl6": 55
+ },
+ "PV_LEAD": {
+  "plan": 16,
+  "brief_natural": 14,
+  "v1": 19,
+  "v2": 16,
+  "rtl6": 38
+ },
+ "gathers": [
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "a0",
+   "plan_cycles": 16,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "a1",
+   "plan_cycles": 16,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "b0",
+   "plan_cycles": 16,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_0__u_RH_r0",
+   "port": "b1",
+   "plan_cycles": 16,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "a0",
+   "plan_cycles": 16,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "a1",
+   "plan_cycles": 16,
+   "asbuilt": 48
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "b0",
+   "plan_cycles": 16,
+   "asbuilt": 56
+  },
+  {
+   "dst": "pvw_1__u_RH_r0",
+   "port": "b1",
+   "plan_cycles": 16,
+   "asbuilt": 56
+  }
+ ],
+ "lanes": {
+  "n": 2326,
+  "bends_max": 2,
+  "bends_p90": 0,
+  "bends_hist": {
+   "0": 2173,
+   "1": 133,
+   "2": 20
+  },
+  "detour_p90": 1.235,
+  "detour_max": 1.313,
+  "multi_hop_lanes": 441
+ },
+ "F_DLY_bench": {
+  "verdict": "F_DLY=2 NOT bit-exact at long context",
+  "branch": "claude/kv-p2-rtl-1023@ef0304185",
+  "evidence": "results/rtl/kv_p2_fdly2_1023 (tb_kvattn_rel plan-frame, Verilator 5.050): FD=2 PASS u1 T1024/T4096/T4096-peaky, u4 T1024/T4096; FAIL u1 T8191/T8192, u4 T8192 (stack faults st0/st1); FD=3 vehicle 10/10 PASS; 7/7 mutants caught",
+  "consequence": "keep D(pvp)=1 (F_DLY 3) in the schedule until the r17 root PV launch or the stack read schedule changes (new RTL + re-closure)"
+ }
+}

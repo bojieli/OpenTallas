@@ -25,6 +25,7 @@ Conventions (binding for every tool):
 - Part name "@die" in a port endpoint is the die boundary (bumps / die IO); its bus is the die-level port name.
 """
 import bisect
+from fractions import Fraction
 import json
 import math
 import sys
@@ -573,7 +574,10 @@ def spread(A, n, lo, hi):
     m = len(A)
     if n == 0:
         return []
-    cen = (lo + hi) / 2.0
+    # exact arithmetic (KV-P2 10-23): window ends snapped to 1e-6 track and kept as Fractions, so the nearest-track ties
+    # resolve identically in mirrored replicas (die-frame float error broke them: G0 'pin table differs')
+    lo, hi = Fraction(str(round(lo, 6))), Fraction(str(round(hi, 6)))
+    cen = (lo + hi) / 2
     L = hi - lo
 
     def nearest(t):
