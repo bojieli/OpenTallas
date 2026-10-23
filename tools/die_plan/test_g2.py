@@ -60,3 +60,16 @@ def test_part_probe_files_and_worst():
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
         assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + 2   # fz_i from die IO: no epoch
+
+
+def test_assembly_die_flow():
+    import gen_phys
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "views").mkdir()
+        kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
+        kd = Path(d) / "die"
+        tcl = (kd / "die_flow.tcl").read_text()
+        assert "place_inst -name pfb -location {1434.24 0}" in tcl and "detailed_route" in tcl
+        v = (kd / "die_top_struct.v").read_text()
+        assert "endmodule :" not in v and "w_x" in v
+        assert (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
