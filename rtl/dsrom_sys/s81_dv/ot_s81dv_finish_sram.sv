@@ -391,8 +391,15 @@ module ot_s81dv_eng_finish_sram #(
     // N32 reset (r7): the former rs[1] (one register driving every control flop of every finish after merging) is
     // replaced by bounded 2-edge leaves of a control forest (same release edge); the arithmetic units take the raw
     // rst_n and build their own 2-edge forests (ot_s81dv_*_n32)
+`ifdef OT_S81DV_XFIN_N25
+    // N25 (STW-S81c-COLLA4 10-22, N23 native: rc[5] leaf 48 RESETN loads = u_vtl + the 2T N23 u_nvl copies + vkl):
+    // 8 more bounded leaves of the same 2-edge forest (same release edge); each u_nvl copy takes its own leaf rc[8+nh]
+    wire [15:0] rc;
+    ot_s81dv_finish_reset2 #(.LEAVES(16)) u_ctl_reset(.clk(clk),.rst_n(rst_n),.q(rc));
+`else
     wire [7:0] rc;
     ot_s81dv_finish_reset2 #(.LEAVES(8)) u_ctl_reset(.clk(clk),.rst_n(rst_n),.q(rc));
+`endif
     wire [NRS-1:0] rsr;
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
     // Leaf-valid clears have distinct same-edge owners from the internal
@@ -684,7 +691,12 @@ module ot_s81dv_eng_finish_sram #(
 `ifdef OT_S81DV_XFIN_N23
     for (genvar nh = 0; nh < 2 * T; nh = nh + 1) begin : g_nvl
         wire ve_u; wire [CW-1:0] te_u;
-        ot_s81dv_fin_vtline #(.CW(CW), .D(LAV), .ID(nh + 1)) u_nvl (.clk(clk), .rst_n(rc[5]), .v(f_q), .t(t_q),
+`ifdef OT_S81DV_XFIN_N25
+        localparam integer NVR = 8 + nh;
+`else
+        localparam integer NVR = 5;
+`endif
+        ot_s81dv_fin_vtline #(.CW(CW), .D(LAV), .ID(nh + 1)) u_nvl (.clk(clk), .rst_n(rc[NVR]), .v(f_q), .t(t_q),
             .v_e(ve_u), .t_e(te_u), .v_o(nv_v[nh]), .t_o(nv_t[nh * CW +: CW]));
     end
 `endif
