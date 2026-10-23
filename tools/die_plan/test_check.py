@@ -271,7 +271,7 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
     from types import SimpleNamespace
     import census_cov
 
-    def run(mutate=None, forwarders=("pm",)):
+    def run(mutate=None, forwarders=("pm",), extra_controls=0, data_bits=8):
         ports = {
             "data": dict(src=dict(part="pa", bus="o_pa_data"), dst=dict(part="pb", bus="i_pa_data"), width=8),
             "c0": dict(src=dict(part="pa", bus="o_pa_c"), dst=dict(part="pm", bus="i_pa_c"), width=1),
@@ -280,9 +280,12 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
                             parts={n: {"type": "t"} for n in ("pa", "pm", "pb", "wrong")},
                             ports=ports, lanes={p: dict(ports=[p]) for p in ports})
         rows = [dict(src="pa", src_bus=bus, dst="pb", dst_bus=bus, bits=w, kind="data")
-                for bus, w in (("data", 8), ("c", 1))]
+                for bus, w in (("data", data_bits), ("c", 1))]
         route = dict(src="pa", src_bus="c", dst="pb", dst_bus="c", lanes=["c0", "c1"])
         mp = dict(parts={n: n for n in P.parts}, forward_via=list(forwarders), forward_routes=[route])
+        for i in range(extra_controls):
+            rows.append(dict(src="pa", src_bus="c", dst="pb", dst_bus=f"c_again{i}", bits=1, kind="data"))
+            mp["forward_routes"].append(dict(route, dst_bus=f"c_again{i}"))
         if mutate:
             mutate(P, mp)
         (tmp_path / "rows.json").write_text(json.dumps(rows))
@@ -311,3 +314,22 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
     assert R.errors()
     summary, R = run(lambda p, m: m.pop("forward_routes"))
     assert summary["dropped_bits"] == 1 and R.errors()  # the generic single-path rule stays unchanged
+
+    # Two distinct census rows may refer to the same physical control. Their witnesses cannot reserve the
+    # same lane capacity twice, even though their exact row keys differ.
+    _, R = run(extra_controls=1)
+    assert any("reuse planned lane capacity" in e["msg"] for e in R.errors())
+
+    def direct_cycle(p, m):
+        p.ports["direct"] = dict(src=dict(part="pa", bus="o_pa_c"),
+                                 dst=dict(part="pb", bus="i_pa_c"), width=1)
+        p.ports["back"] = dict(src=dict(part="pb", bus="o_pa_c"),
+                               dst=dict(part="pm", bus="i_pa_c"), width=1)
+        for lid in ("direct", "back"):
+            p.lanes[lid] = dict(ports=[lid])
+        m["forward_routes"][0]["lanes"] = ["direct", "back", "c1"]
+    summary, R = run(direct_cycle, forwarders=("pm", "pb"), data_bits=9)
+    assert summary["dropped_bits"] == 1 and R.errors()  # direct control must not count again as data capacity
+
+    _, R = run(lambda p, m: m.update(groups={"g": ["pa", "pm"]}), forwarders=("g",))
+    assert any("witness capacity exceeds planned lanes" in e["msg"] for e in R.errors())
