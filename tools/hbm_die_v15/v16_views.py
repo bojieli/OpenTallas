@@ -48,7 +48,9 @@ def lef_ports(lef):
 
 # routed views that must not bind (native qualification FAIL): H-DIE-R8 10-17 h9b view fails native capture 213.7 ->
 # the CLOSED successor hdie_pc_ctrl_cfg_h9c (same master, RTL unchanged, 155.52^2) binds instead
-NOT_BINDABLE = ('physical/ref_tile/hdie_pc_ctrl_cfg_h9b/',)
+# HBMc/CHAIN2 10-22 (STEWARD, freeze item 3): hbm_refcfg_q_1018 is pre-REL_HOLD (f94a3e82b) -- never bind it; the die
+# binds hbm_refcfg_q_1022 (same pins/params, REL_HOLD 64) when its views exist, else ot_hbm_pc_refresh_cfg is SYNTH (FB b).
+NOT_BINDABLE = ('physical/ref_tile/hdie_pc_ctrl_cfg_h9b/', 'physical/ref_tile/hbm_refcfg_q_1018/')
 
 
 def real_views(m):
