@@ -1,0 +1,4298 @@
+{
+ "schema": "opentallas.hbm.d4g.l12_banklat.v1",
+ "region": "d4g_l12_banklat",
+ "inp": "/home/ubuntu/artifacts/hdie-d4/hbmc_r18f_1021/plansM/net/pre_relay.json",
+ "budgets": {
+  "master": {
+   "ot_hbm_su_static_pgslice_lg": {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   "ot_hgi_sfu_lg_pair_tap_leaf": {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   },
+   "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   },
+   "ot_hgi_sfu_core_split3": {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   },
+   "ot_hbm_hc_qhub_static": {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   },
+   "ot_hgi_sm_xload_cl2_ctlx": {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   },
+   "ot_hgi_dma_back_static_vp4_banks_cp": {
+    "RR_RT": 80
+   },
+   "ot_hfd_coll_q2_hard_v8g": {
+    "VM_RT": 76
+   },
+   "ot_hfd_coll_q3_hard_v8x": {
+    "VM_RT": 76
+   },
+   "ot_hgi_coll_gq_issue": {
+    "VM_RT": 76
+   }
+  },
+  "inst": {
+   "hcollrs_SW": {
+    "BANK_RT": 73
+   },
+   "hcollrs_SE": {
+    "BANK_RT": 72
+   },
+   "hcollrs_NW": {
+    "BANK_RT": 72
+   },
+   "hcollrs_NE": {
+    "BANK_RT": 72
+   },
+   "hb_idx__nwsh": {
+    "BANK_RT": 40
+   },
+   "hb_idx__ctl": {
+    "VM_RT": 65,
+    "CR_RT": 36,
+    "SEL_LAT": 30
+   },
+   "hb_argmax": {
+    "VMX": 78,
+    "ACK": 52
+   },
+   "hb_idx__op_SW": {
+    "VM_RT_EXTRA": 171
+   },
+   "hb_idx__op_SE": {
+    "VM_RT_EXTRA": 171
+   },
+   "hb_idx__op_NW": {
+    "VM_RT_EXTRA": 173
+   },
+   "hb_idx__op_NE": {
+    "VM_RT_EXTRA": 171
+   }
+  }
+ },
+ "overlay": {
+  "path": "/home/ubuntu/scratch/hbmc-token2/r18src/l12_overlay.json",
+  "master": {
+   "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   },
+   "ot_hbm_hc_qhub_static": {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   },
+   "ot_hgi_sm_xload_cl2_ctlx": {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   },
+   "ot_hfd_coll_q2_hard_v8g": {
+    "VM_RT": 76
+   },
+   "ot_hfd_coll_q3_hard_v8x": {
+    "VM_RT": 76
+   },
+   "ot_hgi_coll_gq_issue": {
+    "VM_RT": 76
+   }
+  },
+  "inst": {
+   "hb_argmax": {
+    "VMX": 78
+   },
+   "hcollrs_SW": {
+    "BANK_RT": 73
+   },
+   "hb_idx__op_NW": {
+    "VM_RT_EXTRA": 173
+   }
+  },
+  "deltas": [
+   {
+    "what": "HC LG tap term READ_RETURN / WRITE_RETURN",
+    "from": [
+     32,
+     29
+    ],
+    "to": [
+     34,
+     31
+    ],
+    "delta": 2,
+    "need": "A NE/SE 34/31, B NE/SE 33/30"
+   },
+   {
+    "what": "HC qhub RD_CAPTURE / GATHER_PHASE / DONE_LAT (tracks the HC tap: tap + 5 / + 5 / + 4; functional coupling, the LAT class does not check it)",
+    "from": [
+     37,
+     37,
+     33
+    ],
+    "to": [
+     39,
+     39,
+     35
+    ],
+    "delta": 2
+   },
+   {
+    "what": "hb_quant_NW RL (client<->share lanes 16 vs budget 4)",
+    "from": 45,
+    "to": 57,
+    "delta": 12,
+    "need": "A 55, B 57"
+   },
+   {
+    "what": "hb_argmax VMX",
+    "from": 77,
+    "to": 78,
+    "delta": 1,
+    "need": "A 78"
+   },
+   {
+    "what": "hcollrs_SW BANK_RT (other quadrants stay 72)",
+    "from": 72,
+    "to": 73,
+    "delta": 1,
+    "need": "B 73"
+   },
+   {
+    "what": "xload ctlx RD_LAT bank 1",
+    "from": 39,
+    "to": 40,
+    "delta": 1,
+    "need": "B xl_NW_ctl vmb_NW1 40",
+    "price_note": "0: x-load priced at max RD_LAT 55, unchanged"
+   },
+   {
+    "what": "registered share2 consumers only",
+    "from_parameters": {
+     "COLL_VM_RT": 74,
+     "GQ_VM_RT": 74,
+     "INDEX_NW_VM_RT_EXTRA": 171,
+     "QDQ_NW_RL": 57
+    },
+    "to_parameters": {
+     "COLL_VM_RT": 76,
+     "GQ_VM_RT": 76,
+     "INDEX_NW_VM_RT_EXTRA": 173,
+     "QDQ_NW_RL": 59
+    },
+    "delta": 2,
+    "proof": "d4g_bank_latency.SHARE_EXTRA[ot_hbm_idx_vm_share2_static_r]=2; every request and return face registered"
+   },
+   {
+    "what": "x-load ctlx RD_LAT per bank (d4g_bank_latency ref 6 -> 7, STEWARD-TOK-HBM 045b6666c: cl2 ctl checks md[RLM+1] against raw rr capture)",
+    "from": [
+     37,
+     40,
+     27,
+     29,
+     53,
+     55,
+     43,
+     45
+    ],
+    "to": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ],
+    "delta": 1,
+    "need": "die bench N_b+8 PASS / N_b+7 FAIL; pads N_b unchanged"
+   },
+   {
+    "what": "hb_quant_NW RL inst budget dropped: l32q qdq r3 split, RL on the 4 LG children = netmap RL 54 (coordinator-approved 18:50)",
+    "from": 59,
+    "to": 54,
+    "delta": -5
+   }
+  ],
+  "price": {
+   "status": "STATIC_EDGE_LEDGER_PENDING_PRODUCTION_REPRICE",
+   "request_edge_delta": 1,
+   "return_edge_delta": 1,
+   "per_affected_transaction_edges": 2,
+   "affected": [
+    "hb_coll_SW",
+    "hb_coll_SE",
+    "hb_coll_NW",
+    "hb_coll_NE",
+    "hcollgi_SW",
+    "hcollgi_SE",
+    "hcollgi_NW",
+    "hcollgi_NE",
+    "hb_idx__op_NW",
+    "hb_quant_NW"
+   ],
+   "kq_share_extra_delta": 0,
+   "required": "compile production schedules with selected budgets/current S4 lanes; no old DS/Qwen throughput claim"
+  }
+ },
+ "problems": [],
+ "over_budget": [],
+ "e8_recheck": [],
+ "e8_lanes": [],
+ "iterations": [
+  {
+   "it": 0,
+   "lat": {
+    "clients": 258,
+    "checked": 124,
+    "fail": 124,
+    "unequal": 0,
+    "unresolved_landings": 0
+   },
+   "pads_planned": 195,
+   "s": 1.8
+  },
+  {
+   "it": 1,
+   "lat": {
+    "clients": 258,
+    "checked": 124,
+    "fail": 76,
+    "unequal": 0,
+    "unresolved_landings": 0
+   },
+   "pads_planned": 106,
+   "s": 1.6
+  },
+  {
+   "it": 2,
+   "lat": {
+    "clients": 258,
+    "checked": 124,
+    "fail": 32,
+    "unequal": 0,
+    "unresolved_landings": 0
+   },
+   "pads_planned": 64,
+   "s": 1.3
+  },
+  {
+   "it": 3,
+   "lat": {
+    "clients": 258,
+    "checked": 124,
+    "fail": 0,
+    "unequal": 0,
+    "unresolved_landings": 0
+   },
+   "pads_planned": 0,
+   "s": 1.6
+  }
+ ],
+ "stripped": 0,
+ "params": [
+  [
+   "hb_coll_NE",
+   "ot_hfd_coll_q2_hard_v8g",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hb_coll_NW",
+   "ot_hfd_coll_q2_hard_v8g",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hb_coll_SE",
+   "ot_hfd_coll_q2_hard_v8g",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hb_coll_SW",
+   "ot_hfd_coll_q3_hard_v8x",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hb_dbk_NE",
+   "ot_hgi_dma_back_static_vp4_banks_cp",
+   {
+    "RR_RT": null
+   },
+   {
+    "RR_RT": 80
+   }
+  ],
+  [
+   "hb_dbk_NW",
+   "ot_hgi_dma_back_static_vp4_banks_cp",
+   {
+    "RR_RT": null
+   },
+   {
+    "RR_RT": 80
+   }
+  ],
+  [
+   "hb_dbk_SE",
+   "ot_hgi_dma_back_static_vp4_banks_cp",
+   {
+    "RR_RT": null
+   },
+   {
+    "RR_RT": 80
+   }
+  ],
+  [
+   "hb_dbk_SW",
+   "ot_hgi_dma_back_static_vp4_banks_cp",
+   {
+    "RR_RT": null
+   },
+   {
+    "RR_RT": 80
+   }
+  ],
+  [
+   "hc_NE",
+   "ot_hbm_hc_qhub_static",
+   {
+    "RD_CAPTURE": null,
+    "GATHER_PHASE": null,
+    "DONE_LAT": null
+   },
+   {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   }
+  ],
+  [
+   "hc_NE0",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NE1",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NE2",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NE3",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NW",
+   "ot_hbm_hc_qhub_static",
+   {
+    "RD_CAPTURE": null,
+    "GATHER_PHASE": null,
+    "DONE_LAT": null
+   },
+   {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   }
+  ],
+  [
+   "hc_NW0",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NW1",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NW2",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_NW3",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SE",
+   "ot_hbm_hc_qhub_static",
+   {
+    "RD_CAPTURE": null,
+    "GATHER_PHASE": null,
+    "DONE_LAT": null
+   },
+   {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   }
+  ],
+  [
+   "hc_SE0",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SE1",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SE2",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SE3",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SW",
+   "ot_hbm_hc_qhub_static",
+   {
+    "RD_CAPTURE": null,
+    "GATHER_PHASE": null,
+    "DONE_LAT": null
+   },
+   {
+    "RD_CAPTURE": 39,
+    "GATHER_PHASE": 39,
+    "DONE_LAT": 35
+   }
+  ],
+  [
+   "hc_SW0",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SW1",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SW2",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hc_SW3",
+   "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   },
+   {
+    "READ_RETURN": 34,
+    "WRITE_RETURN": 31
+   }
+  ],
+  [
+   "hcollgi_NE",
+   "ot_hgi_coll_gq_issue",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hcollgi_NW",
+   "ot_hgi_coll_gq_issue",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hcollgi_SE",
+   "ot_hgi_coll_gq_issue",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "hcollgi_SW",
+   "ot_hgi_coll_gq_issue",
+   {
+    "VM_RT": null
+   },
+   {
+    "VM_RT": 76
+   }
+  ],
+  [
+   "sfu_NE0",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NE1",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NE2",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NE3",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NW0",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NW1",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NW2",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_NW3",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SE0",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SE1",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SE2",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SE3",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SW0",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SW1",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SW2",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfu_SW3",
+   "ot_hgi_sfu_lg_pair_tap_leaf",
+   {
+    "READ_RETURN": 14,
+    "WRITE_RETURN": 11
+   },
+   {
+    "READ_RETURN": 24,
+    "WRITE_RETURN": 21
+   }
+  ],
+  [
+   "sfucore_NE",
+   "ot_hgi_sfu_core_split3",
+   {
+    "TAP_RR": null,
+    "TAP_WR": null
+   },
+   {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   }
+  ],
+  [
+   "sfucore_NW",
+   "ot_hgi_sfu_core_split3",
+   {
+    "TAP_RR": null,
+    "TAP_WR": null
+   },
+   {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   }
+  ],
+  [
+   "sfucore_SE",
+   "ot_hgi_sfu_core_split3",
+   {
+    "TAP_RR": null,
+    "TAP_WR": null
+   },
+   {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   }
+  ],
+  [
+   "sfucore_SW",
+   "ot_hgi_sfu_core_split3",
+   {
+    "TAP_RR": null,
+    "TAP_WR": null
+   },
+   {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   }
+  ],
+  [
+   "su_NE0",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NE1",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NE2",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NE3",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NW0",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NW1",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NW2",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_NW3",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SE0",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SE1",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SE2",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SE3",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SW0",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SW1",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SW2",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "su_SW3",
+   "ot_hbm_su_static_pgslice_lg",
+   {
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   {
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15
+   }
+  ],
+  [
+   "xl_NE_ctl",
+   "ot_hgi_sm_xload_cl2_ctlx",
+   {
+    "RD_LAT": 6
+   },
+   {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   }
+  ],
+  [
+   "xl_NW_ctl",
+   "ot_hgi_sm_xload_cl2_ctlx",
+   {
+    "RD_LAT": 6
+   },
+   {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   }
+  ],
+  [
+   "xl_SE_ctl",
+   "ot_hgi_sm_xload_cl2_ctlx",
+   {
+    "RD_LAT": 6
+   },
+   {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   }
+  ],
+  [
+   "xl_SW_ctl",
+   "ot_hgi_sm_xload_cl2_ctlx",
+   {
+    "RD_LAT": 6
+   },
+   {
+    "RD_LAT": [
+     38,
+     41,
+     28,
+     30,
+     54,
+     56,
+     44,
+     46
+    ]
+   }
+  ],
+  [
+   "hcollrs_SW",
+   "ot_hbm_idx_vm_share2_static_r",
+   {
+    "BANK_RT": null
+   },
+   {
+    "BANK_RT": 73
+   }
+  ],
+  [
+   "hcollrs_SE",
+   "ot_hbm_idx_vm_share2_static_r",
+   {
+    "BANK_RT": null
+   },
+   {
+    "BANK_RT": 72
+   }
+  ],
+  [
+   "hcollrs_NW",
+   "ot_hbm_idx_vm_share2_static_r",
+   {
+    "BANK_RT": null
+   },
+   {
+    "BANK_RT": 72
+   }
+  ],
+  [
+   "hcollrs_NE",
+   "ot_hbm_idx_vm_share2_static_r",
+   {
+    "BANK_RT": null
+   },
+   {
+    "BANK_RT": 72
+   }
+  ],
+  [
+   "hb_idx__nwsh",
+   "ot_hbm_idx_vm_share2_static_r",
+   {
+    "BANK_RT": null
+   },
+   {
+    "BANK_RT": 40
+   }
+  ],
+  [
+   "hb_idx__ctl",
+   "ot_hbm_idx_rootctl_static_am",
+   {
+    "VM_RT": 65,
+    "CR_RT": 36,
+    "SEL_LAT": 30
+   },
+   {
+    "VM_RT": 65,
+    "CR_RT": 36,
+    "SEL_LAT": 30
+   }
+  ],
+  [
+   "hb_argmax",
+   "ot_hbm_argmax_static_sw_vm_r2",
+   {
+    "VMX": null,
+    "ACK": null
+   },
+   {
+    "VMX": 78,
+    "ACK": 52
+   }
+  ],
+  [
+   "hb_idx__op_SW",
+   "ot_hbm_idx_vm_query_static_n12",
+   {
+    "VM_RT_EXTRA": null
+   },
+   {
+    "VM_RT_EXTRA": 171
+   }
+  ],
+  [
+   "hb_idx__op_SE",
+   "ot_hbm_idx_vm_query_static_n12",
+   {
+    "VM_RT_EXTRA": null
+   },
+   {
+    "VM_RT_EXTRA": 171
+   }
+  ],
+  [
+   "hb_idx__op_NW",
+   "ot_hbm_idx_vm_query_static_n12",
+   {
+    "VM_RT_EXTRA": null
+   },
+   {
+    "VM_RT_EXTRA": 173
+   }
+  ],
+  [
+   "hb_idx__op_NE",
+   "ot_hbm_idx_vm_query_static_n12",
+   {
+    "VM_RT_EXTRA": null
+   },
+   {
+    "VM_RT_EXTRA": 171
+   }
+  ]
+ ],
+ "segments": [
+  {
+   "name": "ctl_cq_cr",
+   "target": 35,
+   "fwd": 0,
+   "fwd_e8_extra": 0,
+   "back": {
+    "(0, 0)": 274
+   },
+   "why": "CR_RT = faces pin 1 + lanes(cq) + lanes(cr) (TOPK ACK 13 + CR_RT)",
+   "pads": [
+    {
+     "bits": 274,
+     "N": 35
+    }
+   ]
+  },
+  {
+   "name": "argmax_cq_cr",
+   "target": 38,
+   "fwd": 0,
+   "fwd_e8_extra": 0,
+   "back": {
+    "(0, 0)": 274
+   },
+   "why": "ACK = 13 + faces pin 1 + lanes(cq) + lanes(cr)",
+   "pads": [
+    {
+     "bits": 274,
+     "N": 38
+    }
+   ]
+  },
+  {
+   "name": "ctl_sel",
+   "target": 26,
+   "fwd": 0,
+   "fwd_e8_extra": 0,
+   "back": {
+    "(0, 0)": 4
+   },
+   "why": "SEL_LAT = 4 + lanes(sel_op) + lanes(selected_v) (exact)",
+   "pads": [
+    {
+     "bits": 4,
+     "N": 26
+    }
+   ]
+  }
+ ],
+ "final_lat": {
+  "clients": 258,
+  "checked": 124,
+  "fail": 0,
+  "unequal": 0,
+  "unresolved_landings": 0
+ },
+ "final_fail": [],
+ "pads": [
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE0_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE0.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE1_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE1.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE2_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE2.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE3_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE3.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE4_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE4.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE5_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE5.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE6_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE6.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NE_rq_vmb_NE7_rq1_0",
+   "at": "hb_dbk_NE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NE.rq -> vmb_NE7.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW0_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW0.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW1_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW1.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW2_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW2.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW3_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW3.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW4_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW4.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW5_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW5.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW6_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW6.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_NW_rq_vmb_NW7_rq1_0",
+   "at": "hb_dbk_NW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_NW.rq -> vmb_NW7.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE0_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE0.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE1_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE1.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE2_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE2.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE3_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE3.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE4_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE4.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE5_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE5.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE6_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE6.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SE_rq_vmb_SE7_rq1_0",
+   "at": "hb_dbk_SE.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SE.rq -> vmb_SE7.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW0_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW0.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW1_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW1.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW2_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW2.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW3_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW3.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW4_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW4.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW5_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW5.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW6_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW6.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_dbk_SW_rq_vmb_SW7_rq1_0",
+   "at": "hb_dbk_SW.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 72,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 72 stages on the request lane hb_dbk_SW.rq -> vmb_SW7.rq1[0:17] (RR_RT 80 -> round trip 79, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW0_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW0.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW1_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW1.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW2_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW2.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW3_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW3.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW4_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW4.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW5_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW5.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW6_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW6.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__ctl_vm_rq_vmb_SW7_rq4_0",
+   "at": "hb_idx__ctl.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 64,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 64 stages on the request lane hb_idx__ctl.vm_rq -> vmb_SW7.rq4[0:17] (VM_RT 65 -> round trip 71, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW0_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW0.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW1_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW1.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW2_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW2.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW3_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW3.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW4_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW4.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW5_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW5.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW6_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW6.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__nwsh_vm_rq_vmb_NW7_rq3_0",
+   "at": "hb_idx__nwsh.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane hb_idx__nwsh.vm_rq -> vmb_NW7.rq3[0:17] (BANK_RT 40 -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE0_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE0.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE1_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE1.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE2_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE2.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE3_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE3.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE4_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE4.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE5_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE5.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE6_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE6.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NE_vm_rq_vmb_NE7_rq4_0",
+   "at": "hb_idx__op_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_NE.vm_rq -> vmb_NE7.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE0_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE0.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE1_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE1.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE2_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE2.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE3_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE3.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE4_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE4.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE5_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE5.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE6_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE6.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SE_vm_rq_vmb_SE7_rq4_0",
+   "at": "hb_idx__op_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 166,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 166 stages on the request lane hb_idx__op_SE.vm_rq -> vmb_SE7.rq4[0:17] (VM_RT_EXTRA 171 -> round trip 175, lanes give 9)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE0_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE0.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE1_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE1.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE2_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE2.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE3_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE3.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE4_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE4.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE5_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE5.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE6_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE6.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NE_vm_rq_vmb_NE7_rq3_0",
+   "at": "hcollrs_NE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NE.vm_rq -> vmb_NE7.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW0_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW0.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW1_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW1.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW2_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW2.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW3_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW3.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW4_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW4.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW5_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW5.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW6_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW6.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_NW_vm_rq_vmb_NW7_rq4_0",
+   "at": "hcollrs_NW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_NW.vm_rq -> vmb_NW7.rq4[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE0_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE0.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE1_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE1.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE2_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE2.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE3_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE3.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE4_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE4.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE5_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE5.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE6_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE6.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SE_vm_rq_vmb_SE7_rq3_0",
+   "at": "hcollrs_SE.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 65,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 65 stages on the request lane hcollrs_SE.vm_rq -> vmb_SE7.rq3[0:17] (BANK_RT 72 -> round trip 72, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW0_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW0.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW1_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW1.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW2_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW2.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW3_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW3.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW4_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW4.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW5_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW5.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW6_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW6.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_hcollrs_SW_vm_rq_vmb_SW7_rq3_0",
+   "at": "hcollrs_SW.vm_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 66,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 66 stages on the request lane hcollrs_SW.vm_rq -> vmb_SW7.rq3[0:17] (BANK_RT 73 -> round trip 73, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE0_lg_rq_vmb_NE0_rq0_0",
+   "at": "su_NE0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE0.lg_rq -> vmb_NE0.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE0_lg_rq_vmb_NE1_rq0_0",
+   "at": "su_NE0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE0.lg_rq -> vmb_NE1.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE0_lg_w_done_vmb_NE0_wq_done0_0",
+   "at": "su_NE0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE0.wq_done0[0:1] -> su_NE0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE0_lg_w_done_vmb_NE1_wq_done0_0",
+   "at": "su_NE0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE1.wq_done0[0:1] -> su_NE0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE1_lg_rq_vmb_NE2_rq0_0",
+   "at": "su_NE1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE1.lg_rq -> vmb_NE2.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE1_lg_rq_vmb_NE3_rq0_0",
+   "at": "su_NE1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE1.lg_rq -> vmb_NE3.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE1_lg_w_done_vmb_NE2_wq_done0_0",
+   "at": "su_NE1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE2.wq_done0[0:1] -> su_NE1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE1_lg_w_done_vmb_NE3_wq_done0_0",
+   "at": "su_NE1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE3.wq_done0[0:1] -> su_NE1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE2_lg_rq_vmb_NE4_rq0_0",
+   "at": "su_NE2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE2.lg_rq -> vmb_NE4.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE2_lg_rq_vmb_NE5_rq0_0",
+   "at": "su_NE2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE2.lg_rq -> vmb_NE5.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE2_lg_w_done_vmb_NE4_wq_done0_0",
+   "at": "su_NE2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE4.wq_done0[0:1] -> su_NE2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE2_lg_w_done_vmb_NE5_wq_done0_0",
+   "at": "su_NE2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE5.wq_done0[0:1] -> su_NE2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE3_lg_rq_vmb_NE6_rq0_0",
+   "at": "su_NE3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE3.lg_rq -> vmb_NE6.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE3_lg_rq_vmb_NE7_rq0_0",
+   "at": "su_NE3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NE3.lg_rq -> vmb_NE7.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NE3_lg_w_done_vmb_NE6_wq_done0_0",
+   "at": "su_NE3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE6.wq_done0[0:1] -> su_NE3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NE3_lg_w_done_vmb_NE7_wq_done0_0",
+   "at": "su_NE3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NE7.wq_done0[0:1] -> su_NE3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW0_lg_rq_vmb_NW0_rq0_0",
+   "at": "su_NW0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW0.lg_rq -> vmb_NW0.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW0_lg_rq_vmb_NW1_rq0_0",
+   "at": "su_NW0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW0.lg_rq -> vmb_NW1.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW0_lg_w_done_vmb_NW0_wq_done0_0",
+   "at": "su_NW0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW0.wq_done0[0:1] -> su_NW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW0_lg_w_done_vmb_NW1_wq_done0_0",
+   "at": "su_NW0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW1.wq_done0[0:1] -> su_NW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW1_lg_rq_vmb_NW2_rq0_0",
+   "at": "su_NW1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW1.lg_rq -> vmb_NW2.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW1_lg_rq_vmb_NW3_rq0_0",
+   "at": "su_NW1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW1.lg_rq -> vmb_NW3.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW1_lg_w_done_vmb_NW2_wq_done0_0",
+   "at": "su_NW1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW2.wq_done0[0:1] -> su_NW1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW1_lg_w_done_vmb_NW3_wq_done0_0",
+   "at": "su_NW1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW3.wq_done0[0:1] -> su_NW1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW2_lg_rq_vmb_NW4_rq0_0",
+   "at": "su_NW2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW2.lg_rq -> vmb_NW4.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW2_lg_rq_vmb_NW5_rq0_0",
+   "at": "su_NW2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW2.lg_rq -> vmb_NW5.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW2_lg_w_done_vmb_NW4_wq_done0_0",
+   "at": "su_NW2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW4.wq_done0[0:1] -> su_NW2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW2_lg_w_done_vmb_NW5_wq_done0_0",
+   "at": "su_NW2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW5.wq_done0[0:1] -> su_NW2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW3_lg_rq_vmb_NW6_rq0_0",
+   "at": "su_NW3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW3.lg_rq -> vmb_NW6.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW3_lg_rq_vmb_NW7_rq0_0",
+   "at": "su_NW3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_NW3.lg_rq -> vmb_NW7.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_NW3_lg_w_done_vmb_NW6_wq_done0_0",
+   "at": "su_NW3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW6.wq_done0[0:1] -> su_NW3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_NW3_lg_w_done_vmb_NW7_wq_done0_0",
+   "at": "su_NW3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_NW7.wq_done0[0:1] -> su_NW3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE0_lg_rq_vmb_SE0_rq0_0",
+   "at": "su_SE0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE0.lg_rq -> vmb_SE0.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE0_lg_rq_vmb_SE1_rq0_0",
+   "at": "su_SE0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE0.lg_rq -> vmb_SE1.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE0_lg_w_done_vmb_SE0_wq_done0_0",
+   "at": "su_SE0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE0.wq_done0[0:1] -> su_SE0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE0_lg_w_done_vmb_SE1_wq_done0_0",
+   "at": "su_SE0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE1.wq_done0[0:1] -> su_SE0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE1_lg_rq_vmb_SE2_rq0_0",
+   "at": "su_SE1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE1.lg_rq -> vmb_SE2.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE1_lg_rq_vmb_SE3_rq0_0",
+   "at": "su_SE1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE1.lg_rq -> vmb_SE3.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE1_lg_w_done_vmb_SE2_wq_done0_0",
+   "at": "su_SE1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE2.wq_done0[0:1] -> su_SE1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE1_lg_w_done_vmb_SE3_wq_done0_0",
+   "at": "su_SE1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE3.wq_done0[0:1] -> su_SE1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE2_lg_rq_vmb_SE4_rq0_0",
+   "at": "su_SE2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE2.lg_rq -> vmb_SE4.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE2_lg_rq_vmb_SE5_rq0_0",
+   "at": "su_SE2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE2.lg_rq -> vmb_SE5.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE2_lg_w_done_vmb_SE4_wq_done0_0",
+   "at": "su_SE2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE4.wq_done0[0:1] -> su_SE2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE2_lg_w_done_vmb_SE5_wq_done0_0",
+   "at": "su_SE2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE5.wq_done0[0:1] -> su_SE2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE3_lg_rq_vmb_SE6_rq0_0",
+   "at": "su_SE3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE3.lg_rq -> vmb_SE6.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE3_lg_rq_vmb_SE7_rq0_0",
+   "at": "su_SE3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SE3.lg_rq -> vmb_SE7.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SE3_lg_w_done_vmb_SE6_wq_done0_0",
+   "at": "su_SE3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE6.wq_done0[0:1] -> su_SE3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SE3_lg_w_done_vmb_SE7_wq_done0_0",
+   "at": "su_SE3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SE7.wq_done0[0:1] -> su_SE3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0",
+   "at": "su_SW0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW0.lg_rq -> vmb_SW0.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+   "at": "su_SW0.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW0.lg_rq -> vmb_SW1.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0",
+   "at": "su_SW0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW0.wq_done0[0:1] -> su_SW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0",
+   "at": "su_SW0.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW1.wq_done0[0:1] -> su_SW0.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW1_lg_rq_vmb_SW2_rq0_0",
+   "at": "su_SW1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW1.lg_rq -> vmb_SW2.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW1_lg_rq_vmb_SW3_rq0_0",
+   "at": "su_SW1.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW1.lg_rq -> vmb_SW3.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW1_lg_w_done_vmb_SW2_wq_done0_0",
+   "at": "su_SW1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW2.wq_done0[0:1] -> su_SW1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW1_lg_w_done_vmb_SW3_wq_done0_0",
+   "at": "su_SW1.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW3.wq_done0[0:1] -> su_SW1.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW2_lg_rq_vmb_SW4_rq0_0",
+   "at": "su_SW2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW2.lg_rq -> vmb_SW4.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW2_lg_rq_vmb_SW5_rq0_0",
+   "at": "su_SW2.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW2.lg_rq -> vmb_SW5.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW2_lg_w_done_vmb_SW4_wq_done0_0",
+   "at": "su_SW2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW4.wq_done0[0:1] -> su_SW2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW2_lg_w_done_vmb_SW5_wq_done0_0",
+   "at": "su_SW2.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW5.wq_done0[0:1] -> su_SW2.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW3_lg_rq_vmb_SW6_rq0_0",
+   "at": "su_SW3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW3.lg_rq -> vmb_SW6.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW3_lg_rq_vmb_SW7_rq0_0",
+   "at": "su_SW3.lg_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the request lane su_SW3.lg_rq -> vmb_SW7.rq0[0:17] (READ_RETURN 18 -> round trip 14, lanes give 7)"
+  },
+  {
+   "pad": "l12p_su_SW3_lg_w_done_vmb_SW6_wq_done0_0",
+   "at": "su_SW3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW6.wq_done0[0:1] -> su_SW3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_su_SW3_lg_w_done_vmb_SW7_wq_done0_0",
+   "at": "su_SW3.lg_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the return lane vmb_SW7.wq_done0[0:1] -> su_SW3.lg_w_done (WRITE_RETURN 15 -> round trip 11, lanes give 4)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE0_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 30,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 30 stages on the request lane xl_NE_ctl.rq -> vmb_NE0.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 37, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE1_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane xl_NE_ctl.rq -> vmb_NE1.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE2_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 20,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 20 stages on the request lane xl_NE_ctl.rq -> vmb_NE2.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 27, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE3_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 22,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 22 stages on the request lane xl_NE_ctl.rq -> vmb_NE3.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 29, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE4_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 46,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 46 stages on the request lane xl_NE_ctl.rq -> vmb_NE4.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 53, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE5_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 48,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 48 stages on the request lane xl_NE_ctl.rq -> vmb_NE5.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 55, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE6_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 36,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 36 stages on the request lane xl_NE_ctl.rq -> vmb_NE6.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 43, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NE_ctl_rq_vmb_NE7_rq2_0",
+   "at": "xl_NE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 38,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 38 stages on the request lane xl_NE_ctl.rq -> vmb_NE7.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 45, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW0_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 30,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 30 stages on the request lane xl_NW_ctl.rq -> vmb_NW0.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 37, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW1_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane xl_NW_ctl.rq -> vmb_NW1.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW2_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 20,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 20 stages on the request lane xl_NW_ctl.rq -> vmb_NW2.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 27, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW3_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 22,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 22 stages on the request lane xl_NW_ctl.rq -> vmb_NW3.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 29, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW4_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 46,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 46 stages on the request lane xl_NW_ctl.rq -> vmb_NW4.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 53, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW5_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 48,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 48 stages on the request lane xl_NW_ctl.rq -> vmb_NW5.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 55, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW6_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 36,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 36 stages on the request lane xl_NW_ctl.rq -> vmb_NW6.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 43, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_NW_ctl_rq_vmb_NW7_rq2_0",
+   "at": "xl_NW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 38,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 38 stages on the request lane xl_NW_ctl.rq -> vmb_NW7.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 45, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE0_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 30,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 30 stages on the request lane xl_SE_ctl.rq -> vmb_SE0.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 37, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE1_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane xl_SE_ctl.rq -> vmb_SE1.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE2_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 20,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 20 stages on the request lane xl_SE_ctl.rq -> vmb_SE2.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 27, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE3_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 22,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 22 stages on the request lane xl_SE_ctl.rq -> vmb_SE3.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 29, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE4_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 46,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 46 stages on the request lane xl_SE_ctl.rq -> vmb_SE4.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 53, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE5_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 48,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 48 stages on the request lane xl_SE_ctl.rq -> vmb_SE5.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 55, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE6_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 36,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 36 stages on the request lane xl_SE_ctl.rq -> vmb_SE6.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 43, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SE_ctl_rq_vmb_SE7_rq2_0",
+   "at": "xl_SE_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 38,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 38 stages on the request lane xl_SE_ctl.rq -> vmb_SE7.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 45, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW0_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 30,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 30 stages on the request lane xl_SW_ctl.rq -> vmb_SW0.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 37, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW1_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 33,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 33 stages on the request lane xl_SW_ctl.rq -> vmb_SW1.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 40, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW2_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 20,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 20 stages on the request lane xl_SW_ctl.rq -> vmb_SW2.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 27, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW3_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 22,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 22 stages on the request lane xl_SW_ctl.rq -> vmb_SW3.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 29, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW4_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 46,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 46 stages on the request lane xl_SW_ctl.rq -> vmb_SW4.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 53, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW5_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 48,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 48 stages on the request lane xl_SW_ctl.rq -> vmb_SW5.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 55, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW6_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 36,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 36 stages on the request lane xl_SW_ctl.rq -> vmb_SW6.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 43, lanes give 7)"
+  },
+  {
+   "pad": "l12p_xl_SW_ctl_rq_vmb_SW7_rq2_0",
+   "at": "xl_SW_ctl.rq",
+   "end": "source",
+   "bits": 17,
+   "N": 38,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 38 stages on the request lane xl_SW_ctl.rq -> vmb_SW7.rq2[0:17] (RD_LAT [38, 41, 28, 30, 54, 56, 44, 46] -> round trip 45, lanes give 7)"
+  },
+  {
+   "pad": "l12p_ctl_cq_cr_hb_idx__ctl_cr_0",
+   "at": "hb_idx__ctl.cr",
+   "end": "sink",
+   "bits": 274,
+   "N": 35,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 35 stages on the ctl_cq_cr return lane hb_vms_SW.cr -> hb_idx__ctl.cr (CR_RT = faces pin 1 + lanes(cq) + lanes(cr) (TOPK ACK 13 + CR_RT): target 35, lanes 0+0)"
+  },
+  {
+   "pad": "l12p_argmax_cq_cr_hb_argmax_cr_0",
+   "at": "hb_argmax.cr",
+   "end": "sink",
+   "bits": 274,
+   "N": 38,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 38 stages on the argmax_cq_cr return lane hb_vms_SW.cr -> hb_argmax.cr (ACK = 13 + faces pin 1 + lanes(cq) + lanes(cr): target 38, lanes 0+0)"
+  },
+  {
+   "pad": "l12p_ctl_sel_hb_idx__ctl_selected_v_0",
+   "at": "hb_idx__ctl.selected_v",
+   "end": "sink",
+   "bits": 4,
+   "N": 26,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 26 stages on the ctl_sel return lane hb_idx__selector.selected_v -> hb_idx__ctl.selected_v (SEL_LAT = 4 + lanes(sel_op) + lanes(selected_v) (exact): target 26, lanes 0+0)"
+  },
+  {
+   "pad": "l12p_sfu_NE0_near_rq_su_NE0_far_rq_0",
+   "at": "sfu_NE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE0.near_rq -> su_NE0.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE0_near_rq_su_NE0_far_rq_17",
+   "at": "sfu_NE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE0.near_rq -> su_NE0.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE0_near_w_done_su_NE0_far_w_done_0",
+   "at": "sfu_NE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE0.far_w_done[0:1] -> sfu_NE0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE0_near_w_done_su_NE0_far_w_done_1",
+   "at": "sfu_NE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE0.far_w_done[1:2] -> sfu_NE0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE1_near_rq_su_NE1_far_rq_0",
+   "at": "sfu_NE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE1.near_rq -> su_NE1.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE1_near_rq_su_NE1_far_rq_17",
+   "at": "sfu_NE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE1.near_rq -> su_NE1.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE1_near_w_done_su_NE1_far_w_done_0",
+   "at": "sfu_NE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE1.far_w_done[0:1] -> sfu_NE1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE1_near_w_done_su_NE1_far_w_done_1",
+   "at": "sfu_NE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE1.far_w_done[1:2] -> sfu_NE1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE2_near_rq_su_NE2_far_rq_0",
+   "at": "sfu_NE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE2.near_rq -> su_NE2.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE2_near_rq_su_NE2_far_rq_17",
+   "at": "sfu_NE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE2.near_rq -> su_NE2.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE2_near_w_done_su_NE2_far_w_done_0",
+   "at": "sfu_NE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE2.far_w_done[0:1] -> sfu_NE2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE2_near_w_done_su_NE2_far_w_done_1",
+   "at": "sfu_NE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE2.far_w_done[1:2] -> sfu_NE2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE3_near_rq_su_NE3_far_rq_0",
+   "at": "sfu_NE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE3.near_rq -> su_NE3.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE3_near_rq_su_NE3_far_rq_17",
+   "at": "sfu_NE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NE3.near_rq -> su_NE3.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NE3_near_w_done_su_NE3_far_w_done_0",
+   "at": "sfu_NE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE3.far_w_done[0:1] -> sfu_NE3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NE3_near_w_done_su_NE3_far_w_done_1",
+   "at": "sfu_NE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NE3.far_w_done[1:2] -> sfu_NE3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW0_near_rq_su_NW0_far_rq_0",
+   "at": "sfu_NW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW0.near_rq -> su_NW0.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW0_near_rq_su_NW0_far_rq_17",
+   "at": "sfu_NW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW0.near_rq -> su_NW0.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW0_near_w_done_su_NW0_far_w_done_0",
+   "at": "sfu_NW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW0.far_w_done[0:1] -> sfu_NW0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW0_near_w_done_su_NW0_far_w_done_1",
+   "at": "sfu_NW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW0.far_w_done[1:2] -> sfu_NW0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW1_near_rq_su_NW1_far_rq_0",
+   "at": "sfu_NW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW1.near_rq -> su_NW1.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW1_near_rq_su_NW1_far_rq_17",
+   "at": "sfu_NW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW1.near_rq -> su_NW1.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW1_near_w_done_su_NW1_far_w_done_0",
+   "at": "sfu_NW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW1.far_w_done[0:1] -> sfu_NW1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW1_near_w_done_su_NW1_far_w_done_1",
+   "at": "sfu_NW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW1.far_w_done[1:2] -> sfu_NW1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW2_near_rq_su_NW2_far_rq_0",
+   "at": "sfu_NW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW2.near_rq -> su_NW2.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW2_near_rq_su_NW2_far_rq_17",
+   "at": "sfu_NW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW2.near_rq -> su_NW2.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW2_near_w_done_su_NW2_far_w_done_0",
+   "at": "sfu_NW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW2.far_w_done[0:1] -> sfu_NW2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW2_near_w_done_su_NW2_far_w_done_1",
+   "at": "sfu_NW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW2.far_w_done[1:2] -> sfu_NW2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW3_near_rq_su_NW3_far_rq_0",
+   "at": "sfu_NW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW3.near_rq -> su_NW3.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW3_near_rq_su_NW3_far_rq_17",
+   "at": "sfu_NW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_NW3.near_rq -> su_NW3.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_NW3_near_w_done_su_NW3_far_w_done_0",
+   "at": "sfu_NW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW3.far_w_done[0:1] -> sfu_NW3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_NW3_near_w_done_su_NW3_far_w_done_1",
+   "at": "sfu_NW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_NW3.far_w_done[1:2] -> sfu_NW3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE0_near_rq_su_SE0_far_rq_0",
+   "at": "sfu_SE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE0.near_rq -> su_SE0.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE0_near_rq_su_SE0_far_rq_17",
+   "at": "sfu_SE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE0.near_rq -> su_SE0.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE0_near_w_done_su_SE0_far_w_done_0",
+   "at": "sfu_SE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE0.far_w_done[0:1] -> sfu_SE0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE0_near_w_done_su_SE0_far_w_done_1",
+   "at": "sfu_SE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE0.far_w_done[1:2] -> sfu_SE0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE1_near_rq_su_SE1_far_rq_0",
+   "at": "sfu_SE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE1.near_rq -> su_SE1.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE1_near_rq_su_SE1_far_rq_17",
+   "at": "sfu_SE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE1.near_rq -> su_SE1.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE1_near_w_done_su_SE1_far_w_done_0",
+   "at": "sfu_SE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE1.far_w_done[0:1] -> sfu_SE1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE1_near_w_done_su_SE1_far_w_done_1",
+   "at": "sfu_SE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE1.far_w_done[1:2] -> sfu_SE1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE2_near_rq_su_SE2_far_rq_0",
+   "at": "sfu_SE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE2.near_rq -> su_SE2.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE2_near_rq_su_SE2_far_rq_17",
+   "at": "sfu_SE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE2.near_rq -> su_SE2.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE2_near_w_done_su_SE2_far_w_done_0",
+   "at": "sfu_SE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE2.far_w_done[0:1] -> sfu_SE2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE2_near_w_done_su_SE2_far_w_done_1",
+   "at": "sfu_SE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE2.far_w_done[1:2] -> sfu_SE2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE3_near_rq_su_SE3_far_rq_0",
+   "at": "sfu_SE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE3.near_rq -> su_SE3.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE3_near_rq_su_SE3_far_rq_17",
+   "at": "sfu_SE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SE3.near_rq -> su_SE3.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SE3_near_w_done_su_SE3_far_w_done_0",
+   "at": "sfu_SE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE3.far_w_done[0:1] -> sfu_SE3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SE3_near_w_done_su_SE3_far_w_done_1",
+   "at": "sfu_SE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SE3.far_w_done[1:2] -> sfu_SE3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW0_near_rq_su_SW0_far_rq_0",
+   "at": "sfu_SW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW0.near_rq -> su_SW0.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW0_near_rq_su_SW0_far_rq_17",
+   "at": "sfu_SW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW0.near_rq -> su_SW0.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW0_near_w_done_su_SW0_far_w_done_0",
+   "at": "sfu_SW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW0.far_w_done[0:1] -> sfu_SW0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW0_near_w_done_su_SW0_far_w_done_1",
+   "at": "sfu_SW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW0.far_w_done[1:2] -> sfu_SW0.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW1_near_rq_su_SW1_far_rq_0",
+   "at": "sfu_SW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW1.near_rq -> su_SW1.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW1_near_rq_su_SW1_far_rq_17",
+   "at": "sfu_SW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW1.near_rq -> su_SW1.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW1_near_w_done_su_SW1_far_w_done_0",
+   "at": "sfu_SW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW1.far_w_done[0:1] -> sfu_SW1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW1_near_w_done_su_SW1_far_w_done_1",
+   "at": "sfu_SW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW1.far_w_done[1:2] -> sfu_SW1.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW2_near_rq_su_SW2_far_rq_0",
+   "at": "sfu_SW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW2.near_rq -> su_SW2.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW2_near_rq_su_SW2_far_rq_17",
+   "at": "sfu_SW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW2.near_rq -> su_SW2.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW2_near_w_done_su_SW2_far_w_done_0",
+   "at": "sfu_SW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW2.far_w_done[0:1] -> sfu_SW2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW2_near_w_done_su_SW2_far_w_done_1",
+   "at": "sfu_SW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW2.far_w_done[1:2] -> sfu_SW2.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW3_near_rq_su_SW3_far_rq_0",
+   "at": "sfu_SW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW3.near_rq -> su_SW3.far_rq[0:17] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW3_near_rq_su_SW3_far_rq_17",
+   "at": "sfu_SW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the request lane sfu_SW3.near_rq -> su_SW3.far_rq[17:34] (READ_RETURN 24 -> round trip 20, lanes give 18)"
+  },
+  {
+   "pad": "l12p_sfu_SW3_near_w_done_su_SW3_far_w_done_0",
+   "at": "sfu_SW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW3.far_w_done[0:1] -> sfu_SW3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_sfu_SW3_near_w_done_su_SW3_far_w_done_1",
+   "at": "sfu_SW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 2,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 2 stages on the return lane su_SW3.far_w_done[1:2] -> sfu_SW3.near_w_done (WRITE_RETURN 21 -> round trip 17, lanes give 15)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_SW_hb_idx__ctl_index_rq_0",
+   "at": "hb_idx__ctl.index_rq",
+   "end": "sink",
+   "bits": 136,
+   "N": 100,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 100 stages on the share request face hb_idx__op_SW -> hb_idx__ctl.index_rq[0:136] (VM_RT_EXTRA 171: client<->share lanes 2 -> 102)"
+  },
+  {
+   "pad": "l12p_hb_argmax_hb_idx__ctl_argmax_rq_0",
+   "at": "hb_idx__ctl.argmax_rq",
+   "end": "sink",
+   "bits": 136,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_argmax -> hb_idx__ctl.argmax_rq[0:136] (VMX 78: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NW_hb_idx__nwsh_a_rq_0",
+   "at": "hb_idx__nwsh.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 133,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 133 stages on the share request face hb_idx__op_NW -> hb_idx__nwsh.a_rq[0:34] (VM_RT_EXTRA 173: client<->share lanes 2 -> 135)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NW_hb_idx__nwsh_a_rq_34",
+   "at": "hb_idx__nwsh.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 133,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 133 stages on the share request face hb_idx__op_NW -> hb_idx__nwsh.a_rq[34:68] (VM_RT_EXTRA 173: client<->share lanes 2 -> 135)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NW_hb_idx__nwsh_a_rq_68",
+   "at": "hb_idx__nwsh.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 133,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 133 stages on the share request face hb_idx__op_NW -> hb_idx__nwsh.a_rq[68:102] (VM_RT_EXTRA 173: client<->share lanes 2 -> 135)"
+  },
+  {
+   "pad": "l12p_hb_idx__op_NW_hb_idx__nwsh_a_rq_102",
+   "at": "hb_idx__nwsh.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 133,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 133 stages on the share request face hb_idx__op_NW -> hb_idx__nwsh.a_rq[102:136] (VM_RT_EXTRA 173: client<->share lanes 2 -> 135)"
+  },
+  {
+   "pad": "l12p_hb_quant_NW__quant_NW0_lg_hb_idx__nwsh_b_rq_0",
+   "at": "hb_idx__nwsh.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 11,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 11 stages on the share request face hb_quant_NW__quant_NW0_lg -> hb_idx__nwsh.b_rq[0:34] (RL 54: client<->share lanes 0 -> 11)"
+  },
+  {
+   "pad": "l12p_hb_quant_NW__quant_NW0_lg_hb_idx__nwsh_b_rq_34",
+   "at": "hb_idx__nwsh.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 11,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 11 stages on the share request face hb_quant_NW__quant_NW0_lg -> hb_idx__nwsh.b_rq[34:68] (RL 54: client<->share lanes 0 -> 11)"
+  },
+  {
+   "pad": "l12p_hb_quant_NW__quant_NW0_lg_hb_idx__nwsh_b_rq_68",
+   "at": "hb_idx__nwsh.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 11,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 11 stages on the share request face hb_quant_NW__quant_NW0_lg -> hb_idx__nwsh.b_rq[68:102] (RL 54: client<->share lanes 0 -> 11)"
+  },
+  {
+   "pad": "l12p_hb_quant_NW__quant_NW0_lg_hb_idx__nwsh_b_rq_102",
+   "at": "hb_idx__nwsh.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 11,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 11 stages on the share request face hb_quant_NW__quant_NW0_lg -> hb_idx__nwsh.b_rq[102:136] (RL 54: client<->share lanes 0 -> 11)"
+  },
+  {
+   "pad": "l12p_hb_coll_NE_hcollrs_NE_a_rq_0",
+   "at": "hcollrs_NE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NE -> hcollrs_NE.a_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NE_hcollrs_NE_a_rq_34",
+   "at": "hcollrs_NE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NE -> hcollrs_NE.a_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NE_hcollrs_NE_a_rq_68",
+   "at": "hcollrs_NE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NE -> hcollrs_NE.a_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NE_hcollrs_NE_a_rq_102",
+   "at": "hcollrs_NE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NE -> hcollrs_NE.a_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NE_hcollrs_NE_b_rq_0",
+   "at": "hcollrs_NE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NE -> hcollrs_NE.b_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NE_hcollrs_NE_b_rq_34",
+   "at": "hcollrs_NE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NE -> hcollrs_NE.b_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NE_hcollrs_NE_b_rq_68",
+   "at": "hcollrs_NE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NE -> hcollrs_NE.b_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NE_hcollrs_NE_b_rq_102",
+   "at": "hcollrs_NE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NE -> hcollrs_NE.b_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NW_hcollrs_NW_a_rq_0",
+   "at": "hcollrs_NW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NW -> hcollrs_NW.a_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NW_hcollrs_NW_a_rq_34",
+   "at": "hcollrs_NW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NW -> hcollrs_NW.a_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NW_hcollrs_NW_a_rq_68",
+   "at": "hcollrs_NW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NW -> hcollrs_NW.a_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_NW_hcollrs_NW_a_rq_102",
+   "at": "hcollrs_NW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_NW -> hcollrs_NW.a_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NW_hcollrs_NW_b_rq_0",
+   "at": "hcollrs_NW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NW -> hcollrs_NW.b_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NW_hcollrs_NW_b_rq_34",
+   "at": "hcollrs_NW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NW -> hcollrs_NW.b_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NW_hcollrs_NW_b_rq_68",
+   "at": "hcollrs_NW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NW -> hcollrs_NW.b_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_NW_hcollrs_NW_b_rq_102",
+   "at": "hcollrs_NW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_NW -> hcollrs_NW.b_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_SE_hcollrs_SE_a_rq_0",
+   "at": "hcollrs_SE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_SE -> hcollrs_SE.a_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_SE_hcollrs_SE_a_rq_34",
+   "at": "hcollrs_SE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_SE -> hcollrs_SE.a_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_SE_hcollrs_SE_a_rq_68",
+   "at": "hcollrs_SE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_SE -> hcollrs_SE.a_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_SE_hcollrs_SE_a_rq_102",
+   "at": "hcollrs_SE.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hb_coll_SE -> hcollrs_SE.a_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_SE_hcollrs_SE_b_rq_0",
+   "at": "hcollrs_SE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_SE -> hcollrs_SE.b_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_SE_hcollrs_SE_b_rq_34",
+   "at": "hcollrs_SE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_SE -> hcollrs_SE.b_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_SE_hcollrs_SE_b_rq_68",
+   "at": "hcollrs_SE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_SE -> hcollrs_SE.b_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hcollgi_SE_hcollrs_SE_b_rq_102",
+   "at": "hcollrs_SE.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 8,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 8 stages on the share request face hcollgi_SE -> hcollrs_SE.b_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 8)"
+  },
+  {
+   "pad": "l12p_hb_coll_SW_hcollrs_SW_a_rq_0",
+   "at": "hcollrs_SW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hb_coll_SW -> hcollrs_SW.a_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hb_coll_SW_hcollrs_SW_a_rq_34",
+   "at": "hcollrs_SW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hb_coll_SW -> hcollrs_SW.a_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hb_coll_SW_hcollrs_SW_a_rq_68",
+   "at": "hcollrs_SW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hb_coll_SW -> hcollrs_SW.a_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hb_coll_SW_hcollrs_SW_a_rq_102",
+   "at": "hcollrs_SW.a_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hb_coll_SW -> hcollrs_SW.a_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hcollgi_SW_hcollrs_SW_b_rq_0",
+   "at": "hcollrs_SW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hcollgi_SW -> hcollrs_SW.b_rq[0:34] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hcollgi_SW_hcollrs_SW_b_rq_34",
+   "at": "hcollrs_SW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hcollgi_SW -> hcollrs_SW.b_rq[34:68] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hcollgi_SW_hcollrs_SW_b_rq_68",
+   "at": "hcollrs_SW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hcollgi_SW -> hcollrs_SW.b_rq[68:102] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hcollgi_SW_hcollrs_SW_b_rq_102",
+   "at": "hcollrs_SW.b_rq",
+   "end": "sink",
+   "bits": 34,
+   "N": 7,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 7 stages on the share request face hcollgi_SW -> hcollrs_SW.b_rq[102:136] (VM_RT 76: client<->share lanes 0 -> 7)"
+  },
+  {
+   "pad": "l12p_hc_NE0_near_rq_sfu_NE0_far_rq_0",
+   "at": "hc_NE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE0.near_rq -> sfu_NE0.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE0_near_rq_sfu_NE0_far_rq_17",
+   "at": "hc_NE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE0.near_rq -> sfu_NE0.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE0_near_w_done_sfu_NE0_far_w_done_0",
+   "at": "hc_NE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE0.far_w_done[0:1] -> hc_NE0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE0_near_w_done_sfu_NE0_far_w_done_1",
+   "at": "hc_NE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE0.far_w_done[1:2] -> hc_NE0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE1_near_rq_sfu_NE1_far_rq_0",
+   "at": "hc_NE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE1.near_rq -> sfu_NE1.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE1_near_rq_sfu_NE1_far_rq_17",
+   "at": "hc_NE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE1.near_rq -> sfu_NE1.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE1_near_w_done_sfu_NE1_far_w_done_0",
+   "at": "hc_NE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE1.far_w_done[0:1] -> hc_NE1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE1_near_w_done_sfu_NE1_far_w_done_1",
+   "at": "hc_NE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE1.far_w_done[1:2] -> hc_NE1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE2_near_rq_sfu_NE2_far_rq_0",
+   "at": "hc_NE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE2.near_rq -> sfu_NE2.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE2_near_rq_sfu_NE2_far_rq_17",
+   "at": "hc_NE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE2.near_rq -> sfu_NE2.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE2_near_w_done_sfu_NE2_far_w_done_0",
+   "at": "hc_NE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE2.far_w_done[0:1] -> hc_NE2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE2_near_w_done_sfu_NE2_far_w_done_1",
+   "at": "hc_NE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE2.far_w_done[1:2] -> hc_NE2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE3_near_rq_sfu_NE3_far_rq_0",
+   "at": "hc_NE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE3.near_rq -> sfu_NE3.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE3_near_rq_sfu_NE3_far_rq_17",
+   "at": "hc_NE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NE3.near_rq -> sfu_NE3.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NE3_near_w_done_sfu_NE3_far_w_done_0",
+   "at": "hc_NE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE3.far_w_done[0:1] -> hc_NE3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NE3_near_w_done_sfu_NE3_far_w_done_1",
+   "at": "hc_NE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NE3.far_w_done[1:2] -> hc_NE3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW0_near_rq_sfu_NW0_far_rq_0",
+   "at": "hc_NW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW0.near_rq -> sfu_NW0.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW0_near_rq_sfu_NW0_far_rq_17",
+   "at": "hc_NW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW0.near_rq -> sfu_NW0.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW0_near_w_done_sfu_NW0_far_w_done_0",
+   "at": "hc_NW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW0.far_w_done[0:1] -> hc_NW0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW0_near_w_done_sfu_NW0_far_w_done_1",
+   "at": "hc_NW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW0.far_w_done[1:2] -> hc_NW0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW1_near_rq_sfu_NW1_far_rq_0",
+   "at": "hc_NW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW1.near_rq -> sfu_NW1.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW1_near_rq_sfu_NW1_far_rq_17",
+   "at": "hc_NW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW1.near_rq -> sfu_NW1.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW1_near_w_done_sfu_NW1_far_w_done_0",
+   "at": "hc_NW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW1.far_w_done[0:1] -> hc_NW1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW1_near_w_done_sfu_NW1_far_w_done_1",
+   "at": "hc_NW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW1.far_w_done[1:2] -> hc_NW1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW2_near_rq_sfu_NW2_far_rq_0",
+   "at": "hc_NW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW2.near_rq -> sfu_NW2.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW2_near_rq_sfu_NW2_far_rq_17",
+   "at": "hc_NW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW2.near_rq -> sfu_NW2.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW2_near_w_done_sfu_NW2_far_w_done_0",
+   "at": "hc_NW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW2.far_w_done[0:1] -> hc_NW2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW2_near_w_done_sfu_NW2_far_w_done_1",
+   "at": "hc_NW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW2.far_w_done[1:2] -> hc_NW2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW3_near_rq_sfu_NW3_far_rq_0",
+   "at": "hc_NW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW3.near_rq -> sfu_NW3.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW3_near_rq_sfu_NW3_far_rq_17",
+   "at": "hc_NW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_NW3.near_rq -> sfu_NW3.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_NW3_near_w_done_sfu_NW3_far_w_done_0",
+   "at": "hc_NW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW3.far_w_done[0:1] -> hc_NW3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_NW3_near_w_done_sfu_NW3_far_w_done_1",
+   "at": "hc_NW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_NW3.far_w_done[1:2] -> hc_NW3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE0_near_rq_sfu_SE0_far_rq_0",
+   "at": "hc_SE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE0.near_rq -> sfu_SE0.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE0_near_rq_sfu_SE0_far_rq_17",
+   "at": "hc_SE0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE0.near_rq -> sfu_SE0.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE0_near_w_done_sfu_SE0_far_w_done_0",
+   "at": "hc_SE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE0.far_w_done[0:1] -> hc_SE0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE0_near_w_done_sfu_SE0_far_w_done_1",
+   "at": "hc_SE0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE0.far_w_done[1:2] -> hc_SE0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE1_near_rq_sfu_SE1_far_rq_0",
+   "at": "hc_SE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE1.near_rq -> sfu_SE1.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE1_near_rq_sfu_SE1_far_rq_17",
+   "at": "hc_SE1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE1.near_rq -> sfu_SE1.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE1_near_w_done_sfu_SE1_far_w_done_0",
+   "at": "hc_SE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE1.far_w_done[0:1] -> hc_SE1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE1_near_w_done_sfu_SE1_far_w_done_1",
+   "at": "hc_SE1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE1.far_w_done[1:2] -> hc_SE1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE2_near_rq_sfu_SE2_far_rq_0",
+   "at": "hc_SE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE2.near_rq -> sfu_SE2.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE2_near_rq_sfu_SE2_far_rq_17",
+   "at": "hc_SE2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE2.near_rq -> sfu_SE2.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE2_near_w_done_sfu_SE2_far_w_done_0",
+   "at": "hc_SE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE2.far_w_done[0:1] -> hc_SE2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE2_near_w_done_sfu_SE2_far_w_done_1",
+   "at": "hc_SE2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE2.far_w_done[1:2] -> hc_SE2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE3_near_rq_sfu_SE3_far_rq_0",
+   "at": "hc_SE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE3.near_rq -> sfu_SE3.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE3_near_rq_sfu_SE3_far_rq_17",
+   "at": "hc_SE3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SE3.near_rq -> sfu_SE3.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SE3_near_w_done_sfu_SE3_far_w_done_0",
+   "at": "hc_SE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE3.far_w_done[0:1] -> hc_SE3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SE3_near_w_done_sfu_SE3_far_w_done_1",
+   "at": "hc_SE3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SE3.far_w_done[1:2] -> hc_SE3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW0_near_rq_sfu_SW0_far_rq_0",
+   "at": "hc_SW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW0.near_rq -> sfu_SW0.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW0_near_rq_sfu_SW0_far_rq_17",
+   "at": "hc_SW0.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW0.near_rq -> sfu_SW0.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW0_near_w_done_sfu_SW0_far_w_done_0",
+   "at": "hc_SW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW0.far_w_done[0:1] -> hc_SW0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW0_near_w_done_sfu_SW0_far_w_done_1",
+   "at": "hc_SW0.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW0.far_w_done[1:2] -> hc_SW0.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW1_near_rq_sfu_SW1_far_rq_0",
+   "at": "hc_SW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW1.near_rq -> sfu_SW1.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW1_near_rq_sfu_SW1_far_rq_17",
+   "at": "hc_SW1.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW1.near_rq -> sfu_SW1.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW1_near_w_done_sfu_SW1_far_w_done_0",
+   "at": "hc_SW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW1.far_w_done[0:1] -> hc_SW1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW1_near_w_done_sfu_SW1_far_w_done_1",
+   "at": "hc_SW1.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW1.far_w_done[1:2] -> hc_SW1.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW2_near_rq_sfu_SW2_far_rq_0",
+   "at": "hc_SW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW2.near_rq -> sfu_SW2.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW2_near_rq_sfu_SW2_far_rq_17",
+   "at": "hc_SW2.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW2.near_rq -> sfu_SW2.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW2_near_w_done_sfu_SW2_far_w_done_0",
+   "at": "hc_SW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW2.far_w_done[0:1] -> hc_SW2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW2_near_w_done_sfu_SW2_far_w_done_1",
+   "at": "hc_SW2.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW2.far_w_done[1:2] -> hc_SW2.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW3_near_rq_sfu_SW3_far_rq_0",
+   "at": "hc_SW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW3.near_rq -> sfu_SW3.far_rq[0:17] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW3_near_rq_sfu_SW3_far_rq_17",
+   "at": "hc_SW3.near_rq",
+   "end": "source",
+   "bits": 17,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the request lane hc_SW3.near_rq -> sfu_SW3.far_rq[17:34] (READ_RETURN 34 -> round trip 30, lanes give 24)"
+  },
+  {
+   "pad": "l12p_hc_SW3_near_w_done_sfu_SW3_far_w_done_0",
+   "at": "hc_SW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW3.far_w_done[0:1] -> hc_SW3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  },
+  {
+   "pad": "l12p_hc_SW3_near_w_done_sfu_SW3_far_w_done_1",
+   "at": "hc_SW3.near_w_done",
+   "end": "sink",
+   "bits": 1,
+   "N": 6,
+   "note": "TW5-BANKLATDIE l12 bank-client latency pad: 6 stages on the return lane sfu_SW3.far_w_done[1:2] -> hc_SW3.near_w_done (WRITE_RETURN 31 -> round trip 27, lanes give 21)"
+  }
+ ],
+ "log": {
+  "pads": 365,
+  "pad_flops": 223022
+ },
+ "verdict": "PASS"
+}
