@@ -36,30 +36,25 @@
    "command_stage",
    "dc",
    "cmd",
-   "emb_start",
    "cf",
    "table_req"
   ],
   "S": [
    "dh",
-   "dh_user",
    "program_obs",
    "native_pos",
    "cal_image_ready",
    "hr",
    "ag5",
-   "emb_user",
    "f16_st"
   ],
   "E": [
-   "pw",
    "mu_fault",
    "fab",
    "native_tok",
    "cal_descriptor_obs",
    "native_ret",
    "ss5",
-   "emb_position",
    "f16_obs",
    "ck_hr"
   ],
@@ -73,7 +68,12 @@
    "tl",
    "emb_token",
    "f16_auth",
-   "ck_core"
+   "ck_core",
+   "dh_user",
+   "emb_position",
+   "emb_start",
+   "emb_user",
+   "pw"
   ]
  },
  "clock_port": "ck_core[0]",

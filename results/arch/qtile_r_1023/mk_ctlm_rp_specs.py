@@ -38,6 +38,12 @@ def spec(name, wc, sb, mid, estrip, tag):
     xa = wc; xb = snap(xa + W_SR + mid); w = snap(max(xb + W_SR, xb + W_SS + 21.6 + W_RS + 21.6 + W_RS + 2.0) + estrip)
     h = snap(sb + 4 * P_SR + 2 * P_RB + 22.2)
     s["name"] = name
+    # r3 (gate 02:28 FAIL both: ck_core boundary pin-flop spread 187.8 / 215.7 ps > 80 TT; core-domain pins sat on all four
+    # faces): every ck_core-domain port joins tl / rst_n / ck_core on the W face, so the core pin flops form one face group
+    core = set(s["clock_entry_domains"]["core"]["inputs"] + s["clock_entry_domains"]["core"]["outputs"])
+    for fc in ("N", "S", "E"):
+        s["pins"][fc] = [p for p in s["pins"][fc] if p not in core]
+    s["pins"]["W"] = s["pins"]["W"] + sorted(p for p in core if p not in s["pins"]["W"])
     s["top"] = "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_pr"
     srcs = [x for x in s["sources"] if "cpub39_1_physical.sv" not in x and "qfd_tt_ctlm_dv_wtn.sv" not in x]
     s["sources"] = ["rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical_wtnbal24_pr.sv"] + srcs + [
