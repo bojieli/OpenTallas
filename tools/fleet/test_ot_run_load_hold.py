@@ -87,10 +87,10 @@ class Rebalance(unittest.TestCase):
         calls = []
         def probe(h, d):
             return h, seq[min(len(calls), 1)][h]
-        def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False):
+        def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, disk=None):
             calls.append((host, max_wait))
             return (75, False) if len(calls) == 1 else (0, True)
-        with patch.object(module, 'HOSTS', ['a','b']), patch.object(module, 'probe', side_effect=probe), \
+        with patch.object(module, 'HOSTS', ['a','b']), patch.object(module, 'reload_conf', return_value=[]), patch.object(module, 'probe', side_effect=probe), \
              patch.object(module, 'run', side_effect=run), patch.object(module.sys, 'argv', ['ot-run','--mem','80','--','true']), \
              patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()) as err:
             with self.assertRaises(SystemExit) as ex:
@@ -102,12 +102,12 @@ class Rebalance(unittest.TestCase):
     def test_single_host_waits_unbounded_and_max_wait_is_kept(self):
         module = load(Path(__file__).with_name('ot-run'))
         calls = []
-        def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False):
+        def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, disk=None):
             calls.append(max_wait); return (75, False)
         for extra, want in [((), [None]), (('--max-wait','900'), [900])]:
             calls.clear()
             with patch.object(module, 'HOSTS', ['a']), patch.object(module, 'probe', return_value=('a', row(10,0,128))), \
-                 patch.object(module, 'run', side_effect=run), patch.object(module.sys, 'argv', ['ot-run','--mem','80',*extra,'--','true']), \
+                 patch.object(module, 'run', side_effect=run), patch.object(module.sys, 'argv', ['ot-run','--hosts','a','--mem','80',*extra,'--','true']), \
                  patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()):
                 with self.assertRaises(SystemExit) as ex:
                     module.main()

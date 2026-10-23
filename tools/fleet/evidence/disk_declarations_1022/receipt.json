@@ -1,0 +1,26 @@
+{
+  "problem": "gold1 1029 GiB free falsely excludes 100 GiB follower after 17 times 60 GiB reservation despite small GEN requests",
+  "change": "Resolved --disk exported as OT_HEAVY_DISK_GB for normal and spilled runs. Active die scopes reserved once; unknown legacy scopes default60. Exact owner-verified legacy disk.UNIT annotations supported. Standalone unrepresented closure daemon die jobs remain60. Existing below2000GiB threshold unchanged.",
+  "validation": {
+    "ot_run_unit_tests": "63 passed in3.033s",
+    "choose_selftest": "25 cases passed",
+    "diff_check": "PASS",
+    "gold1_readonly_query": "17 active scopes, currently all unknown, reserve1020; no deployment performed"
+  },
+  "approved_legacy_annotations": {
+    "host": "ot-gold1",
+    "file_prefix": "/var/tmp/ot-heavy/disk.",
+    "value_gib": 1,
+    "units": [
+      "oth-ubuntu-3889089-1792728683",
+      "oth-ubuntu-3889095-1792728683",
+      "oth-ubuntu-4058482-1792730681",
+      "oth-ubuntu-4058485-1792730681"
+    ],
+    "authority": "TOK relayed QCHAIN owner release; pre.sh ends after GEN/reset_sync/strict-bind/PRE_DONE; no later physical step within scope",
+    "measurements": "GEN71MB + pre640KB + genfacts17MB; 1GiB >10x measured total; earlier existing source30GB already consumes df free",
+    "projected_reduction_gib": 236,
+    "deployment": "Requires ROOT review; annotate only still-active named scopes; leave diag physical later scopes unknown60 and physical followers declared100"
+  },
+  "status_note": "inv_terms reserve/fresh/peak shown separately; no config/policy changes"
+}
