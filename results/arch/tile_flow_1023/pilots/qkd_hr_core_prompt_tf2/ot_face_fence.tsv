@@ -461,8 +461,8 @@ native_request_tag[3]	N	reg	u47870_c0/u_cell
 native_request_tag[40]	N	reg	u47871_c0/u_cell
 native_request_tag[41]	N	reg	u47872_c0/u_cell
 native_request_tag[42]	N	reg	u47873_c0/u_cell
-native_request_tag[43]	N	multi	u47874_c0/u_cell,u47874_c2/u_cell,u47874_c1/u_cell,u47874_c3/u_cell
-native_request_tag[44]	N	multi	u47875_c0/u_cell,u47875_c2/u_cell,u47875_c1/u_cell
+native_request_tag[43]	N	multi	u47874_c1/u_cell,u47874_c3/u_cell,u47874_c0/u_cell,u47874_c2/u_cell
+native_request_tag[44]	N	multi	u47875_c1/u_cell,u47875_c0/u_cell,u47875_c2/u_cell
 native_request_tag[45]	N	reg	u47876_c0/u_cell
 native_request_tag[46]	N	reg	u47877_c0/u_cell
 native_request_tag[47]	N	reg	u47878_c0/u_cell
