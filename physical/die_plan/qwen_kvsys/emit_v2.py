@@ -242,7 +242,8 @@ def main():
             base = r['role']
             n_ = cnt[base]
             cnt[base] += 1
-            nm = base if n_ == 0 else f'{base}~{n_}'
+            ident = re.sub(r'[^A-Za-z0-9_]', '_', base.replace('#', 'N').replace('.', '_', 1))
+            nm = ident if n_ == 0 else f'{ident}_d{n_}'      # Verilog-safe bus names (gen_rtl / g2 probes)
             names_geo[(r['tf'], r['lo'], r['hi'], r['role'])] = nm
             func.append(dict(name=nm, dir='out' if r['role'][0] == 'o' else 'in', width=r['w'], kind='data'))
         slots = sorted(slotinfo[rep], key=lambda s: (s[0][0], s[0][1], s[1][0], s[1][1]))
