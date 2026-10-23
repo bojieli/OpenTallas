@@ -32,6 +32,11 @@ def compile_service(*, record, op, probability_rows, latencies, go_at,
     svg=[];xc=[]
     for cyc,f in enumerate(cal.cyc):
         command=E.cmd_word(**f)
+        # SM contract guard (ot_hbm_sm_attn_front_static_m30): the SM command is {xc[191:83], svg[82:0]} and an
+        # attention word needs arithmetic_v (svg bit 25) == consume (xc bit 152).  Never emit an svg word that drops or
+        # adds bit 25 against the xc consume (the PV v3 'clear svg bit 25' correction zeroed all 512 SM values).
+        if (command>>183)&1 and ((command>>25)&1)!=((command>>152)&1):
+            raise ValueError(f'attention word {cyc}: svg bit25 != xc consume152')
         svg.append(SB.svg_word(command&((1<<83)-1),read=reads.get(cyc),
                                retire=(cyc==len(cal.cyc)-1)))
         xc.append((command>>83)|(cal.kvd.get(cyc,0)<<109))
