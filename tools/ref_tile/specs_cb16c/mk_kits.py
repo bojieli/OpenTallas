@@ -345,7 +345,107 @@ def cx_spec_r():
     }
 
 
+
+# ---------------------------------------------------------------------------------------------- COLLIO-SR2 compact face tile
+# COORD tile review 10-23: the 864 x 907 split bodies are BAD (6 small macros, ~2% fill, ~1.8k unregistered body pins).
+# One compact FLAT tile per face (qfd_coll_face_<p>_fx = wires-only wrapper of the split face, RTL/cycles unchanged): the
+# edge slices are the face pin registers (cal_ck / rx_rck / codec0p), each bus on its own face, outline from content
+# (6 SRAMs 82.2k um2 + ~15k um2 std cells at ~56% util), macros' pin edges facing the logic:
+#   col A (W): u_rx R0 (pins W -> rx_data pin band / rx read side), bank0 MY + u_tx MY (pins E -> codec spine)
+#   spine    : codec / calendar logic between col A and col B
+#   col B (E): bank1..3 R0 (pins W -> spine); 41-um channels between them carry phy_tx / phy_rx to the E pin band
+#   faces    : N tx_data (over u_tx), W rx_data (beside u_rx), E phy_rx (low) / phy_tx (high), S clocks / control
+FX = {
+    'main': dict(W=486.0, H=356.4, ax=43.2, bx=280.8, rx=27.0, b0=129.6, tx=237.6, b1=27.0, b2=140.4, b3=253.8, rxo='R0'),
+    # ALT (parallel fallback route): same arrangement, +21.6 spine, +10.8 every channel (routing room first)
+    'alt': dict(W=518.4, H=388.8, ax=43.2, bx=302.4, rx=27.0, b0=140.4, tx=259.2, b1=27.0, b2=153.9, b3=280.8, rxo='R0'),
+}
+HARDG = {'s0': 'g_s0', 'p': 'g_p', 's1': 'g_s1', 's2': 'g_s2', 'r': 'g_r'}
+FXSRC = 'rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_fx.sv'
+
+
+def _pack(lo, names, step=3.24, gap=2.16, wide=None):
+    out, x = {}, lo
+    for n in names:
+        w = (wide or {}).get(n, step)
+        out[n] = [round(x, 2), round(x + w, 2)]
+        x += w + gap
+    return out
+
+
+def fx_spec(prof, variant):
+    g = FX[variant]
+    s, _src = body_spec(prof)
+    name = f'qfd_cb16c_{prof}_fx' + ('x' if variant == 'alt' else '')
+    s = json.loads(json.dumps(s).replace(f'physical/ref_tile/qfd_cb16c_{prof}_body/', f'physical/ref_tile/{name}/'))
+    s['name'] = name
+    s['top'] = f'qfd_coll_face_{prof}_fx'
+    s['sources'] = [FXSRC] + s['sources']
+    s['outline'] = {'w': g['W'], 'h': g['H']}
+    pre = f'u_face.{HARDG[prof]}.u_core.'
+    M546, M512 = 'physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1', 'physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2'
+    bk = lambda b: pre + f'u_body.g_codec_pl.u_codec.g_bank[{b}].g_local.u_store.u_sram'
+    s['macros'] = [
+        {'view': M546, 'inst': pre + 'u_body.u_rx.u_mem', 'count': 1, 'at': [g['ax'], g['rx']], 'orient': g['rxo']},
+        {'view': M512, 'inst': bk(0), 'count': 1, 'at': [g['ax'], g['b0']], 'orient': 'MY'},
+        {'view': M546, 'inst': pre + 'u_body.u_tx.u_mem', 'count': 1, 'at': [g['ax'], g['tx']], 'orient': 'MY'},
+        {'view': M512, 'inst': bk(1), 'count': 1, 'at': [g['bx'], g['b1']], 'orient': 'R0'},
+        {'view': M512, 'inst': bk(2), 'count': 1, 'at': [g['bx'], g['b2']], 'orient': 'R0'},
+        {'view': M512, 'inst': bk(3), 'count': 1, 'at': [g['bx'], g['b3']], 'orient': 'R0'}]
+    s['soft_root_macro_bindings'] = {pre + k: v for k, v in s['soft_root_macro_bindings'].items()}
+    W, H = g['W'], g['H']
+    # N: tx_data over u_tx (col A) + the cal_ck / tx entries and tx control beside it
+    nr = {'tx_data': [48.6, 210.6]}
+    nr.update(_pack(221.4, ['tx_valid', 'tx_slot', 'peer_slot', 'cal_ck', 'tx_wck', 'tx_rck', 'cal_lck']))
+    # W: rx_data beside u_rx + its entries and the core faults / reset
+    wr = {'rx_data': [16.2, 199.8]}
+    wr.update(_pack(210.6, ['rx_valid', 'rx_rck', 'rx_wck', 'rst_n', 'cdc_fault'], wide={'cdc_fault': 10.8}))
+    # E: phy_rx low, phy_tx high, PHY control / codec0p between them
+    e1 = round(H * 0.42, 1)
+    er = {'phy_rx': [16.2, e1], 'phy_tx': [round(H - 16.2 - (e1 - 16.2), 1), round(H - 16.2, 1)]}
+    er.update(_pack(e1 + 4.32, ['phy_rx_valid', 'phy_up', 'codec0p', 'phy_rx_slot', 'phy_tx_slot', 'epoch_abort', 'fault_cause',
+                                'phy_tx_valid'], wide={'fault_cause': 10.8}))
+    assert er['phy_tx_valid'][1] < er['phy_tx'][0], er
+    # S: bank / codec entries under their macros (codec1 = bank0 col A, codec2..4 = bank1..3 col B, codec0 = spine)
+    sr = {'codec1': [g['ax'] + 86.4, g['ax'] + 89.64], 'codec0': [g['bx'] - 32.4, g['bx'] - 29.16],
+          'codec2': [g['bx'] + 54.0, g['bx'] + 57.24], 'codec3': [g['bx'] + 86.4, g['bx'] + 89.64],
+          'codec4': [g['bx'] + 118.8, g['bx'] + 122.04]}
+    s['pins'] = {'N': list(nr), 'W': list(wr), 'E': list(er), 'S': list(sr)}
+    s['pin_ranges'] = {**nr, **wr, **er, **sr}
+    # domains: tx_data is captured by the cal_ck pin register (edge slice), rx_data launched by rx_rck, phy by codec0p
+    d = s['clock_entry_domains']
+    d['core']['inputs'] = [x for x in d['core']['inputs'] if x != 'tx_data'] + ['tx_data']
+    d['txw']['inputs'] = []
+    for k in ('pin_hook_after_flops', 'pre_dpl_extra'):
+        s.pop(k, None)
+    s['pin_regs'] = {'enable': False, 'reason': 'RTL registers every bus pin: the split face edge slices (tx_data cal_ck, rx_data '
+                     'rx_rck, phy_tx / phy_rx codec0p) are the face pin registers; scalar control ports land on SAFE/TOK_REG '
+                     'owning-root ranks; exact calendar neutral.'}
+    s['fill_reason'] = {'macro_bound': f'COLLIO-SR2 compact face: 6 SRAMs (82.2k um2) in a {W} x {H} outline sized from content '
+                        '(macros + ~15k um2 std cells, ~56% util incl. macros); the free area is the macro pin channels and the '
+                        'four pin-register bands (2.3k bus pins, one bus per face).'}
+    s['slot_change_request'] = (f'COLLIO-SR2 10-23: face tile shrinks from the 907.2-square face slot to {W} x {H} (one flat tile per '
+                                'face replaces body + 12 slices + wires-only parent); die lead re-slots the face')
+    s['structural_change'] = (
+        f'COLLIO-SR2 10-23 (COORD tile review: split bodies 864 x 907, 6 small macros, ~2% fill, ~1.8k unregistered pins = BAD): '
+        f'ONE compact flat tile per face, top qfd_coll_face_{prof}_fx = wires-only wrapper of the regional split face '
+        f'(qfd_coll_face_{"r_" if prof == "r" else ""}cx, RTL unchanged: L+2 as benched, lockstep + mutant witnesses '
+        f'{WIT}/{prof}_m*.log); the edge slices are the face pin registers on the root owning their band. Outline {W} x {H} '
+        f'from content; macros face the logic (u_rx R0 -> W rx band, bank0/u_tx MY -> spine, bank1-3 R0 -> spine); one bus per '
+        f'face (N tx_data, W rx_data, E phy); no 600-1200-um inter-entry hops left (largest tile span ~{max(W, H):.0f} um). '
+        f'{"ALT: +21.6 spine / +10.8 channels (routing room). " if variant == "alt" else ""}'
+        'Band fences of the old body dropped (every root fits the compact outline).')
+    s['job'] = dict(s['job'], tag=f'{prof}fx' + ('x' if variant == 'alt' else ''),
+                    purpose=f'COLLIO-SR2: {prof.upper()} compact face tile ({variant.upper()})')
+    s['job']['benches'] = [lint(s['top'], s['sources'], '-DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL')] + s['job']['benches'][1:]
+    return s
+
 if __name__ == '__main__':
+    if len(sys.argv) > 2 and sys.argv[2] == 'fx':
+        for prof in sys.argv[3:] or ('s0', 'p', 's1', 's2', 'r'):
+            for v in ('main', 'alt'):
+                write(fx_spec(prof, v))
+        sys.exit(0)
     if len(sys.argv) > 2 and sys.argv[2] == 'cx':
         for prof in sys.argv[3:] or ('s0', 'p'):
             write(cx_spec_r() if prof == 'r' else cx_spec(prof))

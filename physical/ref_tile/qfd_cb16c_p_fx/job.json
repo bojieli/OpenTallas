@@ -1,0 +1,147 @@
+{
+ "name": "qfd_cb16c_p_fx-pfx-COMMIT",
+ "block": "qfd_coll_face_p_fx",
+ "ref_tile": true,
+ "owner": "Claude:CB16c-COLL",
+ "purpose": "COLLIO-SR2: P compact face tile (MAIN)",
+ "threads": 8,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/cb16c-coll-1022",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_p_fx u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLL_BANK_LOCAL -DOT_COLL_REGIONAL --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_fx.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx.sv rtl/physical/qwen_coll_cb16c_1022/qfd_coll_face_cx_body.sv rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok"
+   },
+   {
+    "name": "cb16c_lockstep_p_m0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m0 p 0",
+    "pass_regex": "^CB16C_COLL_BENCH PASS MUT=0 PROFILE=p$",
+    "pass_witness": "results/rtl/cb16c_coll_1022/p_m0.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m1 p 1",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=1 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m1.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m2 p 2",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=2 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m2.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m3 p 3",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=3 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m3.log"
+   },
+   {
+    "name": "cb16c_lockstep_p_m4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VERILATOR=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/test/run_cb16c_coll_face_cx.sh {RUN}/p_m4 p 4",
+    "fail_regex": "^CB16C_COLL_BENCH FAIL MUT=4 PROFILE=p$",
+    "fail_witness": "results/rtl/cb16c_coll_1022/p_m4.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_cb16c_p_fx/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_cb16c_p_fx/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_cb16c_p_fx --out {RUN}/record/views/qfd_coll_face_p_fx --macro-view physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_cb16c_p_fx/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_cb16c_p_fx/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_cb16c_p_fx/qfd_cb16c_p_fx-pfx-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "COLLIO-SR2 10-23 (COORD tile review: split bodies 864 x 907, 6 small macros, ~2% fill, ~1.8k unregistered pins = BAD): ONE compact flat tile per face, top qfd_coll_face_p_fx = wires-only wrapper of the regional split face (qfd_coll_face_cx, RTL unchanged: L+2 as benched, lockstep + mutant witnesses results/rtl/cb16c_coll_1022/p_m*.log); the edge slices are the face pin registers on the root owning their band. Outline 486.0 x 356.4 from content; macros face the logic (u_rx R0 -> W rx band, bank0/u_tx MY -> spine, bank1-3 R0 -> spine); one bus per face (N tx_data, W rx_data, E phy); no 600-1200-um inter-entry hops left (largest tile span ~486 um). Band fences of the old body dropped (every root fits the compact outline)."
+}
