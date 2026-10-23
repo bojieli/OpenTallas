@@ -654,10 +654,11 @@ def build_west(P, census_blocks):
             # (io_serdes_1), S2 at the SE corner (io_serdes_2 via the W5 CB column, E face y 4-220), P below and R
             # above the shared UCIe PHY core.  Outline = COLLIO-F face kit (qfd_cb16c_<f>_fx, 518.4 x 388.8; std
             # ~15k um2 = ~116k cells at 0.129 um2/cell, macro-bound).  The collective core, gearbox, UCIe share,
-            # clkrx/ckdiv, bumps and u_codec_pl_land stay flattened in the partition (glue).
+            # clkrx/ckdiv, bumps and u_codec_pl_land stay flattened in the partition (glue).  Cores route M2-M5 (M5 cap
+            # for new tiles); M6/M7 over them stay with the partition (G2 coll probe: obs to M7 left 149 overflow).
             for f, (ox, oy) in COLL_CORES.items():
                 cont.append({"inst": f"u_coll_face_{f}", "module": "qfd_coll_static_face", "status": "rework",
-                             "outline_um": list(COLL_FACE_WH), "origin_um": [ox, oy], "obs_max": "M7",
+                             "outline_um": list(COLL_FACE_WH), "origin_um": [ox, oy], "obs_max": "M5",
                              "kit": f"physical/ref_tile/qfd_cb16c_{f}_fx (codex/collio-fl2-render-1023; gates FAIL, "
                                     "re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one "
                                     "codec spine band)",
@@ -1273,6 +1274,15 @@ def main():
                                      "soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
              "census_coverage": cov,
              "planned_cores": P.cores,
+             # QC-P2 (COORD 10-23 head landed-LP 3317/27981): leaf parameters the die netlist binder MUST pass from
+             # the plan.  The old landed parents qfd_tt_ctlm_dv_lpf.sv:93 / lp/qfd_tt_ctlm_dv_lpf_lp.sv:196 /
+             # headprep/qfd_tt_ctlm_dv_lpf_hp.sv:123 instantiate ot_qfd_tt_ctlm_static_hr without .SEGCAL (default
+             # 0) -> the head lockstep FAIL.  The plan's tt_ctlm partition binds the HP13 cpub39 leaf, whose source
+             # (corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv:54572) elaborates SEGCAL=1, STAGE_ME=1.
+             "leaf_params": {"tt_ctlm": {"ot_qfd_tt_ctlm_static_hr": {"SEGCAL": 1, "STAGE_ME": 1},
+                                         "qfd_tt_ctlm_head_static": {"SEGCAL": 1},
+                                         "check": "every instance of these modules under the tt_ctlm partition "
+                                                  "carries these values (binder + elaborated-netlist grep)"}},
              "coll_split": {"cores": len(P.cores) + 1, "max_core_cells_est": max([c["cells_est"] for c in P.cores] or [0]),
                             "glue_cells_est": WS_CELLS["coll"], "cap": 400000,
                             "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits "

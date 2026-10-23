@@ -590,6 +590,18 @@
    "cells_est": 116000
   }
  ],
+ "leaf_params": {
+  "tt_ctlm": {
+   "ot_qfd_tt_ctlm_static_hr": {
+    "SEGCAL": 1,
+    "STAGE_ME": 1
+   },
+   "qfd_tt_ctlm_head_static": {
+    "SEGCAL": 1
+   },
+   "check": "every instance of these modules under the tt_ctlm partition carries these values (binder + elaborated-netlist grep)"
+  }
+ },
  "coll_split": {
   "cores": 6,
   "max_core_cells_est": 116000,
