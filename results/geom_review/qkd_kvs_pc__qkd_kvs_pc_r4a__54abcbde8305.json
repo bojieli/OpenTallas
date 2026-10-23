@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_pc",
+ "kit": "physical/ref_tile/qkd_kvs_pc_r4a@e47e759a6",
+ "verdict": "PASS",
+ "hash": "54abcbde8305b0f406e5961b5ea7f4184e900e866014df225bebc9b0fc322157",
+ "reasons": "FULL PASS (placed + conditions closed): fill/p90/buf share met at 3_place; TIE-OFF CHECK answered by KVPC-R 02:55 (tie_pc_r4a.tsv: 5.8k unused async SET/RESET pins of DFFASRHQN, 1.7k unused/constant SRAM mask/wd/addr/ce pins, 17 D=1 reset-pipe/CDC/schedule constants, 3 constant event masks, 2 known tied census outputs) -> no tied functional input. The 258 dead pc__land_er bits are a die-interface cleanup at STEWARD, not a tile geometry item (pc_h: same RTL family and tie count 7.2k)",
+ "fixes": "none; r5a stays the parallel fallback",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T03:06:46-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

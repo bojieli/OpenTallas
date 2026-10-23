@@ -1,0 +1,11 @@
+{
+ "element": "hnx_vms_bank_q0_faces",
+ "kit": "physical/ref_tile/hnx_vms_bank_safe5a@fa341533f",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "f0c44d159ad78d28a367d097f291b98394e7b9404fc9f3bc48f9fdb4efffdb08",
+ "reasons": "PLAN only (provisional per COORD 02:32). Fixes the safe4 single 21.6-um band (p90 193): rows everywhere outside halos, pin flops FIRM at pins (cols 2), left column MY so all 4 rd_out face the centre read strip; 2x2 SRAMs on the 43.2 lattice, 475x281 aspect 1.7; pins <=4/um. Macro-dominated: std 3.7k um2 -> fill 4.4% of free is intrinsic to 4 SRAMs + perimeter regs, not slack in the plan",
+ "fixes": "full PASS needs the placed render: pin->reg p90 <=30, buf/inv <=40%, logic in the face ring + centre cross only (no islands in the 43-um outer strips beyond the regs); post bits/tracks for the centre read strip (4 x rd_out 256 b + wr/addr) <=0.6; FB safe5b (no anchoring) only if safe5a p90 fails",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:34:22-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

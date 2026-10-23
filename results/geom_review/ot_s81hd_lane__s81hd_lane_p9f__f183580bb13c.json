@@ -1,0 +1,11 @@
+{
+ "element": "ot_s81hd_lane",
+ "kit": "physical/ref_tile/s81hd_lane_p9f@b463840f5",
+ "verdict": "PASS",
+ "hash": "f183580bb13cd7a99dcd4046845f136f5f33e6fef250886ad94f2101c0f55158",
+ "reasons": "Parent wrapping the CLOSED 725.76x583.2 lane view at (43.2,43.2), plus one N-S column of 4 small adapter sub-children at x 789.7. The lane-to-adapter channel is 20.7 um (>= 20, the COORD 'check channel width' item is resolved) and the adapter-to-E-edge channel is 20.3 um. Parent W pins rx/tx pass straight to the lane W face. E pins tx/rx_d sit beside the adapter column they feed. Packing ~75%, soft logic = rxen only. CTS spread 41/44 ps (p9f 35/48).",
+ "fixes": "Optional, not blocking: the 43.2-um ring on the lane child's N/S/W sides carries nothing but the W pass-through, so a 20-um ring (or the lane view moved to the W edge band) would cut ~8% of the area. When parent_wait regates with the s8nt child view, re-REQ only if the outline or placement changes.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:09:53-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

@@ -1,0 +1,11 @@
+{
+ "element": "qfd_coll_face_s1_fx",
+ "kit": "physical/ref_tile/qfd_cb16c_s1_fx@4ae37675c",
+ "verdict": "FAIL",
+ "hash": "07fd314f63c2e623d4c8e9d15b5d3e199437df0410828b0a70596fa8e5563daf",
+ "reasons": "Gate FAIL (CTS: codec0 pin-flop spread 123 ps > 80, 3.7k sinks spread over the whole tile; clock_rule coverage). No placed render exists (gate dirs released). Floorplan: 6 SRAMs in 2 columns x 3 rows, NOT abutted: ~30-um row channels, ~58-um spine, 42-um W and 33-um E bands. Std cells are only 7.0k um2 = 13.5% of the 52k um2 placeable area, so channels are sized by spacing, not demand. Outline/content ~1.6x (> 1.3). E face 1,211 pins = 3.4/um sets 356 um; N 545, W 588, S ~29 (clock entries only). Logic will scatter over 5 channels, which is why codec0's sinks span the tile. (s1 = same plan as r_fx; its own gate FAILed the same way)",
+ "fixes": "(1) Abut each SRAM column N-S (bare faces, pins toward the spine) and size the spine from demand (std 7k um2 at 60% + pin-reg slices = ~30-40 um). The codec0 rank + edge slices become ONE spine band with the clock entry at its centre (fixes the 123-ps spread structurally). (2) Re-derive the outline from content (macros + spine + face bands): expect ~400-420 x 300-320; raise the E face to <=5 pins/um or use 2 pin layers (M4+M6) to cut the height. (3) Use the near-empty S face (29 pins) for part of the E/N buses if the connectivity allows. (4) Re-REQ with a placed render (FP+GPL) + review_stats: pin->reg p90 <= 30 um, std density of the band 40-60%.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T02:06:49-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
