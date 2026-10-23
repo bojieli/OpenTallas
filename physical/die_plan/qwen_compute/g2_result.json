@@ -1,0 +1,38 @@
+{
+ "gate": "G2 virtual-die probe",
+ "plan": "die_plan.json@94436d088",
+ "tool": "g2_build.py + g2.tcl, openroad/orfs:asap7lock, docker 16 cpu / 80 GB cap, localhost, read-only",
+ "gcell_um": 20,
+ "nets": 1442217,
+ "port_bit_nets": 1442215,
+ "port_bit_nets_routed": 0,
+ "note_port_nets": "every port bit's two pins coincide on the abutted face (gcell-local, zero span): abutment holds for all 3104 ports",
+ "routed_nets": [
+  "clk_spine (1 source + 798 taps)",
+  "rst_async (1 source + 798 synchronizers)"
+ ],
+ "overflow_total": 0,
+ "overflow_by_layer": {
+  "M2-M9": 0
+ },
+ "usage": {
+  "M8": "0.01%",
+  "M9": "0.00%"
+ },
+ "wirelength_um": {
+  "clk_spine": 548271,
+  "rst_async": 547892,
+  "total": 1096162
+ },
+ "clock_reach": {
+  "root_um": [
+   15996.96,
+   12614.4
+  ],
+  "max_root_to_tap_um": 27644,
+  "repeater_stages_at_450um": 62
+ },
+ "peak_rss_gb": 3.2,
+ "runtime_s": 6,
+ "caveat": "blackbox probe: partition-internal ft/station routing is checked by G0 cuts (worst partition segment 0.149) and closes at G3; slices are single partitions in v1"
+}
