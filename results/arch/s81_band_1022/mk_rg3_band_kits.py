@@ -257,6 +257,21 @@ for h in range(2):
     m["why_floorplan"] = b["why_floorplan"] + (" sx_i / rst on the S face beside the clock (one pin-flop band; the W-face "
                                                "capture was the early 234-ps group of xmh1).")
     specs[m["name"]] = m
+# gate 10-22 20:5x, xmh1s: clock_rule the only FAIL, TT pin-flop spread 80.3 (FF 69.2).  Per-sink dump (TT): kq + the S
+# capture 262..318 at the S band, the 4 SRAM clk pins (boundary: lw_* write straight in) 237..269 -- the EARLY end is the
+# lowest SRAM nearest the S-centre root.  Geometry: the SRAM column moves up one 21.6 step (y 64.8 + 90.72 u; top edge
+# 24.6 um), so the lowest macro clock pin sits farther from the root and the S pin-flop band gets the freed row.
+for h in range(2):
+    b = specs[f"s81dv_rg3b_xmh{h}s"]
+    m = copy.deepcopy(b)
+    nm = f"s81dv_rg3b_xmh{h}t"
+    m["name"] = nm
+    m["job"].update(tag=nm, views_to=f"physical/ref_tile/{nm}/views", record_to=f"results/rtl/ref_tile/{nm}")
+    for u, mc in enumerate(m["macros"]):
+        mc["at"] = [mc["at"][0], round(64.8 + 90.72 * u, 2)]
+    m["why_floorplan"] = b["why_floorplan"].replace("90.72 pitch from y 43.2", "90.72 pitch from y 64.8") + \
+        " SRAM column one 21.6 step up (the lowest SRAM clock pin was the early end of the pin-flop spread)."
+    specs[nm] = m
 ONLY = None
 if "--only" in sys.argv:
     i = sys.argv.index("--only"); ONLY = set(sys.argv[i + 1].split(",")); del sys.argv[i:i + 2]

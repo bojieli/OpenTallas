@@ -187,24 +187,21 @@ module dsdv_idx_rg3_bxmh #(
         // the scale-select capture: the RAW {su_b, s_lo} land in pin flops beside the S-face sx_i pins and the 32-way
         // decode follows them (cycle-identical to registering the decoded ssel; gate 10-22 20:4x: the 32 decoded ssel
         // flops sat at the SRAM read channel as boundary flops, TT 369..419 ps vs 325..347 for the S pin band)
-        // native census (gate 10-22 21:xx: one shared decode drove 59 / 38 loads): the raw capture is replicated 8x
-        // (keep, like ks0..3); copy c decodes its own 32 selects for k_sc[4c +: 4], so every sl_r bit and every
-        // decoded select stays <= 32 loads.  Cycle-identical to the single copy.
-        (* keep = "true" *) reg [39:0] sl_r;               // copy c = sl_r[5c +: 5] (flat: yosys)
-        always @(posedge ck) sl_r <= {8{su_b, s_lo}};
+        // native census: a shared select (one copy: the decode drove 59 / 38 loads; 8 copies x 4 bits: abc maps the
+        // 32:1 select to a mux tree, so each copy's s_lo[0] drove 34..62 mux selects).  One raw-select copy per k_sc
+        // bit (32 x 5 keep pin flops): a 32:1 tree needs at most 16 loads per select bit.  Cycle-identical.
+        (* keep = "true" *) reg [159:0] sl_r;              // copy b = sl_r[5b +: 5] = {su_b, s_lo}
+        always @(posedge ck) sl_r <= {32{su_b, s_lo}};
         reg [31:0] k_sc;
-        genvar gc, ga;
-        for (gc = 0; gc < 8; gc = gc + 1) begin : g_sc8
-            wire [31:0] ssel;
-            for (ga = 0; ga < 32; ga = ga + 1) begin : g_ss
-                assign ssel[ga] = sl_r[5 * gc + 3 +: 2] == 2'(ga / 8) && sl_r[5 * gc +: 3] == 3'(ga % 8);
+        genvar gc;
+        for (gc = 0; gc < 32; gc = gc + 1) begin : g_sc32
+            wire [4:0] sl = sl_r[5 * gc +: 5];
+            wire [31:0] col;
+            genvar ga;
+            for (ga = 0; ga < 32; ga = ga + 1) begin : g_col
+                assign col[ga] = hq[ga / 8][32 * (ga % 8) + gc];
             end
-            always @(posedge ck) begin : g_scr
-                reg [3:0] x; integer a_;
-                x = 4'd0;
-                for (a_ = 0; a_ < 32; a_ = a_ + 1) x = x | ({4{ssel[a_]}} & hq[a_ / 8][32 * (a_ % 8) + 4 * gc +: 4]);
-                k_sc[4 * gc +: 4] <= x;
-            end
+            always @(posedge ck) k_sc[gc] <= col[sl];
         end
         (* keep = "true" *) reg [287:0] kq;         // S face pin flops
         always @(posedge ck) kq <= {k_sc, k_key};
