@@ -73,13 +73,13 @@ module ot_hbm_idx_link_p_merge #(parameter integer NA=8,parameter integer NB=8,p
    localparam integer C=(q*NC)/N;
    localparam integer SH=(1<<i);
    if(q>=SH)begin:mv
-    if(RW<=6)begin:small
+    if(RW<=6)begin:small_mux
      (* keep_hierarchy *) ot_hbm_idx_link_mux_leaf #(.W(RW)) u(.sel(na[C*CW+i]),.a(st[i*W+(q-SH)*RW+:RW]),.b(st[i*W+q*RW+:RW]),.y(st[(i+1)*W+q*RW+:RW]));
     end else begin:wide
     assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?st[i*W+(q-SH)*RW+:RW]:st[i*W+q*RW+:RW];
     end
    end else begin:lo
-    if(RW<=6)begin:small
+    if(RW<=6)begin:small_mux
      (* keep_hierarchy *) ot_hbm_idx_link_mux_leaf #(.W(RW)) u(.sel(na[C*CW+i]),.a({RW{1'b0}}),.b(st[i*W+q*RW+:RW]),.y(st[(i+1)*W+q*RW+:RW]));
     end else begin:wide
     assign st[(i+1)*W+q*RW+:RW]=na[C*CW+i]?{RW{1'b0}}:st[i*W+q*RW+:RW];
