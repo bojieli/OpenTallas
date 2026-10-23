@@ -1,0 +1,11 @@
+# HBM SU required control-fanout repair
+
+Opt-in separate top `ot_hbm_su_static_pgslice_rgf_lp_n32`; original released module is unchanged. Frozen external ports and all data/reset ages are preserved by construction. Sixteen scalar wide landing rings become existing kept-selector n32 split writer / split reader, chunk24, reset group16; copies replace the existing last regional reset stage, adding no reset edges. Eighty alignment/child reset pads keep distinct registers to prevent cross-child merging. Largest crossing2448bits.
+
+This is a partial structural repair, not a qualified view. Full parent functionality/native/clock/floorplan remain open. Remaining named controls include sout.dd, forwarded fr control, src1_c, vm_we and pos_r. The top is not bound into any die or FT kit. Existing FT wrapper needs regeneration only after source qualification.
+
+Pinned Verilator5.050 proof of existing ring substitution at widths1742/521/542/164 passed2200cycles per width through three reset epochs; causal output-bit corruption was caught. Raw proof.otrun preserves that scoped result. Larger2448 repeat and whole-parent mapped native were launched after the source syntax lint passed (lint3.otrun, unit4142943). Syntax lint suppresses missing hard-child modules and is only syntax/elaboration evidence.
+
+Whole-parent native uses immutable predecessor gate src/config from ep9 ref_gate/hbm_su_pgslice_lg_ft_d4g-20261023-025308, own source overlay, exact pinned ORFS image16470cea, real bank6_clock/kind0 libraries. It runs make synth and native_census only; no floorplan or P&R. Own remote root /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023, local client3785303, unit4142946-1792753661, outputs work/native_census.json and full_native_synth.log.
+
+Largest2448 repeat is now actual PASS (four widths2448/521/542/164), unit4144905 terminal0; causal mutant caught. First full-parent native synthesis reached mapped logic, but inherited FT ck_ft SDC refused synthesis ODB. Its container output directories were not host-mounted, so no mapped file survived; audit4158261 accordingly refused missing file. Corrected persisted synth/native is running client3795076, script native_persisted.sh; outputs are explicitly bound under /work. Both staging failures remain disclosed; there is no native result yet.

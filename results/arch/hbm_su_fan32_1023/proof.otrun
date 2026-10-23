@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-epyc9       admits   325 GB (avail 395, reserve 0, fresh 2, peak 3.3, headroom 0, waiters 0/0 GB) load 27/128 running 17 disk 1570 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4110826-1792753393 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+RING_FAN32_EQ PASS width1742 checks2179
+RING_FAN32_EQ PASS width542 checks2179
+RING_FAN32_EQ PASS width521 checks2179
+RING_FAN32_EQ PASS width164 checks2179
+SU_RING_FAN32_PROOF PASS
+- rtl/test/landed_parent/tb_su_ring_fan32.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.069 s; speed 31.800 us/s
+- Verilator: cpu 0.069 s on 1 threads; allocated 7 MB
+[81000] %Fatal: tb_su_ring_fan32.sv:20: Assertion failed in tb.c0: RING_FAN32_MISMATCH W1742 time81000
+%Error: rtl/test/landed_parent/tb_su_ring_fan32.sv:20: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4110826-1792753393): exit 0

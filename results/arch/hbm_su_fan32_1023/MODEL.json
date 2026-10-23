@@ -1,0 +1,39 @@
+{
+  "scope": "opt-in ring-control repair only; whole-parent native remains open",
+  "external_ports": "unchanged",
+  "added_data_edges": 0,
+  "added_reset_edges": 0,
+  "landings": 16,
+  "chunk_bits": 24,
+  "writer_data_bits_per_kept_selector": 12,
+  "largest_width": 2448,
+  "largest_chunks": 102,
+  "remaining_causes": [
+    "parent regional reset leaf fanout",
+    "sout dd data selector",
+    "forward relay control selector",
+    "src1_c",
+    "vm_we",
+    "pos_r"
+  ],
+  "reset_repair": "same last regional stage copied per<=16chunks; per-child pad chains kept distinct",
+  "reset_copy_added_edges": 0,
+  "widths": {
+    "0": 521,
+    "1": 521,
+    "2": 521,
+    "3": 521,
+    "4": 164,
+    "5": 1742,
+    "6": 542,
+    "7": 521,
+    "8": 542,
+    "9": 164,
+    "10": 1742,
+    "11": 521,
+    "12": 2448,
+    "13": 542,
+    "14": 542,
+    "15": 2448
+  }
+}

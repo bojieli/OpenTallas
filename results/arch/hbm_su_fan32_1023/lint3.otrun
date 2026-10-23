@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-epyc9       admits   274 GB (avail 388, reserve 0, fresh 46.4, peak 3.2, headroom 0, waiters 0/0 GB) load 43/128 running 22 disk 1566 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-su-fan32-0400-1023
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4142943-1792753661 after 0 s
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4142943-1792753661): exit 0
