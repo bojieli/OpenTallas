@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_txm_grp",
+ "enable": false,
+ "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); POUT=1 (r2, STW-S81c-TOK5): the output p is a pin flop (the AND-OR of the RDL q_l under bsk1 registered here; the parent ORs pa|pb combinationally into rd, same edge, 0 cycles). A recipe pin stage would add a lookup edge (reference LPX 3)."
+}

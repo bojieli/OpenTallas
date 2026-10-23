@@ -1,0 +1,30 @@
+{
+  "status": "SOURCE_ONLY_EXACT_PRODUCER_CLOCK_PROOF",
+  "source": "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_native32.sv",
+  "source_sha256": "66cd44bf35e5bbb8a3f2cf9bf0698ca9c75f7e2f676dcf4ee2727c46627eb9da",
+  "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32",
+  "port": "cf",
+  "width": 1,
+  "source_value_net": "n_3011",
+  "actual_final_register": {
+    "instance": "u_9160",
+    "type": "qfd_bmath_dff_pn0",
+    "C": "n_3160",
+    "D": "n_19931",
+    "Q": "n_3011",
+    "R": "n_89166"
+  },
+  "clock_alias": {
+    "net": "n_3160",
+    "actual_top_port": "ck_hr"
+  },
+  "actual_owner_endpoint": [
+    "tt_ctlm",
+    "ck_hr"
+  ],
+  "forbidden_owner_selection": "first clock of tt_ctlm or ck_core",
+  "generator_adoption": false,
+  "existing_generator_state": "fault_face_bind fails closed on multiclock TT; FE _clock_bus legacy firstclock is not an admitted contract for this new source; standalone endpoint follower APIcd8 pending ROOTreview/publication",
+  "required_source_stage_integration": "Select exact TT HR owner before FE pre root allocation and for TT source bits; all TT-owned fault nodes must follow actual ck_hr via per-port endpoint map through final clock refile. Every crossroot edge requires real source/destination clock LAND. No firstclock fallback.",
+  "scope": "No clock/register/latency added, no actualGEN clocklanding/bind/CTS/PG/nativeinsertionR qualification."
+}

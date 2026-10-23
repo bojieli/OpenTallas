@@ -1,0 +1,13 @@
+FAIL go tile (1,2): op 0 at cycle 105, expected 104
+FAIL go tile (1,2): op 1 at cycle 153, expected 152
+RS op 0 cycle 180 latency 90 (compiled 90) fault 0 match 1
+FAIL go tile (1,2): op 2 at cycle 201, expected 200
+RS op 1 cycle 228 latency 90 (compiled 90) fault 0 match 1
+FAIL go tile (1,2): op 3 at cycle 249, expected 248
+RS op 2 cycle 276 latency 90 (compiled 90) fault 0 match 1
+RS op 3 cycle 324 latency 90 (compiled 90) fault 0 match 1
+QCLUSTER_FAIL MUT 8 FAR 0 errors 4
+- rtl/test/tb_qcluster_b8n_fabric.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 384ns; walltime 0.035 s; speed 10.929 us/s
+- Verilator: cpu 0.026 s on 1 threads; allocated 11 MB

@@ -1,0 +1,13 @@
+FIN0 user 0 root age 1744 face res_t 1745 (fin pin -> face core +1)
+FIN0 user 1 root age 1744 face res_t 1745 (fin pin -> face core +1)
+FIN0 user 2 root age 1744 face res_t 1745 (fin pin -> face core +1)
+FIN0 user 3 root age 1744 face res_t 1745 (fin pin -> face core +1)
+{"user":0,"ctx":8192,"exact": true,"data_errors":0,"result_words":512,"status_word":9,"k_rows":8192,"v_rows":8192,"cyc_go":104,"cyc_run":128,"cyc_cmd":132,"cyc_start_qk":135,"cyc_k_last":411,"cyc_v_first":991,"cyc_v_last":1518,"cyc_pv0_out":1653,"cyc_pv1_out":1653,"cyc_final_out":1878,"cyc_result0":1883,"cyc_result31":1914,"cyc_status":2129,"cyc_idle":2129,"fin0_root_age":1744,"start_to_retire":1782,"start_to_status":1997,"work_span":1746}
+{"user":1,"ctx":8192,"exact": true,"data_errors":0,"result_words":512,"status_word":9,"k_rows":8192,"v_rows":8192,"cyc_go":2129,"cyc_run":2153,"cyc_cmd":2157,"cyc_start_qk":2160,"cyc_k_last":2436,"cyc_v_first":3016,"cyc_v_last":3543,"cyc_pv0_out":3678,"cyc_pv1_out":3678,"cyc_final_out":3903,"cyc_result0":3908,"cyc_result31":3939,"cyc_status":4154,"cyc_idle":4154,"fin0_root_age":1744,"start_to_retire":1782,"start_to_status":1997,"work_span":1746}
+{"user":2,"ctx":8192,"exact": true,"data_errors":0,"result_words":512,"status_word":9,"k_rows":8192,"v_rows":8192,"cyc_go":4154,"cyc_run":4178,"cyc_cmd":4182,"cyc_start_qk":4185,"cyc_k_last":4461,"cyc_v_first":5041,"cyc_v_last":5568,"cyc_pv0_out":5703,"cyc_pv1_out":5703,"cyc_final_out":5928,"cyc_result0":5933,"cyc_result31":5964,"cyc_status":6179,"cyc_idle":6179,"fin0_root_age":1744,"start_to_retire":1782,"start_to_status":1997,"work_span":1746}
+{"user":3,"ctx":8192,"exact": true,"data_errors":0,"result_words":512,"status_word":9,"k_rows":8192,"v_rows":8192,"cyc_go":6179,"cyc_run":6203,"cyc_cmd":6207,"cyc_start_qk":6210,"cyc_k_last":6486,"cyc_v_first":7066,"cyc_v_last":7593,"cyc_pv0_out":7728,"cyc_pv1_out":7728,"cyc_final_out":7953,"cyc_result0":7958,"cyc_result31":7989,"cyc_status":8204,"cyc_idle":8204,"fin0_root_age":1744,"start_to_retire":1782,"start_to_status":1997,"work_span":1746}
+KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=8192 fd=3 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025
+- rtl/test/qwen_kv_die/kvattn_rel_1019/tb_kvattn_rel.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 1997.867 s; speed 8.217 ns/s
+- Verilator: cpu 1997.388 s on 150 threads; allocated 2952 MB

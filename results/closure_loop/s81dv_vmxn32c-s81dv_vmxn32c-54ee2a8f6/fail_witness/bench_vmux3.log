@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dv_vmxn32c-s81dv_vmxn32c-54ee2a8f6 bench bench_vmux3 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81dv_vmxn32c-s81dv_vmxn32c-54ee2a8f6 log cl/bench_vmux3.a1b1.log captured 2026-10-21T21:03:08-07:00
+# fail_regex 'VMUX_N32 FAIL'
+MISMATCH vmux cyc 18 ref a43cfff44bc41925/0 dut a43cfff44bc41924/0
+MISMATCH vmux cyc 22 ref f73d5d1e3f506f6b/0 dut f73d5d1e3f506f6a/0
+MISMATCH vmux cyc 23 ref 27e8c7ebc5191fed/0 dut 27e8c7ebc5191fec/0
+MISMATCH vmux cyc 38 ref 40604dcda12ecb67/0 dut 40604dcda12ecb66/0
+MISMATCH vmux cyc 41 ref 8558d84d28523d5d/0 dut 8558d84d28523d5c/0
+VMUX_N32 FAIL nerr 3271 valid_beats 13317 fault_ref 1 | VDLY PASS nerr 0 (vm_mut 3 dl_mut 0)
+- rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_vmux_n32.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.077 s; speed 259.067 us/s
+- Verilator: cpu 0.077 s on 1 threads; allocated 7 MB

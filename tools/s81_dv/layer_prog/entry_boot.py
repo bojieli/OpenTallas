@@ -18,7 +18,7 @@ import dv_layer_compile as D
 from entry_inputs import compile_inputs
 
 
-def compile_jobs(die, entry, mechanism, out, prog_jobs=()):
+def compile_jobs(die, entry, mechanism, out, prog_jobs=(), drift_to_replay=False):
     if 'retire_not_before' not in D.finish.__code__.co_names:
         raise ValueError('entry jobs require current native compiler static-END fence support')
     if mechanism.get('status') != 'PASS':
@@ -41,10 +41,14 @@ def compile_jobs(die, entry, mechanism, out, prog_jobs=()):
     expected = mechanism.get('source_sha256')
     if not isinstance(expected, dict) or not expected:
         raise ValueError('mechanism receipt requires exact compiled production source hashes')
+    drift = []
     for name, digest in expected.items():
         path = ROOT/name
         if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
-            raise ValueError('entry mechanism source identity differs: '+name)
+            if not drift_to_replay or name.startswith('/'):
+                raise ValueError('entry mechanism source identity differs: '+name)
+            drift.append(dict(path=name, mechanism_sha256=digest,
+                              compiled_sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
     # Retain complete source/row identity; pair two leaves per real 128-row job.
     leaves = {}
     for write in entry['writes']:
@@ -104,7 +108,11 @@ def compile_jobs(die, entry, mechanism, out, prog_jobs=()):
     manifest=dict(schema='opentallas.s81.entry_native_jobs.v1', status='PARTIAL',
         source_input_provenance=entry['input_sources'], die_sha256=die.die_sha,
         measured_local_ages=ages, mechanism_receipt_sha256=hashlib.sha256(json.dumps(mechanism,sort_keys=True).encode()).hexdigest(),
-        jobs=jobs, sealed_programme_held=True, runtime_program_bound=False,
+        jobs=jobs, mechanism_source_drift=drift,
+        mechanism_ages_status=('HYPOTHESIS: measured on the mechanism sources, not on these; the cut replay on the '
+                               'compiled sources (run_entry_replay.py, bit-exact line + zero faults) is the only proof')
+                              if drift else 'MEASURED_ON_COMPILED_SOURCES',
+        sealed_programme_held=True, runtime_program_bound=False,
         global_clock_transport_qualified=False, full_stage=False, full_token=False,
         initial_state='single fixture entry; no fabricated KS/user/token/position descriptor',
         obligations=['actual host adopts these jobs and matching incoming descriptor',
@@ -144,9 +152,13 @@ def main():
     ap.add_argument('--mechanism-receipt',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--replay-job',type=int,action='append',default=[],help='also write job K as a dv_cut_replay prog dir')
+    ap.add_argument('--mechanism-drift-to-replay',action='store_true',
+                    help='TOKc-S81 (G9 rerun): compile even when repo RTL files differ from the mechanism receipt sources '
+                         '(recorded in manifest mechanism_source_drift); the measured ages become a hypothesis that only the '
+                         'RTL cut replay of these jobs can confirm. Bench files outside the repo must still match.')
     a=ap.parse_args();die=D.Die(a.tree)
     data=compile_jobs(die,compile_inputs(die,a.fixtures),json.loads(a.mechanism_receipt.read_text()),a.out,
-                      prog_jobs=set(a.replay_job))
+                      prog_jobs=set(a.replay_job), drift_to_replay=a.mechanism_drift_to_replay)
     print('ENTRY_NATIVE_JOBS',len(data['jobs']),'PARTIAL: real host/global route adoption held')
 
 

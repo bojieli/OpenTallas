@@ -32,6 +32,10 @@ def main():
     p = sp.add_parser('plan'); p.add_argument('--lanes', required=True, type=Path)
     p.add_argument('--logs', nargs='+', required=True, type=Path); p.add_argument('--out', required=True, type=Path)
     p.add_argument('--D', type=int, default=4); p.add_argument('--calendar', type=Path)
+    p.add_argument('--D-auto', help='QW-DIECLK4 10-20: comma list of ring depths (e.g. 4,6,8); per lane the smallest D '
+                   'whose hold side holds at TT and FF (L5: a hold miss raises D, never E); the GEN instantiates that '
+                   'landing depth.  H0 is measured at --D (the depth of the STA MCPs)')
+    p.add_argument('--hold-margin', type=float, default=0.0, help='ps required on hold_E (with --D-auto)')
     a = ap.parse_args()
     fl = json.loads(a.lanes.read_text())
     if a.cmd == 'tcl':
@@ -67,22 +71,29 @@ def main():
         if not s1:
             rows.append(dict(bid=r['bid'], n=r['n'], E=None, note='no STA slack at the landing pins')); continue
         E = max(1, max(1 + math.ceil(-v / T) for v in s1.values()))
-        hold_E = {c: round(v + (a.D - E) * T, 1) for c, v in h0.items()}
-        ok = all(v >= 0 for v in hold_E.values())
+        Dl = a.D
+        for Dl in ([int(x) for x in a.D_auto.split(',')] if a.D_auto else [a.D]):
+            if all(v + (Dl - E) * T >= a.hold_margin for v in h0.values()):
+                break
+        hold_E = {c: round(v + (Dl - E) * T, 1) for c, v in h0.items()}
+        ok = all(v >= (a.hold_margin if a.D_auto else 0) for v in hold_E.values())
         K = (E + int(cal.get(r['bid'], 0))) % 8
         row = dict(bid=r['bid'], n=r['n'], E=E, K=K, s1={c: round(v, 1) for c, v in s1.items()},
                    h0={c: round(v, 1) for c, v in h0.items()}, setup_E={c: round(v + (E - 1) * T, 1) for c, v in s1.items()},
-                   hold_E=hold_E, window_ok=ok, E_gen=r['E'])
+                   hold_E=hold_E, window_ok=ok, E_gen=r['E'], D=Dl)
         rows.append(row)
         if not ok:
             fails.append(r['bid'])
-    hist = {}
+    hist, dh = {}, {}
     for x in rows:
+        if x.get('D') is not None:
+            dh[str(x['D'])] = dh.get(str(x['D']), 0) + 1
         if x.get('E') is not None:
             hist[str(x['E'])] = hist.get(str(x['E']), 0) + 1
     rec = dict(schema='opentallas.qwen_split.fwd_land_plan.v1', T_ps=T, D=a.D, rule='E = max over corners of 1 + ceil(-S1/T)',
                lanes_file=str(a.lanes), logs=[str(x) for x in a.logs], links=rows,
-               summary=dict(links=len(rows), E_hist=hist, window_fail=fails, no_slack=[x['bid'] for x in rows if x.get('E') is None]))
+               D_auto=a.D_auto, hold_margin_ps=a.hold_margin if a.D_auto else None,
+               summary=dict(links=len(rows), E_hist=hist, D_hist=dh, window_fail=fails, no_slack=[x['bid'] for x in rows if x.get('E') is None]))
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(rec['summary']))
 

@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   582 GB (avail 521, growth 113, headroom 0, waiters 0/0 GB) load 98/128 running 47 disk 2253 GB 
+ot-run: ot-epyc7       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: ot-epyc9       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: ot-gold2       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: ot-gold1       skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: ot-pve1        skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: ot-agidock128  skipped: no /home/ubuntu/ot-scratch/claude/codex-k-ctl-geo-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-803555-1792602396 after 1 s
+kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-803555-1792602396): exit 0

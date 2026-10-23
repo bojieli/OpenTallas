@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+RST64_MISMATCH edge68 q01 q11 old0 expected0
+RST64_MISMATCH edge70 q00 q10 old1 expected1
+RST64_MISMATCH edge72 q01 q11 old0 expected0
+RST64_MISMATCH edge76 q00 q10 old1 expected1
+RST64_FAIL errors675 checks19934
+- /srv/opentallas-scratch/claude/codex-reset64-1022/out_lat/tb.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.010 s; speed 20.449 ms/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 7 MB

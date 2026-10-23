@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-22T22:04:54.695308-07:00",
+  "main": "66a6e1368",
+  "helper": "tools/orfs_hold_mm.py",
+  "old_sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+  "new_sha256": "bc51bdc730b5896c2029b41975f16a07836339491c8683dbef55a5a9f8d6551f",
+  "backup": "/home/ubuntu/claude-takeover-20261007/daemon_backups/root-spine-1022-2205",
+  "method": "atomic byte sync of external helper only; no daemon restart, no historical job snapshot modified",
+  "remaining": "Per existing snapshot_refresh_sh new shipped main helper refreshes flowhold only when exact main hash matches; frozen helpers preserved."
+}

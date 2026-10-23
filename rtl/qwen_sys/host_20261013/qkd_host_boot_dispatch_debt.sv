@@ -24,7 +24,7 @@ module qkd_host_boot_dispatch_debt #(parameter integer MUT=0)(
  wire[24:0]i_le=i_addr[24:0];wire[24:0]i_se=i_le-25'd19447808;
  wire[1:0]i_stack=(i_le<25'd19447808)?i_le[6:5]:i_se[6:5];
  wire[6:0]i_target=i_embed?{i_stack,(i_le<25'd19447808)?i_le[4:0]:i_se[4:0]}:i_addr[6:0];
- wire i_good=i_we&&(i_marker||(i_embed?(i_addr[30:25]==0&&i_le<25'd19457304):(i_addr[30:24]==0)));
+ wire i_good=i_we&&(i_marker||(i_embed?(i_addr[30:25]==0&&i_le<25'd19588376):(i_addr[30:24]==0)));
  wire[9:0]id_dec={i_target,i_good,i_embed,i_marker};
  reg[9:0]qd[0:7];reg[9:0]hd;
  wire[289:0]head=q[rp];wire[24:0]logical_e=head[26:2];

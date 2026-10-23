@@ -24,8 +24,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import abstract_pin_windows as APW   # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-A0_REF = "30d3d3510"   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
-W, H = 457.92, 1166.4
+A0_REF = os.environ.get("OT_A0_PINS_REF", "30d3d3510")   # Q-ROMPARENT-2 c1r6 (codex/romleaf-native-1621): ck_tx4/5 on E face M4, mirror-legal
+# SQC-CB16 10-22: OT_A0_PINS_REF=c12c62ba7 OT_A0_PINS_PATH=tools/qwen_romleaf/rc14_2000/baseline/{kind}_pins.tcl OT_A0_W=820.8
+# OT_A0_H=907.2 -> real-face abstract of the live A0 (rc14..rc17: FINAL rc2 pin plan, 820.8 x 907.2), still a stand-in body.
+A0_PINS_PATH = os.environ.get("OT_A0_PINS_PATH", "tools/qwen_romleaf/parent_{kind}_c1_pins.tcl")
+W, H = float(os.environ.get("OT_A0_W", "457.92")), float(os.environ.get("OT_A0_H", "1166.4"))
 R = {"tt": 220.0, "ff": 170.0, "ss": 290.0}
 # Q-CLUSTER4 (coordinator 0de+6 (1)): every A0 clock entry carries its MEASURED internal insertion (pin latency, so the
 # cluster CTS balances at child flops).  Entries passed straight to a closed leaf take that leaf view's measured
@@ -54,7 +57,7 @@ OUTS = {"t_out", "n_y", "tie_hi", "tie_lo"}
 
 
 def pins(kind):
-    src = subprocess.run(["git", "-C", str(ROOT), "show", f"{A0_REF}:tools/qwen_romleaf/parent_{kind}_c1_pins.tcl"],
+    src = subprocess.run(["git", "-C", str(ROOT), "show", f"{A0_REF}:" + A0_PINS_PATH.format(kind=kind)],
                          check=True, capture_output=True, text=True).stdout
     out = []
     for m in re.finditer(r"place_pin -pin_name \{([^}]+)\} -layer (M\d) -location \{([\d.]+) ([\d.]+)\}", src):

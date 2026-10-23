@@ -2,8 +2,9 @@
 # QW-SLICE 10-19: one station region (qfd_dv_redstn2_region, PIN_IN=1, no OT_ASSERT) -> generic stat + ASAP7 RVT TT
 # mapped std-cell area (kit outline basis).  args: SRC_ROOT OUT_DIR LIB(combined asap7 liberty)
 set -euo pipefail
+source "$(dirname "$(readlink -f "$0")")/../yosys_pin.sh" || exit 2  # TOKc-YOSYS 10-22: Yosys >= 0.68 or exit 2
 src=$1; out=$2; LIB=$3; mkdir -p $out; cd $src
-yosys -Q -p "read_verilog -lib -sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v; \
+"$YOSYS" -Q -p "read_verilog -lib -sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v; \
 read_verilog -sv -D SYNTHESIS rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv rtl/qwen_dv/qfd_dv_redstn2_regional.sv rtl/qwen_dv/qfd_dv_station_math_g.sv \
  rtl/qwen_dv/qfd_dv_ring_delay.sv rtl/qwen_dv/qfd_dv_reset_tree.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_physical.sv \
  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv; \

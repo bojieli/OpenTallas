@@ -31,6 +31,11 @@ class SignalTopTest(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn('ROUTE -signal M4-M7 -clock M4-M9', r.stdout)
 
+    def test_owner_m9_signal_plan_reaches_routing_api(self):
+        r = run('M9')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn('ROUTE -signal M4-M9 -clock M4-M9', r.stdout)
+
     def test_invalid_layer_fails_before_routing(self):
         r = run('wrong')
         self.assertNotEqual(r.returncode, 0)

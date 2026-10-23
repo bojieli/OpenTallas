@@ -1,0 +1,139 @@
+{
+  "run_id": "s81-cap14-local-target-20261021-r1",
+  "edge_convention": "sampled target clock edges; local ring pin availability and join outputs observed after the edge; private control pins/internal enables observed before edge consumption",
+  "source_clock_epoch": 0,
+  "target_clock_epoch": 0,
+  "clock_period_ps": 834,
+  "clock_forward_delay_ps": 115,
+  "data_forward_delay_ps": 115,
+  "regional_reset_R0": 12,
+  "gate_G": 12,
+  "gate_shift_GS": 4,
+  "source_reset_total": 4,
+  "K": 17,
+  "physical_epoch_mapping": null,
+  "peer_flight_qualified": false,
+  "events": [
+    {
+      "kind": "PRIVATE_HEADER",
+      "edge": 40,
+      "subtype": 0
+    },
+    {
+      "kind": "CFG_PIN_CAPTURE",
+      "edge": 41,
+      "local_first": 78,
+      "peer_first": 403
+    },
+    {
+      "kind": "INGRESS_CFG_CONSUME",
+      "edge": 42
+    },
+    {
+      "kind": "PRIVATE_HEADER",
+      "edge": 45,
+      "subtype": 1
+    },
+    {
+      "kind": "PARAM_PIN_CAPTURE",
+      "edge": 47,
+      "row": 0
+    },
+    {
+      "kind": "PARAM_PIN_CAPTURE",
+      "edge": 48,
+      "row": 1
+    },
+    {
+      "kind": "PARAM_SRAM_COMMIT",
+      "edge": 48,
+      "row": 0,
+      "data": "4000000f4000000e4000000d4000000c4000000b4000000a40000009400000084000000740000006400000054000000440000003400000024000000140000000"
+    },
+    {
+      "kind": "PARAM_PIN_CAPTURE",
+      "edge": 49,
+      "row": 2
+    },
+    {
+      "kind": "PARAM_SRAM_COMMIT",
+      "edge": 49,
+      "row": 1,
+      "data": "400003f7400003f6400003f5400003f4400003f3400003f2400003f1400003f0400003ef400003ee400003ed400003ec400003eb400003ea400003e9400003e8"
+    },
+    {
+      "kind": "PARAM_PIN_CAPTURE",
+      "edge": 50,
+      "row": 3
+    },
+    {
+      "kind": "PARAM_SRAM_COMMIT",
+      "edge": 50,
+      "row": 2,
+      "data": "400007df400007de400007dd400007dc400007db400007da400007d9400007d8400007d7400007d6400007d5400007d4400007d3400007d2400007d1400007d0"
+    },
+    {
+      "kind": "PARAM_PIN_CAPTURE",
+      "edge": 51,
+      "row": 4
+    },
+    {
+      "kind": "PARAM_SRAM_COMMIT",
+      "edge": 51,
+      "row": 3,
+      "data": "40000bc740000bc640000bc540000bc440000bc340000bc240000bc140000bc040000bbf40000bbe40000bbd40000bbc40000bbb40000bba40000bb940000bb8"
+    },
+    {
+      "kind": "PARAM_SRAM_COMMIT",
+      "edge": 52,
+      "row": 4,
+      "data": "40000faf40000fae40000fad40000fac40000fab40000faa40000fa940000fa840000fa740000fa640000fa540000fa440000fa340000fa240000fa140000fa0"
+    },
+    {
+      "kind": "LOCAL_PIN_FIRST",
+      "edge": 118,
+      "departure": 100,
+      "age": 18
+    },
+    {
+      "kind": "JOIN_FIRST",
+      "edge": 119,
+      "departure": 100,
+      "age": 19
+    },
+    {
+      "kind": "PRIVATE_HEADER",
+      "edge": 780,
+      "subtype": 2
+    },
+    {
+      "kind": "TARGET_Q_FIRST",
+      "edge": 783
+    }
+  ],
+  "boundaries": {
+    "private_CFG_header": 40,
+    "CFG_join_and_ingress_pin": 41,
+    "ingress_internal_CFG_consume": 42,
+    "final_parameter_pin": 51,
+    "final_parameter_SRAM_commit": 52,
+    "local_departure": 100,
+    "local_pin_availability": 118,
+    "half_join_first": 119,
+    "private_launch_header": 780,
+    "first_generated_q": 783
+  },
+  "joined_records": 640,
+  "generated_words": 534,
+  "qualification": "Bounded local transport/control/target serialization only. Synthetic component payloads, direct already-landed peer, no SM arithmetic, full entry, SOT, or production epoch.",
+  "identity": {
+    "readset_sha256": "25eb6d4ec1e5c56fa99e387f0dde0e52591bf185c4f0fb806fe394e627dc3dc1",
+    "programme_owner": 598853,
+    "position": 777,
+    "se_jid": 49,
+    "so_jid": 103,
+    "full_service_job_launched": false,
+    "launch_pin_observed": false,
+    "downstream_service_acceptance_observed": false
+  }
+}

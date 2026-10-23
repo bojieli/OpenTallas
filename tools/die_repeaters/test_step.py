@@ -33,6 +33,20 @@ def test_config_defaults_and_env(monkeypatch):
         step.config('hbm', 'x', over_reach='maybe')
 
 
+def test_upper_rc_layer_spacing(monkeypatch):
+    """owner 10-22: repeaters spaced on the M7-M9 RC default to 450 um (600 broke slew, REACH-M89); M4 keeps 160; explicit / env values win"""
+    for k in ('OT_DIE_REPAIR_MAX_WIRE', 'OT_DIE_SIGNAL_TOP_LAYER'):
+        monkeypatch.delenv(k, raising=False)
+    assert step.config('s81', 'r', rc_layer='M4')['max_wire_um'] == 160.0
+    for layer in ('M7', 'M8', 'M9'):
+        assert step.config('s81', 'r', rc_layer=layer)['max_wire_um'] == 450.0
+    assert step.config('hbm', 'r', rc_layer='M8', max_wire_um=200.0)['max_wire_um'] == 200.0
+    assert 'max_wire_um 450' in step.tcl_call('qwen_kv', 'r', signal_top_layer='M4-M9')
+    assert 'max_wire_um 160' in step.tcl_call('qwen_kv', 'r', signal_top_layer='M4-M7')
+    monkeypatch.setenv('OT_DIE_REPAIR_MAX_WIRE', '300')
+    assert step.config('s81', 'r', rc_layer='M8')['max_wire_um'] == 300.0
+
+
 def test_tcl_call_shape():
     t = step.tcl_call('hbm', '/work/out/die_repeaters.json', tcl_dir='/work', receiver_slew={'m_a': 240})
     assert 'source /work/die_repeaters.tcl' in t

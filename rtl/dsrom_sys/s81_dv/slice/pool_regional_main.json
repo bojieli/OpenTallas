@@ -1,0 +1,21 @@
+{
+  "variant": "main",
+  "base": "rtl/dsrom_sys/s81_dv/slice/pool_native_main.sv",
+  "base_sha256": "c5abeedb16d08401b22c602c05c56fe3888ce134bc5ad7f850e2842f8e23ffa4",
+  "land_sha256": "a8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75",
+  "generated_sha256": "c3e5ed6f1543cefd944c20a725f473eeabf3401a1e667cd21149ea3e348fd013",
+  "clock_ports": {
+    "control": "clk",
+    "lanes": "ck_l[7:0]"
+  },
+  "ring": {
+    "D": 4,
+    "K": 1,
+    "chunk_bits": 16,
+    "in_bits": 35,
+    "out_bits": 66
+  },
+  "added_command_edges": 4,
+  "arithmetic_edges_added": 0,
+  "qualification": "UNQUALIFIED until numerical (positive + swap_kv) and native census on this file"
+}

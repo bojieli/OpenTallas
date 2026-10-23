@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81dv_rg3b_xn-s81dv_rg3b_xn-6733e5cca bench bench_rg3b_bx_lsw_mut5 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81dv_rg3b_xn-s81dv_rg3b_xn-6733e5cca log cl/bench_rg3b_bx_lsw_mut5.a1b1.log captured 2026-10-22T20:18:06-07:00
+# fail_regex '^BX_LSW MUTANT_CAUGHT$'
+BX_LSW MISMATCH cycle 99 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 100 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 121 xr_eq 1 kq_eq 0
+BX_LSW MISMATCH cycle 124 xr_eq 1 kq_eq 0
+BX_LSW MUTN=5 cycles 20000 live_key 19274 writes 19857 mismatches 14698
+BX_LSW MUTANT_CAUGHT
+- /srv/opentallas-scratch2/claude/closure-loop/s81dv_rg3b_xn-s81dv_rg3b_xn-6733e5cca/bench_src_a1/rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3_bx_lsw.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.231 s; speed 173.406 us/s
+- Verilator: cpu 0.231 s on 1 threads; allocated 7 MB

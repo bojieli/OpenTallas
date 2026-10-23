@@ -23,6 +23,18 @@ from qwen_split.closed_view import enabled as view_enabled, install_master as vi
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_sys_face'
 SOURCE = 'rtl/qwen_split/qfd_sys_face.sv'
+HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+if HEAD_PREP:
+    MASTER = 'qfd_sys_face_ovl'
+    SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl.sv'
+FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
+if FAULT_FACE:
+    if not HEAD_PREP:
+        raise ValueError('fault1 requires the coherent head-prepare source')
+    MASTER = 'qfd_sys_face_ovl_fault1'
+    SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv'
+from qwen_split.sysface_lctx_source import select as select_lctx_source
+MASTER, SOURCE = select_lctx_source((MASTER,SOURCE),ROOT)
 INST = 'sys_face'
 WH_HIST = (302.4, 216.0)
 
@@ -81,6 +93,10 @@ EDGES = [
     ('fwd_epoch', 'bump_fwd_epoch', 'o'),
 ]
 
+if HEAD_PREP:
+    EDGES += [(p, 'd2d_rom', p) for p in ('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx','prog_head_context_slot')]
+    EDGES += [('prog_head_context_user','d2d_rom','tx_user')]
+
 
 # Q-CTLM G8 (claude/qctlm-1017 d8f159727): the DV sys_face drops these inputs (their producers, the qfd_crom_g groups and
 # the res trains, left the die); with that RTL their edges are skipped (Q-DIEPLAN6 10-17), with the older RTL they bind
@@ -107,8 +123,11 @@ def apply(model):
     for need in ('d2d_rom', 'seq_su', 'tt_ctlm', 'native59', 'embed_prov', 'io_collective', 'res_train_issue', 'bump_fwd_epoch'):
         if need not in by:
             raise ValueError(f'sys face bind: die instance {need} missing')
-    if by['d2d_rom'].master != 'qfd_d2d_static':
-        raise ValueError('sys face bind needs the static D2D end (static_link_bind)')
+    expected_link = 'qfd_d2d_static_ovl_sf7' if HEAD_PREP else 'qfd_d2d_static'
+    if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+        expected_link = 'qfd_d2d_static_ovl_sf7_obs1'
+    if by['d2d_rom'].master != expected_link:
+        raise ValueError(f'sys face bind needs the selected static D2D end {expected_link} (static_link_bind)')
     sf = rtl_ports(ROOT / SOURCE, MASTER)
     prov = rtl_ports(ROOT / PROV_SOURCE, PROV_MASTER)
     by['embed_prov'].master = PROV_MASTER
@@ -172,11 +191,17 @@ def apply(model):
     conn = {p for b, c, n, es in model['buses'] for i, p in es if i == INST}
     conn = {alias.get(p, (p, None))[0] for p in conn}
     open_in = sorted(p for p, (n, d) in sf.items() if d == 'input' and p not in conn)
-    if open_in:
-        raise ValueError(f'sys face bind: qfd_sys_face inputs left open {open_in}')
+    late_inputs = {'head_descriptor_v','head_descriptor_tag','head_descriptor_generation'} if HEAD_PREP else set()
+    if FAULT_FACE:
+        late_inputs.add('obs_fault')
+    if HEAD_PREP and not os.environ.get('OT_SPLIT_DV'):
+        raise ValueError('head descriptor requires the actual DV rebind stage')
+    if set(open_in) != late_inputs:
+        raise ValueError(f'sys face bind: unexpected unconnected inputs {open_in}; actual DV descriptor debt {sorted(late_inputs)}')
     rec = dict(master=MASTER, source=SOURCE, source_sha256=hashlib.sha256((ROOT / SOURCE).read_bytes()).hexdigest(),
                provider=dict(master=PROV_MASTER, source=PROV_SOURCE), straps=[s[0] for s in STRAPS],
                added_buses=added, appended_buses=sorted(set(appended)), new_instances=NEW_INSTS, frames=None,
+               deferred_inputs=sorted(late_inputs),
                qualified=False, note='NEW unclosed parent; site from place() unless the homes file names it')
     model['sys_face_bind'] = rec
     return rec
@@ -187,6 +212,8 @@ def _src_of(model, inst):
     rev = {v: k for k, v in NG_INST.items()}
     if inst in rev and rev[inst] in NG_MASTER:
         return NG_MASTER[rev[inst]][1]
+    if inst == 'd2d_rom':
+        return model['static_link_bind']['source']
     return dict(d2d_rom='rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv',
                 tt_ctlm='rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv',
                 io_collective='rtl/physical/ot_qfd_collective_static_io_production.sv',
