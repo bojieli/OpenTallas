@@ -681,6 +681,7 @@ class Binder:
         self.bitpos = {}                     # (src part, dst part, src cell, port, bit) -> (bus, lane bit)
         self.bitcyc = {}                     # same key -> bound register stages
         self.unplanned = defaultdict(int)
+        self.unplanned_bits = []            # per bit (first 5000): driver pin, sink ports (relative), partitions
         self.forwarded = defaultdict(int)    # (src part, dst part) -> bits carried over >1 lane
         self.fwd_parts = defaultdict(int)    # forwarding partition -> bits forwarded
         lanes = self.plan_lanes()
@@ -791,6 +792,11 @@ class Binder:
             if rest:
                 self.unplanned[(sp, dp)] += len(rest)
                 direct.append((sp, dp, sci, spn, rest))
+                if len(self.unplanned_bits) < 5000:
+                    sk = sorted(self.cross_sinks[(sp, dp, sci, spn)])
+                    for b in rest:
+                        self.unplanned_bits.append(dict(src_part=sp, dst_part=dp, driver=f"{F.cells[sci].path}.{spn}[{b}]",
+                                                        sink_ports=[f"{r}.{q}" for r, q in sk]))
         self.lanes_unused = sorted(L["id"] for L in allL if not L["items"])
         for L in sorted(allL, key=lambda L: L["id"]):
             if L["items"]:
@@ -1302,6 +1308,7 @@ class Binder:
                               lane_bits=sum(L["width"] for L in self.links if L["lane"]),
                               unplanned_bits=sum(self.unplanned.values()),
                               unplanned_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.unplanned.items())},
+                              unplanned_bit_list=self.unplanned_bits,
                               ft_hops=sum(len(L["ft"]) for L in self.links),
                               forwarded_bits=sum(self.forwarded.values()),
                               forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
