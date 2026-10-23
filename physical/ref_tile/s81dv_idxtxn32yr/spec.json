@@ -143,7 +143,7 @@
  "outhold": false,
  "inter": [],
  "structural_change": "Complete300bit input and256bit return rings per score column; internal kept clock branches and local subtrees replace failed y cross-boundary paths; D4/K2,+6 lookupedges.",
- "why_floorplan": "FB y parent (STW-S81c-TOK5 10-22): outline 669.6 x 628.56 (x + 43.2 W / + 67 H: the full-height child needs >= 20 um from the W (ck/rst) and N/S (vi/vo, lo/st) pin faces) with column A (banks 0-4) as the CLOSED hard child s81dv_idxtxga (313.2 x 561.6 at (43.2, 43.2) on the 43.2 child lattice, own clock root, POUT pin flops on its E face) and column B (banks 5-9, u_gb) at x 421.632 on the same 95.04 row pitch as x; the TX core + column-B landings sit in the 65-um band between the child's E face and column B plus the 71-um E band. The parent root spans only the E half + child boundary.",
+ "why_floorplan": "FB y parent (STW-S81c-TOK5 10-22): outline 669.6 x 628.56 (x + 43.2 W / + 67 H: the full-height child needs >= 20 um from the W (ck/rst) and N/S (vi/vo, lo/st) pin faces) with column A (banks 0-4) as the CLOSED hard child s81dv_idxtxga (313.2 x 561.6 at (43.2, 43.2) on the 43.2 child lattice, own clock root, POUT pin flops on its E face) and column B (banks 5-7, u_gb) at x 421.632 on the same 95.04 row pitch as x; the TX core + column-B landings sit in the 65-um band between the child's E face and column B plus the 71-um E band. The parent root spans only the E half + child boundary.",
  "job": {
   "owner": "CODEX-S81-TX-2208-1022",
   "branch": "codex/s81-topk-ring-2208-1022",
