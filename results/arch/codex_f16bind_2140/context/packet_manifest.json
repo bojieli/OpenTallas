@@ -58,7 +58,8 @@
     "rtl/qwen_dv/f16/qfd_dv_f16_issue_tap.sv": "1a02739b20f7a54e5aae47b529a2946900c69ee056203015d9dcd611b735feca",
     "rtl/qwen_dv/f16/qfd_dv_slice2_f16cmd.sv": "fba1bf4fbf091fd609767abcdcb507c3147b2135454ca6f6a34022eb27842a13",
     "rtl/qwen_dv/f16/qfd_tt_ctlm_dv_gi_hp13_f16.sv": "5a5debf9eaab0ef6ad5b22f58faf5ac5b7aca8ea7f688a4133558cc17c5ee61c",
-    "tools/qwen_split/f16_command_context_source.py": "c3970d207d2095bf3cb3a521098d386a700f45636a6b9cb95346de4ee0efd87f"
+    "tools/qwen_split/f16_command_context_source.py": "c3970d207d2095bf3cb3a521098d386a700f45636a6b9cb95346de4ee0efd87f",
+    "results/arch/codex_f16bind_2140/context/README.md": "e015f757b83b98daac97e21c30f92cd705984072fcd712e852a1921fe762f65b"
   },
   "checks": [
     "Regeneration outputs byte-exact against admitted proven sources",
