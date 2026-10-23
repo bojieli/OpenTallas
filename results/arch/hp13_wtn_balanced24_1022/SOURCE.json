@@ -1,0 +1,10 @@
+{
+  "source_sha256": "737c772b892baf869ed19a58665d7792ef3a0281d82632a053f35af8fc0afac7",
+  "wrapper_sha256": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
+  "constructor_sha256": "072449c62767ad121bfb23f1024d23a44fc1a0fa42de26054bd0ccbec5842b78",
+  "preprocess": "abc -g simple after synth/dffunmap",
+  "pipeline_edges_added": 0,
+  "status": "SOURCE_LOCKSTEP_PASS_NATIVE_PHYSICAL_PENDING",
+  "parent_base": "3d3060df7",
+  "geometry_and_clocks": "unchanged from native24; original gate snapshots preserved"
+}

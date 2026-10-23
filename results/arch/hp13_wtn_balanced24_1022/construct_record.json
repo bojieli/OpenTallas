@@ -1,0 +1,63 @@
+{
+  "soft_input_isolation": false,
+  "soft_input_isolation_budget": "32 reserved loads per nonzero soft input driven by parent FF/Boolean cones; immutable macro outputs retain actual weights and overload refusal; actual native weights retained unchanged",
+  "generic_terminal_cost_contract": "MUX select counts two actual dynamic pins through inversion; other generic gate inputs one; exact child weights remain authoritative; full mapped census still required",
+  "normalized_enabled_flops": [],
+  "macro_contracts": {},
+  "retained_macro_terminals": [],
+  "source_synth_cells_before_fusion": 31311,
+  "fused_ao_pairs": 5178,
+  "original_cells": 26133,
+  "original_by_type": {
+    "$_AO21_": 3725,
+    "$_AND_": 4896,
+    "$_OA21_": 1453,
+    "$_NOT_": 2478,
+    "$_OR_": 4195,
+    "$_MUX_": 3391,
+    "$_XOR_": 1330,
+    "$_DFF_P_": 4663,
+    "$_DFF_PN0_": 2
+  },
+  "final_by_type": {
+    "$_AO21_": 3725,
+    "$_AND_": 4913,
+    "$_OA21_": 1453,
+    "$_NOT_": 2485,
+    "$_OR_": 4202,
+    "$_MUX_": 3391,
+    "$_XOR_": 1330,
+    "$_DFF_P_": 4885,
+    "$_DFF_PN0_": 2
+  },
+  "unconsumed_cells_removed": 0,
+  "dropped_outputs": [],
+  "unused_inputs_removed": [],
+  "holding_chain_count": 0,
+  "holding_ring_groups": [],
+  "actual_final_rings": [],
+  "ring_input_load_contract": "D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch",
+  "retention": "FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping",
+  "transparent_inverters": true,
+  "retain_mux": true,
+  "shared_helpers": true,
+  "final_cells": 26386,
+  "added_by_type": {
+    "$_OR_": 7,
+    "$_NOT_": 7,
+    "$_DFF_P_": 222,
+    "$_AND_": 17
+  },
+  "passes": 3,
+  "input_sha256": "c4c6db935028e3569bbeef1d32dc624a15aafead4e885e1790cc37deea444614",
+  "max_data_reset_loads": 32,
+  "internal_load_cap": 24,
+  "input_load_cap": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required"
+}

@@ -1,0 +1,7 @@
+read_verilog -sv qfd_dv_typed_witness_control.sv qfd_tt_ctlm_dv_wtn.sv
+hierarchy -check -top qfd_tt_ctlm_dv_wtn
+synth -top qfd_tt_ctlm_dv_wtn -flatten -noabc -nofsm -noshare
+dffunmap
+abc -g simple
+clean
+write_json wtn.json
