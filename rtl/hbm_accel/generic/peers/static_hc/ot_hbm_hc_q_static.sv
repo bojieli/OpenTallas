@@ -29,6 +29,7 @@
 module ot_hbm_hc_q_static #(
     parameter integer RD_CAPTURE=23,
     parameter integer GATHER_PHASE=23,
+    parameter integer GATHER_PERIOD=(GATHER_PHASE>=24)?GATHER_PHASE+1:24,  // HBMc/CHAIN2 10-22 P40 fold
     parameter integer DONE_LAT=19,
     parameter integer XW_BEATS=4,
     parameter integer MUT=0 // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
@@ -121,7 +122,7 @@ module ot_hbm_hc_q_static #(
         .clk(clk),.rst_n(rr_n[2]),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
         .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
         .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
-    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE)) gather(
+    ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE),.PERIOD(GATHER_PERIOD)) gather(
         .clk(clk),.rst_n(rr_n[3]),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
         .local_rq(gat_rq),.local_read(gat_read),.local_rr(gather_phase?rr_q:2056'd0),
