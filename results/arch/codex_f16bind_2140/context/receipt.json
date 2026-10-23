@@ -1,0 +1,110 @@
+{
+  "scope": "Frozen-width source component proof; no full current programme, GEN, native parent regeneration or final-read claim",
+  "calendar_source": {
+    "path": "results/arch/codex_f16bind_2140/context/frozen_cal_7617.sv",
+    "sha256": "7617d35af5a76535329b18b452bda2607ae0596b0b4a1dc5aca87d78fa80df94",
+    "provenance": "Exact recovered 955-line emitted native source; main historical 435-line source archived as actual_cal.sv is stale and is not the implementation baseline"
+  },
+  "implementation": {
+    "reuses_stage_bank_bits": 24,
+    "adds_held_token_bits": 64,
+    "command_width": 116,
+    "SU_field": "111:90 = stage6/token16",
+    "new_command_wires": 0,
+    "command_edges_added": 0,
+    "tap_capture_edges": 1,
+    "accepted_guard": "go_u[user]&&!start_bad&&g_cnt_nz",
+    "GI_identity": "existing u_tokid",
+    "all_non_SU_words": "byte-exact"
+  },
+  "calendar_proof": {
+    "host": "ot-epyc5",
+    "unit": "oth-ubuntu-3376826-1792733987",
+    "summary": {
+      "mut": 0,
+      "verdict": "PASS",
+      "fails": [],
+      "C_issue_offset": 0,
+      "lock": {
+        "mismatches": 0,
+        "faults": [
+          [
+            22388,
+            "000001"
+          ]
+        ]
+      },
+      "solo1_events": 72,
+      "mu4_events": 288,
+      "mu4_done_per_user": {
+        "0": 3,
+        "1": 3,
+        "2": 3,
+        "3": 3
+      },
+      "landed_words": 1536,
+      "busy4_fault_code": "000001",
+      "coll4_fault_code": "000010",
+      "mu4_fault_code": "000000"
+    },
+    "baseline": "Exact frozen source plus disabled variant; non-command outputs exact, non-SU full word and SU functional fields exact",
+    "causals": {
+      "host": "ot-epyc9",
+      "unit": "oth-ubuntu-2843834-1792734395",
+      "rejected": [
+        "live_epoch",
+        "wrong_user",
+        "refused_start"
+      ],
+      "required_behavioral_marker": "F16_CAL_IDENTITY"
+    }
+  },
+  "packed_consumers": {
+    "host": "ot-epyc9",
+    "unit": "oth-ubuntu-2850398-1792734457",
+    "source_and_native_each": {
+      "edges": 26823,
+      "completion_groups": 65,
+      "starts": 5,
+      "retire_stimuli": 5,
+      "max_live": 4,
+      "reference_mismatches": 0,
+      "begin_withdraw": "PASS",
+      "causal_rejected": [
+        "wrong PC",
+        "wrong user",
+        "installed epoch"
+      ]
+    },
+    "producer": "Actual post-pin SETID/target/valid/kind c_su decode and PC, metadata from actual command; 12 fixed SETID dispatch cuts",
+    "retire_scope": "Retire flags are test stimuli, not final-read evidence"
+  },
+  "decode_audit": {
+    "slice_sha256": "7d62b03b1239e9fd040bf1e8cf0c796c05cb6b149525a09414ac2c9aae6a3613",
+    "scalar_sha256": "706a0e0f9ac5cdc3d4a58c838cbad12a7b772fba6b31ad1e76f66c1ed22ab516",
+    "SU_functional_fields": [
+      "valid/kind[3:0]",
+      "programPC[12:4]",
+      "target[115:112]"
+    ],
+    "overlap": "Only scalar cfg_eps[91:60],cfg_k[96:92],cfg_amnb[102:97],cfg_rdir[103] intersect metadata; scalar captures these only at cfg_v=c_root (kind3), disjoint from c_su(kind1). Whole command forwarding is retained. Formerly constant fields require new physical native."
+  },
+  "outputs": {
+    "rtl/qwen_dv/f16/qfd_dv_slice2_f16cmd.sv": "fba1bf4fbf091fd609767abcdcb507c3147b2135454ca6f6a34022eb27842a13",
+    "rtl/qwen_dv/f16/qfd_dv_f16_issue_tap.sv": "1a02739b20f7a54e5aae47b529a2946900c69ee056203015d9dcd611b735feca",
+    "rtl/qwen_dv/f16/qfd_tt_ctlm_dv_gi_hp13_f16.sv": "5a5debf9eaab0ef6ad5b22f58faf5ac5b7aca8ea7f688a4133558cc17c5ee61c",
+    "rtl/qwen_dv/f16/qfd_dv_cmd_cal_mu_f16.sv": "82729953f3bb4ec7fc689ac4642390cd7812aaf3a58601a614e9338a80381cd6"
+  },
+  "failures_preserved": [
+    "context/logs/context_missing_observer.log: missing source dependency, recovered exact source then rebuilt",
+    "First causal runner staging failed missing script; second runner grep searched wrong files after real mutant rejection; final runner checks outer behavioral log and all three reject"
+  ],
+  "remaining": [
+    "Actual selected parent/LP native regeneration",
+    "Actual GEN event return and auth/init/status binding",
+    "Current complete private ROM programme",
+    "Absolute cold INIT launch/provider date",
+    "Actual final ME/XPF read receipt"
+  ],
+  "compatibility": "Distinct source modules only; canonical selected masters unchanged. Main-based packet includes every generator and benchmark dependency. No reset/physical spec change."
+}

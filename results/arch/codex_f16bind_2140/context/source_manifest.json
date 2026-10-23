@@ -1,0 +1,17 @@
+{
+  "sources": {
+    "results/arch/codex_f16bind_2140/context/frozen_cal_7617.sv": "7617d35af5a76535329b18b452bda2607ae0596b0b4a1dc5aca87d78fa80df94",
+    "results/arch/codex_f16bind_2140/context/actual_gi_parts.sv": "ccce2a8874869a928911ad53fa39daa7fec897b7eb7dcffcb47c40d635991c95",
+    "results/arch/codex_f16bind_2140/issue/actual_slice2_tld_source.sv": "7d62b03b1239e9fd040bf1e8cf0c796c05cb6b149525a09414ac2c9aae6a3613"
+  },
+  "outputs": {
+    "qfd_dv_cmd_cal_mu_f16.sv": "82729953f3bb4ec7fc689ac4642390cd7812aaf3a58601a614e9338a80381cd6",
+    "qfd_tt_ctlm_dv_gi_hp13_f16.sv": "5a5debf9eaab0ef6ad5b22f58faf5ac5b7aca8ea7f688a4133558cc17c5ee61c",
+    "qfd_dv_slice2_f16cmd.sv": "fba1bf4fbf091fd609767abcdcb507c3147b2135454ca6f6a34022eb27842a13"
+  },
+  "context_bank_bits": 64,
+  "command_width": 116,
+  "command_edges_added": 0,
+  "context_field": "SU-only cmd[111:90]",
+  "scope": "Source candidate; full selected parent/LP/native/GEN binding remains required"
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "Frozen F16 missing identity integration model; no rate/topology change",
+  "users": 4,
+  "stage_bits": 6,
+  "token_identity_bits": 16,
+  "accepted_identity_bank_bits": 64,
+  "command_metadata_bits": 22,
+  "existing_command_wire_bits": 116,
+  "proposed_SU_only_field": {
+    "msb": 111,
+    "lsb": 90
+  },
+  "reserved_field_role": "SU consumes only0..12 and112..115; ROOT/other command fields overlapping90..111 remain untouched for nonSU",
+  "source_event": "Actual accepted nonempty go_u[user]&&!start_bad&&g_cnt_nz captures token identity alongside existing pst; actual chosen ru publishes both on external SU in the existing command output register",
+  "new_bits_per_cycle_across_command_boundary": 0,
+  "command_transport_cycles_added": 0,
+  "event_output_capture_cycles": 1,
+  "source_state_upper_increment_bits": 64,
+  "source_area": "native mappedFF/logic area pending",
+  "native_and_physical": "requires actual native regeneration and gates; formerly constant SU bits become meaningful",
+  "open": [
+    "Selected parent and LP native regeneration; formerly constant SU fields are now functional",
+    "Actual die GEN metadata/event return binding",
+    "Current complete PRIVATE_CALR1 programme and actual cold INIT provider date",
+    "Real final ME/XPF read receipt"
+  ],
+  "reused_existing_stage_bank_bits": 24
+}
