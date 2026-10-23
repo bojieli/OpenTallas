@@ -1,0 +1,30 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: ot-gold1       admits    36 GB (avail 368, reserve 0, fresh 183.7, peak 83.1, headroom 0, waiters 0/0 GB) load 47/112 running 35 disk 1087 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-tld-neg1-2140-1022
+ot-run: SPILL not possible: no spill host admits it now
+ot-run: -> ot-gold1 (will queue: admits 36 GB < 100 GB)
+ot-heavy: waiting for memory on ot-gold1: need 0.7 x 100 = 70 GB, admissible 37 GB: available 367 GB, growth charged 184 GB (v16 measured reserve, running growth cap 0 % of available, settled floor 0 GB; pending 184 GB at x1), young 84 GB, floor 50 GB; invariant: committed 907 GB (in use 640, other 24, units max(now, peak) 700, + reserve 0 + fresh 184) vs physical - 64 = 943 GB -> headroom 37 GB
+ot-heavy: NOT RUN: no memory on ot-gold1 within 120 s (need 0.7 x 100 = 70 GB, admissible 31 GB: available 358 GB, growth charged 183 GB (v16 measured reserve, running growth cap 0 % of available, settled floor 0 GB; pending 183 GB at x1), young 83 GB, floor 50 GB; invariant: committed 912 GB (in use 649, other 28, units max(now, peak) 703, + reserve 0 + fresh 182) vs physical - 64 = 943 GB -> headroom 31 GB): bash run_negative.sh
+ot-run: REBALANCE: not admitted on ot-gold1 within 120 s; placing again
+ot-run: -> ot-gold1 (will queue: admits 31 GB < 100 GB)
+ot-heavy: waiting for memory on ot-gold1: need 0.7 x 100 = 70 GB, admissible 31 GB: available 359 GB, growth charged 183 GB (v16 measured reserve, running growth cap 0 % of available, settled floor 0 GB; pending 183 GB at x1), young 83 GB, floor 50 GB; invariant: committed 912 GB (in use 649, other 27, units max(now, peak) 703, + reserve 0 + fresh 182) vs physical - 64 = 943 GB -> headroom 31 GB
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-141980-1792732695 after 21 s
+Verilator 5.050 2026-07-01 rev v5.050
+TRACE entries=14967 first=1084 last=233021 producer=cpub39_1
+TLD_TABLE_MISMATCH slice=0 stage=1 user=0 slot=0 c0=6512 we=0 want_we=1
+TLD_TABLE_MISMATCH slice=0 stage=1 user=0 slot=1 c0=6513 we=0 want_we=1
+TLD_TABLE_MISMATCH slice=0 stage=1 user=0 slot=2 c0=6514 we=0 want_we=1
+SLICE 1 TSLICE=6 cmd_lane=25 cmd_checks=232503 bad_cmd=0 loads=0 bad_align=0 bad_order=0 table_edges=0 bad_table=0 stages2_36_loaded=0 faults=0 stream_tw=0 setid=1/6
+SLICE_FAIL 1
+SLICE 0 TSLICE=5 cmd_lane=20 cmd_checks=232508 bad_cmd=0 loads=36 bad_align=0 bad_order=0 table_edges=3168 bad_table=3096 stages2_36_loaded=35 faults=0 stream_tw=0 setid=1/5
+SLICE_FAIL 0
+PRODUCER table_req pulses=36 (cpub39_1 trace)
+TLD_CHAIN FAIL VAR=1 NS=2 SHAPE=2 K0=5 fails=2
+TLD_CHAIN FAIL VAR=1 NS=2 SHAPE=2 K0=5 fails=2
+grep: FAIL: No such file or directory
+NEGATIVE_1_CAUGHT
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-141980-1792732695): exit 0

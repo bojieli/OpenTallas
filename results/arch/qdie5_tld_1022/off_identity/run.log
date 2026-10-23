@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: ot-gold1       admits    76 GB (avail 355, reserve 0, fresh 114.7, peak 99.9, headroom 0, waiters 0/0 GB) load 55/112 running 36 disk 1082 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-tld-gen-deterministic-1022
+ot-run: -> ot-gold1
+ot-heavy: request 16G is charged 9G (class 'gen_suite.sh' measured peak 0.7G, n=1+1 proved); the cap stays 16G
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-216708-1792733303 after 0 s
+GEN_SUITE base_off PASS
+GEN_SUITE tld_off PASS
+GEN_OFF_IDENTICAL 336 / 339
+DIFFERENT case/manifest.json
+DIFFERENT pin_align_rows.json.gz
+DIFFERENT relay_run.json
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-216708-1792733303): exit 0
