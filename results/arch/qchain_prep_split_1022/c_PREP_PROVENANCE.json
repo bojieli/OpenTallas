@@ -1,0 +1,16 @@
+{
+  "scope": "prep phase split only; original pinned source untouched",
+  "original_source": "f3d247a72 claude/sqc-qgen51-1022 (src-r51 = src-r49 + delta 2fff51d03..f3d247a72: main 4b215c0b3 via QDIE5-HP13 00ff9c80b HP13 netlists/wtn RTL + 89b077e94/929d94f32/5ba0694eb (= 28badd3e1/b2823e951/2fff51d03) + f3d247a72 OT_QWEN_MU_FAULT_OR)",
+  "prep_mem_GB": 32,
+  "resume_mem_GB": 200,
+  "evidence": "prior comparable r48 PDN peak ~7.4 GB; ~31k block inventory",
+  "checkpoint": "after validated case, PDN and physical clock; PREPARED_WAIT_GRT only, no DONE/closure credit",
+  "files": {
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/src/tools/qwen_kv_die/chain/die_chain.sh": "e421d61bf5836158fad6297d36351e3ccdfbf041ec8b7a6fb98417fb32b5c098",
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/src/tools/qwen_split/chain_after_build.sh": "1fb8fcc51c3899b499954bf22a47e474c41c208f147704f7c8ad35ec975557fd",
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/chain.sh": "3f9e5f4cbb92cd740467f2b8766ef1d20907d8b180f5bcb8121371998441d2ef",
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/phase3.sh": "76d543208e788821b22010343a9a66d6a4cf4a2e94558fdc7dfcbab694ea10ae",
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/prep_source/tools/qwen_kv_die/chain/die_chain.sh": "b60b25cda71c19701251424758a5bd8168a26bd6e41e1f9fb0cb0ecb1131ce95",
+    "/srv/opentallas-scratch/claude/codex-qdie-2000/dv2f21g5r51cxc/prep_source/chain_after_build.sh": "5b46da0f0bb3aeef4208a41ffe39d0b8979345714aa6ba0421ec436234b6dcdf"
+  }
+}
