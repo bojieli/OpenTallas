@@ -101,6 +101,7 @@ module qfd_sys_face_lctx3_core_f16 #(
     parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
 ) (
     output wire [82:0] f16_auth,
+    output reg init_u0,
     input  wire          ck,
     input  wire          rst_n,
     input wire [44:0] input_source_copies,
@@ -636,7 +637,7 @@ module qfd_sys_face_lctx3_core_f16 #(
     // ================================================================ event outputs (registered)
     always @(posedge ck or negedge rst_out) begin
         if (!rst_out) begin
-            cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
+            init_u0 <= 1'b0; cal_exp <= 1'b0; seg_exp <= 1'b0; dh_run <= 44'd0; tt_kok <= 1'b0; tt_kwd <= 1'b0;
             q_slot <= 1'b0; q_slot_beat <= 5'd0; kv_word_slot <= 1'b0; kv_word_index <= 2'd0;
             visibility_slot <= 1'b0; complete_slot <= 1'b0;
             emb_expected_slot <= 1'b0; emb_expected_word <= 6'd0; emb_expected_scale <= 1'b0; emb_expected_token <= 18'd0;
@@ -646,6 +647,10 @@ module qfd_sys_face_lctx3_core_f16 #(
             // the D2D sequencer's start must coincide with this calendar's layer / token-run flag (layer 1 = L0 rides the
             // token run): the two compiler images cannot drift apart unnoticed
             cal_exp <= ev_tok | (ev_lay && ta[5:0] != 6'd1); seg_exp <= ev_tok;
+            // Exact cold T-prefix INIT is (port=0, argument=0), from
+            // mu_cold_prefix.py be5612758. Ordinary RESULT has argument bit8=1.
+            // Register beside DH, so no first-stage or prior-state inference.
+            init_u0 <= ev_stage && ta == 9'd0;
             dh_run[42] <= ev_stage; dh_run[41:36] <= ev_stage ? ta[5:0] : dh_run[41:36];
             dh_run[35:18] <= tok; dh_run[17:0] <= pos;
             if (ev_tlev) begin tt_kok <= ta[0]; tt_kwd <= ta[1]; end

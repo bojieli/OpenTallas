@@ -1,0 +1,73 @@
+{
+  "scope": "Source decoder/export only. Full actual selected hierarchy, real decoded T-event register outputs forced. No executed ROM cold-prefix/calendar or host/provider/full-token qualification.",
+  "source_contract": {
+    "commit": "be5612758be9dda60b65aea1715a438e115551fd",
+    "path": "tools/qwen_static_schedule/mu_cold_prefix.py",
+    "init_event": {
+      "port": 0,
+      "argument": 0
+    },
+    "cold_mark": {
+      "port": 5,
+      "argument": 128
+    },
+    "ordinary_result": {
+      "port": 0,
+      "argument": 256
+    },
+    "range": {
+      "first": 52,
+      "count": 3
+    }
+  },
+  "transport": {
+    "decoded_T_to_core_DH_and_init_edges": 1,
+    "wrapper_output_capture_edges": 1,
+    "relative_init_to_DH_edges": 0,
+    "GEN_edges": null,
+    "total_consumer_edges": null
+  },
+  "runs": [
+    {
+      "unit": "oth-ubuntu-3154657-1792731710",
+      "auth": "PASS128 plus2 causal failures",
+      "init": "FAIL test harness Icarus force expression semantics; source unchanged"
+    },
+    {
+      "unit": "oth-ubuntu-3156643-1792731730",
+      "mem_gb": 8,
+      "threads": 1,
+      "exit": 0,
+      "init": "PASS cold MARK, INIT, firstL0, two later ordinary RESULT, idle, exact DH/token777/position0 age",
+      "mutant": "FAIL ordinary RESULT incorrectly selected INIT"
+    }
+  ],
+  "open": [
+    "Select actual compiled cold-prefix segment and dates against real provider final row completion. Current default T start_seg remains0.",
+    "Price GEN and LP same-age transport from new SYSFACE pins to CTLM.",
+    "Bind real slice observations, final ME/XPF read receipt, F16 status.",
+    "Native and physical qualification of distinct changed source variants."
+  ],
+  "sources": [
+    {
+      "path": "tools/qwen_split/f16_auth_source.py",
+      "sha256": "7a5f7b304b908400e5a2cc24f064ec33d30d8b634bf8ea7b962e3909e485b2f5"
+    },
+    {
+      "path": "rtl/qwen_split/f16/qfd_sys_face_lctx3_core_f16.sv",
+      "sha256": "de07e4aa669f0206216d12bae64a211e68a21cc5e1396ed77e1be36aa3627501"
+    },
+    {
+      "path": "rtl/qwen_split/f16/qfd_sys_face_lctx3_wrapped_f16.sv",
+      "sha256": "08eed8de38739f9c141e82843bae6fbd157a088fdda91f6b4a157350474af496"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/tb_init_export.sv",
+      "sha256": "9a4fd839dce12a3766603d0cc761e87ceecf5067dd7dee3db2766387e7170f10"
+    },
+    {
+      "path": "results/arch/codex_f16bind_2140/run_init_export.sh",
+      "sha256": "cb674778dc3cd13310c83341663002df57ee553137599569cf99a507534ec051"
+    }
+  ]
+}
