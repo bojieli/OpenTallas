@@ -62,6 +62,26 @@ specs.append(kit("s81dv_l1fb_f", "dsdv_gunit_l1f_bf", "banded gunit l1f MAIN: F 
                  "store + write decode + beat read / forward in the W two thirds, merge (fold -> m1 -> cx8_2) + gather + the "
                  "246-b output stage on the E third under the E pins; S face = A_lo seam (sv_lo / control out, sort #0 in), "
                  "N face = A_hi seam."))
+# F successors (gate 10-22 17:05: FAIL TT / FF pin-flop spread 109.8 / 99.0 ps AND trial GRT overflow 221,731, M2 65 %).
+# Per-sink TT dump: the W-face input flops (adc / bdc / wqc / arc, x 2..14) arrive 384..408 ps, the E-face gather / output
+# flops (gac / ghc / o_d, x 422..429) 434..491 ps: one W-corner clock feeding a 430-um pass-through band (inputs W, outputs
+# E).  The placement packed all 110k cells at pd 0.4 into the W ~45 % (13.5k um2 of std cells in a 72k core) -> the
+# crossbar-like SC store write / read muxes overflowed M2 there while the E half stayed empty.
+#   fb: clock at the S-face centre (x 216: both pin faces 216 um from the entry), pd 0.22 so the store spreads over the band
+#   fc: fb on the default (obstruction-aware, clustered) tree
+import copy as _cp
+f0 = specs[-1]
+for nm, dflt in (("s81dv_l1fb_fb", False), ("s81dv_l1fb_fc", True)):
+    v = _cp.deepcopy(f0); v["name"] = nm; v["job"]["tag"] = nm
+    v["job"]["views_to"] = f"physical/ref_tile/{nm}/views"; v["job"]["record_to"] = f"results/rtl/ref_tile/{nm}"
+    v["job"]["purpose"] = f0["job"]["purpose"] + (" (S-centre clock, pd 0.22, default CTS)" if dflt else " (S-centre clock, pd 0.22)")
+    v["pins"] = {"W": [p for p in f_w if p != "clk"], "E": f_e, "S": f_s + ["clk"], "N": f_n}
+    v["pin_ranges"]["clk"] = [212.76, 219.24]
+    v["route"]["pd"] = 0.22
+    if dflt:
+        v["route"].pop("cts_sink", None)
+    v["why_floorplan"] = f0["why_floorplan"] + " Successor: clock pin at the S-face centre; place density 0.22 (store spread over the full band)."
+    specs.append(v)
 for s in specs:
     d = ROOT / "physical/ref_tile" / s["name"]; d.mkdir(parents=True, exist_ok=True)
     (d / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
