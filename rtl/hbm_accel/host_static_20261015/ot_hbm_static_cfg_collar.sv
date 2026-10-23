@@ -42,6 +42,10 @@ module ot_hbm_static_cfg_collar #(
     parameter integer MUT=0,       // bench: 1 skip sequential check, 2 ready ignores need, 3 go one edge early, 4 no event seq check,
                                    //        5 (XSER=1) stream domain left without its reset, 6 (XSER=1) binary event sequence (not Gray),
                                    //        7 (XSER=1) one synchroniser stage short, 8 (XSER=0) core state without the synchronised reset
+    // SU bank/row ABI: ordered, contiguous rows inside each present bank; absent banks are never written.
+    // E01 need is the exact number of programme writes in this installation generation.
+    parameter integer SPARSE_SU=0,
+    parameter [319:0] SU_DICT_CAP={32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3},
     parameter integer AW=PAGE_W+11
 )(
     input  wire clk, clk_in, rst_n,
@@ -68,6 +72,22 @@ module ot_hbm_static_cfg_collar #(
         if (NS<1 || NS>4 || NPR<1 || NPR>1024 || NREC<0 || NREC>512 || NGO<1 || NGO>2 || PAGE_W<1 || AW>31)
             $fatal(1, "ot_hbm_static_cfg_collar: parameter out of range");
     end
+    initial if (SPARSE_SU && (NS!=1 || PAGE_W!=12))
+        $fatal(1, "SPARSE_SU requires the frozen SU bank16/row7 interface");
+    // Match root_h5's four 320-bank parts and pslice_c5's ten local column apertures.
+    function automatic su_bank_valid(input [15:0] bank);
+        integer part, local_bank, column, cap;
+        begin
+            su_bank_valid=0;
+            for(part=0;part<4;part=part+1) begin
+                if(bank>=part*320 && bank<(part+1)*320) begin
+                    local_bank=bank-part*320; column=local_bank/32;
+                    cap=SU_DICT_CAP[32*column+:32];
+                    su_bank_valid=(local_bank%32)<(4+((cap<=3)?3:13));
+                end
+            end
+        end
+    endfunction
     localparam integer SW = (NS>1) ? $clog2(NS) : 1;
     localparam integer RN = (NREC>0) ? NREC : 1;
     localparam integer RW = (NREC>1) ? $clog2(NREC+1) : 1;
@@ -185,6 +205,13 @@ module ot_hbm_static_cfg_collar #(
     reg [PAGE_W-1:0] page [0:NS-1];
     reg [AW:0] hwm [0:NS-1];
     reg [AW:0] need [0:NS-1];
+    reg [AW-1:0] sparse_last;
+    reg sparse_seen;
+    wire [22:0] sparse_linear=23'(lin), sparse_previous=23'(sparse_last);
+    wire sparse_address_ok=su_bank_valid(sparse_linear[22:7]) &&
+        ((lin==0) || (sparse_seen && lin>sparse_last &&
+          ((sparse_linear[22:7]==sparse_previous[22:7] && {1'b0,lin[6:0]}=={1'b0,sparse_last[6:0]}+8'd1) ||
+           (sparse_linear[22:7]>sparse_previous[22:7] && lin[6:0]==0))));
     reg need_set, wait_mask, wait_done;
     reg [NPR-1:0] loaded;
     reg armed, run;
@@ -202,7 +229,8 @@ module ot_hbm_static_cfg_collar #(
     integer s;
     always @* begin
         inst_ok = need_set && (&loaded);
-        for (s = 0; s < NS; s = s + 1) if (hwm[s] < need[s] && MUT != 2) inst_ok = 0;
+        if (SPARSE_SU && (!sparse_seen || need[0]==0)) inst_ok = 0;
+        for (s = 0; s < NS; s = s + 1) if ((SPARSE_SU ? (hwm[s] != need[s]) : (hwm[s] < need[s])) && MUT != 2) inst_ok = 0;
     end
     wire recs_done = (NREC == 0) || (rptr >= NREC) || !r_val[rptr];
     wire [31:0] cur_off = r_off[(NREC == 0) ? 0 : rptr];
@@ -212,7 +240,7 @@ module ot_hbm_static_cfg_collar #(
         if (!rst_c_n) begin
             pw_we <= 0; start_v <= 0; go <= 0; ready <= 0; active <= 0; fault <= 0;
             sel <= 0; need_set <= 0; wait_mask <= 0; wait_done <= 0; loaded <= 0; armed <= 0; run <= 0;
-            cnt <= 0; rptr <= 0; tail <= 0; r_val <= 0;
+            cnt <= 0; rptr <= 0; tail <= 0; r_val <= 0; sparse_last <= 0; sparse_seen <= 0;
             for (k = 0; k < NS; k = k + 1) begin hwm[k] <= 0; need[k] <= 0; page[k] <= 0; end
         end else begin
             pw_we <= 0; start_v <= 0; go <= 0;
@@ -222,7 +250,16 @@ module ot_hbm_static_cfg_collar #(
                 armed <= 0;
                 if (run) fault <= 1;
                 else if (!ca[11]) begin
-                    if (lin == hwm[sel] || MUT == 1) begin
+                    if (SPARSE_SU) begin
+                        if (!sparse_address_ok || hwm[sel][AW]) fault <= 1;
+                        else begin
+                            pw_we[sel] <= 1; pw_addr <= lin[AW-1:0]; pw_data <= cd;
+                            sparse_last <= lin[AW-1:0]; sparse_seen <= 1;
+                            if(lin==0) begin
+                                hwm[sel] <= 1; need_set <= 0; loaded <= 0;
+                            end else hwm[sel] <= hwm[sel]+1'b1;
+                        end
+                    end else if (lin == hwm[sel] || MUT == 1) begin
                         if (hwm[sel][AW]) fault <= 1;
                         else begin pw_we[sel] <= 1; pw_addr <= lin[AW-1:0]; pw_data <= cd; hwm[sel] <= lin + 1'b1; end
                     end else if (lin == 0) begin
