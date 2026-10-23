@@ -1,0 +1,52 @@
+{
+ "partitions": 798,
+ "types": 72,
+ "ports": 3104,
+ "lanes": 2219,
+ "die_um": [
+  31993.92,
+  25228.8
+ ],
+ "die_mm2": 807.2,
+ "content_status_per_instance": {
+  "reuse": 983,
+  "rework": 781,
+  "new": 777
+ },
+ "type_status": {
+  "reuse": 197,
+  "rework": 55,
+  "new": 55
+ },
+ "census_dropped_bits": {
+  "d2d|flt|ctl": 8,
+  "flt|flt|ctl": 484,
+  "flt|sys|ctl": 1,
+  "io|flt|ctl": 70,
+  "mu|flt|ctl": 2,
+  "reset|d2d_rom|ucie_kv": 1,
+  "reset|rstseq_rom|ckdiv_coll_blk": 1,
+  "reset|rstseq_rom|dvs_E0": 1,
+  "reset|rstseq_rom|dvs_E1": 1,
+  "reset|rstseq_rom|dvs_E2": 1,
+  "reset|rstseq_rom|dvs_E3": 1,
+  "reset|rstseq_rom|dvs_E4": 1,
+  "reset|rstseq_rom|dvs_E5": 1,
+  "reset|rstseq_rom|dvs_W0": 1,
+  "reset|rstseq_rom|dvs_W1": 1,
+  "reset|rstseq_rom|dvs_W2": 1,
+  "reset|rstseq_rom|dvs_W3": 1,
+  "reset|rstseq_rom|dvs_W4": 1,
+  "reset|rstseq_rom|dvs_W5": 1,
+  "reset|rstseq_rom|io_collective": 1,
+  "reset|rstseq_rom|io_serdes": 1,
+  "reset|rstseq_rom|io_serdes_1": 1,
+  "reset|rstseq_rom|io_serdes_2": 1,
+  "reset|rstseq_rom|io_ucie": 1,
+  "reset|rstseq_rom|native59": 1,
+  "reset|rstseq_rom|tt_ctlm": 1,
+  "rstseq|flt|reset": 485,
+  "sys|flt|ctl": 1,
+  "tt|flt|ctl": 1
+ }
+}
