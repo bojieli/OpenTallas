@@ -1734,7 +1734,9 @@ puts OT_DONE
         die_repeaters_step.copy(out)
     rep_call = (die_reach.repair_tcl(mw, '-buffer_gain 4.0') if a.legacy_die_repeaters else
                 die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
-                                            repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um,
+                                            # HBMc 10-22 (STEWARD approved): no -buffer_gain, as S81 / Qwen (the gain
+                                            # pre-pass stalled repair_design iteration 0 on 12.5M nets, x3)
+                                            repair_args='', max_wire_um=a.repeater_max_wire_um,
                                             signal_top_layer=a.signal_top_layer).rstrip())
     # HBMc 10-22: the repeater spread sees carved feedthrough channels as free (solid = master bbox minus channels)
     rep_carved = ('set ::ot_die_rep_carved [dict create' + ''.join(
