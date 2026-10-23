@@ -138,6 +138,17 @@ FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue cont
 RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
 if KV_REACH > 0:
     RELAY_TARGET = min(RELAY_TARGET, 0.72 * KV_REACH)   # same pitch/reach ratio as 320/445
+# FT-KV-DIE 10-23 (OT_KV_REACH_M89=1, default off = the clamp above unchanged): REACH-M89 die hop (results/arch/
+# die_reach_m89_1022.json: one-cycle M8/M9 relay hop, KV 1.2 mm, die repeaters every <= 450 um).  OT_KV_REACH then SETS
+# (may raise) PIN_REACH / REACH_TARGET / RELAY_TARGET / HOP_REACH and the plan's pin-hop gate (pin_reach, 500 um legacy)
+# instead of only clamping them; the first-hop limits of late-launch closed views (FIRST_REACH, HOP_FIRST, PHY_REACH,
+# SEAM_REACH) are unchanged.  Width classes stay OT_KV_REACH_W (set them to the same hop, e.g. '100000:1200').
+REACH_M89 = __import__('os').environ.get('OT_KV_REACH_M89', '0') == '1' and KV_REACH > 0
+PIN_HOP_GATE = 500.0            # pin_reach default: plan pass pin-hop violation limit
+if REACH_M89:
+    PIN_REACH = REACH_TARGET = KV_REACH
+    RELAY_TARGET = 0.72 * KV_REACH
+    PIN_HOP_GATE = max(PIN_HOP_GATE, KV_REACH)
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -1903,6 +1914,8 @@ _PIN_HINT = {}
 # chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
 HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
 HOP_REACH = 445.0 if KV_REACH <= 0 else min(445.0, KV_REACH)
+if REACH_M89:
+    HOP_REACH = KV_REACH          # FT-KV-DIE 10-23: OT_KV_REACH_M89 (see REACH_M89)
 HOP_FIRST = dict(krq=340.0, krs=340.0)
 _LEAF_PIN_CACHE = {}
 
@@ -5029,9 +5042,11 @@ def pin_xy(it, mm, port):
     return it.x + x, it.y + y
 
 
-def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
+def pin_reach(m, M, reach=None, skip=('clock_trunk', 'reset', 'constant')):
     """qwen-1010/b 2026-10-10: the pin-to-pin register hops of every point-to-point die bus (Manhattan between the two
     drawn pins; the frame-to-frame margin lint cannot see a pin on a far face or far along a long face)."""
+    if reach is None:
+        reach = PIN_HOP_GATE        # 500.0 unless OT_KV_REACH_M89
     by = {i.name: i for i in m['insts']}
     bad, n = [], 0
     for bid, cl, bits, eps in m['buses']:

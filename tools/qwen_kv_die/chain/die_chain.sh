@@ -119,6 +119,8 @@ elif pg_open_diag; then :
 else say "PDN FAIL rc=$pdn_rc ($C/run_pdn.log)"; exit 1; fi
 fi
 fi
+# FT-KV-DIE 10-23: OT_STOP=pdn ends a DIAGNOSTIC chain after the PDN (floorplan_pdn.odb for a read-only GRT probe)
+[ "${OT_STOP:-}" = pdn ] && { say "OT_STOP=pdn: chain stopped after the PDN (no GEN safety / GRT / STA)"; exit 0; }
 mkdir -p $G; cp $H/grt.tcl $G/; place $C/floorplan_pdn.odb $G/floorplan_pdn.odb || { say "GRT: cannot place floorplan_pdn.odb in $G"; exit 1; }
 # GEN16 item 6 (10-19, OT_DIE_CLOCK_PHYS=1, Qwen compute): the PHYSICAL die clock (regional entries + forwarded spine,
 # tools/qwen_split/chain_dieclk.sh) is built on the PDN floorplan BEFORE GRT; GRT routes its nets, STA takes the measured
