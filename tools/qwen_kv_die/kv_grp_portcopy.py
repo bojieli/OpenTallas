@@ -67,51 +67,76 @@ def main(k):
                     remap[(pp, i)] = y2
             rec[p] += 1
             dload[dnet] += 1
-    # the copies of async-reset exit flops (RESETN / SETN) load the landed reset nets of r2c (each <= 32 there): every
-    # such net the copies push over 32 gets extra driver copies (its landing flop + keep INV, same D / CLK = the same
-    # release edge), the copies' reset pins move to them in groups of <= 32.  Constant (tie) nets are not dynamic.
-    rloads = collections.Counter()
-    for m in re.finditer(r'\.(?:RESETN|SETN)\((\w+)\)', top):
-        rloads[m.group(1)] += 1
-    radd = collections.Counter()
-    for line in add:
-        for m in re.finditer(r'\.(?:RESETN|SETN)\((\w+)\)', line):
-            radd[m.group(1)] += 1
-    rfix = {}
-    for net, c in radd.items():
-        if rloads[net] + c <= MAXL:
+    # Every input pin of a copy (D, RESETN, SETN; CLK is the clock tree) adds one TERMINAL load to the root of its net:
+    # the native census resolves keep INV / BUF chains transparently (r2c root n54901_c0 = 1 A + 31 through its INV = 32;
+    # a copy D on that INV made 33).  Each root the copies push over 32 gets extra copies of its driver flop (same D / CLK /
+    # reset = the same value every cycle, 0 edges) with the same INV chain, and the copies' pins move to them in groups of
+    # <= 32.  Constant (tie cell) roots are not dynamic.  The added driver copies load their own roots: checked again.
+    children = collections.defaultdict(list)
+    for y, (ityp, iname, a_) in invy.items():
+        children[a_].append(y)
+    direct = collections.Counter()
+    for m in re.finditer(r'^  (?:\(\* keep \*\) )?(\w+) \w+ \((.*)\);$', top, re.M):
+        if m.group(1).startswith('INV'):
             continue
-        if rloads[net] > MAXL and re.search(rf'^  (?:\(\* keep \*\) )?\w+ \w+ \(\.[LH]\({net}\)\);$', top, re.M):
-            continue    # a tie cell (constant SETN / RESETN level), not a dynamic driver
-        if rloads[net] > MAXL and re.search(rf'\.[LH]\({net}\)', top):
-            continue
-        if net not in invy or invy[net][2] not in flops:
-            raise SystemExit(f'{k}: reset net {net} over {MAXL} after copies and not a flop -> INV landing driver')
-        ityp, iname, qn = invy[net]
-        ftyp, fname, conn = flops[qn]
-        n_new = -(-c // MAXL)
-        drivers = []
-        for r in range(n_new):
-            qn2, y2 = f'{qn}_rc{r}', f'{net}_rc{r}'
-            conn2 = re.sub(r'\.QN\(\w+\)', f'.QN({qn2})', conn)
-            add.append(f'  wire {qn2};\n  wire {y2};\n  {ftyp} {fname}_rc{r} ({conn2});\n'
-                       f'  (* keep *) {ityp} {iname}_rc{r} (.A({qn2}), .Y({y2}));\n')
-            dload[re.search(r'\.D\((\w+)\)', conn).group(1)] += 1
-            drivers.append(y2)
-        rfix[net] = drivers
-    if rfix:
-        cnt = collections.Counter()
+        for pn, net in re.findall(r'\.(\w+)\((\w+)\)', m.group(2)):
+            if pn not in ('QN', 'Q', 'Y', 'CLK', 'clk'):
+                direct[net] += 1
+    for m in re.finditer(r'\.\w+\(\{([^}]*)\}\)', top):
+        for net in re.findall(r'\w+', m.group(1)):
+            direct[net] += 1
 
-        def rsub(m):
-            net = m.group(2)
-            if net not in rfix:
-                return m.group(0)
-            d = rfix[net][cnt[net] // MAXL]
-            cnt[net] += 1
-            return f'.{m.group(1)}({d})'
-        add = [re.sub(r'\.(RESETN|SETN)\((\w+)\)', rsub, line) if f'_rc' not in line.split('(')[0] else line for line in add]
-        rec['reset_driver_copies'] = sum(len(v) for v in rfix.values())
-    over = {n: loads[n] + c for n, c in dload.items() if loads[n] + c > MAXL}
+    def term(n):
+        return direct[n] + sum(term(c) for c in children.get(n, []))
+
+    def path(n):
+        """root net and the INV chain root -> n"""
+        chain = []
+        while n in invy:
+            chain.append(invy[n])
+            n = invy[n][2]
+        return n, chain[::-1]
+    ties = set(re.findall(r'\.[LH]\((\w+)\)', top))
+    nrep = collections.Counter()
+    for _round in range(4):
+        pins = collections.defaultdict(list)      # root -> [(index in add, net)]
+        for ai, line in enumerate(add):
+            for pn, net in re.findall(r'\.(D|RESETN|SETN)\((\w+)\)', line):
+                pins[path(net)[0]].append((ai, net))
+        moved = False
+        for root, lst in sorted(pins.items()):
+            if root in ties or term(root) + len(lst) <= MAXL:
+                continue
+            if root not in flops:
+                raise SystemExit(f'{k}: root {root} over {MAXL} after copies and not a flop QN')
+            ftyp, fname, conn = flops[root]
+            groups = [lst[i:i + MAXL] for i in range(0, len(lst), MAXL)]
+            for grp_ in groups:
+                r = nrep[root]; nrep[root] += 1
+                q2 = f'{root}_rc{r}'
+                conn2 = re.sub(r'\.QN\(\w+\)', f'.QN({q2})', conn)
+                new = [f'  wire {q2};\n  {ftyp} {fname}_rc{r} ({conn2});\n']
+                rename = {root: q2}
+                for ai, net in grp_:
+                    rt, chain = path(net)
+                    prev = q2
+                    for ityp, iname, a_ in chain:
+                        y_ = [y for y, v in invy.items() if v[1] == iname][0]
+                        if y_ not in rename:
+                            rename[y_] = f'{y_}_rc{r}'
+                            new.append(f'  wire {rename[y_]};\n  (* keep *) {ityp} {iname}_rc{r} (.A({prev}), .Y({rename[y_]}));\n')
+                        prev = rename[y_]
+                    add[ai] = re.sub(rf'\.(D|RESETN|SETN)\({net}\)', lambda m_: f'.{m_.group(1)}({rename[net]})', add[ai], count=1)
+                add.extend(new)
+                rec['driver_copies'] += 1
+            moved = True
+        if not moved:
+            break
+    else:
+        raise SystemExit(f'{k}: driver copy rounds did not converge')
+    worst = max((term(r) + len(l) for r, l in pins.items() if r not in ties), default=0)
+    dload = collections.Counter({'_worst_root': worst})
+    over = {}
     if over:
         raise SystemExit(f'{k}: D nets over {MAXL} loads after copies: {list(over.items())[:5]}')
 
@@ -130,11 +155,11 @@ def main(k):
     cert.update(top=f'qkd_kvs_{k}_r2d', generated_sha256=hashlib.sha256(out.encode()).hexdigest(),
                 portcopy=dict(tool='tools/qwen_kv_die/kv_grp_portcopy.py', input=str(src.relative_to(WT)),
                               input_sha256=hashlib.sha256(raw.encode()).hexdigest(), copies=dict(rec),
-                              total=sum(rec.values()), d_net_max_loads=max((loads[n] + c for n, c in dload.items()), default=0),
+                              total=sum(rec.values()), max_root_terminal_loads=dload['_worst_root'],
                               skipped=skipped, edges=0))
     cert['generated_cells'] = cert.get('generated_cells', 0) + 2 * sum(rec.values())
     (D / f'qkd_kvs_{k}_r2d.json').write_text(json.dumps(cert, indent=1) + '\n')
-    print(k, 'copies', dict(rec), 'D max loads', cert['portcopy']['d_net_max_loads'], 'skipped', len(skipped))
+    print(k, 'copies', dict(rec), 'max root terminal loads', cert['portcopy']['max_root_terminal_loads'], 'skipped', len(skipped))
 
 
 if __name__ == '__main__':
