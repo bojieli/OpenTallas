@@ -195,6 +195,14 @@
     "ck"
    ],
    "stages": 1
+  },
+  {
+   "module": "\\$and",
+   "inst": "serdes_host\\.u_sub\\.\\$and\\$kv_phy_slices\\.sv:196\\$1",
+   "out": "Y",
+   "op": "and",
+   "stages": 0,
+   "note": "KV-P5 (C): tx_up AND join, re-emitted per sink partition (d2d_kv.serdes_up in sys_c, host.fdi in hub_Wi)"
   }
  ],
  "sources": [
@@ -290,5 +298,10 @@
   }
  ],
  "port_names": "/home/ubuntu/scratch/binder2-1023/kv_bound/bound_netlist.json",
- "land_align_note": "off for KV (BINDER2 10-23): land_align=cell trial = 969 groups, 180,979 pad flops, max pad 77 (kreq/x__tep/col_valid: plan v3.4 rewired + regrouped edges far from as-built depth) and 88->103 types; timing for KV is the plan latency schedule (KV-P5 R8 latency_groups), bus_groups_binder2.json.gz lists the groups"
+ "land_align_note": "off for KV (BINDER2 10-23): land_align=cell trial = 969 groups, 180,979 pad flops, max pad 77 (kreq/x__tep/col_valid: plan v3.4 rewired + regrouped edges far from as-built depth) and 88->103 types; timing for KV is the plan latency schedule (KV-P5 R8 latency_groups), bus_groups_binder2.json.gz lists the groups",
+ "reducers_keep_plan_contents": true,
+ "portbind_prefer": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ ]
 }
