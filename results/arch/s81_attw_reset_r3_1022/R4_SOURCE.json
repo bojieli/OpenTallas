@@ -1,0 +1,25 @@
+{
+  "variant": "R4",
+  "source_commit": "597e40479",
+  "archive_sha256": "78c4091a1088ae9ccf8f75cdeb1ad319c9d0eab2ca3f42a4c1911c5820472c02",
+  "defines": [
+    "OT_S81_ATTW_RESET_R3",
+    "OT_S81_ATTW_ENABLE_R4"
+  ],
+  "params": {
+    "MUT": 0,
+    "DIE_ID": 0,
+    "ST": 0,
+    "SRAM_MACRO": 1,
+    "ROOT": 1,
+    "PMEM": 1,
+    "TEXT": 1,
+    "TLX": 6,
+    "TXD": 0,
+    "NTP": 1,
+    "ROLE_EXT": 1
+  },
+  "qualification": "SOURCE_NATIVE_SUCCESSOR_ONLY",
+  "added_cycles": 0,
+  "startup_release_edges": 2
+}
