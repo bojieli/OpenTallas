@@ -197,7 +197,7 @@
   "pin_reg_split": false,
   "hold_budget": "die",
   "reset_landing": {
-    "enable": true,
-    "stages": 2
+    "enable": false,
+    "reason": "Actual explicit source preserves original wrapper reset input relay2 and native core release3; all-source transition/reset-valid proof and source hashes in results/arch/codex_f16bind_2140/bounded/receipt.json. Stacking an automatic reset landing would add two unpriced boot edges."
   }
 }

@@ -1,0 +1,19 @@
+BUILD FAILED nu1 m0 l1: see /home/ubuntu/ot-scratch/claude/codex-f16bind-2140/context_run/b_nu1_m0_l1/build.log
+%Error-MODMISSING: /srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-f16bind-2140/rtl/qwen_dv/f16/qfd_dv_cmd_cal_mu_f16.sv:282:5: Cannot find file containing module: 'qkd_program_pw_observer_p'
+  282 |     qkd_program_pw_observer_p u_obs (.macro_ce(m_ce), .macro_row({pw_row2, pw_row2}), .macro_data(m_data),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        qkd_program_pw_observer_p
+                        qkd_program_pw_observer_p.v
+                        qkd_program_pw_observer_p.sv
+                        /home/ubuntu/ot-scratch/claude/codex-f16bind-2140/context_run/b_nu1_m0_l1/qkd_program_pw_observer_p
+                        /home/ubuntu/ot-scratch/claude/codex-f16bind-2140/context_run/b_nu1_m0_l1/qkd_program_pw_observer_p.v
+                        /home/ubuntu/ot-scratch/claude/codex-f16bind-2140/context_run/b_nu1_m0_l1/qkd_program_pw_observer_p.sv
+                   ... With current working directory '/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-f16bind-2140'
+%Error-MODMISSING: /srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-f16bind-2140/results/arch/codex_f16bind_2140/context/frozen_cal_7617.sv:280:5: Cannot find file containing module: 'qkd_program_pw_observer_p'
+  280 |     qkd_program_pw_observer_p u_obs (.macro_ce(m_ce), .macro_row({pw_row2, pw_row2}), .macro_data(m_data),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)
+
