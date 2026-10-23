@@ -17,8 +17,12 @@ f=[x for x in f if x != u+'dsdv_seq_host_c_r3_lp.sv']+[u+'dsdv_seq_host_c_r3_lb.
    'rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv','physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v','rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv',u+'dsdv_seq_host_mu_lp.sv',u+'tb_dsdv_seq_host_mu_lp.sv']
 Path(sys.argv[1]).write_text('\n'.join(dict.fromkeys(f))+'\n')
 PY
+# MULP_R3=1 (rev3, STW-S81c-COLLA4-SEQ 10-22): + the derived core dsdv_seq_host_c_r3_lb3.sv and -DOT_MU_LP_R3 (u_l0 reset run rebuilt in
+# the parent); unset = the rev2 file list and defines, byte-identical behaviour
+[ "${MULP_R3:-0}" = 1 ] && echo rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_c_r3_lb3.sv >> "$OUT/files.txt"
 mapfile -t F < "$OUT/files.txt"; sha256sum "${F[@]}" > "$OUT/sources.sha256"
 DEFS="-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E"
+[ "${MULP_R3:-0}" = 1 ] && DEFS="$DEFS -DOT_MU_LP_R3"
 # MULP_CASES (env, MU_LP_MUT:LPMUT words) restricts the cases, e.g. MULP_CASES=1:0 for an expect=fail kit bench
 for c in ${MULP_CASES:-0:0 1:0 2:0 0:1}; do set -- ${c%:*} ${c#*:}; t=m$1_l$2
   ${VERILATOR:-verilator} --binary --timing -j ${VL_JOBS:-4} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -Wno-TIMESCALEMOD -O1 \

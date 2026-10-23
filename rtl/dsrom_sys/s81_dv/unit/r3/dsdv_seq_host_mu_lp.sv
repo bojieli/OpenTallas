@@ -41,11 +41,29 @@ module dsdv_seq_host_mu_lp #(parameter integer V = 276, parameter integer STAGE 
     ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(2)) u_rr (.clk(ck), .rst_n_in(rst_l1), .rst_n(rr));
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(7)) u_rh (.clk(ck), .rst_n_in(rst_l1), .rst_n(rh));
     wire [53:0] kd;
+`ifdef OT_MU_LP_R3
+    // rev3 (STW-S81c-COLLA4-SEQ 10-22; rev2 gate reg->reg u_blk/lpr_c_u_l0 -> u_l0/rst_n -702.9 ps, a ~680 um one-cycle hop
+    // around u_l0): u_l0's reset is the SAME 4-edge run the band builds (rst_n_lk -> ot_pl_pad N=3 -> rst copy -> u_l0), rebuilt
+    // here from the same rr[0] as four kept single-flop stages the kit stations along the E channel (<= ~140 um per hop).
+    // Release edge of u_l0 unchanged; no port / latency change.  MU_LP_MUT 3 (bench only) = one stage short (epoch slip).
+    wire [3:0] l0r;
+    ot_pl_land_rst_copy #(.ID(100)) u_l0r0 (.ck(ck), .d(rr[0]),  .q(l0r[0]));
+    ot_pl_land_rst_copy #(.ID(101)) u_l0r1 (.ck(ck), .d(l0r[0]), .q(l0r[1]));
+    ot_pl_land_rst_copy #(.ID(102)) u_l0r2 (.ck(ck), .d(l0r[1]), .q(l0r[2]));
+    ot_pl_land_rst_copy #(.ID(103)) u_l0r3 (.ck(ck), .d(l0r[2]), .q(l0r[3]));
+    dsdv_seq_host_c_r3_lp3
+`ifndef SYNTHESIS
+    #(.V(V), .STAGE(STAGE), .CHILD_MUT(CHILD_MUT), .RL(RL), .MUT(MUT))
+`endif
+    u_core (.rst_n_l0x((MU_LP_MUT == 3) ? l0r[2] : l0r[3]),
+        .ck_lk(ck), .ck_sq(ck), .ck_vc(ck), .rst_n_lk(rr[0]), .rst_n_sq(rr[1]), .rst_n_vc(rr[2]),
+`else
     dsdv_seq_host_c_r3_lp
 `ifndef SYNTHESIS
     #(.V(V), .STAGE(STAGE), .CHILD_MUT(CHILD_MUT), .RL(RL), .MUT(MUT))
 `endif
     u_core (.ck_lk(ck), .ck_sq(ck), .ck_vc(ck), .rst_n_lk(rr[0]), .rst_n_sq(rr[1]), .rst_n_vc(rr[2]),
+`endif
         .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host),
         .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(kd), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e),
         .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e),

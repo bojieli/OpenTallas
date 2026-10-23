@@ -1,0 +1,15 @@
+== f_0_0.out
+m0_l0: MU_LP_LOCKSTEP PASS ku_valid=24
+MU_LP_BENCH_EXIT 0
+== f_0_1.out
+m0_l1: MU_LP_LOCKSTEP FAIL ku_valid=24
+MU_LP_BENCH_EXIT 0
+== f_1_0.out
+m1_l0: MU_LP_LOCKSTEP FAIL ku_valid=24
+MU_LP_BENCH_EXIT 0
+== f_2_0.out
+m2_l0: MU_LP_LOCKSTEP FAIL ku_valid=24
+MU_LP_BENCH_EXIT 0
+== f_3_0.out
+m3_l0: MU_LP_LOCKSTEP FAIL ku_valid=24
+MU_LP_BENCH_EXIT 0
