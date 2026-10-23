@@ -1,0 +1,10 @@
+{
+  "original_unit": "oth-ubuntu-4154745-1792731476",
+  "original_session": 29632,
+  "original_exit": 1,
+  "observed_log": "C: two write captures in one cycle (TXD collision)",
+  "retention_note": "Original failed path was reused by successful retry; this preserves the actual observed original unit/failure, not an original on-disk file. The independent immutable rerun is retained alongside.",
+  "rerun_unit": "oth-ubuntu-58038-1792732099",
+  "rerun_process_exit": 1,
+  "negative_test_exit": 0
+}
