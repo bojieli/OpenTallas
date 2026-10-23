@@ -289,6 +289,10 @@ def tile_plan_on(s: dict) -> dict | None:
         raise SpecError("spec: tile_plan applies to leaf tiles")
     if tp.get("logic_face") not in (None, "N", "S", "E", "W"):
         raise SpecError("spec: tile_plan.logic_face is one of N S E W (the face the one logic band runs along)")
+    tied = tp.get("tied_macro_pins")
+    if tied is not None and (not isinstance(tied, list) or
+                             any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(x)) for x in tied)):
+        raise SpecError("spec: tile_plan.tied_macro_pins is a list of macro pin base names the RTL ties constant")
     pd = tp.get("pin_density")
     if pd is not None and not (isinstance(pd, (int, float)) and 0 < float(pd) <= TP.PIN_WINDOW_MAX):
         raise SpecError(f"spec: tile_plan.pin_density must be in (0, {TP.PIN_WINDOW_MAX:g}] pins/um")
@@ -1377,6 +1381,13 @@ def tile_plan_pin_checks(s: dict, W: float, H: float, slot: dict | None) -> list
                               float(tp.get("pin_density", TP.PIN_DENSITY))) for f, regs in sorted(per.items())]
 
 
+def tile_plan_macro(s: dict, view: str) -> dict:
+    """the LEF macro as the planner sees it: without the pins the RTL ties to constants (TP.REPAIR_PINS + spec
+    tile_plan.tied_macro_pins: [bus base name]); they need no channel"""
+    tied = list(TP.REPAIR_PINS) + list((s.get("tile_plan") or {}).get("tied_macro_pins") or [])
+    return TP.strip_pins(track_macro(view), tied)
+
+
 def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: list) -> dict | None:
     """tile_plan.content_outline of the kit (None without a synthesized std area); s["_tp_demand"] is kept for the
     macro plan"""
@@ -1386,7 +1397,7 @@ def tile_plan_outline(s: dict, slot: dict | None, std: float | None, blocks: lis
     demand, exact = tile_plan_demand(s)
     s["_tp_demand"] = demand
     halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
-    ms = [{"w": b["w"], "h": b["h"], "tm": track_macro(b["view"]), "key": i}
+    ms = [{"w": b["w"], "h": b["h"], "tm": tile_plan_macro(s, b["view"]), "key": i}
           for i, b in enumerate(blocks) if b["kind"] == "macro" and not b.get("at")]
     # GEOM-REVIEW 10-23 (s81dv_rg3b_xm6 'std 80412 + macros 0'): macros at fixed spec positions and hard children are
     # MACRO area from their LEF footprint, never std cells; std stays the synthesized std-cell area without macros
@@ -1716,7 +1727,7 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
         # TILE-FLOW: the compact macro array (tile_plan.plan_macros), pin faces into logic channels
         auto_m = [b for b in blocks if b["kind"] == "macro" and not b.get("at")]
         halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
-        ms = [{"w": b["w"], "h": b["h"], "tm": track_macro(b["view"]), "key": k} for k, b in enumerate(auto_m)]
+        ms = [{"w": b["w"], "h": b["h"], "tm": tile_plan_macro(s, b["view"]), "key": k} for k, b in enumerate(auto_m)]
         dem = s.get("_tp_demand")
         if dem is None:
             dem = tile_plan_demand(s)[0]
