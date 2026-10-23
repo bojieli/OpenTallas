@@ -60,7 +60,7 @@ PY
   local bf=""
   if [ -n "${BFVEC:-}" ] && [ -x $od/obj/Vtb_s81dv_frame ]; then
     $od/obj/Vtb_s81dv_frame $(sed "s#+OT_ROM_DIR=[^ ]*#+OT_ROM_DIR=$(realpath $BFVEC)#" $BFVEC/ARGS) > $od/run_bf.log 2>&1
-    local bsm bft bact; bsm=$(grep -c 'SEAM_MISMATCH' $od/run_bf.log); bft=$(grep -m1 '^END' $od/run_bf.log | sed -E 's/.*fault=([0-9]+).*/\1/')
+    local bsm bft bact; bsm=$(grep -c 'SEAM_MISMATCH' $od/run_bf.log); bft=$(grep -m1 '^END' $od/run_bf.log | sed -E 's/.* fault=([0-9]+).*/\1/')
     bact=$(grep -E 'SEAM_ACT' $od/run_bf.log | awk '$4 > 0' | wc -l)
     bf="bf_seam_mismatch_lines=$bsm bf_fault=${bft:-NA} bf_active_seams=$bact"
   fi
