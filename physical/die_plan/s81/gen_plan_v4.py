@@ -39,6 +39,7 @@ NC, NR = 22, 20
 DIE_W = NC * PX + 2 * X0
 DIE_H = NR * PY + 2 * X0
 REACH = 1500.0
+FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
 UNIFORM_SEG = True
 SNAP = 0.192
 TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
@@ -1075,7 +1076,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     eo = outs[nxt]
                     a_, b_ = port_pt(pid), port_pt(nxt)
                     Ld = abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
-                    st = max(1, math.ceil(Ld / (REACH * 0.98)))
+                    # R3 (COORD 10-23): ft stations at most FT_STATION_MAX apart along the slot route (also <= REACH)
+                    st = max(1, math.ceil(Ld / (min(REACH, FT_STATION_MAX) * 0.98)))
                     slots.append((ei, eo, st))
                     used |= {pid, nxt}
         for e in p.ents:
