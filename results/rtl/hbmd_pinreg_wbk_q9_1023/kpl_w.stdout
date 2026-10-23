@@ -1,0 +1,7 @@
+PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=0 PP=1 WOPEN=0 SEED=4 blocks=10 sectors=8183 K_fires=8183 K_valid_edges=26970 (back-pressured 18787) compares stream=3809 hbm=3102 mismatches=0
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 13.734 s; speed 231.280 ns/s
+- Verilator: cpu 13.733 s on 1 threads; allocated 51 MB
+STK_KPL PASS kpl_w
+rc=0

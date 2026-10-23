@@ -3,6 +3,10 @@
 # Run from the repo root (fleet, via ot-run):  run_stk_quadrant_bench.sh <out> <case>
 #   wbq_e | wbq_w | wbq_e_wopen   ot_hbm_svc_wb_kport_q quadrant WB path + lockstep vs ot_hbm_svc_wb_kport (PASS expected)
 #   wbq_mut_quad | wbq_mut_span | wbq_mut_premature | wbq_mut_ksaddr     mutants (must FAIL with WB_INTEGRITY)
+#   wbq_mut_slice | wbq_mut_commit | wbq_mut_credit   kq2/kq8 core mutants (slice select / watermark / FIFO credit)
+#   wbq_mut_pp | wbq_mut_lock   HBM-WBK8 kq8 mutants (ping-pong read toggle stuck / pop ignores the K ring room)
+#   price_e | price_e_f2 | price_e_g   pricing: blocks one at a time (+SERIAL; +GN=0 = no group traffic), fence per block
+#   wbq_e_f2 | wbq_w_f2 | wbq_e_wopen_f2   the same benches with PP=0 (single depth-4 crossing FIFO per slice)
 #   wb_default    GEN0 regressions on the parameterised cutthrough: run_wb_kshare_bench.sh (baseline + 3 mutants) and
 #                 run_wb_cutthrough_cdc_bench.sh (PASS expected)
 #   sf_q | sf_mut_pair | sf_mut_share   per-quadrant stack fault lockstep vs the NPC 32 master (+ mutants)
@@ -18,7 +22,7 @@ command -v "$ys" >/dev/null 2>&1 || ys=yosys
 n=rtl/hbm_accel/loader/service_native
 ref=results/rtl/rbh_stk_1018/ref
 wbsrc=("$n/tb_hbm_svc_wb_kshare_qh.sv" "$n/ot_hbm_svc_wb_kport_q.sv" "$n/ot_hbm_svc_wb_kport.sv" "$n/ot_hbm_svc_vm_kshare.sv"
- "$n/ot_hbm_svc_wb_cutthrough_cdc.sv" "$n/ot_hbm_svc_async_fifo.sv"
+ "$n/ot_hbm_svc_wb_cutthrough_cdc.sv" "$n/ot_hbm_svc_wb_kq8.sv" rtl/link/ot_link_afifo.sv "$n/ot_hbm_svc_async_fifo.sv"
  "$n/ot_hbm_svc_native_sector_pipeline_leaves.sv" "$n/ot_hbm_svc_pc_ctrl_leaf.sv" "$n/ot_hbm_svc_pc_ctrl_leaf_cfg.sv"
  "$n/tb_hbm_svc_command_dram_pipeline_fixture.sv" rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap.sv
  rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv
@@ -28,11 +32,25 @@ wbq() {   # wbq <label> <expect pass|fail> <verilator -G args...>
  sha256sum "${wbsrc[@]}" > "$out/source.sha256"
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_svc_wb_kshare_qh --Mdir "$out/obj-$L" -o sim "$@" "${wbsrc[@]}" > "$out/build-$L.log" 2>&1
- local rc=0; "$out/obj-$L/sim" > "$out/$L.log" 2>&1 || rc=$?
+ local rc=0; "$out/obj-$L/sim" ${SIMARGS:-} > "$out/$L.log" 2>&1 || rc=$?
  rm -rf "$out/obj-$L"
  cat "$out/$L.log" | tail -20
  if [[ $E == pass ]]; then test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_qh' "$out/$L.log" && echo "STK_WBQ PASS $L"
  else test "$rc" != 0 && grep -q 'WB_INTEGRITY\|FAIL tb_hbm_svc_wb_kshare_qh' "$out/$L.log" && echo "STK_WBQ MUTANT_REJECTED $L"; fi
+}
+# STEWARD-HBMd/PINREG q9 2026-10-23: KPREG=0 vs KPREG=1 cycle-exact lockstep (tb_hbm_svc_wb_kq8_kpreg_lockstep)
+kpsrc=("$n/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv" "$n/ot_hbm_svc_wb_kport_q.sv" "$n/ot_hbm_svc_wb_kq8.sv" rtl/link/ot_link_afifo.sv
+ rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+kpl() {   # kpl <label> <expect pass|fail> <verilator -G args...>   (SIMARGS: plusargs)
+ local L=$1 E=$2; shift 2
+ sha256sum "${kpsrc[@]}" > "$out/source.sha256"
+ "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
+  --top-module tb_hbm_svc_wb_kq8_kpreg_lockstep --Mdir "$out/obj-$L" -o sim "$@" "${kpsrc[@]}" > "$out/build-$L.log" 2>&1
+ local rc=0; "$out/obj-$L/sim" ${SIMARGS:-} > "$out/$L.log" 2>&1 || rc=$?
+ rm -rf "$out/obj-$L"
+ tail -20 "$out/$L.log"
+ if [[ $E == pass ]]; then test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kq8_kpreg_lockstep' "$out/$L.log" && echo "STK_KPL PASS $L"
+ else test "$rc" != 0 && grep -q 'MISMATCH' "$out/$L.log" && grep -q '^FAIL tb_hbm_svc_wb_kq8_kpreg_lockstep' "$out/$L.log" && echo "STK_KPL MUTANT_REJECTED $L"; fi
 }
 ivl() {   # ivl <label> <expect> <top> <files...> (-P params in IVP)
  local L=$1 E=$2 T=$3; shift 3
@@ -50,6 +68,42 @@ case "$c" in
  wbq_mut_span)      wbq "$c" fail -GQE=1 -GWBMUT=3 ;;
  wbq_mut_premature) wbq "$c" fail -GQE=1 -GWBMUT=1 ;;
  wbq_mut_ksaddr)    wbq "$c" fail -GQE=1 -GKSMUT=4 ;;
+ wbq_mut_slice)     wbq "$c" fail -GQE=1 -GWBMUT=5 ;;
+ wbq_mut_commit)    wbq "$c" fail -GQE=1 -GWBMUT=6 ;;
+ wbq_mut_credit)    wbq "$c" fail -GQE=1 -GWBMUT=8 ;;
+ wbq_mut_pp)        wbq "$c" fail -GQE=1 -GWBMUT=9 ;;
+ wbq_mut_lock)      wbq "$c" fail -GQE=1 -GWBMUT=10 ;;
+ price_e)           SIMARGS="+SERIAL +GN=0" wbq "$c" pass -GQE=1 ;;
+ price_e_f2)        SIMARGS="+SERIAL +GN=0" wbq "$c" pass -GQE=1 -GPP=0 ;;
+ price_e_g)         SIMARGS="+SERIAL" wbq "$c" pass -GQE=1 ;;
+ wbq_e_f2)          wbq "$c" pass -GQE=1 -GPP=0 ;;
+ wbq_w_f2)          wbq "$c" pass -GQE=0 -GPP=0 ;;
+ wbq_e_wopen_f2)    wbq "$c" pass -GQE=1 -GWOPEN=1 -GPP=0 ;;
+ # KPREG=1 (registered K ring heads): lockstep vs KPREG=0 + the positive benches / mutants on KPREG=1
+ kpl_e)             SIMARGS="+SEED=1" kpl "$c" pass -GQE=1 ;;
+ kpl_e_s2)          SIMARGS="+SEED=2 +RDYP=30 +NB=14" kpl "$c" pass -GQE=1 ;;
+ kpl_e_s3)          SIMARGS="+SEED=3 +RDYP=95 +NB=12" kpl "$c" pass -GQE=1 ;;
+ kpl_w)             SIMARGS="+SEED=4" kpl "$c" pass -GQE=0 ;;
+ kpl_e_f2)          SIMARGS="+SEED=5" kpl "$c" pass -GQE=1 -GPP=0 ;;
+ kpl_e_wopen)       SIMARGS="+SEED=6" kpl "$c" pass -GQE=1 -GWOPEN=1 ;;
+ kpl_mut_stale)     SIMARGS="+SEED=1" kpl "$c" fail -GQE=1 -GDMUT=12 ;;
+ kpl_mut_bypass)    SIMARGS="+SEED=1" kpl "$c" fail -GQE=1 -GDMUT=13 ;;
+ wbq_e_kp)          wbq "$c" pass -GQE=1 -GKPREG=1 ;;
+ wbq_w_kp)          wbq "$c" pass -GQE=0 -GKPREG=1 ;;
+ wbq_e_wopen_kp)    wbq "$c" pass -GQE=1 -GWOPEN=1 -GKPREG=1 ;;
+ wbq_e_f2_kp)       wbq "$c" pass -GQE=1 -GPP=0 -GKPREG=1 ;;
+ price_e_kp)        SIMARGS="+SERIAL +GN=0" wbq "$c" pass -GQE=1 -GKPREG=1 ;;
+ wbq_mut_quad_kp)   wbq "$c" fail -GQE=1 -GWBMUT=2 -GKPREG=1 ;;
+ wbq_mut_span_kp)   wbq "$c" fail -GQE=1 -GWBMUT=3 -GKPREG=1 ;;
+ wbq_mut_premature_kp) wbq "$c" fail -GQE=1 -GWBMUT=1 -GKPREG=1 ;;
+ wbq_mut_ksaddr_kp) wbq "$c" fail -GQE=1 -GKSMUT=4 -GKPREG=1 ;;
+ wbq_mut_slice_kp)  wbq "$c" fail -GQE=1 -GWBMUT=5 -GKPREG=1 ;;
+ wbq_mut_commit_kp) wbq "$c" fail -GQE=1 -GWBMUT=6 -GKPREG=1 ;;
+ wbq_mut_credit_kp) wbq "$c" fail -GQE=1 -GWBMUT=8 -GKPREG=1 ;;
+ wbq_mut_pp_kp)     wbq "$c" fail -GQE=1 -GWBMUT=9 -GKPREG=1 ;;
+ wbq_mut_lock_kp)   wbq "$c" fail -GQE=1 -GWBMUT=10 -GKPREG=1 ;;
+ wbq_mut_stale_kp)  wbq "$c" fail -GQE=1 -GWBMUT=12 -GKPREG=1 ;;
+ wbq_mut_bypass_kp) wbq "$c" fail -GQE=1 -GWBMUT=13 -GKPREG=1 ;;
  wb_default)
   bash "$n/run_wb_kshare_bench.sh" "$out/kshare_q" | tee "$out/wb_default.log"
   test "$(grep -c '^QUALIFIED' "$out/wb_default.log")" = 4

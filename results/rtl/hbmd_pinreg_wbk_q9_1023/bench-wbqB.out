@@ -1,0 +1,66 @@
+ot-run: ot-gold1       admits   558 GB (avail 716, reserve 0, fresh 17.1, peak 76.7, headroom 0, waiters 0/0 GB) load 80/112 running 46 disk 974 GB 
+ot-run: ot-epyc7       admits   133 GB (avail 260, reserve 0, fresh 57.9, peak 5.2, headroom 0, waiters 0/0 GB) load 65/96 running 26 disk 3870 GB 
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1925975-1792744245 after 0 s
+host=ot-gold1
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/price_e_kp.stdout:PASS tb_hbm_svc_wb_kshare_qh QE=1 KSMUT=0 WBMUT=0 WOPEN=0 blocks=8 sectors=5563 lockstep_windows=8 group_req=0 vm_windows=4
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/price_e_kp.stdout:STK_WBQ PASS price_e_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/price_e_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_f2_kp.stdout:PASS tb_hbm_svc_wb_kshare_qh QE=1 KSMUT=0 WBMUT=0 WOPEN=0 blocks=8 sectors=5563 lockstep_windows=8 group_req=1920 vm_windows=4
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_f2_kp.stdout:STK_WBQ PASS wbq_e_f2_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_f2_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_kp.stdout:PASS tb_hbm_svc_wb_kshare_qh QE=1 KSMUT=0 WBMUT=0 WOPEN=0 blocks=8 sectors=5563 lockstep_windows=8 group_req=1920 vm_windows=4
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_kp.stdout:STK_WBQ PASS wbq_e_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_wopen_kp.stdout:PASS tb_hbm_svc_wb_kshare_qh QE=1 KSMUT=0 WBMUT=0 WOPEN=1 blocks=8 sectors=5563 lockstep_windows=8 group_req=1920 vm_windows=4
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_wopen_kp.stdout:STK_WBQ PASS wbq_e_wopen_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_e_wopen_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_bypass_kp.stdout:[214167000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=15 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_bypass_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_bypass_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_bypass_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_bypass_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_commit_kp.stdout:[781667000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_commit_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_commit_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_commit_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_commit_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_credit_kp.stdout:[229167000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=0 wb=1 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_credit_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_credit_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_credit_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_credit_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_ksaddr_kp.stdout:[225834000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=0 wb=0 kshare=0000 controller=1
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_ksaddr_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_ksaddr_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_ksaddr_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_ksaddr_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_lock_kp.stdout:[17002514000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_lock_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_lock_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_lock_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_lock_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_pp_kp.stdout:[17002514000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_pp_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_pp_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_pp_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_pp_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_premature_kp.stdout:[267500000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_premature_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_premature_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_premature_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_premature_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_quad_kp.stdout:[200000000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_quad_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_quad_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_quad_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_quad_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_slice_kp.stdout:[781667000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_slice_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_slice_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_slice_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_slice_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_span_kp.stdout:[200000000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=1 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_span_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_span_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_span_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_span_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_stale_kp.stdout:[215000000] %Fatal: tb_hbm_svc_wb_kshare_qh.sv:118: Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY errors=8 wb=0 kshare=0000 controller=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_stale_kp.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:118: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_stale_kp.stdout:STK_WBQ MUTANT_REJECTED wbq_mut_stale_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_mut_stale_kp.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_w_kp.stdout:PASS tb_hbm_svc_wb_kshare_qh QE=0 KSMUT=0 WBMUT=0 WOPEN=0 blocks=8 sectors=5563 lockstep_windows=8 group_req=1920 vm_windows=4
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_w_kp.stdout:STK_WBQ PASS wbq_w_kp
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-wbqB/wbq_w_kp.stdout:rc=0
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1925975-1792744245): exit 0
+BENCH_RC=0

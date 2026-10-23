@@ -218,6 +218,32 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
                 near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
                 g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
                       + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
+        # pin_bit_groups (q9 10-23): a grouped port is assigned bit range by bit range; its groups must cover every bit once
+        try:
+            grouped = RT.pin_bit_group_ports(spec)
+        except RT.SpecError as e:
+            g.add("FAIL", "pins", str(e), "fix pin_bit_groups")
+            grouped = {}
+        for n, rs in grouped.items():
+            if n in plan:
+                g.add("FAIL", "pins", f"port {n} is in pins AND pin_bit_groups", "assign a grouped port only by its groups")
+            if n not in ports:
+                g.add("FAIL", "pins", f"pin_bit_groups names '{n}', not a port of {spec['top']} ({where})", "name ports by base name")
+                continue
+            w, vec = ports[n]
+            lsb = (getattr(ports, "ranges", {}).get(n) or (0, w - 1))[0]
+            got = sorted((lo - lsb, hi - lsb) for lo, hi, _ in rs)
+            cover, nxt = True, 0
+            for lo, hi in got:
+                cover = cover and lo == nxt
+                nxt = hi + 1
+            if not vec or not cover or nxt != w:
+                g.add("FAIL", "pins", f"pin_bit_groups {n}: bit ranges {[(lo, hi) for lo, hi, _ in rs]} do not cover "
+                      f"[{lsb}:{lsb + w - 1}] exactly once ({w} b{'' if vec else ', scalar'})", "cover every bit of the bus once")
+            plan[n] = sorted({f for _, _, f in rs})
+        if grouped:
+            g.add("INFO", "pins", "pin_bit_groups: " + "; ".join(f"{n} -> " + ", ".join(f"[{lo}:{hi}] {f}" for lo, hi, f in rs)
+                                                               for n, rs in list(grouped.items())[:6]))
         miss = [p for p in ports if p not in plan]
         if miss:
             g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
@@ -279,7 +305,8 @@ def kit_pin_plan(spec: dict, ports: dict | None, outline, lc: dict | None = None
     regs = []
     for r in RT.pin_regions(spec):
         ln = float(outline[FACE_LEN[r["face"]]])
-        ws = [(ports or {}).get(n, (None, False))[0] for n in r["names"]]
+        ws = ([hi - lo + 1 for lo, hi in r["bits"].values()] if r.get("bits")
+              else [(ports or {}).get(n, (None, False))[0] for n in r["names"]])
         lo, hi = r["range"] if r["range"] else (0.0, ln)
         regs.append({**r, "n": None if any(w is None for w in ws) else sum(ws), "lo": lo, "hi": hi, "len": ln,
                      "layers": st["h"] if r["face"] in ("W", "E") else st["v"]})

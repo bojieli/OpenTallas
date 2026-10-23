@@ -749,6 +749,7 @@ def load_spec(path: str) -> dict:
     bad = [f for f in s["pins"] if f not in FACES and f != "ANY"]
     if bad:
         raise SpecError(f"spec: pins faces must be N/S/E/W (or ANY: placer's choice, all faces), got {bad}")
+    pin_bit_groups(s)
     if literal_pin_bits(s):
         validate_literal_pin_plan(s)
     return s
@@ -1540,7 +1541,7 @@ def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
 
 def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
     """explicit 'at' wins; the rest go in rows away from the pin faces, >= CHANNEL_UM apart and from the core edge"""
-    pin_faces = {f for f, v in s["pins"].items() if v}
+    pin_faces = pin_faces_used(s)
     if pin_faces & {"ANY"}:
         pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
@@ -1598,7 +1599,7 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
 def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float | None) -> list:
     """(severity, check, message, fix) -- the geometry part of the pre-route gate, also run at gen time"""
     out = []
-    pin_faces = {f for f, v in s["pins"].items() if v}
+    pin_faces = pin_faces_used(s)
     if "ANY" in pin_faces:
         pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
@@ -1698,6 +1699,106 @@ def clock_ports_sdc(s: dict) -> str:
 
 def pin_regex(names) -> str:
     return "^(" + "|".join(re.escape(n) for n in names) + r")(\[|$)"
+
+
+def num_range_regex(lo: int, hi: int) -> str:
+    """a regex (no anchors) matching exactly the decimal integers lo..hi (no leading zeros)"""
+    if lo > hi:
+        raise ValueError("num_range_regex: lo > hi")
+    if lo == hi:
+        return str(lo)
+    parts = []
+
+    def split(a: int, b: int):                  # [a, b] with equal digit counts -> digit-class pieces
+        if a == b:
+            parts.append(str(a))
+            return
+        sa, sb = str(a), str(b)
+        i = 0
+        while sa[i] == sb[i]:
+            i += 1
+        pre, k = sa[:i], len(sa) - i - 1         # common prefix, digits after the first differing one
+        lo_tail_min = sa[i + 1:] == "0" * k
+        hi_tail_max = sb[i + 1:] == "9" * k
+        da, db = int(sa[i]), int(sb[i])
+        if lo_tail_min and hi_tail_max:
+            parts.append(pre + (f"[{da}-{db}]" if da != db else str(da)) + "[0-9]" * k)
+            return
+        if not lo_tail_min:
+            split(a, int(pre + str(da) + "9" * k))
+            da += 1
+        mid_hi = db - (0 if hi_tail_max else 1)
+        if da <= mid_hi:
+            parts.append(pre + (f"[{da}-{mid_hi}]" if da != mid_hi else str(da)) + "[0-9]" * k)
+        if not hi_tail_max:
+            split(int(pre + str(db) + "0" * k), b)
+
+    a = lo
+    while a <= hi:                              # one digit count at a time
+        top = min(hi, 10 ** len(str(a)) - 1)
+        split(a, top)
+        a = top + 1
+    return "(" + "|".join(parts) + ")"
+
+
+def pin_bit_groups(s: dict) -> list:
+    """optional "pin_bit_groups" (STEWARD-HBMd/PINREG q9 10-23): a face assignment BY BIT RANGE, for buses whose bits go to
+    different faces (wbk_q K ports: PCs 0-7 on N, PCs 8-15 on E; the die binds the port names, so the bus cannot be split
+    into new ports).  [{"face": N|S|E|W, "range": [lo_um, hi_um] (optional, along the face as pin_ranges),
+    "bits": {port: [lsb, msb], ...}}, ...]: each group is ONE pin region (run_abi3_physical --pin-region with a
+    bit-index regex), its ports' bits laid out together over its range (lsort -dictionary order).  A grouped port is not
+    listed in "pins"; the gate checks that its groups cover every bit exactly once (and run_abi3_physical's
+    ot_check_bus_complete re-checks it on the netlist).  Validated here; [] when absent."""
+    g = s.get("pin_bit_groups")
+    if g is None:
+        return []
+    if not isinstance(g, list) or not g:
+        raise SpecError("spec: pin_bit_groups must be a non-empty list of {face, bits, range?}")
+    listed = {n for v in s["pins"].values() for n in v}
+    seen = {}
+    for i, e in enumerate(g):
+        if not isinstance(e, dict) or e.get("face") not in FACES or not isinstance(e.get("bits"), dict) or not e["bits"]:
+            raise SpecError(f"spec: pin_bit_groups[{i}] needs face N/S/E/W and a non-empty bits {{port: [lsb, msb]}}")
+        if set(e) - {"face", "bits", "range", "why"}:
+            raise SpecError(f"spec: pin_bit_groups[{i}]: unknown keys {sorted(set(e) - {'face', 'bits', 'range', 'why'})}")
+        if "range" in e:
+            r = e["range"]
+            if not (isinstance(r, list) and len(r) == 2 and all(isinstance(x, (int, float)) for x in r) and r[1] > r[0] >= 0):
+                raise SpecError(f"spec: pin_bit_groups[{i}].range must be [lo_um, hi_um], hi > lo >= 0")
+        for n, b in e["bits"].items():
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", n):
+                raise SpecError(f"spec: pin_bit_groups[{i}]: {n!r} is not a port base name")
+            if n in listed:
+                raise SpecError(f"spec: pin_bit_groups port {n} is also listed in pins (a grouped port is assigned by its groups)")
+            if not (isinstance(b, list) and len(b) == 2 and all(isinstance(x, int) and not isinstance(x, bool) for x in b)
+                    and 0 <= b[0] <= b[1]):
+                raise SpecError(f"spec: pin_bit_groups[{i}].bits[{n}] must be [lsb, msb] integers, 0 <= lsb <= msb")
+            for lo, hi in seen.get(n, []):
+                if not (b[1] < lo or b[0] > hi):
+                    raise SpecError(f"spec: pin_bit_groups: {n}[{b[0]}:{b[1]}] overlaps {n}[{lo}:{hi}]")
+            seen.setdefault(n, []).append((b[0], b[1]))
+    return g
+
+
+def pin_bit_group_ports(s: dict) -> dict:
+    """{port: [(lsb, msb, face), ...]} of the pin_bit_groups"""
+    out = {}
+    for e in pin_bit_groups(s):
+        for n, b in e["bits"].items():
+            out.setdefault(n, []).append((b[0], b[1], e["face"]))
+    return out
+
+
+def pin_region_regex(g: dict) -> str:
+    """the --pin-region regex of one pin_regions() entry"""
+    if not g.get("bits"):
+        return pin_regex(g["names"])
+    return "|".join(f"^{re.escape(n)}\\[{num_range_regex(lo, hi)}\\]$" for n, (lo, hi) in g["bits"].items())
+
+
+def pin_faces_used(s: dict) -> set:
+    """faces that carry pins: the "pins" faces with ports plus every pin_bit_groups face"""
+    return {f for f, v in s["pins"].items() if v} | {e["face"] for e in pin_bit_groups(s)}
 
 
 def kit_dir(s: dict) -> str:
@@ -2158,7 +2259,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
     # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
     # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
-    regs = [pin_regex(g["names"]) + "=" + FACES[g["face"]]
+    regs = [pin_region_regex(g) + "=" + FACES[g["face"]]
             + (f":{g['range'][0]:g}-{g['range'][1]:g}" if g["range"] else "") for g in pin_regions(s)]
     pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
     if s.get("io_tcl"):
@@ -2364,6 +2465,11 @@ def pin_regions(s: dict) -> list:
             if n in rng:
                 lo, hi = rng[n]
                 out.append({"names": [n], "face": f, "range": (float(lo), float(hi))})
+    # pin_bit_groups: one region per group, its ports matched by bit index ("bits": {port: (lsb, msb)})
+    for e in pin_bit_groups(s):
+        out.append({"names": list(e["bits"]), "face": e["face"],
+                    "range": (float(e["range"][0]), float(e["range"][1])) if e.get("range") else None,
+                    "bits": {n: (int(b[0]), int(b[1])) for n, b in e["bits"].items()}})
     return out
 
 
@@ -2731,7 +2837,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     fp = {"schema": "opentallas.ref_tile.floorplan.v1", "name": s["name"], "top": s["top"], "kind": s["kind"],
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,
           "std_area_um2": std, "layer_contract": {k: (list(v) if isinstance(v, tuple) else v) for k, v in lc.items()},
-          "pins": s["pins"], "clock_port": s["clock_port"],
+          "pins": s["pins"], **({"pin_bit_groups": s["pin_bit_groups"]} if s.get("pin_bit_groups") else {}),
+          "clock_port": s["clock_port"],
           **({"clock_ports": clock_ports(s)} if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else {}),
           **({"clock_cts_roots": list(s["clock_cts_roots"])} if s.get("clock") == "hybrid_entries" else {}),
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}

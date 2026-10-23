@@ -1,0 +1,22 @@
+  PC 10 v 1 rdy 1 addr 288000ec/00000040 wdata[63:0] 7194c25a56402977/0000000000000000
+  PC 11 v 1 rdy 0 addr 288000e8/00000040 wdata[63:0] 712336ee56f7ddc3/0000000000000000
+  PC 12 v 1 rdy 1 addr 288000f4/00000040 wdata[63:0] 723ab4c255ee5fef/0000000000000000
+  PC 13 v 1 rdy 0 addr 288000f0/00000040 wdata[63:0] 71c9ef16561d043b/0000000000000000
+MISMATCH hbm t=112129 ready 1/1 wa 0/0 wbw 0/0 fault 0/0 k_v ffff/ffff
+  PC 1 v 1 rdy 1 addr 288000c2/00000040 wdata[63:0] 7e0d193c59d9f211/0000000000000000
+  PC 2 v 1 rdy 1 addr 288000ce/00000040 wdata[63:0] 7f049f1058d0743d/0000000000000000
+  PC 8 v 1 rdy 1 addr 288000e5/00000040 wdata[63:0] f0e55667d731bd4a/0000000000000000
+  PC 10 v 1 rdy 1 addr 288000ed/00000040 wdata[63:0] f18b088fd65fe3a2/0000000000000000
+  PC 12 v 1 rdy 1 addr 288000f5/00000040 wdata[63:0] f251e137d5850a1a/0000000000000000
+MISMATCH stream t=112174 ready 1/1 wa 0/0 wbw 0/0 fault 0/0 k_v ffff/ffff
+  PC 1 v 1 rdy 1 addr 288000c2/00000040 wdata[63:0] 7e0d193c59d9f211/0000000000000000
+  PC 2 v 1 rdy 1 addr 288000ce/00000040 wdata[63:0] 7f049f1058d0743d/0000000000000000
+  PC 8 v 1 rdy 1 addr 288000e5/00000040 wdata[63:0] f0e55667d731bd4a/0000000000000000
+  PC 10 v 1 rdy 1 addr 288000ed/00000040 wdata[63:0] f18b088fd65fe3a2/0000000000000000
+  PC 12 v 1 rdy 1 addr 288000f5/00000040 wdata[63:0] f251e137d5850a1a/0000000000000000
+FAIL tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=13 QE=1 PP=1 SEED=1 mismatches=2952 blocks=10/10 posted=6152 fires=6152 issued=6152 fault=0/0
+[2587648] %Fatal: tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Assertion failed in tb_hbm_svc_wb_kq8_kpreg_lockstep
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Verilog $stop
+Aborting...
+STK_KPL MUTANT_REJECTED kpl_mut_bypass
+rc=0

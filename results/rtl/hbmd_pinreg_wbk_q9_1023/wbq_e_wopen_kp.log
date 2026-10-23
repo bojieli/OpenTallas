@@ -1,0 +1,13 @@
+WB_BLOCK 0 ordinals 640 fence_stream_edges 920
+WB_BLOCK 1 ordinals 1 fence_stream_edges 3361
+WB_BLOCK 2 ordinals 13 fence_stream_edges 4676
+WB_BLOCK 3 ordinals 1984 fence_stream_edges 4920
+WB_BLOCK 4 ordinals 1984 fence_stream_edges 4941
+WB_BLOCK 5 ordinals 640 fence_stream_edges 4553
+WB_BLOCK 6 ordinals 300 fence_stream_edges 3028
+WB_BLOCK 7 ordinals 1 fence_stream_edges 1294
+PASS tb_hbm_svc_wb_kshare_qh QE=1 KSMUT=0 WBMUT=0 WOPEN=1 blocks=8 sectors=5563 lockstep_windows=8 group_req=1920 vm_windows=4
+- rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv:297: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 60.721 s; speed 240.203 ns/s
+- Verilator: cpu 60.717 s on 1 threads; allocated 33 MB

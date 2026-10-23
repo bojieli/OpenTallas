@@ -1,0 +1,35 @@
+ot-run: ot-gold1       admits   555 GB (avail 671, reserve 0, fresh 35.5, peak 15.7, headroom 0, waiters 0/0 GB) load 47/112 running 36 disk 973 GB 
+ot-run: ot-epyc7       admits   163 GB (avail 250, reserve 0, fresh 20.2, peak 2, headroom 0, waiters 0/0 GB) load 32/96 running 16 disk 3881 GB 
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2803318-1792745878 after 1 s
+host=ot-epyc7
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=1 PP=1 WOPEN=0 SEED=1 blocks=10 sectors=6152 K_fires=6152 K_valid_edges=19997 (back-pressured 13845) compares stream=3103 hbm=2527 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e.stdout:STK_KPL PASS kpl_e
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_f2.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=1 PP=0 WOPEN=0 SEED=5 blocks=10 sectors=7339 K_fires=7339 K_valid_edges=28063 (back-pressured 20724) compares stream=4677 hbm=3809 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_f2.stdout:STK_KPL PASS kpl_e_f2
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_f2.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s2.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=1 PP=1 WOPEN=0 SEED=2 blocks=14 sectors=10880 K_fires=10880 K_valid_edges=64617 (back-pressured 53737) compares stream=7895 hbm=6430 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s2.stdout:STK_KPL PASS kpl_e_s2
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s2.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s3.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=1 PP=1 WOPEN=0 SEED=3 blocks=12 sectors=9146 K_fires=9146 K_valid_edges=21064 (back-pressured 11918) compares stream=3672 hbm=2991 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s3.stdout:STK_KPL PASS kpl_e_s3
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_s3.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_wopen.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=1 PP=1 WOPEN=1 SEED=6 blocks=10 sectors=6615 K_fires=6615 K_valid_edges=21637 (back-pressured 15022) compares stream=3401 hbm=2770 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_wopen.stdout:STK_KPL PASS kpl_e_wopen
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_e_wopen.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_bypass.stdout:FAIL tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=13 QE=1 PP=1 SEED=1 mismatches=2952 blocks=10/10 posted=6152 fires=6152 issued=6152 fault=0/0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_bypass.stdout:[2587648] %Fatal: tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Assertion failed in tb_hbm_svc_wb_kq8_kpreg_lockstep
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_bypass.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_bypass.stdout:STK_KPL MUTANT_REJECTED kpl_mut_bypass
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_bypass.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_stale.stdout:FAIL tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=12 QE=1 PP=1 SEED=1 mismatches=3917 blocks=10/10 posted=6152 fires=6152 issued=6152 fault=0/0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_stale.stdout:[2587648] %Fatal: tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Assertion failed in tb_hbm_svc_wb_kq8_kpreg_lockstep
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_stale.stdout:%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Verilog $stop
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_stale.stdout:STK_KPL MUTANT_REJECTED kpl_mut_stale
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_mut_stale.stdout:rc=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_w.stdout:PASS tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=0 QE=0 PP=1 WOPEN=0 SEED=4 blocks=10 sectors=8183 K_fires=8183 K_valid_edges=26970 (back-pressured 18787) compares stream=3809 hbm=3102 mismatches=0
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_w.stdout:STK_KPL PASS kpl_w
+/srv/opentallas-scratch/claude/hbmd-pinreg-wbk-q9/bench/out-kplA/kpl_w.stdout:rc=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2803318-1792745878): exit 0
+BENCH_RC=0

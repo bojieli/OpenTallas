@@ -1,0 +1,22 @@
+  PC 1 v 1 rdy 1 addr 288000c2/288000c1 wdata[63:0] 7e0d193c59d9f211/fe162ccbd9c2c7e6
+  PC 2 v 1 rdy 1 addr 288000ce/288000cd wdata[63:0] 7f049f1058d0743d/ff10522fd8c4b902
+  PC 8 v 1 rdy 1 addr 288000e5/288000e4 wdata[63:0] f0e55667d731bd4a/70ce6932571a821f
+  PC 10 v 1 rdy 1 addr 288000ed/288000ec wdata[63:0] f18b088fd65fe3a2/7194c25a56402977
+  PC 12 v 1 rdy 1 addr 288000f5/288000f4 wdata[63:0] f251e137d5850a1a/723ab4c255ee5fef
+MISMATCH stream t=113008 ready 1/1 wa 0/0 wbw 0/0 fault 0/0 k_v ffff/ffff
+  PC 1 v 1 rdy 1 addr 288000c2/288000c1 wdata[63:0] 7e0d193c59d9f211/fe162ccbd9c2c7e6
+  PC 2 v 1 rdy 0 addr 288000ce/288000cd wdata[63:0] 7f049f1058d0743d/ff10522fd8c4b902
+  PC 8 v 1 rdy 1 addr 288000e5/288000e4 wdata[63:0] f0e55667d731bd4a/70ce6932571a821f
+  PC 10 v 1 rdy 1 addr 288000ed/288000ec wdata[63:0] f18b088fd65fe3a2/7194c25a56402977
+  PC 12 v 1 rdy 1 addr 288000f5/288000f4 wdata[63:0] f251e137d5850a1a/723ab4c255ee5fef
+MISMATCH hbm t=113153 ready 1/1 wa 0/0 wbw 0/0 fault 0/0 k_v ffff/ffff
+  PC 1 v 1 rdy 1 addr 288000c3/288000c2 wdata[63:0] fe204661d9f4ad4c/7e0d193c59d9f211
+  PC 8 v 1 rdy 1 addr 288000e6/288000e5 wdata[63:0] 7119834856cd6865/f0e55667d731bd4a
+  PC 10 v 1 rdy 1 addr 288000ee/288000ed wdata[63:0] 71be75f0566a9edd/f18b088fd65fe3a2
+  PC 12 v 1 rdy 1 addr 288000f6/288000f5 wdata[63:0] 72442e185590c535/f251e137d5850a1a
+FAIL tb_hbm_svc_wb_kq8_kpreg_lockstep DMUT=12 QE=1 PP=1 SEED=1 mismatches=3917 blocks=10/10 posted=6152 fires=6152 issued=6152 fault=0/0
+[2587648] %Fatal: tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Assertion failed in tb_hbm_svc_wb_kq8_kpreg_lockstep
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kq8_kpreg_lockstep.sv:130: Verilog $stop
+Aborting...
+STK_KPL MUTANT_REJECTED kpl_mut_stale
+rc=0
