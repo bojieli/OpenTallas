@@ -1,0 +1,65 @@
+{
+  "scope": "Source/macro/pin planning before actual mapped native or physical qualification",
+  "external_ports": 95,
+  "external_bits": 2808,
+  "new_ports": {
+    "f16_auth": 83,
+    "init_u0": 1
+  },
+  "bounded_source_model": {
+    "before_cells": 36808,
+    "after_cells": 37140,
+    "same_edge_copy_FF": 188,
+    "Boolean_cone_copies": 144,
+    "construction_passes": 4,
+    "execution_cycles_added_by_copies": 0
+  },
+  "variants": [
+    {
+      "variant": "main",
+      "outline_um": [
+        345.6,
+        216
+      ],
+      "raw_ROM_area_um2": 7174.75968,
+      "pin_density_by_face_per_um": {
+        "N": 4.033564814814815,
+        "W": 1.7268518518518519,
+        "S": 1.886574074074074,
+        "E": 1.8009259259259258
+      },
+      "max_allowed_per_um": 6,
+      "clock_entry_side": "N",
+      "macro_lattice_um": 43.2,
+      "registered_boundary": "actual explicit input1/output1; automatic pinregs disabled",
+      "spec_sha256": "f39c7a6144ee3b3e20cc1982ad72945d60a45e7de141ce77c6afdfbdd13b9995"
+    },
+    {
+      "variant": "alt",
+      "outline_um": [
+        388.8,
+        216
+      ],
+      "raw_ROM_area_um2": 7174.75968,
+      "pin_density_by_face_per_um": {
+        "N": 3.5853909465020575,
+        "W": 1.7268518518518519,
+        "S": 1.676954732510288,
+        "E": 1.8009259259259258
+      },
+      "max_allowed_per_um": 6,
+      "clock_entry_side": "N",
+      "macro_lattice_um": 43.2,
+      "registered_boundary": "actual explicit input1/output1; automatic pinregs disabled",
+      "spec_sha256": "827f2de9762ce7d913e10094d21b79f607134c6947edf7d9e76051ae1138058e"
+    }
+  ],
+  "unknown": [
+    "native mapped FF/cell area",
+    "placement utilization after mapping",
+    "native load result",
+    "pin-flop spread TT/FF",
+    "GRT/STA/real clock insertion",
+    "actual current programme image and consumer dates"
+  ]
+}
