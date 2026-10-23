@@ -165,7 +165,27 @@ def test_kit_overrides_platform_tracks():
     P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     with tempfile.TemporaryDirectory() as d:
         kd = gen_phys.write_type_kit(P, "src", d, [])
-        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in (kd / "config.mk").read_text()
+        cfg = (kd / "config.mk").read_text()
+        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in cfg
+        # CP1 10-23: pin registers FIRM at their faces through GPL, released before DPL
+        assert "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl" in cfg
+        assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
+        assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
+
+
+def test_die_sta_flat_in_opensta_etm_with_tech():
+    """CP1 10-23: openroad link_design needs a technology (ORD-2010) and flattens the hierarchy, so read_spef -path
+    <instance> finds nothing (STA-0276).  FLAT runs in standalone OpenSTA without LEF; ETM reads tech + abstracts."""
+    import gen_phys
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "views").mkdir()
+        gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
+        kd = Path(d) / "die"
+        sta = (kd / "sta_die.tcl").read_text()
+        etm = sta.split('if {$MODE == "etm"} {', 1)[1].split("}", 1)[0]
+        assert "asap7_tech_1x" in etm and sta.count("read_lef") == sta.count("read_lef", sta.index('if {$MODE == "etm"}'))
+        assert "read_spef -path" in sta
+        assert "T='sta -no_splash'" in (kd / "run_die.sh").read_text()
 
 
 def test_spread_mirror_equivariant_on_ties():

@@ -241,8 +241,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False):
            "export SKIP_LAST_GASP = 1",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
               "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
-           "export TNS_END_PERCENT = 100"]
+           "export TNS_END_PERCENT = 100",
+           # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
+           "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
+           "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    for f in ("face_flops.tcl", "face_flops_release.tcl"):
+        shutil.copyfile(Path(__file__).with_name(f), kd / f)
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -429,9 +434,18 @@ def sta_die_tcl(P):
              "# MODE etm : the partitions' generate_abstract timing models (.lib) under the die netlist + die SPEF",
              "set MODE [expr {[info exists ::env(MODE)] ? $::env(MODE) : \"flat\"}]",
              "set L /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM",
+             # ETM runs in openroad, whose link_design needs the technology (ORD-2010): tech + std-cell LEF and the
+             # partition abstracts as masters of the timing-model cells.  FLAT runs in standalone OpenSTA ('sta'):
+             # openroad's link_design flattens the hierarchy, so read_spef -path <instance> finds no instance (STA-0276)
+             "set PL /OpenROAD-flow-scripts/flow/platforms/asap7",
+             "if {$MODE == \"etm\"} {",
+             "  read_lef $PL/lef/asap7_tech_1x_201209.lef",
+             "  read_lef $PL/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+             "}",
              "foreach f [glob $L/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }",
              "if {$MODE == \"etm\"} {"]
     for tn, t in sorted(P.types.items()):
+        lines.append(f"  read_lef $::env(DIE)/{t['module']}.lef")
         lines.append(f"  read_liberty $::env(DIE)/{t['module']}.lib")
     lines.append("} else {")
     for tn, t in sorted(P.types.items()):
@@ -537,7 +551,7 @@ docker run --rm --name dpdie-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   -e HUID=$(id -u) -e HGID=$(id -g) -w /work "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   /usr/bin/time -v openroad -threads $CPUS -exit /work/die_flow.tcl > /work/die_flow.log 2>&1; echo FLOW_EXIT \$? >> /work/die_flow.log; \
   ODB=/work/die_routed.odb SEAMS=/work/seams.json OUT=/work/abut_audit.json openroad -python -exit /work/abut_audit.py > /work/abut_audit.log 2>&1; \
-  for m in flat etm; do for c in TT FF; do MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt openroad -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
+  for m in flat etm; do T=openroad; [ \$m = flat ] && T='sta -no_splash'; for c in TT FF; do MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt \$T -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
   chown -R \$HUID:\$HGID /work"
 tail -3 "$K/die_flow.log"; tail -2 "$K/abut_audit.log"; tail -n 3 "$K"/sta_*.txt 2>/dev/null
 """
