@@ -56,7 +56,7 @@ end else begin:g_mu
  for(genvar d=0;d<8;d=d+1)begin:g_boot
   assign boot_done[d]=boot8[d*2];assign boot_ok[d]=boot8[d*2+1];
  end
- wire[181:0]raw_hc,cmd_hc;wire cmd_v,cmd_cr;
+ wire[181:0]raw_hc;wire[38:0]cmd_hc;wire cmd_v,cmd_cr;
 wire  s_awvalid;
 wire  s_awready;
 wire [12:0] s_awaddr;
@@ -173,7 +173,7 @@ qkd_host_control_prompt_observed #(.MU(1),.NL(NL),.T_LINK(T_LINK),.T_HBM(T_HBM),
 .physical_fault(physical_fault));
 wire[181:0]transport_hc;
 assign hc={raw_hc[181:39],transport_hc[38:0]};
-qkd_host_hc_station #(.MUT(HC_MUT))u_hc(.ck(ck_hc),.rst_n(host_rst_n),.die_id(die_id),.raw_hc({143'd0,raw_hc[38:0]}),.cmd_cr(cmd_cr),
+qkd_host_hc_station #(.MUT(HC_MUT),.HCW(39))u_hc(.ck(ck_hc),.rst_n(host_rst_n),.die_id(die_id),.raw_hc(raw_hc[38:0]),.cmd_cr(cmd_cr),
  .cmd_v(cmd_v),.cmd_hc(cmd_hc),.source_cr(source_cr),.available(available),.fault(source_fault));
 // KV-BIND5-OBS: packet-side AXI (u_packet master -> u_obs)
 wire  u_s_awvalid;
@@ -200,7 +200,7 @@ qkd_host_packet_bundle_admission_mu #(.MU(1),.ENABLE_SERVICE(ENABLE_SERVICE),.EN
 .begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(begin_cr),.begin_available(ctrl_begin_available),
 .service_begin_v(service_begin_v),.service_begin_epoch(service_begin_epoch),.pending_advertised(pending_advertised),.pending_epoch(pending_epoch),
 .service_ready8(service_ready8),.pending_ack8(pending_ack8),.service_epoch8(service_epoch8),.ingest_permission(ingest_permission),
-.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(cmd_cr),
+.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc({143'd0,cmd_hc}),.cmd_cr(cmd_cr),
  .hc(transport_hc),.tk8(tk8),.kst8(kst8),.boot8(boot8),.seen(seen),
  .ing_v(ing_v),.ing_cls(ing_cls),.ing_d(ing_d),.ing_crn(ing_crn),.ing_t_v(ing_t_v),.ing_t_d(ing_t_d),.ing_t_cr(ing_t_cr),.faults(packet_faults),
 .s_awvalid(u_s_awvalid),
