@@ -113,34 +113,36 @@ def op_fields(consumer, lw, isa_xbase=False):
 
 
 # ------------------------------------------------------------------------------------------------ calibrate
+def plan_free(hr_at, consumer, go_lag=None, xpf_lead=None, x_tap=None):
+    def fn(lw, base):
+        f = op_fields(consumer, lw)
+        xs, _ = X.x_edges(lw['expected']['x'], shift=base)
+        if go_lag is None:                 # timing probe: XPF well before the stream, go well after it
+            xpf = min(min(v) for v in xs.values()) - 40
+            go = max(max(v) for v in xs.values()) + 60
+        else:
+            xt = {m: [e + x_tap for e in v] for m, v in xs.items()}
+            go = max(max(v) + go_lag - hr_at[m] for m, v in xt.items())
+            xpf = min(min(v) - xpf_lead - hr_at[m] for m, v in xt.items())
+        hr = [(xpf, X.hr_word(xpf72=X.pack_xpf72(f))), (go, X.hr_word(go=1, ib=X.pack_ib(f)))]
+        return dict(hr=hr, xpf=xpf, go=go, xs=xs, f=f, end=go + X.read_span(f) + 200)
+    return fn
+
+
+def verdict(consumer, st, rc):
+    xt, cw, xl, hf = heads_log(st['log'])
+    errs = B2.status_ok2(st['log'])
+    return dict(rc=rc, hf=hf, slice_faults=errs, cw=cw, xt=xt, xl=xl,
+                ok=(rc == 0 and not hf and not errs and all(cw[m] for m in range(N))))
+
+
 def calibrate(work):
     work.mkdir(parents=True, exist_ok=True)
     hr_at = X.bench_hr_arrival()
     res = {}
 
-    def plan_free(consumer, go_lag=None, xpf_lead=None, x_tap=None):
-        def fn(lw, base):
-            f = op_fields(consumer, lw)
-            xs, _ = X.x_edges(lw['expected']['x'], shift=base)
-            if go_lag is None:                 # timing probe: XPF well before the stream, go well after it
-                xpf = min(min(v) for v in xs.values()) - 40
-                go = max(max(v) for v in xs.values()) + 60
-            else:
-                xt = {m: [e + x_tap for e in v] for m, v in xs.items()}
-                go = max(max(v) + go_lag - hr_at[m] for m, v in xt.items())
-                xpf = min(min(v) - xpf_lead - hr_at[m] for m, v in xt.items())
-            hr = [(xpf, X.hr_word(xpf72=X.pack_xpf72(f))), (go, X.hr_word(go=1, ib=X.pack_ib(f)))]
-            return dict(hr=hr, xpf=xpf, go=go, xs=xs, f=f, end=go + X.read_span(f) + 200)
-        return fn
-
-    def verdict(consumer, st, rc):
-        xt, cw, xl, hf = heads_log(st['log'])
-        errs = B2.status_ok2(st['log'])
-        return dict(rc=rc, hf=hf, slice_faults=errs, cw=cw, xt=xt, xl=xl,
-                    ok=(rc == 0 and not hf and not errs and all(cw[m] for m in range(N))))
-
     consumer = 'gu'
-    rc, st = run_family(work, consumer, plan_free(consumer), 'cal_probe')
+    rc, st = run_family(work, consumer, plan_free(hr_at, consumer), 'cal_probe')
     v = verdict(consumer, st, rc)
     p = st['hr_plan']
     xs = p['xs']
@@ -168,10 +170,10 @@ def calibrate(work):
     import os
     g0 = int(os.environ.get('OT_XH_GO_MIN', '-2'))      # TOKd-QW 10-22: widen when -2 still passes (no FAIL edge)
     for g in range(g0, 7):
-        rc, st = run_family(work, consumer, plan_free(consumer, g, 12, x_tap), f'cal_go{g}')
+        rc, st = run_family(work, consumer, plan_free(hr_at, consumer, g, 12, x_tap), f'cal_go{g}')
         sweep['go_lag'][g] = verdict(consumer, st, rc)['ok']
     for L in range(-2, 7):
-        rc, st = run_family(work, consumer, plan_free(consumer, 20, L, x_tap), f'cal_xpf{L}')
+        rc, st = run_family(work, consumer, plan_free(hr_at, consumer, 20, L, x_tap), f'cal_xpf{L}')
         sweep['xpf_lead'][L] = verdict(consumer, st, rc)['ok']
 
     def smallest(d):
@@ -195,6 +197,59 @@ def calibrate(work):
     print('XHEAD_CALIBRATE', json.dumps({k: ages[k] for k in ('x_tap', 'xpf_lead', 'go_lag', 'd_head', 'read_tail')}),
           json.dumps(sweep))
     return 0
+
+
+# ------------------------------------------------------------------------------------------------ per-consumer sweep
+# TOKe-QW 10-23: go_lag / xpf_lead depend on the consumer op's read order (dv_lower_xhead.consumer_ages).  One sweep point
+# per process (the family bench monkeypatches module state), run in parallel; --merge folds the points into
+# ages['consumer'][C] with the same smallest-passing rule (and a FAIL edge below it) as --calibrate.
+def point(work, consumer, ages_path, go_lag, xpf_lead):
+    ages = json.loads(Path(ages_path).read_text())
+    hr_at = X.bench_hr_arrival()
+    tag = f'pt_{consumer}_g{go_lag}_x{xpf_lead}'
+    rc, st = run_family(work, consumer, plan_free(hr_at, consumer, go_lag, xpf_lead, ages['x_tap']), tag)
+    v = verdict(consumer, st, rc)
+    rec = dict(consumer=consumer, go_lag=go_lag, xpf_lead=xpf_lead, ok=v['ok'], rc=rc, hf=v['hf'],
+               slice_faults=v['slice_faults'][:4], xpf_w5=st['hr_plan']['xpf'], go_w5=st['hr_plan']['go'])
+    (work / f'{tag}.json').write_text(json.dumps(rec) + '\n')
+    print('XHEAD_POINT', json.dumps(rec))
+    return 0
+
+
+def merge(work, ages_path, out_path):
+    ages = json.loads(Path(ages_path).read_text())
+    pts = [json.loads(p.read_text()) for p in sorted(Path(work).glob('pt_*.json'))]
+    cons = dict(ages.get('consumer') or {})
+
+    def smallest(d):
+        ks = sorted(d)
+        for k in ks:
+            if d[k] and all(d[j] for j in ks if j >= k):
+                return k
+        return None
+    for c in sorted({p['consumer'] for p in pts}):
+        sw = dict(go_lag={}, xpf_lead={})
+        for p in pts:
+            if p['consumer'] != c:
+                continue
+            if p['xpf_lead'] == 12:
+                sw['go_lag'][p['go_lag']] = p['ok']
+            if p['go_lag'] == 20:
+                sw['xpf_lead'][p['xpf_lead']] = p['ok']
+        g, L = smallest(sw['go_lag']), smallest(sw['xpf_lead'])
+        edge = g is not None and L is not None and g != min(sw['go_lag']) and L != min(sw['xpf_lead'])
+        cons[c] = dict(go_lag=g, xpf_lead=L, edge_ok=edge, sweep={k: {str(a): b for a, b in sorted(v.items())}
+                                                                     for k, v in sw.items()},
+                       first_fail_hf={str(p['go_lag']): p['hf'] for p in pts if p['consumer'] == c and
+                                      p['xpf_lead'] == 12 and not p['ok']})
+        print('XHEAD_MERGE', c, json.dumps({k: cons[c][k] for k in ('go_lag', 'xpf_lead', 'edge_ok')}),
+              json.dumps(cons[c]['sweep']))
+    ages['consumer'] = cons
+    ages['consumer_rule'] = ('TOKe-QW 10-23: per consumer op (read order tiles/k/split), go_lag swept at xpf_lead 12 and '
+                             'xpf_lead at go_lag 20; smallest passing value with a FAIL below it; x_tap / d_head / '
+                             'read_tail stay the resid-calibrated globals')
+    Path(out_path).write_text(json.dumps(ages, indent=1) + '\n')
+    return 0 if all(v.get('edge_ok') for v in cons.values()) else 1
 
 
 # ------------------------------------------------------------------------------------------------ run
@@ -260,12 +315,20 @@ def main():
     ap.add_argument('--ages')
     ap.add_argument('--mutant', choices=('goearly', 'xpflate', 'isaxbase'))
     ap.add_argument('--build-dir', help='where obj_xh lives (shared by every run; default --work)')
+    ap.add_argument('--point', choices=tuple(FAMILY), help='one per-consumer sweep point (--go-lag, --xpf-lead)')
+    ap.add_argument('--go-lag', type=int)
+    ap.add_argument('--xpf-lead', type=int)
+    ap.add_argument('--merge', help='fold the pt_*.json of --work into --ages -> this file (ages[consumer])')
     a = ap.parse_args()
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     BUILD['dir'] = Path(a.build_dir) if a.build_dir else work
     if a.calibrate:
         return calibrate(work)
+    if a.point:
+        return point(work, a.point, a.ages, a.go_lag, a.xpf_lead)
+    if a.merge:
+        return merge(work, a.ages, a.merge)
     return run(work, a.run, a.ages or work / 'xhead_ages.json', a.mutant)
 
 

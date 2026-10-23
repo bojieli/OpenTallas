@@ -1,0 +1,106 @@
+{
+ "consumer": "down",
+ "mutant": "goearly",
+ "verdict": "FAIL",
+ "errors": [
+  "S0ST fault bits 1000000 (any,su,vm,stn,sc,stm,port)",
+  "producer family bench rc 1",
+  "heads FAULT on slices [0] (first edge 2418)",
+  "slice 0: corridor go [2411] != lowered 2412",
+  "slice 1: corridor go [2412] != lowered 2413",
+  "slice 2: corridor go [2413] != lowered 2414",
+  "slice 3: corridor go [2414] != lowered 2415",
+  "slice 4: corridor go [2415] != lowered 2416",
+  "slice 5: corridor go [2416] != lowered 2417",
+  "slice 6: corridor go [2417] != lowered 2418",
+  "slice 7: corridor go [2418] != lowered 2419",
+  "slice 8: corridor go [2419] != lowered 2420",
+  "slice 9: corridor go [2420] != lowered 2421",
+  "slice 10: corridor go [2421] != lowered 2422",
+  "slice 11: corridor go [2422] != lowered 2423"
+ ],
+ "xpf_w5": 2315,
+ "go_w5": 2395,
+ "base": 1562,
+ "lowered": {
+  "go_min": 2396,
+  "xpf_window": [
+   -1000000000,
+   2315
+  ],
+  "head_go": {
+   "0": 2412,
+   "1": 2413,
+   "2": 2414,
+   "3": 2415,
+   "4": 2416,
+   "5": 2417,
+   "6": 2418,
+   "7": 2419,
+   "8": 2420,
+   "9": 2421,
+   "10": 2422,
+   "11": 2423
+  },
+  "read_end": {
+   "0": 2550,
+   "1": 2551,
+   "2": 2552,
+   "3": 2553,
+   "4": 2554,
+   "5": 2555,
+   "6": 2556,
+   "7": 2557,
+   "8": 2558,
+   "9": 2559,
+   "10": 2560,
+   "11": 2561
+  },
+  "read_span": 144
+ },
+ "measured": {
+  "first_cw": {
+   "0": 2411,
+   "1": 2412,
+   "2": 2413,
+   "3": 2414,
+   "4": 2415,
+   "5": 2416,
+   "6": 2417,
+   "7": 2418,
+   "8": 2419,
+   "9": 2420,
+   "10": 2421,
+   "11": 2422
+  },
+  "last_xl": {
+   "0": 2549,
+   "1": 2550,
+   "2": 2551,
+   "3": 2552,
+   "4": 2553,
+   "5": 2554,
+   "6": 2555,
+   "7": 2556,
+   "8": 2557,
+   "9": 2558,
+   "10": 2559,
+   "11": 2560
+  },
+  "xl_edges": {
+   "0": 72,
+   "1": 72,
+   "2": 72,
+   "3": 72,
+   "4": 72,
+   "5": 72,
+   "6": 72,
+   "7": 72,
+   "8": 72,
+   "9": 72,
+   "10": 72,
+   "11": 72
+  }
+ },
+ "span_x_to_last_line": 241
+}
