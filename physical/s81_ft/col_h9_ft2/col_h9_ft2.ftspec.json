@@ -1,0 +1,427 @@
+{
+ "schema": "opentallas.die_feedthrough.ftspec.v1",
+ "die": "s81",
+ "block": "col_h9_ft2 (quantised, all instances)",
+ "master": "col_h9_l4_lp",
+ "variant": "col_h9_l4_lp__ft2",
+ "outline": [
+  1436.832,
+  3369.6
+ ],
+ "orient": "R0",
+ "layer_contract": {
+  "signal_max": "M7",
+  "ft_layers": [
+   "M8",
+   "M9"
+  ],
+  "pg_max": "M7"
+ },
+ "clock": "block",
+ "station_hc": 0,
+ "ports": [
+  {
+   "name": "ft0_i",
+   "path": 0,
+   "dir": "input",
+   "face": "E",
+   "lo": 700.0,
+   "hi": 778.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft0_o",
+   "path": 0,
+   "dir": "output",
+   "face": "W",
+   "lo": 140.0,
+   "hi": 220.4,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft1_i",
+   "path": 1,
+   "dir": "input",
+   "face": "E",
+   "lo": 780.0,
+   "hi": 858.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft1_o",
+   "path": 1,
+   "dir": "output",
+   "face": "W",
+   "lo": 222.4,
+   "hi": 302.8,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft2_i",
+   "path": 2,
+   "dir": "input",
+   "face": "E",
+   "lo": 860.0,
+   "hi": 938.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft2_o",
+   "path": 2,
+   "dir": "output",
+   "face": "W",
+   "lo": 304.8,
+   "hi": 385.2,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft3_i",
+   "path": 3,
+   "dir": "input",
+   "face": "E",
+   "lo": 940.0,
+   "hi": 1018.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft3_o",
+   "path": 3,
+   "dir": "output",
+   "face": "W",
+   "lo": 387.2,
+   "hi": 467.6,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft4_i",
+   "path": 4,
+   "dir": "input",
+   "face": "W",
+   "lo": 469.6,
+   "hi": 550.0,
+   "layer": "M8",
+   "bits": 70
+  },
+  {
+   "name": "ft4_o",
+   "path": 4,
+   "dir": "output",
+   "face": "E",
+   "lo": 1020.0,
+   "hi": 1098.0,
+   "layer": "M8",
+   "bits": 70
+  },
+  {
+   "name": "ft5_i",
+   "path": 5,
+   "dir": "input",
+   "face": "E",
+   "lo": 1800.0,
+   "hi": 1878.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft5_o",
+   "path": 5,
+   "dir": "output",
+   "face": "W",
+   "lo": 700.0,
+   "hi": 778.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft6_i",
+   "path": 6,
+   "dir": "input",
+   "face": "E",
+   "lo": 1880.0,
+   "hi": 1958.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft6_o",
+   "path": 6,
+   "dir": "output",
+   "face": "W",
+   "lo": 780.0,
+   "hi": 858.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft7_i",
+   "path": 7,
+   "dir": "input",
+   "face": "E",
+   "lo": 1960.0,
+   "hi": 2038.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft7_o",
+   "path": 7,
+   "dir": "output",
+   "face": "W",
+   "lo": 860.0,
+   "hi": 938.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft8_i",
+   "path": 8,
+   "dir": "input",
+   "face": "E",
+   "lo": 2040.0,
+   "hi": 2118.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft8_o",
+   "path": 8,
+   "dir": "output",
+   "face": "W",
+   "lo": 940.0,
+   "hi": 1018.0,
+   "layer": "M8",
+   "bits": 276
+  },
+  {
+   "name": "ft9_i",
+   "path": 9,
+   "dir": "input",
+   "face": "W",
+   "lo": 1020.0,
+   "hi": 1098.0,
+   "layer": "M8",
+   "bits": 70
+  },
+  {
+   "name": "ft9_o",
+   "path": 9,
+   "dir": "output",
+   "face": "E",
+   "lo": 2120.0,
+   "hi": 2198.0,
+   "layer": "M8",
+   "bits": 70
+  }
+ ],
+ "paths": [
+  {
+   "path": 0,
+   "lane": "bundle0_x0",
+   "in": "ft0_i",
+   "out": "ft0_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     739.0
+    ],
+    [
+     20.0,
+     180.2
+    ]
+   ]
+  },
+  {
+   "path": 1,
+   "lane": "bundle0_x1",
+   "in": "ft1_i",
+   "out": "ft1_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     819.0
+    ],
+    [
+     20.0,
+     262.6
+    ]
+   ]
+  },
+  {
+   "path": 2,
+   "lane": "bundle0_x2",
+   "in": "ft2_i",
+   "out": "ft2_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     899.0
+    ],
+    [
+     20.0,
+     345.0
+    ]
+   ]
+  },
+  {
+   "path": 3,
+   "lane": "bundle0_x3",
+   "in": "ft3_i",
+   "out": "ft3_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     979.0
+    ],
+    [
+     20.0,
+     427.4
+    ]
+   ]
+  },
+  {
+   "path": 4,
+   "lane": "bundle0_r",
+   "in": "ft4_i",
+   "out": "ft4_o",
+   "bits": 70,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     20.0,
+     509.8
+    ],
+    [
+     1416.832,
+     1059.0
+    ]
+   ]
+  },
+  {
+   "path": 5,
+   "lane": "bundle1_x0",
+   "in": "ft5_i",
+   "out": "ft5_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     1839.0
+    ],
+    [
+     20.0,
+     739.0
+    ]
+   ]
+  },
+  {
+   "path": 6,
+   "lane": "bundle1_x1",
+   "in": "ft6_i",
+   "out": "ft6_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     1919.0
+    ],
+    [
+     20.0,
+     819.0
+    ]
+   ]
+  },
+  {
+   "path": 7,
+   "lane": "bundle1_x2",
+   "in": "ft7_i",
+   "out": "ft7_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     1999.0
+    ],
+    [
+     20.0,
+     899.0
+    ]
+   ]
+  },
+  {
+   "path": 8,
+   "lane": "bundle1_x3",
+   "in": "ft8_i",
+   "out": "ft8_o",
+   "bits": 276,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     1416.832,
+     2079.0
+    ],
+    [
+     20.0,
+     979.0
+    ]
+   ]
+  },
+  {
+   "path": 9,
+   "lane": "bundle1_r",
+   "in": "ft9_i",
+   "out": "ft9_o",
+   "bits": 70,
+   "stages": 2,
+   "len_um": 1436.8,
+   "rep_sites": 4,
+   "regs_um": [
+    [
+     20.0,
+     1059.0
+    ],
+    [
+     1416.832,
+     2159.0
+    ]
+   ]
+  }
+ ],
+ "note": "FT-S81 quantised shifted-corridor spec (RECIPE.md 6.1); the E array uses the MX master of the same variant"
+}

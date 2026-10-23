@@ -1,0 +1,150 @@
+{
+ "schema": "opentallas.die_feedthrough.contract.v1",
+ "variant": "col_h9_l4_lp__ft2",
+ "block": "col_h9_ft2 (quantised, all instances)",
+ "signal_min": "M2",
+ "signal_max": "M7",
+ "ft_layers": [
+  "M8",
+  "M9"
+ ],
+ "pg_max": "M7",
+ "route_max": "M9",
+ "ft_nets": [
+  "ft0_i",
+  "ft0_o",
+  "ft1_i",
+  "ft1_o",
+  "ft2_i",
+  "ft2_o",
+  "ft3_i",
+  "ft3_o",
+  "ft4_i",
+  "ft4_o",
+  "ft5_i",
+  "ft5_o",
+  "ft6_i",
+  "ft6_o",
+  "ft7_i",
+  "ft7_o",
+  "ft8_i",
+  "ft8_o",
+  "ft9_i",
+  "ft9_o",
+  "ft0_p*",
+  "ft1_p*",
+  "ft2_p*",
+  "ft3_p*",
+  "ft4_p*",
+  "ft5_p*",
+  "ft6_p*",
+  "ft7_p*",
+  "ft8_p*",
+  "ft9_p*"
+ ],
+ "ft_insts": [
+  "ft0_s0",
+  "ft0_s1",
+  "ft1_s0",
+  "ft1_s1",
+  "ft2_s0",
+  "ft2_s1",
+  "ft3_s0",
+  "ft3_s1",
+  "ft4_s0",
+  "ft4_s1",
+  "ft5_s0",
+  "ft5_s1",
+  "ft6_s0",
+  "ft6_s1",
+  "ft7_s0",
+  "ft7_s1",
+  "ft8_s0",
+  "ft8_s1",
+  "ft9_s0",
+  "ft9_s1"
+ ],
+ "obs_rule": "export exact routed geometry; no full-footprint blanket on M8/M9",
+ "mechanism": "global signal range M2-M9 + region adjustment 1.0 on M8/M9 outside the ft corridors (OpenROAD 26Q3 has no per-net layer range)",
+ "orfs_env": {
+  "MIN_ROUTING_LAYER": "M2",
+  "MAX_ROUTING_LAYER": "M9",
+  "FASTROUTE_TCL": "col_h9_l4_lp__ft2.fastroute.tcl"
+ },
+ "corridors": [
+  [
+   0.0,
+   138.0,
+   1436.832,
+   780.0
+  ],
+  [
+   0.0,
+   220.4,
+   1436.832,
+   860.0
+  ],
+  [
+   0.0,
+   302.8,
+   1436.832,
+   940.0
+  ],
+  [
+   0.0,
+   385.2,
+   1436.832,
+   1020.0
+  ],
+  [
+   0.0,
+   467.6,
+   1436.832,
+   1100.0
+  ],
+  [
+   0.0,
+   698.0,
+   1436.832,
+   1880.0
+  ],
+  [
+   0.0,
+   778.0,
+   1436.832,
+   1960.0
+  ],
+  [
+   0.0,
+   858.0,
+   1436.832,
+   2040.0
+  ],
+  [
+   0.0,
+   938.0,
+   1436.832,
+   2120.0
+  ],
+  [
+   0.0,
+   1018.0,
+   1436.832,
+   2200.0
+  ]
+ ],
+ "fence": [
+  [
+   0.0,
+   0.0,
+   1436.832,
+   138.0
+  ],
+  [
+   0.0,
+   2200.0,
+   1436.832,
+   3369.6
+  ]
+ ]
+}

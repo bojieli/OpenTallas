@@ -275,7 +275,10 @@ def landed_record(spec, root):
         raise ValueError(f'{path}: spec "landed_band": true iff the record is a {BAND_GENERATOR} landed_band record')
     if rec.get("generator") == BAND_GENERATOR:
         return landed_band_record(spec, root, rec, path)
-    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
+    # FT-S81 10-23 (opt-in "ft"): a feedthrough variant is the base kit module renamed + fenced ft ports/stations
+    # (tools/s81_dv/ft/frame_ft_kit.py check proves the frame text byte-identical), so it keeps the base's lp.py record
+    tops = {spec.get("top")} | ({(spec.get("ft") or {}).get("base_top")} if isinstance(spec.get("ft"), dict) else set())
+    if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") not in tops - {None}:
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
     regions = rec.get("regions")
     if not isinstance(regions, dict) or not regions:
