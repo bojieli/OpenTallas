@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_pr",
+ "enable": false,
+ "reason": "RTL registers every data pin: QTILE-R *_pr top (tools/qwen_split/hp13_pinreg_top.py) adds one keep flop per bit on the 15 ports whose bits were not flop-direct in the synthesized netlist (727 in + 417 out bits, +1 cycle each, rtl/.../_pr.sv.pin_regs.json); the other ports were already flop-direct (census results/arch/qtile_r_1023)"
+}

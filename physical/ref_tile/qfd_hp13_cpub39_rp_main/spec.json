@@ -1,0 +1,532 @@
+{
+ "name": "qfd_hp13_cpub39_rp_main",
+ "top": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_pr",
+ "kind": "tile",
+ "recipe": 4,
+ "clock_port": "ck_core[0]",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 96,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "period_ps": 770,
+  "signoff_period_ps": 833.333
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_core[0]",
+  "ck_hr[0]"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core[0]"
+   ],
+   "inputs": [
+    "pw",
+    "rst_n",
+    "dh_user"
+   ],
+   "outputs": [
+    "tl",
+    "emb_start",
+    "emb_token",
+    "emb_position",
+    "emb_user"
+   ]
+  },
+  "hr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hr[0]"
+   ],
+   "inputs": [
+    "dh",
+    "init_u0",
+    "ctx_x",
+    "mu_fault",
+    "kok",
+    "kwd",
+    "fab",
+    "native_ret",
+    "ss5",
+    "ag5",
+    "f16_auth",
+    "f16_obs"
+   ],
+   "outputs": [
+    "program_obs",
+    "control_stores_ready",
+    "layer_context_v",
+    "native_tok",
+    "native_pos",
+    "command_stage",
+    "cal_program_obs",
+    "cal_descriptor_obs",
+    "cal_image_ready",
+    "dc",
+    "native_cmd",
+    "hr",
+    "cmd",
+    "cf",
+    "f16_st",
+    "table_req"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "soft_root_macro_masters": [
+  "ot_rom_4096x266_m8",
+  "ot_rom_4096x72_m8",
+  "ot_sram_1r1w_32x128_m1",
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.g_op.u_leaf.g_op.u_rom": {
+   "master": "ot_rom_4096x72_m8",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_calrom.u_rom.m0": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_calrom.u_rom.m1": {
+   "master": "ot_rom_4096x266_m8",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_fifo[0].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_fifo[1].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_fifo[2].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_fifo[3].u_fifo": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_m[0].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_gi.u_cal.g_m[1].u_pm": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_core[0]"
+  },
+  "u_hr.u_24525": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24526": {
+   "master": "ot_sram_1r1w_64x512_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24527": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24528": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24529": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24530": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24531": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  },
+  "u_hr.u_24532": {
+   "master": "ot_sram_1r1w_32x128_m1",
+   "clock_pin": "clk",
+   "root": "ck_hr[0]"
+  }
+ },
+ "sources": [
+  "rtl/qwen_dv/headprep13/physical_abi/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1_physical_wtnbal24_pr.sv",
+  "rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv",
+  "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+  "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v",
+  "rtl/qwen_dv/headprep13/h16za/native32_helpers.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/qwen_dv/headprep13/physical_abi/qfd_dv_typed_witness_control_frozen.sv",
+  "rtl/qwen_dv/headprep13/wtn_balanced24/helpers.sv",
+  "rtl/qwen_dv/headprep13/wtn_balanced24/qfd_tt_ctlm_dv_wtn_balanced24.sv"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "outline": {
+  "w": 486.0,
+  "h": 514.08
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[0].u_fifo",
+   "at": [
+    75.6,
+    54.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[1].u_fifo",
+   "at": [
+    75.6,
+    131.808
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[2].u_fifo",
+   "at": [
+    75.6,
+    209.616
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_fifo[3].u_fifo",
+   "at": [
+    75.6,
+    287.424
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_calrom.u_rom.m0",
+   "at": [
+    75.6,
+    365.232
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_calrom.u_rom.m1",
+   "at": [
+    75.6,
+    428.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[0].u_pm",
+   "at": [
+    287.28,
+    54.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_gi.u_cal.g_m[1].u_pm",
+   "at": [
+    287.28,
+    131.808
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_hr.u_24525",
+   "at": [
+    287.28,
+    209.616
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_hr.u_24526",
+   "at": [
+    287.28,
+    287.424
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24527",
+   "at": [
+    287.28,
+    365.232
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24528",
+   "at": [
+    287.28,
+    386.064
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24529",
+   "at": [
+    287.28,
+    406.896
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24530",
+   "at": [
+    287.28,
+    427.728
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24531",
+   "at": [
+    287.28,
+    448.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "u_hr.u_24532",
+   "at": [
+    287.28,
+    469.392
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "at": [
+    360.72,
+    365.232
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "at": [
+    360.72,
+    428.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+   "at": [
+    421.2,
+    365.232
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "fill_reason": {
+  "macro_bound": "19 authentic macros (135.5k um2) in two abutted N-S columns at the NE; outline from content 486.0 x 514.08 um (was 864 x 561.6): W core 75.6, S core 54.0, mid channel 40.39, E strip >= 25.0"
+ },
+ "pins": {
+  "N": [
+   "init_u0",
+   "kok",
+   "control_stores_ready",
+   "command_stage",
+   "dc",
+   "cmd",
+   "emb_start",
+   "cf",
+   "table_req"
+  ],
+  "S": [
+   "dh",
+   "dh_user",
+   "program_obs",
+   "native_pos",
+   "cal_image_ready",
+   "hr",
+   "ag5",
+   "emb_user",
+   "f16_st"
+  ],
+  "E": [
+   "pw",
+   "mu_fault",
+   "fab",
+   "native_tok",
+   "cal_descriptor_obs",
+   "native_ret",
+   "ss5",
+   "emb_position",
+   "f16_obs",
+   "ck_hr"
+  ],
+  "W": [
+   "rst_n",
+   "ctx_x",
+   "kwd",
+   "layer_context_v",
+   "cal_program_obs",
+   "native_cmd",
+   "tl",
+   "emb_token",
+   "f16_auth",
+   "ck_core"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data pin: QTILE-R *_pr top (tools/qwen_split/hp13_pinreg_top.py) adds one keep flop per bit on the 15 ports whose bits were not flop-direct in the synthesized netlist (727 in + 417 out bits, +1 cycle each, rtl/.../_pr.sv.pin_regs.json); the other ports were already flop-direct (census results/arch/qtile_r_1023)"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Preserve exact source reset forests; full-parent reset release and removal remain measured obligations, no source-edge inference."
+ },
+ "structural_change": "QTILE-R re-pack (COORD tile review 10-23 BAD: 864x562, 9.9% fill, logic in macro channels, 1,046 unregistered pins): outline from content, macros as two abutted N-S columns at the NE with their W/E pin edges facing the W core / mid channel / E strip, one L logic core on the pin-dense W and S faces, face pin registers in RTL (+1 cycle on 15 ports); core = Codex wtnbal24 (f160a99d3, same function, passes the native census that the cpub39_1 full kit failed)",
+ "safe_design_checklist": {
+  "1_pins": "Every data pin registered: 15 ports +1 cycle (pin_regs.json), the rest already flop-direct; io_flop_at_pins anchors them.",
+  "2_reach": "Macro channels >=20um; full physical reach measured, no die transport credit.",
+  "3_fanout": "Native-first strict census required for complete composed parent.",
+  "4_depth": "Unchanged source math and833.333ps target; measured CTS timing required.",
+  "5_storage": "19 actual SRAM/ROM macros, no inferred replacement.",
+  "6_floorplan": "Outline from content 486.0 x 514.08; 2 abutted macro columns NE, L core W 75.6 / S 54.0; channels >= 21.6 um.",
+  "7_clock": "Two real source roots ck_core/ck_hr, same PLL intended1:1/phase0, measured qualification open.",
+  "8_schedule": "Variant1/2 retain exact publisher stages; all existing source ages unchanged, actual routed ages required."
+ },
+ "job": {
+  "owner": "QTILE-R",
+  "branch": "claude/qtile-r-1023",
+  "tag": "rp1",
+  "purpose": "HP13 cpub39 tt_ctlm re-pack (outline from content + face pin regs); qualification candidate, not a die result",
+  "extra_paths": [
+   "results/arch/hp13_corepub39_1021",
+   "rtl/qwen_dv/headprep13/corepub39",
+   "results/arch/qtile_r_1023"
+  ],
+  "benches": []
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
