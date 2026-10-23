@@ -1,0 +1,20 @@
+# Verilator 5.050, ot-run ot-epyc5; source 6df8d1a30 (+MUT 9 widened in the commit below); 4000 edges, resets every 128
+NE ref pos exit=0 VMS_GLUE_SPLIT_EQUIV NE PASS checks=33768 errors=0
+NE tile pos exit=0 VMS_GLUE_SPLIT_EQUIV NE PASS checks=172592 errors=0
+NE tile sid exit=1 VMS_GLUE_SPLIT_EQUIV NE FAIL checks=172592 errors=6889
+NW ref pos exit=0 VMS_GLUE_SPLIT_EQUIV NW PASS checks=33768 errors=0
+NW tile g5 exit=1 VMS_GLUE_SPLIT_EQUIV NW FAIL checks=172592 errors=57
+NW tile pos exit=0 VMS_GLUE_SPLIT_EQUIV NW PASS checks=172592 errors=0
+NW tile rmut exit=1 VMS_GLUE_SPLIT_EQUIV NW FAIL checks=172592 errors=465
+SE ref pos exit=0 VMS_GLUE_SPLIT_EQUIV SE PASS checks=33768 errors=0
+SE tile g3 exit=1 VMS_GLUE_SPLIT_EQUIV SE FAIL checks=172592 errors=54
+SE tile g7 exit=1 VMS_GLUE_SPLIT_EQUIV SE FAIL checks=172592 errors=18
+SE tile pos exit=0 VMS_GLUE_SPLIT_EQUIV SE PASS checks=172592 errors=0
+SW ref pos exit=0 VMS_GLUE_SPLIT_EQUIV SW PASS checks=37520 errors=0
+SW tile g4 exit=1 VMS_GLUE_SPLIT_EQUIV SW FAIL checks=176344 errors=600
+SW tile pos exit=0 VMS_GLUE_SPLIT_EQUIV SW PASS checks=176344 errors=0
+SW tile rmut exit=1 VMS_GLUE_SPLIT_EQUIV SW FAIL checks=176344 errors=487
+SW tile split exit=1 VMS_GLUE_SPLIT_EQUIV SW FAIL checks=176344 errors=360
+NW tile split exit=1 VMS_GLUE_SPLIT_EQUIV NW FAIL checks=172592 errors=340
+SE tile split exit=1 VMS_GLUE_SPLIT_EQUIV SE FAIL checks=172592 errors=297
+NE tile split exit=1 VMS_GLUE_SPLIT_EQUIV NE FAIL checks=172592 errors=352

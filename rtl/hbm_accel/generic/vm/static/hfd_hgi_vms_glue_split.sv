@@ -24,7 +24,7 @@
 // tile _t and vs the contract ref _t_ref, every output bit every edge, periodic resets).
 // Parameter MUT (bench only, default 0): 1 ring-stop flit mutant (both stops, = tile MUT 1), 4 / 6 / 7 hub mutants
 // (= tile MUT 4 / 6 / 7), 5 pi / rce seam relays bypassed (= tile MUT 5), 9 split mutant: HUB drives the CW pi seam from
-// the hub directly (seam relay pi0_r missing: contract break, must FAIL).
+// the hub directly and the replay takes the CW rce seam unlanded (seam relays pi0_r / rce0_r missing: contract break, must FAIL).
 module hfd_vmg_rs_t #(parameter integer MUT=0) (
     input wire clk,
     input wire rst_n,
@@ -300,7 +300,7 @@ module hfd_vmg_hub_sw_t #(parameter integer MUT=0) (
     assign pi0=(RMUT == 5 || MUT == 9) ? pi0_h : pi0_r;
     assign pi1=(RMUT == 5) ? pi1_h : pi1_r;
     assign ri0=ri0_r; assign ri1=ri1_r;
-    wire [287:0] rce0_s=(RMUT == 5) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
+    wire [287:0] rce0_s=(RMUT == 5 || MUT == 9) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
     wire [2:0] hub_status_w;
     assign hub_status_c=hub_status_w;
     ot_vms_hub_lt #(.NC(NC),.CW(CW),.MUT(RMUT),.NLH(NLH)) u_hub(
@@ -470,7 +470,7 @@ module hfd_vmg_hub_e_t #(parameter integer MUT=0) (
     assign pi0=(RMUT == 5 || MUT == 9) ? pi0_h : pi0_r;
     assign pi1=(RMUT == 5) ? pi1_h : pi1_r;
     assign ri0=ri0_r; assign ri1=ri1_r;
-    wire [287:0] rce0_s=(RMUT == 5) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
+    wire [287:0] rce0_s=(RMUT == 5 || MUT == 9) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
     wire [2:0] hub_status_w;
     assign hub_status_c=hub_status_w;
     ot_vms_hub_lt #(.NC(NC),.CW(CW),.MUT(RMUT),.NLH(NLH)) u_hub(
@@ -659,7 +659,7 @@ module hfd_vmg_hub_nw_t #(parameter integer MUT=0) (
     assign pi0=(RMUT == 5 || MUT == 9) ? pi0_h : pi0_r;
     assign pi1=(RMUT == 5) ? pi1_h : pi1_r;
     assign ri0=ri0_r; assign ri1=ri1_r;
-    wire [287:0] rce0_s=(RMUT == 5) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
+    wire [287:0] rce0_s=(RMUT == 5 || MUT == 9) ? rce0 : rce0_r, rce1_s=(RMUT == 5) ? rce1 : rce1_r;
     wire [2:0] hub_status_w;
     assign hub_status_c=hub_status_w;
     ot_vms_hub_lt #(.NC(NC),.CW(CW),.MUT(RMUT),.NLH(NLH)) u_hub(
