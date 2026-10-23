@@ -1,0 +1,146 @@
+{
+ "name": "qfd_tile_nl_a0cv3-a0cv3-COMMIT",
+ "block": "qfd_tile_nl_a0c",
+ "ref_tile": true,
+ "owner": "Claude:QC-P3",
+ "purpose": "QC-P4 10-23 a0 v3 (from v2): v2 initial-GRT probe left hotspot 2 hot (NK 3,417 / NL 5,268 overflow in x220-320 y700-740); dwr/der L9 writer boxes 2x taller (660.6-760.6) and the hub box moved up to y 764.6-829 plus the LSL row-0/1 gap band (y 819.7-829) W and E, so the writers spread and the hub no longer stacks on them. QC-P3 10-23 a0 v2 (from a0ck): L1 ring readers co-located with their writers (regions only; GEOM 11:44 hotspots (230,410)/(220-320,720)), GPL routability-driven. Same RTL, outline, pins, clock. QC-A0 10-23 (FALLBACK: one core clock ck, 48 k-means local roots (clock_split_km.tcl) under one TritonCTS top tree): A0 planned hard core of the Qwen compute variant-B plan (CB quad, 4 cores at (86.4|699.84, 77.76|1382.4), 457.92 x 1157.76, one spine tap per core). Same rpf floorplan, children, regions, request decoders, RTL body and cycles as qfd_tile_nl_romleaf_rpf@fce5d5cb2; the 35/39 clock-entry ports become internal nets of ck (r3 NL setup -169/-425 ps were 100% inter-entry crossings under 210 ps inter-entry uncertainty).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qc-a0v3-1023",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+   "rtl/physical/ot_qwen_tile_node.sv",
+   "rtl/physical/ot_qwen_tile_romleaf.sv",
+   "rtl/physical/qfd_tile_nk_rp1.sv",
+   "rtl/physical/qfd_tile_nk_rp2_45.sv",
+   "rtl/test/tb_qwen_a0_rr6.sv",
+   "rtl/test/tb_qwen_a0_rr8.sv",
+   "rtl/test/tb_qwen_romleaf_parent_nk_native.sv",
+   "tools/qwen_a0_safe",
+   "tools/qwen_romleaf",
+   "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
+   "rtl/physical/ot_qw_land4.sv",
+   "rtl/test/tb_qwen_a0_rr9.sv",
+   "rtl/physical/ot_qw_land4_n32.sv",
+   "rtl/physical/ot_qw_land4_n32_select.sv",
+   "rtl/hdc/ot_qwen_rom_tile_w12_land32.sv",
+   "rtl/hdc/ot_qwen_w12_matvec_land32.sv",
+   "tools/qwen_romleaf/rc11",
+   "tools/qwen_romleaf/rc12",
+   "tools/qwen_romleaf/rc13",
+   "tools/qwen_romleaf/rc14_2000",
+   "rtl/physical/a0_rc14_selected_2000",
+   "results/arch/codex_qw_a0_2000_1021",
+   "physical/ref_tile/qw_a0_rc14_children",
+   "tools/qwen_romleaf/rc15_2000",
+   "rtl/physical/a0_rc15_selected_2000",
+   "results/arch/codex_qw_a0_localreq_2000_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_tile_nl_a0c #(.REGROOT_MODE(9)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv rtl/physical/a0_core/qfd_tile_nl_a0c.sv rtl/physical/bb/ot_qwen_tile_romleaf_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "parent_native_0",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
+    "pass_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_PASS.log"
+   },
+   {
+    "name": "parent_native_leaf_clock_4",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
+    "fail_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_clock_MUT4_FAIL.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_nl_a0cv3/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_nl_a0cv3/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_nl_a0cv3 --out {RUN}/record/views/qfd_tile_nl_a0c --macro-view physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf --macro-view physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tile_nl_a0cv3/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tile_nl_a0cv3/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tile_nl_a0cv3/qfd_tile_nl_a0cv3-a0cv3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
+ "structural_change": "QC-P4 10-23 a0 v3 (from v2): v2 initial-GRT probe left hotspot 2 hot (NK 3,417 / NL 5,268 overflow in x220-320 y700-740); dwr/der L9 writer boxes 2x taller (660.6-760.6) and the hub box moved up to y 764.6-829 plus the LSL row-0/1 gap band (y 819.7-829) W and E, so the writers spread and the hub no longer stacks on them. QC-P3 10-23 a0 v2 (from a0ck): L1 ring readers co-located with their writers (regions only; GEOM 11:44 hotspots (230,410)/(220-320,720)), GPL routability-driven. Same RTL, outline, pins, clock. QC-A0 10-23 (FALLBACK: one core clock ck, 48 k-means local roots (clock_split_km.tcl) under one TritonCTS top tree): A0 planned hard core of the Qwen compute variant-B plan (CB quad, 4 cores at (86.4|699.84, 77.76|1382.4), 457.92 x 1157.76, one spine tap per core). Same rpf floorplan, children, regions, request decoders, RTL body and cycles as qfd_tile_nl_romleaf_rpf@fce5d5cb2; the 35/39 clock-entry ports become internal nets of ck (r3 NL setup -169/-425 ps were 100% inter-entry crossings under 210 ps inter-entry uncertainty)."
+}
