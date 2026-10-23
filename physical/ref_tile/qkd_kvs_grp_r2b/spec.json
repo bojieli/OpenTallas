@@ -1,0 +1,275 @@
+{
+ "name": "qkd_kvs_grp_r2b",
+ "top": "qkd_kvs_grp_r2",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 222.576,
+  "h": 1187.976,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc?0?*u_rows",
+   "at": [
+    85.5,
+    82.152
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc?1?*u_rows",
+   "at": [
+    85.5,
+    368.088
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc?2?*u_rows",
+   "at": [
+    85.5,
+    694.296
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc?3?*u_rows",
+   "at": [
+    85.5,
+    980.232
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_ctl"
+  ],
+  "S": [
+   "i_up",
+   "o_dn"
+  ],
+  "E": [
+   "kreq",
+   "krsp",
+   "rsp",
+   "vreq"
+  ],
+  "W": [
+   "i_pc0",
+   "o_pc0",
+   "i_pc1",
+   "o_pc1",
+   "ck",
+   "hck",
+   "af__fault",
+   "afk",
+   "afu",
+   "afv",
+   "hrst_n",
+   "rst_n",
+   "slg__cfg_group",
+   "slg__cfg_stack",
+   "x__est",
+   "x__tep",
+   "x__tok",
+   "y__est__0_1",
+   "y__tok",
+   "y__tep",
+   "i_pc2",
+   "o_pc2",
+   "i_pc3",
+   "o_pc3"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp for the release KV die (FB)",
+ "job": {
+  "owner": "Claude:KDIE5-RTL",
+  "branch": "claude/kdie5-rtl-1022",
+  "tag": "r2b",
+  "purpose": "KDIE5-RTL 10-22: pin-registered successor of qkd_kvs_grp for the release KV die (FB)",
+  "benches": [
+   {
+    "name": "grp_r2_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m0 grp 0 all 4000",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2 .* failing=0 .* mut=0$",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m0.log"
+   },
+   {
+    "name": "grp_r2_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m1 grp 1 all 4000",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=1$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m1.log"
+   },
+   {
+    "name": "grp_r2_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m2 grp 2 all 4000",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=2$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m2.log"
+   },
+   {
+    "name": "grp_r2_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m3 grp 3 all 4000",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=3$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m3.log"
+   },
+   {
+    "name": "grp_r2_mut4",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_m4 grp 4 all 4000",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_r2 ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_r2 .* mut=4$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl_1022/grp_m4.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits",
+   "results/arch",
+   "results/rtl/qwen_kv_die/kdie5_rtl_1022",
+   "rtl",
+   "tools/qwen_kv_die"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_grp_r2b/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_grp_r2b"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KDIE5-RTL: the r2 RTL registers every pass word at both pins (entry / exit face flops + mid-span relays); a flow pin stage would add an uncounted edge"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KDIE5-RTL 10-22: top qkd_kvs_grp_r2 = the UNCHANGED release module qkd_kvs_grp (n32_pj) as u_core + face registers: no combinational in -> out path (o_dn 4 edges a hop, in-tile equalising delay so every group sees the fan word +29, gather own +3 / +4 a hop, cf1 fault inputs +2, EST / tok / tep +2). Frame, pins, macros, spine, reset landing = qkd_kvs_grp_r1. FB: fan / gather relay stages FIRM at their 1/3 / 2/3 span points (relay_place.tcl).",
+ "kits_b": {
+  "frame": [
+   222.0,
+   1188.0
+  ],
+  "kit_outline": [
+   220.32,
+   1185.84
+  ],
+  "count": 28,
+  "rep_instance": "slg_WS_0",
+  "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+  "hck_inputs": [
+   "hrst_n"
+  ],
+  "hck_outputs": [],
+  "mixed_domain_ports": [
+   "o_ctl",
+   "o_pc0",
+   "o_pc1",
+   "o_pc2",
+   "o_pc3"
+  ],
+  "critical": null
+ },
+ "sdc_extra": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_r2b_hck.sdc"
+ ],
+ "io_tcl": "physical/qkd_kvs_kits/qkd_kvs_grp_r2b_io.tcl",
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_r2b_hck_boundary.tcl"
+ ],
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck,hck"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qkd_kvs_grp_r2b/relay_place.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/ref_tile/qkd_kvs_grp_r2b/relay_release.tcl"
+ ]
+}
