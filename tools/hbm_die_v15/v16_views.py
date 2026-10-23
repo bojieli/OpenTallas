@@ -164,6 +164,17 @@ def real_view(m, ports=None, params=None, physical_view=None, source=None):
         if any(lp.get(p) != w for p, w in ports.items()):
             continue
         sp = spec_params(rv[0])
+        # SPARSE_SU changes the collar's accepted programme addresses. Older dense
+        # collar specs omit the new default-off parameter, so equal ports and a
+        # matching subset of old parameters cannot qualify their behaviour.
+        if m == 'ot_hbm_static_cfg_collar':
+            want = (params or {}).get('SPARSE_SU', 0)
+            have = (sp or {}).get('SPARSE_SU', 0)
+            want = int(want) if isinstance(want, (int, bool)) else _int_lit(want)
+            have = int(have) if isinstance(have, (int, bool)) else _int_lit(have)
+            if want is None or have is None or want != have:
+                param_miss = True
+                continue
         if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()):
             param_miss = True
             continue
