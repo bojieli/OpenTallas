@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_grp_r2d",
+ "enable": false,
+ "reason": "KDIE5-RTL: the r2 RTL lands both resets (rst_n: cr0 -> cr1 on ck, hrst_n: hr0 -> hr1 on hck; async assert, release +2 own-clock edges) and the mapped structural copy preserves them (replicated landing copies, <= 32 loads each); benched in lockstep; a flow landing would add 2 more unbenched edges"
+}

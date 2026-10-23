@@ -1,0 +1,388 @@
+{
+ "name": "qkd_kvs_grp_h_r4b",
+ "top": "qkd_kvs_grp_h_r2d",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2d.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "hrst_n"
+ ],
+ "outline": {
+  "w": 164.16,
+  "h": 438.48,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u48559_c0*",
+   "at": [
+    23.76,
+    136.08
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u50000_c0*",
+   "at": [
+    23.76,
+    177.168
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u51441_c0*",
+   "at": [
+    23.76,
+    218.256
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "u52882_c0*",
+   "at": [
+    23.76,
+    259.344
+   ],
+   "orient": "MY",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_dn",
+   "o_ctl"
+  ],
+  "E": [
+   "kreq",
+   "krsp",
+   "rsp",
+   "vreq"
+  ],
+  "W": [
+   "i_pc0",
+   "o_pc0",
+   "i_pc1",
+   "o_pc1",
+   "ck",
+   "hck",
+   "af__fault",
+   "afk",
+   "afv",
+   "hrst_n",
+   "rst_n",
+   "slg__cfg_group",
+   "slg__cfg_stack",
+   "x__est",
+   "x__tep",
+   "x__tok",
+   "y__est__0_1",
+   "y__tok",
+   "y__tep",
+   "i_pc2",
+   "o_pc2",
+   "i_pc3",
+   "o_pc3"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "purpose": "KVPC-R 10-23 r4b: COORD-review redesign of qkd_kvs_grp_h on the r2d RTL (byte-identical, 0 edges): outline 164.16 x 438.48 (was 222.6 x 1188, AR 5.3, fill 4-7 %), 4 SRAMs as one abutted N-S stack MY at x 23.76, explicit face ranges (W pc0/1 low, pc2/3 high; E kreq/krsp/rsp/vreq; N/S fan chain). r4 ALT: E at 5.0 /um, macros MY at x 23.76 face the E band.",
+ "job": {
+  "owner": "Claude:KVPC-R",
+  "branch": "claude/kvgrp-r3-1023",
+  "tag": "r4b",
+  "purpose": "KVPC-R 10-23 r4b: COORD-review redesign of qkd_kvs_grp_h on the r2d RTL (byte-identical, 0 edges): outline 164.16 x 438.48 (was 222.6 x 1188, AR 5.3, fill 4-7 %), 4 SRAMs as one abutted N-S stack MY at x 23.76, explicit face ranges (W pc0/1 low, pc2/3 high; E kreq/krsp/rsp/vreq; N/S fan chain). r4 ALT: E at 5.0 /um, macros MY at x 23.76 face the E band.",
+  "benches": [
+   {
+    "name": "grp_h_r2d_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m0 grp_h 0 all 4000 r2d",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d .* failing=0 .* mut=0$",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m0.log"
+   },
+   {
+    "name": "grp_h_r2d_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m1 grp_h 1 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=1$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m1.log"
+   },
+   {
+    "name": "grp_h_r2d_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m2 grp_h 2 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=2$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m2.log"
+   },
+   {
+    "name": "grp_h_r2d_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m3 grp_h 3 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=3$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m3.log"
+   },
+   {
+    "name": "grp_h_r2d_mut4",
+    "cmd": "bash tools/qwen_kv_die/kvs_grp_r2_bench.sh {RUN}/bench/grp_h_m4 grp_h 4 all 4000 r2d",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^GRP_R2 PASS tile=grp_h_r2d ",
+    "fail_regex": "^GRP_R2 FAIL tile=grp_h_r2d .* mut=4$",
+    "fail_witness": "results/rtl/qwen_kv_die/kdie5_rtl2_1022/grp_h_r2d_m4.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits",
+   "results/arch",
+   "results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible",
+   "results/rtl/qwen_kv_die/kdie5_rtl2_1022",
+   "results/rtl/qwen_kv_die/kdie5_rtl_1022",
+   "rtl",
+   "tools/qwen_kv_die"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_grp_h_r2da/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_grp_h_r2da"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KDIE5-RTL: the r2 RTL registers every pass word at both pins (entry / exit face flops + mid-span relays); a flow pin stage would add an uncounted edge"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KVPC-R 10-23 r4b: COORD-review redesign of qkd_kvs_grp_h on the r2d RTL (byte-identical, 0 edges): outline 164.16 x 438.48 (was 222.6 x 1188, AR 5.3, fill 4-7 %), 4 SRAMs as one abutted N-S stack MY at x 23.76, explicit face ranges (W pc0/1 low, pc2/3 high; E kreq/krsp/rsp/vreq; N/S fan chain). r4 ALT: E at 5.0 /um, macros MY at x 23.76 face the E band.",
+ "kits_b": {
+  "frame": [
+   166.32,
+   440.64
+  ],
+  "kit_outline": [
+   164.16,
+   438.48
+  ],
+  "count": 4,
+  "rep_instance": "slg_WS_4",
+  "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv",
+  "hck_inputs": [
+   "hrst_n"
+  ],
+  "hck_outputs": [],
+  "mixed_domain_ports": [
+   "o_ctl",
+   "o_pc0",
+   "o_pc1",
+   "o_pc2",
+   "o_pc3"
+  ],
+  "critical": null
+ },
+ "sdc_extra": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_r2da_hck.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_r2da_hck_boundary.tcl"
+ ],
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck,hck"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "KDIE5-RTL: the r2 RTL lands both resets (rst_n: cr0 -> cr1 on ck, hrst_n: hr0 -> hr1 on hck; async assert, release +2 own-clock edges) and the mapped structural copy preserves them (replicated landing copies, <= 32 loads each); benched in lockstep; a flow landing would add 2 more unbenched edges"
+ },
+ "fill_reason": {
+  "pin_bound": "KVPC-R grp r4b PIN-BOUND by the 2171-bit E bus (kreq/krsp/rsp/vreq, die partner E: STEWARD-QK 10-23 ruling, no N/S move): 2171 pins / (438.48 - 2) um = 4.97 /um on M4 (pin pitch 0.201 um = 4.2 M4 tracks; M6 is above the M5 cap), so H = 438.48; W = 23.76 W pin-reg band + 94.8 macro + E band = 164.16.  W 4.18 /um, N 4.23, S None.  No padding."
+ },
+ "pin_ranges": {
+  "i_ctl": [
+   1.0,
+   64.7759
+  ],
+  "o_dn": [
+   65.1359,
+   128.9117
+  ],
+  "o_ctl": [
+   129.2717,
+   163.16
+  ],
+  "kreq": [
+   1.0,
+   8.621
+  ],
+  "krsp": [
+   8.981,
+   221.968
+  ],
+  "rsp": [
+   222.328,
+   434.1117
+  ],
+  "vreq": [
+   434.4717,
+   437.48
+  ],
+  "i_pc0": [
+   1.0,
+   72.5831
+  ],
+  "o_pc0": [
+   72.9431,
+   102.9846
+  ],
+  "i_pc1": [
+   103.3446,
+   174.9277
+  ],
+  "o_pc1": [
+   175.2877,
+   205.3292
+  ],
+  "ck": [
+   205.6892,
+   205.9792
+  ],
+  "hck": [
+   206.3392,
+   206.6292
+  ],
+  "af__fault": [
+   206.9892,
+   207.2792
+  ],
+  "afk": [
+   207.6392,
+   207.9292
+  ],
+  "afv": [
+   208.2892,
+   208.5792
+  ],
+  "hrst_n": [
+   208.9392,
+   209.2292
+  ],
+  "rst_n": [
+   209.5892,
+   209.8792
+  ],
+  "slg__cfg_group": [
+   210.2392,
+   210.9433
+  ],
+  "slg__cfg_stack": [
+   211.3033,
+   211.7727
+  ],
+  "x__est": [
+   212.1327,
+   215.1837
+  ],
+  "x__tep": [
+   215.5437,
+   219.2989
+  ],
+  "x__tok": [
+   219.6589,
+   223.8835
+  ],
+  "y__est__0_1": [
+   224.2435,
+   224.5335
+  ],
+  "y__tok": [
+   224.8935,
+   229.1181
+  ],
+  "y__tep": [
+   229.4781,
+   233.2333
+  ],
+  "i_pc2": [
+   233.5933,
+   305.1764
+  ],
+  "o_pc2": [
+   305.5364,
+   335.5778
+  ],
+  "i_pc3": [
+   335.9378,
+   407.521
+  ],
+  "o_pc3": [
+   407.881,
+   437.9224
+  ]
+ }
+}

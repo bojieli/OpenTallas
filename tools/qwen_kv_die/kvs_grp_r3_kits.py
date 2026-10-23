@@ -55,7 +55,7 @@ def spread(order, bits, lo, hi, gap=0.36):
     return out, pitch
 
 
-def build(base, name, tag, W, H, orient, why):
+def build(base, name, tag, W, H, orient, why, x0=None):
     s = copy.deepcopy(json.load(open(os.path.join(ROOT, 'physical/ref_tile', base, 'spec.json'))))
     bits = widths(s['sources'][0], s['top'])
     s['name'] = name
@@ -72,11 +72,19 @@ def build(base, name, tag, W, H, orient, why):
         dens[f] = round(sum(bits[p] for p in ports) / (L - 2), 2)
     s['pin_ranges'] = pr
     s['route'] = dict(s['route'], pin_balance={'group_max': 1, 'h': 'M4', 'v': 'M5'})   # bit order judged + kept
-    x0 = 43.2 if orient == 'MY' else 86.4
+    x0 = x0 if x0 is not None else (43.2 if orient == 'MY' else 86.4)
     y0 = round(((H - 4 * PITCH) / 2) // 2.16 * 2.16, 4)
     mac = s['macros']
     s['macros'] = [dict(m, at=[x0, round(y0 + k * PITCH, 4)], orient=orient, at_exact=True) for k, m in enumerate(mac)]
-    s['fill_reason'] = {'pin_bound': (
+    if tag.startswith('r4'):
+        eb = sum(bits[p] for p in s['pins']['E'] if p in bits)
+        s['fill_reason'] = {'pin_bound': (
+            f"KVPC-R grp {tag} PIN-BOUND by the {eb}-bit E bus (kreq/krsp/rsp/vreq, die partner E: STEWARD-QK 10-23 ruling, "
+            f"no N/S move): {eb} pins / ({H} - 2) um = {dens.get('E')} /um on M4 (pin pitch {(H - 2) / eb:.3f} um = "
+            f"{(H - 2) / eb / 0.048:.1f} M4 tracks; M6 is above the M5 cap), so H = {H}; W = 23.76 W pin-reg band + 94.8 "
+            f"macro + E band = {W}.  W {dens.get('W')} /um, N {dens.get('N')}, S {dens.get('S')}.  No padding.")}
+    else:
+      s['fill_reason'] = {'pin_bound': (
         f"KVPC-R grp r3 pin-bound outline {W} x {H}: E {dens.get('E')} /um (K/V response words), W {dens.get('W')} /um "
         f"(4 PC word pairs), N {dens.get('N')} S {dens.get('S')}; content std ~17k + macros 15.6k um2 would fit ~230 x 230 "
         "at 60-70 %, which needs >= 9 pins/um on E; height = E pins at ~4.2-4.6 /um, width = macro column + two bands.")}
@@ -99,3 +107,10 @@ if __name__ == '__main__':
     for b, t in (('qkd_kvs_grp_r2da', 'qkd_kvs_grp'), ('qkd_kvs_grp_h_r2da', 'qkd_kvs_grp_h')):
         build(b, t + '_r3a', 'r3a', 237.6, 475.2, 'MY', 'MAIN: macros face the E response band.')
         build(b, t + '_r3b', 'r3b', 259.2, 518.4, 'R0', 'ALT: macros face the W PC landing band, E 4.2 /um.')
+    # r4 (GEOM-REVIEW 02:05 FAIL of r3: empty N/S bands, W face strip + E islands).  STEWARD-QK ruling 02:10: the K/V
+    # words stay on E (their die partner is E); pin-bound height from the E bus at a legal pitch; the logic packed
+    # against E with the macros facing it (MY); the W band is only the PC-word pin registers (macro 21.6 um inside the core, the pin
+    # edge); width = W band + macro + E band, no padding.
+    for b, t in (('qkd_kvs_grp_r2da', 'qkd_kvs_grp'), ('qkd_kvs_grp_h_r2da', 'qkd_kvs_grp_h')):
+        build(b, t + '_r4a', 'r4a', 151.2, 397.44, 'MY', 'r4 MAIN: E 2,175 pins at 5.5 /um (M4), macros MY at x 23.76 face the E band.', 23.76)
+        build(b, t + '_r4b', 'r4b', 164.16, 438.48, 'MY', 'r4 ALT: E at 5.0 /um, macros MY at x 23.76 face the E band.', 23.76)
