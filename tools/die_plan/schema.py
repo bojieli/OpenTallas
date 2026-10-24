@@ -323,13 +323,13 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
-            # ELEM-S81 station405 / COORD 10-24: the receiver's face share of an ft seam hop (gen_phys.ft_hop_in_share;
-            # default 0.08 T).  Die-wide: every partition of the plan uses the same split.
-            "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
             "common_latency_ps": _pos,
+            # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
+            # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
+            "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,

@@ -223,12 +223,7 @@ FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (th
 
 
 def ft_hop_in_share(P):
-    """the receiver's face share of an ft seam hop (fraction of T): plan clock.ft_hop_in_share, else FT_HOP_IN_SHARE.
-    ELEM-S81 station405 10-24 (COORD ruling, S81 die-wide): at 0.08 T the receiving station-0 flop's TT setup and
-    FF hold (standard overlay, vclk fixed at the plan insertion) share a ~3 ps window, setup + hold =
-    0.2 x I_TT - 42 ps at I_TT = 250 (t12 / T7 r4d measured), so CTS skew alone fails one of them; senders kept
-    >= +245.9 ps ft reg2out slack on all 17 routed station tiles.  A die-wide value: every partition of the plan
-    (stations AND frames) must use the same split, so it lives in the plan, never in a kit override."""
+    """the plan's ft seam receiver share (clock.ft_hop_in_share, COORD RULING 10-24 12:37), else FT_HOP_IN_SHARE."""
     return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
 
 
