@@ -1,0 +1,252 @@
+{
+  "schema": "opentallas.s81.head_die_model.v1",
+  "lane": "S81-HEAD 2026-10-24",
+  "status": "MODEL (top-down sizing; no P&R)",
+  "workload": {
+    "vocab": 129280,
+    "d_model": 5120,
+    "weights": "BF16 ROM",
+    "tp": 4,
+    "bundles": 1010,
+    "bundles_per_rank": [
+      253,
+      253,
+      252,
+      252
+    ],
+    "rows_per_rank": [
+      32384,
+      32384,
+      32256,
+      32256
+    ]
+  },
+  "tile": {
+    "content": "ot_s81hd_tile = 1 bundle (4 A + 1 B elements as CLOSED hard cores) + chain glue",
+    "outline_um": [
+      691.2,
+      1036.8
+    ],
+    "area_mm2": 0.7166,
+    "core_fill": 0.671,
+    "cells": 1071597,
+    "cells_basis": "4 x elemA 214445 (ASSUMED: elemB cells x area ratio (no elemA count committed)) + elemB 163817 + glue 50000 ASSUMED",
+    "hard_cores": "5 (each < 400k cells): the tile is over the 400k CORE-KS cap, so the elements are its cores",
+    "macs_per_cycle": 80.0,
+    "rom_bits_per_cycle": 1370,
+    "x_in_bits_per_cycle": 512,
+    "chain_bus_bits": 565,
+    "chain_bus": "bus B: x 512 (xa K0..4095 / xb K4096..5119) + go + xv + rv + row17 + bits32 (FP32 logit) + flt",
+    "go_to_result": 8359,
+    "x_stream_cycles": 8241,
+    "face_pins": {
+      "i": 566,
+      "o": 566,
+      "note": "+1 epoch bit; on a 345.6-um window with M4+M6 = 1.6 pins/um"
+    }
+  },
+  "floorplan": {
+    "outline_um": [
+      17521.92,
+      17556.48
+    ],
+    "area_mm2": 307.6,
+    "reticle_mm2": 858,
+    "serdes": {
+      "per_edge": 6,
+      "slot_um": [
+        2885.76,
+        1226.88
+      ],
+      "N": [
+        "WN2",
+        "WN1",
+        "WN0",
+        "WN3",
+        "EN0",
+        "EN1"
+      ],
+      "S": [
+        "WS1",
+        "WS0",
+        "HOST0",
+        "HOST1",
+        "ES0",
+        "ES1"
+      ],
+      "note": "same slot, PHY abstract and bump field as the S81 layer die (cross-die die_io pairing)"
+    },
+    "link_row": {
+      "frames_per_row": 12,
+      "frame_um": [
+        1442.88,
+        1226.88
+      ],
+      "note": "one row of layer-die frames inside each SerDes row: link endpoints, ctl, ft stations"
+    },
+    "tiles": {
+      "per_half_row": 11,
+      "rowpairs": 6,
+      "chains": 12,
+      "tiles_per_chain": 22,
+      "slots": 264,
+      "used": 253,
+      "dark": 11,
+      "tile_um": [
+        691.2,
+        1036.8
+      ]
+    },
+    "spine": {
+      "width_um": 1762.56,
+      "node_um": [
+        1762.56,
+        2073.6
+      ],
+      "levels": 6,
+      "note": "one spine node a row-pair: x/go down, best up, W/E chain heads (upper row) and tails (lower)"
+    },
+    "turn_um": [
+      172.8,
+      1036.8
+    ]
+  },
+  "blocks": {
+    "tiles": {
+      "replicas": 264,
+      "active": 253,
+      "macs_per_cycle": 21120.0,
+      "rom_bytes_per_cycle": 45210.0,
+      "rom_macros": 2640,
+      "area_mm2": 189.2,
+      "fanout": "none: x enters a chain head once and is forwarded tile to tile (registered); best is merged forward; no mux/demux beyond the 3-way spine node copy"
+    },
+    "spine": {
+      "replicas": 6,
+      "bits_per_cycle": {
+        "x_down": 565,
+        "best_up": 565,
+        "ft_up_down": 808
+      },
+      "content": "spo (x/go 3-way registered forward) + spr (capture-all-then-fire argmax) per level"
+    },
+    "ctl": {
+      "replicas": 1,
+      "cells": 300000,
+      "cells_basis": "ASSUMED (SPEC ctl ~1.5 x 1.5 mm; x store 80 kb SRAM)",
+      "x_store_bits": 81920,
+      "x_store_read_bits_per_cycle": 512,
+      "content": "x store + stream issue + spine root + final compare + rank merge + dsfd_mtp_seq + token former + host frame mux + fault/status"
+    },
+    "lep_0N": {
+      "content": "dsdv_slice_lepw_mu.LP (the layer die's s_0N_LP: identical stage-circuit protocol)",
+      "cells": 365489,
+      "cells_basis": "layer die cells_est s_0N_LP (measured lep + lanes, flattened)"
+    },
+    "mesh_ep": {
+      "replicas": 3,
+      "content": "2 x dsfd_coll_lane_w_safe8_ntf + 64-b static adapter",
+      "cells": 140000,
+      "cells_basis": "ASSUMED (layer die 2-lane lep LP 192k incl. MU land)"
+    },
+    "host_ep": {
+      "replicas": 1,
+      "content": "2 x dsfd_coll_lane_w_safe8_ntf + dsdv_hostb_stage_hbc frame endpoint",
+      "cells": 200000,
+      "cells_basis": "ASSUMED"
+    },
+    "hbm": "none: the LM head is ROM-resident and argmax/MTP state is small; the rack's 4 stacks a head die (10-06 record) is not needed by this die: OWNER decision (saves 48 stacks)"
+  },
+  "links": {
+    "per_die_macros": 12,
+    "circuits": 6,
+    "stage_in": {
+      "macros": "WN2+WN3",
+      "bits_a_position": 81920,
+      "beats": 160,
+      "occupancy_ar": 0.00139
+    },
+    "stage_out": {
+      "macros": "WN0+WN1",
+      "payload": "token (+ in-band host frames to the stage dies)"
+    },
+    "tp_mesh": {
+      "macros": "WS0/1 ES0/1 (ring) + EN0/1 (d+2)",
+      "bits_a_position": 64,
+      "note": "rank argmax all-gather: 50 b best + tag; 64-b core-side lanes"
+    },
+    "host": {
+      "macros": "HOST0+HOST1",
+      "core_bits": 276,
+      "note": "host plane: token out a user, prompt / config / KV ingest; stage dies get it in-band via WN0/1 (S81.HOST). 276-b core-side lanes = 331 Gb/s a direction (MODEL; the stage circuits carry 20-30x headroom)"
+    },
+    "draft_fanout": "SPEC v1 had 5 draft fan-out SerDes; the rack wires none (RELEASE_RACK 'placeholders'). Not planned: OWNER decision (MTP draft runs on the copy-B wave, TOK.DS.RATE)"
+  },
+  "latency": {
+    "rows": {
+      "xb_ingress": 162,
+      "x_fill_and_return": 156,
+      "bundle": 8359,
+      "spine_merge_fire": 12,
+      "rank_merge": 357,
+      "mtp_seq_token_former": 6,
+      "out_hop_issue": 4
+    },
+    "total": 9056,
+    "calendar_head_window": 10357,
+    "vs_calendar": -1301,
+    "ar_share": 0.00719,
+    "note": "x fill / return counts 2 edges a tile (registered faces) + the spine stations at 364.5 um"
+  },
+  "throughput": {
+    "positions_per_s": {
+      "ar": 47642,
+      "mtp": 29235
+    },
+    "occupancy_cycles_a_position": 8819,
+    "groups_1": {
+      "ar_occupancy": 0.35,
+      "mtp_occupancy": 0.215
+    },
+    "groups_3": {
+      "ar_occupancy": 0.117,
+      "mtp_occupancy": 0.072
+    },
+    "single_user_positions_never_overlap": true,
+    "verdict": "ONE TP4 group (4 dies) sustains the saturated AR and MTP head rate (<= 35% busy); the single-user MTP positions arrive >= 23,239 cycles apart > 8,819 occupancy, so a group never holds two positions. 12 dies (3 groups) is the 10-06 rack record: OWNER decision."
+  },
+  "intensity": {
+    "macs_per_cycle": 21120.0,
+    "rom_bytes_per_cycle": 45210.0,
+    "compute_intensity_macs_per_rom_byte": 0.467,
+    "comm_bits_per_mac": 0.02727
+  },
+  "routing": {
+    "tile_face": {
+      "bits": 566,
+      "tracks": 7560,
+      "ratio": null
+    },
+    "spine_ns_face": {
+      "bits": 1946,
+      "tracks": 38556
+    },
+    "note": "per-face G0 numbers are recomputed by tools/die_plan/check.py on the generated plan"
+  },
+  "levers": {
+    "vocab_over_12_dies": {
+      "saving_cycles": 5573,
+      "ar_rate_gain": 0.00442,
+      "verdict": "split the vocabulary over all 12 dies (1/12 each): ~5.6k cycles a position = 0.44% AR, below the 1% adoption rule: NOT a lever"
+    },
+    "one_reticle_head": {
+      "note": "1,010 tiles x 0.717 mm2 = 724 mm2 of tiles: one 790-mm2 frame-class die could hold the whole head (no TP4 mesh); recorded, not planned (rack is TP4)"
+    }
+  },
+  "owner": [
+    "head-die count 12 (3 TP4 groups) vs 4 (1 group): 1 group meets AR + MTP rate (throughput row)",
+    "HBM on head dies: none needed (blocks.hbm)",
+    "draft fan-out SerDes: none planned (links.draft_fanout)",
+    "11 dark tile slots (ten = 0) keep the chains regular; alternative: shorter last chain + empty slots (same outline)"
+  ]
+}

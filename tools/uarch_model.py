@@ -9411,6 +9411,7 @@ def main(argv=None):
     ap.add_argument("--s81-collective-gearbox", action="store_true", help="size the exact registered-head collective gearbox candidate")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--s81-collective-core-width", type=float, help="size an opt-in native OQPIPE core with four-track VM pins")
+    ap.add_argument("--s81-head-die", action="store_true", help="S81 release head die top-down sizing (LM head / argmax / MTP / host; tools/s81_head_die_model.py)")
     ap.add_argument("--s81-l20-idxrd2-recompose", action="store_true", help="S81 L20 idxrd2 1130->1070 ROM slots: integer stages/dies/rate")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
@@ -9548,6 +9549,14 @@ def main(argv=None):
     if a.s81_collective_lane_width is not None:
         from s81_collective_lane_sizing import model
         payload = json.dumps(model(a.s81_collective_lane_width), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_head_die:
+        from s81_head_die_model import model
+        payload = json.dumps(model(), indent=2, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)
