@@ -91,6 +91,8 @@ def main():
     K.mkdir(parents=True, exist_ok=False)
     for n in INFRA:
         shutil.copy2(old / n, K / n)
+    for n in ("face_keep.tcl", "face_keep_release.tcl"):     # CP1-R10 main 0ce45ab03c hooks
+        shutil.copy2(R / "tools/die_plan" / n, K / n)
     (K / "rtl").mkdir()
     (K / "macros").mkdir()
     for s in SRCS:
@@ -192,6 +194,8 @@ export MACRO_PLACE_HALO = 4.32 4.32
 export MACRO_ROWS_HALO_X = 4.32
 export MACRO_ROWS_HALO_Y = 4.32
 export SYNTH_HDL_FRONTEND = slang
+export PRE_SYNTH_TCL = /work/face_keep.tcl
+export POST_SYNTH_TCL = /work/face_keep_release.tcl
 """
     # c6: fixed ROM sites (the c5 auto placement stacked both ROMs against the W core edge: W-side rd_out / ctl pins
     # in the 4.32 halo with no room for their capture flops - REJECTED at the floorplan review).  Both R0 (ctl + 130 rd
