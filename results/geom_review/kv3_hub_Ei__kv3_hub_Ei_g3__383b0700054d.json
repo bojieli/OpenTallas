@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Ei (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "383b0700054d54a3",
+ "reasons": "[10-23 19:50] [GEOM-REVIEW7] [G3, KV-P6 19:48 REQ, first kit-rtl kit] Kit hash recomputed by me (C-sorted cat, 19 files). Placed 3_place.odb dumped and rendered by me: /home/ubuntu/scratch/geom-review7-1023/hubEi/r7.png. Also viewed the author's /home/ubuntu/scratch/kv-p6-1023/g3hub/png/hub_Ei_place.png. 1278.72x1676.16 pure transit: 23,064 FF, 237 logic cells, 99k buf/inv, fill 0.8%, 0 bins > 0.8 (max 0.20). Face regs are on the W/E/N windows. Station flops lie on the straight in->out lines: N-S columns and diagonal turning lanes (COORD 13:44 form), with no stacking at the centre. Answer (a): 81% buf/inv is expected for a transit partition. Same as coll_ftc (80%) and KV io kits9 (82%): the cells are repeaters on <= 750-um hops, which already carry the 450-um repeater spacing. Do NOT add stations for the share. The figure to watch is repeaters per bit-mm, not the share. CLOCK (blocking): tap_mode is 'grid' (9 taps at 600 pitch). My nearest-tap count on the placed FFs: clk_t1 4,939 and clk_t4 5,486 sinks (> 3k cap), reach 354-487 um on every tap. That fails R4 the same way KV kits7 and coll_ftc g3g did.",
+ "fixes": "Geometry accepted; CTS/route NOT allowed on this hash. Re-kit tap-only with clock.tap_mode sinks (tool c1bae2221 path, cap 1.5k, radius <= 250) + per-tap rsync. Post the kit diff (only io.tcl taps / RTL tap ports / tap_balance / config) and the OT_TAP_CHECK probe; then the gate is allowed without a new render (same as kits9). Generator: make tap_mode sinks the default for kit-rtl kits.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T19:50:16-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
