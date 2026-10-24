@@ -14,7 +14,7 @@ qwen_compute vehicle (= STEWARD-TOKh/TOKi xt1, made automatically here, never ha
     tt_ctlm -> sl_W5_fw lane ends (cmd / hr / tl) are the XT1 bench event ports, every other open lane end idles at 0;
   * source closure: every module the carve instantiates, resolved from <bound>/rtl, then the bind.f files, then the
     source revision REV (git), with `include files and their incdirs; the file list is generated, not hand kept;
-  * bench: xt1_bench.py gen (nominal lead 8 / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
+  * bench: xt1_bench.py gen (nominal lead 8 + XT1_FILL_LEAD_OFFSET / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
     TOKe-QWM record gold, ROM masks masks_fixed);
   * mutant: +SMOKE_MUT_SKEW=1 delays the hr lane end by one cycle against cmd/tl (models one schedule constant off by
     one), same binary;
@@ -423,7 +423,7 @@ else
   BUILT=0
 fi
 T1=$(date +%s)
-python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead 8 --gap 4 > gen.out 2>&1 \
+python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead __LEAD__ --gap 4 > gen.out 2>&1 \
   || { echo "RESULT SMOKE GEN_FAIL"; tail -5 gen.out; exit 2; }
 GF=inputs/gold_far.json; [ -f $GF ] || GF=inputs/gold_near.json
 for m in 0 __MUT__; do
@@ -431,12 +431,28 @@ for m in 0 __MUT__; do
      +SMOKE_MUT_SKEW=$m > sim_m$m.out 2>&1; echo "sim rc=$?" >> sim_m$m.out
   [ -f log_m$m.txt ] || : > log_m$m.txt
   python3 bench/xt1n_bench.py check --gold-near inputs/gold_near.json --gold-far $GF --log log_m$m.txt --mode nominal \
-     --lead 8 --gap 4 > check_m$m.txt 2>&1
+     --lead __LEAD__ --gap 4 > check_m$m.txt 2>&1
   echo "[mut=$m] $(grep -h '^RESULT' check_m$m.txt | tail -1)"
 done
 T2=$(date +%s)
 echo "TIMES built=$BUILT build_s=$((T1-T0)) sim_s=$((T2-T1)) obj=$OBJ"
 '''
+
+
+def xt1_lead(a):
+    """x fill lead of the xt1 bench: as-built 8 + XT1_FILL_LEAD_OFFSET of the bound top (regen_constants.py qc_xfill;
+    QC-TOK 10-24: the hr x-arm crossing and the fill stream crossings land with different (landed - as-built))."""
+    if getattr(a, '_lead', None) is None:
+        off, c = 0, {}
+        if a.constants:
+            c = json.loads(Path(a.constants).read_text()).get('constants', {}).get('XT1_FILL_LEAD_OFFSET', {})
+            if c.get('status') == 'OK' and isinstance(c.get('value'), int):
+                off = c['value']
+            elif c:
+                raise SystemExit(f'XT1_FILL_LEAD_OFFSET not one value: {c}')
+        a.lead_offset_used = bool(c)
+        a._lead = 8 + off
+    return a._lead
 
 
 def qc_prepare(a, work: Path):
@@ -466,7 +482,7 @@ def qc_prepare(a, work: Path):
             raise SystemExit(f'bench file {f} not in {a.src_rev}')
         (bench / Path(f).name).write_bytes(r.stdout)
     run = (RUN_SH.replace('__VERILATOR__', VERILATOR).replace('__JOBS__', str(a.jobs)).replace('__BJOBS__', str(a.build_jobs)).replace('__GROUPS__', str(a.output_groups))
-           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)))
+           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)).replace('__LEAD__', str(xt1_lead(a))))
     (work / 'run_smoke.sh').write_text(run)
     (work / 'run_smoke.sh').chmod(0o755)
     meta = dict(carve=rep, closure_files=len(flist), files=flist, includes=[str(Path(i).relative_to(S.base)) for i in incs],
@@ -540,12 +556,14 @@ def run_qc(a):
                             partitions=meta['carve']['seeds'], rom_tiles=meta['carve']['rom_tiles'],
                             closure_files=meta['closure_files'], unresolved_modules=meta['unresolved_modules'],
                             ambiguous_modules=sorted(meta['ambiguous']), src_rev=a.src_rev,
-                            bench='xt1_bench gen nominal lead 8 gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
+                            bench=f'xt1_bench gen nominal lead {xt1_lead(a)} gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
                             mutant=f'+SMOKE_MUT_SKEW={a.mut_skew} (hr lane end {a.mut_skew} cycle late vs cmd/tl)'),
                cycles=a.ncyc, command=cmd)
     if a.constants:
-        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 uses no '
-                                 'compiler constant beyond lead/gap, so the file is recorded, not consumed')
+        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 consumes '
+                                 'XT1_FILL_LEAD_OFFSET (x fill lead = 8 + offset) when present' if a.lead_offset_used else
+                                 'the bound top carries the regenerated RTL parameters (bind param_regen); no XT1_FILL_LEAD_OFFSET '
+                                 'in the constants: lead 8 (as-built)')
     if a.local:
         return run_qc_local(a, work, rep, t0)
     if not a.submit:
