@@ -1,0 +1,425 @@
+{
+ "fit_fail": {},
+ "fill_max": [
+  [
+   1.0,
+   "SW_sm3"
+  ],
+  [
+   1.0,
+   "SW_sm2"
+  ],
+  [
+   1.0,
+   "SW_sm1"
+  ],
+  [
+   1.0,
+   "SW_sm0"
+  ],
+  [
+   1.0,
+   "SE_sm3"
+  ],
+  [
+   1.0,
+   "SE_sm2"
+  ],
+  [
+   1.0,
+   "SE_sm1"
+  ],
+  [
+   1.0,
+   "SE_sm0"
+  ],
+  [
+   1.0,
+   "NW_sm3"
+  ],
+  [
+   1.0,
+   "NW_sm2"
+  ],
+  [
+   1.0,
+   "NW_sm1"
+  ],
+  [
+   1.0,
+   "NW_sm0"
+  ]
+ ],
+ "variant": "A",
+ "label": "A: P=3 SM, 16 SM / 4 quad tiles, 2 HBM3E stacks",
+ "die_um": [
+  25989.12,
+  32832.0
+ ],
+ "die_mm2": 853.3,
+ "partitions": 185,
+ "lanes": 728,
+ "bits": 503736,
+ "util_top": [
+  [
+   1.9000045927868254,
+   "SE_hub",
+   "SE_su30",
+   7281
+  ],
+  [
+   1.9000045927868254,
+   "NE_hub",
+   "NE_su30",
+   7281
+  ],
+  [
+   1.726470318071369,
+   "SE_hub",
+   "SE_su21",
+   6616
+  ],
+  [
+   1.726470318071369,
+   "NE_hub",
+   "NE_su21",
+   6616
+  ],
+  [
+   1.552153181966214,
+   "SW_hub",
+   "SW_su30",
+   5948
+  ],
+  [
+   1.552153181966214,
+   "NW_hub",
+   "NW_su30",
+   5948
+  ],
+  [
+   1.4740139846660691,
+   "SE_spb2",
+   "SE_spu1",
+   18598
+  ],
+  [
+   1.4740139846660691,
+   "NE_spb2",
+   "NE_spu1",
+   18598
+  ],
+  [
+   1.4673431980827247,
+   "SE_hub",
+   "SE_su10",
+   5623
+  ],
+  [
+   1.4673431980827247,
+   "NE_hub",
+   "NE_su10",
+   5623
+  ],
+  [
+   1.4673431980827205,
+   "SW_hub",
+   "SW_su10",
+   5623
+  ],
+  [
+   1.4673431980827205,
+   "NW_hub",
+   "NW_su10",
+   5623
+  ],
+  [
+   1.46629938289646,
+   "SW_hub",
+   "SW_su21",
+   5619
+  ],
+  [
+   1.46629938289646,
+   "NW_hub",
+   "NW_su21",
+   5619
+  ],
+  [
+   1.451299600387283,
+   "SW_hub",
+   "SW_spu1",
+   22976
+  ],
+  [
+   1.451299600387283,
+   "NW_hub",
+   "NW_spu1",
+   22976
+  ],
+  [
+   1.3646398961168078,
+   "SW_spb2",
+   "SW_spu1",
+   17218
+  ],
+  [
+   1.3646398961168078,
+   "NW_spb2",
+   "NW_spu1",
+   17218
+  ],
+  [
+   1.301217434191243,
+   "SE_hub",
+   "SE_spu1",
+   20600
+  ],
+  [
+   1.301217434191243,
+   "NE_hub",
+   "NE_spu1",
+   20600
+  ],
+  [
+   1.2794616997902726,
+   "SW_b100",
+   "SW_hub",
+   10249
+  ],
+  [
+   1.2794616997902726,
+   "NW_b100",
+   "NW_hub",
+   10249
+  ],
+  [
+   1.2310925488664402,
+   "SE_spb1",
+   "SE_spb2",
+   15533
+  ],
+  [
+   1.2310925488664402,
+   "SE_spb0",
+   "root",
+   15533
+  ],
+  [
+   1.2310925488664402,
+   "SE_spb0",
+   "SE_spb1",
+   15533
+  ]
+ ],
+ "tutil_top": [
+  [
+   1.7558219140882363,
+   "SE_spb2",
+   "V",
+   16635
+  ],
+  [
+   1.7558219140882363,
+   "NE_spb2",
+   "V",
+   16635
+  ],
+  [
+   1.6310619800664572,
+   "SE_spb1",
+   "V",
+   15453
+  ],
+  [
+   1.6310619800664572,
+   "SE_spb0",
+   "V",
+   15453
+  ],
+  [
+   1.6310619800664572,
+   "NE_spb1",
+   "V",
+   15453
+  ],
+  [
+   1.6310619800664572,
+   "NE_spb0",
+   "V",
+   15453
+  ],
+  [
+   1.6105853073082306,
+   "SW_spb2",
+   "V",
+   15259
+  ],
+  [
+   1.6105853073082306,
+   "SW_spb1",
+   "V",
+   15259
+  ],
+  [
+   1.6105853073082306,
+   "SW_spb0",
+   "V",
+   15259
+  ],
+  [
+   1.6105853073082306,
+   "NW_spb2",
+   "V",
+   15259
+  ],
+  [
+   1.6105853073082306,
+   "NW_spb1",
+   "V",
+   15259
+  ],
+  [
+   1.6105853073082306,
+   "NW_spb0",
+   "V",
+   15259
+  ],
+  [
+   1.551726997098683,
+   "SW_spu1",
+   "V",
+   18439
+  ],
+  [
+   1.551726997098683,
+   "NW_spu1",
+   "V",
+   18439
+  ],
+  [
+   1.521986755178044,
+   "SW_su30",
+   "H",
+   10998
+  ],
+  [
+   1.5219867551780424,
+   "NW_su30",
+   "H",
+   10998
+  ],
+  [
+   1.453306969405456,
+   "NE_mcb",
+   "H",
+   8168
+  ],
+  [
+   1.4533069694054541,
+   "SE_mcb",
+   "H",
+   8168
+  ],
+  [
+   1.435300766503418,
+   "vsS3",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsS2",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsS1",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsS0",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsN3",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsN2",
+   "V",
+   11524
+  ],
+  [
+   1.435300766503418,
+   "vsN1",
+   "V",
+   11524
+  ]
+ ],
+ "errs": [
+  "segment NW_spu1|NW_hub overflow: lane 45 needs up to 7577.0 > 7342.0",
+  "segment NE_b110|NE_hub overflow: lane 47 needs up to 25679.6 > 25572.4",
+  "segment SW_spu1|SW_hub overflow: lane 49 needs up to 7577.0 > 7342.0",
+  "segment SE_b110|SE_hub overflow: lane 51 needs up to 8658.8 > 8551.6",
+  "segment root|NW_spb0 overflow: lane 52 needs up to 7159.1 > 7082.8",
+  "segment NW_spu1|NW_hub overflow: lane 52 needs up to 8019.9 > 7342.0",
+  "segment NE_spu1|NE_hub overflow: lane 53 needs up to 21468.8 > 21200.6",
+  "segment root|SW_spb0 overflow: lane 54 needs up to 7159.1 > 7082.8",
+  "segment SW_spu1|SW_hub overflow: lane 54 needs up to 8019.9 > 7342.0",
+  "segment SE_spu1|SE_hub overflow: lane 55 needs up to 21468.8 > 21200.6",
+  "segment NW_hub|NW_b100 overflow: lane 72 needs up to 24335.9 > 24276.4",
+  "segment SW_hub|SW_b100 overflow: lane 74 needs up to 9907.1 > 9847.6",
+  "segment NW_spu1|NW_hub overflow: lane 84 needs up to 8395.7 > 7342.0",
+  "segment NE_spu1|NE_hub overflow: lane 85 needs up to 21844.7 > 21200.6",
+  "segment SW_spu1|SW_hub overflow: lane 86 needs up to 8395.7 > 7342.0",
+  "segment SE_spu1|SE_hub overflow: lane 87 needs up to 21844.7 > 21200.6",
+  "segment NE_hub|NE_su21 overflow: lane 133 needs up to 22075.4 > 21822.6",
+  "segment SE_hub|SE_su21 overflow: lane 135 needs up to 22075.4 > 21822.6",
+  "segment NW_hub|NW_su30 overflow: lane 136 needs up to 8216.8 > 7964.1",
+  "segment NE_hub|NE_su30 overflow: lane 137 needs up to 18895.9 > 18643.1",
+  "segment SW_hub|SW_su30 overflow: lane 138 needs up to 8216.8 > 7964.1",
+  "segment SE_hub|SE_su30 overflow: lane 139 needs up to 18895.9 > 18643.1",
+  "segment NW_su10|NW_hub overflow: lane 148 needs up to 8160.1 > 7964.1",
+  "segment NE_su10|NE_hub overflow: lane 149 needs up to 18839.1 > 18643.1",
+  "segment SW_su10|SW_hub overflow: lane 150 needs up to 8160.1 > 7964.1",
+  "segment SE_su10|SE_hub overflow: lane 151 needs up to 18839.1 > 18643.1",
+  "segment NW_su21|NW_hub overflow: lane 152 needs up to 4980.6 > 4784.6",
+  "segment SW_su21|SW_hub overflow: lane 154 needs up to 4980.6 > 4784.6",
+  "segment NW_b100|NW_hub overflow: lane 156 needs up to 24632.9 > 24276.4",
+  "segment SW_b100|SW_hub overflow: lane 158 needs up to 10204.1 > 9847.6",
+  "segment NE_hub|NE_su01 overflow: lane 161 needs up to 21951.4 > 21822.6",
+  "segment SE_hub|SE_su01 overflow: lane 163 needs up to 21951.4 > 21822.6",
+  "segment NE_hub|NE_su30 overflow: lane 173 needs up to 19125.7 > 18643.1",
+  "segment SE_hub|SE_su30 overflow: lane 175 needs up to 19125.7 > 18643.1",
+  "segment NW_spu1|NW_su30 overflow: lane 188 needs up to 23082.8 > 22980.4",
+  "segment SW_spu1|SW_su30 overflow: lane 190 needs up to 11505.2 > 11402.8",
+  "segment NW_b110|NW_hub overflow: lane 208 needs up to 25661.3 > 25572.4",
+  "segment SW_b110|SW_hub overflow: lane 210 needs up to 8640.5 > 8551.6",
+  "segment NE_b110|NE_hub overflow: lane 217 needs up to 25794.8 > 25572.4",
+  "segment NE_hub|NE_su21 overflow: lane 217 needs up to 22151.4 > 21822.6",
+  "segment SE_b110|SE_hub overflow: lane 219 needs up to 8774.0 > 8551.6",
+  "segment SE_hub|SE_su21 overflow: lane 219 needs up to 22151.4 > 21822.6",
+  "segment NW_spb0|root overflow: lane 224 needs up to 7269.1 > 7082.8",
+  "segment NE_spb0|root overflow: lane 225 needs up to 20995.5 > 20941.4",
+  "segment SW_spb0|root overflow: lane 226 needs up to 7269.1 > 7082.8",
+  "segment SE_spb0|root overflow: lane 227 needs up to 20995.5 > 20941.4",
+  "segment NW_hub|NW_spu1 overflow: lane 232 needs up to 8502.9 > 7342.0",
+  "segment NE_hub|NE_spu1 overflow: lane 233 needs up to 21951.9 > 21200.6",
+  "segment NE_spu1|NE_spb2 overflow: lane 233 needs up to 20998.1 > 20941.4",
+  "segment SW_hub|SW_spu1 overflow: lane 234 needs up to 8502.9 > 7342.0"
+ ],
+ "n_errs": 506,
+ "unrouted": [],
+ "exempt": {
+  "reset": 592,
+  "ctl": 64
+ }
+}

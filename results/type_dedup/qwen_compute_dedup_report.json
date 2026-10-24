@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.die_plan.dedup.v1",
+ "die": "qwen_compute",
+ "types_before": 56,
+ "types_after": 56,
+ "partitions": 377,
+ "fix_order": true,
+ "plan_only": false,
+ "rtl_dirs": [
+  "/home/ubuntu/scratch/type-dedup/base_qwen_compute/bind/bound_r8/rtl"
+ ],
+ "exact_groups": [],
+ "strap_candidates": [],
+ "ft_population": [
+  {
+   "types": 2,
+   "slot_signatures": 2,
+   "example": [
+    "cbf_q00",
+    "cbf_q00_s2"
+   ],
+   "slots_min": 0,
+   "slots_max": 5,
+   "ft_bits_min": 0,
+   "ft_bits_max": 1197
+  },
+  {
+   "types": 2,
+   "slot_signatures": 2,
+   "example": [
+    "cbf_q01",
+    "cbf_q01_s2"
+   ],
+   "slots_min": 1,
+   "slots_max": 6,
+   "ft_bits_min": 514,
+   "ft_bits_max": 1711
+  }
+ ],
+ "verify": {
+  "exact": true,
+  "problems": []
+ }
+}

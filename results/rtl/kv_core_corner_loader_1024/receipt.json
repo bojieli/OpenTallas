@@ -1,0 +1,13 @@
+{
+ "status": "RUNNER_LOAD_FIX_VERIFIED_NOT_SIGNOFF",
+ "original_failure": "All11routedhead/astkcores:LIBS_TT empty;STA-0453 BUFx4notfound",
+ "root_cause": "Pinned ORFS make print-LIB_FILES emits LIB_FILES: values,parserrequired LIB_FILES = values",
+ "changes": [
+  "Parse actualcolonhelperoutput forlibs/lefs",
+  "RefuseemptyLibertybeforeSTA",
+  "TT/FFonly automaticcorners",
+  "OptionalOT_SDCforcorrectedownconstraintrecovery;originalserializedSDCdefaultpreserved"
+ ],
+ "real_recovery": "head_e1 TTsetup+13.768ps/hold+5.997ps,SPEF,0violations usingcanonicalclockexcludedSDC;ETM/FF anduniformsignoffstillrunning",
+ "scope": "Toolfix, nohardcoreSIGNEDclaim"
+}

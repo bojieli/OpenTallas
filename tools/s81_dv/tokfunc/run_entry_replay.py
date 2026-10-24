@@ -50,8 +50,17 @@ def line_check(src, die_v, cut, prog, run):
     sp = json.loads((cut / 'slice_ports.json').read_text())['ports']
     # only S-tier beats reach the cut's S line faces (TOKd-S81 10-23: jobs 17/22 carry 51 S + 51 N beats; the N-tier
     # line is outside cut_3S_ctl, its rung word is checked by the bench on w_tvN_seqhost_lnd)
-    evs = sorted((e for e in S['events'] if e['kind'] == 'CTL' and e['dir'] == 'in' and e['inst'][5:6] == 'S'),
-                 key=lambda e: e['cycle'])
+    # A row's destinations can have different path lengths. The shared line
+    # sees one injected beat per calendar row, in ISSUE order; consumer arrival
+    # order may differ, and a broadcast's several consumer events are one beat.
+    unique = {}
+    for e in S['events']:
+        if e['kind'] != 'CTL' or e['dir'] != 'in' or e['inst'][5:6] != 'S':
+            continue
+        issue = e.get('from_row', e['cycle'])
+        key = (issue, e['payload'].split()[1].rstrip(';'))
+        unique.setdefault(key, dict(e, cycle=issue))
+    evs = sorted(unique.values(), key=lambda e: e['cycle'])
     res = {}
     for face, (pre, inst, port) in FACES.items():
         idx = {p['index']: int(sp[p['port']]['net'][len(pre):].split('_')[0]) for p in tb
@@ -113,6 +122,8 @@ def main():
     p.add_argument('--jobs', type=int, nargs='*')
     p.add_argument('--mutant', action='append', default=[], help='JOB:SPEC (dv_cut_replay --mutant), must FAIL')
     p.add_argument('--ks', type=int, default=None, help='landed f_ks edge for every job (dv_cut_replay gen --ks)')
+    p.add_argument('--par', type=int, default=1, help='jobs + mutants run concurrently (each sim is single-threaded; '
+                   'S81-P10 10-24: a slow cut binary makes the serial loop hours long)')
     p.add_argument('--ks-probe', action='store_true',
                    help='measure the issuer start phase first: replay the first job with KS = default + 0..3 and take the '
                         'one u_seqhost accepts (t_host sq busy, no fault); every job then uses that --ks')
@@ -221,11 +232,14 @@ def main():
             rep.update(verdict='FAIL', reason=f'KS phase probe: {len(acc)} of 4 phases accepted ({acc})'); save()
             print('ENTRY_REPLAY FAIL ks probe', rep['ks_probe']); return 1
         a.ks = acc[0]; rep['ks'] = a.ks; save()
-    for j in jobs:
-        rep['jobs'].append(one(j)); save()
-    for m in a.mutant:
-        j, spec = m.split(':', 1)
-        rep['mutants'].append(one(int(j), spec)); save()
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max(1, a.par)) as ex:
+        fj = [ex.submit(one, j) for j in jobs]
+        fm = [ex.submit(one, int(m.split(':', 1)[0]), m.split(':', 1)[1]) for m in a.mutant]
+        for f in fj:
+            rep['jobs'].append(f.result()); save()
+        for f in fm:
+            rep['mutants'].append(f.result()); save()
     v = [r['verdict'] for r in rep['jobs']]
     rep['verdict'] = ('FAIL' if 'FAIL' in v or not v else 'PARTIAL' if 'PARTIAL' in v else 'PASS_CUT_COMPONENT')
     if rep.get('xrt_transport_sources_conflict'):
