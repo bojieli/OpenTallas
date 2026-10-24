@@ -20,6 +20,7 @@ NAIVE (S81-DIE7/CRS4: bounded-skew retime register instead of the ring) must FAI
       hardened-view kit benches, tools/s81_dv/crs4_gate.sh)
 """
 import argparse, json, math, re, subprocess, tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TB = 'rtl/dsrom_sys/s81_dv/land/test/tb_cfifo_crs4p.sv'
@@ -49,6 +50,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', type=Path, default=ROOT / 'results/arch/s81_dv_1016/landing/crs4p_bench.json')
     ap.add_argument('--variant', choices=[v for v, _ in VARIANTS])
+    ap.add_argument('-j', '--jobs', type=int, default=4)
     a = ap.parse_args()
     tmp = Path(tempfile.mkdtemp(prefix='crs4p_'))
     res = dict(schema='opentallas.s81_land.crs4_bench.v1', tb=TB, sources=SRC, T_ps=T, skew_sweep_ps=SWEEP, margin_ps=MARGIN,
@@ -63,21 +65,30 @@ def main():
                 subprocess.run(['iverilog', '-g2012', f'-DKP={k}', '-o', b, str(ROOT / TB)] + [str(ROOT / s) for s in SRC] + ([f'-D{dfn}'] if dfn else []), check=True)
             return b
         vr = dict(expect='PASS' if var == 'base' else 'FAIL', runs=[])
+        jobs = []                                       # (geom, E, K, b, args, tag): all runs in parallel (-j)
         for g in GEOM:
             e = math.ceil((max(g['dl']) + SKEW + MARGIN) / T)
             assert min(g['dl']) - SKEW > (e - 4) * T + MARGIN
             k = e + g['G'] - R0
             b = comp(k)
-            offs = set()
             for s in SWEEP:
                 dl = [d + s for d in g['dl']]
-                r = run(b, dict(DL0=dl[0], DL1=dl[1], DL2=dl[2], DL3=dl[3], K=k, G=g['G'], SEED=3 + s))
-                r.update(geom=g['name'], E=e, shift=s, ok=r.get('dmism', 1) == 0 and r.get('rmism', 1) == 0 and r.get('fault', 1) == 0 and r.get('nz', 0) > 100)
-                offs.add(r.get('off')); vr['runs'].append(r)
+                jobs.append((g, e, k, b, dict(DL0=dl[0], DL1=dl[1], DL2=dl[2], DL3=dl[3], K=k, G=g['G'], SEED=3 + s), dict(shift=s)))
             for sl in ('SLIP0', 'SLIP3'):
-                r = run(b, dict(DL0=g['dl'][0], DL1=g['dl'][1], DL2=g['dl'][2], DL3=g['dl'][3], K=k, G=g['G'], **{sl: 1}))
-                r.update(geom=g['name'], E=e, slip_test=sl, ok=r.get('fault') == 1); vr['runs'].append(r)
-            vr.setdefault('offset_by_geom', {})[g['name']] = dict(K=k, G=g['G'], E=e, offsets=sorted(o for o in offs if o is not None))
+                jobs.append((g, e, k, b, dict(DL0=g['dl'][0], DL1=g['dl'][1], DL2=g['dl'][2], DL3=g['dl'][3], K=k, G=g['G'], **{sl: 1}),
+                             dict(slip_test=sl)))
+        with ThreadPoolExecutor(max_workers=a.jobs) as ex:
+            outs = list(ex.map(lambda jb: run(jb[3], jb[4]), jobs))
+        offs = {}
+        for (g, e, k, b, args, tag), r in zip(jobs, outs):
+            r.update(geom=g['name'], E=e, **tag)
+            if 'slip_test' in tag:
+                r['ok'] = r.get('fault') == 1
+            else:
+                r['ok'] = r.get('dmism', 1) == 0 and r.get('rmism', 1) == 0 and r.get('fault', 1) == 0 and r.get('nz', 0) > 100
+                offs.setdefault(g['name'], set()).add(r.get('off'))
+            vr['runs'].append(r)
+            vr.setdefault('offset_by_geom', {})[g['name']] = dict(K=k, G=g['G'], E=e, offsets=sorted(o for o in offs.get(g['name'], ()) if o is not None))
         sw = [r for r in vr['runs'] if 'slip_test' not in r]
         vr['sweep_pass'] = sum(r['ok'] for r in sw); vr['sweep_runs'] = len(sw)
         vr['slip_fault_raised'] = sum(r['ok'] for r in vr['runs'] if 'slip_test' in r)

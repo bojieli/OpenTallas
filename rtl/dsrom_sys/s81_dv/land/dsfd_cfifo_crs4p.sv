@@ -22,7 +22,8 @@
 // gate of this top REFUSED at floorplan -- the four 276-b ot_s81_land rings had one wc / rc / slot enable per lane
 // (1,116 loads), the bubble masks one landed marker bit per bundle (563 / 536 loads), rsync / rsync_s 150 / 69 async
 // pins.  Structural fix, same calendar, same ports / pins / outline:
-//   * every lane ring is cut into <= 8-bit ot_s81_land rings (35 per lane), each with ITS OWN reset leaf;
+//   * every lane ring is cut into <= 4-bit ot_s81_land rings (69 per lane), each with ITS OWN reset leaf (gate 2: 8-bit
+//     rings left rc[0] at 44 loads = 4 per bit + 12; 4 bits -> 28);
 //   * the two marker bits (xl0[0], xl2[14]) land in 3 ot_s81_land_fo rings each (7 kept output copies per ring, port
 //     load 12), one copy per <= 27 masked bits;
 //   * rsync = a kept 2-level reset tree (stage 1 per 16 leaves, all async-reset by rst; leaves async-reset by stage 1)
@@ -50,7 +51,7 @@ module dsfd_cfifo_crs4p #(
     input wire [3:0] xk          // lane k forwarded clock (lane k's last station ck_o)
 );
     // ---- reset tree (rsync): NL leaves, each released on the 2nd cr edge after rst (the old rsync_q[1])
-    localparam integer NR = 35;                        // rings per lane
+    localparam integer NR = 69;                        // rings per lane (4 bits each)
     localparam integer NF = 3;                         // marker fan-out rings per marker bit
     localparam integer NO = 7;                         // kept output copies per marker ring
     localparam integer NL = 4 * NR + 2 * NF + 2;       // ring leaves + rs port + rsync_s tree
@@ -67,7 +68,7 @@ module dsfd_cfifo_crs4p #(
     end endgenerate
     reg [65:0] ri_q; always @(posedge cr) ri_q <= ri;
     reg [1:0] sti; always @(posedge cr) sti <= st;
-    // ---- per-lane landing (contract L1-L3): <= 8-bit rings on xk[k], read on cr from the leaf release
+    // ---- per-lane landing (contract L1-L3): <= 4-bit rings on xk[k], read on cr from the leaf release
     wire [1103:0] xin = {xl3, xl2, xl1, xl0};
     wire [1103:0] xl;
     wire [4 * NR - 1:0] lfc;
@@ -98,8 +99,8 @@ module dsfd_cfifo_crs4p #(
             assign xl[276 * g +: 276] = lo;
         end
         for (c = 0; c < NR; c = c + 1) begin : g_c
-            localparam integer LO = 8 * c;
-            localparam integer WC = (LO + 8 <= NBIT) ? 8 : NBIT - LO;
+            localparam integer LO = 4 * c;
+            localparam integer WC = (LO + 4 <= NBIT) ? 4 : NBIT - LO;
             ot_s81_land #(.W(WC), .D(4)) u_l (.k(LK[3 * g +: 3]), .ck_f(ckl), .i(ld[LO +: WC]), .ck(cr), .rs(rl[NR * g + c]),
                                               .o(lo[LO +: WC]), .fault(lfc[NR * g + c]));
         end
