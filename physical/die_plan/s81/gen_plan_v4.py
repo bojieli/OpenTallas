@@ -50,6 +50,7 @@ TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.
 # grant is M9, the vertical die layer (die M9 PG bands avoided; the kit routes M2-M9 and obstructs the die M8/M9 bands).
 FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M9"]
 STATS_V4 = {}
+XO_JOINED = []     # v4.6: xo lanes that share the x lane window (S81-P9)
 
 
 def face_layers(pa, pb, face):
@@ -136,7 +137,49 @@ def frame_hard_cores(contents, buses):
     # the chain-end variant col_<M>_l4_lp_r0_nx is r0 without the x-forward stations u_xo<j> (no xo bus)
     return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
                  origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac
-            if not (nx and re.match(r"u_r0\.u_xo\d+$", e["inst"]))]
+            if not re.match(r"u_r0\.u_xo\d+$", e["inst"])]   # v4.6: u_xo -> soft u_y_xo<j>_0/_1 chain (S81-P9-RTL)
+
+
+FT_MACRO_ADD = []
+FT_HALO = 8.64
+
+
+def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
+    """v4.6 (S81-P9 10-23, R3 ft0 'jog' fix): station count of an ft slot from its ROUTE around the hard cores.  Station
+    j of k sits at L*j/k on the straight in->out line of each bit (face_flops.tcl); a site inside a hard core (+ halo)
+    is pushed off the core by legalisation, which adds the escape distance to both of its hops (S81 r0 ft0: s1 jogged
+    120 um off the bf row -> 753-841-um hops).  k grows until every sampled bit's hop (L/k + escape) <= smax."""
+    if not cores:
+        return s["stations"]
+    boxes = [(c["origin_um"][0] - FT_HALO, c["origin_um"][1] - FT_HALO, c["origin_um"][0] + c["outline_um"][0] + FT_HALO,
+              c["origin_um"][1] + c["outline_um"][1] + FT_HALO) for c in cores]
+
+    def face_pt(face, win, t):
+        p = win[0] + t * (win[1] - win[0])
+        return {"E": (w, p), "W": (0.0, p), "N": (p, h), "S": (p, 0.0)}[face]
+
+    def escape(x, y):
+        e = 0.0
+        for (a, b, c, d) in boxes:
+            if a < x < c and b < y < d:
+                e = max(e, min(x - a, c - x, y - b, d - y))
+        return e
+    k = s["stations"]
+    for _ in range(4):
+        worst = 0.0
+        for i in range(64):
+            t = (i + 0.5) / 64
+            ax, ay = face_pt(s["in_face"], s["in_window_um"], t)
+            bx, by = face_pt(s["out_face"], s["out_window_um"], t)
+            L = abs(ax - bx) + abs(ay - by)
+            for j in range(1, k):
+                x, y = ax + (bx - ax) * j / k, ay + (by - ay) * j / k
+                worst = max(worst, L / k + escape(x, y))
+            worst = max(worst, L / k)
+        if worst <= smax:
+            break
+        k += 1
+    return k
 
 
 def mir(c):
@@ -960,6 +1003,25 @@ def emit(parts, lanes, routes, chans, fmap, out):
             if grid_owner[x] != grid_owner[y]:
                 cur["ports"].append(next(pids))
     runs = [r for r in runs if r["ports"]]
+    # v4.6 (S81-P9 10-23, COORD R3-INTERNAL): the x forward of an r0 frame (x_i0 / xo_i0 E window -> u_y_xo stations ->
+    # xo_o0 W window) is a straight E->W chain like an ft slot.  The xo lanes of a chain join the x lane's last straight
+    # run on the frame row, so x_i0, every xo window and the in-frame forward share ONE die-y window (v4.5: x_i0 E at
+    # 740-980 vs xo W at 98-336 = a 2.1-2.2 mm in-partition traverse).
+    by_lane = collections.defaultdict(list)
+    for r in runs:
+        by_lane[r["lane"]].append(r)
+    XO_JOINED.clear()
+    for lk in lanes:
+        if lk["cls"] != "x" or not by_lane.get(lk["id"]):
+            continue
+        last = by_lane[lk["id"]][-1]
+        for suf in ("a", "b"):
+            for r in by_lane.get("xo_%s_%s" % (lk["id"][2:], suf), []):
+                if r["line"] == last["line"]:
+                    last["ports"] += r["ports"]
+                    XO_JOINED.append(r["lane"])
+                    r["ports"] = []
+    runs = [r for r in runs if r["ports"]]
     occ = collections.defaultdict(list)          # face key -> [(lo, hi)] occupied (die coords, incl. GAP)
     DIE_CX, DIE_CY = DIE_W / 2.0, X0 + NR * PY / 2.0
 
@@ -1031,7 +1093,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 raw[pt["id"]], pos = (pos - Lw, pos), pos - Lw - g
             else:
                 raw[pt["id"]], pos = (pos, pos + Lw), pos + Lw + g
-    STATS_V4.update(runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
+    STATS_V4.update(ft_macro_add=FT_MACRO_ADD, xo_joined=sorted(XO_JOINED), runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
                     run_fallback_ports=len(single), overfull_faces=sorted("|".join(map(str, k)) for k in over_faces))
     win = {}
     over = []
@@ -1196,6 +1258,12 @@ def emit(parts, lanes, routes, chans, fmap, out):
         for s_ in ftsl:
             if s_["layers"] is None:
                 s_.pop("layers")
+        hc_ = frame_hard_cores(rep.contents, buses)
+        for s_ in ftsl:
+            k0 = s_["stations"]
+            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
+            if s_["stations"] != k0:
+                FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
                   clock=dict(tap_um=[round(rep.w / 2 / G) * G, round(rep.h / 2 / G) * G], layer="M9"),
                   reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
