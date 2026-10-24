@@ -823,8 +823,21 @@ def main():
                         seg = slot_routes.get(sl['name'])
                         if not seg:
                             continue
-                        first = free(seg[0])
-                        regs = [first] + relay_route(first, seg[-1])
+                        corridor_clear = not any(
+                            min(a[0], b[0]) < x + cw + 4.32 and x - 4.32 < max(a[0], b[0])
+                            and min(a[1], b[1]) < y + ch + 4.32 and y - 4.32 < max(a[1], b[1])
+                            for a, b in zip(seg, seg[1:]) for x, y, cw, ch in boxes)
+                        if sl.get('width', 0) >= CORRIDOR_BITS and corridor_clear:
+                            # These routes have an explicitly reserved macro-free band. Keep
+                            # stations in that band instead of shortest-path detours through
+                            # unrelated narrow channels (which waste the wide FT corridor).
+                            length = CK.plen(seg)
+                            count = max(1, math.ceil(length / 700.0) - 1)
+                            regs = [free(seg[0])] + [free(CK.point_at(seg, length * i / (count + 1)))
+                                    for i in range(1, count + 1)] + [free(seg[-1])]
+                        else:
+                            first = free(seg[0])
+                            regs = [first] + relay_route(first, seg[-1])
                         sl['stations'] = len(regs)
                         sl['regs_um'] = [[round(v, 3) for v in p] for p in regs]
                 lb = sum(b_ for b_, _, _ in lstat) or 1
