@@ -109,3 +109,14 @@ COORD 06:33 open items + census coverage (scripts plan_v31.py / emit_v31.py / co
 hub_Wi through hgi_WN_7, instead of W along the IO row (sys_c, io_W3) and down the W corridor. Same 12 crossings, 36
 stages (R8 phy_rx_flit alignment with L2048 kept), latency table unchanged, route 18.3 -> 16.9 mm. North W corridor
 65 % -> 57 % of the IO-row <-> hub bits, E 33 % -> 42 % (g2_columns_v37s_report.json). No other move is cycle-neutral.
+
+## v3.7q (KV-P7-V38, 10-23) -- core re-place for the GEOM-REVIEW7 v3.7-cores / v3.7p G1 FAILs
+
+    bash run_v37q.sh <v3.7p die_plan.json> OUT [binder3 kv39 rtl/]   # post_v37q -> core_pins_v37q -> post_v37p -> G0, G0C, channels
+
+- head_eighth outlines from measured cells at e0's 71 % fill (e0 285.12, e2/e4/e6 250.56, odd 233.28); hg ectl at the
+  bottom beside its E tN / W krsp windows; window bands >= 25.92 um; pc 2x2 in the lower half beside the W/E windows;
+  pv row gaps 77.76 / 69.12 (top band 449 -> 259 um), bands 60.48, group channels 86.4.
+- g2_channels_v37q.py: per-gap channel-demand table from the bound netlists (routed estimate; channel 36.4 tr/um per
+  direction, over-core M6/M7 15.6) -> g2_channels_v37q.json; g2_coreprobe_v37q.py: OpenROAD GRT probe with the cores as
+  M1-M5 obstructions and one flop per netlist end.

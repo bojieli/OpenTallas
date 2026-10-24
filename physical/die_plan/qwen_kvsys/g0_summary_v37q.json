@@ -1,0 +1,662 @@
+{
+ "plan": "v3.7q (KV-P7-V38 10-23): v3.7p + hg/hgi/pc/pv core re-place (post_v37q.py) + top-down pins re-assigned (core_pins_v37q.py)",
+ "g0": {
+  "verdict": "PASS",
+  "line": "G0 PASS: 0 errors, 1810 warnings; 49 types / 160 partitions (5 in near-duplicate groups); worst cut {'ratio': 0.0714, 'at': 'vertical@6500'}, worst partition segment {'ratio': 0.2592, 'at': 'vertical@6500:hub_Ei'}; report g0/g0_report.json"
+ },
+ "g0c": {
+  "line": [
+   "G0C per type: 48/49 types clean (G3-eligible: 48); die-level {}; ERRORs",
+   "G0C FAIL: 22 errors, 1788 warnings; 49 types / 160 partitions (5 in near-duplicate groups); worst cut {'ratio': 0.0714, 'at': 'vertical@6500'}, worst partition segment {'ratio': 0.2592, 'at': 'vertical@6500:hub_Ei'}; report g0c/g0_report.json"
+  ],
+  "note": "22 errors = kv3_hub_Wi 22 host-cluster child cores without pins (pre-existing, KV-P7-HUB: replaced by one qkd_host_rt_obsx core); every hg/hgi/pc/pv type clean"
+ },
+ "channels": {
+  "kv3_hg": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "ectl | head0_e0",
+    "axis": "H",
+    "box": [
+     25.92,
+     241.92,
+     907.2,
+     302.4
+    ],
+    "width_um": 60.48,
+    "bits": 3086,
+    "tracks": 2201,
+    "ratio": 1.402
+   },
+   "over_core_m6m7_max": 2.905
+  },
+  "kv3_hg_v1_r1": {
+   "gaps": 41,
+   "gaps_over_0p6": 10,
+   "worst": {
+    "gap": "head0_e2 | head0_e3",
+    "axis": "V",
+    "box": [
+     311.04,
+     639.36,
+     371.52,
+     889.92
+    ],
+    "width_um": 60.48,
+    "bits": 3348,
+    "tracks": 2201,
+    "ratio": 1.521
+   },
+   "over_core_m6m7_max": 3.546
+  },
+  "kv3_hg_v1_r2": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "ectl | head0_e0",
+    "axis": "H",
+    "box": [
+     25.92,
+     241.92,
+     907.2,
+     302.4
+    ],
+    "width_um": 60.48,
+    "bits": 3004,
+    "tracks": 2201,
+    "ratio": 1.365
+   },
+   "over_core_m6m7_max": 3.506
+  },
+  "kv3_hg_v1_r3": {
+   "gaps": 41,
+   "gaps_over_0p6": 10,
+   "worst": {
+    "gap": "head0_e2 | head0_e3",
+    "axis": "V",
+    "box": [
+     311.04,
+     639.36,
+     371.52,
+     889.92
+    ],
+    "width_um": 60.48,
+    "bits": 3366,
+    "tracks": 2201,
+    "ratio": 1.529
+   },
+   "over_core_m6m7_max": 3.739
+  },
+  "kv3_hg_v1_r4": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "head0_e2 | head0_e3",
+    "axis": "V",
+    "box": [
+     311.04,
+     639.36,
+     371.52,
+     889.92
+    ],
+    "width_um": 60.48,
+    "bits": 3216,
+    "tracks": 2201,
+    "ratio": 1.461
+   },
+   "over_core_m6m7_max": 3.888
+  },
+  "kv3_hg_v1_r5": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "head0_e2 | head0_e3",
+    "axis": "V",
+    "box": [
+     311.04,
+     639.36,
+     371.52,
+     889.92
+    ],
+    "width_um": 60.48,
+    "bits": 3178,
+    "tracks": 2201,
+    "ratio": 1.444
+   },
+   "over_core_m6m7_max": 3.739
+  },
+  "kv3_hg_v2": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "head0_e2 | head0_e3",
+    "axis": "V",
+    "box": [
+     311.04,
+     639.36,
+     371.52,
+     889.92
+    ],
+    "width_um": 60.48,
+    "bits": 3262,
+    "tracks": 2201,
+    "ratio": 1.482
+   },
+   "over_core_m6m7_max": 3.973
+  },
+  "kv3_hg_v3": {
+   "gaps": 41,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "head0_e0 | head0_e1",
+    "axis": "V",
+    "box": [
+     311.04,
+     302.4,
+     371.52,
+     587.52
+    ],
+    "width_um": 60.48,
+    "bits": 3117,
+    "tracks": 2201,
+    "ratio": 1.416
+   },
+   "over_core_m6m7_max": 3.58
+  },
+  "kv3_hgi": {
+   "gaps": 40,
+   "gaps_over_0p6": 3,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3196,
+    "tracks": 1572,
+    "ratio": 2.032
+   },
+   "over_core_m6m7_max": 3.739
+  },
+  "kv3_hgi_v1": {
+   "gaps": 40,
+   "gaps_over_0p6": 3,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3231,
+    "tracks": 1572,
+    "ratio": 2.055
+   },
+   "over_core_m6m7_max": 3.405
+  },
+  "kv3_hgi_v2": {
+   "gaps": 40,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 2987,
+    "tracks": 1572,
+    "ratio": 1.9
+   },
+   "over_core_m6m7_max": 3.324
+  },
+  "kv3_hgi_v3": {
+   "gaps": 40,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3128,
+    "tracks": 1572,
+    "ratio": 1.989
+   },
+   "over_core_m6m7_max": 2.804
+  },
+  "kv3_hgi_v4": {
+   "gaps": 40,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3477,
+    "tracks": 1572,
+    "ratio": 2.211
+   },
+   "over_core_m6m7_max": 3.947
+  },
+  "kv3_hgi_v5": {
+   "gaps": 40,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3318,
+    "tracks": 1572,
+    "ratio": 2.11
+   },
+   "over_core_m6m7_max": 4.481
+  },
+  "kv3_hgi_v6": {
+   "gaps": 40,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 3088,
+    "tracks": 1572,
+    "ratio": 1.964
+   },
+   "over_core_m6m7_max": 4.051
+  },
+  "kv3_hgi_v7": {
+   "gaps": 40,
+   "gaps_over_0p6": 6,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 2910,
+    "tracks": 1572,
+    "ratio": 1.851
+   },
+   "over_core_m6m7_max": 2.804
+  },
+  "kv3_hgi_v8": {
+   "gaps": 40,
+   "gaps_over_0p6": 9,
+   "worst": {
+    "gap": "face W | head2_e0",
+    "axis": "V",
+    "box": [
+     0.0,
+     25.92,
+     43.2,
+     311.04
+    ],
+    "width_um": 43.2,
+    "bits": 2930,
+    "tracks": 1572,
+    "ratio": 1.863
+   },
+   "over_core_m6m7_max": 3.739
+  },
+  "kv3_pc": {
+   "gaps": 12,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "kvpc1 | kvpc2",
+    "axis": "H",
+    "box": [
+     561.6,
+     397.44,
+     959.04,
+     535.68
+    ],
+    "width_um": 138.24,
+    "bits": 4130,
+    "tracks": 5032,
+    "ratio": 0.821
+   },
+   "over_core_m6m7_max": 5.509
+  },
+  "kv3_pc_v1": {
+   "gaps": 12,
+   "gaps_over_0p6": 6,
+   "worst": {
+    "gap": "kvpc1 | kvpc2",
+    "axis": "H",
+    "box": [
+     561.6,
+     397.44,
+     959.04,
+     535.68
+    ],
+    "width_um": 138.24,
+    "bits": 5053,
+    "tracks": 5032,
+    "ratio": 1.004
+   },
+   "over_core_m6m7_max": 5.008
+  },
+  "kv3_pc_v2": {
+   "gaps": 12,
+   "gaps_over_0p6": 5,
+   "worst": {
+    "gap": "kvpc1 | kvpc2",
+    "axis": "H",
+    "box": [
+     561.6,
+     397.44,
+     959.04,
+     535.68
+    ],
+    "width_um": 138.24,
+    "bits": 5077,
+    "tracks": 5032,
+    "ratio": 1.009
+   },
+   "over_core_m6m7_max": 2.699
+  },
+  "kv3_pc_v3": {
+   "gaps": 12,
+   "gaps_over_0p6": 5,
+   "worst": {
+    "gap": "kvpc1 | kvpc2",
+    "axis": "H",
+    "box": [
+     561.6,
+     397.44,
+     959.04,
+     535.68
+    ],
+    "width_um": 138.24,
+    "bits": 5266,
+    "tracks": 5032,
+    "ratio": 1.047
+   },
+   "over_core_m6m7_max": 2.753
+  },
+  "kv3_pv": {
+   "gaps": 49,
+   "gaps_over_0p6": 1,
+   "worst": {
+    "gap": "pv__u_g1_j | pvg1_p2",
+    "axis": "H",
+    "box": [
+     630.83,
+     734.41,
+     803.63,
+     803.52
+    ],
+    "width_um": 69.11,
+    "bits": 1557,
+    "tracks": 2516,
+    "ratio": 0.619
+   },
+   "over_core_m6m7_max": 1.154
+  },
+  "kv3_pv_v1": {
+   "gaps": 49,
+   "gaps_over_0p6": 14,
+   "worst": {
+    "gap": "face S | pvg1_p0",
+    "axis": "H",
+    "box": [
+     527.04,
+     0.0,
+     907.2,
+     34.56
+    ],
+    "width_um": 34.56,
+    "bits": 1493,
+    "tracks": 1258,
+    "ratio": 1.187
+   },
+   "over_core_m6m7_max": 2.671
+  },
+  "kv3_pv_v10": {
+   "gaps": 49,
+   "gaps_over_0p6": 17,
+   "worst": {
+    "gap": "pvg1_p0 | pvg1_p1",
+    "axis": "H",
+    "box": [
+     527.04,
+     224.64,
+     907.2,
+     302.4
+    ],
+    "width_um": 77.76,
+    "bits": 2797,
+    "tracks": 2830,
+    "ratio": 0.988
+   },
+   "over_core_m6m7_max": 4.006
+  },
+  "kv3_pv_v11": {
+   "gaps": 49,
+   "gaps_over_0p6": 15,
+   "worst": {
+    "gap": "pvg1_p0 | pvg1_p1",
+    "axis": "H",
+    "box": [
+     527.04,
+     224.64,
+     907.2,
+     302.4
+    ],
+    "width_um": 77.76,
+    "bits": 2674,
+    "tracks": 2830,
+    "ratio": 0.945
+   },
+   "over_core_m6m7_max": 2.304
+  },
+  "kv3_pv_v12": {
+   "gaps": 49,
+   "gaps_over_0p6": 10,
+   "worst": {
+    "gap": "pvg1_p0 | pvg1_p1",
+    "axis": "H",
+    "box": [
+     527.04,
+     224.64,
+     907.2,
+     302.4
+    ],
+    "width_um": 77.76,
+    "bits": 2944,
+    "tracks": 2830,
+    "ratio": 1.04
+   },
+   "over_core_m6m7_max": 5.008
+  },
+  "kv3_pv_v2": {
+   "gaps": 49,
+   "gaps_over_0p6": 10,
+   "worst": {
+    "gap": "face S | pvg1_p0",
+    "axis": "H",
+    "box": [
+     527.04,
+     0.0,
+     907.2,
+     34.56
+    ],
+    "width_um": 34.56,
+    "bits": 1033,
+    "tracks": 1258,
+    "ratio": 0.821
+   },
+   "over_core_m6m7_max": 1.818
+  },
+  "kv3_pv_v3": {
+   "gaps": 49,
+   "gaps_over_0p6": 18,
+   "worst": {
+    "gap": "pvg0_p1 | pvg1_p1",
+    "axis": "V",
+    "box": [
+     440.64,
+     302.4,
+     527.04,
+     492.48
+    ],
+    "width_um": 86.4,
+    "bits": 3206,
+    "tracks": 3145,
+    "ratio": 1.019
+   },
+   "over_core_m6m7_max": 3.695
+  },
+  "kv3_pv_v4": {
+   "gaps": 49,
+   "gaps_over_0p6": 16,
+   "worst": {
+    "gap": "pvg0_p1 | pvg1_p1",
+    "axis": "V",
+    "box": [
+     440.64,
+     302.4,
+     527.04,
+     492.48
+    ],
+    "width_um": 86.4,
+    "bits": 2695,
+    "tracks": 3145,
+    "ratio": 0.857
+   },
+   "over_core_m6m7_max": 1.944
+  },
+  "kv3_pv_v5": {
+   "gaps": 49,
+   "gaps_over_0p6": 13,
+   "worst": {
+    "gap": "pvg1_p0 | pvg1_p1",
+    "axis": "H",
+    "box": [
+     527.04,
+     224.64,
+     907.2,
+     302.4
+    ],
+    "width_um": 77.76,
+    "bits": 2976,
+    "tracks": 2830,
+    "ratio": 1.051
+   },
+   "over_core_m6m7_max": 2.437
+  },
+  "kv3_pv_v6": {
+   "gaps": 49,
+   "gaps_over_0p6": 4,
+   "worst": {
+    "gap": "pvg0_p1 | pv__u_g0_j",
+    "axis": "H",
+    "box": [
+     60.48,
+     492.48,
+     440.64,
+     561.61
+    ],
+    "width_um": 69.13,
+    "bits": 1950,
+    "tracks": 2516,
+    "ratio": 0.775
+   },
+   "over_core_m6m7_max": 2.787
+  },
+  "kv3_pv_v7": {
+   "gaps": 49,
+   "gaps_over_0p6": 10,
+   "worst": {
+    "gap": "pvg1_p0 | pvg1_p1",
+    "axis": "H",
+    "box": [
+     527.04,
+     224.64,
+     907.2,
+     302.4
+    ],
+    "width_um": 77.76,
+    "bits": 2793,
+    "tracks": 2830,
+    "ratio": 0.987
+   },
+   "over_core_m6m7_max": 3.839
+  },
+  "kv3_pv_v8": {
+   "gaps": 49,
+   "gaps_over_0p6": 2,
+   "worst": {
+    "gap": "pv__u_g2_j | pvg2_p2",
+    "axis": "H",
+    "box": [
+     1097.39,
+     734.41,
+     1270.19,
+     803.52
+    ],
+    "width_um": 69.11,
+    "bits": 1684,
+    "tracks": 2516,
+    "ratio": 0.67
+   },
+   "over_core_m6m7_max": 1.692
+  },
+  "kv3_pv_v9": {
+   "gaps": 49,
+   "gaps_over_0p6": 12,
+   "worst": {
+    "gap": "pvg1_p1 | pv__u_g1_j",
+    "axis": "H",
+    "box": [
+     527.04,
+     492.48,
+     907.2,
+     561.61
+    ],
+    "width_um": 69.13,
+    "bits": 2535,
+    "tracks": 2516,
+    "ratio": 1.007
+   },
+   "over_core_m6m7_max": 3.005
+  }
+ }
+}

@@ -1153,12 +1153,6 @@
    "pins_file": "cores/kv3_head_eighth_e7_pins.json"
   }
  },
- "kv3_hub_C": {
-  "ahub": {
-   "orient": "R0",
-   "pins_file": "cores/qkd_ahub_pins.json"
-  }
- },
  "kv3_pc": {
   "kvpc0": {
    "orient": "R0",
@@ -1170,18 +1164,10 @@
   },
   "kvpc2": {
    "orient": "R0",
-   "origin_um": [
-    552.96,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   },
   "kvpc3": {
    "orient": "MY",
-   "origin_um": [
-    86.4,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   }
  },
@@ -1196,18 +1182,10 @@
   },
   "kvpc2": {
    "orient": "R0",
-   "origin_um": [
-    552.96,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   },
   "kvpc3": {
    "orient": "MY",
-   "origin_um": [
-    86.4,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   }
  },
@@ -1222,18 +1200,10 @@
   },
   "kvpc2": {
    "orient": "R0",
-   "origin_um": [
-    552.96,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   },
   "kvpc3": {
    "orient": "MY",
-   "origin_um": [
-    86.4,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   }
  },
@@ -1248,46 +1218,14 @@
   },
   "kvpc2": {
    "orient": "R0",
-   "origin_um": [
-    552.96,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   },
   "kvpc3": {
    "orient": "MY",
-   "origin_um": [
-    86.4,
-    1140.48
-   ],
    "pins_file": "cores/qkd_kvs_pc_pins.json"
   }
  },
  "kv3_pv": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1298,18 +1236,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1322,18 +1252,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1346,18 +1268,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1370,46 +1284,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v1": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1420,18 +1302,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1444,18 +1318,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1468,18 +1334,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1492,46 +1350,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v10": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1542,18 +1368,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1566,18 +1384,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1590,18 +1400,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1614,46 +1416,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v11": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1664,18 +1434,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1688,18 +1450,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1712,18 +1466,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1736,46 +1482,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v12": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1786,18 +1500,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1810,18 +1516,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1834,18 +1532,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1858,46 +1548,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v2": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -1908,18 +1566,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -1932,18 +1582,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -1956,18 +1598,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -1980,46 +1614,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v3": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2030,18 +1632,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2054,18 +1648,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2078,18 +1664,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2102,46 +1680,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v4": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2152,18 +1698,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2176,18 +1714,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2200,18 +1730,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2224,46 +1746,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v5": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2274,18 +1764,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2298,18 +1780,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2322,18 +1796,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2346,46 +1812,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v6": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2396,18 +1830,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2420,18 +1846,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2444,18 +1862,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2468,46 +1878,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v7": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2518,18 +1896,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2542,18 +1912,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2566,18 +1928,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2590,46 +1944,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v8": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2640,18 +1962,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2664,18 +1978,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2688,18 +1994,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2712,46 +2010,14 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  },
  "kv3_pv_v9": {
-  "pv__u_g0_j": {
-   "origin_um": [
-    138.24,
-    466.56
-   ]
-  },
-  "pv__u_g1_j": {
-   "origin_um": [
-    622.08,
-    466.56
-   ]
-  },
-  "pv__u_g2_j": {
-   "origin_um": [
-    1105.92,
-    466.56
-   ]
-  },
-  "pv__u_g3_j": {
-   "origin_um": [
-    1589.76,
-    466.56
-   ]
-  },
   "pvg0_p0": {
    "orient": "R0",
    "pins_file": "cores/kv3_pv_pair_pins.json"
@@ -2762,18 +2028,10 @@
   },
   "pvg0_p2": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg0_p3": {
    "orient": "MX",
-   "origin_um": [
-    34.56,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p0": {
@@ -2786,18 +2044,10 @@
   },
   "pvg1_p2": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg1_p3": {
    "orient": "MX",
-   "origin_um": [
-    518.4,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p0": {
@@ -2810,18 +2060,10 @@
   },
   "pvg2_p2": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg2_p3": {
    "orient": "MX",
-   "origin_um": [
-    1002.24,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p0": {
@@ -2834,18 +2076,10 @@
   },
   "pvg3_p2": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    665.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   },
   "pvg3_p3": {
    "orient": "MX",
-   "origin_um": [
-    1486.08,
-    881.28
-   ],
    "pins_file": "cores/kv3_pv_pair_pins.json"
   }
  }
