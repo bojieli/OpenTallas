@@ -1,0 +1,10 @@
+{
+ "image": "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_head_eighth_e1/review.png",
+ "verdict": "PASS_CONDITIONAL_FOR_HOLD_REPAIR",
+ "findings": [
+  "GeometryandRTLunchanged fromreviewedhead_e1;Wface dataflowlocalized;pinregp90<6.5um",
+  "55percentempty permits additionalholdbuffers without area pressure",
+  "Reusingplacedcheckpoint;repairmargin40ps towardFFholdclosure;no timingbudgetrelaxation"
+ ],
+ "scope": "Routecandidateonly;requiresnewTT/FFsignoff"
+}

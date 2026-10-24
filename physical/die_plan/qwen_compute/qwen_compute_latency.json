@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "8fd32979888311a1",
+ "plan_digest": "53b5c3b08c5b642a",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -14765,7 +14765,7 @@
     "part": "glue",
     "bus": "coll_fltv_i"
    },
-   "width": 69
+   "width": 70
   },
   "coll_core__out_data_rd_wi": {
    "cycles": 5,
@@ -15031,7 +15031,7 @@
     "part": "coll_core",
     "bus": "fltv_s_i"
    },
-   "width": 35
+   "width": 36
   },
   "coll_s__serdes_tx_tx_flit": {
    "cycles": 2,
@@ -15164,7 +15164,7 @@
     "part": "coll_core",
     "bus": "flt_u_i"
    },
-   "width": 1
+   "width": 4
   },
   "coll_ucie__shared_fault_io_shared_fault": {
    "cycles": 6,
@@ -38289,5 +38289,6 @@
    },
    "width": 1
   }
- }
+ },
+ "groups": []
 }

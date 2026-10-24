@@ -176,6 +176,21 @@ def sdc(per, ins, tol, clks, rsts, tid):
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
+def preserve_head_relays(path):
+    """Retain existing physical command-relay FFs, including unused command fields; no logic/cycle change."""
+    if Path(path).name != "ot_qwen_nearhbm_head_hs.sv":
+        return
+    text = Path(path).read_text()
+    start = text.index("module ot_qkh_relay #")
+    end = text.index("endmodule", start)
+    body = text[start:end]
+    declaration = "    reg [W-1:0] r [0:D-1];"
+    if body.count(declaration) != 1:
+        raise ValueError("head relay register declaration changed; physical keep intent needs review")
+    body = '(* keep_hierarchy = "yes" *) ' + body.replace(declaration, '    (* keep = 1 *) reg [W-1:0] r [0:D-1];')
+    Path(path).write_text(text[:start] + body + text[end:])
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -243,6 +258,7 @@ def main():
                 raise SystemExit(f"rtl name clash {dst.name}")
             continue
         shutil.copyfile(f, dst)
+        preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
@@ -313,6 +329,12 @@ def main():
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
+    for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
+        shutil.copyfile(REPO / "physical/common_flow" / name, kd / name)
+    for name in ("face_keep.tcl", "face_keep_release.tcl"):
+        text = (tool / name).read_text()
+        text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
+        (kd / name).write_text(text)
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (tool / "face_flops.tcl").read_text()
     ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
@@ -346,6 +368,9 @@ def main():
            f"export MAX_ROUTING_LAYER = {rec.get('sigmax', a.sigmax)}",
            f"export PLACE_DENSITY = {rec.get('util', a.util):g}",
            "export SYNTH_HIERARCHICAL = 0",
+           "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
+           "export PRE_SYNTH_TCL = /work/face_keep.tcl",
+           "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
            "export HOLD_SLACK_MARGIN = 15",

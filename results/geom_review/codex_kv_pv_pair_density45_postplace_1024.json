@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND",
+ "phase": "post-place, before CTS/GRT",
+ "images": [
+  "/srv/opentallas-scratch/claude/codex-qwen/pvpair_review/floorplan.png",
+  "/srv/opentallas-scratch/claude/codex-qwen/pvpair_review/density.png"
+ ],
+ "findings": [
+  "Lower density removes the saturated north-edge red stripe. Maximum64x64 bin density0.638; free-area fill0.381.",
+  "Eight south-edge SRAM macros unchanged; channels and pin geometry identical to previously reviewed candidate. PDN stripes remain continuous across the logic field.",
+  "Proceed to TT CTS/GRT to check congestion and timing. Do not claim SIGNED; pin-flop spread and final core signoff remain required."
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS-COND",
+ "image": "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_pv_pair/review.png",
+ "reviewer": "Codex",
+ "findings": [
+  "Eight SRAM macros hug the south edge with usable channels; 1652 N-face pins have p90 pin-flop distance 8.46um.",
+  "Local N edge density saturates while 27% of free area is empty and overall fill is32.4%; GRT1692 overflows on M2-M5 confirms localized density.",
+  "Revise placement target from0.60 to0.45 to spread combinational logic away from the fixed face-register band while preserving core outline/pins/macro boundary."
+ ],
+ "next": "Place-only candidate. Inspect new placement/congestion image before routing. No timing or SIGNED credit."
+}
