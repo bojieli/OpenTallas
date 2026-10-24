@@ -37,7 +37,7 @@
   "x_in_bits_per_cycle": 512,
   "chain_bus_bits": 565,
   "chain_bus": "bus B: x 512 (xa K0..4095 / xb K4096..5119) + go + xv + rv + row17 + bits32 (FP32 logit) + flt",
-  "go_to_result": 8415,
+  "go_to_result": 8416,
   "x_stream_cycles": 8269,
   "face_pins": {
    "i": 566,
@@ -186,15 +186,15 @@
   "rows": {
    "xb_ingress": 162,
    "x_fill_and_return": 156,
-   "bundle": 8415,
+   "bundle": 8416,
    "spine_merge_fire": 12,
    "rank_merge": 361,
    "mtp_seq_token_former": 6,
    "out_hop_issue": 4
   },
-  "total": 9116,
+  "total": 9117,
   "calendar_head_window": 10357,
-  "vs_calendar": -1241,
+  "vs_calendar": -1240,
   "ar_share": 0.00724,
   "note": "x fill / return counts 2 edges a tile (registered faces) + the spine stations at 364.5 um"
  },
@@ -203,7 +203,7 @@
    "ar": 47642,
    "mtp": 29235
   },
-  "occupancy_cycles_a_position": 8875,
+  "occupancy_cycles_a_position": 8876,
   "groups_1": {
    "ar_occupancy": 0.352,
    "mtp_occupancy": 0.216
@@ -235,8 +235,8 @@
  },
  "levers": {
   "vocab_over_12_dies": {
-   "saving_cycles": 5610,
-   "ar_rate_gain": 0.00445,
+   "saving_cycles": 5611,
+   "ar_rate_gain": 0.00446,
    "verdict": "split the vocabulary over all 12 dies (1/12 each): ~5.6k cycles a position = 0.44% AR, below the 1% adoption rule: NOT a lever"
   },
   "one_reticle_head": {

@@ -41,9 +41,9 @@ BUNDLES = VOCAB // ROWS_PER_BUNDLE       # 1010
 ELEMS = dict(A=4, B=1)                   # A: 32 rows x K 0..4095 (LV 8); B: 128 rows x K 4096..5119 (LV 6, PAD 2)
 ROM = dict(macro="ot_rom_4096x274_m8", words=4096, bits=274, per_bundle=10, area_um2=7881.4,
            src="results/uarch/v41_rom_depth_study.json")
-BUNDLE_GO_TO_RESULT = 8_359 + 54 + 2        # IOREG 1 / SAFE 1 (tile README, SAFE point 8) at CUT 0x17b; +54 at the CLOSED
+BUNDLE_GO_TO_RESULT = 8_359 + 54 + 3        # IOREG 1 / SAFE 1 (tile README, SAFE point 8) at CUT 0x17b; +54 at the CLOSED
                                          # element views' CUT 0x1ff / SPLIT9 1 (S81-HEAD 10-24: mini array 8,375 -> 8,429)
-                                         # +2: rebuilt elemB + elemA output register stages (ot_s81hd_oreg; mini array 8,431, 10-24)
+                                         # +3: rebuilt elemB + elemA output register stages (ot_s81hd_oreg) + bundle pk_q stage (mini array 8,432, 10-24)
 X_BEATS = D_MODEL * 16 // 512            # 160 beats of 512 b on the stage circuit (XB in)
 ELEM_VIEW = dict(A=dict(job="dshead-elemA-ss-f11f3cc47", um=317.672, ss_ps=133.67, ff_ps=10.81,
                         cells=None, cells_basis="ASSUMED: elemB cells x area ratio (no elemA count committed)"),
