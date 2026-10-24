@@ -158,7 +158,10 @@ FIXED = [
 # xw lanes then run VM -> sm<k>c through the SM's own a/b quarters (COORD option C inner-face capacity).
 XDIRECT = os.environ.get('OT_HBM_XDIRECT', '1') == '1'
 if XDIRECT:
-    FIXED.insert(0, (r'^(xq_Q_p\d_(bd|eg|bfq\d)|xl_Q_(ctl|aqhi|aqlo))$', 'vm'))
+    # p1 serves SM 2/3 (above SU2/SU3): its egress + broadcast-dequeue sit in SU2 (abuts sm2a, next to the VM), so the
+    # 2 x 2079-b xw trees do not cross the full vm|su2 face; only bfq rwq + qq + lane_en (1.6 kb) do.
+    FIXED.insert(0, (r'^(xq_Q_p0_(bd|eg|bfq\d)|xq_Q_p1_bfq\d|xl_Q_(ctl|aqhi|aqlo))$', 'vm'))
+    FIXED.insert(0, (r'^xq_Q_p1_(bd|eg)$', 'su2'))
 CTL_RE = re.compile(r'^ctl_p(\d\d)$')
 
 # ---------------------------------------------------------------------------------------------------- labels / roles
@@ -662,7 +665,7 @@ def main():
     cen2 = dict(groups=groups)
     segs, adj = v1.build_graph(parts)
     for s_ in segs.values():
-        s_['cap'] *= 0.92          # window parity / 10-um margins cost up to ~15% of the face over the routing estimate
+        s_['cap'] *= float(os.environ.get('OT_HBM_LONG_CAP', '0.86')) if s_['len'] >= 1000 else float(os.environ.get('OT_HBM_SHORT_CAP', '0.70'))   # window parity / 10-um margins cost up to ~15% of the face over the routing estimate (P5: more on sub-mm faces, the 803-um hc ring)
     P = {p['name']: p for p in parts}
     B = v1.bundles(cen2, {**where, **SMQ_WHERE}, P)
     orb = v1.orbits(B, P)

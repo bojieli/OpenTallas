@@ -684,7 +684,11 @@ def bundles(cen, where, P):
     return B
 
 
+B_ALL = {}
+
+
 def orbits(B, P):
+    B_ALL.clear(); B_ALL.update(B)
     done, orb = set(), []
     for k, b in B.items():
         if k in done:
@@ -702,6 +706,7 @@ def orbits(B, P):
             mem[0] = k
         for v in mem.values():
             done.add(v)
+            B[v]['_rep'] = mem[0]               # P5: every image slices like the orbit representative
         orb.append(mem)
     return orb
 
@@ -1264,6 +1269,7 @@ def word_elem(name, nb):
     return None
 
 
+WORD_SLICE = int(os.environ.get('OT_HBM_WORD_SLICE', '256'))   # P5: slice size inside one word (fewer windows per face)
 ALIGN = os.environ.get('OT_HBM_SLICE_ALIGN', '1') == '1' and os.environ.get('OT_HBM_PAD', 'word') == 'word'
 
 
@@ -1273,11 +1279,20 @@ def slice_plan(b):
     the other nets are split evenly as before.  Cached on the bundle."""
     if '_sw' in b:
         return b['_sw']
+    if b.get('_rep') is not None and B_ALL.get(b['_rep']) is not None and B_ALL[b['_rep']] is not b:
+        R = slice_plan(B_ALL[b['_rep']])
+        if sum(R) >= b['bits']:
+            b['_sw'] = R
+        else:                               # a wider image (e.g. SW with the 5th SerDes): rep slices + the extra bits spread
+            ns, x = len(R), b['bits'] - sum(R)
+            b['_sw'] = [R[i] + x // ns + (1 if i < x % ns else 0) for i in range(ns)]
+        return b['_sw']
     if not ALIGN or not b.get('nbits'):
         ns = max(1, math.ceil(b['bits'] / SLICE_BITS))
         b['_sw'] = [b['bits'] // ns + (1 if i < b['bits'] % ns else 0) for i in range(ns)]
         return b['_sw']
     W, rest = [], 0
+    order = canon_nets(b)
 
     def flush():
         nonlocal rest
@@ -1285,15 +1300,20 @@ def slice_plan(b):
             ns = max(1, math.ceil(rest / SLICE_BITS))
             W.extend(rest // ns + (1 if i < rest % ns else 0) for i in range(ns))
         rest = 0
-    for (si, sb), nb in zip(b['nets'], b['nbits']):
+    for (si, sb), nb in order:
         e = word_elem(f'{si}.{sb}', nb)
-        if not e:
-            rest += nb
+        if not e and nb < SLICE_BITS // 2:
+            rest += nb                      # small fields share slices
+            continue
+        if not e:                           # a wide bus (one word): its own slices, never shared with another bus
+            flush()
+            k = math.ceil(nb / WORD_SLICE)
+            W.extend(nb // k + (1 if i < nb % k else 0) for i in range(k))
             continue
         flush()
         n = nb // e
-        if e > 2 * SLICE_BITS:
-            k = math.ceil(e / SLICE_BITS)
+        if e > WORD_SLICE * 3 // 2:
+            k = math.ceil(e / WORD_SLICE)
             for _ in range(n):
                 W.extend(e // k + (1 if i < e % k else 0) for i in range(k))
         else:
@@ -1303,8 +1323,20 @@ def slice_plan(b):
             W.extend([m * e] * (n // m))
     flush()
     W = [w for w in W if w > 0] or [b['bits']]
+    x = b['bits'] - sum(W)                  # orbit width equalisation widened the bundle past its own nets: spread it
+    if x > 0:
+        ns = len(W)
+        W = [W[i] + x // ns + (1 if i < x % ns else 0) for i in range(ns)]
     b['_sw'] = W
     return W
+
+
+def canon_nets(b):
+    """Nets of a bundle in a quadrant-independent order (mirror images of an orbit slice identically)."""
+    pairs = list(zip(b['nets'], b.get('nbits') or [0] * len(b['nets'])))
+    if not ALIGN:
+        return pairs
+    return sorted(pairs, key=lambda t: (re.sub(r'(NW|NE|SW|SE)', 'Q', f'{t[0][0]}.{t[0][1]}'), t[1]))
 
 
 def swidth(b, sl, ns):
@@ -1315,6 +1347,13 @@ def swidth(b, sl, ns):
 
 
 def slice_nets(b, sl, ns):
+    rep = B_ALL.get(b.get('_rep')) if b.get('_rep') is not None else None
+    if rep is not None and rep is not b:
+        return slice_nets(rep, sl, ns)      # P5: words of the orbit representative (identical pads on every image)
+    return _slice_nets(b, sl, ns)
+
+
+def _slice_nets(b, sl, ns):
     """P5: source buses (src inst.bus) carried by slice sl of bundle b.  The bundle is the concatenation of its
     nets in b['nets'] order (b['nbits'] bits each); slice s carries bits [s*q + min(s, r), +q + (s < r))."""
     W = slice_plan(b)
@@ -1324,7 +1363,7 @@ def slice_nets(b, sl, ns):
         q, r = divmod(b['bits'], ns)
         lo = sl * q + min(sl, r); hi = lo + q + (1 if sl < r else 0)
     out, at = set(), 0
-    for (si, sb), nb in zip(b['nets'], b.get('nbits') or [0] * len(b['nets'])):
+    for (si, sb), nb in canon_nets(b):
         if at < hi and at + nb > lo:
             nm = f'{si}.{sb}'
             e = word_elem(nm, nb)
