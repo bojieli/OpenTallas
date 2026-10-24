@@ -127,3 +127,15 @@ def test_bind_post_gate(tmp_path):
     g = json.loads((b / "bind_gate.json").read_text())
     assert (g["verdict"], g["regen"]["verdict"], g["smoke"]["verdict"]) == ("INCOMPLETE", "PASS", "SKIPPED")
     assert "localparam int COLL_LS = 389;" in (b / "regen" / "qwen_compute_sched_pkg.sv").read_text()
+
+
+def test_bound_rtl_must_carry_regen_values(tmp_path):
+    """BINDER3 kv39 bound RTL keeps the as-built KV d2d TXDP [22,4,3,3] while its seam needs [67,4,3,3] -> MISMATCH"""
+    for txdp, want in (("32'h03030416", "MISMATCH"), ("32'h03030443", "OK")):
+        b = tmp_path / txdp[-4:]
+        shutil.copytree(FX / "kv39", b)
+        (b / "rtl").mkdir()
+        (b / "rtl" / "kv3_sys_c_part.sv").write_text(
+            f"module kv3_sys_c_part; qkd_d2d_static_sfm #(.PR(1), .TXDP({txdp})) u_d2d_kv (.clk(clk)); endmodule\n")
+        d = RC.run("qwen_kvsys", b)
+        assert d["constants"]["D2D_TXDP_K"]["status"] == want, d["constants"]["D2D_TXDP_K"]

@@ -227,6 +227,34 @@ class Out:
                 r["status"] = "MISMATCH"
                 r["mismatch"] = f"bind applied {bad} on {len([1 for i, b in got if str(b) != str(exp)])} inst, regen {exp}"
 
+    def rtl_check(self, table):
+        """the bound RTL itself (BIND_DIR/rtl) must carry the regenerated values: table = [(constant, module_re, param)];
+        every instance of the module must hold the constant's value (as integers), else MISMATCH."""
+        if not self.B or not (self.B.dir / "rtl").is_dir():
+            return
+        for name, mod, param in table:
+            r = self.c.get(name)
+            if not r or r["status"] not in ("OK", "WARN") or r["value"] is None:
+                continue
+            want = _int(r["sv_literal"]) if "sv_literal" in r else r["value"]   # TXDP / AP_OFS literals -> int
+            if isinstance(want, list):
+                continue
+            insts = {i: v for i, v in self.B.rtl_insts(mod).items() if param in v["params"]}
+            got = {}
+            for i, v in insts.items():
+                try:
+                    got[f"{v['file']}:{i}"] = _int(v["params"][param])
+                except ValueError:
+                    got[f"{v['file']}:{i}"] = v["params"][param]
+            bad = {k: v for k, v in got.items() if v != want}
+            r["rtl_bound"] = dict(module=mod, param=param, instances=len(got), values=sorted({str(v) for v in got.values()}))
+            if not got:
+                r["rtl_bound"]["note"] = "no instance carries the parameter in BIND_DIR/rtl (RTL default / hard leaf)"
+            elif bad:
+                r["status"] = "MISMATCH"
+                r["mismatch"] = (r.get("mismatch", "") + f" bound RTL {param}={sorted({str(v) for v in bad.values()})} on "
+                                 f"{len(bad)}/{len(got)} {mod} instances, regen {want}").strip()
+
     def verdict(self):
         st = defaultdict(int)
         for r in self.c.values():
@@ -695,6 +723,16 @@ def s81_rules(o):
           "return edges; anchor = S81-P8 measured LP calendar)", group="frame", status="OK" if bf else "PENDING")
 
 
+# constants the bound RTL must carry (module regex, parameter): checked on BIND_DIR/rtl by Out.rtl_check
+RTL_CHECK = {
+    "qwen_compute": [("COLL_LS", r"qfd_io_collective_static\w*", "LS")],
+    "qwen_kvsys": [("RESPONSE_LAT", r"qkd_ectl3_kiss_st\w*", "RESPONSE_LAT"), ("QK_ISSUE_AGE", r"qkd_ectl3_kiss_st\w*", "QK_ISSUE_AGE"),
+                   ("AP_OFS", r"qkd_ahub_static_dw\w*", "AP_OFS"), ("FR_OFS", r"qkd_ahub_static_dw\w*", "FR_OFS"),
+                   ("KVN_A0", r"qkd_seq_core_static_s\w*", "KVN_A0"), ("TRUNK_D", r"ot_qwen_tp8_pv_wide_ctl_tbf\w*", "TRUNK_D"),
+                   ("FLAG_D", r"ot_qwen_tp8_pv_wide_ctl_tbf\w*", "FLAG_D"), ("D2D_TXDP_K", r"qkd_d2d_static\w*", "TXDP")],
+}
+
+
 # ============================================================================================================ emit
 def _sv_name(n):
     return re.sub(r"\W", "_", n).upper()
@@ -759,6 +797,7 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
                   "(pair calendar image; both dies bind its TXDP)", dict(peer=str(peer)), group="xdie")
     if B:
         o.crosscheck()
+        o.rtl_check(RTL_CHECK.get(die, []))
     rec = {}
     if B and die == "qwen_kvsys" and o.c.get("XDIE_SEAM_K", {}).get("value"):
         bg = next((str(B.dir / f) for f in ("bus_groups.json", "bus_groups.json.gz") if (B.dir / f).exists()), None)
