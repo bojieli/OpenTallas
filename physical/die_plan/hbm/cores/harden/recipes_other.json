@@ -30,7 +30,19 @@
   "view_cell": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
   "view_kind": "ROUTED_UNBOUND",
   "view_port_bits": 1229,
-  "closed_view_dir": "physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+  "closed_view_dir": "physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "macro_place": {
+   "g_wpay.u_write_payload": [
+    30.348,
+    30.24,
+    "R0"
+   ],
+   "u_response_payload": [
+    30.348,
+    84.24,
+    "R0"
+   ]
+  }
  },
  "ot_hbm_static_cfg_collar_idx256r__108x108": {
   "top": "ot_hbm_static_cfg_collar_idx256r",

@@ -202,12 +202,31 @@ def main():
         for ext, lst in ((".lef", lefs), ("_tt.lib", libs)):
             shutil.copyfile(md / f"{m}{ext}", kd / "macros" / f"{m}{ext}")
             lst.append(f"/work/macros/{m}{ext}")
+    off = [q["name"] for q in pins if q["layer"] in ("M4", "M5") and
+           abs(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048 - round(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048)) > 0.05]
+    if off:
+        # as-built pins on the platform lattice (M4/M5 offset 0.012): every term gets DRT-0422 and edge pins DRT-0255
+        raise SystemExit(f"{a.type}: {len(off)}/{len(pins)} M4/M5 pins off the plan lattice (0.024 + k*0.048), e.g. {off[:3]}")
     io, prow = io_tcl(pins, w, h, a.type)
     (kd / "io.tcl").write_text(io)
     (kd / "pins.json").write_text(json.dumps(prow) + "\n")
     names = [p["name"] for p in pins]
-    clks = [n for n in names if re.match(CLK_RE, n)]
-    rsts = [n for n in names if re.match(RST_RE, n)]
+    pins_pending = None
+    canon = Path(__file__).with_name("canonical_ports_split.json")
+    ft = rec.get("functional_type")
+    if ft and canon.is_file():
+        ct = json.load(open(canon)).get("types", {}).get(ft)
+        if ct:
+            cn = [n if w == 1 else f"{n}[{lsb + i}]" for n, d, w, lsb in ct["ports"] for i in range(w)]
+            if set(cn) != set(names):
+                # the plan pins still carry the netlist-cut names: synth-only kit until the canonical re-pin lands
+                pins_pending = f"plan pins use cut names ({len(names)}), RTL top has canonical ports ({len(cn)})"
+                names = cn
+                io = "# PINS PENDING: " + pins_pending + "\n"
+                (kd / "io.tcl").write_text(io)
+    base = lambda n: re.sub(r"\[\d+\]$", "", n)
+    clks = [n for n in names if re.match(CLK_RE, base(n))]
+    rsts = [n for n in names if re.match(RST_RE, base(n))]
     if not clks:
         raise SystemExit(f"{a.type}: no clock pin among {len(names)} pins")
     per = float(plan["die"]["period_ps"])
@@ -282,7 +301,7 @@ def main():
               pins_file=c["pins_file"], pins_sha256=sha(plandir / c["pins_file"]), pins=len(pins),
               clocks=clks, resets=rsts, recipe_sha256=rec_sha, tool=f"{TOOL}@{tool_rev}",
               period_ps=per, insertion_budget_ps=ins, signal_max=a.sigmax, macros=rec.get("macros", []),
-              kit_hash=kit_hash(kd))
+              pins_pending=pins_pending, kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, kit_hash=fz["kit_hash"])))
 
