@@ -139,6 +139,10 @@ def _eval_obj(ctx, w):
     a = _words(w[1:-1])
     c = a[0]
     if c == "all_inputs":
+        if a[1:] == ["-no_clocks"]:
+            return ("ports", list(ctx.inputs))
+        if len(a) != 1:
+            raise SdcLintError(f"unsupported all_inputs options: {w}")
         return ("ports", ctx.inputs + ctx.clock_ports)
     if c == "all_outputs":
         return ("ports", list(ctx.outputs))
@@ -165,8 +169,7 @@ def _eval_obj(ctx, w):
         kind, lst = _eval_obj(ctx, rest[0])
         pat = rest[1]
         if "-regexp" in fl:
-            rx = pat[1:-1] if pat.startswith("{") else pat
-            return (kind, [p for p in lst if not re.search(rx, p)])
+            raise SdcLintError("regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks")
         _, ex = _eval_obj(ctx, pat)
         return (kind, [p for p in lst if p not in ex])
     raise SdcLintError(f"unsupported expression {w}")
