@@ -25,7 +25,7 @@ from pathlib import Path
 
 MAX_CHAIN = 3
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
-SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n)$"
+SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n)$"
 
 
 def is_ff(master):
@@ -427,7 +427,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=()):
                 fail("merged", b, f"flop {F.cells[ci][1]} also registers {[x for x in bs if x != b][:3]}")
             res["ok"] -= len(bs)
     if pins is not None:
-        want = {f"{x['bus']}[{x['bit']}]" for x in pins}
+        want = {x['bus'] if x.get('bit') is None else f"{x['bus']}[{x['bit']}]" for x in pins}
         have = {b for p in T.ports if not re.match(skip_re, p) for b in _bits_of(T, p)}
         for b in sorted(want - have)[:50]:
             fail("missing_port", b, "planned pin bit not a netlist port")
