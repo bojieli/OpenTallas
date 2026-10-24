@@ -16,6 +16,9 @@ mkdir -p $OUT/$NAME
   done
 ) &
 SAMPLER=$!
+# kit-name suffix _tnsK = ORFS repair_timing -repair_tns K (OT_TNS_END_PERCENT; the production default is 100)
+case $NAME in *_tns*) export OT_TNS_END_PERCENT=${NAME##*_tns};; esac
+echo "OT_TNS_END_PERCENT=${OT_TNS_END_PERCENT:-100} NC from kit" >> $OUT/$NAME/STATUS
 /usr/bin/time -v -o $OUT/$NAME/time_v.txt env SRC=$WT bash $WT/tools/ref_tile/ref_route.sh \
   $WT/results/arch/part_capacity_1024/kits/$NAME/kit.env $NAME $OUT
 rc=$?
