@@ -1,0 +1,8 @@
+{
+  "element": "cp1_r10c_pair",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T09:04:20.250259-07:00",
+  "picture": "/srv/opentallas-scratch/claude/codex-cp1/r10c_full_taps.png",
+  "reasons": "Viewed actual R4 grid+sinks on 1442.88x2453.76um abutted proof pair: regular4x4 grids per tile, extra taps at crowded face endpoints, aligned seam bus windows, no macros or macro walls in proof geometry. Global horizontal ft lanes carry stations at centre; paired face flops and PDN use existing plan. Requires CTS seam spread<=80ps and uniform signoff; no physical closure credit before those. Original c/d jobs are dead (no containers/PIDs, stale tmp logs); resume independent checkpoint copies."
+}
