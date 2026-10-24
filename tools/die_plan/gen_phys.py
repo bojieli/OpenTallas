@@ -453,6 +453,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
+    # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
+    ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    if ist:
+        shutil.copyfile(ist[0], kd / "istations.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
