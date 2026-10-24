@@ -596,6 +596,40 @@ def main():
                 f"export MACRO_PLACE_HALO = {rec.get('macro_place_halo_um', 4.32):g} {rec.get('macro_place_halo_um', 4.32):g}",
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)}"]
+    if lefs and not rec.get("macro_placement") and rec.get("macro_fence", True):
+        # ELEM-HBM 10-24 placed review (idx_qctl B2l): RTL-MP put the SRAM flush on the S face that carries 313/337 pins,
+        # so the face flops sat 48 um from their pins.  Fence the macros out of a pin band along every face that
+        # carries >= 5 % of the pins (band = MACRO_FENCE_BAND_UM, default 12.96 um inside the 4.32-um core margin).
+        band = float(rec.get("macro_fence_band_um", 12.96))
+        fc = {"N": 0, "S": 0, "E": 0, "W": 0}
+        for p_ in pins:
+            fc[min([(p_["x"], "W"), (w - p_["x"], "E"), (p_["y"], "S"), (h - p_["y"], "N")])[1]] += 1
+        heavy = {f for f, n in fc.items() if n >= 0.05 * max(1, len(pins))}
+        lx = 4.32 + (band if "W" in heavy else 0.0)
+        ux = w - 4.32 - (band if "E" in heavy else 0.0)
+        ly = 4.32 + (band if "S" in heavy else 0.0)
+        uy = h - 4.32 - (band if "N" in heavy else 0.0)
+        mw = mh = 0.0
+        for lf in lefs:
+            mm = re.search(r"SIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)", (kd / "macros" / Path(lf).name).read_text())
+            if mm:
+                mw, mh = max(mw, float(mm.group(1))), max(mh, float(mm.group(2)))
+        hx = float(rec.get("macro_place_halo_um", 4.32))
+        # the largest macro (+halo both sides) must still fit: give the band back on the lighter face, then both
+        if ux - lx < mw + 2 * hx:
+            if "W" in heavy and "E" in heavy:
+                if fc["W"] <= fc["E"]: lx = 4.32
+                else: ux = w - 4.32
+            if ux - lx < mw + 2 * hx:
+                lx, ux = 4.32, w - 4.32
+        if uy - ly < mh + 2 * hx:
+            if "S" in heavy and "N" in heavy:
+                if fc["S"] <= fc["N"]: ly = 4.32
+                else: uy = h - 4.32
+            if uy - ly < mh + 2 * hx:
+                ly, uy = 4.32, h - 4.32
+        cfg += [f"export RTLMP_FENCE_LX = {lx:g}", f"export RTLMP_FENCE_LY = {ly:g}",
+                f"export RTLMP_FENCE_UX = {ux:g}", f"export RTLMP_FENCE_UY = {uy:g}"]
     if rec.get("macro_placement"):
         lines = []
         for placement in rec["macro_placement"]:

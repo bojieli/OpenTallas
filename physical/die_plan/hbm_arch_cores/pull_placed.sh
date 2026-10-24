@@ -3,7 +3,7 @@
 # the placed view (render_core_placed.py) for the placed-stage review.   pull_placed.sh
 B=/srv/opentallas-scratch/claude/elem-hbm; H=$(dirname "$0")
 grep -o '[a-zA-Z0-9_]* -> [a-z0-9]*:' $B/launch.log | sort -u | while read kit arrow host; do
-  host=${host%:}; kd=$B/kits_tt/$kit; [ -d "$kd" ] || continue
+  host=${host%:}; kd=$B/kits_b2l/$kit; [ -d "$kd" ] || continue
   src=$B/runs/$kit
   if [ "$host" = localhost ]; then pre=""; else pre="$host:"; fi
   rsync -a --include='placed.csv' --include='ot_face_flops.txt' --include='face_guard.json' --include='run_*.log' \
