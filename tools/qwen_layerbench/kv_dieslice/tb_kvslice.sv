@@ -231,7 +231,12 @@ module tb_kvslice;
         $display("KVSLICE_CFG phase %s frames %0d expect %0d mut_frame %0d top %m", phase, nfr, n_exp, mut_frame);
         repeat (20) @(posedge ck_ref); por_n = 1;
         repeat (4) @(posedge ck_ref); rst_n = 1;
+        // board link up only once the die's link end can receive: its HOST is out of reset (host_rst_n at the hub) and
+        // both SerDes halves report tx_up, + 64 host cycles for the 30-cycle lanes.  Before this the board adapter's
+        // idle flits are lost and its FDI sequence is ahead of the die's (die adapter f_seq on the first flit).
+        wait (bo_sig[3] && dut.sys_SW.u_core.tx_up && dut.sys_SE.u_core.tx_up);
         repeat (64) @(posedge ck_host); host_up = 1;
+        $display("KVSLICE host board link up at core cycle %0d", cyc_core);
         while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + setup_wait)) && t_bfault < 0)
             @(posedge ck_core);
         repeat (2000) @(posedge ck_core);
