@@ -568,7 +568,7 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
-    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py"):
+    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     shutil.copyfile(HARDEN / "pin_audit_core.py", kd / "pin_audit_core.py")
     m = CORE_MARGIN_UM
@@ -603,6 +603,7 @@ def main():
            # ELEM-HBM 10-24 (gq_land RSZ0060): ORFS cts.tcl repairs hold BEFORE the POST_CTS tap_balance, i.e. on an
            # unbalanced tree -> thousands of needless hold buffers; repair after GRT instead, on the balanced tree.
            "export SKIP_CTS_REPAIR_TIMING = 1",
+           "export PRE_GLOBAL_ROUTE_TCL = /work/hold_cap.tcl",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
