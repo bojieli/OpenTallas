@@ -754,6 +754,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
 
 
 FT_MACRO_ADD = []
+NF_HC_TYPES = []
 FT_HALO = 8.64
 
 
@@ -1910,10 +1911,16 @@ def emit(parts, lanes, routes, chans, fmap, out):
         for s_ in ftsl:
             if s_["layers"] is None:
                 s_.pop("layers")
-        hc_ = frame_hard_cores(rep.contents, buses) + nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl, buses)   # S81-P9-HC
+        nf_ = nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl, buses)
+        hc_ = frame_hard_cores(rep.contents, buses) + nf_   # S81-P9-HC
+        if nf_:
+            # S81-CORES: a type hardened here is skipped by macrofree_ft_reach (it has hard_cores); its slots are sized at
+            # the implemented M4-M7 kit reach around the cores here, and by the actual pin bits at the end (corefull)
+            NF_HC_TYPES.append(tn)
         for s_ in ftsl:
             k0 = s_["stations"]
-            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
+            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h,
+                                               **({"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98} if nf_ else {}))
             if s_["stations"] != k0:
                 FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
@@ -1998,6 +2005,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
+    from tools.die_plan.ft_reach import resize
+    STATS_V4["corefull_ft_reach"] = resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98,
+                                           types=NF_HC_TYPES, macrofree_only=False)
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
