@@ -9,3 +9,4 @@ mkdir -p "$O"
 O=$(cd "$O" && pwd)
 PYTHONHASHSEED=0 python3 "$D/gen_plan_v2.py" --out "$O"
 python3 "$R/tools/die_plan/check.py" "$O/die_plan.json" --png --out "$O/g0"
+python3 "$D/complete_p7.py" "$O" --tool "${OT_PT4:-$R}"   # P7 G0C completeness (needs plan-tool4 tools/die_plan: check._bus_targets)

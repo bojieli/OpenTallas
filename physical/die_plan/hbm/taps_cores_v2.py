@@ -233,6 +233,10 @@ def load_blocks(ft):
     return m
 
 
+HC_ARR = os.environ.get('OT_HBM_HC_ARR', '1') != '0'
+HC_ARR_V = os.environ.get('OT_HBM_HC_ARR', 'A')
+
+
 def apply(plan, out_dir, where, ft=None):
     ft = ft or os.path.join(HERE, 'inputs')
     ev_all = json.load(open(os.path.join(HERE, 'inputs', 'cells_evidence.json')))
@@ -267,6 +271,15 @@ def apply(plan, out_dir, where, ft=None):
                 OCS[(tn_, re.sub(r'__pv\d+$', '', mst))] = sp
     ppi = os.path.join(HERE, 'cores', 'pins_plan', 'index.json')
     PP = ({k: v['file'] for k, v in json.load(open(ppi))['done'].items()} if os.path.exists(ppi) else {})
+    # P7: adopt CORE-HBM re-pin v3 (claude/core-hbm-1023 @f36c41c75 pins_v3_proposal, byte-identical copies).  Excluded:
+    # collar_idx256r (closed view = plan core, CORE-HBM keeps the published pins), h9b (gate on the published pins),
+    # kshare_splitstrap (face rule FAIL at 146.88: outline decision pending with the VM slice).
+    V3_EXCL = os.environ.get('OT_HBM_V3_EXCL', 'ot_hbm_static_cfg_collar_idx256r,ot_hbm_svc_pc_ctrl_leaf_cfg_h9b,'
+                             'ot_hbm_svc_vm_kshare_splitstrap').split(',')
+    v3i = os.path.join(HERE, 'cores', 'pins_plan_v3', 'summary.json')
+    V3 = ({k: v['pins_file'] for k, v in json.load(open(v3i)).items() if k.split('__')[0] not in V3_EXCL}
+          if os.path.exists(v3i) and os.environ.get('OT_HBM_PINS_V3', '1') == '1' else {})
+    v3_used = set()
     for tn in sorted(types):
         t = types[tn]
         w, h = t['outline_um']
@@ -366,6 +379,20 @@ def apply(plan, out_dir, where, ft=None):
                              f'area is a PROPOSAL; the RTL owner partitions it into {n} cores of <= 350k'
                              + (f'; its {macros} SRAM macros go with the sub-cores' if macros else ''))
                 subs = grid_split(box, len(groups))
+                if HC_ARR and c['module'].startswith('ot_hbm_hc_bankq') and len(groups) == 3:
+                    # P7 (G2 hc congestion, GEOM/COORD 18:23 (2)): the 2x2 grid of 362.88 cores blocked M1-M5 over
+                    # 54% of the tile and left 17-um N/E strips; the ~3 kb/face transit then only had M6/M7 over
+                    # the cores.  Lane cores at content size (288.9k cells x 0.11 um2 = 31.8k um2 -> 172.8 x 345.6
+                    # = 53% std fill, 2.7k pins = 2.6/um), bank core (12 SRAM) unchanged 362.88; bank top-left,
+                    # lanes bottom-right, no two cores share an x column or a y row -> every horizontal cut keeps
+                    # >= 440 um and every vertical cut >= 544 um of M2-M5, face strips >= 43 um.
+                    if HC_ARR_V == 'B':                 # realistic bank: 12 SRAM 114k um2 + 22.9k std -> 72% fill
+                        subs = [(59 * G, 5 * G, 20 * G, 34 * G), (80 * G, 5 * G, 20 * G, 34 * G),
+                                (5 * G, 39 * G, 52 * G, 49 * G)]
+                    else:
+                        L, B_ = 20 * G, 42 * G
+                        subs = [(53 * G, 6 * G, L, 2 * L), (78 * G, 6 * G, L, 2 * L), (6 * G, 46 * G, B_, B_)]
+                    assert all(sx + sw <= w + 1e-6 and sy + sh <= h + 1e-6 for sx, sy, sw, sh in subs), (tn, w, h)
                 for (nm, cc, why), (sx, sy, sw, sh) in zip(groups, subs):
                     cores.append(dict(inst=f"{c['inst']}_{nm}", module=f"{c['module']}__{nm}", origin_um=[r3(sx), r3(sy)],
                                       outline_um=[r3(sw), r3(sh)], orient='R0', track_offset_um=[0.0, 0.0],
@@ -448,6 +475,14 @@ def apply(plan, out_dir, where, ft=None):
                         and b[1] < a[1] + a[3] - 1e-6:
                     ov += 1
         tinfo['core_overlaps'] = ov
+        for c in cores:                                 # P7: CORE-HBM connectivity-aware re-pin v3 (adopted 10-23)
+            k3 = f"{c['module']}__{c['outline_um'][0]:g}x{c['outline_um'][1]:g}"
+            if k3 in V3:
+                c['pins_file'] = f'cores/pins_plan_v3/{V3[k3]}'
+                c['track_offset_um'] = [0.0, 0.0]
+                c['note'] = (c.get('note', '') + '; P7 re-pin v3 (CORE-HBM, plan M4/M5 die-lattice tracks, '
+                             'face rule <= 4.5/um)')
+                v3_used.add(V3[k3])
         for c in cores:                                 # P4: plan-derived pins (pins_plan_v2.py) where none exist
             if 'pins_file' in c:
                 continue
@@ -480,6 +515,11 @@ def apply(plan, out_dir, where, ft=None):
         os.makedirs(os.path.join(out_dir, 'cores', 'pins_plan'), exist_ok=True)
         for m in sorted(pp_used):
             shutil.copyfile(os.path.join(HERE, 'cores', 'pins_plan', m), os.path.join(out_dir, 'cores', 'pins_plan', m))
+    notes['pins_plan_v3_files'] = sorted(v3_used)
+    if v3_used and os.path.realpath(os.path.join(out_dir, 'cores')) != os.path.realpath(os.path.join(HERE, 'cores')):
+        os.makedirs(os.path.join(out_dir, 'cores', 'pins_plan_v3'), exist_ok=True)
+        for m in sorted(v3_used):
+            shutil.copyfile(os.path.join(HERE, 'cores', 'pins_plan_v3', m), os.path.join(out_dir, 'cores', 'pins_plan_v3', m))
     notes['c0_tree'] = c0_tree(plan)
     notes['summary'] = summarise(notes)
     json.dump(notes, open(os.path.join(out_dir, 'plan_notes_v2.json'), 'w'), indent=1, sort_keys=True)
