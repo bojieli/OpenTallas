@@ -55,6 +55,8 @@ def mean(*pairs):
     return round(t / b, 2) if b else None
 
 
+import os
+B2 = os.environ.get('HBM_ARCH_B2')
 C = dict(
     SM_HBM=mean(('spine', 'sm', None)),
     SM_X=mean(('hub', 'sm', None)),
@@ -70,6 +72,13 @@ C = dict(
     SU_CORE=mean(('su', 'hub', None), ('hub', 'su', None)),
     KV_DESC=mean(('spine', 'hub', None), ('hub', 'spine', None)),
 )
+if B2:   # svc (ctl / vmks / svg) in the hub: SM_HBM = far-row PHY -> hub -> SM read path (hbm_rows.json, conservative);
+         # HBM_VM / VM_HBM in-hub (2); SM_X = hub -> SM
+    hr = json.load(open(f'{pdir}/hbm_rows.json'))
+    C['SM_HBM'] = hr['HBM read path far (PHY->hub->SM, cycles)']
+    C['HBM_VM'] = 2.0; C['VM_HBM'] = 2.0; C['KV_DESC'] = 2.0
+    C['SM_X'] = hr['svc->SM far']['mean_cycles']
+    C['SM_OUT'] = hr['SM->svc far']['mean_cycles']
 base = json.load(open(base_p))
 st = dict(base['plan_b'])
 for k, v in C.items():

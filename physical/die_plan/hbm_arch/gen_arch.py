@@ -55,6 +55,11 @@ VAR = {
     # current-release SM ot_hbm_accel_smh_attn as 2x2 QSPLIT quarters (1944 x 1737 each) = 450u x 402u
     'Ac': dict(smw=450, smh=402, nq=4, label='Ac: current SM (QSPLIT 2x2), 16 SM / 4 quad tiles, 2 stacks'),
     'B': dict(smw=584, smh=520, nq=2, phyh=200, bandh=200, hubw=640, label='B: P=3 SM, 8 SM / 2 quad tiles, 1 HBM3E stack'),
+    # B2 (COORD 10-23 22:xx review): HBM access (svg / vmks / ctl) in the hub; SFU core 2x2 W and IDX score 2x2 E of the
+    # hub (each a full hub face), hc ring 4 + 4 at the band ends; narrower seam; 3-layer endpoint faces where the M8 / M9
+    # budget allows; NE = MY mirror of NW (one master per tile partition); SerDes S1 on the S edge (vsN0)
+    'B2': dict(smw=584, smh=520, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210, spuhub=True,
+               mirror=True, l3=True, label='B2: P=3 SM, 8 SM / 2 mirrored quad tiles, 1 HBM3E stack'),
 }
 SIDE = 96          # side column width
 SUH = 180          # SU band height (4 lane-group partitions per SM)
@@ -62,10 +67,10 @@ BANDH0 = 150       # service band row height (2 rows)
 PHYH0 = 140        # PHY row (HBM3E PHY 8501.76 x 1183.68 + pseudo-channel controllers + IO)
 PHYW = 984
 SEAMH = 120        # horizontal seam row (root tile at its centre)
-SEAMV = 200        # vertical seam column
+SEAMV0 = 200       # vertical seam column
 HUBW0 = 440        # hub width (tile centre)
-SP = 236           # tile spine column width (SM0 | spine | SM1)
-DSU = 30           # SU-row spine widening (each side)
+SP0 = 236          # tile spine column width (SM0 | spine | SM1)
+DSU0 = 30          # SU-row spine widening (each side)
 NSP = 3            # spine partitions per SM row
 IOW = 110           # SerDes io partition width (die edge, band row 0)
 NSIDE = 3          # side-column partitions per SM
@@ -86,6 +91,9 @@ def build(var):
     PHYH = V.get('phyh', PHYH0)
     BANDH = V.get('bandh', BANDH0)
     HUBW = V.get('hubw', HUBW0)
+    SEAMV = V.get('seamv', SEAMV0)
+    DSU = V.get('dsu', DSU0)
+    SP = V.get('sp', SP0)
     QW = 2 * smw + SP
     QH = 2 * (smh + SUH) + 2 * BANDH
     W = 2 * QW + SEAMV
@@ -116,7 +124,28 @@ def build(var):
     yb0 = smh + SUH
     hx0, hx1 = QW // 2 - HUBW // 2, QW // 2 + HUBW // 2
     loc.append(('hub', hx0, yb0, hx1, yb0 + 2 * BANDH, 'hub'))
-    for r in range(2):
+    if V.get('band2'):
+        # [io | hcb hcb | sfuc sfuc | HUB | idx idx | hcb hcb]: 2 rows; the SFU core / IDX score 2x2 blocks each give
+        # the hub one whole face; the hc ring sits 4 + 4 at the band ends
+        if V.get('band2') == 'ringE':      # hc ring whole at the E end (next to the root's hc_eng): no ring crossing
+            cols = [(IOW, hx0, ['s0', 's1']), (hx1, QW, ['i0', 'i1', 'h0', 'h1', 'h2', 'h3'])]
+        else:
+            cols = [(IOW, hx0, ['h0', 'h1', 's0', 's1']), (hx1, QW, ['i0', 'i1', 'h2', 'h3'])]
+        for xa0, xa1, names in cols:
+            cw = (xa1 - xa0) // len(names)
+            for j, c in enumerate(names):
+                xa = xa0 + j * cw
+                xb = xa1 if j == len(names) - 1 else xa + cw
+                for r in range(2):
+                    ya, yb = yb0 + r * BANDH, yb0 + (r + 1) * BANDH
+                    if c[0] == 'h':
+                        nm = f'b0{r}{c[1]}'
+                    elif c[0] == 's':
+                        nm = f'b11{2 * r + (1 - int(c[1]))}'      # inner column (next to the hub) = slices 0 / 2
+                    else:
+                        nm = f'b10{2 * r + int(c[1])}'
+                    loc.append((nm, xa, ya, xb, yb, 'band'))
+    for r in (range(2) if not V.get('band2') else ()):
         ya, yb = yb0 + r * BANDH, yb0 + (r + 1) * BANDH
         for h, (xa0, xa1) in enumerate(((IOW, hx0), (hx1, QW))):
             cw = (xa1 - xa0) // 4
@@ -145,7 +174,7 @@ def build(var):
         parts[f'PHY_{side}'] = dict(type='phy', rect=(px0, y0, px0 + PHYW, y1), orient={'N': 'R0', 'S': 'MX'}[side],
                                     kind='phy', quad=None, local='phy')
     if nq == 2:
-        return build_b_tail(parts, W, H, QW, QH, smh, V, var, quads)
+        return build_b_tail(parts, W, H, QW, QH, smh, V, var, quads, SEAMV)
     ys0 = PHYH + QH
     ys1 = ys0 + SEAMH
     # seam row: [hsW | ROOT (from the W spines to the E spines, under the vertical seam) | hsE]: the root abuts
@@ -165,7 +194,7 @@ def build(var):
     return dict(W=W, H=H, QW=QW, QH=QH, parts=parts, quads=quads, V=V, var=var)
 
 
-def build_b_tail(parts, W, H, QW, QH, smh, V, var, quads):
+def build_b_tail(parts, W, H, QW, QH, smh, V, var, quads, SEAMV):
     """B (8 SM, 1 stack): the two quad tiles side by side under PHY_N; the vertical seam between them is the ROOT
     over the SU / band / SU rows (1 band-row hop from both hubs; VM ring = the one NW<->NE link through it) and a
     transit seam beside the two SM rows.  The S edge is the SM2/SM3 row (IO sits in the band-row io partitions)."""
@@ -194,13 +223,14 @@ def assign(L):
         A[f'hc_Q{k}'] = [far]; A[f'cxdl_Q{k}_q'] = [far]; A[f'cxdl_Q{k}_s'] = [far]
         top = k < 2
         # HBM access (vmks keyspace + svg scatter/gather) for all 4 SMs at the memory end of the spine
-        A[f'svg{k}'] = ['spu0' if top else 'spu1']
-        A[f'vmks{k}'] = ['spu0' if top else 'spu1']
+        SH = L['V'].get('spuhub')
+        A[f'svg{k}'] = ['hub' if SH else 'spu0' if top else 'spu1']
+        A[f'vmks{k}'] = ['hub' if SH else 'spu0' if top else 'spu1']
         A[f'cp_svg{k}'] = ['spt0' if top else f'spb{NSP - 1}']
         A[f'xc{k}'] = ['spt0' if top else f'spb{NSP - 1}']
         A[f'hcollks_Q_p{k}'] = ['hub']
     for p in range(16):           # pseudo-channel controllers next to the keyspace units (spine top, under the PHY row)
-        A[f'ctl_p{p:02d}'] = ['spu0' if p // 4 < 2 else 'spu1']     # with its SM's keyspace unit (vmks)
+        A[f'ctl_p{p:02d}'] = ['hub' if L['V'].get('spuhub') else 'spu0' if p // 4 < 2 else 'spu1']  # with its SM's vmks
     # service band: hc ring (8 banks) in the SM1/SM3 half (b1*), SFU / IDX in the SM0/SM2 half (b0*); hub 2x2 centre
     # band (seam side): row 1 (SU2/3 side) = IDX score quarter x 3 + SFU store/programme; row 0 = hc ring + SFU core
     # band by area: W half = hc ring, one 0.54-mm2 bank per partition (ring order around the half);
@@ -252,6 +282,11 @@ def mapping(T, census):
     for n, (q, r) in role.items():
         if n in SERDES_Q:
             qq = SERDES_Q[n]
+            if qq not in T['quads'] and T['V'].get('mirror'):
+                # B2: the d4f SerDes count per die is kept (5 x 6 lanes): the S-quadrant macros go to the S-edge
+                # bottom-spine partitions (beachfront, empty corridor), one per tile (mirror pair)
+                out[n] = ['NW_spb0' if qq == 'SW' else 'NE_spb0']
+                continue
             if qq not in T['quads']:
                 continue                       # B: the S quadrants' SerDes do not exist on this die
             out[n] = [f'{qq}_io']
@@ -265,7 +300,7 @@ def mapping(T, census):
             if p == '@phy':
                 p = 'PHY_N' if (n.endswith('NW') or nq == 2) else 'PHY_S'
             elif p == 'SW_mca' and nq == 2:
-                p = 'NE_mca'
+                p = 'vsN0' if T['V'].get('mirror') else 'NE_mca'   # B2: S-edge centre (keeps NW / NE symmetric)
             out[n] = [p]
             continue
         rr = 'qdq' if QDQ_RE.match(r) else r
@@ -610,9 +645,42 @@ def plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, outdir):
         return int(c / share)
     parts_out = []
     fit = {}
-    for n, p in P.items():
+    MIR = T['V'].get('mirror')
+    import emit_mirror as EM
+
+    def sig(n):
+        # role signature (as-built per-quadrant parameter variants __pvN / glue_nw_t are one master + a quad-ID strap)
+        return sorted((census[2].get(i, (None, i))[1] if census[2].get(i, ('G',))[0] != 'G' else re.sub(r'^(lk|ep)_[NS]\d$', r'\1', i), len(M[i])) for i in contents.get(n, []))
+    order_ = sorted(P, key=lambda n: (n.startswith('NE_'), n))      # NW masters first
+    tname = {}
+    for n in order_:
+        sa, sb_ = sig(n), sig(EM.mir(n))
+        # NW-only as-built blocks (quant / idx_share / vmm live in quadrant NW of the r18h5 census): the tile master
+        # carries them, the NE copy is the same master (lanes are already canonical = max over the quadrants)
+        sub = n.startswith('NW_') and set(sb_) <= set(sa) or n.startswith('NE_') and set(sa) <= set(sb_)
+        if sub and sa != sb_:
+            T.setdefault('master_superset', {})[n[3:]] = sorted({r for r, _ in set(sa) ^ set(sb_)})
+        if MIR and not EM.single(n) and P[n]['kind'] not in ('sm',) and (sa == sb_ or (sub and P[n]['kind'] == 'hub')):
+            tname[n] = 'q_' + n[3:]
+        elif MIR and P[n]['kind'] == 'sm':
+            tname[n] = 'q_' + n[3:]
+        else:
+            tname[n] = n
+    FL = {'E': 'W', 'W': 'E', 'N': 'N', 'S': 'S'}
+    for n in order_:
+        p = P[n]
         x0, y0, x1, y1 = (u(v) for v in p['rect'])
-        tn = n                          # concept plan: one type per instance (replication proven per tile, see doc)
+        tn = tname[n]
+        flip = MIR and n.startswith('NE_') and tn.startswith('q_')
+        if tn in types:                 # mirror instance of a shared master: check buses / slots, then place it MY
+            t0 = types[tn]
+            sl = sorted((x['name'], FL[x['in_face']], FL[x['out_face']], x['width']) for x in slots.get(n, []))
+            s0 = sorted((x['name'], x['in_face'], x['out_face'], x['width']) for x in t0['ft_slots'])
+            b0 = sorted(x['name'] for x in t0['buses'])
+            if sl != s0 or sorted(x['name'] for x in buses.get(n, [])) != b0:
+                T.setdefault('mirror_errs', []).append(n)
+            parts_out.append(dict(name=n, type=tn, origin_um=[x0, y0], orient='MY'))
+            continue
         w, h = round(x1 - x0, 4), round(y1 - y0, 4)
         insts = sorted(contents.get(n, []))
         cells = sum(cells_of(i, len(M[i])) for i in insts)
@@ -662,10 +730,16 @@ def plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, outdir):
             if not cont:
                 cont.append(dict(inst='u_ft', module=f'hbm_arch_ft_{tn}', status='new', cells=0,
                                  note='transit only: ft stations + pin registers'))
+        if MIR:
+            for c in cont:
+                c['inst'] = re.sub(r'_NW(?=\d|_|$)', '_Q', c['inst'])
+            for c in hcs:
+                c['inst'] = re.sub(r'_NW(?=\d|_|$)', '_Q', c['inst'])
         t = dict(module=f'hbm_arch_{tn}', outline_um=[w, h], hard=p['kind'] in ('phy', 'sm'),
                  face_layers=dict(E=HL, W=HL, N=VL, S=VL),
                  buses=buses.get(n, []), ft_slots=slots.get(n, []),
-                 clock=dict(tap_um=[round(w / 2, 3), round(h / 2, 3)], layer='M9', insertion_ps=250),
+                 clock=dict(tap_um=[round(w / 2, 3), round(h / 2, 3)], layer='M9', insertion_ps=250,
+                            **({'tap_pitch_um': float(max(w, h))} if p['kind'] in ('phy', 'sm') else {})),  # hard macro: one clock pin, own tree
                  reset=dict(tap_um=[round(w / 2, 3), round(h / 2, 3)], sync_stages=2),
                  contents=cont, cells=max(cells, 1000))
         if p['kind'] == 'phy':
@@ -712,7 +786,12 @@ def main():
     M = mapping(T, census)
     pair, exempt = traffic(T, census, M)
     bundles = canon(T, pair)
-    lanes, ports, lane_out, buses, slots, errs, unrouted, R = emit(T, bundles, M, census, a.out)
+    if T['V'].get('mirror'):
+        import emit_mirror as EM
+        lanes, ports, lane_out, buses, slots, errs, unrouted, R = EM.emit_mirror(
+            T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH)
+    else:
+        lanes, ports, lane_out, buses, slots, errs, unrouted, R = emit(T, bundles, M, census, a.out)
     plan = plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, a.out)
     # ft stations from the checker's own route geometry (zroute between the slot's in / out windows): <= 850 um apart
     import check as CK
@@ -723,7 +802,8 @@ def main():
             sl = Pl.slot(part, slot)
             seg = CK.zroute(Pl.port_point(pa_), Pl.port_point(pb_), Pl.die_face(part, sl['in_face']),
                             Pl.die_face(part, sl['out_face']))
-            slot_k[(part, slot)] = max(1, math.ceil(CK.plen(seg) / STATION_UM))
+            k_ = (Pl.parts[part]['type'], slot)
+            slot_k[k_] = max(slot_k.get(k_, 1), math.ceil(CK.plen(seg) / STATION_UM))
     for tn, t in plan['partition_types'].items():
         for sl in t['ft_slots']:
             sl['stations'] = slot_k.get((tn, sl['name']), sl['stations'])
@@ -756,7 +836,9 @@ def main():
     tot = sum(L['width'] for L in lanes)
     summ = dict(fit_fail=T['fit'], fill_max=sorted(((v, k) for k, v in T['fill'].items()), reverse=True)[:12], variant=a.variant, label=T['V']['label'], die_um=[u(T['W']), u(T['H'])],
                 die_mm2=round(u(T['W']) * u(T['H']) / 1e6, 1), partitions=len(T['parts']), lanes=len(lanes),
-                bits=tot, util_top=[list(x) for x in T['util'][:25]], tutil_top=[list(x) for x in T['tutil']], errs=errs[:50], n_errs=len(errs), unrouted=unrouted, exempt=dict(exempt))
+                bits=tot, util_top=[list(x) for x in T['util'][:25]], tutil_top=[list(x) for x in T['tutil']], errs=errs[:50], n_errs=len(errs), unrouted=unrouted, exempt=dict(exempt),
+                face_occ_top=[list(x) for x in T.get('focc', [])[:25]], ft_top=[list(x) for x in T.get('ftu', [])[:25]],
+                mirror_errs=T.get('mirror_errs', []), master_superset=T.get('master_superset', {}), types=len(plan['partition_types']), need3=len(T.get('need3', ())))
     json.dump(summ, open(os.path.join(a.out, 'gen_summary.json'), 'w'), indent=1)
     print(json.dumps({k: v for k, v in summ.items() if k not in ('errs',)}, indent=1)[:3000])
     for e in errs[:20]:

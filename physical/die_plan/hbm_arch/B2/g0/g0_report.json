@@ -1,0 +1,7482 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/home/ubuntu/wt/hbm-arch-1023/physical/die_plan/hbm_arch/B2/die_plan.json",
+ "verdict": "PASS",
+ "mode": "G0",
+ "errors": 0,
+ "warnings": 563,
+ "summary": {
+  "die": "hbm_arch_B2",
+  "partitions": 88,
+  "types": {
+   "types": 49,
+   "partitions": 88,
+   "singleton_types": 10,
+   "max_instances": 2,
+   "near_duplicate_groups": 1,
+   "near_duplicate_types": 2,
+   "mergeable_saving": 1
+  },
+  "ports": 894,
+  "lanes": 298,
+  "bits": 613977,
+  "taps_cores": {
+   "taps": 0,
+   "hard_cores": 208,
+   "core_pins": 0,
+   "core_pins_off_track": 0,
+   "types_no_cells": 0,
+   "over_cap_no_cores": 0,
+   "cell_sources": [],
+   "no_cells": []
+  },
+  "core_faces": {
+   "groups": 0,
+   "groups_away": 0,
+   "pins": 0,
+   "pins_away": 0,
+   "types_away": 0,
+   "cores": 208,
+   "cores_unchecked": 208
+  },
+  "complete": {
+   "cells": 0,
+   "track_offset": 0,
+   "clock_method": 0,
+   "common_latency": 0,
+   "insertion_target": 0,
+   "reset_sync": 0,
+   "face_flop": 0,
+   "internal_station": 0
+  },
+  "g0c": {
+   "types": 49,
+   "clean": 12,
+   "die_level": {},
+   "g3_eligible": [
+    "PHY_N",
+    "q_mca",
+    "q_spb1",
+    "q_spt1",
+    "q_spt2",
+    "q_spu0",
+    "q_spu1",
+    "vsN1",
+    "vsN2",
+    "vsN4",
+    "vsN5",
+    "vsN6"
+   ],
+   "by_type": {
+    "q_b000": {
+     "hard_cores": 1
+    },
+    "q_b001": {
+     "hard_cores": 1
+    },
+    "q_b002": {
+     "hard_cores": 1
+    },
+    "q_b003": {
+     "hard_cores": 1
+    },
+    "q_b010": {
+     "hard_cores": 1
+    },
+    "q_b011": {
+     "hard_cores": 1
+    },
+    "q_b012": {
+     "hard_cores": 1
+    },
+    "q_b013": {
+     "hard_cores": 1
+    },
+    "q_b100": {
+     "hard_cores": 1
+    },
+    "q_b101": {
+     "hard_cores": 1
+    },
+    "q_b102": {
+     "hard_cores": 1
+    },
+    "q_b103": {
+     "hard_cores": 1
+    },
+    "q_b110": {
+     "hard_cores": 1
+    },
+    "q_b111": {
+     "hard_cores": 1
+    },
+    "q_b112": {
+     "hard_cores": 1
+    },
+    "q_b113": {
+     "hard_cores": 1
+    },
+    "q_hub": {
+     "hard_cores": 121
+    },
+    "NW_io": {
+     "hard_cores": 4
+    },
+    "q_mcb": {
+     "hard_cores": 2
+    },
+    "q_sm0": {
+     "hard_cores": 1
+    },
+    "q_sm1": {
+     "hard_cores": 1
+    },
+    "q_sm2": {
+     "hard_cores": 1
+    },
+    "q_sm3": {
+     "hard_cores": 1
+    },
+    "q_spb0": {
+     "hard_cores": 2
+    },
+    "q_spb2": {
+     "hard_cores": 4
+    },
+    "q_spt0": {
+     "hard_cores": 4
+    },
+    "q_su00": {
+     "hard_cores": 6
+    },
+    "q_su01": {
+     "hard_cores": 1
+    },
+    "q_su10": {
+     "hard_cores": 1
+    },
+    "q_su11": {
+     "hard_cores": 6
+    },
+    "q_su20": {
+     "hard_cores": 6
+    },
+    "q_su21": {
+     "hard_cores": 1
+    },
+    "q_su30": {
+     "hard_cores": 1
+    },
+    "q_su31": {
+     "hard_cores": 6
+    },
+    "root": {
+     "hard_cores": 19
+    },
+    "vsN0": {
+     "hard_cores": 2
+    },
+    "NE_io": {
+     "hard_cores": 2
+    }
+   }
+  },
+  "geometry": {
+   "partition_area_mm2": 461.4778552320001,
+   "channel_area_mm2": 0.0,
+   "uncovered_mm2": 0.0,
+   "fill": 1.0000000000000002,
+   "planned_channels": []
+  },
+  "worst_faces": [
+   {
+    "part": "vsN6",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN5",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN5",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN4",
+    "face": "S",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "vsN4",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "W",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "root",
+    "face": "E",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "NW_su31",
+    "face": "N",
+    "pins_per_um": 9.4
+   },
+   {
+    "part": "NW_su21",
+    "face": "N",
+    "pins_per_um": 9.4
+   }
+  ],
+  "worst_hops": [
+   {
+    "lane": "L56m",
+    "hop_um": 849.6,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L56",
+    "hop_um": 849.6,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L61m",
+    "hop_um": 849.5,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L61",
+    "hop_um": 849.5,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L114",
+    "hop_um": 848.3,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L8m",
+    "hop_um": 843.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L8",
+    "hop_um": 843.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L9m",
+    "hop_um": 842.1,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L9",
+    "hop_um": 842.1,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "L139m",
+    "hop_um": 840.2,
+    "reach_um": 1000.0
+   }
+  ],
+  "cuts": {
+   "vertical": [
+    {
+     "at_um": 250,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 500,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 750,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 1000,
+     "bits": 2822,
+     "tracks": 304326,
+     "ratio": 0.0093,
+     "m89_only_ratio": 0.0123,
+     "worst_part": "NW_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 1250,
+     "bits": 5480,
+     "tracks": 304326,
+     "ratio": 0.018,
+     "m89_only_ratio": 0.0239,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0747,
+     "worst_part_bits": 2574
+    },
+    {
+     "at_um": 1500,
+     "bits": 6532,
+     "tracks": 304326,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0285,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 1750,
+     "bits": 7584,
+     "tracks": 304326,
+     "ratio": 0.0249,
+     "m89_only_ratio": 0.0331,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2000,
+     "bits": 7584,
+     "tracks": 304326,
+     "ratio": 0.0249,
+     "m89_only_ratio": 0.0331,
+     "worst_part": "NW_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2250,
+     "bits": 7070,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2500,
+     "bits": 7070,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 2750,
+     "bits": 15252,
+     "tracks": 304326,
+     "ratio": 0.0501,
+     "m89_only_ratio": 0.0666,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.1372,
+     "worst_part_bits": 4727
+    },
+    {
+     "at_um": 3000,
+     "bits": 17048,
+     "tracks": 304326,
+     "ratio": 0.056,
+     "m89_only_ratio": 0.0745,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3250,
+     "bits": 17417,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3500,
+     "bits": 17417,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 3750,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NW_su21",
+     "worst_part_ratio": 0.1094,
+     "worst_part_bits": 2826
+    },
+    {
+     "at_um": 4000,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NW_su21",
+     "worst_part_ratio": 0.1094,
+     "worst_part_bits": 2826
+    },
+    {
+     "at_um": 4250,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NW_su01",
+     "worst_part_ratio": 0.21,
+     "worst_part_bits": 5427
+    },
+    {
+     "at_um": 4500,
+     "bits": 7152,
+     "tracks": 304326,
+     "ratio": 0.0235,
+     "m89_only_ratio": 0.0312,
+     "worst_part": "NW_su01",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 4750,
+     "bits": 7152,
+     "tracks": 304326,
+     "ratio": 0.0235,
+     "m89_only_ratio": 0.0312,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 5000,
+     "bits": 11223,
+     "tracks": 304326,
+     "ratio": 0.0369,
+     "m89_only_ratio": 0.049,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.325,
+     "worst_part_bits": 8397
+    },
+    {
+     "at_um": 5250,
+     "bits": 13560,
+     "tracks": 304326,
+     "ratio": 0.0446,
+     "m89_only_ratio": 0.0592,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 5500,
+     "bits": 17080,
+     "tracks": 304326,
+     "ratio": 0.0561,
+     "m89_only_ratio": 0.0746,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 5750,
+     "bits": 20343,
+     "tracks": 304326,
+     "ratio": 0.0668,
+     "m89_only_ratio": 0.0888,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 6000,
+     "bits": 21308,
+     "tracks": 304326,
+     "ratio": 0.07,
+     "m89_only_ratio": 0.0931,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 6250,
+     "bits": 21797,
+     "tracks": 304326,
+     "ratio": 0.0716,
+     "m89_only_ratio": 0.0952,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.2485,
+     "worst_part_bits": 6421
+    },
+    {
+     "at_um": 6500,
+     "bits": 21319,
+     "tracks": 304326,
+     "ratio": 0.0701,
+     "m89_only_ratio": 0.0931,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 6750,
+     "bits": 21319,
+     "tracks": 304326,
+     "ratio": 0.0701,
+     "m89_only_ratio": 0.0931,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 7000,
+     "bits": 17626,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.077,
+     "worst_part": "NW_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 7250,
+     "bits": 14621,
+     "tracks": 304326,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0639,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 7500,
+     "bits": 14621,
+     "tracks": 304326,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0639,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 7750,
+     "bits": 14621,
+     "tracks": 304326,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0639,
+     "worst_part": "NW_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 8000,
+     "bits": 17601,
+     "tracks": 304326,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0769,
+     "worst_part": "NW_su30",
+     "worst_part_ratio": 0.2345,
+     "worst_part_bits": 6059
+    },
+    {
+     "at_um": 8250,
+     "bits": 17608,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.0769,
+     "worst_part": "NW_su30",
+     "worst_part_ratio": 0.2345,
+     "worst_part_bits": 6059
+    },
+    {
+     "at_um": 8500,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b102",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 8750,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b102",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 9000,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_b103",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 9250,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NW_su30",
+     "worst_part_ratio": 0.2355,
+     "worst_part_bits": 6085
+    },
+    {
+     "at_um": 9500,
+     "bits": 18570,
+     "tracks": 304326,
+     "ratio": 0.061,
+     "m89_only_ratio": 0.0811,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 9750,
+     "bits": 16648,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 10000,
+     "bits": 16648,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 10250,
+     "bits": 15853,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6316
+    },
+    {
+     "at_um": 10500,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 10750,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11000,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11250,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NW_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11500,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NW_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 11750,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NW_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 12000,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 12250,
+     "bits": 6036,
+     "tracks": 304326,
+     "ratio": 0.0198,
+     "m89_only_ratio": 0.0264,
+     "worst_part": "root",
+     "worst_part_ratio": 0.0501,
+     "worst_part_bits": 6036
+    },
+    {
+     "at_um": 12500,
+     "bits": 8788,
+     "tracks": 304326,
+     "ratio": 0.0289,
+     "m89_only_ratio": 0.0384,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 12750,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13000,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13250,
+     "bits": 8084,
+     "tracks": 304326,
+     "ratio": 0.0266,
+     "m89_only_ratio": 0.0353,
+     "worst_part": "root",
+     "worst_part_ratio": 0.067,
+     "worst_part_bits": 8084
+    },
+    {
+     "at_um": 13500,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NE_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 13750,
+     "bits": 14779,
+     "tracks": 304326,
+     "ratio": 0.0486,
+     "m89_only_ratio": 0.0645,
+     "worst_part": "NE_b013",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14000,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NE_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14250,
+     "bits": 15055,
+     "tracks": 304326,
+     "ratio": 0.0495,
+     "m89_only_ratio": 0.0658,
+     "worst_part": "NE_b012",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14500,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NE_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 14750,
+     "bits": 15851,
+     "tracks": 304326,
+     "ratio": 0.0521,
+     "m89_only_ratio": 0.0692,
+     "worst_part": "NE_b011",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 15000,
+     "bits": 16634,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NE_b001",
+     "worst_part_ratio": 0.2,
+     "worst_part_bits": 6890
+    },
+    {
+     "at_um": 15250,
+     "bits": 16648,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NE_b010",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 15500,
+     "bits": 16648,
+     "tracks": 304326,
+     "ratio": 0.0547,
+     "m89_only_ratio": 0.0727,
+     "worst_part": "NE_b010",
+     "worst_part_ratio": 0.1833,
+     "worst_part_bits": 6315
+    },
+    {
+     "at_um": 15750,
+     "bits": 18570,
+     "tracks": 304326,
+     "ratio": 0.061,
+     "m89_only_ratio": 0.0811,
+     "worst_part": "NE_b101",
+     "worst_part_ratio": 0.223,
+     "worst_part_bits": 7682
+    },
+    {
+     "at_um": 16000,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_su30",
+     "worst_part_ratio": 0.2355,
+     "worst_part_bits": 6085
+    },
+    {
+     "at_um": 16250,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 16500,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 16750,
+     "bits": 24671,
+     "tracks": 304326,
+     "ratio": 0.0811,
+     "m89_only_ratio": 0.1078,
+     "worst_part": "NE_b102",
+     "worst_part_ratio": 0.2428,
+     "worst_part_bits": 8364
+    },
+    {
+     "at_um": 17000,
+     "bits": 17608,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.0769,
+     "worst_part": "NE_su30",
+     "worst_part_ratio": 0.2345,
+     "worst_part_bits": 6059
+    },
+    {
+     "at_um": 17250,
+     "bits": 17310,
+     "tracks": 304326,
+     "ratio": 0.0569,
+     "m89_only_ratio": 0.0756,
+     "worst_part": "NE_su30",
+     "worst_part_ratio": 0.2339,
+     "worst_part_bits": 6045
+    },
+    {
+     "at_um": 17500,
+     "bits": 14621,
+     "tracks": 304326,
+     "ratio": 0.048,
+     "m89_only_ratio": 0.0639,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 17750,
+     "bits": 16236,
+     "tracks": 304326,
+     "ratio": 0.0534,
+     "m89_only_ratio": 0.0709,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.202,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 18000,
+     "bits": 17626,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.077,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 18250,
+     "bits": 17626,
+     "tracks": 304326,
+     "ratio": 0.0579,
+     "m89_only_ratio": 0.077,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 18500,
+     "bits": 21319,
+     "tracks": 304326,
+     "ratio": 0.0701,
+     "m89_only_ratio": 0.0931,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 18750,
+     "bits": 21319,
+     "tracks": 304326,
+     "ratio": 0.0701,
+     "m89_only_ratio": 0.0931,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.23,
+     "worst_part_bits": 5943
+    },
+    {
+     "at_um": 19000,
+     "bits": 21789,
+     "tracks": 304326,
+     "ratio": 0.0716,
+     "m89_only_ratio": 0.0952,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2523,
+     "worst_part_bits": 6520
+    },
+    {
+     "at_um": 19250,
+     "bits": 22372,
+     "tracks": 304326,
+     "ratio": 0.0735,
+     "m89_only_ratio": 0.0977,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2711,
+     "worst_part_bits": 7005
+    },
+    {
+     "at_um": 19500,
+     "bits": 18196,
+     "tracks": 304326,
+     "ratio": 0.0598,
+     "m89_only_ratio": 0.0795,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 19750,
+     "bits": 17080,
+     "tracks": 304326,
+     "ratio": 0.0561,
+     "m89_only_ratio": 0.0746,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.325,
+     "worst_part_bits": 8397
+    },
+    {
+     "at_um": 20000,
+     "bits": 13560,
+     "tracks": 304326,
+     "ratio": 0.0446,
+     "m89_only_ratio": 0.0592,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 20250,
+     "bits": 11223,
+     "tracks": 304326,
+     "ratio": 0.0369,
+     "m89_only_ratio": 0.049,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.325,
+     "worst_part_bits": 8397
+    },
+    {
+     "at_um": 20500,
+     "bits": 7152,
+     "tracks": 304326,
+     "ratio": 0.0235,
+     "m89_only_ratio": 0.0312,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 20750,
+     "bits": 7152,
+     "tracks": 304326,
+     "ratio": 0.0235,
+     "m89_only_ratio": 0.0312,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.2299,
+     "worst_part_bits": 5941
+    },
+    {
+     "at_um": 21000,
+     "bits": 6638,
+     "tracks": 304326,
+     "ratio": 0.0218,
+     "m89_only_ratio": 0.029,
+     "worst_part": "NE_su01",
+     "worst_part_ratio": 0.21,
+     "worst_part_bits": 5427
+    },
+    {
+     "at_um": 21250,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NE_su21",
+     "worst_part_ratio": 0.1094,
+     "worst_part_bits": 2826
+    },
+    {
+     "at_um": 21500,
+     "bits": 5255,
+     "tracks": 304326,
+     "ratio": 0.0173,
+     "m89_only_ratio": 0.023,
+     "worst_part": "NE_su21",
+     "worst_part_ratio": 0.1094,
+     "worst_part_bits": 2826
+    },
+    {
+     "at_um": 21750,
+     "bits": 17417,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 22000,
+     "bits": 17413,
+     "tracks": 304326,
+     "ratio": 0.0572,
+     "m89_only_ratio": 0.0761,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.2067,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 22250,
+     "bits": 16966,
+     "tracks": 304326,
+     "ratio": 0.0557,
+     "m89_only_ratio": 0.0741,
+     "worst_part": "NE_b112",
+     "worst_part_ratio": 0.1598,
+     "worst_part_bits": 5505
+    },
+    {
+     "at_um": 22500,
+     "bits": 15252,
+     "tracks": 304326,
+     "ratio": 0.0501,
+     "m89_only_ratio": 0.0666,
+     "worst_part": "NE_b110",
+     "worst_part_ratio": 0.1372,
+     "worst_part_bits": 4727
+    },
+    {
+     "at_um": 22750,
+     "bits": 7070,
+     "tracks": 304326,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NE_b110",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23000,
+     "bits": 7584,
+     "tracks": 304326,
+     "ratio": 0.0249,
+     "m89_only_ratio": 0.0331,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23250,
+     "bits": 7584,
+     "tracks": 304326,
+     "ratio": 0.0249,
+     "m89_only_ratio": 0.0331,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23500,
+     "bits": 7584,
+     "tracks": 304326,
+     "ratio": 0.0249,
+     "m89_only_ratio": 0.0331,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0903,
+     "worst_part_bits": 3112
+    },
+    {
+     "at_um": 23750,
+     "bits": 6508,
+     "tracks": 304326,
+     "ratio": 0.0214,
+     "m89_only_ratio": 0.0284,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0896,
+     "worst_part_bits": 3088
+    },
+    {
+     "at_um": 24000,
+     "bits": 5480,
+     "tracks": 304326,
+     "ratio": 0.018,
+     "m89_only_ratio": 0.0239,
+     "worst_part": "NE_b111",
+     "worst_part_ratio": 0.0747,
+     "worst_part_bits": 2574
+    },
+    {
+     "at_um": 24250,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 24500,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 24750,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    },
+    {
+     "at_um": 25000,
+     "bits": 1572,
+     "tracks": 304326,
+     "ratio": 0.0052,
+     "m89_only_ratio": 0.0069,
+     "worst_part": "NE_su00",
+     "worst_part_ratio": 0.0598,
+     "worst_part_bits": 1545
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 500,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 750,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1000,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1500,
+     "bits": 39,
+     "tracks": 418592,
+     "ratio": 0.0001,
+     "m89_only_ratio": 0.0001,
+     "worst_part": "vsN1",
+     "worst_part_ratio": 0.0006,
+     "worst_part_bits": 13
+    },
+    {
+     "at_um": 1750,
+     "bits": 921,
+     "tracks": 418592,
+     "ratio": 0.0022,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0151,
+     "worst_part_bits": 454
+    },
+    {
+     "at_um": 2000,
+     "bits": 921,
+     "tracks": 418592,
+     "ratio": 0.0022,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0151,
+     "worst_part_bits": 454
+    },
+    {
+     "at_um": 2250,
+     "bits": 921,
+     "tracks": 418592,
+     "ratio": 0.0022,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0151,
+     "worst_part_bits": 454
+    },
+    {
+     "at_um": 2500,
+     "bits": 921,
+     "tracks": 418592,
+     "ratio": 0.0022,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0151,
+     "worst_part_bits": 454
+    },
+    {
+     "at_um": 2750,
+     "bits": 921,
+     "tracks": 418592,
+     "ratio": 0.0022,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "NW_spb1",
+     "worst_part_ratio": 0.0151,
+     "worst_part_bits": 454
+    },
+    {
+     "at_um": 3000,
+     "bits": 575,
+     "tracks": 418592,
+     "ratio": 0.0014,
+     "m89_only_ratio": 0.0018,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.0093,
+     "worst_part_bits": 281
+    },
+    {
+     "at_um": 3250,
+     "bits": 3805,
+     "tracks": 418592,
+     "ratio": 0.0091,
+     "m89_only_ratio": 0.0121,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.0629,
+     "worst_part_bits": 1896
+    },
+    {
+     "at_um": 3500,
+     "bits": 7035,
+     "tracks": 418592,
+     "ratio": 0.0168,
+     "m89_only_ratio": 0.0223,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1165,
+     "worst_part_bits": 3511
+    },
+    {
+     "at_um": 3750,
+     "bits": 7079,
+     "tracks": 418592,
+     "ratio": 0.0169,
+     "m89_only_ratio": 0.0225,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1172,
+     "worst_part_bits": 3533
+    },
+    {
+     "at_um": 4000,
+     "bits": 7079,
+     "tracks": 418592,
+     "ratio": 0.0169,
+     "m89_only_ratio": 0.0225,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1172,
+     "worst_part_bits": 3533
+    },
+    {
+     "at_um": 4250,
+     "bits": 7079,
+     "tracks": 418592,
+     "ratio": 0.0169,
+     "m89_only_ratio": 0.0225,
+     "worst_part": "NW_spb2",
+     "worst_part_ratio": 0.1172,
+     "worst_part_bits": 3533
+    },
+    {
+     "at_um": 4500,
+     "bits": 17954,
+     "tracks": 418592,
+     "ratio": 0.0429,
+     "m89_only_ratio": 0.057,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.1293,
+     "worst_part_bits": 5384
+    },
+    {
+     "at_um": 4750,
+     "bits": 34512,
+     "tracks": 418592,
+     "ratio": 0.0824,
+     "m89_only_ratio": 0.1096,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.18,
+     "worst_part_bits": 7493
+    },
+    {
+     "at_um": 5000,
+     "bits": 40136,
+     "tracks": 418592,
+     "ratio": 0.0959,
+     "m89_only_ratio": 0.1274,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.2094,
+     "worst_part_bits": 8717
+    },
+    {
+     "at_um": 5250,
+     "bits": 37332,
+     "tracks": 418592,
+     "ratio": 0.0892,
+     "m89_only_ratio": 0.1185,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.213,
+     "worst_part_bits": 8866
+    },
+    {
+     "at_um": 5500,
+     "bits": 34544,
+     "tracks": 418592,
+     "ratio": 0.0825,
+     "m89_only_ratio": 0.1097,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.213,
+     "worst_part_bits": 8866
+    },
+    {
+     "at_um": 5750,
+     "bits": 34544,
+     "tracks": 418592,
+     "ratio": 0.0825,
+     "m89_only_ratio": 0.1097,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.213,
+     "worst_part_bits": 8866
+    },
+    {
+     "at_um": 6000,
+     "bits": 34544,
+     "tracks": 418592,
+     "ratio": 0.0825,
+     "m89_only_ratio": 0.1097,
+     "worst_part": "NE_spu1",
+     "worst_part_ratio": 0.213,
+     "worst_part_bits": 8866
+    },
+    {
+     "at_um": 6250,
+     "bits": 17946,
+     "tracks": 418592,
+     "ratio": 0.0429,
+     "m89_only_ratio": 0.057,
+     "worst_part": "root",
+     "worst_part_ratio": 0.276,
+     "worst_part_bits": 6340
+    },
+    {
+     "at_um": 6500,
+     "bits": 17988,
+     "tracks": 418592,
+     "ratio": 0.043,
+     "m89_only_ratio": 0.0571,
+     "worst_part": "root",
+     "worst_part_ratio": 0.276,
+     "worst_part_bits": 6340
+    },
+    {
+     "at_um": 6750,
+     "bits": 9724,
+     "tracks": 418592,
+     "ratio": 0.0232,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "NW_b110",
+     "worst_part_ratio": 0.1592,
+     "worst_part_bits": 3427
+    },
+    {
+     "at_um": 7000,
+     "bits": 11524,
+     "tracks": 418592,
+     "ratio": 0.0275,
+     "m89_only_ratio": 0.0366,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.21,
+     "worst_part_bits": 2050
+    },
+    {
+     "at_um": 7250,
+     "bits": 8120,
+     "tracks": 418592,
+     "ratio": 0.0194,
+     "m89_only_ratio": 0.0258,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 7500,
+     "bits": 6370,
+     "tracks": 418592,
+     "ratio": 0.0152,
+     "m89_only_ratio": 0.0202,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 7750,
+     "bits": 6370,
+     "tracks": 418592,
+     "ratio": 0.0152,
+     "m89_only_ratio": 0.0202,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 8000,
+     "bits": 6370,
+     "tracks": 418592,
+     "ratio": 0.0152,
+     "m89_only_ratio": 0.0202,
+     "worst_part": "NW_b101",
+     "worst_part_ratio": 0.2099,
+     "worst_part_bits": 2049
+    },
+    {
+     "at_um": 8250,
+     "bits": 22938,
+     "tracks": 418592,
+     "ratio": 0.0548,
+     "m89_only_ratio": 0.0728,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.2187,
+     "worst_part_bits": 2135
+    },
+    {
+     "at_um": 8500,
+     "bits": 43548,
+     "tracks": 418592,
+     "ratio": 0.104,
+     "m89_only_ratio": 0.1383,
+     "worst_part": "NW_b011",
+     "worst_part_ratio": 0.4372,
+     "worst_part_bits": 4268
+    },
+    {
+     "at_um": 8750,
+     "bits": 37902,
+     "tracks": 418592,
+     "ratio": 0.0905,
+     "m89_only_ratio": 0.1204,
+     "worst_part": "NW_b010",
+     "worst_part_ratio": 0.4283,
+     "worst_part_bits": 4181
+    },
+    {
+     "at_um": 9000,
+     "bits": 36694,
+     "tracks": 418592,
+     "ratio": 0.0877,
+     "m89_only_ratio": 0.1165,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.3307,
+     "worst_part_bits": 7120
+    },
+    {
+     "at_um": 9250,
+     "bits": 25844,
+     "tracks": 418592,
+     "ratio": 0.0617,
+     "m89_only_ratio": 0.0821,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2689,
+     "worst_part_bits": 5791
+    },
+    {
+     "at_um": 9500,
+     "bits": 20064,
+     "tracks": 418592,
+     "ratio": 0.0479,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 9750,
+     "bits": 20064,
+     "tracks": 418592,
+     "ratio": 0.0479,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 10000,
+     "bits": 20064,
+     "tracks": 418592,
+     "ratio": 0.0479,
+     "m89_only_ratio": 0.0637,
+     "worst_part": "NW_b112",
+     "worst_part_ratio": 0.2298,
+     "worst_part_bits": 4949
+    },
+    {
+     "at_um": 10250,
+     "bits": 53446,
+     "tracks": 418592,
+     "ratio": 0.1277,
+     "m89_only_ratio": 0.1697,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2255,
+     "worst_part_bits": 9388
+    },
+    {
+     "at_um": 10500,
+     "bits": 48614,
+     "tracks": 418592,
+     "ratio": 0.1161,
+     "m89_only_ratio": 0.1544,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2255,
+     "worst_part_bits": 9388
+    },
+    {
+     "at_um": 10750,
+     "bits": 49642,
+     "tracks": 418592,
+     "ratio": 0.1186,
+     "m89_only_ratio": 0.1576,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2714,
+     "worst_part_bits": 11298
+    },
+    {
+     "at_um": 11000,
+     "bits": 39772,
+     "tracks": 418592,
+     "ratio": 0.095,
+     "m89_only_ratio": 0.1263,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.238,
+     "worst_part_bits": 9907
+    },
+    {
+     "at_um": 11250,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 11500,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 11750,
+     "bits": 37696,
+     "tracks": 418592,
+     "ratio": 0.0901,
+     "m89_only_ratio": 0.1197,
+     "worst_part": "NE_spu0",
+     "worst_part_ratio": 0.2256,
+     "worst_part_bits": 9390
+    },
+    {
+     "at_um": 12000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 12750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt0",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 13750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt1",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 14750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15250,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15500,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 15750,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 16000,
+     "bits": 19878,
+     "tracks": 418592,
+     "ratio": 0.0475,
+     "m89_only_ratio": 0.0631,
+     "worst_part": "NW_spt2",
+     "worst_part_ratio": 0.2501,
+     "worst_part_bits": 7539
+    },
+    {
+     "at_um": 16250,
+     "bits": 13920,
+     "tracks": 418592,
+     "ratio": 0.0333,
+     "m89_only_ratio": 0.0442,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.1004,
+     "worst_part_bits": 6960
+    },
+    {
+     "at_um": 16500,
+     "bits": 9008,
+     "tracks": 418592,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0286,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.065,
+     "worst_part_bits": 4504
+    },
+    {
+     "at_um": 16750,
+     "bits": 9008,
+     "tracks": 418592,
+     "ratio": 0.0215,
+     "m89_only_ratio": 0.0286,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.065,
+     "worst_part_bits": 4504
+    },
+    {
+     "at_um": 17000,
+     "bits": 4096,
+     "tracks": 418592,
+     "ratio": 0.0098,
+     "m89_only_ratio": 0.013,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.0295,
+     "worst_part_bits": 2048
+    },
+    {
+     "at_um": 17250,
+     "bits": 4096,
+     "tracks": 418592,
+     "ratio": 0.0098,
+     "m89_only_ratio": 0.013,
+     "worst_part": "NE_mcb",
+     "worst_part_ratio": 0.0295,
+     "worst_part_bits": 2048
+    },
+    {
+     "at_um": 17500,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17750,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 18000,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 18250,
+     "bits": 0,
+     "tracks": 418592,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    }
+   ],
+   "worst_full": {
+    "ratio": 0.1277,
+    "at": "horizontal@10250"
+   },
+   "worst_partition_segment": {
+    "ratio": 0.4372,
+    "at": "horizontal@8500:NW_b011"
+   },
+   "model": {
+    "partition_ft_layers": {
+     "H": [
+      "M4",
+      "M6"
+     ],
+     "V": [
+      "M5",
+      "M7"
+     ]
+    },
+    "ft_track_frac_default": 0.25,
+    "die_layers": [
+     "M8",
+     "M9"
+    ],
+    "cut_avail": {
+     "M8": 0.6,
+     "M9": 0.6
+    },
+    "step_um": 250
+   }
+  },
+  "latency": {
+   "L0": 2,
+   "L0m": 2,
+   "L1": 7,
+   "L1m": 7,
+   "L2": 2,
+   "L2m": 2,
+   "L3": 2,
+   "L3m": 2,
+   "L4": 17,
+   "L4m": 17,
+   "L5": 2,
+   "L5m": 2,
+   "L6": 2,
+   "L6m": 2,
+   "L7": 2,
+   "L7m": 2,
+   "L8": 15,
+   "L8m": 15,
+   "L9": 15,
+   "L9m": 15,
+   "L10": 2,
+   "L10m": 2,
+   "L11": 2,
+   "L11m": 2,
+   "L12": 10,
+   "L12m": 10,
+   "L13": 10,
+   "L13m": 10,
+   "L14": 2,
+   "L14m": 2,
+   "L15": 2,
+   "L15m": 2,
+   "L16": 2,
+   "L16m": 2,
+   "L17": 2,
+   "L17m": 2,
+   "L18": 2,
+   "L18m": 2,
+   "L19": 7,
+   "L19m": 7,
+   "L20": 2,
+   "L20m": 2,
+   "L21": 15,
+   "L21m": 15,
+   "L22": 20,
+   "L22m": 21,
+   "L23": 2,
+   "L23m": 2,
+   "L24": 6,
+   "L24m": 6,
+   "L25": 2,
+   "L25m": 2,
+   "L26": 2,
+   "L26m": 2,
+   "L27": 2,
+   "L27m": 2,
+   "L28": 8,
+   "L28m": 8,
+   "L29": 7,
+   "L29m": 7,
+   "L30": 5,
+   "L30m": 5,
+   "L31": 4,
+   "L31m": 4,
+   "L32": 6,
+   "L32m": 6,
+   "L33": 7,
+   "L33m": 7,
+   "L34": 9,
+   "L34m": 9,
+   "L35": 9,
+   "L35m": 9,
+   "L36": 9,
+   "L36m": 9,
+   "L37": 4,
+   "L37m": 4,
+   "L38": 7,
+   "L38m": 7,
+   "L39": 6,
+   "L39m": 6,
+   "L40": 5,
+   "L40m": 5,
+   "L41": 4,
+   "L41m": 4,
+   "L42": 13,
+   "L42m": 13,
+   "L43": 15,
+   "L43m": 15,
+   "L44": 14,
+   "L44m": 14,
+   "L45": 2,
+   "L45m": 2,
+   "L46": 12,
+   "L46m": 12,
+   "L47": 2,
+   "L47m": 2,
+   "L48": 20,
+   "L48m": 20,
+   "L49": 4,
+   "L49m": 4,
+   "L50": 4,
+   "L50m": 4,
+   "L51": 7,
+   "L51m": 7,
+   "L52": 7,
+   "L52m": 7,
+   "L53": 20,
+   "L53m": 20,
+   "L54": 2,
+   "L54m": 2,
+   "L55": 9,
+   "L55m": 9,
+   "L56": 18,
+   "L56m": 18,
+   "L57": 11,
+   "L57m": 11,
+   "L58": 2,
+   "L58m": 2,
+   "L59": 7,
+   "L59m": 7,
+   "L60": 13,
+   "L60m": 13,
+   "L61": 8,
+   "L61m": 8,
+   "L62": 12,
+   "L62m": 12,
+   "L63": 29,
+   "L63m": 29,
+   "L64": 7,
+   "L64m": 7,
+   "L65": 10,
+   "L65m": 10,
+   "L66": 11,
+   "L66m": 11,
+   "L67": 12,
+   "L67m": 12,
+   "L68": 5,
+   "L68m": 5,
+   "L69": 8,
+   "L69m": 8,
+   "L70": 12,
+   "L70m": 12,
+   "L71": 2,
+   "L71m": 2,
+   "L72": 2,
+   "L72m": 2,
+   "L73": 9,
+   "L73m": 9,
+   "L74": 12,
+   "L74m": 12,
+   "L75": 2,
+   "L75m": 2,
+   "L76": 6,
+   "L76m": 6,
+   "L77": 2,
+   "L77m": 2,
+   "L78": 2,
+   "L78m": 2,
+   "L79": 11,
+   "L79m": 11,
+   "L80": 7,
+   "L80m": 7,
+   "L81": 2,
+   "L81m": 2,
+   "L82": 11,
+   "L82m": 11,
+   "L83": 5,
+   "L83m": 5,
+   "L84": 4,
+   "L84m": 4,
+   "L85": 2,
+   "L85m": 2,
+   "L86": 2,
+   "L86m": 2,
+   "L87": 5,
+   "L87m": 5,
+   "L88": 4,
+   "L88m": 4,
+   "L89": 12,
+   "L89m": 12,
+   "L90": 10,
+   "L90m": 10,
+   "L91": 2,
+   "L91m": 2,
+   "L92": 2,
+   "L92m": 2,
+   "L93": 2,
+   "L93m": 2,
+   "L94": 2,
+   "L94m": 2,
+   "L95": 2,
+   "L95m": 2,
+   "L96": 21,
+   "L96m": 21,
+   "L97": 12,
+   "L97m": 12,
+   "L98": 5,
+   "L98m": 5,
+   "L99": 8,
+   "L99m": 8,
+   "L100": 8,
+   "L100m": 8,
+   "L101": 7,
+   "L101m": 7,
+   "L102": 8,
+   "L102m": 8,
+   "L103": 5,
+   "L103m": 5,
+   "L104": 7,
+   "L104m": 7,
+   "L105": 8,
+   "L105m": 8,
+   "L106": 21,
+   "L106m": 21,
+   "L107": 2,
+   "L107m": 2,
+   "L108": 2,
+   "L108m": 2,
+   "L109": 2,
+   "L109m": 2,
+   "L110": 2,
+   "L110m": 2,
+   "L111": 2,
+   "L111m": 2,
+   "L112": 5,
+   "L112m": 5,
+   "L113": 5,
+   "L113m": 5,
+   "L114": 25,
+   "L114m": 26,
+   "L115": 11,
+   "L115m": 11,
+   "L116": 7,
+   "L116m": 7,
+   "L117": 17,
+   "L117m": 17,
+   "L118": 6,
+   "L119": 9,
+   "L119m": 9,
+   "L120": 12,
+   "L120m": 12,
+   "L121": 5,
+   "L121m": 5,
+   "L122": 8,
+   "L122m": 8,
+   "L123": 5,
+   "L123m": 5,
+   "L124": 7,
+   "L124m": 7,
+   "L125": 21,
+   "L125m": 21,
+   "L126": 7,
+   "L126m": 7,
+   "L127": 2,
+   "L127m": 2,
+   "L128": 12,
+   "L128m": 12,
+   "L129": 2,
+   "L129m": 2,
+   "L130": 13,
+   "L130m": 13,
+   "L131": 5,
+   "L131m": 5,
+   "L132": 8,
+   "L132m": 8,
+   "L133": 7,
+   "L133m": 7,
+   "L134": 8,
+   "L134m": 8,
+   "L135": 5,
+   "L135m": 5,
+   "L136": 7,
+   "L136m": 7,
+   "L137": 2,
+   "L137m": 2,
+   "L138": 17,
+   "L138m": 17,
+   "L139": 20,
+   "L139m": 20,
+   "L140": 26,
+   "L140m": 26,
+   "L141": 6,
+   "L142": 6,
+   "L142m": 6,
+   "L143": 2,
+   "L143m": 2,
+   "L144": 2,
+   "L144m": 2,
+   "L145": 2,
+   "L145m": 2,
+   "L146": 9,
+   "L146m": 9,
+   "L147": 13,
+   "L147m": 13,
+   "L148": 20,
+   "L148m": 20,
+   "L149": 12,
+   "L149m": 12
+  },
+  "r8": {
+   "checked": false
+  },
+  "seams": {
+   "nets": {
+    "abutted": 614871,
+    "channel": 0
+   },
+   "pairs": {
+    "NW_hub|NW_su01": {
+     "abutted": 6530,
+     "channel": 0
+    },
+    "NE_hub|NE_su01": {
+     "abutted": 6530,
+     "channel": 0
+    },
+    "NW_spu0|NW_su01": {
+     "abutted": 5949,
+     "channel": 0
+    },
+    "NW_spu0|NW_su10": {
+     "abutted": 5952,
+     "channel": 0
+    },
+    "NE_spu0|NE_su01": {
+     "abutted": 5949,
+     "channel": 0
+    },
+    "NE_spu0|NE_su10": {
+     "abutted": 5952,
+     "channel": 0
+    },
+    "NW_hub|NW_su21": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NE_hub|NE_su21": {
+     "abutted": 6335,
+     "channel": 0
+    },
+    "NW_hub|NW_su30": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_hub|NE_su30": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NW_b100|NW_hub": {
+     "abutted": 10664,
+     "channel": 0
+    },
+    "NW_b100|NW_b101": {
+     "abutted": 5636,
+     "channel": 0
+    },
+    "NW_b000|NW_b101": {
+     "abutted": 8166,
+     "channel": 0
+    },
+    "NW_b000|NW_b001": {
+     "abutted": 8203,
+     "channel": 0
+    },
+    "NW_b001|NW_b002": {
+     "abutted": 8501,
+     "channel": 0
+    },
+    "NW_b002|NW_b003": {
+     "abutted": 8530,
+     "channel": 0
+    },
+    "NW_b003|root": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_b003|root": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_b002|NE_b003": {
+     "abutted": 8530,
+     "channel": 0
+    },
+    "NE_b001|NE_b002": {
+     "abutted": 8501,
+     "channel": 0
+    },
+    "NE_b000|NE_b001": {
+     "abutted": 8203,
+     "channel": 0
+    },
+    "NE_b000|NE_b101": {
+     "abutted": 8166,
+     "channel": 0
+    },
+    "NE_b100|NE_b101": {
+     "abutted": 5636,
+     "channel": 0
+    },
+    "NE_b100|NE_hub": {
+     "abutted": 10664,
+     "channel": 0
+    },
+    "NW_b110|NW_hub": {
+     "abutted": 9735,
+     "channel": 0
+    },
+    "NE_b110|NE_hub": {
+     "abutted": 9735,
+     "channel": 0
+    },
+    "NW_hub|NW_spu0": {
+     "abutted": 9398,
+     "channel": 0
+    },
+    "NW_spt0|NW_spu0": {
+     "abutted": 9401,
+     "channel": 0
+    },
+    "NW_spt0|NW_spt1": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_spt1|NW_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_mcb|NW_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NW_mcb|PHY_N": {
+     "abutted": 6963,
+     "channel": 0
+    },
+    "NE_hub|NE_spu0": {
+     "abutted": 9398,
+     "channel": 0
+    },
+    "NE_spt0|NE_spu0": {
+     "abutted": 9401,
+     "channel": 0
+    },
+    "NE_spt0|NE_spt1": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_spt1|NE_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_mcb|NE_spt2": {
+     "abutted": 7545,
+     "channel": 0
+    },
+    "NE_mcb|PHY_N": {
+     "abutted": 6963,
+     "channel": 0
+    },
+    "NW_b010|NW_b011": {
+     "abutted": 8734,
+     "channel": 0
+    },
+    "NE_b010|NE_b011": {
+     "abutted": 8734,
+     "channel": 0
+    },
+    "NW_b013|root": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NW_b012|NW_b013": {
+     "abutted": 8428,
+     "channel": 0
+    },
+    "NW_b011|NW_b012": {
+     "abutted": 8705,
+     "channel": 0
+    },
+    "NW_b010|NW_b103": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NW_b102|NW_b103": {
+     "abutted": 8368,
+     "channel": 0
+    },
+    "NW_b102|NW_hub": {
+     "abutted": 8368,
+     "channel": 0
+    },
+    "NE_b013|root": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NE_b012|NE_b013": {
+     "abutted": 8428,
+     "channel": 0
+    },
+    "NE_b011|NE_b012": {
+     "abutted": 8705,
+     "channel": 0
+    },
+    "NE_b010|NE_b103": {
+     "abutted": 6318,
+     "channel": 0
+    },
+    "NE_b102|NE_b103": {
+     "abutted": 8368,
+     "channel": 0
+    },
+    "NE_b102|NE_hub": {
+     "abutted": 8368,
+     "channel": 0
+    },
+    "NW_b003|NW_b013": {
+     "abutted": 2110,
+     "channel": 0
+    },
+    "NE_b003|NE_b013": {
+     "abutted": 2110,
+     "channel": 0
+    },
+    "NW_b101|NW_b103": {
+     "abutted": 2050,
+     "channel": 0
+    },
+    "NE_b101|NE_b103": {
+     "abutted": 2050,
+     "channel": 0
+    },
+    "NW_b000|NW_b010": {
+     "abutted": 2051,
+     "channel": 0
+    },
+    "NE_b000|NE_b010": {
+     "abutted": 2051,
+     "channel": 0
+    },
+    "PHY_N|vsN6": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "vsN5|vsN6": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "vsN4|vsN5": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "root|vsN4": {
+     "abutted": 4806,
+     "channel": 0
+    },
+    "NW_b112|NW_su01": {
+     "abutted": 5622,
+     "channel": 0
+    },
+    "NW_b112|NW_hub": {
+     "abutted": 7131,
+     "channel": 0
+    },
+    "NE_b112|NE_su01": {
+     "abutted": 5622,
+     "channel": 0
+    },
+    "NE_b112|NE_hub": {
+     "abutted": 7131,
+     "channel": 0
+    },
+    "NW_hub|NW_su10": {
+     "abutted": 6923,
+     "channel": 0
+    },
+    "NE_hub|NE_su10": {
+     "abutted": 6923,
+     "channel": 0
+    },
+    "NW_sm0|NW_su01": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NE_sm0|NE_su01": {
+     "abutted": 3232,
+     "channel": 0
+    },
+    "NW_sm1|NW_su10": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NE_sm1|NE_su10": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NW_sm2|NW_su21": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NE_sm2|NE_su21": {
+     "abutted": 3534,
+     "channel": 0
+    },
+    "NW_b110|NW_su21": {
+     "abutted": 3120,
+     "channel": 0
+    },
+    "NE_b110|NE_su21": {
+     "abutted": 3120,
+     "channel": 0
+    },
+    "NW_hub|NW_spu1": {
+     "abutted": 8887,
+     "channel": 0
+    },
+    "NW_spb2|NW_spu1": {
+     "abutted": 5395,
+     "channel": 0
+    },
+    "NW_sm3|NW_spb2": {
+     "abutted": 3255,
+     "channel": 0
+    },
+    "NE_hub|NE_spu1": {
+     "abutted": 8887,
+     "channel": 0
+    },
+    "NE_spb2|NE_spu1": {
+     "abutted": 5395,
+     "channel": 0
+    },
+    "NE_sm3|NE_spb2": {
+     "abutted": 3255,
+     "channel": 0
+    },
+    "NW_b112|NW_b113": {
+     "abutted": 2694,
+     "channel": 0
+    },
+    "NW_b113|NW_su00": {
+     "abutted": 3873,
+     "channel": 0
+    },
+    "NE_b112|NE_b113": {
+     "abutted": 2694,
+     "channel": 0
+    },
+    "NE_b113|NE_su00": {
+     "abutted": 3873,
+     "channel": 0
+    },
+    "NW_su10|NW_su11": {
+     "abutted": 4605,
+     "channel": 0
+    },
+    "NE_su10|NE_su11": {
+     "abutted": 4605,
+     "channel": 0
+    },
+    "NW_b110|NW_b111": {
+     "abutted": 3119,
+     "channel": 0
+    },
+    "NW_b111|NW_su20": {
+     "abutted": 3056,
+     "channel": 0
+    },
+    "NE_b110|NE_b111": {
+     "abutted": 3119,
+     "channel": 0
+    },
+    "NE_b111|NE_su20": {
+     "abutted": 3056,
+     "channel": 0
+    },
+    "NW_su30|NW_su31": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NE_su30|NE_su31": {
+     "abutted": 6114,
+     "channel": 0
+    },
+    "NW_spu1|NW_su30": {
+     "abutted": 4746,
+     "channel": 0
+    },
+    "NW_b002|NW_su31": {
+     "abutted": 799,
+     "channel": 0
+    },
+    "NE_spu1|NE_su30": {
+     "abutted": 4746,
+     "channel": 0
+    },
+    "NE_b002|NE_su31": {
+     "abutted": 799,
+     "channel": 0
+    },
+    "NW_b001|NW_su31": {
+     "abutted": 784,
+     "channel": 0
+    },
+    "NW_b001|NW_b011": {
+     "abutted": 784,
+     "channel": 0
+    },
+    "NE_b001|NE_su31": {
+     "abutted": 784,
+     "channel": 0
+    },
+    "NE_b001|NE_b011": {
+     "abutted": 784,
+     "channel": 0
+    },
+    "NW_spu1|NW_su21": {
+     "abutted": 1218,
+     "channel": 0
+    },
+    "NE_spu1|NE_su21": {
+     "abutted": 1218,
+     "channel": 0
+    },
+    "NW_io|NW_su00": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NW_su00|NW_su01": {
+     "abutted": 1765,
+     "channel": 0
+    },
+    "NW_su11|root": {
+     "abutted": 1251,
+     "channel": 0
+    },
+    "NE_io|NE_su00": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NE_su00|NE_su01": {
+     "abutted": 1765,
+     "channel": 0
+    },
+    "NE_su11|root": {
+     "abutted": 1251,
+     "channel": 0
+    },
+    "NW_b111|NW_io": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NE_b111|NE_io": {
+     "abutted": 1248,
+     "channel": 0
+    },
+    "NW_su31|root": {
+     "abutted": 1121,
+     "channel": 0
+    },
+    "NE_su31|root": {
+     "abutted": 1121,
+     "channel": 0
+    },
+    "NW_b000|NW_su31": {
+     "abutted": 351,
+     "channel": 0
+    },
+    "NE_b000|NE_su31": {
+     "abutted": 351,
+     "channel": 0
+    },
+    "NW_sm0|NW_su00": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NE_sm0|NE_su00": {
+     "abutted": 302,
+     "channel": 0
+    },
+    "NW_sm3|NW_spb1": {
+     "abutted": 443,
+     "channel": 0
+    },
+    "NW_spb1|NW_spb2": {
+     "abutted": 458,
+     "channel": 0
+    },
+    "NE_sm3|NE_spb1": {
+     "abutted": 443,
+     "channel": 0
+    },
+    "NE_spb1|NE_spb2": {
+     "abutted": 458,
+     "channel": 0
+    },
+    "NW_b013|NW_su11": {
+     "abutted": 279,
+     "channel": 0
+    },
+    "NE_b013|NE_su11": {
+     "abutted": 279,
+     "channel": 0
+    },
+    "NW_sm2|NW_spb2": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm2|NE_spb2": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_sm0|NW_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm0|NE_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_sm1|NW_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NE_sm1|NE_spt0": {
+     "abutted": 174,
+     "channel": 0
+    },
+    "NW_su20|NW_su21": {
+     "abutted": 33,
+     "channel": 0
+    },
+    "NW_io|NW_su20": {
+     "abutted": 29,
+     "channel": 0
+    },
+    "NE_su20|NE_su21": {
+     "abutted": 33,
+     "channel": 0
+    },
+    "NE_io|NE_su20": {
+     "abutted": 29,
+     "channel": 0
+    },
+    "NW_b011|NW_su11": {
+     "abutted": 19,
+     "channel": 0
+    },
+    "NE_b011|NE_su11": {
+     "abutted": 19,
+     "channel": 0
+    },
+    "NW_spb0|NW_spb1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "NE_spb0|NE_spb1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "vsN0|vsN1": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "vsN1|vsN2": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "root|vsN2": {
+     "abutted": 15,
+     "channel": 0
+    },
+    "NW_sm3|NW_su30": {
+     "abutted": 10,
+     "channel": 0
+    },
+    "NE_sm3|NE_su30": {
+     "abutted": 10,
+     "channel": 0
+    },
+    "NW_b113|NW_io": {
+     "abutted": 6,
+     "channel": 0
+    },
+    "NE_b113|NE_io": {
+     "abutted": 6,
+     "channel": 0
+    }
+   }
+  },
+  "die_io": {
+   "windows": 7,
+   "ports": 0,
+   "placed": 0,
+   "plan": {
+    "windows": 7,
+    "iface_windows": 7,
+    "io_instances": 7,
+    "by_class": {
+     "ucie": {
+      "instances": 1,
+      "signals": 144
+     },
+     "serdes": {
+      "instances": 5,
+      "signals": 130
+     },
+     "hbm_phy": {
+      "instances": 1,
+      "signals": 1900
+     }
+    },
+    "host": [
+     "io_NW_io_u_host_N"
+    ],
+    "uncovered": 0,
+    "off_shore": 0,
+    "over_sites": 0
+   },
+   "source": "plan"
+  },
+  "cut_lines": {
+   "vertical": [
+    {
+     "at_um": 950.4,
+     "bits": 2826,
+     "abutted_bits": 1254,
+     "route_bits": 1572,
+     "tracks": 538056,
+     "ratio": 0.0053
+    },
+    {
+     "at_um": 2237.76,
+     "bits": 7600,
+     "abutted_bits": 5813,
+     "route_bits": 1787,
+     "tracks": 538056,
+     "ratio": 0.0141
+    },
+    {
+     "at_um": 2522.88,
+     "bits": 7081,
+     "abutted_bits": 1798,
+     "route_bits": 5283,
+     "tracks": 538056,
+     "ratio": 0.0132
+    },
+    {
+     "at_um": 3533.76,
+     "bits": 22121,
+     "abutted_bits": 16866,
+     "route_bits": 5255,
+     "tracks": 538056,
+     "ratio": 0.0411
+    },
+    {
+     "at_um": 4173.12,
+     "bits": 6638,
+     "abutted_bits": 0,
+     "route_bits": 6638,
+     "tracks": 538056,
+     "ratio": 0.0123
+    },
+    {
+     "at_um": 4700.16,
+     "bits": 7167,
+     "abutted_bits": 7167,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0133
+    },
+    {
+     "at_um": 5045.76,
+     "bits": 11571,
+     "abutted_bits": 348,
+     "route_bits": 11223,
+     "tracks": 538056,
+     "ratio": 0.0215
+    },
+    {
+     "at_um": 6860.16,
+     "bits": 21498,
+     "abutted_bits": 3872,
+     "route_bits": 17626,
+     "tracks": 538056,
+     "ratio": 0.04
+    },
+    {
+     "at_um": 7205.76,
+     "bits": 17658,
+     "abutted_bits": 10698,
+     "route_bits": 6960,
+     "tracks": 538056,
+     "ratio": 0.0328
+    },
+    {
+     "at_um": 8346.24,
+     "bits": 17611,
+     "abutted_bits": 6963,
+     "route_bits": 10648,
+     "tracks": 538056,
+     "ratio": 0.0327
+    },
+    {
+     "at_um": 8372.16,
+     "bits": 29706,
+     "abutted_bits": 19032,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 8959.68,
+     "bits": 24678,
+     "abutted_bits": 14004,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 9383.04,
+     "bits": 24716,
+     "abutted_bits": 10719,
+     "route_bits": 13997,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 9547.2,
+     "bits": 19057,
+     "abutted_bits": 14484,
+     "route_bits": 4573,
+     "tracks": 538056,
+     "ratio": 0.0354
+    },
+    {
+     "at_um": 10134.72,
+     "bits": 21161,
+     "abutted_bits": 16937,
+     "route_bits": 4224,
+     "tracks": 538056,
+     "ratio": 0.0393
+    },
+    {
+     "at_um": 10722.24,
+     "bits": 20633,
+     "abutted_bits": 17206,
+     "route_bits": 3427,
+     "tracks": 538056,
+     "ratio": 0.0383
+    },
+    {
+     "at_um": 11309.76,
+     "bits": 19589,
+     "abutted_bits": 16958,
+     "route_bits": 2631,
+     "tracks": 538056,
+     "ratio": 0.0364
+    },
+    {
+     "at_um": 11905.92,
+     "bits": 14804,
+     "abutted_bits": 14804,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0275
+    },
+    {
+     "at_um": 13288.32,
+     "bits": 14804,
+     "abutted_bits": 14804,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0275
+    },
+    {
+     "at_um": 13884.48,
+     "bits": 19589,
+     "abutted_bits": 16958,
+     "route_bits": 2631,
+     "tracks": 538056,
+     "ratio": 0.0364
+    },
+    {
+     "at_um": 14472.0,
+     "bits": 20633,
+     "abutted_bits": 17206,
+     "route_bits": 3427,
+     "tracks": 538056,
+     "ratio": 0.0383
+    },
+    {
+     "at_um": 15059.52,
+     "bits": 21161,
+     "abutted_bits": 16937,
+     "route_bits": 4224,
+     "tracks": 538056,
+     "ratio": 0.0393
+    },
+    {
+     "at_um": 15647.04,
+     "bits": 19057,
+     "abutted_bits": 14484,
+     "route_bits": 4573,
+     "tracks": 538056,
+     "ratio": 0.0354
+    },
+    {
+     "at_um": 15811.2,
+     "bits": 24716,
+     "abutted_bits": 10719,
+     "route_bits": 13997,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 16234.56,
+     "bits": 24678,
+     "abutted_bits": 14004,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 16822.08,
+     "bits": 29706,
+     "abutted_bits": 19032,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 16848.0,
+     "bits": 17611,
+     "abutted_bits": 6963,
+     "route_bits": 10648,
+     "tracks": 538056,
+     "ratio": 0.0327
+    },
+    {
+     "at_um": 17988.48,
+     "bits": 17658,
+     "abutted_bits": 10698,
+     "route_bits": 6960,
+     "tracks": 538056,
+     "ratio": 0.0328
+    },
+    {
+     "at_um": 18334.08,
+     "bits": 21498,
+     "abutted_bits": 3872,
+     "route_bits": 17626,
+     "tracks": 538056,
+     "ratio": 0.04
+    },
+    {
+     "at_um": 20148.48,
+     "bits": 11571,
+     "abutted_bits": 348,
+     "route_bits": 11223,
+     "tracks": 538056,
+     "ratio": 0.0215
+    },
+    {
+     "at_um": 20494.08,
+     "bits": 7167,
+     "abutted_bits": 7167,
+     "route_bits": 0,
+     "tracks": 538056,
+     "ratio": 0.0133
+    },
+    {
+     "at_um": 21021.12,
+     "bits": 6638,
+     "abutted_bits": 0,
+     "route_bits": 6638,
+     "tracks": 538056,
+     "ratio": 0.0123
+    },
+    {
+     "at_um": 21660.48,
+     "bits": 22121,
+     "abutted_bits": 16866,
+     "route_bits": 5255,
+     "tracks": 538056,
+     "ratio": 0.0411
+    },
+    {
+     "at_um": 22671.36,
+     "bits": 7081,
+     "abutted_bits": 1798,
+     "route_bits": 5283,
+     "tracks": 538056,
+     "ratio": 0.0132
+    },
+    {
+     "at_um": 22956.48,
+     "bits": 7600,
+     "abutted_bits": 5813,
+     "route_bits": 1787,
+     "tracks": 538056,
+     "ratio": 0.0141
+    },
+    {
+     "at_um": 24243.84,
+     "bits": 2826,
+     "abutted_bits": 1254,
+     "route_bits": 1572,
+     "tracks": 538056,
+     "ratio": 0.0053
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 1494.72,
+     "bits": 45,
+     "abutted_bits": 45,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0001
+    },
+    {
+     "at_um": 2989.44,
+     "bits": 923,
+     "abutted_bits": 15,
+     "route_bits": 908,
+     "tracks": 740081,
+     "ratio": 0.0012
+    },
+    {
+     "at_um": 2998.08,
+     "bits": 929,
+     "abutted_bits": 916,
+     "route_bits": 13,
+     "tracks": 740081,
+     "ratio": 0.0013
+    },
+    {
+     "at_um": 4492.8,
+     "bits": 17893,
+     "abutted_bits": 17893,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0242
+    },
+    {
+     "at_um": 6048.0,
+     "bits": 59658,
+     "abutted_bits": 58950,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0806
+    },
+    {
+     "at_um": 8121.6,
+     "bits": 14698,
+     "abutted_bits": 13990,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0199
+    },
+    {
+     "at_um": 10195.2,
+     "bits": 72588,
+     "abutted_bits": 67784,
+     "route_bits": 4804,
+     "tracks": 740081,
+     "ratio": 0.0981
+    },
+    {
+     "at_um": 11750.4,
+     "bits": 37744,
+     "abutted_bits": 37744,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.051
+    },
+    {
+     "at_um": 13245.12,
+     "bits": 19890,
+     "abutted_bits": 15090,
+     "route_bits": 4800,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 13253.76,
+     "bits": 19884,
+     "abutted_bits": 4806,
+     "route_bits": 15078,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 14748.48,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 16243.2,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    }
+   ],
+   "top_vertical": [
+    {
+     "at_um": 8372.16,
+     "bits": 29706,
+     "abutted_bits": 19032,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 16822.08,
+     "bits": 29706,
+     "abutted_bits": 19032,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0552
+    },
+    {
+     "at_um": 9383.04,
+     "bits": 24716,
+     "abutted_bits": 10719,
+     "route_bits": 13997,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 15811.2,
+     "bits": 24716,
+     "abutted_bits": 10719,
+     "route_bits": 13997,
+     "tracks": 538056,
+     "ratio": 0.0459
+    },
+    {
+     "at_um": 8959.68,
+     "bits": 24678,
+     "abutted_bits": 14004,
+     "route_bits": 10674,
+     "tracks": 538056,
+     "ratio": 0.0459
+    }
+   ],
+   "top_horizontal": [
+    {
+     "at_um": 10195.2,
+     "bits": 72588,
+     "abutted_bits": 67784,
+     "route_bits": 4804,
+     "tracks": 740081,
+     "ratio": 0.0981
+    },
+    {
+     "at_um": 6048.0,
+     "bits": 59658,
+     "abutted_bits": 58950,
+     "route_bits": 708,
+     "tracks": 740081,
+     "ratio": 0.0806
+    },
+    {
+     "at_um": 11750.4,
+     "bits": 37744,
+     "abutted_bits": 37744,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.051
+    },
+    {
+     "at_um": 14748.48,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    },
+    {
+     "at_um": 16243.2,
+     "bits": 19896,
+     "abutted_bits": 19896,
+     "route_bits": 0,
+     "tracks": 740081,
+     "ratio": 0.0269
+    }
+   ],
+   "worst": {
+    "ratio": 0.0981,
+    "at": "horizontal@10195.2"
+   },
+   "lines": 48,
+   "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max + die layers x cut_avail"
+  },
+  "reach": {
+   "margin": 0.9,
+   "table": {
+    "M4": 405.0,
+    "M5": 405.0,
+    "M6": 405.0,
+    "M7": 405.0,
+    "M8": 1001.2,
+    "M9": 1012.8
+   },
+   "source": "results/arch/die_reach_m89_1022.json",
+   "die_reach_um": 1000.0,
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "over": 0,
+   "by_layers": {},
+   "over_if_partition_layers": {
+    "limit_um": 364.5,
+    "lanes": 206
+   },
+   "worst": [
+    {
+     "lane": "L56m",
+     "hop_um": 849.6,
+     "reach_um": 1001.2,
+     "frac": 0.849
+    },
+    {
+     "lane": "L56",
+     "hop_um": 849.6,
+     "reach_um": 1001.2,
+     "frac": 0.849
+    },
+    {
+     "lane": "L61m",
+     "hop_um": 849.5,
+     "reach_um": 1001.2,
+     "frac": 0.848
+    },
+    {
+     "lane": "L61",
+     "hop_um": 849.5,
+     "reach_um": 1001.2,
+     "frac": 0.848
+    },
+    {
+     "lane": "L114",
+     "hop_um": 848.3,
+     "reach_um": 1001.2,
+     "frac": 0.847
+    },
+    {
+     "lane": "L8m",
+     "hop_um": 843.2,
+     "reach_um": 1001.2,
+     "frac": 0.842
+    },
+    {
+     "lane": "L8",
+     "hop_um": 843.2,
+     "reach_um": 1001.2,
+     "frac": 0.842
+    },
+    {
+     "lane": "L9m",
+     "hop_um": 842.1,
+     "reach_um": 1001.2,
+     "frac": 0.841
+    },
+    {
+     "lane": "L9",
+     "hop_um": 842.1,
+     "reach_um": 1001.2,
+     "frac": 0.841
+    },
+    {
+     "lane": "L139m",
+     "hop_um": 840.2,
+     "reach_um": 1001.2,
+     "frac": 0.839
+    }
+   ]
+  },
+  "face_tracks": {
+   "over": 0,
+   "worst": [
+    {
+     "part": "NW_hub",
+     "face": "N",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NW_su01",
+     "face": "S",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NE_hub",
+     "face": "N",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NE_su01",
+     "face": "S",
+     "ratio": 0.362,
+     "on": "M9",
+     "allowed": [
+      "M5",
+      "M7",
+      "M9"
+     ]
+    },
+    {
+     "part": "NW_su01",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_spu0",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_spu0",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NW_su10",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NE_su01",
+     "face": "W",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    },
+    {
+     "part": "NE_spu0",
+     "face": "E",
+     "ratio": 0.362,
+     "on": "M8",
+     "allowed": [
+      "M4",
+      "M6",
+      "M8"
+     ]
+    }
+   ]
+  },
+  "ft_budget": {
+   "over": 0,
+   "worst": [
+    {
+     "type": "q_spt0",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7888,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9576,
+      "ratio": 0.7873
+     }
+    },
+    {
+     "type": "q_spt1",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7934,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9576,
+      "ratio": 0.7873
+     }
+    },
+    {
+     "type": "q_spt2",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 7888,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7539,
+      "die_layer_pins": 0,
+      "used": 7539,
+      "reserved": 9576,
+      "ratio": 0.7873
+     }
+    },
+    {
+     "type": "q_su01",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 5941,
+      "die_layer_pins": 0,
+      "used": 5941,
+      "reserved": 8208,
+      "ratio": 0.7238
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 7410,
+      "die_layer_pins": 1572,
+      "used": 8982,
+      "reserved": 11491,
+      "ratio": 0.7816
+     }
+    },
+    {
+     "type": "q_b102",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 8364,
+      "die_layer_pins": 0,
+      "used": 8364,
+      "reserved": 10944,
+      "ratio": 0.7643
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 0,
+      "die_layer_pins": 0,
+      "used": 0,
+      "reserved": 3100,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "q_b103",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 8364,
+      "die_layer_pins": 0,
+      "used": 8364,
+      "reserved": 10944,
+      "ratio": 0.7643
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 2049,
+      "die_layer_pins": 0,
+      "used": 2049,
+      "reserved": 3100,
+      "ratio": 0.6608
+     }
+    },
+    {
+     "type": "q_su30",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 6085,
+      "die_layer_pins": 0,
+      "used": 6085,
+      "reserved": 8208,
+      "ratio": 0.7413
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 1387,
+      "die_layer_pins": 1572,
+      "used": 2959,
+      "reserved": 11491,
+      "ratio": 0.2575
+     }
+    },
+    {
+     "type": "q_spu0",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 5943,
+      "die_layer_pins": 0,
+      "used": 5943,
+      "reserved": 8208,
+      "ratio": 0.724
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 9390,
+      "die_layer_pins": 0,
+      "used": 9390,
+      "reserved": 13224,
+      "ratio": 0.7101
+     }
+    },
+    {
+     "type": "q_b112",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 7120,
+      "die_layer_pins": 0,
+      "used": 7120,
+      "reserved": 10944,
+      "ratio": 0.6506
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 4949,
+      "die_layer_pins": 0,
+      "used": 4949,
+      "reserved": 6840,
+      "ratio": 0.7235
+     }
+    },
+    {
+     "type": "q_b101",
+     "instances": 2,
+     "H": {
+      "layers": [
+       "M8"
+      ],
+      "ft_bits": 7682,
+      "die_layer_pins": 0,
+      "used": 7682,
+      "reserved": 10944,
+      "ratio": 0.7019
+     },
+     "V": {
+      "layers": [
+       "M9"
+      ],
+      "ft_bits": 2049,
+      "die_layer_pins": 0,
+      "used": 2049,
+      "reserved": 3100,
+      "ratio": 0.6608
+     }
+    }
+   ],
+   "total_types": 49
+  },
+  "xdie_counts": {
+   "hard_cores": 208,
+   "core_faces": 0,
+   "complete": 0,
+   "die_io_plan": 0,
+   "cut_lines": 0,
+   "reach": 0,
+   "face_tracks": 0,
+   "ft_budget": 0
+  },
+  "census": {
+   "declared": "none",
+   "reason": "B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadrants); no as-built census of this die exists"
+  },
+  "png": "g0/die_plan.png"
+ },
+ "findings": [
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['NE_io', 'NW_io'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "31 replicated types without type-frame pin windows on their buses (e.g. ['q_b000', 'q_b001', 'q_b002', 'q_b003', 'q_b010']): declare face/window_um/layers on the type so every instance shares one pin table"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b000 core u_hcb_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b000",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b001 core u_hcb_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b001",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b002 core u_hcb_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b002",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b003 core u_hcb_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b003",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b010 core u_hcb_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b010",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b011 core u_hcb_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b011",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b012 core u_hcb_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b012",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b013 core u_hcb_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b013",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b100 core u_hb_idx__s_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b100",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b101 core u_hb_idx__s_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b101",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b102 core u_hb_idx__s_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b102",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b103 core u_hb_idx__s_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b103",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b110 core u_sfucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b110",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b111 core u_sfucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b111",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b112 core u_sfucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b112",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_b113 core u_sfucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_b113",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_sfup_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_pgp_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_svg_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_svg_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_svg_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_svg_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_coll_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_wbk_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cij_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cxrc_Q_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cxrc_Q_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_vms_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cxij_Q_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cxij_Q_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_smw_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xl_Q_ctl: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_eg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_eg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmb_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_bd: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_bd: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_sucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_sfus_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__u_dec: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_dbk_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollgi_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollgl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmfc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_idx__qctl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q0_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q1_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q2_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q3_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_idx__q_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p00: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p01: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p02: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p03: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p04: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p05: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p06: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p07: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p08: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p09: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p10: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p11: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p12: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p13: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p14: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_ctl_Q_p15: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmks_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmks_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmks_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmks_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_idx__nwsh: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollrs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__program_leaf: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_ctl: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollb_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollks_Q_p0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollks_Q_p1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollks_Q_p2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollks_Q_p3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_calendar_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_epcal_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_idx__op_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmdel_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xl_Q_aqhi: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_xl_Q_aqlo: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_0__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_1__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_2__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_3__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hleaf_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_vmm_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_col_sfu_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_0__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_1__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_2__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_3__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hcollks_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_stl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_cic_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__hbfd_qdq_split_and: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_hb_quant_Q__hbfd_qdq_split_or: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_fcx_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_obs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_fr_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_fs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_wbc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_hub core u_subr_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_hub",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NW_io core u_host_N: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NW_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NW_io core u_lk_N0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NW_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NW_io core u_ep_N0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NW_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NW_io core u_host_ep: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NW_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_mcb core u_refcfg_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_mcb",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_mcb core u_sfault_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_mcb",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_sm0 core u_sm: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_sm0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_sm1 core u_sm: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_sm1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_sm2 core u_sm: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_sm2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_sm3 core u_sm: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_sm3",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb0 core u_lk_S0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb0 core u_ep_S0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb2 core u_xc_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb2 core u_xc_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb2 core u_cp_svg_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spb2 core u_cp_svg_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spb2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spt0 core u_xc_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spt0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spt0 core u_xc_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spt0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spt0 core u_cp_svg_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spt0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_spt0 core u_cp_svg_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_spt0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_su_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_cxdl_Q0_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_cxdl_Q0_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_hc_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_sfu_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su00 core u_fl_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su00",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su01 core u_su_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su01",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su10 core u_su_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su10",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_su_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_cxdl_Q1_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_cxdl_Q1_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_hc_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_sfu_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su11 core u_fl_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_su_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_cxdl_Q2_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_cxdl_Q2_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_hc_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_sfu_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su20 core u_fl_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su21 core u_su_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su21",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su30 core u_su_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su30",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_su_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_cxdl_Q3_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_cxdl_Q3_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_hc_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_sfu_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type q_su31 core u_fl_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "q_su31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_tkm_SW: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hc_eng: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__link: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__selector: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_host_cp_rxs: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__ctl: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__xqr: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__xq_N: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_idx__xq_S: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_argmax: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_col_idx: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_su_prog: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_col_su: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_str_C: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_host_cp_ingress: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_hb_router_ids: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_obs_C: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_host_status: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type root core u_vm_status4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "root",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type vsN0 core u_lk_S1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "vsN0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type vsN0 core u_ep_S1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "vsN0",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NE_io core u_lk_N2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NE_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type NE_io core u_ep_N2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "type": "NE_io",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b000: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b001: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b002: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b003: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b010: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b011: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b012: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b013: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b100: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b101: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b102: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b102"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b103: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b103"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b110: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b111: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b112: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_b113: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_hub: 121/121 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type NW_io: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_mcb: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm0: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm0"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm1: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm2: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm2"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_sm3: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_sm3"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_spb0: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_spb0"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_spb2: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_spt0: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su00: 6/6 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su01: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su10: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su11: 6/6 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su20: 6/6 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su21: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su30: 1/1 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type q_su31: 6/6 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type root: 19/19 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type vsN0: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "vsN0"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type NE_io: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_b103 slot L19x2: crossing ~1331 um > 1 station(s) x reach 1000 (see hops)",
+   "type": "q_b103"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_spu0 slot L140x1: crossing ~2030 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_spu0"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su00 slot L56x4: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su01 slot L1x1: crossing ~1866 um > 1 station(s) x reach 1000 (see hops)",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su11 slot L116x2: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su11 slot L133x1: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su31 slot L65x3: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su31 slot L90x3: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type q_su31 slot L148x3: crossing ~2039 um > 2 station(s) x reach 1000 (see hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type root slot L22x4: crossing ~4320 um > 4 station(s) x reach 1000 (see hops)",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "r8",
+   "msg": "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L14_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L19_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L20_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L65_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L90_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L107_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L142_o has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b000: bus L144_i has no leaf binding",
+   "type": "q_b000"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L14_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L15_o has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L71_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L94_o has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L107_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b001: bus L108_i has no leaf binding",
+   "type": "q_b001"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L10_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L15_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L42_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L71_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L85_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L94_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L108_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L115_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L132_o has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b002: bus L143_i has no leaf binding",
+   "type": "q_b002"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L10_i has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L16_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L85_i has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L92_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b003: bus L143_o has no leaf binding",
+   "type": "q_b003"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L11_i has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L20_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L86_i has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L144_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b010: bus L145_o has no leaf binding",
+   "type": "q_b010"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L11_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L17_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L43_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L72_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L86_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L95_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L109_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L116_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L133_o has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b011: bus L145_i has no leaf binding",
+   "type": "q_b011"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L17_o has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L18_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L72_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L93_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L95_o has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b012: bus L109_i has no leaf binding",
+   "type": "q_b012"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L16_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L18_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L73_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L92_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L93_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L119_i has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b013: bus L146_o has no leaf binding",
+   "type": "q_b013"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L6_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L7_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L91_i has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b100: bus L137_o has no leaf binding",
+   "type": "q_b100"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L64_o has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L80_i has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b101: bus L124_i has no leaf binding",
+   "type": "q_b101"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L5_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L23_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L44_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L60_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L81_o has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b110: bus L130_i has no leaf binding",
+   "type": "q_b110"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L45_o has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L58_i has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b111: bus L129_i has no leaf binding",
+   "type": "q_b111"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L46_o has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L56_i has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b112: bus L128_i has no leaf binding",
+   "type": "q_b112"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L47_o has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L54_i has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_b113: bus L127_i has no leaf binding",
+   "type": "q_b113"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_hub: farthest boundary point 4493 um from the tap (> 2 hops)",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L0_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L1_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L2_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L3_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L4_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L4_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L5_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L6_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L7_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L8_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L9_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L12_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L13_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L19_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L21_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L22_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L23_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L24_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L25_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L26_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L27_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L28_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L29_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L30_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L31_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L32_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L33_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L34_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L35_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L36_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L37_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L38_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L39_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L40_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L41_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L42_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L43_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L49_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L50_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L51_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L52_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L55_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L57_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L59_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L61_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L62_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L63_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L65_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L66_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L67_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L68_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L69_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L70_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L73_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L74_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L79_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L81_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L82_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L83_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L84_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L87_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L88_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L89_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L90_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L91_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L96_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L96_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L97_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L98_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L99_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L100_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L101_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L102_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L103_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L104_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L105_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L110_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L111_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L112_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L113_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L114_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L115_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L116_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L119_o has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L120_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L121_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L122_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L123_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L126_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L131_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L132_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L133_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L134_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L135_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L136_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L137_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L139_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L140_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L142_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_hub: bus L146_i has no leaf binding",
+   "type": "q_hub"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type NW_io: farthest boundary point 2549 um from the tap (> 2 hops)",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L48_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L51_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L52_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L53_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L101_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L106_i has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L125_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NW_io: bus L126_o has no leaf binding",
+   "type": "NW_io"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_mca: farthest boundary point 3123 um from the tap (> 2 hops)",
+   "type": "q_mca"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_mcb: farthest boundary point 3123 um from the tap (> 2 hops)",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L66_i has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L79_i has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_mcb: bus L82_o has no leaf binding",
+   "type": "q_mcb"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb0: bus L117_o has no leaf binding",
+   "type": "q_spb0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb0: bus L138_o has no leaf binding",
+   "type": "q_spb0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L40_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L49_i has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L75_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L76_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L83_i has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L87_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spb2: bus L139_o has no leaf binding",
+   "type": "q_spb2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L41_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L50_i has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L77_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L78_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L84_i has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L88_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_spt0: bus L140_o has no leaf binding",
+   "type": "q_spt0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_spu0: farthest boundary point 2030 um from the tap (> 2 hops)",
+   "type": "q_spu0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_spu1: farthest boundary point 2030 um from the tap (> 2 hops)",
+   "type": "q_spu1"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su00: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L36_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L47_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L54_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L55_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L102_i has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L127_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L134_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su00: bus L147_o has no leaf binding",
+   "type": "q_su00"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L0_i has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L24_o has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su01: bus L110_i has no leaf binding",
+   "type": "q_su01"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L1_i has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L25_o has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su10: bus L111_i has no leaf binding",
+   "type": "q_su10"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su11: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L37_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L46_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L56_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L57_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L103_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L128_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L135_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L147_i has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su11: bus L148_o has no leaf binding",
+   "type": "q_su11"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su20: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L38_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L45_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L58_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L59_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L104_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L129_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L136_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L148_i has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su20: bus L149_o has no leaf binding",
+   "type": "q_su20"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L2_i has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L26_o has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su21: bus L112_i has no leaf binding",
+   "type": "q_su21"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L3_i has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L27_o has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su30: bus L113_i has no leaf binding",
+   "type": "q_su30"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type q_su31: farthest boundary point 2039 um from the tap (> 2 hops)",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L39_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L44_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L60_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L61_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L105_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L130_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L131_o has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type q_su31: bus L149_i has no leaf binding",
+   "type": "q_su31"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type root: farthest boundary point 4320 um from the tap (> 2 hops)",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L12_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L12m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L13_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L13m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L48_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L48m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L53_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L53m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L62_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L62m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L64_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L64m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L74_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L74m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L80_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L80m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L89_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L89m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L106_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L106m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L117_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L117m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L118_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L124_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L124m_o has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L125_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L125m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L138_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L138m_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type root: bus L141_i has no leaf binding",
+   "type": "root"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type vsN0: bus L118_o has no leaf binding",
+   "type": "vsN0"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type vsN0: bus L141_o has no leaf binding",
+   "type": "vsN0"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type NE_io: farthest boundary point 2549 um from the tap (> 2 hops)",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L48_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L51_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L52_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L53_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L101_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L106_i has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L125_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type NE_io: bus L126_o has no leaf binding",
+   "type": "NE_io"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census coverage not run: B is a 2-quadrant die: lanes = the 16-SM r18h5 census folded (SW->NW, SE->NE; per-pair width = max over the folded quadrants); no as-built census of this die exists"
+  }
+ ]
+}
