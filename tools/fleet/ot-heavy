@@ -71,8 +71,9 @@ while :; do
     # v12 (FLEET-OOM 2026-10-18): every job gets the fleet's pinned tools first on PATH (Verilator 5.050, yosys 0.68),
     # the ones the closure-loop daemon's bench stages use; /usr/bin/verilator is Debian 5.032 (none on PVE1), so lane
     # benches run through ot-run and the daemon's job benches disagreed.  OT_HEAVY_SYSTEM_TOOLS=1 opts out.
+    # FLEET-NEW3 2026-10-24: also ~/.local/opentallas-tools/bin (opensta `sta`; non-login ssh has no profile PATH).
     if [ -z "${OT_HEAVY_SYSTEM_TOOLS:-}" ]; then
-      for _d in "$HOME/.local/opentallas-tools/yosys-0.68/bin" "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do
+      for _d in "$HOME/.local/opentallas-tools/bin" "$HOME/.local/opentallas-tools/yosys-0.68/bin" "$HOME/.local/opentallas-tools/verilator-5.050/bin"; do
         [ -d "$_d" ] && export PATH="$_d:$PATH"
       done
     fi
