@@ -1,0 +1,17 @@
+{
+ "element": "kv3_head_eighth_e3",
+ "kit": "intel1:/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_head_eighth_e3__*",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "eaf19facc50b22dbe2e5ea4a7461f4fcfd5f30c9d61bea25d3171b4fe14c56be",
+ "reasons": "[2026-10-24 08:23] [GEOM-REVIEW tile GR-QK] looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_head_eighth_e3/review.png + contact sheets /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_*.png. class C (2 tiles only; pins W 1.87 / N 0.04). 142243 cells, fill 22.6%, empty 55%, pin->reg p50/p90 6.17/6.59 um, CTS WNS 39.31 ps. Repeat identity: the 8 head eighths are NOT one design: 3 logic classes (A e0; B e2/e4/e6 = front+2 tiles differing by bsel strap constant; C e1/e3/e5/e7 = 2 tiles only, no front) and within B and C the pin plans differ (e2 != e4=e6; e1=e3 != e5=e7). All in the same 285.12x285.12 slot: class C uses ~45% of it (55% empty, right 40% bare), class B ~50% (blob clusters with large holes), A 69%. Placements are clustered blobs (independent tiles) at bin density 0.6-0.8, GRT overflow 0 (usage 8-11%). hash = sha256 over \"<relpath> <git blob id>\" of the kit dir files excluding run/ views/ gate_layout/ record/ *.log.",
+ "fixes": "1. Record the head eighths as 3 classes x pin variants (not 8 repeats of one core) in the core spec. 2. Make the B and C variants one netlist each (bsel/hid as strap pins tied in the parent; one pin plan per class with MX/MY placement) if kit count matters. 3. Class C occupies ~45% of its 285x285 slot (55% empty): shrink the slot in the KV plan (e.g. 285x~170) or pair two class-C eighths per slot - area waste x4 per head. ",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_head_eighth_e3/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_head8.png"
+ ],
+ "stage": "4_cts (GRT running)",
+ "owner_lane": "KVG3-CORES (KV-G3)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:23:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

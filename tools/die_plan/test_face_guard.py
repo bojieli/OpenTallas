@@ -85,6 +85,21 @@ def test_yosys_keep_attributes_prevent_merges():
     assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))
 
 
+def test_kit_keeps_face_registers_through_eliminate_dead_logic():
+    """CP1-R10 r10b: ORFS eliminate_dead_logic (synth_odb.tcl) deleted 120 unused-q face flops after Yosys kept them:
+    the kit sets dont_touch on the boundary cells around that step and guards the 1_synth.odb netlist too."""
+    import json
+    import gen_phys
+    import schema
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "src", d, [])
+        cfg = (kd / "config.mk").read_text()
+        assert "export PRE_SYNTH_TCL = /work/face_keep.tcl" in cfg and "export POST_SYNTH_TCL = /work/face_keep_release.tcl" in cfg
+        assert "set_dont_touch" in (kd / "face_keep.tcl").read_text()
+        assert "unset_dont_touch" in (kd / "face_keep_release.tcl").read_text()
+    assert "face_guard_odb.json" in gen_phys.RUN_KIT and "1_synth.odb" in gen_phys.RUN_KIT
+
 NET_FT1 = r"""
 module top(clk, ft0_i, ft0_o, ft1_i, ft1_o);
   input clk; input [1:0] ft0_i; output [1:0] ft0_o; input ft1_i; output ft1_o;
@@ -112,3 +127,24 @@ def test_portless_type_passes_with_empty_pin_table():
     net = "module top(clk);\n  input clk;\nendmodule\n"
     assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
     assert face_guard.guard(net)["verdict"] == "FAIL"
+
+
+def test_early_core_clock_ports_are_not_data_boundaries():
+    net = NET_OK.replace("top(clk, a, o);", "top(clk, clk_c0, clk_c4, a, o);")
+    net = net.replace("input clk;", "input clk; input clk_c0; input clk_c4;")
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
+    r = face_guard.guard(net, pins=pins)
+    assert r["verdict"] == "PASS" and r["checked"] == 4 and r["ok"] == 4, r
+
+
+def test_native_scalar_pins_and_global_reset():
+    net = r"""module top(clk, rst_n, a, o);
+input clk; input rst_n; input a; output o;
+wire q; wire nq;
+DFFHQNx1_ASAP7_75t_R u_bin_a_q (.CLK(clk), .D(a), .QN(q));
+DFFHQNx1_ASAP7_75t_R u_bout_o_q (.CLK(clk), .D(q), .QN(nq));
+INVx3_ASAP7_75t_R out_inv (.A(nq), .Y(o));
+endmodule
+"""
+    r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
+    assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r

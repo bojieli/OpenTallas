@@ -9,8 +9,10 @@ two dies, so its two endpoint windows must also agree.  For every circuit of a r
   iface     both ends' windows have the same iface (serdes / ucie) (ERROR);
   lanes     the circuit's lanes_per_dir <= the end's macros x lanes a macro (window signals = 4 x lanes + 2) (ERROR);
   pitch     both ends use the same bump pitch (ERROR: the package / board breakout differs);
-  host      a die role's die_io marks a host window only if the rack gives that role a host circuit, and every
-            role with a host circuit marks its host macros host: true (ERROR);
+  host      a die role's die_io marks a host window (host: true / iface host) only if the rack gives that role a
+            host circuit, and every role with a host circuit marks its host macros host: true (ERROR); a role
+            without a host circuit may mark in-band host windows (host: "in_band", die_io.py --in-band-host), which
+            must be macros the rack actually wires for that role (ERROR otherwise);
   unused    a die-IO window no circuit of that role uses (WARN: a reserve or an unplanned PHY).
 
     python3 tools/die_plan/xdie_io.py --conn results/arch/release_rack_1021/connections_s81.csv \
@@ -82,10 +84,14 @@ def check(conn_rows, roles):
     summ = dict(circuits_checked=sum(by_cls.values()),
                 by_class={f"{c} {a}-{b}": n for (c, a, b), n in sorted(by_cls.items())}, roles={})
     for role, io in roles.items():
-        hw = sorted(m for m, w in io.items() if w.get("host") or w.get("iface") == "host")
+        hw = sorted(m for m, w in io.items() if w.get("host") is True or w.get("iface") == "host")
+        ib = sorted(m for m, w in io.items() if w.get("host") == "in_band")
         unused = sorted(set(io) - used[role] - {m for m, w in io.items() if w.get("iface") == "hbm_phy"})
         summ["roles"][role] = dict(windows=len(io), used=sorted(used[role] & set(io)), host_windows=hw, unused=unused,
-                                   host_circuit=role in host_roles)
+                                   host_circuit=role in host_roles, in_band_host_windows=ib)
+        if ib and not set(ib) <= used[role]:
+            errs.append(dict(rule="host", role=role, msg=f"role {role}: in-band host windows {sorted(set(ib) - used[role])}"
+                                                         " are wired by no rack circuit of this role"))
         if hw and role not in host_roles:
             errs.append(dict(rule="host", role=role, msg=f"role {role}: die_io marks {hw} host: true but the rack gives "
                                                          "this role no host circuit (host traffic is in-band)"))

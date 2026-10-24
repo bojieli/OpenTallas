@@ -1,7 +1,7 @@
 #!/bin/bash
 # KVG3-CORES (gen_core_kit_kv.py): run one KV core kit through ORFS in docker: synth .. finish (TC), generate_abstract,
 # sdc_lint gate (CP1-R10, fail-closed) before synth, face_guard after synth (REPORT ONLY for cores),
-# pin audit of the routed ODB, then corners.tcl at TT / FF / SS (STA + write_timing_model).  Outputs chowned back.
+# pin audit of the routed ODB, then corners.tcl at TT / FF (STA + write_timing_model), then signoff.py (SIGNED = closed).  Outputs chowned back.
 #   run_kit_kv.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call it through ot-run --mem MEM_GB)
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
@@ -15,6 +15,8 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json > /work/face_guard.log 2>&1; echo \"face_guard rc \$? (report only: core pins are leaf pins, not planned face registers)\"; fi; \
+  D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
+  if [ \$rc = 0 ] && [ -n \"\$D\" ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json > /work/face_guard_odb.log 2>&1; echo \"face_guard 1_synth.odb rc \$? (report only; signoff.py judges)\"; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
@@ -22,10 +24,11 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py; fi; \
   if [ \$rc = 0 ] && [ -f \$R/6_final.odb ]; then \
     mkdir -p /work/views; \
-    LIBS_TT=\$(\$M print-LIB_FILES 2>/dev/null | sed -n 's/^LIB_FILES = //p'); \
-    LEFS=\"\$(\$M print-TECH_LEF 2>/dev/null | sed -n 's/^TECH_LEF = //p') \$(\$M print-SC_LEF 2>/dev/null | sed -n 's/^SC_LEF = //p') \$(\$M print-ADDITIONAL_LEFS 2>/dev/null | sed -n 's/^ADDITIONAL_LEFS = //p')\"; \
+    LIBS_TT=\$(\$M print-LIB_FILES 2>/dev/null | sed -n 's/^LIB_FILES[:=] *//p'); \
+    LEFS=\"\$(\$M print-TECH_LEF 2>/dev/null | sed -n 's/^TECH_LEF[:=] *//p') \$(\$M print-SC_LEF 2>/dev/null | sed -n 's/^SC_LEF[:=] *//p') \$(\$M print-ADDITIONAL_LEFS 2>/dev/null | sed -n 's/^ADDITIONAL_LEFS[:=] *//p')\"; \
     echo \"LIBS_TT=\$LIBS_TT\" > /work/views/libs.txt; \
-    for c in tt ff ss; do \
+    test -n \"\$LIBS_TT\" || { echo \"ERROR: empty LIB_FILES from ORFS make print helper\"; exit 102; }; \
+    for c in tt ff; do \
       case \$c in tt) L=\$LIBS_TT;; ff) L=\$(echo \$LIBS_TT | sed 's/_TT_/_FF_/g; s/_tt\.lib/_ff.lib/g');; ss) L=\$(echo \$LIBS_TT | sed 's/_TT_/_SS_/g; s/_tt\.lib/_ss.lib/g');; esac; \
       echo \"LIBS_\$c=\$L\" >> /work/views/libs.txt; \
       OT_CORNER=\$c OT_LIBS=\"\$L\" OT_LEFS=\"\$LEFS\" RES=\$R OT_MOD=\$(sed -n 's/^export DESIGN_NAME = //p' /work/config.mk) OT_OUT=/work/views \
@@ -37,4 +40,12 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
 rc=$?
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+# SIGNOFF (coordinator 10-24, main f942bf2f72): uniform tools/die_plan/signoff.py verdict (TT setup / FF hold with the
+# standard boundary-hold overlay / DRV / unconstrained / pin-flop spread / sdc_lint / face_guard / DRC + antenna) in
+# KIT/signoff/signoff.json; a core is closed only when it says SIGNED (collect_core.py reads it).
+if [ $rc = 0 ] && [ $GOAL = finish ] && [ -f "$K/signoff.py" ]; then
+  SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-$DK} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
+    --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+fi
 exit $rc

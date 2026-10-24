@@ -1,0 +1,71 @@
+{
+ "gold": {
+  "top": "observe",
+  "checked": 28,
+  "ok": 24,
+  "fails": {
+   "dropped": [
+    "d[12]: no load on r.d[12] (register removed)",
+    "d[11]: no load on r.d[11] (register removed)",
+    "d[10]: no load on r.d[10] (register removed)",
+    "d[9]: no load on r.d[9] (register removed)"
+   ]
+  },
+  "flops": {
+   "d[15]": "r.r_reg[0][15]",
+   "d[14]": "r.r_reg[0][14]",
+   "d[13]": "r.r_reg[0][13]",
+   "d[8]": "r.r_reg[0][8]",
+   "d[7]": "r.r_reg[0][7]",
+   "d[6]": "r.r_reg[0][6]",
+   "d[5]": "r.r_reg[0][5]",
+   "d[4]": "r.r_reg[0][4]",
+   "d[3]": "r.r_reg[0][3]",
+   "d[2]": "r.r_reg[0][2]",
+   "d[1]": "r.r_reg[0][1]",
+   "d[0]": "r.r_reg[0][0]",
+   "q[11]": "r.r_reg[1][15]",
+   "q[10]": "r.r_reg[1][14]",
+   "q[9]": "r.r_reg[1][13]",
+   "q[8]": "r.r_reg[1][8]",
+   "q[7]": "r.r_reg[1][7]",
+   "q[6]": "r.r_reg[1][6]",
+   "q[5]": "r.r_reg[1][5]",
+   "q[4]": "r.r_reg[1][4]"
+  },
+  "fail_counts": {
+   "dropped": 4
+  },
+  "verdict": "FAIL"
+ },
+ "kept": {
+  "top": "observe",
+  "checked": 28,
+  "ok": 28,
+  "fails": {},
+  "flops": {
+   "d[15]": "r/r_reg[0][15]",
+   "d[14]": "r/r_reg[0][14]",
+   "d[13]": "r/r_reg[0][13]",
+   "d[12]": "r/r_reg[0][12]",
+   "d[11]": "r/r_reg[0][11]",
+   "d[10]": "r/r_reg[0][10]",
+   "d[9]": "r/r_reg[0][9]",
+   "d[8]": "r/r_reg[0][8]",
+   "d[7]": "r/r_reg[0][7]",
+   "d[6]": "r/r_reg[0][6]",
+   "d[5]": "r/r_reg[0][5]",
+   "d[4]": "r/r_reg[0][4]",
+   "d[3]": "r/r_reg[0][3]",
+   "d[2]": "r/r_reg[0][2]",
+   "d[1]": "r/r_reg[0][1]",
+   "d[0]": "r/r_reg[0][0]",
+   "q[11]": "r/r_reg[1][15]",
+   "q[10]": "r/r_reg[1][14]",
+   "q[9]": "r/r_reg[1][13]",
+   "q[8]": "r/r_reg[1][8]"
+  },
+  "fail_counts": {},
+  "verdict": "PASS"
+ }
+}

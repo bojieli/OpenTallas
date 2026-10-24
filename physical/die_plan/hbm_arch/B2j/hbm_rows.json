@@ -1,0 +1,46 @@
+{
+ "PHY->hub": {
+  "bits": 4112,
+  "mean_cycles": 39.0,
+  "max_cycles": 46,
+  "bit_mm": 47924,
+  "mm_per_bit": 11.65
+ },
+ "SM->svc far": {
+  "bits": 554,
+  "mean_cycles": 14.02,
+  "max_cycles": 16,
+  "bit_mm": 2333,
+  "mm_per_bit": 4.21
+ },
+ "SM->svc near": {
+  "bits": 554,
+  "mean_cycles": 13.03,
+  "max_cycles": 15,
+  "bit_mm": 1364,
+  "mm_per_bit": 2.46
+ },
+ "hub->PHY": {
+  "bits": 5248,
+  "mean_cycles": 33.11,
+  "max_cycles": 42,
+  "bit_mm": 58341,
+  "mm_per_bit": 11.12
+ },
+ "svc->SM far": {
+  "bits": 6850,
+  "mean_cycles": 13.81,
+  "max_cycles": 17,
+  "bit_mm": 23071,
+  "mm_per_bit": 3.37
+ },
+ "svc->SM near": {
+  "bits": 6850,
+  "mean_cycles": 17.24,
+  "max_cycles": 29,
+  "bit_mm": 32603,
+  "mm_per_bit": 4.76
+ },
+ "HBM read path near (PHY->hub->SM, cycles)": 55.24,
+ "HBM read path far (PHY->hub->SM, cycles)": 51.81
+}

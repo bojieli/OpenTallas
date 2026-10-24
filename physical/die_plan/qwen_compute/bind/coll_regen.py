@@ -28,6 +28,30 @@ def _one(ctx, path, ports, what):
     return v.pop()
 
 
+def _compute_txdp(ctx):
+    # Use the same versioned seam anchors/producer law as regen_constants, at the actual sink bits.
+    # Missing/skewed members fail the bind rather than silently keeping TXDP=0.
+    import regen_constants as RC
+    index = ctx.cell_index()
+    seam = {}
+    for name, members in RC.QC_SEAM_BUNDLES.items():
+        delta = set()
+        for src, sp, dst, dp in members:
+            ci = index[dst]
+            landed = ctx.depth(dst, dp)
+            for bit in range(len(ctx.F.cells[ci].ports[dp])):
+                d = ctx.sinks[(ci, dp, bit)]
+                if d[0] != 'x' or ctx.F.cells[d[2]].path != src or d[3] != sp:
+                    raise ValueError(f"{name}: {dst}.{dp}[{bit}] is not the expected {src}.{sp} crossing")
+                delta.add(landed[bit] - d[5])
+        if len(delta) != 1:
+            raise ValueError(f"{name}: seam members shift by {sorted(delta)}")
+        seam[name] = RC.QC_ANCHOR['seam'][name] + delta.pop()
+    values = [seam['CS_TXS'] + RC.N59_TX + seam['SC_TX'], 1, 1,
+              seam['CS_X3S'] + RC.N59_X3 + 1 + seam['SC_X3']]
+    values = [x + p for x,p in zip(values, RC.PINREG_EXT['C'])]
+    return f"32'h{RC._txdp_word(values):08x}", seam
+
 def regen(ctx):
     tools = Path(sys.modules[type(ctx).__module__].__file__).resolve().parents[1]     # the binder's tools/
     sys.path.insert(0, str(tools / "qwen_split"))
@@ -53,10 +77,12 @@ def regen(ctx):
     f2 = {k: int(str(v).strip('"')) for k, v in ctx.F.cells[ctx.cell_index()[face(0)]].params.items()}
     cal = LG.collective_calendar(LX, dict(RU=fp["R"], RS0=RS[0], RS1=RS[1], RS2=RS[2], PS=339), root=ctx.base)
     LS = cal["LS"]
-    params = {f"{C}.u_collective": dict(LS=LS)}
+    sys.path.insert(0, str(tools / "die_plan"))
+    txdp, seam = _compute_txdp(ctx)
+    params = {f"{C}.u_collective": dict(LS=LS), "d2d_rom": dict(TXDP=txdp)}
     for j in range(3):
         params[face(j)] = dict(PHY=cal["PS"] + LX[j], L=LS, R=RS[j], PEER_R=RS[PEER[j]])
     return dict(params=params,
-                record=dict(rule=__doc__.split("\n\n")[1], TX=TX, RX=RX, RS=RS, RU=fp["R"], LX=LX, LS=LS, calendar=cal,
+                record=dict(rule=__doc__.split("\n\n")[1], D2D_TXDP_C=txdp, D2D_SEAM_C=seam, TX=TX, RX=RX, RS=RS, RU=fp["R"], LX=LX, LS=LS, calendar=cal,
                             bench_args=f"--relays {fp['R']} {RS[0]} {RS[1]} {RS[2]} --lanes {TX[0]} {TX[1]} {TX[2]} "
                                        f"{RX[0]} {RX[1]} {RX[2]} --lx {LX[0]} {LX[1]} {LX[2]}", ucie_face_params=f2))

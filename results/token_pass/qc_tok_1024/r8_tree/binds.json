@@ -1,0 +1,89 @@
+{
+ "p5_bound_r8_chain": {
+  "pad_flops": 870428,
+  "padded_bits": 156960,
+  "max_pad": 15,
+  "stale": 0,
+  "uncovered": 0,
+  "tree": null,
+  "types": 80,
+  "errors": 0,
+  "extra_tables": [
+   {
+    "table": "qc_treq_pads.json",
+    "replaced": 12
+   }
+  ]
+ },
+ "p5_tree": {
+  "pad_flops": 870428,
+  "padded_bits": 156960,
+  "max_pad": 15,
+  "stale": 0,
+  "uncovered": 0,
+  "tree": {
+   "pad_flops": 587936,
+   "chain_pad_flops": 870428,
+   "root_lines": 65844,
+   "root_flops": 437744,
+   "fwd_lines": 50508,
+   "hoisted_bits": 117492,
+   "uniform_rounds": 2
+  },
+  "types": 80,
+  "errors": 0,
+  "extra_tables": [
+   {
+    "table": "qc_treq_pads.json",
+    "replaced": 12
+   }
+  ],
+  "verify": {
+   "verdict": "PASS",
+   "compared": 2723884,
+   "matched": 2723870,
+   "mismatched": 0,
+   "lint": 0
+  }
+ },
+ "p6xt1_b3_chain": {
+  "pad_flops": 1034324,
+  "padded_bits": 180720,
+  "max_pad": 18,
+  "stale": 0,
+  "uncovered": 0,
+  "tree": null,
+  "types": 69,
+  "errors": 0,
+  "extra_tables": [
+   {
+    "table": "qc_tree_pads.json",
+    "replaced": 144
+   }
+  ]
+ },
+ "p6xt1_b3_tree": {
+  "pad_flops": 1034324,
+  "padded_bits": 180720,
+  "max_pad": 18,
+  "stale": 0,
+  "uncovered": 0,
+  "tree": {
+   "pad_flops": 985040,
+   "chain_pad_flops": 1034324,
+   "root_lines": 142104,
+   "root_flops": 958736,
+   "fwd_lines": 13656,
+   "hoisted_bits": 166884,
+   "uniform_rounds": 2
+  },
+  "types": 69,
+  "errors": 0,
+  "extra_tables": [
+   {
+    "table": "qc_tree_pads.json",
+    "replaced": 144
+   }
+  ]
+ }
+}

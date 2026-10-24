@@ -1,0 +1,18 @@
+{
+ "element": "s81_head_plan",
+ "kit": "physical/die_plan/s81_head@claude/s81-head-1024 fa3ada974c",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "6b6620d0e030126417c7b166f67250073bd577f9088ee88a9f396e236f12b5ca",
+ "reasons": "[2026-10-24 08:50] [GEOM-REVIEW die-level batch 1] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05). Tools: G0/G0C = the branch's own tools/die_plan/check.py --completeness --png (re-run by me); review pack = tools/geom_review/plan_review.py (whole die with hard cores + seams coloured by bits/um, lane bit-density heat map, auto zooms on densest bundle / longest lane / largest bit*mm lane / densest seam / clock root / IO / most core-filled partition / thinnest partition; metrics: lane bit*mm ranking, hop vs reach, per-seam bits/um, bit-order twist per ft crossing (CCW chord test; only straight/U-turn crossings with overlapping in/out windows can cost wire), computed ft-station points inside hard cores, root->tap distances, aspect / slivers / coverage). The PNGs in 'images' were looked at by me; the rest of the auto-generated pack is in 'pack'. SEEN: 17.52 x 17.56 mm, 326 partitions / 16 types / 325 lanes; G0 PASS, G0C PASS 0 err / 4 warn (re-run by me; also on cc7b6206 b8d870fa: identical geometry). Picture: SerDes rows N and S, station/ctl/host rows, 2 x 11 x 12 tile array of hd_tile (4 elemA + 1 elemB macros each, fill 0.67, ~10-15 um macro-macro / macro-edge channels, tap in the centre channel), 1.76-mm central spine, 172.8-um U-turn columns W/E. MY-symmetric, no slivers, voids only in the 4 hatched corners. Data flow: tile chain is abutment-only (no die-level wire); the spine carries the TP mesh / coll / host lanes: heat-map peak 1,096 bits/bin at the S station row (7.85, 1.55) mm, cut 0.025. Hops <= 468 um (0.31 of reach 1500) BUT stations every 330-460 um: m0S_tx/rx 64 b 16.3 mm = 48 cycles, host_tx/rx 276 b 12.4 mm = 38 cycles, coll_WN2_u 514 b 6.5 mm = 20 cycles (reach would allow 11 / 9 / 5). Twist: 18 full bit reversals, all at corner crossings (hd_turn_b N->W, hd_st_k5, hd_ctl, hd_host): with H/V on separate layers these route as L-shapes at no cost - OK. Clock: H-tree root at the die centre, root->tap 1.0-15.3 mm Manhattan.",
+ "fixes": "(1) Latency lever (not a blocker): the 345-um station-row / spine partitions force one register per partition, i.e. 3-4x the stations reach needs on the mesh, host and coll lanes (m0S 48 cyc, host 38 cyc). With the head path at 9,110 cycles vs the 10,357 window, consider wider station partitions (or multi-partition ft slots) before the station kits are hardened. (2) hd_tile G3: per lane report the r2 global placement FAILED the lane's own review (elemB W-face sliver); the revised floorplan must be re-rendered and recorded before route (GEOM-REVIEW tile review follows). (3) The 17-mm root->tap distance is a die clock-tree job (TRIAL-S81 / DIE-STA): seam skew <= 80 ps between neighbouring tiles must be shown at G4.",
+ "images": [
+  "results/geom_review/die_1024/img/s81_head2/die_cores.png",
+  "results/geom_review/die_1024/img/s81_head2/zoom_cores.png"
+ ],
+ "pack": "results/geom_review/die_1024/img/s81_head2/",
+ "metrics": "results/geom_review/die_1024/img/s81_head2/review.json",
+ "owner_lane": "S81-HEAD",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:50:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}

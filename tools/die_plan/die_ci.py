@@ -30,7 +30,8 @@ NOT RUN (<reason>) / N/A (<reason>) / CARRIED (<from sha>):
             STAND-IN budgets (below).  NOT RUN when die_sta.py is not on this sha.  Margins: see MARGINS.
 
 MARGINS (owner item 2): what the open toolchain cannot sign off is added ON TOP of the AGENTS.md policy (1.2 GHz /
-833.333 ps, 60 ps setup / 25 ps hold uncertainty, setup at SS, hold at FF), never instead of it; die_ci refuses a
+833.333 ps, 60 ps setup / 25 ps hold uncertainty, setup at TT, hold at FF -- owner 2026-10-24: never gate on SS;
+SS setup is reported for information only), never instead of it; die_ci refuses a
 margins file that would relax anything (check_margins).  Each measured seam is reported twice:
   policy    die_sta.py exactly as DIE-STA runs it (the G4 view);
   margined  the same STA with set_timing_derate (OCV x IR late on cells, OCV early; OCV on nets) inside OpenSTA, minus
@@ -42,7 +43,7 @@ STAND-IN budgets (seams without measured views; never a PASS): the kit SDC contr
   setup  true slack >= kit_src + kit_dst - (T - I_max - O_max)     hold  true slack >= kit_src + kit_dst + (O_min - I_min)
 so a seam with I_max + O_max >= T (ft hop shares 0.92 T + 0.08 T) is contract-backed with slack I+O-T, hold with
 insertion_tol (min input delay -tol, min output delay 0).  A functional bus port (0.2 T + 0.2 T) is not contract-backed;
-its stand-in is the R2 face-flop estimate T - unc - neighbour skew - clk->q(SS, seam load) - wire - setup(SS).
+its stand-in is the R2 face-flop estimate T - unc - neighbour skew - clk->q(TT, seam load) - wire - setup(TT).
 Both then subtract the margins the kits cannot see (crosstalk + derate on the seam clocks and clk->q): a negative
 stand-in is the IO slack the two kits must leave.
 
@@ -73,7 +74,10 @@ DIES = [
     dict(name="s81_head", plans=["physical/die_plan/s81_head/die_plan.json"]),
     dict(name="qwen_compute", plans=["physical/die_plan/qwen_compute/die_plan.json"]),
     dict(name="qwen_kvsys", plans=["physical/die_plan/qwen_kvsys/die_plan.json"]),
-    dict(name="hbm", plans=["physical/die_plan/hbm/die_plan.json"]),
+    # G2 memory (GB, docker --memory = --memory-swap): die probe, first part try, part ceiling.  A part probe killed
+    # by the cgroup (EXIT 137) is re-run alone at 2x up to the ceiling; the die's ot-run job reserves its peak.
+    # HBM q_sfuc / q_su1 hit 137 at 32 GB in the 10-24 nightly -> HBM starts at 64.
+    dict(name="hbm", plans=["physical/die_plan/hbm/die_plan.json"], g2_mem=(64, 64, 128)),
     # HBM-ARCH B2 redesign: joins when its plan is on main (B2r2 preferred over B2)
     dict(name="hbm_arch_B2", plans=["physical/die_plan/hbm_arch/B2r2/die_plan.json",
                                     "physical/die_plan/hbm_arch/B2/die_plan.json"], optional=True),
@@ -92,9 +96,25 @@ G2_TOOLS = ["tools/die_plan/g2.py", "tools/die_plan/gen_phys.py", "tools/die_pla
 G2_WORST = 5
 G2_MEM_DIE = 64
 G2_MEM_PART = 32
+G2_MEM_PART_MAX = 64
+
+
+def die_def(name):
+    return next((d for d in DIES if d["name"] == name), {})
+
+
+def g2_mem(name):
+    return tuple(die_def(name).get("g2_mem", (G2_MEM_DIE, G2_MEM_PART, G2_MEM_PART_MAX)))
+
+
+def job_mem(name):
+    """GB the per-die ot-run job reserves: the largest single G2 docker (die probe or the part ceiling) + 8 GB for
+    check.py / xdie_io / ILM die STA (KV pair ILM STA peaks 0.7 GB; S81 G0C ~2 GB)."""
+    d, p0, pmax = g2_mem(name)
+    return max(d, pmax, p0) + 8
 
 # AGENTS.md policy (never relaxed here; margins add on top)
-POLICY = dict(period_ps=833.333, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="SS", hold_corner="FF")
+POLICY = dict(period_ps=833.333, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
 
 
 def sh(cmd, cwd=None, log=None, env=None):
@@ -223,7 +243,7 @@ def gzip_read(p):
 
 DEFAULT_MARGINS = {
     "schema": "opentallas.die_ci.margins.v1",
-    "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at SS setup / FF hold, 60 ps setup / 25 ps hold "
+    "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold "
                    "uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
     "ocv": {
         "cell_late": 1.05, "cell_early": 0.95, "net_late": 1.03, "net_early": 0.97,
@@ -235,13 +255,14 @@ DEFAULT_MARGINS = {
                "each partition is derated -- the dominant term on a seam."
     },
     "ir": {
-        "mode": "stated", "vdd_ss_v": 0.63, "vdd_drop_frac": 0.05, "vt_v": 0.25, "alpha": 1.3,
+        "mode": "stated", "vdd_v": 0.70, "vdd_drop_frac": 0.05, "vt_v": 0.25, "alpha": 1.3,
         "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for "
                "OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the "
-               "SS supply (31.5 mV at 0.63 V, the total static + dynamic drop a sign-off PDN is designed to). Delay "
+               "TT supply of the setup sign-off corner (35 mV at 0.70 V, the total static + dynamic drop a sign-off "
+               "PDN is designed to). Delay "
                "sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: "
-               "d ln t / d ln V = 1 - a V / (V - Vt) = -1.155 at a = 1.3, Vt = 0.25 V (conservative ASAP7 RVT), so a "
-               "5 % drop is +5.8 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late "
+               "d ln t / d ln V = 1 - a V / (V - Vt) = -1.022 at a = 1.3, V = 0.70, Vt = 0.25 V (conservative ASAP7 "
+               "RVT), so a 5 % drop is +5.1 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late "
                "launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it "
                "replaces vdd_drop_frac.",
         "pdnsim": None
@@ -259,6 +280,8 @@ DEFAULT_MARGINS = {
                "push. Clock-net coupling is not added (clock trees are inside the derated OCV term)."
     },
     "lib": {
+        "TT": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 100.77, "clk_q_min_ps": 96.27,
+               "r_eff_ps_per_ff": 4.103, "setup_ps": 9.99, "hold_ps": 12.47},
         "SS": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 152.25, "clk_q_min_ps": 144.82,
                "r_eff_ps_per_ff": 6.596, "setup_ps": 16.21, "hold_ps": 18.28},
         "FF": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 71.16, "clk_q_min_ps": 68.92,
@@ -296,7 +319,7 @@ def check_margins(m):
 
 def ir_factor(m):
     ir = m["ir"]
-    v, vt, a = ir["vdd_ss_v"], ir["vt_v"], ir["alpha"]
+    v, vt, a = ir.get("vdd_v", ir.get("vdd_ss_v")), ir["vt_v"], ir["alpha"]
     sens = a * v / (v - vt) - 1.0
     drop = ir["vdd_drop_frac"]
     if (ir.get("pdnsim") or {}).get("worst_drop_mv") is not None:
@@ -315,7 +338,7 @@ def xtalk_ps(m, pin_reg_p90_um=None):
     x = m["xtalk"]
     L = 2.0 * pin_reg_p90_um if pin_reg_p90_um else x["seam_len_um_default"]
     cc = x["cc_frac"] * x["c_per_um_ff"] * L
-    s = abs(x["mcf_setup"] - 1.0) * m["lib"]["SS"]["r_eff_ps_per_ff"] * cc
+    s = abs(x["mcf_setup"] - 1.0) * m["lib"][POLICY["setup_corner"]]["r_eff_ps_per_ff"] * cc
     h = abs(1.0 - x["mcf_hold"]) * m["lib"]["FF"]["r_eff_ps_per_ff"] * cc
     return dict(setup_ps=round(s, 2), hold_ps=round(h, 2), seam_len_um=L, cc_ff=round(cc, 3))
 
@@ -374,7 +397,7 @@ def standin(seam_cls, P, m, kb):
     O = kb["ft_in_share"] if seam_cls in ("ft", "ft_out") else kb["io"]
     I = (1.0 - kb["ft_in_share"]) if seam_cls in ("ft", "ft_in") else kb["io"]
     comp = (I + O - 1.0) * T
-    ss, ff = m["lib"]["SS"], m["lib"]["FF"]
+    ss, ff = m["lib"][POLICY["setup_corner"]], m["lib"]["FF"]      # setup corner TT (owner 10-24), hold FF
     pin_reg = float(P.budgets.get("pin_reg_p90_um", 30.0))
     L = 2 * pin_reg
     wire_ps = 0.5 * 0.0180365 * m["xtalk"]["c_per_um_ff"] * L * L   # Elmore, M4 R (kohm/um) x C (fF/um) -> ps
@@ -571,7 +594,7 @@ def run_xdie_io(repo, sysdef, die_plans, work):
                 report=str(out), seconds=sec)
 
 
-def gate_g2(repo, plan, work, mem_die=G2_MEM_DIE, mem_part=G2_MEM_PART):
+def gate_g2(repo, plan, work, mem_die=G2_MEM_DIE, mem_part=G2_MEM_PART, mem_part_max=G2_MEM_PART_MAX):
     out = work / "g2"
     if out.exists():
         shutil.rmtree(out)
@@ -582,6 +605,21 @@ def gate_g2(repo, plan, work, mem_die=G2_MEM_DIE, mem_part=G2_MEM_PART):
                      "--mem", str(mem_die)], cwd=repo, log=work / "g2_die.log")
     rc2, _, s2 = sh([sys.executable, str(repo / "tools/die_plan/g2.py"), "part", str(plan), "--out", str(out),
                      "--worst", str(G2_WORST), "--run", "--mem", str(mem_part)], cwd=repo, log=work / "g2_part.log")
+    # memory ladder: a part probe killed by its cgroup (EXIT 137) re-runs alone at 2x, up to mem_part_max
+    retries = []
+    mem = mem_part
+    while True:
+        oom = sorted(d.name[5:] for d in out.glob("part_*") if (d / "probe.exit").is_file()
+                     and (d / "probe.exit").read_text().split()[-1:] == ["137"])
+        if not oom or mem * 2 > mem_part_max:
+            break
+        mem *= 2
+        for t in oom:
+            rc, _, s3 = sh([sys.executable, str(repo / "tools/die_plan/g2.py"), "part", str(plan), "--out", str(out),
+                            "--types", t, "--run", "--mem", str(mem)], cwd=repo, log=work / f"g2_retry_{t}_{mem}.log")
+            retries.append(dict(type=t, mem_gb=mem, exit=(out / f"part_{t}" / "probe.exit").read_text().strip()
+                                if (out / f"part_{t}" / "probe.exit").is_file() else None, seconds=s3))
+            s2 += s3
     rp = out / "g2_report.json"
     if not rp.is_file():
         return dict(status=f"NOT RUN (g2.py exit {rc1}/{rc2}, no report; see {work}/g2_*.log)")
@@ -593,14 +631,39 @@ def gate_g2(repo, plan, work, mem_die=G2_MEM_DIE, mem_part=G2_MEM_PART):
                          reach=v.get("reach"))
     ov = sum((p["overflow"] or 0) for p in probes.values())
     na = sum(p["no_access"] for p in probes.values())
-    return dict(status=r["verdict"], probes=len(probes), overflow=ov, no_access=na,
+    oom_left = sorted(d.name[5:] for d in out.glob("part_*") if (d / "probe.exit").is_file()
+                      and (d / "probe.exit").read_text().split()[-1:] == ["137"])
+    return dict(status=r["verdict"], probes=len(probes), overflow=ov, no_access=na, mem_gb=dict(
+                    die=mem_die, part_first=mem_part, part_max=mem_part_max), oom_retries=retries,
+                oom_at_ceiling=oom_left,
                 not_done=sorted(k for k, p in probes.items() if not p["done"]), detail=probes, seconds=s1 + s2,
                 report=str(rp))
 
 
 # ----------------------------------------------------------------------------------------------------------- die STA
+STA_TOOL = None       # --sta-tool: a die_sta.py outside the sha under test (DIE-STA branch tip until it merges)
+
+
+def sta_tool_path(repo):
+    p = Path(repo) / "tools/die_plan/die_sta.py"
+    if p.is_file():
+        return p
+    return Path(STA_TOOL) if STA_TOOL and Path(STA_TOOL).is_file() else None
+
+
 def sta_available(repo):
-    return (Path(repo) / "tools/die_plan/die_sta.py").is_file()
+    return sta_tool_path(repo) is not None
+
+
+def load_die_sta(repo, path=None):
+    _import(repo, "schema")              # die_sta's own imports (schema, gen_rtl, gen_phys) resolve to the repo under test
+    p = Path(path) if path else sta_tool_path(repo)
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("die_sta", str(p))
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["die_sta"] = mod
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
@@ -640,7 +703,8 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
                        pdnsim="NOT RUN: no die-level PDN database (plan pg.grid only)"
                        if not margins["ir"].get("pdnsim") else margins["ir"]["pdnsim"]))
     if not sta_available(repo):
-        res["status"] = "NOT RUN (tools/die_plan/die_sta.py not on this sha: lane DIE-STA claude/die-sta-1024)"
+        res["status"] = ("NOT RUN (tools/die_plan/die_sta.py not on this sha and no --sta-tool: lane DIE-STA "
+                         "claude/die-sta-1024)")
         return res
     if not measured:
         res["status"] = ("NOT RUN (no seam between two partitions with routed views; stand-in budgets only)"
@@ -654,7 +718,8 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
         os.symlink(d.resolve(), sta / "parts" / tn)
     proc = subprocess.run([sys.executable, str(Path(__file__).resolve()), "_sta", "--repo", str(repo), "--plan", str(plan),
                            "--work", str(sta), "--margins-json", json.dumps(margins), "--threads", str(threads),
-                           "--modules", ",".join(sorted({P.types[t]["module"] for t in have}))],
+                           "--modules", ",".join(sorted({P.types[t]["module"] for t in have})),
+                           "--sta-tool", str(sta_tool_path(repo))],
                           capture_output=True, text=True)
     (sta / "die_ci_sta.log").write_text(proc.stdout + proc.stderr)
     rj = sta / "die_ci_sta.json"
@@ -669,10 +734,11 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
         row = dict(seam=g)
         for tag in ("policy", "margined"):
             sg = r[tag]["seams"].get(g, {})
-            row[f"{tag}_setup_SS"] = sg.get("setup_SS")
+            row[f"{tag}_setup_TT"] = sg.get("setup_TT")
+            row[f"{tag}_setup_SS_info"] = sg.get("setup_SS")      # SS: information only, never gates
             row[f"{tag}_hold_FF"] = sg.get("hold_FF")
             row[f"{tag}_neg"] = sg.get("neg", 0)
-        row["final_setup_SS"] = None if row["margined_setup_SS"] is None else round(row["margined_setup_SS"] - xs, 3)
+        row["final_setup_TT"] = None if row["margined_setup_TT"] is None else round(row["margined_setup_TT"] - xs, 3)
         row["final_hold_FF"] = None if row["margined_hold_FF"] is None else round(row["margined_hold_FF"] - xh, 3)
         rows.append(row)
     res["seam_groups"] = rows
@@ -680,12 +746,13 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
     def worst(k):
         v = [x[k] for x in rows if x[k] is not None]
         return min(v) if v else None
-    res["worst"] = {k: worst(k) for k in ("policy_setup_SS", "policy_hold_FF", "final_setup_SS", "final_hold_FF")}
-    res["neg_groups"] = sum(1 for x in rows if (x["final_setup_SS"] is not None and x["final_setup_SS"] < 0) or
+    res["worst"] = {k: worst(k) for k in ("policy_setup_TT", "policy_hold_FF", "final_setup_TT", "final_hold_FF",
+                                          "policy_setup_SS_info")}
+    res["neg_groups"] = sum(1 for x in rows if (x["final_setup_TT"] is not None and x["final_setup_TT"] < 0) or
                             (x["final_hold_FF"] is not None and x["final_hold_FF"] < 0))
     ran = r["policy"].get("ran") and r["margined"].get("ran")
     if not ran:
-        res["status"] = "NOT RUN (signoff corners SS + FF did not both complete; see die_ci_sta.log)"
+        res["status"] = "NOT RUN (signoff corners TT setup + FF hold did not both complete; see die_ci_sta.log)"
     elif res["neg_groups"]:
         res["status"] = "FAIL"
     elif rest:
@@ -700,12 +767,11 @@ def cmd_sta_child(a):
     repo = Path(a.repo)
     work = Path(a.work)
     margins = json.loads(a.margins_json)
-    ds = _import(repo, "die_sta")
+    ds = load_die_sta(repo, a.sta_tool)
     # policy guard: DIE-STA's constants are the AGENTS.md policy; die_ci never runs a relaxed variant
     if ds.UNC_SETUP_PS < POLICY["unc_setup_ps"] or ds.UNC_HOLD_PS < POLICY["unc_hold_ps"] or \
             ds.PERIOD_PS > POLICY["period_ps"] + 1e-6:
         raise SystemExit("die_ci: die_sta.py constants relax the AGENTS.md policy")
-    ds.THREADS = int(a.threads)
     full = work / "die_top_full.v"
     ds.write_top(a.plan, full)
     sub, kept = filter_top(full.read_text(), set(a.modules.split(",")))
@@ -724,13 +790,15 @@ def cmd_sta_child(a):
             ds.sta_tcl = lambda *x, **k: inject_derate(orig(*x, **k), margins)
         else:
             ds.sta_tcl = orig
-        ns = argparse.Namespace(top=str(top), top_module=None, parts=str(work / "parts"), out=str(o), mode="ilm",
-                                corner=["SS", "FF"], period_ps=period, spine_branch=None, die_spef=None, libdir=None,
-                                lib=[], rebuild=False)
+        # through die_sta.py's own CLI (its defaults stay DIE-STA's); the derate patch is the module-level sta_tcl
+        argv = ["run", "--top", str(top), "--parts", str(work / "parts"), "--out", str(o), "--mode", "ilm",
+                "--corner", "TT", "--corner", "FF", "--corner", "SS", "--period-ps", f"{period:.3f}",
+                "--threads", str(a.threads)]
         t0 = time.time()
         try:
-            r = ds.cmd_run(ns)
-        except SystemExit as e:
+            ds.main(argv)
+            r = json.loads((o / "die_sta.json").read_text())
+        except (SystemExit, FileNotFoundError, ValueError) as e:
             out[tag] = dict(ran=False, error=str(e), seams={})
             continue
         seams = {}
@@ -740,7 +808,7 @@ def cmd_sta_child(a):
                     if s.get(dly):
                         seams.setdefault(g, {"neg": 0})[key] = s[dly]["worst"]
                         seams[g]["neg"] += s[dly]["neg"]
-        out[tag] = dict(ran=all(r["corners"].get(c, {}).get("exit") == 0 for c in ("SS", "FF")),
+        out[tag] = dict(ran=all(r["corners"].get(c, {}).get("exit") == 0 for c in ("TT", "FF")),
                         verdict=r.get("verdict"), seams=seams, seconds=round(time.time() - t0, 1),
                         corners={c: dict(exit=x.get("exit"), seconds=x.get("seconds"), rss_gb=x.get("peak_rss_gb"),
                                          wns_ps=x.get("wns_ps"), whs_ps=x.get("whs_ps"))
@@ -849,7 +917,8 @@ def run_die(repo, name, plan, work, a, prev_die, g2_mode, views, margins, xdie_s
             if "CARRIED" not in pg2["status"] else pg2["status"]
         gates["g2"] = c
     else:
-        gates["g2"] = gate_g2(repo, plan, work)
+        md, mp, mx = g2_mem(name)
+        gates["g2"] = gate_g2(repo, plan, work, md, mp, mx)
     if a.sta == "none":
         gates["sta"] = dict(status="NOT RUN (--sta none)")
     else:
@@ -895,8 +964,8 @@ def die_md(d):
     row("latency", f"{fmt(lt.get('lanes'))} lanes; table {lt.get('record') or lt.get('reason')}")
     s = g.get("sta", {})
     w = s.get("worst") or {}
-    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam setup@SS "
-               f"{fmt(w.get('final_setup_SS'))} ps (policy {fmt(w.get('policy_setup_SS'))}), hold@FF "
+    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam setup@TT "
+               f"{fmt(w.get('final_setup_TT'))} ps (policy {fmt(w.get('policy_setup_TT'))}), hold@FF "
                f"{fmt(w.get('final_hold_FF'))} ps (policy {fmt(w.get('policy_hold_FF'))}); stand-in worst "
                f"{fmt(s.get('standin_worst_setup_ps'))} / {fmt(s.get('standin_worst_hold_ps'))} ps")
     if s.get("xtalk"):
@@ -906,10 +975,10 @@ def die_md(d):
                   f"{dr.get('cell_late')} (OCV x IR {dr.get('ir_factor')}) / early {dr.get('cell_early')}; IR "
                   f"{(s.get('ir') or {}).get('mode')} (PDNSim: {(s.get('ir') or {}).get('pdnsim')})."]
     if s.get("seam_groups"):
-        L += ["", "| seam group | setup@SS final (policy) | hold@FF final (policy) |", "|---|---|---|"]
-        for r in sorted(s["seam_groups"], key=lambda r: (r["final_setup_SS"] if r["final_setup_SS"] is not None else 1e9))[:10]:
-            L.append(f"| {r['seam']} | {fmt(r['final_setup_SS'])} ({fmt(r['policy_setup_SS'])}) | "
-                     f"{fmt(r['final_hold_FF'])} ({fmt(r['policy_hold_FF'])}) |")
+        L += ["", "| seam group | setup@TT final (policy) | hold@FF final (policy) | setup@SS info |", "|---|---|---|---|"]
+        for r in sorted(s["seam_groups"], key=lambda r: (r["final_setup_TT"] if r["final_setup_TT"] is not None else 1e9))[:10]:
+            L.append(f"| {r['seam']} | {fmt(r['final_setup_TT'])} ({fmt(r['policy_setup_TT'])}) | "
+                     f"{fmt(r['final_hold_FF'])} ({fmt(r['policy_hold_FF'])}) | {fmt(r.get('policy_setup_SS_info'))} |")
     dl = d.get("delta")
     L += [""]
     if dl:
@@ -932,9 +1001,9 @@ def summary_md(run):
         def s(k):
             return (g.get(k) or {}).get("status", "-").split(" (")[0]
         w = (g.get("sta") or {}).get("worst") or {}
-        L.append(f"| {n} | {d['verdict']} | {s('g0')} | {s('g0c')} ({fmt(g['g0c'].get('errors'))}) | {s('xdie')} "
-                 f"({fmt(g['xdie'].get('errors'))}) | {s('g2')} | {s('census')} | {s('latency')} | {s('sta')} "
-                 f"({fmt(w.get('final_setup_SS'))} / {fmt(w.get('final_hold_FF'))}) |")
+        L.append(f"| {n} | {d['verdict']} | {s('g0')} | {s('g0c')} ({fmt((g.get('g0c') or {}).get('errors'))}) | {s('xdie')} "
+                 f"({fmt((g.get('xdie') or {}).get('errors'))}) | {s('g2')} | {s('census')} | {s('latency')} | {s('sta')} "
+                 f"({fmt(w.get('final_setup_TT'))} / {fmt(w.get('final_hold_FF'))}) |")
     for n in run.get("absent", []):
         L.append(f"| {n} | NOT PRESENT (plan not on this sha) | | | | | | | |")
     L += ["", "Per-die detail: `<die>.md` / `<die>.json`. Gates: G0 and G0C from one check.py --completeness run; xdie "
@@ -947,7 +1016,9 @@ def cmd_run(a):
     repo = Path(a.repo).resolve()
     a.sha = a.sha or git(repo, "rev-parse", "HEAD") or "unknown"
     date = a.date or datetime.datetime.now().strftime("%Y-%m-%d")
-    name = f"{date}_{a.sha[:12]}"
+    name = a.name or f"{date}_{a.sha[:12]}"
+    global STA_TOOL
+    STA_TOOL = a.sta_tool
     root = Path(a.out) if os.path.isabs(a.out) else repo / a.out
     rd = root / name
     work = rd / "work"
@@ -970,9 +1041,12 @@ def cmd_run(a):
         g2_mode = "all"
     t0 = time.time()
     xsys = {}
-    (work / "xdie").mkdir(exist_ok=True)
+    xw = work / ("xdie" if not a.partial else f"xdie_{'_'.join(sel)}")
+    xw.mkdir(exist_ok=True)
     for sd in ([] if a.plan else SYSTEMS):
-        r = run_xdie_io(repo, sd, plans, work / "xdie")
+        if a.partial and not set((sd.get("roles") or {}).values()) & set(sel):
+            continue
+        r = run_xdie_io(repo, sd, plans, xw)
         r["_dies"] = sorted(set((sd.get("roles") or {}).values()))
         if not r["status"].startswith("N/A (die"):
             xsys[sd["name"]] = r
@@ -991,17 +1065,51 @@ def cmd_run(a):
     run = dict(schema=SCHEMA, date=date, sha=a.sha, mode=a.mode, host=socket.gethostname(),
                started=datetime.datetime.fromtimestamp(t0).isoformat(timespec="seconds"),
                seconds=round(time.time() - t0, 1), prev_sha=(prev or {}).get("sha"), g2_mode=g2_mode,
-               sta_tool=sta_available(repo), margins=margins, systems={k: {kk: vv for kk, vv in v.items() if kk != "_dies"}
+               sta_tool=dict(path=str(sta_tool_path(repo)) if sta_available(repo) else None, ref=a.sta_tool_ref,
+                             blob=file_digest([sta_tool_path(repo)]) if sta_available(repo) else None),
+               margins=margins, systems={k: {kk: vv for kk, vv in v.items() if kk != "_dies"}
                                                                      for k, v in xsys.items()},
                absent=absent, dies=dies)
     run["verdict"] = "FAIL" if any(d["verdict"] in ("FAIL", "ERROR") for d in dies.values()) else \
         ("INCOMPLETE" if any(d["verdict"] != "PASS" for d in dies.values()) else "PASS")
+    if a.partial:                    # per-die job of a split run: `die_ci.py collect RUN_DIR` writes the summary
+        for n, d in dies.items():
+            (rd / f"{n}.json").write_text(json.dumps(d, indent=1) + "\n")
+            (rd / f"{n}.md").write_text(die_md(d) if d.get("gates") else f"# DIE-CI {n} — ERROR\n\n{d.get('error')}\n")
+            (rd / f"part_{n}.json").write_text(json.dumps(dict(run, dies={n: d}), indent=1) + "\n")
+        print(f"DIE-CI PART {run['verdict']}: {rd}")
+        return 0
     write_run(rd, run)
     print(f"DIE-CI {run['verdict']}: {rd / 'SUMMARY.md'}")
     for n, d in dies.items():
         print(f"  {n}: {d['verdict']}  " + "  ".join(f"{k}={(v or {}).get('status', '-').split(' (')[0]}"
                                                     for k, v in d.get("gates", {}).items()))
     return 0
+
+
+def cmd_collect(rd, expect=None):
+    """merge the per-die part_<die>.json of a split run into die_ci.json + SUMMARY.md; a die whose job left no part
+    file is reported NOT RUN (never dropped)."""
+    rd = Path(rd)
+    parts = {f.stem[5:]: json.loads(f.read_text()) for f in sorted(rd.glob("part_*.json"))}
+    if not parts:
+        raise SystemExit(f"die_ci collect: no part_*.json in {rd}")
+    base = dict(next(iter(parts.values())))
+    dies, systems = {}, {}
+    for n in [d["name"] for d in DIES] + sorted(set(parts) - {d["name"] for d in DIES}):
+        if n in parts:
+            dies[n] = parts[n]["dies"][n]
+            systems.update(parts[n].get("systems", {}))
+        elif expect and n in expect:
+            dies[n] = dict(schema=SCHEMA, die=n, sha=base["sha"], gates={}, verdict="ERROR",
+                           error="per-die job left no result (NOT RUN): see the runner log")
+    base.update(dies=dies, systems=systems, absent=[n for n in base.get("absent", []) if n not in dies],
+                seconds=round(sum(d.get("seconds") or 0 for d in dies.values()), 1), split=True)
+    base["verdict"] = "FAIL" if any(d["verdict"] in ("FAIL", "ERROR") for d in dies.values()) else \
+        ("INCOMPLETE" if any(d["verdict"] != "PASS" for d in dies.values()) else "PASS")
+    write_run(rd, base)
+    print(f"DIE-CI {base['verdict']}: {rd / 'SUMMARY.md'}")
+    return base
 
 
 def write_run(rd, run):
@@ -1035,6 +1143,15 @@ def main(argv=None):
     r.add_argument("--margins", default="tools/die_plan/die_ci_margins.json")
     r.add_argument("--prev", default="auto")
     r.add_argument("--jobs", type=int, default=6)
+    r.add_argument("--name", help="run dir name (default <date>_<sha12>); per-die jobs of one run share it")
+    r.add_argument("--partial", action="store_true", help="per-die job: write <die>.json/.md + part_<die>.json only")
+    r.add_argument("--sta-tool", help="die_sta.py to use when the sha has none (DIE-STA branch tip)")
+    r.add_argument("--sta-tool-ref", help="provenance of --sta-tool (ref@sha), recorded in die_ci.json")
+    k = sub.add_parser("collect")
+    k.add_argument("run_dir")
+    k.add_argument("--expect", help="comma list of dies whose jobs were launched")
+    j = sub.add_parser("job-mem", help="GB the per-die job reserves (G2 peak + 8)")
+    j.add_argument("die")
     m = sub.add_parser("margins")
     m.add_argument("--derive", action="store_true")
     m.add_argument("--libdir", default=os.path.expanduser("~/.cache/opentallas/asap7_nldm"))
@@ -1050,6 +1167,7 @@ def main(argv=None):
     for k in ("--repo", "--plan", "--work", "--margins-json", "--modules"):
         c.add_argument(k, required=True)
     c.add_argument("--threads", type=int, default=8)
+    c.add_argument("--sta-tool")
     a = ap.parse_args(argv)
     if a.cmd == "run":
         return cmd_run(a)
@@ -1070,6 +1188,12 @@ def main(argv=None):
         res = stage_views(a.views, a.host, a.dest)
         print(json.dumps(res, indent=1))
         return 0 if all(x["ok"] for x in res) else 1
+    if a.cmd == "collect":
+        cmd_collect(a.run_dir, a.expect.split(",") if a.expect else None)
+        return 0
+    if a.cmd == "job-mem":
+        print(job_mem(a.die))
+        return 0
     if a.cmd == "render":
         run = json.loads((Path(a.run_dir) / "die_ci.json").read_text())
         write_run(a.run_dir, run)
