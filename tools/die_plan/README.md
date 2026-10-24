@@ -280,3 +280,5 @@ moved with changes under tools/die_plan or physical/die_plan; `die-ci-nightly.ti
 The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, copies the run back to
 /srv/opentallas-scratch/claude/die-ci/results, commits the JSON/MD to branch `claude/die-ci-results`, and keeps the
 `DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.
+
+Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.

@@ -194,6 +194,8 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
                                        "layers": _lays, "order": _order}}},
@@ -1043,6 +1045,11 @@ def validate(raw):
         if dup:
             errs.append(f"type {tn}: bus names defined twice: {sorted(dup)}")
         for s in t.get("ft_slots", []):
+            from ft_bit_sites import validate_slot
+            try:
+                validate_slot(s)
+            except ValueError as exc:
+                errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
                 errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):
