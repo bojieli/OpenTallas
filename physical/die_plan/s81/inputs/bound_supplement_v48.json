@@ -1,0 +1,128 @@
+{
+ "schema": "s81.bound_supplement.v1",
+ "note": "S81-P9-R8EQ 10-23 (plan v4.8): bound-top crossings that the as-built census (s81_lanes.tsv) does not carry, from BINDER4 b3r8 bind_report.json lanes.unplanned_bit_list (scratch/binder4-1023/s81/b3r8, plan v4.7b): the svc_rs chain svc_2k -> svc_2k+1 (rsv ro/ri, so_d/so_v -> si_d/si_v, up_o -> up_i; new svc_rs RTL, not in the as-built die) and the slice C -> LP 1-b lep inputs (u_flt.q -> u_lep.sl_f, u_xg.ro_* -> u_lep.ro).  seqhost <-> s_*_LP (mu_*/f_*/t_* = 1,032 b) is NOT here: the census has those rows; gen_plan_v4 ipart() now maps the lep buses to the LP partition.  One lane per entry (width = bits); C -> LP widens nothing (own lane).",
+ "source": "/home/ubuntu/scratch/binder4-1023/s81/b3r8/bind_report.json",
+ "entries": [
+  {
+   "src": "s_0N_C",
+   "dst": "s_0N_LP",
+   "bits": 1,
+   "cls": "lepf",
+   "ports": {
+    "u_s_0N.u_sl.u_flt.q -> u_lep.sl_f": 1
+   }
+  },
+  {
+   "src": "s_0S_C",
+   "dst": "s_0S_LP",
+   "bits": 1,
+   "cls": "lepf",
+   "ports": {
+    "u_s_0S.u_sl.u_xg.ro_w -> u_lep.ro": 1
+   }
+  },
+  {
+   "src": "s_7N_C",
+   "dst": "s_7N_LP",
+   "bits": 1,
+   "cls": "lepf",
+   "ports": {
+    "u_s_7N.u_sl.u_xg.ro_e -> u_lep.ro": 1
+   }
+  },
+  {
+   "src": "s_7S_C",
+   "dst": "s_7S_LP",
+   "bits": 1,
+   "cls": "lepf",
+   "ports": {
+    "u_s_7S.u_sl.u_xg.ro_e -> u_lep.ro": 1
+   }
+  },
+  {
+   "src": "svc_0",
+   "dst": "svc_1",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_00.ro -> u_rsv_01.ri": 34,
+    "u_rsv_00.up_o -> u_rsv_01.up_i": 16
+   }
+  },
+  {
+   "src": "svc_10",
+   "dst": "svc_11",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_10.ro -> u_rsv_11.ri": 34,
+    "u_rsv_10.up_o -> u_rsv_11.up_i": 16
+   }
+  },
+  {
+   "src": "svc_12",
+   "dst": "svc_13",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_12.ro -> u_rsv_13.ri": 34,
+    "u_rsv_12.up_o -> u_rsv_13.up_i": 16
+   }
+  },
+  {
+   "src": "svc_14",
+   "dst": "svc_15",
+   "bits": 46,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_14.so_d -> u_rsv_15.si_d": 29,
+    "u_rsv_14.so_v -> u_rsv_15.si_v": 1,
+    "u_rsv_14.up_o -> u_rsv_15.up_i": 16
+   }
+  },
+  {
+   "src": "svc_2",
+   "dst": "svc_3",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_02.so_d -> u_rsv_03.si_d": 33,
+    "u_rsv_02.so_v -> u_rsv_03.si_v": 1,
+    "u_rsv_02.up_o -> u_rsv_03.up_i": 16
+   }
+  },
+  {
+   "src": "svc_4",
+   "dst": "svc_5",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_04.so_d -> u_rsv_05.si_d": 33,
+    "u_rsv_04.so_v -> u_rsv_05.si_v": 1,
+    "u_rsv_04.up_o -> u_rsv_05.up_i": 16
+   }
+  },
+  {
+   "src": "svc_6",
+   "dst": "svc_7",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_06.so_d -> u_rsv_07.si_d": 33,
+    "u_rsv_06.so_v -> u_rsv_07.si_v": 1,
+    "u_rsv_06.up_o -> u_rsv_07.up_i": 16
+   }
+  },
+  {
+   "src": "svc_8",
+   "dst": "svc_9",
+   "bits": 50,
+   "cls": "rsv",
+   "ports": {
+    "u_rsv_08.so_d -> u_rsv_09.si_d": 33,
+    "u_rsv_08.so_v -> u_rsv_09.si_v": 1,
+    "u_rsv_08.up_o -> u_rsv_09.up_i": 16
+   }
+  }
+ ]
+}

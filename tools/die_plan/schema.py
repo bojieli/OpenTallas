@@ -308,7 +308,8 @@ SCHEMA = {
         # automatically (Plan.latency_groups()).
         "latency_groups": {"type": "array", "items": {
             "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
-            "properties": {"name": _name, "kind": {"enum": ["bus", "replica"]},
+            "properties": {"name": _name, "kind": {"enum": ["bus", "replica", "landed"]},
+                           "window": {"type": "integer", "minimum": 2},
                            "lanes": {"type": "array", "items": _name, "minItems": 2},
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
@@ -650,6 +651,24 @@ class Plan:
             if len(lids) > 1:
                 out.append((f"replica:{sp}.{sb}->{dt}.{db}", "replica", sorted(lids)))
         return out
+
+    def landed_skew(self):
+        """LANDED BUNDLES (COORD rule 10-23, r8.py doc): a latency group of kind `landed` = the lanes of one bundle
+        that lands in ONE forwarded-clock landing ring with one K strap (window = ring depth D cycles, default 4).  The
+        bundle arrives at ONE group depth (lane_pads pads every lane to the slowest, as a bus group); its natural
+        per-lane spread must stay under the landing window margin D - 1, else the bundle cannot land coherently and the
+        stations must be re-planned.  Returns [message] for every landed group over the margin."""
+        bad = []
+        for g in self.raw.get("latency_groups", []):
+            if g.get("kind") != "landed" or not all(l in self.lanes for l in g["lanes"]):
+                continue
+            nat = {l: self.lane_natural(l)["cycles"] for l in g["lanes"]}
+            d = g.get("window", 4)
+            if max(nat.values()) - min(nat.values()) > d - 1:
+                bad.append(f"landed group {g['name']}: natural lane spread {max(nat.values()) - min(nat.values())} "
+                           f"cycles {nat} > landing window margin {d - 1} (re-plan the stations so the bundle lands "
+                           "in one window)")
+        return bad
 
     def lane_pads(self):
         """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""

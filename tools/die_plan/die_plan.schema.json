@@ -1277,8 +1277,13 @@
      "kind": {
       "enum": [
        "bus",
-       "replica"
+       "replica",
+       "landed"
       ]
+     },
+     "window": {
+      "type": "integer",
+      "minimum": 2
      },
      "lanes": {
       "type": "array",
