@@ -685,6 +685,16 @@ def sta_die_tcl(P):
             lines.append(f"foreach r $rows {{ lassign $r sl sp ep; puts $fh \"PORT {pid} {dly} slack $sl "
                          f"skew [ot_skew $sp $ep] from $sp to $ep\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
+    # R4 face-flop spread (CP1-R10): rise-edge CK arrival over every pin register (u_bin_* / u_bout_* boundary flops)
+    # per partition instance, and over the whole die: FFSPREAD <inst|ALL> n lo hi spread (ps, propagated, RC)
+    lines += ["set ff_all {}",
+              "foreach c [all_registers -cells] { set n [get_full_name $c]; "
+              "if {![regexp {^([^/]+)/u_(bin|bout)_} $n -> pi]} { continue }; "
+              "set q [ot_ckpin $n/D]; if {$q eq \"\"} { continue }; set a [ot_ck $q]; if {$a eq \"\"} { continue }; "
+              "dict lappend ff_all $pi $a; dict lappend ff_all ALL $a }",
+              "foreach k [dict keys $ff_all] { set v [lsort -real [dict get $ff_all $k]]; "
+              "puts $fh [format \"FFSPREAD %s n %d lo %.1f hi %.1f spread %.1f\" $k [llength $v] [lindex $v 0] "
+              "[lindex $v end] [expr {[lindex $v end] - [lindex $v 0]}]] }"]
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
               "close $fh",
               "report_checks -path_delay max -through [get_pins -hierarchical */x_i*] -format full_clock_expanded "

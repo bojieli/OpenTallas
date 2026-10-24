@@ -517,3 +517,12 @@ def test_run_die_signoff_corners():
     """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
     import gen_phys
     assert "for c in SS TT FF" in gen_phys.RUN_DIE
+
+
+def test_die_sta_reports_face_flop_spread():
+    """CP1-R10: die STA prints the R4 face-flop spread (rise-edge CK arrival over the u_bin_/u_bout_ pin registers)
+    per partition instance and over the die."""
+    import gen_phys
+    P = schema.Plan(PAIR)
+    t = gen_phys.sta_die_tcl(P)
+    assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")
