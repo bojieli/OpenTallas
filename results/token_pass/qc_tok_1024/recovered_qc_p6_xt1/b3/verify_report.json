@@ -1,0 +1,53 @@
+{
+ "top": "qwen_compute_bound_top",
+ "cells": 191050,
+ "leaves_missing": 0,
+ "leaves_missing_examples": [],
+ "counts": {
+  "compared": 2723884,
+  "matched": 2723870,
+  "mismatched": 0,
+  "glue_unmatched": 14,
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_driven": 0,
+  "plan_driven": 0
+ },
+ "mismatches": [],
+ "tied_examples": [],
+ "graph_errors": [],
+ "lint": {
+  "ran": true,
+  "rc": 1,
+  "errors": 0,
+  "warnings": 491,
+  "first_errors": [],
+  "waived": [
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/qc-p6-xt1/src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv:73:5: Cannot find file containing module: 'ot_sram_1r1w_64x137_m1_r2c2_p192'",
+   "%Error-MODMISSING: /srv/opentallas-scratch/claude/qc-p6-xt1/src/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'"
+  ],
+  "waivers": [
+   {
+    "rx": "D2D_TXDP_NOT_COMPILED",
+    "reason": "elaboration trap module in a generate-if that is false for the as-built TXDP parameters (Yosys elaborates it lazily; Verilator resolves every instantiated name before parameter evaluation)"
+   },
+   {
+    "rx": "ot_sram_1r1w_64x137_m1_r2c2_p192",
+    "reason": "AS-BUILT RTL DEFECT (reported): ot_qwen_d2d_safe7.sv ot_qkvd_llr_replay_sram_leaf_s7 instantiates ot_sram_1r1w_64x137_m1_r2c2_p192, which no file on main defines (the macro is d2d_sram_1r1w_64x137_m1_r2c2_p192); the closed ucie_kv d2d view was built from a kit copy"
+   }
+  ],
+  "closure_files": 166,
+  "closure_missing": []
+ },
+ "asbuilt_proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 11568,
+  "plan_driven": 0
+ },
+ "asbuilt_errors": 0,
+ "verdict": "PASS"
+}
