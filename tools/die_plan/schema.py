@@ -268,6 +268,15 @@ SCHEMA = {
                            "fixed_cycles": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "note": {"type": "string"}}}},
+        # R8 (COORD 10-23): lanes that must arrive in the SAME cycle: the bits of one as-built bus (valid + data +
+        # forwarded bits, groups from BINDER2) split over several lanes.  lane_latency() pads every member to the
+        # slowest; replicated consumers of one source (same source bus, same destination type + bus) are grouped
+        # automatically (Plan.latency_groups()).
+        "latency_groups": {"type": "array", "items": {
+            "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
+            "properties": {"name": _name, "kind": {"enum": ["bus", "replica"]},
+                           "lanes": {"type": "array", "items": _name, "minItems": 2},
+                           "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
@@ -283,6 +292,7 @@ SCHEMA = {
                 "properties": {"cycles": {"type": "integer", "minimum": 1}, "stations": {"type": "integer"},
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
+                               "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
@@ -585,7 +595,90 @@ class Plan:
             out.append((part, slot, a, b))
         return out
 
+    def latency_groups(self):
+        """R8: [(name, kind, [lanes])]: the plan's latency_groups (bus groups from BINDER2) + automatic replica groups
+        (lanes from one source bus into the same destination type + bus on different partitions)."""
+        out = [(g["name"], g.get("kind", "bus"), list(g["lanes"])) for g in self.raw.get("latency_groups", [])]
+        rep = {}
+        for lid, ln in self.lanes.items():
+            a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
+            if b["dst"]["part"] == DIE_PART:
+                continue
+            key = (a["src"]["part"], a["src"]["bus"], self.parts[b["dst"]["part"]]["type"], b["dst"]["bus"])
+            rep.setdefault(key, []).append(lid)
+        for (sp, sb, dt, db), lids in sorted(rep.items()):
+            if len(lids) > 1:
+                out.append((f"replica:{sp}.{sb}->{dt}.{db}", "replica", sorted(lids)))
+        return out
+
+    def lane_pads(self):
+        """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""
+        if getattr(self, "_pads", None) is not None:
+            return self._pads
+        nat = {lid: self.lane_natural(lid)["cycles"] for lid in self.lanes}
+        cyc = dict(nat)
+        groups = [g for g in self.latency_groups() if all(l in self.lanes for l in g[2])]
+        for _ in range(len(self.lanes) + 1):
+            moved = False
+            for _, _, lids in groups:
+                m = max(cyc[l] for l in lids)
+                for l in lids:
+                    if cyc[l] < m:
+                        cyc[l], moved = m, True
+            if not moved:
+                break
+        self._pads = {lid: cyc[lid] - nat[lid] for lid in self.lanes}
+        return self._pads
+
+    def lane_pad_sites(self, lid):
+        """candidate sites of a lane's pad stages, preferred first: the destination in bus, then the source out bus."""
+        ln = self.lanes[lid]
+        a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
+        out = []
+        if b["dst"]["part"] != DIE_PART:
+            out.append((self.parts[b["dst"]["part"]]["type"], b["dst"]["bus"]))
+        if a["src"]["part"] != DIE_PART:
+            out.append((self.parts[a["src"]["part"]]["type"], a["src"]["bus"]))
+        return out
+
+    def bus_pads(self):
+        """R8: ({(type, bus): pad}, [conflicts]).  Pad stages are a TYPE property (hardened once): every lane through
+        a (type, bus) site must want the same pad there.  Each padded lane takes its destination in bus, else its
+        source out bus; a lane that fits neither is a conflict (split the type, or move the delay with fixed_cycles /
+        ft stations)."""
+        pads = self.lane_pads()
+        want = {}                                  # site -> {lane: pad} for every lane touching the site
+        for lid in self.lanes:
+            for site in self.lane_pad_sites(lid):
+                want.setdefault(site, {})[lid] = None
+        chosen, bad, got = {}, [], {lid: 0 for lid in self.lanes}
+        for lid in sorted(self.lanes, key=lambda l: (-pads[l], l)):
+            need = pads[lid] - got[lid]
+            if not need:
+                continue
+            for site in self.lane_pad_sites(lid):
+                if site in chosen:
+                    continue
+                # a site pads EVERY lane through it: each must still need exactly this much
+                if all(pads[o] - got[o] == need for o in want[site]):
+                    chosen[site] = need
+                    for o in want[site]:
+                        got[o] += need
+                    break
+            else:
+                bad.append(f"lane {lid}: pad {need} fits no site {self.lane_pad_sites(lid)} (other lanes of the same "
+                           "type bus need a different pad: split the type or move the delay with fixed_cycles)")
+        return chosen, bad
+
     def lane_latency(self, lid):
+        """lane_natural() + the R8 group pad: dict(cycles, natural, pad, stations, boundary, faces, fixed)."""
+        d = self.lane_natural(lid)
+        pad = self.lane_pads()[lid]
+        d["natural"], d["pad"] = d["cycles"], pad
+        d["cycles"] += pad
+        return d
+
+    def lane_natural(self, lid):
         """dict(cycles, stations, boundary, faces, fixed).  cycles = the register stages a lane adds between the source
         leaf and the destination leaf: the source partition's out boundary flop + the stations of every crossed ft
         slot + the destination's in boundary flop (a die-IO end has no partition flop) + fixed_cycles."""
@@ -937,6 +1030,10 @@ def validate(raw):
         src = raw.get(k, {}).get("source")
         if src and src["part"] != DIE_PART and src["part"] not in P.parts:
             errs.append(f"{k}.source: unknown partition {src['part']}")
+    for g in raw.get("latency_groups", []):
+        for lid in g["lanes"]:
+            if lid not in P.lanes:
+                errs.append(f"latency_groups {g['name']}: unknown lane '{lid}'")
     # latency table keys
     lat = raw.get("latency", {}).get("lanes", {})
     for lid in lat:

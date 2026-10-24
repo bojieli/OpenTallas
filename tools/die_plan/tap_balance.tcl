@@ -86,11 +86,13 @@ for {set it 0} {$it < 4} {incr it} {
   set m [tb_measure]
   set longest 0.0
   dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
-  set tgt [expr {min($tb_target + $tb_win, max($tb_target - $tb_win, $longest))}]
+  # target fixed at the first pass (padding overshoot must not ratchet it up); a padded tree's slowest sink stays
+  # <= ins + tol
+  if {$it == 0} { set tgt [expr {min($tb_target + $tb_win, max($tb_target - $tb_win, $longest))}] }
   puts "[tb_line "OT_TAP_BALANCE it$it target [format %.0f $tgt]:" $m]"
   set todo 0
   dict for {n v} $m {
-    set d [expr {$tgt - [lindex $v 0]}]
+    set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
     if {$d <= $tb_tol} continue
     set todo 1
     # ~18 ps per BUFx4 stage on a short local net; insert 3/4 of the estimate per pass and re-measure

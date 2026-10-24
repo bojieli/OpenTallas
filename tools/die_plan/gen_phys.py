@@ -177,7 +177,10 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
-FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
+FT_HOP_IN_SHARE = 0.25
+# min input delay (hold) of every partition input vs vclk (= budgeted insertion): neighbour launch at ins - tol
+# (-40 ps) + min clk-to-q + abutted wire (~+40 ps) -> 0 ps
+HOLD_IN_MIN_PS = 0.0   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
 
 
 def sdc(P, tn, pins):
@@ -207,6 +210,10 @@ def sdc(P, tn, pins):
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
                 f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+    # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
+    # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
+    # short clk-to-q + abutted wire, i.e. ~at the budgeted insertion: min input delay HOLD_IN_MIN_PS on every input
+    out += (f"set_input_delay -min {t_lib(HOLD_IN_MIN_PS):.4f} -clock vclk $non_clk_in\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -311,7 +318,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
-           "export HOLD_SLACK_MARGIN = 0",
+           # FF hold margin over the TT kit corner (CP1 r6: FF seam hold 8 ps worse than TT)
+           "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
@@ -322,6 +330,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           "export OT_TAP_MAX_SINKS = 3000",   # COORD 10-23: taps sized by sink count
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
@@ -565,7 +574,18 @@ def sta_die_tcl(P):
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",
-              "puts $fh \"mode $MODE corner $::env(CORNER)\""]
+              "puts $fh \"mode $MODE corner $::env(CORNER)\"",
+              # R4 revised: seam skew on RC = rise-edge clock arrival at the capture CK minus the launch CK (OpenSTA
+              # arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2)
+              "proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq \"\"} { return \"\" }; "
+              f"set h {per / 2.0:.4f}; if {{$a >= $h}} {{ set a [expr {{$a - $h}}] }}; return $a }}",
+              # (endpoint_clock_pin segfaults OpenSTA here: go through the instances' CLK pins by name)
+              "proc ot_ckpin {pin} { set i [file dirname $pin]; "
+              "foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; if {$q ne \"\"} { return $q } }; return \"\" }",
+              # skew from NAMES: an arrival query re-runs the search and frees the PathEnd objects (segfault)
+              "proc ot_skew {sp ep} { set s [ot_ckpin $sp]; set e [ot_ckpin $ep]; "
+              "if {$s eq \"\" || $e eq \"\"} { return NA }; set a [ot_ck $s]; set b [ot_ck $e]; "
+              "if {$a eq \"\" || $b eq \"\"} { return NA }; return [format %.1f [expr {$b - $a}]] }"]
     # every abutment port: the worst setup + hold path through its destination pins
     for pid, pr in sorted(P.ports.items()):
         if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
@@ -573,9 +593,10 @@ def sta_die_tcl(P):
         thr = f"{gen_rtl.sv_id(pr['dst']['part'])}/{gen_rtl.sv_id(pr['dst']['bus'])}[*]"
         for dly in ("max", "min"):
             lines.append(f"set ps [find_timing_paths -through [get_pins {thr}] -path_delay {dly} -group_path_count 1]")
-            lines.append(f"foreach p $ps {{ puts $fh \"PORT {pid} {dly} slack [get_property $p slack] "
-                         f"from [get_full_name [get_property $p startpoint]] to "
-                         f"[get_full_name [get_property $p endpoint]]\" }}")
+            lines.append(f"set rows {{}}; foreach p $ps {{ lappend rows [list [get_property $p slack] "
+                         f"[get_full_name [get_property $p startpoint]] [get_full_name [get_property $p endpoint]]] }}")
+            lines.append(f"foreach r $rows {{ lassign $r sl sp ep; puts $fh \"PORT {pid} {dly} slack $sl "
+                         f"skew [ot_skew $sp $ep] from $sp to $ep\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
               "close $fh",
