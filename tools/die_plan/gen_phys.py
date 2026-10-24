@@ -28,6 +28,7 @@ import shutil
 from pathlib import Path
 
 import schema as S
+import taps as T
 from schema import DIE_PART
 
 CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
@@ -187,6 +188,26 @@ def t_lib(ps):
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
+# min input delay (hold) of every partition input vs vclk (= budgeted insertion).  CP1 r8 (10-23 21:22): with 0 ps
+# (neighbour launch at ins - tol, credited back by clk-to-q + abutted wire) the kits padded nothing and the seam hold
+# failed -50 TT / -48 FF.  Seam-hold padding (CP1 r9): the neighbour's face flop may launch at the fast end of the
+# insertion window with NO clk-to-q / wire credit -> min input delay = -clock.insertion_tol_ps, so the receiving kit
+# pads every seam input for the whole window.
+
+
+def hold_in_min_ps(P):
+    """seam-hold padding: the kit's min input delay vs vclk (ps)."""
+    return -float(P.clock["insertion_tol_ps"])
+
+
+# COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
+# the sender (clk -> vclk: out ports) and the receiver (vclk -> clk: in ports); clk -> clk keeps the full value.
+UNC_SPLIT = 0.5
+
+
+def _tap_cap(t):
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps)."""
+    return int(t.get("clock", {}).get("tap_max_sinks", 3000))
 
 
 def sdc(P, tn, pins):
@@ -209,6 +230,11 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
+           f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup {t_lib(UNC_SPLIT * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
            f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
            f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n")
@@ -216,6 +242,10 @@ def sdc(P, tn, pins):
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
                 f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+    # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
+    # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
+    # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
+    out += (f"set_input_delay -min {t_lib(hold_in_min_ps(P)):.4f} -clock vclk $non_clk_in\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -321,7 +351,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
-           "export HOLD_SLACK_MARGIN = 0",
+           # FF hold margin over the TT kit corner (CP1 r6: FF seam hold 8 ps worse than TT)
+           "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
@@ -332,7 +363,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
-           "export OT_TAP_MAX_SINKS = 3000",   # COORD 10-23: taps sized by sink count
+           # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
+           f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
@@ -366,7 +398,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
-                          insertion_tol_ps=P.clock["insertion_tol_ps"]),
+                          insertion_tol_ps=P.clock["insertion_tol_ps"],
+                          # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
+                          tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
+                          tap_pitch_um=S.tap_pitch(P, tn), grid_taps=len(S._grid_taps(P, tn)),
+                          taps=[dict(name=n, xy=[x, y],
+                                     kind="grid" if i < len(S._grid_taps(P, tn)) else "sinks")
+                                for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
+                          sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
+                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          uncertainty_split=UNC_SPLIT),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
@@ -400,12 +441,17 @@ exit $rc
 """
 
 
-def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False):
+def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None):
+    """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
+    port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
     P = S.Plan(raw)
     out = Path(out)
     rtl_dir = out / "_rtl"
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, types)
+    gtypes = types
+    if kit_rtl:                # kit-rtl types take the bound RTL: no generated plan wrapper for them
+        gtypes = [tn for tn in (types or P.types) if tn not in kit_rtl]
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -413,7 +459,20 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False):
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types and tn not in types):
             continue
-        mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
+        if kit_rtl and tn in kit_rtl:
+            fl = [Path(x) for x in Path(kit_rtl[tn]).read_text().split() if x and not x.startswith(("+", "-"))]
+            miss = [str(x) for x in fl if not x.is_file()]
+            if miss:
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl filelist {kit_rtl[tn]} names missing files {miss[:5]}")
+            if fl[0].name != f"{t['module']}.sv":
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl filelist must start with the wrapper {t['module']}.sv")
+            names = [x.name for x in fl]
+            dup = sorted({n for n in names if names.count(n) > 1})
+            if dup:
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl files share a basename {dup[:5]} (the kit flattens rtl/)")
+            mine = fl
+        else:
+            mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
@@ -450,6 +509,21 @@ def die_pdn_tcl(P):
     return "\n".join(lines) + "\n"
 
 
+def dropped_taps(P, views):
+    """{type: {tap port}} of taps a kit's clock_taps.tcl found without sinks (views/<type>/ot_clock_taps.json, from
+    the kit's RESULTS_DIR); a type keeps at least one connected tap."""
+    out = {}
+    for tn in P.types:
+        f = Path(views) / tn / "ot_clock_taps.json"
+        if f.is_file():
+            d = json.loads(f.read_text())
+            names = {n for n, _, _ in S.tap_grid(P, tn)}
+            dr = set(d.get("dropped", [])) & names
+            if dr and len(dr) < len(names):          # a type keeps at least one connected tap
+                out[tn] = dr
+    return out
+
+
 def write_assembly(raw, out, views, rtl_root=None):
     """die assembly kit: ORFS config for the die top with every partition as a macro (views/<type>/<module>.lef/.lib
     from each kit's generate_abstract), exact placement, die PG, die IO pins, routing on M2..M9 (abutment nets are
@@ -459,7 +533,10 @@ def write_assembly(raw, out, views, rtl_root=None):
     kd = Path(out) / "die"
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
     ep = gen_rtl.bus_epochs(P)
-    (kd / "rtl" / f"{gen_rtl.sv_id(P.name)}_top.sv").write_text(gen_rtl.die_top(P, ep))
+    dropped = dropped_taps(P, views)
+    (kd / "rtl" / f"{gen_rtl.sv_id(P.name)}_top.sv").write_text(gen_rtl.die_top(P, ep, dropped))
+    (kd / "clock_taps.json").write_text(json.dumps(dict(dropped={k: sorted(v) for k, v in dropped.items()}),
+                                                   indent=1) + "\n")
     (kd / "macro_place.tcl").write_text(macro_place_tcl(P))
     (kd / "pdn.tcl").write_text(die_pdn_tcl(P))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
@@ -526,7 +603,7 @@ def write_assembly(raw, out, views, rtl_root=None):
             seams.append(dict(net=f"w_{gen_rtl.sv_id(pid)}[{bit}]", port=pid, kind=kind,
                               src=gen_rtl.sv_id(pr["src"]["part"]), dst=gen_rtl.sv_id(pr["dst"]["part"])))
     (kd / "seams.json").write_text(json.dumps(dict(die=P.name, seams=seams), indent=0) + "\n")
-    top_v = gen_rtl.die_top(P, ep)
+    top_v = gen_rtl.die_top(P, ep, dropped)
     plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", l) for l in top_v.splitlines()
                       if not l.startswith("`"))
     (kd / "die_top_struct.v").write_text(plain + "\n")

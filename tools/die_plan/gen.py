@@ -3,12 +3,16 @@
     python3 tools/die_plan/gen.py rtl PLAN.json --out DIR [--rtl-root REPO]
         (a) partition wrapper RTL per type + ot_dp_cells.sv + the die top netlist (gen_rtl.py docstring)
 
-    python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
+    python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR] [--groups BUS_GROUPS.json]
     python3 tools/die_plan/gen.py phys PLAN.json --out DIR [--rtl-root REPO]      (b) partition ORFS kits (gen_phys.py)
     python3 tools/die_plan/gen.py assembly PLAN.json --out DIR --views VDIR    (d) die assembly kit (gen_phys.py)
         (c) the latency table: writes the plan's `latency.lanes` (with --inplace), DIR/<die>_lat_pkg.sv (SV package,
             one localparam per lane) and DIR/<die>_latency.json (the compiler's input).  The table is computed by
             schema.Plan.lane_latency() only: src out flop + stations of the crossed ft slots + dst in flop + fixed_cycles.
+            R8 (COORD 10-23): with --groups (BINDER2's as-built bus_groups.json bound on this plan) it also writes
+            DIR/<die>_r8_landing.json (r8.py): the landing pad per as-built bus member so every bus lands at ONE added
+            delay, replicated consumers of one source equal, as-built valid/data order kept; the latency JSON gets an
+            `r8` block (file, digest, summary) and the binder realises the pads (ot_dp_dly after the in flop).
 """
 import argparse
 import hashlib
@@ -50,6 +54,9 @@ def write_latency(raw, out_dir, inplace_path=None):
     if errs:
         raise SystemExit("plan invalid:\n  " + "\n  ".join(errs[:20]))
     P = S.Plan(raw)
+    sk = P.landed_skew()
+    if sk:
+        raise SystemExit("latency: landed bundle over the landing window margin:\n  " + "\n  ".join(sk))
     tab = latency_table(P)
     dig = plan_digest(raw)
     out_dir = Path(out_dir)
@@ -70,7 +77,9 @@ def write_latency(raw, out_dir, inplace_path=None):
     js = dict(schema="opentallas.die_plan.latency.v1", die=P.name, plan_digest=dig, period_ps=P.die["period_ps"],
               lanes={lid: dict(d, src=P.ports[P.lanes[lid]["ports"][0]]["src"],
                                dst=P.ports[P.lanes[lid]["ports"][-1]]["dst"],
-                               width=P.ports[P.lanes[lid]["ports"][0]]["width"]) for lid, d in sorted(tab.items())})
+                               width=P.ports[P.lanes[lid]["ports"][0]]["width"]) for lid, d in sorted(tab.items())},
+              groups=[dict(name=n, kind=k, lanes=l, cycles=tab[l[0]]["cycles"]) for n, k, l in P.latency_groups()
+                      if k == "landed" and all(x in tab for x in l)])
     (out_dir / f"{P.name}_latency.json").write_text(json.dumps(js, indent=1) + "\n")
     if inplace_path:
         raw = dict(raw)
@@ -86,6 +95,9 @@ def main(argv=None):
     a1.add_argument("plan")
     a1.add_argument("--out")
     a1.add_argument("--inplace", action="store_true", help="write latency.lanes back into PLAN.json")
+    a1.add_argument("--groups", help="R8: BINDER2 bus_groups.json -> <die>_r8_landing.json")
+    a1.add_argument("--replica", choices=("all", "type"), default="all")
+    a1.add_argument("--bus", choices=("part", "leaf"), default="part")
     a2 = sub.add_parser("rtl")
     a2.add_argument("plan")
     a2.add_argument("--out", required=True)
@@ -98,6 +110,9 @@ def main(argv=None):
     a3.add_argument("--types")
     a3.add_argument("--util", type=float, default=0.5)
     a3.add_argument("--proof", action="store_true", help="proof kit: SKIP_INCREMENTAL_REPAIR (CP1 seam proofs)")
+    a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
+                    help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
+                         "wrapper) instead of the generated plan wrapper + type sources; repeatable")
     a4 = sub.add_parser("assembly")
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
@@ -116,7 +131,8 @@ def main(argv=None):
         try:
             if a.cmd == "phys":
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
-                                           a.types.split(",") if a.types else None, a.util, a.proof)
+                                           a.types.split(",") if a.types else None, a.util, a.proof,
+                                           dict(x.split("=", 1) for x in a.kit_rtl))
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
         except gen_rtl.GenError as e:
@@ -138,6 +154,14 @@ def main(argv=None):
         out = a.out or str(Path(a.plan).resolve().parent / "gen")
         tab, sv, js = write_latency(raw, out, a.plan if a.inplace else None)
         print(f"{len(tab)} lanes -> {sv}, {js}" + (f", {a.plan}" if a.inplace else ""))
+        if a.groups:
+            import r8
+            bg = json.loads(Path(a.groups).read_text())
+            lp, sm = r8.write_pads(raw, bg, out, a.replica, a.bus)
+            d = json.loads(js.read_text())
+            d["r8"] = dict(landing=lp.name, bus_groups_digest=r8.bg_digest(bg), replica=a.replica, bus=a.bus, summary=sm)
+            js.write_text(json.dumps(d, indent=1) + "\n")
+            print(f"R8 landing -> {lp}: {json.dumps(sm)}")
     return 0
 
 

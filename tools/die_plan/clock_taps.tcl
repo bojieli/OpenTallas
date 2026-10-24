@@ -83,7 +83,8 @@ if {[llength $ct_taps] >= 2} {
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
     }
     if {![llength $cand]} {
-      puts "OT_CLOCK_TAPS FAIL $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
+      # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate
+      puts "OT_CLOCK_TAPS WARN $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
       lappend ct_stuck $on
       continue
     }
@@ -108,4 +109,23 @@ if {[llength $ct_taps] >= 2} {
   set l {}
   foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
   puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
+}
+# COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
+# every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
+# assembly (gen.py assembly, views/<type>/ot_clock_taps.json) leaves it unconnected, so the spine makes no dead drop.
+if {[llength $ct_taps] >= 2} {
+  set ct_js {}
+  set ct_empty {}
+  foreach tp $ct_taps {
+    set k 0
+    foreach it [[lindex $tp 1] getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { incr k } }
+    lappend ct_js "\"[lindex $tp 0]\": $k"
+    if {$k == 0} { lappend ct_empty "\"[lindex $tp 0]\"" }
+  }
+  if {[info exists ::env(RESULTS_DIR)]} {
+    set fh [open $::env(RESULTS_DIR)/ot_clock_taps.json w]
+    puts $fh "{\"sinks\": {[join $ct_js {, }]}, \"dropped\": \[[join $ct_empty {, }]\]}"
+    close $fh
+  }
+  puts "OT_CLOCK_TAPS per-tap sinks: [join $ct_js {, }]; dropped (no sinks): [llength $ct_empty] [join $ct_empty { }]"
 }
