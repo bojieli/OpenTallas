@@ -1,0 +1,897 @@
+{
+ "status": "G0C_CAPACITY_CANDIDATE_NOT_ADOPTED",
+ "g0c": "56/56",
+ "g0_errors": 0,
+ "old_digest": "743b528a6e2087fd",
+ "new_digest": "e19f7628a4b10ac1",
+ "lane_cycle_changes": [
+  {
+   "lane": "sl_E0_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E0_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E0_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E0_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E0_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E0_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E0_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E1_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E1_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E1_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E1_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E1_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E1_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E1_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E2_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E2_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E2_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E2_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E2_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E2_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E2_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E3_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E3_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E3_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E3_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E3_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E3_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E3_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E4_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E4_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E4_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E4_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E4_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E4_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E4_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E5_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_E5_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_E5_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_E5_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E5_su_l0__x_su_l0_sc",
+   "old": 5,
+   "new": 3,
+   "delta": -2
+  },
+  {
+   "lane": "sl_E5_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_E5_su_l1__x_su_l1_stm",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W0_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W0_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W0_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W0_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W0_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W0_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W0_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W0_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W0_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W1_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W1_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W1_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W1_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W1_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W1_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W1_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W1_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W1_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W2_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W2_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W2_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W2_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W2_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W2_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W2_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W2_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W2_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W3_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W3_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W3_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W3_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W3_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W3_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W3_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W3_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W3_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W4_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W4_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W4_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W4_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W4_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W4_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W4_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W4_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W4_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W5_ctl__x_ctl_fw",
+   "old": 12,
+   "new": 4,
+   "delta": -8
+  },
+  {
+   "lane": "sl_W5_fe__x_fe_fw",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_sc",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W5_fw__x_fw_st_a",
+   "old": 6,
+   "new": 10,
+   "delta": 4
+  },
+  {
+   "lane": "sl_W5_sc__x_sc_ctl",
+   "old": 3,
+   "new": 2,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W5_sc__x_sc_fw",
+   "old": 4,
+   "new": 7,
+   "delta": 3
+  },
+  {
+   "lane": "sl_W5_st_b__x_st_b_fe",
+   "old": 5,
+   "new": 10,
+   "delta": 5
+  },
+  {
+   "lane": "sl_W5_su_c__x_su_c_ctl",
+   "old": 4,
+   "new": 5,
+   "delta": 1
+  },
+  {
+   "lane": "sl_W5_su_l0__x_su_l0_sc",
+   "old": 4,
+   "new": 3,
+   "delta": -1
+  },
+  {
+   "lane": "sl_W5_su_l1__x_su_l1_ctl",
+   "old": 6,
+   "new": 7,
+   "delta": 1
+  }
+ ],
+ "delta_histogram": {
+  "-8": 12,
+  "3": 18,
+  "4": 12,
+  "-1": 24,
+  "5": 12,
+  "1": 30,
+  "-2": 6
+ },
+ "new_lanes": [
+  "sl_E0_ctl__x_ctl_fw_p1",
+  "sl_E0_ctl__x_ctl_su_c_p1",
+  "sl_E0_ctl__x_ctl_su_c_p2",
+  "sl_E0_fe__x_fe_fw_p1",
+  "sl_E0_fe__x_fe_stm_p1",
+  "sl_E0_fw__x_fw_ctl_p1",
+  "sl_E0_fw__x_fw_ctl_p2",
+  "sl_E0_fw__x_fw_fe_p1",
+  "sl_E0_fw__x_fw_fe_p2",
+  "sl_E0_fw__x_fw_stm_p1",
+  "sl_E0_stm__x_stm_fe_p1",
+  "sl_E0_stm__x_stm_fw_p1",
+  "sl_E0_su_c__x_su_c_su_l0_p1",
+  "sl_E0_su_c__x_su_c_su_l1_p1",
+  "sl_E0_su_l0__x_su_l0_su_c_p1",
+  "sl_E0_su_l1__x_su_l1_su_c_p1",
+  "sl_E1_ctl__x_ctl_fw_p1",
+  "sl_E1_ctl__x_ctl_su_c_p1",
+  "sl_E1_ctl__x_ctl_su_c_p2",
+  "sl_E1_fe__x_fe_fw_p1",
+  "sl_E1_fe__x_fe_stm_p1",
+  "sl_E1_fw__x_fw_ctl_p1",
+  "sl_E1_fw__x_fw_ctl_p2",
+  "sl_E1_fw__x_fw_fe_p1",
+  "sl_E1_fw__x_fw_fe_p2",
+  "sl_E1_fw__x_fw_stm_p1",
+  "sl_E1_stm__x_stm_fe_p1",
+  "sl_E1_stm__x_stm_fw_p1",
+  "sl_E1_su_c__x_su_c_su_l0_p1",
+  "sl_E1_su_c__x_su_c_su_l1_p1",
+  "sl_E1_su_l0__x_su_l0_su_c_p1",
+  "sl_E1_su_l1__x_su_l1_su_c_p1",
+  "sl_E2_ctl__x_ctl_fw_p1",
+  "sl_E2_ctl__x_ctl_su_c_p1",
+  "sl_E2_ctl__x_ctl_su_c_p2",
+  "sl_E2_fe__x_fe_fw_p1",
+  "sl_E2_fe__x_fe_stm_p1",
+  "sl_E2_fw__x_fw_ctl_p1",
+  "sl_E2_fw__x_fw_ctl_p2",
+  "sl_E2_fw__x_fw_fe_p1",
+  "sl_E2_fw__x_fw_fe_p2",
+  "sl_E2_fw__x_fw_stm_p1",
+  "sl_E2_stm__x_stm_fe_p1",
+  "sl_E2_stm__x_stm_fw_p1",
+  "sl_E2_su_c__x_su_c_su_l0_p1",
+  "sl_E2_su_c__x_su_c_su_l1_p1",
+  "sl_E2_su_l0__x_su_l0_su_c_p1",
+  "sl_E2_su_l1__x_su_l1_su_c_p1",
+  "sl_E3_ctl__x_ctl_fw_p1",
+  "sl_E3_ctl__x_ctl_su_c_p1",
+  "sl_E3_ctl__x_ctl_su_c_p2",
+  "sl_E3_fe__x_fe_fw_p1",
+  "sl_E3_fe__x_fe_stm_p1",
+  "sl_E3_fw__x_fw_ctl_p1",
+  "sl_E3_fw__x_fw_ctl_p2",
+  "sl_E3_fw__x_fw_fe_p1",
+  "sl_E3_fw__x_fw_fe_p2",
+  "sl_E3_fw__x_fw_stm_p1",
+  "sl_E3_stm__x_stm_fe_p1",
+  "sl_E3_stm__x_stm_fw_p1",
+  "sl_E3_su_c__x_su_c_su_l0_p1",
+  "sl_E3_su_c__x_su_c_su_l1_p1",
+  "sl_E3_su_l0__x_su_l0_su_c_p1",
+  "sl_E3_su_l1__x_su_l1_su_c_p1",
+  "sl_E4_ctl__x_ctl_fw_p1",
+  "sl_E4_ctl__x_ctl_su_c_p1",
+  "sl_E4_ctl__x_ctl_su_c_p2",
+  "sl_E4_fe__x_fe_fw_p1",
+  "sl_E4_fe__x_fe_stm_p1",
+  "sl_E4_fw__x_fw_ctl_p1",
+  "sl_E4_fw__x_fw_ctl_p2",
+  "sl_E4_fw__x_fw_fe_p1",
+  "sl_E4_fw__x_fw_fe_p2",
+  "sl_E4_fw__x_fw_stm_p1",
+  "sl_E4_stm__x_stm_fe_p1",
+  "sl_E4_stm__x_stm_fw_p1",
+  "sl_E4_su_c__x_su_c_su_l0_p1",
+  "sl_E4_su_c__x_su_c_su_l1_p1",
+  "sl_E4_su_l0__x_su_l0_su_c_p1",
+  "sl_E4_su_l1__x_su_l1_su_c_p1",
+  "sl_E5_ctl__x_ctl_fw_p1",
+  "sl_E5_ctl__x_ctl_su_c_p1",
+  "sl_E5_ctl__x_ctl_su_c_p2",
+  "sl_E5_fe__x_fe_fw_p1",
+  "sl_E5_fe__x_fe_stm_p1",
+  "sl_E5_fw__x_fw_ctl_p1",
+  "sl_E5_fw__x_fw_ctl_p2",
+  "sl_E5_fw__x_fw_fe_p1",
+  "sl_E5_fw__x_fw_fe_p2",
+  "sl_E5_fw__x_fw_stm_p1",
+  "sl_E5_stm__x_stm_fe_p1",
+  "sl_E5_stm__x_stm_fw_p1",
+  "sl_E5_su_c__x_su_c_su_l0_p1",
+  "sl_E5_su_c__x_su_c_su_l1_p1",
+  "sl_E5_su_l0__x_su_l0_su_c_p1",
+  "sl_E5_su_l1__x_su_l1_su_c_p1",
+  "sl_W0_ctl__x_ctl_fw_p1",
+  "sl_W0_ctl__x_ctl_su_c_p1",
+  "sl_W0_ctl__x_ctl_su_c_p2",
+  "sl_W0_fe__x_fe_fw_p1",
+  "sl_W0_fe__x_fe_stm_p1",
+  "sl_W0_fw__x_fw_ctl_p1",
+  "sl_W0_fw__x_fw_ctl_p2",
+  "sl_W0_fw__x_fw_fe_p1",
+  "sl_W0_fw__x_fw_fe_p2",
+  "sl_W0_fw__x_fw_stm_p1",
+  "sl_W0_stm__x_stm_fe_p1",
+  "sl_W0_stm__x_stm_fw_p1",
+  "sl_W0_su_c__x_su_c_su_l0_p1",
+  "sl_W0_su_c__x_su_c_su_l1_p1",
+  "sl_W0_su_l0__x_su_l0_su_c_p1",
+  "sl_W0_su_l1__x_su_l1_su_c_p1",
+  "sl_W1_ctl__x_ctl_fw_p1",
+  "sl_W1_ctl__x_ctl_su_c_p1",
+  "sl_W1_ctl__x_ctl_su_c_p2",
+  "sl_W1_fe__x_fe_fw_p1",
+  "sl_W1_fe__x_fe_stm_p1",
+  "sl_W1_fw__x_fw_ctl_p1",
+  "sl_W1_fw__x_fw_ctl_p2",
+  "sl_W1_fw__x_fw_fe_p1",
+  "sl_W1_fw__x_fw_fe_p2",
+  "sl_W1_fw__x_fw_stm_p1",
+  "sl_W1_stm__x_stm_fe_p1",
+  "sl_W1_stm__x_stm_fw_p1",
+  "sl_W1_su_c__x_su_c_su_l0_p1",
+  "sl_W1_su_c__x_su_c_su_l1_p1",
+  "sl_W1_su_l0__x_su_l0_su_c_p1",
+  "sl_W1_su_l1__x_su_l1_su_c_p1",
+  "sl_W2_ctl__x_ctl_fw_p1",
+  "sl_W2_ctl__x_ctl_su_c_p1",
+  "sl_W2_ctl__x_ctl_su_c_p2",
+  "sl_W2_fe__x_fe_fw_p1",
+  "sl_W2_fe__x_fe_stm_p1",
+  "sl_W2_fw__x_fw_ctl_p1",
+  "sl_W2_fw__x_fw_ctl_p2",
+  "sl_W2_fw__x_fw_fe_p1",
+  "sl_W2_fw__x_fw_fe_p2",
+  "sl_W2_fw__x_fw_stm_p1",
+  "sl_W2_stm__x_stm_fe_p1",
+  "sl_W2_stm__x_stm_fw_p1",
+  "sl_W2_su_c__x_su_c_su_l0_p1",
+  "sl_W2_su_c__x_su_c_su_l1_p1",
+  "sl_W2_su_l0__x_su_l0_su_c_p1",
+  "sl_W2_su_l1__x_su_l1_su_c_p1",
+  "sl_W3_ctl__x_ctl_fw_p1",
+  "sl_W3_ctl__x_ctl_su_c_p1",
+  "sl_W3_ctl__x_ctl_su_c_p2",
+  "sl_W3_fe__x_fe_fw_p1",
+  "sl_W3_fe__x_fe_stm_p1",
+  "sl_W3_fw__x_fw_ctl_p1",
+  "sl_W3_fw__x_fw_ctl_p2",
+  "sl_W3_fw__x_fw_fe_p1",
+  "sl_W3_fw__x_fw_fe_p2",
+  "sl_W3_fw__x_fw_stm_p1",
+  "sl_W3_stm__x_stm_fe_p1",
+  "sl_W3_stm__x_stm_fw_p1",
+  "sl_W3_su_c__x_su_c_su_l0_p1",
+  "sl_W3_su_c__x_su_c_su_l1_p1",
+  "sl_W3_su_l0__x_su_l0_su_c_p1",
+  "sl_W3_su_l1__x_su_l1_su_c_p1",
+  "sl_W4_ctl__x_ctl_fw_p1",
+  "sl_W4_ctl__x_ctl_su_c_p1",
+  "sl_W4_ctl__x_ctl_su_c_p2",
+  "sl_W4_fe__x_fe_fw_p1",
+  "sl_W4_fe__x_fe_stm_p1",
+  "sl_W4_fw__x_fw_ctl_p1",
+  "sl_W4_fw__x_fw_ctl_p2",
+  "sl_W4_fw__x_fw_fe_p1",
+  "sl_W4_fw__x_fw_fe_p2",
+  "sl_W4_fw__x_fw_stm_p1",
+  "sl_W4_stm__x_stm_fe_p1",
+  "sl_W4_stm__x_stm_fw_p1",
+  "sl_W4_su_c__x_su_c_su_l0_p1",
+  "sl_W4_su_c__x_su_c_su_l1_p1",
+  "sl_W4_su_l0__x_su_l0_su_c_p1",
+  "sl_W4_su_l1__x_su_l1_su_c_p1",
+  "sl_W5_ctl__x_ctl_fw_p1",
+  "sl_W5_ctl__x_ctl_su_c_p1",
+  "sl_W5_ctl__x_ctl_su_c_p2",
+  "sl_W5_fe__x_fe_fw_p1",
+  "sl_W5_fe__x_fe_stm_p1",
+  "sl_W5_fw__x_fw_ctl_p1",
+  "sl_W5_fw__x_fw_ctl_p2",
+  "sl_W5_fw__x_fw_fe_p1",
+  "sl_W5_fw__x_fw_fe_p2",
+  "sl_W5_fw__x_fw_stm_p1",
+  "sl_W5_stm__x_stm_fe_p1",
+  "sl_W5_stm__x_stm_fw_p1",
+  "sl_W5_su_c__x_su_c_su_l0_p1",
+  "sl_W5_su_c__x_su_c_su_l1_p1",
+  "sl_W5_su_l0__x_su_l0_su_c_p1",
+  "sl_W5_su_l1__x_su_l1_su_c_p1"
+ ],
+ "next": "R8 regeneration and bind/exact schedule integration before adoption"
+}
