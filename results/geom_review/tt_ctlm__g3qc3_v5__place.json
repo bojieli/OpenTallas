@@ -1,0 +1,10 @@
+{
+ "element": "qwen_compute tt_ctlm (qfd_qc_tt_ctlm_part)",
+ "kit": "localhost/epyc3:/srv/opentallas-scratch/claude/elem-qk/g3qc3/tt_ctlm (gen_phys main + elemqk macro overlay, bound = qcp6_status_bind_v5)",
+ "verdict": "PASS-CONDITIONAL",
+ "reasons": "AUTHOR review (ELEM-QK) of 3_place render (results/elem_qk_1024/review/tt_ctlm_v5_place.png): 777.6x518.4, 19 macros on the W half (two SRAM stacks + ROMs) per the overlay, 4 grid taps 17+ um clear of macros, SDC_LINT PASS, FACE_GUARD PASS 3117/3117, face flops FIRM at faces (pin->reg p90 8.4 um, max 11/12.3), max bin density 0.47, 0 bins > 0.8. RISKS: ff-ff hops p90 144 um but 37 > 675 um and 6 > 750 um (max 820): u_hr SRAM-side logic split between the W macro stacks and the E cluster (x~740), and a dense channel at x 150-190 between the stacks carries the S pin band (x 0-310, under the macros) traffic.",
+ "fixes": "route as is (timing will show whether the >675 um hops close at TT); if TT fails on u_hr paths, revise the overlay: move the S pin window or swap the 6x SRAM32x128 column toward the E cluster.",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T13:26:35-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}
