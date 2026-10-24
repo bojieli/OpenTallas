@@ -1,0 +1,87 @@
+{
+ "note": "KV-P6-V37 10-23: PV trunk structure options, kv_pv_pads_plan.py on the kv35 bind (BINDER2 bus_groups, = v3.6 PV lanes) with V/header/cmd(/flag) depths re-modelled by kv_pv_route.py; V-D-H shift fixed 0 (KV-P6-PV d218a2b98). member = pad per sink member (BINDER r8 landing, fanout counted 8x for V); entry = pads at the sink PARTITION ENTRY (one delay line per source-bit range per partition, --entry). Lane-flop and face numbers are hand-computed from the plan widths (128 b V per vport per partition, 1067 b vo per vport, 2 cycles per 1520-um partition hop, face budget 6 pins/um x 1900 um = 11.4k).",
+ "options": {
+  "v36": {
+   "entry_pad_flops": 228856,
+   "entry_by_kind": {
+    "other": 2328,
+    "rs": 59438,
+    "flag": 2820,
+    "pe2": 3840,
+    "cmd": 5550,
+    "V": 154880
+   },
+   "member_pad_flops": 1295796,
+   "inner_delay_flops": 288888,
+   "TRUNK_D": 43,
+   "FLAG_D": 0,
+   "extra_lane_flops": 0
+  },
+  "turn7": {
+   "entry_pad_flops": 169464,
+   "entry_by_kind": {
+    "other": 45336,
+    "rs": 59438,
+    "flag": 2820,
+    "pe2": 3840,
+    "cmd": 5550,
+    "V": 52480
+   },
+   "member_pad_flops": 519604,
+   "inner_delay_flops": 49272,
+   "TRUNK_D": 43,
+   "FLAG_D": 0,
+   "extra_lane_flops": "~+170k, same face overload at pv_*_6|7"
+  },
+  "turnC": {
+   "entry_pad_flops": 77044,
+   "entry_by_kind": {
+    "other": 2576,
+    "rs": 61508,
+    "flag": 2944,
+    "pe2": 4096,
+    "cmd": 5920,
+    "V": 0
+   },
+   "member_pad_flops": 81648,
+   "inner_delay_flops": 35960,
+   "TRUNK_D": 44,
+   "FLAG_D": 0,
+   "extra_lane_flops": "~+200k (up 1067 b x 2 cyc x (8-pk) hops per vport + 8-hop tapering down chain 128(p+1) b, minus v3.6 V lanes ~86k)",
+   "face_pins": "pv_*_6|7 face ~13.7k, hub_C S/N face ~16.8k + cmd/rs > 11.4k budget -> G0 faces FAIL"
+  },
+  "mid": {
+   "entry_pad_flops": 631384,
+   "entry_by_kind": {
+    "other": 270296,
+    "rs": 84302,
+    "flag": 3972,
+    "pe2": 28416,
+    "cmd": 5550,
+    "V": 238848
+   },
+   "member_pad_flops": 2310868,
+   "inner_delay_flops": 35960,
+   "TRUNK_D": 55,
+   "FLAG_D": 0,
+   "extra_lane_flops": "pc rsp +~135k (KV-P6-PV estimate) + pv/vport re-cut; V-D-H = -2m by construction (ctl stays in hub_C) -> pads explode"
+  },
+  "ctlmid": {
+   "entry_pad_flops": 155217,
+   "entry_by_kind": {
+    "other": 1060,
+    "rs": 85336,
+    "flag": 5144,
+    "pe2": 27136,
+    "cmd": 6845,
+    "V": 29696
+   },
+   "member_pad_flops": 393692,
+   "inner_delay_flops": 167032,
+   "TRUNK_D": 48,
+   "FLAG_D": 0,
+   "extra_lane_flops": "ctl<->hub narrow lanes ~4 hops (cmd 33 b, vport req 8x15 b, cfg, RH link); rs trunk/pe2 pads grow (RH and astk stay at hub end)"
+  }
+ },
+ "verdict": "No re-route of V beats padding at the partition entry: required V depth = D + H + e (via-ctl distance) and the V bits are distinct per partition, so any physical detour costs >= the pad flops and adds face pins. Best pad-only = v3.6 lanes + entry-level pads 229k (V 155k, rs 59k). Below 150k needs the ctl moved (ctlmid 155k, V 30k but rs 85k / pe2 27k) or the rs trunk restructured too; turnC reaches 77k pads but costs ~+200k lane flops and fails face budget."
+}
