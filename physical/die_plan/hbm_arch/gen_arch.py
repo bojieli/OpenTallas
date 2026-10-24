@@ -69,6 +69,9 @@ VAR = {
     'B2j': dict(smw=668, smh=522, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
                 spuhub=True, mirror=True, l3=True, sm_channel=2, sm_col_channel=12,
                 label='B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels'),
+    'B2k': dict(smw=668, smh=522, suh=228, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
+                spuhub=True, mirror=True, l3=True, sm_channel=2, sm_col_channel=12,
+                label='B2k: B2j plus taller SU bands for unobstructed wide feedthrough corridors'),
 }
 SIDE = 96          # side column width
 SUH = 180          # SU band height (4 lane-group partitions per SM)
@@ -97,6 +100,7 @@ def build(var):
     inter-tile corridors; the ROOT sits at the die centre in the seam row."""
     V = VAR[var]
     smw, smh, nq = V['smw'], V['smh'], V['nq']
+    SUH = V.get('suh', globals()['SUH'])
     PHYH = V.get('phyh', PHYH0)
     BANDH = V.get('bandh', BANDH0)
     HUBW = V.get('hubw', HUBW0)

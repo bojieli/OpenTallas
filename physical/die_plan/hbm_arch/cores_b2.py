@@ -460,6 +460,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('plan')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--ft-corridor-types', default='*', help='comma-separated types reserving straight heavy FT bands; other types use macro-free relay channels')
     a = ap.parse_args()
     src_dir = os.path.dirname(os.path.abspath(a.plan))
     out = os.path.abspath(a.out)
@@ -630,7 +631,7 @@ def main():
                     seg = CK.zroute(A, B, P_.die_face(part, sl['in_face']), P_.die_face(part, sl['out_face']))
                     seg = [(x - ox, y - oy) for x, y in seg]
                     slot_routes[slot] = seg
-                    if sl.get('width', 0) >= CORRIDOR_BITS:
+                    if sl.get('width', 0) >= CORRIDOR_BITS and (a.ft_corridor_types == '*' or tn in a.ft_corridor_types.split(',')):
                         for (x1, y1), (x2, y2) in zip(seg, seg[1:]):
                             hw = CORRIDOR_W / 2
                             obst.append((min(x1, x2) - hw, min(y1, y2) - hw, abs(x2 - x1) + 2 * hw, abs(y2 - y1) + 2 * hw))
