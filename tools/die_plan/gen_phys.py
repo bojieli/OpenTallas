@@ -211,6 +211,7 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
+SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the liberty limit (see config below)
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
@@ -219,6 +220,16 @@ FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (th
 # failed -50 TT / -48 FF.  Seam-hold padding (CP1 r9): the neighbour's face flop may launch at the fast end of the
 # insertion window with NO clk-to-q / wire credit -> min input delay = -clock.insertion_tol_ps, so the receiving kit
 # pads every seam input for the whole window.
+
+
+def ft_hop_in_share(P):
+    """the receiver's face share of an ft seam hop (fraction of T): plan clock.ft_hop_in_share, else FT_HOP_IN_SHARE.
+    ELEM-S81 station405 10-24 (COORD ruling, S81 die-wide): at 0.08 T the receiving station-0 flop's TT setup and
+    FF hold (standard overlay, vclk fixed at the plan insertion) share a ~3 ps window, setup + hold =
+    0.2 x I_TT - 42 ps at I_TT = 250 (t12 / T7 r4d measured), so CTS skew alone fails one of them; senders kept
+    >= +245.9 ps ft reg2out slack on all 17 routed station tiles.  A die-wide value: every partition of the plan
+    (stations AND frames) must use the same split, so it lives in the plan, never in a kit override."""
+    return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
 
 
 def hold_in_min_ps(P):
@@ -269,9 +280,10 @@ def sdc(P, tn, pins):
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
-        out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay -max {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
-                f"set_output_delay -max {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        sh = ft_hop_in_share(P)
+        out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
+                f"set_input_delay -max {(1 - sh) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
@@ -329,7 +341,7 @@ def core_latency_files(P, tn, kd, root=None):
     return dict(rows=rows, taps=taps)
 
 
-def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
+def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None):
     t = P.types[tn]
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -438,6 +450,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
+           # ELEM-S81 station405 10-24: repair_design sizes repeaters on the ASAP7 setRC wire model, which the
+           # routed RCX exceeds ~1.8x in slew: every routed station405_c1 tile had 86..1830 max-slew violations
+           # (worst 438..587 ps vs 320), all 2-pin repeater nets of ~190-196 um that GRT had clean.  Design to 50 % /
+           # 20 % of the slew / cap limits so the repeater pitch fits the routed RC (slew ~ L^2: ~140 um).
+           f"export SLEW_MARGIN = {SLEW_MARGIN_PCT}",
+           f"export CAP_MARGIN = {CAP_MARGIN_PCT}",
            # CP1-R10 10-24: ORFS synth_odb.tcl eliminate_dead_logic deleted face registers whose q the leaf leaves
            # unused (r10b: 120 in-bus flops); boundary cells dont_touch around that step only
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
@@ -445,6 +463,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
               "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
            "export TNS_END_PERCENT = 100",
+           # ELEM-S81 station405 10-24 (opt-in gen.py phys --hold-ff-margin PS): hold signs off at FF only, but ORFS
+           # repairs hold over every kit corner, and at TT the seam inputs see ~-40 ps hold (vclk is fixed at the plan
+           # insertion while the local tree is slower at TT than FF): the TT hold buffers eat the TT setup of the same
+           # face flops (station405_c1: 'Unable to repair all hold checks', T7 r4b TT -23.68 after hold).  CTS-stage
+           # combined repair is skipped; run_kit.sh runs GRT + repair at CORNERS=bc with this hold margin, then
+           # route / finish / abstract on the native corners; TT setup is checked unchanged by signoff.py.
+           *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
+             if hold_ff_margin is not None and not macros else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -551,6 +577,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/face_guard.py ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -f /work/face_guard.py ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then \$M cts && \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
@@ -574,7 +602,7 @@ exit $rc
 """
 
 
-def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None):
+def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None, hold_ff_margin=None):
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
@@ -606,7 +634,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
-        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root))
+        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

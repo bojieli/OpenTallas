@@ -1366,6 +1366,11 @@
      "type": "number",
      "minimum": 0
     },
+    "ft_hop_in_share": {
+     "type": "number",
+     "exclusiveMinimum": 0,
+     "exclusiveMaximum": 1
+    },
     "neighbour_skew_ps": {
      "type": "number",
      "exclusiveMinimum": 0

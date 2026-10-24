@@ -118,6 +118,9 @@ def main(argv=None):
     a3.add_argument("--types")
     a3.add_argument("--util", type=float, default=0.5)
     a3.add_argument("--proof", action="store_true", help="proof kit: SKIP_INCREMENTAL_REPAIR (CP1 seam proofs)")
+    a3.add_argument("--hold-ff-margin", type=float, default=None, metavar="PS",
+                    help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
+                         "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -140,7 +143,7 @@ def main(argv=None):
             if a.cmd == "phys":
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
                                            a.types.split(",") if a.types else None, a.util, a.proof,
-                                           dict(x.split("=", 1) for x in a.kit_rtl))
+                                           dict(x.split("=", 1) for x in a.kit_rtl), a.hold_ff_margin)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
         except gen_rtl.GenError as e:
