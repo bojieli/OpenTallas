@@ -792,6 +792,651 @@
     }
    }
   },
+  "coll_q2_body": {
+   "elab_bits": [
+    4652,
+    6242
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_body_core.sv",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "u_body_g_qout_1_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_2_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_3_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_5_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_6_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_7_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_8_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "vm_rq",
+     "output",
+     8,
+     0
+    ],
+    [
+     "vm_rq_",
+     "output",
+     128,
+     0
+    ],
+    [
+     "stat_cycles",
+     "output",
+     32,
+     0
+    ],
+    [
+     "hgi_del_obase",
+     "output",
+     160,
+     0
+    ],
+    [
+     "hgi_inj_addr",
+     "output",
+     160,
+     0
+    ],
+    [
+     "inj_idx",
+     "output",
+     32,
+     0
+    ],
+    [
+     "inj_rd",
+     "output",
+     2,
+     0
+    ],
+    [
+     "fault_cause",
+     "output",
+     16,
+     0
+    ],
+    [
+     "u_body_g_qout_10_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_17_g2_n_a_u_out_u_dst_d",
+     "output",
+     5,
+     0
+    ],
+    [
+     "u_body_g_qout_0_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_0_g2_w_a_u_out_u_dst_v",
+     "output",
+     5,
+     0
+    ],
+    [
+     "u_body_g_qcap_7_u_cap_src_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "u_body_g_qcap_7_u_cap_src_d",
+     "input",
+     545,
+     0
+    ],
+    [
+     "tx_pin_flit",
+     "output",
+     612,
+     0
+    ],
+    [
+     "u_body_g_qout_16_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_15_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_9_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_14_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_13_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_12_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_4_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "u_body_g_qout_11_g2_w_a_u_out_u_dst_d",
+     "output",
+     160,
+     0
+    ],
+    [
+     "isa_ring",
+     "output",
+     42,
+     0
+    ],
+    [
+     "u_body_u_upipe_SL_7_u_d3",
+     "output",
+     17,
+     0
+    ],
+    [
+     "u_body_u_upipe_SL_15_u_d3",
+     "output",
+     15,
+     0
+    ],
+    [
+     "u_body_g_ariter_t_idx",
+     "output",
+     16,
+     0
+    ],
+    [
+     "u_body_g_ariter_t_pb",
+     "output",
+     4,
+     0
+    ],
+    [
+     "u_body_g_ariter_t_pa",
+     "output",
+     4,
+     0
+    ],
+    [
+     "u_body_g_ariter_t_read",
+     "output",
+     4,
+     0
+    ],
+    [
+     "u_body_g_ariter_t_load",
+     "output",
+     4,
+     0
+    ],
+    [
+     "vm_kq",
+     "output",
+     2248,
+     0
+    ],
+    [
+     "clk_control",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "qid",
+     "input",
+     2,
+     0
+    ],
+    [
+     "cfg_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "cfg_target",
+     "input",
+     8,
+     0
+    ],
+    [
+     "cfg_addr",
+     "input",
+     12,
+     0
+    ],
+    [
+     "cfg_data",
+     "input",
+     256,
+     0
+    ],
+    [
+     "desc_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "desc_base",
+     "input",
+     12,
+     0
+    ],
+    [
+     "desc_limit",
+     "input",
+     13,
+     0
+    ],
+    [
+     "desc_loops",
+     "input",
+     16,
+     0
+    ],
+    [
+     "launch_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rc_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rc_tag",
+     "input",
+     3,
+     0
+    ],
+    [
+     "phy_up",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rx_pin_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rx_pin_flit",
+     "input",
+     612,
+     0
+    ],
+    [
+     "clk_program",
+     "input",
+     1,
+     0
+    ],
+    [
+     "clk_vmasm",
+     "input",
+     16,
+     0
+    ],
+    [
+     "clk_upipe",
+     "input",
+     16,
+     0
+    ],
+    [
+     "clk_issue",
+     "input",
+     1,
+     0
+    ],
+    [
+     "clk_qslots",
+     "input",
+     26,
+     0
+    ],
+    [
+     "clk_reduce",
+     "input",
+     1,
+     0
+    ],
+    [
+     "clk_vmwrite",
+     "input",
+     16,
+     0
+    ],
+    [
+     "clk_link",
+     "input",
+     5,
+     0
+    ],
+    [
+     "inj_d",
+     "input",
+     1024,
+     0
+    ],
+    [
+     "vm_rr",
+     "input",
+     2056,
+     0
+    ],
+    [
+     "tx_pin_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "retry_requested",
+     "output",
+     1,
+     0
+    ],
+    [
+     "program_configured",
+     "output",
+     1,
+     0
+    ],
+    [
+     "program_init_busy",
+     "output",
+     1,
+     0
+    ],
+    [
+     "program_fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "u_body_g_q2_a_u_fj_u_fj_u_reduce_fault",
+     "input",
+     1,
+     0
+    ],
+    [
+     "u_body_g_q2_a_u_fj_u_fj_u_ring_fault",
+     "input",
+     1,
+     0
+    ],
+    [
+     "hgi_busy",
+     "output",
+     1,
+     0
+    ],
+    [
+     "done",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hfd_coll_q2_body_core",
+   "type_ids": {
+    "ot_hfd_coll_q2_hard_v8g__body__233.28x233.28": {
+     "check": "PASS",
+     "cut_bits": [
+      4652,
+      6242
+     ],
+     "cut_pins": {
+      "cfg_addr": {
+       "cfg_addr": 12
+      },
+      "cfg_data": {
+       "cfg_data": 256
+      },
+      "cfg_target": {
+       "cfg_target": 8
+      },
+      "cfg_v": {
+       "cfg_v": 1
+      },
+      "clk_control": {
+       "clk_control": 1
+      },
+      "clk_issue": {
+       "clk_issue": 1
+      },
+      "clk_link": {
+       "clk_link": 5
+      },
+      "clk_program": {
+       "clk_program": 1
+      },
+      "clk_qslots": {
+       "clk_qslots": 26
+      },
+      "clk_reduce": {
+       "clk_reduce": 1
+      },
+      "clk_upipe": {
+       "clk_upipe": 16
+      },
+      "clk_vmasm": {
+       "clk_vmasm": 16
+      },
+      "clk_vmwrite": {
+       "clk_vmwrite": 16
+      },
+      "desc_base": {
+       "desc_base": 12
+      },
+      "desc_limit": {
+       "desc_limit": 13
+      },
+      "desc_loops": {
+       "desc_loops": 16
+      },
+      "desc_v": {
+       "desc_v": 1
+      },
+      "fault_cause": {
+       "fault_cause": 16
+      },
+      "hgi_busy": {
+       "hgi_busy": 1
+      },
+      "hgi_del_obase": {
+       "hgi_del_obase": 160
+      },
+      "hgi_inj_addr": {
+       "hgi_inj_addr": 160
+      },
+      "inj_d": {
+       "inj_d": 1024
+      },
+      "inj_idx": {
+       "inj_idx": 32
+      },
+      "inj_rd": {
+       "inj_rd": 2
+      },
+      "launch_v": {
+       "launch_v": 1
+      },
+      "phy_up": {
+       "phy_up": 1
+      },
+      "program_configured": {
+       "program_configured": 1
+      },
+      "program_fault": {
+       "program_fault": 1
+      },
+      "program_init_busy": {
+       "program_init_busy": 1
+      },
+      "qid": {
+       "qid": 2
+      },
+      "rc_tag": {
+       "rc_tag": 3
+      },
+      "rc_v": {
+       "rc_v": 1
+      },
+      "retry_requested": {
+       "retry_requested": 1
+      },
+      "rst_n": {
+       "rst_n": 1
+      },
+      "rx_pin_flit": {
+       "rx_pin_flit": 612
+      },
+      "rx_pin_v": {
+       "rx_pin_v": 1
+      },
+      "stat_cycles": {
+       "stat_cycles": 32
+      },
+      "tx_pin_flit": {
+       "tx_pin_flit": 612
+      },
+      "tx_pin_v": {
+       "tx_pin_v": 1
+      },
+      "u_body_g_qcap_7_u_cap_src_d": {
+       "u_body_g_qcap_7_u_cap_src_d": 545
+      },
+      "u_body_g_qcap_7_u_cap_src_v": {
+       "u_body_g_qcap_7_u_cap_src_v": 1
+      },
+      "vm_kq": {
+       "vm_kq": 2248
+      },
+      "vm_rr": {
+       "vm_rr": 2056
+      }
+     },
+     "excluded": "",
+     "mapped_bits": 7918,
+     "unmapped_cut_pins": [
+      "u_body_g_q2_a_u_fj_u_fj_reduce_fault",
+      "u_body_g_q2_a_u_fj_u_fj_ring_fault",
+      "del_flit",
+      "del_valid",
+      "hgi_done",
+      "hgi_fault",
+      "isa_ring",
+      "u_body_g_q2_genblk1_genblk1_a_u_control_u_control_dest_v",
+      "u_body_g_qout_0_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_10_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_11_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_12_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_13_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_14_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_15_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_16_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_17_g2_n_a_u_out_dst_d",
+      "u_body_g_qout_1_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_2_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_3_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_4_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_5_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_6_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_7_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_8_g2_w_a_u_out_dst_d",
+      "u_body_g_qout_9_g2_w_a_u_out_dst_d",
+      "u_body_u_upipe_d3",
+      "vm_rq",
+      "x_u_body_u_reduce_load_tag",
+      "x_u_body_u_reduce_pub_meta",
+      "x_u_body_u_reduce_pub_tag_a",
+      "x_u_body_u_reduce_pub_tag_b",
+      "x_u_body_u_reduce_read_tag"
+     ]
+    }
+   }
+  },
   "coll_q2_reduce": {
    "elab_bits": [
     628,
@@ -17826,6 +18471,297 @@
      "straps": {
       "map_lane_j": "1001"
      }
+    }
+   }
+  },
+  "tkm_root": {
+   "elab_bits": [
+    2624,
+    951
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_root_core.sv",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "u_up_0",
+     "input",
+     344,
+     0
+    ],
+    [
+     "w_addr",
+     "output",
+     40,
+     0
+    ],
+    [
+     "u_entry_q",
+     "output",
+     344,
+     0
+    ],
+    [
+     "stat_cycles",
+     "output",
+     32,
+     0
+    ],
+    [
+     "w_data",
+     "output",
+     512,
+     0
+    ],
+    [
+     "w_mask",
+     "output",
+     16,
+     0
+    ],
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "start",
+     "input",
+     1,
+     0
+    ],
+    [
+     "cfg_n",
+     "input",
+     12,
+     0
+    ],
+    [
+     "cfg_k",
+     "input",
+     13,
+     0
+    ],
+    [
+     "cfg_g",
+     "input",
+     8,
+     0
+    ],
+    [
+     "cfg_gbase",
+     "input",
+     8,
+     0
+    ],
+    [
+     "cfg_pf",
+     "input",
+     16,
+     0
+    ],
+    [
+     "cfg_nout",
+     "input",
+     13,
+     0
+    ],
+    [
+     "cfg_obase",
+     "input",
+     40,
+     0
+    ],
+    [
+     "cfg_rbase",
+     "input",
+     40,
+     0
+    ],
+    [
+     "cfg_has_r",
+     "input",
+     1,
+     0
+    ],
+    [
+     "del_valid",
+     "input",
+     4,
+     0
+    ],
+    [
+     "del_flit",
+     "input",
+     2116,
+     0
+    ],
+    [
+     "buffer_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "del_slot",
+     "input",
+     4,
+     0
+    ],
+    [
+     "arg_mode",
+     "input",
+     1,
+     0
+    ],
+    [
+     "busy",
+     "output",
+     1,
+     0
+    ],
+    [
+     "u_entry_vq",
+     "output",
+     1,
+     0
+    ],
+    [
+     "u_conv_q",
+     "output",
+     1,
+     0
+    ],
+    [
+     "u_clr_q",
+     "output",
+     1,
+     0
+    ],
+    [
+     "fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "done",
+     "output",
+     1,
+     0
+    ],
+    [
+     "w_v",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hgi_coll_tkm_tp192_root_core",
+   "type_ids": {
+    "ot_hgi_coll_tkm_m_tp192__root__319.68x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      2624,
+      951
+     ],
+     "cut_pins": {
+      "arg_mode": {
+       "arg_mode": 1
+      },
+      "buffer_clk": {
+       "buffer_clk": 1
+      },
+      "busy": {
+       "busy": 1
+      },
+      "cfg_g": {
+       "cfg_g": 8
+      },
+      "cfg_gbase": {
+       "cfg_gbase": 8
+      },
+      "cfg_has_r": {
+       "cfg_has_r": 1
+      },
+      "cfg_k": {
+       "cfg_k": 13
+      },
+      "cfg_n": {
+       "cfg_n": 12
+      },
+      "cfg_nout": {
+       "cfg_nout": 13
+      },
+      "cfg_obase": {
+       "cfg_obase": 40
+      },
+      "cfg_pf": {
+       "cfg_pf": 16
+      },
+      "cfg_rbase": {
+       "cfg_rbase": 40
+      },
+      "clk": {
+       "clk": 1
+      },
+      "del_flit": {
+       "del_flit": 2116
+      },
+      "del_slot": {
+       "del_slot": 4
+      },
+      "del_valid": {
+       "del_valid": 4
+      },
+      "done": {
+       "done": 1
+      },
+      "fault": {
+       "fault": 1
+      },
+      "rst_n": {
+       "rst_n": 1
+      },
+      "start": {
+       "start": 1
+      },
+      "stat_cycles": {
+       "stat_cycles": 32
+      },
+      "w_addr": {
+       "w_addr": 40
+      },
+      "w_data": {
+       "w_data": 512
+      },
+      "w_mask": {
+       "w_mask": 16
+      },
+      "w_v": {
+       "w_v": 1
+      },
+      "x_u_u_g_tiles_0_e86_u_tile_ins_b": {
+       "u_entry_q": 344
+      },
+      "x_u_u_g_tiles_0_e86_u_tile_up_out": {
+       "u_up_0": 344
+      }
+     },
+     "excluded": "",
+     "mapped_bits": 3572,
+     "unmapped_cut_pins": [
+      "x_u_u_g_tiles_0_e86_u_tile_clr",
+      "x_u_u_g_tiles_0_e86_u_tile_conv",
+      "x_u_u_g_tiles_0_e86_u_tile_ins_v"
+     ]
     }
    }
   },

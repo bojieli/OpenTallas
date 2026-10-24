@@ -342,3 +342,45 @@ def emit_wrapper(P, top, rtl, straps=(), header=''):
     for k, b in enumerate(P.bnd):
         bmap[b['cut']][where[k][0]] += 1
     return '\n'.join(L), ports, {c: dict(v) for c, v in bmap.items()}
+
+
+def top_port_use(n, top, include, exclude=()):
+    """For a remainder core (members may be std cells): which bits of each master TOP port touch the core.
+    Returns {port: [bit index (lsb 0) ...]} for every master port."""
+    exp = set()
+    for p in list(include) + list(exclude):
+        parts = p.split('/')
+        for k in range(1, len(parts)):
+            exp.add('/'.join(parts[:k]))
+    insts, unions = view(n, top, exp)
+
+    def ism(nm):
+        inc = any(nm == p or nm.startswith(p + '/') for p in include) or ('' in include)
+        exc = any(nm == p or nm.startswith(p + '/') for p in exclude)
+        return inc and not exc
+    uf = {}
+
+    def find(x):
+        r = x
+        while uf.get(r, r) != r:
+            r = uf[r]
+        while uf.get(x, x) != r:
+            uf[x], x = r, uf[x]
+        return r
+    for a, b in unions:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            uf[ra] = rb
+    touch = set()
+    for name, t, cb in insts:
+        if ism(name):
+            for bl in cb.values():
+                for b in bl:
+                    if b not in ('C0', 'C1', 'Cx'):
+                        touch.add(find(b))
+    m = n.mods[n.resolve(top)]
+    out = {}
+    for p in m.ports:
+        bl = n.bits(m, p[0])                      # msb first
+        out[p[0]] = [i for i, b in enumerate(reversed(bl)) if find(b) in touch]
+    return out
