@@ -36,10 +36,13 @@ module tb_kvslice;
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
     // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
     // + KVN transport on the pair image of the KV boot image; see that file).  +FAR=0 (default): the link is silent.
-    reg far_en = 0, far_m1 = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
+    // +EP_RAW=1 (DIAGNOSTIC): the compute pin follows the d2d_kv fwd_epoch / fwd_link_rst_n OUTPUT (before the 5 bound relay
+    // stages to the bump pad u_fwb_*) -- isolates the epoch-anchor skew question (KV dcal EP_SKEW 3 vs pad + package).
+    reg far_en = 0, far_m1 = 0, far_epraw = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
     kvs_compute_end u_far (.ck(ck_core), .rst_n(rst_n), .en(far_en), .epb(far_epb), .epoch(dut.sys_c.i_host_token_epoch_q),
         .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
-        .kv_fwd_ep_pad(dut.sys_c.d5_d2d_kv_fwd_epoch[0]), .kv_fwd_lrst_pad(dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
+        .kv_fwd_ep_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_epoch[0] : dut.sys_c.d5_d2d_kv_fwd_epoch[0]),
+        .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
     // die host TX (two halves) -> host board port RX
     wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
@@ -141,6 +144,7 @@ module tb_kvslice;
             if ($value$plusargs("EPB=%d", x)) far_epb = 5'(x);
             if ($value$plusargs("CTX=%d", x)) far_pos = 13'(x - 1);
             if ($test$plusargs("MUT_CMD_LATE")) far_m1 = 1;
+            if ($value$plusargs("EP_RAW=%d", x)) far_epraw = (x != 0);
         end
         fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
         while (!$feof(fd) && $fscanf(fd, "%h\n", frames[nfr]) == 1) nfr = nfr + 1;
