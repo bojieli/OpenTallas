@@ -1,0 +1,11 @@
+{
+ "element": "qkd_kvs_emb",
+ "kit": "physical/ref_tile/qkd_kvs_emb@c84feb9f9",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "cafe27247163fb192a2147cd88f6f3df0ccb4c505a1dd0ba967c012136309ccd",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_03.png): 388.8x302.4 um, 1 macros inside core, no overlap, pins per face {'N': 0, 'S': 5, 'E': 6, 'W': 2}; 2 floorplan findings recorded in floorplan.json (as closed)",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

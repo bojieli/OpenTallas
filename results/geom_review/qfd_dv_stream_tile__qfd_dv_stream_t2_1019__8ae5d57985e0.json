@@ -1,0 +1,11 @@
+{
+ "element": "qfd_dv_stream_tile",
+ "kit": "physical/ref_tile/qfd_dv_stream_t2_1019@49ac29c7e",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "8ae5d57985e075851f1f680943b6b1db5144d1152c88467b65f1837245a50111",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_01.png): 302.4x380.2 um, 0 macros inside core, no overlap, pins per face {'W': 4, 'E': 4, 'S': 7, 'N': 13}; 1 finding; fill 0.06 (as closed)",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

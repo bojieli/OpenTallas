@@ -1,0 +1,11 @@
+{
+ "element": "qfd_dv_redstn2_region",
+ "kit": "physical/ref_tile/qfd_dv_slice2_stnrgc@3c8f821d2",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "9ed808e76f3183a44a0854a2a92330470ec991bacc2c8948301f909e1afefb03",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_00.png): 151.2x151.2 um, 5 macros inside core, no overlap, pins per face {'W': 13, 'N': 5, 'S': 7, 'E': 5}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

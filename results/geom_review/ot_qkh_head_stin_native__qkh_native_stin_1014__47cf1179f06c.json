@@ -1,0 +1,11 @@
+{
+ "element": "ot_qkh_head_stin_native",
+ "kit": "physical/ref_tile/qkh_native_stin_1014@4d79e59c1",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "47cf1179f06c5840d9581bb344d114a7b218e0187a77045eab42328ced6506ba",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_01.png): 54.0x43.2 um, 0 macros inside core, no overlap, pins per face {'E': 2, 'S': 3, 'W': 2}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

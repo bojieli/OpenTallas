@@ -1,0 +1,11 @@
+{
+ "element": "qfd_dv_s8_station_tail1",
+ "kit": "physical/ref_tile/qfd_dv_s8_station_tail1_p7b@1f80a0746",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "9fd0f0bc67ac9129b9ea7d26a5c25caf4eab7a88a60e8ab0b091b99dba10c9f3",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_01.png): 162.0x162.0 um, 5 macros inside core, no overlap, pins per face {'W': 13, 'N': 5, 'S': 7, 'E': 5}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

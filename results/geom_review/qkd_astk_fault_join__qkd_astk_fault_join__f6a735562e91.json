@@ -1,0 +1,11 @@
+{
+ "element": "qkd_astk_fault_join",
+ "kit": "physical/ref_tile/qkd_astk_fault_join@849bb441e",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "f6a735562e917c831c4c00ba0505aaf0090b54edb3a3246be94e980c0fbb86e4",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_02.png): 21.6x21.6 um, 0 macros inside core, no overlap, pins per face {'S': 2, 'W': 2, 'E': 1}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

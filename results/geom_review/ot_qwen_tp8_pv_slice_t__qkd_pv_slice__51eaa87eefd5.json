@@ -1,0 +1,11 @@
+{
+ "element": "ot_qwen_tp8_pv_slice_t",
+ "kit": "physical/ref_tile/qkd_pv_slice@708845e84",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "51eaa87eefd578c4ed0fdc52fac0831001d31e061caa2cc9c309bedc2c4c0e07",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_02.png): 172.8x172.8 um, 4 macros inside core, no overlap, pins per face {'S': 3, 'N': 2, 'W': 2}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

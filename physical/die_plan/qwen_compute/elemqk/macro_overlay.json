@@ -1,0 +1,603 @@
+{
+ "tt_ctlm": [
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_fifo[0].u_fifo",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    8.64,
+    54.012
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_fifo[1].u_fifo",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    8.64,
+    131.916
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_fifo[2].u_fifo",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    8.64,
+    209.82
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_fifo[3].u_fifo",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    8.64,
+    287.724
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m0",
+   "module": "ot_rom_4096x266_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+   "origin_um": [
+    8.64,
+    365.628
+   ],
+   "outline_um": [
+    121.848,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m1",
+   "module": "ot_rom_4096x266_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+   "origin_um": [
+    8.64,
+    428.7
+   ],
+   "outline_um": [
+    121.848,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_m[0].u_pm",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    200.88,
+    54.012
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.u_cal.g_m[1].u_pm",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    200.88,
+    131.916
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24525",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    200.88,
+    209.82
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24526",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    200.88,
+    287.724
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24527",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    365.628
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24528",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    386.508
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24529",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    407.436
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24530",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    428.316
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24531",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    449.244
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_hr.u_24532",
+   "module": "ot_sram_1r1w_32x128_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+   "origin_um": [
+    200.88,
+    470.124
+   ],
+   "outline_um": [
+    51.408,
+    20.79
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    274.32,
+    365.628
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    274.32,
+    428.7
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.u_rom",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    334.8,
+    365.628
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  }
+ ],
+ "native59": [
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[0].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    8.64,
+    86.412
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[1].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    8.64,
+    162.732
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[2].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    8.64,
+    239.004
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[3].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    8.64,
+    315.324
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[4].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    198.72,
+    86.412
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[5].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    198.72,
+    162.732
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[6].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    198.72,
+    239.004
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_core.u_qb.u_qseat.g_writer[7].u_mem",
+   "module": "ot_sram_1r1w_32x512_m1",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.lef",
+   "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1_tt.lib",
+   "origin_um": [
+    198.72,
+    315.324
+   ],
+   "outline_um": [
+    167.4,
+    76.14
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  }
+ ],
+ "glue": [
+  {
+   "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram.u_m",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+   "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+   "origin_um": [
+    8.64,
+    432.012
+   ],
+   "outline_um": [
+    57.912,
+    45.672
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.u_m",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+   "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+   "origin_um": [
+    8.64,
+    477.804
+   ],
+   "outline_um": [
+    57.912,
+    45.672
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.u_m",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+   "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+   "origin_um": [
+    8.64,
+    523.644
+   ],
+   "outline_um": [
+    57.912,
+    45.672
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram.u_m",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+   "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+   "origin_um": [
+    8.64,
+    569.436
+   ],
+   "outline_um": [
+    57.912,
+    45.672
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_sys_face.u_ot_pr_core.u_rom",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    86.4,
+    432.012
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_tx_rom",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    86.4,
+    495.132
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_rx_rom",
+   "module": "ot_rom_4096x72_m8",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "origin_um": [
+    86.4,
+    558.204
+   ],
+   "outline_um": [
+    38.04,
+    62.952
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  },
+  {
+   "inst": "u_bound.u_embed_prov.store.codes",
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "status": "reuse",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "origin_um": [
+    8.64,
+    648.012
+   ],
+   "outline_um": [
+    171.288,
+    77.784
+   ],
+   "orient": "R0",
+   "note": "ELEM-QK 10-24 macro site (macro_overlay.py; M4 pins on plan tracks)"
+  }
+ ]
+}

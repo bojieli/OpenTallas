@@ -1,0 +1,11 @@
+{
+ "element": "qkd_seq_core_static_s",
+ "kit": "physical/ref_tile/qkd_seq_core_st_s@62789a1ed",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "f717ff352346bd682b4febe289de613b223a5470387a52265a7886e988e5438a",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_03.png): 43.2x34.6 um, 0 macros inside core, no overlap, pins per face {'N': 12, 'S': 7, 'W': 3, 'E': 3}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

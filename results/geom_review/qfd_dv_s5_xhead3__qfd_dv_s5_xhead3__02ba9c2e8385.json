@@ -1,0 +1,11 @@
+{
+ "element": "qfd_dv_s5_xhead3",
+ "kit": "physical/ref_tile/qfd_dv_s5_xhead3@2c3fd91ba",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "02ba9c2e8385754606a9a946841630b31a5bd4fb99c68ed8d3f20ed9c2be9221",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_00.png): 216.0x432.0 um, 0 macros inside core, no overlap, pins per face {'N': 7, 'E': 2, 'W': 8, 'S': 7}; 1 floorplan finding; 216x432 fill 0.07 (as closed)",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}

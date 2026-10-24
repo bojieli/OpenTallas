@@ -1,0 +1,11 @@
+{
+ "element": "ot_qkh_ktree_lk",
+ "kit": "physical/ref_tile/ot_qkh_ktree_lkp@52f03a544",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "5d2c55df961ef95a28ee3822e84d4160fa12abcf1c2393a04b0f13a9d4e5746c",
+ "reasons": "AUTHOR review (ELEM-QK, not the independent GEOM-REVIEW pass): re-run of the CLOSED kit at its own source commit, routed DB lost with the old fleet (results/signoff_1024 NEEDS RE-RUN). floorplan.json rendered (results/elem_qk_1024/review/batch_02.png): 151.2x97.2 um, 0 macros inside core, no overlap, pins per face {'W': 2, 'S': 3, 'N': 3}; no anomaly seen",
+ "fixes": "none before re-route; GEOM-REVIEW second review pending",
+ "reviewer": "ELEM-QK",
+ "at": "2026-10-24T08:20:15-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author review; GEOM-REVIEW second-reviews)"
+}
