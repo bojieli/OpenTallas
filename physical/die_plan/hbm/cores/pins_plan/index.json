@@ -1,0 +1,269 @@
+{
+ "done": {
+  "hfd_ep_static@434.72x371.52": {
+   "file": "hfd_ep_static__434.72x371.52.json",
+   "how": "repin",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2288
+  },
+  "ot_hbm_sm_attn_front_static@362.88x319.68": {
+   "file": "ot_hbm_sm_attn_front_static__362.88x319.68.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 18922
+  },
+  "ot_hbm_sm_attn_native_col@362.88x319.68": {
+   "file": "ot_hbm_sm_attn_native_col__362.88x319.68.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1182
+  },
+  "ot_hbm_sm_attn_native_col@362.88x406.08": {
+   "file": "ot_hbm_sm_attn_native_col__362.88x406.08.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1182
+  },
+  "ot_hbm_su_static_cxport_ij_q@216.0x388.8": {
+   "file": "ot_hbm_su_static_cxport_ij_q__216x388.8.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 6213
+  },
+  "ot_hbm_su_static_qcore_r13@302.4x280.8": {
+   "file": "ot_hbm_su_static_qcore_r13__302.4x280.8.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1473
+  },
+  "ot_hbm_su_static_sfustore_hw@561.6x276.48": {
+   "file": "ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1829
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@155.52x155.52": {
+   "file": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
+   "how": "repin",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1229
+  },
+  "ot_hbm_svc_vmdel_lane_n@257.04x108.0": {
+   "file": "ot_hbm_svc_vmdel_lane_n__257.04x108.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1489
+  },
+  "ot_hbm_xp_aq_tree13_fmt@183.6x108.0": {
+   "file": "ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1807
+  },
+  "ot_hgi_coll_gq_land@237.6x237.6": {
+   "file": "ot_hgi_coll_gq_land__237.6x237.6.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 3880
+  },
+  "ot_hgi_qw_dec@260.0x260.0": {
+   "file": "ot_hgi_qw_dec__260x260.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1670
+  },
+  "ot_hgi_sm_xload_cl2_bfqg@302.4x298.08": {
+   "file": "ot_hgi_sm_xload_cl2_bfqg__302.4x298.08.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1340
+  },
+  "ot_hgi_sm_xload_xq_pegress@369.36x369.36": {
+   "file": "ot_hgi_sm_xload_xq_pegress__369.36x369.36.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 5184
+  },
+  "ot_smh_static_front@362.88x319.68": {
+   "file": "ot_smh_static_front__362.88x319.68.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 18749
+  }
+ },
+ "skipped": {
+  "ot_hbm_hc_bankq0_static__part0@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq0_static__part1@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq0_static__part2@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_ft_static__part0@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_ft_static__part1@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_ft_static__part2@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_static__part0@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_static__part1@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_static__part2@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_term_static__part0@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_term_static__part1@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_bankq_term_static__part2@362.88x362.88": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_root_static__hc_tail0_s0@241.92x172.8": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_root_static__hc_tail0_s1@241.92x172.8": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_root_static__hc_tail1_s0@241.92x172.8": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_root_static__hc_tail1_s1@241.92x172.8": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_hc_root_static__hcp_sys10@241.92x172.8": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part0@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part10@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part11@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part12@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part13@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part14@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part15@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part16@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part17@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part18@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part19@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part1@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part20@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part21@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part22@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part23@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part24@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part25@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part26@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part27@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part28@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part29@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part2@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part30@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part31@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part32@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part33@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part34@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part35@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part3@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part4@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part5@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part6@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part7@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part8@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_idx_score_quarter_static__part9@241.92x241.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_sm_attn_leafh@362.88x319.68": "SM synthetic boundary (lx/tp: wrapper RTL from the SM split)",
+  "ot_hbm_sm_attn_leafh@362.88x406.08": "SM synthetic boundary (lx/tp: wrapper RTL from the SM split)",
+  "ot_hbm_sm_attn_tile@362.88x319.68": "SM synthetic boundary (lx/tp: wrapper RTL from the SM split)",
+  "ot_hbm_sm_attn_tile@362.88x406.08": "SM synthetic boundary (lx/tp: wrapper RTL from the SM split)",
+  "ot_hbm_su_static_pgslice_lg__lane0_3@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane0_3@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane12_15@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane12_15@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane16_19@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane20_23@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane24_27@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane28_31@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane4_7@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane4_7@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane8_11@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane8_11@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp0@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp10@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp11@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp12@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp13@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp14@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp1@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp2@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp3@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp4@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp5@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp6@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp7@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp8@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp9@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__lane_exp_l0@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__pretree0@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__pretree0@587.52x933.12": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__side0_s0@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hbm_su_static_pgslice_lg__side0_s1@440.64x457.92": "split proposal (over-cap RTL split pending)",
+  "ot_hfd_coll_q2_hard_v8g__body0@233.28x233.28": "split proposal (over-cap RTL split pending)",
+  "ot_hfd_coll_q2_hard_v8g__reduce0@233.28x233.28": "split proposal (over-cap RTL split pending)",
+  "ot_hfd_coll_q2_hard_v8g__ring_ag0@233.28x233.28": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part0@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part10@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part11@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part12@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part13@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part14@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part15@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part16@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part17@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part18@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part1@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part2@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part3@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part4@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part5@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part6@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part7@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part8@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_coll_tkm_m_tp192__part9@492.48x414.72": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part0@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part10@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part11@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part12@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part13@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part14@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part15@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part16@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part1@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part2@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part3@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part4@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part5@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part6@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part7@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part8@388.8x345.6": "split proposal (over-cap RTL split pending)",
+  "ot_hgi_sfu_core_split3__part9@388.8x345.6": "split proposal (over-cap RTL split pending)"
+ }
+}

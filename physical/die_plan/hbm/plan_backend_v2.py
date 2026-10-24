@@ -603,6 +603,7 @@ def md(p, q):
 # ------------------------------------------------------------------------------------------------ lanes
 SPLIT_OF = {}
 SPLIT_LAND = {}          # P3 (COORD R6 R2-alt): every external SM lane lands on the front quarter c
+SM_DIRECT = os.environ.get('OT_HBM_SM_DIRECT', '1') == '1'   # P4: abutting SM-quarter lanes = one direct hop
 SM_MODE = os.environ.get('OT_HBM_SM_MODE', 'inner_c')  # inner_c (published, COORD option C+A) | off: pre-R6 | inner: COORD R6 rule, G0 FAIL on the current floorplan | strict: no route
 # | inner_c: COORD option (C) 10-23 -- SM ports on c, SM-internal lanes planned, die ft may use the inner SM faces up to
 #   their free capacity (the SM-internal lanes are routed first-class and share the face budget), plus (A) os M9 faces
@@ -618,8 +619,25 @@ def sm_pair(u, v):
     return bool(a and b and a.groups() == b.groups())
 
 
+XLAND = os.environ.get('OT_HBM_XLAND', 'c')   # P4 study: 'a' = SM lanes from the VM side land on the VM-facing quarter
+
+
+def xland_a(other_part):
+    """P4 XLAND=a: the peer is not a per-SM service partition (svc*), so the lane lands on the nearest quarter
+    (a, facing the VM / SU row) and the SM relays it a->b->c inside (planned SM-internal rows)."""
+    return XLAND == 'a' and other_part is not None and not re.match(r'^(NW|NE|SW|SE)_svc\d$', other_part)
+
+
+STEPC_MASTER = {
+    # COORD R6 (3) QUANT x4 (HBM-P4-QUANT claude/hbm-p4-quant-1023 @690e86d3d): the NW programme leaf has target 48
+    # hard-wired; every quadrant's engine needs its own target (0x30+Q), so all 4 use the strapped leaf.
+    'ot_hgi_qdq_nw_program_leaf': ('ot_hgi_qdq_q_program_leaf', 'new',
+                                   'Step C QUANT x4: ot_hgi_qdq_q_program_leaf (TGT 0x30+Q strap, 415 pins); no view yet'),
+}
+
+
 def nearest_sub(inst, other_part, P):
-    if inst in SPLIT_LAND and other_part is not None:
+    if inst in SPLIT_LAND and other_part is not None and not xland_a(other_part):
         return SPLIT_LAND[inst]
     subs = SPLIT_OF.get(inst)
     if not subs or other_part is None:
@@ -760,6 +778,12 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
         nodes = {rep['src']}; edges = []
         allow = {quadn(rep['src'])} | {quadn(t) for t in rep['dsts']}
         smint = all(sm_pair(rep['src'], t) for t in rep['dsts'])
+        if (SM_DIRECT and smint and len(rep['dsts']) == 1
+                and tuple(sorted((rep['src'], rep['dsts'][0]))) in segs):
+            # P4: an SM-internal quarter lane between ABUTTING quarters is one direct registered hop, never split
+            # around the stack (P3 routed 59-61 slices of smq c->b/b->a around, land_pad up to 31 cycles inside
+            # the SM op).  The die ft lanes negotiate for the remaining inner-face capacity (option C).
+            return [(rep['src'], rep['dsts'][0])]
         for t in sorted(rep['dsts'], key=lambda t: md(C[rep['src']], C[t])):
             p_ = dijk(nodes, t, wbits, gbs, allow, smint)
             if p_ is None:
@@ -1296,7 +1320,10 @@ def types_and_plan(parts, insts, where, em):
             if p['op'] in ('MX', 'R'):
                 ly = h_ - ly - I['h']
             st, note = status(I['fam'])
-            cont.append(dict(inst=i, module=I['fam'], status=st, origin_um=[round(lx, 3), round(ly, 3)],
+            mod_ = I['fam']
+            if mod_ in STEPC_MASTER:                   # P4: Step C quadrant-parameterised replacement master
+                mod_, st, note = STEPC_MASTER[mod_]
+            cont.append(dict(inst=i, module=mod_, status=st, origin_um=[round(lx, 3), round(ly, 3)],
                              outline_um=[I['w'], I['h']], note=note))
         # type-local content names (identical across mirrored instances): u<k> by module + type-frame origin
         cont.sort(key=lambda c: (c['module'], c['origin_um'][0], c['origin_um'][1]))

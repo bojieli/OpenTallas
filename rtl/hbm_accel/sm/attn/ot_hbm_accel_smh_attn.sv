@@ -38,6 +38,31 @@ module ot_hbm_accel_smh_attn #(
                                         // command mode 3): one packed 128-code line an edge = rows A (columns 0..3 side)
                                         // and B (columns 4..7 side) of one chunk as ordinary BF16 rows; column 4 leaves
                                         // as rdata column 1 while the result mode is set (VM slot 1).  128 codes/edge.
+    // HBM-P4-SM (10-23, COORD R6(1), physical/die_plan/hbm/sm_split/README.md "RTL changes (Step C)"): opt-in, default off
+    // (0 = the netlist / behaviour as before).  1 = the SM is built for the 4 stacked plan partitions a/b/c/d
+    // (d = c0,c1 | c = c2,c3 + front + int8 + top | b = c4,c5 | a = c6,c7) with EVERY quarter crossing flop -> flop:
+    //   R1      u_qs_c_r1l/u_qs_c_r1r (c): one output register on the front's rl, rr, bl, br together (rows leave from
+    //           flops, rows and x-write beats in step); BE_DELAY + 1, front result deskew unchanged.            +1 cycle
+    //   R2-alt  u_qs_c_land (c): the SM inputs (command, kv_desc, packet, xw_*) land on quarter c in ONE register, all in
+    //           step (incl. the int8 packet select command[116]); everything inside sees the landed copy.     +1 cycle
+    //   R3      u_qs_c_pin (c) + u_qs_b_out (b): rv / rrow / rdata / fault / schedule_fault pin register in c and a
+    //           relay in b (the result lanes land in a).                                                       +2 cycles
+    //   R4      u_qs_b_becmd (b): be_cmd relay for the c6 / c7 BEs (quarter a); their CONTROL_DELAY - 1.         0 cycles
+    // Command -> result: +4 cycles, uniform (static pipeline, throughput unchanged).  The default build is unchanged.
+    ,parameter integer QSPLIT =
+`ifdef OT_SM_QSPLIT
+        1
+`else
+        0
+`endif
+    ,parameter integer QSMUT =          // bench negative controls only (QSPLIT 1): 1 = R1 on the west side only (east rows /
+                                        // beats one cycle early), 2 = R2 drops the packet's landing stage, 3 = R4 relay
+                                        // without the CONTROL_DELAY - 1, 4 = R3 drops rdata's relay stage
+`ifdef OT_SM_QSPLIT_MUT
+        `OT_SM_QSPLIT_MUT
+`else
+        0
+`endif
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -87,55 +112,113 @@ module ot_hbm_accel_smh_attn #(
     localparam integer NP  = SUB / RPT;
     initial if (RBW != 818 || BBW != 2069 || QLW != 46) $fatal(1, "ot_hbm_accel_smh_attn: production shape only");
 
-    wire [SUB*RBW-1:0] f_rl, f_rr;
-    wire [NP*BBW-1:0]  f_bl, f_br;
+    wire [SUB*RBW-1:0] f_rl, f_rr, u_rl, u_rr;
+    wire [NP*BBW-1:0]  f_bl, f_br, u_bl, u_br;
+    // ---- R2-alt: SM input landing (quarter c) ----
+    wire [191:0]  s_command;
+    wire [63:0]   s_kv_desc;
+    wire [1098:0] s_packet;
+    wire          s_xw_en;
+    wire [6:0]    s_xw_addr, s_xw_grp;
+    wire [2047:0] s_xw_data;
+    wire          u_rv, u_fault, u_schedule_fault;
+    wire [11:0]   u_rrow;
+    wire [255:0]  u_rdata;
+    localparam integer INW = 192 + 64 + 1099 + 1 + 7 + 7 + 2048;      // 3418
+    // reset: the whole command word (zero = idle), packet valid, xw_en; data fields are not reset
+    localparam [INW-1:0] IN_RM = {{192{1'b1}}, 64'd0, 1'b1, 1098'd0, 1'b1, 14'd0, 2048'd0};
+    generate if (QSPLIT != 0) begin : g_qs_in
+        wire [INW-1:0] land_q;
+        ot_smh_qs_reg #(.W(INW), .RM(IN_RM)) u_qs_c_land (.clk(clk), .rst_n(rst_n),
+            .d({command, kv_desc, packet, xw_en, xw_addr, xw_grp, xw_data}), .q(land_q));
+        assign {s_command, s_kv_desc} = land_q[INW-1 -: 256];
+        assign s_packet = (QSMUT == 2) ? packet : land_q[INW-257 -: 1099];
+        assign {s_xw_en, s_xw_addr, s_xw_grp, s_xw_data} = land_q[2062:0];
+    end else begin : g_no_qs_in
+        assign s_command = command; assign s_kv_desc = kv_desc; assign s_packet = packet;
+        assign s_xw_en = xw_en; assign s_xw_addr = xw_addr; assign s_xw_grp = xw_grp; assign s_xw_data = xw_data;
+    end endgenerate
     wire [NH*QLW-1:0]  f_ql, f_qr;
     wire [191:0]  f_command;
     wire [1098:0] f_packet;
     wire          f_schedule_fault, i8_schedule_fault;
     generate if (ENABLE_INT8) begin : g_int8
-        wire          i8_mark = command[116];
+        wire          i8_mark = s_command[116];
         wire [1098:0] i8_out;
         wire [34:0]   i8_sel;                                // kept copies of i8_out[1098]: bit b selects with copy b/32
         if (ENABLE_INT8 == 2) begin : g_soft                 // reference form (SMB-INT8 e592ae5d0): soft converter glue
-            ot_smh_static_int8 u_int8 (.clk(clk), .rst_n(rst_n), .packet_in({packet[1098] & i8_mark, packet[1097:0]}),
+            ot_smh_static_int8 u_int8 (.clk(clk), .rst_n(rst_n), .packet_in({s_packet[1098] & i8_mark, s_packet[1097:0]}),
                 .packet_out(i8_out));
             assign i8_sel = {35{i8_out[1098]}};
         end else begin : g_hard                              // LH-SMATT/INT8 10-19: hard SAFE tile (kit smh_int8_t1),
             wire          t_v;                               // cycle-exact with g_soft; reset release +2 (face landing)
             wire [9:0]    t_tag;
             wire [1023:0] t_data;
-            ot_smh_int8_tile u_int8 (.clk(clk), .rst_n(rst_n), .i_v(packet[1098] & i8_mark), .i_tag(packet[1097:1088]),
-                .i_codes(packet[1023:0]), .o_v(t_v), .o_tag(t_tag), .o_data(t_data), .o_sel(i8_sel));
+            ot_smh_int8_tile u_int8 (.clk(clk), .rst_n(rst_n), .i_v(s_packet[1098] & i8_mark), .i_tag(s_packet[1097:1088]),
+                .i_codes(s_packet[1023:0]), .o_v(t_v), .o_tag(t_tag), .o_data(t_data), .o_sel(i8_sel));
             assign i8_out = {t_v, t_tag, 64'd0, t_data};
         end
-        assign f_command = {command[191:117], 1'b0, command[115:0]};
+        assign f_command = {s_command[191:117], 1'b0, s_command[115:0]};
         genvar i8b;
         for (i8b = 0; i8b < 1099; i8b = i8b + 1) begin : g_i8mux
-            assign f_packet[i8b] = i8_sel[i8b / 32] ? i8_out[i8b] : (!i8_mark && packet[i8b]);
+            assign f_packet[i8b] = i8_sel[i8b / 32] ? i8_out[i8b] : (!i8_mark && s_packet[i8b]);
         end
         reg i8_fault, i8_busy;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin i8_fault <= 1'b0; i8_busy <= 1'b0; end
             else begin
-                i8_busy <= packet[1098] && i8_mark;              // the converter's second (high-half) edge
-                if ((i8_mark && (!packet[1098] || command[183] || i8_busy)) || (!i8_mark && packet[1098] && i8_out[1098]))
+                i8_busy <= s_packet[1098] && i8_mark;              // the converter's second (high-half) edge
+                if ((i8_mark && (!s_packet[1098] || s_command[183] || i8_busy)) || (!i8_mark && s_packet[1098] && i8_out[1098]))
                     i8_fault <= 1'b1;
             end
         assign i8_schedule_fault = i8_fault;
     end else begin : g_no_int8
-        assign f_command = command;
-        assign f_packet  = packet;
+        assign f_command = s_command;
+        assign f_packet  = s_packet;
         assign i8_schedule_fault = 1'b0;
     end endgenerate
-    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT), .INT8W(INT8W)) u_front (.clk(clk), .rst_n(rst_n), .command(f_command), .kv_desc(kv_desc), .packet(f_packet),
-        .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .request(request),
-        .rl(f_rl), .rr(f_rr), .bl(f_bl), .br(f_br), .ql(f_ql), .qr(f_qr),
-        .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(f_schedule_fault));
-    assign schedule_fault = f_schedule_fault | i8_schedule_fault;
+    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT), .INT8W(INT8W)) u_front (.clk(clk), .rst_n(rst_n), .command(f_command), .kv_desc(s_kv_desc), .packet(f_packet),
+        .xw_en(s_xw_en), .xw_addr(s_xw_addr), .xw_grp(s_xw_grp), .xw_data(s_xw_data), .request(request),
+        .rl(u_rl), .rr(u_rr), .bl(u_bl), .br(u_br), .ql(f_ql), .qr(f_qr),
+        .rv(u_rv), .rrow(u_rrow), .rdata(u_rdata), .fault(u_fault), .schedule_fault(f_schedule_fault));
+    assign u_schedule_fault = f_schedule_fault | i8_schedule_fault;
+    // ---- R1: front row-bundle / beat launch registers (quarter c); R3: SM output pin registers (c) + relay (b) ----
+    localparam [RBW-1:0] ROW_RM = {2'b11, {(RBW-10){1'b0}}, 1'b1, 7'd0};    // vb, vf, ce (ot_hbm_sm_attn_row_launch)
+    localparam [BBW-1:0] BEAT_RM = {1'b1, {(BBW-1){1'b0}}};                // beat valid
+    localparam integer SDW = SUB * RBW + NP * BBW;
+    localparam [SDW-1:0] SIDE_RM = {{SUB{ROW_RM}}, {NP{BEAT_RM}}};
+    localparam integer OW = 1 + 12 + 256 + 1 + 1;
+    localparam [OW-1:0] OUT_RM = {1'b1, 12'd0, 256'd0, 1'b1, 1'b1};
+    generate if (QSPLIT != 0) begin : g_qs_out
+        ot_smh_qs_reg #(.W(SDW), .RM(SIDE_RM)) u_qs_c_r1l (.clk(clk), .rst_n(rst_n), .d({u_rl, u_bl}), .q({f_rl, f_bl}));
+        if (QSMUT == 1) begin : g_mut1
+            assign f_rr = u_rr; assign f_br = u_br;
+        end else begin : g_r1r
+            ot_smh_qs_reg #(.W(SDW), .RM(SIDE_RM)) u_qs_c_r1r (.clk(clk), .rst_n(rst_n), .d({u_rr, u_br}), .q({f_rr, f_br}));
+        end
+        wire [OW-1:0] pin_q, out_q;
+        ot_smh_qs_reg #(.W(OW), .RM(OUT_RM)) u_qs_c_pin (.clk(clk), .rst_n(rst_n),
+            .d({u_rv, u_rrow, u_rdata, u_fault, u_schedule_fault}), .q(pin_q));
+        ot_smh_qs_reg #(.W(OW), .RM(OUT_RM)) u_qs_b_out (.clk(clk), .rst_n(rst_n), .d(pin_q), .q(out_q));
+        assign {rv, rrow} = out_q[OW-1 -: 13];
+        assign rdata = (QSMUT == 4) ? pin_q[257 -: 256] : out_q[257 -: 256];
+        assign {fault, schedule_fault} = out_q[1:0];
+    end else begin : g_no_qs_out
+        assign f_rl = u_rl; assign f_rr = u_rr; assign f_bl = u_bl; assign f_br = u_br;
+        assign rv = u_rv; assign rrow = u_rrow; assign rdata = u_rdata; assign fault = u_fault;
+        assign schedule_fault = u_schedule_fault;
+    end endgenerate
     // BE control: one broadcast register at the front, delayed inside every BE
     reg [28:0] be_cmd;
-    always @(posedge clk or negedge rst_n) if (!rst_n) be_cmd <= 29'd0; else be_cmd <= command[111:83];
+    always @(posedge clk or negedge rst_n) if (!rst_n) be_cmd <= 29'd0; else be_cmd <= s_command[111:83];
+    // R4: be_cmd relay in quarter b for the quarter-a BEs (c6, c7), their CONTROL_DELAY - 1 (0 cycles)
+    wire [28:0] be_cmd_a;
+    localparam integer BED = BE_DELAY + ((QSPLIT != 0) ? 1 : 0);              // R1: rows leave one cycle later
+    generate if (QSPLIT != 0) begin : g_qs_be
+        ot_smh_qs_reg #(.W(29), .RM({29{1'b1}})) u_qs_b_becmd (.clk(clk), .rst_n(rst_n), .d(be_cmd), .q(be_cmd_a));
+    end else begin : g_no_qs_be
+        assign be_cmd_a = be_cmd;
+    end endgenerate
 
     localparam integer TRW = RPT * RBW;
     localparam integer TGI = (SUB - RPT) * GLW;
@@ -203,13 +286,41 @@ module ot_hbm_accel_smh_attn #(
             end
         end
         localparam integer HOP = (c < NL) ? (NL - 1 - c) : (c - NL);
-        ot_hbm_sm_attn_be #(.CONTROL_DELAY(BE_DELAY + HOPD * HOP), .SUB(SUB), .RPT(RPT), .IL(IL), .RMAX(RMAX), .LEV(LEV), .TAGW(TAGW),
+        localparam integer QA = (QSPLIT != 0) && (c >= NC - 2);               // quarter a (c6, c7): relayed be_cmd
+        localparam integer CDQ = (QA && QSMUT != 3) ? 1 : 0;
+        ot_hbm_sm_attn_be #(.CONTROL_DELAY(BED + HOPD * HOP - CDQ), .SUB(SUB), .RPT(RPT), .IL(IL), .RMAX(RMAX), .LEV(LEV), .TAGW(TAGW),
                             .NH(NH)) u_be (
-            .clk(clk), .rst_n(rst_n), .attn_column(3'(c)), .command(be_cmd), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
+            .clk(clk), .rst_n(rst_n), .attn_column(3'(c)), .command(QA ? be_cmd_a : be_cmd), .gin(t_go[(c*NP+NP-1)*SUB*GLW +: SUB*GLW]),
             .qin(e_qi[c*(NH-1)*QLW +: (NH-1)*QLW]), .qout(e_qo[c*NH*QLW +: NH*QLW]));
     end
     endgenerate
     assign f_ql = e_qo[(NL-1)*NH*QLW +: NH*QLW];
     assign f_qr = e_qo[NL*NH*QLW +: NH*QLW];
+endmodule
+
+// HBM-P4-SM (10-23): one quarter-crossing register stage (QSPLIT).  Bits with RM set are async-reset flops (valids, the
+// command word), the rest plain flops; a named instance per quarter (u_qs_<quarter>_*) so the partition tools and
+// physical/die_plan/hbm/sm_split/tools/qsplit_check.py can place it and check every crossing is flop -> flop.
+module ot_smh_qs_reg #(
+    parameter integer W = 1,
+    parameter [W-1:0] RM = {W{1'b0}}
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    genvar i;
+    generate for (i = 0; i < W; i = i + 1) begin : g_b
+        if (RM[i]) begin : g_r
+            reg r;
+            always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= d[i];
+            assign q[i] = r;
+        end else begin : g_n
+            reg r;
+            always @(posedge clk) r <= d[i];
+            assign q[i] = r;
+        end
+    end endgenerate
 endmodule
 `default_nettype wire

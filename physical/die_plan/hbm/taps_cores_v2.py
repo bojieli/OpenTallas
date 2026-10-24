@@ -142,12 +142,29 @@ def place_taps(w, h, cores, root):
             taps.append(glue_tap(f'g{i}_{j}.ck', cx, cy, root))
     k = 0
     while True:                                         # refine: no lattice point farther than REACH from a tap
-        worst, wp = tap_worst(w, h, taps, cores=cores)
+        worst, wp = tap_worst(w, h, taps, step=1, cores=cores)   # P4: step 1 (the metric's grid): 8.64-um channels
         if worst <= REACH or k > 400:
             break
         cx, cy = off_core(*wp, w, h, cores)
         taps.append(glue_tap(f'gr{k}.ck', cx, cy, root))
         k += 1
+    for b in range(64):                                 # P4: bridge taps until the <= REACH tap graph is connected
+        pts = [t['xy'] for t in taps]
+        seen, todo = {0}, [0]
+        while todo:
+            a_ = todo.pop()
+            for j in range(len(pts)):
+                if j not in seen and l1(pts[a_], pts[j]) <= REACH:
+                    seen.add(j); todo.append(j)
+        if len(seen) == len(pts):
+            break
+        i, j = min(((i, j) for i in seen for j in range(len(pts)) if j not in seen),
+                   key=lambda ij: l1(pts[ij[0]], pts[ij[1]]))
+        mx, my = (pts[i][0] + pts[j][0]) / 2, (pts[i][1] + pts[j][1]) / 2
+        cx, cy = off_core(mx, my, w, h, cores)
+        if l1((cx, cy), pts[i]) > REACH or l1((cx, cy), pts[j]) > REACH:
+            cx, cy = mx, my                             # bridge inside a core's halo: keep the midpoint
+        taps.append(glue_tap(f'gb{b}.ck', cx, cy, root))
     return taps
 
 
@@ -237,6 +254,17 @@ def apply(plan, out_dir, where, ft=None):
                  glue_cells_per_bit=GLUE_CELLS_PER_BIT, tap_metric='L1 (Manhattan) um', tap_reach_um=REACH,
                  a_cell_um2=ev_all['a_cell_um2'], types={}, over_cap=[], pins_files=[])
     pins_used = set()
+    pp_used = set()
+    OCS = {}                                            # (type, module) -> measured split (over_cap_split/)
+    oci = os.path.join(HERE, 'over_cap_split', 'index.json')
+    if os.path.exists(oci):
+        for mst, e in json.load(open(oci))['masters'].items():
+            sp = json.load(open(os.path.join(HERE, 'over_cap_split', e['file'])))
+            sp['_file'] = e['file']
+            for tn_ in e.get('plan_types', []):
+                OCS[(tn_, re.sub(r'__pv\d+$', '', mst))] = sp
+    ppi = os.path.join(HERE, 'cores', 'pins_plan', 'index.json')
+    PP = ({k: v['file'] for k, v in json.load(open(ppi))['done'].items()} if os.path.exists(ppi) else {})
     for tn in sorted(types):
         t = types[tn]
         w, h = t['outline_um']
@@ -297,7 +325,15 @@ def apply(plan, out_dir, where, ft=None):
                 else:
                     key = c['module'] if c['module'] in SPL else None
                 groups = []
-                if key:
+                osp = OCS.get((tn, c['module']))
+                if osp:                                     # P4: measured connectivity split (HBM-P4-SPLIT)
+                    groups = [(cr['core_label'], cr['cells'],
+                               f"{cr['module']} ({cr['cells']} Yosys; {osp['status']})") for cr in osp['cores']]
+                    sub_glue = osp.get('glue_cells') or 0
+                    sbasis = f"YOSYS {osp['basis']}"
+                    snote = (f"over_cap_split/{osp['_file']} {osp['status']}: {len(groups)} cores by connectivity, "
+                             f"max {max(g[1] for g in groups)}")
+                elif key:
                     sp = SPL[key]
                     for nm, n, each in sp['parts']:
                         per = max(1, CORE_BUDGET // each) if each <= CORE_BUDGET else 0
@@ -408,6 +444,16 @@ def apply(plan, out_dir, where, ft=None):
                         and b[1] < a[1] + a[3] - 1e-6:
                     ov += 1
         tinfo['core_overlaps'] = ov
+        for c in cores:                                 # P4: plan-derived pins (pins_plan_v2.py) where none exist
+            if 'pins_file' in c:
+                continue
+            fn = PP.get(f"{c['module']}@{c['outline_um'][0]}x{c['outline_um'][1]}") or \
+                PP.get(f"{c['module']}@{c['outline_um'][0]:g}x{c['outline_um'][1]:g}")
+            if fn and not re.match(r'sm_(lx|tp)\d', c['inst']):
+                c['pins_file'] = f'cores/pins_plan/{fn}'
+                c['track_offset_um'] = [0.0, 0.0]
+                c['note'] = (c.get('note', '') + '; P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)')
+                pp_used.add(fn)
         if cores:
             t['hard_cores'] = [{k: v for k, v in c.items() if not k.startswith('_')} for c in cores]
         # ---------------- type note
@@ -425,6 +471,11 @@ def apply(plan, out_dir, where, ft=None):
         for m in sorted(pins_used):
             shutil.copyfile(os.path.join(HERE, 'cores', 'pins', f'{m}.json'),
                             os.path.join(out_dir, 'cores', 'pins', f'{m}.json'))
+    notes['pins_plan_files'] = sorted(pp_used)
+    if pp_used and os.path.realpath(os.path.join(out_dir, 'cores')) != os.path.realpath(os.path.join(HERE, 'cores')):
+        os.makedirs(os.path.join(out_dir, 'cores', 'pins_plan'), exist_ok=True)
+        for m in sorted(pp_used):
+            shutil.copyfile(os.path.join(HERE, 'cores', 'pins_plan', m), os.path.join(out_dir, 'cores', 'pins_plan', m))
     notes['c0_tree'] = c0_tree(plan)
     notes['summary'] = summarise(notes)
     json.dump(notes, open(os.path.join(out_dir, 'plan_notes_v2.json'), 'w'), indent=1, sort_keys=True)

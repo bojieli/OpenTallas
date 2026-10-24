@@ -168,3 +168,42 @@ Disadvantages:
 **Recommendation: the 4 stacked partitions.** That means front in `c`, R1-R4, and R2-alt where the die plan can
 re-land the inputs. The die plan must take the SM-stack feedthrough lanes off the inner SM faces (M8/M9), or R5
 must be verified, before G3.
+
+## Implemented (HBM-P4-SM, 2026-10-23): `QSPLIT`
+
+R1, R2-alt, R3 and R4 are in `rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv` behind the opt-in parameter `QSPLIT`
+(define `OT_SM_QSPLIT`). The default, 0, leaves the netlist and the behaviour as before. R1 uses the +1-cycle form; the
+0-cycle form was not proven. Every new register stage is a named `ot_smh_qs_reg` instance with its quarter in the name:
+- `u_qs_c_land` (c): R2-alt. All 3,418 input bits, including the int8 select `command[116]`, land in one register.
+- `u_qs_c_r1l` and `u_qs_c_r1r` (c): R1. `BE_DELAY` becomes +1.
+- `u_qs_c_pin` (c) and `u_qs_b_out` (b): R3.
+- `u_qs_b_becmd` (b): R4. `CONTROL_DELAY` becomes -1 on c6 and c7.
+
+`QSMUT` 1-4 are bench negative controls:
+- 1: R1 on the west side only.
+- 2: no landing stage on the packet.
+- 3: R4 without the `CONTROL_DELAY` -1.
+- 4: no relay stage on rdata.
+
+Cost:
+- Command -> result: **+4 cycles** (R1 +1, R2-alt +1, R3 +2, R4 0), uniform across ops.
+- Top glue: +18,809 flops (14,820 + 3,418 + 542 + 29). That is +38.6k yosys/ABC ASAP7 cells, of which about 18.8k
+  are QN inverters (1,229 -> 39,815 top cells, children black-boxed).
+
+**Structural check.** `tools/qsplit_check.py` elaborates the top with yosys, with the children as black boxes, and takes
+the child port kinds from the measured classification. Results are in `qsplit_check_q{0,1}.json`.
+- `QSPLIT=0` reproduces the census groups: `rr` 3,272, the inputs, and the c->a outputs and `be_cmd`.
+- `QSPLIT=1` **PASS**: no unregistered and no non-adjacent quarter crossing.
+- `QSMUT` 1 and 4 FAIL the check, as they should.
+
+**Benches** (Verilator 5.050 via ot-run, source 8617e0378). Records are in `qsplit_benches.json`.
+
+| bench | default (QSPLIT=0) | QSPLIT=1 | delta | mutants (all FAIL as expected) |
+|---|---|---|---|---|
+| smh_attn element (`sm_elem_bench.py`, `tb_hbm_smh_attn`), ds640 and ds128, qk_sm0 + pv_sm0 | PASS | PASS, bit-exact | first result +4 in every op | M1: pv faults, 8/512. M2: schedule_fault. M3: qk faults. M4: every word mismatches. |
+| SM token layer (`toksim_smhbm.py` L00, `tb_toksim_smhbm`), 20 ops | PASS 20/20 | PASS 20/20 | every op span +4 | M4: 0/20 |
+| INT8 SM.MATVEC (`qwen_sm_mv_unit.py` L0 qkv/o/gu/down, ENABLE_INT8) | PASS 4/4 | PASS 4/4 | +4 per op (3206 -> 3210 ...) | M2: schedule_fault on 4/4. Compiler `late`: 4/4 FAIL. |
+| wide INT8 (`--i8w`, INT8W=1) | not run | PASS 4/4 | not measured | M2: 4/4 FAIL |
+| PV merge (`run_pvacc.sh`) | PASS | n/a | n/a | MUT1 FAIL. `ot_hbm_accel_smh_pvacc` is not in the SM top, so this is a regression check only. |
+
+`sm_attn_bench.py` builds `tb_hbm_sm_attn`, a sub-assembly without `ot_hbm_accel_smh_attn`, so QSPLIT does not touch it.

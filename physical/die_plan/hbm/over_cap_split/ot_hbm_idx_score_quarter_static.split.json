@@ -1,0 +1,1009 @@
+{
+ "master": "ot_hbm_idx_score_quarter_static",
+ "plan_types": [
+  "q_os2"
+ ],
+ "status": "DONE",
+ "measured_total": 12561840,
+ "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hbm_idx_score_quarter_static/ot_hbm_idx_score_quarter_static.stat (r18h5 recipe: src d34578d6f, wrapper v16w TP=192, synth_master.sh HIER=1, ASAP7 RVT TT)",
+ "n_cores": 66,
+ "max_core_cells": 195127,
+ "cores_cells": 12313880,
+ "glue_cells": 213320,
+ "cores": [
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c0_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[0].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c1_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[1].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c2_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[2].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r0c3_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[0].gc[3].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c0_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[0].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c1_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[1].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c2_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[2].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k0h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[0].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k0h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[0].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k1h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[1].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k1h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[1].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k2h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[2].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k2h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[2].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k3h0",
+   "module": "ot_hidx_score_hcol #(HALF 0)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[3].g_half[0].u_hc"
+   ],
+   "cells": 195127,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "r1c3_k3h1",
+   "module": "ot_hidx_score_hcol #(HALF 1)",
+   "members": [
+    "ge[1].gc[3].leaf.core.g_col[3].g_half[1].u_hc"
+   ],
+   "cells": 186410,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1181,
+    "out": 35
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "tail0",
+   "module": "ot_hbm_idx_tail_native (closed leaf)",
+   "members": [
+    "ge[0].u_t"
+   ],
+   "cells": 52348,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 538,
+    "out": 73
+   }
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "core_label": "tail1",
+   "module": "ot_hbm_idx_tail_native (closed leaf)",
+   "members": [
+    "ge[1].u_t"
+   ],
+   "cells": 52348,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 538,
+    "out": 73
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "between": "leaf glue (W pin regs rq/rkey/hid) -> hcol (each of 8 per leaf)",
+   "bits": 1146,
+   "kind": "REG->REG",
+   "note": "query broadcast {qv_b,q_b} 569 b + the column key 544 b + 4 head ids 32 b land in the hcol region pin regs (q_p/key_p/hid_p); rst_col = the column reset relay output"
+  },
+  {
+   "between": "hcol HALF0 -> hcol HALF1 (same column)",
+   "bits": 33,
+   "kind": "REG->REG",
+   "note": "running sum cs[4] + cf[4]: cs_o (head 3) -> csi_p (head 4)"
+  },
+  {
+   "between": "hcol HALF1 -> leaf glue",
+   "bits": 33,
+   "kind": "REG->REG",
+   "note": "cs[8]/cf[8] cs_o -> c_sum and the leaf sum-bus register b_w"
+  },
+  {
+   "between": "hcol -> leaf glue (online)",
+   "bits": 2,
+   "kind": "REG->REG",
+   "note": "region onl flops -> rdy1"
+  },
+  {
+   "between": "leaf glue -> next leaf glue (W->E seam, flat glue)",
+   "bits": 3332,
+   "kind": "REG->REG",
+   "note": "unchanged pinned seam chain (E pin regs -> next W pin regs)"
+  },
+  {
+   "between": "leaf (e,3) glue -> tail e",
+   "bits": 552,
+   "kind": "REG->REG",
+   "note": "sum bus e_bus reg -> tail input (unchanged)"
+  }
+ ],
+ "rtl": {
+  "twin": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv (ot_hbm_idx_score_quarter_static_h / ot_hbm_idx_score_leaf_h, verbatim copies of the pinned modules with the leaf core -> ot_hbm_idx_chunk_rt_h)",
+  "split": "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv (ot_hidx_score_hcol HALF 0/1 = 2 masters x 64 instances)",
+  "cycle_cost_edges": 0,
+  "bench": "rtl/test/hbm_idx_static/run_chunk_rt_h_equiv.sh OUT pos|gap4|mut (lock-step vs pinned ot_hbm_idx_chunk_rt, every output every edge)",
+  "bench_result": "ot-gold2 @bcc0334cd: pos PASS (GAPK 2: 2337 checks / 1063 nonzero sums; GAPK 4 PASS 2349; GAPK 2 SEED 7 PASS; GAPK 3 SEED 99 PASS), mutant MUT 1 FAIL (1245 errors) as required"
+ },
+ "note": "leaf 1.55M (one key column ~383k > 350k): each key column cut at its head-pair region seam into two half-column cores (heads 0-3 / 4-7); every crossing was already a register pair (region pin regs, cs seam regs), so the twin is cycle-exact. Leaf W/E pin registers, chunk glue (input regs, head ids, valid line, online), quarter W glue, meta delays stay flat.",
+ "splits_entry": {
+  "parts": [
+   [
+    "hcol0",
+    32,
+    195127
+   ],
+   [
+    "hcol1",
+    32,
+    186410
+   ],
+   [
+    "tail",
+    2,
+    52348
+   ]
+  ],
+  "glue": 213320,
+  "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hbm_idx_score_quarter_static/ot_hbm_idx_score_quarter_static.stat",
+  "total": 12561840,
+  "note": "leaf 1.55M (one key column ~383k > 350k): each key column cut at its head-pair region seam into two half-column cores (heads 0-3 / 4-7); every crossing was already a register pair (region pin regs, cs seam regs), so the twin is cycle-exact. Leaf W/E pin registers, chunk glue (input regs, head ids, valid line, online), quarter W glue, meta delays stay flat."
+ },
+ "measured_total_with_split": 12527200
+}
