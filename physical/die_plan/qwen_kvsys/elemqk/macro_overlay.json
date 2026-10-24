@@ -1,0 +1,76 @@
+{
+ "schema": "elemqk.plan_overlay.v1",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json (v3.8s main 4b7b2b3e64)",
+ "note": "ELEM-QK 10-24: macro placements the kit needs (gen_phys type_macros) that plan v3.8s lacks; instance names = kit-rtl (kv41 bind) synth netlist paths. Proposed to KV-G3 as a plan change.",
+ "types": {
+  "kv3_sys_c": {
+   "contents_add": [
+    {
+     "inst": "u_bound.u_ucie_rom",
+     "module": "ot_qkvd_ucie_x64_phy",
+     "status": "reuse",
+     "lef": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "origin_um": [
+      138.24,
+      250.56
+     ],
+     "orient": "MX",
+     "note": "UCIe-A x64 PHY 777.6 sq at the N (die) edge, W of the clock tap (950.4, 518.4); MX: signal pins (LEF top edge, x 276-501) face S into the d2d logic at y 250.56 (top 1028.16: inside the 4.32 core margin, 8.64 lattice)"
+    },
+    {
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[0\\].u_store.g_p288.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+     "status": "reuse",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+     "origin_um": [
+      172.8,
+      86.4
+     ],
+     "orient": "R0",
+     "note": "d2d link replay bank 0 (57.9 x 67.5), row under the PHY pin edge"
+    },
+    {
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[1\\].u_store.g_p288.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+     "status": "reuse",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+     "origin_um": [
+      259.20000000000005,
+      86.4
+     ],
+     "orient": "R0",
+     "note": "d2d link replay bank 1 (57.9 x 67.5), row under the PHY pin edge"
+    },
+    {
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[2\\].u_store.g_p288.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+     "status": "reuse",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+     "origin_um": [
+      345.6,
+      86.4
+     ],
+     "orient": "R0",
+     "note": "d2d link replay bank 2 (57.9 x 67.5), row under the PHY pin edge"
+    },
+    {
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[3\\].u_store.g_p288.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+     "status": "reuse",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+     "origin_um": [
+      432.00000000000006,
+      86.4
+     ],
+     "orient": "R0",
+     "note": "d2d link replay bank 3 (57.9 x 67.5), row under the PHY pin edge"
+    }
+   ]
+  }
+ }
+}
