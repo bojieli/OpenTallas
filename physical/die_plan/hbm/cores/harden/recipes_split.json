@@ -4304,6 +4304,9 @@
    }
   ],
   "macro_place_halo_um": 4.32,
-  "macro_inventory_basis": "48 actual 256x256 SRAMs,172.824x41.064um each; fourcolumns,twelverows,8.64umchannels"
+  "macro_inventory_basis": "48 actual 256x256 SRAMs,172.824x41.064um each; fourcolumns,twelverows,8.64umchannels",
+  "orfs_vars": {
+   "GLOBAL_PLACEMENT_ARGS": "-bin_grid_count 256"
+  }
  }
 }
