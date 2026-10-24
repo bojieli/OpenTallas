@@ -1,0 +1,1015 @@
+{
+ "run": "/srv/opentallas-scratch/claude/trial-hbm/fab_full",
+ "plan": "physical/die_plan/hbm_arch/B2r2/die_plan.json",
+ "grt": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 191999031,
+    "demand": 13057106,
+    "usage_pct": 6.8,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 191562965,
+    "demand": 19994089,
+    "usage_pct": 10.44,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 340568149,
+    "demand": 14109466,
+    "usage_pct": 4.14,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 347814140,
+    "demand": 8950917,
+    "usage_pct": 2.57,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 511150414,
+    "demand": 9373461,
+    "usage_pct": 1.83,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 511098382,
+    "demand": 3266228,
+    "usage_pct": 0.64,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 676252627.0,
+  "errors": [
+   "DPL-0012"
+  ],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {},
+  "pin_access_done": false,
+  "reach": {},
+  "done": false
+ },
+ "timing_s": {
+  "read": 21,
+  "grt": 181,
+  "guides": 185,
+  "rc": 322,
+  "sta_grt_SS_max": 468,
+  "sta_grt_TT_max": 513,
+  "sta_grt_FF_min": 552,
+  "sta_grt_SS_min": 598
+ },
+ "peak_rss_gb": 23.6,
+ "resources": {
+  "M1": {
+   "original": 0,
+   "derated": 0
+  },
+  "M2": {
+   "original": 0,
+   "derated": 0
+  },
+  "M3": {
+   "original": 0,
+   "derated": 0
+  },
+  "M4": {
+   "original": 383998835,
+   "derated": 191999031
+  },
+  "M5": {
+   "original": 383128365,
+   "derated": 191562965
+  },
+  "M6": {
+   "original": 681141390,
+   "derated": 340568149
+  },
+  "M7": {
+   "original": 695632348,
+   "derated": 347814140
+  },
+  "M8": {
+   "original": 511150414,
+   "derated": 511150414
+  },
+  "M9": {
+   "original": 511098382,
+   "derated": 511098382
+  }
+ },
+ "guide_nets": 1155477,
+ "worst_windows_raw": [
+  {
+   "layer": "M8",
+   "x_mm": 15.0,
+   "y_mm": 6.25,
+   "tracks_used": 2278.2,
+   "tracks": 3125,
+   "usage": 0.729
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.0,
+   "y_mm": 6.25,
+   "tracks_used": 2278.2,
+   "tracks": 3125,
+   "usage": 0.729
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.25,
+   "y_mm": 6.25,
+   "tracks_used": 2226.9,
+   "tracks": 3125,
+   "usage": 0.7126
+  },
+  {
+   "layer": "M9",
+   "x_mm": 2.75,
+   "y_mm": 8.75,
+   "tracks_used": 2206.3,
+   "tracks": 3125,
+   "usage": 0.706
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.5,
+   "y_mm": 6.25,
+   "tracks_used": 2199.6,
+   "tracks": 3125,
+   "usage": 0.7039
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.5,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.75,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 15.25,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 9.75,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.25,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.5,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.5,
+   "y_mm": 6.25,
+   "tracks_used": 2194.0,
+   "tracks": 3125,
+   "usage": 0.7021
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.25,
+   "y_mm": 8.25,
+   "tracks_used": 2193.5,
+   "tracks": 3125,
+   "usage": 0.7019
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.75,
+   "y_mm": 8.25,
+   "tracks_used": 2186.0,
+   "tracks": 3125,
+   "usage": 0.6995
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.0,
+   "y_mm": 8.25,
+   "tracks_used": 2186.0,
+   "tracks": 3125,
+   "usage": 0.6995
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.0,
+   "y_mm": 8.25,
+   "tracks_used": 2186.0,
+   "tracks": 3125,
+   "usage": 0.6995
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.75,
+   "y_mm": 6.25,
+   "tracks_used": 2155.1,
+   "tracks": 3125,
+   "usage": 0.6896
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.75,
+   "y_mm": 8.25,
+   "tracks_used": 2141.6,
+   "tracks": 3125,
+   "usage": 0.6853
+  },
+  {
+   "layer": "M9",
+   "x_mm": 12.5,
+   "y_mm": 6.25,
+   "tracks_used": 2139.6,
+   "tracks": 3125,
+   "usage": 0.6847
+  },
+  {
+   "layer": "M8",
+   "x_mm": 15.25,
+   "y_mm": 8.5,
+   "tracks_used": 2052.2,
+   "tracks": 3125,
+   "usage": 0.6567
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.25,
+   "y_mm": 6.25,
+   "tracks_used": 2042.4,
+   "tracks": 3125,
+   "usage": 0.6536
+  },
+  {
+   "layer": "M8",
+   "x_mm": 9.75,
+   "y_mm": 8.5,
+   "tracks_used": 2025.1,
+   "tracks": 3125,
+   "usage": 0.648
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.25,
+   "y_mm": 6.25,
+   "tracks_used": 1941.9,
+   "tracks": 3125,
+   "usage": 0.6214
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.75,
+   "y_mm": 6.25,
+   "tracks_used": 1934.0,
+   "tracks": 3125,
+   "usage": 0.6189
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.0,
+   "y_mm": 6.25,
+   "tracks_used": 1934.0,
+   "tracks": 3125,
+   "usage": 0.6189
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.0,
+   "y_mm": 6.25,
+   "tracks_used": 1934.0,
+   "tracks": 3125,
+   "usage": 0.6189
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.25,
+   "y_mm": 8.25,
+   "tracks_used": 1921.1,
+   "tracks": 3125,
+   "usage": 0.6148
+  },
+  {
+   "layer": "M9",
+   "x_mm": 2.75,
+   "y_mm": 8.5,
+   "tracks_used": 1911.6,
+   "tracks": 3125,
+   "usage": 0.6117
+  },
+  {
+   "layer": "M8",
+   "x_mm": 9.5,
+   "y_mm": 6.25,
+   "tracks_used": 1868.9,
+   "tracks": 3125,
+   "usage": 0.598
+  },
+  {
+   "layer": "M9",
+   "x_mm": 22.25,
+   "y_mm": 8.75,
+   "tracks_used": 1868.5,
+   "tracks": 3125,
+   "usage": 0.5979
+  },
+  {
+   "layer": "M8",
+   "x_mm": 11.25,
+   "y_mm": 6.0,
+   "tracks_used": 1760.0,
+   "tracks": 3125,
+   "usage": 0.5632
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.75,
+   "y_mm": 6.0,
+   "tracks_used": 1759.4,
+   "tracks": 3125,
+   "usage": 0.563
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.0,
+   "y_mm": 6.0,
+   "tracks_used": 1751.8,
+   "tracks": 3125,
+   "usage": 0.5606
+  },
+  {
+   "layer": "M8",
+   "x_mm": 15.0,
+   "y_mm": 6.0,
+   "tracks_used": 1751.8,
+   "tracks": 3125,
+   "usage": 0.5606
+  },
+  {
+   "layer": "M8",
+   "x_mm": 14.25,
+   "y_mm": 6.0,
+   "tracks_used": 1751.8,
+   "tracks": 3125,
+   "usage": 0.5606
+  },
+  {
+   "layer": "M8",
+   "x_mm": 9.5,
+   "y_mm": 8.5,
+   "tracks_used": 1737.9,
+   "tracks": 3125,
+   "usage": 0.5561
+  },
+  {
+   "layer": "M8",
+   "x_mm": 13.5,
+   "y_mm": 8.25,
+   "tracks_used": 1709.0,
+   "tracks": 3125,
+   "usage": 0.5469
+  },
+  {
+   "layer": "M8",
+   "x_mm": 10.0,
+   "y_mm": 8.5,
+   "tracks_used": 1701.2,
+   "tracks": 3125,
+   "usage": 0.5444
+  },
+  {
+   "layer": "M8",
+   "x_mm": 15.25,
+   "y_mm": 8.25,
+   "tracks_used": 1695.4,
+   "tracks": 3125,
+   "usage": 0.5425
+  },
+  {
+   "layer": "M8",
+   "x_mm": 9.75,
+   "y_mm": 6.0,
+   "tracks_used": 1687.0,
+   "tracks": 3125,
+   "usage": 0.5398
+  }
+ ],
+ "window_usage_by_layer": {
+  "M4": {
+   "max": 0.4293,
+   "p99": 0.394,
+   "n": 1484
+  },
+  "M5": {
+   "max": 0.4644,
+   "p99": 0.4314,
+   "n": 1455
+  },
+  "M6": {
+   "max": 0.5107,
+   "p99": 0.479,
+   "n": 1254
+  },
+  "M7": {
+   "max": 0.4728,
+   "p99": 0.4414,
+   "n": 1127
+  },
+  "M8": {
+   "max": 0.729,
+   "p99": 0.6995,
+   "n": 1120
+  },
+  "M9": {
+   "max": 0.706,
+   "p99": 0.4533,
+   "n": 637
+  }
+ },
+ "overflow_gcells": {
+  "total": 0,
+  "by_layer": {},
+  "worst_bins": []
+ },
+ "cuts_measured": [
+  {
+   "line": "y=10195.2",
+   "bits": 74646,
+   "per_layer": {
+    "M5": {
+     "bits": 66831,
+     "tracks": 524880,
+     "ratio": 0.1273
+    },
+    "M7": {
+     "bits": 7134,
+     "tracks": 393660,
+     "ratio": 0.0181
+    },
+    "M9": {
+     "bits": 681,
+     "tracks": 314928,
+     "ratio": 0.0022
+    }
+   },
+   "ratio_all": 0.0605,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0022
+  },
+  {
+   "line": "y=6048",
+   "bits": 57546,
+   "per_layer": {
+    "M5": {
+     "bits": 45061,
+     "tracks": 524880,
+     "ratio": 0.0859
+    },
+    "M7": {
+     "bits": 11967,
+     "tracks": 393660,
+     "ratio": 0.0304
+    },
+    "M9": {
+     "bits": 518,
+     "tracks": 314928,
+     "ratio": 0.0016
+    }
+   },
+   "ratio_all": 0.0467,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0016
+  },
+  {
+   "line": "x=8959.68",
+   "bits": 38879,
+   "per_layer": {
+    "M4": {
+     "bits": 2623,
+     "tracks": 381600,
+     "ratio": 0.0069
+    },
+    "M6": {
+     "bits": 30552,
+     "tracks": 286200,
+     "ratio": 0.1068
+    },
+    "M8": {
+     "bits": 5593,
+     "tracks": 228960,
+     "ratio": 0.0244
+    }
+   },
+   "ratio_all": 0.0434,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0244
+  },
+  {
+   "line": "x=16234.6",
+   "bits": 38744,
+   "per_layer": {
+    "M4": {
+     "bits": 4970,
+     "tracks": 381600,
+     "ratio": 0.013
+    },
+    "M6": {
+     "bits": 30856,
+     "tracks": 286200,
+     "ratio": 0.1078
+    },
+    "M8": {
+     "bits": 5286,
+     "tracks": 228960,
+     "ratio": 0.0231
+    }
+   },
+   "ratio_all": 0.0432,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0231
+  },
+  {
+   "line": "x=9547.2",
+   "bits": 31089,
+   "per_layer": {
+    "M4": {
+     "bits": 1823,
+     "tracks": 381600,
+     "ratio": 0.0048
+    },
+    "M6": {
+     "bits": 16290,
+     "tracks": 286200,
+     "ratio": 0.0569
+    },
+    "M8": {
+     "bits": 12950,
+     "tracks": 228960,
+     "ratio": 0.0566
+    }
+   },
+   "ratio_all": 0.0347,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0566
+  },
+  {
+   "line": "x=11309.8",
+   "bits": 29875,
+   "per_layer": {
+    "M4": {
+     "bits": 5634,
+     "tracks": 381600,
+     "ratio": 0.0148
+    },
+    "M6": {
+     "bits": 9320,
+     "tracks": 286200,
+     "ratio": 0.0326
+    },
+    "M8": {
+     "bits": 18936,
+     "tracks": 228960,
+     "ratio": 0.0827
+    }
+   },
+   "ratio_all": 0.0333,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0827
+  },
+  {
+   "line": "x=9383.04",
+   "bits": 29306,
+   "per_layer": {
+    "M4": {
+     "bits": 1386,
+     "tracks": 381600,
+     "ratio": 0.0036
+    },
+    "M6": {
+     "bits": 24905,
+     "tracks": 286200,
+     "ratio": 0.087
+    },
+    "M8": {
+     "bits": 3015,
+     "tracks": 228960,
+     "ratio": 0.0132
+    }
+   },
+   "ratio_all": 0.0327,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0132
+  },
+  {
+   "line": "x=10134.7",
+   "bits": 29113,
+   "per_layer": {
+    "M4": {
+     "bits": 4161,
+     "tracks": 381600,
+     "ratio": 0.0109
+    },
+    "M6": {
+     "bits": 6703,
+     "tracks": 286200,
+     "ratio": 0.0234
+    },
+    "M8": {
+     "bits": 18250,
+     "tracks": 228960,
+     "ratio": 0.0797
+    }
+   },
+   "ratio_all": 0.0325,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0797
+  },
+  {
+   "line": "x=15059.5",
+   "bits": 29113,
+   "per_layer": {
+    "M4": {
+     "bits": 5366,
+     "tracks": 381600,
+     "ratio": 0.0141
+    },
+    "M6": {
+     "bits": 7082,
+     "tracks": 286200,
+     "ratio": 0.0247
+    },
+    "M8": {
+     "bits": 16666,
+     "tracks": 228960,
+     "ratio": 0.0728
+    }
+   },
+   "ratio_all": 0.0325,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0728
+  },
+  {
+   "line": "y=14748.5",
+   "bits": 39792,
+   "per_layer": {
+    "M5": {
+     "bits": 38943,
+     "tracks": 524880,
+     "ratio": 0.0742
+    },
+    "M7": {
+     "bits": 849,
+     "tracks": 393660,
+     "ratio": 0.0022
+    },
+    "M9": {
+     "bits": 0,
+     "tracks": 314928,
+     "ratio": 0.0
+    }
+   },
+   "ratio_all": 0.0323,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0
+  },
+  {
+   "line": "x=14472",
+   "bits": 28687,
+   "per_layer": {
+    "M4": {
+     "bits": 4955,
+     "tracks": 381600,
+     "ratio": 0.013
+    },
+    "M6": {
+     "bits": 5494,
+     "tracks": 286200,
+     "ratio": 0.0192
+    },
+    "M8": {
+     "bits": 18225,
+     "tracks": 228960,
+     "ratio": 0.0796
+    }
+   },
+   "ratio_all": 0.032,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0796
+  },
+  {
+   "line": "x=3533.76",
+   "bits": 28550,
+   "per_layer": {
+    "M4": {
+     "bits": 17036,
+     "tracks": 381600,
+     "ratio": 0.0446
+    },
+    "M6": {
+     "bits": 7417,
+     "tracks": 286200,
+     "ratio": 0.0259
+    },
+    "M8": {
+     "bits": 3988,
+     "tracks": 228960,
+     "ratio": 0.0174
+    }
+   },
+   "ratio_all": 0.0318,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0174
+  },
+  {
+   "line": "x=10722.2",
+   "bits": 27838,
+   "per_layer": {
+    "M4": {
+     "bits": 7163,
+     "tracks": 381600,
+     "ratio": 0.0188
+    },
+    "M6": {
+     "bits": 5092,
+     "tracks": 286200,
+     "ratio": 0.0178
+    },
+    "M8": {
+     "bits": 15583,
+     "tracks": 228960,
+     "ratio": 0.0681
+    }
+   },
+   "ratio_all": 0.031,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0681
+  },
+  {
+   "line": "x=13884.5",
+   "bits": 27577,
+   "per_layer": {
+    "M4": {
+     "bits": 3597,
+     "tracks": 381600,
+     "ratio": 0.0094
+    },
+    "M6": {
+     "bits": 5318,
+     "tracks": 286200,
+     "ratio": 0.0186
+    },
+    "M8": {
+     "bits": 18638,
+     "tracks": 228960,
+     "ratio": 0.0814
+    }
+   },
+   "ratio_all": 0.0308,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0814
+  },
+  {
+   "line": "y=11750.4",
+   "bits": 37744,
+   "per_layer": {
+    "M5": {
+     "bits": 24254,
+     "tracks": 524880,
+     "ratio": 0.0462
+    },
+    "M7": {
+     "bits": 13012,
+     "tracks": 393660,
+     "ratio": 0.0331
+    },
+    "M9": {
+     "bits": 478,
+     "tracks": 314928,
+     "ratio": 0.0015
+    }
+   },
+   "ratio_all": 0.0306,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0015
+  },
+  {
+   "line": "y=13245.1",
+   "bits": 34986,
+   "per_layer": {
+    "M5": {
+     "bits": 34986,
+     "tracks": 524880,
+     "ratio": 0.0667
+    },
+    "M7": {
+     "bits": 0,
+     "tracks": 393660,
+     "ratio": 0.0
+    },
+    "M9": {
+     "bits": 0,
+     "tracks": 314928,
+     "ratio": 0.0
+    }
+   },
+   "ratio_all": 0.0284,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0
+  },
+  {
+   "line": "x=8372.16",
+   "bits": 24726,
+   "per_layer": {
+    "M4": {
+     "bits": 1957,
+     "tracks": 381600,
+     "ratio": 0.0051
+    },
+    "M6": {
+     "bits": 17435,
+     "tracks": 286200,
+     "ratio": 0.0609
+    },
+    "M8": {
+     "bits": 5848,
+     "tracks": 228960,
+     "ratio": 0.0255
+    }
+   },
+   "ratio_all": 0.0276,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0255
+  },
+  {
+   "line": "x=15811.2",
+   "bits": 24723,
+   "per_layer": {
+    "M4": {
+     "bits": 3738,
+     "tracks": 381600,
+     "ratio": 0.0098
+    },
+    "M6": {
+     "bits": 18426,
+     "tracks": 286200,
+     "ratio": 0.0644
+    },
+    "M8": {
+     "bits": 2559,
+     "tracks": 228960,
+     "ratio": 0.0112
+    }
+   },
+   "ratio_all": 0.0276,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0112
+  },
+  {
+   "line": "x=16822.1",
+   "bits": 24749,
+   "per_layer": {
+    "M4": {
+     "bits": 1930,
+     "tracks": 381600,
+     "ratio": 0.0051
+    },
+    "M6": {
+     "bits": 17653,
+     "tracks": 286200,
+     "ratio": 0.0617
+    },
+    "M8": {
+     "bits": 5147,
+     "tracks": 228960,
+     "ratio": 0.0225
+    }
+   },
+   "ratio_all": 0.0276,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.0225
+  },
+  {
+   "line": "x=17988.5",
+   "bits": 24137,
+   "per_layer": {
+    "M4": {
+     "bits": 19145,
+     "tracks": 381600,
+     "ratio": 0.0502
+    },
+    "M6": {
+     "bits": 2864,
+     "tracks": 286200,
+     "ratio": 0.01
+    },
+    "M8": {
+     "bits": 1836,
+     "tracks": 228960,
+     "ratio": 0.008
+    }
+   },
+   "ratio_all": 0.0269,
+   "note": "bits = nets crossing (any layer); per-layer = runs longer than one gcell across the line",
+   "ratio_m89": 0.008
+  }
+ ],
+ "viol_counts": {
+  "grt": {
+   "max": 848622,
+   "min": 1277
+  }
+ },
+ "sta": {
+  "sta_grt_FF_min": {
+   "worst_ps": -2.07,
+   "violating_listed": 1277,
+   "listed": 200000,
+   "tns_listed_ps": -808.8,
+   "viol_below_50ps": 0,
+   "viol_below_100ps": 0,
+   "viol_below_200ps": 0,
+   "viol_below_400ps": 0
+  },
+  "sta_grt_SS_max": {
+   "worst_ps": -1430.07,
+   "violating_listed": 200000,
+   "listed": 200000,
+   "tns_listed_ps": -210696884.9,
+   "viol_below_50ps": 200000,
+   "viol_below_100ps": 200000,
+   "viol_below_200ps": 200000,
+   "viol_below_400ps": 200000
+  },
+  "sta_grt_SS_min": {
+   "worst_ps": 29.58,
+   "violating_listed": 0,
+   "listed": 200000
+  },
+  "sta_grt_TT_max": {
+   "worst_ps": -1045.06,
+   "violating_listed": 200000,
+   "listed": 200000,
+   "tns_listed_ps": -135386785.0,
+   "viol_below_50ps": 200000,
+   "viol_below_100ps": 200000,
+   "viol_below_200ps": 200000,
+   "viol_below_400ps": 200000
+  },
+  "tns_grt": {
+   "max": -588616064.0,
+   "min": -808.85
+  }
+ },
+ "drv": {
+  "drv_grt": {
+   "slew": 2850943
+  }
+ }
+}

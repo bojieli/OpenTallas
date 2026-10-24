@@ -1,0 +1,93 @@
+Startpoint: NW_b103__st__L19x2__1811__0
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_b102__st__L19x3__1811__0
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: TT
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_b103__st__L19x2__1811__0/CLK (DFFHQNx1_ASAP7_75t_R)
+     1  155.8 1337.1  333.6  333.6 ^ NW_b103__st__L19x2__1811__0/QN (DFFHQNx1_ASAP7_75t_R)
+              3739.7 1131.6 1465.2 ^ NW_b102__st__L19x3__1811__0/D (DFFHQNx1_ASAP7_75t_R)
+                            1465.2   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_b102__st__L19x3__1811__0/CLK (DFFHQNx1_ASAP7_75t_R)
+                     -353.2  420.1   library setup time
+                             420.1   data required time
+-------------------------------------------------------------------------
+                             420.1   data required time
+                            -1465.2   data arrival time
+-------------------------------------------------------------------------
+                            -1045.1   slack (VIOLATED)
+
+
+Startpoint: NW_b103__st__L19x2__1814__0
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_b102__st__L19x3__1814__0
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: TT
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_b103__st__L19x2__1814__0/CLK (DFFHQNx1_ASAP7_75t_R)
+     1  155.7 1336.3  333.8  333.8 ^ NW_b103__st__L19x2__1814__0/QN (DFFHQNx1_ASAP7_75t_R)
+              3736.5 1130.5 1464.2 ^ NW_b102__st__L19x3__1814__0/D (DFFHQNx1_ASAP7_75t_R)
+                            1464.2   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_b102__st__L19x3__1814__0/CLK (DFFHQNx1_ASAP7_75t_R)
+                     -352.9  420.4   library setup time
+                             420.4   data required time
+-------------------------------------------------------------------------
+                             420.4   data required time
+                            -1464.2   data arrival time
+-------------------------------------------------------------------------
+                            -1043.8   slack (VIOLATED)
+
+
+Startpoint: NW_b103__st__L19x2__1817__0
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: NW_b102__st__L19x3__1817__0
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: TT
+
+Fanout    Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------------
+                 0.0    0.0    0.0   clock clk (rise edge)
+                        0.0    0.0   clock network delay (ideal)
+                 0.0    0.0    0.0 ^ NW_b103__st__L19x2__1817__0/CLK (DFFHQNx1_ASAP7_75t_R)
+     1  155.5 1333.9  334.0  334.0 ^ NW_b103__st__L19x2__1817__0/QN (DFFHQNx1_ASAP7_75t_R)
+              3724.5 1126.5 1460.5 ^ NW_b102__st__L19x3__1817__0/D (DFFHQNx1_ASAP7_75t_R)
+                            1460.5   data arrival time
+
+                 0.0  833.3  833.3   clock clk (rise edge)
+                        0.0  833.3   clock network delay (ideal)
+                      -60.0  773.3   clock uncertainty
+                        0.0  773.3   clock reconvergence pessimism
+                             773.3 ^ NW_b102__st__L19x3__1817__0/CLK (DFFHQNx1_ASAP7_75t_R)
+                     -351.8  421.5   library setup time
+                             421.5   data required time
+-------------------------------------------------------------------------
+                             421.5   data required time
+                            -1460.5   data arrival time
+-------------------------------------------------------------------------
+                            -1039.0   slack (VIOLATED)
+
+
