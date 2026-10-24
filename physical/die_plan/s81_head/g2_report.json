@@ -1,0 +1,98 @@
+{
+ "schema": "opentallas.die_plan.g2.v1",
+ "plan": "/srv/opentallas-scratch2/claude/s81-head/wt/physical/die_plan/s81_head/die_plan.json",
+ "probes": {
+  "die": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 355833216,
+     "demand": 41625,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 355705938,
+     "demand": 65973,
+     "usage_pct": 0.02,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1068969.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {
+    "clk": {
+     "max_um": 16998.1,
+     "p90_um": 13158.7,
+     "taps": 2540
+    },
+    "rst": {
+     "max_um": 16086.6,
+     "p90_um": 12536.7,
+     "taps": 326
+    }
+   },
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-die",
+   "die": "s81_head",
+   "taps": 2540,
+   "pg_stripes": 8118,
+   "channels": 8,
+   "route_layers": [
+    "M8",
+    "M9"
+   ],
+   "root_um": [
+    8760.96,
+    8778.24
+   ]
+  }
+ },
+ "verdict": "PASS"
+}

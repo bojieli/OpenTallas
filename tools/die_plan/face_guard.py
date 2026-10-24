@@ -282,7 +282,27 @@ class Flat:
                 self.cells.append((typ, path, pins))
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None):
+def read_ft1(path):
+    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`)."""
+    out = set()
+    for ln in Path(path).read_text().splitlines():
+        f = ln.split()
+        if f and not f[0].startswith("#") and len(f) >= 2 and f[1] == "1":
+            out.add(f[0])
+    return out
+
+
+def _ft1_pair(bs, ft1):
+    """True when the bits are exactly S_i[k] and S_o[k] of one 1-station ft slot S: that slot's single station register
+    is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types)."""
+    if len(bs) != 2:
+        return False
+    m = [re.match(r"^(.+)_([io])(\[\d+\])?$", b) for b in bs]
+    return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and m[0].group(3) == m[1].group(3)
+            and {m[0].group(2), m[1].group(2)} == {"i", "o"})
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=()):
     mods = parse(text)
     if top is None:
         used = {typ for M in mods.values() for typ, _, _ in M.cells}
@@ -399,6 +419,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None):
             res["flops"][b] = ff[1]
             res["ok"] += 1
     for ci, bs in claimed.items():
+        if len(bs) > 1 and _ft1_pair(bs, ft1):
+            res["ft1_stations"] = res.get("ft1_stations", 0) + 1
+            continue
         if len(bs) > 1:
             for b in bs:
                 fail("merged", b, f"flop {F.cells[ci][1]} also registers {[x for x in bs if x != b][:3]}")
@@ -415,7 +438,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None):
     nf = sum(len(v) for v in res["fails"].values())
     res["fail_counts"] = {k: len(v) for k, v in res["fails"].items()}
     res["fails"] = {k: v[:50] for k, v in res["fails"].items()}
-    res["verdict"] = "PASS" if nf == 0 and res["checked"] > 0 else "FAIL"
+    empty = pins is not None and not res.get("planned_bits") and res["checked"] == 0    # a planned port-less type
+    res["verdict"] = "PASS" if nf == 0 and (res["checked"] > 0 or empty) else "FAIL"
     res["flops"] = dict(list(res["flops"].items())[:20])
     return res
 
@@ -426,9 +450,12 @@ def main(argv=None):
     ap.add_argument("--top")
     ap.add_argument("--pins")
     ap.add_argument("--out")
+    ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
     a = ap.parse_args(argv)
     pins = json.loads(Path(a.pins).read_text()) if a.pins else None
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins)
+    ftf = a.ft or (str(Path(a.pins).with_name("ft_stations.txt")) if a.pins else None)
+    ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
