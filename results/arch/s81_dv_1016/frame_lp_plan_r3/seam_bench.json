@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.s81.r3_seam_bench.v1",
+ "rtl_commit": "968060ade",
+ "host": "ot-epyc9",
+ "dir": "/srv/opentallas-scratch/claude/s81-p9-rtl",
+ "bench": "tools/s81_dv/frame_seam_bench.sh (TWIN = plan contents r0..r2 + --bench-top, BFVEC = S81-P7 attn.wo_a p65)",
+ "runs": {
+  "c_h10_base": {
+   "line": "SEAM_BENCH h10 base: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2678259-1792806975"
+  },
+  "c_h9_base": {
+   "line": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677935-1792806975"
+  },
+  "h10_base": {
+   "line": "SEAM_BENCH h10 base: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2678661-1792806975"
+  },
+  "h10_landread": {
+   "line": "SEAM_BENCH h10 landread: FRAME_SET col_h10 MUT=landread set=plan pass=0 fail=1 seam_mismatch_lines=8 MISMATCH edge 372 row 2 lo 0 k 2 n 4 got 46cbc917/0 want 478937c1/0 MISMATCH edge 373 row 3 lo 0 k 2 n 4 got 47a98604/0 want 4845254c/0  bf_seam_mismatch_lines=8 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2678590-1792806975"
+  },
+  "h10_late17": {
+   "line": "SEAM_BENCH h10 late17: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2679049-1792806975"
+  },
+  "h10_late32": {
+   "line": "SEAM_BENCH h10 late32: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2678166-1792806975"
+  },
+  "h10_reset": {
+   "line": "SEAM_BENCH h10 reset: FRAME_SET col_h10 MUT=reset set=plan pass=0 fail=1 seam_mismatch_lines=8 COVERAGE row 0 segments [1, 2, 3] of 4 COVERAGE row 1 segments [1, 2, 3] of 4  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677156-1792806975"
+  },
+  "h10_short": {
+   "line": "SEAM_BENCH h10 short: FRAME_SET col_h10 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 10 ret words, got 12; first diff ((356, 0, (0, 1, 4), 3344205570, 0), (354, 0, (0, 1, 4), 3344205570, 0)) FAULT SEAM_MISMATCH lpl_18 edge 81  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=21 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2679034-1792806975"
+  },
+  "h10_unland": {
+   "line": "SEAM_BENCH h10 unland: FRAME_SET col_h10 MUT=unland set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2679027-1792806975"
+  },
+  "h9_base": {
+   "line": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2679025-1792806975"
+  },
+  "h9_landread": {
+   "line": "SEAM_BENCH h9 landread: FRAME_SET col_h9 MUT=landread set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 14 ret words, got 14; first diff ((375, 0, (2, 1, 4), 1203109165, 0), (376, 0, (2, 1, 4), 1203109165, 0)) FAULT SEAM_MISMATCH lpl_0 edge 308  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677103-1792806975"
+  },
+  "h9_late13": {
+   "line": "SEAM_BENCH h9 late13: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677565-1792806975"
+  },
+  "h9_late9": {
+   "line": "SEAM_BENCH h9 late9: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=8 bf_fault=4 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677471-1792806975"
+  },
+  "h9_reset": {
+   "line": "SEAM_BENCH h9 reset: FRAME_SET col_h9 MUT=reset set=plan pass=0 fail=1 seam_mismatch_lines=8 COVERAGE row 2 segments [0, 1, 2] of 4 COVERAGE row 3 segments [0, 1, 2] of 4  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2679037-1792806975"
+  },
+  "h9_short": {
+   "line": "SEAM_BENCH h9 short: FRAME_SET col_h9 MUT=0 set=plan pass=0 fail=1 seam_mismatch_lines=8 PLAN_MISMATCH predicted 14 ret words, got 14; first diff ((354, 2, (0, 0, 4), 1189067981, 0), (352, 2, (0, 0, 4), 1189067981, 0)) FAULT SEAM_MISMATCH lpl_8 edge 80  bf_seam_mismatch_lines=8 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2677624-1792806975"
+  },
+  "h9_unland": {
+   "line": "SEAM_BENCH h9 unland: FRAME_SET col_h9 MUT=unland set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "unit": "oth-ubuntu-2676708-1792806975"
+  }
+ },
+ "verdict": {
+  "base": "h9/h10 ret calendar PASS, 0 seam mismatches (every seam vs vgch ref every edge), BF 0 seam mismatches / 0 fault, xo checked every edge at XO_LAT 2",
+  "latency_neutral": "ret words (plan set 14/10, BF 6/6) edge+value IDENTICAL to the P7 contents control (c_*, --no-r3); BF words = S81-P8-B measured LP calendar (h9 408..430, h10 407 410 417 418 420 426)",
+  "mutants": "caught: late9/late13/late17/late32 (BF seam mismatches 8), short, landread, reset; unland NOT caught (plan generator wires the twin MUT-1 bypass as MUT 0 by construction: blind in the control too)",
+  "bf_calendar": "FAIL in every run incl. control: the P7 bfvec predicts 405/401 (pre-P8-B calendar); on ep9 the fixtures path was also missing -- re-checked locally: values equal, edges = the P8-B measured calendar"
+ }
+}
