@@ -4,18 +4,18 @@
 "replica": "type",
 "bus": "leaf",
 "bus_groups_die": "qwen_kvsys",
-"bus_groups_digest": "53be8a5c079b8374",
+"bus_groups_digest": "52620a39a8a81dc0",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 5537,
-"classes": 3735,
-"replica_links": 16,
-"padded_members": 274,
-"padded_bits": 8331,
-"pad_flops": 26338,
-"max_pad": 66,
+"classes": 3810,
+"replica_links": 9,
+"padded_members": 203,
+"padded_bits": 7513,
+"pad_flops": 18520,
+"max_pad": 7,
 "max_depth_before": 36,
-"max_depth_after": 78,
+"max_depth_after": 39,
 "max_offset_before": 36,
 "max_offset_after": 36,
 "binder_landed_max": 36
@@ -1138,8 +1138,8 @@
 "source": "kvs_attn.acal_EN",
 "asbuilt": 18,
 "bound": 17,
-"pad": 2,
-"landed": 19,
+"pad": 0,
+"landed": 17,
 "lane": "L1397"
 },
 {
@@ -1233,8 +1233,8 @@
 "source": "kvs_attn.acal_EN",
 "asbuilt": 18,
 "bound": 15,
-"pad": 4,
-"landed": 19,
+"pad": 0,
+"landed": 15,
 "lane": "L1396"
 },
 {
@@ -1328,8 +1328,8 @@
 "source": "kvs_attn.acal_EN",
 "asbuilt": 18,
 "bound": 13,
-"pad": 6,
-"landed": 19,
+"pad": 0,
+"landed": 13,
 "lane": "L1395"
 },
 {
@@ -1423,8 +1423,8 @@
 "source": "kvs_attn.acal_EN",
 "asbuilt": 18,
 "bound": 11,
-"pad": 8,
-"landed": 19,
+"pad": 0,
+"landed": 11,
 "lane": "L1394"
 },
 {
@@ -2734,8 +2734,8 @@
 "source": "kvs_attn.acal_ES",
 "asbuilt": 51,
 "bound": 17,
-"pad": 2,
-"landed": 19,
+"pad": 0,
+"landed": 17,
 "lane": "L1406"
 },
 {
@@ -2829,8 +2829,8 @@
 "source": "kvs_attn.acal_ES",
 "asbuilt": 51,
 "bound": 15,
-"pad": 4,
-"landed": 19,
+"pad": 0,
+"landed": 15,
 "lane": "L1405"
 },
 {
@@ -2924,8 +2924,8 @@
 "source": "kvs_attn.acal_ES",
 "asbuilt": 51,
 "bound": 13,
-"pad": 6,
-"landed": 19,
+"pad": 0,
+"landed": 13,
 "lane": "L1404"
 },
 {
@@ -3019,8 +3019,8 @@
 "source": "kvs_attn.acal_ES",
 "asbuilt": 51,
 "bound": 11,
-"pad": 8,
-"landed": 19,
+"pad": 0,
+"landed": 11,
 "lane": "L1403"
 },
 {
@@ -4349,8 +4349,8 @@
 "source": "kvs_attn.acal_WN",
 "asbuilt": 40,
 "bound": 16,
-"pad": 2,
-"landed": 18,
+"pad": 0,
+"landed": 16,
 "lane": "L1415"
 },
 {
@@ -4444,8 +4444,8 @@
 "source": "kvs_attn.acal_WN",
 "asbuilt": 40,
 "bound": 14,
-"pad": 4,
-"landed": 18,
+"pad": 0,
+"landed": 14,
 "lane": "L1414"
 },
 {
@@ -4539,8 +4539,8 @@
 "source": "kvs_attn.acal_WN",
 "asbuilt": 40,
 "bound": 12,
-"pad": 6,
-"landed": 18,
+"pad": 0,
+"landed": 12,
 "lane": "L1413"
 },
 {
@@ -4634,8 +4634,8 @@
 "source": "kvs_attn.acal_WN",
 "asbuilt": 40,
 "bound": 10,
-"pad": 8,
-"landed": 18,
+"pad": 0,
+"landed": 10,
 "lane": "L1412"
 },
 {
@@ -5945,8 +5945,8 @@
 "source": "kvs_attn.acal_WS",
 "asbuilt": 76,
 "bound": 16,
-"pad": 2,
-"landed": 18,
+"pad": 0,
+"landed": 16,
 "lane": "L1424"
 },
 {
@@ -6040,8 +6040,8 @@
 "source": "kvs_attn.acal_WS",
 "asbuilt": 76,
 "bound": 14,
-"pad": 4,
-"landed": 18,
+"pad": 0,
+"landed": 14,
 "lane": "L1423"
 },
 {
@@ -6135,8 +6135,8 @@
 "source": "kvs_attn.acal_WS",
 "asbuilt": 76,
 "bound": 12,
-"pad": 6,
-"landed": 18,
+"pad": 0,
+"landed": 12,
 "lane": "L1422"
 },
 {
@@ -6230,8 +6230,8 @@
 "source": "kvs_attn.acal_WS",
 "asbuilt": 76,
 "bound": 10,
-"pad": 8,
-"landed": 18,
+"pad": 0,
+"landed": 10,
 "lane": "L1421"
 },
 {
@@ -6971,8 +6971,8 @@
 "source": "kvs_hroot_EN.o_c0",
 "asbuilt": 35,
 "bound": 14,
-"pad": 1,
-"landed": 15,
+"pad": 0,
+"landed": 14,
 "lane": "L1531"
 },
 {
@@ -7199,8 +7199,8 @@
 "source": "kvs_hroot_EN.o_c1",
 "asbuilt": 28,
 "bound": 12,
-"pad": 2,
-"landed": 14,
+"pad": 0,
+"landed": 12,
 "lane": "L1530"
 },
 {
@@ -7883,8 +7883,8 @@
 "source": "kvs_hroot_EN.o_c4",
 "asbuilt": 43,
 "bound": 18,
-"pad": 4,
-"landed": 22,
+"pad": 0,
+"landed": 18,
 "lane": "L1533"
 },
 {
@@ -8111,8 +8111,8 @@
 "source": "kvs_hroot_EN.o_c5",
 "asbuilt": 36,
 "bound": 16,
-"pad": 4,
-"landed": 20,
+"pad": 0,
+"landed": 16,
 "lane": "L1532"
 },
 {
@@ -8339,8 +8339,8 @@
 "source": "kvs_hroot_EN.o_c6",
 "asbuilt": 29,
 "bound": 6,
-"pad": 4,
-"landed": 10,
+"pad": 0,
+"landed": 6,
 "lane": "L1527"
 },
 {
@@ -8567,8 +8567,8 @@
 "source": "kvs_hroot_EN.o_c7",
 "asbuilt": 22,
 "bound": 4,
-"pad": 4,
-"landed": 8,
+"pad": 0,
+"landed": 4,
 "lane": "L1526"
 },
 {
@@ -8795,8 +8795,8 @@
 "source": "kvs_hroot_ES.o_c0",
 "asbuilt": 31,
 "bound": 14,
-"pad": 4,
-"landed": 18,
+"pad": 0,
+"landed": 14,
 "lane": "L1551"
 },
 {
@@ -8814,8 +8814,8 @@
 "source": "kvs_hroot_ES.o_kg",
 "asbuilt": 29,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1562"
 },
 {
@@ -8833,8 +8833,8 @@
 "source": "kvs_hroot_ES.o_kg",
 "asbuilt": 29,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1562"
 },
 {
@@ -8852,8 +8852,8 @@
 "source": "kvs_hroot_ES.o_kg",
 "asbuilt": 29,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1562"
 },
 {
@@ -9023,8 +9023,8 @@
 "source": "kvs_hroot_ES.o_c1",
 "asbuilt": 24,
 "bound": 12,
-"pad": 2,
-"landed": 14,
+"pad": 0,
+"landed": 12,
 "lane": "L1550"
 },
 {
@@ -9707,8 +9707,8 @@
 "source": "kvs_hroot_ES.o_c4",
 "asbuilt": 39,
 "bound": 18,
-"pad": 3,
-"landed": 21,
+"pad": 0,
+"landed": 18,
 "lane": "L1553"
 },
 {
@@ -9935,8 +9935,8 @@
 "source": "kvs_hroot_ES.o_c5",
 "asbuilt": 33,
 "bound": 16,
-"pad": 4,
-"landed": 20,
+"pad": 0,
+"landed": 16,
 "lane": "L1552"
 },
 {
@@ -10163,8 +10163,8 @@
 "source": "kvs_hroot_ES.o_c6",
 "asbuilt": 27,
 "bound": 6,
-"pad": 5,
-"landed": 11,
+"pad": 0,
+"landed": 6,
 "lane": "L1547"
 },
 {
@@ -10391,8 +10391,8 @@
 "source": "kvs_hroot_ES.o_c7",
 "asbuilt": 20,
 "bound": 4,
-"pad": 5,
-"landed": 9,
+"pad": 0,
+"landed": 4,
 "lane": "L1546"
 },
 {
@@ -10619,8 +10619,8 @@
 "source": "kvs_hroot_WN.o_c0",
 "asbuilt": 34,
 "bound": 14,
-"pad": 4,
-"landed": 18,
+"pad": 0,
+"landed": 14,
 "lane": "L1571"
 },
 {
@@ -10638,8 +10638,8 @@
 "source": "kvs_hroot_WN.o_kg",
 "asbuilt": 32,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1582"
 },
 {
@@ -10657,8 +10657,8 @@
 "source": "kvs_hroot_WN.o_kg",
 "asbuilt": 32,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1582"
 },
 {
@@ -10676,8 +10676,8 @@
 "source": "kvs_hroot_WN.o_kg",
 "asbuilt": 32,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1582"
 },
 {
@@ -10847,8 +10847,8 @@
 "source": "kvs_hroot_WN.o_c1",
 "asbuilt": 27,
 "bound": 12,
-"pad": 2,
-"landed": 14,
+"pad": 0,
+"landed": 12,
 "lane": "L1570"
 },
 {
@@ -11531,8 +11531,8 @@
 "source": "kvs_hroot_WN.o_c4",
 "asbuilt": 40,
 "bound": 18,
-"pad": 1,
-"landed": 19,
+"pad": 0,
+"landed": 18,
 "lane": "L1573"
 },
 {
@@ -11759,8 +11759,8 @@
 "source": "kvs_hroot_WN.o_c5",
 "asbuilt": 33,
 "bound": 16,
-"pad": 1,
-"landed": 17,
+"pad": 0,
+"landed": 16,
 "lane": "L1572"
 },
 {
@@ -11987,8 +11987,8 @@
 "source": "kvs_hroot_WN.o_c6",
 "asbuilt": 26,
 "bound": 6,
-"pad": 1,
-"landed": 7,
+"pad": 0,
+"landed": 6,
 "lane": "L1567"
 },
 {
@@ -12215,8 +12215,8 @@
 "source": "kvs_hroot_WN.o_c7",
 "asbuilt": 19,
 "bound": 4,
-"pad": 1,
-"landed": 5,
+"pad": 0,
+"landed": 4,
 "lane": "L1566"
 },
 {
@@ -12443,8 +12443,8 @@
 "source": "kvs_hroot_WS.o_c0",
 "asbuilt": 30,
 "bound": 14,
-"pad": 4,
-"landed": 18,
+"pad": 0,
+"landed": 14,
 "lane": "L1591"
 },
 {
@@ -12462,8 +12462,8 @@
 "source": "kvs_hroot_WS.o_kg",
 "asbuilt": 28,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1602"
 },
 {
@@ -12481,8 +12481,8 @@
 "source": "kvs_hroot_WS.o_kg",
 "asbuilt": 28,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1602"
 },
 {
@@ -12500,8 +12500,8 @@
 "source": "kvs_hroot_WS.o_kg",
 "asbuilt": 28,
 "bound": 14,
-"pad": 2,
-"landed": 16,
+"pad": 0,
+"landed": 14,
 "lane": "L1602"
 },
 {
@@ -12671,8 +12671,8 @@
 "source": "kvs_hroot_WS.o_c1",
 "asbuilt": 24,
 "bound": 12,
-"pad": 3,
-"landed": 15,
+"pad": 0,
+"landed": 12,
 "lane": "L1590"
 },
 {
@@ -13355,8 +13355,8 @@
 "source": "kvs_hroot_WS.o_c4",
 "asbuilt": 37,
 "bound": 18,
-"pad": 1,
-"landed": 19,
+"pad": 0,
+"landed": 18,
 "lane": "L1593"
 },
 {
@@ -13583,8 +13583,8 @@
 "source": "kvs_hroot_WS.o_c5",
 "asbuilt": 29,
 "bound": 16,
-"pad": 1,
-"landed": 17,
+"pad": 0,
+"landed": 16,
 "lane": "L1592"
 },
 {
@@ -14039,8 +14039,8 @@
 "source": "kvs_hroot_WS.o_c7",
 "asbuilt": 16,
 "bound": 4,
-"pad": 1,
-"landed": 5,
+"pad": 0,
+"landed": 4,
 "lane": "L1586"
 },
 {
@@ -94409,8 +94409,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 72,
 "bound": 20,
-"pad": 34,
-"landed": 54,
+"pad": 0,
+"landed": 20,
 "lane": "L1486"
 },
 {
@@ -94637,8 +94637,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 77,
 "bound": 18,
-"pad": 45,
-"landed": 63,
+"pad": 0,
+"landed": 18,
 "lane": "L1485"
 },
 {
@@ -94865,8 +94865,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 81,
 "bound": 16,
-"pad": 53,
-"landed": 69,
+"pad": 0,
+"landed": 16,
 "lane": "L1484"
 },
 {
@@ -95093,8 +95093,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 60,
 "bound": 26,
-"pad": 11,
-"landed": 37,
+"pad": 0,
+"landed": 26,
 "lane": "L1489"
 },
 {
@@ -95302,8 +95302,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 64,
 "bound": 24,
-"pad": 19,
-"landed": 43,
+"pad": 0,
+"landed": 24,
 "lane": "L1488"
 },
 {
@@ -95530,8 +95530,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 85,
 "bound": 14,
-"pad": 62,
-"landed": 76,
+"pad": 0,
+"landed": 14,
 "lane": "L1483"
 },
 {
@@ -95549,8 +95549,8 @@
 "source": "kvs_emb.px_tok",
 "asbuilt": 24,
 "bound": 14,
-"pad": 1,
-"landed": 15,
+"pad": 0,
+"landed": 14,
 "lane": "L1517"
 },
 {
@@ -95777,8 +95777,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 87,
 "bound": 12,
-"pad": 66,
-"landed": 78,
+"pad": 0,
+"landed": 12,
 "lane": "L1482"
 },
 {
@@ -95986,8 +95986,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 76,
 "bound": 22,
-"pad": 1,
-"landed": 23,
+"pad": 0,
+"landed": 22,
 "lane": "L1479"
 },
 {
@@ -96214,8 +96214,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 72,
 "bound": 20,
-"pad": 34,
-"landed": 54,
+"pad": 0,
+"landed": 20,
 "lane": "L1478"
 },
 {
@@ -96233,8 +96233,8 @@
 "source": "kvs_emb.px_tok",
 "asbuilt": 71,
 "bound": 20,
-"pad": 33,
-"landed": 53,
+"pad": 0,
+"landed": 20,
 "lane": "L1512"
 },
 {
@@ -96442,8 +96442,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 70,
 "bound": 18,
-"pad": 4,
-"landed": 22,
+"pad": 0,
+"landed": 18,
 "lane": "L1477"
 },
 {
@@ -96670,8 +96670,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 63,
 "bound": 16,
-"pad": 1,
-"landed": 17,
+"pad": 0,
+"landed": 16,
 "lane": "L1476"
 },
 {
@@ -96689,8 +96689,8 @@
 "source": "kvs_emb.px_tok",
 "asbuilt": 63,
 "bound": 16,
-"pad": 1,
-"landed": 17,
+"pad": 0,
+"landed": 16,
 "lane": "L1510"
 },
 {
@@ -96898,8 +96898,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 84,
 "bound": 26,
-"pad": 1,
-"landed": 27,
+"pad": 0,
+"landed": 26,
 "lane": "L1481"
 },
 {
@@ -97107,8 +97107,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 82,
 "bound": 24,
-"pad": 3,
-"landed": 27,
+"pad": 0,
+"landed": 24,
 "lane": "L1480"
 },
 {
@@ -97582,8 +97582,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 56,
 "bound": 12,
-"pad": 1,
-"landed": 13,
+"pad": 0,
+"landed": 12,
 "lane": "L1474"
 },
 {
@@ -98912,8 +98912,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 45,
 "bound": 24,
-"pad": 1,
-"landed": 25,
+"pad": 0,
+"landed": 24,
 "lane": "L1471"
 },
 {
@@ -99159,8 +99159,8 @@
 "source": "kvs_emb.px_tok",
 "asbuilt": 24,
 "bound": 14,
-"pad": 1,
-"landed": 15,
+"pad": 0,
+"landed": 14,
 "lane": "L1500"
 },
 {
@@ -99824,8 +99824,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 71,
 "bound": 20,
-"pad": 1,
-"landed": 21,
+"pad": 0,
+"landed": 20,
 "lane": "L1461"
 },
 {
@@ -100280,8 +100280,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 63,
 "bound": 16,
-"pad": 1,
-"landed": 17,
+"pad": 0,
+"landed": 16,
 "lane": "L1459"
 },
 {
@@ -100717,8 +100717,8 @@
 "source": "kvs_emb.px_tep",
 "asbuilt": 79,
 "bound": 24,
-"pad": 1,
-"landed": 25,
+"pad": 0,
+"landed": 24,
 "lane": "L1463"
 },
 {
@@ -100964,8 +100964,8 @@
 "source": "kvs_emb.px_tok",
 "asbuilt": 58,
 "bound": 14,
-"pad": 1,
-"landed": 15,
+"pad": 0,
+"landed": 14,
 "lane": "L1492"
 },
 {
