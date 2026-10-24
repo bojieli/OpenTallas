@@ -1,0 +1,251 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "die": "qwen_compute",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+ "plan_digest": "8fd32979888311a1",
+ "g2_tools_digest": "a38419f6efe1ac48",
+ "gates": {
+  "g0": {
+   "status": "PASS",
+   "errors": 0,
+   "by_check": {},
+   "warnings": 88,
+   "seconds": 57.0,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/qwen_compute/g0c/g0_report.json",
+   "worst_cut": {
+    "ratio": 0.2218,
+    "at": "horizontal@12250"
+   },
+   "worst_segment": {
+    "ratio": 0.4124,
+    "at": "horizontal@12250:sl_W3_sc"
+   },
+   "types": 56,
+   "partitions": 377
+  },
+  "g0c": {
+   "status": "FAIL",
+   "errors": 4,
+   "by_check": {
+    "ft_budget": 4
+   },
+   "clean_types": 52,
+   "types": 56,
+   "g3_eligible": 52,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/qwen_compute/g0c/g0_report.json"
+  },
+  "xdie": {
+   "status": "FAIL",
+   "errors": 4,
+   "in_die": {
+    "status": "FAIL",
+    "errors": 4,
+    "by_rule": {
+     "die_io_plan": 0,
+     "cut_lines": 0,
+     "reach": 0,
+     "face_tracks": 0,
+     "ft_budget": 4
+    }
+   },
+   "systems": {}
+  },
+  "census": {
+   "status": "PASS",
+   "errors": 0,
+   "dropped_bits": 0,
+   "unmapped_instances": 0,
+   "inter_bits": 706998,
+   "exempt": 1530,
+   "sources": 4
+  },
+  "latency": {
+   "status": "PASS",
+   "reason": null,
+   "plan_digest": "8fd32979888311a1",
+   "lanes": 2015,
+   "g0_latency_errors": 0,
+   "record": "physical/die_plan/qwen_compute/qwen_compute_latency.json",
+   "files": [
+    {
+     "file": "physical/die_plan/qwen_compute/qwen_compute_latency.json",
+     "plan_digest": "8fd32979888311a1",
+     "digest_match": true,
+     "lanes": 2015,
+     "mismatched_lanes": 0,
+     "extra_lanes": 0,
+     "example": []
+    },
+    {
+     "file": "physical/die_plan/qwen_compute/r8/qwen_compute_latency.json",
+     "plan_digest": "0d80196e5d0dbcb7",
+     "digest_match": false,
+     "lanes": 1998,
+     "mismatched_lanes": 306,
+     "extra_lanes": 1,
+     "example": [
+      "c_W5_bf_11__a00",
+      "c_W5_bf_00__a22",
+      "c_W5_bf_01__b00"
+     ]
+    }
+   ],
+   "max_cycles": 18
+  },
+  "g2": {
+   "status": "PASS",
+   "probes": 6,
+   "overflow": 0,
+   "no_access": 0,
+   "not_done": [],
+   "detail": {
+    "part_slw_sc": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 6771405.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_slw_st_b": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 5165480.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_sle_sc": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 7065722.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_slw_su_l0": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 3269263.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_sle_fe_v1": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 3697327.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "die": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 2427446.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {
+      "clk": {
+       "max_um": 27967.5,
+       "p90_um": 21531.0,
+       "taps": 8819
+      },
+      "rst": {
+       "max_um": 26304.5,
+       "p90_um": 19980.1,
+       "taps": 377
+      }
+     }
+    }
+   },
+   "seconds": 3244.7,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/qwen_compute/g2/g2_report.json"
+  },
+  "sta": {
+   "seams": 3002,
+   "measured_ports": 0,
+   "standin_ports": 3002,
+   "standin": {
+    "bus": {
+     "cls": "bus",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 1432
+    },
+    "ft": {
+     "cls": "ft",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 0.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -79.6,
+     "hold_ps": -22.6,
+     "ports": 404
+    },
+    "ft_in": {
+     "cls": "ft_in",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 100.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 20.3,
+     "hold_ps": -22.6,
+     "ports": 583
+    },
+    "ft_out": {
+     "cls": "ft_out",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 583
+    }
+   },
+   "standin_worst_setup_ps": -79.6,
+   "standin_worst_hold_ps": -22.6,
+   "views": {},
+   "views_unavailable": {},
+   "xtalk": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05,
+    "mode": "stated",
+    "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+   },
+   "status": "NOT RUN (tools/die_plan/die_sta.py not on this sha: lane DIE-STA claude/die-sta-1024)"
+  }
+ },
+ "seconds": 3302.0,
+ "verdict": "FAIL",
+ "delta": {
+  "prev_sha": "9d2065c7a2b91a378a9712037f27125d6e0a1844",
+  "metrics": {},
+  "status_changes": {},
+  "new": []
+ }
+}

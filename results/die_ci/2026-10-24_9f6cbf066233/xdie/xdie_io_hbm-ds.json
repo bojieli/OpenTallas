@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.die_plan.xdie_io.v1",
+ "conn": "/srv/opentallas-scratch2/claude/die-ci/wt/results/arch/release_rack_1021/connections_hbm-ds.csv",
+ "roles": {
+  "D": "/srv/opentallas-scratch2/claude/die-ci/wt/physical/die_plan/hbm/die_io.json"
+ },
+ "verdict": "FAIL",
+ "errors": 961,
+ "error_groups": [
+  {
+   "rule": "missing",
+   "role": "D",
+   "macro": "lk_SE0",
+   "cls": "quad_mesh",
+   "n": 192,
+   "example": "quad_mesh hbm-ds.00000: role D has no die.io window on lk_SE0"
+  },
+  {
+   "rule": "missing",
+   "role": "D",
+   "macro": "lk_SW0",
+   "cls": "quad_mesh",
+   "n": 192,
+   "example": "quad_mesh hbm-ds.00000: role D has no die.io window on lk_SW0"
+  },
+  {
+   "rule": "missing",
+   "role": "D",
+   "macro": "lk_NW0",
+   "cls": "quad_mesh",
+   "n": 192,
+   "example": "quad_mesh hbm-ds.00004: role D has no die.io window on lk_NW0"
+  },
+  {
+   "rule": "missing",
+   "role": "D",
+   "macro": "lk_NE0",
+   "cls": "quad_ring",
+   "n": 192,
+   "example": "quad_ring hbm-ds.00288: role D has no die.io window on lk_NE0"
+  },
+  {
+   "rule": "missing",
+   "role": "D",
+   "macro": "lk_SW1",
+   "cls": "quad_ring",
+   "n": 192,
+   "example": "quad_ring hbm-ds.00288: role D has no die.io window on lk_SW1"
+  },
+  {
+   "rule": "host",
+   "role": "D",
+   "macro": null,
+   "cls": null,
+   "n": 1,
+   "example": "role D: die_io marks ['C0'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+  }
+ ],
+ "warnings": [
+  "role D: window C0 used by no circuit",
+  "role D: window NE_io used by no circuit",
+  "role D: window NW_io used by no circuit",
+  "role D: window SE_io used by no circuit",
+  "role D: window SW_io used by no circuit"
+ ],
+ "summary": {
+  "circuits_checked": 0,
+  "by_class": {},
+  "roles": {
+   "D": {
+    "windows": 7,
+    "used": [],
+    "host_windows": [
+     "C0"
+    ],
+    "unused": [
+     "C0",
+     "NE_io",
+     "NW_io",
+     "SE_io",
+     "SW_io"
+    ],
+    "host_circuit": false
+   }
+  }
+ }
+}

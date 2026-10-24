@@ -1,0 +1,280 @@
+{
+ "schema": "opentallas.die_ci.v1",
+ "die": "hbm",
+ "plan": "physical/die_plan/hbm/die_plan.json",
+ "sha": "9f6cbf0662335aa1380e17234c3e500f2d323bdd",
+ "plan_digest": "21c9f0d3bb2000b9",
+ "g2_tools_digest": "a38419f6efe1ac48",
+ "gates": {
+  "g0": {
+   "status": "PASS",
+   "errors": 0,
+   "by_check": {},
+   "warnings": 516,
+   "seconds": 97.5,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/hbm/g0c/g0_report.json",
+   "worst_cut": {
+    "ratio": 0.1447,
+    "at": "vertical@6250"
+   },
+   "worst_segment": {
+    "ratio": 0.2688,
+    "at": "horizontal@12500:SE_sfuc"
+   },
+   "types": 60,
+   "partitions": 187
+  },
+  "g0c": {
+   "status": "FAIL",
+   "errors": 121,
+   "by_check": {
+    "core_faces": 110,
+    "die_io_plan": 10,
+    "ft_budget": 1
+   },
+   "clean_types": 34,
+   "types": 60,
+   "g3_eligible": 34,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/hbm/g0c/g0_report.json"
+  },
+  "xdie": {
+   "status": "FAIL",
+   "errors": 972,
+   "in_die": {
+    "status": "FAIL",
+    "errors": 11,
+    "by_rule": {
+     "die_io_plan": 10,
+     "cut_lines": 0,
+     "reach": 0,
+     "face_tracks": 0,
+     "ft_budget": 1
+    }
+   },
+   "systems": {
+    "hbm-ds": {
+     "status": "FAIL",
+     "errors": 961,
+     "circuits": 0,
+     "warnings": 5,
+     "groups": [
+      {
+       "rule": "missing",
+       "role": "D",
+       "n": 192,
+       "example": "quad_mesh hbm-ds.00000: role D has no die.io window on lk_SE0"
+      },
+      {
+       "rule": "missing",
+       "role": "D",
+       "n": 192,
+       "example": "quad_mesh hbm-ds.00000: role D has no die.io window on lk_SW0"
+      },
+      {
+       "rule": "missing",
+       "role": "D",
+       "n": 192,
+       "example": "quad_mesh hbm-ds.00004: role D has no die.io window on lk_NW0"
+      },
+      {
+       "rule": "missing",
+       "role": "D",
+       "n": 192,
+       "example": "quad_ring hbm-ds.00288: role D has no die.io window on lk_NE0"
+      },
+      {
+       "rule": "missing",
+       "role": "D",
+       "n": 192,
+       "example": "quad_ring hbm-ds.00288: role D has no die.io window on lk_SW1"
+      },
+      {
+       "rule": "host",
+       "role": "D",
+       "n": 1,
+       "example": "role D: die_io marks ['C0'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+      }
+     ],
+     "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/xdie/xdie_io_hbm-ds.json",
+     "seconds": 0.1
+    }
+   }
+  },
+  "census": {
+   "status": "PASS",
+   "errors": 0,
+   "dropped_bits": 0,
+   "unmapped_instances": 0,
+   "inter_bits": 506326,
+   "exempt": 0,
+   "sources": 1
+  },
+  "latency": {
+   "status": "FAIL",
+   "reason": "no <die>_latency.json in the plan dir (gen.py latency never written for this plan)",
+   "plan_digest": "21c9f0d3bb2000b9",
+   "lanes": 5483,
+   "g0_latency_errors": 0,
+   "record": null,
+   "files": [],
+   "max_cycles": 69
+  },
+  "g2": {
+   "status": "FAIL",
+   "probes": 6,
+   "overflow": 0,
+   "no_access": 0,
+   "not_done": [
+    "part_q_sfuc",
+    "part_q_su1"
+   ],
+   "detail": {
+    "part_q_sfuc": {
+     "done": false,
+     "overflow": null,
+     "wirelength_um": null,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_q_sm2a": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 16636640.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_q_sm1a": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 15246950.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_q_sm1d": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 14448227.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "part_q_su1": {
+     "done": false,
+     "overflow": null,
+     "wirelength_um": null,
+     "no_access": 0,
+     "errors": [],
+     "reach": {}
+    },
+    "die": {
+     "done": true,
+     "overflow": 0,
+     "wirelength_um": 2444131.0,
+     "no_access": 0,
+     "errors": [],
+     "reach": {
+      "clk": {
+       "max_um": 26222.2,
+       "p90_um": 20899.1,
+       "taps": 9542
+      },
+      "rst": {
+       "max_um": 24546.2,
+       "p90_um": 21189.6,
+       "taps": 187
+      }
+     }
+    }
+   },
+   "seconds": 7406.8,
+   "report": "/srv/opentallas-scratch2/claude/die-ci/results/die_ci/2026-10-24_9f6cbf066233/work/hbm/g2/g2_report.json"
+  },
+  "sta": {
+   "seams": 12158,
+   "measured_ports": 0,
+   "standin_ports": 12158,
+   "standin": {
+    "bus": {
+     "cls": "bus",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 3632
+    },
+    "ft": {
+     "cls": "ft",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 0.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": -79.6,
+     "hold_ps": -22.6,
+     "ports": 4824
+    },
+    "ft_in": {
+     "cls": "ft_in",
+     "basis": "contract (kit I_max + O_max >= T)",
+     "setup_policy_ps": 100.0,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 20.3,
+     "hold_ps": -22.6,
+     "ports": 1851
+    },
+    "ft_out": {
+     "cls": "ft_out",
+     "basis": "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)",
+     "setup_policy_ps": 576.4,
+     "hold_policy_ps": 40.0,
+     "margin_setup_ps": 79.6,
+     "margin_hold_ps": 62.6,
+     "setup_ps": 496.8,
+     "hold_ps": -22.6,
+     "ports": 1851
+    }
+   },
+   "standin_worst_setup_ps": -79.6,
+   "standin_worst_hold_ps": -22.6,
+   "views": {},
+   "views_unavailable": {},
+   "xtalk": {
+    "setup_ps": 30.76,
+    "hold_ps": 20.76,
+    "seam_len_um": 60.0,
+    "cc_ff": 7.496
+   },
+   "derates": {
+    "cell_late": 1.1037,
+    "cell_early": 0.95,
+    "net_late": 1.03,
+    "net_early": 0.97,
+    "ir_factor": 1.0511
+   },
+   "ir": {
+    "factor": 1.0511,
+    "sensitivity": 1.022,
+    "drop_frac": 0.05,
+    "mode": "stated",
+    "pdnsim": "NOT RUN: no die-level PDN database (plan pg.grid only)"
+   },
+   "status": "NOT RUN (tools/die_plan/die_sta.py not on this sha: lane DIE-STA claude/die-sta-1024)"
+  }
+ },
+ "seconds": 7505.5,
+ "verdict": "FAIL",
+ "delta": {
+  "prev_sha": "9d2065c7a2b91a378a9712037f27125d6e0a1844",
+  "metrics": {},
+  "status_changes": {},
+  "new": []
+ }
+}
