@@ -1,0 +1,295 @@
+{
+ "schema": "opentallas.tokfunc.qwen_rom.v1",
+ "base_rev": "94cd97b7a",
+ "asm": "main 8a5d1f3dab (stg/head/attnret/xhead readset == main 7d75427c59) + QC-TOK link 3e05af806 (tp8/xdie/ovl4u) + carried 92c2417f6 xt1/ctx4u/kv/chain",
+ "grade": "RTL-functional",
+ "clock_period_ps": 833.0,
+ "clock_hz": 1200480192.0768306,
+ "rate_convention": "composer uses rounded 833 ps period (1.200480192 GHz)",
+ "model_of_record": {
+  "u1_tok_s": 4403.2,
+  "u4_tok_s": 11750.6,
+  "cycles": 272641
+ },
+ "base_reproduced": {
+  "cycles": 272641,
+  "tok_s": 4403.2,
+  "chained": 7471,
+  "l0_cold": 8005,
+  "pct_measured": 62.8,
+  "pct_rel": 60.0,
+  "vs_price": -8.48,
+  "by": {
+   "REL": 163601,
+   "PLAN_GAP": 1297,
+   "PRICED": 32358,
+   "DIAG": 67643,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1143,
+  "u4": 11750.6,
+  "variants": {
+   "variant_plan": [
+    4528.1,
+    12066.5
+   ],
+   "variant_asbuilt": [
+    4585.7,
+    12210.9
+   ]
+  }
+ },
+ "stages": {
+  "stg": "PASS",
+  "xt1": "PASS",
+  "xdie": "PASS",
+  "tp8": "PASS",
+  "ovl4u": "PASS",
+  "ctx4u": "PASS",
+  "head": "PASS",
+  "kv": "PASS",
+  "chain": "PASS"
+ },
+ "missing_stages": [],
+ "diagnostic_stages": [],
+ "gap_stages": {
+  "attnret": "PASS",
+  "xhead": "PASS"
+ },
+ "gaps": [
+  "IMAGE CAPACITY: legacy CALD check is stale; successor = CALR (QW-CALR/TLPROD: calendar ROM 1009/1023 entries, per-layer TABLE_REL loads, results/rtl/qw_calr_1020/calr_capacity_safe8u_tlprod.json PASS; tt_ctlm hp13 PRIVATE_CALR on main, ledger CALR producer 76/layer PRICED). OPEN: slice-side table_req consumer + GEN OT_SPLIT_DV_TREQ (claude/qdie5-tld-1022, not on main) not bound in the die and not in this run",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar [RTL item: per-slice go delay HGD[s] = 6 s - (hr_at[s] - hr_at[0]) for the AR destinations (dv_lower_xhead.tile_delivery); not built in qfd_dv_heads / tt_ctlm; stg od drives the stagger from the bench (nostagger mutant FAIL)]",
+  "PER-TOKEN RoPE ROW (producer -> consumer): the KV-die RoPE OVL producer (qkd_d2d_cal_seq_ovl_rope, qkd_kvn_ctx_ovl_rope view, codex/kdie-2000-1021) is not in this token run: stg drives the row from the bench; no cross-die co-sim of the row onto the compute-die return chain yet"
+ ],
+ "gaps_resolved": [
+  "COLUMN-HEAD x CONSUMER: RESOLVED -- dv_lower_xhead (QW-XHEAD fa577f2ea) lowers XPF arm + go/ib; xhead_bench calibrate + qkv/gu/o/down PASS, mutants FAIL (4/4 cases PASS, 10/10 mutants FAIL; calibrate go_lag -3 xpf_lead 4 (OT_XH_GO_MIN -8, FAIL edge at -4); consumer ages qkv -5/4, o -1/4, down -2/4)",
+  "PER-TOKEN RoPE ROW (compute-die consumer): RESOLVED -- qfd_dv_slice2 RP 1 + qfd_dv_vm CRH (QW-LAYERGAP) bound by die_params; stg pos qk --rope rx PASS, rope_late / RP 2 mutants FAIL",
+  "AR TAG CONTRACT: RESOLVED in RTL -- qfd_dv_slice2 ARF 1 (QW-LAYERGAP 6ff5be90f), bound on the release die by die_params (OT_QWEN_SLICE_LAYERGAP default 1) and the slice2_e / slice2_wh kits; stg pos od/lm --arf PASS, ARF 0 and ARF 2 mutant FAIL",
+  "ATTENTION RETURN: RESOLVED -- re-bench on the stg objects: measured 98 == compiled 98 (rel + pos), ddwin / ddbase FAIL; the composer's 116 was the unshifted measurement vs the PRICED SU8/VM8 successor-shifted compile (+18)"
+ ],
+ "stage_sources": {
+  "stg": {
+   "src_commit": "8a5d1f3dab",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "xt1": {
+   "src_commit": "92c2417f6",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": "CARRIED from TOKe-QWM 10-23 record results/rtl/tokqwm_1023/stages/xt1.json (assembly 92c2417f6), NOT re-run by TOK-QW 10-24; QC-TOK runs this link test on the bound_r8 die (claude/qc-tok-link-1024), not yet collected"
+  },
+  "xdie": {
+   "src_commit": "3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "tp8": {
+   "src_commit": "3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "ovl4u": {
+   "src_commit": "3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "ctx4u": {
+   "src_commit": "92c2417f6",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": "CARRIED from TOKe-QWM 10-23 record results/rtl/tokqwm_1023/stages/ctx4u.json (assembly 92c2417f6), NOT re-run by TOK-QW 10-24; QC-TOK runs this link test on the bound_r8 die (claude/qc-tok-link-1024), not yet collected"
+  },
+  "head": {
+   "src_commit": "8a5d1f3dab",
+   "grade": "RTL-functional (die-selected leaf, source assembly)",
+   "source_note": null
+  },
+  "kv": {
+   "src_commit": "92c2417f6",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": "92c2417f6 assembly: current r17 KV attention (qkd_kvs_attn_r17/fl_r17) + bench 0e597ed1c + explicit genuine-archive binding b0cc8cdca (tb sha 239b88c26de33c5e) | CARRIED from TOKe-QWM 10-23 record results/rtl/tokqwm_1023/stages/kv.json (assembly 92c2417f6), NOT re-run by TOK-QW 10-24; KV r17 vehicle readset 53/53 non-bench files + qkd_native_attention_record.sv byte-identical 92c2417f6 -> main 8a5d1f3da; the r17 explicit child-archive packet was lost with ep5/ep9"
+  },
+  "chain": {
+   "src_commit": null,
+   "grade": "RTL-functional (source assembly) KV vehicle = stage kv build 92c2417f6",
+   "source_note": "CARRIED from TOKe-QWM 10-23 record results/rtl/tokqwm_1023/stages/chain.json (assembly 92c2417f6), NOT re-run by TOK-QW 10-24; KV r17 vehicle readset 53/53 non-bench files + qkd_native_attention_record.sv byte-identical 92c2417f6 -> main 8a5d1f3da; the r17 explicit child-archive packet was lost with ep5/ep9"
+  },
+  "attnret": {
+   "src_commit": null,
+   "grade": "same build/source grade as stage stg",
+   "source_note": null
+  },
+  "xhead": {
+   "src_commit": "8a5d1f3dab",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  }
+ },
+ "applied": [
+  "dv ages ['slice', 'stn', 'vec'] <- stg",
+  "tile ops near + far 61 <- xt1",
+  "attention c2k 55 kv_service 1779 roundtrip 1887 -> plan 1872 <- xdie",
+  "kv_service 1782 (max of 36 real-token layers) <- chain",
+  "allreduce E 297 LS 389 <- tp8",
+  "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
+  "head 3135 <- head",
+  "attention return span 98 REL + 18 PRICED successor delta <- attnret"
+ ],
+ "problems": [],
+ "token": {
+  "cycles": 271106,
+  "tok_s": 4428.1,
+  "chained": 7428,
+  "l0_cold": 7941,
+  "pct_measured": 88.0,
+  "pct_rel": 85.2,
+  "vs_price": -7.96,
+  "by": {
+   "REL": 230900,
+   "PLAN_GAP": 1297,
+   "PRICED": 26987,
+   "DIAG": 4180,
+   "NEWEST": 7742
+  },
+  "die_edges_per_layer": 934,
+  "sched_added_per_layer": 1080,
+  "u4": 11844.1,
+  "variants": {
+   "variant_plan": [
+    4554.5,
+    12165.0
+   ],
+   "variant_asbuilt": [
+    4572.9,
+    12210.9
+   ]
+  }
+ },
+ "gaps_engine": [
+  "IMAGE CAPACITY: the full layer needs 13942 PW words (calendar 854 + tables 12608 = (PROG 72 + BTAB 188 + CROM 528) x 16) > CMD_CEIL 976: tt_ctlm cannot hold one layer's slice tables + calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream (ROM-resident slice tables or a table DMA) is needed",
+  "COLUMN-HEAD x CONSUMER: the qkv / gu / down / o matvecs read x from the slice x stream; the hr / xpf control that makes the column heads tap those words on the compiled edges is not lowered (QLB-C4b/3a left)",
+  "TILE DELIVERY: tile_first 40 (ME issue -> first far cluster word) and the AR stagger (slice s gets block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar",
+  "PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)",
+  "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
+ ],
+ "attn_span_probe": {
+  "compiled_unshifted": 98,
+  "compiled_priced": 116,
+  "priced_delta": 18
+ },
+ "u1": {
+  "qualified_full_token": false,
+  "scope": "historical model diagnostic; current token price held",
+  "cycles": 271106,
+  "tok_s": 4428.1,
+  "vs_model_pct": 0.57
+ },
+ "u4": {
+  "qualified_full_token": false,
+  "scope": "historical model diagnostic; isolated OVL transport is not full-token throughput",
+  "tok_s": 11844.1,
+  "vs_model_pct": 0.8
+ },
+ "verdict": "INCOMPLETE/FAIL (see stages/problems/gaps)",
+ "current_token_price": {
+  "status": "HELD",
+  "reasons": [
+   "open gap: IMAGE CAPACITY",
+   "open gap: TILE DELIVERY",
+   "open gap: PER-TOKEN RoPE ROW (producer -> consumer)"
+  ]
+ },
+ "chain": {
+  "verdict": "PASS",
+  "grade": "RTL-functional (source assembly) KV vehicle = stage kv build 92c2417f6",
+  "hand_off": {
+   "edges": 288,
+   "exact": 288
+  },
+  "kv_attention": {
+   "start_to_retire": {
+    "min": 1782,
+    "max": 1782,
+    "sum": 64152,
+    "n": 36
+   },
+   "start_to_status": {
+    "min": 1997,
+    "max": 1997,
+    "sum": 71892,
+    "n": 36
+   },
+   "work_span": {
+    "min": 1746,
+    "max": 1746,
+    "sum": 62856,
+    "n": 36
+   },
+   "cyc_k_last": {
+    "min": 411,
+    "max": 411,
+    "sum": 14796,
+    "n": 36
+   },
+   "cyc_v_last": {
+    "min": 1518,
+    "max": 1518,
+    "sum": 54648,
+    "n": 36
+   },
+   "cyc_final_out": {
+    "min": 1878,
+    "max": 1878,
+    "sum": 67608,
+    "n": 36
+   }
+  },
+  "kv_attention_token_36_layers": 71892,
+  "kv_attention_u4_cmd_period": [
+   2025.0
+  ],
+  "gaps": [
+   "golden family split: the KV RTL computes TP8-native attention (PV256) while the 36-layer token golden is TP4 (PV512); the od/resid stages were fed the TP4 ATTN (word diffs in tp8_vs_tp4_attention). A 36-layer TP8 token golden (tools/qwen_layerbench/qwen_tp8_layer_gold.py, only L0..L1 at P8191 exist) closes it"
+  ],
+  "failures": []
+ },
+ "isolated_ovl_transport": {
+  "verdict": "PASS",
+  "scope": "compiled fixture exchanges at release master pins; no full-token throughput claim",
+  "cycles": {
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2,
+   "codec": 2,
+   "codec1_H_frame": 4026800,
+   "codec1_aggregate_tok_s_833ps": 13708.2
+  }
+ }
+}

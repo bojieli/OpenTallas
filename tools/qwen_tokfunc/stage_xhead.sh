@@ -88,6 +88,8 @@ for t in ('gu_goearly', 'gu_xpflate', 'gu_isaxbase', 'qkv_goearly', 'o_goearly',
 ages = json.loads((O / 'xhead_ages.json').read_text()) if (O / 'xhead_ages.json').is_file() else None
 res = dict(stage='xhead', grade='RTL-functional (source assembly)', src_commit=sys.argv[2] or None,
            verdict='PASS' if not bad else 'FAIL', problems=bad, cases=cases, mutants=muts,
+           summary=f"{sum(1 for v in cases.values() if v and ' PASS ' in v)}/4 cases PASS, "
+                   f"{sum(1 for v in muts.values() if v == 'FAIL as required')}/10 mutants FAIL",
            consumer_ages=(ages or {}).get('consumer'), merge=(O / 'merge.out').read_text().splitlines()[:4]
            if (O / 'merge.out').is_file() else None,
            bench='rtl/test/qwen_dv/xhead_bench.py (tb_qfd_dv2 N 12 +DV2_XHEAD), protocol = TOKe-QW 10-23 xhead_cons_job.sh')
