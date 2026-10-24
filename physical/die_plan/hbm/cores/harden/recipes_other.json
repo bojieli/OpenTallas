@@ -204,7 +204,11 @@
   "view_cell": "ot_pdie_serdes",
   "view_kind": "SYNTH",
   "view_port_bits": 2118,
-  "closed_view_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_serdes"
+  "closed_view_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_serdes",
+  "orfs_vars": {
+   "SYNTH_MEMORY_MAX_BITS": 65536
+  },
+  "orfs_note": "the 512x8 flop FIFO (4096 b) exceeds the ORFS default SYNTH_MEMORY_MAX_BITS; the die view maps it to flops too"
  },
  "hfd_hgi_vm_calendar_f20_role__196.344x196.56": {
   "top": "hfd_hgi_vm_calendar_f20_role",

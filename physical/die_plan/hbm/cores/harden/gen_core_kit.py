@@ -260,6 +260,7 @@ def main():
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            "export CORNER = TC",
+           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *([f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
               "export MACRO_PLACE_HALO = 4.32 4.32"] if lefs else [])]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
