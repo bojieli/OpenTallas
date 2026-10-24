@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_ci.margins.v1",
- "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at SS setup / FF hold, 60 ps setup / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
+ "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
  "ocv": {
   "cell_late": 1.05,
   "cell_early": 0.95,
@@ -10,11 +10,11 @@
  },
  "ir": {
   "mode": "stated",
-  "vdd_ss_v": 0.63,
+  "vdd_v": 0.7,
   "vdd_drop_frac": 0.05,
   "vt_v": 0.25,
   "alpha": 1.3,
-  "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the SS supply (31.5 mV at 0.63 V, the total static + dynamic drop a sign-off PDN is designed to). Delay sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: d ln t / d ln V = 1 - a V / (V - Vt) = -1.155 at a = 1.3, Vt = 0.25 V (conservative ASAP7 RVT), so a 5 % drop is +5.8 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it replaces vdd_drop_frac.",
+  "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the TT supply of the setup sign-off corner (35 mV at 0.70 V, the total static + dynamic drop a sign-off PDN is designed to). Delay sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: d ln t / d ln V = 1 - a V / (V - Vt) = -1.022 at a = 1.3, V = 0.70, Vt = 0.25 V (conservative ASAP7 RVT), so a 5 % drop is +5.1 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it replaces vdd_drop_frac.",
   "pdnsim": null
  },
  "xtalk": {
@@ -66,21 +66,21 @@
  "derived_on": "2026-10-24",
  "derived": {
   "derates": {
-   "cell_late": 1.1107,
+   "cell_late": 1.1037,
    "cell_early": 0.95,
    "net_late": 1.03,
    "net_early": 0.97,
-   "ir_factor": 1.0578
+   "ir_factor": 1.0511
   },
   "xtalk_default": {
-   "setup_ps": 49.44,
+   "setup_ps": 30.76,
    "hold_ps": 20.76,
    "seam_len_um": 60.0,
    "cc_ff": 7.496
   },
   "ir": {
-   "factor": 1.0578,
-   "sensitivity": 1.155,
+   "factor": 1.0511,
+   "sensitivity": 1.022,
    "drop_frac": 0.05
   }
  }
