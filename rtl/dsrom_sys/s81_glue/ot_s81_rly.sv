@@ -78,6 +78,45 @@ module ot_s81_rly #(
     assign o = r;
 endmodule
 
+// ot_s81_rly_k (S81-P9-RTL 10-23): ot_s81_rly (non-sliced form, cycle-identical for every RSREG) whose flops are KEPT.
+// R3-INTERNAL far-qbank twins (frame_band_plan.py (g)) copy a relay with identical D/ck/rs; Yosys opt_merge folded the
+// twin back into its original (col_h10_r1__t1 kit synth).  (* keep *) on the flop processes marks the $dff cells; a kept
+// cell is still merged with an unkept identical one, so the original and every twin use this module.  ID only names the copy.
+module ot_s81_rly_k #(
+    parameter int W = 63,
+    parameter int RSREG = 0,
+    parameter int ID = 0
+) (
+    input  wire         ck,
+    input  wire         rs,
+    input  wire [W-1:0] i,
+    output wire [W-1:0] o
+);
+    reg [W-1:0] r;
+    wire rsi;
+    generate if (RSREG != 0) begin : g_rsreg
+        reg rq;
+        (* keep *) always @(posedge ck or negedge rs)
+            if (!rs) rq <= 1'b0;
+            else rq <= 1'b1;
+`ifdef OT_S81_RLY_RSMUT
+        assign rsi = rs;                    // bench mutant: reset pin register bypassed
+`else
+        assign rsi = rq;
+`endif
+    end else begin : g_rs
+        assign rsi = rs;
+    end endgenerate
+    (* keep *) always @(posedge ck or negedge rsi)
+        if (!rsi) r <= {W{1'b0}};
+`ifdef OT_S81_RLY_MUT
+        else r <= i ^ {{(W-1){1'b0}}, 1'b1};   // bench mutant: bit 0 inverted
+`else
+        else r <= i;
+`endif
+    assign o = r;
+endmodule
+
 `ifdef OT_S81_RLY_RSSLICE
 // One kept reset pin register copy of the sliced ot_s81_rly (distinct ID per copy so synthesis never merges copies).
 module ot_s81_rly_rq #(

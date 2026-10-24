@@ -5,6 +5,10 @@
 # REF=vgch runs the same bench on the unmodified banded twin (baseline).  Run on the FLEET (ot-run), never on localhost.
 #   bash rtl/dsrom_sys/s81_dv/frame_lp/vgcs/col_h9_l4_lp_bench.sh OUTDIR
 set -u
+# RETIRED (S81-P9 10-23, COORD / ROOT-MERGE6): this unit lockstep passes mutants 1/2/4 (blind). The release check for the
+# frame seams is tools/s81_dv/frame_seam_bench.sh (all 6 mutants caught; evidence results/arch/s81_dv_1016/
+# frame_lp_plan_r3/seam_bench.json). Set OT_FORCE_RETIRED=1 only for archaeology.
+[ "${OT_FORCE_RETIRED:-0}" = 1 ] || { echo "col_l4_lp_seam_bench.sh RETIRED: use tools/s81_dv/frame_seam_bench.sh" >&2; exit 2; }
 cd "${LP_ROOT:-$(cd "$(dirname "$0")/../../../../.." && pwd)}"
 OUT=${1:-seam_bench_out}; mkdir -p "$OUT"; rc=0; V=${REF:-vgcs}; M=${M:-h9}; TBD=$([ "$M" = h9 ] && echo vgc || echo vg)
 DUT0="rtl/dsrom_sys/s81_dv/frame_lp/$V/col_${M}_l4_lp_rf3r.sv"
