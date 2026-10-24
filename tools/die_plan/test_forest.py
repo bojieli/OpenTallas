@@ -26,13 +26,13 @@ def _netlist():
     v.append(f"  {FF} src (.CLK(clk), .D(a), .QN(src_q));")
     d = "src_q"
     for i in range(NPRE):
-        v.append(f"  {FF} \\{f}.g_prefix[{i}].u_ff.value_reg  (.CLK(clk), .D({d}), .QN(p{i}));")
+        v.append(f"  {FF} \\{f}.g_prefix[{i}].u_ff/value_reg  (.CLK(clk), .D({d}), .QN(p{i}));")
         d = f"p{i}"
     for b in range(NBR):
-        v.append(f"  {FF} \\{f}.g_branch[{b}].u_ff.value_reg  (.CLK(clk), .D({d}), .QN(bq{b}));")
-        v.append(f"  {INV} \\{f}.g_branch[{b}].u_ff.inv  (.A(bq{b}), .Y(bo{b}));")
+        v.append(f"  {FF} \\{f}.g_branch[{b}].u_ff/value_reg  (.CLK(clk), .D({d}), .QN(bq{b}));")
+        v.append(f"  {INV} \\{f}.g_branch[{b}].u_ff/inv  (.A(bq{b}), .Y(bo{b}));")
     for n in range(NLEAF):
-        v.append(f"  {FF} \\{f}.g_leaf[{n}].u_ff.value_reg  (.CLK(clk), .D(bo{n // 32}), .QN(lq{n}));")
+        v.append(f"  {FF} \\{f}.g_leaf[{n}].u_ff/value_reg  (.CLK(clk), .D(bo{n // 32}), .QN(lq{n}));")
         v.append(f"  {FF} ld{n} (.CLK(clk), .D(lq{n}), .QN());")
     v.append("  assign y = lq0;\nendmodule\n")
     return "\n".join(v)
@@ -101,14 +101,14 @@ def test_forest_recluster():
         assert len(leaves) == NLEAF
         per = {}
         for _, k, src, par, dist in leaves:
-            assert re.fullmatch(r"u_f\.g_branch\[\d\]\.u_ff\.value_reg", src), src     # still a branch flop
+            assert re.fullmatch(r"u_f\.g_branch\[\d\]\.u_ff/value_reg", src), src     # still a branch flop
             assert par == "1"                                                          # same parity as the RTL
             assert float(dist) <= 750.0
             per[src] = per.get(src, 0) + 1
         assert max(per.values()) <= 32 and sum(per.values()) == NLEAF
         for kind, k, src, par, dist in chk:
             if kind == "branch":
-                assert src == f"u_f.g_prefix[{NPRE - 1}].u_ff.value_reg" and float(dist) <= 750.0
+                assert src == f"u_f.g_prefix[{NPRE - 1}].u_ff/value_reg" and float(dist) <= 750.0
             if kind == "prefix":
                 assert float(dist) <= 750.0
         log = (Path(d) / "ot_forest_recluster.txt").read_text()

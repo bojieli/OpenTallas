@@ -19,7 +19,7 @@
 uplevel #0 {
 set fr_blk [ord::get_db_block]
 set fr_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-set fr_re [expr {[info exists ::env(OT_FOREST_RE)] ? $::env(OT_FOREST_RE) : {^(.*)[.]g_(prefix|branch|leaf)\[([0-9]+)\][.]u_ff[.]}}]
+set fr_re [expr {[info exists ::env(OT_FOREST_RE)] ? $::env(OT_FOREST_RE) : {^(.*)[.]g_(prefix|branch|leaf)\[([0-9]+)\][.]u_ff[./]}}]
 set fr_hop [expr {([info exists ::env(OT_FOREST_HOP_UM)] ? $::env(OT_FOREST_HOP_UM) : 750.0) * $fr_dbu}]
 # plan to the limit minus a legalisation margin (row / site snapping and DPL moves; OT_FOREST_MARGIN_UM, 25)
 set fr_plan [expr {$fr_hop - ([info exists ::env(OT_FOREST_MARGIN_UM)] ? $::env(OT_FOREST_MARGIN_UM) : 25.0) * $fr_dbu}]
