@@ -416,7 +416,7 @@ def main():
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "clock_family.tcl"):
+    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py"):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
