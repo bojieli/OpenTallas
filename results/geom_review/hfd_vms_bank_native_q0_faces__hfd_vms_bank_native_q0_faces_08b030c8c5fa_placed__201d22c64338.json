@@ -1,0 +1,16 @@
+{
+ "element": "hfd_vms_bank_native_q0_faces",
+ "view": "hfd_vms_bank_native_q0_faces@08b030c8c5fa",
+ "kit": "physical/die_plan/hbm_arch_cores (kit hfd_vms_bank_native_q0_faces_08b030c8c5fa, B2r2 pins 08b030c8c5fa, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "201d22c64338d92a",
+ "reasons": "placed-stage: placement of kit e06e19b9379d2d5c reused (regenerated as 201d22c64338d92a: only change SKIP_CTS_REPAIR_TIMING=1, a post-place stage); cells 26966, flops 7924, macros 3, fill of free 0.102, buf/inv 0.194, bins>0.8 0 (max bin 0.51), face flops 3910 pin->reg p50/p90/max 6.7/8.5/16.2 um. CTS-only probe: mean insertion 251 ps, longest tree 484 ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80). Longest tree 484 ps > 290: pin-flop spread decides at signoff.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/hfd_vms_bank_native_q0_faces_08b030c8c5fa/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:51-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

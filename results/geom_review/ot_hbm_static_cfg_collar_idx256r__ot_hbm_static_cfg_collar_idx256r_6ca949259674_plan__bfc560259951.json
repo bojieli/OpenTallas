@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_static_cfg_collar_idx256r",
+ "view": "ot_hbm_static_cfg_collar_idx256r@6ca949259674",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_static_cfg_collar_idx256r_6ca949259674, B2r2 pins 6ca949259674, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "bfc560259951d0fe",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 108.0x108.0 um, 1559 pins, faces E:622,N:622,S:304,W:11; worst 0.216 pins/track per layer (<=0.6 OK), pins on lattice. Context root/u_col_idx: 19/23 buses with partners; 1307 of 1548 connected bits leave a face pointing away from the nearest partner (e.g. active, cfg_addr, cfg_data, cfg_target); 549 bits > 365 um to the nearest partner (plan stations). Macros: none. Fill/density/face-flop distance/clock judged at the placed stage.",
+ "fixes": "Place only; route + signoff after the placed-stage review. Facing-away buses reported to HBM-ARCH.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_static_cfg_collar_idx256r_6ca949259674/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_static_cfg_collar_idx256r_6ca949259674/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:50-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

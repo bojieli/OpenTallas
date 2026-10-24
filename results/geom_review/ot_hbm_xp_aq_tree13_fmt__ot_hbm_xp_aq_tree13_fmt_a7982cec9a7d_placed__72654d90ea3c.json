@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_xp_aq_tree13_fmt",
+ "view": "ot_hbm_xp_aq_tree13_fmt@a7982cec9a7d",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d, B2r2 pins a7982cec9a7d, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "72654d90ea3c4f2d",
+ "reasons": "placed-stage: placement of kit 0c899de1425acff4 reused (regenerated as 72654d90ea3c4f2d: only change SKIP_CTS_REPAIR_TIMING=1, a post-place stage); cells 54091, flops 13185, macros 0, fill of free 0.42, buf/inv 0.119, bins>0.8 0 (max bin 0.58), face flops 1805 pin->reg p50/p90/max 6.4/8.4/21.8 um. CTS-only probe: mean insertion 236 ps, longest tree - ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:51-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
