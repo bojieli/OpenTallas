@@ -20,6 +20,10 @@ X=$SRC/rtl/hbm_accel/generic/collective/xdie; P=$SRC/rtl/hbm_accel/generic/colle
 E=$SRC/rtl/hbm_accel/tu/ep_static_20261015; L=$SRC/rtl/dsrom_sys/s81_link; Q=$SRC/rtl/qwen_sys/split_20261014
 VS=$SRC/rtl/hbm_accel/generic/vm/static; M=$SRC/physical/asap7_memory_macros; H=$SRC/rtl/hdc
 C="python3 $SRC/tools/xdie_hbm_coll_compile.py"
+# HBM-P6-CMP (10-23): LEAF_SPLIT=1 -> hb_coll = the over-cap split parent ot_hfd_coll_q2_hard_v8g_s (u_reduce =
+# ot_hgi_coll_reduce_static_pr) and the compiler schedules it (--leaf-split 1: reduce publication +1).  CMP_LS overrides
+# the compiler only (negative control: twin RTL + CMP_LS=0 must FAIL).  WHICH=dsqw = ds + qw + ds mutants, no topk.
+LS=${LEAF_SPLIT:-0}; CLS=${CMP_LS:-$LS}; C="$C --leaf-split $CLS"
 F="$X/tb_xdie_hbm_coll.sv
  $P/ot_hfd_coll_q_hard_v8g.sv $P/ot_hfd_coll_q_hard_v5.sv $P/ot_hgi_coll_ctl_v5.sv $P/ot_hfd_coll_q3_static_host_v4.sv
  $P/ot_hfd_coll_q2_static_host_v4.sv $P/ot_hgi_coll_static_program_target.sv $P/ot_hfd_coll_q_static_v4.sv
@@ -40,7 +44,13 @@ F="$X/tb_xdie_hbm_coll.sv
  $E/hfd_ep_static.sv $E/ot_hep_rx_store.sv $L/ot_s81_kp4_common.sv $L/ot_s81_kp4_enc.sv $L/ot_s81_kp4_dec.sv $L/ot_pdie_serdes.sv
  $M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v $M/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  $M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v $M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
-sha256sum $F $SRC/tools/xdie_hbm_coll_compile.py $P/static_uop_layout_v4.json > "$OUT/sources.sha256"
+if [ "$LS" = 1 ]; then
+  sed 's/^\(\s*\)ot_hfd_coll_q2_hard_v8g #(/\1ot_hfd_coll_q2_hard_v8g_s #(/' $X/tb_xdie_hbm_coll.sv > "$OUT/tb_xdie_hbm_coll_s.sv"
+  grep -q "ot_hfd_coll_q2_hard_v8g_s #(" "$OUT/tb_xdie_hbm_coll_s.sv" || { echo "XDIE2 LEAF_SPLIT tb rewrite FAIL"; exit 2; }
+  F="${F/$X\/tb_xdie_hbm_coll.sv/$OUT/tb_xdie_hbm_coll_s.sv} $P/ot_hfd_coll_q2_hard_v8g_s.sv $P/ot_hgi_coll_reduce_static_pr.sv"
+fi
+echo "XDIE2_CFG LEAF_SPLIT=$LS CMP_LS=$CLS"
+sha256sum $F $SRC/tools/xdie_hbm_coll_compile.py $SRC/tools/hbm_static/leaf_split_latency.py $P/static_uop_layout_v4.json > "$OUT/sources.sha256"
 "$V" --binary --timing -O1 -j ${JOBS:-16} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTIDRIVEN \
   -Wno-TIMESCALEMOD -Wno-INITIALDLY -Wno-MULTITOP -Wno-BLKSEQ -Wno-WIDTHCONCAT +incdir+$L --top-module tb_xdie_hbm_coll \
   --Mdir "$OUT/obj" -o tb $F > "$OUT/build.log" 2>&1 || { tail -60 "$OUT/build.log"; echo "XDIE2 build FAIL"; exit 2; }
@@ -58,14 +68,14 @@ stage() {  # tag swd compile-args...
 }
 rc=0
 for cfg in ds qw; do
-  [ "$WHICH" = all ] || [ "$WHICH" = $cfg ] || continue
+  [ "$WHICH" = all ] || [ "$WHICH" = dsqw ] || [ "$WHICH" = $cfg ] || continue
   SWD=333; [ $cfg = qw ] && SWD=4
   stage ${cfg}_A $SWD --from -
   stage ${cfg}_B $SWD --from "$OUT/${cfg}_A.log" --guard 80
   stage ${cfg}_pass $SWD --from "$OUT/${cfg}_B.log" --guard 8
   grep -q '^XDIE2 .* PASS$' "$OUT/${cfg}_pass.log" || { echo "XDIE2 ${cfg}_pass did not PASS"; rc=1; }
 done
-if [ "$WHICH" = all ] || [ "$WHICH" = ds ]; then
+if [ "$WHICH" = all ] || [ "$WHICH" = dsqw ] || [ "$WHICH" = ds ]; then
   stage m_order 333 --from "$OUT/ds_B.log" --guard 8 --mut order
   stage m_flip 333 --from "$OUT/ds_B.log" --guard 8 --mut flip
   stage m_early 333 --from "$OUT/ds_B.log" --guard 8 --release-early 40

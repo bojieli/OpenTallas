@@ -65,8 +65,12 @@ START_ADVANCE, CFG_LEAD, EDGES_MAX = 9, 2, 7111
 FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
 SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
 # first lane output after the setup line: su_top_compile FO = 8 + 23 + 4(MLAT-3) + (ALAT-3) + LEAF + 4 PIN_REG with
-# the die's su_<q><g> parameters MLAT 4, ALAT 3, LEAF 1, PIN_REG 0 (die.v su_SW0 #(...))
-FIRST_OUT = 8 + 23 + 4 * (4 - 3) + 0 + 1 + 0
+# the die's su_<q><g> parameters MLAT 4, ALAT 3, LEAF 1, PIN_REG 0 (die.v su_SW0 #(...)).
+# HBM-P6-CMP: the over-cap pgslice split (ot_hbm_su_static_pgslice_lg_s) runs PIN_REG 1 = LS 'su_pin_reg' when
+# OT_HBM_LEAF_SPLIT=1: first output +4 (36 -> 40 measured), requests +2 (su_top_compile --pin-reg rule).
+import leaf_split_latency as LS  # noqa: E402
+SU_PIN_REG = LS.shift('su_pin_reg')
+FIRST_OUT = 8 + 23 + 4 * (4 - 3) + 0 + 1 + 4 * SU_PIN_REG
 DS_PROGRAMME = ROOT / "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json"
 
 

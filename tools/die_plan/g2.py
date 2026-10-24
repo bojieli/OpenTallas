@@ -212,6 +212,25 @@ def worst_types(P, summ, n):
     return [(tn, score[tn], dens[tn]) for tn in cands[:n]]
 
 
+def probe_blockages(t):
+    """Leaf obstructions of a partition probe.  A content leaf that the plan splits into planned hard cores
+    (hard_cores[].inst == leaf inst or '<leaf inst>_*', e.g. an over-cap bankq leaf -> 3 cores) is represented by
+    those cores, not by the whole leaf outline: the space between the cores is glue / routing area of the partition.
+    Every other content leaf with an outline is blocked as before."""
+    cores = [h for h in t.get("hard_cores", []) if "origin_um" in h and "outline_um" in h]
+    out, covered = [], set()
+    for c in t.get("contents", []):
+        if "origin_um" not in c or "outline_um" not in c:
+            continue
+        sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith(c["inst"] + "_")]
+        if sub:
+            covered.update(h["inst"] for h in sub)
+            out += [dict(h, obs_max=c.get("obs_max", h.get("obs_max", "M5"))) for h in sub]
+        else:
+            out.append(c)
+    return out
+
+
 def part_probe(P, tn, out, adjust=0.5, mem=32):
     t = P.types[tn]
     w, h = t["outline_um"]
@@ -291,9 +310,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
            f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{{m:g} {m:g} {w - m:g} {h - m:g}}} "
            "-site asap7sc7p5t", "source /work/make_tracks.tcl", "source /work/io.tcl"]
     nobs = 0
-    for c in t.get("contents", []):
-        if "origin_um" not in c or "outline_um" not in c:
-            continue
+    for c in probe_blockages(t):
         x0, y0 = c["origin_um"]
         x1, y1 = x0 + c["outline_um"][0], y0 + c["outline_um"][1]
         tcl.append(f"create_blockage -region {{{x0:g} {y0:g} {x1:g} {y1:g}}}")

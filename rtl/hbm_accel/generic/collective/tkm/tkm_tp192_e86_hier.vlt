@@ -1,0 +1,7 @@
+`verilator_config
+// HBM-P5-RTLA 10-23 (restores TKM-3 10-18 tkm_tp192_hier.vlt, 1749db353): the TP192 gates instantiate the e86 tile
+// shape. Through the e86 wrapper (tile_rg #(.EW(86),.PT(64)) .*) Verilator 5.050 does not substitute the tile_rg hier
+// block and flattens all 32 tile bodies into the top pass: >280 GB (HBM-P4-SPLIT memcg OOM at 128/300 GB on gold2, and
+// again 280 GB here).  Making the parameterless e86 wrapper the hier block gives the top pass 32 stubs.
+hier_block -module "ot_hgi_coll_tkm_tile"
+hier_block -module "ot_hgi_coll_tkm_tile_e86"

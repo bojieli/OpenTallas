@@ -15,7 +15,7 @@
   },
   "ot_hgi_coll_tkm_m_tp192": {
    "file": "ot_hgi_coll_tkm_m_tp192.split.json",
-   "status": "RTL-UNBENCHED",
+   "status": "DONE",
    "plan_types": [
     "c0"
    ],
@@ -27,7 +27,7 @@
   },
   "ot_hgi_sfu_core_split3": {
    "file": "ot_hgi_sfu_core_split3.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "q_sfuc"
    ],
@@ -35,11 +35,11 @@
    "n_cores": 19,
    "max_core_cells": 306861,
    "glue_cells": 0,
-   "cycle_cost": null
+   "cycle_cost": 3
   },
   "ot_hbm_su_static_pgslice_lg__pv0": {
    "file": "ot_hbm_su_static_pgslice_lg__pv0.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "q_su0",
     "q_su1"
@@ -48,11 +48,11 @@
    "n_cores": 23,
    "max_core_cells": 308480,
    "glue_cells": 63629,
-   "cycle_cost": "PIN_REG 1: +2 request / +4 write+reducer edges (existing opt-in); side split +1 edge on side results (OPEN)"
+   "cycle_cost": "PIN_REG 1: +2 request / +4 write+reducer edges; side split 0 data edges (+1 on the softplus fault pulse)"
   },
   "ot_hbm_su_static_pgslice_lg__pv8": {
    "file": "ot_hbm_su_static_pgslice_lg__pv8.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "q_su2",
     "q_su3",
@@ -62,7 +62,7 @@
    "n_cores": 9,
    "max_core_cells": 308632,
    "glue_cells": 63778,
-   "cycle_cost": "PIN_REG 1: +2 request / +4 write+reducer edges (existing opt-in)"
+   "cycle_cost": "PIN_REG 1: +2 request / +4 write+reducer edges"
   },
   "ot_hbm_hc_bankq0_static": {
    "file": "ot_hbm_hc_bankq0_static.split.json",
@@ -118,7 +118,7 @@
   },
   "ot_hbm_hc_root_static": {
    "file": "ot_hbm_hc_root_static.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "c0"
    ],
@@ -126,11 +126,11 @@
    "n_cores": 7,
    "max_core_cells": 302248,
    "glue_cells": 111386,
-   "cycle_cost": "+1 sink_clk edge per Sinkhorn (out_valid at 2 ITERS + 2 = 42, pinned 41): the tail calendar's sink_capture moves 1 sink edge"
+   "cycle_cost": "+1 sink edge = +7 core edges per HC tail result (L 496 -> 503; emit >= launch + 504)"
   },
   "ot_hfd_coll_q2_hard_v8g": {
    "file": "ot_hfd_coll_q2_hard_v8g.split.json",
-   "status": "CUT-ONLY",
+   "status": "DONE",
    "plan_types": [
     "q_rc4",
     "q_rc4_v1"
@@ -139,7 +139,10 @@
    "n_cores": 3,
    "max_core_cells": 222636,
    "glue_cells": 0,
-   "cycle_cost": null
+   "cycle_cost": "+1 edge per AR reduce publication (fault status +2)"
   }
- }
+ },
+ "history": [
+  "HBM-P5-RTLB 10-23 @8f38f3246: pgslice pv0/pv8, hc_root, coll_q2 twins + benches (see each split.json rtl)"
+ ]
 }

@@ -1,0 +1,7 @@
+{"schema": "opentallas.hbm.sm_qsplit_wrap_bench.v1", "lane": "HBM-P5-PINS 2026-10-23 15:31",
+ "rtl": "rtl/hbm_accel/sm/attn/qsplit (ot_hbm_sm_attn_leafh_lx, ot_hbm_sm_attn_tile_tp, leafh_q, tile_q)",
+ "bench": "rtl/hbm_accel/sm/attn/qsplit/tbv_sm_attn_tile_q.sv: ot_hbm_sm_attn_tile vs ot_hbm_sm_attn_tile_q, random rin/bin/gin every cycle, every output every edge",
+ "defines": "OT_SMH_FC_HIER OT_SMH_HIER OT_SMH_XLK OT_FP_DATA_NORST OT_SMH_DRST0 OT_SMH_RSTRELAY (the r18h5 SM view set, no PINREG/RSTPIN)",
+ "simulator": "Verilator 4.038 (localhost)",
+ "runs": {"MUT0": {"cycles": 3995, "mismatches": 0, "verdict": "PASS"},
+          "MUT1_strap": {"cycles": 3995, "mismatches": 3769, "verdict": "FAIL (expected)"}}}

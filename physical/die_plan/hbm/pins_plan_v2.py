@@ -14,6 +14,10 @@ Two cases, both written to cores/pins_plan/<module>.json in the pins_file schema
           by the G3 binder; the pins are legal plan-track pins, not a connectivity claim.
 
     python3 pins_plan_v2.py --ports PORTS.json [--ports ...] --out cores/pins_plan
+    HBM-P5-PINS: the port lists live in cores/ports/ (pins_cut/gen_core_ports.py = netlist cuts of the over-cap
+    splits; pins_cut/sm_wrap_ports.py = the SM lx/tp wrappers; ~/scratch/hbm-p4-1023/pins = the P4 views):
+    python3 pins_plan_v2.py --ports cores/ports/p4_ports.json --ports cores/ports/sm_wrap_ports.json \
+        --ports cores/ports/ports_cut.json
 """
 import argparse, json, math, os, re
 
@@ -124,12 +128,11 @@ def main():
             lef = os.path.join(HERE, 'cores', 'pins', f'{mod}.json')
             if 'cannot land' in note and os.path.exists(lef):
                 pins = repin(json.load(open(lef)), w, h); how = 'repin'
-            elif mod in ports and not re.match(r'sm_(lx|tp)\d', c['inst']):
+            elif mod in ports:
                 pins = spread(ports[mod], w, h); how = 'ports'
             else:
-                skipped[key] = ('SM synthetic boundary (lx/tp: wrapper RTL from the SM split)'
-                                if re.match(r'sm_(lx|tp)\d', c['inst']) else
-                                'split proposal (over-cap RTL split pending)' if 'SPLIT' in note else 'no port list')
+                skipped[key] = ('split proposal: no port list (over-cap cut not derived)' if 'SPLIT' in note
+                                else 'no port list')
                 continue
             fn = f'{mod}__{w:g}x{h:g}.json'
             json.dump(pins, open(os.path.join(a.out, fn), 'w'), indent=0)
