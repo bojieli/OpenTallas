@@ -51,7 +51,9 @@ from sfu_control_image import WIDTH as CTL_W, pack  # noqa: E402
 ROWS = 2048                  # sfup_SW rows (PAGE_AW 1)
 LANES = 16
 LEAD = 8                     # offset-bank load lead (sfu_vector_calendar)
-HORIZON = 46                 # drain horizon of a non-dividing, SFU-free op (sfu_vector_calendar)
+import leaf_split_latency as LS  # noqa: E402  HBM-P6-CMP over-cap leaf-split shifts (opt-in OT_HBM_LEAF_SPLIT)
+# drain horizon of a non-dividing, SFU-free op (sfu_vector_calendar); + LS 'sfu_op_horizon' (3) on the split core _sp2
+HORIZON = 46 + LS.shift('sfu_op_horizon')
 GAP = 64                     # rows without emits before the co_rnd pass (> HORIZON)
 TAIL = 16                    # rows after the drain horizon: the last beats' OUT-stage co_rnd (RTL: 46 rows short by 3)
 VB_LAG = 0                   # rows the vector bases trail the emit row (lane_map: pass ring vs emit pipe; RTL-measured)

@@ -74,8 +74,11 @@ def main():
     # earlier (root out flop + quarter pin flop + XRD relays).  RAW0 from the split probe.
     ap.add_argument('--split', action='store_true')
     ap.add_argument('--ding', type=int, default=2)
-    ap.add_argument('--tail-extra', type=int, default=0,
-                    help='HBM-P5-RTLB 10-23: extra tail result edges (hc_root split twin: +7 = one sink edge); default 0 = unchanged')
+    sys.path.insert(0, str(ROOT / 'tools' / 'hbm_static'))
+    import leaf_split_latency as LS  # HBM-P6-CMP: default = LS 'hc_tail_result' (7 with OT_HBM_LEAF_SPLIT=1, else 0)
+    ap.add_argument('--tail-extra', type=int, default=LS.shift('hc_tail_result'),
+                    help='HBM-P5-RTLB 10-23: extra tail result edges (hc_root split twin: +7 = one sink edge); default '
+                         'leaf_split_latency hc_tail_result (0 unless OT_HBM_LEAF_SPLIT=1)')
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
