@@ -168,16 +168,20 @@ def main():
         py = sum(p["y"] for p in L) / len(L) + oy
         f = collections.Counter(face_of(p["x"], p["y"], w, h) for p in L).most_common(1)[0][0]
         nx, ny = dict(N=(0, 1), S=(0, -1), E=(1, 0), W=(-1, 0))[f]
-        for tgt in tg:
-            q = centres.get(tgt) or buspt.get(tgt)
-            if q is None:
-                checks.append(dict(bus=b, partner=tgt, bits=len(L), cos=None, dist_um=None))
-                continue
+        # a multi-endpoint net (broadcast / shared bus) is a tree: judge the bus against its NEAREST endpoint only
+        cand = [(tgt, centres.get(tgt) or buspt.get(tgt)) for tgt in tg]
+        unres = [t_ for t_, q in cand if q is None]
+        cand = [(t_, q) for t_, q in cand if q is not None]
+        if not cand:
+            checks.append(dict(bus=b, partner=",".join(unres), bits=len(L), cos=None, dist_um=None))
+            continue
+        cand = [min(cand, key=lambda c: abs(c[1][0] - px) + abs(c[1][1] - py))]
+        for tgt, q in cand:
             dx, dy = q[0] - px, q[1] - py
             d = math.hypot(dx, dy) or 1e-9
             cs = (dx * nx + dy * ny) / d
             man = abs(dx) + abs(dy)
-            checks.append(dict(bus=b, partner=tgt, bits=len(L), face=f, cos=round(cs, 3), dist_um=round(man, 1)))
+            checks.append(dict(bus=b, partner=tgt, endpoints=len(tg), bits=len(L), face=f, cos=round(cs, 3), dist_um=round(man, 1)))
             ax.plot([px, q[0]], [py, q[1]], lw=0.4 + 2.5 * min(1, len(L) / 512),
                     color="tab:green" if cs >= 0.3 else "tab:orange" if cs >= 0 else "tab:red", alpha=0.7)
     ax.set_aspect("equal")
