@@ -1,0 +1,11 @@
+SC2CE_MISMATCH port=up_o cycle=25 ref=a0003e1b3566 dut=a0003f800000
+SC2CE_MISMATCH port=w1_we cycle=25 ref=0 dut=1
+SC2CE_MISMATCH port=w1_data cycle=25 ref=00000000 dut=3f800000
+SC2CE_MISMATCH port=up_o cycle=26 ref=000000000000 dut=a0003f800000
+SC2CE_MISMATCH port=w1_we cycle=26 ref=0 dut=1
+SC2CE_MISMATCH port=w1_data cycle=26 ref=00000000 dut=3f800000
+SC2_CE_LOCKSTEP FAIL VAR=1 MUT=2 mismatches=76107 of 240000
+- bench/tb_sc2_ce.sv:60: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 6.299 s; speed 3.175 us/s
+- Verilator: cpu 6.296 s on 1 threads; allocated 19 MB
