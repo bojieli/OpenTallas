@@ -30,6 +30,8 @@ HARDEN_MIN = 20_000            # leaves below this (and without macros) are flat
 GLUE_CELLS_PER_BIT = 2         # boundary / station / fork register bit: 1 flop + ~1 buffer/hold cell (EST)
 INS_PS, INS_TOL = 250.0, 40.0
 SM_MOD = 'ot_hbm_accel_smh_attn'
+# HBM-P5-PINS: the SM synthetic cores lx / tp are real modules now (rtl/hbm_accel/sm/attn/qsplit, lock-step == tile)
+SM_WRAP = {'lx': 'ot_hbm_sm_attn_leafh_lx', 'tp': 'ot_hbm_sm_attn_tile_tp'}
 HARD_IP = {'ot_hbm3e_phy_rc_e8p5'}
 LAYER = {'M2': ('H', 0.036, 0.045), 'M3': ('V', 0.036, 0.009), 'M4': ('H', 0.048, 0.024), 'M5': ('V', 0.048, 0.024),
          'M6': ('H', 0.064, 0.032), 'M7': ('V', 0.064, 0.032), 'M8': ('H', 0.080, 0.040), 'M9': ('V', 0.080, 0.040)}
@@ -282,11 +284,13 @@ def apply(plan, out_dir, where, ft=None):
             m_ = 4 * G
             box = (m_, m_, lat_floor(w - m_), lat_floor(h - m_))
             for i, ((sx, sy, sw, sh), sc) in enumerate(zip(grid_split(box, len(sq['cores'])), sq['cores'])):
-                cores.append(dict(inst=f"sm_{sc['role']}{i}", module=sc['module'].split(' ')[0],
+                cores.append(dict(inst=f"sm_{sc['role']}{i}", module=SM_WRAP.get(sc['role'], sc['module'].split(' ')[0]),
                                   origin_um=[r3(sx), r3(sy)], outline_um=[r3(sw), r3(sh)], orient='R0',
                                   track_offset_um=[0.0, 0.0],
                                   note=f"SM quarter {q} core {sc['name']} ({sc['module']}): {sc['cells']} cells "
-                                       f"{sc['label']} (sm_split); outline EST (grid of the quarter), no pins",
+                                       f"{sc['label']} (sm_split); outline EST (grid of the quarter)"
+                                       + (f"; wrapper RTL {SM_WRAP[sc['role']]} (rtl/hbm_accel/sm/attn/qsplit)"
+                                          if sc['role'] in SM_WRAP else ''),
                                   _cells=sc['cells'], _box=(sx, sy, sw, sh)))
             flat.append(dict(inst='sm_glue', module=f"SM quarter {q} glue ({sq['glue_note']})",
                              cells=sq['glue_cells'], basis='sm_split glue_cells_with_relays_est', macros=0))
@@ -325,7 +329,7 @@ def apply(plan, out_dir, where, ft=None):
                 else:
                     key = c['module'] if c['module'] in SPL else None
                 groups = []
-                osp = OCS.get((tn, c['module']))
+                osp = OCS.get((tn, c['module'])) or OCS.get((re.sub(r'_v\d+$', '', tn), c['module']))   # P6: new _vN variants of a split type
                 if osp:                                     # P4: measured connectivity split (HBM-P4-SPLIT)
                     groups = [(cr['core_label'], cr['cells'],
                                f"{cr['module']} ({cr['cells']} Yosys; {osp['status']})") for cr in osp['cores']]
@@ -449,7 +453,7 @@ def apply(plan, out_dir, where, ft=None):
                 continue
             fn = PP.get(f"{c['module']}@{c['outline_um'][0]}x{c['outline_um'][1]}") or \
                 PP.get(f"{c['module']}@{c['outline_um'][0]:g}x{c['outline_um'][1]:g}")
-            if fn and not re.match(r'sm_(lx|tp)\d', c['inst']):
+            if fn:
                 c['pins_file'] = f'cores/pins_plan/{fn}'
                 c['track_offset_um'] = [0.0, 0.0]
                 c['note'] = (c.get('note', '') + '; P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)')

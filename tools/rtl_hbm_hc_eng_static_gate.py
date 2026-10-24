@@ -74,6 +74,11 @@ def main():
     # earlier (root out flop + quarter pin flop + XRD relays).  RAW0 from the split probe.
     ap.add_argument('--split', action='store_true')
     ap.add_argument('--ding', type=int, default=2)
+    sys.path.insert(0, str(ROOT / 'tools' / 'hbm_static'))
+    import leaf_split_latency as LS  # HBM-P6-CMP: default = LS 'hc_tail_result' (7 with OT_HBM_LEAF_SPLIT=1, else 0)
+    ap.add_argument('--tail-extra', type=int, default=LS.shift('hc_tail_result'),
+                    help='HBM-P5-RTLB 10-23: extra tail result edges (hc_root split twin: +7 = one sink edge); default '
+                         'leaf_split_latency hc_tail_result (0 unless OT_HBM_LEAF_SPLIT=1)')
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
@@ -162,7 +167,7 @@ def main():
                     tft -= 1
                 add(tft, tf=1, tset=tset)
                 add(t, tl=1, tunit=u, tpos=p)
-                e = t + 497
+                e = t + 497 + a.tail_extra
                 while e in ev and 'emit' in ev[e]:
                     e += 1
                 add(e, emit=1, qmask=0xf, eunit=u)
@@ -180,7 +185,7 @@ def main():
         t = TB + 2 + 24 + 6
         add(t - 7, tf=1, tset=tset)
         add(t, tl=1, tunit=1, tpos=0)
-        add(t + 497, emit=1, qmask=0b0101, eunit=1)
+        add(t + 497 + a.tail_extra, emit=1, qmask=0b0101, eunit=1)
         events = {'TB': TB, 'tail_launch': t}
         P = 1
     words = []

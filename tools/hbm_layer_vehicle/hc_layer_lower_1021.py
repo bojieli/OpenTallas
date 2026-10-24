@@ -20,6 +20,8 @@ import numpy as np
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
 from hbm_layer_vehicle import hc_images as HC
+sys.path.insert(0, str(TOOLS / "hbm_static"))
+import leaf_split_latency as LS  # noqa: E402  HBM-P6-CMP over-cap leaf-split shifts
 from hbm_layer_vehicle.layer_images import CpBus
 
 # STEWARD-TOK-HBM-HC 10-21: the ds_native fixtures (records.json/operands.npz, HC_MIX_POST A -> O) are the full-shape
@@ -36,7 +38,9 @@ ROOT_TGT, TABLE_TGT = 164, 165
 # Selected SE leaf2 -> target pin/start -> sequencer pin/start -> event/root edge.
 # This is an explicit source schedule to be checked by the coupled RTL case.
 ROOT_APPLY_AFTER_LAUNCH = 8
-TAIL_RESULT_LATENCY = 496
+# HBM-P6-CMP: + LS 'hc_tail_result' (7 core edges, sinkhorn_s split root ot_hbm_hc_root_static_s; L 496 -> 503) when
+# OT_HBM_LEAF_SPLIT=1 (default 0 = pinned root): every tail emit moves +7 with it.
+TAIL_RESULT_LATENCY = 496 + LS.shift('hc_tail_result')
 TAIL_EMIT_GUARD = 4
 EVENT_FIELDS = {"clear": (104, 1), "gm": (60, 1), "gmq": (61, 2),
                 "gmo": (63, 1), "tf": (105, 1), "tset": (106, 7),

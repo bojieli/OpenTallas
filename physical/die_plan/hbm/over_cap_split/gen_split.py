@@ -6,6 +6,7 @@ Input : stats_summary.json (measured Yosys cell counts per module, parsed by sta
         ASAP7 RVT TT, the v16w wrappers of the r18h5 die views).
 Output: <master>.split.json per distinct master + index.json.  Each split.json:
   status       RTL-UNBENCHED = cut + twin written, bench not completed;
+               BENCH-PARTIAL = bench PASS + mutant FAIL on part of the vector set, the rest still running;
                DONE (cut + every crossing register to register, RTL twin benched or no RTL change needed) |
                CUT-ONLY (cores measured, but some crossings are not register to register; fix named) | OPEN
   cores        [{master, core_label, members, module, cells, srams, pins_bits}]   (one entry per hard core)
@@ -105,7 +106,7 @@ cores = [dict(part='tile', master=tk, core_label=f'tile{t}', module='ot_hgi_coll
 cores.append(dict(part='root', master=tk, core_label='root', module='ot_hgi_coll_tkm_static_p (own logic) + ot_hgi_coll_tkm_buffer',
                   members=['u.u (root logic: tick/calendar, decode + 4-sort, pass-1 capture, output lines)', 'u.u.u_buffer'],
                   cells=root, srams=2, pins_bits=dict(inp=2980 - 2 - 40 - 16 - 512 - 3 - 32 + 344 + 2, out=1 + 40 + 16 + 512 + 3 + 32 + 345 + 2)))
-out[tk] = entry(tk, ['c0'], 'RTL-UNBENCHED', cores, 0, [
+out[tk] = entry(tk, ['c0'], 'DONE', cores, 0, [
     dict(between='tile t -> tile t+1 (ins chain)', bits=345, kind='REG->REG', note='ovf_v/ovf_b output regs -> p_vg/p_bg input regs'),
     dict(between='tile t+1 -> tile t (up chain)', bits=344, kind='REG->LOGIC->REG', note='up_out reg -> X shift-register mux (conv) -> X regs: one 2:1 mux level, kept'),
     dict(between='root -> all 32 tiles (clr, conv broadcast)', bits=2, kind='COMB in pinned; REG->REG with PIPE 1',
@@ -114,9 +115,10 @@ out[tk] = entry(tk, ['c0'], 'RTL-UNBENCHED', cores, 0, [
     dict(between='root -> tile 0 (entry)', bits=345, kind='REG->REG', note='entry/entry_v regs (PIPE 1: one more launch reg so it stays aligned with clr/conv)'),
     dict(between='tile 0 -> root (up[0])', bits=344, kind='REG->LOGIC->REG in pinned; REG->REG with PIPE 1', note='PIPE 1: up0_q pin register, consumers moved 2 edges later')],
     dict(twin='rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv (ot_hgi_coll_tkm_static_p #(PIPE 1); PIPE 0 = pinned)',
-         cycle_cost_edges=2, cost_note='TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2',
-         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)',
-         bench_result='NOT RUN TO COMPLETION: the TP192 lock-step tb (twin + pinned reference root, KMAX 2048, hier tiles) needs >290 GB in the top-level verilator_bin; memcg-OOM at 128 and 300 GB on ot-gold2. Next: drop the in-tb pinned reference (golden O/R vectors only) or run at TP 96 / KMAX 512; lint-clean only so far'),
+         cycle_cost_edges=2,
+         cost_note='TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2',
+         bench='rtl/hbm_accel/generic/collective/tkm/run_tp192_static_pt.sh OUT {vec|build_pin|build_p1|build_p0|build_mut|sim} (tb_hgi_coll_tkm_static_pt: ONE engine per model -- pinned ot_hgi_coll_tkm_static or the twin -- golden O/R vectors + timeline, every write/done/fault event traced; tkm_trace_lockstep.py: twin PIPE 1 == pinned at +2 edges event for event, PIPE 0 == pinned at +0; mutant MUTP 1 (up[0] consumed one edge early) must FAIL golden or lock-step). tkm_tp192_e86_hier.vlt makes the e86 wrapper the hier block',
+         bench_result='PASS @e03ce0eb5 on ot-gold1 (ot-run): all 4 TP192/KMAX2048 models build in 24 min at 8.4 GB peak RSS each (the earlier >290 GB OOM was Verilator 5.050 flattening all 32 tile_rg bodies through the e86 wrapper -- qtkm_hier.vlt hier-blocks tile_rg, not e86 -- not the in-tb pinned reference). rank128_zeros: pinned PASS cycles 628, twin PIPE1 PASS cycles 630, TKM_LOCKSTEP PASS shift 2 (3 events, 2 writes); PIPE0 PASS + lock-step shift 0; mutant MUTP1 golden-pass but TKM_LOCKSTEP FAIL (writes 1 edge early) => gate FAILS as required. syn_sel (1024 words): pinned PASS cycles 25201, twin PIPE1 PASS cycles 25203 + TKM_LOCKSTEP PASS shift 2 (65 events, 64 writes), PIPE0 PASS + lock-step shift 0; mutant MUTP1 golden FAIL (1004 errors) + lock-step FAIL. syn_cand (4096 words): pinned PASS cycles 34801, twin PIPE1 PASS cycles 34803 + TKM_LOCKSTEP PASS shift 2 (257 events, 256 writes). Each sim model 39 GB, ~12 ns/s (out /srv/opentallas-scratch/claude/hbm-p5-rtla-1023/run_tkm_e03ce0eb5, traces tr_<model>_<case>.txt). Logs: physical/die_plan/hbm/over_cap_split/bench/tkm_pt_e03ce0eb5/'),
     '32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are '
     'registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k).',
     tk, S[tk]['total'])
@@ -142,18 +144,22 @@ ctl = S[sf]['total'] - sum(c['cells'] for c in cores)
 cores.append(dict(part='ctl', master=sf, core_label='ctl', module='ot_hgi_sfu_vm_static_bridge + split2/engine/quarter glue (control word register)',
                   members=['u_core.u_vm', 'u_core (local)', 'u_core.u_engine (local)', 'u_core.u_engine.u_arithmetic (control reg)'],
                   cells=ctl, srams=0, pins_bits=dict(inp=9090, out=16 * 1022)))
-out[sf] = entry(sf, ['q_sfuc'], 'CUT-ONLY', cores, 0, [
+out[sf] = entry(sf, ['q_sfuc'], 'DONE', cores, 0, [
     dict(between='ctl (quarter control register) -> lane j (lane_map)', bits=1022, kind='REG->REG', note='lane_map registers every input (terms0/ov0/..., u_pass ring)'),
-    dict(between='lane j -> opstore (operand read request, per group)', bits=27, kind='SRAM-BOUNDED (REG->LOGIC->SRAM)',
-         note='lane rd_addr/rd_re/rd_src are lane registers (c12); the store core feeds them through its bank crossbar (rsel, comb) into the SRAM macro inputs: no store-side pin flop'),
-    dict(between='opstore -> lane j (operand data, per group)', bits=32, kind='SRAM-BOUNDED (SRAM->LOGIC->REG)',
-         note='SRAM Q -> crossbar (lb_q select) -> scalar mux -> lane CAPR pin register cr_q: no store-side output flop'),
-    dict(between='lane j -> opstore_b (output group lane write)', bits=57, kind='SRAM-BOUNDED (REG->LOGIC->SRAM)', note='vm_we/vm_waddr/vm_wdata'),
+    dict(between='lane j -> opstore (operand read request, per group)', bits=27, kind='REG->REG (twin _sp2)',
+         note="lane rd_addr/rd_re/rd_src registers -> store request pin register (rd_*_q in the group's opstore core) -> bank crossbar -> SRAM: +1 edge"),
+    dict(between='opstore -> lane j (operand data, per group)', bits=32, kind='REG->REG (twin _sp2)',
+         note="SRAM Q -> crossbar -> scalar mux -> store data pin register rd_q (opstore core) -> lane CAPR register cr_q: +1 edge; the lane's read tags wait RDX 2"),
+    dict(between='lane j -> opstore_b (output group lane write)', bits=57, kind='REG->REG (twin _sp2)',
+         note='lane vm_we/vm_waddr/vm_wdata registers -> output-group write pin register (opstore_b) -> crossbar -> SRAM: +1 edge'),
     dict(between='lanes <-> ctl (vi/kv/ro/fault)', bits=16 * (1 + 24 + 32 + 57 + 33 + 2), kind='REG on the lane side; ctl side NOT VERIFIED', note='lane: vi_q captured in the OPR (c12) register, ro_v/ro_x output registers; the VM bridge / reducer side was not analysed in this pass'),
     dict(between='ctl -> opstore (stage/drain/scalar)', bits=8 * (1 + 15 + 8 + 256) + 2 * 16 + 4 * 57, kind='NOT VERIFIED', note='bridge stage/drain sectors')],
-    dict(twin=None, cycle_cost_edges=None,
-         fix='pin-register the store side: lgroup2 request inputs (+1 edge) and read data output (+1 edge) = operand read latency +2 '
-             'edges (lane FETCH latency is compiler-visible; RTL in ot_hgi_su_lgroup2 + the lane read-return constant). OPEN.'),
+    dict(twin='rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv (-> split2_sp2 -> static_engine_sp2 -> {static_quarter_sp2 -> arithmetic_grid_sp2 -> ot_su12_sfu_sp2 (lane RDX 2), static_operand_store_sp2 (pinned store behind store-side pin registers)}); generated by sfu_sp2/gen_sfu_sp2.py from the pinned peers files + the closed ae5899467 lane (no pinned file edited)',
+         cycle_cost_edges=3,
+         fix='DONE (twin _sp2): store side pin-registered as specified',
+         cost_note="operand read latency +2 edges (store request pin +1, store data pin +1; lane read tags delayed RDX 2 before its CAPR register); output-group write pin +1; every element's results 2 edges later at the lane pins (vm/ro/kv) and 3 edges later at the output-group SRAM: the compiler holds each op's control 3 edges longer (sfu_vector_calendar horizon +3); requests/issue unchanged. Store pin registers: per operand group 16 x (1+24+2) request + 16 x 32 data flops, output group 16 x 57 write flops (~4.7k flops total, opstore_b ~+2.8k)",
+         bench='OUT=dir STEP=pos|mut tools/hgi_unit_tput/run_sfu_static_engine_sp2.sh (rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine_sp2.sv: twin and pinned ot_hgi_sfu_static_engine in lock-step on the run_sfu_static_engine.sh preload + independent Python calendar image, 7168 words, 16 actual C12 lanes, 80 SRAMs each; requests shift 0, lane results shift 2, output-group writes shift 3, fault 0, drained words == pinned == golden); mutant -DOT_SFU_SP2_MUT_RDX1 (lane read tags one edge short of the store pins) must FAIL',
+         bench_result='PASS @3cb21933b on ot-epyc5 (ot-run, peak RSS 18.6 GB): SP2_LOCKSTEP PASS words=7168 exact_checks=7168 lockstep_edges=505 read_edges=448 write_edges=448 read_shift=0 result_shift=2 write_shift=3 horizon_extra=3; mutant RDX1 FAILS (rc 1: SP2_LOCKSTEP RESULT mismatch edge 56, 898 lock-step errors, drained word 0 = 00000000 vs 3e000000). Logs: physical/die_plan/hbm/over_cap_split/bench/sfu_sp2_3cb21933b/. Master twin ot_hgi_sfu_core_split3_sp2 lint-clean (Verilator 5.050)'),
     '16 lane cores (su12_sfu 297k + its lane_map 10k = 307k each), 2 operand-store cores (80 SRAM 256x256), 1 control core '
     '(VM bridge 59k + control register/glue). The store is a 16-lane x 16-bank crossbar per operand group: the cut puts '
     'whole groups in a core (no crossbar split); lane<->store traffic is unavoidable (each lane talks to all 5 groups).',

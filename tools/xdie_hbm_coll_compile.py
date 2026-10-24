@@ -28,6 +28,12 @@ READY + GUARD - K2 (GUARD 8 cycles: ready max + 8, as xdie_hbm_1018 LXB).  Nothi
 import argparse, json, pathlib, random, re, struct, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools' / 'hbm_static'))
+import leaf_split_latency as LS  # noqa: E402  HBM-P6-CMP over-cap leaf-split shifts
+# reduce-source publication offset: 0 on the pinned ot_hgi_coll_reduce_static; LS 'coll_reduce_pub' (+1) on the
+# over-cap split parent ot_hfd_coll_q2_hard_v8g_s (u_reduce = ot_hgi_coll_reduce_static_pr: input pin registers, the
+# reduce runs 1 edge later; operands and controls enter through the same registers, so only the publication moves).
+RED_PUB = 0
 NPT, ND = 1, 14
 SRC_SU0, SRC_RAIL0, SRC_RED = 0, 2, NPT + 6          # source order SU0,SU1,rail0,VM0..3,reduce
 DST_RAIL0, DST_DEL0, DST_RED = 0, NPT, ND - 1        # sink order rail0,SU0..3,RGX0..3,TKM0..3,reduce
@@ -223,13 +229,14 @@ def compile_die(d, C, order, rel_w, gap, early=0):
         P.set(ux + RX_CAP + 1, 'sink_slot', 1 << DST_RED); P.set(ux + RX_CAP + 1, 'sink_select', SRC_RAIL0 << (4 * DST_RED))
     # ---- publication (FP32, tag 0, release) -> reduce source -> delivery 0
     tp = t_prev_issue + 9
+    R = RED_PUB
     P.a(tp, pub_read=1, pub_tag_a=0, pub_release=1, pub_src=d, pub_index=0xA5)
     P.a(tp + 1, pub_issue=1)
-    P.set(tp + 2, 'capture_slot', 1 << SRC_RED)
-    P.set(tp + 3, 'sink_slot', 1 << DST_DEL0); P.set(tp + 3, 'sink_select', SRC_RED << (4 * DST_DEL0))
-    P.set(tp + 3, 'del_obase', 0x10000 + 3 * 0x4000)
-    end = tp + 6
-    return dict(P=P, end=end, rd=rd, wr=WR, rx=rx, slots=slots, rel_w=rel_w, ops=ops, cal=cal, pub=tp + 3)
+    P.set(tp + 2 + R, 'capture_slot', 1 << SRC_RED)
+    P.set(tp + 3 + R, 'sink_slot', 1 << DST_DEL0); P.set(tp + 3 + R, 'sink_select', SRC_RED << (4 * DST_DEL0))
+    P.set(tp + 3 + R, 'del_obase', 0x10000 + 3 * 0x4000)
+    end = tp + 6 + R
+    return dict(P=P, end=end, rd=rd, wr=WR, rx=rx, slots=slots, rel_w=rel_w, ops=ops, cal=cal, pub=tp + 3 + R)
 
 
 def lower(P, end):
@@ -311,7 +318,13 @@ def main():
     ap.add_argument('--guard', type=int, default=8)
     ap.add_argument('--release-early', type=int, default=0)
     ap.add_argument('--mut', default='', choices=['', 'order', 'flip'])
+    ap.add_argument('--leaf-split', type=int, default=None,
+                    help='1: hb_coll = over-cap split ot_hfd_coll_q2_hard_v8g_s (reduce publication +1); default '
+                         'OT_HBM_LEAF_SPLIT (0 = pinned v8g)')
     a = ap.parse_args()
+    global RED_PUB
+    RED_PUB = LS.shift('coll_reduce_pub', None if a.leaf_split is None else bool(a.leaf_split))
+    print(f'XDIE2_LEAF_SPLIT red_pub={RED_PUB}')
     check_layout()
     a.out.mkdir(parents=True, exist_ok=True)
     M = measure(a.frm) if a.frm != '-' else {0: {}, 1: {}}
