@@ -28,6 +28,13 @@ conns schema (opentallas.kv_p4.cell_conns.v1), per type -> cells[inst] = {module
   rewired[]: as-built leaf inputs whose driver the plan changes ({"sink": {...}, "driver": {...}}).
   ID word layout of the pc chain bus (31 b): [1:0] stack, [6:2] row4 (pc base index), [30:7] PHYS group table 8 x 3 b.
     python3 bind/plan_cell_conns_v34.py [--out bind/plan_cell_conns_v34.json]
+
+KV-P5 10-23 revision (BINDER2 15:14/15:31 conns defects, bind kv_bg):
+  * leaf ports are named as in the bound RTL, not the as-built die-port name: RTL_PORT maps (leaf inst, die port) ->
+    RTL port (dcal = qkd_d2d_cal_seq_pin_bc4: die port 'flt' is RTL port 'fault').
+  * EMPTY_LANES: the 12 vport all-gather lanes pv_<H>_0 -> hg_<Q>_0 (i_vport_Q_N_vo / _d2 / _d3) carry NO as-built
+    bit (BINDER2 kv_bg lanes.unused; the hg row-0 heads take vo from hgi), so their in buses do not exist in the bound
+    partition and their epochs are not landing-check inputs.  Plan v3.5 deletes these lanes.
 """
 import argparse
 import collections
@@ -72,6 +79,8 @@ s1lanes = collections.defaultdict(list)
 for ln in S1['lanes']:
     s1lanes[(ln['src'], ln['sp'])].append(ln)
 ERR = []
+RTL_PORT = {('dcal', 'flt'): 'fault'}
+EMPTY_LANES = {'L2231', 'L2244', 'L2256', 'L2283', 'L2296', 'L2308', 'L2335', 'L2348', 'L2360', 'L2387', 'L2400', 'L2412'}
 
 
 def err(m):
@@ -284,7 +293,7 @@ for e in E:
         if ssyn:
             add(sp_, sl, e['sp'], snk_far)
         else:
-            PC[sp_].setdefault('bus_drivers', []).append(dict(bus=sb, drivers=[dict(inst=sl, port=e['sp'], bits=[0, 0])]))
+            PC[sp_].setdefault('bus_drivers', []).append(dict(bus=sb, drivers=[dict(inst=sl, port=RTL_PORT.get((sl, e['sp']), e['sp']), bits=[0, 0])]))
         drv = drv_far
         snk = dict(cell=dl, port=e['dp'], bits=[0, 0]) if dsyn else dict(inst=dl, port=e['dp'], bits=[0, 0])
         part = dp_
@@ -307,6 +316,8 @@ for e in E:
 lat_by_lane = LAT['lanes'] if 'lanes' in LAT else LAT
 dst_lat = collections.defaultdict(int)
 for ln in P['lanes']:
+    if ln['id'] in EMPTY_LANES:
+        continue
     cyc = int(lat_by_lane.get(ln['id'], {}).get('cycles', 0))
     for x in ln['ports']:
         dpart = pport[x]['dst']['part']
