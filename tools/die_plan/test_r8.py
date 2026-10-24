@@ -87,3 +87,13 @@ def test_replica_type_mode():
     assert used == 0                                                      # heads are distinct types
     N, uf, used = r8.classes(bg, RAW, replica="all")
     assert used == 2 and len({uf.find(i) for i in range(len(N))}) == 1
+
+
+def test_bus_sub_splits_a_leaf_bus():
+    import r8
+    g = {"sink": "s", "src_part": "p"}
+    a = {"source": "leaf.x", "sink_port": "a"}
+    b = {"source": "leaf.y", "sink_port": "b", "bus_sub": 1}
+    assert r8.bus_key(g, a, "leaf") != r8.bus_key(g, b, "leaf")
+    assert r8.bus_key(g, a, "leaf") == r8.bus_key(g, dict(a, source="leaf.z"), "leaf")
+    assert r8.bus_key(g, a, "part") != r8.bus_key(g, b, "part")
