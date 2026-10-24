@@ -1,0 +1,9 @@
+{
+ "image": "/srv/opentallas-scratch/claude/codex-qwen/ectlk_bins256_noinflate/review/review.png",
+ "verdict": "PASS_CONDITIONAL_PIN_LIMITED",
+ "findings": "Actualnewplacement hasp90pin-register8.33um vsoldunplaced732um;allfaceFFsattheirpins,no>100umyellowlinks,4SRAMsWwithgaps,continuousPDN. 3.4%freefill/85%emptyisdocumentedfixed-pinwidthbound3625Sx0.24um=870um. 256bins+noartificialinflationclosedplace/DPL; oldNaN/inflatedfailsremain.",
+ "route_layers": "M2..M7, explicitlyallowedbydie.layer_budget.partition_signal_max M7;M8/M9reserved untouched",
+ "changes": "RoutingcapacityM5->M7;noRTL/pins/outline/cycles/SDCchange",
+ "scope": "Corecandidate, noSIGNEDclaim",
+ "original_lowfill_report_preserved": "/srv/opentallas-scratch/claude/codex-qwen/ectlk_bins256_noinflate/review/review_stats.json"
+}
