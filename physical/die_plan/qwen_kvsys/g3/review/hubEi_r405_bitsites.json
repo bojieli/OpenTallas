@@ -1,0 +1,622 @@
+{
+ "schema": "opentallas.kv_g3.ft_bit_sites.v1",
+ "type": "kv3_hub_Ei",
+ "cell_um": [
+  1.404,
+  0.27
+ ],
+ "col_um": 1.512,
+ "slots": {
+  "ft63": {
+   "width": 1118,
+   "stations": 5,
+   "jog_um": 639.6800000000001,
+   "max_disp_um": 2.35,
+   "max_bit_hop_um": 342.4,
+   "order_preserved": false
+  },
+  "ft64": {
+   "width": 1118,
+   "stations": 5,
+   "jog_um": 519.6800000000001,
+   "max_disp_um": 2.23,
+   "max_bit_hop_um": 342.4,
+   "order_preserved": false
+  },
+  "ft38": {
+   "width": 548,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 3.96,
+   "max_bit_hop_um": 361.7,
+   "order_preserved": null
+  },
+  "ft55": {
+   "width": 548,
+   "stations": 6,
+   "jog_um": null,
+   "max_disp_um": 3.84,
+   "max_bit_hop_um": 350.6,
+   "order_preserved": null
+  },
+  "ft36": {
+   "width": 522,
+   "stations": 7,
+   "jog_um": null,
+   "max_disp_um": 3.84,
+   "max_bit_hop_um": 380.8,
+   "order_preserved": null
+  },
+  "ft25": {
+   "width": 299,
+   "stations": 5,
+   "jog_um": 719.6800000000001,
+   "max_disp_um": 2.35,
+   "max_bit_hop_um": 346.1,
+   "order_preserved": false
+  },
+  "ft27": {
+   "width": 299,
+   "stations": 5,
+   "jog_um": 759.6800000000001,
+   "max_disp_um": 2.96,
+   "max_bit_hop_um": 345.4,
+   "order_preserved": false
+  },
+  "ft48": {
+   "width": 291,
+   "stations": 4,
+   "jog_um": 799.6800000000001,
+   "max_disp_um": 2.07,
+   "max_bit_hop_um": 390.8,
+   "order_preserved": false
+  },
+  "ft49": {
+   "width": 291,
+   "stations": 4,
+   "jog_um": 439.68,
+   "max_disp_um": 2.07,
+   "max_bit_hop_um": 391.4,
+   "order_preserved": false
+  },
+  "ft57": {
+   "width": 256,
+   "stations": 5,
+   "jog_um": 839.6800000000001,
+   "max_disp_um": 2.27,
+   "max_bit_hop_um": 336.4,
+   "order_preserved": false
+  },
+  "ft35": {
+   "width": 174,
+   "stations": 7,
+   "jog_um": null,
+   "max_disp_um": 3.77,
+   "max_bit_hop_um": 351.6,
+   "order_preserved": null
+  },
+  "ft24": {
+   "width": 144,
+   "stations": 5,
+   "jog_um": 409.68,
+   "max_disp_um": 2.29,
+   "max_bit_hop_um": 346.2,
+   "order_preserved": false
+  },
+  "ft26": {
+   "width": 144,
+   "stations": 5,
+   "jog_um": 869.6800000000001,
+   "max_disp_um": 2.34,
+   "max_bit_hop_um": 345.8,
+   "order_preserved": false
+  },
+  "ft30": {
+   "width": 128,
+   "stations": 5,
+   "jog_um": 389.68,
+   "max_disp_um": 2.28,
+   "max_bit_hop_um": 345.7,
+   "order_preserved": false
+  },
+  "ft31": {
+   "width": 128,
+   "stations": 5,
+   "jog_um": 889.6800000000001,
+   "max_disp_um": 3.1,
+   "max_bit_hop_um": 346.2,
+   "order_preserved": false
+  },
+  "ft70": {
+   "width": 128,
+   "stations": 5,
+   "jog_um": 369.68,
+   "max_disp_um": 1.87,
+   "max_bit_hop_um": 344.4,
+   "order_preserved": false
+  },
+  "ft71": {
+   "width": 128,
+   "stations": 5,
+   "jog_um": 909.6800000000001,
+   "max_disp_um": 3.3,
+   "max_bit_hop_um": 345.4,
+   "order_preserved": false
+  },
+  "ft62": {
+   "width": 61,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 2.29,
+   "max_bit_hop_um": 361.0,
+   "order_preserved": null
+  },
+  "ft39": {
+   "width": 59,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 15.46,
+   "max_bit_hop_um": 376.5,
+   "order_preserved": null
+  },
+  "ft53": {
+   "width": 48,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 1.05,
+   "max_bit_hop_um": 391.4,
+   "order_preserved": false
+  },
+  "ft54": {
+   "width": 48,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 2.35,
+   "max_bit_hop_um": 392.9,
+   "order_preserved": false
+  },
+  "ft1": {
+   "width": 43,
+   "stations": 4,
+   "jog_um": 329.68,
+   "max_disp_um": 2.23,
+   "max_bit_hop_um": 321.9,
+   "order_preserved": false
+  },
+  "ft3": {
+   "width": 43,
+   "stations": 4,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 2.23,
+   "max_bit_hop_um": 321.9,
+   "order_preserved": false
+  },
+  "ft44": {
+   "width": 36,
+   "stations": 4,
+   "jog_um": 329.68,
+   "max_disp_um": 20.21,
+   "max_bit_hop_um": 339.6,
+   "order_preserved": true
+  },
+  "ft45": {
+   "width": 36,
+   "stations": 4,
+   "jog_um": 329.68,
+   "max_disp_um": 17.51,
+   "max_bit_hop_um": 340.2,
+   "order_preserved": true
+  },
+  "ft73": {
+   "width": 33,
+   "stations": 5,
+   "jog_um": 329.68,
+   "max_disp_um": 1.83,
+   "max_bit_hop_um": 345.1,
+   "order_preserved": false
+  },
+  "ft10": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 2.36,
+   "max_bit_hop_um": 393.0,
+   "order_preserved": false
+  },
+  "ft11": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 2.13,
+   "max_bit_hop_um": 393.8,
+   "order_preserved": false
+  },
+  "ft13": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 2.34,
+   "max_bit_hop_um": 392.3,
+   "order_preserved": false
+  },
+  "ft14": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 2.13,
+   "max_bit_hop_um": 392.8,
+   "order_preserved": false
+  },
+  "ft15": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 329.68,
+   "max_disp_um": 2.27,
+   "max_bit_hop_um": 393.2,
+   "order_preserved": false
+  },
+  "ft16": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 2.38,
+   "max_bit_hop_um": 394.0,
+   "order_preserved": false
+  },
+  "ft17": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 2.38,
+   "max_bit_hop_um": 394.0,
+   "order_preserved": false
+  },
+  "ft18": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 2.38,
+   "max_bit_hop_um": 394.1,
+   "order_preserved": false
+  },
+  "ft20": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 329.68,
+   "max_disp_um": 2.38,
+   "max_bit_hop_um": 393.4,
+   "order_preserved": false
+  },
+  "ft21": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 2.38,
+   "max_bit_hop_um": 393.0,
+   "order_preserved": false
+  },
+  "ft22": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 2.26,
+   "max_bit_hop_um": 392.6,
+   "order_preserved": false
+  },
+  "ft23": {
+   "width": 32,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 2.19,
+   "max_bit_hop_um": 393.7,
+   "order_preserved": false
+  },
+  "ft59": {
+   "width": 32,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 2.17,
+   "max_bit_hop_um": 364.6,
+   "order_preserved": null
+  },
+  "ft72": {
+   "width": 28,
+   "stations": 5,
+   "jog_um": 329.68,
+   "max_disp_um": 1.83,
+   "max_bit_hop_um": 343.9,
+   "order_preserved": false
+  },
+  "ft69": {
+   "width": 18,
+   "stations": 5,
+   "jog_um": 949.6800000000001,
+   "max_disp_um": 1.73,
+   "max_bit_hop_um": 343.5,
+   "order_preserved": false
+  },
+  "ft68": {
+   "width": 16,
+   "stations": 5,
+   "jog_um": 449.68,
+   "max_disp_um": 1.79,
+   "max_bit_hop_um": 344.5,
+   "order_preserved": false
+  },
+  "ft46": {
+   "width": 13,
+   "stations": 4,
+   "jog_um": 429.68,
+   "max_disp_um": 0.64,
+   "max_bit_hop_um": 389.5,
+   "order_preserved": false
+  },
+  "ft37": {
+   "width": 12,
+   "stations": 7,
+   "jog_um": null,
+   "max_disp_um": 2.49,
+   "max_bit_hop_um": 380.5,
+   "order_preserved": null
+  },
+  "ft58": {
+   "width": 6,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 1.05,
+   "max_bit_hop_um": 365.5,
+   "order_preserved": null
+  },
+  "ft43": {
+   "width": 5,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 20.73,
+   "max_bit_hop_um": 384.2,
+   "order_preserved": null
+  },
+  "ft42": {
+   "width": 4,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 17.54,
+   "max_bit_hop_um": 380.3,
+   "order_preserved": null
+  },
+  "ft40": {
+   "width": 2,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 15.92,
+   "max_bit_hop_um": 377.4,
+   "order_preserved": null
+  },
+  "ft0": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 13.06,
+   "max_bit_hop_um": 333.6,
+   "order_preserved": false
+  },
+  "ft2": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.86,
+   "max_bit_hop_um": 320.9,
+   "order_preserved": false
+  },
+  "ft4": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.92,
+   "max_bit_hop_um": 389.5,
+   "order_preserved": true
+  },
+  "ft5": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 0.77,
+   "max_bit_hop_um": 389.6,
+   "order_preserved": true
+  },
+  "ft6": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.68,
+   "max_bit_hop_um": 389.6,
+   "order_preserved": true
+  },
+  "ft7": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 0.61,
+   "max_bit_hop_um": 389.5,
+   "order_preserved": false
+  },
+  "ft8": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.6,
+   "max_bit_hop_um": 389.4,
+   "order_preserved": true
+  },
+  "ft9": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 1.0,
+   "max_bit_hop_um": 390.1,
+   "order_preserved": false
+  },
+  "ft12": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 1.09,
+   "max_bit_hop_um": 391.0,
+   "order_preserved": true
+  },
+  "ft19": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 0.96,
+   "max_bit_hop_um": 391.5,
+   "order_preserved": true
+  },
+  "ft28": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.86,
+   "max_bit_hop_um": 342.7,
+   "order_preserved": false
+  },
+  "ft29": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 0.56,
+   "max_bit_hop_um": 342.6,
+   "order_preserved": true
+  },
+  "ft32": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 349.68,
+   "max_disp_um": 0.72,
+   "max_bit_hop_um": 343.2,
+   "order_preserved": true
+  },
+  "ft33": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 0.85,
+   "max_bit_hop_um": 343.2,
+   "order_preserved": true
+  },
+  "ft34": {
+   "width": 1,
+   "stations": 6,
+   "jog_um": null,
+   "max_disp_um": 0.95,
+   "max_bit_hop_um": 394.7,
+   "order_preserved": null
+  },
+  "ft41": {
+   "width": 1,
+   "stations": 8,
+   "jog_um": null,
+   "max_disp_um": 17.21,
+   "max_bit_hop_um": 379.1,
+   "order_preserved": null
+  },
+  "ft47": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.5,
+   "max_bit_hop_um": 389.3,
+   "order_preserved": true
+  },
+  "ft50": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 0.65,
+   "max_bit_hop_um": 389.4,
+   "order_preserved": false
+  },
+  "ft51": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 349.68,
+   "max_disp_um": 0.52,
+   "max_bit_hop_um": 389.4,
+   "order_preserved": false
+  },
+  "ft52": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": 929.6800000000001,
+   "max_disp_um": 0.9,
+   "max_bit_hop_um": 389.8,
+   "order_preserved": true
+  },
+  "ft56": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 0.86,
+   "max_bit_hop_um": 376.3,
+   "order_preserved": null
+  },
+  "ft60": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 0.75,
+   "max_bit_hop_um": 360.9,
+   "order_preserved": null
+  },
+  "ft61": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": null,
+   "max_disp_um": 0.82,
+   "max_bit_hop_um": 359.9,
+   "order_preserved": null
+  },
+  "ft65": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": null,
+   "max_disp_um": 0.66,
+   "max_bit_hop_um": 332.6,
+   "order_preserved": null
+  },
+  "ft66": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": null,
+   "max_disp_um": 0.82,
+   "max_bit_hop_um": 331.1,
+   "order_preserved": null
+  },
+  "ft67": {
+   "width": 1,
+   "stations": 4,
+   "jog_um": null,
+   "max_disp_um": 0.55,
+   "max_bit_hop_um": 329.6,
+   "order_preserved": null
+  },
+  "ft74": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 809.6800000000001,
+   "max_disp_um": 0.71,
+   "max_bit_hop_um": 342.6,
+   "order_preserved": true
+  },
+  "ft75": {
+   "width": 1,
+   "stations": 5,
+   "jog_um": 789.6800000000001,
+   "max_disp_um": 1.1,
+   "max_bit_hop_um": 343.2,
+   "order_preserved": true
+  }
+ },
+ "max_bit_hop_um": 394.7,
+ "max_disp_um": 20.73,
+ "sites": 31740
+}
