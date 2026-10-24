@@ -463,6 +463,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            *(["export OT_CORE_TAPS = /work/core_taps.txt"] if clat["taps"] else []),
            # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
            "export CORNER = TC",
+           # Native TT/FF repair for macro-free kits. Macro parents need their
+           # child timing libraries separated explicitly by corner.
+           *(["export CORNERS = tc bc",
+              "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
+              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
