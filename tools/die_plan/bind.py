@@ -592,17 +592,29 @@ class Binder:
                     if m:
                         tmpl, same = [t], sm
                         break
+                if not m and e.get("bit_map") == "identity" and e.get("beside"):
+                    # template-less added edge (no as-built edge: e.g. QC-P5-TIE treq lanes twinned with cmd): bit i ->
+                    # bit i, register stages = the as-built stages of its 'beside' edge (one value over its bits)
+                    bm = asb_map(edge(e["beside"])) or {}
+                    stg = {v[1] for v in bm.values()}
+                    if len(stg) != 1:
+                        self.errors.append(f"REWIRE_BESIDE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: beside edge "
+                                           f"{e['beside']['s']}.{e['beside']['sp']} has as-built stages {sorted(stg)}")
+                        continue
+                    m = {i: (i, next(iter(stg))) for i in range(int(e["bits"]))}
+                    tmpl = []
                 if not m:
                     self.errors.append(f"REWIRE_NO_TEMPLATE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}")
                     continue
                 if len(m) != e["bits"]:
                     self.errors.append(f"REWIRE_WIDTH {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: template "
-                                       f"{tmpl[0]['s']}->{tmpl[0]['d']} maps {len(m)} b, edge says {e['bits']}")
+                                       f"{tmpl[0]['s'] if tmpl else 'beside'}->{tmpl[0]['d'] if tmpl else ''} maps "
+                                       f"{len(m)} b, edge says {e['bits']}")
                 cs = self.F.cells[sc]
                 if e["rsp"] not in cs.ports:
                     # an output the as-built leaves open (e.g. the tail of a chain the plan reverses): give it nets
-                    tc = self.F.cells[tmpl[0]["sc"]]
-                    w = len(tc.ports.get(tmpl[0]["rsp"], [])) or (max(sb for sb, _ in m.values()) + 1)
+                    tc = self.F.cells[tmpl[0]["sc"]] if tmpl else None
+                    w = (len(tc.ports.get(tmpl[0]["rsp"], [])) if tc else 0) or (max(sb for sb, _ in m.values()) + 1)
                     if not hasattr(self, "_rw_net"):
                         self._rw_net = 1 + max((b for c2 in self.F.cells for bs in c2.ports.values() for b in bs
                                                 if not isinstance(b, str)), default=0)
@@ -614,7 +626,7 @@ class Binder:
                     k = (dc, e["rdp"], e["do"] + i)
                     self.rewire[k] = ("pin", sc, e["rsp"], e["so"] + sb, stg)
                     covered.add(k)
-                st[cl + (" (same-sink template)" if same else "")] += len(m)
+                st[cl + (" (template-less, beside)" if not tmpl else " (same-sink template)" if same else "")] += len(m)
             dropped = 0
             for e in rem:
                 for i in (asb_map(e) or {}):
@@ -1207,6 +1219,65 @@ class Binder:
                     seen.add(k)
                     st["pad_flops"] += d[7]
 
+    def _apply_inner(self, inner, cidx, st):
+        """INNER:<part>:<sink>.<port><-<source leaf>@<as-built> members of an extra pad table: every intra-partition sink
+        bit of that edge (top-level or inside an OR) gets `landed` kept stages instead of the as-built count (0 = direct);
+        ot_dp_dly instances no sink uses any more are dropped (intra_dly rebuilt from the sinks)."""
+        want, noop = {}, 0
+        for m in inner:
+            if m["sink"] == m["source"] and m["landed"] == m["asbuilt"]:
+                noop += 1          # a leaf's own loop (no binder edge), unchanged: nothing to realise
+                continue
+            ci, sci = cidx.get(m["sink"]), cidx.get(m["source"])
+            if ci is None or sci is None:
+                st["stale"] += 1
+                self.errors.append(f"R8_STALE {m['id']}: no such sink / source leaf in this bind")
+                continue
+            want[(ci, m["sink_port"], sci, int(m["asbuilt"]))] = (int(m["landed"]), m)
+        hit, changed = set(), [0]
+
+        def fix(ci, pn, d):
+            if not isinstance(d, tuple) or not d:
+                return d
+            if d[0] == "int":
+                w = want.get((ci, pn, d[1], d[4]))
+                if w is None:
+                    return d
+                hit.add((ci, pn, d[1], d[4]))
+                if w[0] != d[4]:
+                    changed[0] += 1
+                    return ("int", d[1], d[2], d[3], w[0])
+                return d
+            if d[0] in ("or", "and"):
+                return (d[0], tuple(fix(ci, pn, u) for u in d[1]))
+            return d
+        for k, d in list(self.sinks.items()):
+            nd = fix(k[0], k[1], d)
+            if nd != d:
+                self.sinks[k] = nd
+        miss = [w[1]["id"] for k, w in want.items() if k not in hit]
+        for i in miss[:30]:
+            self.errors.append(f"R8_STALE {i}: no intra-partition sink bit of this edge at that as-built depth")
+        st["stale"] += len(miss)
+        # rebuild the kept-stage set from what the sinks use
+        used = defaultdict(set)
+
+        def walk(p, d):
+            if d and d[0] == "int" and d[4]:
+                used[p].add((d[1], d[2], d[4]))
+            elif d and d[0] in ("or", "and"):
+                for u in d[1]:
+                    walk(p, u)
+        for (ci, pn, i), d in self.sinks.items():
+            walk(self.cpart.get(ci), d)
+        before = sum(len(v) for v in self.intra_dly.values())
+        for p in list(self.intra_dly):
+            self.intra_dly[p] = used.get(p, set())
+        for p, v in used.items():
+            self.intra_dly[p] = v
+        st["inner"] = dict(members=len(inner), self_noop=noop, matched=len(hit), changed_bits=changed[0], stale=len(miss),
+                           dly_sets_before=before, dly_sets_after=sum(len(v) for v in self.intra_dly.values()))
+
     def align_r8(self):
         """asbuilt.land_align = "r8" (COORD 10-23 16:58 R8 SOURCE OF TRUTH): the landing pads are NOT computed here but
         read from PLAN-TOOL3's r8 landing table (tools/die_plan/r8.py; asbuilt.land_r8, default
@@ -1231,6 +1302,20 @@ class Binder:
         # pins the table left outside R8: r8.py --exempt (recorded in the table) + asbuilt.land_r8_exempt (a die's own
         # bus-group prep, e.g. KV r8_fault_exempt.py); used only to excuse crossing bits the table does not list
         R8.EXEMPT[:] = [re.compile(x) for x in js.get("exempt", []) + self.ab.get("land_r8_exempt", [])]
+        # asbuilt.land_r8_extra: owner pad tables in the r8 member schema (e.g. KV-P6-PV kv_pv_pads_v36.json), each
+        # AUTHORITATIVE for the ids it lists (replaces the r8 member of the same id; new ids are added); INNER:<part>:
+        # members re-size the intra-partition ot_dp_dly of one (sink leaf.port <- source leaf @ as-built stages) edge
+        inner, extra_info = [], []
+        for xf in self.ab.get("land_r8_extra", []):
+            xf = Path(xf) if Path(xf).is_absolute() else Path(self.base) / xf
+            xj = json.loads(xf.read_text())
+            xm = {m["id"]: m for m in xj["members"] if not m["id"].startswith("INNER:")}
+            inner += [m for m in xj["members"] if m["id"].startswith("INNER:")]
+            ids = {m["id"] for m in js["members"]}
+            js["members"] = [xm.get(m["id"], m) for m in js["members"]] + [m for i, m in xm.items() if i not in ids]
+            extra_info.append(dict(table=str(xf), sha=hashlib.sha256(xf.read_bytes()).hexdigest()[:16],
+                                   replaced=sum(i in ids for i in xm), added=sum(i not in ids for i in xm),
+                                   inner=sum(1 for m in xj["members"] if m["id"].startswith("INNER:"))))
         excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         cidx = self.cell_index()
         st = self.pad_stats
@@ -1295,6 +1380,9 @@ class Binder:
             st["stale"] += 1
             if st["stale"] <= 30:
                 self.errors.append(f"R8_STALE {m['id']} bit {k[2]}: bit is not a crossing in this bind")
+        if extra_info:
+            st["extra_tables"] = extra_info
+            self._apply_inner(inner, cidx, st)
         st["groups"] = len({m["id"] for m in js["members"]})
         st["padded_groups"] = len({m["id"] for m in js["members"] if m["pad"]})
         seen_f = set()
