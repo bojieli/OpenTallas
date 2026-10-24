@@ -1,0 +1,72 @@
+{
+ "rule": "pad (DQ - 15) stages on the vport W request lane (pr_valid, pr_t) = ot_dp_dly W 15",
+ "source": "../boot_v36/image_kv41/vport_dq_pads.json",
+ "pads": [
+  {
+   "vport": "vport_EN_1",
+   "file": "kv3_pv_v11_part.sv",
+   "inst": "u_vport_E",
+   "stages": 4,
+   "pr_t": "i_pvw__u_ctl_req_t_q[83:70]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[5]"
+  },
+  {
+   "vport": "vport_WN_1",
+   "file": "kv3_pv_v11_part.sv",
+   "inst": "u_vport_W",
+   "stages": 3,
+   "pr_t": "i_pvw__u_ctl_req_t_q[69:56]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[4]"
+  },
+  {
+   "vport": "vport_EN_3",
+   "file": "kv3_pv_v12_part.sv",
+   "inst": "u_vport_E",
+   "stages": 14,
+   "pr_t": "i_pvw__u_ctl_req_t_q[27:14]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[1]"
+  },
+  {
+   "vport": "vport_WN_3",
+   "file": "kv3_pv_v12_part.sv",
+   "inst": "u_vport_W",
+   "stages": 14,
+   "pr_t": "i_pvw__u_ctl_req_t_q[13:0]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[0]"
+  },
+  {
+   "vport": "vport_ES_1",
+   "file": "kv3_pv_v5_part.sv",
+   "inst": "u_vport_E",
+   "stages": 3,
+   "pr_t": "i_pvw__u_ctl_req_t_q[83:70]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[5]"
+  },
+  {
+   "vport": "vport_WS_1",
+   "file": "kv3_pv_v5_part.sv",
+   "inst": "u_vport_W",
+   "stages": 2,
+   "pr_t": "i_pvw__u_ctl_req_t_q[69:56]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[4]"
+  },
+  {
+   "vport": "vport_ES_3",
+   "file": "kv3_pv_v7_part.sv",
+   "inst": "u_vport_E",
+   "stages": 10,
+   "pr_t": "i_pvw__u_ctl_req_t_q[27:14]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[1]"
+  },
+  {
+   "vport": "vport_WS_3",
+   "file": "kv3_pv_v7_part.sv",
+   "inst": "u_vport_W",
+   "stages": 10,
+   "pr_t": "i_pvw__u_ctl_req_t_q[13:0]",
+   "pr_valid": "i_pvw__u_ctl_req_valid_q[0]"
+  }
+ ],
+ "pad_flops": 900,
+ "missing": []
+}

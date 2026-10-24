@@ -11,9 +11,12 @@ Why a post-bind edit and not bind.py land_r8_extra: the as-built netlist the KV 
 (binder2-1023/kv_bound/die_bound.v) was lost with the 10-23 hosts; the edit adds only delay stages on one leaf-input
 connection per port (no connectivity change), exactly what an INNER re-depth of the bind emits.
 
-    kv_pv_wreq_pads.py SRC_RTL_DIR VPORT_DQ_PADS.json OUT_RTL_DIR      (OUT gets copies of the changed partition files)
+    kv_pv_wreq_pads.py SRC_RTL_DIR VPORT_DQ_PADS.json OUT_RTL_DIR [BUS_GROUPS_IN BUS_GROUPS_OUT]
+OUT gets copies of the changed partition files; with BUS_GROUPS the bind's landing record is re-emitted with the pad added
+to landed_stages of the padded vport pr_t / pr_valid members (what a re-bind with the pad in land_r8_extra records; the
+boot compile and regen_constants read W from it).
 """
-import json, re, shutil, sys
+import gzip, json, re, shutil, sys
 from pathlib import Path
 
 src, padf, out = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
@@ -42,6 +45,17 @@ for f in sorted(src.glob('kv3_*.sv')):
     if changed:
         (out / f.name).write_text(t)
 miss = sorted(set(pads) - set(done))
+if len(sys.argv) > 5:
+    bi, bo = sys.argv[4], sys.argv[5]
+    g = json.load(gzip.open(bi) if bi.endswith('.gz') else open(bi)); nb = 0
+    for x in g['landing']:
+        if x['sink'] in done:
+            for m in x['members']:
+                if m['sink_port'] in ('pr_t', 'pr_valid'):
+                    m['landed_stages'] += done[x['sink']][2]; m['wreq_pad'] = done[x['sink']][2]; nb += 1
+    g['note'] = g.get('note', '') + f' | KV-TOK 10-24: + PV W request-lane pads ({nb} members, kv_pv_wreq_pads.py)'
+    (gzip.open(bo, 'wt') if bo.endswith('.gz') else open(bo, 'w')).write(json.dumps(g))
+    print(f'bus_groups: {nb} vport pr members padded')
 json.dump(dict(rule='pad (DQ - 15) stages on the vport W request lane (pr_valid, pr_t) = ot_dp_dly W 15', source=str(padf),
                pads=rec, pad_flops=flops, missing=miss), open(out / 'wreq_pads.json', 'w'), indent=1)
 print(f'padded {len(done)} ports, {flops} flops, files {sorted({v[0] for v in done.values()})}, missing {miss}')
