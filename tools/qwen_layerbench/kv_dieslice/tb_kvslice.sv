@@ -140,6 +140,22 @@ module tb_kvslice;
         if (bo_sig != bo_q) $display("BOOTOBS cyc %0d boot_go_d1_hgi_WN_7 %b host_rst_n %b hbm_rst_n %b die_rst_n %b boot_go %b", cyc_core,
                                      bo_sig[4], bo_sig[3], bo_sig[2], bo_sig[1], bo_sig[0]);
     end
+    // HBM boot_go fan-out and per-stack slice boot status (sdo/soo/sfo = done/ok/fault bit per slice, 32 per stack)
+    wire [10:0] bg_sig = {dut.x_hub_Wi_o_host_boot_go_d2_hub_Wo[0], dut.x_hub_Ei_ft47_o_hub_Eo[0],
+        dut.x_hroot_WS_ft1_o_pc_WS_7[0], dut.x_hroot_WN_ft1_o_pc_WN_7[0], dut.x_hroot_ES_ft1_o_pc_ES_7[0], dut.x_hroot_EN_ft1_o_pc_EN_7[0],
+        dut.x_pc_WS_1_o_hsl_Q_N_bgo_pc_WS_0[0], dut.x_pc_WN_1_o_hsl_Q_N_bgo_pc_WN_0[0], dut.x_pc_ES_1_o_hsl_Q_N_bgo_pc_ES_0[0],
+        dut.x_pc_EN_1_o_hsl_Q_N_bgo_pc_EN_0[0], 1'b0};
+    reg [10:0] bg_q = 0;
+`define SST(S) {8'($countones(dut.x_pc_``S``_7_o_hsl_Q_N_sdo_hroot_``S``[31:0])), 8'($countones(dut.x_pc_``S``_7_o_hsl_Q_N_soo_hroot_``S``[31:0])), 8'($countones(dut.x_pc_``S``_7_o_hsl_Q_N_sfo_hroot_``S``[31:0]))}
+    wire [95:0] sst = {`SST(WS), `SST(WN), `SST(ES), `SST(EN)};
+    reg [95:0] sst_q = 0;
+    always @(posedge ck_core) begin
+        bg_q <= bg_sig; sst_q <= sst;
+        if (bg_sig != bg_q) $display("BGOBS cyc %0d d2_hub_Wo %b hub_Eo_in %b hroot_ft1 WS %b WN %b ES %b EN %b chain_end WS %b WN %b ES %b EN %b",
+                                     cyc_core, bg_sig[10], bg_sig[9], bg_sig[8], bg_sig[7], bg_sig[6], bg_sig[5], bg_sig[4], bg_sig[3], bg_sig[2], bg_sig[1]);
+        if (sst != sst_q) $display("SLICEBOOT cyc %0d done/ok/fault WS %0d/%0d/%0d WN %0d/%0d/%0d ES %0d/%0d/%0d EN %0d/%0d/%0d", cyc_core,
+            sst[95:88], sst[87:80], sst[79:72], sst[71:64], sst[63:56], sst[55:48], sst[47:40], sst[39:32], sst[31:24], sst[23:16], sst[15:8], sst[7:0]);
+    end
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
     initial void'($value$plusargs("HB=%d", hb));
