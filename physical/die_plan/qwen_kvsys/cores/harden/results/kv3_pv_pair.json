@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_pv_pair",
+ "kit": "kv3_pv_pair__380.16x190.08",
+ "kit_hash": "08148d609ca03b4a",
+ "run": "intel1:/srv/opentallas-scratch2/claude/codex-qwen/pvpair_m7",
+ "outline_um": [
+  380.16,
+  190.08
+ ],
+ "pins": 1652,
+ "plan_pins": 1652,
+ "added_pins": 0,
+ "clocks": [
+  "s0__clk"
+ ],
+ "macros": [
+  "ot_sram_1r1w_32x128_m1"
+ ],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 438833,
+ "std_util": 0.436535,
+ "grt_overflow": 8.87e-07,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 1652/1652",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 2.3220314652818947,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 5.040329285211525,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 172.8535099744432,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": -10.75170512476348,
+   "hold_ws_ps": -10.75170512476348,
+   "hold_tns_ps": -777.8183683798073,
+   "hold_viol_endpoints": 472
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -10.75 ps, 470 endpoints",
+   "drv: FAIL TT slew 66.0 cap 0.0, FF slew 96.0 cap 0.0",
+   "clock: FAIL TT pin-flop insertion 355.6 ps not within 250 +- 40",
+   "face_guard: FAIL {'shared': 3, 'dropped': 1}"
+  ],
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "unconstrained": "PASS",
+   "clock": "FAIL",
+   "sdc_lint": "PASS",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf 8.87e-07, pins PASS 1652/1652, TT setup WS 2.3220314652818947, FF hold WS -10.75170512476348)",
+ "views_status": "abstract_only (not SIGNED)",
+ "views": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair"
+}

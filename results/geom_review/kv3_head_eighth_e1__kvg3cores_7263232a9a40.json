@@ -1,0 +1,16 @@
+{
+ "element": "kv3_head_eighth_e1",
+ "kit": "KVG3-CORES core kit kv3_head_eighth_e1__216x216 (plan v3.8x, main c98b74b466; kv41 bound RTL, split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS (route) (not an independent GEOM-REVIEW verdict)",
+ "hash": "7263232a9a4004e0",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py)",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_head_eighth_e1_216_placed.png",
+  "physical/die_plan/qwen_kvsys/g3/review/part_kv3_hg_v38x.png"
+ ],
+ "reasons": "v3.8x 216x216 slot, 3_place: std fill 40% of the core (was 22-33% at 285.12), 133370 cells / 26510 flops, max 10-um bin 0.65 (no bin > 0.8), buf/inv 8% area; logic spread over the whole core, no empty quadrant; 538 face flops at their pins (pin->reg p50 5.4 / p90 6.1 / max 11.5 um). Partition (g3/review/part_kv3_hg_v38x.png): 103.68 um gaps to every neighbour head, ectl 95.04 um, 0 pins facing a non-partner core. Routing M2-M7 (recipe; the 285 e0 failed GRT 5555 at M5). face_guard on 1_synth.odb: {'shared': 5, 'dropped': 5} ('dropped' = clk_unused member clock pins; 'shared' clk/rst fanout); no data face fails",
+ "fixes": "route finish + signoff.py; closed only if SIGNED.",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T13:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)"
+}

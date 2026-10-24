@@ -1,0 +1,19 @@
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE2_CFG LEAF_SPLIT=1 CMP_LS=1
+XDIE2 build ok
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 577 cycles | d1 588 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=558 | d1 first_wr=28 last_rx=549
+XDIE2 SWD=4 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 281 cycles | d1 286 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=262 | d1 first_wr=28 last_rx=247
+XDIE2 SWD=4 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 209 cycles | d1 214 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=190 | d1 first_wr=28 last_rx=175
+XDIE2 SWD=4 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_GATE rc=0

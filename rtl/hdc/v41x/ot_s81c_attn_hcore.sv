@@ -22,7 +22,15 @@
 // ot_hdc_v41x_attn_tile_s at the default HG = 4 / PCOLP = 0, every output every cycle).  tile_s instantiates it under
 // -DOT_ATTN_HCORE (opt-in, off by default).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81c_attn_hcore (
+module ot_s81c_attn_hcore #(
+    // S81-P10 (opt-in, off by default): hgrp_s WPRE = 1, the write predicates captured at R0 (same values, same edges);
+    // the hard-core kit sets it with -DOT_S81C_HCORE_WPRE
+`ifdef OT_S81C_HCORE_WPRE
+    parameter integer WPRE = 1
+`else
+    parameter integer WPRE = 0
+`endif
+) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire [7:0]        gid,        // static: the tile head index of this core (0 .. 15)
@@ -41,7 +49,7 @@ module ot_s81c_attn_hcore (
     output wire              oflt
 );
     ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1),
-                              .PCOLP(1)) u_h (
+                              .PCOLP(1), .WPRE(WPRE)) u_h (
         .clk(clk), .rst_n(rst_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
         .ld_w({512'd0, ld_w}), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy),
         .oflt(oflt));

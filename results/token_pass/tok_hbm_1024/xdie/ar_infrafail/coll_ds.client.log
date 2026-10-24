@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE2_CFG LEAF_SPLIT=0 CMP_LS=0
+sha256sum: /srv/opentallas-scratch/claude/tok-hbm/xdie/ar/r14_coll_ar/src/tools/hbm_static/leaf_split_latency.py: No such file or directory
+XDIE2 build ok
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/tok-hbm/xdie/ar/r14_coll_ar/src/tools/xdie_hbm_coll_compile.py", line 32, in <module>
+    import leaf_split_latency as LS  # noqa: E402  HBM-P6-CMP over-cap leaf-split shifts
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'leaf_split_latency'
+XDIE2 compile ds_A FAIL
