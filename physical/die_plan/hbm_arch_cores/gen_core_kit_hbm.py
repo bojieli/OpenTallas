@@ -433,6 +433,10 @@ def main():
     for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py"):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    tb = (TOOL / "tap_balance.tcl").read_text()
+    tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
+    (kd / "tap_balance.tcl").write_text(tb)
+    (kd / "post_synth_actual.tcl").write_text("# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
     lefs, libs = [], []
     for m in rec.get("macros", []):
         md = REPO / "physical" / "asap7_memory_macros_v2" / m
@@ -485,6 +489,10 @@ def main():
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            "export TNS_END_PERCENT = 100",
+           "export POST_SYNTH_TCL = /work/post_synth_actual.tcl",
+           "export POST_CTS_TCL = /work/tap_balance.tcl",
+           f"export OT_TAP_TARGET_PS = {ins:g}",
+           f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            f"export CORNER = {a.corner}",
