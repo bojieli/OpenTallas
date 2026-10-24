@@ -3,6 +3,7 @@
 # usage (on the host, from anywhere): run_one.sh NAME OUTROOT     (worktree = ~/wt/part-cap)
 set -u
 NAME=$1; OUT=$2; WT=${PART_CAP_WT:-$HOME/wt/part-cap}
+export CORNER=${CORNER:-TC}
 mkdir -p $OUT/$NAME
 (
   while true; do
