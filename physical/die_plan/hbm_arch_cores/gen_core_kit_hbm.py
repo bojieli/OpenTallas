@@ -504,6 +504,7 @@ def main():
            "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(ttlibs),
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
            "export ADDITIONAL_LIBS =",
+           "override export LIB_FILES = $(TC_LIB_FILES)",
            *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
