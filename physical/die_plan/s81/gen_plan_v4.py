@@ -201,7 +201,9 @@ def _rt(kit, mod):
     return _RT % (kit, mod, mod)
 
 
-_ARCH = "/home/ubuntu/closed_archive/%s/%s/run/record/views/%s/%s.lef.zst"
+_ARCH_SRC = "/home/ubuntu/closed_archive/%s/%s/run/record/views/%s/%s.lef.zst"
+# S81-P9: the closed-archive views are imported into the repo (physical/s81_die_views/closed_import/<m>/, see PROVENANCE)
+_ARCH = "physical/s81_die_views/closed_import/%s/%.0s%.0s%s.lef"
 _C_COMMON = [dict(inst="u_c.u_eg", module="ot_s81sl_eg", lef=_rt("s81sl_eg", "ot_s81sl_eg"), cells=261681, plan_core="eg"),
              dict(inst="u_c.u_xf", module="ot_s81dv_xfin", lef=_rt("s81dv_xfin", "ot_s81dv_xfin"), cells=135954,
                   plan_core="xf_cap"),
@@ -240,7 +242,7 @@ NONFRAME_HC = {
                    gaps=[dict(inst="u_bk_sel.u_vm", module="dsdv_idx_vmux", cells=3547, plan_core="bkg_tx_vmux",
                               why="views are of dsdv_idx_vmux_n32, a different module; flattened (small)")]),
     "leaf": dict(cores=[dict(inst="u_lf.u_vp", module="ot_s81sl_vp", cells=36056 + 16 * 50540, plan_core="vp_abc",
-                             lef=_ARCH % ("ot_s81sl_vp", "s81sl_vp9_fb-s81sl_vp9_fb1-7d8e05c33", "ot_s81sl_vp",
+                             lef=_ARCH_SRC % ("ot_s81sl_vp", "s81sl_vp9_fb-s81sl_vp9_fb1-7d8e05c33", "ot_s81sl_vp",
                                           "ot_s81sl_vp")),
                         dict(inst="u_lf.u_vn", module="ot_s81sl_vn", lef=_rt("s81sl_vn", "ot_s81sl_vn"), cells=375145,
                              plan_core="vn"),
