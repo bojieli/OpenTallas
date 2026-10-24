@@ -496,3 +496,18 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
         dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
+
+
+def test_pair_drops_hard_cores():
+    """CP1-R10 (10-24): pair.py's proof leaf replaces every content, so hard_cores[] (S81 v4.7+ frame cores with LEF
+    views) are dropped too; kept, the kit would place macros the proof netlist does not instantiate."""
+    import copy
+    import pair
+    raw = copy.deepcopy(PAIR)
+    tn = raw["partitions"][0]["type"]
+    raw["partition_types"][tn]["hard_cores"] = [dict(inst="u_core", module="m", lef="x.lef", origin_um=[8.64, 8.64],
+                                                    outline_um=[100.0, 100.0])]
+    out, _ = pair.extract(raw, [p["name"] for p in raw["partitions"][:2]])
+    assert all("hard_cores" not in t for t in out["partition_types"].values())
+    assert "1 hard_cores dropped" in out["partition_types"][tn]["note"]
+    assert not schema.validate(out)

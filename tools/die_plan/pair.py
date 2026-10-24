@@ -11,6 +11,7 @@
 - Partition contents are replaced by one generated proof leaf per type (`<module>_proof_leaf`, written to DIR/leaves.sv).
   It registers every functional in-bus and drives every functional out-bus from a registered XOR fold of the inputs.
   The leaf is a vehicle for the boundary, face and channel proof only. It is not the partition's real logic.
+- Hard cores (`hard_cores[]`) are dropped with the contents: the proof netlist does not instantiate them.
 - Lanes are rebuilt by following ft slots. Latency is left for `gen.py latency`.
 """
 import argparse
@@ -97,6 +98,12 @@ def extract(raw, parts, channel_um=0.0, name=None):
                           "note": "CP1 proof leaf (pair.py)"}]
         t["sources"] = ["leaves.sv"]
         t.pop("kit", None)
+        # CP1-R10 (10-24): the proof leaf replaces ALL contents, hard cores included.  S81 v4.7+ types carry
+        # hard_cores[] with LEF views; kept, the kit's macro_place.tcl places instances the proof netlist does not
+        # have (ORFS stops in floorplan).  Dropped with a note, so the pair kit is the seam vehicle only.
+        hc = t.pop("hard_cores", None)
+        if hc:
+            t["note"] = (t.get("note", "") + f" [pair.py: {len(hc)} hard_cores dropped, proof leaf only]").strip()
         types[tn] = t
     leaves.append("`default_nettype wire")
     newparts = []
