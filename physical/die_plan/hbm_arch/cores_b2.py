@@ -132,6 +132,7 @@ def face_of(x, y, w, h):
 
 # ------------------------------------------------------------------------------------------------- pin placement
 LAY2 = dict(M6=(0.064, 0.032), M7=(0.064, 0.032))
+MEAN_MIN = -0.08         # check.py core_faces ERROR below -0.1 (WARN -0.1..0)
 CAP2 = 6.0 - CAP          # second pin layer (M6 E/W, M7 N/S) up to the CORE-HBM hard cap 6.0 pins/um
 SLACK = 1.3              # grown cores: perimeter capacity >= 1.3 x pins, so connected ports can take their face
 
@@ -172,17 +173,30 @@ def place_pins(groups, w, h):
     blind = lambda g: len(g[3]) == 1 and abs(list(g[3].values())[0] - 0.01) < 1e-9
     # connected ports first (smallest first, so a bus that must spill is a big one with most pins still facing);
     # spill faces by pull (mean cos to the partners); blind ports (d4g face kept) fill what is left
-    for port, names, f, pull in sorted(groups, key=lambda g: (blind(g), len(g[1]))):
-        if blind((port, names, f, pull)):
+    # connected ports first, the most constrained first (fewest faces with pull >= 0, then smallest); pull = the
+    # check.py core_faces score (best cosine over the port's partners).  A pin goes to a facing face (pull >= 0) by
+    # pull; when those are full it may take a far face only while the port's mean stays >= MEAN_MIN (check.py ERRORs
+    # below -0.1).  Blind ports (d4g face kept, unchecked) fill what is left.
+    ngood = lambda g: sum(1 for v in g[3].values() if v >= 0)
+    for port, names, f, pull in sorted(groups, key=lambda g: (blind(g), ngood(g), len(g[1]))):
+        isb = blind((port, names, f, pull))
+        if isb:
             order = [f] + sorted((x for x in 'NSEW' if x != f), key=lambda x: (x not in ADJ[f], load[x] - cap[x]))
         else:
             order = sorted('NSEW', key=lambda x: -pull.get(x, -1))
         cnt = collections.Counter()
-        for nm in sorted(names, key=bitk):
+        tot = 0.0
+        for i, nm in enumerate(sorted(names, key=bitk)):
             for x in order:
-                if load[x] < cap[x]:
-                    load[x] += 1; on[x].append(nm); cnt[x] += 1
-                    break
+                if load[x] >= cap[x]:
+                    continue
+                pv = pull.get(x, -1)
+                if not isb and pv < 0 and (tot + pv) / (i + 1) < MEAN_MIN:
+                    continue
+                load[x] += 1; on[x].append(nm); cnt[x] += 1; tot += pv
+                break
+            else:
+                raise ValueError(f'port {port}: faces {order} full')
         gf[port] = cnt.most_common(1)[0][0]
     out = []
     for f in 'NSEW':
@@ -282,6 +296,14 @@ def census_conn(plan_dir):
 
 
 # ------------------------------------------------------------------------------------------------- main
+class Retry(Exception):
+    pass
+
+
+class Unfit(Exception):
+    pass
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('plan')
@@ -382,123 +404,142 @@ def main():
         if not items:
             t.pop('hard_cores', None)
             continue
-        sized = []
-        for k, iw, ih, kind, pl in items:
-            if kind == 'core':
-                npin = len(read_pins(pl['src']))
-                if sum(face_cap(f, iw, ih) for f in 'NSEW') < npin:
-                    nw, nh = min_outline(npin, iw, ih)
-                    rep['grown'][f'{tn}.{k}'] = [iw, ih, nw, nh, npin]
-                    iw, ih = nw, nh
-            sized.append((k, iw, ih, kind, pl))
-        items = sized
-        pos = pack([(k, iw, ih) for k, iw, ih, _, _ in items], w, h) or pack_columns([(k, iw, ih) for k, iw, ih, _, _ in items], w, h)
-        if pos is None:
-            rep['unfit'].append(tn)
-            print('UNFIT', tn, w, h, sum(snap(iw) * snap(ih) for _, iw, ih, _, _ in items) / (w * h))
-            continue
-        geo = {k: (pos[k][0], pos[k][1], snap(iw) if kind == 'soft' else iw, snap(ih) if kind == 'soft' else ih)
-               for k, iw, ih, kind, _ in items}
-        # contents: origin / outline (split master = bbox of its pieces)
-        for ci, c in cont.items():
-            mem = [g for k, g in geo.items() if k == ci or k.startswith(ci + '_') and any(it[0] == k and it[4].get('parent') == ci for it in items)]
-            if mem:
-                x0 = min(g[0] for g in mem); y0 = min(g[1] for g in mem)
-                x1 = max(g[0] + g[2] for g in mem); y1 = max(g[1] + g[3] for g in mem)
-                c['origin_um'] = [round(x0, 4), round(y0, 4)]
-                c['outline_um'] = [round(x1 - x0, 4), round(y1 - y0, 4)]
-        # targets for connectivity
-        bt = CK._bus_targets(S.Plan(plan), tn)
-        bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
-        if inst_nw:
-            for L in plan['lanes']:
-                p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
-                if p0['src']['part'] == inst_nw:
-                    bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
-                if p1['dst']['part'] == inst_nw:
-                    bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
-        by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
-        new_hc = []
-        tconn = {}
-        for k, iw, ih, kind, pl in items:
-            if kind == 'soft':
-                rep['soft'].append(f'{tn}.{k}')
-                continue
-            x0, y0 = geo[k][0], geo[k][1]
-            cx, cy = x0 + iw / 2, y0 + ih / 2
-            src_pins = read_pins(pl['src'])
-            ow, oh = D4[pl['module']][0]
-            ports = collections.OrderedDict()
-            for nm, ln, px, py in src_pins:
-                ports.setdefault(base(nm), []).append((nm, face_of(px, py, ow, oh)))
-            ab = asb.get((tn, pl['parent'])) if k == pl['parent'] else None
-            groups = []
-            pconn = {}
-            for port, lst in ports.items():
-                names = [x[0] for x in lst]
-                f0 = collections.Counter(x[1] for x in lst).most_common(1)[0][0]
-                tg = []
-                if ab and port in conn.get(ab, {}) and inst_nw:
-                    for partner in conn[ab][port]:
-                        pps = parts_of(partner)
-                        if inst_nw in pps and partner in by_asb and by_asb[partner] != k:
-                            tg.append(('leaf', by_asb[partner]))
+        orig_wh = {it[0]: (it[1], it[2]) for it in items}
+        items0, force = items, {}
+        for attempt in range(40):
+            items = items0
+            pending, soft_l, cnt = {}, [], collections.Counter()
+            try:
+                sized = []
+                for k, iw, ih, kind, pl in items:
+                    if kind == 'core':
+                        npin = len(read_pins(pl['src']))
+                        if k in force:
+                            iw, ih = force[k]
+                        elif sum(face_cap(f, iw, ih) for f in 'NSEW') < npin:
+                            nw, nh = min_outline(npin, iw, ih)
+                            rep['grown'][f'{tn}.{k}'] = [iw, ih, nw, nh, npin]
+                            iw, ih = nw, nh
+                    sized.append((k, iw, ih, kind, pl))
+                items = sized
+                pos = pack([(k, iw, ih) for k, iw, ih, _, _ in items], w, h) or pack_columns([(k, iw, ih) for k, iw, ih, _, _ in items], w, h)
+                if pos is None:
+                    raise Unfit(tn)
+                geo = {k: (pos[k][0], pos[k][1], snap(iw) if kind == 'soft' else iw, snap(ih) if kind == 'soft' else ih)
+                       for k, iw, ih, kind, _ in items}
+                # contents: origin / outline (split master = bbox of its pieces)
+                for ci, c in cont.items():
+                    mem = [g for k, g in geo.items() if k == ci or k.startswith(ci + '_') and any(it[0] == k and it[4].get('parent') == ci for it in items)]
+                    if mem:
+                        x0 = min(g[0] for g in mem); y0 = min(g[1] for g in mem)
+                        x1 = max(g[0] + g[2] for g in mem); y1 = max(g[1] + g[3] for g in mem)
+                        c['origin_um'] = [round(x0, 4), round(y0, 4)]
+                        c['outline_um'] = [round(x1 - x0, 4), round(y1 - y0, 4)]
+                # targets for connectivity
+                bt = CK._bus_targets(S.Plan(plan), tn)
+                bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
+                if inst_nw:
+                    for L in plan['lanes']:
+                        p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
+                        if p0['src']['part'] == inst_nw:
+                            bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
+                        if p1['dst']['part'] == inst_nw:
+                            bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
+                by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
+                new_hc = []
+                tconn = {}
+                for k, iw, ih, kind, pl in items:
+                    if kind == 'soft':
+                        soft_l.append(f'{tn}.{k}')
+                        continue
+                    x0, y0 = geo[k][0], geo[k][1]
+                    cx, cy = x0 + iw / 2, y0 + ih / 2
+                    src_pins = read_pins(pl['src'])
+                    ow, oh = D4[pl['module']][0]
+                    ports = collections.OrderedDict()
+                    for nm, ln, px, py in src_pins:
+                        ports.setdefault(base(nm), []).append((nm, face_of(px, py, ow, oh)))
+                    ab = asb.get((tn, pl['parent'])) if k == pl['parent'] else None
+                    groups = []
+                    pconn = {}
+                    for port, lst in ports.items():
+                        names = [x[0] for x in lst]
+                        f0 = collections.Counter(x[1] for x in lst).most_common(1)[0][0]
+                        tg = []
+                        if ab and port in conn.get(ab, {}) and inst_nw:
+                            for partner in conn[ab][port]:
+                                pps = parts_of(partner)
+                                if inst_nw in pps and partner in by_asb and by_asb[partner] != k:
+                                    tg.append(('leaf', by_asb[partner]))
+                                else:
+                                    for b, others in bus_lanes.items():
+                                        if set(pps) & others and b in bt:
+                                            tg.append(('bus', b))
+                        pts = []
+                        for kd, nm in sorted(set(tg)):
+                            if kd == 'bus':
+                                pts.append(bt[nm][1])
+                            else:
+                                c2 = cont[nm]
+                                if 'origin_um' in c2:
+                                    pts.append((c2['origin_um'][0] + c2['outline_um'][0] / 2, c2['origin_um'][1] + c2['outline_um'][1] / 2))
+                        dirs = []
+                        for tx, ty in pts:
+                            d = math.hypot(tx - cx, ty - cy)
+                            if d > 1e-6:
+                                dirs.append(((tx - cx) / d, (ty - cy) / d))
+                        if dirs:
+                            pull = {f: max(NORM[f][0] * ux + NORM[f][1] * uy for ux, uy in dirs) for f in 'NSEW'}
+                            f = max(pull, key=pull.get)
+                            pconn[port] = [f'{kd}:{nm}' for kd, nm in sorted(set(tg))]
+                            cnt['conn'] += 1
                         else:
-                            for b, others in bus_lanes.items():
-                                if set(pps) & others and b in bt:
-                                    tg.append(('bus', b))
-                pts = []
-                for kd, nm in sorted(set(tg)):
-                    if kd == 'bus':
-                        pts.append(bt[nm][1])
-                    else:
-                        c2 = cont[nm]
-                        if 'origin_um' in c2:
-                            pts.append((c2['origin_um'][0] + c2['outline_um'][0] / 2, c2['origin_um'][1] + c2['outline_um'][1] / 2))
-                dirs = []
-                for tx, ty in pts:
-                    d = math.hypot(tx - cx, ty - cy)
-                    if d > 1e-6:
-                        dirs.append(((tx - cx) / d, (ty - cy) / d))
-                if dirs:
-                    pull = {f: sum(NORM[f][0] * ux + NORM[f][1] * uy for ux, uy in dirs) / len(dirs) for f in 'NSEW'}
-                    f = max(pull, key=pull.get)
-                    pconn[port] = [f'{kd}:{nm}' for kd, nm in sorted(set(tg))]
-                    rep['conn_ports'] += 1
-                else:
-                    pull = {f0: 0.01}
-                    f = f0
-                    rep['blind_ports'] += 1
-                groups.append((port, names, f, pull))
-            cw, ch = iw, ih
-            while True:
-                try:
-                    pins, gf = place_pins(groups, cw, ch)
-                    break
-                except ValueError:
-                    cw, ch = min_outline(sum(len(g[1]) for g in groups), cw + 4.32, ch)
-                    rep['grown'][f'{tn}.{k}'] = [iw, ih, cw, ch]
-            spills = [p for p, f, *_ in [(g[0], g[2]) for g in groups] if gf[p] != f]
-            if spills:
-                rep['spill'][f'{tn}.{k}'] = len(spills)
-            key = f"{pl['module']}__{cw:g}x{ch:g}__{tn}_{k}" if pconn else f"{pl['module']}__{cw:g}x{ch:g}"
-            pf = f'cores/{key}.json'
-            if pf not in pin_tables:
-                pin_tables[pf] = pins
-                json.dump([dict(name=n, layer=l, x=x, y=y) for n, l, x, y in pins], open(os.path.join(out, pf), 'w'))
-            new_hc.append(dict(inst=k, module=pl['module'], origin_um=[x0, y0], outline_um=[cw, ch],
-                               track_offset_um=[0.0, 0.0], pins_file=pf,
-                               note=pl['note'] + (f"; {pl['cells']} cells" if pl.get('cells') else '')))
-            if pconn:
-                tconn[k] = pconn
-            rep['cores'] += 1
-        t['hard_cores'] = new_hc
-        if not new_hc:
-            t.pop('hard_cores')
-        if tconn:
-            core_conns[tn] = tconn
-        rep['types'][tn] = dict(cores=len(new_hc), soft=sum(1 for it in items if it[3] == 'soft'),
-                                fill=round(sum(g[2] * g[3] for g in geo.values()) / (w * h), 3))
+                            pull = {f0: 0.01}
+                            f = f0
+                            cnt['blind'] += 1
+                        groups.append((port, names, f, pull))
+                    cw, ch = iw, ih
+                    try:
+                        pins, gf = place_pins(groups, cw, ch)
+                    except ValueError as e:
+                        nw = round(math.ceil(cw * 1.15 / 4.32) * 4.32, 4); nh = round(math.ceil(ch * 1.15 / 4.32) * 4.32, 4)
+                        force[k] = (nw, nh)
+                        rep['grown'][f'{tn}.{k}'] = [orig_wh[k][0], orig_wh[k][1], nw, nh, str(e)[:60]]
+                        raise Retry(k)
+                    spills = [p for p, f, *_ in [(g[0], g[2]) for g in groups] if gf[p] != f]
+                    if spills:
+                        rep['spill'][f'{tn}.{k}'] = len(spills)
+                    key = f"{pl['module']}__{cw:g}x{ch:g}__{tn}_{k}" if pconn else f"{pl['module']}__{cw:g}x{ch:g}"
+                    pf = f'cores/{key}.json'
+                    if pf not in pin_tables:
+                        pending[pf] = pins
+                    new_hc.append(dict(inst=k, module=pl['module'], origin_um=[x0, y0], outline_um=[cw, ch],
+                                       track_offset_um=[0.0, 0.0], pins_file=pf,
+                                       note=pl['note'] + (f"; {pl['cells']} cells" if pl.get('cells') else '')))
+                    if pconn:
+                        tconn[k] = pconn
+                    cnt['cores'] += 1
+                t['hard_cores'] = new_hc
+                if not new_hc:
+                    t.pop('hard_cores')
+                if tconn:
+                    core_conns[tn] = tconn
+                rep['types'][tn] = dict(cores=len(new_hc), soft=sum(1 for it in items if it[3] == 'soft'),
+                                        fill=round(sum(g[2] * g[3] for g in geo.values()) / (w * h), 3))
+                break
+            except Retry:
+                continue
+            except Unfit:
+                rep['unfit'].append(tn)
+                print('UNFIT', tn)
+                break
+        else:
+            rep['unfit'].append(tn + ' (retries)')
+        for pf, pins in pending.items():
+            pin_tables[pf] = pins
+            json.dump([dict(name=n, layer=l, x=x, y=y) for n, l, x, y in pins], open(os.path.join(out, pf), 'w'))
+        rep['soft'] += soft_l
+        rep['conn_ports'] += cnt['conn']; rep['blind_ports'] += cnt['blind']; rep['cores'] += cnt['cores']
     # the SM type cell estimate (r1: 1203 placeholder)
     for tn, t in plan['partition_types'].items():
         if any(c['module'] == SM_MOD for c in t['contents']):
