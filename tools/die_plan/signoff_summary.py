@@ -30,7 +30,12 @@ def paper_screen(rec):
         if v is not None and v > SPREAD_MAX:
             p.append(f"recorded {c.upper()} pin-flop spread {v:.1f} ps > 80")
     if rec.get("cl_ss_ps") is not None and rec["cl_ss_ps"] < 0:
-        p.append(f"recorded SS setup {rec['cl_ss_ps']:+.2f} ps")
+        p.append(f"recorded SS setup {rec['cl_ss_ps']:+.2f} ps"
+                 + (f" (closed at {rec['cl_setup_corner'].upper()} setup {rec['cl_setup_ps']:+.2f})"
+                    if (rec.get("cl_setup_corner") or "ss").lower() != "ss" and rec.get("cl_setup_ps") is not None
+                    else ""))
+    elif rec.get("cl_status") and rec.get("cl_ss_ps") is None:
+        p.append("no recorded SS setup")
     if rec.get("cl_ff_ps") is not None and rec["cl_ff_ps"] < 0:
         p.append(f"recorded FF hold {rec['cl_ff_ps']:+.2f} ps")
     if rec.get("cl_drc"):
@@ -77,7 +82,8 @@ def build(inv, runs_dir):
             row = dict(module=m, instances=v["dies"][die].get("instances"), types=v["dies"][die].get("types"),
                        kit=v.get("kit"), kit_in_repo=v.get("kit_in_repo"), recorded_db=v.get("recorded_db"),
                        db_status=v.get("db_status"),
-                       recorded=dict(ss_setup_ps=rec.get("cl_ss_ps"), ff_hold_ps=rec.get("cl_ff_ps"),
+                       recorded=dict(ss_setup_ps=rec.get("cl_ss_ps"), setup_corner=rec.get("cl_setup_corner"),
+                                     setup_corner_ps=rec.get("cl_setup_ps"), ff_hold_ps=rec.get("cl_ff_ps"),
                                      drc=rec.get("cl_drc"), spread_tt_ps=rec.get("spread_tt_ps"),
                                      spread_ff_ps=rec.get("spread_ff_ps"), ins_tt_ps=rec.get("ins_tt_ps"),
                                      closed_at=rec.get("cl_closed_at"), gate_verdict=rec.get("gate_verdict")),
@@ -113,14 +119,16 @@ def die_md(die, d):
     L = [f"### {die} ({d['plan']})", "",
          f"counts {d['counts']}; NEEDS RE-RUN whose last record already fails the standard on paper: "
          f"{d['needs_rerun_paper_fail']}; not-closed plan cores (not counted): {d['not_closed']}", "",
-         "| module | inst | status | rec SS setup | rec FF hold | rec spread TT/FF | kit in repo | paper |",
+         "| module | inst | status | rec SS setup (closure corner: setup) | rec FF hold | rec spread TT/FF | kit in repo | paper |",
          "|---|---|---|---|---|---|---|---|"]
     for r in d["modules"]:
         rc = r["recorded"]
 
         def f(x):
             return "-" if x is None else f"{x:g}"
-        L.append(f"| {r['module']} | {r['instances']} | {r['status']} | {f(rc['ss_setup_ps'])} | "
+        sc = (rc.get("setup_corner") or "-").upper()
+        L.append(f"| {r['module']} | {r['instances']} | {r['status']} | {f(rc['ss_setup_ps'])} ({sc}: "
+                 f"{f(rc.get('setup_corner_ps'))}) | "
                  f"{f(rc['ff_hold_ps'])} | {f(rc['spread_tt_ps'])}/{f(rc['spread_ff_ps'])} | "
                  f"{'yes' if r['kit_in_repo'] else 'NO'} | {r['paper']['verdict']}"
                  f"{(': ' + '; '.join(r['paper']['problems'])) if r['paper']['problems'] else ''} |")
