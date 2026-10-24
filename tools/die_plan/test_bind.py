@@ -456,6 +456,36 @@ def test_land_r8(tmp_path):
     assert any(e.startswith("R8_STALE") for e in report(out2)["errors"])
 
 
+def test_land_r8_pad_tree(tmp_path):
+    """asbuilt.land_pad_tree (QC-TOK 10-24, opt-in): the same r8 table realised as delay trees (pads hoisted into the
+    source / forwarding partition's tapped line): every sink lands at the same depth as with per-sink chains, the
+    independent proof holds, and the tree never uses more flops than the chains"""
+    import r8 as R8
+    out0 = tmp_path / "o0"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", _split_d0), out0, "elab", "bind") == 0
+    bg = json.loads((out0 / "bus_groups.json").read_text())
+
+    def edit(p, tree):
+        _split_d0(p)
+        p["asbuilt"]["land_align"] = "r8"
+        if tree:
+            p["asbuilt"]["land_pad_tree"] = True
+    land = {}
+    for tree in (False, True):
+        plan = plan_copy(tmp_path, "die_plan_lanes.json", lambda p: edit(p, tree))
+        R8.write_pads(json.loads(plan.read_text()), bg, tmp_path / "r8")
+        out = tmp_path / f"o_{int(tree)}"
+        assert run(plan, out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+        assert verify(out)["verdict"] == "PASS"
+        sinks = json.loads((out / "bind_sinks.json").read_text())
+        land[tree] = {k: v[2] for k, v in sinks.items() if v[0] == "pin"}
+        la = report(out)["lanes"]["landing_alignment"]
+        if tree:
+            assert la["tree"]["pad_flops"] <= la["pad_flops"]
+            assert la["tree"]["hoisted_bits"] > 0                 # the pads moved upstream of the sink
+    assert land[False] == land[True]
+
+
 def test_clock_roles(tmp_path):
     """per-quadrant clock domains (KV-P5 type-split ask): A0 runs on clk_q_A, A1 on clk_q_B (same partition type ta);
     the partition module names the clock by its role, so ta binds ONE module and the top feeds each instance its own
