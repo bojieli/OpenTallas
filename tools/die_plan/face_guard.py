@@ -282,7 +282,30 @@ class Flat:
                 self.cells.append((typ, path, pins))
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None):
+def ft_single(path):
+    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`): such a slot's
+    S_i[k] and S_o[k] are, by plan, the same register (README ft slot: `stations` registers between S_i and S_o)."""
+    out = set()
+    p = Path(path)
+    if not p.is_file():
+        return out
+    for ln in p.read_text().splitlines():
+        f = ln.split()
+        if len(f) >= 2 and not ln.lstrip().startswith("#") and f[1] == "1":
+            out.add(f[0])
+    return out
+
+
+def _ft1_pair(bs, ft1):
+    """True when the bits a flop registers are exactly S_i[k] + S_o[k] of one single-station ft slot S."""
+    if len(bs) != 2 or not ft1:
+        return False
+    m = [re.match(r"^(.*)_([io])(\[\d+\])?$", b) for b in bs]
+    return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and
+            {m[0].group(2), m[1].group(2)} == {"i", "o"} and m[0].group(3) == m[1].group(3))
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
     mods = parse(text)
     if top is None:
         used = {typ for M in mods.values() for typ, _, _ in M.cells}
@@ -399,6 +422,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None):
             res["flops"][b] = ff[1]
             res["ok"] += 1
     for ci, bs in claimed.items():
+        if len(bs) > 1 and _ft1_pair(bs, ft1):
+            res["ft1_shared"] = res.get("ft1_shared", 0) + 1     # one station: S_i/S_o share it by plan
+            continue
         if len(bs) > 1:
             for b in bs:
                 fail("merged", b, f"flop {F.cells[ci][1]} also registers {[x for x in bs if x != b][:3]}")
@@ -426,9 +452,11 @@ def main(argv=None):
     ap.add_argument("--top")
     ap.add_argument("--pins")
     ap.add_argument("--out")
+    ap.add_argument("--ft-stations", help="kit ft_stations.txt (default: beside --pins)")
     a = ap.parse_args(argv)
     pins = json.loads(Path(a.pins).read_text()) if a.pins else None
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins)
+    fts = a.ft_stations or (str(Path(a.pins).parent / "ft_stations.txt") if a.pins else None)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft_single(fts) if fts else set())
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

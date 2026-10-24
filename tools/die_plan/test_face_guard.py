@@ -83,3 +83,26 @@ def test_yosys_keep_attributes_prevent_merges():
     r = face_guard.guard(_synth(bare), skip_re=r"^(clk|rst_n)$")
     assert r["verdict"] == "FAIL", r
     assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))
+
+
+NET_FT1 = r"""
+module top(clk, s_i, s_o, t_i, t_o);
+  input clk; input s_i; output s_o; input t_i; output t_o;
+  wire _0_; wire _1_;
+  DFFHQNx1_ASAP7_75t_R \u_ft_s.q[0]$_DFF_P_  (.CLK(clk), .D(s_i), .QN(_0_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(s_o));
+  DFFHQNx1_ASAP7_75t_R \u_ft_t.q[0]$_DFF_P_  (.CLK(clk), .D(t_i), .QN(_1_));
+  INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(t_o));
+endmodule
+"""
+
+
+def test_single_station_ft_slot(tmp_path):
+    """ELEM-QK 10-24: a 1-station ft slot has ONE register between S_i and S_o (README); it is not `merged`."""
+    assert "merged" in face_guard.guard(NET_FT1)["fail_counts"]
+    r = face_guard.guard(NET_FT1, ft1={"s", "t"})
+    assert r["verdict"] == "PASS" and r.get("ft1_shared") == 2, r
+    r = face_guard.guard(NET_FT1, ft1={"s"})          # t has 2+ stations: its shared flop stays a failure
+    assert r["fail_counts"].get("merged") == 2, r
+    (tmp_path / "ft_stations.txt").write_text("# slot stations in_face out_face\ns 1 S N\nt 2 N S\n")
+    assert face_guard.ft_single(tmp_path / "ft_stations.txt") == {"s"}
