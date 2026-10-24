@@ -1,16 +1,1465 @@
 {
+ "ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c0_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c1_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c1_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c2_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c2_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r0c3_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c3_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c0_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c0_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c1_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c1_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c2_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c2_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k0h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k0h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k0h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k0h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k1h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k1h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k1h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k1h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k2h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k2h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k2h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k2h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k3h0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h0",
+  "macros": [],
+  "params": {
+   "HALF": 0,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k3h0__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 0) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); the cut port list IS the twin port list.  HALF changes the per-head delay depth and the seed head, so h0 and h1 are 2 types",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__r1c3_k3h1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+  ],
+  "functional_type": "score_hcol_h1",
+  "macros": [],
+  "params": {
+   "HALF": 1,
+   "MUT": 0
+  },
+  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r1c3_k3h1__181.44x155.52\"]",
+  "source": "HBM-P4-SPLIT twin ot_hidx_score_hcol #(HALF 1) (rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv); see score_hcol_h0",
+  "top": "ot_hidx_score_hcol"
+ },
+ "ot_hbm_idx_score_quarter_static__tail0__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv"
+  ],
+  "functional_type": "score_tail",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_idx_tail_native ports; cut pin -> canonical map in canonical_ports_split.json types.score_tail.type_ids[\"ot_hbm_idx_score_quarter_static__tail0__181.44x155.52\"]",
+  "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv ge[e] tail (ot_hbm_idx_tail_native, verbatim in the _h twin)",
+  "top": "ot_hbm_idx_tail_native"
+ },
+ "ot_hbm_idx_score_quarter_static__tail1__181.44x155.52": {
+  "defines": [],
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+   "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv"
+  ],
+  "functional_type": "score_tail",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_idx_tail_native ports; cut pin -> canonical map in canonical_ports_split.json types.score_tail.type_ids[\"ot_hbm_idx_score_quarter_static__tail1__181.44x155.52\"]",
+  "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv ge[e] tail (ot_hbm_idx_tail_native, verbatim in the _h twin)",
+  "top": "ot_hbm_idx_tail_native"
+ },
  "ot_hbm_su_static_pgslice_lg__side_rest__440.64x457.92": {
   "defines": [],
   "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
-   "rtl/hdc/ot_hdc_fastfp_lat.sv",
-   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
    "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
    "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_side_rest_core.sv"
   ],
   "functional_type": "pgslice_side_rest",
@@ -23,17 +1472,20 @@
  "ot_hbm_su_static_pgslice_lg__side_softplus__440.64x457.92": {
   "defines": [],
   "files": [
-   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
    "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
    "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_sfu.sv",
    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
-   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
    "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_side_softplus_core.sv"
   ],
   "functional_type": "pgslice_side_softplus",
@@ -42,6 +1494,454 @@
   "port_map_note": "canonical ports = ot_hbm_su_side_softplus_core ports; cut pin -> canonical map in canonical_ports_split.json types.pgslice_side_softplus.type_ids[\"ot_hbm_su_static_pgslice_lg__side_softplus__440.64x457.92\"]",
   "source": "u_side.u_sp of ot_hbm_su_static_side_s (HBM-P5-RTLB twin): ot_hbm_su_static_side_softplus_s #(LM 3, LA 3, FREG 1)",
   "top": "ot_hbm_su_side_softplus_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6\"]; straps {'tile_tid': '000000'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile10__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile10__319.68x345.6\"]; straps {'tile_tid': '001010'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile11__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile11__319.68x345.6\"]; straps {'tile_tid': '001011'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile12__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile12__319.68x345.6\"]; straps {'tile_tid': '001100'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile13__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile13__319.68x345.6\"]; straps {'tile_tid': '001101'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile14__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile14__319.68x345.6\"]; straps {'tile_tid': '001110'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile15__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile15__319.68x345.6\"]; straps {'tile_tid': '001111'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile16__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile16__319.68x345.6\"]; straps {'tile_tid': '010000'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile17__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile17__319.68x345.6\"]; straps {'tile_tid': '010001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile18__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile18__319.68x345.6\"]; straps {'tile_tid': '010010'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile19__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile19__319.68x345.6\"]; straps {'tile_tid': '010011'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile1__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile1__319.68x345.6\"]; straps {'tile_tid': '000001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile20__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile20__319.68x345.6\"]; straps {'tile_tid': '010100'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile21__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile21__319.68x345.6\"]; straps {'tile_tid': '010101'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile22__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile22__319.68x345.6\"]; straps {'tile_tid': '010110'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile23__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile23__319.68x345.6\"]; straps {'tile_tid': '010111'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile24__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile24__319.68x345.6\"]; straps {'tile_tid': '011000'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile25__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile25__319.68x345.6\"]; straps {'tile_tid': '011001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile26__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile26__319.68x345.6\"]; straps {'tile_tid': '011010'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile27__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile27__319.68x345.6\"]; straps {'tile_tid': '011011'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile28__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile28__319.68x345.6\"]; straps {'tile_tid': '011100'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile29__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile29__319.68x345.6\"]; straps {'tile_tid': '011101'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile2__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile2__319.68x345.6\"]; straps {'tile_tid': '000010'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile30__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile30__319.68x345.6\"]; straps {'tile_tid': '011110'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile31__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile31__319.68x345.6\"]; straps {'tile_tid': '011111'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile3__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile3__319.68x345.6\"]; straps {'tile_tid': '000011'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile4__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile4__319.68x345.6\"]; straps {'tile_tid': '000100'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile5__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile5__319.68x345.6\"]; straps {'tile_tid': '000101'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile6__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile6__319.68x345.6\"]; straps {'tile_tid': '000110'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile7__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile7__319.68x345.6\"]; straps {'tile_tid': '000111'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile8__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile8__319.68x345.6\"]; straps {'tile_tid': '001000'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
+ },
+ "ot_hgi_coll_tkm_m_tp192__tile9__319.68x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "functional_type": "tkm_tile",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_coll_tkm_tp192_tile_core ports; cut pin -> canonical map in canonical_ports_split.json types.tkm_tile.type_ids[\"ot_hgi_coll_tkm_m_tp192__tile9__319.68x345.6\"]; straps {'tile_tid': '001001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core"
  },
  "ot_hgi_sfu_core_split3__lane0__388.8x345.6": {
   "defines": [],

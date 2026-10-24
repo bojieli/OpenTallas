@@ -1782,5 +1782,1430 @@
     "#(.GSH(1),.KIMM(1),.DENR(1),.DRING(3))"
    ]
   }
+ },
+ "tkm_tile": {
+  "master": "ot_hgi_coll_tkm_m_tp192",
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
+  "ports": [
+   [
+    "tile_clk",
+    "input",
+    1,
+    0
+   ],
+   [
+    "tile_clr",
+    "input",
+    1,
+    0
+   ],
+   [
+    "tile_conv",
+    "input",
+    1,
+    0
+   ],
+   [
+    "tile_ins_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "tile_ins_b",
+    "input",
+    344,
+    0
+   ],
+   [
+    "tile_up_in",
+    "input",
+    344,
+    0
+   ],
+   [
+    "tile_tid",
+    "input",
+    6,
+    0
+   ],
+   [
+    "tile_ovf_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "tile_ovf_b",
+    "output",
+    344,
+    0
+   ],
+   [
+    "tile_up_out",
+    "output",
+    344,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hgi_coll_tkm_m_tp192__tile0": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_0_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_0_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_0_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_0_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_0_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_0_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_0_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_0_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000000"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile10": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_10_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_10_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_10_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_10_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_10_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_10_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_10_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_10_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001010"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile11": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_11_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_11_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_11_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_11_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_11_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_11_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_11_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_11_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001011"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile12": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_12_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_12_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_12_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_12_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_12_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_12_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_12_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_12_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001100"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile13": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_13_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_13_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_13_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_13_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_13_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_13_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_13_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_13_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001101"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile14": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_14_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_14_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_14_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_14_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_14_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_14_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_14_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_14_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001110"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile15": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_15_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_15_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_15_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_15_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_15_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_15_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_15_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_15_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001111"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile16": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_16_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_16_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_16_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_16_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_16_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_16_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_16_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_16_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010000"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile17": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_17_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_17_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_17_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_17_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_17_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_17_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_17_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_17_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010001"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile18": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_18_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_18_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_18_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_18_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_18_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_18_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_18_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_18_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010010"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile19": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_19_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_19_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_19_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_19_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_19_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_19_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_19_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_19_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010011"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile1": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_1_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_1_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_1_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_1_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_1_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_1_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_1_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_1_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000001"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile20": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_20_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_20_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_20_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_20_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_20_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_20_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_20_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_20_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010100"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile21": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_21_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_21_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_21_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_21_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_21_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_21_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_21_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_21_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010101"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile22": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_22_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_22_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_22_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_22_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_22_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_22_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_22_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_22_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010110"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile23": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_23_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_23_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_23_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_23_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_23_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_23_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_23_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_23_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "010111"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile24": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_24_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_24_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_24_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_24_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_24_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_24_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_24_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_24_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011000"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile25": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_25_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_25_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_25_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_25_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_25_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_25_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_25_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_25_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011001"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile26": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_26_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_26_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_26_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_26_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_26_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_26_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_26_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_26_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011010"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile27": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_27_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_27_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_27_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_27_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_27_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_27_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_27_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_27_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011011"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile28": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_28_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_28_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_28_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_28_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_28_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_28_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_28_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_28_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011100"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile29": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_29_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_29_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_29_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_29_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_29_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_29_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_29_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_29_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011101"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile2": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_2_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_2_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_2_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_2_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_2_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_2_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_2_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_2_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000010"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile30": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_30_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_30_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_30_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_30_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_30_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_30_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_30_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_30_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011110"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile31": {
+    "cut_bits": {
+     "inp": 348,
+     "out": 344
+    },
+    "same_structure": false,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_31_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_31_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_31_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_31_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_31_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "011111"
+    },
+    "subset_of_reference": {
+     "ok": true,
+     "tied_in_bits": 344,
+     "open_out_bits": 345,
+     "detail": {
+      "tied": {
+       "tile_up_in=0": 344
+      },
+      "open": {
+       "tile_ovf_v": 1,
+       "tile_ovf_b": 344
+      },
+      "bad": []
+     }
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile3": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_3_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_3_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_3_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_3_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_3_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_3_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_3_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_3_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000011"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile4": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_4_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_4_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_4_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_4_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_4_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_4_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_4_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_4_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000100"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile5": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_5_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_5_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_5_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_5_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_5_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_5_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_5_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_5_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000101"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile6": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_6_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_6_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_6_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_6_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_6_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_6_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_6_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_6_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000110"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile7": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_7_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_7_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_7_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_7_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_7_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_7_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_7_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_7_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "000111"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile8": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_8_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_8_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_8_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_8_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_8_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_8_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_8_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_8_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001000"
+    }
+   },
+   "ot_hgi_coll_tkm_m_tp192__tile9": {
+    "cut_bits": {
+     "inp": 692,
+     "out": 689
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "tile_clk": {
+      "tile_clk": 1
+     },
+     "g_tiles_9_e86_u_tile_clr": {
+      "tile_clr": 1
+     },
+     "g_tiles_9_e86_u_tile_conv": {
+      "tile_conv": 1
+     },
+     "g_tiles_9_e86_u_tile_ins_v": {
+      "tile_ins_v": 1
+     },
+     "g_tiles_9_e86_u_tile_ins_b": {
+      "tile_ins_b": 344
+     },
+     "g_tiles_9_e86_u_tile_ovf_v": {
+      "tile_ovf_v": 1
+     },
+     "g_tiles_9_e86_u_tile_ovf_b": {
+      "tile_ovf_b": 344
+     },
+     "g_tiles_9_e86_u_tile_up_in": {
+      "tile_up_in": 344
+     },
+     "g_tiles_9_e86_u_tile_up_out": {
+      "tile_up_out": 344
+     }
+    },
+    "straps": {
+     "tile_tid": "001001"
+    }
+   }
+  },
+  "src": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
+  "rtl": {
+   "u_tile": [
+    "ot_hgi_coll_tkm_tile_e86",
+    ""
+   ]
+  }
+ },
+ "score_tail": {
+  "master": "ot_hbm_idx_score_quarter_static",
+  "top": "ot_hbm_idx_tail_native",
+  "file": null,
+  "pieces": {
+   "ot_hbm_idx_score_quarter_static__tail0": {
+    "cut_bits": {
+     "inp": 539,
+     "out": 73
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_tail": {
+      "clk": 1
+     },
+     "ge_0_u_t_rst_n": {
+      "rst_n": 1
+     },
+     "ge_0_u_t_i_v": {
+      "i_v": 1
+     },
+     "ge_0_u_t_i_kv": {
+      "i_kv": 4
+     },
+     "ge_0_u_t_i_keep": {
+      "i_keep": 4
+     },
+     "ge_0_u_t_i_sum": {
+      "i_sum": 512
+     },
+     "ge_0_u_t_i_fault": {
+      "i_fault": 16
+     },
+     "ge_0_u_t_o_v": {
+      "o_v": 1
+     },
+     "ge_0_u_t_o_kv": {
+      "o_kv": 4
+     },
+     "ge_0_u_t_o_score": {
+      "o_score": 64
+     },
+     "ge_0_u_t_o_fault": {
+      "o_fault": 4
+     }
+    },
+    "straps": {}
+   },
+   "ot_hbm_idx_score_quarter_static__tail1": {
+    "cut_bits": {
+     "inp": 539,
+     "out": 73
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_tail": {
+      "clk": 1
+     },
+     "ge_1_u_t_rst_n": {
+      "rst_n": 1
+     },
+     "ge_1_u_t_i_v": {
+      "i_v": 1
+     },
+     "ge_1_u_t_i_kv": {
+      "i_kv": 4
+     },
+     "ge_1_u_t_i_keep": {
+      "i_keep": 4
+     },
+     "ge_1_u_t_i_sum": {
+      "i_sum": 512
+     },
+     "ge_1_u_t_i_fault": {
+      "i_fault": 16
+     },
+     "ge_1_u_t_o_v": {
+      "o_v": 1
+     },
+     "ge_1_u_t_o_kv": {
+      "o_kv": 4
+     },
+     "ge_1_u_t_o_score": {
+      "o_score": 64
+     },
+     "ge_1_u_t_o_fault": {
+      "o_fault": 4
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv ge[e] tail (ot_hbm_idx_tail_native, verbatim in the _h twin)",
+  "direct": true
  }
 }
