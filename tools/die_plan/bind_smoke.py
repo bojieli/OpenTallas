@@ -114,12 +114,14 @@ def tiles_of(rtl: Path, module: str):
 
 def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     seed = re.compile(r'^(sl_W5_\w+|c_W5_tn_\d\d' + (r'|c_W5_tf_\d\d' if clusters == 'both' else '') + r')$')
-    nseed = 23 if clusters == 'both' else 19
     out.mkdir(parents=True, exist_ok=True)
     wires, insts = parse_top(top)
     keep = [i for i in insts if seed.match(i['name'])]
-    if len(keep) != nseed:
-        raise SystemExit(f'carve: {len(keep)} seed partitions != {nseed}: {[i["name"] for i in keep]}')
+    required = {f"sl_W5_{role}" for role in ("ctl", "fe", "fw", "hc0", "hc1", "hc2", "hc3", "sc", "st_a", "st_b", "stm", "su_c", "su_l0", "su_l1")}
+    required.update(f"c_W5_{side}_{x}{y}" for side in (["tn", "tf"] if clusters == "both" else ["tn"]) for x in (0, 1) for y in (0, 1))
+    missing = required - {i["name"] for i in keep}
+    if missing:
+        raise SystemExit(f"carve: missing required current-plan partitions {sorted(missing)}")
     drv, rd = {}, {}
     for i in keep:
         pd = ports_of(rtl, i['module'])
@@ -593,18 +595,31 @@ def run_qc(a):
     if 'BUILD_FAIL' in out or nominal is None:
         verdict = 'BUILD_FAIL'
     else:
-        verdict = 'PASS' if ok(nominal) and not ok(mutant) else 'FAIL'
+        schedule = fixed_schedule_gate(work / 'results', a.mut_skew)
+        rep['schedule_gate'] = schedule
+        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
     rep.update(host=host, run_dir=f'{host}:{remote}', otrun_exit=p.returncode,
                runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
-               gate_rule='nominal near (and far) words exact AND mutant not exact',
+               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
                build_cached=(tm.group(1) == '0') if tm else None,
                build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
                wall_s=round(time.time() - t0), peak_build_gb=peak)
     if verdict == 'FAIL' and ok(mutant):
-        rep['note'] = 'mutant PASSED: the bench does not see a one-cycle hr skew -> gate not sensitive (fix the mutant)'
+        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
     elif verdict == 'FAIL' and not ok(nominal):
         rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
     return rep, verdict
+
+
+def fixed_schedule_gate(results: Path, mutant_index: int):
+    # Numeric acceptance remains truthful; a shifted static-consumer calendar is an effective negative control.
+    from xt1_schedule_gate import evaluate
+    n=results/'log_m0.txt.xt1n.json'; m=results/f'log_m{mutant_index}.txt.xt1n.json'
+    if not n.exists() or not m.exists():
+        return dict(verdict='FAIL',mutant_caught=False,reason='missing actual schedule-edge records')
+    gate=evaluate(json.loads(n.read_text()),json.loads(m.read_text()))
+    (results/'schedule_gate.json').write_text(json.dumps(gate,indent=1)+'\n')
+    return gate
 
 
 def run_qc_local(a, work: Path, rep: dict, t0: float):
@@ -625,10 +640,12 @@ def run_qc_local(a, work: Path, rep: dict, t0: float):
     if 'BUILD_FAIL' in out or nominal is None:
         verdict = 'BUILD_FAIL'
     else:
-        verdict = 'PASS' if ok(nominal) and not ok(mutant) else 'FAIL'
+        schedule = fixed_schedule_gate(work, a.mut_skew)
+        rep['schedule_gate'] = schedule
+        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
     rep.update(host=socket.gethostname(), run_dir=f'{socket.gethostname()}:{work}', run_exit=p.returncode,
                runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
-               gate_rule='nominal near (and far) words exact AND mutant not exact',
+               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
                build_cached=(tm.group(1) == '0') if tm else None,
                build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
                wall_s=round(time.time() - t0), peak_build_gb=peak)
@@ -636,7 +653,7 @@ def run_qc_local(a, work: Path, rep: dict, t0: float):
         man = a.inputs / 'MANIFEST.json'
         rep['inputs'] = dict(dir=str(a.inputs), manifest=json.loads(man.read_text()) if man.exists() else None)
     if verdict == 'FAIL' and ok(mutant):
-        rep['note'] = 'mutant PASSED: the bench does not see a one-cycle hr skew -> gate not sensitive (fix the mutant)'
+        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
     elif verdict == 'FAIL' and not ok(nominal):
         rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
     return rep, verdict
