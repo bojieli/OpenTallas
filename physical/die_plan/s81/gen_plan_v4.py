@@ -261,10 +261,23 @@ NONFRAME_HC = {
                         dict(inst="u_lf.u_rxsf", module="dsfd_su_t_rxsf", lef=_rt("s81su_rxsf_ref", "dsfd_su_t_rxsf"),
                              cells=82916, plan_core="vq_rx"),
                         dict(inst="u_lf.u_rxsb", module="dsfd_su_t_rxsb", lef=_rt("s81su_rxsb_ref", "dsfd_su_t_rxsb"),
-                             cells=99597, plan_core="vq_rx")],
-                 gaps=[dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve_a/ve_b",
-                            why="no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no "
-                                "final/ views; repo has stand-in views only); 460,279 cells is itself over the cap")]),
+                             cells=99597, plan_core="vq_rx"),
+                        # CORE-S81 10-23: ve r5 CLOSED view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021,
+                        # TT +42.12 / FF +12.74 / DRC 0; final LEF regenerated from provenance/raw with the run's own
+                        # abstract_pin_stub.py, sha 01b54bf1 = the record) imported to closed_import/ot_s81sl_ve
+                        dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve",
+                             lef=_ARCH % ("ot_s81sl_ve", "s81sl_ve_r5-f51f4ec42-linked-eco-1021", "ot_s81sl_ve",
+                                          "ot_s81sl_ve"))],
+                 gaps=[],
+                 # CORE-S81 10-23 leaf placement (the shelf packer cannot fit vp 734x864 + vn + ve): vp W column under
+                 # the N bus; E column top row vn + vq (both on the N bus, vq takes vn's y), ve under vn with vsw on
+                 # its E side, vs (the ve / vsw / rx / vp hub) centred under ve so ve's W (reduce) and E (add) faces
+                 # are equidistant from it, rxsf -> rxsb E of vs
+                 place={"u_lf.u_vp": (34.56, 319.68), "u_lf.u_vn": (786.24, 829.44), "u_lf.u_vq": (1157.76, 1054.08),
+                        "u_lf.u_ve": (786.24, 466.56), "u_lf.u_vsw": (1149.12, 587.52), "u_lf.u_vs": (872.64, 276.48),
+                        "u_lf.u_rxsf": (1062.72, 276.48), "u_lf.u_rxsb": (1218.24, 276.48)},
+                 # vp / vn / vq carry the N-face leaf bus: only the x mirror keeps them under it
+                 mirrors=((False, False), (True, False))),
     "svc": dict(cores=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
                             lef=_rt("dsdv_svc_sx_hrow", "dsdv_svc_sx_hrow"), plan_core="sx_hrow_ab")
                        for r in range(4) for b in range(2)],
@@ -349,6 +362,15 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
         return math.ceil(round(v / G, 6)) * G
     x0 = y0 = up(HC_EDGE_UM)
     x, y, row_h, out = x0, y0, 0.0, []
+    if spec.get("place"):
+        # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
+        # fit; the corner mirroring and the gap / edge legality below still apply
+        for c, (cw, ch) in items:
+            ox_, oy_ = spec["place"][c["inst"]]
+            out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[ox_, oy_], outline_um=[cw, ch],
+                            orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
+                            pins_file="inputs/core_pins/%s.json" % c["module"]))
+        items = []
     for c, (cw, ch) in items:
         if x + dx + cw > w - HC_EDGE_UM:
             x, y, row_h = x0, up(y + dy + row_h + HC_GAP_UM), 0.0
@@ -386,7 +408,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
                     return False
         return True
     best = None
-    for mx, my in ((False, False), (False, True), (True, False), (True, True)):
+    for mx, my in spec.get("mirrors", ((False, False), (False, True), (True, False), (True, True))):
         o = mirrored(mx, my)
         if not legal(o):
             continue

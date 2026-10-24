@@ -1,0 +1,148 @@
+{
+ "outline": [
+  1581.12,
+  1226.88
+ ],
+ "place": {
+  "vp": [
+   423.36,
+   319.68
+  ],
+  "vn": [
+   1183.68,
+   570.24
+  ],
+  "vq": [
+   1365.12,
+   423.36
+  ],
+  "ve": [
+   34.56,
+   682.56
+  ],
+  "vs": [
+   120.96,
+   492.48
+  ],
+  "vsw": [
+   95.04,
+   250.56
+  ],
+  "rxsf": [
+   34.56,
+   95.04
+  ],
+  "rxsb": [
+   190.08,
+   95.04
+  ]
+ },
+ "bundles": [
+  {
+   "a": "vp",
+   "b": "vn",
+   "groups": "hw_ hq_ hr_ n_ wl_|hw_ hq_ hr_ n_ wl_",
+   "bits": 912,
+   "manhattan_um": 28
+  },
+  {
+   "a": "vp",
+   "b": "vs",
+   "groups": "s_|s_",
+   "bits": 161,
+   "manhattan_um": 409
+  },
+  {
+   "a": "vp",
+   "b": "vs",
+   "groups": "x_q x_r|x_q x_r",
+   "bits": 268,
+   "manhattan_um": 376
+  },
+  {
+   "a": "vp",
+   "b": "vs",
+   "groups": "x_w|x_w",
+   "bits": 275,
+   "manhattan_um": 613
+  },
+  {
+   "a": "vp",
+   "b": "vq",
+   "groups": "m_|m_",
+   "bits": 11,
+   "manhattan_um": 635
+  },
+  {
+   "a": "vn",
+   "b": "vq",
+   "groups": "y|y",
+   "bits": 260,
+   "manhattan_um": 322
+  },
+  {
+   "a": "vs",
+   "b": "vq",
+   "groups": "u um_|u um_",
+   "bits": 271,
+   "manhattan_um": 1076
+  },
+  {
+   "a": "ve",
+   "b": "vs",
+   "groups": "r_ p_|ve_r ve_p",
+   "bits": 486,
+   "manhattan_um": 363
+  },
+  {
+   "a": "ve",
+   "b": "vs",
+   "groups": "a_|ve_a",
+   "bits": 547,
+   "manhattan_um": 263
+  },
+  {
+   "a": "ve",
+   "b": "vs",
+   "groups": "o_|ve_o",
+   "bits": 259,
+   "manhattan_um": 547
+  },
+  {
+   "a": "vs",
+   "b": "vsw",
+   "groups": "sw_v sw_d sw_w sw_lim|i_",
+   "bits": 322,
+   "manhattan_um": 72
+  },
+  {
+   "a": "vsw",
+   "b": "vs",
+   "groups": "o_|sw_vi sw_ri sw_fi",
+   "bits": 66,
+   "manhattan_um": 262
+  },
+  {
+   "a": "vs",
+   "b": "rxsf",
+   "groups": "ra_v ra_x|i_",
+   "bits": 34,
+   "manhattan_um": 327
+  },
+  {
+   "a": "rxsf",
+   "b": "rxsb",
+   "groups": "o_|i_",
+   "bits": 98,
+   "manhattan_um": 344
+  },
+  {
+   "a": "rxsb",
+   "b": "vs",
+   "groups": "o_|ra_vi ra_ri ra_fi",
+   "bits": 34,
+   "manhattan_um": 358
+  }
+ ],
+ "worst_um": 1076
+}
