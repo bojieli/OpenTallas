@@ -76,16 +76,22 @@ class Piece:
     pass
 
 
+def _nat(p):
+    return [int(x) if x.isdigit() else x for x in re.split(r'(\d+)', p)]
+
+
 def roles_of(paths):
+    """role = instance base name; repeated base names get ordinals in natural path order (g_lane[8] before [10])."""
     base = [re.split(r'[/.]', p)[-1] for p in paths]
     cnt = collections.Counter(base)
+    out = [None] * len(paths)
     seen = collections.Counter()
-    out = []
-    for b in base:
+    for i in sorted(range(len(paths)), key=lambda i: _nat(paths[i])):
+        b = base[i]
         if cnt[b] > 1:
-            out.append(f'{b}{seen[b]}'); seen[b] += 1
+            out[i] = f'{b}{seen[b]}'; seen[b] += 1
         else:
-            out.append(b)
+            out[i] = b
     return out
 
 
@@ -170,6 +176,8 @@ def analyse(n, top, include, exclude=(), strip=''):
                         if c not in bidx:
                             bidx[c] = len(P.bnd)
                             P.bnd.append(dict(dir='output' if c in drv else 'input', can=f'{role}_{pn}', c=c))
+                        if pdir == 'output' and not P.bnd[bidx[c]].get('drv_lab'):
+                            P.bnd[bidx[c]]['drv_lab'] = True; P.bnd[bidx[c]]['can'] = f'{role}_{pn}'
                         cls.append(('P', bidx[c]))
                     elif c in drv and sum(1 for _ in [0]) and _multi(c, mem, find, ism):
                         iidx.setdefault(c, len(iidx)); cls.append(('I', iidx[c]))
@@ -198,6 +206,7 @@ def analyse(n, top, include, exclude=(), strip=''):
     P.cut_bits = dict(inp=sum(res['inp'].values()), out=sum(res['out'].values()))
     for b in P.bnd:
         del b['c']
+        b.pop('drv_lab', None)
     return P
 
 
@@ -210,7 +219,7 @@ def signature(P):
     ren, k = {}, 0
     sig = []
     for _, t, role in P.members:
-        sig.append(('M', role, re.sub(r'__d4g_\w+$', '', netcut.base(t))))
+        sig.append(('M', role, re.sub(r'__d4g_\w+$', '', t)))   # full type: a parameter difference is a type difference
     for key in sorted(P.pins):
         pdir, cls = P.pins[key]
         row = []

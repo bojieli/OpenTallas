@@ -6,7 +6,14 @@
 set -u
 SRC=$(readlink -f $1); OUT=$(readlink -f $2); TOP=$3; MEMG=${4:-8}; NAME=${NAME:-$TOP}; export NAME
 mkdir -p $OUT
-if [ -n "${FILES:-}" ]; then python3 -c "import json,sys; print(json.dumps({\"top\": sys.argv[2], \"files\": [l.strip() for l in open(sys.argv[1]) if l.strip()], \"macros\": []}))" $FILES $TOP > $OUT/$NAME.files.json; else
+if [ -n "${FILES:-}" ]; then python3 - $FILES $TOP > $OUT/$NAME.files.json <<'PY0'
+import json, sys
+L = [l.strip() for l in open(sys.argv[1]) if l.strip() and not l.startswith('#')]
+mac = [l[6:] for l in L if l.startswith('macro:')]
+print(json.dumps({"top": sys.argv[2], "files": [l for l in L if not l.startswith('macro:')],
+                  "macros": [{"module": m, "file": f"physical/asap7_memory_macros_v2/{m}/{m}_bb.v"} for m in mac]}))
+PY0
+else
   HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json > $OUT/$NAME.files.json || { echo "$TOP FILELIST_FAIL"; exit 2; }; fi
 python3 - $OUT/$NAME.files.json $OUT/$NAME.ys $TOP <<'PY'
 import json, sys

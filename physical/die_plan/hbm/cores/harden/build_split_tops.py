@@ -49,6 +49,33 @@ def coll_one(rx, lbl):
     return f
 
 
+def pg_groups(sel):
+    """pgslice lane pieces (lanes + their pinned banks), labels as gen_core_ports.py."""
+    def f(n, m):
+        if m.endswith('pv0'):
+            groups = [(f'lane_exp{k}', [k]) for k in range(15)] + [('lane_exp_l', [15])] + \
+                     [(f'lanes_plain{4 * j}_{4 * j + 3}', list(range(16 + 4 * j, 20 + 4 * j))) for j in range(4)]
+        else:
+            groups = [(f'lanes{4 * j}_{4 * j + 3}', list(range(4 * j, 4 * j + 4))) for j in range(8)]
+        ln = g.find_paths(n, m, r'su_static_lane'); bk = g.find_paths(n, m, r'pinned_bank')
+        out = {}
+        for lbl, ks in groups:
+            if not sel(m, lbl):
+                continue
+            inc = [p for p in ln if int(re.search(r'g_lane\[(\d+)\]', p).group(1)) in ks] + \
+                  [p for p in bk if int(re.search(r'g_bank\[(\d+)\]', p).group(1)) in ks]
+            out[f'ot_hbm_su_static_pgslice_lg__{lbl}'] = (inc, [])
+        return out
+    return f
+
+
+PG_LANE = '#(.LN(7),.KIND(%d),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2))'
+PG_BANK = ('ot_hbm_su_static_pinned_bank', '#(.READERS(6),.RB(9))')
+PG_SRC = ('rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: '
+          'ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + '
+          'g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent')
+
+
 def score_tail(n, m):
     out = {}
     for tp in g.find_paths(n, m, r'idx_tail_native'):
@@ -102,6 +129,24 @@ PIECES = {
         src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr '
             '(HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9\'h1ff '
             'inside as the master'),
+    'pg_lane_full': dict(
+        master='ot_hbm_su_static_pgslice_lg__pv0', top='ot_hbm_su_pg_lane_full_core',
+        pieces=pg_groups(lambda m, l: l == 'lane_exp0'),
+        rtl={'u_lane': ('ot_hbm_su_static_lane_pinreg', PG_LANE % 2), 'u_bank': PG_BANK},
+        straps=[('u_lane', 'lane_id')], src=PG_SRC + ' (lane 0 of QID 0: KIND 2 FULL, owns the side pins)'),
+    'pg_lane_exp': dict(
+        master='ot_hbm_su_static_pgslice_lg__pv0', top='ot_hbm_su_pg_lane_exp_core',
+        pieces=pg_groups(lambda m, l: l.startswith('lane_exp') and l != 'lane_exp0'),
+        rtl={'u_lane': ('ot_hbm_su_static_lane_pinreg', PG_LANE % 1), 'u_bank': PG_BANK},
+        straps=[('u_lane', 'lane_id')], src=PG_SRC + ' (lanes L 1..15: KIND 1 exp lane)'),
+    'pg_lanes4': dict(
+        master='ot_hbm_su_static_pgslice_lg__pv0', top='ot_hbm_su_pg_lanes4_core',
+        masters=['ot_hbm_su_static_pgslice_lg__pv0', 'ot_hbm_su_static_pgslice_lg__pv8'],
+        pieces=pg_groups(lambda m, l: l.startswith('lanes')),
+        rtl={**{f'u_lane{k}': ('ot_hbm_su_static_lane_pinreg', PG_LANE % 0) for k in range(4)},
+             **{f'u_bank{k}': PG_BANK for k in range(4)}},
+        straps=[(f'u_lane{k}', 'lane_id') for k in range(4)],
+        src=PG_SRC + ' (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)'),
 }
 
 
@@ -211,7 +256,7 @@ def recipes(a):
                                               excluded=t['excluded'], check='PASS' if ok else 'FAIL')
                     R[t['type_id']] = dict(top=v['top'], files=files['files'], defines=v.get('defines', []),
                                            params=v.get('params', {}),
-                                           macros=[mm['name'] if isinstance(mm, dict) and 'name' in mm else mm
+                                           macros=[mm['module'] if isinstance(mm, dict) else mm
                                                    for mm in files.get('macros', [])],
                                            functional_type=ft,
                                            port_map_note=f'canonical ports = {v["top"]} ports; cut pin -> canonical map in '
@@ -229,6 +274,7 @@ def subset(R, V, straps):
     """Variant V is the reference R with some boundary inputs tied to constants at the parent and some boundary outputs
     left open (an end-of-chain replica).  Returns {ok, tied_in_bits, open_out_bits, detail}."""
     tied, opened, bad = collections.Counter(), collections.Counter(), []
+    seen = set()                                   # one reference boundary bit can reach several member pins
     for key, (pdir, rc) in R.pins.items():
         if key in straps:
             continue
@@ -239,9 +285,13 @@ def subset(R, V, straps):
             if a == b or (a[0] == 'I' and b[0] == 'I'):
                 continue
             if a[0] == 'P' and R.bnd[a[1]]['dir'] == 'input' and b[0] == 'K':
-                tied[sc.canon_name(R.bnd[a[1]]['can']) + '=' + b[1]] += 1; continue
+                if a[1] not in seen:
+                    seen.add(a[1]); tied[sc.canon_name(R.bnd[a[1]]['can']) + '=' + b[1]] += 1
+                continue
             if a[0] == 'P' and R.bnd[a[1]]['dir'] == 'output' and b[0] in ('N', 'I'):
-                opened[sc.canon_name(R.bnd[a[1]]['can'])] += 1; continue
+                if a[1] not in seen:
+                    seen.add(a[1]); opened[sc.canon_name(R.bnd[a[1]]['can'])] += 1
+                continue
             bad.append((key, i, a, b))
     return dict(ok=not bad, tied_in_bits=sum(tied.values()), open_out_bits=sum(opened.values()),
                 detail=dict(tied=dict(tied), open=dict(opened), bad=[str(x) for x in bad[:20]]))
@@ -280,6 +330,8 @@ def main():
                 sig0, P0 = sig, P
             same = sig == sig0
             sub = None if same else subset(P0, P, straps)
+            if sub is not None and [s for s in sig if s[0] == 'M'] != [s for s in sig0 if s[0] == 'M']:
+                sub['ok'] = False; sub['detail']['bad'].append('member module types differ')
             if cfg['rtl'] is None:      # direct: the single member module is the top (every member pin is a core pin)
                 assert len(P.members) == 1 and all(cl[0] == 'P' for _, cls in P.pins.values() for cl in cls), cut_mod
                 pre = sc.canon_name(P.members[0][2] + '_')
@@ -307,7 +359,7 @@ def main():
                f'// Source wiring: {cfg["src"]}\n'
                f'// Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.\n')
         txt, ports, _ = sc.emit_wrapper(P0, cfg['top'], cfg['rtl'], straps, hdr)
-        d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', m)
+        d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', re.sub(r'__pv\d+$', '', m))
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, cfg['top'] + '.sv'), 'w').write(txt)
         res[key] = dict(master=m, top=cfg['top'], file=os.path.relpath(os.path.join(d, cfg['top'] + '.sv'), REPO),
