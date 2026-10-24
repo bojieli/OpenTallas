@@ -2,9 +2,189 @@
  "a_cell_um2": 0.11,
  "c0_tree": {
   "c0": {
-   "lane_endpoints": 556,
+   "lane_endpoints": 355,
    "partition": "C0",
    "roots": {
+    "rl_L147s0a": {
+     "dst_parts": [
+      "NE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 32,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L147s0b": {
+     "dst_parts": [
+      "NW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 32,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L147s0c": {
+     "dst_parts": [
+      "SE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 32,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L147s0d": {
+     "dst_parts": [
+      "SW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 32,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L148s0a": {
+     "dst_parts": [
+      "NE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 18,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L148s0b": {
+     "dst_parts": [
+      "NW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 18,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L148s0c": {
+     "dst_parts": [
+      "SE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 18,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L148s0d": {
+     "dst_parts": [
+      "SW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 4,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 18,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L150s0a": {
+     "dst_parts": [
+      "NW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 15,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 2,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L150s0b": {
+     "dst_parts": [
+      "NE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 15,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 2,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L150s0c": {
+     "dst_parts": [
+      "SW_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 15,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 2,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L150s0d": {
+     "dst_parts": [
+      "SE_rc4"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 15,
+     "max_hops": 1,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 2,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
     "u1": {
      "dst_parts": [
       "NE_vm",
@@ -15,28 +195,28 @@
      "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 104,
-     "max_cycles": 14,
+     "lanes": 36,
+     "max_cycles": 15,
      "max_hops": 5,
      "module": "ot_hbm_argmax_static_sw_vm_r2",
      "out_bits": 12672,
-     "out_buses": 104,
+     "out_buses": 36,
      "per_quadrant": {
       "NE": {
        "bits": 3168,
-       "buses": 26
+       "buses": 9
       },
       "NW": {
        "bits": 3168,
-       "buses": 26
+       "buses": 9
       },
       "SE": {
        "bits": 3168,
-       "buses": 26
+       "buses": 9
       },
       "SW": {
        "bits": 3168,
-       "buses": 26
+       "buses": 9
       }
      }
     },
@@ -55,21 +235,17 @@
     },
     "u12": {
      "dst_parts": [
-      "NE_svc0",
-      "NE_svc3",
-      "NW_svc0",
-      "NW_svc3",
-      "SE_svc0",
-      "SE_svc3",
-      "SW_svc0",
-      "SW_svc3"
+      "NE_svc2",
+      "NW_svc2",
+      "SE_svc2",
+      "SW_svc2"
      ],
      "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 36,
      "in_buses": 4,
      "lanes": 8,
-     "max_cycles": 49,
-     "max_hops": 15,
+     "max_cycles": 45,
+     "max_hops": 13,
      "module": "ot_hbm_router_ids_static",
      "out_bits": 388,
      "out_buses": 8,
@@ -107,48 +283,48 @@
     },
     "u14": {
      "dst_parts": [
-      "NE_rc4",
+      "NE_r1e",
       "NE_svc2",
-      "NW_rc4",
+      "NW_r1e",
       "NW_svc2",
-      "SE_rc4",
+      "SE_r1e",
       "SE_svc2",
-      "SW_rc4",
+      "SW_r1e",
       "SW_svc2"
      ],
      "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1116,
-     "in_buses": 16,
-     "lanes": 140,
-     "max_cycles": 75,
-     "max_hops": 23,
+     "in_buses": 12,
+     "lanes": 36,
+     "max_cycles": 45,
+     "max_hops": 14,
      "module": "ot_hbm_static_cfg_collar_idx256r",
-     "out_bits": 15908,
-     "out_buses": 140,
+     "out_bits": 4488,
+     "out_buses": 36,
      "per_quadrant": {
       "NE": {
-       "bits": 3977,
-       "buses": 35
+       "bits": 1122,
+       "buses": 9
       },
       "NW": {
-       "bits": 3977,
-       "buses": 35
+       "bits": 1122,
+       "buses": 9
       },
       "SE": {
-       "bits": 3977,
-       "buses": 35
+       "bits": 1122,
+       "buses": 9
       },
       "SW": {
-       "bits": 3977,
-       "buses": 35
+       "bits": 1122,
+       "buses": 9
       }
      }
     },
     "u15": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 316,
-     "in_buses": 12,
+     "in_bits": 691,
+     "in_buses": 15,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -160,8 +336,8 @@
     "u17": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 7065,
-     "in_buses": 57,
+     "in_bits": 164,
+     "in_buses": 4,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -173,8 +349,8 @@
     "u18": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 2481,
-     "in_buses": 20,
+     "in_bits": 2439,
+     "in_buses": 12,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -193,28 +369,28 @@
      "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 564,
      "in_buses": 12,
-     "lanes": 40,
+     "lanes": 28,
      "max_cycles": 7,
      "max_hops": 3,
      "module": "ot_hbm_hc_root_static",
      "out_bits": 4524,
-     "out_buses": 40,
+     "out_buses": 28,
      "per_quadrant": {
       "NE": {
        "bits": 1131,
-       "buses": 10
+       "buses": 7
       },
       "NW": {
        "bits": 1131,
-       "buses": 10
+       "buses": 7
       },
       "SE": {
        "bits": 1131,
-       "buses": 10
+       "buses": 7
       },
       "SW": {
        "bits": 1131,
-       "buses": 10
+       "buses": 7
       }
      }
     },
@@ -256,8 +432,8 @@
     "u5": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 11414,
-     "in_buses": 95,
+     "in_bits": 11040,
+     "in_buses": 88,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -266,11 +442,46 @@
      "out_buses": 0,
      "per_quadrant": {}
     },
+    "u7": {
+     "dst_parts": [
+      "NE_rc4",
+      "NW_rc4",
+      "SE_rc4",
+      "SW_rc4"
+     ],
+     "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 44,
+     "max_cycles": 2,
+     "max_hops": 1,
+     "module": "ot_hbm_idx_topk_link_static",
+     "out_bits": 11420,
+     "out_buses": 44,
+     "per_quadrant": {
+      "NE": {
+       "bits": 2855,
+       "buses": 11
+      },
+      "NW": {
+       "bits": 2855,
+       "buses": 11
+      },
+      "SE": {
+       "bits": 2855,
+       "buses": 11
+      },
+      "SW": {
+       "bits": 2855,
+       "buses": 11
+      }
+     }
+    },
     "u9": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1188,
-     "in_buses": 12,
+     "in_buses": 8,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -282,24 +493,130 @@
    }
   },
   "q_vm": {
-   "lane_endpoints": 445,
+   "lane_endpoints": 327,
    "partition": "NW_vm",
    "roots": {
+    "rl_L135s1a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 37,
+     "max_hops": 3,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 256,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L137s0a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 44,
+     "max_hops": 4,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 11,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L138s0a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 30,
+     "max_hops": 3,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 41,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L140s0a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 32,
+     "max_hops": 4,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 12,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L140s1a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 35,
+     "max_hops": 3,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 256,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L142s0a": {
+     "dst_parts": [
+      "NW_hcq"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 30,
+     "max_hops": 3,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 41,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
+    "rl_L60s0a": {
+     "dst_parts": [
+      "NW_os1"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 1,
+     "max_cycles": 25,
+     "max_hops": 3,
+     "module": "hbm_ft_fork_reg",
+     "out_bits": 234,
+     "out_buses": 1,
+     "per_quadrant": {}
+    },
     "u0": {
      "dst_parts": [
       "NW_rc4",
+      "NW_su1",
       "NW_su2",
       "NW_svc2"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 369,
-     "in_buses": 7,
-     "lanes": 36,
-     "max_cycles": 22,
-     "max_hops": 7,
+     "in_buses": 6,
+     "lanes": 34,
+     "max_cycles": 27,
+     "max_hops": 8,
      "module": "hfd_hgi_vm_calendar_f20",
-     "out_bits": 4305,
-     "out_buses": 36,
+     "out_bits": 4352,
+     "out_buses": 34,
      "per_quadrant": {}
     },
     "u1": {
@@ -309,13 +626,13 @@
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 7604,
-     "in_buses": 61,
-     "lanes": 36,
-     "max_cycles": 68,
-     "max_hops": 19,
+     "in_buses": 24,
+     "lanes": 16,
+     "max_cycles": 22,
+     "max_hops": 7,
      "module": "hfd_hgi_vms_glue_nw_t",
      "out_bits": 4448,
-     "out_buses": 36,
+     "out_buses": 16,
      "per_quadrant": {}
     },
     "u18": {
@@ -323,11 +640,11 @@
       "C0"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 249,
+     "in_bits": 229,
      "in_buses": 4,
      "lanes": 1,
-     "max_cycles": 20,
-     "max_hops": 7,
+     "max_cycles": 13,
+     "max_hops": 4,
      "module": "ot_hbm_fault_leaf",
      "out_bits": 4,
      "out_buses": 1,
@@ -336,7 +653,7 @@
     "u19": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 16,
+     "in_bits": 36,
      "in_buses": 3,
      "lanes": 0,
      "max_cycles": 0,
@@ -353,26 +670,27 @@
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 6,
-     "max_cycles": 13,
+     "lanes": 4,
+     "max_cycles": 17,
      "max_hops": 4,
      "module": "ot_hbm_idx_query_static",
      "out_bits": 596,
-     "out_buses": 6,
+     "out_buses": 4,
      "per_quadrant": {}
     },
     "u21": {
      "dst_parts": [
-      "C0"
+      "C0",
+      "NW_r1e"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 171,
-     "in_buses": 2,
+     "in_buses": 1,
      "lanes": 6,
-     "max_cycles": 13,
-     "max_hops": 4,
+     "max_cycles": 18,
+     "max_hops": 7,
      "module": "ot_hbm_idx_vm_query_static_n12",
-     "out_bits": 703,
+     "out_bits": 706,
      "out_buses": 6,
      "per_quadrant": {}
     },
@@ -382,10 +700,10 @@
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1454,
-     "in_buses": 22,
+     "in_buses": 17,
      "lanes": 1,
-     "max_cycles": 24,
-     "max_hops": 7,
+     "max_cycles": 13,
+     "max_hops": 5,
      "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
      "out_bits": 3,
      "out_buses": 1,
@@ -399,8 +717,8 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 10,
-     "max_hops": 3,
+     "max_cycles": 2,
+     "max_hops": 1,
      "module": "ot_hbm_su_bridge_release_s",
      "out_bits": 1,
      "out_buses": 1,
@@ -408,18 +726,19 @@
     },
     "u25": {
      "dst_parts": [
-      "NW_rc4",
+      "C0",
+      "NW_su1",
       "NW_su2"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 16,
-     "max_cycles": 25,
-     "max_hops": 7,
+     "lanes": 17,
+     "max_cycles": 13,
+     "max_hops": 5,
      "module": "ot_hbm_su_programme_pslice_c5",
-     "out_bits": 1906,
-     "out_buses": 16,
+     "out_bits": 3810,
+     "out_buses": 17,
      "per_quadrant": {}
     },
     "u26": {
@@ -429,12 +748,12 @@
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 14,
+     "lanes": 21,
      "max_cycles": 2,
      "max_hops": 1,
      "module": "ot_hbm_su_static_cxport_dl_q",
-     "out_bits": 1566,
-     "out_buses": 14,
+     "out_bits": 3292,
+     "out_buses": 21,
      "per_quadrant": {}
     },
     "u27": {
@@ -444,19 +763,19 @@
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 14,
-     "max_cycles": 6,
+     "lanes": 10,
+     "max_cycles": 12,
      "max_hops": 3,
      "module": "ot_hbm_su_static_cxport_dl_q",
      "out_bits": 1566,
-     "out_buses": 14,
+     "out_buses": 10,
      "per_quadrant": {}
     },
     "u29": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1338,
-     "in_buses": 12,
+     "in_buses": 7,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -467,24 +786,24 @@
     },
     "u3": {
      "dst_parts": [
-      "NW_su3"
+      "NW_rc4"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 6,
-     "max_cycles": 14,
+     "lanes": 16,
+     "max_cycles": 10,
      "max_hops": 4,
      "module": "hfd_vms_bank_native_q0_faces",
-     "out_bits": 518,
-     "out_buses": 6,
+     "out_bits": 2056,
+     "out_buses": 16,
      "per_quadrant": {}
     },
     "u30": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 6876,
-     "in_buses": 56,
+     "in_buses": 36,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -495,25 +814,27 @@
     },
     "u32": {
      "dst_parts": [
+      "NW_r1e",
       "NW_sfuc",
+      "NW_su1",
       "NW_su2"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 288,
-     "in_buses": 3,
-     "lanes": 8,
-     "max_cycles": 18,
-     "max_hops": 5,
+     "in_bits": 448,
+     "in_buses": 4,
+     "lanes": 11,
+     "max_cycles": 10,
+     "max_hops": 3,
      "module": "ot_hbm_su_static_qcore_r13",
-     "out_bits": 502,
-     "out_buses": 8,
+     "out_bits": 927,
+     "out_buses": 11,
      "per_quadrant": {}
     },
-    "u34": {
+    "u33": {
      "dst_parts": [],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 2272,
-     "in_buses": 19,
+     "in_buses": 11,
      "lanes": 0,
      "max_cycles": 0,
      "max_hops": 0,
@@ -522,110 +843,81 @@
      "out_buses": 0,
      "per_quadrant": {}
     },
-    "u38": {
+    "u37": {
      "dst_parts": [
       "NW_svc1"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1305,
-     "in_buses": 12,
+     "in_buses": 8,
      "lanes": 1,
-     "max_cycles": 23,
+     "max_cycles": 22,
      "max_hops": 6,
      "module": "ot_hbm_svc_vmdel_lane_n",
      "out_bits": 8,
      "out_buses": 1,
      "per_quadrant": {}
     },
-    "u42": {
-     "dst_parts": [
-      "NW_svc1"
-     ],
-     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 0,
-     "in_buses": 0,
-     "lanes": 6,
-     "max_cycles": 34,
-     "max_hops": 8,
-     "module": "ot_hbm_xp_aq_tree13_fmt",
-     "out_bits": 655,
-     "out_buses": 6,
-     "per_quadrant": {}
-    },
     "u43": {
      "dst_parts": [
+      "NW_su1",
       "NW_su2"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 2704,
-     "in_buses": 22,
+     "in_bits": 2544,
+     "in_buses": 14,
      "lanes": 3,
-     "max_cycles": 6,
-     "max_hops": 3,
+     "max_cycles": 2,
+     "max_hops": 1,
      "module": "ot_hgi_coll_inj_copy",
-     "out_bits": 166,
+     "out_bits": 326,
      "out_buses": 3,
      "per_quadrant": {}
     },
-    "u5": {
+    "u68": {
      "dst_parts": [
-      "NW_rc4"
+      "NW_sm1a"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 0,
      "in_buses": 0,
-     "lanes": 17,
-     "max_cycles": 22,
-     "max_hops": 8,
-     "module": "hfd_vms_bank_native_q0_faces",
-     "out_bits": 2056,
-     "out_buses": 17,
+     "lanes": 9,
+     "max_cycles": 2,
+     "max_hops": 1,
+     "module": "ot_hgi_sm_xload_xq_pegress",
+     "out_bits": 2070,
+     "out_buses": 9,
      "per_quadrant": {}
     },
-    "u65": {
-     "dst_parts": [
-      "NW_svc1"
-     ],
-     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 0,
-     "in_buses": 0,
-     "lanes": 8,
-     "max_cycles": 29,
-     "max_hops": 7,
-     "module": "ot_hgi_sm_xload_cl2_bfqg",
-     "out_bits": 1024,
-     "out_buses": 8,
-     "per_quadrant": {}
-    },
-    "u66": {
-     "dst_parts": [
-      "NW_svc1"
-     ],
-     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
-     "in_bits": 0,
-     "in_buses": 0,
-     "lanes": 1,
-     "max_cycles": 28,
-     "max_hops": 7,
-     "module": "ot_hgi_sm_xload_cl2_ctlx",
-     "out_bits": 47,
-     "out_buses": 1,
-     "per_quadrant": {}
-    },
-    "u9": {
+    "u7": {
      "dst_parts": [
       "NW_su0",
       "NW_svc2"
      ],
      "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 1256,
-     "in_buses": 10,
-     "lanes": 31,
-     "max_cycles": 39,
-     "max_hops": 10,
+     "in_buses": 8,
+     "lanes": 21,
+     "max_cycles": 34,
+     "max_hops": 9,
      "module": "hfd_vms_bank_native_q0_faces",
-     "out_bits": 3598,
-     "out_buses": 31,
+     "out_bits": 2574,
+     "out_buses": 21,
+     "per_quadrant": {}
+    },
+    "u9": {
+     "dst_parts": [
+      "NW_su3"
+     ],
+     "fanout_per_hop": "root register -> its own output register -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
+     "in_bits": 0,
+     "in_buses": 0,
+     "lanes": 5,
+     "max_cycles": 5,
+     "max_hops": 2,
+     "module": "hfd_vms_bank_native_q0_faces",
+     "out_bits": 518,
+     "out_buses": 5,
      "per_quadrant": {}
     }
    }
@@ -643,7 +935,7 @@
    "master": "ot_hbm_hc_root_static",
    "max_sub_core": 302248,
    "module": "ot_hbm_hc_root_static",
-   "proposal": "over_cap_split/ot_hbm_hc_root_static.split.json CUT-ONLY: 7 cores by connectivity, max 302248",
+   "proposal": "over_cap_split/ot_hbm_hc_root_static.split.json DONE: 7 cores by connectivity, max 302248",
    "split_into": 7,
    "type": "c0"
   },
@@ -654,7 +946,7 @@
    "master": "ot_hgi_coll_tkm_m_tp192",
    "max_sub_core": 260110,
    "module": "ot_hgi_coll_tkm_m_tp192",
-   "proposal": "over_cap_split/ot_hgi_coll_tkm_m_tp192.split.json RTL-UNBENCHED: 33 cores by connectivity, max 260110",
+   "proposal": "over_cap_split/ot_hgi_coll_tkm_m_tp192.split.json DONE: 33 cores by connectivity, max 260110",
    "split_into": 33,
    "type": "c0"
   },
@@ -760,24 +1052,46 @@
   {
    "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
    "cells": 465018,
-   "inst": "u5",
+   "inst": "u3",
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json DONE: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4"
   },
   {
    "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
    "cells": 465018,
-   "inst": "u5",
+   "inst": "u3",
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json DONE: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4_v1"
+  },
+  {
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "cells": 465018,
+   "inst": "u3",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "max_sub_core": 222636,
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json DONE: 3 cores by connectivity, max 222636",
+   "split_into": 3,
+   "type": "q_rc4_v2"
+  },
+  {
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "cells": 465018,
+   "inst": "u3",
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "max_sub_core": 222636,
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json DONE: 3 cores by connectivity, max 222636",
+   "split_into": 3,
+   "type": "q_rc4_v3"
   },
   {
    "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_core_split3/meta.json std_area 629035 um2 / 0.11 um2",
@@ -786,7 +1100,7 @@
    "master": "ot_hgi_sfu_core_split3",
    "max_sub_core": 306861,
    "module": "ot_hgi_sfu_core_split3",
-   "proposal": "over_cap_split/ot_hgi_sfu_core_split3.split.json CUT-ONLY: 19 cores by connectivity, max 306861",
+   "proposal": "over_cap_split/ot_hgi_sfu_core_split3.split.json DONE: 19 cores by connectivity, max 306861",
    "split_into": 19,
    "type": "q_sfuc"
   },
@@ -797,7 +1111,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv2",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json DONE: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su0"
   },
@@ -808,7 +1122,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv6",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json DONE: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su1"
   },
@@ -819,7 +1133,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv10",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json DONE: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su2"
   },
@@ -830,7 +1144,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv14",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json DONE: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3"
   },
@@ -841,7 +1155,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv15",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json DONE: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3_v1"
   }
@@ -866,6 +1180,7 @@
   "ot_hbm_sm_vm_wr_q_t_lanes4",
   "ot_hbm_static_cfg_collar_idx256r",
   "ot_hbm_su_programme_pslice_c5",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
   "ot_hbm_svc_sm_group_rel_id",
   "ot_hbm_svc_sm_xcal_rel_t",
   "ot_hbm_svc_vm_kshare_splitstrap",
@@ -1074,14 +1389,14 @@
  "scope": "HBM-P3-TAPS post-pass (taps_cores_v2.py); plan stage only, no P&R claim",
  "summary": {
   "all_tap_graphs_connected": false,
-  "core_overlaps": 0,
+  "core_overlaps": 2,
   "cores_over_cap": [],
   "glue_over_cap": [],
-  "hard_cores": 694,
-  "leaves_split": 19,
+  "hard_cores": 733,
+  "leaves_split": 21,
   "max_core_cells": 394328,
   "max_core_type": "io",
-  "max_glue_cells": 389962,
+  "max_glue_cells": 336226,
   "max_glue_type": "q_os2",
   "max_nn_tap_um": 1062.7,
   "max_point_to_tap_um": 1123.2,
@@ -1103,11 +1418,12 @@
    "q_sm3b",
    "q_sm3b_v1",
    "q_sm3c",
-   "q_sm3d"
+   "q_sm3d",
+   "q_sm3d_v1"
   ],
-  "taps": 1376,
-  "types": 56,
-  "types_with_taps": 56
+  "taps": 1452,
+  "types": 60,
+  "types_with_taps": 60
  },
  "tap_metric": "L1 (Manhattan) um",
  "tap_reach_um": 600.0,
@@ -1420,10 +1736,10 @@
      "module": "ot_vms_status4_static"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 59392 + station 0 + fork 0 bits) + flattened leaves",
-   "glue_cells": 296143,
+   "glue_basis": "EST 2 cells/bit x (boundary 52658 + station 0 + fork 208 bits) + flattened leaves",
+   "glue_cells": 283091,
    "glue_flat_leaf_cells": 177359,
-   "glue_regs_cells": 118784,
+   "glue_regs_cells": 105732,
    "instances": 1,
    "leaves": [
     {
@@ -1715,10 +2031,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 14880 + station 0 + fork 8 bits) + flattened leaves",
-   "glue_cells": 29776,
+   "glue_basis": "EST 2 cells/bit x (boundary 12560 + station 0 + fork 8 bits) + flattened leaves",
+   "glue_cells": 25136,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 29776,
+   "glue_regs_cells": 25136,
    "instances": 2,
    "leaves": [
     {
@@ -1773,10 +2089,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 6537 + station 6797 + fork 0 bits) + flattened leaves",
-   "glue_cells": 26668,
+   "glue_basis": "EST 2 cells/bit x (boundary 6543 + station 6439 + fork 6 bits) + flattened leaves",
+   "glue_cells": 25976,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 26668,
+   "glue_regs_cells": 25976,
    "instances": 4,
    "leaves": [
     {
@@ -1798,13 +2114,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -1834,10 +2150,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 7566 + fork 0 bits) + flattened leaves",
-   "glue_cells": 24078,
+   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 6262 + fork 0 bits) + flattened leaves",
+   "glue_cells": 21470,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24078,
+   "glue_regs_cells": 21470,
    "instances": 4,
    "leaves": [
     {
@@ -1859,13 +2175,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -1895,10 +2211,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 6053 + station 4886 + fork 452 bits) + flattened leaves",
-   "glue_cells": 22782,
+   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 5882 + fork 0 bits) + flattened leaves",
+   "glue_cells": 22966,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 22782,
+   "glue_regs_cells": 22966,
    "instances": 4,
    "leaves": [
     {
@@ -1920,13 +2236,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -1956,10 +2272,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4524 + station 6965 + fork 0 bits) + flattened leaves",
-   "glue_cells": 22978,
+   "glue_basis": "EST 2 cells/bit x (boundary 4524 + station 6191 + fork 0 bits) + flattened leaves",
+   "glue_cells": 21430,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 22978,
+   "glue_regs_cells": 21430,
    "instances": 4,
    "leaves": [
     {
@@ -1981,13 +2297,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -2017,10 +2333,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4955 + station 6836 + fork 461 bits) + flattened leaves",
-   "glue_cells": 24504,
+   "glue_basis": "EST 2 cells/bit x (boundary 4728 + station 5049 + fork 234 bits) + flattened leaves",
+   "glue_cells": 20022,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24504,
+   "glue_regs_cells": 20022,
    "instances": 4,
    "leaves": [
     {
@@ -2042,13 +2358,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -2078,10 +2394,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4824 + station 7015 + fork 330 bits) + flattened leaves",
-   "glue_cells": 24338,
+   "glue_basis": "EST 2 cells/bit x (boundary 4494 + station 5925 + fork 0 bits) + flattened leaves",
+   "glue_cells": 20838,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24338,
+   "glue_regs_cells": 20838,
    "instances": 4,
    "leaves": [
     {
@@ -2103,13 +2419,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -2139,10 +2455,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 6977 + fork 0 bits) + flattened leaves",
-   "glue_cells": 25156,
+   "glue_basis": "EST 2 cells/bit x (boundary 5613 + station 5968 + fork 12 bits) + flattened leaves",
+   "glue_cells": 23186,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 25156,
+   "glue_regs_cells": 23186,
    "instances": 4,
    "leaves": [
     {
@@ -2164,13 +2480,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -2200,10 +2516,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 8611 + fork 0 bits) + flattened leaves",
-   "glue_cells": 26152,
+   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 7812 + fork 0 bits) + flattened leaves",
+   "glue_cells": 24554,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 26152,
+   "glue_regs_cells": 24554,
    "instances": 4,
    "leaves": [
     {
@@ -2225,13 +2541,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 371.5,
-    "max_point_to_tap_um": 401.8,
+    "max_nn_tap_um": 345.6,
+    "max_point_to_tap_um": 427.7,
     "n": 7
    },
    "taps_kinds": {
@@ -2251,10 +2567,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 11200 + station 2555 + fork 570 bits) + flattened leaves",
-   "glue_cells": 28650,
+   "glue_basis": "EST 2 cells/bit x (boundary 10958 + station 1710 + fork 328 bits) + flattened leaves",
+   "glue_cells": 25992,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 28650,
+   "glue_regs_cells": 25992,
    "instances": 4,
    "leaves": [
     {
@@ -2275,13 +2591,13 @@
     "R180"
    ],
    "outline_um": [
-    803.52,
+    907.2,
     803.52
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 559.4,
-    "max_point_to_tap_um": 477.4,
+    "max_nn_tap_um": 533.5,
+    "max_point_to_tap_um": 492.5,
     "n": 5
    },
    "taps_kinds": {
@@ -2306,10 +2622,10 @@
      "module": "ot_hbm_su_static_cxport_dl_s"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 3261 + station 75185 + fork 506 bits) + flattened leaves",
-   "glue_cells": 177095,
+   "glue_basis": "EST 2 cells/bit x (boundary 2505 + station 57057 + fork 117 bits) + flattened leaves",
+   "glue_cells": 138549,
    "glue_flat_leaf_cells": 19191,
-   "glue_regs_cells": 157904,
+   "glue_regs_cells": 119358,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2676,10 +2992,10 @@
      "module": "ot_hbm_idx_score_quarter_static (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8188 + station 77447 + fork 2686 bits) + flattened leaves",
-   "glue_cells": 389962,
+   "glue_basis": "EST 2 cells/bit x (boundary 9898 + station 47159 + fork 4396 bits) + flattened leaves",
+   "glue_cells": 336226,
    "glue_flat_leaf_cells": 213320,
-   "glue_regs_cells": 176642,
+   "glue_regs_cells": 122906,
    "instances": 4,
    "leaves": [
     {
@@ -2721,10 +3037,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 27229 + fork 0 bits) + flattened leaves",
-   "glue_cells": 54458,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 15893 + fork 0 bits) + flattened leaves",
+   "glue_cells": 31786,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 54458,
+   "glue_regs_cells": 31786,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2754,10 +3070,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 120 + station 38750 + fork 120 bits) + flattened leaves",
-   "glue_cells": 77980,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 42151 + fork 0 bits) + flattened leaves",
+   "glue_cells": 84302,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 77980,
+   "glue_regs_cells": 84302,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2782,87 +3098,131 @@
    }
   },
   "q_r1e": {
-   "core_cells_max": 0,
-   "core_cells_total": 0,
+   "core_cells_max": 1632,
+   "core_cells_total": 1632,
    "core_overlaps": 0,
-   "cores": [],
+   "cores": [
+    {
+     "cells": 1632,
+     "inst": "u0",
+     "module": "ot_hbm_idx_qctl_static"
+    }
+   ],
    "flattened": [
     {
      "cells": 12066,
-     "inst": "u0",
+     "inst": "u1",
      "module": "ot_hbm_su_static_cxport_dl_q"
     },
     {
      "cells": 4240,
-     "inst": "u1",
+     "inst": "u2",
      "module": "ot_hbm_su_static_cxport_dl_s"
+    },
+    {
+     "cells": 861,
+     "inst": "u3",
+     "module": "ot_hbm_su_stree_leaf"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 3853 + station 32236 + fork 1469 bits) + flattened leaves",
-   "glue_cells": 91422,
-   "glue_flat_leaf_cells": 16306,
-   "glue_regs_cells": 75116,
+   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 21241 + fork 1285 bits) + flattened leaves",
+   "glue_cells": 72377,
+   "glue_flat_leaf_cells": 17167,
+   "glue_regs_cells": 55210,
    "instances": 2,
-   "leaves": [],
-   "n_cores": 0,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
+     "cells": 1632,
+     "inst": "u0",
+     "macros": 1,
+     "master": "ot_hbm_idx_qctl_static",
+     "module": "ot_hbm_idx_qctl_static",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 1,
    "orients": [
     "MX",
     "R0"
    ],
    "outline_um": [
-    1477.44,
+    1166.4,
     2410.56
    ],
    "taps": {
     "connected": true,
     "max_nn_tap_um": 482.1,
-    "max_point_to_tap_um": 487.3,
-    "n": 14
+    "max_point_to_tap_um": 532.7,
+    "n": 11
    },
    "taps_kinds": {
-    "glue": 14
+    "core": 1,
+    "glue": 10
    }
   },
   "q_r1e_v1": {
-   "core_cells_max": 0,
-   "core_cells_total": 0,
+   "core_cells_max": 1632,
+   "core_cells_total": 1632,
    "core_overlaps": 0,
-   "cores": [],
+   "cores": [
+    {
+     "cells": 1632,
+     "inst": "u0",
+     "module": "ot_hbm_idx_qctl_static"
+    }
+   ],
    "flattened": [
     {
      "cells": 12066,
-     "inst": "u0",
+     "inst": "u1",
      "module": "ot_hbm_su_static_cxport_dl_q"
     },
     {
      "cells": 4241,
-     "inst": "u1",
+     "inst": "u2",
      "module": "ot_hbm_su_static_cxport_dl_s"
+    },
+    {
+     "cells": 861,
+     "inst": "u3",
+     "module": "ot_hbm_su_stree_leaf"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 3853 + station 32236 + fork 1469 bits) + flattened leaves",
-   "glue_cells": 91423,
-   "glue_flat_leaf_cells": 16307,
-   "glue_regs_cells": 75116,
+   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 21241 + fork 1285 bits) + flattened leaves",
+   "glue_cells": 72378,
+   "glue_flat_leaf_cells": 17168,
+   "glue_regs_cells": 55210,
    "instances": 2,
-   "leaves": [],
-   "n_cores": 0,
+   "leaves": [
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
+     "cells": 1632,
+     "inst": "u0",
+     "macros": 1,
+     "master": "ot_hbm_idx_qctl_static",
+     "module": "ot_hbm_idx_qctl_static",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 1,
    "orients": [
     "MY",
     "R180"
    ],
    "outline_um": [
-    1477.44,
+    1166.4,
     2410.56
    ],
    "taps": {
     "connected": true,
     "max_nn_tap_um": 482.1,
-    "max_point_to_tap_um": 487.3,
-    "n": 14
+    "max_point_to_tap_um": 532.7,
+    "n": 11
    },
    "taps_kinds": {
-    "glue": 14
+    "core": 1,
+    "glue": 10
    }
   },
   "q_r5a": {
@@ -2871,10 +3231,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 11911 + fork 0 bits) + flattened leaves",
-   "glue_cells": 23822,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 4613 + fork 0 bits) + flattened leaves",
+   "glue_cells": 9226,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 23822,
+   "glue_regs_cells": 9226,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2904,10 +3264,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 896 + station 24172 + fork 896 bits) + flattened leaves",
-   "glue_cells": 51928,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 14368 + fork 0 bits) + flattened leaves",
+   "glue_cells": 28736,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 51928,
+   "glue_regs_cells": 28736,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2937,10 +3297,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 268 + station 16931 + fork 268 bits) + flattened leaves",
-   "glue_cells": 34934,
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 22801 + fork 299 bits) + flattened leaves",
+   "glue_cells": 46798,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 34934,
+   "glue_regs_cells": 46798,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -2968,10 +3328,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 268 + station 16931 + fork 268 bits) + flattened leaves",
-   "glue_cells": 34934,
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 22801 + fork 299 bits) + flattened leaves",
+   "glue_cells": 46798,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 34934,
+   "glue_regs_cells": 46798,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -3011,10 +3371,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38689 + fork 0 bits) + flattened leaves",
-   "glue_cells": 90221,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 36273 + fork 0 bits) + flattened leaves",
+   "glue_cells": 85389,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 82988,
+   "glue_regs_cells": 78156,
    "instances": 2,
    "leaves": [
     {
@@ -3065,10 +3425,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38689 + fork 0 bits) + flattened leaves",
-   "glue_cells": 90221,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 36273 + fork 0 bits) + flattened leaves",
+   "glue_cells": 85389,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 82988,
+   "glue_regs_cells": 78156,
    "instances": 2,
    "leaves": [
     {
@@ -3103,65 +3463,65 @@
   },
   "q_rc4": {
    "core_cells_max": 222636,
-   "core_cells_total": 753679,
+   "core_cells_total": 752047,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 1632,
-     "inst": "u0",
-     "module": "ot_hbm_idx_qctl_static"
-    },
-    {
      "cells": 121663,
-     "inst": "u5_ring_ag",
+     "inst": "u3_ring_ag",
      "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce",
+     "inst": "u3_reduce",
      "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body",
+     "inst": "u3_body",
      "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
-     "inst": "u6",
+     "inst": "u4",
      "module": "ot_hgi_coll_gq_issue"
     },
     {
      "cells": 49024,
-     "inst": "u7",
+     "inst": "u5",
      "module": "ot_hgi_coll_gq_land"
     },
     {
      "cells": 74964,
-     "inst": "u8",
+     "inst": "u6",
      "module": "ot_hgi_coll_inj_idx_join_rg"
     }
    ],
    "flattened": [
     {
      "cells": 4853,
-     "inst": "u1",
+     "inst": "u0",
      "module": "ot_hbm_idx_vm_share2_static_r"
     },
     {
      "cells": 1,
-     "inst": "u2",
+     "inst": "u1",
      "module": "ot_hbm_kqs_fault_or4"
     },
     {
      "cells": 2214,
-     "inst": "u3",
+     "inst": "u2",
      "module": "ot_hbm_obs_leaf"
     },
     {
-     "cells": 861,
-     "inst": "u4",
-     "module": "ot_hbm_su_stree_leaf"
+     "cells": 5380,
+     "inst": "u7",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u8",
+     "module": "ot_hgi_coll_kq_share2_leaf"
     },
     {
      "cells": 5380,
@@ -3174,40 +3534,21 @@
      "module": "ot_hgi_coll_kq_share2_leaf"
     },
     {
-     "cells": 5380,
-     "inst": "u11",
-     "module": "ot_hgi_coll_kq_share2_leaf"
-    },
-    {
-     "cells": 5380,
-     "inst": "u12",
-     "module": "ot_hgi_coll_kq_share2_leaf"
-    },
-    {
      "cells": 17601,
-     "inst": "u13",
+     "inst": "u11",
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 24735 + station 32 + fork 1340 bits) + flattened leaves",
-   "glue_cells": 99264,
-   "glue_flat_leaf_cells": 47050,
-   "glue_regs_cells": 52214,
-   "instances": 2,
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 3169 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 102491,
+   "glue_flat_leaf_cells": 46189,
+   "glue_regs_cells": 56302,
+   "instances": 1,
    "leaves": [
-    {
-     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
-     "cells": 1632,
-     "inst": "u0",
-     "macros": 1,
-     "master": "ot_hbm_idx_qctl_static",
-     "module": "ot_hbm_idx_qctl_static",
-     "status": "reuse"
-    },
     {
      "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
      "cells": 465018,
-     "inst": "u5",
+     "inst": "u3",
      "macros": 15,
      "master": "ot_hfd_coll_q2_hard_v8g",
      "module": "ot_hfd_coll_q2_hard_v8g",
@@ -3217,7 +3558,7 @@
     {
      "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
      "cells": 163041,
-     "inst": "u6",
+     "inst": "u4",
      "macros": 0,
      "master": "ot_hgi_coll_gq_issue",
      "module": "ot_hgi_coll_gq_issue",
@@ -3226,7 +3567,7 @@
     {
      "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
      "cells": 49024,
-     "inst": "u7",
+     "inst": "u5",
      "macros": 0,
      "master": "ot_hgi_coll_gq_land",
      "module": "ot_hgi_coll_gq_land",
@@ -3235,16 +3576,15 @@
     {
      "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
      "cells": 74964,
-     "inst": "u8",
+     "inst": "u6",
      "macros": 0,
      "master": "ot_hgi_coll_inj_idx_join_rg",
      "module": "ot_hgi_coll_inj_idx_join_rg",
      "status": "reuse"
     }
    ],
-   "n_cores": 7,
+   "n_cores": 6,
    "orients": [
-    "MY",
     "R0"
    ],
    "outline_um": [
@@ -3255,74 +3595,74 @@
     "connected": true,
     "max_nn_tap_um": 529.2,
     "max_point_to_tap_um": 552.6,
-    "n": 19
+    "n": 18
    },
    "taps_kinds": {
-    "core": 7,
+    "core": 6,
     "glue": 12
    }
   },
   "q_rc4_v1": {
    "core_cells_max": 222636,
-   "core_cells_total": 753679,
+   "core_cells_total": 752047,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 1632,
-     "inst": "u0",
-     "module": "ot_hbm_idx_qctl_static"
-    },
-    {
      "cells": 121663,
-     "inst": "u5_ring_ag",
+     "inst": "u3_ring_ag",
      "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce",
+     "inst": "u3_reduce",
      "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body",
+     "inst": "u3_body",
      "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
-     "inst": "u6",
+     "inst": "u4",
      "module": "ot_hgi_coll_gq_issue"
     },
     {
      "cells": 49024,
-     "inst": "u7",
+     "inst": "u5",
      "module": "ot_hgi_coll_gq_land"
     },
     {
      "cells": 74964,
-     "inst": "u8",
+     "inst": "u6",
      "module": "ot_hgi_coll_inj_idx_join_rg"
     }
    ],
    "flattened": [
     {
      "cells": 4853,
-     "inst": "u1",
+     "inst": "u0",
      "module": "ot_hbm_idx_vm_share2_static_r"
     },
     {
      "cells": 1,
-     "inst": "u2",
+     "inst": "u1",
      "module": "ot_hbm_kqs_fault_or4"
     },
     {
-     "cells": 2205,
-     "inst": "u3",
+     "cells": 1975,
+     "inst": "u2",
      "module": "ot_hbm_obs_leaf"
     },
     {
-     "cells": 861,
-     "inst": "u4",
-     "module": "ot_hbm_su_stree_leaf"
+     "cells": 5380,
+     "inst": "u7",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u8",
+     "module": "ot_hgi_coll_kq_share2_leaf"
     },
     {
      "cells": 5380,
@@ -3335,40 +3675,21 @@
      "module": "ot_hgi_coll_kq_share2_leaf"
     },
     {
-     "cells": 5380,
-     "inst": "u11",
-     "module": "ot_hgi_coll_kq_share2_leaf"
-    },
-    {
-     "cells": 5380,
-     "inst": "u12",
-     "module": "ot_hgi_coll_kq_share2_leaf"
-    },
-    {
      "cells": 17601,
-     "inst": "u13",
+     "inst": "u11",
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 24735 + station 32 + fork 1340 bits) + flattened leaves",
-   "glue_cells": 99255,
-   "glue_flat_leaf_cells": 47041,
-   "glue_regs_cells": 52214,
-   "instances": 2,
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1284 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 98482,
+   "glue_flat_leaf_cells": 45950,
+   "glue_regs_cells": 52532,
+   "instances": 1,
    "leaves": [
-    {
-     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
-     "cells": 1632,
-     "inst": "u0",
-     "macros": 1,
-     "master": "ot_hbm_idx_qctl_static",
-     "module": "ot_hbm_idx_qctl_static",
-     "status": "reuse"
-    },
     {
      "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
      "cells": 465018,
-     "inst": "u5",
+     "inst": "u3",
      "macros": 15,
      "master": "ot_hfd_coll_q2_hard_v8g",
      "module": "ot_hfd_coll_q2_hard_v8g",
@@ -3378,7 +3699,7 @@
     {
      "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
      "cells": 163041,
-     "inst": "u6",
+     "inst": "u4",
      "macros": 0,
      "master": "ot_hgi_coll_gq_issue",
      "module": "ot_hgi_coll_gq_issue",
@@ -3387,7 +3708,7 @@
     {
      "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
      "cells": 49024,
-     "inst": "u7",
+     "inst": "u5",
      "macros": 0,
      "master": "ot_hgi_coll_gq_land",
      "module": "ot_hgi_coll_gq_land",
@@ -3396,16 +3717,297 @@
     {
      "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
      "cells": 74964,
-     "inst": "u8",
+     "inst": "u6",
      "macros": 0,
      "master": "ot_hgi_coll_inj_idx_join_rg",
      "module": "ot_hgi_coll_inj_idx_join_rg",
      "status": "reuse"
     }
    ],
-   "n_cores": 7,
+   "n_cores": 6,
    "orients": [
-    "MX",
+    "MY"
+   ],
+   "outline_um": [
+    2116.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 529.2,
+    "max_point_to_tap_um": 552.6,
+    "n": 18
+   },
+   "taps_kinds": {
+    "core": 6,
+    "glue": 12
+   }
+  },
+  "q_rc4_v2": {
+   "core_cells_max": 222636,
+   "core_cells_total": 752047,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 121663,
+     "inst": "u3_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
+    },
+    {
+     "cells": 120719,
+     "inst": "u3_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
+    },
+    {
+     "cells": 222636,
+     "inst": "u3_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
+    },
+    {
+     "cells": 163041,
+     "inst": "u4",
+     "module": "ot_hgi_coll_gq_issue"
+    },
+    {
+     "cells": 49024,
+     "inst": "u5",
+     "module": "ot_hgi_coll_gq_land"
+    },
+    {
+     "cells": 74964,
+     "inst": "u6",
+     "module": "ot_hgi_coll_inj_idx_join_rg"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 4853,
+     "inst": "u0",
+     "module": "ot_hbm_idx_vm_share2_static_r"
+    },
+    {
+     "cells": 1,
+     "inst": "u1",
+     "module": "ot_hbm_kqs_fault_or4"
+    },
+    {
+     "cells": 2205,
+     "inst": "u2",
+     "module": "ot_hbm_obs_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u7",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u8",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u9",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u10",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 17601,
+     "inst": "u11",
+     "module": "ot_hgi_coll_ring_b_stop"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 24580 + station 1284 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 103340,
+   "glue_flat_leaf_cells": 46180,
+   "glue_regs_cells": 57160,
+   "instances": 1,
+   "leaves": [
+    {
+     "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+     "cells": 465018,
+     "inst": "u3",
+     "macros": 15,
+     "master": "ot_hfd_coll_q2_hard_v8g",
+     "module": "ot_hfd_coll_q2_hard_v8g",
+     "split": 3,
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
+     "cells": 163041,
+     "inst": "u4",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_issue",
+     "module": "ot_hgi_coll_gq_issue",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
+     "cells": 49024,
+     "inst": "u5",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_land",
+     "module": "ot_hgi_coll_gq_land",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
+     "cells": 74964,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hgi_coll_inj_idx_join_rg",
+     "module": "ot_hgi_coll_inj_idx_join_rg",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 6,
+   "orients": [
+    "MX"
+   ],
+   "outline_um": [
+    2116.8,
+    1728.0
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 529.2,
+    "max_point_to_tap_um": 552.6,
+    "n": 18
+   },
+   "taps_kinds": {
+    "core": 6,
+    "glue": 12
+   }
+  },
+  "q_rc4_v3": {
+   "core_cells_max": 222636,
+   "core_cells_total": 752047,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 121663,
+     "inst": "u3_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
+    },
+    {
+     "cells": 120719,
+     "inst": "u3_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
+    },
+    {
+     "cells": 222636,
+     "inst": "u3_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
+    },
+    {
+     "cells": 163041,
+     "inst": "u4",
+     "module": "ot_hgi_coll_gq_issue"
+    },
+    {
+     "cells": 49024,
+     "inst": "u5",
+     "module": "ot_hgi_coll_gq_land"
+    },
+    {
+     "cells": 74964,
+     "inst": "u6",
+     "module": "ot_hgi_coll_inj_idx_join_rg"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 4853,
+     "inst": "u0",
+     "module": "ot_hbm_idx_vm_share2_static_r"
+    },
+    {
+     "cells": 1,
+     "inst": "u1",
+     "module": "ot_hbm_kqs_fault_or4"
+    },
+    {
+     "cells": 1976,
+     "inst": "u2",
+     "module": "ot_hbm_obs_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u7",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u8",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u9",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 5380,
+     "inst": "u10",
+     "module": "ot_hgi_coll_kq_share2_leaf"
+    },
+    {
+     "cells": 17601,
+     "inst": "u11",
+     "module": "ot_hgi_coll_ring_b_stop"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1284 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 98483,
+   "glue_flat_leaf_cells": 45951,
+   "glue_regs_cells": 52532,
+   "instances": 1,
+   "leaves": [
+    {
+     "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+     "cells": 465018,
+     "inst": "u3",
+     "macros": 15,
+     "master": "ot_hfd_coll_q2_hard_v8g",
+     "module": "ot_hfd_coll_q2_hard_v8g",
+     "split": 3,
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
+     "cells": 163041,
+     "inst": "u4",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_issue",
+     "module": "ot_hgi_coll_gq_issue",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
+     "cells": 49024,
+     "inst": "u5",
+     "macros": 0,
+     "master": "ot_hgi_coll_gq_land",
+     "module": "ot_hgi_coll_gq_land",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
+     "cells": 74964,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hgi_coll_inj_idx_join_rg",
+     "module": "ot_hgi_coll_inj_idx_join_rg",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 6,
+   "orients": [
     "R180"
    ],
    "outline_um": [
@@ -3416,10 +4018,10 @@
     "connected": true,
     "max_nn_tap_um": 529.2,
     "max_point_to_tap_um": 552.6,
-    "n": 19
+    "n": 18
    },
    "taps_kinds": {
-    "core": 7,
+    "core": 6,
     "glue": 12
    }
   },
@@ -3601,10 +4203,10 @@
      "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14349 + station 44032 + fork 326 bits) + flattened leaves",
-   "glue_cells": 275044,
+   "glue_basis": "EST 2 cells/bit x (boundary 14016 + station 46935 + fork 24 bits) + flattened leaves",
+   "glue_cells": 279580,
    "glue_flat_leaf_cells": 157630,
-   "glue_regs_cells": 117414,
+   "glue_regs_cells": 121950,
    "instances": 4,
    "leaves": [
     {
@@ -3762,10 +4364,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8707 + station 27011 + fork 8350 bits) + flattened leaves",
-   "glue_cells": 171594,
+   "glue_basis": "EST 2 cells/bit x (boundary 12023 + station 19030 + fork 9953 bits) + flattened leaves",
+   "glue_cells": 165470,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 88136,
+   "glue_regs_cells": 82012,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -3905,10 +4507,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 11060 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 168273,
+   "glue_basis": "EST 2 cells/bit x (boundary 19900 + station 120 + fork 19900 bits) + flattened leaves",
+   "glue_cells": 163025,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 85088,
+   "glue_regs_cells": 79840,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4058,10 +4660,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 21243 + station 12048 + fork 17541 bits) + flattened leaves",
-   "glue_cells": 231970,
+   "glue_basis": "EST 2 cells/bit x (boundary 19182 + station 18753 + fork 17550 bits) + flattened leaves",
+   "glue_cells": 241276,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 101664,
+   "glue_regs_cells": 110970,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -4201,10 +4803,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 23415 + fork 7604 bits) + flattened leaves",
-   "glue_cells": 167540,
+   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 21166 + fork 7674 bits) + flattened leaves",
+   "glue_cells": 163322,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 77246,
+   "glue_regs_cells": 73028,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4344,10 +4946,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8893 + station 32389 + fork 8893 bits) + flattened leaves",
-   "glue_cells": 183808,
+   "glue_basis": "EST 2 cells/bit x (boundary 14142 + station 24372 + fork 12072 bits) + flattened leaves",
+   "glue_cells": 184630,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 100350,
+   "glue_regs_cells": 101172,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4487,10 +5089,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15753 + station 10478 + fork 15753 bits) + flattened leaves",
-   "glue_cells": 167153,
+   "glue_basis": "EST 2 cells/bit x (boundary 19900 + station 120 + fork 19900 bits) + flattened leaves",
+   "glue_cells": 163025,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 83968,
+   "glue_regs_cells": 79840,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4640,10 +5242,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 19295 + station 11940 + fork 15593 bits) + flattened leaves",
-   "glue_cells": 223962,
+   "glue_basis": "EST 2 cells/bit x (boundary 19182 + station 12502 + fork 17550 bits) + flattened leaves",
+   "glue_cells": 228774,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 93656,
+   "glue_regs_cells": 98468,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -4783,10 +5385,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7849 + station 24302 + fork 7849 bits) + flattened leaves",
-   "glue_cells": 170294,
+   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 21852 + fork 7674 bits) + flattened leaves",
+   "glue_cells": 164694,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 80000,
+   "glue_regs_cells": 74400,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4926,10 +5528,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 27170 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 169190,
+   "glue_basis": "EST 2 cells/bit x (boundary 14067 + station 27281 + fork 11997 bits) + flattened leaves",
+   "glue_cells": 190148,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 85732,
+   "glue_regs_cells": 106690,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5069,10 +5671,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9048 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 164249,
+   "glue_basis": "EST 2 cells/bit x (boundary 19900 + station 120 + fork 19900 bits) + flattened leaves",
+   "glue_cells": 163025,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 81064,
+   "glue_regs_cells": 79840,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5222,10 +5824,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 21487 + station 3663 + fork 17785 bits) + flattened leaves",
-   "glue_cells": 216176,
+   "glue_basis": "EST 2 cells/bit x (boundary 19182 + station 6251 + fork 17550 bits) + flattened leaves",
+   "glue_cells": 216272,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 85870,
+   "glue_regs_cells": 85966,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -5365,10 +5967,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 31093 + fork 7604 bits) + flattened leaves",
-   "glue_cells": 182896,
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 26077 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 172764,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 92602,
+   "glue_regs_cells": 82470,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5508,10 +6110,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 13563 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 141976,
+   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 14416 + fork 9927 bits) + flattened leaves",
+   "glue_cells": 156138,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 58518,
+   "glue_regs_cells": 72680,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5649,10 +6251,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 13563 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 141976,
+   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 14416 + fork 9927 bits) + flattened leaves",
+   "glue_cells": 156138,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 58518,
+   "glue_regs_cells": 72680,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5790,10 +6392,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15744 + station 6108 + fork 15744 bits) + flattened leaves",
-   "glue_cells": 158377,
+   "glue_basis": "EST 2 cells/bit x (boundary 19900 + station 120 + fork 19900 bits) + flattened leaves",
+   "glue_cells": 163025,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 75192,
+   "glue_regs_cells": 79840,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5931,10 +6533,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15744 + station 6108 + fork 15744 bits) + flattened leaves",
-   "glue_cells": 158377,
+   "glue_basis": "EST 2 cells/bit x (boundary 19900 + station 120 + fork 19900 bits) + flattened leaves",
+   "glue_cells": 163025,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 75192,
+   "glue_regs_cells": 79840,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -6082,7 +6684,7 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 20028 + station 378 + fork 16326 bits) + flattened leaves",
+   "glue_basis": "EST 2 cells/bit x (boundary 19182 + station 0 + fork 17550 bits) + flattened leaves",
    "glue_cells": 203770,
    "glue_flat_leaf_cells": 130306,
    "glue_regs_cells": 73464,
@@ -6225,18 +6827,157 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7699 + station 10254 + fork 7699 bits) + flattened leaves",
-   "glue_cells": 141598,
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 7908 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 136426,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 51304,
-   "instances": 4,
+   "glue_regs_cells": 46132,
+   "instances": 2,
    "leaves": [],
    "n_cores": 20,
    "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
    "orients": [
     "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    1745.28
+   ],
+   "sm_split": "5d8b16d54c5322e9becf6d57a19d52deab8d7dba01dbd9b2feae1355f8605d56",
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 384.5,
+    "max_point_to_tap_um": 410.4,
+    "n": 30
+   },
+   "taps_kinds": {
+    "core": 20,
+    "glue": 10
+   }
+  },
+  "q_sm3d_v1": {
+   "core_cells_max": 244462,
+   "core_cells_total": 3082400,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 244462,
+     "inst": "sm_ln0",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx1",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln2",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx3",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp4",
+     "module": "ot_hbm_sm_attn_tile_tp"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln5",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx6",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln7",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx8",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp9",
+     "module": "ot_hbm_sm_attn_tile_tp"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln10",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx11",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln12",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx13",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp14",
+     "module": "ot_hbm_sm_attn_tile_tp"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln15",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx16",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 244462,
+     "inst": "sm_ln17",
+     "module": "ot_hbm_sm_attn_native_col"
+    },
+    {
+     "cells": 119608,
+     "inst": "sm_lx18",
+     "module": "ot_hbm_sm_attn_leafh_lx"
+    },
+    {
+     "cells": 42460,
+     "inst": "sm_tp19",
+     "module": "ot_hbm_sm_attn_tile_tp"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 90294,
+     "inst": "sm_glue",
+     "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 7908 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 136426,
+   "glue_flat_leaf_cells": 90294,
+   "glue_regs_cells": 46132,
+   "instances": 2,
+   "leaves": [],
+   "n_cores": 20,
+   "note": "SM quarter of ot_hbm_accel_smh_attn: cores and cells from physical/die_plan/hbm/sm_split (HBM-P3-SM)",
+   "orients": [
     "MY",
-    "R0",
     "R180"
    ],
    "outline_um": [
@@ -6383,10 +7124,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 6940 + station 32455 + fork 0 bits) + flattened leaves",
-   "glue_cells": 142419,
+   "glue_basis": "EST 2 cells/bit x (boundary 7453 + station 20193 + fork 513 bits) + flattened leaves",
+   "glue_cells": 119947,
    "glue_flat_leaf_cells": 63629,
-   "glue_regs_cells": 78790,
+   "glue_regs_cells": 56318,
    "instances": 4,
    "leaves": [
     {
@@ -6550,10 +7291,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 11178 + station 52743 + fork 2539 bits) + flattened leaves",
-   "glue_cells": 196549,
+   "glue_basis": "EST 2 cells/bit x (boundary 11443 + station 45964 + fork 2551 bits) + flattened leaves",
+   "glue_cells": 183545,
    "glue_flat_leaf_cells": 63629,
-   "glue_regs_cells": 132920,
+   "glue_regs_cells": 119916,
    "instances": 4,
    "leaves": [
     {
@@ -6591,8 +7332,8 @@
   },
   "q_su2": {
    "core_cells_max": 308632,
-   "core_cells_total": 2681351,
-   "core_overlaps": 0,
+   "core_cells_total": 2823144,
+   "core_overlaps": 2,
    "cores": [
     {
      "cells": 308632,
@@ -6638,6 +7379,16 @@
      "cells": 212295,
      "inst": "u0_pretree",
      "module": "ot_hbm_su_static_pgslice_lg__pretree"
+    },
+    {
+     "cells": 85191,
+     "inst": "u1",
+     "module": "ot_hgi_sm_xload_cl2_bdring"
+    },
+    {
+     "cells": 56602,
+     "inst": "u2",
+     "module": "ot_hgi_sm_xload_xq_pegress"
     }
    ],
    "flattened": [
@@ -6647,10 +7398,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 12928 + station 50415 + fork 3833 bits) + flattened leaves",
-   "glue_cells": 198130,
+   "glue_basis": "EST 2 cells/bit x (boundary 14624 + station 43997 + fork 3848 bits) + flattened leaves",
+   "glue_cells": 188716,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 134352,
+   "glue_regs_cells": 124938,
    "instances": 4,
    "leaves": [
     {
@@ -6662,9 +7413,27 @@
      "module": "ot_hbm_su_static_pgslice_lg",
      "split": 9,
      "status": "rework"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
+     "cells": 85191,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_cl2_bdring",
+     "module": "ot_hgi_sm_xload_cl2_bdring",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
+     "cells": 56602,
+     "inst": "u2",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_xq_pegress",
+     "module": "ot_hgi_sm_xload_xq_pegress",
+     "status": "reuse"
     }
    ],
-   "n_cores": 9,
+   "n_cores": 11,
    "orients": [
     "MX",
     "MY",
@@ -6678,12 +7447,12 @@
    "taps": {
     "connected": true,
     "max_nn_tap_um": 578.9,
-    "max_point_to_tap_um": 514.1,
-    "n": 31
+    "max_point_to_tap_um": 504.4,
+    "n": 32
    },
    "taps_kinds": {
-    "core": 9,
-    "glue": 22
+    "core": 11,
+    "glue": 21
    }
   },
   "q_su3": {
@@ -6744,10 +7513,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
-   "glue_cells": 121062,
+   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 19352 + fork 161 bits) + flattened leaves",
+   "glue_cells": 116998,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 57284,
+   "glue_regs_cells": 53220,
    "instances": 2,
    "leaves": [
     {
@@ -6839,10 +7608,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
-   "glue_cells": 121062,
+   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 19630 + fork 161 bits) + flattened leaves",
+   "glue_cells": 117554,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 57284,
+   "glue_regs_cells": 53776,
    "instances": 2,
    "leaves": [
     {
@@ -6924,10 +7693,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8265 + station 8112 + fork 898 bits) + flattened leaves",
-   "glue_cells": 38073,
+   "glue_basis": "EST 2 cells/bit x (boundary 8195 + station 5891 + fork 828 bits) + flattened leaves",
+   "glue_cells": 33351,
    "glue_flat_leaf_cells": 3523,
-   "glue_regs_cells": 34550,
+   "glue_regs_cells": 29828,
    "instances": 4,
    "leaves": [
     {
@@ -7018,7 +7787,7 @@
   },
   "q_svc1": {
    "core_cells_max": 220378,
-   "core_cells_total": 742296,
+   "core_cells_total": 600503,
    "core_overlaps": 0,
    "cores": [
     {
@@ -7055,16 +7824,6 @@
      "cells": 115723,
      "inst": "u8",
      "module": "ot_hbm_svc_vm_kshare_splitstrap"
-    },
-    {
-     "cells": 85191,
-     "inst": "u9",
-     "module": "ot_hgi_sm_xload_cl2_bdring"
-    },
-    {
-     "cells": 56602,
-     "inst": "u10",
-     "module": "ot_hgi_sm_xload_xq_pegress"
     }
    ],
    "flattened": [
@@ -7080,14 +7839,14 @@
     },
     {
      "cells": 3523,
-     "inst": "u11",
+     "inst": "u9",
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14476 + station 5838 + fork 3114 bits) + flattened leaves",
-   "glue_cells": 51603,
+   "glue_basis": "EST 2 cells/bit x (boundary 10812 + station 5537 + fork 3370 bits) + flattened leaves",
+   "glue_cells": 44185,
    "glue_flat_leaf_cells": 4747,
-   "glue_regs_cells": 46856,
+   "glue_regs_cells": 39438,
    "instances": 4,
    "leaves": [
     {
@@ -7152,27 +7911,9 @@
      "master": "ot_hbm_svc_vm_kshare_splitstrap",
      "module": "ot_hbm_svc_vm_kshare_splitstrap",
      "status": "reuse"
-    },
-    {
-     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
-     "cells": 85191,
-     "inst": "u9",
-     "macros": 0,
-     "master": "ot_hgi_sm_xload_cl2_bdring",
-     "module": "ot_hgi_sm_xload_cl2_bdring",
-     "status": "reuse"
-    },
-    {
-     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
-     "cells": 56602,
-     "inst": "u10",
-     "macros": 0,
-     "master": "ot_hgi_sm_xload_xq_pegress",
-     "module": "ot_hgi_sm_xload_xq_pegress",
-     "status": "reuse"
     }
    ],
-   "n_cores": 9,
+   "n_cores": 7,
    "orients": [
     "MX",
     "MY",
@@ -7187,16 +7928,16 @@
     "connected": true,
     "max_nn_tap_um": 495.8,
     "max_point_to_tap_um": 489.3,
-    "n": 21
+    "n": 19
    },
    "taps_kinds": {
-    "core": 9,
+    "core": 7,
     "glue": 12
    }
   },
   "q_svc2": {
    "core_cells_max": 321528,
-   "core_cells_total": 1113014,
+   "core_cells_total": 971221,
    "core_overlaps": 0,
    "cores": [
     {
@@ -7248,16 +7989,6 @@
      "cells": 37867,
      "inst": "u14",
      "module": "ot_hgi_dma_back_static_vp4_banks_cp"
-    },
-    {
-     "cells": 85191,
-     "inst": "u16",
-     "module": "ot_hgi_sm_xload_cl2_bdring"
-    },
-    {
-     "cells": 56602,
-     "inst": "u17",
-     "module": "ot_hgi_sm_xload_xq_pegress"
     }
    ],
    "flattened": [
@@ -7288,14 +8019,14 @@
     },
     {
      "cells": 3523,
-     "inst": "u18",
+     "inst": "u16",
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 16323 + station 90 + fork 70 bits) + flattened leaves",
-   "glue_cells": 42615,
+   "glue_basis": "EST 2 cells/bit x (boundary 13580 + station 2983 + fork 1125 bits) + flattened leaves",
+   "glue_cells": 45025,
    "glue_flat_leaf_cells": 9649,
-   "glue_regs_cells": 32966,
+   "glue_regs_cells": 35376,
    "instances": 4,
    "leaves": [
     {
@@ -7387,27 +8118,9 @@
      "master": "ot_hgi_dma_back_static_vp4_banks_cp",
      "module": "ot_hgi_dma_back_static_vp4_banks_cp",
      "status": "reuse"
-    },
-    {
-     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
-     "cells": 85191,
-     "inst": "u16",
-     "macros": 0,
-     "master": "ot_hgi_sm_xload_cl2_bdring",
-     "module": "ot_hgi_sm_xload_cl2_bdring",
-     "status": "reuse"
-    },
-    {
-     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
-     "cells": 56602,
-     "inst": "u17",
-     "macros": 0,
-     "master": "ot_hgi_sm_xload_xq_pegress",
-     "module": "ot_hgi_sm_xload_xq_pegress",
-     "status": "reuse"
     }
    ],
-   "n_cores": 12,
+   "n_cores": 10,
    "orients": [
     "MX",
     "MY",
@@ -7422,10 +8135,10 @@
     "connected": true,
     "max_nn_tap_um": 486.0,
     "max_point_to_tap_um": 489.3,
-    "n": 24
+    "n": 22
    },
    "taps_kinds": {
-    "core": 12,
+    "core": 10,
     "glue": 12
    }
   },
@@ -7477,11 +8190,11 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8388 + station 0 + fork 1028 bits) + flattened leaves",
-   "glue_cells": 22355,
+   "glue_basis": "EST 2 cells/bit x (boundary 8388 + station 24 + fork 1028 bits) + flattened leaves",
+   "glue_cells": 22403,
    "glue_flat_leaf_cells": 3523,
-   "glue_regs_cells": 18832,
-   "instances": 4,
+   "glue_regs_cells": 18880,
+   "instances": 2,
    "leaves": [
     {
      "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
@@ -7550,8 +8263,144 @@
    "n_cores": 7,
    "orients": [
     "MX",
+    "R0"
+   ],
+   "outline_um": [
+    1944.0,
+    1321.92
+   ],
+   "taps": {
+    "connected": true,
+    "max_nn_tap_um": 494.5,
+    "max_point_to_tap_um": 488.1,
+    "n": 19
+   },
+   "taps_kinds": {
+    "core": 7,
+    "glue": 12
+   }
+  },
+  "q_svc3_v1": {
+   "core_cells_max": 220378,
+   "core_cells_total": 600503,
+   "core_overlaps": 0,
+   "cores": [
+    {
+     "cells": 63509,
+     "inst": "u0",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u1",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u2",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 63509,
+     "inst": "u3",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b"
+    },
+    {
+     "cells": 220378,
+     "inst": "u4",
+     "module": "ot_hbm_svc_sm_group_rel_id"
+    },
+    {
+     "cells": 10366,
+     "inst": "u5",
+     "module": "ot_hbm_svc_sm_xcal_rel_t"
+    },
+    {
+     "cells": 115723,
+     "inst": "u6",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap"
+    }
+   ],
+   "flattened": [
+    {
+     "cells": 3523,
+     "inst": "u7",
+     "module": "ot_static_run_target"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8388 + station 24 + fork 1028 bits) + flattened leaves",
+   "glue_cells": 22403,
+   "glue_flat_leaf_cells": 3523,
+   "glue_regs_cells": 18880,
+   "instances": 2,
+   "leaves": [
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u0",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u1",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u2",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+     "cells": 63509,
+     "inst": "u3",
+     "macros": 0,
+     "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+     "status": "reuse"
+    },
+    {
+     "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+     "cells": 220378,
+     "inst": "u4",
+     "macros": 17,
+     "master": "ot_hbm_svc_sm_group_rel_id",
+     "module": "ot_hbm_svc_sm_group_rel_id",
+     "status": "rework"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+     "cells": 10366,
+     "inst": "u5",
+     "macros": 4,
+     "master": "ot_hbm_svc_sm_xcal_rel_t",
+     "module": "ot_hbm_svc_sm_xcal_rel_t",
+     "status": "reuse"
+    },
+    {
+     "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+     "cells": 115723,
+     "inst": "u6",
+     "macros": 0,
+     "master": "ot_hbm_svc_vm_kshare_splitstrap",
+     "module": "ot_hbm_svc_vm_kshare_splitstrap",
+     "status": "reuse"
+    }
+   ],
+   "n_cores": 7,
+   "orients": [
     "MY",
-    "R0",
     "R180"
    ],
    "outline_um": [
@@ -7571,7 +8420,7 @@
   },
   "q_vm": {
    "core_cells_max": 168514,
-   "core_cells_total": 1808360,
+   "core_cells_total": 1950153,
    "core_overlaps": 0,
    "cores": [
     {
@@ -7710,9 +8559,9 @@
      "module": "ot_hgi_qw_dec"
     },
     {
-     "cells": 20345,
+     "cells": 85191,
      "inst": "u58",
-     "module": "ot_hgi_sm_xload_cl2_bfqg"
+     "module": "ot_hgi_sm_xload_cl2_bdring"
     },
     {
      "cells": 20345,
@@ -7750,9 +8599,19 @@
      "module": "ot_hgi_sm_xload_cl2_bfqg"
     },
     {
-     "cells": 89302,
+     "cells": 20345,
      "inst": "u66",
+     "module": "ot_hgi_sm_xload_cl2_bfqg"
+    },
+    {
+     "cells": 89302,
+     "inst": "u67",
      "module": "ot_hgi_sm_xload_cl2_ctlx"
+    },
+    {
+     "cells": 56602,
+     "inst": "u68",
+     "module": "ot_hgi_sm_xload_xq_pegress"
     }
    ],
    "flattened": [
@@ -7912,10 +8771,10 @@
      "module": "ot_hgi_qdq_transport_wslice"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 49574 + station 0 + fork 0 bits) + flattened leaves",
-   "glue_cells": 298918,
+   "glue_basis": "EST 2 cells/bit x (boundary 54010 + station 0 + fork 851 bits) + flattened leaves",
+   "glue_cells": 309492,
    "glue_flat_leaf_cells": 199770,
-   "glue_regs_cells": 99148,
+   "glue_regs_cells": 109722,
    "instances": 4,
    "leaves": [
     {
@@ -8162,12 +9021,12 @@
      "status": "reuse"
     },
     {
-     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
-     "cells": 20345,
+     "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
+     "cells": 85191,
      "inst": "u58",
-     "macros": 8,
-     "master": "ot_hgi_sm_xload_cl2_bfqg",
-     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_cl2_bdring",
+     "module": "ot_hgi_sm_xload_cl2_bdring",
      "status": "reuse"
     },
     {
@@ -8234,16 +9093,34 @@
      "status": "reuse"
     },
     {
+     "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+     "cells": 20345,
+     "inst": "u66",
+     "macros": 8,
+     "master": "ot_hgi_sm_xload_cl2_bfqg",
+     "module": "ot_hgi_sm_xload_cl2_bfqg",
+     "status": "reuse"
+    },
+    {
      "basis": "CLOSED hgi_sm_xl2_ctlx_bl-b1-f3b542177 std cells (die 151165 um2)",
      "cells": 89302,
-     "inst": "u66",
+     "inst": "u67",
      "macros": 1,
      "master": "ot_hgi_sm_xload_cl2_ctlx",
      "module": "ot_hgi_sm_xload_cl2_ctlx",
      "status": "reuse"
+    },
+    {
+     "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
+     "cells": 56602,
+     "inst": "u68",
+     "macros": 0,
+     "master": "ot_hgi_sm_xload_xq_pegress",
+     "module": "ot_hgi_sm_xload_xq_pegress",
+     "status": "reuse"
     }
    ],
-   "n_cores": 36,
+   "n_cores": 38,
    "orients": [
     "MX",
     "MY",
@@ -8258,10 +9135,10 @@
     "connected": true,
     "max_nn_tap_um": 586.4,
     "max_point_to_tap_um": 581.0,
-    "n": 56
+    "n": 58
    },
    "taps_kinds": {
-    "core": 36,
+    "core": 38,
     "glue": 20
    }
   }
