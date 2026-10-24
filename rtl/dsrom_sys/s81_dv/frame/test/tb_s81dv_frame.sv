@@ -99,9 +99,17 @@ module tb_s81dv_frame;
     end
 `endif
     // ---------------- checks / capture
-    reg [1103:0] x_d; reg live = 1'b0; integer xo_checked = 0, nret = 0, nflt = 0;
+    // S81-P9-RTL 10-23: TB_XO_LAT = the frame's x -> xo latency in edges (default 1; the plan-contents frame with the
+    // R3-INTERNAL soft x-forward chain u_y_xo<j>_0 -> _1 has 2)
+`ifndef TB_XO_LAT
+`define TB_XO_LAT 1
+`endif
+    reg [1103:0] x_dl [0:`TB_XO_LAT-1];
+    wire [1103:0] x_d = x_dl[`TB_XO_LAT-1];
+    reg live = 1'b0; integer xo_checked = 0, nret = 0, nflt = 0;
     always @(posedge clk) begin
-        x_d <= xin;
+        x_dl[0] <= xin;
+        for (int xi = 1; xi < `TB_XO_LAT; xi = xi + 1) x_dl[xi] <= x_dl[xi-1];
         if (rst_n) edge_n <= edge_n + 1;
         if (live) begin
             if (xo !== x_d) begin
