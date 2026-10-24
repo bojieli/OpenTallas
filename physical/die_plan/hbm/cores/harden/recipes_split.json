@@ -206,7 +206,8 @@
   },
   "port_map_note": "canonical ports = ot_hdc_sk_step0 ports; cut pin -> canonical map in canonical_ports_split.json types.hc_sk_step0.type_ids[\"ot_hbm_hc_root_static__tail0_sk_step0__155.52x172.8\"]",
   "source": "HBM-P5-RTLB twin ot_hdc_sinkhorn_s.u_s0 (EPS = HC_EPS default of ot_hgi_hc_tail_static_s); cut ports = twin ports",
-  "top": "ot_hdc_sk_step0"
+  "top": "ot_hdc_sk_step0",
+  "synth_memory_max_bits": 33280
  },
  "ot_hbm_hc_root_static__tail1_rest__155.52x172.8": {
   "defines": [],
@@ -261,7 +262,8 @@
   },
   "port_map_note": "canonical ports = ot_hdc_sk_step0 ports; cut pin -> canonical map in canonical_ports_split.json types.hc_sk_step0.type_ids[\"ot_hbm_hc_root_static__tail1_sk_step0__155.52x172.8\"]",
   "source": "HBM-P5-RTLB twin ot_hdc_sinkhorn_s.u_s0 (EPS = HC_EPS default of ot_hgi_hc_tail_static_s); cut ports = twin ports",
-  "top": "ot_hdc_sk_step0"
+  "top": "ot_hdc_sk_step0",
+  "synth_memory_max_bits": 33280
  },
  "ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52": {
   "defines": [],

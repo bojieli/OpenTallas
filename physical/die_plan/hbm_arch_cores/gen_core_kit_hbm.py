@@ -600,6 +600,9 @@ def main():
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
            "export POST_SYNTH_TCL = /work/post_synth_actual.tcl",
            "export POST_CTS_TCL = /work/tap_balance.tcl",
+           # ELEM-HBM 10-24 (gq_land RSZ0060): ORFS cts.tcl repairs hold BEFORE the POST_CTS tap_balance, i.e. on an
+           # unbalanced tree -> thousands of needless hold buffers; repair after GRT instead, on the balanced tree.
+           "export SKIP_CTS_REPAIR_TIMING = 1",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
