@@ -1,0 +1,705 @@
+{
+ "cores": {
+  "host__qkd_hr_cdc_ch": {
+   "glue_members_left_in_partition_glue": [
+    "glue:fence_sync"
+   ],
+   "members": {
+    "g_mu.u_rank/g_mu.u_bridge/u_done": "top/u_rank/u_bridge/u_done",
+    "g_mu.u_rank/g_mu.u_bridge/u_ing": "top/u_rank/u_bridge/u_ing"
+   },
+   "module": "qkd_hr_cdc_ch",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 16
+  },
+  "host__qkd_hr_cdc_ci": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_qm/u_ox": "top/u_rank/u_qm/u_ox",
+    "g_mu.u_rank/g_mu.u_qm/u_rx": "top/u_rank/u_qm/u_rx"
+   },
+   "module": "qkd_hr_cdc_ci",
+   "partner_kinds": [
+    "core"
+   ],
+   "pin_groups_with_partner": 6
+  },
+  "host__qkd_hr_cdc_hi": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_qm/u_cx": "top/u_rank/u_qm/u_cx",
+    "g_mu.u_rank/g_mu.u_qm/u_hx": "top/u_rank/u_qm/u_hx"
+   },
+   "module": "qkd_hr_cdc_hi",
+   "partner_kinds": [
+    "core"
+   ],
+   "pin_groups_with_partner": 5
+  },
+  "host__qkd_hr_cdc_pc": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_phy/u_rx": "top/u_rank/u_phy/u_rx",
+    "g_mu.u_rank/g_mu.u_phy/u_tx": "top/u_rank/u_phy/u_tx"
+   },
+   "module": "qkd_hr_cdc_pc",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 20
+  },
+  "host__qkd_hr_core_guard": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_guard": "top/u_rank/u_guard",
+    "g_mu.u_rank/g_mu.u_native": "top/u_rank/u_native"
+   },
+   "module": "qkd_hr_core_guard",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 57
+  },
+  "host__qkd_hr_core_order": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_chain": "top/u_rank/u_chain",
+    "g_mu.u_rank/g_mu.u_dispatch": "top/u_rank/u_dispatch"
+   },
+   "module": "qkd_hr_core_order",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 20
+  },
+  "host__qkd_hr_core_peer": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_coordinator": "top/u_coordinator",
+    "g_mu.u_peer_codec": "top/u_peer_codec",
+    "g_mu.u_rank/g_mu.u_peer": "top/u_rank/u_peer",
+    "g_mu.u_root_mux": "top/u_root_mux"
+   },
+   "module": "qkd_hr_core_peer",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 99
+  },
+  "host__qkd_hr_core_prompt": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_control/g_mu.u_control": "top/u_rank/u_control/u_control",
+    "g_mu.u_rank/g_mu.u_program": "top/u_rank/u_program",
+    "g_mu.u_rank/g_mu.u_program_rx": "top/u_rank/u_program_rx",
+    "g_mu.u_records": "top/u_records"
+   },
+   "module": "qkd_hr_core_prompt",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 108
+  },
+  "host__qkd_hr_core_queue": {
+   "glue_members_left_in_partition_glue": [
+    "glue:qm_core",
+    "glue:fence_core"
+   ],
+   "members": {
+    "g_mu.u_rank/g_mu.u_bootbarrier": "top/u_rank/u_bootbarrier",
+    "g_mu.u_rank/g_mu.u_bridge/u_queue": "top/u_rank/u_bridge/u_queue",
+    "g_mu.u_rank/g_mu.u_marker_consumer": "top/u_rank/u_marker_consumer"
+   },
+   "module": "qkd_hr_core_queue",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 21
+  },
+  "host__qkd_hr_core_rx": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_control/g_mu.u_packet/g_mu.u_rx": "top/u_rank/u_control/u_packet/u_rx"
+   },
+   "module": "qkd_hr_core_rx",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 20
+  },
+  "host__qkd_hr_core_tx": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_control/g_mu.u_packet/g_mu.u_axi": "top/u_rank/u_control/u_packet/u_axi",
+    "g_mu.u_rank/g_mu.u_control/g_mu.u_packet/g_mu.u_ctrl": "top/u_rank/u_control/u_packet/u_ctrl",
+    "g_mu.u_rank/g_mu.u_control/g_mu.u_packet/g_mu.u_tx": "top/u_rank/u_control/u_packet/u_tx"
+   },
+   "module": "qkd_hr_core_tx",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 109
+  },
+  "host__qkd_hr_host_qm": {
+   "glue_members_left_in_partition_glue": [
+    "glue:qm_host",
+    "glue:fence_host"
+   ],
+   "members": {
+    "g_mu.u_rank/g_mu.u_bridge/u_pacer": "top/u_rank/u_bridge/u_pacer"
+   },
+   "module": "qkd_hr_host_qm",
+   "partner_kinds": [
+    "core"
+   ],
+   "pin_groups_with_partner": 3
+  },
+  "host__qkd_hr_ingest_eng": {
+   "glue_members_left_in_partition_glue": [
+    "glue:qm_ingest"
+   ],
+   "members": {
+    "g_mu.u_rank/g_mu.u_qm/u_eng": "top/u_rank/u_qm/u_eng"
+   },
+   "module": "qkd_hr_ingest_eng",
+   "partner_kinds": [
+    "core"
+   ],
+   "pin_groups_with_partner": 11
+  },
+  "host__qkd_hr_phy_adp_0": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[0].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 12
+  },
+  "host__qkd_hr_phy_adp_1": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[1].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 8
+  },
+  "host__qkd_hr_phy_adp_2": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[2].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 8
+  },
+  "host__qkd_hr_phy_adp_3": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[3].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 8
+  },
+  "host__qkd_hr_phy_adp_4": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[4].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 8
+  },
+  "host__qkd_hr_phy_adp_5": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[5].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 7
+  },
+  "host__qkd_hr_phy_adp_6": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[6].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 7
+  },
+  "host__qkd_hr_phy_adp_7": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_adapter/g_slice[7].u_slice": "top/u_rank/u_adapter/g_slice[0].u_slice"
+   },
+   "module": "qkd_hr_phy_adp",
+   "partner_kinds": [
+    "bus",
+    "core"
+   ],
+   "pin_groups_with_partner": 7
+  },
+  "host__qkd_hr_phy_pad": {
+   "glue_members_left_in_partition_glue": [],
+   "members": {
+    "g_mu.u_rank/g_mu.u_phy/u_pad": "top/u_rank/u_phy/u_pad"
+   },
+   "module": "qkd_hr_phy_pad",
+   "partner_kinds": [
+    "core"
+   ],
+   "pin_groups_with_partner": 7
+  }
+ },
+ "depth": 3,
+ "fanout": 64,
+ "glue_members": {
+  "qkd_hr_cdc_ch": [
+   "glue:fence_sync"
+  ],
+  "qkd_hr_core_queue": [
+   "glue:qm_core",
+   "glue:fence_core"
+  ],
+  "qkd_hr_host_qm": [
+   "glue:qm_host",
+   "glue:fence_host"
+  ],
+  "qkd_hr_ingest_eng": [
+   "glue:qm_ingest"
+  ]
+ },
+ "glue_rule": "cores = real instance members only; glue:* (A1/A2 re-cut pieces of native_qm / visibility_fence) and instances no child lists stay hub_Wi partition glue",
+ "hop_max": 8,
+ "instances_outside_cores": [
+  "g_mu.u_rank/g_mu.u_control/g_mu.u_hc",
+  "g_mu.u_rank/g_mu.u_control/g_mu.u_obs",
+  "g_mu.u_rank/g_mu.u_fence",
+  "g_mu.u_rank/g_mu.u_qm/u_rsc",
+  "g_mu.u_rank/g_mu.u_qm/u_rsh",
+  "g_mu.u_rank/g_mu.u_qm/u_rsi"
+ ],
+ "leaf": "host = u_host (qkd_host_root_admission_obsx)",
+ "missing_members": [],
+ "modules": {
+  "qkd_hr_cdc_ch": {
+   "faces": {
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1204
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 4
+    }
+   },
+   "groups": 24,
+   "orients": {
+    "host__qkd_hr_cdc_ch": "R0"
+   },
+   "pins": 1208
+  },
+  "qkd_hr_cdc_ci": {
+   "faces": {
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 813
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 293
+    }
+   },
+   "groups": 20,
+   "orients": {
+    "host__qkd_hr_cdc_ci": "R0"
+   },
+   "pins": 1106
+  },
+  "qkd_hr_cdc_hi": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 660
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 517
+    }
+   },
+   "groups": 21,
+   "orients": {
+    "host__qkd_hr_cdc_hi": "R0"
+   },
+   "pins": 1177
+  },
+  "qkd_hr_cdc_pc": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1069
+    },
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1099
+    }
+   },
+   "groups": 24,
+   "orients": {
+    "host__qkd_hr_cdc_pc": "R0"
+   },
+   "pins": 2168
+  },
+  "qkd_hr_core_guard": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 673
+    },
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 126
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 330
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 47
+    }
+   },
+   "groups": 65,
+   "orients": {
+    "host__qkd_hr_core_guard": "R0"
+   },
+   "pins": 1176
+  },
+  "qkd_hr_core_order": {
+   "faces": {
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1612
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 674
+    }
+   },
+   "groups": 31,
+   "orients": {
+    "host__qkd_hr_core_order": "R0"
+   },
+   "pins": 2286
+  },
+  "qkd_hr_core_peer": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1470
+    },
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1319
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1060
+    }
+   },
+   "groups": 121,
+   "orients": {
+    "host__qkd_hr_core_peer": "R0"
+   },
+   "pins": 3849
+  },
+  "qkd_hr_core_prompt": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 885
+    },
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 912
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1394
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1940
+    }
+   },
+   "groups": 162,
+   "orients": {
+    "host__qkd_hr_core_prompt": "R0"
+   },
+   "pins": 5131
+  },
+  "qkd_hr_core_queue": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1
+    },
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 27
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 747
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 697
+    }
+   },
+   "groups": 34,
+   "orients": {
+    "host__qkd_hr_core_queue": "R0"
+   },
+   "pins": 1472
+  },
+  "qkd_hr_core_rx": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1103
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1031
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 3
+    }
+   },
+   "groups": 24,
+   "orients": {
+    "host__qkd_hr_core_rx": "R0"
+   },
+   "pins": 2137
+  },
+  "qkd_hr_core_tx": {
+   "faces": {
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1440
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 66
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 2266
+    }
+   },
+   "groups": 121,
+   "orients": {
+    "host__qkd_hr_core_tx": "R0"
+   },
+   "pins": 3772
+  },
+  "qkd_hr_host_qm": {
+   "faces": {
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 10
+    }
+   },
+   "groups": 6,
+   "orients": {
+    "host__qkd_hr_host_qm": "R0"
+   },
+   "pins": 10
+  },
+  "qkd_hr_ingest_eng": {
+   "faces": {
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 1399
+    }
+   },
+   "groups": 22,
+   "orients": {
+    "host__qkd_hr_ingest_eng": "R0"
+   },
+   "pins": 1399
+  },
+  "qkd_hr_phy_adp": {
+   "faces": {
+    "N": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 148
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 2
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 410
+    }
+   },
+   "groups": 14,
+   "orients": {
+    "host__qkd_hr_phy_adp_0": "R0",
+    "host__qkd_hr_phy_adp_1": "R0",
+    "host__qkd_hr_phy_adp_2": "MX",
+    "host__qkd_hr_phy_adp_3": "R0",
+    "host__qkd_hr_phy_adp_4": "MY",
+    "host__qkd_hr_phy_adp_5": "MY",
+    "host__qkd_hr_phy_adp_6": "MY",
+    "host__qkd_hr_phy_adp_7": "MY"
+   },
+   "pins": 560
+  },
+  "qkd_hr_phy_pad": {
+   "faces": {
+    "E": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1024
+    },
+    "S": {
+     "layers": [
+      "M5"
+     ],
+     "pins": 552
+    },
+    "W": {
+     "layers": [
+      "M4"
+     ],
+     "pins": 1
+    }
+   },
+   "groups": 9,
+   "orients": {
+    "host__qkd_hr_phy_pad": "R0"
+   },
+   "pins": 1577
+  }
+ },
+ "params": {
+  "ENABLE_NATIVE": "1",
+  "ENABLE_SERVICE": "1",
+  "ENABLE_TOKEN": "1",
+  "NL": "2"
+ },
+ "schema": "opentallas.die_plan.core_pins_hr_report.v1",
+ "type": "kv3_hub_Wi"
+}

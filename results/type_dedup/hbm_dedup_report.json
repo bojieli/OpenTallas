@@ -1,0 +1,168 @@
+{
+ "schema": "opentallas.die_plan.dedup.v1",
+ "die": "hbm_d4g",
+ "types_before": 60,
+ "types_after": 60,
+ "partitions": 187,
+ "fix_order": true,
+ "plan_only": false,
+ "rtl_dirs": [],
+ "exact_groups": [
+  {
+   "canon": "q_r1e",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_r1e_v1",
+     "reason": "vs q_r1e: NE_r1e@MY: type-frame pin table differs from NW_r1e at ('L65s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_r1e",
+    "q_r1e_v1"
+   ]
+  },
+  {
+   "canon": "q_rc2",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_rc2_v1",
+     "reason": "vs q_rc2: SE_rc2@R180: type-frame pin table differs from NE_rc2 at ('L47s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_rc2",
+    "q_rc2_v1"
+   ]
+  },
+  {
+   "canon": "q_rc3",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_rc3_v1",
+     "reason": "vs q_rc3: SE_rc3@R180: type-frame pin table differs from NE_rc3 at ('L89s6a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_rc3",
+    "q_rc3_v1"
+   ]
+  },
+  {
+   "canon": "q_rc4_v1",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_rc4_v3",
+     "reason": "vs q_rc4_v1: SE_rc4@R180: type-frame pin table differs from NE_rc4 at ('L147s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_rc4_v1",
+    "q_rc4_v3"
+   ]
+  },
+  {
+   "canon": "q_sm3b",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_sm3b_v1",
+     "reason": "vs q_sm3b: NE_sm3b@MY: type-frame pin table differs from NW_sm3b at ('L191s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_sm3b",
+    "q_sm3b_v1"
+   ]
+  },
+  {
+   "canon": "q_sm3d",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_sm3d_v1",
+     "reason": "vs q_sm3d: NE_sm3d@MY: type-frame pin table differs from NW_sm3d at ('L197s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_sm3d",
+    "q_sm3d_v1"
+   ]
+  },
+  {
+   "canon": "q_su3",
+   "members": [],
+   "blocked": [
+    {
+     "type": "q_su3_v1",
+     "reason": "vs q_su3: NE_su3@MY: type-frame pin table differs from NW_su3 at ('L90s0a_o', 0)"
+    }
+   ],
+   "types_before": 2,
+   "types_after": 2,
+   "all": [
+    "q_su3",
+    "q_su3_v1"
+   ]
+  }
+ ],
+ "strap_candidates": [],
+ "ft_population": [
+  {
+   "types": 2,
+   "slot_signatures": 2,
+   "example": [
+    "q_r5a",
+    "q_r5b"
+   ],
+   "slots_min": 12,
+   "slots_max": 23,
+   "ft_bits_min": 2526,
+   "ft_bits_max": 4174
+  },
+  {
+   "types": 3,
+   "slot_signatures": 2,
+   "example": [
+    "q_rc4",
+    "q_rc4_v1",
+    "q_rc4_v3"
+   ],
+   "slots_min": 5,
+   "slots_max": 8,
+   "ft_bits_min": 428,
+   "ft_bits_max": 805
+  },
+  {
+   "types": 2,
+   "slot_signatures": 2,
+   "example": [
+    "q_sm3a",
+    "q_sm3a_v1"
+   ],
+   "slots_min": 23,
+   "slots_max": 23,
+   "ft_bits_min": 4671,
+   "ft_bits_max": 4671
+  }
+ ],
+ "verify": {
+  "exact": true,
+  "problems": []
+ }
+}

@@ -3,6 +3,9 @@
     python3 tools/die_plan/gen.py rtl PLAN.json --out DIR [--rtl-root REPO]
         (a) partition wrapper RTL per type + ot_dp_cells.sv + the die top netlist (gen_rtl.py docstring)
 
+    python3 tools/die_plan/gen.py dedup PLAN.json --out-plan NEW.json [--fix-order]
+        TYPE-DEDUP (opt-in, writes a copy): merge of near-duplicate types (dedup.py)
+
     python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR] [--groups BUS_GROUPS.json]
     python3 tools/die_plan/gen.py phys PLAN.json --out DIR [--rtl-root REPO]      (b) partition ORFS kits (gen_phys.py)
     python3 tools/die_plan/gen.py assembly PLAN.json --out DIR --views VDIR    (d) die assembly kit (gen_phys.py)
@@ -89,6 +92,11 @@ def write_latency(raw, out_dir, inplace_path=None):
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["dedup"]:
+        # TYPE-DEDUP (opt-in): gen.py dedup PLAN --out-plan NEW [--fix-order] ... = dedup.py apply (never in place)
+        import dedup
+        return dedup.main(["apply"] + argv[1:])
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     a1 = sub.add_parser("latency")

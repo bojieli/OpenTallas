@@ -282,30 +282,27 @@ class Flat:
                 self.cells.append((typ, path, pins))
 
 
-def ft_single(path):
-    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`): such a slot's
-    S_i[k] and S_o[k] are, by plan, the same register (README ft slot: `stations` registers between S_i and S_o)."""
+def read_ft1(path):
+    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`)."""
     out = set()
-    p = Path(path)
-    if not p.is_file():
-        return out
-    for ln in p.read_text().splitlines():
+    for ln in Path(path).read_text().splitlines():
         f = ln.split()
-        if len(f) >= 2 and not ln.lstrip().startswith("#") and f[1] == "1":
+        if f and not f[0].startswith("#") and len(f) >= 2 and f[1] == "1":
             out.add(f[0])
     return out
 
 
 def _ft1_pair(bs, ft1):
-    """True when the bits a flop registers are exactly S_i[k] + S_o[k] of one single-station ft slot S."""
-    if len(bs) != 2 or not ft1:
+    """True when the bits are exactly S_i[k] and S_o[k] of one 1-station ft slot S: that slot's single station register
+    is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types)."""
+    if len(bs) != 2:
         return False
-    m = [re.match(r"^(.*)_([io])(\[\d+\])?$", b) for b in bs]
-    return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and
-            {m[0].group(2), m[1].group(2)} == {"i", "o"} and m[0].group(3) == m[1].group(3))
+    m = [re.match(r"^(.+)_([io])(\[\d+\])?$", b) for b in bs]
+    return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and m[0].group(3) == m[1].group(3)
+            and {m[0].group(2), m[1].group(2)} == {"i", "o"})
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=()):
     mods = parse(text)
     if top is None:
         used = {typ for M in mods.values() for typ, _, _ in M.cells}
@@ -334,18 +331,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
     def fail(cls, b, why):
         res["fails"][cls].append(f"{b}: {why}")
 
-    want = {f"{x['bus']}[{x['bit']}]" for x in pins} if pins is not None else None
     for p in T.ports:
         if re.match(skip_re, p):
             continue
         d = T.dirs.get(p)
-        bits = _bits_of(T, p)
-        if want is not None and not any(b in want or f"{b}[0]" in want for b in bits):
-            # a port with no planned pin (kit-rtl bound-only pins: die IO io_*, extra clock roles clk_*, reset spines)
-            # is not a face register of the plan (ELEM-QK 10-24: KV hroot clk_clk_hbm, sys_c io_pad_por_n)
-            res.setdefault("unplanned_ports", []).append(p)
-            continue
-        for b in bits:
+        for b in _bits_of(T, p):
             res["checked"] += 1
             r = port_root[b]
             others = [x for x in roots_ports[r] if x != b]
@@ -430,7 +420,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
             res["ok"] += 1
     for ci, bs in claimed.items():
         if len(bs) > 1 and _ft1_pair(bs, ft1):
-            res["ft1_shared"] = res.get("ft1_shared", 0) + 1     # one station: S_i/S_o share it by plan
+            res["ft1_stations"] = res.get("ft1_stations", 0) + 1
             continue
         if len(bs) > 1:
             for b in bs:
@@ -448,7 +438,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
     nf = sum(len(v) for v in res["fails"].values())
     res["fail_counts"] = {k: len(v) for k, v in res["fails"].items()}
     res["fails"] = {k: v[:50] for k, v in res["fails"].items()}
-    res["verdict"] = "PASS" if nf == 0 and res["checked"] > 0 else "FAIL"
+    empty = pins is not None and not res.get("planned_bits") and res["checked"] == 0    # a planned port-less type
+    res["verdict"] = "PASS" if nf == 0 and (res["checked"] > 0 or empty) else "FAIL"
     res["flops"] = dict(list(res["flops"].items())[:20])
     return res
 
@@ -459,11 +450,12 @@ def main(argv=None):
     ap.add_argument("--top")
     ap.add_argument("--pins")
     ap.add_argument("--out")
-    ap.add_argument("--ft-stations", help="kit ft_stations.txt (default: beside --pins)")
+    ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
     a = ap.parse_args(argv)
     pins = json.loads(Path(a.pins).read_text()) if a.pins else None
-    fts = a.ft_stations or (str(Path(a.pins).parent / "ft_stations.txt") if a.pins else None)
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft_single(fts) if fts else set())
+    ftf = a.ft or (str(Path(a.pins).with_name("ft_stations.txt")) if a.pins else None)
+    ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
