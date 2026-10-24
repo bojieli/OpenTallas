@@ -16,7 +16,7 @@ TOPF=$(grep '/qwen_kvsys_bound_top.sv$' $O/files.f); RD=$(dirname $TOPF)
 # KV-TOK 10-24: Verilator 5.050 inlines every hier_block module that has parameters -> top without the (== default)
 # overrides + partition types with header localparams (exact; strip_default_params.py); the lists point at those copies
 if [ "${HIER:-1}" = 1 ]; then
-  rm -rf $O/top_s; python3 $H/strip_default_params.py $TOPF $RD $O/top_s || exit 2
+  python3 $H/strip_default_params.py $TOPF $RD $O/top_s || exit 2
   sed -i -E "s#^$RD/((qwen_kvsys_bound_top|kv3_[A-Za-z0-9_]+)\.sv)\$#$O/top_s/\1#" $O/files.f
   sed -i "s#^-y $RD\$#-y $O/top_s\n-y $RD#" $O/incdirs.f
 fi
