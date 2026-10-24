@@ -51,11 +51,22 @@ def lnum(name):
     return int(name[1:])
 
 
+# G0C (COORD 10-23 ~20:10): the plan-completeness / hard-core rules are ERRORs only under `check.py --completeness`;
+# plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
+G0C_CHECKS = ("hard_cores", "core_faces", "complete")
+
+
 class Report:
-    def __init__(self):
+    def __init__(self, completeness=False):
         self.items = []
+        self.completeness = completeness
 
     def err(self, check, msg, **kw):
+        if check in G0C_CHECKS:
+            kw["g0c"] = True
+            if not self.completeness:
+                self.items.append(dict(level="WARN", check=check, msg="[G0C] " + msg, **kw))
+                return
         self.items.append(dict(level="ERROR", check=check, msg=msg, **kw))
 
     def warn(self, check, msg, **kw):
@@ -915,7 +926,7 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
     def bad(field, tn, msg):
         miss[field] += 1
         n_msg[field] += 1
-        if n_msg[field] <= max_msgs * 4:
+        if True:
             R.err("complete", f"[{field}] " + (f"type {tn}: " if tn else "") + msg, type=tn, field=field)
     raw_ck = P.raw.get("clock", {})
     common = raw_ck.get("common_latency_ps")
@@ -1145,8 +1156,22 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
 
 
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None):
-    R = Report()
+def g0c_summary(P, R):
+    """per partition type: G0C findings by check; types with none are G3-eligible (as far as the plan goes)."""
+    by = {tn: defaultdict(int) for tn in P.types}
+    die = defaultdict(int)
+    for i in R.items:
+        if not i.get("g0c"):
+            continue
+        tgt = by.get(i.get("type"), die)
+        tgt[i["check"] + (f":{i['field']}" if i.get("field") else "")] += 1
+    bad = {tn: dict(c) for tn, c in by.items() if c}
+    return dict(types=len(P.types), clean=len(P.types) - len(bad), die_level=dict(die),
+                g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
+
+
+def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False):
+    R = Report(completeness)
     errs = S.validate(raw)
     for e in errs:
         R.err("schema", e)
@@ -1159,6 +1184,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
     summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()))
+    summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
@@ -1191,17 +1217,22 @@ def main(argv=None):
     ap.add_argument("--cells-evidence", action="append", default=[],
                     help="cells.py evidence file (type / partition / module cell table or Yosys stat); repeatable; "
                          "PLANDIR cells_est.json, plan_notes.json, l1_cores_v3*.json, cells_evidence.json are read too")
+    ap.add_argument("--completeness", action="store_true",
+                    help="G0C: plan-completeness + hard-core rules are ERRORs (default: WARN '[G0C]'); per-type "
+                         "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
-                  groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns)
+                  groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
+                  completeness=a.completeness)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
     rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict="PASS" if ok else "FAIL",
+               mode="G0C" if a.completeness else "G0",
                errors=ne, warnings=nw, summary=summ, findings=R.items)
     (out / "g0_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     if not a.quiet:
@@ -1211,7 +1242,10 @@ def main(argv=None):
             print(f"... {len(R.items) - 200} more in g0_report.json")
     c = summ.get("cuts", {})
     ty = summ.get("types", {})
-    print(f"G0 {rep['verdict']}: {ne} errors, {nw} warnings; {ty.get('types')} types / {ty.get('partitions')} "
+    g = summ.get("g0c", {})
+    print(f"G0C per type: {g.get('clean')}/{g.get('types')} types clean (G3-eligible: {len(g.get('g3_eligible', []))}); "
+          f"die-level {g.get('die_level')}; {'ERRORs' if a.completeness else 'reported as WARN (run --completeness)'}")
+    print(f"{rep['mode']} {rep['verdict']}: {ne} errors, {nw} warnings; {ty.get('types')} types / {ty.get('partitions')} "
           f"partitions ({ty.get('near_duplicate_types')} in near-duplicate groups); worst cut {c.get('worst_full')}, worst partition "
           f"segment {c.get('worst_partition_segment')}; report {out / 'g0_report.json'}")
     return 0 if ok else 1

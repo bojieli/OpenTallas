@@ -18,7 +18,7 @@ def g0(mut=None):
     p = copy.deepcopy(EX)
     if mut:
         mut(p)
-    R, summ = check.run(p)
+    R, summ = check.run(p, completeness=True)
     return R, summ
 
 
@@ -456,12 +456,12 @@ def test_cells_estimator(tmp_path):
     assert cells.parse_stat(stat) == {"tiny_src_core": 4321, "other": 7}
     est, _ = cells.estimate(p, None, [tmp_path / "y.stat"])
     assert est["src"] == (4321, "modules 1/1")
-    R, summ = check.run(p, evidence=[tmp_path / "bt.json"])
+    R, summ = check.run(p, evidence=[tmp_path / "bt.json"], completeness=True)
     e = [i["msg"] for i in R.errors() if i["check"] == "hard_cores"]
     assert len(e) == 1 and "500000 cells (by_type bt.json)" in e[0] and summ["taps_cores"]["over_cap_no_cores"] == 1
     # auto-discovery in the plan directory
     (tmp_path / "plan_notes.json").write_text(json.dumps({"cells_per_type": {"mid": {"cells": 900_000}}}))
-    R, _ = check.run(p, plan_dir=tmp_path)
+    R, _ = check.run(p, plan_dir=tmp_path, completeness=True)
     assert any("type mid: 900000 cells" in i["msg"] for i in R.errors())
 
 
@@ -513,7 +513,7 @@ def test_core_face_rule_core_to_core(tmp_path):
     p = copy.deepcopy(EX)
     _face_core(dict(din="W", x="E", q="E"), conns=lambda t: two(t, True))(p)
     (tmp_path / "core_conns.json").write_text(json.dumps({"src": {"u_core": {"q": ["core:u_b"]}}}))
-    R, summ = check.run(p, plan_dir=tmp_path)
+    R, summ = check.run(p, plan_dir=tmp_path, completeness=True)
     e = [i["msg"] for i in R.errors() if i["check"] == "core_faces"]
     assert len(e) == 1 and "port q" in e[0]
     assert summ["core_faces"]["cores_unchecked"] == 1      # u_b: no connectivity named for it
@@ -557,3 +557,19 @@ def test_plan_completeness():
     # face_flop: a bus with no planned port / pin geometry is already a schema ERROR (no face-flop site)
     extra = lambda p: p["partition_types"]["src"]["buses"].append(dict(name="zz_o", dir="out", width=4))  # noqa
     assert any("unbound" in m for m in errs(extra, "schema"))
+
+
+def test_g0c_gated():
+    """COORD 10-23: completeness / hard-core findings are ERRORs only with --completeness (G0C); plain G0 WARNs."""
+    def m(p):
+        p["clock"].pop("common_latency_ps")
+        p["partition_types"]["mid"]["cells"] = 450_000
+    p = copy.deepcopy(EX)
+    m(p)
+    R, summ = check.run(p)
+    assert R.errors() == [] and any(i["msg"].startswith("[G0C]") for i in R.items)
+    R, summ = check.run(copy.deepcopy(p), completeness=True)
+    assert {i["check"] for i in R.errors()} == {"hard_cores", "complete"}
+    g = summ["g0c"]
+    assert g["by_type"] == {"mid": {"hard_cores": 1}} and g["die_level"] == {"complete:common_latency": 1}
+    assert g["g3_eligible"] == [] and g["clean"] == 2

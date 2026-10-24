@@ -128,6 +128,10 @@ The checks are listed in the `check.py` docstring:
   vclk latency), type `insertion_ps` equal to it, a reset sync, face-flop pin geometry, and `internal_stations[]` for
   every estimated internal reg-reg connection over `ft_station_max_um` (R3-INTERNAL).
 
+G0C (COORD 10-23): the `hard_cores`, `core_faces` and `complete` findings are ERRORs only with
+`check.py --completeness`; plain G0 reports them as WARN `[G0C] ...`. `summary.g0c` lists findings per partition type
+(`g3_eligible` = types with none and no die-level gap).
+
 R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
 WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
 
