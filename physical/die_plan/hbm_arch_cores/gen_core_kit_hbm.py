@@ -172,6 +172,11 @@ def kit_hash(kd):
 
 def load_recipes():
     rec = {}
+    b2 = HERE / "recipes_b2.json"          # ELEM-HBM recipes (first): views CORE-HBM had no recipe for
+    if b2.is_file():
+        for k, v in json.load(open(b2)).items():
+            if isinstance(v, dict) and "files" in v:
+                rec[k] = v
     for f in ("recipes_split.json", "recipes_other.json", "recipes.json"):
         for k, v in json.load(open(HARDEN / f)).items():
             if isinstance(v, dict) and "files" in v:
@@ -313,7 +318,11 @@ def main():
     names = [p["name"] for p in pins]
     pb = buses_of(names)
     R = load_recipes()
-    rk = a.recipe_key or (v["recipe_keys"][0] if v["recipe_keys"] else None)
+    rk = a.recipe_key or (module if module in R and (HERE / "recipes_b2.json").is_file() and module in
+                          json.load(open(HERE / "recipes_b2.json")) else None) or \
+        (v["recipe_keys"][0] if v["recipe_keys"] else None)
+    if a.wrapper is None and (HERE / "wrappers" / f"{module}.sv").is_file():
+        a.wrapper = str(HERE / "wrappers" / f"{module}.sv")     # hand-checked split wrapper (exactness record beside it)
     if not rk or rk not in R:
         raise SystemExit(f"NO_RECIPE {a.view}")
     rec = R[rk]
@@ -349,6 +358,11 @@ def main():
         local.append(str(kd / "rtl" / f"{module}__wrap.sv"))
         wrap_rep = dict(hand_wrapper=str(a.wrapper))
         design, dparams = module, {}
+        tports = yosys_ports(local, module, {}, rec.get("defines", []), kd / "rtl")
+        tpw = {n: wd for n, _, wd in tports}
+        bad = [b for b, (wd, _) in pb.items() if tpw.get(b) != wd] + [n for n in tpw if n not in pb]
+        if bad:
+            raise SystemExit(f"PORT_MISMATCH {a.view}: hand wrapper ports != plan pins, e.g. {bad[:6]}")
     elif top != module or canon:
         tports = yosys_ports(local, top, params, rec.get("defines", []), kd / "rtl")
         if canon:
@@ -390,12 +404,14 @@ def main():
     sig_in = [b for b in ports_in if b in pb]  # buses
     # direction from the wrapper / top port list
     dirs = {}
-    if wrap_rep is not None and not a.wrapper:
+    if a.wrapper:
+        dirs = {n: d for n, d, _ in tports}
+    elif wrap_rep is not None:
         txt = (kd / "rtl" / f"{module}__wrap.sv").read_text()
         for m in re.finditer(r"^\s+(input|output) wire (?:\[\d+:0\] )?([^\s,]+),?$", txt, re.M):
             dirs[m.group(2)] = m.group(1)
     else:
-        dirs = {n: d for n, d, _ in tports} if not a.wrapper else {}
+        dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
