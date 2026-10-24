@@ -132,10 +132,10 @@ def test_spine_models_agree(tmp_path):
     sp.write_text(json.dumps({"parts": {"u0": {"taps": {"clk": {"offset_ps": 20.0}}},
                                         "u1": {"taps": {"clk": {"offset_ps": 0.0}}}}}))
     w = {}
-    for m in ("annotate", "gclk"):
+    for m in ("ports", "gclk"):
         D.main(["run", "--top", str(TD / "die_top.v"), "--parts", str(tmp_path / "parts"), "--out", str(tmp_path / m),
                 "--mode", "flat", "--corner", "TT", "--spine-branch", str(tmp_path / "spine_{c}.json"),
                 "--spine-model", m])
         w[m] = json.loads((tmp_path / m / "die_sta.json").read_text())["corners"]["TT"]["seams"]["u0->u1/a_i"]
-    assert abs(w["annotate"]["max"]["worst"] - w["gclk"]["max"]["worst"]) < 0.01
-    assert abs(w["annotate"]["min"]["worst"] - w["gclk"]["min"]["worst"]) < 0.01
+    assert abs(w["ports"]["max"]["worst"] - w["gclk"]["max"]["worst"]) < 0.01
+    assert abs(w["ports"]["min"]["worst"] - w["gclk"]["min"]["worst"]) < 0.01
