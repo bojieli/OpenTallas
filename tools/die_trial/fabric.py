@@ -221,6 +221,27 @@ def fmt(v):
     return int(round(v * DBU))
 
 
+def insert_repeaters(cells, nets, pitch, master):
+    """Fixed non-inverting signal buffers; no new register stages or clock sinks."""
+    if pitch <= 0:
+        return cells, nets
+    cells = dict(cells); routed = []
+    for k, (name, src, dst, meta) in enumerate(nets):
+        a, b = cells[src], cells[dst]
+        pts = [(a[0], a[1]), (b[0], a[1]), (b[0], b[1])]
+        length = check.plen(pts)
+        count = max(0, math.ceil(length / pitch) - 1)
+        previous = src
+        for j in range(count):
+            nm = f"repeater_{k}_{j}"
+            x, y = check.point_at(pts, length * (j + 1) / (count + 1))
+            cells[nm] = (x, y, a[2], "buf:" + master)
+            routed.append((f"{name}_seg{j}", previous, nm, dict(meta, source_net=name)))
+            previous = nm
+        routed.append((f"{name}_seg{count}" if count else name, previous, dst, dict(meta, source_net=name)))
+    return cells, routed
+
+
 def write_def(P, path, cells, nets, blks, clk_xy):
     W, H = P.W, P.H
     with open(path, "w") as f:
@@ -246,7 +267,8 @@ def write_def(P, path, cells, nets, blks, clk_xy):
         for nm, (x, y, part, kind) in cells.items():
             x = min(max(x - 0.54, 0.0), W - 1.08)
             y = min(max(y - 0.135, 0.0), H - 0.27)
-            f.write(f"- {nm} {FLOP} + PLACED ( {fmt(x)} {fmt(y)} ) N ;\n")
+            master = kind[4:] if kind.startswith("buf:") else FLOP
+            f.write(f"- {nm} {master} + PLACED ( {fmt(x)} {fmt(y)} ) N ;\n")
         f.write("END COMPONENTS\n")
         f.write(f"PINS 1 ;\n- clk + NET clk + DIRECTION INPUT + USE CLOCK\n  + LAYER M9 ( -20 0 ) ( 20 320 )\n"
                 f"  + PLACED ( {fmt(clk_xy[0])} {fmt(clk_xy[1])} ) N ;\nEND PINS\n")
@@ -257,12 +279,16 @@ def write_def(P, path, cells, nets, blks, clk_xy):
         f.write(f"NETS {len(nets) + 1} ;\n")
         f.write("- clk ( PIN clk )")
         for i, nm in enumerate(cells):
+            if cells[nm][3].startswith("buf:"):
+                continue
             f.write(f" ( {nm} CLK )")
             if i % 8 == 7:
                 f.write("\n")
         f.write(" + USE CLOCK ;\n")
         for nm, drv, rcv, _ in nets:
-            f.write(f"- {nm} ( {drv} QN ) ( {rcv} D ) ;\n")
+            dp = "Y" if cells[drv][3].startswith("buf:") else "QN"
+            rp = "A" if cells[rcv][3].startswith("buf:") else "D"
+            f.write(f"- {nm} ( {drv} {dp} ) ( {rcv} {rp} ) ;\n")
         f.write("END NETS\nEND DESIGN\n")
 
 
@@ -377,6 +403,8 @@ def main(argv=None):
     g.add_argument("--no-sta", action="store_true")
     g.add_argument("--no-repair", action="store_true")
     g.add_argument("--wire-layer", help="repair job: placement RC of this layer (e.g. M8) instead of setRC's average")
+    g.add_argument("--repeater-pitch", type=float, default=0, help="insert non-inverting data repeaters at this maximum Manhattan pitch (um); geometry review still required")
+    g.add_argument("--repeater-master", default="BUFx12_ASAP7_75t_R")
     g.add_argument("--window", help="x0,y0,x1,y1: keep only nets with both ends inside (smoke test)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
@@ -391,6 +419,7 @@ def main(argv=None):
         nets = [n for n in nets if inside(n[1]) and inside(n[2])]
         used = {n[1] for n in nets} | {n[2] for n in nets}
         cells = {k: v for k, v in cells.items() if k in used}
+    cells, nets = insert_repeaters(cells, nets, a.repeater_pitch, a.repeater_master)
     blks = blockages(P, plan_dir, a.htree)
     root = P.clock.get("spine", {}).get("root_um") or [P.W / 2, P.H / 2]
     write_def(P, out / "fabric.def", cells, nets, blks, root)
@@ -412,6 +441,7 @@ def main(argv=None):
     lens = sorted(h["len_um"] for h in hop)
     summ = dict(plan=str(Path(a.plan).resolve()), die=P.name, cells=len(cells), nets=len(nets),
                 bf=sum(1 for c in cells.values() if c[3] == "bf"), st=sum(1 for c in cells.values() if c[3] == "st"),
+                repeaters=sum(1 for c in cells.values() if c[3].startswith("buf:")), repeater_pitch_um=a.repeater_pitch,
                 blockages=dict(by), adjust=a.adjust, htree=a.htree, window=a.window,
                 hop_um=dict(max=lens[-1] if lens else 0, p50=lens[len(lens) // 2] if lens else 0,
                             p90=lens[int(0.9 * (len(lens) - 1))] if lens else 0,
