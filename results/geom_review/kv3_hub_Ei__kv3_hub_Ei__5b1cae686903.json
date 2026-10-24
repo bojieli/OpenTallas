@@ -1,0 +1,17 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "intel2:/srv/opentallas-scratch2/claude/kv-g3/g4/vC/kv3_hub_Ei (plan v3.8s, vC clock grid+sinks r250 cap1500)",
+ "verdict": "FAIL",
+ "hash": "5b1cae686903b839f339320cdfa48c8a055ab5af97ae73e4970860d50d583754",
+ "reasons": "[2026-10-24 08:23] [GEOM-REVIEW tile GR-QK] looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/hub_Ei_vC/review.png (4_cts.odb dump), KV-G3 g3/review/hubEi_plan_v38v.png, 4_1_cts.log. 1278.72x1676.16 um feedthrough hub: 121731 cells, 81% buf/inv, 23170 FF, std fill 0.8% of area (95% empty bins, max bin density 0.14) - a wire partition, density is not the issue. Pins W 7303 (4.4/um), E 5296, N 2003. pin->reg: 12917 registered pins, median 8.3 um but p90 571 / max 717 um: 5617 pins > 100 um, ALL ft*_o out pins (ft63_o/ft64_o 1119 each, ft25/27_o 300, ft48/49_o 292, ...): the last ft station sits ~500-720 um inside the partition and the out leg runs unregistered on <= M7 to the face (= the 728 um ft-hop issue; reach on M7 ~400-450 um). Clock: 54 taps, 15 grid taps carry 0 sinks (clk, clk_t1, t3, t4, t6-t8, t11-t13, t15-t19 -> dead spine drops), tap means 220-257 ps, clk_t31 tree 214-296 > 290 (TAP_CHECK WARN), intra-tap ranges up to 43 ps. Plus the known hp_fault_1052 2.2 mm unregistered plan-cell leg (STA TT WNS -679) which v3.8s does not fix. GRT on this kit just started (trial b had overflow 9723). vC is superseded by vG (gated v3.8v kit with kit_istations: fault-leg internal stations) and vF (M8/M9 pricing); routing vC cannot produce a closable result. hash = sha256 over \"<relpath> <git blob id>\" of the kit dir files excluding run/ views/ gate_layout/ record/ *.log.",
+ "fixes": "1. Stop vC after GRT (keep its congestion report as the grid+sinks data point for vG/vF); do not run DRT/STA on it. 2. vG must close the ft out legs: either stations within ~400 um of the out face on <= M7, or route ft nets on M8/M9 (vF) - needs the OWNER? ruling (KV-G3 item 1); with ft legs at 500-720 um on M7 the face timing will not close. 3. Drop the 15 sink-less grid taps from the hub clock contract (or seed them with sinks) so the die spine does not carry dead drops. 4. vG review before route: pin->reg on ft*_o <= 30 um (or a documented ft-out exception with per-leg reach), hp_fault leg stations realised, GRT overflow ~0 near the W face (4.4 pins/um).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/hub_Ei_vC/review.png",
+  "/home/ubuntu/wt/kv-g3/physical/die_plan/qwen_kvsys/g3/review/hubEi_plan_v38v.png"
+ ],
+ "stage": "4_cts",
+ "owner_lane": "KV-G3",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:23:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}
