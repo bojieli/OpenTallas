@@ -1,0 +1,14 @@
+{
+ "element": "hnx_rp3lp3h_n / hnx_rp3lp3h_s (SM halves, 256 placed)",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/elem-hbm/kits_sm/hnx_rp3lp3h_n_1938f3904f84-f, intel1:/srv/opentallas-scratch2/claude/elem-hbm/kits_sm/hnx_rp3lp3h_s_33365650555c-{f,h}, epyc3:/srv/opentallas-scratch/claude/elem-hbm/kits_sm/hnx_rp3lp3h_n_1938f3904f84-h",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "n-f 3bc9b8d0e66e7484b99badb971d576f2522659dfe511439f49c468781519f702 / s-f 78490c173159c5c75bd0fc94a9aa98f2b860edf9f29bc8533d255e97b5846456",
+ "stage": "kit inputs only (no ODB: n-f exit 137 at yosys SHARE on epyc2 128G; s-f/s-h/n-h still in synth)",
+ "owner_lane": "ELEM-HBM SM (plan: HBM-ARCH)",
+ "reasons": "[2026-10-24 08:25] [GEOM-REVIEW tile GR-HBM] NOT REVIEWED at layout level; there is no ODB yet. n-f died with exit 137 (OOM/kill at 128G) in yosys SHARE; the others are still in synth. Kit vs die: kit pins.json = B2r2 cores/hnx_rp3lp3h_{n,s}.json exactly (n 6506, s 4537 names, 0.000 um diff, same faces and layers); outline n 630.72x1209.6, s 630.72x1036.8 = plan. So what is being closed is what the die places. Plan geometry: the q_sm partitions stack s/n/s/n on a 630.72 pitch with no channels, and the NE copies are MY. Seam sb_bank/sb_vld: s N face and n S face, both at x 43.2-303.7, aligned. Ring rin/rout_n (y 552-748) and rin/rout_s (y 420-616) chain W->E, aligned. CONCERN: the RTL header says the die fans bin out to both halves on the same edge. n.bout leaves the n E face at local y 10.8-507 (tile y 1047-1544). The next tile s.bin enters at y 629-1026, so each of the 2069 bits jogs about 420 um vertically. The tiles abut with no channel, so this runs over the hard halves, at each of 7 seams x 2 rows x 8 partitions. Also: gout (200 b, S face of s) abuts gin (100 b, N face of n of the tile below) with different widths; xs_* (n N, x 240-264) and xss_* (s S, x 167-191) are offset 73 um. q_sm has no core_conns entry, so none of this is checked by G0C.",
+ "fixes": "1. HBM-ARCH: state the q_sm net map (who drives each s.bin, gin, xs/xss) and either line the s.bin window up with the n.bout window of the neighbour tile (or with a partition-level bin distribution), or reserve an over-the-core layer budget / channel for the 2069-b vertical jog. Add q_sm to core_conns so G0C checks it.\n2. ELEM-HBM: re-launch n-f with more memory or with SYNTH_HIERARCHICAL; the flat 128G job is OOM-killed.\n3. Review again at 3_place: macro (SRAM) halos and orientation, the 2887 pins per W/E face (4.6/um M4), and ck_n/ck_s root placement and face-flop spread <= 80 ps.\n4. Confirm that the hardened LEF is legal and track-aligned in MY (NE copies).",
+ "images": [],
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:25:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

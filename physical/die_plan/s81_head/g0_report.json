@@ -74,10 +74,10 @@
    "by_type": {}
   },
   "geometry": {
-   "partition_area_mm2": 293.3114167296,
+   "partition_area_mm2": 293.3114167295999,
    "channel_area_mm2": 14.31182131200001,
-   "uncovered_mm2": 0.0,
-   "fill": 0.9534761372284086,
+   "uncovered_mm2": 8.568167686462402e-14,
+   "fill": 0.9534761372284083,
    "planned_channels": []
   },
   "worst_faces": [
@@ -159,12 +159,12 @@
     "reach_um": 1500.0
    },
    {
-    "lane": "chW5_t",
+    "lane": "chE3_t",
     "hop_um": 468.3,
     "reach_um": 1500.0
    },
    {
-    "lane": "chE3_t",
+    "lane": "chW5_t",
     "hop_um": 468.3,
     "reach_um": 1500.0
    },
@@ -923,7 +923,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp5",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -933,7 +933,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp5",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -943,7 +943,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp5",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -993,7 +993,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp5",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1003,7 +1003,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp4",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1013,7 +1013,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp4",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1023,7 +1023,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp4",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1083,7 +1083,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp3",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1093,7 +1093,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp3",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1103,7 +1103,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp3",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1113,7 +1113,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp3",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1163,7 +1163,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp3",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1173,7 +1173,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp2",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1183,7 +1183,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp2",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1193,7 +1193,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp2",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1243,7 +1243,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp2",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1253,7 +1253,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp1",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1263,7 +1263,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp1",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1273,7 +1273,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp1",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1323,7 +1323,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp1",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1333,7 +1333,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp0",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1343,7 +1343,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp0",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1353,7 +1353,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp0",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -1363,7 +1363,7 @@
      "ratio": 0.0028,
      "m89_only_ratio": 0.0037,
      "worst_part": "sp0",
-     "worst_part_ratio": 0.0276,
+     "worst_part_ratio": 0.0352,
      "worst_part_bits": 808
     },
     {
@@ -3256,7 +3256,7 @@
      "ratio": 0.0132
     },
     {
-     "at_um": 967.68,
+     "at_um": 984.96,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3272,7 +3272,7 @@
      "ratio": 0.0
     },
     {
-     "at_um": 1658.88,
+     "at_um": 1693.44,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3280,7 +3280,7 @@
      "ratio": 0.0132
     },
     {
-     "at_um": 2350.08,
+     "at_um": 2401.92,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3296,7 +3296,7 @@
      "ratio": 0.004
     },
     {
-     "at_um": 3041.28,
+     "at_um": 3110.4,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3304,15 +3304,7 @@
      "ratio": 0.0171
     },
     {
-     "at_um": 3732.48,
-     "bits": 8844,
-     "abutted_bits": 6792,
-     "route_bits": 2052,
-     "tracks": 515722,
-     "ratio": 0.0171
-    },
-    {
-     "at_um": 4423.68,
+     "at_um": 3818.88,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3328,15 +3320,15 @@
      "ratio": 0.004
     },
     {
-     "at_um": 5114.88,
-     "bits": 8844,
+     "at_um": 4527.36,
+     "bits": 7818,
      "abutted_bits": 6792,
-     "route_bits": 2052,
+     "route_bits": 1026,
      "tracks": 515722,
-     "ratio": 0.0171
+     "ratio": 0.0152
     },
     {
-     "at_um": 5806.08,
+     "at_um": 5235.84,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3352,7 +3344,7 @@
      "ratio": 0.0042
     },
     {
-     "at_um": 6497.28,
+     "at_um": 5944.32,
      "bits": 8972,
      "abutted_bits": 6792,
      "route_bits": 2180,
@@ -3360,7 +3352,7 @@
      "ratio": 0.0174
     },
     {
-     "at_um": 7188.48,
+     "at_um": 6652.8,
      "bits": 8972,
      "abutted_bits": 6792,
      "route_bits": 2180,
@@ -3376,7 +3368,15 @@
      "ratio": 0.0042
     },
     {
-     "at_um": 7879.68,
+     "at_um": 7361.28,
+     "bits": 6920,
+     "abutted_bits": 6792,
+     "route_bits": 128,
+     "tracks": 515722,
+     "ratio": 0.0134
+    },
+    {
+     "at_um": 8069.76,
      "bits": 7946,
      "abutted_bits": 6792,
      "route_bits": 1154,
@@ -3392,12 +3392,20 @@
      "ratio": 0.0087
     },
     {
-     "at_um": 9642.24,
+     "at_um": 9452.16,
      "bits": 7946,
      "abutted_bits": 6792,
      "route_bits": 1154,
      "tracks": 515722,
      "ratio": 0.0154
+    },
+    {
+     "at_um": 10160.64,
+     "bits": 6920,
+     "abutted_bits": 6792,
+     "route_bits": 128,
+     "tracks": 515722,
+     "ratio": 0.0134
     },
     {
      "at_um": 10203.84,
@@ -3408,7 +3416,7 @@
      "ratio": 0.0005
     },
     {
-     "at_um": 10333.44,
+     "at_um": 10869.12,
      "bits": 7048,
      "abutted_bits": 6792,
      "route_bits": 256,
@@ -3416,7 +3424,7 @@
      "ratio": 0.0137
     },
     {
-     "at_um": 11024.64,
+     "at_um": 11577.6,
      "bits": 7048,
      "abutted_bits": 6792,
      "route_bits": 256,
@@ -3432,7 +3440,7 @@
      "ratio": 0.0005
     },
     {
-     "at_um": 11715.84,
+     "at_um": 12286.08,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3440,7 +3448,7 @@
      "ratio": 0.0132
     },
     {
-     "at_um": 12407.04,
+     "at_um": 12994.56,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3456,7 +3464,7 @@
      "ratio": 0.004
     },
     {
-     "at_um": 13098.24,
+     "at_um": 13703.04,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3464,15 +3472,7 @@
      "ratio": 0.0171
     },
     {
-     "at_um": 13789.44,
-     "bits": 8844,
-     "abutted_bits": 6792,
-     "route_bits": 2052,
-     "tracks": 515722,
-     "ratio": 0.0171
-    },
-    {
-     "at_um": 14480.64,
+     "at_um": 14411.52,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3488,7 +3488,7 @@
      "ratio": 0.004
     },
     {
-     "at_um": 15171.84,
+     "at_um": 15120.0,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3496,7 +3496,7 @@
      "ratio": 0.0171
     },
     {
-     "at_um": 15863.04,
+     "at_um": 15828.48,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3512,7 +3512,7 @@
      "ratio": 0.0
     },
     {
-     "at_um": 16554.24,
+     "at_um": 16536.96,
      "bits": 6792,
      "abutted_bits": 6792,
      "route_bits": 0,
@@ -3676,7 +3676,7 @@
    ],
    "top_vertical": [
     {
-     "at_um": 6497.28,
+     "at_um": 5944.32,
      "bits": 8972,
      "abutted_bits": 6792,
      "route_bits": 2180,
@@ -3684,7 +3684,7 @@
      "ratio": 0.0174
     },
     {
-     "at_um": 7188.48,
+     "at_um": 6652.8,
      "bits": 8972,
      "abutted_bits": 6792,
      "route_bits": 2180,
@@ -3692,7 +3692,7 @@
      "ratio": 0.0174
     },
     {
-     "at_um": 2350.08,
+     "at_um": 2401.92,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3700,7 +3700,7 @@
      "ratio": 0.0171
     },
     {
-     "at_um": 3041.28,
+     "at_um": 3110.4,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3708,7 +3708,7 @@
      "ratio": 0.0171
     },
     {
-     "at_um": 3732.48,
+     "at_um": 3818.88,
      "bits": 8844,
      "abutted_bits": 6792,
      "route_bits": 2052,
@@ -3760,7 +3760,7 @@
    ],
    "worst": {
     "ratio": 0.0174,
-    "at": "vertical@6497.28"
+    "at": "vertical@5944.32"
    },
    "lines": 54,
    "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max + die layers x cut_avail"
@@ -3819,13 +3819,13 @@
      "frac": 0.468
     },
     {
-     "lane": "chW5_t",
+     "lane": "chE3_t",
      "hop_um": 468.3,
      "reach_um": 1001.2,
      "frac": 0.468
     },
     {
-     "lane": "chE3_t",
+     "lane": "chW5_t",
      "hop_um": 468.3,
      "reach_um": 1001.2,
      "frac": 0.468
@@ -4170,8 +4170,8 @@
       "ft_bits": 808,
       "die_layer_pins": 0,
       "used": 808,
-      "reserved": 9302,
-      "ratio": 0.0869
+      "reserved": 7296,
+      "ratio": 0.1107
      }
     },
     {
@@ -4194,8 +4194,8 @@
       "ft_bits": 808,
       "die_layer_pins": 0,
       "used": 808,
-      "reserved": 9302,
-      "ratio": 0.0869
+      "reserved": 7296,
+      "ratio": 0.1107
      }
     }
    ],
@@ -4215,7 +4215,7 @@
    "declared": "none",
    "reason": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"
   },
-  "png": "physical/die_plan/s81_head/die_plan.png"
+  "png": "/tmp/s81h_g0png/die_plan.png"
  },
  "findings": [
   {
