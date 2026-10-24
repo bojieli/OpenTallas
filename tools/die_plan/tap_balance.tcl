@@ -2,11 +2,18 @@
 # clock_taps.tcl splits the sinks over one clock port per tap; CTS builds each local tree on its own.  Rule (R4
 # revised): every tap tree <= insertion_ps + tol (250 + 40) after CTS, neighbour / seam skew <= 80 ps checked on RC
 # (SPEF), never the measured insertion in the IO SDC.  Here each tree's mean / max sink insertion is measured on the
-# RISE edge (OpenSTA arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2: 438.8 vs 21.7 ps on CP1 r4),
+# active edge using tagged propagated clock paths and their actual source waveform;
 # short trees get a delay chain (tap port -> bufs -> root) up to T = the plan insertion (KV-P6), and a tree
 # over ins + tol is an OT_TAP_CHECK WARN with the tap pitch that would fit (the generator re-sizes the grid:
 # partition clock.tap_pitch_um).  OT_TAP_REPORT_ONLY=1: measure only, on the parasitics the caller loaded (post-route
 # SPEF) -> OT_TAP_RC line.
+if {![llength [info commands ot_cf_wire_transition]]} {
+  set tb_helper [file join [file dirname [info script]] clock_family.tcl]
+  if {![file exists $tb_helper]} {
+    set tb_helper [file normalize [file join [file dirname [info script]] ../../physical/common_flow/clock_family.tcl]]
+  }
+  source $tb_helper
+}
 uplevel #0 {
 set tb_blk [ord::get_db_block]
 set tb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -55,19 +62,19 @@ proc tb_sinks {net} {
   }
   return $out
 }
-proc tb_rise {pin half} {
-  # rise-edge insertion: OpenSTA's max over clock edges can return the falling edge (+T/2)
-  set a [get_property $pin arrival_max_rise]
-  if {$a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
-  if {$a >= $half} { set a [expr {$a - $half}] }
-  return $a
+proc tb_rise {pin {buffer_output 0}} {
+  set clocks [get_property $pin clocks]
+  if {[llength $clocks] != 1} {error "OT_TAP: missing unique clock at [get_full_name $pin]"}
+  set clock [lindex $clocks 0]
+  if {$buffer_output} {return [ot_cf_wire_transition $pin $clock rise]}
+  return [ot_cf_wire $pin $clock]
 }
 proc tb_measure {{est 1}} {
   global tb_blk tb_clat tb_cores tb_port_re
   set tb_cores {}
-  if {$est} { estimate_parasitics -placement }
   set_propagated_clock [all_clocks]
-  set half [expr {[get_property [get_clocks clk] period] / 2.0}]
+  if {$est} { estimate_parasitics -placement }
+  ot_cf_refresh
   set res {}
   foreach bt [$tb_blk getBTerms] {
     set n [$bt getName]
@@ -79,7 +86,7 @@ proc tb_measure {{est 1}} {
     foreach p [tb_sinks $net] {
       set pin [get_pins -quiet $p]
       if {$pin eq ""} continue
-      set a [tb_rise $pin $half]
+      set a [tb_rise $pin]
       if {$a eq ""} continue
       if {[dict exists $tb_clat $p]} {
         # hard-core clock pin: effective arrival = pin + internal latency; kept apart from the tap's flop statistics
@@ -268,13 +275,12 @@ if {[dict size $tb_clat]} {
         # (out + ~20 ps of wire <= need); the chain sits at the pin.  The tap port itself is the last resort (a long
         # unbuffered wire from an ideal port: CP2 probe 10-23, 505 ps slew at the chain head).
         lassign [tb_outside $it] px py
-        set half [expr {[get_property [get_clocks clk] period] / 2.0}]
         set best ""; set bd 0
         foreach b [tb_tree_bufs [$bt getNet]] {
           lassign $b bn bpin bnet bx by
           set q [get_pins -quiet $bpin]
           if {$q eq ""} continue
-          set ba [tb_rise $q $half]
+          set ba [tb_rise $q 1]
           if {$ba eq "" || $ba + 20.0 > $need} continue
           set dd [expr {abs($bx - $px) + abs($by - $py)}]
           if {$best eq "" || $dd < $bd} { set best [list $bnet $ba]; set bd $dd }
