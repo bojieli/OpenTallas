@@ -91,6 +91,16 @@ PIECES = {
         straps=[('u_map', 'lane_j')],
         src='rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; '
             'the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)'),
+    'sfu_opstore_b': dict(
+        master='ot_hgi_sfu_core_split3', top='ot_hgi_sfu_split3_opstore_b_core',
+        pieces=lambda n, m: {f'{m}__opstore_b': ([p for p in g.find_paths(n, m, r'lgroup2')
+                                                  if re.search(r'g_operand\[[23]\]|u_output$', p)], [])},
+        rtl={**{f'u_group{k}': ('ot_hgi_su_lgroup2', '#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8))')
+                for k in range(2)},
+             'u_output': ('ot_hgi_su_lgroup2', '#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2))')},
+        straps=[],
+        src='rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv (LWB 15) g_operand[2,3].u_group + u_output '
+            '(the sp2 twin wraps this store unchanged: its pin registers sit in the u_memory remainder = opstore_a)'),
     'tkm_tile': dict(
         master='ot_hgi_coll_tkm_m_tp192', top='ot_hgi_coll_tkm_tp192_tile_core', pieces=tkm_tile,
         rtl={'u_tile': ('ot_hgi_coll_tkm_tile_e86', '')},
@@ -211,6 +221,20 @@ MANUAL = {
         pieces={'ot_hgi_coll_tkm_m_tp192__root': 'auto'},
         src='rest_extract.sh: ot_hgi_coll_tkm_m_tp192_p (ot_hgi_coll_tkm_static_p #(TP 192, PIPE 1)) minus the 32 tile '
             'cells; rest_wrap.py: master del_flit bits the root never reads (64) tied 0 inside'),
+    'sfu_opstore_a': dict(
+        master='ot_hgi_sfu_core_split3', top='ot_hgi_sfu_split3_opstore_a_core', params={}, rest=True,
+        file='rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_a_core.sv',
+        pieces={'ot_hgi_sfu_core_split3__opstore_a': 'auto'},
+        src='rest_extract.sh: ot_hgi_sfu_core_split3 #(LWB 15, LG_PATH 31) u_core.u_engine.u_memory minus g_operand[2,3] '
+            'and u_output (groups 0,1 = ot_hgi_su_lgroup2 NS 8 kept as instances); rest_wrap.py: stage_mask[63:0] = the '
+            'cut pin of the master constant 64\'hffff.. (unread; the core folds it)'),
+    'sfu_ctl': dict(
+        master='ot_hgi_sfu_core_split3', top='ot_hgi_sfu_split3_ctl_core', params={}, rest=True,
+        file='rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_core.sv',
+        pieces={'ot_hgi_sfu_core_split3__ctl': 'auto'},
+        src='rest_extract.sh: ot_hgi_sfu_core_split3 #(LWB 15, LG_PATH 31) minus the 16 lanes (u_sfu + u_map) and '
+            'u_memory (vm bridge, control register, glue flattened); rest_wrap.py: io_word bit the master never reads '
+            'tied 0; stage_mask[63:0] driven 64\'hffff.. (the vm bridge constant the cut carries)'),
     'coll_q2_body': dict(
         master='ot_hfd_coll_q2_hard_v8g', top='ot_hfd_coll_q2_body_core', params={}, rest=True,
         file='rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_body_core.sv',

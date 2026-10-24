@@ -3227,6 +3227,18 @@
   "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)",
   "top": "ot_hgi_coll_tkm_tp192_tile_core"
  },
+ "ot_hgi_sfu_core_split3__ctl__388.8x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_core.sv"
+  ],
+  "functional_type": "sfu_ctl",
+  "macros": [],
+  "params": {},
+  "port_map_note": "remainder core (unique): pin COUNT equals the cut; cut pin -> port map by name / unique width where derivable (canonical_ports_split.json)",
+  "source": "rest_extract.sh: ot_hgi_sfu_core_split3 #(LWB 15, LG_PATH 31) minus the 16 lanes (u_sfu + u_map) and u_memory (vm bridge, control register, glue flattened); rest_wrap.py: io_word bit the master never reads tied 0; stage_mask[63:0] driven 64'hffff.. (the vm bridge constant the cut carries)",
+  "top": "ot_hgi_sfu_split3_ctl_core"
+ },
  "ot_hgi_sfu_core_split3__lane0__388.8x345.6": {
   "defines": [],
   "files": [
@@ -3850,5 +3862,39 @@
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
   "synth_memory_max_bits": 16384,
   "top": "ot_hgi_sfu_split3_lane_core"
+ },
+ "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_a_core.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv"
+  ],
+  "functional_type": "sfu_opstore_a",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "remainder core (unique): pin COUNT equals the cut; cut pin -> port map by name / unique width where derivable (canonical_ports_split.json)",
+  "source": "rest_extract.sh: ot_hgi_sfu_core_split3 #(LWB 15, LG_PATH 31) u_core.u_engine.u_memory minus g_operand[2,3] and u_output (groups 0,1 = ot_hgi_su_lgroup2 NS 8 kept as instances); rest_wrap.py: stage_mask[63:0] = the cut pin of the master constant 64'hffff.. (unread; the core folds it)",
+  "top": "ot_hgi_sfu_split3_opstore_a_core"
+ },
+ "ot_hgi_sfu_core_split3__opstore_b__388.8x345.6": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_b_core.sv"
+  ],
+  "functional_type": "sfu_opstore_b",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hgi_sfu_split3_opstore_b_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_opstore_b.type_ids[\"ot_hgi_sfu_core_split3__opstore_b__388.8x345.6\"]",
+  "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv (LWB 15) g_operand[2,3].u_group + u_output (the sp2 twin wraps this store unchanged: its pin registers sit in the u_memory remainder = opstore_a)",
+  "top": "ot_hgi_sfu_split3_opstore_b_core"
  }
 }

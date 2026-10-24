@@ -16680,6 +16680,397 @@
     }
    }
   },
+  "sfu_ctl": {
+   "elab_bits": [
+    5363,
+    6456
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_ctl_core.sv",
+   "master": "ot_hgi_sfu_core_split3",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "u_core_u_engine_lane_fault",
+     "input",
+     16,
+     0
+    ],
+    [
+     "u_core_u_engine_lane_coll",
+     "input",
+     16,
+     0
+    ],
+    [
+     "u_core_u_engine_scalar_load",
+     "output",
+     4,
+     0
+    ],
+    [
+     "u_core_u_engine_scalar_data",
+     "output",
+     128,
+     0
+    ],
+    [
+     "u_core_u_engine_stage_v",
+     "output",
+     8,
+     0
+    ],
+    [
+     "u_core_u_engine_drain_data",
+     "input",
+     512,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_control",
+     "output",
+     1022,
+     0
+    ],
+    [
+     "u_core_u_vm_scalar_addr_pipe_78",
+     "output",
+     96,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_0_meta_78",
+     "output",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_1_meta_78",
+     "output",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_2_meta_78",
+     "output",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_3_meta_78",
+     "output",
+     34,
+     0
+    ],
+    [
+     "u_core_u_engine_drain_result_v",
+     "input",
+     2,
+     0
+    ],
+    [
+     "u_core_u_rst_relay_q_0",
+     "output",
+     1,
+     0
+    ],
+    [
+     "u_core_e_rox",
+     "input",
+     512,
+     0
+    ],
+    [
+     "u_core_e_rov",
+     "input",
+     16,
+     0
+    ],
+    [
+     "u_core_b_rr",
+     "output",
+     2048,
+     0
+    ],
+    [
+     "u_core_io_r",
+     "output",
+     36,
+     0
+    ],
+    [
+     "u_core_ro_x_e",
+     "output",
+     256,
+     0
+    ],
+    [
+     "u_core_ro_x_w",
+     "output",
+     256,
+     0
+    ],
+    [
+     "u_core_ro_v_e",
+     "output",
+     8,
+     0
+    ],
+    [
+     "u_core_ro_v_w",
+     "output",
+     8,
+     0
+    ],
+    [
+     "local_wq",
+     "output",
+     2248,
+     0
+    ],
+    [
+     "local_rq",
+     "output",
+     136,
+     0
+    ],
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "clk_lg",
+     "input",
+     4,
+     0
+    ],
+    [
+     "rst_lg_n",
+     "input",
+     4,
+     0
+    ],
+    [
+     "local_rr",
+     "input",
+     2056,
+     0
+    ],
+    [
+     "local_w_done",
+     "input",
+     8,
+     0
+    ],
+    [
+     "compiler_control",
+     "input",
+     1742,
+     0
+    ],
+    [
+     "clk_pw",
+     "input",
+     1,
+     0
+    ],
+    [
+     "clk_pe",
+     "input",
+     1,
+     0
+    ],
+    [
+     "io_word",
+     "input",
+     470,
+     0
+    ],
+    [
+     "u_core_u_engine_store_fault",
+     "input",
+     1,
+     0
+    ],
+    [
+     "fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "stage_mask",
+     "output",
+     64,
+     0
+    ]
+   ],
+   "top": "ot_hgi_sfu_split3_ctl_core",
+   "type_ids": {
+    "ot_hgi_sfu_core_split3__ctl__388.8x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      5363,
+      6456
+     ],
+     "cut_pins": {
+      "clk": {
+       "clk": 1
+      },
+      "clk_lg": {
+       "clk_lg": 4
+      },
+      "clk_pe": {
+       "clk_pe": 1
+      },
+      "clk_pw": {
+       "clk_pw": 1
+      },
+      "compiler_control": {
+       "compiler_control": 1742
+      },
+      "fault": {
+       "fault": 1
+      },
+      "io_word": {
+       "io_word": 470
+      },
+      "local_rq": {
+       "local_rq": 136
+      },
+      "local_rr": {
+       "local_rr": 2056
+      },
+      "local_w_done": {
+       "local_w_done": 8
+      },
+      "local_wq": {
+       "local_wq": 2248
+      },
+      "rst_lg_n": {
+       "rst_lg_n": 4
+      },
+      "rst_n": {
+       "rst_n": 1
+      },
+      "u_core_u_vm_drain_result_v": {
+       "u_core_u_engine_drain_result_v": 2
+      },
+      "u_core_u_vm_scalar_load_addr": {
+       "u_core_u_vm_scalar_addr_pipe_78": 96
+      },
+      "u_core_u_vm_stage_data": {
+       "u_core_b_rr": 2048
+      },
+      "u_core_u_vm_stage_mask": {
+       "stage_mask": 64
+      }
+     },
+     "excluded": "",
+     "mapped_bits": 8883,
+     "unmapped_cut_pins": [
+      "u_core_u_vm_drain_data",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_x",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_coll",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_fault",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_x",
+      "x_u_core_u_engine_u_memory_fault",
+      "ro_v_e",
+      "ro_v_n",
+      "ro_v_s",
+      "ro_v_w",
+      "ro_x_e",
+      "ro_x_n",
+      "ro_x_s",
+      "ro_x_w",
+      "u_core_u_vm_scalar_data",
+      "u_core_u_vm_scalar_load",
+      "u_core_u_vm_stage_addr",
+      "u_core_u_vm_stage_group",
+      "u_core_u_vm_stage_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_emit",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_i_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_krow",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_ls",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_lvw",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_o_v",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_pass",
+      "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_ld_terms",
+      "x_u_core_u_engine_u_memory_drain_addr",
+      "x_u_core_u_engine_u_memory_drain_v",
+      "x_u_core_u_engine_u_memory_rst_n",
+      "x_u_core_u_engine_u_memory_scalar_enable"
+     ]
+    }
+   }
+  },
   "sfu_lane": {
    "elab_bits": [
     1190,
@@ -18471,6 +18862,472 @@
      "straps": {
       "map_lane_j": "1001"
      }
+    }
+   }
+  },
+  "sfu_opstore_a": {
+   "elab_bits": [
+    5437,
+    2097
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_a_core.sv",
+   "master": "ot_hgi_sfu_core_split3",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_rd_q",
+     "output",
+     2048,
+     0
+    ],
+    [
+     "u_core_u_vm_scalar_addr_pipe_78",
+     "input",
+     96,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_rd_re",
+     "input",
+     64,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_rd_src",
+     "input",
+     128,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_3_sw",
+     "output",
+     8,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_3_data",
+     "input",
+     512,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_3_req",
+     "output",
+     16,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_2_sw",
+     "output",
+     8,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_2_data",
+     "input",
+     512,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_g_operand_2_req",
+     "output",
+     16,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_group_fault",
+     "input",
+     3,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_stage_v",
+     "input",
+     8,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_scalar_data",
+     "input",
+     128,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_scalar_load",
+     "input",
+     4,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_vm_waddr",
+     "input",
+     144,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_rd_addr",
+     "input",
+     1536,
+     0
+    ],
+    [
+     "u_core_u_engine_u_arithmetic_u_grid_vm_we",
+     "input",
+     16,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_0_meta_78",
+     "input",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_1_meta_78",
+     "input",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_2_meta_78",
+     "input",
+     34,
+     0
+    ],
+    [
+     "u_core_u_vm_g_lg_3_meta_78",
+     "input",
+     34,
+     0
+    ],
+    [
+     "u_core_u_rst_relay_q_0",
+     "input",
+     1,
+     0
+    ],
+    [
+     "u_core_b_rr",
+     "input",
+     2048,
+     0
+    ],
+    [
+     "u_core_io_r",
+     "input",
+     36,
+     0
+    ],
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "u_core_u_engine_u_memory_fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "stage_mask",
+     "input",
+     64,
+     0
+    ]
+   ],
+   "top": "ot_hgi_sfu_split3_opstore_a_core",
+   "type_ids": {
+    "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      5437,
+      2097
+     ],
+     "cut_pins": {
+      "clk": {
+       "clk": 1
+      },
+      "g_operand_0_u_group_sw_d": {
+       "u_core_b_rr": 2048
+      },
+      "glue_1": {
+       "u_core_u_engine_u_memory_fault": 1
+      },
+      "x_u_core_u_engine_u_arithmetic_rd_addr": {
+       "u_core_u_engine_u_arithmetic_u_grid_rd_addr": 1536
+      },
+      "x_u_core_u_engine_u_arithmetic_rd_q": {
+       "u_core_u_engine_u_arithmetic_u_grid_rd_q": 2048
+      },
+      "x_u_core_u_engine_u_arithmetic_vm_waddr": {
+       "u_core_u_engine_u_arithmetic_u_grid_vm_waddr": 144
+      },
+      "x_u_core_u_vm_scalar_load_addr": {
+       "u_core_u_vm_scalar_addr_pipe_78": 96
+      },
+      "x_u_core_u_vm_stage_v": {
+       "u_core_u_engine_u_memory_stage_v": 8
+      }
+     },
+     "excluded": "",
+     "mapped_bits": 5882,
+     "unmapped_cut_pins": [
+      "glue",
+      "g_operand_0_u_group_sw_mask",
+      "x_u_core_u_engine_u_arithmetic_rd_re",
+      "x_u_core_u_engine_u_arithmetic_rd_src",
+      "x_u_core_u_engine_u_arithmetic_rst_control_n",
+      "x_u_core_u_engine_u_arithmetic_vm_we",
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_flt",
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_rd",
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr",
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt",
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_rd",
+      "x_u_core_u_engine_u_memory_u_output_flt",
+      "x_u_core_u_engine_u_memory_u_output_sr_addr",
+      "x_u_core_u_engine_u_memory_u_output_sr_v",
+      "x_u_core_u_vm_scalar_data",
+      "x_u_core_u_vm_scalar_load",
+      "x_u_core_u_vm_stage_group",
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_rq",
+      "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v",
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_rq",
+      "x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v"
+     ]
+    }
+   }
+  },
+  "sfu_opstore_b": {
+   "elab_bits": [
+    3994,
+    1541
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_b_core.sv",
+   "master": "ot_hgi_sfu_core_split3",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "group0_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "group0_rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "group0_rq",
+     "input",
+     16,
+     0
+    ],
+    [
+     "group0_ra",
+     "input",
+     384,
+     0
+    ],
+    [
+     "group0_sw_v",
+     "input",
+     8,
+     0
+    ],
+    [
+     "group0_sw_addr",
+     "input",
+     120,
+     0
+    ],
+    [
+     "group0_sw_mask",
+     "input",
+     64,
+     0
+    ],
+    [
+     "group0_sw_d",
+     "input",
+     2048,
+     0
+    ],
+    [
+     "group1_rq",
+     "input",
+     16,
+     0
+    ],
+    [
+     "group1_ra",
+     "input",
+     384,
+     0
+    ],
+    [
+     "group1_sw_v",
+     "input",
+     8,
+     0
+    ],
+    [
+     "output_sr_v",
+     "input",
+     2,
+     0
+    ],
+    [
+     "output_sr_addr",
+     "input",
+     30,
+     0
+    ],
+    [
+     "output_lw",
+     "input",
+     16,
+     0
+    ],
+    [
+     "output_lwa",
+     "input",
+     384,
+     0
+    ],
+    [
+     "output_lwd",
+     "input",
+     512,
+     0
+    ],
+    [
+     "group0_rd",
+     "output",
+     512,
+     0
+    ],
+    [
+     "group0_flt",
+     "output",
+     1,
+     0
+    ],
+    [
+     "group1_rd",
+     "output",
+     512,
+     0
+    ],
+    [
+     "group1_flt",
+     "output",
+     1,
+     0
+    ],
+    [
+     "output_sr_d",
+     "output",
+     512,
+     0
+    ],
+    [
+     "output_sr_rv",
+     "output",
+     2,
+     0
+    ],
+    [
+     "output_flt",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hgi_sfu_split3_opstore_b_core",
+   "type_ids": {
+    "ot_hgi_sfu_core_split3__opstore_b__388.8x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      3994,
+      1541
+     ],
+     "cut_pins": {
+      "clk": {
+       "group0_clk": 1
+      },
+      "g_operand_2_u_group_flt": {
+       "group0_flt": 1
+      },
+      "g_operand_2_u_group_ra": {
+       "group0_ra": 384
+      },
+      "g_operand_2_u_group_rd": {
+       "group0_rd": 512
+      },
+      "g_operand_2_u_group_rq": {
+       "group0_rq": 16
+      },
+      "g_operand_2_u_group_rst_n": {
+       "group0_rst_n": 1
+      },
+      "g_operand_2_u_group_sw_addr": {
+       "group0_sw_addr": 120
+      },
+      "g_operand_2_u_group_sw_d": {
+       "group0_sw_d": 2048
+      },
+      "g_operand_2_u_group_sw_mask": {
+       "group0_sw_mask": 64
+      },
+      "g_operand_2_u_group_sw_v": {
+       "group0_sw_v": 8
+      },
+      "g_operand_3_u_group_flt": {
+       "group1_flt": 1
+      },
+      "g_operand_3_u_group_ra": {
+       "group1_ra": 384
+      },
+      "g_operand_3_u_group_rd": {
+       "group1_rd": 512
+      },
+      "g_operand_3_u_group_rq": {
+       "group1_rq": 16
+      },
+      "g_operand_3_u_group_sw_v": {
+       "group1_sw_v": 8
+      },
+      "u_output_flt": {
+       "output_flt": 1
+      },
+      "u_output_lw": {
+       "output_lw": 16
+      },
+      "u_output_lwa": {
+       "output_lwa": 384
+      },
+      "u_output_lwd": {
+       "output_lwd": 512
+      },
+      "u_output_sr_addr": {
+       "output_sr_addr": 30
+      },
+      "u_output_sr_d": {
+       "output_sr_d": 512
+      },
+      "u_output_sr_rv": {
+       "output_sr_rv": 2
+      },
+      "u_output_sr_v": {
+       "output_sr_v": 2
+      }
+     },
+     "excluded": "",
+     "straps": {}
     }
    }
   },

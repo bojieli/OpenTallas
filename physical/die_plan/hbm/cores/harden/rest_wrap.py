@@ -33,6 +33,11 @@ def main():
         ap.add_argument('--' + k, required=True)
     ap.add_argument('--hdr', default='')
     ap.add_argument('--parent', default='')
+    # constant nets the as-built hierarchical netlist carries across the cut (no cross-boundary constant propagation),
+    # which the flattened extraction folds away: 'input:NAME:W' = pin kept, unread; 'output:NAME:W:VALUE' = driven const
+    ap.add_argument('--add', action='append', default=[])
+    # kept member-type cells yosys named '$paramod$<hash>\\MOD': 'MOD=#(...)' rewrites them to the RTL module + params
+    ap.add_argument('--paramod', action='append', default=[])
     a = ap.parse_args()
     txt = open(a.ext).read()
     m, ports = ports_of(txt, a.name)
@@ -59,6 +64,10 @@ def main():
     use = json.load(open(a.use))
     body = m.group(0)
     body = re.sub(r'^module\s+\\?' + re.escape(a.name) + r'\b', f'module {a.top}_x', body, count=1)
+    for s in a.paramod:
+        mod, prm = s.split('=', 1)
+        body = re.sub(r'\\\$paramod\$[0-9a-f]+\\' + re.escape(mod) + r'\s', f'{mod} {prm} ', body)
+    assert '$paramod' not in body, 'unresolved $paramod cell type'
     L = [a.hdr.rstrip(), '`timescale 1ns/1ps', body, '', f'module {a.top} (']
     decl, conns, asg, final = [], [], [], []
     # splitnets made single-bit ports '\\base[i]': regroup them into one bus per (base, dir), bits in index order
@@ -90,6 +99,9 @@ def main():
             continue
         if d == 'input' and nm in use and len(use[nm]) < w:
             u = use[nm]
+            if not u:                               # master port the core never reads: no pin, tied 0 inside
+                conns.append(f".{ref}({w}'b0)")
+                continue
             decl.append(f'    input wire [{len(u) - 1}:0] {c}' if len(u) > 1 else f'    input wire {c}')
             asg.append(f'    wire [{w - 1}:0] {c}__full;')
             for k, i in enumerate(u):
@@ -103,6 +115,15 @@ def main():
             decl.append(f'    {d} wire {"[%d:0] " % (w - 1) if w > 1 else ""}{c}')
             conns.append(f'.{ref}({c})')
             final.append([c, d, w, 0])
+    for s in a.add:
+        f = s.split(':')
+        w = int(f[2])
+        decl.append(f'    {f[0]} wire {"[%d:0] " % (w - 1) if w > 1 else ""}{f[1]}')
+        if f[0] == 'output':
+            asg.append(f'    assign {f[1]} = {f[3]};   // constant net of the master carried by the cut')
+        else:
+            asg.append(f'    // {f[1]}: cut pin of a net the master ties constant ({w} b); the core folds the constant')
+        final.append([f[1], f[0], w, 0])
     L.append(',\n'.join(decl))
     L.append(');')
     L += asg

@@ -15436,5 +15436,246 @@
     "#(.LAT(6))"
    ]
   }
+ },
+ "sfu_opstore_b": {
+  "master": "ot_hgi_sfu_core_split3",
+  "top": "ot_hgi_sfu_split3_opstore_b_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_opstore_b_core.sv",
+  "ports": [
+   [
+    "group0_clk",
+    "input",
+    1,
+    0
+   ],
+   [
+    "group0_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "group0_rq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "group0_ra",
+    "input",
+    384,
+    0
+   ],
+   [
+    "group0_sw_v",
+    "input",
+    8,
+    0
+   ],
+   [
+    "group0_sw_addr",
+    "input",
+    120,
+    0
+   ],
+   [
+    "group0_sw_mask",
+    "input",
+    64,
+    0
+   ],
+   [
+    "group0_sw_d",
+    "input",
+    2048,
+    0
+   ],
+   [
+    "group1_rq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "group1_ra",
+    "input",
+    384,
+    0
+   ],
+   [
+    "group1_sw_v",
+    "input",
+    8,
+    0
+   ],
+   [
+    "output_sr_v",
+    "input",
+    2,
+    0
+   ],
+   [
+    "output_sr_addr",
+    "input",
+    30,
+    0
+   ],
+   [
+    "output_lw",
+    "input",
+    16,
+    0
+   ],
+   [
+    "output_lwa",
+    "input",
+    384,
+    0
+   ],
+   [
+    "output_lwd",
+    "input",
+    512,
+    0
+   ],
+   [
+    "group0_rd",
+    "output",
+    512,
+    0
+   ],
+   [
+    "group0_flt",
+    "output",
+    1,
+    0
+   ],
+   [
+    "group1_rd",
+    "output",
+    512,
+    0
+   ],
+   [
+    "group1_flt",
+    "output",
+    1,
+    0
+   ],
+   [
+    "output_sr_d",
+    "output",
+    512,
+    0
+   ],
+   [
+    "output_sr_rv",
+    "output",
+    2,
+    0
+   ],
+   [
+    "output_flt",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hgi_sfu_core_split3__opstore_b": {
+    "cut_bits": {
+     "inp": 3994,
+     "out": 1541
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk": {
+      "group0_clk": 1
+     },
+     "g_operand_2_u_group_rst_n": {
+      "group0_rst_n": 1
+     },
+     "g_operand_2_u_group_rq": {
+      "group0_rq": 16
+     },
+     "g_operand_2_u_group_ra": {
+      "group0_ra": 384
+     },
+     "g_operand_2_u_group_rd": {
+      "group0_rd": 512
+     },
+     "g_operand_2_u_group_sw_v": {
+      "group0_sw_v": 8
+     },
+     "g_operand_2_u_group_sw_addr": {
+      "group0_sw_addr": 120
+     },
+     "g_operand_2_u_group_sw_mask": {
+      "group0_sw_mask": 64
+     },
+     "g_operand_2_u_group_sw_d": {
+      "group0_sw_d": 2048
+     },
+     "g_operand_2_u_group_flt": {
+      "group0_flt": 1
+     },
+     "g_operand_3_u_group_rq": {
+      "group1_rq": 16
+     },
+     "g_operand_3_u_group_ra": {
+      "group1_ra": 384
+     },
+     "g_operand_3_u_group_rd": {
+      "group1_rd": 512
+     },
+     "g_operand_3_u_group_sw_v": {
+      "group1_sw_v": 8
+     },
+     "g_operand_3_u_group_flt": {
+      "group1_flt": 1
+     },
+     "u_output_sr_v": {
+      "output_sr_v": 2
+     },
+     "u_output_sr_addr": {
+      "output_sr_addr": 30
+     },
+     "u_output_sr_d": {
+      "output_sr_d": 512
+     },
+     "u_output_sr_rv": {
+      "output_sr_rv": 2
+     },
+     "u_output_lw": {
+      "output_lw": 16
+     },
+     "u_output_lwa": {
+      "output_lwa": 384
+     },
+     "u_output_lwd": {
+      "output_lwd": 512
+     },
+     "u_output_flt": {
+      "output_flt": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv (LWB 15) g_operand[2,3].u_group + u_output (the sp2 twin wraps this store unchanged: its pin registers sit in the u_memory remainder = opstore_a)",
+  "rtl": {
+   "u_group0": [
+    "ot_hgi_su_lgroup2",
+    "#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8))"
+   ],
+   "u_group1": [
+    "ot_hgi_su_lgroup2",
+    "#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8))"
+   ],
+   "u_output": [
+    "ot_hgi_su_lgroup2",
+    "#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2))"
+   ]
+  }
  }
 }
