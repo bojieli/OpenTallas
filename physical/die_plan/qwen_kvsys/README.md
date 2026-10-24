@@ -155,3 +155,12 @@ and hub_Wi got +1 station (41 lanes +1 cycle) because their route has no core-fr
 ft15-17/28/+1, hub_Wi ft5/22/23) still have none: they need a channel route) + gen.py latency + G0/G0C:
 G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38w.json, g3/ft_channel_regs_v38w.json).
 The ft WIRES still cross the macro fields on a straight zroute: they need M8/M9 over the cores or channel routes (OWNER? 1).
+
+## v3.8x (KVG3-CORES, 10-24) -- head_eighth slot shrink 285.12 -> 216 um (KV-G3 ruling on the core review)
+`core_pins_resize_v38x.py` re-spreads the 8 `cores/kv3_head_eighth_e*_pins.json` onto 216 x 216 (same faces / order /
+spreading rule as core_pins_v37p.py; round trip at 285.12 reproduces the v3.7p files exactly), then
+`run_v38x.sh die_plan(v3.8v).json OUT` = post_v38w.py + `post_v38x.py` (outline only, origins kept: ectl gap
+25.92 -> 95.04 um, inter-head gaps 34.56 -> 103.68 um) + ONE g3/ft_channel_regs.py --add-stations pass on the final
+geometry (in-core station points 1001 -> 942, moved 974, failed 8 as before; no lane latency change) + gen.py latency +
+G0/G0C: G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38x.json). Only kv3_hg*/kv3_hgi* differ from v3.8w.
+Render: g3/review/part_kv3_hg_v38x.png (no pin faces a non-partner core within 60 um).

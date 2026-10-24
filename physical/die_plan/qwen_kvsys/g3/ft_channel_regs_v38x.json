@@ -1,0 +1,397 @@
+{
+ "schema": "opentallas.kv_g3.ft_channel_regs.v1",
+ "clear_um": 8.64,
+ "smax_um": 750.0,
+ "types": {
+  "kv3_hg": {
+   "points": 4,
+   "in_core": 0,
+   "moved": 0,
+   "failed": [],
+   "max_shift_um": 0.0,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v2": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v3": {
+   "points": 5,
+   "in_core": 0,
+   "moved": 0,
+   "failed": [],
+   "max_shift_um": 0.0,
+   "max_hop_before": 719.7,
+   "max_hop_after": 719.7
+  },
+  "kv3_hgi": {
+   "points": 14,
+   "in_core": 10,
+   "moved": 10,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v1": {
+   "points": 6,
+   "in_core": 6,
+   "moved": 6,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v2": {
+   "points": 7,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 639.4,
+   "max_hop_after": 639.4
+  },
+  "kv3_hgi_v3": {
+   "points": 58,
+   "in_core": 44,
+   "moved": 44,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v4": {
+   "points": 50,
+   "in_core": 40,
+   "moved": 40,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v5": {
+   "points": 52,
+   "in_core": 35,
+   "moved": 35,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 639.4,
+   "max_hop_after": 639.4
+  },
+  "kv3_hgi_v6": {
+   "points": 58,
+   "in_core": 44,
+   "moved": 44,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v7": {
+   "points": 50,
+   "in_core": 40,
+   "moved": 40,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 534.6,
+   "max_hop_after": 631.8
+  },
+  "kv3_hgi_v8": {
+   "points": 52,
+   "in_core": 36,
+   "moved": 36,
+   "failed": [],
+   "max_shift_um": 97.2,
+   "max_hop_before": 639.4,
+   "max_hop_after": 639.4
+  },
+  "kv3_hub_C": {
+   "points": 60,
+   "in_core": 5,
+   "moved": 0,
+   "failed": [
+    "ft15: hop 754 > 750 after the move and no on-route fit (best gap 754; left interpolated: needs a station or a channel route)",
+    "ft16: hop 754 > 750 after the move and no on-route fit (best gap 754; left interpolated: needs a station or a channel route)",
+    "ft17: hop 754 > 750 after the move and no on-route fit (best gap 754; left interpolated: needs a station or a channel route)",
+    "ft28: hop 752 > 750 after the move and no on-route fit (best gap 752; left interpolated: needs a station or a channel route)",
+    "ft29: hop 752 > 750 after the move and no on-route fit (best gap 752; left interpolated: needs a station or a channel route)"
+   ],
+   "max_shift_um": 114.5,
+   "max_hop_before": 736.7,
+   "max_hop_after": 736.7
+  },
+  "kv3_hub_Eo": {
+   "points": 60,
+   "in_core": 0,
+   "moved": 0,
+   "failed": [],
+   "max_shift_um": 0.0,
+   "max_hop_before": 723.3,
+   "max_hop_after": 723.3
+  },
+  "kv3_hub_Wi": {
+   "points": 34,
+   "in_core": 25,
+   "moved": 33,
+   "failed": [
+    "ft5: hop 1138 > 750 after the move and no on-route fit (best gap 1138; left interpolated: needs a station or a channel route)",
+    "ft22: hop 838 > 750 after the move and no on-route fit (best gap 838; left interpolated: needs a station or a channel route)",
+    "ft23: hop 838 > 750 after the move and no on-route fit (best gap 838; left interpolated: needs a station or a channel route)"
+   ],
+   "max_shift_um": 203.0,
+   "max_hop_before": 744.0,
+   "max_hop_after": 747.0,
+   "added_station": [
+    "ft2",
+    "ft3",
+    "ft7",
+    "ft8",
+    "ft9",
+    "ft10",
+    "ft11",
+    "ft12",
+    "ft29",
+    "ft30",
+    "ft31"
+   ]
+  },
+  "kv3_hub_Wo": {
+   "points": 60,
+   "in_core": 0,
+   "moved": 0,
+   "failed": [],
+   "max_shift_um": 0.0,
+   "max_hop_before": 723.3,
+   "max_hop_after": 723.3
+  },
+  "kv3_pc_v1": {
+   "points": 4,
+   "in_core": 1,
+   "moved": 1,
+   "failed": [],
+   "max_shift_um": 32.4,
+   "max_hop_before": 506.9,
+   "max_hop_after": 539.3
+  },
+  "kv3_pc_v2": {
+   "points": 4,
+   "in_core": 1,
+   "moved": 1,
+   "failed": [],
+   "max_shift_um": 32.4,
+   "max_hop_before": 507.7,
+   "max_hop_after": 539.3
+  },
+  "kv3_pc_v3": {
+   "points": 4,
+   "in_core": 1,
+   "moved": 1,
+   "failed": [],
+   "max_shift_um": 34.6,
+   "max_hop_before": 508.0,
+   "max_hop_after": 542.6
+  },
+  "kv3_pv": {
+   "points": 14,
+   "in_core": 9,
+   "moved": 14,
+   "failed": [],
+   "max_shift_um": 187.9,
+   "max_hop_before": 727.4,
+   "max_hop_after": 724.5,
+   "added_station": [
+    "ft0",
+    "ft3",
+    "ft5"
+   ]
+  },
+  "kv3_pv_v1": {
+   "points": 18,
+   "in_core": 18,
+   "moved": 18,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 515.8,
+   "max_hop_after": 528.8
+  },
+  "kv3_pv_v2": {
+   "points": 58,
+   "in_core": 52,
+   "moved": 60,
+   "failed": [],
+   "max_shift_um": 198.7,
+   "max_hop_before": 711.7,
+   "max_hop_after": 733.1,
+   "added_station": [
+    "ft0",
+    "ft6",
+    "ft8",
+    "ft26"
+   ]
+  },
+  "kv3_pv_v3": {
+   "points": 50,
+   "in_core": 50,
+   "moved": 50,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 512.9,
+   "max_hop_after": 529.1
+  },
+  "kv3_pv_v4": {
+   "points": 90,
+   "in_core": 88,
+   "moved": 94,
+   "failed": [],
+   "max_shift_um": 187.9,
+   "max_hop_before": 747.5,
+   "max_hop_after": 712.8,
+   "added_station": [
+    "ft0",
+    "ft7",
+    "ft8",
+    "ft42"
+   ]
+  },
+  "kv3_pv_v5": {
+   "points": 82,
+   "in_core": 69,
+   "moved": 69,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 513.8,
+   "max_hop_after": 528.9
+  },
+  "kv3_pv_v6": {
+   "points": 122,
+   "in_core": 84,
+   "moved": 88,
+   "failed": [],
+   "max_shift_um": 177.1,
+   "max_hop_before": 730.9,
+   "max_hop_after": 728.0,
+   "added_station": [
+    "ft0",
+    "ft6",
+    "ft8",
+    "ft58"
+   ]
+  },
+  "kv3_pv_v7": {
+   "points": 114,
+   "in_core": 56,
+   "moved": 56,
+   "failed": [],
+   "max_shift_um": 38.9,
+   "max_hop_before": 541.5,
+   "max_hop_after": 576.9
+  },
+  "kv3_pv_v8": {
+   "points": 14,
+   "in_core": 9,
+   "moved": 15,
+   "failed": [],
+   "max_shift_um": 187.9,
+   "max_hop_before": 727.4,
+   "max_hop_after": 724.5,
+   "added_station": [
+    "ft0",
+    "ft3",
+    "ft5"
+   ]
+  },
+  "kv3_pv_v9": {
+   "points": 18,
+   "in_core": 18,
+   "moved": 18,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 515.8,
+   "max_hop_after": 528.8
+  },
+  "kv3_pv_v10": {
+   "points": 50,
+   "in_core": 50,
+   "moved": 50,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 512.9,
+   "max_hop_after": 529.1
+  },
+  "kv3_pv_v11": {
+   "points": 82,
+   "in_core": 69,
+   "moved": 69,
+   "failed": [],
+   "max_shift_um": 21.6,
+   "max_hop_before": 513.8,
+   "max_hop_after": 528.9
+  },
+  "kv3_pv_v12": {
+   "points": 117,
+   "in_core": 68,
+   "moved": 68,
+   "failed": [],
+   "max_shift_um": 51.8,
+   "max_hop_before": 551.1,
+   "max_hop_after": 602.9
+  },
+  "kv3_hg_v1_r1": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v1_r2": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v1_r3": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v1_r4": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  },
+  "kv3_hg_v1_r5": {
+   "points": 5,
+   "in_core": 2,
+   "moved": 2,
+   "failed": [],
+   "max_shift_um": 56.2,
+   "max_hop_before": 693.7,
+   "max_hop_after": 693.7
+  }
+ },
+ "total": {
+  "points": 1441,
+  "in_core": 942,
+  "moved": 974,
+  "failed": 8
+ }
+}
