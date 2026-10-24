@@ -15,6 +15,9 @@ module tb_dsdv_svc_sx;
 `else
 `include "dsdv_svc_sx_roles.svh"
 `endif
+`ifdef SX_FMASK
+`include "dsdv_svc_rs_faces.svh"
+`endif
 `ifndef MUT
 `define MUT 0
 `endif
@@ -80,7 +83,20 @@ module tb_dsdv_svc_sx;
                 assign si_v[s][f] = 1'b0; assign si_d[s][1076*f +: 1076] = '0;
             end
         end
+`ifdef SX_FMASK
+        // S81-P9-FACE: every slice built as its port variant's core (role-derived gather / scatter face masks,
+        // dsdv_svc_rs_faces.svh rs_fmask = svc_rs_faces.py); the result must equal the all-faces build bit for bit
+`ifdef SX_FMASK_MUT
+        // negative control: the fold root (slice 9) loses one gather-in face its role reads -> the bench must FAIL
+        localparam logic [39:0] FMS = rs_fmask(4'(s)) & ~((s == 9) ? (40'h1 << (24 + 1)) : 40'h0);
+`else
+        localparam logic [39:0] FMS = rs_fmask(4'(s));
+`endif
+        dsdv_svc_sx #(.MUT(`MUT), .FM_GI(FMS[27:24]), .FM_GO(FMS[31:28]), .FM_SI(FMS[35:32]), .FM_SO(FMS[39:36])) u (
+            .ck(ck), .rst(rst), .sid(4'(s)), .l_v(l_v[s]), .l_d(l_d[s]),
+`else
         dsdv_svc_sx #(.MUT(`MUT)) u (.ck(ck), .rst(rst), .sid(4'(s)), .l_v(l_v[s]), .l_d(l_d[s]),
+`endif
             .gi_v(gi_v[s]), .gi_d(gi_d[s]), .go_v(go_v[s]), .go_d(go_d[s]),
             .si_v(si_v[s]), .si_d(si_d[s]), .so_v(so_v[s]), .so_d(so_d[s]),
             .rt_v(rt_v[s]), .rt_d(rt_d[s]), .t_v(t_v[s]), .t_tag(t_tag[s]), .t_y(t_y[s]), .t_f(t_f[s]), .fault(flt[s]));

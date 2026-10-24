@@ -1058,6 +1058,27 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             v[hdr] = f'module dv_die ({", ".join(names_)});'
             v = [x for x in v if not (x.startswith('  input wire ck_') and x[len('  input wire '):-1] in drop)]
         regions = used
+    face_rep = None
+    if T.get('svc_face_variants'):
+        # S81-P9-FACE (10-23, owner: no tie-offs): every rsv slice -> the port variant of its role (svc_rs_faces.py, from
+        # the role ROMs); the faces the role never uses are no longer ports (were `unlinked_bits` 0 pads / _nc outputs).
+        # The pass proves the mask against this netlist (dropped faces all 0 / _nc, kept input faces constant-free).
+        import sys as _sys; _sys.path.insert(0, str(ROOT / 'tools/s81_dv/svc_rs'))
+        import svc_rs_face_bind
+        txt_, face_rep = svc_rs_face_bind.rewrite('\n'.join(v), str(ROOT))
+        v = txt_.split('\n')
+        for inst_, r_ in face_rep['instances'].items():
+            pd_ = pads.get(inst_)
+            if pd_:
+                for p_ in [p_ for p_ in pd_['ports'] if p_ in svc_rs_face_bind.GROUP_OF or p_ == 'q']:
+                    del pd_['ports'][p_]
+                if not pd_['ports']:
+                    del pads[inst_]
+                else:
+                    pd_['master'] = r_['new']
+        pad_rows[:] = [r for r in pad_rows if not (f"u_{r['inst']}" in face_rep['instances'] and
+                                                   (r['port'] in svc_rs_face_bind.GROUP_OF or r['port'] == 'q'))]
+        print('SVC_FACE_VARIANTS', json.dumps({k: face_rep[k] for k in ('dropped_in_bits', 'dropped_out_bits', 'nc_decls_removed')}))
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
     (out / 'straps.json').write_text(json.dumps({'straps': straps}, indent=1))
@@ -1118,6 +1139,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                frame_lk=dict(count=len(frame_lk_val), source=str(lp) if lp else None,
                              rule='K = max land-plan K over the frame x lanes (no-station lanes 1), every lane at K',
                              differs_from_table=frame_lk_diff, values=frame_lk_val))
+    if face_rep:
+        rec['svc_face_variants'] = {k: x for k, x in face_rep.items() if k not in ('bitmap', 'src_faces')}
     if run_bind:
         cmd = ['python3', str(ROOT / 'tools/die_port_bind.py'), str(out / 'die.v'), '--top', 'dv_die', '--rtl-root', str(ROOT / 'rtl'),
                '--rtl-file', str(out / 'cells_used.v'), '--strap-file', str(out / 'straps.json'), '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind.json')]

@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // Existing service entry ABI plus static all-quarter SO source assembly.
 module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1) (
+                           parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
+                           parameter logic [39:0] FM = {40{1'b1}}) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
     input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
@@ -52,7 +53,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
       .den_v(1'b0),.den_mask(16'd0),.den_owner(20'd0),.den_jid(8'd0),.launch(so_launch),
       .q_v(generated_v),.q_d(generated_d),.ready(so_ready),.done(so_done),.fault(ingress_fault),.fault_code(so_fault_code));
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY)) u (.ck(ck),
+    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q_entry), .hw(hw), .hc(hc), .fault(entry_fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
