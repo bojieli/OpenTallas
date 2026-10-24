@@ -1,0 +1,8 @@
+{
+  "element": "slice_station__t7 reach405 clock RC experiment",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T09:18:10.485132-07:00",
+  "picture": "/srv/opentallas-scratch/claude/codex-s81/t7_405_review.png",
+  "reasons": "Viewed revised4-stage direct N-S FT stations: maximum nominal306.72um<405um reach,regular400um clock grid,no macros/slivers/blocked PDN. +2cycles proven by S81 shifted miter1988cycles,mutantcaught. Baseline and opt-in incremental GRT clock rebalance use identical RTL/placement plan; latter adds only physical clock buffers to restore250ps common target using route RC instead of placement RC. Uniform TT/FF signoff gates both; old2-stage FAIL remains preserved."
+}
