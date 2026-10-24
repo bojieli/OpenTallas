@@ -1,0 +1,49 @@
+{
+ "P5": {
+  "plan": "/home/ubuntu/scratch/hbm-p5-1023/gen_P1a/die_plan.json",
+  "lanes": 5516,
+  "bit_mm": 1831295,
+  "bands": {
+   "edge_W": {
+    "range_um": [
+     300.0,
+     2500.0
+    ],
+    "worst_ratio": 0.3063,
+    "at_um": 7750.0,
+    "bits": 11196,
+    "tracks": 36552
+   },
+   "edge_E": {
+    "range_um": [
+     17500.0,
+     19800.0
+    ],
+    "worst_ratio": 0.293,
+    "at_um": 7750.0,
+    "bits": 11196,
+    "tracks": 38214
+   },
+   "cross_V": {
+    "range_um": [
+     9008.8,
+     11208.8
+    ],
+    "worst_ratio": 0.3593,
+    "at_um": 14500.0,
+    "bits": 13134,
+    "tracks": 36552
+   },
+   "cross_H": {
+    "range_um": [
+     15393.8,
+     17593.8
+    ],
+    "worst_ratio": 0.2421,
+    "at_um": 14000.0,
+    "bits": 8850,
+    "tracks": 36552
+   }
+  }
+ }
+}

@@ -73,7 +73,10 @@ st = dict(base)
 detail = {}
 for k, (v, b) in C.items():
     detail[k] = dict(cycles=v, bits=b)
-C['SM_XD'] = mean(r'vm', r'sm\d[a-d]', r'xq|xl')
+C['SM_XD'] = mean(r'vm|su2', r'sm\d[a-d]', r'xq|xl')   # p1 egress sits in SU2 (SM 2/3)
+_p1 = mean(r'vm', r'su2', r'xq')                            # its bfq -> eg leg (vm -> su2), half the SMs
+if C['SM_XD'][0] is not None and _p1[0]:
+    C['SM_XD'] = (C['SM_XD'][0] + 0.5 * (_p1[0] - 1), C['SM_XD'][1])
 if C['SM_XD'][1] and C['SM_XD'][1] > (C['SM_X1'][1] or 0):
     sm_x = C['SM_XD'][0]                       # P5 direct x path: one VM -> SM leg
     # XLAND=xw: the leg ends on quarter a; the SM relays a -> b -> c (smq lanes, one direct hop each); chained lanes
