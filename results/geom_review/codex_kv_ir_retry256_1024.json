@@ -1,0 +1,10 @@
+{
+ "image": "/srv/opentallas-scratch/claude/geom-review/b1/out/kv_v38u/die_plan.png",
+ "verdict": "ABSTRACT_PDN_PROBE_ONLY",
+ "findings": [
+  "Same original160partition/2370tapplan;dense centralbundles documented asphysicalreview risk",
+  "No geometry/power-grid changes: originalM8M9PG overcoarsened M7loadtiles, explicitbumparray",
+  "Recover OOM96GB with256GB andPDNcheckpoint; neither old/currentplanadoption norIRpass claimed"
+ ],
+ "scope": "Abstract power-budget feasibility atoriginal89W estimate;not measuredRTLpower/signoff"
+}
