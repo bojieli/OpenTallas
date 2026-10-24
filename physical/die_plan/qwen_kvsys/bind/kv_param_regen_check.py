@@ -415,13 +415,14 @@ def r_pv_vdh(B):
                         for h in H[vp]:
                             sh[a - c - h] += 1
         res[side] = dict(sorted(sh.items()))
-        if len(sh) > 1:
-            viol.append(f'{side}: V-D-H shift not one value over (vport, slice): {len(sh)} values {min(sh)}..{max(sh)}')
+        if set(sh) != {0}:
+            viol.append(f'{side}: V-D-H shift must be 0 on every (vport, slice) (arrival check and cmd take share the ctl pa): '
+                        f'{len(sh)} values {min(sh)}..{max(sh)}')
     return [dict(param='PV V/cmd/header meeting (COL_D / DELTA invariant)',
                  module='qkd_pvw_die_t frame (pv_<S|N>_* slices, hub_C u_pv[NS]_u_ctl)',
                  instances_regex=r'pvw_\d__u_s\d+_b\d+', kind='instance',
-                 formula='for every vport k and slice s: d(V k->s) - d(cmd->s) - d(header k->ctl) = ONE constant per pair side '
-                         '(d = landed - as-built); as built -2/-1 (S), -1/0 (N) by column parity',
+                 formula='for every vport k and slice s: d(V k->s) - d(cmd->s) - d(header k->ctl) = 0 on every pair (d = landed - as-built; the ctl arrival check and the '
+                         'cmd take share pa, so no boot value absorbs a shift); as built -2/-1 (S), -1/0 (N) by column parity',
                  buses=[dict(name='V', src='pv_<side>_<n>', dst='pv_<side>_<m>', leaf_regex=r'vport_\w+\.out_v_(lo|hi) -> pvw_*_s<c>_b<i>.pv2'),
                         dict(name='cmd', src='hub_C', dst='pv_<side>_<m>', leaf_regex=r'pvw_\d__u_ctl\.cmd -> pvw_*_s<c>_b<i>.bc'),
                         dict(name='header', src='pv_<side>_<n>', dst='hub_C', leaf_regex=r'vport_\w+\.out_(t|valid|epoch) -> pvw_*_u_ctl.in_*')],

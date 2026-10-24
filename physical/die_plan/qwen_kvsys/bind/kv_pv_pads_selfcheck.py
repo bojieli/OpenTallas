@@ -3,7 +3,7 @@
 
     kv_pv_pads_selfcheck.py PV_PADS.json      (exit 1 on any violation)
 
-For every slice / join leaf: dV(k) - dC - dH(k) must be ONE constant over all vports k and all columns of a pair side,
+For every slice / join leaf: dV(k) - dC - dH(k) must be 0 for all vports k and all columns (arrival check and cmd take share the ctl pa),
 where d = landed - asbuilt of the member (V: vport_* -> leaf, crossing or INNER; C: ctl.cmd -> leaf; H: vport -> ctl
 in_*); and per column dC(join) + dR(join flags) must be one constant (col_valid all-equal check).
 """
@@ -36,7 +36,7 @@ for side, pvw in (('S', 'pvw_0'), ('N', 'pvw_1')):
         if c is None or r is None: bad.append(f'{j}: cmd/flag member missing'); continue
         dr[c + r] += 1
     res[side] = dict(vports=len(H), V_D_H_shift=dict(vdh), D_plus_R_shift=dict(dr))
-    if len(vdh) != 1: bad.append(f'{side}: V-D-H shifts {dict(vdh)}')
+    if set(vdh) != {0}: bad.append(f'{side}: V-D-H shifts {dict(vdh)} (must be 0)')
     if len(dr) != 1: bad.append(f'{side}: D+R shifts {dict(dr)}')
 print(json.dumps(res, indent=1)); print('violations:', len(bad)); [print(' ', b) for b in bad[:20]]
 sys.exit(1 if bad else 0)

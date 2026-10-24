@@ -1314,7 +1314,7 @@
    "module": "qkd_pvw_die_t frame (pv_<S|N>_* slices, hub_C u_pv[NS]_u_ctl)",
    "instances_regex": "pvw_\\d__u_s\\d+_b\\d+",
    "kind": "instance",
-   "formula": "for every vport k and slice s: d(V k->s) - d(cmd->s) - d(header k->ctl) = ONE constant per pair side (d = landed - as-built); as built -2/-1 (S), -1/0 (N) by column parity",
+   "formula": "for every vport k and slice s: d(V k->s) - d(cmd->s) - d(header k->ctl) = 0 on every pair (d = landed - as-built; the ctl arrival check and the cmd take share pa, so no boot value absorbs a shift); as built -2/-1 (S), -1/0 (N) by column parity",
    "buses": [
     {
      "name": "V",
@@ -1338,13 +1338,13 @@
    "asbuilt": null,
    "regen_kv35": {
     "S": {
-     "-15": 448
+     "0": 448
     },
     "N": {
-     "-16": 448
+     "0": 448
     }
    },
-   "pv_pads": "kv_pv_pads_v36.json",
+   "pv_pads": "bind/kv_pv_pads_v36.json",
    "bound_ok": true,
    "violations": [],
    "note": "crossing members only (bus_groups); intra-partition V (binder ot_dp_dly) is checked by kv_pv_pads_selfcheck.py. Fix for the first proof: kv_pv_pads.py table (KV-P6 option (c)); TRUNK_D/FLAG_D then come from that table (summary TRUNK_D/FLAG_D), NOT from the TRUNK_D/FLAG_D rules above (those pad cmd to the as-built Delta and leave V misaligned)."

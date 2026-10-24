@@ -1,0 +1,152 @@
+{
+ "schema": "opentallas.kv.pv_boot.v1",
+ "die": "qwen_kvsys",
+ "plan": "v3.6 (kv35 bind lanes) + kv_pv_pads_v36.json",
+ "generator": "physical/die_plan/qwen_kvsys/bind/kv_pv_boot.py",
+ "note": "KV-P6-PV 10-23: per-vport boot ages (DQ, RT) + pair cfg_fia + W request-lane pads that realise the vport launch\nshifts of the PV pad table (kv_pv_pads.py summary.vport_launch_shift).\n\n    kv_pv_boot.py BIND_DIR PV_PADS.json RULES.json OUT_BOOT.json      (also appends the W pad members to PV_PADS.json)\n\nFrame = the pair control's pa (cmd take and arrival check; both fixed in it).  The ctl issues request q at a fixed pa\nand expects its first input FIRSTI later, so a cfg_fia change moves the request issue by -dFIA in this frame.\nvport launch (V/header out) = request + W + DQ + RT (qkd_pv16_vport_b; as built W + DQ + RT = C_a on all 16 ports,\npair FIRST_INPUT_AGE = 5 + C_a).  Required: launch_k - launch_k,asb = shift_k, i.e.\n    W_bound,k + Wpad_k + DQ_k + RT_k = X + shift_k,   X = C_a + dFIA  (one value, both pairs)\nX is the smallest value that makes every DQ_k >= 0; DQ_k > 15 (RTL bound) -> the remainder as Wpad_k stages on the\nport's W request lane (pr_t 14 b + pr_valid 1 b).  cfg_fia = 5 + X (as-built generator relation fia = 5 + C_a).\nRT_k = the regenerated round trip from the RT rule (9 + vq + rs on the bound lanes).",
+ "cfg_fia": {
+  "value": 46,
+  "applies": "both pair controls hub_C u_pv[NS]_u_ctl (cfg_fia[7:0])",
+  "bound": 127
+ },
+ "X": 41,
+ "vports": {
+  "vport_EN_0": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 12,
+   "W_pad": 6,
+   "launch_shift": 22
+  },
+  "vport_EN_1": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 7,
+   "W_pad": 26,
+   "launch_shift": 37
+  },
+  "vport_EN_2": {
+   "DQ": 4,
+   "RT": 31,
+   "cfg_age": 1055,
+   "W_bound": 17,
+   "W_pad": 0,
+   "launch_shift": 11
+  },
+  "vport_EN_3": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 2,
+   "W_pad": 41,
+   "launch_shift": 47
+  },
+  "vport_ES_0": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 12,
+   "W_pad": 16,
+   "launch_shift": 32
+  },
+  "vport_ES_1": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 7,
+   "W_pad": 17,
+   "launch_shift": 28
+  },
+  "vport_ES_2": {
+   "DQ": 15,
+   "RT": 31,
+   "cfg_age": 3871,
+   "W_bound": 17,
+   "W_pad": 12,
+   "launch_shift": 34
+  },
+  "vport_ES_3": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 2,
+   "W_pad": 20,
+   "launch_shift": 26
+  },
+  "vport_WN_0": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 12,
+   "W_pad": 0,
+   "launch_shift": 16
+  },
+  "vport_WN_1": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 7,
+   "W_pad": 19,
+   "launch_shift": 30
+  },
+  "vport_WN_2": {
+   "DQ": 0,
+   "RT": 30,
+   "cfg_age": 30,
+   "W_bound": 17,
+   "W_pad": 0,
+   "launch_shift": 6
+  },
+  "vport_WN_3": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 2,
+   "W_pad": 40,
+   "launch_shift": 46
+  },
+  "vport_WS_0": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 12,
+   "W_pad": 10,
+   "launch_shift": 26
+  },
+  "vport_WS_1": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 7,
+   "W_pad": 10,
+   "launch_shift": 21
+  },
+  "vport_WS_2": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 17,
+   "W_pad": 11,
+   "launch_shift": 32
+  },
+  "vport_WS_3": {
+   "DQ": 15,
+   "RT": 30,
+   "cfg_age": 3870,
+   "W_bound": 2,
+   "W_pad": 15,
+   "launch_shift": 21
+  }
+ },
+ "ctl_params": {
+  "TRUNK_D": 43,
+  "FLAG_D": 0,
+  "P0_P1_age_shift": -11
+ },
+ "assumptions": [
+  "as-built W+DQ+RT equal on all ports and fia_asb = 5 + C_a (kv_static_params generator rule)",
+  "RT = regenerated round trip (kv_param_rules RT rule) on the bound vq/rsp lanes"
+ ]
+}

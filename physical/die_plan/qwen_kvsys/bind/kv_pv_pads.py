@@ -11,7 +11,7 @@ INNER:<part>:... members are intra-partition edges the binder emulates with ot_d
 'landed' is the NEW internal delay (bound 0 = direct); BINDER3 re-sizes / splits those ot_dp_dly per sink accordingly.
 Endpoints: pvw_<i>__u_ctl.cmd = 0 (frame of each pair control); ctl col_valid/col_fault = t_FLG and RH (u_RH_r0) = t_RH,
 both SHARED by the two pairs (one ctl type: TRUNK_D = 54 + t_RH, FLAG_D = 58 + t_FLG - t_RH; the pvfin P0/P1 cal ages
-move with t_RH); ctl in_t/in_valid/in_epoch = t_HDR (per pair, cfg_fia boot); external leaves (astk pe2 source, hg
+move with t_RH); ctl in_t/in_valid/in_epoch = 0 (arrival check and the cmd take share pa; only the request -> arrival distance is boot cfg_fia); external leaves (astk pe2 source, hg
 read_addr sink) free.  A vport's launch moves with its host partition (internal V to its own columns), set by DQ / W
 request-lane pads (boot; reported as vport_shift).  Not modelled (pad 0, timing by boot regen): rst, cfg_age, pr_t /
 pr_valid (DQ), vq / rsp (RT), afv fault.
@@ -46,7 +46,7 @@ def end(part, leaf, port, is_src, src_name):
             if port in ('col_valid', 'col_fault'):
                 return 'FLG'
             if port in ('in_t', 'in_valid', 'in_epoch'):
-                return 'HDR:' + m.group(1)
+                return 'ZERO'               # arrival check and cmd take run off the same pa (ctl 'cmd word for the arrival at pa+1')
             return None
         if re.match(r'pvw_\d__u_RH_r0$', leaf):
             return 'RH'
