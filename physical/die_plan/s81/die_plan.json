@@ -28412,6 +28412,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t3": {
@@ -30801,6 +30879,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t8": {
@@ -32981,6 +33137,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t14": {
@@ -34441,6 +34675,84 @@
      "module": "dsdv_slice_c1x.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -36379,6 +36691,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t23": {
@@ -37779,6 +38169,84 @@
      "module": "dsdv_slice_c1x.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -39366,6 +39834,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t33": {
@@ -40902,6 +41448,84 @@
      "module": "dsdv_slice_kv512.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      768.96
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      794.88
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      924.48
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      1002.24
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (R0)"
@@ -42696,6 +43320,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt3",
+     "lef": "physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      570.24,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt3.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      976.32,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      34.56,
+      466.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t39": {
@@ -43996,6 +44698,84 @@
      "module": "dsdv_slice_c1x.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -45678,6 +46458,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      768.96
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      794.88
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      924.48
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      1002.24
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t48": {
@@ -46978,6 +47836,84 @@
      "module": "dsdv_slice_c1x.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -48800,6 +49736,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t59": {
@@ -50384,6 +51398,84 @@
      "module": "dsdv_slice_c1x.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -52556,6 +53648,84 @@
      "module": "dsdv_slice_lepe_nh_mus.C",
      "status": "rework",
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      34.56
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      34.56
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      34.56
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
     }
    ],
    "note": "slice partition; 1 instance(s) (MY)"
@@ -54927,6 +56097,84 @@
      "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_c.u_cap",
+     "module": "ot_s81sl_capc5r",
+     "lef": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef",
+     "origin_um": [
+      34.56,
+      768.96
+     ],
+     "outline_um": [
+      336.96,
+      414.72
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_capc5r.json"
+    },
+    {
+     "inst": "u_c.u_xr",
+     "module": "ot_s81sl_xrt1",
+     "lef": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
+     "origin_um": [
+      388.8,
+      794.88
+     ],
+     "outline_um": [
+      311.04,
+      395.28
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_xrt1.json"
+    },
+    {
+     "inst": "u_c.u_eg",
+     "module": "ot_s81sl_eg",
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "origin_um": [
+      717.12,
+      924.48
+     ],
+     "outline_um": [
+      259.2,
+      259.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81sl_eg.json"
+    },
+    {
+     "inst": "u_c.u_xf",
+     "module": "ot_s81dv_xfin",
+     "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
+     "origin_um": [
+      993.6,
+      1002.24
+     ],
+     "outline_um": [
+      181.44,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/ot_s81dv_xfin.json"
+    }
+   ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t73": {
@@ -56812,6 +58060,198 @@
      "note": "re-aspected 950x1469 -> 2-cell row slot"
     }
    ],
+   "hard_cores": [
+    {
+     "inst": "u_gunit.u_l5",
+     "module": "dsdv_gunit_l5",
+     "lef": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      302.4
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l5.json"
+    },
+    {
+     "inst": "u_gunit.u_l1",
+     "module": "dsdv_gunit_l1",
+     "lef": "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef",
+     "origin_um": [
+      397.44,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      216.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l1.json"
+    },
+    {
+     "inst": "u_gunit.u_l1c",
+     "module": "dsdv_gunit_l1c",
+     "lef": "physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c.lef",
+     "origin_um": [
+      760.32,
+      34.56
+     ],
+     "outline_um": [
+      86.4,
+      216.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l1c.json"
+    },
+    {
+     "inst": "u_gunit.u_l0",
+     "module": "dsdv_gunit_l0",
+     "lef": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef",
+     "origin_um": [
+      864.0,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l0.json"
+    },
+    {
+     "inst": "u_gunit.u_l2",
+     "module": "dsdv_gunit_l2",
+     "lef": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
+     "origin_um": [
+      1226.88,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l2.json"
+    },
+    {
+     "inst": "u_gunit.u_l3",
+     "module": "dsdv_gunit_l3",
+     "lef": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef",
+     "origin_um": [
+      1589.76,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l3.json"
+    },
+    {
+     "inst": "u_gunit.u_l0r",
+     "module": "dsdv_gunit_l0r",
+     "lef": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef",
+     "origin_um": [
+      1952.64,
+      34.56
+     ],
+     "outline_um": [
+      172.8,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l0r.json"
+    },
+    {
+     "inst": "u_gunit.u_l5f",
+     "module": "dsdv_gunit_l5f",
+     "lef": "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef",
+     "origin_um": [
+      2142.72,
+      34.56
+     ],
+     "outline_um": [
+      151.2,
+      151.2
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l5f.json"
+    },
+    {
+     "inst": "u_gunit.u_l4r",
+     "module": "dsdv_gunit_l4r",
+     "lef": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef",
+     "origin_um": [
+      2315.52,
+      34.56
+     ],
+     "outline_um": [
+      129.6,
+      129.6
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l4r.json"
+    },
+    {
+     "inst": "u_gunit.u_l4",
+     "module": "dsdv_gunit_l4",
+     "lef": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef",
+     "origin_um": [
+      2462.4,
+      34.56
+     ],
+     "outline_um": [
+      345.6,
+      64.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_gunit_l4.json"
+    }
+   ],
    "note": "unit partition; 1 instance(s) (R0)"
   },
   "bk_sel__t1": {
@@ -56928,6 +58368,141 @@
       "EG_N": "1'b0"
      },
      "note": "re-aspected 907x4536 -> 3-cell row slot"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_bk_sel.u_sel.g_q[0].u_q",
+     "module": "dsdv_bksel_q",
+     "lef": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      648.0,
+      648.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bksel_q.json"
+    },
+    {
+     "inst": "u_bk_sel.u_sel.g_q[1].u_q",
+     "module": "dsdv_bksel_q",
+     "lef": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
+     "origin_um": [
+      699.84,
+      34.56
+     ],
+     "outline_um": [
+      648.0,
+      648.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bksel_q.json"
+    },
+    {
+     "inst": "u_bk_sel.u_sel.g_q[2].u_q",
+     "module": "dsdv_bksel_q",
+     "lef": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
+     "origin_um": [
+      1365.12,
+      34.56
+     ],
+     "outline_um": [
+      648.0,
+      648.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bksel_q.json"
+    },
+    {
+     "inst": "u_bk_sel.u_sel.g_q[3].u_q",
+     "module": "dsdv_bksel_q",
+     "lef": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
+     "origin_um": [
+      2030.4,
+      34.56
+     ],
+     "outline_um": [
+      648.0,
+      648.0
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bksel_q.json"
+    },
+    {
+     "inst": "u_bk_sel.u_tx",
+     "module": "dsdv_idx_tx_n32",
+     "lef": "/home/ubuntu/closed_archive/dsdv_idx_tx_n32/s81dv_idxtxn32x2-x2-b642addfb/run/record/views/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef.zst",
+     "origin_um": [
+      2695.68,
+      34.56
+     ],
+     "outline_um": [
+      626.4,
+      561.6
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_idx_tx_n32.json"
+    },
+    {
+     "inst": "u_bk_sel.u_sel.u_c",
+     "module": "dsdv_bksel_c",
+     "lef": "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/dsdv_bksel_c.lef",
+     "origin_um": [
+      3343.68,
+      34.56
+     ],
+     "outline_um": [
+      388.8,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bksel_c.json"
+    },
+    {
+     "inst": "u_bk_sel.u_sel.u_g",
+     "module": "dsdv_bk_g",
+     "lef": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef",
+     "origin_um": [
+      3749.76,
+      34.56
+     ],
+     "outline_um": [
+      216.0,
+      172.8
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "inputs/core_pins/dsdv_bk_g.json"
     }
    ],
    "note": "unit partition; 1 instance(s) (R0)"
