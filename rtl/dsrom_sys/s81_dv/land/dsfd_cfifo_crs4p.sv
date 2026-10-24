@@ -18,6 +18,16 @@
 // the lane rings -- xa / xb / cc / x2 registers on cr, the south status path ri -> rr -> rd on cr_s, the fault OR -- is
 // dsfd_cfifo_crs's, line for line.  Default die instances and dsfd_cfifo_crs stay byte-identical (opt-in successor).
 // No ready / occupancy / credit / training: bubbles are written and read like data.
+// S81-P9-CF (2026-10-23, NATIVE CENSUS <= 32 loads per dynamic/reset driver, mandatory pre-gate admission): the first
+// gate of this top REFUSED at floorplan -- the four 276-b ot_s81_land rings had one wc / rc / slot enable per lane
+// (1,116 loads), the bubble masks one landed marker bit per bundle (563 / 536 loads), rsync / rsync_s 150 / 69 async
+// pins.  Structural fix, same calendar, same ports / pins / outline:
+//   * every lane ring is cut into <= 8-bit ot_s81_land rings (35 per lane), each with ITS OWN reset leaf;
+//   * the two marker bits (xl0[0], xl2[14]) land in 3 ot_s81_land_fo rings each (7 kept output copies per ring, port
+//     load 12), one copy per <= 27 masked bits;
+//   * rsync = a kept 2-level reset tree (stage 1 per 16 leaves, all async-reset by rst; leaves async-reset by stage 1)
+//     released on the SAME cr edge as the old 2-flop rsync_q[1]; rsync_s = one stage 1 + 5 kept leaves, same edge.
+// The value of every output is unchanged edge for edge (tools/s81_dv/crs4p_bench.py vs the closed dsfd_cfifo_crs).
 `timescale 1ns/1ps
 module dsfd_cfifo_crs4p #(
     parameter [11:0] LK = {4{3'd2}}
@@ -39,32 +49,81 @@ module dsfd_cfifo_crs4p #(
     input wire [275:0] xl3,      // two ports).  Bit order and S-face pin order unchanged.
     input wire [3:0] xk          // lane k forwarded clock (lane k's last station ck_o)
 );
-    reg [1:0] rsync_q; always @(posedge cr or negedge rst) if (!rst) rsync_q <= 2'b00; else rsync_q <= {rsync_q[0], 1'b1};
-    wire rsync = rsync_q[1];
-    reg [1:0] rsyncs_q; always @(posedge cr_s or negedge rsync) if (!rsync) rsyncs_q <= 2'b00; else rsyncs_q <= {rsyncs_q[0], 1'b1};
-    wire rsync_s = rsyncs_q[1];
+    // ---- reset tree (rsync): NL leaves, each released on the 2nd cr edge after rst (the old rsync_q[1])
+    localparam integer NR = 35;                        // rings per lane
+    localparam integer NF = 3;                         // marker fan-out rings per marker bit
+    localparam integer NO = 7;                         // kept output copies per marker ring
+    localparam integer NL = 4 * NR + 2 * NF + 2;       // ring leaves + rs port + rsync_s tree
+    wire [NL-1:0] rl;
+    dsfd_crs4p_rtree #(.N(NL)) u_rt (.clk(cr), .rst_n(rst), .q(rl));
+    assign rs = rl[NL-1];
+    wire rls = rl[NL-2];
+    (* keep *) reg rsyncs_b;
+    (* keep *) reg [4:0] rsyncs_l;
+    always @(posedge cr_s or negedge rls) if (!rls) rsyncs_b <= 1'b0; else rsyncs_b <= 1'b1;
+    genvar r;
+    generate for (r = 0; r < 5; r = r + 1) begin : g_rss
+        always @(posedge cr_s or negedge rls) if (!rls) rsyncs_l[r] <= 1'b0; else rsyncs_l[r] <= rsyncs_b;
+    end endgenerate
     reg [65:0] ri_q; always @(posedge cr) ri_q <= ri;
-    assign rs = rsync;
     reg [1:0] sti; always @(posedge cr) sti <= st;
-    // ---- per-lane landing (contract L1-L3): ring on xk[k], read on cr from the rsync release
+    // ---- per-lane landing (contract L1-L3): <= 8-bit rings on xk[k], read on cr from the leaf release
     wire [1103:0] xin = {xl3, xl2, xl1, xl0};
     wire [1103:0] xl;
-    wire [3:0] lf;
-    genvar g;
+    wire [4 * NR - 1:0] lfc;
+    wire [2 * NF - 1:0] lfm;
+    wire [2 * NF * NO - 1:0] mk;                       // landed marker copies: lane 0 bit 0 (low half), lane 2 bit 14
+    wire [NF * NO - 1:0] mka = mk[NF * NO - 1:0], mkb = mk[2 * NF * NO - 1:NF * NO];
+    genvar g, c;
     generate for (g = 0; g < 4; g = g + 1) begin : g_lane
 `ifdef OT_CRS4_MUT_NBR   // bench mutant: the dsfd_cfifo_crs gap -- lanes 0 / 3 written on the neighbour lane's clock
         wire ckl = xk[g == 0 ? 1 : (g == 3 ? 2 : g)];
 `else
         wire ckl = xk[g];
 `endif
-        ot_s81_land #(.W(276), .D(4)) u_l (.k(LK[3 * g +: 3]), .ck_f(ckl), .i(xin[276 * g +: 276]), .ck(cr), .rs(rsync),
-                                           .o(xl[276 * g +: 276]), .fault(lf[g]));
+        // lane bits other than the marker (lane 0 bit 0, lane 2 bit 14): 275 (lanes 0, 2) or 276 bits
+        localparam integer MB = (g == 0) ? 0 : ((g == 2) ? 14 : -1);
+        localparam integer NBIT = (MB >= 0) ? 275 : 276;
+        wire [275:0] li = xin[276 * g +: 276];
+        wire [NBIT-1:0] ld;                            // data bits, marker removed
+        wire [NBIT-1:0] lo;
+        if (MB == 0) begin : g_m0
+            assign ld = li[275:1];
+            assign xl[276 * g +: 276] = {lo, mka[0]};
+        end else if (MB == 14) begin : g_m14
+            assign ld = {li[275:15], li[13:0]};
+            assign xl[276 * g +: 276] = {lo[274:14], mkb[0], lo[13:0]};
+        end else begin : g_nm
+            assign ld = li;
+            assign xl[276 * g +: 276] = lo;
+        end
+        for (c = 0; c < NR; c = c + 1) begin : g_c
+            localparam integer LO = 8 * c;
+            localparam integer WC = (LO + 8 <= NBIT) ? 8 : NBIT - LO;
+            ot_s81_land #(.W(WC), .D(4)) u_l (.k(LK[3 * g +: 3]), .ck_f(ckl), .i(ld[LO +: WC]), .ck(cr), .rs(rl[NR * g + c]),
+                                              .o(lo[LO +: WC]), .fault(lfc[NR * g + c]));
+        end
+        if (MB >= 0) begin : g_mk
+            for (c = 0; c < NF; c = c + 1) begin : g_f
+                ot_s81_land_fo #(.NO(NO), .D(4)) u_f (.k(LK[3 * g +: 3]), .ck_f(ckl), .i(li[MB]), .ck(cr),
+                    .rs(rl[4 * NR + NF * (g / 2) + c]), .o(mk[NF * NO * (g / 2) + NO * c +: NO]),
+                    .fault(lfm[NF * (g / 2) + c]));
+            end
+        end
     end endgenerate
-    // bundle words as dsfd_cfifo_crs's ingress delivered them ({W:1} of each, marker stripped), bubbles before the marker
-    wire [564:0] oa_ = xl[565:1] & {565{xl[0]}};
-    wire [536:0] ob_ = xl[1103:567] & {537{xl[566]}};
+    // bundle words as dsfd_cfifo_crs's ingress delivered them ({W:1} of each, marker stripped), bubbles before the marker;
+    // mask bit j by marker copy j / 27 (<= 27 + 2 loads per copy)
+    wire [564:0] oa_;
+    wire [536:0] ob_;
+    genvar j;
+    generate for (j = 0; j < 565; j = j + 1) begin : g_ma
+        assign oa_[j] = xl[1 + j] & mka[j / 27];
+    end
+    for (j = 0; j < 537; j = j + 1) begin : g_mb
+        assign ob_[j] = xl[567 + j] & mkb[j / 27];
+    end endgenerate
     wire [1100:0] xw_ = {ob_[536:1], oa_};
-    wire xflt = (|lf) | (oa_[0] ^ ob_[0]);
+    wire xflt = (|lfc) | (|lfm) | (oa_[0] ^ ob_[0]);
     wire xv = xw_[0];
     reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r; reg [535:0] x2_r;
     always @(posedge cr) begin xa_r <= {xw_[283] & xv, xw_[282:1]}; xb_r <= xw_[549:284];
@@ -72,7 +131,25 @@ module dsfd_cfifo_crs4p #(
         x2_r <= {xw_[1100:570], xw_[569] & xv, xw_[568:566], xw_[565] & xv}; end
     assign xa = xa_r; assign xb = xb_r; assign cc = cc_r; assign x2 = x2_r;
     reg [67:0] rr; reg flt;
-    always @(posedge cr_s or negedge rsync_s) if (!rsync_s) begin rr <= 68'd0; flt <= 1'b0; end
-        else begin rr <= {sti[1] | flt, sti[0], ri_q}; flt <= flt | xflt; end
-    assign rd = {rr, rr[0], rsync_s};
+    wire [67:0] rr_d = {sti[1] | flt, sti[0], ri_q};
+    generate for (r = 0; r < 4; r = r + 1) begin : g_rr      // 17 rr bits per leaf (+ flt on leaf 3)
+        always @(posedge cr_s or negedge rsyncs_l[r]) if (!rsyncs_l[r]) rr[17 * r +: 17] <= 17'd0;
+            else rr[17 * r +: 17] <= rr_d[17 * r +: 17];
+    end endgenerate
+    always @(posedge cr_s or negedge rsyncs_l[3]) if (!rsyncs_l[3]) flt <= 1'b0; else flt <= flt | xflt;
+    assign rd = {rr, rr[0], rsyncs_l[4]};
+endmodule
+
+// kept 2-level reset tree: stage 1 (one per 16 leaves) async-reset by rst_n, each leaf async-reset by its stage 1;
+// every leaf releases on the 2nd clk edge after rst_n (= a 2-flop synchroniser), <= 16 + 1 loads per driver.
+module dsfd_crs4p_rtree #(parameter integer N = 1) (input wire clk, input wire rst_n, output wire [N-1:0] q);
+    localparam integer NB = (N + 15) / 16;
+    (* keep *) reg [NB-1:0] br;
+    (* keep *) reg [N-1:0]  lf;
+    always @(posedge clk or negedge rst_n) if (!rst_n) br <= {NB{1'b0}}; else br <= {NB{1'b1}};
+    genvar i;
+    generate for (i = 0; i < N; i = i + 1) begin : g_l
+        always @(posedge clk or negedge br[i / 16]) if (!br[i / 16]) lf[i] <= 1'b0; else lf[i] <= 1'b1;
+    end endgenerate
+    assign q = lf;
 endmodule
