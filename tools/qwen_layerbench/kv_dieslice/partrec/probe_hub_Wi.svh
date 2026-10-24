@@ -25,3 +25,10 @@
     always @(posedge clk) begin pf_q <= pf; if (pf != pf_q) $display("HOSTPHY core %0d phy_up %b adapter_fault %b phy_faults %b phy_rx %0d d_rv %0d raw_rx %0d",
                                                                       core_cyc, pf[6], pf[5], pf[4:0], c_phy, c_drv, c_raw); end
     final $display("HOSTPHY_END phy_rx_v %0d adapter_out d_rv %0d raw_rx %0d d_rcr %b", c_phy, c_drv, c_raw, `H.d_rcr);
+    `define AB dut.u_host.g_mu.u_rank.g_mu.u_adapter.g_slice[0].u_slice.u_body
+    reg [3:0] af_q = 0; wire [3:0] af = {`AB.f_die_ovr, `AB.f_link_ovr, `AB.f_seq, `AB.f_cred};
+    always @(posedge dut.u_host.g_mu.u_rank.ck_phy[0]) begin
+        af_q <= af;
+        if (`AB.rx_v && c_phy < 4) $display("HOSTADP core %0d rx flit seq %0d expected %0d flit[17:0] %h valid %b", core_cyc, `AB.rx_flit[7:0], `AB.rx_seq, `AB.rx_flit[17:0], `AB.rx_flit[146]);
+        if (af != af_q) $display("HOSTADP core %0d fault die_ovr %b link_ovr %b seq %b cred %b", core_cyc, af[3], af[2], af[1], af[0]);
+    end
