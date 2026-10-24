@@ -16,8 +16,8 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 104,
-     "max_cycles": 20,
-     "max_hops": 7,
+     "max_cycles": 14,
+     "max_hops": 5,
      "module": "ot_hbm_argmax_static_sw_vm_r2",
      "out_bits": 12672,
      "out_buses": 104,
@@ -56,20 +56,20 @@
     "u12": {
      "dst_parts": [
       "NE_svc0",
-      "NE_svc1",
+      "NE_svc3",
       "NW_svc0",
-      "NW_svc1",
+      "NW_svc3",
       "SE_svc0",
-      "SE_svc1",
+      "SE_svc3",
       "SW_svc0",
-      "SW_svc1"
+      "SW_svc3"
      ],
      "fanout_per_hop": "root register -> 4 registered quadrant outputs _q<Q> inside C0 (fan-out 4) -> each output 1:1 on its own lane (seam invariant: one 2-pin net per port bit, no fan-out at a seam; G0 check_seams) -> stations 1:1 -> one destination boundary register (a broadcast re-forks only in a generated hbm_ft_fork_reg of the destination region)",
      "in_bits": 36,
      "in_buses": 4,
      "lanes": 8,
-     "max_cycles": 55,
-     "max_hops": 16,
+     "max_cycles": 49,
+     "max_hops": 15,
      "module": "ot_hbm_router_ids_static",
      "out_bits": 388,
      "out_buses": 8,
@@ -120,8 +120,8 @@
      "in_bits": 1116,
      "in_buses": 16,
      "lanes": 140,
-     "max_cycles": 49,
-     "max_hops": 17,
+     "max_cycles": 75,
+     "max_hops": 23,
      "module": "ot_hbm_static_cfg_collar_idx256r",
      "out_bits": 15908,
      "out_buses": 140,
@@ -229,8 +229,8 @@
      "in_bits": 200,
      "in_buses": 8,
      "lanes": 16,
-     "max_cycles": 11,
-     "max_hops": 5,
+     "max_cycles": 2,
+     "max_hops": 1,
      "module": "ot_hbm_host_static_ingress_obs",
      "out_bits": 1408,
      "out_buses": 16,
@@ -311,8 +311,8 @@
      "in_bits": 7604,
      "in_buses": 61,
      "lanes": 36,
-     "max_cycles": 22,
-     "max_hops": 9,
+     "max_cycles": 68,
+     "max_hops": 19,
      "module": "hfd_hgi_vms_glue_nw_t",
      "out_bits": 4448,
      "out_buses": 36,
@@ -326,7 +326,7 @@
      "in_bits": 249,
      "in_buses": 4,
      "lanes": 1,
-     "max_cycles": 16,
+     "max_cycles": 20,
      "max_hops": 7,
      "module": "ot_hbm_fault_leaf",
      "out_bits": 4,
@@ -369,8 +369,8 @@
      "in_bits": 171,
      "in_buses": 2,
      "lanes": 6,
-     "max_cycles": 14,
-     "max_hops": 5,
+     "max_cycles": 13,
+     "max_hops": 4,
      "module": "ot_hbm_idx_vm_query_static_n12",
      "out_bits": 703,
      "out_buses": 6,
@@ -384,7 +384,7 @@
      "in_bits": 1454,
      "in_buses": 22,
      "lanes": 1,
-     "max_cycles": 21,
+     "max_cycles": 24,
      "max_hops": 7,
      "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
      "out_bits": 3,
@@ -415,7 +415,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 16,
-     "max_cycles": 21,
+     "max_cycles": 25,
      "max_hops": 7,
      "module": "ot_hbm_su_programme_pslice_c5",
      "out_bits": 1906,
@@ -430,8 +430,8 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 14,
-     "max_cycles": 6,
-     "max_hops": 3,
+     "max_cycles": 2,
+     "max_hops": 1,
      "module": "ot_hbm_su_static_cxport_dl_q",
      "out_bits": 1566,
      "out_buses": 14,
@@ -445,7 +445,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 14,
-     "max_cycles": 12,
+     "max_cycles": 6,
      "max_hops": 3,
      "module": "ot_hbm_su_static_cxport_dl_q",
      "out_bits": 1566,
@@ -502,8 +502,8 @@
      "in_bits": 288,
      "in_buses": 3,
      "lanes": 8,
-     "max_cycles": 2,
-     "max_hops": 1,
+     "max_cycles": 18,
+     "max_hops": 5,
      "module": "ot_hbm_su_static_qcore_r13",
      "out_bits": 502,
      "out_buses": 8,
@@ -545,7 +545,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 6,
-     "max_cycles": 31,
+     "max_cycles": 34,
      "max_hops": 8,
      "module": "ot_hbm_xp_aq_tree13_fmt",
      "out_bits": 655,
@@ -605,8 +605,8 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 36,
-     "max_hops": 9,
+     "max_cycles": 28,
+     "max_hops": 7,
      "module": "ot_hgi_sm_xload_cl2_ctlx",
      "out_bits": 47,
      "out_buses": 1,
@@ -621,8 +621,8 @@
      "in_bits": 1256,
      "in_buses": 10,
      "lanes": 31,
-     "max_cycles": 30,
-     "max_hops": 8,
+     "max_cycles": 39,
+     "max_hops": 10,
      "module": "hfd_vms_bank_native_q0_faces",
      "out_bits": 3598,
      "out_buses": 31,
@@ -641,10 +641,10 @@
    "cells": 1514498,
    "inst": "u2",
    "master": "ot_hbm_hc_root_static",
-   "max_sub_core": 336605,
+   "max_sub_core": 302248,
    "module": "ot_hbm_hc_root_static",
-   "proposal": "2 x ot_hbm_hc_tail_unit_static 673k (each OVER the cap: the 10-23 L1 study lists hbm_hc_tail_child 0.63-0.68M as never closed) -> each tail must split again (RTL: tail stage halves) ",
-   "split_into": 5,
+   "proposal": "over_cap_split/ot_hbm_hc_root_static.split.json CUT-ONLY: 7 cores by connectivity, max 302248",
+   "split_into": 7,
    "type": "c0"
   },
   {
@@ -652,10 +652,10 @@
    "cells": 6614494,
    "inst": "u18",
    "master": "ot_hgi_coll_tkm_m_tp192",
-   "max_sub_core": 348132,
+   "max_sub_core": 260110,
    "module": "ot_hgi_coll_tkm_m_tp192",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 19-way split by area is a PROPOSAL; the RTL owner partitions it into 19 cores of <= 350k; its 2 SRAM macros go with the sub-cores",
-   "split_into": 19,
+   "proposal": "over_cap_split/ot_hgi_coll_tkm_m_tp192.split.json RTL-UNBENCHED: 33 cores by connectivity, max 260110",
+   "split_into": 33,
    "type": "c0"
   },
   {
@@ -663,9 +663,9 @@
    "cells": 846145,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq0_static",
-   "max_sub_core": 282049,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq0_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq0_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc0"
   },
@@ -674,9 +674,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc1"
   },
@@ -685,9 +685,9 @@
    "cells": 828986,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_ft_static",
-   "max_sub_core": 276329,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_ft_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_ft_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc2"
   },
@@ -696,9 +696,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc3"
   },
@@ -707,9 +707,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc4"
   },
@@ -718,9 +718,9 @@
    "cells": 839978,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_static",
-   "max_sub_core": 279993,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc5"
   },
@@ -729,9 +729,9 @@
    "cells": 828986,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_ft_static",
-   "max_sub_core": 276329,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_ft_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_ft_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc6"
   },
@@ -740,9 +740,9 @@
    "cells": 839887,
    "inst": "u0",
    "master": "ot_hbm_hc_bankq_term_static",
-   "max_sub_core": 279963,
+   "max_sub_core": 288852,
    "module": "ot_hbm_hc_bankq_term_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 3-way split by area is a PROPOSAL; the RTL owner partitions it into 3 cores of <= 350k; its 12 SRAM macros go with the sub-cores",
+   "proposal": "over_cap_split/ot_hbm_hc_bankq_term_static.split.json DONE: 3 cores by connectivity, max 288852",
    "split_into": 3,
    "type": "q_hc7"
   },
@@ -751,10 +751,10 @@
    "cells": 12422337,
    "inst": "u0",
    "master": "ot_hbm_idx_score_quarter_static",
-   "max_sub_core": 345065,
+   "max_sub_core": 195127,
    "module": "ot_hbm_idx_score_quarter_static",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 36-way split by area is a PROPOSAL; the RTL owner partitions it into 36 cores of <= 350k",
-   "split_into": 36,
+   "proposal": "over_cap_split/ot_hbm_idx_score_quarter_static.split.json DONE: 66 cores by connectivity, max 195127",
+   "split_into": 66,
    "type": "q_os2"
   },
   {
@@ -764,7 +764,7 @@
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4"
   },
@@ -775,7 +775,7 @@
    "master": "ot_hfd_coll_q2_hard_v8g",
    "max_sub_core": 222636,
    "module": "ot_hfd_coll_q2_hard_v8g",
-   "proposal": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "proposal": "over_cap_split/ot_hfd_coll_q2_hard_v8g.split.json CUT-ONLY: 3 cores by connectivity, max 222636",
    "split_into": 3,
    "type": "q_rc4_v1"
   },
@@ -784,10 +784,10 @@
    "cells": 5718505,
    "inst": "u7",
    "master": "ot_hgi_sfu_core_split3",
-   "max_sub_core": 336383,
+   "max_sub_core": 306861,
    "module": "ot_hgi_sfu_core_split3",
-   "proposal": "no module hierarchy available (synthesis .stat not kept): equal 17-way split by area is a PROPOSAL; the RTL owner partitions it into 17 cores of <= 350k; its 80 SRAM macros go with the sub-cores",
-   "split_into": 17,
+   "proposal": "over_cap_split/ot_hgi_sfu_core_split3.split.json CUT-ONLY: 19 cores by connectivity, max 306861",
+   "split_into": 19,
    "type": "q_sfuc"
   },
   {
@@ -797,7 +797,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv2",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su0"
   },
@@ -808,7 +808,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv6",
    "max_sub_core": 308480,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv0.split.json CUT-ONLY: 23 cores by connectivity, max 308480",
    "split_into": 23,
    "type": "q_su1"
   },
@@ -819,7 +819,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv10",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su2"
   },
@@ -830,7 +830,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv14",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3"
   },
@@ -841,7 +841,7 @@
    "master": "ot_hbm_su_static_pgslice_lg__pv15",
    "max_sub_core": 308632,
    "module": "ot_hbm_su_static_pgslice_lg",
-   "proposal": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "proposal": "over_cap_split/ot_hbm_su_static_pgslice_lg__pv8.split.json CUT-ONLY: 9 cores by connectivity, max 308632",
    "split_into": 9,
    "type": "q_su3_v1"
   }
@@ -878,18 +878,35 @@
   "ot_hgi_sm_xload_cl2_ctlx",
   "ot_pdie_serdes"
  ],
+ "pins_plan_files": [
+  "hfd_ep_static__434.72x371.52.json",
+  "ot_hbm_sm_attn_front_static__362.88x319.68.json",
+  "ot_hbm_sm_attn_native_col__362.88x319.68.json",
+  "ot_hbm_sm_attn_native_col__362.88x406.08.json",
+  "ot_hbm_su_static_cxport_ij_q__216x388.8.json",
+  "ot_hbm_su_static_qcore_r13__302.4x280.8.json",
+  "ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
+  "ot_hbm_svc_vmdel_lane_n__257.04x108.json",
+  "ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
+  "ot_hgi_coll_gq_land__237.6x237.6.json",
+  "ot_hgi_qw_dec__260x260.json",
+  "ot_hgi_sm_xload_cl2_bfqg__302.4x298.08.json",
+  "ot_hgi_sm_xload_xq_pegress__369.36x369.36.json",
+  "ot_smh_static_front__362.88x319.68.json"
+ ],
  "scope": "HBM-P3-TAPS post-pass (taps_cores_v2.py); plan stage only, no P&R claim",
  "summary": {
   "all_tap_graphs_connected": false,
   "core_overlaps": 0,
   "cores_over_cap": [],
   "glue_over_cap": [],
-  "hard_cores": 646,
+  "hard_cores": 694,
   "leaves_split": 19,
   "max_core_cells": 394328,
   "max_core_type": "io",
-  "max_glue_cells": 298918,
-  "max_glue_type": "q_vm",
+  "max_glue_cells": 389962,
+  "max_glue_type": "q_os2",
   "max_nn_tap_um": 1062.7,
   "max_point_to_tap_um": 1123.2,
   "sm_types": [
@@ -912,7 +929,7 @@
    "q_sm3c",
    "q_sm3d"
   ],
-  "taps": 1301,
+  "taps": 1376,
   "types": 56,
   "types_with_taps": 56
  },
@@ -920,8 +937,8 @@
  "tap_reach_um": 600.0,
  "types": {
   "c0": {
-   "core_cells_max": 348132,
-   "core_cells_total": 8629817,
+   "core_cells_max": 302248,
+   "core_cells_total": 10376390,
    "core_overlaps": 0,
    "cores": [
     {
@@ -935,29 +952,39 @@
      "module": "ot_hbm_argmax_static_sw_vm_r2"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail0_s0",
-     "module": "ot_hbm_hc_root_static__hc_tail0_s0"
+     "cells": 302248,
+     "inst": "u2_tail0_sk_step0",
+     "module": "ot_hbm_hc_root_static__tail0_sk_step0"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail0_s1",
-     "module": "ot_hbm_hc_root_static__hc_tail0_s1"
+     "cells": 267115,
+     "inst": "u2_tail0_sk_steady",
+     "module": "ot_hbm_hc_root_static__tail0_sk_steady"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail1_s0",
-     "module": "ot_hbm_hc_root_static__hc_tail1_s0"
+     "cells": 105730,
+     "inst": "u2_tail0_rest",
+     "module": "ot_hbm_hc_root_static__tail0_rest"
     },
     {
-     "cells": 336605,
-     "inst": "u2_hc_tail1_s1",
-     "module": "ot_hbm_hc_root_static__hc_tail1_s1"
+     "cells": 302248,
+     "inst": "u2_tail1_sk_step0",
+     "module": "ot_hbm_hc_root_static__tail1_sk_step0"
+    },
+    {
+     "cells": 267115,
+     "inst": "u2_tail1_sk_steady",
+     "module": "ot_hbm_hc_root_static__tail1_sk_steady"
+    },
+    {
+     "cells": 105730,
+     "inst": "u2_tail1_rest",
+     "module": "ot_hbm_hc_root_static__tail1_rest"
     },
     {
      "cells": 56692,
-     "inst": "u2_hcp_sys10",
-     "module": "ot_hbm_hc_root_static__hcp_sys10"
+     "inst": "u2_hcp_sys1",
+     "module": "ot_hbm_hc_root_static__hcp_sys1"
     },
     {
      "cells": 43647,
@@ -985,104 +1012,174 @@
      "module": "ot_hbm_static_cfg_collar_idx256r"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part0",
-     "module": "ot_hgi_coll_tkm_m_tp192__part0"
+     "cells": 260110,
+     "inst": "u18_tile0",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile0"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part1",
-     "module": "ot_hgi_coll_tkm_m_tp192__part1"
+     "cells": 260110,
+     "inst": "u18_tile1",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile1"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part2",
-     "module": "ot_hgi_coll_tkm_m_tp192__part2"
+     "cells": 260110,
+     "inst": "u18_tile2",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile2"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part3",
-     "module": "ot_hgi_coll_tkm_m_tp192__part3"
+     "cells": 260110,
+     "inst": "u18_tile3",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile3"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part4",
-     "module": "ot_hgi_coll_tkm_m_tp192__part4"
+     "cells": 260110,
+     "inst": "u18_tile4",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile4"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part5",
-     "module": "ot_hgi_coll_tkm_m_tp192__part5"
+     "cells": 260110,
+     "inst": "u18_tile5",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile5"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part6",
-     "module": "ot_hgi_coll_tkm_m_tp192__part6"
+     "cells": 260110,
+     "inst": "u18_tile6",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile6"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part7",
-     "module": "ot_hgi_coll_tkm_m_tp192__part7"
+     "cells": 260110,
+     "inst": "u18_tile7",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile7"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part8",
-     "module": "ot_hgi_coll_tkm_m_tp192__part8"
+     "cells": 260110,
+     "inst": "u18_tile8",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile8"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part9",
-     "module": "ot_hgi_coll_tkm_m_tp192__part9"
+     "cells": 260110,
+     "inst": "u18_tile9",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile9"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part10",
-     "module": "ot_hgi_coll_tkm_m_tp192__part10"
+     "cells": 260110,
+     "inst": "u18_tile10",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile10"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part11",
-     "module": "ot_hgi_coll_tkm_m_tp192__part11"
+     "cells": 260110,
+     "inst": "u18_tile11",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile11"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part12",
-     "module": "ot_hgi_coll_tkm_m_tp192__part12"
+     "cells": 260110,
+     "inst": "u18_tile12",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile12"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part13",
-     "module": "ot_hgi_coll_tkm_m_tp192__part13"
+     "cells": 260110,
+     "inst": "u18_tile13",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile13"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part14",
-     "module": "ot_hgi_coll_tkm_m_tp192__part14"
+     "cells": 260110,
+     "inst": "u18_tile14",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile14"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part15",
-     "module": "ot_hgi_coll_tkm_m_tp192__part15"
+     "cells": 260110,
+     "inst": "u18_tile15",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile15"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part16",
-     "module": "ot_hgi_coll_tkm_m_tp192__part16"
+     "cells": 260110,
+     "inst": "u18_tile16",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile16"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part17",
-     "module": "ot_hgi_coll_tkm_m_tp192__part17"
+     "cells": 260110,
+     "inst": "u18_tile17",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile17"
     },
     {
-     "cells": 348132,
-     "inst": "u18_part18",
-     "module": "ot_hgi_coll_tkm_m_tp192__part18"
+     "cells": 260110,
+     "inst": "u18_tile18",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile18"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile19",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile19"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile20",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile20"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile21",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile21"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile22",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile22"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile23",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile23"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile24",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile24"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile25",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile25"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile26",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile26"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile27",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile27"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile28",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile28"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile29",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile29"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile30",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile30"
+    },
+    {
+     "cells": 260110,
+     "inst": "u18_tile31",
+     "module": "ot_hgi_coll_tkm_m_tp192__tile31"
+    },
+    {
+     "cells": 33795,
+     "inst": "u18_root",
+     "module": "ot_hgi_coll_tkm_m_tp192__root"
     }
    ],
    "flattened": [
     {
-     "cells": 95748,
+     "cells": 111386,
      "inst": "u2_glue",
      "module": "ot_hbm_hc_root_static (top + pinned banks)"
     },
@@ -1148,8 +1245,8 @@
     }
    ],
    "glue_basis": "EST 2 cells/bit x (boundary 59392 + station 0 + fork 0 bits) + flattened leaves",
-   "glue_cells": 280505,
-   "glue_flat_leaf_cells": 161721,
+   "glue_cells": 296143,
+   "glue_flat_leaf_cells": 177359,
    "glue_regs_cells": 118784,
    "instances": 1,
    "leaves": [
@@ -1178,7 +1275,7 @@
      "macros": 2,
      "master": "ot_hbm_hc_root_static",
      "module": "ot_hbm_hc_root_static",
-     "split": 5,
+     "split": 7,
      "status": "rework"
     },
     {
@@ -1233,11 +1330,11 @@
      "macros": 2,
      "master": "ot_hgi_coll_tkm_m_tp192",
      "module": "ot_hgi_coll_tkm_m_tp192",
-     "split": 19,
+     "split": 33,
      "status": "rework"
     }
    ],
-   "n_cores": 31,
+   "n_cores": 47,
    "orients": [
     "R0"
    ],
@@ -1249,10 +1346,10 @@
     "connected": true,
     "max_nn_tap_um": 576.0,
     "max_point_to_tap_um": 576.0,
-    "n": 63
+    "n": 79
    },
    "taps_kinds": {
-    "core": 31,
+    "core": 47,
     "glue": 32
    }
   },
@@ -1479,31 +1576,31 @@
    }
   },
   "q_hc0": {
-   "core_cells_max": 282049,
-   "core_cells_total": 846147,
+   "core_cells_max": 288852,
+   "core_cells_total": 797404,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 282049,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq0_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq0_static__lanes0_2"
     },
     {
-     "cells": 282049,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq0_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq0_static__lanes3_5"
     },
     {
-     "cells": 282049,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq0_static__part2"
+     "cells": 219700,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq0_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 6537 + station 7209 + fork 0 bits) + flattened leaves",
-   "glue_cells": 27492,
+   "glue_basis": "EST 2 cells/bit x (boundary 6537 + station 6797 + fork 0 bits) + flattened leaves",
+   "glue_cells": 26668,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 27492,
+   "glue_regs_cells": 26668,
    "instances": 4,
    "leaves": [
     {
@@ -1540,31 +1637,31 @@
    }
   },
   "q_hc1": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 7720 + fork 0 bits) + flattened leaves",
-   "glue_cells": 24386,
+   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 7566 + fork 0 bits) + flattened leaves",
+   "glue_cells": 24078,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24386,
+   "glue_regs_cells": 24078,
    "instances": 4,
    "leaves": [
     {
@@ -1601,31 +1698,31 @@
    }
   },
   "q_hc2": {
-   "core_cells_max": 276329,
-   "core_cells_total": 828987,
+   "core_cells_max": 288852,
+   "core_cells_total": 786154,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 276329,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_ft_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes0_2"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_ft_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes3_5"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_ft_static__part2"
+     "cells": 208450,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 6084 + station 5412 + fork 483 bits) + flattened leaves",
-   "glue_cells": 23958,
+   "glue_basis": "EST 2 cells/bit x (boundary 6053 + station 4886 + fork 452 bits) + flattened leaves",
+   "glue_cells": 22782,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 23958,
+   "glue_regs_cells": 22782,
    "instances": 4,
    "leaves": [
     {
@@ -1662,31 +1759,31 @@
    }
   },
   "q_hc3": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4524 + station 6851 + fork 0 bits) + flattened leaves",
-   "glue_cells": 22750,
+   "glue_basis": "EST 2 cells/bit x (boundary 4524 + station 6965 + fork 0 bits) + flattened leaves",
+   "glue_cells": 22978,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 22750,
+   "glue_regs_cells": 22978,
    "instances": 4,
    "leaves": [
     {
@@ -1723,31 +1820,31 @@
    }
   },
   "q_hc4": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4644 + station 6853 + fork 150 bits) + flattened leaves",
-   "glue_cells": 23294,
+   "glue_basis": "EST 2 cells/bit x (boundary 4955 + station 6836 + fork 461 bits) + flattened leaves",
+   "glue_cells": 24504,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 23294,
+   "glue_regs_cells": 24504,
    "instances": 4,
    "leaves": [
     {
@@ -1784,31 +1881,31 @@
    }
   },
   "q_hc5": {
-   "core_cells_max": 279993,
-   "core_cells_total": 839979,
+   "core_cells_max": 288852,
+   "core_cells_total": 793369,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279993,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_static__lanes0_2"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_static__lanes3_5"
     },
     {
-     "cells": 279993,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_static__part2"
+     "cells": 215665,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4927 + station 6910 + fork 433 bits) + flattened leaves",
-   "glue_cells": 24540,
+   "glue_basis": "EST 2 cells/bit x (boundary 4824 + station 7015 + fork 330 bits) + flattened leaves",
+   "glue_cells": 24338,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24540,
+   "glue_regs_cells": 24338,
    "instances": 4,
    "leaves": [
     {
@@ -1845,31 +1942,31 @@
    }
   },
   "q_hc6": {
-   "core_cells_max": 276329,
-   "core_cells_total": 828987,
+   "core_cells_max": 288852,
+   "core_cells_total": 786154,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 276329,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_ft_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes0_2"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_ft_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes3_5"
     },
     {
-     "cells": 276329,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_ft_static__part2"
+     "cells": 208450,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 7022 + fork 0 bits) + flattened leaves",
-   "glue_cells": 25246,
+   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 6977 + fork 0 bits) + flattened leaves",
+   "glue_cells": 25156,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 25246,
+   "glue_regs_cells": 25156,
    "instances": 4,
    "leaves": [
     {
@@ -1906,31 +2003,31 @@
    }
   },
   "q_hc7": {
-   "core_cells_max": 279963,
-   "core_cells_total": 839889,
+   "core_cells_max": 288852,
+   "core_cells_total": 793307,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 279963,
-     "inst": "u0_part0",
-     "module": "ot_hbm_hc_bankq_term_static__part0"
+     "cells": 288852,
+     "inst": "u0_lanes0_2",
+     "module": "ot_hbm_hc_bankq_term_static__lanes0_2"
     },
     {
-     "cells": 279963,
-     "inst": "u0_part1",
-     "module": "ot_hbm_hc_bankq_term_static__part1"
+     "cells": 288852,
+     "inst": "u0_lanes3_5",
+     "module": "ot_hbm_hc_bankq_term_static__lanes3_5"
     },
     {
-     "cells": 279963,
-     "inst": "u0_part2",
-     "module": "ot_hbm_hc_bankq_term_static__part2"
+     "cells": 215603,
+     "inst": "u0_lanes6_7_bank",
+     "module": "ot_hbm_hc_bankq_term_static__lanes6_7_bank"
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 9103 + fork 0 bits) + flattened leaves",
-   "glue_cells": 27136,
+   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 8611 + fork 0 bits) + flattened leaves",
+   "glue_cells": 26152,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 27136,
+   "glue_regs_cells": 26152,
    "instances": 4,
    "leaves": [
     {
@@ -1978,10 +2075,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 11241 + station 2468 + fork 570 bits) + flattened leaves",
-   "glue_cells": 28558,
+   "glue_basis": "EST 2 cells/bit x (boundary 11200 + station 2555 + fork 570 bits) + flattened leaves",
+   "glue_cells": 28650,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 28558,
+   "glue_regs_cells": 28650,
    "instances": 4,
    "leaves": [
     {
@@ -2033,10 +2130,10 @@
      "module": "ot_hbm_su_static_cxport_dl_s"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2746 + station 75451 + fork 268 bits) + flattened leaves",
-   "glue_cells": 176121,
+   "glue_basis": "EST 2 cells/bit x (boundary 3261 + station 75185 + fork 506 bits) + flattened leaves",
+   "glue_cells": 177095,
    "glue_flat_leaf_cells": 19191,
-   "glue_regs_cells": 156930,
+   "glue_regs_cells": 157904,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2061,196 +2158,352 @@
    }
   },
   "q_os2": {
-   "core_cells_max": 345065,
-   "core_cells_total": 12422340,
+   "core_cells_max": 195127,
+   "core_cells_total": 12313880,
    "core_overlaps": 0,
    "cores": [
     {
-     "cells": 345065,
-     "inst": "u0_part0",
-     "module": "ot_hbm_idx_score_quarter_static__part0"
+     "cells": 195127,
+     "inst": "u0_r0c0_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part1",
-     "module": "ot_hbm_idx_score_quarter_static__part1"
+     "cells": 186410,
+     "inst": "u0_r0c0_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part2",
-     "module": "ot_hbm_idx_score_quarter_static__part2"
+     "cells": 195127,
+     "inst": "u0_r0c0_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part3",
-     "module": "ot_hbm_idx_score_quarter_static__part3"
+     "cells": 186410,
+     "inst": "u0_r0c0_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part4",
-     "module": "ot_hbm_idx_score_quarter_static__part4"
+     "cells": 195127,
+     "inst": "u0_r0c0_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part5",
-     "module": "ot_hbm_idx_score_quarter_static__part5"
+     "cells": 186410,
+     "inst": "u0_r0c0_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part6",
-     "module": "ot_hbm_idx_score_quarter_static__part6"
+     "cells": 195127,
+     "inst": "u0_r0c0_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part7",
-     "module": "ot_hbm_idx_score_quarter_static__part7"
+     "cells": 186410,
+     "inst": "u0_r0c0_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c0_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part8",
-     "module": "ot_hbm_idx_score_quarter_static__part8"
+     "cells": 195127,
+     "inst": "u0_r0c1_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part9",
-     "module": "ot_hbm_idx_score_quarter_static__part9"
+     "cells": 186410,
+     "inst": "u0_r0c1_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part10",
-     "module": "ot_hbm_idx_score_quarter_static__part10"
+     "cells": 195127,
+     "inst": "u0_r0c1_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part11",
-     "module": "ot_hbm_idx_score_quarter_static__part11"
+     "cells": 186410,
+     "inst": "u0_r0c1_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part12",
-     "module": "ot_hbm_idx_score_quarter_static__part12"
+     "cells": 195127,
+     "inst": "u0_r0c1_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part13",
-     "module": "ot_hbm_idx_score_quarter_static__part13"
+     "cells": 186410,
+     "inst": "u0_r0c1_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part14",
-     "module": "ot_hbm_idx_score_quarter_static__part14"
+     "cells": 195127,
+     "inst": "u0_r0c1_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part15",
-     "module": "ot_hbm_idx_score_quarter_static__part15"
+     "cells": 186410,
+     "inst": "u0_r0c1_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c1_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part16",
-     "module": "ot_hbm_idx_score_quarter_static__part16"
+     "cells": 195127,
+     "inst": "u0_r0c2_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part17",
-     "module": "ot_hbm_idx_score_quarter_static__part17"
+     "cells": 186410,
+     "inst": "u0_r0c2_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part18",
-     "module": "ot_hbm_idx_score_quarter_static__part18"
+     "cells": 195127,
+     "inst": "u0_r0c2_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part19",
-     "module": "ot_hbm_idx_score_quarter_static__part19"
+     "cells": 186410,
+     "inst": "u0_r0c2_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part20",
-     "module": "ot_hbm_idx_score_quarter_static__part20"
+     "cells": 195127,
+     "inst": "u0_r0c2_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part21",
-     "module": "ot_hbm_idx_score_quarter_static__part21"
+     "cells": 186410,
+     "inst": "u0_r0c2_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part22",
-     "module": "ot_hbm_idx_score_quarter_static__part22"
+     "cells": 195127,
+     "inst": "u0_r0c2_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part23",
-     "module": "ot_hbm_idx_score_quarter_static__part23"
+     "cells": 186410,
+     "inst": "u0_r0c2_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c2_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part24",
-     "module": "ot_hbm_idx_score_quarter_static__part24"
+     "cells": 195127,
+     "inst": "u0_r0c3_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part25",
-     "module": "ot_hbm_idx_score_quarter_static__part25"
+     "cells": 186410,
+     "inst": "u0_r0c3_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part26",
-     "module": "ot_hbm_idx_score_quarter_static__part26"
+     "cells": 195127,
+     "inst": "u0_r0c3_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part27",
-     "module": "ot_hbm_idx_score_quarter_static__part27"
+     "cells": 186410,
+     "inst": "u0_r0c3_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k1h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part28",
-     "module": "ot_hbm_idx_score_quarter_static__part28"
+     "cells": 195127,
+     "inst": "u0_r0c3_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part29",
-     "module": "ot_hbm_idx_score_quarter_static__part29"
+     "cells": 186410,
+     "inst": "u0_r0c3_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k2h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part30",
-     "module": "ot_hbm_idx_score_quarter_static__part30"
+     "cells": 195127,
+     "inst": "u0_r0c3_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part31",
-     "module": "ot_hbm_idx_score_quarter_static__part31"
+     "cells": 186410,
+     "inst": "u0_r0c3_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r0c3_k3h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part32",
-     "module": "ot_hbm_idx_score_quarter_static__part32"
+     "cells": 195127,
+     "inst": "u0_r1c0_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part33",
-     "module": "ot_hbm_idx_score_quarter_static__part33"
+     "cells": 186410,
+     "inst": "u0_r1c0_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k0h1"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part34",
-     "module": "ot_hbm_idx_score_quarter_static__part34"
+     "cells": 195127,
+     "inst": "u0_r1c0_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h0"
     },
     {
-     "cells": 345065,
-     "inst": "u0_part35",
-     "module": "ot_hbm_idx_score_quarter_static__part35"
+     "cells": 186410,
+     "inst": "u0_r1c0_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c0_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c0_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c0_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c0_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c0_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c1_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c1_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c1_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c2_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c2_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c2_k3h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k0h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k0h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k0h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k1h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k1h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k1h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k2h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k2h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k2h1"
+    },
+    {
+     "cells": 195127,
+     "inst": "u0_r1c3_k3h0",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h0"
+    },
+    {
+     "cells": 186410,
+     "inst": "u0_r1c3_k3h1",
+     "module": "ot_hbm_idx_score_quarter_static__r1c3_k3h1"
+    },
+    {
+     "cells": 52348,
+     "inst": "u0_tail0",
+     "module": "ot_hbm_idx_score_quarter_static__tail0"
+    },
+    {
+     "cells": 52348,
+     "inst": "u0_tail1",
+     "module": "ot_hbm_idx_score_quarter_static__tail1"
     }
    ],
-   "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 8067 + station 77265 + fork 2565 bits) + flattened leaves",
-   "glue_cells": 175794,
-   "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 175794,
+   "flattened": [
+    {
+     "cells": 213320,
+     "inst": "u0_glue",
+     "module": "ot_hbm_idx_score_quarter_static (top + pinned banks)"
+    }
+   ],
+   "glue_basis": "EST 2 cells/bit x (boundary 8188 + station 77447 + fork 2686 bits) + flattened leaves",
+   "glue_cells": 389962,
+   "glue_flat_leaf_cells": 213320,
+   "glue_regs_cells": 176642,
    "instances": 4,
    "leaves": [
     {
@@ -2260,11 +2513,11 @@
      "macros": 0,
      "master": "ot_hbm_idx_score_quarter_static",
      "module": "ot_hbm_idx_score_quarter_static",
-     "split": 36,
+     "split": 66,
      "status": "rework"
     }
    ],
-   "n_cores": 36,
+   "n_cores": 66,
    "orients": [
     "MX",
     "MY",
@@ -2279,11 +2532,11 @@
     "connected": true,
     "max_nn_tap_um": 580.3,
     "max_point_to_tap_um": 581.8,
-    "n": 59
+    "n": 90
    },
    "taps_kinds": {
-    "core": 36,
-    "glue": 23
+    "core": 66,
+    "glue": 24
    }
   },
   "q_os3": {
@@ -2292,10 +2545,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 28006 + fork 0 bits) + flattened leaves",
-   "glue_cells": 56012,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 27229 + fork 0 bits) + flattened leaves",
+   "glue_cells": 54458,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 56012,
+   "glue_regs_cells": 54458,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2325,10 +2578,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 41 + station 34938 + fork 41 bits) + flattened leaves",
-   "glue_cells": 70040,
+   "glue_basis": "EST 2 cells/bit x (boundary 120 + station 38750 + fork 120 bits) + flattened leaves",
+   "glue_cells": 77980,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 70040,
+   "glue_regs_cells": 77980,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2369,10 +2622,10 @@
      "module": "ot_hbm_su_static_cxport_dl_s"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 4066 + station 31567 + fork 1642 bits) + flattened leaves",
-   "glue_cells": 90856,
+   "glue_basis": "EST 2 cells/bit x (boundary 3853 + station 32236 + fork 1469 bits) + flattened leaves",
+   "glue_cells": 91422,
    "glue_flat_leaf_cells": 16306,
-   "glue_regs_cells": 74550,
+   "glue_regs_cells": 75116,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -2411,10 +2664,10 @@
      "module": "ot_hbm_su_static_cxport_dl_s"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 4066 + station 31567 + fork 1642 bits) + flattened leaves",
-   "glue_cells": 90857,
+   "glue_basis": "EST 2 cells/bit x (boundary 3853 + station 32236 + fork 1469 bits) + flattened leaves",
+   "glue_cells": 91423,
    "glue_flat_leaf_cells": 16307,
-   "glue_regs_cells": 74550,
+   "glue_regs_cells": 75116,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -2442,10 +2695,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 11732 + fork 0 bits) + flattened leaves",
-   "glue_cells": 23464,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 11911 + fork 0 bits) + flattened leaves",
+   "glue_cells": 23822,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 23464,
+   "glue_regs_cells": 23822,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2475,10 +2728,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 896 + station 23972 + fork 896 bits) + flattened leaves",
-   "glue_cells": 51528,
+   "glue_basis": "EST 2 cells/bit x (boundary 896 + station 24172 + fork 896 bits) + flattened leaves",
+   "glue_cells": 51928,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 51528,
+   "glue_regs_cells": 51928,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2508,10 +2761,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 17200 + fork 299 bits) + flattened leaves",
-   "glue_cells": 35596,
+   "glue_basis": "EST 2 cells/bit x (boundary 268 + station 16931 + fork 268 bits) + flattened leaves",
+   "glue_cells": 34934,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 35596,
+   "glue_regs_cells": 34934,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -2539,10 +2792,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 17200 + fork 299 bits) + flattened leaves",
-   "glue_cells": 35596,
+   "glue_basis": "EST 2 cells/bit x (boundary 268 + station 16931 + fork 268 bits) + flattened leaves",
+   "glue_cells": 34934,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 35596,
+   "glue_regs_cells": 34934,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -2582,10 +2835,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2836 + station 39918 + fork 31 bits) + flattened leaves",
-   "glue_cells": 92803,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38689 + fork 0 bits) + flattened leaves",
+   "glue_cells": 90221,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 85570,
+   "glue_regs_cells": 82988,
    "instances": 2,
    "leaves": [
     {
@@ -2608,14 +2861,14 @@
     1728.0
    ],
    "taps": {
-    "connected": false,
-    "max_nn_tap_um": 671.8,
+    "connected": true,
+    "max_nn_tap_um": 576.0,
     "max_point_to_tap_um": 579.6,
-    "n": 14
+    "n": 15
    },
    "taps_kinds": {
     "core": 1,
-    "glue": 13
+    "glue": 14
    }
   },
   "q_rc3_v1": {
@@ -2636,10 +2889,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2836 + station 39918 + fork 31 bits) + flattened leaves",
-   "glue_cells": 92803,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38689 + fork 0 bits) + flattened leaves",
+   "glue_cells": 90221,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 85570,
+   "glue_regs_cells": 82988,
    "instances": 2,
    "leaves": [
     {
@@ -2662,14 +2915,14 @@
     1728.0
    ],
    "taps": {
-    "connected": false,
-    "max_nn_tap_um": 669.6,
+    "connected": true,
+    "max_nn_tap_um": 576.0,
     "max_point_to_tap_um": 579.6,
-    "n": 14
+    "n": 15
    },
    "taps_kinds": {
     "core": 1,
-    "glue": 13
+    "glue": 14
    }
   },
   "q_rc4": {
@@ -2684,18 +2937,18 @@
     },
     {
      "cells": 121663,
-     "inst": "u5_ring_ag0",
-     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+     "inst": "u5_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce0",
-     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+     "inst": "u5_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body0",
-     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+     "inst": "u5_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
@@ -2760,10 +3013,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 24630 + station 72 + fork 1356 bits) + flattened leaves",
-   "glue_cells": 99166,
+   "glue_basis": "EST 2 cells/bit x (boundary 24735 + station 32 + fork 1340 bits) + flattened leaves",
+   "glue_cells": 99264,
    "glue_flat_leaf_cells": 47050,
-   "glue_regs_cells": 52116,
+   "glue_regs_cells": 52214,
    "instances": 2,
    "leaves": [
     {
@@ -2845,18 +3098,18 @@
     },
     {
      "cells": 121663,
-     "inst": "u5_ring_ag0",
-     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag0"
+     "inst": "u5_ring_ag",
+     "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
     },
     {
      "cells": 120719,
-     "inst": "u5_reduce0",
-     "module": "ot_hfd_coll_q2_hard_v8g__reduce0"
+     "inst": "u5_reduce",
+     "module": "ot_hfd_coll_q2_hard_v8g__reduce"
     },
     {
      "cells": 222636,
-     "inst": "u5_body0",
-     "module": "ot_hfd_coll_q2_hard_v8g__body0"
+     "inst": "u5_body",
+     "module": "ot_hfd_coll_q2_hard_v8g__body"
     },
     {
      "cells": 163041,
@@ -2921,10 +3174,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 24630 + station 72 + fork 1356 bits) + flattened leaves",
-   "glue_cells": 99157,
+   "glue_basis": "EST 2 cells/bit x (boundary 24735 + station 32 + fork 1340 bits) + flattened leaves",
+   "glue_cells": 99255,
    "glue_flat_leaf_cells": 47041,
-   "glue_regs_cells": 52116,
+   "glue_regs_cells": 52214,
    "instances": 2,
    "leaves": [
     {
@@ -2995,8 +3248,8 @@
    }
   },
   "q_sfuc": {
-   "core_cells_max": 336383,
-   "core_cells_total": 5737083,
+   "core_cells_max": 306861,
+   "core_cells_total": 5534562,
    "core_overlaps": 0,
    "cores": [
     {
@@ -3005,89 +3258,99 @@
      "module": "ot_hbm_su_static_sfustore_hw"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part0",
-     "module": "ot_hgi_sfu_core_split3__part0"
+     "cells": 306861,
+     "inst": "u7_lane0",
+     "module": "ot_hgi_sfu_core_split3__lane0"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part1",
-     "module": "ot_hgi_sfu_core_split3__part1"
+     "cells": 306861,
+     "inst": "u7_lane1",
+     "module": "ot_hgi_sfu_core_split3__lane1"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part2",
-     "module": "ot_hgi_sfu_core_split3__part2"
+     "cells": 306861,
+     "inst": "u7_lane2",
+     "module": "ot_hgi_sfu_core_split3__lane2"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part3",
-     "module": "ot_hgi_sfu_core_split3__part3"
+     "cells": 306861,
+     "inst": "u7_lane3",
+     "module": "ot_hgi_sfu_core_split3__lane3"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part4",
-     "module": "ot_hgi_sfu_core_split3__part4"
+     "cells": 306861,
+     "inst": "u7_lane4",
+     "module": "ot_hgi_sfu_core_split3__lane4"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part5",
-     "module": "ot_hgi_sfu_core_split3__part5"
+     "cells": 306861,
+     "inst": "u7_lane5",
+     "module": "ot_hgi_sfu_core_split3__lane5"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part6",
-     "module": "ot_hgi_sfu_core_split3__part6"
+     "cells": 306861,
+     "inst": "u7_lane6",
+     "module": "ot_hgi_sfu_core_split3__lane6"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part7",
-     "module": "ot_hgi_sfu_core_split3__part7"
+     "cells": 306861,
+     "inst": "u7_lane7",
+     "module": "ot_hgi_sfu_core_split3__lane7"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part8",
-     "module": "ot_hgi_sfu_core_split3__part8"
+     "cells": 306861,
+     "inst": "u7_lane8",
+     "module": "ot_hgi_sfu_core_split3__lane8"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part9",
-     "module": "ot_hgi_sfu_core_split3__part9"
+     "cells": 306861,
+     "inst": "u7_lane9",
+     "module": "ot_hgi_sfu_core_split3__lane9"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part10",
-     "module": "ot_hgi_sfu_core_split3__part10"
+     "cells": 306861,
+     "inst": "u7_lane10",
+     "module": "ot_hgi_sfu_core_split3__lane10"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part11",
-     "module": "ot_hgi_sfu_core_split3__part11"
+     "cells": 306861,
+     "inst": "u7_lane11",
+     "module": "ot_hgi_sfu_core_split3__lane11"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part12",
-     "module": "ot_hgi_sfu_core_split3__part12"
+     "cells": 306861,
+     "inst": "u7_lane12",
+     "module": "ot_hgi_sfu_core_split3__lane12"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part13",
-     "module": "ot_hgi_sfu_core_split3__part13"
+     "cells": 306861,
+     "inst": "u7_lane13",
+     "module": "ot_hgi_sfu_core_split3__lane13"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part14",
-     "module": "ot_hgi_sfu_core_split3__part14"
+     "cells": 306861,
+     "inst": "u7_lane14",
+     "module": "ot_hgi_sfu_core_split3__lane14"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part15",
-     "module": "ot_hgi_sfu_core_split3__part15"
+     "cells": 306861,
+     "inst": "u7_lane15",
+     "module": "ot_hgi_sfu_core_split3__lane15"
     },
     {
-     "cells": 336383,
-     "inst": "u7_part16",
-     "module": "ot_hgi_sfu_core_split3__part16"
+     "cells": 240918,
+     "inst": "u7_opstore_a",
+     "module": "ot_hgi_sfu_core_split3__opstore_a"
+    },
+    {
+     "cells": 288099,
+     "inst": "u7_opstore_b",
+     "module": "ot_hgi_sfu_core_split3__opstore_b"
+    },
+    {
+     "cells": 77197,
+     "inst": "u7_ctl",
+     "module": "ot_hgi_sfu_core_split3__ctl"
     }
    ],
    "flattened": [
@@ -3162,10 +3425,10 @@
      "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14261 + station 47203 + fork 269 bits) + flattened leaves",
-   "glue_cells": 281096,
+   "glue_basis": "EST 2 cells/bit x (boundary 14349 + station 44032 + fork 326 bits) + flattened leaves",
+   "glue_cells": 275044,
    "glue_flat_leaf_cells": 157630,
-   "glue_regs_cells": 123466,
+   "glue_regs_cells": 117414,
    "instances": 4,
    "leaves": [
     {
@@ -3184,11 +3447,11 @@
      "macros": 80,
      "master": "ot_hgi_sfu_core_split3",
      "module": "ot_hgi_sfu_core_split3",
-     "split": 17,
+     "split": 19,
      "status": "rework"
     }
    ],
-   "n_cores": 18,
+   "n_cores": 20,
    "orients": [
     "MX",
     "MY",
@@ -3203,10 +3466,10 @@
     "connected": true,
     "max_nn_tap_um": 482.1,
     "max_point_to_tap_um": 532.7,
-    "n": 36
+    "n": 38
    },
    "taps_kinds": {
-    "core": 18,
+    "core": 20,
     "glue": 18
    }
   },
@@ -3323,10 +3586,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8572 + station 27348 + fork 8393 bits) + flattened leaves",
-   "glue_cells": 172084,
+   "glue_basis": "EST 2 cells/bit x (boundary 8707 + station 27011 + fork 8350 bits) + flattened leaves",
+   "glue_cells": 171594,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 88626,
+   "glue_regs_cells": 88136,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -3466,10 +3729,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9422 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 164997,
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 11060 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 168273,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 81812,
+   "glue_regs_cells": 85088,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -3619,10 +3882,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 20987 + station 13303 + fork 17285 bits) + flattened leaves",
-   "glue_cells": 233456,
+   "glue_basis": "EST 2 cells/bit x (boundary 21243 + station 12048 + fork 17541 bits) + flattened leaves",
+   "glue_cells": 231970,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 103150,
+   "glue_regs_cells": 101664,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -3762,10 +4025,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 26399 + fork 7604 bits) + flattened leaves",
-   "glue_cells": 173508,
+   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 23415 + fork 7604 bits) + flattened leaves",
+   "glue_cells": 167540,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 83214,
+   "glue_regs_cells": 77246,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -3905,10 +4168,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8630 + station 31462 + fork 8630 bits) + flattened leaves",
-   "glue_cells": 180902,
+   "glue_basis": "EST 2 cells/bit x (boundary 8893 + station 32389 + fork 8893 bits) + flattened leaves",
+   "glue_cells": 183808,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 97444,
+   "glue_regs_cells": 100350,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4048,10 +4311,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9427 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 165007,
+   "glue_basis": "EST 2 cells/bit x (boundary 15753 + station 10478 + fork 15753 bits) + flattened leaves",
+   "glue_cells": 167153,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 81822,
+   "glue_regs_cells": 83968,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4201,10 +4464,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 19429 + station 11897 + fork 15727 bits) + flattened leaves",
-   "glue_cells": 224412,
+   "glue_basis": "EST 2 cells/bit x (boundary 19295 + station 11940 + fork 15593 bits) + flattened leaves",
+   "glue_cells": 223962,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 94106,
+   "glue_regs_cells": 93656,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -4344,10 +4607,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7943 + station 23246 + fork 7943 bits) + flattened leaves",
-   "glue_cells": 168558,
+   "glue_basis": "EST 2 cells/bit x (boundary 7849 + station 24302 + fork 7849 bits) + flattened leaves",
+   "glue_cells": 170294,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 78264,
+   "glue_regs_cells": 80000,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4487,10 +4750,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 27434 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 169718,
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 27170 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 169190,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 86260,
+   "glue_regs_cells": 85732,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4630,10 +4893,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 8927 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 164007,
+   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 9048 + fork 15742 bits) + flattened leaves",
+   "glue_cells": 164249,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 80822,
+   "glue_regs_cells": 81064,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4783,10 +5046,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 21487 + station 4423 + fork 17785 bits) + flattened leaves",
-   "glue_cells": 217696,
+   "glue_basis": "EST 2 cells/bit x (boundary 21487 + station 3663 + fork 17785 bits) + flattened leaves",
+   "glue_cells": 216176,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 87390,
+   "glue_regs_cells": 85870,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -4926,10 +5189,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7822 + station 30883 + fork 7822 bits) + flattened leaves",
-   "glue_cells": 183348,
+   "glue_basis": "EST 2 cells/bit x (boundary 7604 + station 31093 + fork 7604 bits) + flattened leaves",
+   "glue_cells": 182896,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 93054,
+   "glue_regs_cells": 92602,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5069,10 +5332,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 15197 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 145244,
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 13563 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 141976,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 61786,
+   "glue_regs_cells": 58518,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5210,10 +5473,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 15197 + fork 7848 bits) + flattened leaves",
-   "glue_cells": 145244,
+   "glue_basis": "EST 2 cells/bit x (boundary 7848 + station 13563 + fork 7848 bits) + flattened leaves",
+   "glue_cells": 141976,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 61786,
+   "glue_regs_cells": 58518,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5351,10 +5614,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 4897 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 155947,
+   "glue_basis": "EST 2 cells/bit x (boundary 15744 + station 6108 + fork 15744 bits) + flattened leaves",
+   "glue_cells": 158377,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 72762,
+   "glue_regs_cells": 75192,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5492,10 +5755,10 @@
      "module": "SM quarter b glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 15742 + station 4897 + fork 15742 bits) + flattened leaves",
-   "glue_cells": 155947,
+   "glue_basis": "EST 2 cells/bit x (boundary 15744 + station 6108 + fork 15744 bits) + flattened leaves",
+   "glue_cells": 158377,
    "glue_flat_leaf_cells": 83185,
-   "glue_regs_cells": 72762,
+   "glue_regs_cells": 75192,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -5643,10 +5906,10 @@
      "module": "SM quarter c glue (BEs + new pin/relay registers (EST 2 cells/bit); c also holds R1 (+14,820 front launch flops, EST +30k cells, inside core fs/fa) and the int8 tile + top select)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 20149 + station 87 + fork 16447 bits) + flattened leaves",
-   "glue_cells": 203672,
+   "glue_basis": "EST 2 cells/bit x (boundary 20028 + station 378 + fork 16326 bits) + flattened leaves",
+   "glue_cells": 203770,
    "glue_flat_leaf_cells": 130306,
-   "glue_regs_cells": 73366,
+   "glue_regs_cells": 73464,
    "instances": 4,
    "leaves": [],
    "n_cores": 22,
@@ -5786,10 +6049,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7577 + station 9616 + fork 7577 bits) + flattened leaves",
-   "glue_cells": 139834,
+   "glue_basis": "EST 2 cells/bit x (boundary 7699 + station 10254 + fork 7699 bits) + flattened leaves",
+   "glue_cells": 141598,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 49540,
+   "glue_regs_cells": 51304,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5898,56 +6161,56 @@
     },
     {
      "cells": 234742,
-     "inst": "u0_lane_exp_l0",
-     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+     "inst": "u0_lane_exp_l",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes_plain0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes_plain4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes_plain8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes_plain12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s0",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+     "cells": 223122,
+     "inst": "u0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s1",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+     "cells": 189664,
+     "inst": "u0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest"
     },
     {
      "cells": 211003,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 36980,
+     "cells": 63629,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 6940 + station 26300 + fork 0 bits) + flattened leaves",
-   "glue_cells": 103460,
-   "glue_flat_leaf_cells": 36980,
-   "glue_regs_cells": 66480,
+   "glue_basis": "EST 2 cells/bit x (boundary 6940 + station 32455 + fork 0 bits) + flattened leaves",
+   "glue_cells": 142419,
+   "glue_flat_leaf_cells": 63629,
+   "glue_regs_cells": 78790,
    "instances": 4,
    "leaves": [
     {
@@ -6065,56 +6328,56 @@
     },
     {
      "cells": 234742,
-     "inst": "u0_lane_exp_l0",
-     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l0"
+     "inst": "u0_lane_exp_l",
+     "module": "ot_hbm_su_static_pgslice_lg__lane_exp_l"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes_plain0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes_plain4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain4_7"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes_plain8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain8_11"
     },
     {
      "cells": 308480,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes_plain12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes_plain12_15"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s0",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s0"
+     "cells": 223122,
+     "inst": "u0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus"
     },
     {
-     "cells": 206393,
-     "inst": "u0_side0_s1",
-     "module": "ot_hbm_su_static_pgslice_lg__side0_s1"
+     "cells": 189664,
+     "inst": "u0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest"
     },
     {
      "cells": 211003,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 36980,
+     "cells": 63629,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 11483 + station 47846 + fork 2628 bits) + flattened leaves",
-   "glue_cells": 160894,
-   "glue_flat_leaf_cells": 36980,
-   "glue_regs_cells": 123914,
+   "glue_basis": "EST 2 cells/bit x (boundary 11178 + station 52743 + fork 2539 bits) + flattened leaves",
+   "glue_cells": 196549,
+   "glue_flat_leaf_cells": 63629,
+   "glue_regs_cells": 132920,
    "instances": 4,
    "leaves": [
     {
@@ -6157,61 +6420,61 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 12859 + station 49343 + fork 3658 bits) + flattened leaves",
-   "glue_cells": 168846,
-   "glue_flat_leaf_cells": 37126,
-   "glue_regs_cells": 131720,
+   "glue_basis": "EST 2 cells/bit x (boundary 12928 + station 50415 + fork 3833 bits) + flattened leaves",
+   "glue_cells": 198130,
+   "glue_flat_leaf_cells": 63778,
+   "glue_regs_cells": 134352,
    "instances": 4,
    "leaves": [
     {
@@ -6237,14 +6500,14 @@
     2894.4
    ],
    "taps": {
-    "connected": false,
-    "max_nn_tap_um": 596.2,
-    "max_point_to_tap_um": 743.0,
-    "n": 23
+    "connected": true,
+    "max_nn_tap_um": 578.9,
+    "max_point_to_tap_um": 514.1,
+    "n": 31
    },
    "taps_kinds": {
     "core": 9,
-    "glue": 14
+    "glue": 22
    }
   },
   "q_su3": {
@@ -6254,61 +6517,61 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7144 + station 22377 + fork 208 bits) + flattened leaves",
-   "glue_cells": 96584,
-   "glue_flat_leaf_cells": 37126,
-   "glue_regs_cells": 59458,
+   "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
+   "glue_cells": 121062,
+   "glue_flat_leaf_cells": 63778,
+   "glue_regs_cells": 57284,
    "instances": 2,
    "leaves": [
     {
@@ -6332,14 +6595,14 @@
     2894.4
    ],
    "taps": {
-    "connected": false,
-    "max_nn_tap_um": 596.2,
-    "max_point_to_tap_um": 743.0,
-    "n": 23
+    "connected": true,
+    "max_nn_tap_um": 578.9,
+    "max_point_to_tap_um": 522.7,
+    "n": 31
    },
    "taps_kinds": {
     "core": 9,
-    "glue": 14
+    "glue": 22
    }
   },
   "q_su3_v1": {
@@ -6349,61 +6612,61 @@
    "cores": [
     {
      "cells": 308632,
-     "inst": "u0_lane0_3",
-     "module": "ot_hbm_su_static_pgslice_lg__lane0_3"
+     "inst": "u0_lanes0_3",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes0_3"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane4_7",
-     "module": "ot_hbm_su_static_pgslice_lg__lane4_7"
+     "inst": "u0_lanes4_7",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes4_7"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane8_11",
-     "module": "ot_hbm_su_static_pgslice_lg__lane8_11"
+     "inst": "u0_lanes8_11",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes8_11"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane12_15",
-     "module": "ot_hbm_su_static_pgslice_lg__lane12_15"
+     "inst": "u0_lanes12_15",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes12_15"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane16_19",
-     "module": "ot_hbm_su_static_pgslice_lg__lane16_19"
+     "inst": "u0_lanes16_19",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes16_19"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane20_23",
-     "module": "ot_hbm_su_static_pgslice_lg__lane20_23"
+     "inst": "u0_lanes20_23",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes20_23"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane24_27",
-     "module": "ot_hbm_su_static_pgslice_lg__lane24_27"
+     "inst": "u0_lanes24_27",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes24_27"
     },
     {
      "cells": 308632,
-     "inst": "u0_lane28_31",
-     "module": "ot_hbm_su_static_pgslice_lg__lane28_31"
+     "inst": "u0_lanes28_31",
+     "module": "ot_hbm_su_static_pgslice_lg__lanes28_31"
     },
     {
      "cells": 212295,
-     "inst": "u0_pretree0",
-     "module": "ot_hbm_su_static_pgslice_lg__pretree0"
+     "inst": "u0_pretree",
+     "module": "ot_hbm_su_static_pgslice_lg__pretree"
     }
    ],
    "flattened": [
     {
-     "cells": 37126,
+     "cells": 63778,
      "inst": "u0_glue",
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7144 + station 22377 + fork 208 bits) + flattened leaves",
-   "glue_cells": 96584,
-   "glue_flat_leaf_cells": 37126,
-   "glue_regs_cells": 59458,
+   "glue_basis": "EST 2 cells/bit x (boundary 7023 + station 21532 + fork 87 bits) + flattened leaves",
+   "glue_cells": 121062,
+   "glue_flat_leaf_cells": 63778,
+   "glue_regs_cells": 57284,
    "instances": 2,
    "leaves": [
     {
@@ -6427,14 +6690,14 @@
     2894.4
    ],
    "taps": {
-    "connected": false,
-    "max_nn_tap_um": 596.2,
-    "max_point_to_tap_um": 743.0,
-    "n": 23
+    "connected": true,
+    "max_nn_tap_um": 578.9,
+    "max_point_to_tap_um": 514.1,
+    "n": 31
    },
    "taps_kinds": {
     "core": 9,
-    "glue": 14
+    "glue": 22
    }
   },
   "q_svc0": {
@@ -6485,10 +6748,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8265 + station 9758 + fork 898 bits) + flattened leaves",
-   "glue_cells": 41365,
+   "glue_basis": "EST 2 cells/bit x (boundary 8265 + station 8112 + fork 898 bits) + flattened leaves",
+   "glue_cells": 38073,
    "glue_flat_leaf_cells": 3523,
-   "glue_regs_cells": 37842,
+   "glue_regs_cells": 34550,
    "instances": 4,
    "leaves": [
     {
@@ -6645,10 +6908,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14381 + station 6209 + fork 3141 bits) + flattened leaves",
-   "glue_cells": 52209,
+   "glue_basis": "EST 2 cells/bit x (boundary 14476 + station 5838 + fork 3114 bits) + flattened leaves",
+   "glue_cells": 51603,
    "glue_flat_leaf_cells": 4747,
-   "glue_regs_cells": 47462,
+   "glue_regs_cells": 46856,
    "instances": 4,
    "leaves": [
     {
@@ -6848,20 +7111,15 @@
      "module": "ot_hbm_svc_wbw_copy"
     },
     {
-     "cells": 19101,
-     "inst": "u15",
-     "module": "ot_hgi_qdq_nw_program_leaf"
-    },
-    {
      "cells": 3523,
      "inst": "u18",
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 16350 + station 465 + fork 97 bits) + flattened leaves",
-   "glue_cells": 62574,
-   "glue_flat_leaf_cells": 28750,
-   "glue_regs_cells": 33824,
+   "glue_basis": "EST 2 cells/bit x (boundary 16323 + station 90 + fork 70 bits) + flattened leaves",
+   "glue_cells": 42615,
+   "glue_flat_leaf_cells": 9649,
+   "glue_regs_cells": 32966,
    "instances": 4,
    "leaves": [
     {

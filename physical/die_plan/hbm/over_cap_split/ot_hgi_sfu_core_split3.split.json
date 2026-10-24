@@ -1,0 +1,376 @@
+{
+ "master": "ot_hgi_sfu_core_split3",
+ "plan_types": [
+  "q_sfuc"
+ ],
+ "status": "CUT-ONLY",
+ "measured_total": 5515990,
+ "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_sfu_core_split3/ot_hgi_sfu_core_split3.stat (r18h5 recipe, scoped_d4g/sfu.sv preferred, LWB=15 LG_PATH=31)",
+ "n_cores": 19,
+ "max_core_cells": 306861,
+ "cores_cells": 5515990,
+ "glue_cells": 0,
+ "cores": [
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane0",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[0].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[0].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane1",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[1].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[1].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane2",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[2].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[2].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane3",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[3].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[3].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane4",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[4].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[4].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane5",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[5].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[5].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane6",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[6].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[6].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane7",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[7].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[7].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane8",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[8].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[8].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane9",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[9].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[9].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane10",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[10].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[10].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane11",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[11].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[11].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane12",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[12].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[12].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane13",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[13].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[13].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane14",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[14].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[14].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "lane15",
+   "module": "ot_su12_sfu__d4g_sfu + ot_hgi_sfu_lane_map__d4g_sfu",
+   "members": [
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[15].*.u_sfu",
+    "u_core.u_engine.u_arithmetic.u_grid.g_lane[15].*.u_map"
+   ],
+   "cells": 306861,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1184,
+    "out": 282
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "opstore_a",
+   "module": "ot_hgi_su_lgroup2 x2 (operand groups 0,1) + operand-store glue",
+   "members": [
+    "u_core.u_engine.u_memory.g_operand[0].u_group",
+    "u_core.u_engine.u_memory.g_operand[1].u_group",
+    "u_core.u_engine.u_memory (local)"
+   ],
+   "cells": 240918,
+   "srams": 32,
+   "pins_bits": {
+    "inp": 3104,
+    "out": 1026
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "opstore_b",
+   "module": "ot_hgi_su_lgroup2 x2 (operand groups 2,3) + output group",
+   "members": [
+    "u_core.u_engine.u_memory.g_operand[2].u_group",
+    "u_core.u_engine.u_memory.g_operand[3].u_group",
+    "u_core.u_engine.u_memory.u_output"
+   ],
+   "cells": 288099,
+   "srams": 48,
+   "pins_bits": {
+    "inp": 4048,
+    "out": 1541
+   }
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3",
+   "core_label": "ctl",
+   "module": "ot_hgi_sfu_vm_static_bridge + split2/engine/quarter glue (control word register)",
+   "members": [
+    "u_core.u_vm",
+    "u_core (local)",
+    "u_core.u_engine (local)",
+    "u_core.u_engine.u_arithmetic (control reg)"
+   ],
+   "cells": 77197,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 9090,
+    "out": 16352
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "between": "ctl (quarter control register) -> lane j (lane_map)",
+   "bits": 1022,
+   "kind": "REG->REG",
+   "note": "lane_map registers every input (terms0/ov0/..., u_pass ring)"
+  },
+  {
+   "between": "lane j -> opstore (operand read request, per group)",
+   "bits": 27,
+   "kind": "SRAM-BOUNDED (REG->LOGIC->SRAM)",
+   "note": "lane rd_addr/rd_re/rd_src are lane registers (c12); the store core feeds them through its bank crossbar (rsel, comb) into the SRAM macro inputs: no store-side pin flop"
+  },
+  {
+   "between": "opstore -> lane j (operand data, per group)",
+   "bits": 32,
+   "kind": "SRAM-BOUNDED (SRAM->LOGIC->REG)",
+   "note": "SRAM Q -> crossbar (lb_q select) -> scalar mux -> lane CAPR pin register cr_q: no store-side output flop"
+  },
+  {
+   "between": "lane j -> opstore_b (output group lane write)",
+   "bits": 57,
+   "kind": "SRAM-BOUNDED (REG->LOGIC->SRAM)",
+   "note": "vm_we/vm_waddr/vm_wdata"
+  },
+  {
+   "between": "lanes <-> ctl (vi/kv/ro/fault)",
+   "bits": 2384,
+   "kind": "REG on the lane side; ctl side NOT VERIFIED",
+   "note": "lane: vi_q captured in the OPR (c12) register, ro_v/ro_x output registers; the VM bridge / reducer side was not analysed in this pass"
+  },
+  {
+   "between": "ctl -> opstore (stage/drain/scalar)",
+   "bits": 2500,
+   "kind": "NOT VERIFIED",
+   "note": "bridge stage/drain sectors"
+  }
+ ],
+ "rtl": {
+  "twin": null,
+  "cycle_cost_edges": null,
+  "fix": "pin-register the store side: lgroup2 request inputs (+1 edge) and read data output (+1 edge) = operand read latency +2 edges (lane FETCH latency is compiler-visible; RTL in ot_hgi_su_lgroup2 + the lane read-return constant). OPEN."
+ },
+ "note": "16 lane cores (su12_sfu 297k + its lane_map 10k = 307k each), 2 operand-store cores (80 SRAM 256x256), 1 control core (VM bridge 59k + control register/glue). The store is a 16-lane x 16-bank crossbar per operand group: the cut puts whole groups in a core (no crossbar split); lane<->store traffic is unavoidable (each lane talks to all 5 groups).",
+ "splits_entry": {
+  "parts": [
+   [
+    "lane",
+    16,
+    306861
+   ],
+   [
+    "opstore_a",
+    1,
+    240918
+   ],
+   [
+    "opstore_b",
+    1,
+    288099
+   ],
+   [
+    "ctl",
+    1,
+    77197
+   ]
+  ],
+  "glue": 0,
+  "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_sfu_core_split3/ot_hgi_sfu_core_split3.stat",
+  "total": 5515990,
+  "note": "16 lane cores (su12_sfu 297k + its lane_map 10k = 307k each), 2 operand-store cores (80 SRAM 256x256), 1 control core (VM bridge 59k + control register/glue). The store is a 16-lane x 16-bank crossbar per operand group: the cut puts whole groups in a core (no crossbar split); lane<->store traffic is unavoidable (each lane talks to all 5 groups)."
+ }
+}

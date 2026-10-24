@@ -1,0 +1,79 @@
+{
+ "master": "ot_hfd_coll_q2_hard_v8g",
+ "plan_types": [
+  "q_rc4",
+  "q_rc4_v1"
+ ],
+ "status": "CUT-ONLY",
+ "measured_total": 465018,
+ "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat (stat file since deleted; numbers from inputs/cells_evidence.json)",
+ "n_cores": 3,
+ "max_core_cells": 222636,
+ "cores_cells": 465018,
+ "glue_cells": 0,
+ "cores": [
+  {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "core_label": "ring_ag",
+   "module": "ring_ag",
+   "members": [
+    "ring_ag"
+   ],
+   "cells": 121663,
+   "srams": null,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "core_label": "reduce",
+   "module": "reduce",
+   "members": [
+    "reduce"
+   ],
+   "cells": 120719,
+   "srams": null,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "core_label": "body",
+   "module": "body",
+   "members": [
+    "body"
+   ],
+   "cells": 222636,
+   "srams": null,
+   "pins_bits": null
+  }
+ ],
+ "crossings": [],
+ "rtl": {
+  "twin": null,
+  "cycle_cost_edges": null,
+  "open": "crossings ring_ag / reduce / body not analysed in this pass"
+ },
+ "note": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest; every part <= 350k already (HBM-P4 cells_evidence split)",
+ "splits_entry": {
+  "glue": 0,
+  "note": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+  "parts": [
+   [
+    "ring_ag",
+    1,
+    121663
+   ],
+   [
+    "reduce",
+    1,
+    120719
+   ],
+   [
+    "body",
+    1,
+    222636
+   ]
+  ],
+  "stat": "ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+  "total": 465018
+ }
+}
