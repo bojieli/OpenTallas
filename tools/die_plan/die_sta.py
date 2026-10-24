@@ -2,7 +2,7 @@
 """Die-level STA for top-down die plans (G4): abstract mode on partition ILMs, flat mode on stitched netlists.
 
     die_sta.py ilm   --netlist P/6_final.v --spef P/6_final.spef --out DIR/<type> [--libs ...]   # one abstract
-    die_sta.py run   --top die_top.v --parts PARTS --out DIR [--mode ilm|flat|etm] [--corner SS|FF|TT ...]
+    die_sta.py run   --top die_top.v --parts PARTS --out DIR [--mode ilm|flat|etm] [--corner TT|FF|SS ...]
     die_sta.py compare A/die_sta.json B/die_sta.json [--tol 2]                                  # seam agreement
     die_sta.py replica --netlist P/6_final.v --spef P/6_final.spef --n N --out DIR             # capacity vehicle
 
@@ -28,8 +28,10 @@ Modes
   the clk->q max/min spread; etm is kept for setup cross-checks only and is never a hold verdict.
 
 Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.333 = 1.2 GHz),
-propagated through each partition's own routed tree, setup uncertainty 60 ps / hold 25 ps.  Signoff corners: setup at
-SS, hold at FF (``--corner SS --corner FF``, the default); TT is pathfinding only and labelled so.  Die spine:
+propagated through each partition's own routed tree, setup uncertainty 60 ps / hold 25 ps.  Signoff (owner,
+2026-10-24): setup at TT, hold at FF, face-flop clock spread <= 80 ps per partition at TT and FF (``--corner TT
+--corner FF``, the default); SS may be run for information and never gates.  Both checks are reported at every
+corner.  Die spine:
 ``ideal`` (taps fed at the plan's common latency: the die top's zero-length clk wires), ``branch`` (spine_branch.json
 of gen.py assembly: a generated clock with source latency offset_ps on every tap pin), or the routed die SPEF
 (``--die-spef``) for channel seams and the routed spine.  Die IO ports of the window are unconstrained (not seams).
@@ -53,7 +55,8 @@ from pathlib import Path
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
 PERIOD_PS = 833.333
-SIGNOFF = {"SS": "max", "FF": "min"}          # AGENTS.md: setup at SS, hold at FF
+SIGNOFF = {"TT": "max", "FF": "min"}          # AGENTS.md (owner 2026-10-24): setup at TT, hold at FF; never SS
+SPREAD_PS = 80.0                               # face-flop (pin-flop) clock arrival spread per partition
 ORFS_LIBS = ("asap7sc7p5t_AO_RVT_{c}_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_{c}_nldm_220122.lib.gz",
              "asap7sc7p5t_OA_RVT_{c}_nldm_211120.lib.gz", "asap7sc7p5t_SIMPLE_RVT_{c}_nldm_211120.lib.gz",
              "asap7sc7p5t_SEQ_RVT_{c}_nldm_220123.lib", "asap7sc7p5t_DFFHQNH2V2X_RVT_{c}_nldm_FAKE.lib",
@@ -755,9 +758,8 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           "proc ot_ckpin {pin} { set i [file dirname $pin]; foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; "
           "if {$q ne \"\"} { return $q } }; return \"\" }",
           "proc ot_arr {pin} { set q [ot_ckpin $pin]; if {$q eq \"\"} { return NA }; return [ot_ck $q] }"]
-    dlys = ["max", "min"] if corner not in SIGNOFF else [SIGNOFF[corner]]
-    for gname, pins in groups:
-        for dly in dlys:
+    for gname, pins, _ in groups:
+        for dly in ("max", "min"):
             L.append(f"set ps [find_timing_paths -through [get_pins {{{' '.join(pins)}}}] -path_delay {dly} "
                      f"-group_path_count {seam_paths} -endpoint_path_count 1 -sort_by_slack]")
             L.append("set n [llength $ps]; set nneg 0; set tns 0.0; set rows {}")
@@ -767,7 +769,17 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
             L.append(f"if {{$n == 0}} {{ puts $fh \"SEAM {gname} {dly} NO_PATH\" }} else {{ lassign $rows s sp ep; "
                      f"puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s\" "
                      f"{gname} {dly} $n $s $nneg $tns [ot_arr $sp] [ot_arr $ep] $sp $ep] }}")
-    L += ["puts \"OT_SEAMS [expr {[clock milliseconds]-$t0}]\"",
+    # R4 face-flop spread: clock arrival (rise, T/2 folded) at every register launching into / capturing from a seam
+    L.append("array set ffarr {}")
+    for gname, dpins, spins in groups:
+        L.append(f"foreach p [get_fanout -from [get_pins {{{' '.join(dpins)}}}] -endpoints_only -flat] "
+                 "{ set n [get_full_name $p]; set a [ot_arr $n]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $n /] 0]) $a } }")
+        L.append(f"foreach p [get_fanin -to [get_pins {{{' '.join(spins)}}}] -startpoints_only -flat] "
+                 "{ set n [get_full_name $p]; set a [ot_arr $n]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $n /] 0]) $a } }")
+    L += ["foreach i [lsort [array names ffarr]] { set v $ffarr($i); set mn [tcl::mathfunc::min {*}$v]; "
+          "set mx [tcl::mathfunc::max {*}$v]; puts $fh [format \"FFSPREAD %s n %d min %.2f max %.2f spread %.2f\" "
+          "$i [llength $v] $mn $mx [expr {$mx - $mn}]] }",
+          "puts \"OT_SEAMS [expr {[clock milliseconds]-$t0}]\"",
           "puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
           "puts $fh \"SECONDS [expr {([clock milliseconds]-$t0)/1000.0}]\"",
           "close $fh"]
@@ -789,6 +801,10 @@ def parse_sta(txt):
             res["seams"].setdefault(g, {})[dly] = dict(
                 paths=int(d["paths"]), worst=float(d["worst"]), neg=int(d["neg"]), tns=float(d["tns"]),
                 launch=d["launch"], capture=d["capture"], start=d["from"], end=d["to"])
+        elif f[0] == "FFSPREAD":
+            d = dict(zip(f[2::2], f[3::2]))
+            res.setdefault("ffspread", {})[f[1]] = dict(n=int(d["n"]), min=float(d["min"]), max=float(d["max"]),
+                                                       spread=float(d["spread"]))
         elif f[0] == "WNS":
             res["wns_ps"], res["whs_ps"] = round(float(f[1]) * 1e12, 3), round(float(f[3]) * 1e12, 3)
         elif f[0] == "SECONDS":
@@ -857,7 +873,10 @@ def cmd_run(a):
     groups = defaultdict(list)
     for s in seams:
         groups[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].append(f"{s['dst']}/{s['dst_pin']}")
-    groups = sorted((g, sorted(set(p))) for g, p in groups.items())
+    srcp = defaultdict(set)
+    for s in seams:
+        srcp[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].add(f"{s['src']}/{s['src_pin']}")
+    groups = sorted((g, sorted(set(p)), sorted(srcp[g])) for g, p in groups.items())
     (out / "seams.json").write_text(json.dumps(dict(top=top.name, seams=seams), indent=0) + "\n")
     mod_files, abstracts = {}, {}
     for m in sorted(set(inst_mods.values())):
@@ -904,8 +923,8 @@ def cmd_run(a):
                                a.period_ps, groups, spine, a.die_spef, etm_libs, reduce=a.reduce))
         rc, sec, rss = run_sta(tcl, tcl.with_suffix(".log"))
         r = parse_sta(txt) if txt.is_file() else dict(seams={})
-        r.update(exit=rc, seconds=sec, peak_rss_gb=rss, check="setup" if SIGNOFF.get(corner) == "max" else
-                 ("hold" if SIGNOFF.get(corner) == "min" else "setup+hold (TT: pathfinding only)"))
+        r.update(exit=rc, seconds=sec, peak_rss_gb=rss, gates={"TT": "setup + spread", "FF": "hold + spread"}.get(
+            corner, "info only (not a signoff corner)"))
         if a.mode == "etm" and corner in ("FF",):
             r["note"] = "ETM hold is optimistic (OpenSTA be771a0 clk->out arcs from max arrival); not a hold verdict"
         res["corners"][corner] = r
@@ -918,7 +937,8 @@ def cmd_run(a):
 
 
 def verdict(res):
-    """worst seam setup (SS) / hold (FF) slack; PASS only if both signoff checks ran and are >= 0."""
+    """worst seam slacks per corner; PASS only if TT setup and FF hold ran, every seam slack there is >= 0 and every
+    partition's face-flop spread is <= SPREAD_PS at TT and FF (AGENTS.md, owner 2026-10-24).  SS is info only."""
     v = {}
     for corner, r in res["corners"].items():
         for dly in ("max", "min"):
@@ -927,13 +947,18 @@ def verdict(res):
                 key = ("setup" if dly == "max" else "hold") + f"_{corner}"
                 v[key] = round(min(w), 3)
                 v[key + "_neg_endpoints"] = sum(s[dly]["neg"] for s in r["seams"].values() if s.get(dly))
+        sp = r.get("ffspread") or {}
+        if sp:
+            v[f"ffspread_{corner}"] = round(max(x["spread"] for x in sp.values()), 2)
     ran = {c for c, r in res["corners"].items() if r.get("exit") == 0}
     if res["mode"] == "etm":
         v["status"] = "INFO (etm: setup cross-check only)"
-    elif not {"SS", "FF"} <= ran:
-        v["status"] = "NOT RUN (signoff needs SS setup + FF hold)"
+    elif not {"TT", "FF"} <= ran:
+        v["status"] = "NOT RUN (signoff needs TT setup + FF hold)"
     else:
-        v["status"] = "PASS" if v.get("setup_SS", -1) >= 0 and v.get("hold_FF", -1) >= 0 else "FAIL"
+        ok = v.get("setup_TT", -1) >= 0 and v.get("hold_FF", -1) >= 0
+        ok = ok and all(v.get(f"ffspread_{c}", 0) <= SPREAD_PS for c in ("TT", "FF"))
+        v["status"] = "PASS" if ok else "FAIL"
     return v
 
 
@@ -956,6 +981,12 @@ def cmd_compare(a):
                 worst = max(worst, abs(d))
                 rows.append(dict(corner=corner, seam=g, check=dly, a=x["worst"], b=y["worst"], delta=round(d, 3),
                                  paths_a=x["paths"], paths_b=y["paths"]))
+        fa, fb = A["corners"][corner].get("ffspread") or {}, B["corners"][corner].get("ffspread") or {}
+        for i in sorted(set(fa) & set(fb)):
+            d = fb[i]["spread"] - fa[i]["spread"]
+            worst = max(worst, abs(d))
+            rows.append(dict(corner=corner, seam=i, check="ffspread", a=fa[i]["spread"], b=fb[i]["spread"],
+                             delta=round(d, 3)))
     res = dict(a=a.a, b=a.b, mode_a=A["mode"], mode_b=B["mode"], max_abs_delta_ps=worst, tol_ps=a.tol,
                status="AGREE" if worst <= a.tol else "DISAGREE", rows=rows)
     if a.out:
@@ -969,7 +1000,7 @@ def cmd_compare(a):
 # ------------------------------------------------------------------------------------------------------------- replica
 def cmd_replica(a):
     """synthetic flat-capacity vehicle: N copies of one routed partition chained output->input (ft buses joined in
-    name order) under a generated top, each with its own read_spef -path.  Times SS setup on the stitched netlist."""
+    name order) under a generated top, each with its own read_spef -path.  Times setup on the stitched netlist."""
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     m = module_of(a.netlist)
@@ -1125,7 +1156,7 @@ def main(argv=None):
     p.add_argument("--n", type=int, required=True)
     p.add_argument("--reduce", action="store_true", help="read_spef -reduce (pi-Elmore at read: less memory)")
     p.add_argument("--out", required=True)
-    p.add_argument("--corner", default="SS")
+    p.add_argument("--corner", default="TT")
     p.add_argument("--period-ps", type=float, default=PERIOD_PS)
     p.add_argument("--libdir")
     p.add_argument("--lib", action="append", default=[])
@@ -1147,7 +1178,7 @@ def main(argv=None):
         st = make_ilm(a.netlist, a.spef, a.out, corner_libs("TT", a.libdir, a.lib), sdc=a.sdc)
         print(json.dumps(st, indent=1))
     elif a.cmd == "run":
-        a.corner = a.corner or ["SS", "FF"]
+        a.corner = a.corner or ["TT", "FF"]
         res = cmd_run(a)
         return 0 if all(r["exit"] == 0 for r in res["corners"].values()) else 1
     elif a.cmd == "extract":

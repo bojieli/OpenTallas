@@ -99,13 +99,25 @@ def test_flat_equals_ilm(tmp_path):
     res = {}
     for mode in ("flat", "ilm"):
         D.main(["run", "--top", str(TD / "die_top.v"), "--parts", str(tmp_path / "parts"), "--out",
-                str(tmp_path / mode), "--mode", mode, "--corner", "SS", "--corner", "FF", "--period-ps", "300"])
+                str(tmp_path / mode), "--mode", mode, "--corner", "TT", "--corner", "FF", "--period-ps", "300"])
         res[mode] = json.loads((tmp_path / mode / "die_sta.json").read_text())
     seam = "u0->u1/a_i"
-    for corner, dly in (("SS", "max"), ("FF", "min")):
+    for corner, dly in (("TT", "max"), ("FF", "min")):
         f = res["flat"]["corners"][corner]["seams"][seam][dly]
         i = res["ilm"]["corners"][corner]["seams"][seam][dly]
         assert f["paths"] == i["paths"] == 2
         assert abs(f["worst"] - i["worst"]) < 0.01
     assert res["flat"]["verdict"]["status"] in ("PASS", "FAIL")
     assert D.main(["compare", str(tmp_path / "flat" / "die_sta.json"), str(tmp_path / "ilm" / "die_sta.json")]) == 0
+
+
+def test_verdict_tt_ff():
+    seams = {"a": {"max": dict(worst=5.0, neg=0), "min": dict(worst=3.0, neg=0)}}
+    res = dict(mode="ilm", corners={"TT": dict(exit=0, seams=seams, ffspread={"u0": dict(spread=40.0)}),
+                                    "FF": dict(exit=0, seams=seams, ffspread={"u0": dict(spread=30.0)}),
+                                    "SS": dict(exit=0, seams={"a": {"max": dict(worst=-100.0, neg=3)}})})
+    assert D.verdict(res)["status"] == "PASS"            # SS never gates
+    res["corners"]["TT"]["ffspread"]["u0"]["spread"] = 81.0
+    assert D.verdict(res)["status"] == "FAIL"            # spread > 80 at TT
+    del res["corners"]["FF"]
+    assert D.verdict(res)["status"].startswith("NOT RUN")
