@@ -459,15 +459,22 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         return math.ceil(round(v / G, 6)) * G
     x0 = y0 = up(HC_EDGE_UM)
     x, y, row_h, out = x0, y0, 0.0, []
+    alts = []
     if spec.get("place"):
         # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
-        # fit; the corner mirroring and the gap / edge legality below still apply
-        for c, (cw, ch) in items:
-            pl_ = spec["place"][c["inst"]]
-            ox_, oy_ = pl_[0], pl_[1]
-            out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[ox_, oy_], outline_um=[cw, ch],
-                            orient=pl_[2] if len(pl_) > 2 else "R0", track_offset_um=list(CORE_TRACK_OFFSET),
-                            pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
+        # fit; the corner mirroring and the gap / edge legality below still apply.  S81-CORES: "alt_place" = ordered
+        # per-instance overrides of the base placement, tried only when the base adds ft-slot stations in this type
+        def explicit(over):
+            o = []
+            for c, (cw, ch) in items:
+                pl_ = over.get(c["inst"], spec["place"][c["inst"]])
+                o.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[pl_[0], pl_[1]],
+                              outline_um=[cw, ch], orient=pl_[2] if len(pl_) > 2 else spec["place"][c["inst"]][2]
+                              if len(spec["place"][c["inst"]]) > 2 else "R0", track_offset_um=list(CORE_TRACK_OFFSET),
+                              pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
+            return o
+        alts = [explicit(a) for a in spec.get("alt_place", ())]
+        out = explicit({})
         items = []
     for c, (cw, ch) in items:
         if x + dx + cw > w - HC_EDGE_UM:
@@ -483,7 +490,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
     # corner choice: the packed block is mirrored to each outline corner (lattice-snapped); the first variant that adds no
     # ft-slot station (ft_stations_macro: a core on a slot's in->out line pushes its stations off) and keeps the gap /
     # edge rules wins; else the one adding fewest stations
-    def mirrored(mx, my):
+    def mirrored(mx, my, out=out):
         o = []
         for c in out:
             (x_, y_), (cw, ch) = c["origin_um"], c["outline_um"]
@@ -527,14 +534,17 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         bf = {b.get("face") for b in buses if b.get("face") in ("N", "S")}
         if len(bf) == 1:
             variants = [v for v in variants if v[1] == (bf == {"S"})]
-    for mx, my in variants:
-        o = mirrored(mx, my)
-        if not legal(o):
-            continue
-        add = sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl)
-        if best is None or add < best[0]:
-            best = (add, o, (mx, my))
-        if add == 0:
+    for ai, base_ in enumerate([out] + alts):
+        for mx, my in variants:
+            o = mirrored(mx, my, base_)
+            if not legal(o):
+                continue
+            add = sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl)
+            if best is None or add < best[0]:
+                best = (add, o, (mx, my), ai)
+            if add == 0:
+                break
+        if best is not None and best[0] == 0:
             break
     if best is None:
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
@@ -543,6 +553,8 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         CORE_CONNS_OUT[tn] = CORE_CONNS[k]
     rep["corner"] = "%s%s" % ("E" if best[2][0] else "W", "N" if best[2][1] else "S")
     rep["ft_stations_added"] = best[0]
+    if alts:
+        rep["alt_place"] = best[3]
     return best[1]
 
 
