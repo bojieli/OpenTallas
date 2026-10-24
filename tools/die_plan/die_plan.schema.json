@@ -591,6 +591,11 @@
         "type": "integer",
         "minimum": 1
        },
+       "core_taps": {
+        "enum": [
+         "early"
+        ]
+       },
        "taps": {
         "type": "array",
         "items": {
@@ -1371,6 +1376,41 @@
         "fishbone",
         "mesh"
        ]
+      },
+      "die_root_um": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2,
+       "maxItems": 2
+      },
+      "die_outline_um": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2,
+       "maxItems": 2
+      },
+      "part_die_origin_um": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       }
+      },
+      "branch_ps_per_mm": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "branch_leaf_um": {
+       "type": "number",
+       "exclusiveMinimum": 0
       }
      }
     }
