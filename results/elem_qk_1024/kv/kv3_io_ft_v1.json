@@ -1,0 +1,24 @@
+{
+ "type": "kv3_io_ft_v1",
+ "verdict": "FAIL",
+ "run": "g3g (main 24b2da3433+ tooling, kit intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_io_ft_v1)",
+ "review": "results/geom_review/kv_g3_kv3_io_ft_v1__elemqk__97ed0c26bc8576eb.json PASS",
+ "signoff": "NOT SIGNED (signoff.py tt,ff on 6_final.odb+spef; run_kit 6_report OOM at 24 GB cap so signoff run separately)",
+ "tt_setup_wns_ps": -85.44,
+ "tt_setup_viol": 1054,
+ "ff_hold_wns_ps": 10.27,
+ "pinflop_spread_tt_ff_ps": [
+  34.67,
+  30.25
+ ],
+ "slew_viol_tt": 1487,
+ "slew_viol_ff": 1305,
+ "drc": 0,
+ "antenna_nets": 0,
+ "grt_overflow": 0,
+ "face_guard": "PASS",
+ "face_guard_odb": "PASS",
+ "pin_audit": "PASS 2100/2100",
+ "cause": "635 um station hops (plan v3.8s 2 stations/slot) left with ~250 um unbuffered segments: RCX slew up to 688 ps (limit 320); worst ft0_o_0/q[7] -> ft0_o_1/q[7] -85 ps. Flow repair_timing inserted no buffers.",
+ "next": "kit-local PRE_RESIZE repair_design -max_wire_length 120 (kvg3g_wl) in flight; else plan stations <= 400 um (KV-G3 recipe)."
+}

@@ -19,7 +19,7 @@
      "note": "UCIe-A x64 PHY 777.6 sq at the N (die) edge, W of the clock tap (950.4, 518.4); MX: signal pins (LEF top edge, x 276-501) face S into the d2d logic at y 250.56 (top 1028.16: inside the 4.32 core margin, 8.64 lattice)"
     },
     {
-     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[0\\].u_store.g_p288.u_sram",
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[0].u_store.g_p288.u_sram",
      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
      "status": "reuse",
      "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
@@ -32,7 +32,7 @@
      "note": "d2d link replay bank 0 (57.9 x 67.5), row under the PHY pin edge"
     },
     {
-     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[1\\].u_store.g_p288.u_sram",
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[1].u_store.g_p288.u_sram",
      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
      "status": "reuse",
      "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
@@ -45,7 +45,7 @@
      "note": "d2d link replay bank 1 (57.9 x 67.5), row under the PHY pin edge"
     },
     {
-     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[2\\].u_store.g_p288.u_sram",
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[2].u_store.g_p288.u_sram",
      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
      "status": "reuse",
      "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
@@ -58,7 +58,7 @@
      "note": "d2d link replay bank 2 (57.9 x 67.5), row under the PHY pin edge"
     },
     {
-     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\\[3\\].u_store.g_p288.u_sram",
+     "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[3].u_store.g_p288.u_sram",
      "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
      "status": "reuse",
      "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
