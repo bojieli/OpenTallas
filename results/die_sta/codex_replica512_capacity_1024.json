@@ -1,0 +1,22 @@
+{
+  "module": "kv3_io_cor_v1_part",
+  "n": 512,
+  "exit": 0,
+  "seconds": 5816.7,
+  "peak_rss_gb": 172.82,
+  "marks_s": {
+    "link": 110.752,
+    "spef": 4368.197,
+    "wns": 5612.451,
+    "whs": 5614.843,
+    "seam": 5624.199
+  },
+  "instances": 73363456,
+  "corner": "SS",
+  "host": "key-cardinal",
+  "netlist": "part/6_final.v",
+  "spef": "part/6_final.spef",
+  "seam_pairs": 25,
+  "status": "CAPACITY PASS, RELEASE TIMING NOT EVALUATED",
+  "diagnosis": "73.36M instances completed within172.82GB and5816.7sec. LegacySS run and833.333ps only capacity evidence. SS max-361.39ps is informational; TT/FF new833ps CP1 comparison remainsrequired. TAPCELL blackbox physical-only, no timinglogic omitted."
+}

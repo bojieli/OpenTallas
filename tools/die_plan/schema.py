@@ -133,14 +133,16 @@ SCHEMA = {
                 "io": {"type": "array", "items": {
                     # PLAN-TOOL5 (die_io.py): a PHY-macro window may instead declare its interface class + off-die
                     # signal count (`iface`, `signals`; the modelled PHY has no RTL pad ports), and `host` when it
-                    # also carries the die's host link
+                    # also carries the die's host link (true), or, on a die without a host link, its host traffic
+                    # in-band ("in_band", with the on-die `host_route`; S81-XDIE 10-24)
                     "type": "object", "required": ["name", "kind", "rect_um", "sites", "part"],
                     "additionalProperties": False,
                     "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
                                    "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
                                    "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                                    "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
-                                   "signals": {"type": "integer", "minimum": 1}, "host": {"type": "boolean"},
+                                   "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
+                                   "host_route": {"type": "string"},
                                    "basis": {"type": "string"}, "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
@@ -192,6 +194,8 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
                                        "layers": _lays, "order": _order}}},
@@ -1041,6 +1045,11 @@ def validate(raw):
         if dup:
             errs.append(f"type {tn}: bus names defined twice: {sorted(dup)}")
         for s in t.get("ft_slots", []):
+            from ft_bit_sites import validate_slot
+            try:
+                validate_slot(s)
+            except ValueError as exc:
+                errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
                 errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):

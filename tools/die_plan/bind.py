@@ -708,6 +708,9 @@ class Binder:
                 self.variants.append(dict(inst=c.path, master=c.module, variant=m, dropped_params=dropped,
                                           open_new_outputs=outs_new, reason=r.get("reason")))
                 c.module = m
+                # The selected variant may declare a new opt-in control parameter. Use
+                # only its own declarations; predecessor-only parameters remain invalid.
+                self.param_defaults[(c.ytype, c.module)] = dict(vm.params)
             if n == 0:
                 self.errors.append(f"VARIANT_NO_MATCH substitute_inst {r['inst']} -> {m}: no leaf instance matches")
 

@@ -495,6 +495,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
+    from ft_bit_sites import table as ft_bit_sites_table
+    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,

@@ -198,14 +198,19 @@ def frame_early_clock(ty):
     common 250 ps target, with no data-cycle change. ROMs have clk->q arcs, not
     internal clock-tree insertion, and stay on the ordinary grid.
     """
-    from tools.die_plan.cores import clock_pins
+    from tools.die_plan.cores import clock_pins, resolve
     from tools.die_plan.schema import tap_clear
     ck = ty["clock"]
     taps = []
     for c in ty.get("hard_cores", []):
         if c.get("module") not in ("ot_v41_rom_elem_q_qxpq_w10", "ot_v41_bf_col"):
             continue
-        pins = clock_pins(c)
+        view_root = os.environ.get("S81_CORE_VIEW_ROOT")
+        if not c.get("lib") or not resolve(c["lib"], view_root).is_file():
+            raise ValueError("selected frame core has no readable clock timing library: " + c["inst"])
+        pins = clock_pins(c, root=view_root)
+        if not pins:
+            raise ValueError("selected frame core has no readable clock timing view: " + c["inst"])
         for pin, timing in pins.items():
             latency = timing["rise"]
             if latency <= 250:
