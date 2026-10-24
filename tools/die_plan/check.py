@@ -795,8 +795,14 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
             if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
                 cent[c["inst"]] = (c["origin_um"][0] + c["outline_um"][0] / 2,
                                    c["origin_um"][1] + c["outline_um"][1] / 2)
-        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in t.get("internal_stations", [])
-                    if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")}
+        ist_bus = [e for e in t.get("internal_stations", [])
+                   if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")]
+        # Broadcast buses may have distinct final relay legs for each capture core.
+        # Unscoped legacy entries retain their previous last-entry behavior.
+        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in ist_bus
+                    if not e.get("capture") or str(e["capture"]).startswith("face bus ")}
+        ist_capture = {(e["conn"][4:], str(e["capture"]).split(".", 1)[0]): tuple(e["regs_um"][-1])
+                       for e in ist_bus if e.get("capture") and not str(e["capture"]).startswith("face bus ")}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
             if b.get("leaf") and "." in b["leaf"]:
@@ -846,7 +852,9 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     if kind == "bus":
                         if bt is None:
                             bt = _bus_targets(P, tn)
-                        if nm in ist_last:
+                        if (nm, ci) in ist_capture:
+                            pts.append((f"station {nm} -> {ci}", ist_capture[(nm, ci)]))
+                        elif nm in ist_last:
                             # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station
                             # (regs_um[-1], the register next to the core pin), not from the face window
                             pts.append((f"station {nm}", ist_last[nm]))

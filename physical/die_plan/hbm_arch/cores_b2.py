@@ -799,11 +799,18 @@ def main():
                             n = math.ceil(d / HOP) - 1
                             route = [A, (B[0], A[1]), B]
                             regs = relay_route(A, B)
+                            launch, capture = f'{k}.{port}', nm
+                            aa, bb = A, B
+                            if kd == 'bus':
+                                near_core = free(A)
+                                regs = relay_route(B, near_core) + [near_core]
+                                aa, bb = B, A
+                                launch, capture = f'face bus {nm}', f'{k}.{port}'
                             n = len(regs)
                             ist.append(dict(conn=(f'bus:{nm}' if kd == 'bus' else f'{k}.{port}|{nm}'),
-                                            from_um=[round(A[0], 3), round(A[1], 3)], to_um=[round(B[0], 3), round(B[1], 3)],
+                                            from_um=[round(aa[0], 3), round(aa[1], 3)], to_um=[round(bb[0], 3), round(bb[1], 3)],
                                             regs_um=[[round(x, 3), round(y, 3)] for x, y in regs], bits=bits,
-                                            launch=f'{k}.{port}', capture=(f'face bus {nm}' if kd == 'bus' else nm),
+                                            launch=launch, capture=capture,
                                             note=f'HBM-ARCH cores_b2 R3-INTERNAL: {d:.0f} um core link, {n} station(s) '
                                                  f'(data + epoch), hops <= {HOP:g} um; +{n} cycle(s) on this link'))
                 if ist:
@@ -854,6 +861,9 @@ def main():
             t['note'] = ('LOWER BOUND: 32 hnx_rp3lp3h halves x 30k um2 std cells / 0.116 um2 per cell (hard '
                                'children excluded); type over 400k -> built from the 32 half kits as hard cores')
     plan['note'] = plan.get('note', '') + '; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins'
+    final_plan = S.Plan(plan)
+    for lane in plan['lanes']:
+        plan['latency']['lanes'][lane['id']] = final_plan.lane_latency(lane['id'])
     json.dump(plan, open(os.path.join(out, 'die_plan.json'), 'w'), indent=0)
     json.dump(core_conns, open(os.path.join(out, 'core_conns.json'), 'w'), indent=0)
     rep['pins_files'] = len(pin_tables) + len(HALVES)
