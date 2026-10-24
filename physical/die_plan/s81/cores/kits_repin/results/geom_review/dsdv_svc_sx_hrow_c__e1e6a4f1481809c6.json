@@ -1,0 +1,14 @@
+{
+ "element": "dsdv_svc_sx_hrow_c",
+ "kit": "physical/die_plan/s81/cores/kits_repin/kits/dsdv_svc_sx_hrow_c@r2",
+ "hash": "e1e6a4f1481809c6",
+ "verdict": "PASS",
+ "pictures": [
+  "dsdv_svc_sx_hrow_c_r2_placed.png"
+ ],
+ "reasons": "138.24 x 164.16 (re-floorplanned from 216 x 216, faces kept): 28% util after placement (5694 um2 std, max 5-um bin 0.72, no hotspot); 3849 face flops FIRM in a ring at the faces, logic in the middle. Pins N 818 / S 861 / W 1086 / E 1086 at 6.5-7.5 pins/um (caps 24.3 / 10.4), on tracks, no PDN clash (stripes core-only). Each face carries its lane's gather/scatter in+out pairs (gi/go/si/so) + rt_o E, l_i W, t_o/sid/hb/fault S: the crossbar is any-face to any-face by RTL, wires <= ~300 um Manhattan inside one cycle (flop to flop). Clock pin ck at N centre (x 69.06): balanced. No macros.",
+ "fixes": "none; r2 route running (launched before the order; allowed to finish).",
+ "reviewer": "S81-CORES kits_repin (author)",
+ "at": "2026-10-24T08:10:40-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (author self-review; GEOM-REVIEW second review pending)"
+}

@@ -1,0 +1,15 @@
+{
+ "element": "ot_s81sl_vq_lfp",
+ "kit": "physical/die_plan/s81/cores/kits_repin/kits/ot_s81sl_vq_lfp@r3",
+ "hash": "e42cef4b5eec15ac",
+ "verdict": "PASS-COND",
+ "pictures": [
+  "ot_s81sl_vq_lfp_r2_placed.png",
+  "ot_s81sl_vq_lfp_r3_fp.png"
+ ],
+ "reasons": "r2 (kit 7a2040b56d2c0edf, SRAM at [55.296, 4.32], rows halo 2) placed fine (52% util, max 5-um bin 0.57, 828/828 face flops FIRM) but GRT-0183 after the hold repair: net _09150_ (E-face capture u_c[66] at x 165 -> AND2 at x 51.9, 3 um off the SRAM W pin wall) boxed in; the SRAM (94.8 x 41.1) sat right of centre leaving a 22.7-um E channel while the re-pin moved u/um (vs, 271 pins) to the full-height E face. Pins: W y 260 / E u+um 271 / N 299 (xf 276 + ctl + clk/rst), S none; <= 2.5 pins/um (cap 10.4 M4, 24.3 M3+M5), on tracks; PDN M5 stripes span the core only (y 4.30..125.30), pins sit in the 4.32 margin: no clash. Data flow: y (W) and u (E) feed one aq12 stream (one-or-other per cycle) whose output xf leaves N: both inputs cross half the tile, acceptable at 172.8 um. Clock pin at the NW corner (x 4.6, N face, plan contract): CTS insertion is the risk to watch (rule 300 ps).",
+ "fixes": "r3: SRAM centred on the pin-free S face (x 38.988, y 4.32; M4 pins on track), 39-um clearance to W and E faces, rows halo 4.32. Conditions: GRT/DRT clean and CTS insertion <= 300 ps with the corner clock pin; if insertion fails, ask the plan for a centre-N clk pin (pin contract, not changed here).",
+ "reviewer": "S81-CORES kits_repin (author)",
+ "at": "2026-10-24T08:10:40-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (author self-review; GEOM-REVIEW second review pending)"
+}

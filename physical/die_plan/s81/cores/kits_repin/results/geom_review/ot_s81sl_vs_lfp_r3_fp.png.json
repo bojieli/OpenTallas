@@ -1,0 +1,134 @@
+{
+ "kit": "ot_s81sl_vs_lfp",
+ "kit_hash": "8f4d9f3677716e33",
+ "outline_um": [
+  172.8,
+  172.8
+ ],
+ "pins": 2859,
+ "faces": {
+  "N": {
+   "pins": 1589,
+   "max_per_um": 10.0,
+   "mean_per_um": 9.2,
+   "layers": {
+    "M5": 794,
+    "M3": 795
+   },
+   "span": [
+    4.4,
+    168.42
+   ],
+   "groups": [
+    "e_c",
+    "e_d",
+    "e_v",
+    "fault",
+    "g_c",
+    "g_d",
+    "g_v",
+    "s_d",
+    "s_v",
+    "ve_ac",
+    "ve_ag",
+    "ve_ah",
+    "ve_av",
+    "ve_aval",
+    "ve_fi",
+    "ve_oc",
+    "ve_ov",
+    "ve_oy",
+    "ve_pc",
+    "ve_pdd",
+    "ve_phh",
+    "ve_pkk",
+    "ve_pv",
+    "ve_rc",
+    "ve_rh",
+    "ve_rk",
+    "ve_rv",
+    "ve_rw"
+   ]
+  },
+  "S": {
+   "pins": 69,
+   "max_per_um": 0.5,
+   "mean_per_um": 0.4,
+   "layers": {
+    "M3": 35,
+    "M5": 34
+   },
+   "span": [
+    5.48,
+    167.26
+   ],
+   "groups": [
+    "clk",
+    "ra_fi",
+    "ra_ri",
+    "ra_v",
+    "ra_vi",
+    "ra_x",
+    "rst_n"
+   ]
+  },
+  "W": {
+   "pins": 814,
+   "max_per_um": 5.0,
+   "mean_per_um": 4.71,
+   "layers": {
+    "M4": 814
+   },
+   "span": [
+    4.43,
+    168.4
+   ],
+   "groups": [
+    "u",
+    "u_i",
+    "u_v",
+    "um_b",
+    "um_i",
+    "um_q",
+    "um_v",
+    "x_qd",
+    "x_qv",
+    "x_ra",
+    "x_rv",
+    "x_wa",
+    "x_wd",
+    "x_wm",
+    "x_wv"
+   ]
+  },
+  "E": {
+   "pins": 387,
+   "max_per_um": 2.5,
+   "mean_per_um": 2.24,
+   "layers": {
+    "M4": 387
+   },
+   "span": [
+    4.52,
+    168.3
+   ],
+   "groups": [
+    "sw_d",
+    "sw_fi",
+    "sw_lim",
+    "sw_ri",
+    "sw_v",
+    "sw_vi",
+    "sw_w"
+   ]
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "clk",
+  "x": 5.481,
+  "y": 0.019,
+  "face": "S",
+  "layer": "M3"
+ }
+}

@@ -2,7 +2,7 @@
 # Instances are found by master (flattened names differ by stage / frontend).
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-foreach {master x y orient} {ot_sram_1r1w_128x256_m1_r2c2 55.296 4.32 R0} {
+foreach {master x y orient} {ot_sram_1r1w_128x256_m1_r2c2 38.988 4.32 R0} {
   set hit {}
   foreach i [$b getInsts] { if {[[$i getMaster] getName] eq $master} { lappend hit $i } }
   if {[llength $hit] != 1} { error "kits_repin macro_place: [llength $hit] instances of $master (want 1)" }

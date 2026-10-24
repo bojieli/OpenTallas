@@ -30,4 +30,6 @@ export ADDITIONAL_LEFS = /work/macros/ot_sram_1r1w_128x256_m1_r2c2.lef
 export ADDITIONAL_LIBS = /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
 export MACRO_PLACE_HALO = 4.32 4.32
 export MACRO_PLACEMENT_TCL = /work/macro_place.tcl
+export MACRO_ROWS_HALO_X = 4.32
+export MACRO_ROWS_HALO_Y = 4.32
 export SYNTH_HDL_FRONTEND = slang

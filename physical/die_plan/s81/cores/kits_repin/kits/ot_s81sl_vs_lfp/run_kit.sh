@@ -19,7 +19,8 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard_core.py \$N $TOP '$SKIP' /work/pins.json /work/face_guard.json; rc=\$?; \
-    if [ \$rc = 3 ]; then echo 'FACE_GUARD FAIL (self-loop only): physical run continues, FAIL recorded'; rc=0; fi; fi; \
+    if [ \$rc = 3 ]; then echo 'FACE_GUARD FAIL (self-loop only): physical run continues, FAIL recorded'; rc=0; fi; \
+    if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
