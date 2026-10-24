@@ -7,8 +7,8 @@
   "face_r": "coll_core",
   "face_s0": "coll_n",
   "u_collective": "coll_core",
-  "u_shared": "coll_core",
-  "io_ucie": "coll_core",
+  "u_shared": "coll_ucie",
+  "io_ucie": "coll_ucie",
   "io_serdes": "io_serdes",
   "io_serdes_1": "io_serdes_1",
   "io_serdes_2": "io_serdes_2",
@@ -30,8 +30,7 @@
    "sl_W5_stm",
    "sl_W5_su_c",
    "sl_W5_su_l0",
-   "sl_W5_su_l1",
-   "sl_W5_tap"
+   "sl_W5_su_l1"
   ]
  }
 }

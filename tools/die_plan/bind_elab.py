@@ -543,6 +543,10 @@ def flatten(yjs, top, parent_variants=()):
                             continue
                         if b in pm:
                             y = pm[b]
+                            if x == "z" and not isinstance(y, str):
+                                # an output the parent leaves open ('z') that the child aliases to another port's net
+                                # (e.g. assign ck_rt = {8{clk}}): open, not a constant driver of that net (BINDER4)
+                                continue
                             if isinstance(x, str) or isinstance(y, str):
                                 if not isinstance(x, str):
                                     F.const_drivers[x] = (y, f"{cpath}.{pn}[{i}]")

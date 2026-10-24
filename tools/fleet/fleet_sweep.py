@@ -21,7 +21,6 @@ ALERT_LOG = Path.home() / ".local/state/fleet_sweep/alerts.log"
 TAKEOVER_LOG = Path("/home/ubuntu/claude-takeover-20261007/integrate.log")
 ALERT_PCT = 85
 SWEEP_ROOTS = {"ot-epyc4": ["/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/tmp"],
-               "ot-epyc5": ["/srv/opentallas-scratch", "/srv/opentallas-scratch2", "/tmp"],
                "ot-epyc7": ["/srv/opentallas-scratch", "/tmp"],                               # FLEET-NEW 2026-10-19
                "ot-epyc8": ["/srv/opentallas-scratch", "/tmp"],                               # FLEET-NEW2 2026-10-19
                "ot-epyc9": ["/srv/opentallas-scratch", "/tmp"],                               # FLEET-NEW2 epyc9 2026-10-19

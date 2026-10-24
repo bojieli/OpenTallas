@@ -1,0 +1,11 @@
+{
+ "element": "dsfd_cfifo_crs4p",
+ "kit": "physical/ref_tile/s81coll_cfifo_crs4p@61744766b",
+ "verdict": "PASS",
+ "hash": "95a4abde2a5ac450670f870b4dba3a9302b4dc04ee0f8f333ef151b4cdacbc24",
+ "reasons": "[10-23 20:17] [GEOM-REVIEW7] [S81-P9-CF 20:16 REQ, R7 re-harden of u_cf] Gate hash recomputed by me (geom_review_gate.py hash) = 95a4abde2a5a. Placed render viewed: /home/ubuntu/wt/s81-p9-cf-1023/physical/ref_tile/s81coll_cfifo_crs4p/gate_layout/review.png. review_stats.json read. Outline 280.8x69.12 (aspect 4.06 is set by the frame slot and unchanged from the closed crs4). Pins are crs4's minus the 12 lk straps; LK is now a parameter (RTL read: no lk port). Fill 53%, 0 macros, N/S 4.2 pins/um (peak 4.4), pin->reg p50/p90 4.7/6.1. CTS spread TT 27 / FF 26 ps over 6 roots (core + 4 forwarded xk + cr), trial GRT overflow 0. The N-face register band is clear in the render. The 1,105 'unregistered' are the S-face xl0..3 lane inputs (1,104 b + 1). Each lane lands in the FIFO storage flops of its own forwarded clock xk[k] (landed CDC, as-built crs4 form), which spread over the 69-um height. That is <= 69 um pin->flop, registered, not face-banded. buf/inv 52% is above the 40% guidance, from the per-bit marker/landing rings the native census forced (crs4 body refused at 1,116 loads).",
+ "fixes": "PASS: CTS/route gate allowed (geometry). Not geometry and still OPEN: textbook.reset_landing (rst -> 18 stage-1 flops) is the S81 release-edge decision in STEWARD-S81, and the gate result binds on it. Then frame_band_plan.py instantiates dsfd_cfifo_crs4p #(.LK(LK)) without .lk (S81-P8 18:20 item 1).",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T20:17:11-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

@@ -114,7 +114,7 @@ LAYOUT = [
     # C0 corner = x 970-1170 (die-level centre)
     ('io', 0, 0, 230, 200), ('rc2', 230, 0, 455, 200), ('rc3', 455, 0, 725, 200), ('rc4', 725, 0, 970, 200),
     # R1 (200-479): fabric/fault leaves, SFU core, hc ring 3x3 (93), r1e above C0
-    ('r1c', 0, 200, 450, 479), ('sfuc', 450, 200, 720, 479), ('r1e', 720 + 3 * int(os.environ.get('OT_HBM_RING_X', '93')), 200, 1170, 479),
+    ('r1c', 0, 200, 450, 479), ('sfuc', 450, 200, 720, 479), ('r1e', 720 + 3 * int(os.environ.get('OT_HBM_RING_X', '105')), 200, 1170, 479),
     # R2 (479-814): SU0 SU1 [VM slice] SU2 SU3
     ('su0', 0, 479, 225, 814), ('su1', 225, 479, 450, 814), ('vm', 450, 479, 720, 814),
     ('su2', 720, 479, 945, 814), ('su3', 945, 479, 1170, 814),
@@ -131,7 +131,7 @@ RING = 93
 # P6 (COORD 10-23 18:23 (2)): q_hc2/hc7 G2 congestion is real (3 x 363-um bankq cores + 2.5-3.8 kb ft in an 803-um
 # square, M1-M5 blocked over 61%).  The die height is at the 33-mm reticle, so the hc tiles grow in x only (RING_X
 # lattice units; r1e above C0 gives up the width).  The ring's N/S faces and the free channel beside the cores grow.
-RING_X = int(os.environ.get('OT_HBM_RING_X', '93'))
+RING_X = int(os.environ.get('OT_HBM_RING_X', '105'))
 HC_X0, HC_Y0 = 720, 200
 # hc ring: as-built relative order (col0: 7,0,1 bottom->top; top row 1,2,3; col2: 3,4,5; bottom 7,6,5; qhub centre)
 HC_POS = {7: (0, 0), 0: (0, 1), 1: (0, 2), 2: (1, 2), 3: (2, 2), 4: (2, 1), 5: (2, 0), 6: (1, 0), 'q': (1, 1)}
@@ -675,7 +675,7 @@ def main():
     cen2 = dict(groups=groups)
     segs, adj = v1.build_graph(parts)
     for s_ in segs.values():
-        s_['cap'] *= float(os.environ.get('OT_HBM_LONG_CAP', '0.86')) if s_['len'] >= 1000 else float(os.environ.get('OT_HBM_SHORT_CAP', '0.70'))   # window parity / 10-um margins cost up to ~15% of the face over the routing estimate (P5: more on sub-mm faces, the 803-um hc ring)
+        s_['cap'] *= float(os.environ.get('OT_HBM_LONG_CAP', '0.86')) if s_['len'] >= 1000 else float(os.environ.get('OT_HBM_SHORT_CAP', '0.65'))   # window parity / 10-um margins cost up to ~15% of the face over the routing estimate (P5: more on sub-mm faces, the 803-um hc ring)
     P = {p['name']: p for p in parts}
     B = v1.bundles(cen2, {**where, **SMQ_WHERE}, P)
     orb = v1.orbits(B, P)

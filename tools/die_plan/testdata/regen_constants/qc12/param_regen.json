@@ -1,0 +1,160 @@
+{
+"file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+"changed": [
+{
+"inst": "io_collective.u_io.u_collective",
+"param": "LS",
+"asbuilt": "376",
+"bound": 389
+},
+{
+"inst": "io_collective.u_io.g_face[2].u_face",
+"param": "PHY",
+"asbuilt": "339",
+"bound": 351
+},
+{
+"inst": "io_collective.u_io.g_face[2].u_face",
+"param": "L",
+"asbuilt": "376",
+"bound": 389
+},
+{
+"inst": "io_collective.u_io.g_face[2].u_face",
+"param": "R",
+"asbuilt": "0",
+"bound": 7
+},
+{
+"inst": "io_collective.u_io.g_face[2].u_face",
+"param": "PEER_R",
+"asbuilt": "5",
+"bound": 8
+},
+{
+"inst": "io_collective.u_io.g_face[3].u_face",
+"param": "PHY",
+"asbuilt": "339",
+"bound": 343
+},
+{
+"inst": "io_collective.u_io.g_face[3].u_face",
+"param": "L",
+"asbuilt": "376",
+"bound": 389
+},
+{
+"inst": "io_collective.u_io.g_face[3].u_face",
+"param": "R",
+"asbuilt": "0",
+"bound": 8
+},
+{
+"inst": "io_collective.u_io.g_face[3].u_face",
+"param": "PEER_R",
+"asbuilt": "0",
+"bound": 8
+},
+{
+"inst": "io_collective.u_io.g_face[4].u_face",
+"param": "PHY",
+"asbuilt": "339",
+"bound": 351
+},
+{
+"inst": "io_collective.u_io.g_face[4].u_face",
+"param": "L",
+"asbuilt": "376",
+"bound": 389
+},
+{
+"inst": "io_collective.u_io.g_face[4].u_face",
+"param": "R",
+"asbuilt": "5",
+"bound": 8
+},
+{
+"inst": "io_collective.u_io.g_face[4].u_face",
+"param": "PEER_R",
+"asbuilt": "0",
+"bound": 7
+}
+],
+"record": {
+"rule": "The bound top dissolves qfd_collective_static_io_production: the SerDes legs (face phy_tx -> io_serdes_j tx_flit,\nio_serdes_j rx_flit -> face phy_rx) and the core<->face relays (u_collective sx_j -> face tx_*, face rx_* ->\nu_collective sr_j) become plan lanes of new depth, so the as-built LS / PHY / R parameters no longer match.  Rule\n(tools/qwen_split/lane_groups.py collective_calendar, as STEWARD-TOKh tp8 used it on the bound top):\n  TX_j = face[2+j].phy_tx -> io_serdes_j  depth,  RX_j = io_serdes_j -> face[2+j].phy_rx depth (flit == valid == up)\n  RS_j = u_collective sx_j -> face[2+j] depth == face[2+j] rx -> u_collective sr_j depth (one relay depth per port)\n  LX_j = TX(peer j) + RX_j,  LS = max_j KC + KW + 17 + PS + LX_j + RS_j + RS_peer(j)\nFaces f=2..4: PHY = PS + LX_j, L = LS, R = RS_j, PEER_R = RS_peer(j); u_collective: LS.  UCIe faces 0/1 (RU) are\nchecked unchanged.  The ports used here are excluded from land_align (asbuilt.land_align_exclude): their timing is\ncarried by these parameters, not by as-built relative offsets.",
+"TX": [
+2,
+2,
+10
+],
+"RX": [
+2,
+2,
+10
+],
+"RS": [
+7,
+8,
+8
+],
+"RU": 0,
+"LX": [
+12,
+4,
+12
+],
+"LS": 389,
+"calendar": {
+"rule": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+"KC": 4,
+"KW": 2,
+"PS": 339,
+"PU": 20,
+"RU": 0,
+"RS": [
+7,
+8,
+8
+],
+"ports": {
+"0": {
+"LX": 12,
+"R": 7,
+"R_peer": 8,
+"L_min": 389
+},
+"1": {
+"LX": 4,
+"R": 8,
+"R_peer": 8,
+"L_min": 382
+},
+"2": {
+"LX": 12,
+"R": 8,
+"R_peer": 7,
+"L_min": 389
+}
+},
+"LS": 389,
+"LU": 43,
+"binding_port": 0,
+"rtl_default_LS": 376,
+"delta_vs_default": 13
+},
+"bench_args": "--relays 0 7 8 8 --lanes 2 2 10 2 2 10 --lx 12 4 12",
+"ucie_face_params": {
+"FW": 546,
+"L": 376,
+"PEER_R": 5,
+"PHY": 339,
+"PLAND": 0,
+"PLD": 2,
+"PLK": 1,
+"R": 0,
+"SAFE": 0,
+"TOK_REG": 0,
+"UP_SYNC": 0
+}
+}
+}

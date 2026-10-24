@@ -9,7 +9,8 @@
   "col_h9_r2": "physical/ref_tile/s81frame_col_h9_vgch_b2/spec.json",
   "col_h10_r0": "physical/ref_tile/s81frame_col_h10_vg/spec.json (cut, y shift 0.0), row gaps x 0.9811",
   "col_h10_r1": "physical/ref_tile/s81frame_col_h10_vg/spec.json (cut, y shift -1231.2), row gaps x 0.9120, 4 row(s) lifted to the 13.8-um macro gap",
-  "col_h10_r2": "physical/ref_tile/s81frame_col_h10_vg/spec.json (cut, y shift -2397.6), row gaps x 0.9913"
+  "col_h10_r2": "physical/ref_tile/s81frame_col_h10_vg/spec.json (cut, y shift -2397.6), row gaps x 0.9913",
+  "s81_p9_v46": "S81-P9 10-23 v4.6: r0 u_cf next to the x_i0 windows (h9 (1131.84,604.8), h10 (1149.12,466.56)); conflicting E-column macros unblocked to the nearest legal site, then tools/s81_dv/frame_resite optimize (u_cf fixed; plan v4.6 windows): modelled max hop h9 r0 685, h10 r0 745 (p1) / 806 (p4 x_i0->u_cf, next round)"
  },
  "masters": {
   "col_h9": {
@@ -61,8 +62,8 @@
      "lef": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N.lef",
      "lib": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N_tt.lib",
      "origin_um": [
-      864.0,
-      864.0
+      397.44,
+      915.84
      ],
      "orient": "R0",
      "size_um": [
@@ -70,8 +71,8 @@
       8.64
      ],
      "kit_origin_um": [
-      864.0,
-      864.0
+      397.44,
+      915.84
      ]
     },
     {
@@ -101,8 +102,8 @@
      "lef": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S.lef",
      "lib": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
      "origin_um": [
-      216.0,
-      43.2
+      267.84,
+      181.44
      ],
      "orient": "R0",
      "size_um": [
@@ -110,8 +111,8 @@
       17.28
      ],
      "kit_origin_um": [
-      216.0,
-      43.2
+      267.84,
+      181.44
      ]
     },
     {
@@ -161,8 +162,8 @@
      "lef": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S.lef",
      "lib": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
      "origin_um": [
-      1252.8,
-      475.2
+      699.84,
+      570.24
      ],
      "orient": "R0",
      "size_um": [
@@ -170,8 +171,8 @@
       17.28
      ],
      "kit_origin_um": [
-      1252.8,
-      475.2
+      699.84,
+      570.24
      ]
     },
     {
@@ -182,7 +183,7 @@
      "lib": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib",
      "origin_um": [
       1131.84,
-      129.6
+      604.8
      ],
      "orient": "R0",
      "size_um": [
@@ -190,8 +191,8 @@
       69.12
      ],
      "kit_origin_um": [
-      1123.2,
-      86.4
+      1131.84,
+      604.8
      ]
     },
     {
@@ -461,8 +462,8 @@
      "lef": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu.lef",
      "lib": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
      "origin_um": [
-      1209.6,
-      561.6
+      1218.24,
+      509.76
      ],
      "orient": "R0",
      "size_um": [
@@ -470,8 +471,8 @@
       77.76
      ],
      "kit_origin_um": [
-      1209.6,
-      561.6
+      1218.24,
+      509.76
      ]
     },
     {
@@ -602,7 +603,7 @@
      "lib": "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg_tt.lib",
      "origin_um": [
       1296.0,
-      561.6
+      552.96
      ],
      "orient": "R0",
      "size_um": [
@@ -611,7 +612,7 @@
      ],
      "kit_origin_um": [
       1296.0,
-      561.6
+      552.96
      ]
     },
     {
@@ -621,8 +622,8 @@
      "lef": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq.lef",
      "lib": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
      "origin_um": [
-      475.2,
-      43.2
+      552.96,
+      146.88
      ],
      "orient": "R0",
      "size_um": [
@@ -630,8 +631,8 @@
       51.84
      ],
      "kit_origin_um": [
-      475.2,
-      43.2
+      552.96,
+      146.88
      ]
     },
     {
@@ -641,8 +642,8 @@
      "lef": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq.lef",
      "lib": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
      "origin_um": [
-      604.8,
-      43.2
+      864.0,
+      34.56
      ],
      "orient": "R0",
      "size_um": [
@@ -650,8 +651,8 @@
       51.84
      ],
      "kit_origin_um": [
-      604.8,
-      43.2
+      864.0,
+      34.56
      ]
     },
     {
@@ -721,8 +722,8 @@
      "lef": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef",
      "lib": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
      "origin_um": [
-      1010.88,
-      51.84
+      1140.48,
+      250.56
      ],
      "orient": "R0",
      "size_um": [
@@ -730,8 +731,8 @@
       30.24
      ],
      "kit_origin_um": [
-      388.8,
-      129.6
+      1140.48,
+      250.56
      ]
     },
     {
@@ -741,8 +742,8 @@
      "lef": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536.lef",
      "lib": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
      "origin_um": [
-      1157.76,
-      216.0
+      1278.72,
+      509.76
      ],
      "orient": "R0",
      "size_um": [
@@ -750,8 +751,8 @@
       25.92
      ],
      "kit_origin_um": [
-      518.4,
-      129.6
+      1278.72,
+      509.76
      ]
     },
     {
@@ -761,8 +762,8 @@
      "lef": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef",
      "lib": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
      "origin_um": [
-      388.8,
-      475.2
+      596.16,
+      552.96
      ],
      "orient": "R0",
      "size_um": [
@@ -770,8 +771,8 @@
       30.24
      ],
      "kit_origin_um": [
-      388.8,
-      475.2
+      596.16,
+      552.96
      ]
     },
     {
@@ -4569,8 +4570,8 @@
      "lef": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S.lef",
      "lib": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
      "origin_um": [
-      1252.8,
-      803.52
+      596.16,
+      855.36
      ],
      "orient": "R0",
      "size_um": [
@@ -4578,8 +4579,8 @@
       17.28
      ],
      "kit_origin_um": [
-      1252.8,
-      805.68
+      596.16,
+      855.36
      ]
     },
     {
@@ -4590,7 +4591,7 @@
      "lib": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib",
      "origin_um": [
       1149.12,
-      129.6
+      466.56
      ],
      "orient": "R0",
      "size_um": [
@@ -4598,8 +4599,8 @@
       69.12
      ],
      "kit_origin_um": [
-      1123.2,
-      85.32
+      1149.12,
+      466.56
      ]
     },
     {
@@ -4849,8 +4850,8 @@
      "lef": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu.lef",
      "lib": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
      "origin_um": [
-      1166.4,
-      423.36
+      1019.52,
+      457.92
      ],
      "orient": "R0",
      "size_um": [
@@ -4858,8 +4859,8 @@
       77.76
      ],
      "kit_origin_um": [
-      1166.4,
-      424.44
+      1019.52,
+      457.92
      ]
     },
     {
@@ -5169,8 +5170,8 @@
      "lef": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef",
      "lib": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
      "origin_um": [
-      1019.52,
-      51.84
+      760.32,
+      483.84
      ],
      "orient": "R0",
      "size_um": [
@@ -5178,8 +5179,8 @@
       30.24
      ],
      "kit_origin_um": [
-      388.8,
-      127.44
+      760.32,
+      483.84
      ]
     },
     {
@@ -5190,7 +5191,7 @@
      "lib": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
      "origin_um": [
       1226.88,
-      432.0
+      423.36
      ],
      "orient": "R0",
      "size_um": [
@@ -5198,8 +5199,8 @@
       25.92
      ],
      "kit_origin_um": [
-      518.4,
-      127.44
+      1226.88,
+      423.36
      ]
     },
     {

@@ -1,0 +1,88 @@
+[
+ {
+  "name": "io_io_serdes_2_u_io_serdes_2",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "io_serdes_2",
+  "rect_um": [
+   0.0,
+   0.0,
+   1563.84,
+   2324.16
+  ],
+  "sites": 150,
+  "pitch_um": 150.0,
+  "signals": 50,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um",
+  "note": "die_io.py plan: u_io_serdes_2"
+ },
+ {
+  "name": "io_io_serdes_1_u_io_serdes_1",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "io_serdes_1",
+  "rect_um": [
+   0.0,
+   2324.16,
+   1563.84,
+   4648.32
+  ],
+  "sites": 150,
+  "pitch_um": 150.0,
+  "signals": 50,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um",
+  "note": "die_io.py plan: u_io_serdes_1"
+ },
+ {
+  "name": "io_io_serdes_u_io_serdes_1",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "io_serdes",
+  "rect_um": [
+   0.0,
+   13746.24,
+   1563.84,
+   16070.4
+  ],
+  "sites": 150,
+  "pitch_um": 150.0,
+  "signals": 50,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um",
+  "note": "die_io.py plan: u_io_serdes_1"
+ },
+ {
+  "name": "io_ucie_kv_u_ucie_kv",
+  "kind": "phy_macro",
+  "iface": "ucie",
+  "part": "ucie_kv",
+  "rect_um": [
+   0.0,
+   9244.8,
+   777.6,
+   10022.4
+  ],
+  "sites": 289,
+  "pitch_um": 45.0,
+  "signals": 144,
+  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
+  "note": "die_io.py plan: u_ucie_kv; host link (BFS 1 port hop(s) from glue): CONFIRM",
+  "host": true
+ },
+ {
+  "name": "io_coll_ucie_u_io_ucie",
+  "kind": "phy_macro",
+  "iface": "ucie",
+  "part": "coll_ucie",
+  "rect_um": [
+   0.0,
+   7603.2,
+   777.6,
+   8380.8
+  ],
+  "sites": 289,
+  "pitch_um": 45.0,
+  "signals": 144,
+  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
+  "note": "die_io.py plan: u_io_ucie"
+ }
+]

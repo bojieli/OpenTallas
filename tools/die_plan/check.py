@@ -26,6 +26,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
+  G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
+              cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
 import argparse
@@ -53,7 +55,9 @@ def lnum(name):
 
 # G0C (COORD 10-23 ~20:10): the plan-completeness / hard-core rules are ERRORs only under `check.py --completeness`;
 # plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
-G0C_CHECKS = ("hard_cores", "core_faces", "complete")
+G0C_CHECKS = ("hard_cores", "core_faces", "complete",
+              # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
+              "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget")
 
 
 class Report:
@@ -791,6 +795,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
             if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
                 cent[c["inst"]] = (c["origin_um"][0] + c["outline_um"][0] / 2,
                                    c["origin_um"][1] + c["outline_um"][1] / 2)
+        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in t.get("internal_stations", [])
+                    if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
             if b.get("leaf") and "." in b["leaf"]:
@@ -840,7 +846,11 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     if kind == "bus":
                         if bt is None:
                             bt = _bus_targets(P, tn)
-                        if nm in bt:
+                        if nm in ist_last:
+                            # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station
+                            # (regs_um[-1], the register next to the core pin), not from the face window
+                            pts.append((f"station {nm}", ist_last[nm]))
+                        elif nm in bt:
                             pts.append((f"face {bt[nm][0]} ({nm})", bt[nm][1]))
                     elif kind == "net":
                         pts += [(f"{oi} (net {nm})", cent[oi]) for oi in sorted(net_ends.get(nm, ()))
@@ -1047,7 +1057,7 @@ def check_die_io(P, R):
         if x0 < px0 - EPS or y0 < py0 - EPS or x1 > px1 + EPS or y1 > py1 + EPS:
             R.err("die_io", f"io window {w['name']}: not inside its host partition {w['part']}")
         bits = 0
-        for pid in w["ports"]:
+        for pid in w.get("ports", []):
             pr = P.ports.get(pid)
             if pr is None or pid not in die_ports:
                 R.err("die_io", f"io window {w['name']}: {pid} is not a die IO port")
@@ -1172,6 +1182,13 @@ def g0c_summary(P, R):
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False):
     R = Report(completeness)
+    io_src = "plan" if raw.get("die", {}).get("io") else None
+    sc = Path(plan_dir) / "die_io.json" if plan_dir else None
+    if io_src is None and sc is not None and sc.exists():
+        # PLAN-TOOL5: die IO sidecar (die_io.py plan --out PLANDIR/die_io.json) when the plan has no die.io: it survives
+        # the die generators' regeneration; a die.io list in the plan always wins
+        raw = dict(raw, die=dict(raw["die"], io=json.loads(sc.read_text())))
+        io_src = str(sc)
     errs = S.validate(raw)
     for e in errs:
         R.err("schema", e)
@@ -1196,6 +1213,17 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
+    # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))
+    import die_io
+    import xdie
+    summ["die_io"]["plan"] = die_io.check(P, R)
+    summ["die_io"]["source"] = io_src
+    summ["cut_lines"] = xdie.check_cut_lines(P, R, geo)
+    summ["reach"] = xdie.check_reach(P, R, geo)
+    summ["face_tracks"] = xdie.check_face_tracks(P, R, fp)
+    summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
+    summ["g0c"] = g0c_summary(P, R)
+    summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:

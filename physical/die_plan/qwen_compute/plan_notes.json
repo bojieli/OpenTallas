@@ -1,10 +1,10 @@
 {
  "variant": "B",
- "partitions": 388,
+ "partitions": 377,
  "types": 56,
- "types_merged": 146,
- "ports": 3716,
- "lanes": 2154,
+ "types_merged": 135,
+ "ports": 3002,
+ "lanes": 2015,
  "die_um": [
   31216.32,
   25228.8
@@ -13,7 +13,7 @@
  "content_status_per_instance": {
   "reuse": 1717,
   "rework": 906,
-  "new": 381
+  "new": 370
  },
  "max_cells_type": [
   782764,
@@ -102,7 +102,7 @@
    "macros": 40
   },
   "coll_core": {
-   "cells": 150000,
+   "cells": 120000,
    "instances": 1,
    "outline_um": [
     786.24,
@@ -164,6 +164,15 @@
    ],
    "macros": 0
   },
+  "coll_ucie": {
+   "cells": 40000,
+   "instances": 1,
+   "outline_um": [
+    777.6,
+    1641.6
+   ],
+   "macros": 0
+  },
   "glue": {
    "cells": 120000,
    "instances": 1,
@@ -210,10 +219,10 @@
    "macros": 1
   },
   "sle_ctl": {
-   "cells": 183360,
+   "cells": 253360,
    "instances": 12,
    "outline_um": [
-    613.44,
+    1226.88,
     1080.0
    ],
    "macros": 0
@@ -358,15 +367,6 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1080.0
-   ],
-   "macros": 0
-  },
-  "sle_tap": {
-   "cells": 70000,
-   "instances": 12,
-   "outline_um": [
-    613.44,
     1080.0
    ],
    "macros": 0
@@ -525,6 +525,65 @@
    "macros": 0
   }
  },
+ "su_core_cells": {
+  "sle_su_c.u_suvm_u_vm8q_u_va": 82688,
+  "sle_su_c.u_suvm_u_vm8q_u_vb": 82688,
+  "sle_su_c.u_suvm_u_vm8q_u_vc": 82688,
+  "sle_su_c.u_suvm_u_vm8q_u_cl": 82688,
+  "sle_su_c.u_suvm_u_vm8q_u_pg": 105945,
+  "sle_su_c.u_suvm_u_vm8q_u_ch": 82688,
+  "sle_su_c.u_suvm_u_vm8q_u_bt": 105945,
+  "sle_su_c.u_suvm_u_su8": 25840,
+  "sle_su_l0.u_lane0": 103360,
+  "sle_su_l0.u_lane1": 103360,
+  "sle_su_l0.u_lane2": 103360,
+  "sle_su_l0.u_lane3": 103360,
+  "sle_su_l1.u_lane4": 103360,
+  "sle_su_l1.u_lane5": 103360,
+  "sle_su_l1.u_lane6": 103360,
+  "sle_su_l1.u_lane7": 103360,
+  "slw_su_c.u_suvm_u_vm8q_u_va": 82688,
+  "slw_su_c.u_suvm_u_vm8q_u_vb": 82688,
+  "slw_su_c.u_suvm_u_vm8q_u_vc": 82688,
+  "slw_su_c.u_suvm_u_vm8q_u_cl": 82688,
+  "slw_su_c.u_suvm_u_vm8q_u_pg": 105945,
+  "slw_su_c.u_suvm_u_vm8q_u_ch": 82688,
+  "slw_su_c.u_suvm_u_vm8q_u_bt": 105945,
+  "slw_su_c.u_suvm_u_su8": 25840,
+  "slw_su_l0.u_lane0": 110897,
+  "slw_su_l0.u_lane1": 110897,
+  "slw_su_l0.u_lane2": 110897,
+  "slw_su_l0.u_lane3": 110897,
+  "slw_su_l1.u_lane4": 110897,
+  "slw_su_l1.u_lane5": 110897,
+  "slw_su_l1.u_lane6": 110897,
+  "slw_su_l1.u_lane7": 110897
+ },
+ "r3_internal_stations": {
+  "buses": {
+   "cbf_q00.na_i00": 2,
+   "cbf_q00.nb_i00": 3,
+   "cbf_q00.y_o00": 1,
+   "cbf_q00_s2.na_i00": 2,
+   "cbf_q00_s2.nb_i00": 3,
+   "cbf_q00_s2.y_o00": 1,
+   "cbf_q01.nb_i12": 2,
+   "cbf_q01.y_o12": 1,
+   "cbf_q01_s2.nb_i12": 2,
+   "cbf_q01_s2.y_o12": 1,
+   "cbf_q11.na_i22": 1,
+   "cbf_q11.nb_i22": 1,
+   "cbn_q00.na_i00": 2,
+   "cbn_q00.nb_i00": 3,
+   "cbn_q00.y_o00": 1,
+   "cbn_q01.nb_i12": 2,
+   "cbn_q01.y_o12": 1,
+   "cbn_q11.na_i22": 1,
+   "cbn_q11.nb_i22": 1
+  },
+  "lanes": 288,
+  "stations": 31
+ },
  "internal_bits_absorbed": {
   "bc00": 24768,
   "bc02": 24768,
@@ -562,9 +621,7 @@
   "crec_tx_p": 549,
   "crec_rx_p": 547,
   "crec_tx_r": 517,
-  "crec_rx_r": 515,
-  "cshr_rtx": 568,
-  "cshr_rrx": 566
+  "crec_rx_r": 515
  },
  "cell_estimate_method": "A0 = 187991 cells (NL rpf synth_stat incl. 10 ROM leaf macros); other leaves = outline area x 0.6 / 0.52 um2 per cell (A0 calibration); soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
  "census_coverage": {
@@ -765,7 +822,7 @@
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    1192.32
+    406.08
    ],
    "outline_um": [
     518.4,
@@ -865,7 +922,8 @@
   "glue_cells_est": {
    "coll_s": 15000,
    "coll_ft": 6000,
-   "coll_core": 150000,
+   "coll_core": 120000,
+   "coll_ucie": 40000,
    "coll_ftm": 8000,
    "coll_ftc": 8000,
    "coll_ftn": 6000,
@@ -2278,24 +2336,12 @@
       "kind": "core",
       "xy": [
        267.84,
-       1382.4
+       604.8
       ],
       "insertion_ps": 250,
       "insertion_tol_ps": 40,
       "budget_owner": "face core kit (11 internal roots below this tap)",
-      "from_root_um": 708.5
-     },
-     {
-      "name": "u_io_ucie.ck",
-      "kind": "core",
-      "xy": [
-       388.8,
-       794.88
-      ],
-      "insertion_ps": 250,
-      "insertion_tol_ps": 40,
-      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
-      "from_root_um": 0.0
+      "from_root_um": 311.0
      },
      {
       "name": "glue_00",
@@ -2335,7 +2381,7 @@
      }
     ],
     "max_from_root_um": 708.5,
-    "max_nearest_tap_um": 406.1,
+    "max_nearest_tap_um": 717.1,
     "glue_taps_over_290ps": []
    },
    "coll_ft": {
@@ -2566,6 +2612,65 @@
     "max_nearest_tap_um": 337.0,
     "glue_taps_over_290ps": []
    },
+   "coll_ucie": {
+    "root_um": [
+     388.8,
+     820.8
+    ],
+    "taps": [
+     {
+      "name": "u_io_ucie.ck",
+      "kind": "core",
+      "xy": [
+       388.8,
+       388.8
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
+      "from_root_um": 432.0
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       406.08
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       777.6,
+       820.8
+      ],
+      "reach_um": 803.5,
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 414.7
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       1226.88
+      ],
+      "region_um": [
+       0.0,
+       820.8,
+       777.6,
+       1641.6
+      ],
+      "reach_um": 803.5,
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     }
+    ],
+    "max_from_root_um": 432.0,
+    "max_nearest_tap_um": 820.8,
+    "glue_taps_over_290ps": []
+   },
    "glue": {
     "root_um": [
      388.8,
@@ -2644,31 +2749,49 @@
    },
    "sle_ctl": {
     "root_um": [
-     311.04,
+     613.44,
      535.68
     ],
     "taps": [
      {
-      "name": "glue",
+      "name": "glue_00",
       "kind": "glue",
       "xy": [
-       311.04,
-       535.68
+       613.44,
+       267.84
       ],
       "region_um": [
        0.0,
        0.0,
+       1226.88,
+       540.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
        613.44,
+       812.16
+      ],
+      "region_um": [
+       0.0,
+       540.0,
+       1226.88,
        1080.0
       ],
-      "reach_um": 855.4,
-      "insertion_ps": 270,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 0.0
+      "from_root_um": 276.5
      }
     ],
-    "max_from_root_um": 0.0,
-    "max_nearest_tap_um": 0.0,
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
     "glue_taps_over_290ps": []
    },
    "sle_fe_v1": {
@@ -3141,35 +3264,6 @@
        0.0,
        0.0,
        622.08,
-       1080.0
-      ],
-      "reach_um": 855.4,
-      "insertion_ps": 270,
-      "insertion_tol_ps": 40,
-      "from_root_um": 0.0
-     }
-    ],
-    "max_from_root_um": 0.0,
-    "max_nearest_tap_um": 0.0,
-    "glue_taps_over_290ps": []
-   },
-   "sle_tap": {
-    "root_um": [
-     311.04,
-     535.68
-    ],
-    "taps": [
-     {
-      "name": "glue",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       535.68
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
        1080.0
       ],
       "reach_um": 855.4,
@@ -3746,7 +3840,7 @@
     ]
    },
    "coll_f2": {
-    "abutting": 4,
+    "abutting": 5,
     "linked": 2,
     "linked_to": [
      "coll_core",
@@ -3754,11 +3848,12 @@
     ]
    },
    "coll_core": {
-    "abutting": 4,
-    "linked": 2,
+    "abutting": 5,
+    "linked": 3,
     "linked_to": [
      "coll_f2",
-     "coll_f3"
+     "coll_f3",
+     "coll_ucie"
     ]
    },
    "coll_f3": {
@@ -3863,14 +3958,26 @@
   {
    "role": "cshr_rtx",
    "src": "coll_core",
-   "dst": "coll_core",
+   "dst": "coll_ucie",
    "bits": 568
   },
   {
    "role": "cshr_rrx",
-   "src": "coll_core",
+   "src": "coll_ucie",
    "dst": "coll_core",
    "bits": 566
+  },
+  {
+   "role": "cshr_ptx",
+   "src": "coll_core",
+   "dst": "coll_ucie",
+   "bits": 600
+  },
+  {
+   "role": "cshr_prx",
+   "src": "coll_ucie",
+   "dst": "coll_core",
+   "bits": 598
   }
  ],
  "census_dropped_bits": {}

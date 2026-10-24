@@ -12,6 +12,7 @@
     strict replay FAILS the check
   4 event words (LB2-S81/EVENTS): out-event streams (valid bit, masked data) checked at edge + age, consumer cuts driven
     with the full words, in-event words, producer gaps -> unencoded, offdie / internal events apart, class mutants
+  6 entry lowering (TOKj 10-23): line CTL rows derive the column-4 V rung beat; KS job start forwarded to u_eng.f_ks
 """
 import json
 import shutil
@@ -342,10 +343,43 @@ def seqhost_reset(tmp):
        'calendar_start_phase reads the begin header (not the seal word)')
 
 
+def entry_lowering(tmp):
+    """6 (TOKj-S81 10-23, fc30 entry): (a) a CTL row compiled at a line stop (u_s_3N.ri_e) also derives the seq_host V
+    rung beat on u_s_4N.vi (w_tvN_seqhost: job17's 51 rung words were unscheduled on a strict lane); a vi row is not
+    duplicated; (b) the KS job start is forwarded whole to u_eng.f_ks (HOSTB_ENABLE 0 mux) at f_ks landed + the eks
+    lane age; another seqhost master encodes no forward"""
+    class D:
+        links = {f'xrW_{c}N': dict(age=3, src=[(f'u_s_{c + 1}N', 'ro_w')], dst=[(f'u_s_{c}N', 'ri_e')]) for c in range(7)} | \
+            {f'xrE_{c}N': dict(age=3, src=[(f'u_s_{c}N', 'ro_e')], dst=[(f'u_s_{c + 1}N', 'ri_w')]) for c in range(7)}
+    S = dict(events=[dict(kind='CTL', dir='in', inst='u_s_3N', port='ri_e', cycle=100, payload='template 7', tag='r0')])
+    ev = R.derive_line_events(S, D())
+    vi = [e for e in ev if e['port'] == 'vi']
+    # line out at col 4 = 100 - (3 + RSTOP_HOP) = 95; rung beat at vi = 95 + RSTOP_HOP - inject (6, no contract) = 91
+    ok(len(vi) == 1 and vi[0]['inst'] == 'u_s_4N' and vi[0]['cycle'] == 91, 'line CTL row derives the column-4 vi rung beat')
+    S2 = dict(events=S['events'] + [dict(vi[0], derived_from=None)])
+    ok(not [e for e in R.derive_line_events(S2, D()) if e['port'] == 'vi'], 'a compiled vi rung beat is not derived twice')
+    class E:
+        inst = {'u_seqhost': dict(master='dsdv_hostb_seqhost_mux', params='.HOSTB_ENABLE(0), .STATIC_KS6(0)'),
+                'u_eng': dict(master='dsdv_eng_rr', params='')}
+        links = {'eks_7N': dict(age=11, out_net='w_eks_7N_lnd')}
+        def port_bits(self, inst, port):
+            if (inst, port) == ('u_seqhost', 'engram_f_ks'):
+                return [('w_eks_7N_src', i) for i in range(53)]
+            if (inst, port) == ('u_eng', 'f_ks'):
+                return [('w_eks_7N_lnd', i) for i in range(53)]
+            return []
+    w = R.ks_engram_words(E(), 0x1000082e4fffff, -5)
+    ok(len(w) == 1 and w[0]['inst'] == 'u_eng' and w[0]['cycle_land'] == 6
+       and sum(v << b for (n, b), v in w[0]['bits'].items()) == 0x1000082e4fffff,
+       'KS job start forwarded whole to u_eng.f_ks at landed -5 + eks age 11 = 6')
+    E.inst = dict(E.inst, u_seqhost=dict(master='dsdv_hostb_seqhost_mux', params='.HOSTB_ENABLE(1)'))
+    ok(R.ks_engram_words(E(), 1, -5) == [], 'hostb-enabled seqhost: no KS forward encoded')
+
+
 def main():
     with tempfile.TemporaryDirectory() as t:
         tmp = Path(t)
-        for f in (real_die, witnesses, synthetic, events, seqhost_reset):
+        for f in (real_die, witnesses, synthetic, events, seqhost_reset, entry_lowering):
             d = tmp / f.__name__
             d.mkdir()
             f(d)

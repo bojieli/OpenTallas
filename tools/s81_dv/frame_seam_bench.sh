@@ -15,7 +15,7 @@
 # TWIN = the frame RTL under test (default the vgcs twin; the plan contents bench twin: frame_band_plan.py --bench-top).
 # SEAM_REF (always on): tools/s81_dv/frame_seam_ref.py adds the vgch reference twin and compares every seam output every
 # edge from SEAM_T0 (default 0) -- the ret calendar alone missed the x-seam mutants (x lands with slack before go).
-# Env: MUTS (default: base + all), LK (lane strap, default 2; LDLY passes to frame_bench.sh), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run, and check its return calendar with xs_place.py check, fixtures BF_FIXTURES,
+# Env: XO_LAT (x -> xo edges, default 1; 2 = plan contents with the R3-INTERNAL x chain), MUTS (default: base + all), LK (lane strap, default 2; LDLY passes to frame_bench.sh), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run, and check its return calendar with xs_place.py check, fixtures BF_FIXTURES,
 # the BF framed traffic on each build -- required to exercise the 536-b x2 payload seams).  Exit 0 = base PASS and every mutant FAIL.
 set -u
 O=$1; M=${2:-h9}; MASTER=col_$M; mkdir -p $O
@@ -40,6 +40,14 @@ for mod, early in (('ot_pl_seam_r', 'pad[CK-2]'), ('ot_pl_seam_r_pl', 'pk')):
     if not m: continue
     b = m.group(0).replace("assign o[c*CHUNK_BITS +: CW] = oq;", "assign o[c*CHUNK_BITS +: CW] = warm ? %s : {CW{1'b0}};" % early)
     n += b != m.group(0); s = s[:m.start()] + b + s[m.end():]
+# S81-P9-RTL: the relay-placeable reader (flop-last = station u_y_q): bypass the station, gate p_K with its warm flags
+m = re.search(r'module ot_pl_seam_r_plq #.*?endmodule', s, re.S)
+if m:
+    b = m.group(0).replace("ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_q (.ck(ck), .clr_n(wq), .d(pk), .q(o));",
+        "for (genvar c2 = 0; c2 < CHUNKS; c2 = c2 + 1) begin : g_short\n"
+        "        localparam integer CW2 = (W - c2*CHUNK_BITS < CHUNK_BITS) ? W - c2*CHUNK_BITS : CHUNK_BITS;\n"
+        "        assign o[c2*CHUNK_BITS +: CW2] = g_chunk[c2].warm ? pk[c2*CHUNK_BITS +: CW2] : {CW2{1'b0}};\n    end")
+    n += b != m.group(0); s = s[:m.start()] + b + s[m.end():]
 assert n >= 1; open(sys.argv[2], 'w').write(s)
 PY
            ;;
@@ -49,7 +57,8 @@ PY
   # seam observer (SEAM_REF): the vgch reference twin on the same traffic, every seam output compared every edge
   python3 tools/s81_dv/frame_seam_ref.py --master $MASTER --dut $lpsv --ref rtl/dsrom_sys/s81_dv/frame_lp/vgch/${MASTER}_l4_lp_rf3r.sv \
     --out-ref $od/ref_twin.sv --out-svh $od/seam_ref.svh --t0 ${SEAM_T0:-0} > $od/seam_ref.log 2>&1 || { echo "$mu: SEAM_REF_FAILED"; return 3; }
-  FRAME_LP=1 SET=plan FRAME_LP_SV=$lpsv SEAM_SV=$seam LK=${LK:-2} VFLAGS="-DSEAM_REF +incdir+$od $od/ref_twin.sv" \
+  # XO_LAT (S81-P9-RTL): the twin's x -> xo latency (2 for the plan contents with the R3-INTERNAL x-forward chain)
+  FRAME_LP=1 SET=plan FRAME_LP_SV=$lpsv SEAM_SV=$seam LK=${LK:-2} VFLAGS="-DSEAM_REF -DTB_XO_LAT=${XO_LAT:-1} +incdir+$od $od/ref_twin.sv" \
     bash tools/s81_dv/frame_bench.sh $od $MASTER $lmut > $od/frame_bench.log 2>&1
   local line; line=$(grep -m1 '^FRAME_SET' $od/frame_bench.log)
   local chk; chk=$(grep -h -m2 -E 'PLAN_MISMATCH|MISMATCH|FAULT|COVERAGE|BAD_' $od/check_plan.log 2>/dev/null | head -2 | cut -c1-200 | tr '\n' ' ')

@@ -1,14 +1,16 @@
 """Sink-anchored clock taps (COORD 10-23 R4, GEOM-REVIEW6 17:09, KV-P6).
 
 A partition whose clock sinks are FIRM-planned (face registers at their pins, ft stations on their planned routes, the
-per-tap reset synchronisers) gets its clock taps AT those sinks instead of on a blind ceil(w/pitch) x ceil(h/pitch)
-grid: the grid left 6/12 (400 um) and 11/20 (280 um) io_cor_v1 taps without a sink (dead spine drops, unloaded
+per-tap reset synchronisers) may ADD clock taps at those sinks to its ceil(w/pitch) x ceil(h/pitch) grid (KV-P6
+motivation: a coarse grid left 6/12 (400 um) and 11/20 (280 um) io_cor_v1 taps without a sink (dead spine drops, unloaded
 per-tap reset synchronisers) while the loaded taps held 2.7k sinks / 349-ps trees.
 
-    clock.tap_mode      "sinks" (default "grid": schema.tap_grid's pitch grid)
+    clock.tap_mode      "grid+sinks" / "sinks" (default "grid": schema.tap_grid's pitch grid).  CP1 r8 RULING (COORD
+                        10-23 21:26): these taps are ADDED to the R4 grid (schema.tap_grid), never replace it -- as a
+                        replacement the frame's interior logic (4.5-5.7k sinks) piled on one tap (spread 133 ps)
     clock.tap_radius_um max Manhattan distance tap -> planned sink (default 250: the 280-um grid's 205-222 ps trees)
-    clock.tap_max_sinks max planned sinks per tap (default 1500; clock_taps.tcl caps the real netlist at
-                        OT_TAP_MAX_SINKS = this value)
+    clock.tap_max_sinks max planned sinks per sink tap (clustering default 1500); clock_taps.tcl caps the real
+                        netlist per tap (grid or added) at OT_TAP_MAX_SINKS = this value, else 3000
 
 Method: the planned sinks (planned_sinks) are clustered by capacity- and radius-bounded Manhattan k-medians: k grows
 from ceil(N / cap) until every cluster fits the radius and the cap; a tap sits at its cluster's coordinate-wise median

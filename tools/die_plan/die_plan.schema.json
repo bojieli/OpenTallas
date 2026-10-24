@@ -150,6 +150,14 @@
         "minimum": 0,
         "maximum": 1
        }
+      },
+      "ft_route_layers": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "minItems": 1
       }
      }
     },
@@ -162,8 +170,7 @@
        "kind",
        "rect_um",
        "sites",
-       "part",
-       "ports"
+       "part"
       ],
       "additionalProperties": false,
       "properties": {
@@ -209,6 +216,26 @@
          "minLength": 1
         },
         "minItems": 1
+       },
+       "iface": {
+        "enum": [
+         "serdes",
+         "ucie",
+         "hbm_phy",
+         "host",
+         "refclk",
+         "other"
+        ]
+       },
+       "signals": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "host": {
+        "type": "boolean"
+       },
+       "basis": {
+        "type": "string"
        },
        "note": {
         "type": "string"
@@ -552,6 +579,7 @@
        "tap_mode": {
         "enum": [
          "grid",
+         "grid+sinks",
          "sinks"
         ]
        },
@@ -943,6 +971,14 @@
       "minimum": 0,
       "maximum": 1
      },
+     "ft_budget": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     },
      "face_layers": {
       "type": "object",
       "additionalProperties": false,
@@ -1210,6 +1246,14 @@
       "type": "string",
       "pattern": "^[A-Z][A-Z0-9_]*$"
      },
+     "route_layers": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^M[1-9]$"
+      },
+      "minItems": 1
+     },
      "note": {
       "type": "string"
      }
@@ -1453,6 +1497,14 @@
      "exclusiveMinimum": 0
     },
     "tap_pitch_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "reach_margin": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "io_edge_max_um": {
      "type": "number",
      "exclusiveMinimum": 0
     }
