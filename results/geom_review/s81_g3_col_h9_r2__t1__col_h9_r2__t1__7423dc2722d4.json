@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_col_h9_r2__t1",
+ "kit": "claude/s81-p9-1023@c9f28196a:physical/die_plan/s81 (plan v4.7a sha 779e4774) kit ot-epyc9:/srv/opentallas-scratch/claude/s81-p9-g3b/col_h9_r2__t1 (kits48: RTL 4f10921ce + tool ea725a12d)",
+ "verdict": "PASS",
+ "hash": "7423dc2722d42d5e",
+ "reasons": "[10-23 21:06] [GEOM-REVIEW8] [S81 G3 re-kit kits48, S81-P9 20:59 REQ; was GEOM-REVIEW6 16:58 PASS-COND (15 hops > 750: lpr forest 12, bn11 3; buffer origin open)] Kit hash recomputed by me on ot-epyc9 (C-sorted cat, 64 files, the GR5/6 scheme). I dumped 3_place.odb myself (openroad in docker, 24 GB cap) and rendered it: /home/ubuntu/scratch/geom-review8-1023/col_h9_r2__t1/r7.png. The author's place.png was also viewed. Lattice frame 1442.88x1226.88, 67 macros on the 8.64 lattice, logic in the row channels, max std density 0.61 per 14-um bin, no bins > 0.8. Interior top-level boxes are PG only, plus 9 clock taps and arst_n; 0 of the 10 taps sit on a macro. Pins are only on the plan frame windows (N/S, neighbour-bound as before). Reg-reg from the author's probe (main.txt): F>F max 723, F>M <= 627, M>M <= 592, async <= 409, 0 pairs > 750, so the previous items are fixed. Ties: TIEHI -> DFFASRHQN/SETN (unused async SET) plus 35 rsreg D=1, accepted as before. BUFFER ORIGIN (the open GR6 item), counted by me from instance names: 34691 buf/inv (70% of 49,811 non-tap cells; 8,232 FF) = GPL timing-driven repeaters (place#) 16431, repair_design (wire/load_slew) 8608, synth 7936 (mostly the per-flop DFFHQN QN inverters), port buffers 1490. This is explained by the macro-dominated frame (about 23k reg/macro pairs at 100-720 um). Std fill 0.8% of free is lattice-bound and noted only.",
+ "fixes": "Route gate ALLOWED (ot-run). Judge at CTS/route as usual: GRT overflow 0, TT setup >= 0 / FF hold >= 0, and R4 (owner): face-flop spread <= 80 ps at TT and FF, mean within 80 ps of the S81 common latency 250. A route failure means a new REQ, not a re-run.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T21:06:35-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
