@@ -1,0 +1,616 @@
+{
+ "_meta": {
+  "by": "CORE-HBM-OTHER 10-23",
+  "what": "RTL recipes of the HBM d4g other hard cores = the r18h5 die views (views.json + views/synth/<cell>/meta.json source_file_sha256 on ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM); file hashes verified equal to the die src commit d34578d6f (except: hc_qhub view synth is pre-0e5ce01cc but port-identical; xload cl2/xql routed views predate 50799fb45). Several files (vm_calendar_f20_role, idx_selector_static_sel, rootctl f32/kreg, aq_tree13 under physical/) are NOT on claude/core-hbm-1023: run gen_core_kit.py with --repo = an export of d34578d6f (git archive d34578d6f <files> + physical/asap7_memory_macros_v2/<macros>), e.g. /home/ubuntu/scratch/core-hbm-1023/other/src_d34578d6f. Keys type_id@pins_stem select one of several plan cores with the same type id (gen_core_kit.py --pins-file)."
+ },
+ "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52": {
+  "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "files": [
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv"
+  ],
+  "defines": [],
+  "params": {
+   "OREG": 1,
+   "KREG": 1,
+   "KRREG": 1,
+   "RREG": 1,
+   "WPAY": 1,
+   "QREG": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "closed ref_tile physical/ref_tile/hdie_pc_ctrl_cfg_h9c/kit.env (route 39834d852) = the view the r18h5 die binds (views.json view_dir); files read at d34578d6f",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 1229,
+  "closed_view_dir": "physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "macro_place": {
+   "g_wpay.u_write_payload": [
+    30.348,
+    30.24,
+    "R0"
+   ],
+   "u_response_payload": [
+    30.348,
+    84.24,
+    "R0"
+   ]
+  }
+ },
+ "ot_hbm_static_cfg_collar_idx256r__108x108": {
+  "top": "ot_hbm_static_cfg_collar_idx256r",
+  "files": [
+   "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PAGE_W": 1,
+   "NS": 1,
+   "NPR": 6,
+   "NREC": 8,
+   "NGO": 2,
+   "NB": 2,
+   "NF": 5,
+   "XSER": 0,
+   "FAN32": 1
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hbm_static_cfg_collar_idx256r (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e4/syn/ot_hbm_static_cfg_collar_idx256r @ b6461c6df); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_static_cfg_collar_idx256r",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 1559,
+  "closed_view_dir": "physical/ref_tile/hdie_col_idx256r_b/views/ot_hbm_static_cfg_collar_idx256r"
+ },
+ "ot_hbm_svc_sm_group_rel_id__776.304x646.92": {
+  "top": "ot_hbm_svc_sm_group_rel_id",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+   "LBANKS": 4,
+   "NID": 6,
+   "IDW": 9,
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "ID_COHORT": 1,
+   "XSLOT": 1,
+   "OPEN_IL": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_svc_sm_group_rel_id (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_group_rel_id)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_sm_group_rel_id",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7688
+ },
+ "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6": {
+  "top": "ot_hbm_svc_sm_xcal_rel_t",
+  "files": [
+   "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "XSLOT": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_svc_sm_xcal_rel_t (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_xcal_rel_t @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_xcal_rel_t)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_sm_xcal_rel_t",
+  "view_kind": "SYNTH",
+  "view_port_bits": 507
+ },
+ "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88": {
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "KRL1": 1
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343
+ },
+ "ot_hgi_sm_xload_cl2_bdring__86.4x302.4": {
+  "top": "ot_hgi_sm_xload_cl2_bdring",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PMAX": 8,
+   "NR": 32
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hgi_sm_xload_cl2_bdring (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_sm_xload_cl2_bdring @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_sm_xload_cl2_bdring",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 2689,
+  "closed_view_dir": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring"
+ },
+ "ot_hgi_sm_xload_xq_pegress__369.36x369.36": {
+  "top": "ot_hgi_sm_xload_xq_pegress",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PMAX": 8,
+   "NR": 32
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hgi_sm_xload_xq_pegress (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_sm_xload_xq_pegress @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_sm_xload_xq_pegress",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 5184,
+  "closed_view_dir": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress"
+ },
+ "ot_pdie_serdes__600.048x600.48": {
+  "top": "ot_pdie_serdes",
+  "files": [
+   "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc_mat.svh",
+   "rtl/dsrom_sys/s81_link/ot_s81_kp4_syn_mat.svh"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w2c_64x546_m1",
+   "ot_sram_1r1w_32x546_m1"
+  ],
+  "source": "r18h5 die view ot_pdie_serdes (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_pdie_serdes @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_pdie_serdes)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_pdie_serdes",
+  "view_kind": "SYNTH",
+  "view_port_bits": 2118,
+  "closed_view_dir": "physical/asap7_v41x_pdie_macros/ot_pdie_serdes",
+  "orfs_vars": {
+   "SYNTH_MEMORY_MAX_BITS": 65536
+  },
+  "orfs_note": "the 512x8 flop FIFO (4096 b) exceeds the ORFS default SYNTH_MEMORY_MAX_BITS; the die view maps it to flops too"
+ },
+ "hfd_hgi_vm_calendar_f20_role__196.344x196.56": {
+  "top": "hfd_hgi_vm_calendar_f20_role",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "defines": [],
+  "params": {
+   "W": 89
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv2 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv2 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv2)",
+  "source_commit": "d34578d6f",
+  "view_cell": "hfd_hgi_vm_calendar_f20_role__pv2",
+  "view_kind": "SYNTH",
+  "view_port_bits": 460
+ },
+ "ot_hbm_hc_qhub_static__734.4x734.4": {
+  "top": "ot_hbm_hc_qhub_static",
+  "files": [
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "DRLY": 2,
+   "CHX": 11
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_hc_qhub_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2c/syn/ot_hbm_hc_qhub_static @ 8691c1b63); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_hc_qhub_static)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_hc_qhub_static",
+  "view_kind": "SYNTH",
+  "view_port_bits": 9903
+ },
+ "ot_hbm_idx_qctl_static__194.832x195.48": {
+  "top": "ot_hbm_idx_qctl_static",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_qctl_static.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_idx_qctl_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_idx_qctl_static @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_qctl_static)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_idx_qctl_static",
+  "view_kind": "SYNTH",
+  "view_port_bits": 337
+ },
+ "ot_hbm_su_static_sfustore_hw__561.6x276.48": {
+  "top": "ot_hbm_su_static_sfustore_hw",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_su_static_sfustore_hw (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hbm_su_static_sfustore_hw @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_su_static_sfustore_hw",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 1829,
+  "closed_view_dir": "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw"
+ },
+ "ot_hbm_svc_wb_kport_q__475.2x475.2": {
+  "top": "ot_hbm_svc_wb_kport_q",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv",
+   "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+   "WOPEN": 0,
+   "MUT": 0
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_svc_wb_kport_q (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_svc_wb_kport_q @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_wb_kport_q)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_wb_kport_q",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7084
+ },
+ "ot_hgi_coll_gq_issue__237.6x237.6": {
+  "top": "ot_hgi_coll_gq_issue",
+  "files": [
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "r18h5 die view ot_hgi_coll_gq_issue (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_coll_gq_issue @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_coll_gq_issue)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_coll_gq_issue",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4032
+ },
+ "ot_hgi_coll_gq_land__237.6x237.6": {
+  "top": "ot_hgi_coll_gq_land",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "r18h5 die view ot_hgi_coll_gq_land (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_coll_gq_land @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_coll_gq_land",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 3880,
+  "closed_view_dir": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land"
+ },
+ "ot_hgi_coll_inj_idx_join_rg__216x432": {
+  "top": "ot_hgi_coll_inj_idx_join_rg",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv"
+  ],
+  "defines": [],
+  "params": {
+   "INJLAT": 12
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hgi_coll_inj_idx_join_rg (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_coll_inj_idx_join_rg @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_coll_inj_idx_join_rg",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 4761,
+  "closed_view_dir": "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg"
+ },
+ "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84": {
+  "top": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "files": [
+   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv",
+   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hgi_dma_back_static_vp4_banks_cp (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_dma_back_static_vp4_banks_cp @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_dma_back_static_vp4_banks_cp)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_dma_back_static_vp4_banks_cp",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4947
+ },
+ "ot_hgi_sfu_programme_store_r10__1080x950.4": {
+  "top": "ot_hgi_sfu_programme_store_r10",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_store_stripe_leaf_r10.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PAGE_AW": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_512x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hgi_sfu_programme_store_r10 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hgi_sfu_programme_store_r10 @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_sfu_programme_store_r10)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hgi_sfu_programme_store_r10",
+  "view_kind": "SYNTH",
+  "view_port_bits": 2904
+ },
+ "hfd_ep_static__434.72x371.52@hfd_ep_static": {
+  "top": "hfd_ep_static",
+  "files": [
+   "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source": "r18h5 die view hfd_ep_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/hfd_ep_static @ 1fe61477b); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "hfd_ep_static",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 2288,
+  "closed_view_dir": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static"
+ },
+ "hfd_ep_static__434.72x371.52@hfd_ep_static__434.72x371.52": {
+  "top": "hfd_ep_static",
+  "files": [
+   "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source": "r18h5 die view hfd_ep_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/hfd_ep_static @ 1fe61477b); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "hfd_ep_static",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 2288,
+  "closed_view_dir": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static"
+ },
+ "hfd_hgi_vm_calendar_f20_role__241.92x116.64@hfd_hgi_vm_calendar_f20_role__pv0": {
+  "top": "hfd_hgi_vm_calendar_f20_role",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "defines": [],
+  "params": {
+   "W": 19
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv0 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv0 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv0)",
+  "source_commit": "d34578d6f",
+  "view_cell": "hfd_hgi_vm_calendar_f20_role__pv0",
+  "view_kind": "SYNTH",
+  "view_port_bits": 390
+ },
+ "hfd_hgi_vm_calendar_f20_role__241.92x116.64@hfd_hgi_vm_calendar_f20_role__pv1": {
+  "top": "hfd_hgi_vm_calendar_f20_role",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "defines": [],
+  "params": {
+   "W": 38
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv1 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv1 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv1)",
+  "source_commit": "d34578d6f",
+  "view_cell": "hfd_hgi_vm_calendar_f20_role__pv1",
+  "view_kind": "SYNTH",
+  "view_port_bits": 409
+ },
+ "ot_hbm_argmax_static_sw_vm_r2__118.8x118.8": {
+  "top": "ot_hbm_argmax_static_sw_vm_r2",
+  "files": [
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "TP": 192
+  },
+  "macros": [],
+  "source": "r18h5 die view ot_hbm_argmax_static_sw_vm_r2 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hbm_argmax_static_sw_vm_r2 @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_argmax_static_sw_vm_r2",
+  "view_kind": "ROUTED_UNBOUND",
+  "view_port_bits": 1119,
+  "closed_view_dir": "physical/ref_tile/hbm_argmax_swvm_r2_1017/views/ot_hbm_argmax_static_sw_vm_r2"
+ },
+ "ot_hbm_host_cp_rxs__434.808x432": {
+  "top": "ot_hbm_host_cp_rxs",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/host_ep_20261018/ot_hbm_host_cp_rxs.sv",
+   "rtl/hbm_accel/host_ep_20261018/ot_hbm_host_link_capture.sv",
+   "rtl/hbm_accel/host_ep_20261018/ot_hbm_host_link_seq.sv",
+   "rtl/hbm_accel/host_ep_20261018/ot_hbm_host_packet_nc.sv",
+   "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_host_cp_rxs (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_host_cp_rxs @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_host_cp_rxs)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_host_cp_rxs",
+  "view_kind": "SYNTH",
+  "view_port_bits": 1368
+ },
+ "ot_hbm_idx_rootctl_static_am__475.2x259.2": {
+  "top": "ot_hbm_idx_rootctl_static_am",
+  "files": [
+   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "VM_RT": 65,
+   "CR_RT": 36,
+   "SEL_LAT": 30,
+   "RSTL": 1,
+   "FAN32": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_idx_rootctl_static_am (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_idx_rootctl_static_am @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_rootctl_static_am)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_idx_rootctl_static_am",
+  "view_kind": "SYNTH",
+  "view_port_bits": 5877
+ },
+ "ot_hbm_idx_selector_static_sel__600.048x450.36": {
+  "top": "ot_hbm_idx_selector_static_sel",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_idx_selector_static_sel (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/ot_hbm_idx_selector_static_sel @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_selector_static_sel)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_idx_selector_static_sel",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4783
+ },
+ "ot_hbm_idx_topk_link_static__650.16x500.04": {
+  "top": "ot_hbm_idx_topk_link_static",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_idx_topk_link_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hnl-idxd4f/syn/ot_hbm_idx_topk_link_static @ dd4b67ccc); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_topk_link_static)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_idx_topk_link_static",
+  "view_kind": "SYNTH",
+  "view_port_bits": 4597
+ }
+}
