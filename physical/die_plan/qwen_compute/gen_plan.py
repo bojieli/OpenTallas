@@ -1842,6 +1842,8 @@ def main():
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
+    # QC-P6-A0 10-23: A0 v6 core clock drops per CB quad (inputs/a0_core_taps.json; no file -> no change)
+    a0_taps = __import__("a0_core_taps").declare(P, Path(__file__).parent / "inputs" / "a0_core_taps.json", plan["clock"])
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
     st = collections.Counter()
@@ -1865,6 +1867,7 @@ def main():
                                      "soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
              "census_coverage": cov,
              "planned_cores": P.cores,
+             "a0_core_taps": a0_taps,
              # QC-P2 (COORD 10-23 head landed-LP 3317/27981): leaf parameters the die netlist binder MUST pass from
              # the plan.  The old landed parents qfd_tt_ctlm_dv_lpf.sv:93 / lp/qfd_tt_ctlm_dv_lpf_lp.sv:196 /
              # headprep/qfd_tt_ctlm_dv_lpf_hp.sv:123 instantiate ot_qfd_tt_ctlm_static_hr without .SEGCAL (default

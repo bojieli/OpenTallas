@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/home/ubuntu/scratch/qc-p6-a0/plan_v6/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 72,
+ "warnings": 73,
  "summary": {
   "die": "qwen_compute",
   "partitions": 388,
@@ -20,7 +20,7 @@
   "lanes": 2142,
   "bits": 1398951,
   "taps_cores": {
-   "taps": 136,
+   "taps": 1251,
    "hard_cores": 36,
    "core_pins": 91482,
    "core_pins_off_track": 0
@@ -4503,19 +4503,7 @@
    "glue__kvrst": 2
   },
   "r8": {
-   "groups": 1736,
-   "groups_unequal": 0,
-   "inversions": 0,
-   "replica_sets": 609,
-   "replica_unequal": 0,
-   "types_conflicting": 0,
-   "replica_mode": "all",
-   "bus_mode": "part",
-   "async_skipped": 1,
-   "depth_source": "landing file",
-   "checked": true,
-   "groups_file": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "checked": false
   },
   "seams": {
    "nets": {
@@ -7233,7 +7221,8 @@
     }
    ],
    "dropped_bits": 0
-  }
+  },
+  "png": "/home/ubuntu/scratch/qc-p6-a0/plan_v6/die_plan.png"
  },
  "findings": [
   {
@@ -7285,6 +7274,11 @@
    "level": "WARN",
    "check": "types",
    "msg": "near-duplicate types ['phy_serdes', 'phy_serdes_b'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "r8",
+   "msg": "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)"
   },
   {
    "level": "WARN",
