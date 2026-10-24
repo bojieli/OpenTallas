@@ -497,6 +497,7 @@ NONFRAME_HC = {
                       "u_lf.u_rxsb": (760.32, 155.52),
                      },
                  ],
+                 alt_place_file="cores/leaf/alt_place.json",
                  # the leaf bus face picks the variant: N bus = as placed, S bus = y mirror (every core MX'd with it)
                  mirrors=((False, False), (False, True)), mirror_by_bus=True),
     # S81-CORES 10-24: the attention engine as 64 ot_s81c_attn_hcore (CORE-S81-SVC: one head + its own hgrp_s HG1 PCOLP1
@@ -672,6 +673,9 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                               pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
             return o
         alts = [explicit(a) for a in spec.get("alt_place", ())]
+        if spec.get("alt_place_file"):
+            alts += [explicit({kk: tuple(v) for kk, v in c_["place"].items()})
+                     for c_ in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), spec["alt_place_file"])))["candidates"]]
         out = explicit({})
         items = []
     for c, (cw, ch) in items:
@@ -753,13 +757,17 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                     d_ = max(x0_ - a_[0], 0, a_[0] - x1_) + max(y0_ - a_[1], 0, a_[1] - y1_)
                     ex += max(0.0, d_ - FT_STATION_MAX)
         return round(ex, 1)
+    # added stations are counted against the same model with no core (at the 405-um reach for the S81-CORES keys)
+    sm_ = {"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98} if k in CORES_405_KEYS else {}
+    k0_ = [ft_stations_macro(s_, [dict(origin_um=[-1e6, -1e6], outline_um=[1, 1])], w, h, **sm_) if sm_ else s_["stations"]
+           for s_ in ftsl]
     for ai, base_ in enumerate([out] + alts):
         for mx, my in variants:
             o = mirrored(mx, my, base_)
             if not legal(o):
                 continue
-            key = (reach_excess(o), sum(ft_stations_macro(s_, o, w, h, **({"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98}
-                                                                  if k in CORES_405_KEYS else {})) - s_["stations"] for s_ in ftsl))
+            key = (reach_excess(o), sum((max(0, ft_stations_macro(s_, o, w, h, **sm_) - k0_[i_]) if sm_ else
+                                        ft_stations_macro(s_, o, w, h) - k0_[i_]) for i_, s_ in enumerate(ftsl)))
             if best is None or key < best[0]:
                 best = (key, o, (mx, my), ai)
             if key == (0, 0):
@@ -1949,8 +1957,15 @@ def emit(parts, lanes, routes, chans, fmap, out):
             NF_HC_TYPES.append(tn)
         for s_ in ftsl:
             k0 = s_["stations"]
-            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h,
-                                               **({"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98} if nf_ else {}))
+            if nf_:
+                # S81-CORES: the cores add only their escape stations over the same model's no-core count; the count
+                # itself comes from the actual pin bits at the end (corefull resize, as macrofree_ft_reach for soft types)
+                sm_ = min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98
+                s_["_core_add"] = (ft_stations_macro(s_, hc_, rep.w, rep.h, smax=sm_) -
+                                   ft_stations_macro(s_, [dict(origin_um=[-1e6, -1e6], outline_um=[1, 1])], rep.w, rep.h,
+                                                     smax=sm_))
+                continue
+            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
             if s_["stations"] != k0:
                 FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
@@ -2038,6 +2053,13 @@ def emit(parts, lanes, routes, chans, fmap, out):
     from tools.die_plan.ft_reach import resize
     STATS_V4["corefull_ft_reach"] = resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98,
                                            types=NF_HC_TYPES, macrofree_only=False)
+    for tn_ in NF_HC_TYPES:
+        for s_ in plan["partition_types"][tn_]["ft_slots"]:
+            a_ = s_.pop("_core_add", 0)
+            if a_ > 0:
+                FT_MACRO_ADD.append(dict(type=tn_, slot=s_["name"], stations=[s_["stations"], s_["stations"] + a_],
+                                         why="core escape at the 405-um kit reach"))
+                s_["stations"] += a_
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
