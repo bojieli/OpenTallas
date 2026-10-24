@@ -11,7 +11,9 @@
   "rtl",
   "physical/die_plan/hbm/bind/rtl"
  ],
- "files": [],
+ "files": [
+  "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_bb.v"
+ ],
  "prefer": [
   "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_bb.v",
   "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
@@ -283,7 +285,9 @@
   "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/rtl/test/tb_v41_rom_elem_pg.sv",
   "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/rtl/v41rom/ot_v41_bterm.sv",
   "/home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle/rtl/v41rom/ot_v41_bterm2.sv",
-  "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv"
+  "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
  ],
  "source_check": "bundle = /home/ubuntu/scratch/tokd-hbm2/r18h5_src/bundle (files.f + master_files.json, the TOKd-HBM2 r18h5 source token bench); every as-built master resolves to its bundle file (prefer), plan-only modules (twins, QSPLIT regs) to the repo tree",
  "defines": [
@@ -441,10 +445,12 @@
  "map_file": "asbuilt_map.json",
  "land_align": "r8",
  "lint_split": true,
- "lint_jobs": 3,
+ "lint_jobs": 2,
  "portbind_prefer": [
   "rtl/hdc/ot_hdc_fastfp.sv",
-  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
  ],
  "straps": [
   ".*\\.(tgt|qid|sid|bid|bank_id|pc_id|id_sm|id_stack|sm_hbm|sm_stream|stk|attn_column|attn_rowbase|xs_a1|xs_a2|xs_g1|xs_g2|first_ord|quad|lbase|slot|half|rl_cfg|wc_cfg|tile_id)"
@@ -454,5 +460,7 @@
   "(?i)(^|_)(fault|flt)(_o|_q)?$",
   "^(afu|afv|afk|fault_i|fi)$"
  ],
- "land_r8_note": "BINDER4 10-23: r8 table physical/die_plan/hbm/r8/hbm_d4g_r8_landing.json = r8.py pads --bus leaf --replica type --exempt fault on the BINDER4 hbm1 bus_groups (land_align off bind of plan 1098c8cc); 2.70M pad flops (budget < 150k: structural reduction owed by the plan, HBM-P7)"
+ "land_r8_note": "BINDER4 10-23: r8 table physical/die_plan/hbm/r8/hbm_d4g_r8_landing.json = r8.py pads --bus leaf --replica type --exempt fault on the BINDER4 hbm1 bus_groups (land_align off bind of plan 1098c8cc); 2.70M pad flops (budget < 150k: structural reduction owed by the plan, HBM-P7)",
+ "files_note": "HBM3E PHY black box (bundle physical macro, PHY modelled per owner rule); twin closures take rtl/hdc/v41/ot_hdc_fsqrt.sv + rtl/hdc/v41x/ot_hdc_v41x_sfu.sv, the files the twins' own benches compile (tools/hbm_split/run_pgslice_lg_s_vl.sh, run_side_s.sh)",
+ "lint_note": "hbm_part_c0 Verilator lint peaks ~93 GB (tkm tp192 32 tiles + hc_root_s unrolled); 3 parallel lints OOMed a 128-GB unit"
 }
