@@ -2,7 +2,8 @@
 // QC-P4 10-23: lockstep bench of the chain-end slice variants (tools/qwen_dv/gen_s8_chain_end.py) against the as-built
 // slice qfd_dv_s8_flat with the die's literals on the chain-end inputs (die_r56: dvs_E1/E3/W1/W3/W5 .l9_wi(514'h0);
 // dvs_E5 l9/st/ar*/dd/ag wi = 0).  Every other input is random each edge; every output is compared every edge.
-//   VAR 0: qfd_dv_s8_ce_l9h   VAR 1: qfd_dv_s8_ce_e5
+//   VAR 0: qfd_dv_s8_ce_l9h   VAR 1: qfd_dv_s8_ce_e5 (QC-P5-TIE: also no sc_dn_i)   VAR 2: qfd_dv_s8_ce_w5 (l9h + no sc_up_i)
+//   (die_r56 dvs_W5 .sc_wi(48'h0); E5 sc_dn chain end 0; the sc2 leaf of VAR 1/2 is the regenerated k79 netlist)
 //   MUT 0: must PASS.  MUT 1: the reference sees random on the removed inputs (not the die's 0) -> must FAIL
 //   (the removed inputs are observable, so the bench can see a wrong fold).  MUT 2: variant CE_MUT=1 (removed faces
 //   fold to all-ones) -> must FAIL.
@@ -19,6 +20,8 @@ module tb_s8_ce;
     wire [1087:0] r_st_dn = (VAR == 1 && MUT != 1) ? 1088'h0 : st_dn_i;
     wire [1094:0] r_ch_up = (VAR == 1 && MUT != 1) ? 1095'h0 : ch_up_i;
     wire [9:0]    r_ag_up = (VAR == 1 && MUT != 1) ? 10'h0 : ag_up_i;
+    wire [47:0]   r_sc_dn = (VAR == 1 && MUT != 1) ? 48'h0 : sc_dn_i;
+    wire [47:0]   r_sc_up = (VAR == 2 && MUT != 1) ? 48'h0 : sc_up_i;
 `define S8_OUTS(p) wire [115:0] p``cmd_o; wire [452:0] p``hr_o; wire [513:0] p``l9_o; wire [1087:0] p``st_up_o, p``st_dn_o; \
     wire [47:0] p``sc_up_o, p``sc_dn_o; wire [1094:0] p``ch_dn_o; wire [1037:0] p``ch_up_o; \
     wire [515:0] p``cw_n0, p``cw_n1, p``cw_n2, p``cw_n3, p``cw_s0, p``cw_s1, p``cw_s2, p``cw_s3; \
@@ -30,17 +33,21 @@ module tb_s8_ce;
     .cw_n1(p``cw_n1), .cw_n2(p``cw_n2), .cw_n3(p``cw_n3), .cw_s0(p``cw_s0), .cw_s1(p``cw_s1), .cw_s2(p``cw_s2), \
     .cw_s3(p``cw_s3), .st(p``st), .cc_o(p``cc_o), .ag_dn_o(p``ag_dn_o), .treq_o(p``treq_o)
     qfd_dv_s8_flat u_ref (.ck(clk), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .rs_s(rs_s), .rs_n(rs_n), .l9_i(r_l9),
-        .st_up_i(st_up_i), .st_dn_i(r_st_dn), .sc_up_i(sc_up_i), .sc_dn_i(sc_dn_i), .ch_up_i(r_ch_up), .ch_dn_i(ch_dn_i),
+        .st_up_i(st_up_i), .st_dn_i(r_st_dn), .sc_up_i(r_sc_up), .sc_dn_i(r_sc_dn), .ch_up_i(r_ch_up), .ch_dn_i(ch_dn_i),
         .ag_up_i(r_ag_up), .treq_i(treq_i), `S8_OCONN(a_));
     localparam integer CM = (MUT == 2) ? 1 : 0;
     generate if (VAR == 0) begin : g_l9h
         qfd_dv_s8_ce_l9h #(.CE_MUT(CM)) u_dut (.ck(clk), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .rs_s(rs_s),
             .rs_n(rs_n), .st_up_i(st_up_i), .st_dn_i(st_dn_i), .sc_up_i(sc_up_i), .sc_dn_i(sc_dn_i), .ch_up_i(ch_up_i),
             .ch_dn_i(ch_dn_i), .ag_up_i(ag_up_i), .treq_i(treq_i), `S8_OCONN(b_));
-    end else begin : g_e5
+    end else if (VAR == 1) begin : g_e5
         qfd_dv_s8_ce_e5 #(.CE_MUT(CM)) u_dut (.ck(clk), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .rs_s(rs_s),
-            .rs_n(rs_n), .st_up_i(st_up_i), .sc_up_i(sc_up_i), .sc_dn_i(sc_dn_i), .ch_dn_i(ch_dn_i), .treq_i(treq_i),
+            .rs_n(rs_n), .st_up_i(st_up_i), .sc_up_i(sc_up_i), .ch_dn_i(ch_dn_i), .treq_i(treq_i),
             `S8_OCONN(b_));
+    end else begin : g_w5
+        qfd_dv_s8_ce_w5 #(.CE_MUT(CM)) u_dut (.ck(clk), .rst_n(rst_n), .cmd_i(cmd_i), .hr_i(hr_i), .rs_s(rs_s),
+            .rs_n(rs_n), .st_up_i(st_up_i), .st_dn_i(st_dn_i), .sc_dn_i(sc_dn_i), .ch_up_i(ch_up_i),
+            .ch_dn_i(ch_dn_i), .ag_up_i(ag_up_i), .treq_i(treq_i), `S8_OCONN(b_));
     end endgenerate
     wire [115:0] a_all_lo = a_cmd_o; // keep lint quiet on the macro-only names
     task automatic rnd(output reg [1099:0] v); integer i; begin for (i = 0; i < 1100; i = i + 32) v[i +: 32] = $urandom; end endtask
