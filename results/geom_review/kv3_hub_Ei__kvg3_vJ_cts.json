@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "KV-G3 g5/vJ = vI (plan v3.8x + Codex reach405 hub_Ei + per-bit ft sites) + post_v38y.py fault-leg stations <= 400 um (L357 +2 / L758 +1 cycles; G0 PASS) 4_cts",
+ "verdict": "AUTHOR-REVIEW PASS-COND (CTS placement; not an independent GEOM-REVIEW verdict)",
+ "pictures": ["physical/die_plan/qwen_kvsys/g3/review/hubEi_vJ_cts.png"],
+ "reasons": "[10-24 13:5x KV-G3] 309,326 cells: 39,185 FF, 102,772 buf/inv (+4.6k vs vI 3_place = CTS tree), 567 logic. Max std-cell bin density 0.25, no bin > 0.8; stations are per-bit lines, no blobs. ff->ff p90 380 / max 428.9 um (vI 558: fault legs fixed). pin->reg p90 8.3 / max 13.5 um. ft out legs p90 389 / max 394 um (reach405 seam hop). Pair skew with CPPR PASS: TT 74.8 / FF 69.7 ps (limit 80; vI FAILED 89.8/82.6); spread 90.8/83.2 is information only. TT WNS -864.0 = arst_n -> u_rsync_t62 RESETN recovery (reset tree, horizontal BUF line y~838 still visible); TT clk group -26.1 (ft44_o_0 D); WHS TT -84.4 / FF -26.4 before hold repair.",
+ "fixes": "Reset tree fix pending COORD ruling (a/b/c). GEOM-REVIEW second review requested before any route. Do not route until both are in.",
+ "reviewer": "KV-G3 (author self-review)",
+ "at": "2026-10-24T13:55:00-07:00",
+ "rule": "BRIEFING: Review before you route"
+}

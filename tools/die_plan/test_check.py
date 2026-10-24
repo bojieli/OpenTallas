@@ -413,6 +413,25 @@ def test_latency_groups_pad_to_slowest():
     assert schema.Plan(c).bus_pads()[1]
 
 
+def test_landed_group_one_depth_and_window():
+    """COORD rule 10-23 (S81-P9-R8EQ): a latency group of kind `landed` (one forwarded-clock landing ring, one K)
+    arrives at ONE group depth; its natural lane spread must stay under the landing window margin (window - 1)."""
+    p = copy.deepcopy(EX)
+    p["latency_groups"] = [dict(name="xl", kind="landed", window=4, lanes=["x", "cfg23"])]
+    P = schema.Plan(p)
+    assert P.lane_latency("cfg23")["cycles"] == P.lane_latency("x")["cycles"] == 4 and not P.landed_skew()
+    p["latency"]["lanes"] = gen.latency_table(P)
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert [i["msg"] for i in R.errors() if i["check"] == "latency"] == []
+    p["latency_groups"][0]["window"] = 2                       # spread 2 > margin 1
+    assert schema.Plan(p).landed_skew()
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert any("landing window margin" in i["msg"] for i in R.errors())
+    import pytest
+    with pytest.raises(SystemExit):
+        gen.write_latency(p, "/tmp/_landed_test_lat")
+
+
 def test_core_ks_rules(monkeypatch):
     """COORD 10-23 CORE-KS: (a) a type over 400k cells needs hard_cores[], a core without pins is an ERROR;
     (b) M2/M3 core pins are not checked in a mirrored instance's die frame (platform cell-access tracks)."""

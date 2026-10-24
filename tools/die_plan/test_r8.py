@@ -97,3 +97,35 @@ def test_bus_sub_splits_a_leaf_bus():
     assert r8.bus_key(g, a, "leaf") != r8.bus_key(g, b, "leaf")
     assert r8.bus_key(g, a, "leaf") == r8.bus_key(g, dict(a, source="leaf.z"), "leaf")
     assert r8.bus_key(g, a, "part") != r8.bus_key(g, b, "part")
+
+
+def test_landed_bundle_one_depth(tmp_path):
+    """COORD rule 10-23 (S81-P9-R8EQ): a bundle that lands in one forwarded-clock ring with one K is padded to ONE group
+    depth: the as-built per-lane HC1 station counts (41/45/46/47, flight absorbed in the window) are not cycles.  Over
+    the window margin (D - 1 cycles) the bundle keeps per-lane depths and R8 check fails (or WARN with collapse)."""
+    def bg(asb):
+        return dict(landing=[dict(sink="u_f_0L01.u_r0", sink_part="hc0", src_part="tap", members=[
+            mem("x_i0", [[276 * k, 276 * k + 275]], "u_tap.xw_d", a, 14, lane="x_W0_in") for k, a in enumerate(asb)])],
+            replica=[])
+    try:
+        b = bg([46, 41, 45, 47])                                   # skew 6 stations = 3.0 cycles <= 3
+        p, sm = r8.write_pads(RAW, b, tmp_path / "a")
+        assert sm["pad_flops"] == 4 * 276 * 0 + (5 + 0 + 4 + 6) * 276            # rule off: lane tear re-created
+        r8.LANDED.update(rx=[r8.re.compile(r"^x_")])
+        p, sm = r8.write_pads(RAW, b, tmp_path / "b")
+        js = json.loads(p.read_text())
+        assert sm["pad_flops"] == 0 and sm["landed_bundles"] == 1 and sm["landed_over_margin"] == 0
+        assert {m["landed"] for m in js["members"]} == {14} and {m["asbuilt_lane"] for m in js["members"]} == {41, 45, 46, 47}
+        lm, _ = r8.load_landing(p)
+        assert not r8.check(b, RAW, lm)[0]                         # member ids keep the per-lane as-built depth
+        b2 = bg([46, 41, 45, 49])                                  # skew 8 stations = 4.0 cycles > 3
+        p, sm = r8.write_pads(RAW, b2, tmp_path / "c")
+        assert sm["landed_over_margin"] == 1 and sm["pad_flops"] > 0
+        msgs, st = r8.check(b2, RAW, r8.load_landing(p)[0])
+        assert st["landed_over_margin"] == 1 and any(s == "ERROR" and "window margin" in m for s, m in msgs)
+        r8.LANDED.update(over="collapse")
+        p, sm = r8.write_pads(RAW, b2, tmp_path / "d")
+        msgs, st = r8.check(b2, RAW, r8.load_landing(p)[0])
+        assert sm["pad_flops"] == 0 and not any(s == "ERROR" for s, _ in msgs) and any(s == "WARN" for s, _ in msgs)
+    finally:
+        r8.LANDED.update(rx=[], window=4, stage_cycles=0.5, over="keep")

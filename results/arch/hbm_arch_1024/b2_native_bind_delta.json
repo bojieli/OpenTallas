@@ -1,0 +1,441 @@
+{
+ "schema": "opentallas.hbm_arch.b2_native_bind_delta.v1",
+ "rule": "HBM-ARCH 10-24: what an 8-SM B2 die top cuts from the r18h5 16-SM as-built (census rows physical/die_plan/hbm/census/hbm_r18h5_rows.tsv.gz; kept = NW + NE quadrants + die level, dropped = SW + SE). Every kept instance below loses these connections; each needs a 2-quadrant RTL variant (ring of 2, NQ=2 root fan-in/out) or a re-attachment (S-edge SerDes endpoints to the NW/NE hubs) before a native bind of B2l exists.",
+ "total_cut_bits": 35464,
+ "instances": {
+  "hb_idx__ctl": {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "params": ".VM_RT(75), .CR_RT(36), .SEL_LAT(40), .RSTL(1), .FAN32(1)",
+   "bits": 4998,
+   "rows": 22,
+   "dropped_partners": {
+    "hb_idx__op_*": 2192,
+    "hb_vms_*": 612,
+    "vmb_*0": 274,
+    "vmb_*1": 274,
+    "vmb_*2": 274,
+    "vmb_*3": 274,
+    "vmb_*4": 274,
+    "vmb_*5": 274,
+    "vmb_*6": 274,
+    "vmb_*7": 274,
+    "hb_idx__qctl_*": 2
+   },
+   "ports": {
+    "out:index_rr": 2056,
+    "in:vm_rr": 2056,
+    "out:cq": 338,
+    "in:cr": 274,
+    "out:vm_rq": 136,
+    "in:index_rq": 136,
+    "in:qfault": 2
+   }
+  },
+  "hb_idx__link": {
+   "module": "ot_hbm_idx_topk_link_static",
+   "params": "",
+   "bits": 4672,
+   "rows": 20,
+   "dropped_partners": {
+    "cij_*": 4672
+   },
+   "ports": {
+    "out:tx": 4640,
+    "out:tx_v": 32
+   }
+  },
+  "hb_vms_NE": {
+   "module": "hfd_hgi_vms_static_NE_glue",
+   "params": "",
+   "bits": 4448,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_vms_*": 4448
+   },
+   "ports": {
+    "out:ccw_out": 2224,
+    "in:cw_in": 2224
+   }
+  },
+  "hb_vms_NW": {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "params": "",
+   "bits": 4448,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_vms_*": 4448
+   },
+   "ports": {
+    "out:cw_out": 2224,
+    "in:ccw_in": 2224
+   }
+  },
+  "hc_eng": {
+   "module": "ot_hbm_hc_root_static",
+   "params": ".QDRLY(2), .QCHX(11)",
+   "bits": 3387,
+   "rows": 502,
+   "dropped_partners": {
+    "hc_*": 2958,
+    "hleaf_*": 429
+   },
+   "ports": {
+    "out:result": 1542,
+    "in:cfg_data": 268,
+    "in:gathered_mix_data": 152,
+    "in:qps": 152,
+    "out:qi_cnt": 132,
+    "out:qd_wa": 128,
+    "out:qd_xa": 128,
+    "out:qi_word": 128,
+    "out:qd_nv": 104,
+    "out:qi_lo": 84,
+    "out:qi_w": 84,
+    "in:gathered_mix_row": 44
+   }
+  },
+  "host_cp_ingress": {
+   "module": "ot_hbm_host_static_ingress_obs",
+   "params": ".MUT(0), .TARGET_MASK(256'hffffffff000f003f000000f3e1f1ffffffffffff0ff1000000000000)",
+   "bits": 1664,
+   "rows": 100,
+   "dropped_partners": {
+    "hcollgi_*": 832,
+    "hleaf_*": 832
+   },
+   "ports": {
+    "out:cfg_data": 1088,
+    "out:desc_loops": 148,
+    "out:desc_limit": 136,
+    "out:desc_base": 128,
+    "out:cfg_addr": 96,
+    "out:cfg_target": 40,
+    "out:cfg_v": 12,
+    "out:desc_v": 12,
+    "out:launch_v": 4
+   }
+  },
+  "col_idx": {
+   "module": "ot_hbm_static_cfg_collar_idx256r",
+   "params": ".PAGE_W(1), .NS(1), .NPR(6), .NREC(8), .NGO(2), .NB(2), .NF(5), .XSER(0), .FAN32(1)",
+   "bits": 1462,
+   "rows": 81,
+   "dropped_partners": {
+    "hb_idx__qctl_*": 724,
+    "hb_idx__s_*": 360,
+    "hleaf_*": 314,
+    "hb_idx__op_*": 64
+   },
+   "ports": {
+    "out:pw_data": 556,
+    "out:prm": 520,
+    "in:cfg_data": 268,
+    "out:pw_addr": 52,
+    "in:cfg_addr": 24,
+    "out:pw_we": 10,
+    "out:start_v": 10,
+    "in:cfg_target": 9,
+    "out:active": 3,
+    "out:fault": 3,
+    "out:ready": 3,
+    "in:cfg_v": 2
+   }
+  },
+  "ep_S0": {
+   "module": "hfd_ep_static",
+   "params": "",
+   "bits": 1255,
+   "rows": 22,
+   "dropped_partners": {
+    "hb_coll_*": 1235,
+    "epcal_*": 19,
+    "hleaf_*": 1
+   },
+   "ports": {
+    "out:rx_pin_flit": 614,
+    "in:tx_frame": 613,
+    "in:rx_block_words": 7,
+    "in:rx_slot_index": 6,
+    "out:phy_up": 3,
+    "out:rx_pin_v": 3,
+    "in:tx_v": 2,
+    "out:fault": 1,
+    "in:rx_arm_v": 1,
+    "in:rx_arm_bank": 1,
+    "in:rx_release_v": 1,
+    "in:rx_release_bank": 1
+   }
+  },
+  "ep_S1": {
+   "module": "hfd_ep_static",
+   "params": "",
+   "bits": 1255,
+   "rows": 22,
+   "dropped_partners": {
+    "hb_coll_*": 1235,
+    "epcal_*": 19,
+    "hleaf_*": 1
+   },
+   "ports": {
+    "out:rx_pin_flit": 614,
+    "in:tx_frame": 613,
+    "in:rx_block_words": 7,
+    "in:rx_slot_index": 6,
+    "out:phy_up": 3,
+    "out:rx_pin_v": 3,
+    "in:tx_v": 2,
+    "out:fault": 1,
+    "in:rx_arm_v": 1,
+    "in:rx_arm_bank": 1,
+    "in:rx_release_v": 1,
+    "in:rx_release_bank": 1
+   }
+  },
+  "ep_S3": {
+   "module": "hfd_ep_static",
+   "params": "",
+   "bits": 1255,
+   "rows": 22,
+   "dropped_partners": {
+    "hb_coll_*": 1235,
+    "epcal_*": 19,
+    "hleaf_*": 1
+   },
+   "ports": {
+    "out:rx_pin_flit": 614,
+    "in:tx_frame": 613,
+    "in:rx_block_words": 7,
+    "in:rx_slot_index": 6,
+    "out:phy_up": 3,
+    "out:rx_pin_v": 3,
+    "in:tx_v": 2,
+    "out:fault": 1,
+    "in:rx_arm_v": 1,
+    "in:rx_arm_bank": 1,
+    "in:rx_release_v": 1,
+    "in:rx_release_bank": 1
+   }
+  },
+  "hb_router_ids": {
+   "module": "ot_hbm_router_ids_static",
+   "params": ".XRT(1), .GO_DELAY(1), .CQ_DELAY(1)",
+   "bits": 1203,
+   "rows": 132,
+   "dropped_partners": {
+    "svg_*0": 149,
+    "svg_*1": 149,
+    "svg_*2": 149,
+    "svg_*3": 149,
+    "svg_*7": 149,
+    "svg_*6": 149,
+    "svg_*5": 149,
+    "svg_*4": 149,
+    "cp_svg_*0": 11
+   },
+   "ports": {
+    "out:ids": 632,
+    "out:ids_cohort": 328,
+    "out:ids_layer": 200,
+    "out:ids_v": 32,
+    "in:run_layer": 9,
+    "in:run_v": 2
+   }
+  },
+  "su_prog": {
+   "module": "ot_hbm_su_programme_root_h5",
+   "params": "",
+   "bits": 668,
+   "rows": 26,
+   "dropped_partners": {
+    "pgp_*": 668
+   },
+   "ports": {
+    "out:r_data": 544,
+    "out:r_len": 64,
+    "out:r_bank": 34,
+    "out:r_row": 16,
+    "out:r_start": 4,
+    "out:r_we": 4,
+    "in:p_fault": 2
+   }
+  },
+  "hb_argmax": {
+   "module": "ot_hbm_argmax_static_sw_vm_r2",
+   "params": ".TP(192), .VMX(89), .ACK(52)",
+   "bits": 612,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_vms_*": 612
+   },
+   "ports": {
+    "out:cq": 338,
+    "in:cr": 274
+   }
+  },
+  "hb_idx__xq_S": {
+   "module": "ot_hbm_idx_xq_node_static",
+   "params": ".WI(297)",
+   "bits": 594,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_idx__s_*": 594
+   },
+   "ports": {
+    "in:b": 297,
+    "in:a": 297
+   }
+  },
+  "hb_coll_NE": {
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "params": ".NLINK(1), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(81)",
+   "bits": 560,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_coll_*": 560
+   },
+   "ports": {
+    "out:pr_ccw_o": 280,
+    "in:pr_cw_i": 280
+   }
+  },
+  "hb_coll_NW": {
+   "module": "ot_hfd_coll_q2_hard_v8g",
+   "params": ".NLINK(1), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(81)",
+   "bits": 560,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_coll_*": 560
+   },
+   "ports": {
+    "out:pr_cw_o": 280,
+    "in:pr_ccw_i": 280
+   }
+  },
+  "hcollb_NE": {
+   "module": "ot_hgi_coll_ring_b_stop",
+   "params": "",
+   "bits": 560,
+   "rows": 2,
+   "dropped_partners": {
+    "hcollb_*": 560
+   },
+   "ports": {
+    "out:ccw_o": 280,
+    "in:cw_i": 280
+   }
+  },
+  "hcollb_NW": {
+   "module": "ot_hgi_coll_ring_b_stop",
+   "params": "",
+   "bits": 560,
+   "rows": 2,
+   "dropped_partners": {
+    "hcollb_*": 560
+   },
+   "ports": {
+    "out:cw_o": 280,
+    "in:ccw_i": 280
+   }
+  },
+  "host_status": {
+   "module": "ot_hbm_status_join_fa",
+   "params": ".NT(81), .NF(141), .NH(6), .TGTS(648'hb3b2b1b0a3a1816b67d7d6d5d4876f63575655543b77377fd3d2d1d0a2866e6a6662535251503a763630806965c7c6c5c4a5a4856d614746454439787570357ec3c2c1c0a0846c68646043424140387434",
+   "bits": 414,
+   "rows": 61,
+   "dropped_partners": {
+    "hleaf_*": 371,
+    "hcollgi_*": 24,
+    "smw_*": 9,
+    "fr_*": 2,
+    "hcollb_*": 2,
+    "hcollgl_*": 2,
+    "hcollks_*": 2,
+    "hcollrs_*": 2
+   },
+   "ports": {
+    "in:t_fault": 156,
+    "in:t_active": 128,
+    "in:t_ready": 128,
+    "in:a_fault": 2
+   }
+  },
+  "str_C": {
+   "module": "ot_hbm_su_stree_root",
+   "params": ".MUT(0)",
+   "bits": 410,
+   "rows": 4,
+   "dropped_partners": {
+    "stl_*": 410
+   },
+   "ports": {
+    "out:dn0_o": 164,
+    "out:dn1_o": 164,
+    "in:up1_i": 41,
+    "in:up0_i": 41
+   }
+  },
+  "col_su": {
+   "module": "ot_hbm_static_cfg_collar",
+   "params": ".PAGE_W(12), .NS(1), .NPR(1), .NREC(0), .NGO(1), .NB(2), .NF(1), .XSER(1), .SPARSE_SU(1), .SU_DICT_CAP({32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3})",
+   "bits": 319,
+   "rows": 24,
+   "dropped_partners": {
+    "hleaf_*": 314,
+    "pgp_*": 5
+   },
+   "ports": {
+    "in:cfg_data": 268,
+    "in:cfg_addr": 24,
+    "in:cfg_target": 9,
+    "out:active": 3,
+    "out:fault": 3,
+    "out:ready": 3,
+    "in:c_busy": 3,
+    "in:cfg_v": 2,
+    "in:c_done": 2,
+    "in:desc_v": 1,
+    "in:launch_v": 1
+   }
+  },
+  "obs_C": {
+   "module": "ot_hbm_obs_leaf",
+   "params": ".N(95), .LID(0), .SYNC_MASK(512'h0)",
+   "bits": 61,
+   "rows": 9,
+   "dropped_partners": {
+    "obs_*": 61
+   },
+   "ports": {
+    "out:r_d": 41,
+    "out:r_idx": 17,
+    "out:r_v": 3
+   }
+  },
+  "obs_NE": {
+   "module": "ot_hbm_obs_leaf",
+   "params": ".N(182), .LID(3), .SYNC_MASK(512'h7fffe000000000000000000000000000)",
+   "bits": 61,
+   "rows": 9,
+   "dropped_partners": {
+    "obs_*": 61
+   },
+   "ports": {
+    "in:q_d": 41,
+    "in:q_idx": 17,
+    "in:q_v": 3
+   }
+  },
+  "vm_status4": {
+   "module": "ot_vms_status4_static",
+   "params": ".NQ(4)",
+   "bits": 38,
+   "rows": 2,
+   "dropped_partners": {
+    "hb_vms_*": 38
+   },
+   "ports": {
+    "in:quadrant_status": 38
+   }
+  }
+ }
+}
