@@ -419,22 +419,15 @@ def extract_ilm(nl, cells, clock_ports=None):
         if d is None:
             continue
         k = d[0]
-        if k in keep and not is_seq(k) and k not in ck_walk:
-            pass
-        first = k not in keep
         keep.add(k)
         if is_seq(k):
             ck_walk.append(k)
             continue
-        if not first:
-            # a comb cell already kept by the input cone still needs its full fan-in for the output paths
-            pass
-        for i, _ in inputs_of(k):
+        for i, _ in inputs_of(k):                  # full fan-in (also of comb cells the input cone already kept)
             if i not in seen:
                 seen.add(i)
                 q.append(i)
     # clock network of every kept register (through buffers / inverters / clock gates' clock pins)
-    full_fanin = set()                              # instances whose every input is driven in the ILM
     q = deque(ck_walk)
     done = set()
     while q:
@@ -446,25 +439,11 @@ def extract_ilm(nl, cells, clock_ports=None):
             ins = [b for b, ck in inputs_of(k) if ck]
         else:
             ins = [b for b, _ in inputs_of(k)]
-            full_fanin.add(k)
         for b in ins:
             d = drv.get(b)
             if d is not None:
                 keep.add(d[0])
                 q.append(d[0])
-    # output-cone cells: full fan-in (marked while walking back from the outputs)
-    q = deque(out_bits)
-    seen = set(q)
-    while q:
-        b = q.popleft()
-        d = drv.get(b)
-        if d is None or is_seq(d[0]):
-            continue
-        full_fanin.add(d[0])
-        for i, _ in inputs_of(d[0]):
-            if i not in seen:
-                seen.add(i)
-                q.append(i)
     # kept nets: driven by a kept instance or an input port
     kept_nets = set(in_bits)
     for k in keep:
