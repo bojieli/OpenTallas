@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/scratch/s81-p6/v5/die_plan.json",
+ "plan": "/home/ubuntu/scratch/s81-p7/v43/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
- "warnings": 958,
+ "warnings": 1896,
  "summary": {
   "die": "s81",
   "partitions": 400,
@@ -21,7 +21,7 @@
   "bits": 1052871,
   "taps_cores": {
    "taps": 0,
-   "hard_cores": 0,
+   "hard_cores": 938,
    "core_pins": 0,
    "core_pins_off_track": 0
   },
@@ -5103,7 +5103,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/scratch/s81-p6/v5/g0/die_plan.png"
+  "png": "/home/ubuntu/scratch/s81-p7/v43/g0/die_plan.png"
  },
  "findings": [
   {
@@ -5190,6 +5190,5634 @@
    "level": "WARN",
    "check": "types",
    "msg": "near-duplicate types ['ot_s81sl_leaf__t45', 'ot_s81sl_leaf__t50'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bn4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_bs4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e1e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e1w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_rg0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_s5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_t3__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p1__t1 core u_r0.u_c5_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bn6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bn7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bn8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bn9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bs6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bs7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bs8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_bs9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e10: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e10e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e10w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e5e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e5w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_e9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n12: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n13: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n14: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n15: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n16: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n17: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n18: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n19: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n20: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n21: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n22: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n23: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_n24: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_s10: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_s6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_s7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_s8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_s9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t4__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t5__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_t6__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c10_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c6_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c7_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c8_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r1__t1 core u_r1.u_c9_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bn11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bn12: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bn13: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bn14: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bs11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bs12: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bs13: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_bs14: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e12: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e13: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e14: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e15: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e15e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_e15w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n25: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n26: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n27: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n28: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n29: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_n30: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_s11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_s12: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_s13: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_s14: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_s15: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t7__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t8__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_t9__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c11_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c12_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c13_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c14_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r2__t1 core u_r2.u_c15_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p2__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bn5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bn6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bn7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bn9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bs5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bs6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bs7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_bs9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e8e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e8w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_e9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n12: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n13: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n14: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n15: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n16: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n17: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n18: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n19: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n20: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n21: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_n22: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_rg0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_s5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_s6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_s7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_s8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_s9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t3__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t4__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_t5__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c5_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c6_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c7_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c8_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r1__t1 core u_r1.u_c9_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bn10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bn11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bn12: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bn14: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bs10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bs11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bs12: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_bs14: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e12: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e13: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e13e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e13w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_e14: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n23: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n24: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n25: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n26: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n27: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_n28: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_s10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_s11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_s12: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_s13: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_s14: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t6__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t7__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_t8__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c10_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c11_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c12_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c13_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r2__t1 core u_r2.u_c14_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p3__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bn4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_bs4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e1e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e1w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_rg0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_s5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_t3__payload: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_0: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_1: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_2: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_3: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_4: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_5: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h10_r0_p4__t1 core u_r0.u_c5_6: no pins listed; track alignment unchecked",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p5__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p6__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p1__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bn0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bn1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bn2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bn3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bs0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bs1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bs2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_bs3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_cf: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e4e.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_e4w.u_view: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n10: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n11: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n7: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n8: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_n9: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_rg1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_rg2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_s0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_s1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_s2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_s3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_s4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t0__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t1__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_t2__payload: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_xo0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_xo1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_xo2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_xo3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c0_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c1_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c2_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c3_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_0: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_1: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_2: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_3: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_4: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_5: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "type col_h9_r0_p4__t1 core u_r0.u_c4_6: no pins listed; track alignment unchecked",
+   "type": "col_h9_r0_p4__t1"
   },
   {
    "level": "WARN",
