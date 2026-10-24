@@ -1,0 +1,218 @@
+{
+ "note": "KV-P7-V38 10-23 (v3.8 (a), COORD 20:38 ruling 1): PV control co-location options on the KV-P6-V37 pad LP (kv_pv_pads_plan.py BIND R8 OUT --option O --entry; BIND = BINDER2 kv35 (= v3.6 PV lanes), R8 = r8/qwen_kvsys_r8_landing.json). ctlmid = KV-P6's option (pvw ctl into pv_*_4, vports stay at 1/3/5/7); ctlv4 = NEW: pvw ctl AND all 4 vports of each side in pv_*_4 (V, cmd and flags all leave pv_*_4, header local: V depth == cmd depth == 2|p-4| -> data and command share one lane depth / one R8 group); ctlv34 = ctl in pv_*_4, vports _0/_1 in pv_*_4 and _2/_3 in pv_*_3. Totals add the non-PV R8 pads 18.5k (COORD).",
+ "options": {
+  "ctlmid": {
+   "entry_pad_flops": 155217,
+   "entry_pad_flops_by_kind": {
+    "other": 1060,
+    "rs": 85336,
+    "flag": 5144,
+    "pe2": 27136,
+    "cmd": 6845,
+    "V": 29696
+   },
+   "crossing_pad_flops": 393692,
+   "inner_delay_flops_new": 167032,
+   "max_pad": 48,
+   "TRUNK_D": 48,
+   "FLAG_D": 0,
+   "TRUNK_D_asb": 54,
+   "FLAG_D_asb": 58,
+   "P0_P1_age_shift": -6,
+   "route": {
+    "changed": {
+     "R": 128,
+     "H": 48,
+     "C": 576,
+     "V": 1048
+    },
+    "bit_depth_delta": {
+     "C-8": 7400,
+     "C-4": 1480,
+     "C+4": 1480,
+     "H-8": 248,
+     "H-4": 124,
+     "H+4": 124,
+     "R-15": 16,
+     "R-14": 16,
+     "R-13": 16,
+     "R-12": 16,
+     "R-11": 16,
+     "R-6": 16,
+     "R-1": 16,
+     "R+4": 16
+    },
+    "vport_pos": {
+     "vport_EN_0": 3,
+     "vport_EN_1": 5,
+     "vport_EN_2": 1,
+     "vport_EN_3": 7,
+     "vport_ES_0": 3,
+     "vport_ES_1": 5,
+     "vport_ES_2": 1,
+     "vport_ES_3": 7,
+     "vport_WN_0": 3,
+     "vport_WN_1": 5,
+     "vport_WN_2": 1,
+     "vport_WN_3": 7,
+     "vport_WS_0": 3,
+     "vport_WS_1": 5,
+     "vport_WS_2": 1,
+     "vport_WS_3": 7
+    }
+   }
+  },
+  "ctlv4": {
+   "entry_pad_flops": 127572,
+   "entry_pad_flops_by_kind": {
+    "other": 1424,
+    "rs": 86372,
+    "flag": 5184,
+    "pe2": 28672,
+    "cmd": 5920,
+    "V": 0
+   },
+   "crossing_pad_flops": 156944,
+   "inner_delay_flops_new": 35960,
+   "max_pad": 49,
+   "TRUNK_D": 48,
+   "FLAG_D": 0,
+   "TRUNK_D_asb": 54,
+   "FLAG_D_asb": 58,
+   "P0_P1_age_shift": -6,
+   "route": {
+    "changed": {
+     "R": 128,
+     "H": 48,
+     "C": 576,
+     "V": 1048,
+     "own_partition_V_routed_via_trunk": 128,
+     "Vin": 128
+    },
+    "bit_depth_delta": {
+     "C-8": 7400,
+     "C-4": 1480,
+     "C+4": 1480,
+     "H-14": 124,
+     "H-10": 124,
+     "H-6": 124,
+     "H-2": 124,
+     "R-15": 16,
+     "R-14": 16,
+     "R-13": 16,
+     "R-12": 16,
+     "R-11": 16,
+     "R-6": 16,
+     "R-1": 16,
+     "R+4": 16,
+     "V-6": 36864,
+     "V-2": 45056,
+     "V+2": 28672,
+     "V+6": 4096,
+     "Vin+2": 8192,
+     "Vin+6": 8192
+    },
+    "vport_pos": {
+     "vport_EN_0": 4,
+     "vport_EN_1": 4,
+     "vport_EN_2": 4,
+     "vport_EN_3": 4,
+     "vport_ES_0": 4,
+     "vport_ES_1": 4,
+     "vport_ES_2": 4,
+     "vport_ES_3": 4,
+     "vport_WN_0": 4,
+     "vport_WN_1": 4,
+     "vport_WN_2": 4,
+     "vport_WN_3": 4,
+     "vport_WS_0": 4,
+     "vport_WS_1": 4,
+     "vport_WS_2": 4,
+     "vport_WS_3": 4
+    }
+   }
+  },
+  "ctlv34": {
+   "entry_pad_flops": 158100,
+   "entry_pad_flops_by_kind": {
+    "other": 17616,
+    "rs": 86372,
+    "flag": 5184,
+    "pe2": 28672,
+    "cmd": 5920,
+    "V": 14336
+   },
+   "crossing_pad_flops": 287824,
+   "inner_delay_flops_new": 35960,
+   "max_pad": 49,
+   "TRUNK_D": 48,
+   "FLAG_D": 0,
+   "TRUNK_D_asb": 54,
+   "FLAG_D_asb": 58,
+   "P0_P1_age_shift": -6,
+   "route": {
+    "changed": {
+     "R": 128,
+     "H": 48,
+     "C": 576,
+     "V": 1048,
+     "own_partition_V_routed_via_trunk": 128,
+     "Vin": 128
+    },
+    "bit_depth_delta": {
+     "C-8": 7400,
+     "C-4": 1480,
+     "C+4": 1480,
+     "H-12": 124,
+     "H-10": 124,
+     "H-6": 124,
+     "R-15": 16,
+     "R-14": 16,
+     "R-13": 16,
+     "R-12": 16,
+     "R-11": 16,
+     "R-6": 16,
+     "R-1": 16,
+     "R+4": 16,
+     "V-8": 16384,
+     "V-4": 24576,
+     "V-2": 36864,
+     "V+2": 20480,
+     "V+4": 8192,
+     "Vin+2": 8192,
+     "Vin+4": 4096,
+     "Vin+8": 4096
+    },
+    "vport_pos": {
+     "vport_EN_0": 4,
+     "vport_EN_1": 4,
+     "vport_EN_2": 3,
+     "vport_EN_3": 3,
+     "vport_ES_0": 4,
+     "vport_ES_1": 4,
+     "vport_ES_2": 3,
+     "vport_ES_3": 3,
+     "vport_WN_0": 4,
+     "vport_WN_1": 4,
+     "vport_WN_2": 3,
+     "vport_WN_3": 3,
+     "vport_WS_0": 4,
+     "vport_WS_1": 4,
+     "vport_WS_2": 3,
+     "vport_WS_3": 3
+    }
+   }
+  }
+ },
+ "totals_with_r8": {
+  "ctlmid": 173717,
+  "ctlv4": 146072,
+  "ctlv34": 176600
+ },
+ "before": {
+  "entry_table_pad_flops": 236000,
+  "with_r8": 255000,
+  "src": "kv_pv_entry_pads_v36.json @0ec5c902d (163k entries + 73k residual member pads)"
+ },
+ "verdict": "ctlv4 meets the R8 PAD BUDGET: 127.6k PV entry pads (V 0, cmd 5.9k, flags 5.2k, rs 86.4k, pe2 28.7k, other 1.4k) + R8 18.5k = 146.1k < 150k (was ~255k). TRUNK_D 54 -> 48, P0/P1 age -6. The rest is the result trunk rs (RH and astk stay at the hub end); moving RH beside the ctl is the next lever. Changed-cycle lane members (route.bit_depth_delta): cmd C -8/-4/+4, header H -14..-2, flags R -15..+4, V -6..+6 (incl. own-partition V via the trunk). Plan re-cut (move pvw_<i>__u_ctl from hub_C and vport_<q>_<k> into pv_<S|N>_4, re-lane, gen.py latency, R8 regen, physical fit of 4 vports in pv_*_4) NOT done yet."
+}
