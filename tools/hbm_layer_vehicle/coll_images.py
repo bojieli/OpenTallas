@@ -150,6 +150,8 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
     check keep their edges (they precede the launch lane)."""
     Ls = int(transport["launch_edges"]) if transport else 0
     ing = {p: int(v) for p, v in transport["ingress_edges"].items()} if transport else {}
+    # TOKj-HBM 10-23: landing write lanes hcollgl -> hcollks -> vmb (per bank; absent in pre-kq profiles = 0)
+    kqw = {int(b): int(v) for b, v in (transport.get("kq_write_edges") or {}).items()} if transport else {}
     from hbm_layer_vehicle.layer_images import CpBus
     O = np.asarray(O, np.uint32)
     n = len(O)
@@ -222,9 +224,11 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
                 key = (OUT_PORTS[(r, d)], A + 1)
                 assert key not in outc, ("ring output double-booked", key)
                 outc[key] = flit(s, 3 - h, k, sl[s][i])
-            w = IE + PUBLISH_WRITE + vm_rt + 2 * h
-            last_w = max(last_w, w)
-            landed[dst + s * stride + i] = (sl[s][i], w)
+            w = IE + PUBLISH_WRITE + vm_rt + 2 * h          # master publish edge (GEN2 = bank write sample)
+            sec = dst + s * stride + i
+            wb_ = w + kqw.get(sec % 8, 0)                   # bank write sample after the kq write lane
+            last_w = max(last_w, wb_)
+            landed[sec] = (sl[s][i], w, wb_)
     for p, m in drv.items():
         for cyc in sorted(m):
             ev.append(dict(k="D", dom="stream", cyc=cyc, port=p, val=f"{m[cyc]:x}", src=f"farend:{p.split('__')[0]}",
@@ -236,7 +240,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
         chk_ring.append(dict(k="C", dom="stream", cyc=cyc, port=p, val=f"{v:x}", src="check:ring_out", rec=i_rec))
     T = last_w + VM_SETTLE
     full = "ffffffff" * 8
-    for s_, (v, _) in sorted(landed.items()):
+    for s_, (v, _, _) in sorted(landed.items()):
         chk_vm.append(dict(k="C", dom="stream", cyc=T, port=f"vm:{s_:x}", val=f"{v:064x}", mask=full,
                            src="golden:ds_native_fixture", rec=i_rec))
     for j in range(F):
@@ -246,7 +250,7 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
         chk_misc.append(dict(k="C", dom="stream", cyc=T, port=p, val="0", src="check:no_fault", rec=i_rec))
     # every landed sector must be on a distinct (bank, write edge) -- the conflict rule the master faults on
     wb = {}
-    for s_, (_, w) in landed.items():
+    for s_, (_, w, _) in landed.items():
         assert (s_ % 8, w) not in wb, ("two landing writes on one bank edge", s_, w)
         wb[(s_ % 8, w)] = s_
     words_checked = 4 * F * 8
@@ -260,14 +264,14 @@ def gather_record(O, i_rec, R=2, t_start=40, dst_idx=0x100, t_frames=16, q=0, vm
     # exact per-edge bank reservations (collq_gather_1018.schedule rule, plain mode) for the composed layer calendar:
     # (edge relative to the descriptor fire, bank, owner)
     rsv = sorted([(issue_rel(i // R) + 16, (src + i) % 8, "r3") for i in range(F)] +
-                 [(w - FE, s_ % 8, "w2") for s_, (_, w) in landed.items()])
+                 [(wb_ - FE, s_ % 8, "w2") for s_, (_, _, wb_) in landed.items()])
     # read requests keep their edges; with VM_RT they reach the bank through the l12 request pads (hcollrs BANK_RT):
     # the window grant above covers them (it spans the whole gather)
     reservations = dict(reads=F, writes=len(landed), first=rsv[0][0], last=rsv[-1][0],
                         rule="read sample IE+16 (plain), publish write sample IE+34+2h; calendar word = fire_index + "
                              "edge + OWNER_LEAD 1 (collq_gather_1018 on origin/main)")
     return dict(status="emitted", F=F, R=R, stride=stride, src_sector=src, dst_sector=dst, t_start=t_start, vm_rt=vm_rt,
-                transport=dict(launch_edges=Ls, ingress_edges=ing) if transport else None,
+                transport=dict(launch_edges=Ls, ingress_edges=ing, kq_write_edges=kqw) if transport else None,
                 n_words=n, launch_cyc=cL, L=L, fire=FE, last_write=last_w, check_cyc=T,
                 model_span_fire_to_last_write=sp, launch_to_last_write=last_w - L,
                 calendar=dict(target=CAL_TGT, loops=win, word={k: hex(v) for k, v in cal_word.items()},

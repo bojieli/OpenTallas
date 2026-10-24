@@ -37,6 +37,13 @@ SCHEMA = "opentallas.hbm_coll_transport.v1"
 INGRESS = {"hb_coll_NW__pr_cw_o": ("hb_coll_SW", "pr_cw_i"), "hb_coll_SE__pr_ccw_o": ("hb_coll_SW", "pr_ccw_i"),
            "hcollb_NW__cw_o": ("hcollb_SW", "cw_i"), "hcollb_SE__ccw_o": ("hcollb_SW", "ccw_i")}
 LAUNCH = ("hcollgi_SW", "launch_v")
+# TOKj-HBM 10-23: landing WRITE lanes.  hcollgl_SW publishes each landed sector on vm_kq_lo/hi; the kq share leaf
+# hcollks_SW_p<p> (b_kq) forwards it to VM banks 2p / 2p+1 (vmb_SW<b>.kq).  Both legs are relayed on r18h5 (b_kq 5-7,
+# vm_kq 22-32 edges, unequal per bank), so a landed sector reaches its bank kq_write_edges[bank] edges after the GEN2
+# publish write edge; the VM checks and the composed calendar's write reservations move by it (land-direct r18h5 rec2:
+# every one of the 72 failing checks was a VM word read 0 at the GEN2 check edge; the same checks at +74 PASS 287/287).
+KQ_LEAF = {p: (f"hcollks_SW_p{p}", "b_kq") for p in range(4)}
+KQ_BANK = {b: (f"vmb_SW{b}", "kq") for b in range(8)}
 CAL_LAUNCH = ("calendar_SW", "launch_v")
 RELAY = re.compile(r"(rf|rh)\d+_|l12p_")
 HOP = re.compile(r"\b((?:rf|rh)\d+_\w+?|l12p_\w+?)__(o|b|eb|ck_o)\b")
@@ -79,7 +86,7 @@ def profile(contract, die_v):
     import d4g_bank_latency as L
     G = L.Graph.__new__(L.Graph)
     G.I = json.loads(Path(contract).read_text())["instances"]
-    sinks = [LAUNCH, CAL_LAUNCH] + list(INGRESS.values())
+    sinks = [LAUNCH, CAL_LAUNCH] + list(INGRESS.values()) + list(KQ_LEAF.values()) + list(KQ_BANK.values())
     inst = parse_instances(die_v, {s[0] for s in sinks})
     lanes = {}
     for name, port in sinks:
@@ -91,10 +98,20 @@ def profile(contract, die_v):
         # the traced root must be the far-end pin itself (the slice boundary), else the lane map is wrong
         if pin not in lanes[f"{name}.{port}"]["root"]:
             raise ValueError(f"{name}.{port} root {lanes[f'{name}.{port}']['root']!r} is not {pin}")
+    kq = {}
+    for p, (name, port) in KQ_LEAF.items():
+        if "hcollgl_SW__vm_kq" not in lanes[f"{name}.{port}"]["root"]:
+            raise ValueError(f"{name}.{port} root {lanes[f'{name}.{port}']['root']!r} is not hcollgl_SW.vm_kq")
+    for b, (name, port) in KQ_BANK.items():
+        leaf = KQ_LEAF[b // 2]
+        if f"{leaf[0]}__vm_kq" not in lanes[f"{name}.{port}"]["root"]:
+            raise ValueError(f"{name}.{port} root {lanes[f'{name}.{port}']['root']!r} is not {leaf[0]}.vm_kq")
+        kq[str(b)] = lanes[".".join(leaf)]["latency_edges"] + lanes[f"{name}.{port}"]["latency_edges"]
     return dict(schema=SCHEMA, contract=str(contract), die_v=str(die_v),
                 launch_edges=lanes[".".join(LAUNCH)]["latency_edges"],
                 calendar_launch_edges=lanes[".".join(CAL_LAUNCH)]["latency_edges"],
                 ingress_edges={pin: lanes[f"{n}.{p}"]["latency_edges"] for pin, (n, p) in INGRESS.items()},
+                kq_write_edges=kq,
                 scope="source-functional lane timing (K/N model); NO_E landings listed in lanes[*].notes",
                 lanes=lanes)
 
@@ -116,7 +133,7 @@ def main():
     a = ap.parse_args()
     t = profile(a.contract, a.die_v)
     a.out.write_text(json.dumps(t, indent=1) + "\n")
-    print(json.dumps({k: t[k] for k in ("launch_edges", "calendar_launch_edges", "ingress_edges")}))
+    print(json.dumps({k: t[k] for k in ("launch_edges", "calendar_launch_edges", "ingress_edges", "kq_write_edges")}))
 
 
 if __name__ == "__main__":
