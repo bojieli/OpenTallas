@@ -1,0 +1,259 @@
+{
+ "schema": "opentallas.die_plan.dedup_provenance.v1",
+ "source_digest": "8145312207b0f40e",
+ "types_before": 174,
+ "types_after": 161,
+ "merged": {
+  "ot_s81sl_leaf__t74": {
+   "into": "ot_s81sl_leaf__t10",
+   "instances": {
+    "s_7N_L4": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t63": {
+   "into": "ot_s81sl_leaf__t24",
+   "instances": {
+    "s_6N_L3": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t64": {
+   "into": "ot_s81sl_leaf__t25",
+   "instances": {
+    "s_6N_L4": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t49": {
+   "into": "ot_s81sl_leaf__t40",
+   "instances": {
+    "s_5S_L4": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t48": {
+   "into": "ot_s81sl_leaf__t44",
+   "instances": {
+    "s_5S_L3": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t8": {
+   "into": "ot_s81sl_leaf__t72",
+   "instances": {
+    "s_0N_L1": [
+     "R0",
+     "R0"
+    ]
+   }
+  },
+  "ot_s81sl_leaf__t9": {
+   "into": "ot_s81sl_leaf__t73",
+   "instances": {
+    "s_0N_L3": [
+     "R0",
+     "R0"
+    ]
+   }
+  },
+  "serdes__t5": {
+   "into": "serdes__t1",
+   "instances": {
+    "lk_EN0": [
+     "MY",
+     "MY"
+    ],
+    "lk_ES0": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "serdes__t6": {
+   "into": "serdes__t2",
+   "instances": {
+    "lk_EN1": [
+     "MY",
+     "MY"
+    ],
+    "lk_ES1": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "slice_station__t31": {
+   "into": "slice_station__t11",
+   "instances": {
+    "s_7N_x06": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "slice_station__t24": {
+   "into": "slice_station__t2",
+   "instances": {
+    "s_7S_x11": [
+     "MY",
+     "MY"
+    ],
+    "s_7S_x12": [
+     "MY",
+     "MY"
+    ],
+    "s_7S_x14": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "slice_station__t23": {
+   "into": "slice_station__t1",
+   "instances": {
+    "s_7S_x10": [
+     "MY",
+     "MY"
+    ]
+   }
+  },
+  "slice_station__t3": {
+   "into": "slice_station__t25",
+   "instances": {
+    "s_0S_x03": [
+     "R0",
+     "R0"
+    ]
+   }
+  }
+ },
+ "fix_order": true,
+ "reordered_ports": [
+  "coll__lk_ES0__s_7S_LP__1",
+  "coll__lk_ES0__s_7S_LP__2",
+  "coll__lk_ES0__s_7S_LP__3",
+  "coll__lk_ES0__s_7S_LP__4",
+  "coll__lk_ES0__s_7S_LP__5",
+  "coll__lk_ES0__s_7S_LP__6",
+  "coll__lk_ES0__s_7S_LP__7",
+  "coll__lk_ES0__s_7S_LP__8",
+  "coll__lk_ES1__s_7S_LP__2",
+  "coll__lk_ES1__s_7S_LP__3",
+  "coll__lk_ES1__s_7S_LP__4",
+  "coll__lk_ES1__s_7S_LP__5",
+  "coll__lk_ES1__s_7S_LP__6",
+  "coll__lk_ES1__s_7S_LP__7",
+  "coll__lk_ES1__s_7S_LP__8",
+  "coll__lk_ES1__s_7S_LP__9",
+  "coll__s_7N_LP__lk_EN0__5",
+  "coll__s_7N_LP__lk_EN1__5",
+  "coll__s_7N_LP__lk_EN1__6",
+  "coll__s_7S_LP__lk_ES0__8",
+  "coll__s_7S_LP__lk_ES1__8",
+  "coll__s_7S_LP__lk_ES1__9",
+  "rt_W5_in_0__2",
+  "rt_W5_in_0__3",
+  "rt_W5_in_0__4",
+  "rt_W5_in_0__5",
+  "rt_W5_in_1__3",
+  "rt_W5_in_1__4",
+  "rt_W5_in_1__5",
+  "rt_W5_in_1__6",
+  "rt_W5_in_2__4",
+  "rt_W5_in_2__5",
+  "rt_W5_in_2__6",
+  "rt_W5_in_2__7",
+  "rt_W5_out_0__5",
+  "rt_W5_out_0__6",
+  "rt_W5_out_0__7",
+  "rt_W5_out_0__8",
+  "rt_W5_out_1__6",
+  "rt_W5_out_1__7",
+  "rt_W5_out_1__8",
+  "rt_W5_out_1__9",
+  "rt_W5_out_2__10",
+  "rt_W5_out_2__7",
+  "rt_W5_out_2__8",
+  "rt_W5_out_2__9",
+  "x_W5_in__0",
+  "x_W5_in__1",
+  "x_W5_in__2",
+  "x_W5_in__3",
+  "x_W5_out__0",
+  "x_W5_out__1",
+  "x_W5_out__2",
+  "x_W5_out__3",
+  "xtier__s_2N_C__s_2S_C__0",
+  "xtier__s_2N_C__s_2S_C__1",
+  "xtier__s_2N_C__s_2S_C__2",
+  "xtier__s_2N_C__s_2S_C__3",
+  "xtier__s_2N_C__s_2S_C__4",
+  "xtier__s_2N_C__s_2S_C__5",
+  "xtier__s_2S_C__s_2N_C__0",
+  "xtier__s_2S_C__s_2N_C__1",
+  "xtier__s_2S_C__s_2N_C__2",
+  "xtier__s_2S_C__s_2N_C__3",
+  "xtier__s_2S_C__s_2N_C__4",
+  "xtier__s_2S_C__s_2N_C__5",
+  "xtier__s_3S_C__gunit__1",
+  "xtier__s_3S_C__gunit__10",
+  "xtier__s_3S_C__gunit__11",
+  "xtier__s_3S_C__gunit__2",
+  "xtier__s_3S_C__gunit__3",
+  "xtier__s_3S_C__gunit__4",
+  "xtier__s_3S_C__gunit__5",
+  "xtier__s_3S_C__gunit__6",
+  "xtier__s_3S_C__gunit__7",
+  "xtier__s_3S_C__gunit__8",
+  "xtier__s_3S_C__gunit__9",
+  "xtier__s_5N_C__s_5S_C__0",
+  "xtier__s_5N_C__s_5S_C__1",
+  "xtier__s_5N_C__s_5S_C__2",
+  "xtier__s_5N_C__s_5S_C__3",
+  "xtier__s_5N_C__s_5S_C__4",
+  "xtier__s_5N_C__s_5S_C__5"
+ ],
+ "pin_table_touched_types": [
+  "dsdv_slice_c1x_C__t3",
+  "dsdv_slice_c1x_C__t4",
+  "dsdv_slice_c1x_C__t6",
+  "dsdv_slice_c1x_C__t7",
+  "dsdv_slice_lepe_nh_mus_LP__t1",
+  "dsdv_slice_lepw_mu_C__t1",
+  "gunit__t1",
+  "ot_s81sl_leaf__t10",
+  "ot_s81sl_leaf__t23",
+  "ot_s81sl_leaf__t24",
+  "ot_s81sl_leaf__t25",
+  "ot_s81sl_leaf__t26",
+  "ot_s81sl_leaf__t27",
+  "ot_s81sl_leaf__t28",
+  "ot_s81sl_leaf__t29",
+  "ot_s81sl_leaf__t30",
+  "ot_s81sl_leaf__t47",
+  "ot_s81sl_leaf__t50",
+  "ot_s81sl_leaf__t51",
+  "slice_station__t11",
+  "slice_station__t15",
+  "slice_station__t25",
+  "slice_station__t26",
+  "slice_station__t27",
+  "slice_station__t28",
+  "slice_station__t34"
+ ],
+ "verify": {
+  "exact": true,
+  "problems": []
+ }
+}

@@ -131,7 +131,7 @@
  },
  "partition_types": {
   "hd_tile": {
-   "module": "ot_s81hd_tile",
+   "module": "ot_s81hd_tile_p",
    "outline_um": [
     691.2,
     1036.8
@@ -156,14 +156,61 @@
      "status": "rework",
      "kit": "physical/ref_tile/s81hd_tile_m",
      "cells": 50000,
-     "note": "tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; ROM code and the row0 / ten straps are per-instance mask programme (no die ports)"
+     "params": {
+      "CV": "1"
+     },
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n",
+      "row0": "net:row0",
+      "ten": "net:ten"
+     },
+     "note": "tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed views (CV 1, CUT 0x1ff / SPLIT9 1)"
+    },
+    {
+     "inst": "u_strap",
+     "module": "ot_s81hd_strap",
+     "status": "new",
+     "cells": 18,
+     "params": {
+      "ROW0": "0",
+      "TEN": "1"
+     },
+     "bind": {
+      "row0": "net:row0",
+      "ten": "net:ten"
+     },
+     "note": "per-instance position straps row0 / ten = 18 mask-programmed TIEHI / TIELO cells (same footprint, the ROM-code mask-variant class); the kit is built at ROW0 0 / TEN 1, instance k differs only by the tie masters (no die ports)"
     }
    ],
    "note": "LM-head tile = 1 bundle (128 vocab rows, 10 ROM4096) on bus B 565; 4 x elemA 214445 (ASSUMED: elemB cells x area ratio (no elemA count committed)) + elemB 163817 + glue 50000 ASSUMED",
+   "nets": [
+    {
+     "name": "row0",
+     "width": 17
+    },
+    {
+     "name": "ten",
+     "width": 1
+    }
+   ],
+   "sources": [
+    "rtl/common/ot_prefix.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_dsrom_bmul3.sv",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"
+   ],
    "hard_cores": [
     {
-     "inst": "u_eA0",
-     "module": "ot_dsrom_head_elem",
+     "inst": "u_core.u_b.g_cv.u_eA0",
+     "module": "ot_s81hd_elemA_cv",
      "origin_um": [
       8.64,
       8.64
@@ -178,13 +225,13 @@
       0.012
      ],
      "pins_file": "cores/elemA_pins.json",
-     "lef": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef",
-     "lib": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem_ss.lib",
-     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or re-close the copy"
+     "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
-     "inst": "u_eA1",
-     "module": "ot_dsrom_head_elem",
+     "inst": "u_core.u_b.g_cv.u_eA1",
+     "module": "ot_s81hd_elemA_cv",
      "origin_um": [
       354.24,
       8.64
@@ -199,13 +246,13 @@
       0.012
      ],
      "pins_file": "cores/elemA_pins.json",
-     "lef": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef",
-     "lib": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem_ss.lib",
-     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or re-close the copy"
+     "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
-     "inst": "u_eA2",
-     "module": "ot_dsrom_head_elem",
+     "inst": "u_core.u_b.g_cv.u_eA2",
+     "module": "ot_s81hd_elemA_cv",
      "origin_um": [
       8.64,
       354.24
@@ -220,13 +267,13 @@
       0.012
      ],
      "pins_file": "cores/elemA_pins.json",
-     "lef": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef",
-     "lib": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem_ss.lib",
-     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or re-close the copy"
+     "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
-     "inst": "u_eA3",
-     "module": "ot_dsrom_head_elem",
+     "inst": "u_core.u_b.g_cv.u_eA3",
+     "module": "ot_s81hd_elemA_cv",
      "origin_um": [
       354.24,
       354.24
@@ -241,13 +288,13 @@
       0.012
      ],
      "pins_file": "cores/elemA_pins.json",
-     "lef": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef",
-     "lib": "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem_ss.lib",
-     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or re-close the copy"
+     "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
-     "inst": "u_eB",
-     "module": "ot_dsrom_head_elem",
+     "inst": "u_core.u_b.g_cvb.u_eB",
+     "module": "ot_s81hd_elemB_cv",
      "origin_um": [
       8.64,
       699.84
@@ -262,9 +309,9 @@
       0.012
      ],
      "pins_file": "cores/elemB_pins.json",
-     "lef": "physical/dsrom_fh_safe/closed/elemB/ot_dsrom_head_elem.lef",
-     "lib": "physical/dsrom_fh_safe/closed/elemB/ot_dsrom_head_elem_ss.lib",
-     "note": "163817 cells (measured (elemB_final original_physical.json)); CLOSED SS view dshead-elemB-ss-a318fdf47 (SS +91.75 / FF +19.13 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or re-close the copy"
+     "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv.lef",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_ss.lib",
+     "note": "163817 cells (measured (elemB_final original_physical.json)); CLOSED SS view dshead-elemB-ss-a318fdf47 (SS +91.75 / FF +19.13 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemB_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     }
    ],
    "buses": [
