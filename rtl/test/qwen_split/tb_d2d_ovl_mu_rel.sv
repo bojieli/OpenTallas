@@ -294,7 +294,7 @@ module tb_d2d_ovl_mu_rel;
         if (c_rxv0 != c_rxs0) err("compute pins: native_rx_v != native_rx_slot");
         if (c_embv != c_embs) err("compute pins: emb_rx_v != emb_rx_slot");
         if (k_rxv0 != k_rxs0) err("KV pins: att_rx_v != att_rx_slot");
-        if (k_recv != k_recw) err("KV pins: record_rx_v != record_witness_slot");
+        if (k_recw != (k_recv && k_rk == 4'd14)) err("KV pins: witness slot != received kind14 record");
         if (k_recv && k_rec !== k_rxp) err("KV pins: record_rx != rx_payload");
         if (c_rxv0 || c_prxv || c_embv) n_pin_c = n_pin_c + 1;
         if (k_rxv0 || k_recv) n_pin_k = n_pin_k + 1;

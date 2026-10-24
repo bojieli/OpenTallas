@@ -5,6 +5,12 @@
 # Idempotent; never stops or signals a running job; helpers are replaced atomically (install -> new inode).
 #  1. scratch: /srv/opentallas-scratch (real dir on the host's biggest filesystem, owned by the user) with claude/ and
 #     the convenience symlink ~/ot-scratch -> /srv/opentallas-scratch.  An existing mount or directory is kept.
+#     FLEET-DISK 2026-10-24 (owner: never use root disks for work): when /srv/opentallas-scratch2 is a separate disk
+#     (intel1/intel2/epyc2), all work goes there: /srv/opentallas-scratch2/claude (+ claude/wt/<lane> for server
+#     worktrees) is created and /srv/opentallas-scratch/claude becomes a symlink to it (a fresh or empty claude/ is
+#     flipped at once; one with content is moved idle-entry by idle-entry by ot-scratch-consolidate --loop, which
+#     never touches a dir held by a process or bind-mounted by a running container).  Helpers ot-mvlink,
+#     ot-scratch-consolidate, ot-docker-relocate go to /usr/local/bin.  md0-only hosts (localhost/epyc3) are unchanged.
 #  2. ot-heavy helpers: /usr/local/bin/{ot-heavy,ot-heavy-reconcile}, /usr/local/lib/ot-heavy/{ot-heavy-exit,bin/docker},
 #     then the repo installers for ot-vl-jcap (VL_JCAP_1022), ot-protect-die (DIE_WATCHDOG_1021) and OOMADJ_999_1022.
 #  3. earlyoom (install_host_guard.sh arguments), /etc/ot-heavy.conf (coord role: MIN_AVAIL_FRAC=0.15 so the agents on the
@@ -20,7 +26,23 @@ if [ ! -e /srv/opentallas-scratch ]; then
   sudo -n mkdir -p /srv/opentallas-scratch
   sudo -n chown "$u:$u" /srv/opentallas-scratch
 fi
-mkdir -p /srv/opentallas-scratch/claude
+sudo -n install -m 0755 "$here/ot-mvlink.sh" /usr/local/bin/ot-mvlink
+sudo -n install -m 0755 "$here/ot-scratch-consolidate.sh" /usr/local/bin/ot-scratch-consolidate
+sudo -n install -m 0755 "$here/ot-docker-relocate.sh" /usr/local/bin/ot-docker-relocate
+S2=/srv/opentallas-scratch2
+if [ -d $S2 ] && [ "$(stat -c %d $S2)" != "$(stat -c %d /)" ]; then      # separate scratch disk: never the root fs
+  sudo -n chown "$u:$u" $S2
+  mkdir -p $S2/claude/wt
+  if [ ! -e /srv/opentallas-scratch/claude ] || rmdir /srv/opentallas-scratch/claude 2>/dev/null; then
+    ln -sfn $S2/claude /srv/opentallas-scratch/claude
+  elif [ ! -L /srv/opentallas-scratch/claude ]; then
+    pgrep -f '[o]t-scratch-consolidate --loop' >/dev/null || \
+      OT_MVLINK=/usr/local/bin/ot-mvlink nohup setsid /usr/local/bin/ot-scratch-consolidate --loop 600 \
+        >> $S2/claude/consolidate.log 2>&1 < /dev/null &
+  fi
+else
+  mkdir -p /srv/opentallas-scratch/claude
+fi
 [ -e "$HOME/ot-scratch" ] || ln -s /srv/opentallas-scratch "$HOME/ot-scratch"
 
 # 2. helpers
@@ -47,6 +69,6 @@ fi
 sudo -n loginctl enable-linger "$u"
 line='*/2 * * * * /usr/local/bin/ot-heavy-reconcile >/dev/null 2>&1'
 { crontab -l 2>/dev/null | grep -vF '/usr/local/bin/ot-heavy-reconcile' || true; echo "$line"; } | crontab -
-echo "FLEET_HOST_OK $(hostname) role=$role scratch=$(df -BG --output=avail /srv/opentallas-scratch | tail -1 | tr -d ' ') free" \
+echo "FLEET_HOST_OK $(hostname) role=$role scratch=$(df -BG --output=avail /srv/opentallas-scratch/claude/ | tail -1 | tr -d ' ') free" \
   "earlyoom=$(systemctl is-active earlyoom) die-protection=$(systemctl is-active ot-die-protection 2>/dev/null)" \
   "linger=$(loginctl show-user "$u" -p Linger --value) reconcile=$(/usr/local/bin/ot-heavy-reconcile --free / | head -c 80)"

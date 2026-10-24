@@ -21,14 +21,18 @@
 //   * fanout: the 50-bit chain-best hold is enabled by 3 kept rv copies; the output select by 3 kept copies.
 // Latency: own result at go_tile + 1 + BUNDLE_LAT; fire = 2 edges after both are present (select register, output
 // register).  A position's chain best and own result must both arrive before the next go reaches the tile (static
-// schedule: positions >= 8,357 cycles apart; no backpressure).
+// schedule: positions >= 8,357 cycles apart at CUT 0x17b, >= 8,411 at the default CUT 0x1ff / SPLIT9 1; no backpressure).
+// 10-24 (S81-HEAD): defaults CUT 0x1ff / SPLIT9 1 = the CLOSED element views' parameters (physical/dsrom_fh_safe/closed/
+// elem{A,B}); ot_s81hd_elem at these parameters == the closed RTL (tools/s81_head/hd_elem_eq.sh); +54 cycles vs 0x17b
+// (mini array 8,375 -> 8,429, token 21946 exact).  The ROM images follow SK = 11 (tools/s81_head/hd_reskew_images.py).
 // The bundle's head_v / head_d / head_row pre-argmax outputs stay internal (unused).
 // ---------------------------------------------------------------------------
 module ot_s81hd_tile #(
     parameter INSTANCE = "h",                // ROM image prefix (simulation only)
     parameter integer IOREG = 1,             // ot_s81hd_elem pin-registered inputs
-    parameter [8:0] CUT = 9'b1_0111_1011,
-    parameter integer SPLIT9 = 0
+    parameter [8:0] CUT = 9'b1_1111_1111,      // 10-24: closed element views (was 0x17b)
+    parameter integer SPLIT9 = 1,              // 10-24: closed element views (was 0)
+    parameter integer CV = 0                   // 10-24: 1 = elements are the closed-view macros (ot_s81hd_bundle CV)
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -78,7 +82,7 @@ module ot_s81hd_tile #(
     wire [3:0]   nc_hv;
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
-    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9)) u_b (
+    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV)) u_b (
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED
         .go(go_q),

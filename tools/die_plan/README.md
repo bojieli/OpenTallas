@@ -235,3 +235,95 @@ G0 checks:
 3. Reset or clock rows count as dropped unless an explicit `exempt` entry lists them. Exempt totals appear in the
    summary.
 4. A group spanning several partitions gets a WARN: the traffic inside it needs a finer census.
+
+## TYPE-DEDUP (`dedup.py`, `gen.py dedup`; opt-in, writes a copy)
+
+```
+python3 tools/die_plan/dedup.py analyze  PLAN.json [--fix-order] [--out report.json]
+python3 tools/die_plan/gen.py   dedup    PLAN.json --out-plan COPY/die_plan.json [--fix-order] [--only canon,..]
+python3 tools/die_plan/dedup.py variants PLAN.json [--rtl BOUND_RTL_DIR]     # bound modules per plan type (kit count)
+```
+
+Merges near-duplicate partition types only when the merge is exact: the same netlist key (outline, bus interface with
+leaf binds, ft slots, contents with params, hard-core modules) and, per instance, an orient under which every port keeps
+its die pins and the instance's type-frame pin table equals the canonical type's. `--fix-order` also accepts members
+that match up to the bit order of some ports (same faces and tracks) and re-solves port / type orders die-wide as
+parity constraints; the provenance lists the re-ordered ports and the other types whose pin tables change (their kits
+regenerate). A bound-RTL gate (default `PLANDIR/bind/bound_r8/rtl`) keeps a member whose bound netlist differs (R8
+pads, narrowed ports) as its own type. Members that differ only in contents params are reported STRAP candidates, and
+members that differ in ft-slot population FT-POP families; neither is merged (no tie-offs: a strap is a planned lane
+from a configuration register, an unused slot is an unbound bus). Ports, lanes, latency and census are never changed;
+`verify()` re-checks that, and the output must pass G0 (`check.py`) like any plan. Results: `results/type_dedup/`.
+
+## Whole-die CI (`die_ci.py`, lane DIE-CI, owner-approved 2026-10-24)
+
+```
+python3 tools/die_plan/die_ci.py run [--mode commit|nightly] [--g2 auto|all|none] [--views-root DIR]   # -> results/die_ci/<date>_<sha12>/
+python3 tools/die_plan/die_ci.py margins --derive --out tools/die_plan/die_ci_margins.json            # liberty-derived margin numbers
+```
+
+One entry point re-runs the whole-die prototype of every plan (s81, s81_head, qwen_compute, qwen_kvsys, hbm; hbm_arch B2
+once on main) on one sha: G0 + G0C (one `check.py --completeness`), cross-die (PLAN-TOOL5 in-die rules + `xdie_io.py`
+on the rack tables), G2 (`g2.py` die + 5 worst types; CARRIED in commit mode when the plan and G2 tools are unchanged),
+census + latency consistency (the `<die>_latency.json` carrying the current plan digest equals `Plan.lane_latency()`),
+and die STA through DIE-STA's `die_sta.py` (ILM) on a sub-top of the partitions registered in `die_ci_views.json`,
+with stand-in budgets (kit SDC contract composition, else the R2 face-flop estimate) for every other seam.
+Per die: `<die>.json` + `<die>.md` (gate status, counts, worst seam slack, deltas vs the previous run); `SUMMARY.md`.
+
+Margins (`die_ci_margins.json`, derivations inside) are added ON TOP of the AGENTS.md policy and reported next to the
+policy slack: crosstalk per seam (|MCF-1| x R_eff x Cc over 2 x pin_reg_p90; OpenSTA has no SI), IR drop (PDNSim when a
+die PDN database exists, else 5 % VDD stated -> late cell derate via the alpha-power law), flat OCV
+(`set_timing_derate`). `check_margins` refuses any value that would relax the policy.
+
+Schedule (localhost systemd user timers, `systemd/`): `die-ci-commit.timer` hourly runs `die_ci_cron.sh commit` when main
+moved with changes under tools/die_plan or physical/die_plan; `die-ci-nightly.timer` 02:30 Pacific runs the full set.
+The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, copies the run back to
+/srv/opentallas-scratch/claude/die-ci/results, commits the JSON/MD to branch `claude/die-ci-results`, and keeps the
+`DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.
+
+Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.
+
+## Die STA (`die_sta.py`, G4 seam timing; lane DIE-STA 10-24)
+
+```
+python3 tools/die_plan/die_sta.py extract --odb KIT/run/results/asap7/*/base/5_route.odb --out PARTS/<type>   # RCX
+python3 tools/die_plan/die_sta.py top  --plan PLAN.json --out DIE/die_top.v [--views VIEWS]   # = die_top_struct.v
+python3 tools/die_plan/die_sta.py run  --top DIE/die_top.v --parts PARTS --out OUT [--mode ilm|flat|etm]
+        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json] [--die-spef DIE/6_final.spef] [--threads N]
+python3 tools/die_plan/die_sta.py compare OUT_FLAT/die_sta.json OUT_ILM/die_sta.json --tol 2
+python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final.spef --n N --out DIR   # capacity
+```
+
+`PARTS/<x>/6_final.v|.spef` per partition (found by the module name in the netlist; `6_final.sdc` names the clock
+ports).  Seams are found from the die top (every internal net from a partition output to another partition's input)
+and reported per `src->dst/bus`: worst slack, path count, violating endpoints, TNS, launch/capture clock arrival.
+Constraints follow AGENTS.md (owner 2026-10-24): one clock on die `clk`, propagated through each partition's own routed
+tree, 60 ps setup / 25 ps hold uncertainty; signoff = setup at TT, hold at FF (the default `--corner TT --corner FF`),
+plus the R4 face-flop spread: clock arrival spread over every register launching into / capturing from a seam,
+<= 80 ps per partition at TT and FF (`FFSPREAD`).  SS may be run for information and never gates.
+`verdict.status` is PASS only when TT setup and FF hold ran, every seam slack is >= 0 and every spread <= 80 ps;
+otherwise FAIL or NOT RUN.
+Die spine: ideal by default (taps at the plan's common latency), `--spine-branch` (CP2 H-tree branch offsets as
+source latency on every tap pin), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm)
+have no channel ports, so every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+
+Modes:
+- **ilm** (default, continuous die check): each partition is replaced by its interface logic model, extracted from
+  the routed netlist: fan-out of every non-clock input to the first register, fan-in of every output back to the
+  launching registers, the clock network of those registers, and every other cell on a kept net as a side load (that
+  pin only), so kept nets keep their exact RC and pin load; the SPEF is filtered to the kept nets.  Corner independent
+  (one abstract per type, cached in `OUT/ilm/<module>`).  Internal reg-to-reg paths are not timed (that is the kit's
+  own signoff).
+- **flat** (signoff): routed netlists + per-instance `read_spef -path`, stitched under the die top.
+- **etm**: OpenSTA `write_timing_model` per type and corner.  NOT a verdict: OpenSTA be771a0 writes clock->output arcs
+  from the max arrival only (`MakeTimingModel::min_max_`), so ETM hold is optimistic.  KV pair e5e6: ETM vs flat
+  -82 ps setup / +73 ps hold.
+
+Validation (KV pair e5e6, routed kv3_io_cor_v1 | kv3_io_ft_v1, 4 seam groups, TT / FF / SS): ilm == flat to
+0.000 ps on every seam slack and face-flop spread, ilm 2x faster than flat.  (That pair: TT setup +93.7 ps, FF hold
++231.0 ps, spread TT 24.8 / FF 20.1 ps: PASS.)
+
+Flat capacity (OpenSTA be771a0, `replica` of kv3_io_cor_v1 = 143k instances incl. fill, 43k nets, 60 MB SPEF; 16
+threads): memory is linear at ~2.4 KB per instance (~0.33 MB per 143k-instance partition + SPEF); time is dominated
+by the serial SPEF reader (~6.5 s per 60 MB copy) plus the full timing update.  See DIE-STA lane record for the
+measured points and the full-die extrapolation.

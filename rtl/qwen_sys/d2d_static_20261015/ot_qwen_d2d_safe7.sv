@@ -70,7 +70,7 @@ module ot_qkvd_llr_replay_sram_leaf_s7 #(parameter integer SFMUT = 0) (
         ot_d2d_kff u_h0 (.ck(ck), .d((SFMUT == 1 && s == NS - 1) ? h1d : h0d), .q(h0[s]));
         ot_d2d_kff u_h1 (.ck(ck), .d(h1d), .q(h1[s]));
     end
-    ot_sram_1r1w_64x137_m1_r2c2_p192 u_sram (
+    d2d_sram_1r1w_64x137_m1_r2c2_p192 u_sram (
         .clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mr),
         .w_ce_in(wq), .w_addr_in(aq), .wd_in(dq), .w_mask_in({W{1'b1}}),
         .rr_en(2'd0), .rr_addr(12'd0), .cr_en(2'd0), .cr_sel(16'd0));

@@ -1,0 +1,5 @@
+COLL_CALENDAR compiled LS=389 (binding port 0, LX [12, 4, 12], RS [7, 8, 8]) -> lats 389
+case qwen_ar_256w kind=pos latu=53 lats=389 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=1328 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=2048 meas_lu=53 meas_ls=389 pr_overlap=0 compiled_span=808
+case qwen_layer_2x256w kind=pos latu=53 lats=389 phi=0 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL (expected FAIL) mismatches=2704 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4096 meas_lu=53 meas_ls=389 pr_overlap=0 compiled_span=1559
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=2 latu=53 lats=389
+TP8_CASE cal_mut_rank rc=0

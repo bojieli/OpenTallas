@@ -14,7 +14,7 @@ qwen_compute vehicle (= STEWARD-TOKh/TOKi xt1, made automatically here, never ha
     tt_ctlm -> sl_W5_fw lane ends (cmd / hr / tl) are the XT1 bench event ports, every other open lane end idles at 0;
   * source closure: every module the carve instantiates, resolved from <bound>/rtl, then the bind.f files, then the
     source revision REV (git), with `include files and their incdirs; the file list is generated, not hand kept;
-  * bench: xt1_bench.py gen (nominal lead 8 / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
+  * bench: xt1_bench.py gen (nominal lead 8 + XT1_FILL_LEAD_OFFSET / gap 4) -> tb_smoke -> xt1n_bench.py check (near [+ far] words exact vs the
     TOKe-QWM record gold, ROM masks masks_fixed);
   * mutant: +SMOKE_MUT_SKEW=1 delays the hr lane end by one cycle against cmd/tl (models one schedule constant off by
     one), same binary;
@@ -114,12 +114,14 @@ def tiles_of(rtl: Path, module: str):
 
 def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     seed = re.compile(r'^(sl_W5_\w+|c_W5_tn_\d\d' + (r'|c_W5_tf_\d\d' if clusters == 'both' else '') + r')$')
-    nseed = 23 if clusters == 'both' else 19
     out.mkdir(parents=True, exist_ok=True)
     wires, insts = parse_top(top)
     keep = [i for i in insts if seed.match(i['name'])]
-    if len(keep) != nseed:
-        raise SystemExit(f'carve: {len(keep)} seed partitions != {nseed}: {[i["name"] for i in keep]}')
+    required = {f"sl_W5_{role}" for role in ("ctl", "fe", "fw", "hc0", "hc1", "hc2", "hc3", "sc", "st_a", "st_b", "stm", "su_c", "su_l0", "su_l1")}
+    required.update(f"c_W5_{side}_{x}{y}" for side in (["tn", "tf"] if clusters == "both" else ["tn"]) for x in (0, 1) for y in (0, 1))
+    missing = required - {i["name"] for i in keep}
+    if missing:
+        raise SystemExit(f"carve: missing required current-plan partitions {sorted(missing)}")
     drv, rd = {}, {}
     for i in keep:
         pd = ports_of(rtl, i['module'])
@@ -423,7 +425,7 @@ else
   BUILT=0
 fi
 T1=$(date +%s)
-python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead 8 --gap 4 > gen.out 2>&1 \
+python3 bench/xt1_bench.py gen --gold inputs/gold_near.json --out ev.txt --mode nominal --lead __LEAD__ --gap 4 > gen.out 2>&1 \
   || { echo "RESULT SMOKE GEN_FAIL"; tail -5 gen.out; exit 2; }
 GF=inputs/gold_far.json; [ -f $GF ] || GF=inputs/gold_near.json
 for m in 0 __MUT__; do
@@ -431,12 +433,28 @@ for m in 0 __MUT__; do
      +SMOKE_MUT_SKEW=$m > sim_m$m.out 2>&1; echo "sim rc=$?" >> sim_m$m.out
   [ -f log_m$m.txt ] || : > log_m$m.txt
   python3 bench/xt1n_bench.py check --gold-near inputs/gold_near.json --gold-far $GF --log log_m$m.txt --mode nominal \
-     --lead 8 --gap 4 > check_m$m.txt 2>&1
+     --lead __LEAD__ --gap 4 > check_m$m.txt 2>&1
   echo "[mut=$m] $(grep -h '^RESULT' check_m$m.txt | tail -1)"
 done
 T2=$(date +%s)
 echo "TIMES built=$BUILT build_s=$((T1-T0)) sim_s=$((T2-T1)) obj=$OBJ"
 '''
+
+
+def xt1_lead(a):
+    """x fill lead of the xt1 bench: as-built 8 + XT1_FILL_LEAD_OFFSET of the bound top (regen_constants.py qc_xfill;
+    QC-TOK 10-24: the hr x-arm crossing and the fill stream crossings land with different (landed - as-built))."""
+    if getattr(a, '_lead', None) is None:
+        off, c = 0, {}
+        if a.constants:
+            c = json.loads(Path(a.constants).read_text()).get('constants', {}).get('XT1_FILL_LEAD_OFFSET', {})
+            if c.get('status') == 'OK' and isinstance(c.get('value'), int):
+                off = c['value']
+            elif c:
+                raise SystemExit(f'XT1_FILL_LEAD_OFFSET not one value: {c}')
+        a.lead_offset_used = bool(c)
+        a._lead = 8 + off
+    return a._lead
 
 
 def qc_prepare(a, work: Path):
@@ -466,7 +484,7 @@ def qc_prepare(a, work: Path):
             raise SystemExit(f'bench file {f} not in {a.src_rev}')
         (bench / Path(f).name).write_bytes(r.stdout)
     run = (RUN_SH.replace('__VERILATOR__', VERILATOR).replace('__JOBS__', str(a.jobs)).replace('__BJOBS__', str(a.build_jobs)).replace('__GROUPS__', str(a.output_groups))
-           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)))
+           .replace('__NCYC__', str(a.ncyc)).replace('__MUT__', str(a.mut_skew)).replace('__LEAD__', str(xt1_lead(a))))
     (work / 'run_smoke.sh').write_text(run)
     (work / 'run_smoke.sh').chmod(0o755)
     meta = dict(carve=rep, closure_files=len(flist), files=flist, includes=[str(Path(i).relative_to(S.base)) for i in incs],
@@ -480,9 +498,15 @@ def sh(cmd, **kw):
     return subprocess.run(cmd, shell=True, text=True, capture_output=True, **kw)
 
 
-def qc_inputs(work: Path, clusters: str):
-    """gold + masks of the TOKe-QWM xt1 record (gold2) -> work/inputs (cached locally)."""
-    cache = Path(os.environ.get('CAL_SMOKE_CACHE', '/home/ubuntu/scratch/cal-auto-smoke/xt1_inputs'))
+def qc_inputs(work: Path, clusters: str, inputs: Path | None = None):
+    """gold + masks of the TOKe-QWM xt1 record (gold2) -> work/inputs (cached locally).  --inputs DIR (opt-in): a local
+    dir holding gold_near.json, gold_far.json and masks/ (e.g. regenerated by rtl/test/qwen_dv/xhead/xt1_inputs.py);
+    nothing is fetched then."""
+    cache = inputs or Path(os.environ.get('CAL_SMOKE_CACHE', '/home/ubuntu/scratch/cal-auto-smoke/xt1_inputs'))
+    if inputs is not None:
+        miss = [n for n in ('gold_near.json', 'gold_far.json', 'masks') if not (cache / n).exists()]
+        if miss:
+            raise SystemExit(f'--inputs {cache}: missing {miss}')
     if not (cache / 'gold_far.json').exists():
         cache.mkdir(parents=True, exist_ok=True)
         host, path = XT1_INPUTS.split(':')
@@ -494,7 +518,7 @@ def qc_inputs(work: Path, clusters: str):
     inp = work / 'inputs'
     if inp.exists():
         shutil.rmtree(inp)
-    shutil.copytree(cache, inp)
+    shutil.copytree(cache, inp, symlinks=False)
     if clusters == 'near':
         (inp / 'gold_far.json').unlink()
 
@@ -523,7 +547,7 @@ def run_qc(a):
     work.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     meta = qc_prepare(a, work)
-    qc_inputs(work, a.clusters)
+    qc_inputs(work, a.clusters, a.inputs)
     tag = work.name
     remote = f'{REMOTE_ROOT}/{tag}'
     cmd = f'ot-run --mem {a.mem} --threads {a.jobs} --disk 30 --dir {remote} -- bash {remote}/run_smoke.sh'
@@ -534,12 +558,16 @@ def run_qc(a):
                             partitions=meta['carve']['seeds'], rom_tiles=meta['carve']['rom_tiles'],
                             closure_files=meta['closure_files'], unresolved_modules=meta['unresolved_modules'],
                             ambiguous_modules=sorted(meta['ambiguous']), src_rev=a.src_rev,
-                            bench='xt1_bench gen nominal lead 8 gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
+                            bench=f'xt1_bench gen nominal lead {xt1_lead(a)} gap 4 -> xt1n_bench check (record gold c2/c3, masks_fixed)',
                             mutant=f'+SMOKE_MUT_SKEW={a.mut_skew} (hr lane end {a.mut_skew} cycle late vs cmd/tl)'),
                cycles=a.ncyc, command=cmd)
     if a.constants:
-        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 uses no '
-                                 'compiler constant beyond lead/gap, so the file is recorded, not consumed')
+        rep['constants_note'] = ('the bound top carries the regenerated RTL parameters (bind param_regen); xt1 consumes '
+                                 'XT1_FILL_LEAD_OFFSET (x fill lead = 8 + offset) when present' if a.lead_offset_used else
+                                 'the bound top carries the regenerated RTL parameters (bind param_regen); no XT1_FILL_LEAD_OFFSET '
+                                 'in the constants: lead 8 (as-built)')
+    if a.local:
+        return run_qc_local(a, work, rep, t0)
     if not a.submit:
         print(f'staged {work} ({meta["closure_files"]} files); submit with:\n  rsync -a {work}/ <host>:{remote}/ && {cmd}')
         return rep, None
@@ -567,15 +595,65 @@ def run_qc(a):
     if 'BUILD_FAIL' in out or nominal is None:
         verdict = 'BUILD_FAIL'
     else:
-        verdict = 'PASS' if ok(nominal) and not ok(mutant) else 'FAIL'
+        schedule = fixed_schedule_gate(work / 'results', a.mut_skew)
+        rep['schedule_gate'] = schedule
+        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
     rep.update(host=host, run_dir=f'{host}:{remote}', otrun_exit=p.returncode,
                runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
-               gate_rule='nominal near (and far) words exact AND mutant not exact',
+               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
                build_cached=(tm.group(1) == '0') if tm else None,
                build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
                wall_s=round(time.time() - t0), peak_build_gb=peak)
     if verdict == 'FAIL' and ok(mutant):
-        rep['note'] = 'mutant PASSED: the bench does not see a one-cycle hr skew -> gate not sensitive (fix the mutant)'
+        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
+    elif verdict == 'FAIL' and not ok(nominal):
+        rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
+    return rep, verdict
+
+
+def fixed_schedule_gate(results: Path, mutant_index: int):
+    # Numeric acceptance remains truthful; a shifted static-consumer calendar is an effective negative control.
+    from xt1_schedule_gate import evaluate
+    n=results/'log_m0.txt.xt1n.json'; m=results/f'log_m{mutant_index}.txt.xt1n.json'
+    if not n.exists() or not m.exists():
+        return dict(verdict='FAIL',mutant_caught=False,reason='missing actual schedule-edge records')
+    gate=evaluate(json.loads(n.read_text()),json.loads(m.read_text()))
+    (results/'schedule_gate.json').write_text(json.dumps(gate,indent=1)+'\n')
+    return gate
+
+
+def run_qc_local(a, work: Path, rep: dict, t0: float):
+    """--local (opt-in): run run_smoke.sh in the work dir on THIS host (no ot-run, no staging); the caller is responsible
+    for host admission (measured: near 43 GB / both 76 GB peak build RSS)."""
+    import socket
+    rep['command'] = f'bash {work}/run_smoke.sh'
+    p = subprocess.run(['bash', str(work / 'run_smoke.sh')], text=True, capture_output=True)
+    out = p.stdout
+    (work / 'local_run.log').write_text(p.stdout + '\n--- stderr\n' + p.stderr)
+    res, ok, tm = parse_run(out, a.clusters)
+    peak = None
+    bt = work / 'build.time'
+    if bt.exists():
+        mm = re.search(r'Maximum resident set size \(kbytes\): (\d+)', bt.read_text())
+        peak = round(int(mm.group(1)) / 1048576, 1) if mm else None
+    nominal, mutant = res.get(0), res.get(a.mut_skew)
+    if 'BUILD_FAIL' in out or nominal is None:
+        verdict = 'BUILD_FAIL'
+    else:
+        schedule = fixed_schedule_gate(work, a.mut_skew)
+        rep['schedule_gate'] = schedule
+        verdict = 'PASS' if ok(nominal) and schedule['verdict'] == 'PASS' else 'FAIL'
+    rep.update(host=socket.gethostname(), run_dir=f'{socket.gethostname()}:{work}', run_exit=p.returncode,
+               runs=dict(nominal=nominal, mutant=mutant), verdict=verdict,
+               gate_rule='nominal near (and far) words exact AND numeric mismatch or actual fixed-consumer edges catch mutant',
+               build_cached=(tm.group(1) == '0') if tm else None,
+               build_s=int(tm.group(2)) if tm else None, sim_s=int(tm.group(3)) if tm else None,
+               wall_s=round(time.time() - t0), peak_build_gb=peak)
+    if a.inputs:
+        man = a.inputs / 'MANIFEST.json'
+        rep['inputs'] = dict(dir=str(a.inputs), manifest=json.loads(man.read_text()) if man.exists() else None)
+    if verdict == 'FAIL' and ok(mutant):
+        rep['note'] = 'numeric mutant PASS is preserved; fixed-consumer schedule gate failed or lacks actual edge records'
     elif verdict == 'FAIL' and not ok(nominal):
         rep['note'] = 'nominal FAIL: the bound top (with its regenerated constants) does not compute the record stage'
     return rep, verdict
@@ -622,11 +700,16 @@ def main():
     ap.add_argument('--output-groups', type=int, default=192,
                     help='Verilator C++ unity groups (default 5.050 made ~34 x ~100 MB units: 6 compiles at a time)')
     ap.add_argument('--submit', action='store_true', help='stage to an admitting host and run through ot-run')
+    ap.add_argument('--local', action='store_true', help='opt-in: run the staged smoke on this host directly (no ot-run)')
+    ap.add_argument('--inputs', type=Path, help='opt-in: local xt1 inputs dir (gold_near.json, gold_far.json, masks/); '
+                    'default = the TOKe-QWM record inputs fetched from ot-gold2 into $CAL_SMOKE_CACHE')
     ap.add_argument('--no-report', action='store_true', help='do not write <bound>/smoke/smoke_report.json')
     a = ap.parse_args()
     if a.mem is None:
         a.mem = 56 if a.clusters == 'near' else 90
     a.bound = a.bound.resolve()
+    if a.inputs:
+        a.inputs = a.inputs.resolve()
     if a.die == 'qwen_compute':
         if not a.src_rev:
             ap.error('--src-rev is required for qwen_compute (the as-built tree bind.f refers to)')

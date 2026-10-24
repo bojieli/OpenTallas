@@ -29,7 +29,7 @@ def main():
         n = bt.getName()
         if n not in want:
             # clock taps (R4: clk, clk_t<i>) and the reset tap are interior die-spine pins, not face pins
-            if not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
+            if not re.match(r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)

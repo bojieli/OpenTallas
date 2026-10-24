@@ -1,0 +1,5 @@
+KEEP_MITER_EXPECTED mut1 checks1000 mismatches955
+- /srv/opentallas-scratch/claude/codex-qwen/head_keep_gate_v2/tb.sv:1: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ns; walltime 0.001 s; speed 3.451 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

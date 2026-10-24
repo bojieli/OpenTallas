@@ -271,19 +271,32 @@ def test_kit_places_content_macros(tmp_path):
     import pytest
     raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
-    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_tt.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
-    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
                                              origin_um=[17.28, 25.92], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
-                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
     kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    assert (kd / "macros/m_ff.lib").read_text() == "library(m_ff) {}\n"
+    assert (kd / "face_keep.tcl").is_file()
+    assert (kd / "face_keep_release.tcl").is_file()
     mp = (kd / "macro_place.tcl").read_text()
     assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
     assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
     cfg = (kd / "config.mk").read_text()
     assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["hard_cores"][0]["lib"]
+    with pytest.raises(ValueError, match="LEF but no timing liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
+    assert not (tmp_path / "missing_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_ss.lib"
+    with pytest.raises(ValueError, match="requires TT macro liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "ss_lib", [], root=tmp_path)
+    assert not (tmp_path / "ss_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_tt.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
@@ -463,7 +476,9 @@ def test_reset_epoch_flops_not_merged():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
+            # one epoch flop per station (ot_dp_ste is itself kept since CP1-R10: count the async epoch flops in the
+            # hierarchy totals; older yosys stat printed the flattened ot_dp_ep count)
+            assert re.search(r"(ot_dp_ep|\$_DFF_PN0_)\s+2\b", r.stdout), r.stdout
 
 
 def test_empty_grid_taps_dropped_at_assembly():
@@ -496,3 +511,33 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
         dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
+
+
+def test_pair_drops_hard_cores():
+    """CP1-R10 (10-24): pair.py's proof leaf replaces every content, so hard_cores[] (S81 v4.7+ frame cores with LEF
+    views) are dropped too; kept, the kit would place macros the proof netlist does not instantiate."""
+    import copy
+    import pair
+    raw = copy.deepcopy(PAIR)
+    tn = raw["partitions"][0]["type"]
+    raw["partition_types"][tn]["hard_cores"] = [dict(inst="u_core", module="m", lef="x.lef", origin_um=[8.64, 8.64],
+                                                    outline_um=[100.0, 100.0])]
+    out, _ = pair.extract(raw, [p["name"] for p in raw["partitions"][:2]])
+    assert all("hard_cores" not in t for t in out["partition_types"].values())
+    assert "1 hard_cores dropped" in out["partition_types"][tn]["note"]
+    assert not schema.validate(out)
+
+
+def test_run_die_signoff_corners():
+    """CP1-R10: the die STA runs at TT (setup sign-off), FF (hold sign-off) and SS (information only, AGENTS.md 10-24)."""
+    import gen_phys
+    assert "for c in SS TT FF" in gen_phys.RUN_DIE
+
+
+def test_die_sta_reports_face_flop_spread():
+    """CP1-R10: die STA prints the R4 face-flop spread (rise-edge CK arrival over the u_bin_/u_bout_ pin registers)
+    per partition instance and over the die."""
+    import gen_phys
+    P = schema.Plan(PAIR)
+    t = gen_phys.sta_die_tcl(P)
+    assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")

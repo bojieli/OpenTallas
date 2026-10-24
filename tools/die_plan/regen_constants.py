@@ -385,6 +385,42 @@ def qc_treq(o):
     o.add("TREQ_HOPS", rows, "compiler", "per hop table", group="treq")
 
 
+def qc_xfill(o):
+    """QC-TOK 10-24 (xt1 on bound_r8: FAULT heads, x leaf q_bad = an x element read before it was written): the x-slice
+    arm / go (hr: u_fdn.hr_q -> u_tap.hr_q) and the x fill stream (u_fdn.sw_q -> u_stm.sw_i, then u_stm.xt_* -> u_tap)
+    are different crossings, so the bound top changes their relative latency; the static schedule (xt1 bench lead =
+    cycles from the hr x-prefill arm to the first fill beat on st_up_i) must add the difference.
+    XT1_FILL_LEAD_OFFSET = (landed - as-built) of the hr leg - that of the fill legs, per slice; one value -> scalar."""
+    B = o.B
+    rows, offs = [], set()
+    for hr in B.members(sink=r"\.u_tap$", port=r"^hr_q$"):
+        sl = hr["sink"].rpartition(".u_tap")[0]
+        sw = B.members(sink=re.escape(sl) + r"\.u_stm$", port=r"^sw_i$")
+        xt = B.members(sink=re.escape(sl) + r"\.u_tap$", port=r"^xt_(a|d|vcopies)$")
+        if not sw or not xt:
+            continue
+        d_hr = hr["landed"] - hr["asb"]
+        d_sw = {m["landed"] - m["asb"] for m in sw}
+        d_xt = {m["landed"] - m["asb"] for m in xt}
+        if len(d_sw) != 1 or len(d_xt) != 1:
+            o.error("XT1_FILL_LEAD_OFFSET", "compiler", f"{sl}: fill legs land at several offsets sw {sorted(d_sw)} xt "
+                    f"{sorted(d_xt)}", group="xfill")
+            return
+        off = d_hr - next(iter(d_sw)) - next(iter(d_xt))
+        offs.add(off)
+        rows.append(dict(slice=sl, hr=d_hr, sw=next(iter(d_sw)), xt=next(iter(d_xt)), offset=off))
+    if not rows:
+        o.pending("XT1_FILL_LEAD_OFFSET", "compiler", "no u_fdn->u_tap hr crossing with u_stm fill legs on this bind",
+                  group="xfill")
+        return
+    o.add("XT1_FILL_LEAD_OFFSET", sorted(offs)[0] if len(offs) == 1 else sorted(offs), "compiler",
+          "(landed - as-built)(u_tap.hr_q) - (landed - as-built)(u_stm.sw_i) - (landed - as-built)(u_tap.xt_*), per slice: "
+          "added to the x fill lead (hr arm -> first st_up_i beat; xt1 bench --lead 8 + offset)", dict(slices=len(rows)),
+          group="xfill", status="OK" if len(offs) == 1 else "WARN",
+          note=None if len(offs) == 1 else "per-slice table in XT1_FILL_SLICES")
+    o.add("XT1_FILL_SLICES", rows, "compiler", "per slice legs of XT1_FILL_LEAD_OFFSET", group="xfill")
+
+
 def seam_half(o, bundles, anchor, prefix):
     B = o.B
     st, inp = {}, {}
@@ -780,6 +816,7 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
     if die == "qwen_compute":
         o.rule("coll", qc_coll, src_root)
         o.rule("treq", qc_treq)
+        o.rule("xfill", qc_xfill)
         o.rule("xdie", qc_seam)
     elif die == "qwen_kvsys":
         o.rule("ectl", kv_ectl)
