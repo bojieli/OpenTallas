@@ -25,6 +25,10 @@ for l in open(src).read().splitlines():
         out.append(l)
 open(dst, 'w').write('\n'.join(out) + '\n')
 EOF
+# THREADS=n: the top's scheduler runs n threads (the blocks are single-threaded protect-lib calls run in parallel)
+[ -n "${THREADS:-}" ] && printf -- "--threads $THREADS\n--hierarchical-threads $THREADS\n" >> $A
+# a running simulation keeps its binary: move it aside instead of relinking over it
+[ -f $O/obj/Vtb_kvslice ] && mv $O/obj/Vtb_kvslice $O/obj/Vtb_kvslice.prev
 cd $O/obj
 touch V*/V*.mk V*/kv3_*.sv; sleep 1; touch V*/lib*.a
 cd $O
