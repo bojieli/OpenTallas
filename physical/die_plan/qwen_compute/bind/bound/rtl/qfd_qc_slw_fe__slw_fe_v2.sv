@@ -45,8 +45,6 @@ module qfd_qc_slw_fe__slw_fe_v2 (
     output wire [514:0] rsn_o,   // ft rsn: 2 station(s)
     input  wire [48:0] x_fw_sc_i,   // ft x_fw_sc lane sl_W1_fw__x_fw_sc: sl_W1_fw -> sl_W1_sc
     output wire [48:0] x_fw_sc_o,   // ft x_fw_sc: 2 station(s)
-    input  wire [258:0] x_fw_st_a_i,   // ft x_fw_st_a lane sl_W1_fw__x_fw_st_a: sl_W1_fw -> sl_W1_st_a
-    output wire [258:0] x_fw_st_a_o,   // ft x_fw_st_a: 1 station(s)
     input  wire [453:0] x_fw_tap_i,   // ft x_fw_tap lane sl_W1_fw__x_fw_tap: sl_W1_fw -> sl_W1_tap
     output wire [453:0] x_fw_tap_o,   // ft x_fw_tap: 2 station(s)
     input  wire [29:0] x_stm_ctl_i,   // ft x_stm_ctl lane sl_W1_stm__x_stm_ctl: sl_W1_stm -> sl_W1_ctl
@@ -151,7 +149,6 @@ module qfd_qc_slw_fe__slw_fe_v2 (
     ot_dp_st #(.W(514)) u_ft_rsn_o_1 (.clk(clk), .rst_n(rst_n), .d(rsn_o_s0[513:0]), .ea(rsn_o_s0[514]), .q(rsn_o[513:0]), .eq(rsn_o[514]));
     ot_dp_st #(.W(48)) u_ft_x_fw_sc_o_0 (.clk(clk), .rst_n(rst_n), .d(x_fw_sc_i[47:0]), .ea(x_fw_sc_i[48]), .q(x_fw_sc_o_s0[47:0]), .eq(x_fw_sc_o_s0[48]));
     ot_dp_st #(.W(48)) u_ft_x_fw_sc_o_1 (.clk(clk), .rst_n(rst_n), .d(x_fw_sc_o_s0[47:0]), .ea(x_fw_sc_o_s0[48]), .q(x_fw_sc_o[47:0]), .eq(x_fw_sc_o[48]));
-    ot_dp_st #(.W(258)) u_ft_x_fw_st_a_o_0 (.clk(clk), .rst_n(rst_n), .d(x_fw_st_a_i[257:0]), .ea(x_fw_st_a_i[258]), .q(x_fw_st_a_o[257:0]), .eq(x_fw_st_a_o[258]));
     ot_dp_st #(.W(453)) u_ft_x_fw_tap_o_0 (.clk(clk), .rst_n(rst_n), .d(x_fw_tap_i[452:0]), .ea(x_fw_tap_i[453]), .q(x_fw_tap_o_s0[452:0]), .eq(x_fw_tap_o_s0[453]));
     ot_dp_st #(.W(453)) u_ft_x_fw_tap_o_1 (.clk(clk), .rst_n(rst_n), .d(x_fw_tap_o_s0[452:0]), .ea(x_fw_tap_o_s0[453]), .q(x_fw_tap_o[452:0]), .eq(x_fw_tap_o[453]));
     ot_dp_st #(.W(29)) u_ft_x_stm_ctl_o_0 (.clk(clk), .rst_n(rst_n), .d(x_stm_ctl_i[28:0]), .ea(x_stm_ctl_i[29]), .q(x_stm_ctl_o_s0[28:0]), .eq(x_stm_ctl_o_s0[29]));

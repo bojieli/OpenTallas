@@ -313,5 +313,31 @@
    "rx": "ot_sram_1r1w_64x137_m1_r2c2_p192",
    "reason": "AS-BUILT RTL DEFECT (reported): ot_qwen_d2d_safe7.sv ot_qkvd_llr_replay_sram_leaf_s7 instantiates ot_sram_1r1w_64x137_m1_r2c2_p192, which no file on main defines (the macro is d2d_sram_1r1w_64x137_m1_r2c2_p192); the closed ucie_kv d2d view was built from a kit copy"
   }
+ ],
+ "substitute_parent": [
+  {
+   "inst": "dvs_(E1|E3|W1|W3|W5)\\.u_core\\.u_sub",
+   "module": "qfd_dv_s8_ce_l9h",
+   "reason": "QC-P4 14:47 chain-end variants (claude/qc-p4-chainend-1023 @a9dea8962 rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv): l9 pair head, no l9_i"
+  },
+  {
+   "inst": "dvs_E5\\.u_core\\.u_sub",
+   "module": "qfd_dv_s8_ce_e5",
+   "reason": "QC-P4 14:47: far chain end (no l9_i / st_dn_i / ch_up_i / ag_up_i)"
+  }
+ ],
+ "land_align": "cell",
+ "portbind_prefer": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ ],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+  "note": "COORD R8: collective LS/PHY/R/PEER_R from the bound lanes"
+ },
+ "land_align_exclude": [
+  "io_collective\\.u_io\\.g_face\\[[2-4]\\]\\.u_face\\.(phy_rx|phy_rx_valid|phy_up|tx_data|tx_valid|tx_slot|peer_slot)",
+  "io_collective\\.u_io\\.u_collective\\.sr[0-2]_(rec|valid)",
+  "io_serdes(_[12])?\\.(tx_flit|tx_v)"
  ]
 }

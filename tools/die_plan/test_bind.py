@@ -54,7 +54,7 @@ def test_tiny_binds_and_proves(tmp_path, name):
     out = tmp_path / "o"
     assert run(EX / name, out, "elab", "bind", "verify") == 0
     r, v = report(out), verify(out)
-    assert r["proof"] == dict(unbound=0, tied=0, undriven=0, multiply_bound=0, straps=8)
+    assert r["proof"] == dict(unbound=0, tied=0, undriven=0, multiply_bound=0, straps=8, plan_driven=0)
     assert r["n_errors"] == 0
     assert v["verdict"] == "PASS" and v["counts"]["mismatched"] == 0 and v["counts"]["matched"] == 64
     if v["lint"].get("ran"):
@@ -165,3 +165,241 @@ def test_substitute_inst_variant(tmp_path):
     assert any(t["type"] == "ta" for t in r["type_splits"])
     assert verify(out)["verdict"] == "PASS"
     assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))
+
+
+def test_lint_split(tmp_path):
+    """asbuilt.lint_split: top against leaf interface stubs + one run per partition module with its own leaf closure"""
+    def edit(p):
+        p["asbuilt"]["lint_split"] = True
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0
+    lt = verify(out)["lint"]
+    if lt.get("ran"):
+        assert lt["split"] and lt["errors"] == 0 and lt["runs"] >= 3
+
+
+def test_plan_cells_replace_constants(tmp_path):
+    """asbuilt.plan_cells: no strap declared; the plan's ID cells in S drive u_b.id of A0 / A1 over two plan lanes.  The
+    8 as-built constant bits become plan_driven (not tied), the cells are emitted, and the proof passes"""
+    def edit(p):
+        a = p["asbuilt"]
+        a["straps"] = []
+        a["plan_cells"] = str(EX / "plan_cells.json")
+        a["files"] = a["files"] + [str(HERE.parents[1] / "rtl" / "lib" / "ot_dp_id.sv")]
+        t = p["partition_types"]
+        t["ts"]["buses"] += [dict(name="id0_o", dir="out", width=4, kind="ctl"), dict(name="id1_o", dir="out", width=4, kind="ctl")]
+        t["ta"]["buses"] += [dict(name="id_i", dir="in", width=4, kind="ctl")]
+        for k, dst in ((0, "A0"), (1, "A1")):
+            p["ports"].append({"id": f"id{k}__0", "src": {"part": "S", "bus": f"id{k}_o"}, "dst": {"part": dst, "bus": "id_i"},
+                               "width": 4, "kind": "ctl"})
+            p["lanes"].append({"id": f"id{k}", "ports": [f"id{k}__0"]})
+            p["latency"]["lanes"][f"id{k}"] = {"cycles": 2, "stations": 0, "boundary": 2}
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r, v = report(out), verify(out)
+    assert r["proof"]["tied"] == 0 and r["proof"]["straps"] == 0 and r["proof"]["plan_driven"] == 8 and r["n_errors"] == 0
+    assert r["plan_cells"]["cells_emitted"] == 2
+    ts = (out / "rtl" / "bt_ts.sv").read_text()
+    assert "ot_dp_id_src #(.V(5), .W(4)) u_u_id_src" in ts and "ot_dp_id_add #(.K(1), .W(4)) u_u_id_add" in ts
+    ta = (out / "rtl" / "bt_ta.sv").read_text()
+    assert ".id(id_i_q[3:0])" in ta and "4'b" not in ta.split(");", 1)[1]
+    assert v["verdict"] == "PASS" and v["counts"]["plan_driven"] == 8, (v["counts"], v["mismatches"][:3])
+
+
+def test_rewires_swap(tmp_path):
+    """asbuilt.rewires: a plan-declared connectivity change (snk.d0 <-> d1 sources swapped) is applied, recorded with
+    the as-built register stages of its template edge, and proven against the bound netlist"""
+    def edit(p):
+        p["asbuilt"]["rewires"] = {"file": str(EX / "rewires.json"), "classes": ["swap"]}
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["rewires"]["bits"] == {"swap (same-sink template)": 16, "swap dropped": 0} and r["n_errors"] == 0
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    assert sinks["snk.d0[3]"][1] == "p1.u_b.o[3]" and sinks["snk.d1[3]"][1] == "p0.u_b.o[3]"
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_die_io_and_kept_source_leaf(tmp_path):
+    """die IO pads become bound-top inputs routed to the partitions that read them (io_<pad>); a source rule with
+    keep_leaf instantiates the source (here the clock receiver) as a leaf of its partition while its clock output
+    stays the partition clock"""
+    src = tmp_path / "src"
+    src.mkdir()
+    for f in ("leaves.sv", "par.sv"):
+        shutil.copy(EX / f, src / f)
+    die = (EX / "die.v").read_text().replace("module tdie ();", "module tdie (input wire pad_ref, input wire [3:0] pad_id);")
+    die = die.replace(".pll(1'b0)", ".pll(pad_ref)").replace(".id(4'd5)", ".id(pad_id)")
+    (src / "die.v").write_text(die)
+    (src / "clk.sv").write_text("module tclkrx (input wire pll, output wire ck);\n  assign ck = pll;\nendmodule\n")
+    p = json.loads((EX / "die_plan.json").read_text())
+    a = p["asbuilt"]
+    a["base"] = str(src)
+    a["files"] = a["files"] + ["clk.sv"]
+    for r in a["sources"]:
+        if r["module"] == "tclkrx":
+            r["keep_leaf"] = True
+            r.pop("drop_in", None)
+    a["map"]["parts"]["clk_rx"] = "S"
+    f = tmp_path / "die_plan.json"
+    f.write_text(json.dumps(p))
+    out = tmp_path / "o"
+    assert run(f, out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r, v = report(out), verify(out)
+    assert r["n_errors"] == 0 and r["load_bits"]["die_io"] == 5 and r["proof"]["straps"] == 4
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    assert "input  wire [3:0] pad_id;" in top and ".io_pad_id(pad_id)" in top and ".io_pad_ref(pad_ref)" in top
+    assert "tclkrx u_clk_rx" in (out / "rtl" / "bt_ts.sv").read_text()
+    assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
+
+
+def test_reset_spine(tmp_path):
+    """asbuilt.reset_spines: a crossing bit with no lane whose driver matches a spine pin rides an async spine landed
+    by ot_dp_rsync in the sink partition (not UNPLANNED); the proof counts its 2 release stages"""
+    def edit(p):
+        p["ports"] = [x for x in p["ports"] if x["id"] != "a1f__0"]
+        p["lanes"] = [x for x in p["lanes"] if x["id"] != "a1f"]
+        p["asbuilt"]["reset_spines"] = [{"pin": r"p1\.u_b\.flt", "sync_stages": 2}]
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["lanes"]["unplanned_bits"] == 0 and r["lanes"]["reset_spine_bits"] == {"p1.u_b.flt": 1} and r["n_errors"] == 0
+    ts = (out / "rtl" / "bt_ts.sv").read_text()
+    assert "ot_dp_rsync #(.W(1), .S(2))" in ts
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_land_align(tmp_path):
+    """asbuilt.land_align = cell: snk.d0 is split over a 2-cycle lane (5 b) and a forwarded 5-cycle route (3 b); the
+    5 early bits get 3 pad stages so the bus lands as built (all 8 bits at the same depth), and the proof holds"""
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        for x in p["ports"]:
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    la = r["lanes"]["landing_alignment"]
+    assert la["padded_bits"] == 5 and la["max_pad"] == 3 and r["lanes"]["unplanned_bits"] == 0
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    assert {sinks[f"snk.d0[{i}]"][2] for i in range(8)} == {5}
+    lat = json.loads((out / "bind_latency.json").read_text())
+    assert lat["landing_pads"]["snk.d0"] == {"src_part": "A0", "pads": [3, 3], "bits": 5}
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_substitute_parent(tmp_path):
+    """asbuilt.substitute_parent: the dissolved parent p1 is elaborated as its plan variant par_nid (no id port): the
+    as-built literal on p1.id is dropped (recorded, not tied), the variant's leaves bind, and the proof passes"""
+    def edit(p):
+        p["asbuilt"]["substitute_parent"] = [{"inst": "p1", "module": "par_nid"}]
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan.json", edit), out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert r["parent_variants"] == [dict(inst="p1", master="par", variant="par_nid", dropped_literal_bits=4,
+                                         dropped_net_ports=[], new_unconnected_ports=[])]
+    assert r["proof"]["straps"] == 4 and r["proof"]["tied"] == 0 and r["n_errors"] == 0
+    assert "lf_b_nid u_u_b" in "".join(f.read_text() for f in (out / "rtl").glob("bt_ta*.sv"))
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_portbind_strict(tmp_path):
+    """bind.py portbind: the strict tools/die_port_bind.py check on the generated top passes (no stubs, no unbound,
+    tied, undriven or multiply-driven bits) and writes port_bind_strict.json / .txt"""
+    out = tmp_path / "o"
+    assert run(EX / "die_plan_lanes.json", out, "elab", "bind", "portbind") == 0
+    assert (out / "port_bind_strict.txt").read_text().startswith("DIE_PORT_BIND PASS")
+    assert (out / "port_bind_strict.json").exists()
+
+
+def test_bus_groups(tmp_path):
+    """bus_groups.json (COORD R8): the split snk.d0 bus is one landing group, misaligned by the lanes (2 vs 5 cycles)
+    and aligned after the land_align pads; A0's y goes to A1 and S at the same as-built depth = a replica set"""
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        for x in p["ports"]:
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind") == 0
+    bg = json.loads((out / "bus_groups.json").read_text())
+    g = next(x for x in bg["landing"] if x["sink"] == "snk" and x["src_part"] == "A0")
+    d0 = [m for m in g["members"] if m["sink_port"] == "d0"]
+    assert {m["bound_stages"] for m in d0} == {2, 5} and {m["landed_stages"] for m in d0} == {5}
+    assert g["aligned_landed"] and bg["summary"]["landing_groups"] >= 2
+
+
+def test_param_regen_and_land_exclude(tmp_path):
+    """asbuilt.param_regen: a die hook re-derives a leaf parameter from the bound lane depth (ctx.depth) before the
+    types form, recorded in param_regen.json; land_align_exclude keeps the excluded sink unpadded"""
+    hook = tmp_path / "regen.py"
+    hook.write_text("def regen(ctx):\n"
+                    "    d = ctx.depth('snk', 'd0')\n"
+                    "    return dict(params={'p0.u_a': {'ID': max(d.values())}}, record=dict(d0=sorted(set(d.values()))))\n")
+
+    def edit(p):
+        p["asbuilt"]["land_align"] = "cell"
+        p["asbuilt"]["land_align_exclude"] = [r"snk\.d[01]"]
+        p["asbuilt"]["param_regen"] = {"file": str(hook)}
+        for x in p["ports"]:            # split snk.d0 over two lanes of different depth (as test_bus_groups)
+            if x["id"] == "a0s__0":
+                x["width"] = 5
+            if x["id"] == "a1s__0":
+                x["width"] = 16
+        for b in p["partition_types"]["ta"]["buses"]:
+            if b["name"] == "ys_o":
+                b["width"] = 16
+        for b in p["partition_types"]["ts"]["buses"]:
+            if b["name"] == "d1_i":
+                b["width"] = 16
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind") == 0
+    pr = json.loads((out / "param_regen.json").read_text())
+    assert pr["changed"] and pr["changed"][0]["inst"] == "p0.u_a"
+    assert report(out)["lanes"]["landing_alignment"]["padded_groups"] == 0 and pr["record"]["d0"] == [2, 5]
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert f".ID({pr['changed'][0]['bound']})" in top
+
+
+def test_and_reducer(tmp_path):
+    """reducer op "and" (scoped by `inst`): the as-built join is re-emitted per sink partition as ot_dp_and; verify
+    compares it as an AND of the same leaf pins"""
+    def edit(p):
+        for r in p["asbuilt"]["reducers"]:
+            r["op"] = "and"
+            r["inst"] = "for0"
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert "ot_dp_and #(.N(2))" in top and "ot_dp_or #(" not in top.split("module ot_dp_and")[1].split("endmodule", 1)[1]
+
+
+def test_lane_pad(tmp_path):
+    """a latency-table lane above its natural depth (R8 pad) is padded after the in-boundary flop (data + epoch);
+    the bound lane reaches the table cycles (no LANE_CYCLES error) and verify still passes"""
+    def edit(p):
+        p["latency"]["lanes"]["a1s"].update(cycles=6, pad=4)
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind", "verify") == 0
+    top = "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    assert ".D(4)) u_lpad_" in top
+    assert not [e for e in report(out)["errors"] if e.startswith("LANE_CYCLES")]
+    lat = json.loads((out / "bind_latency.json").read_text())
+    assert any(b["lane"] == "a1s" and b["bound_stages"] == 6 for b in lat["buses"])
