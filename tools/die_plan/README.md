@@ -235,3 +235,48 @@ G0 checks:
 3. Reset or clock rows count as dropped unless an explicit `exempt` entry lists them. Exempt totals appear in the
    summary.
 4. A group spanning several partitions gets a WARN: the traffic inside it needs a finer census.
+
+## TYPE-DEDUP (`dedup.py`, `gen.py dedup`; opt-in, writes a copy)
+
+```
+python3 tools/die_plan/dedup.py analyze  PLAN.json [--fix-order] [--out report.json]
+python3 tools/die_plan/gen.py   dedup    PLAN.json --out-plan COPY/die_plan.json [--fix-order] [--only canon,..]
+python3 tools/die_plan/dedup.py variants PLAN.json [--rtl BOUND_RTL_DIR]     # bound modules per plan type (kit count)
+```
+
+Merges near-duplicate partition types only when the merge is exact: the same netlist key (outline, bus interface with
+leaf binds, ft slots, contents with params, hard-core modules) and, per instance, an orient under which every port keeps
+its die pins and the instance's type-frame pin table equals the canonical type's. `--fix-order` also accepts members
+that match up to the bit order of some ports (same faces and tracks) and re-solves port / type orders die-wide as
+parity constraints; the provenance lists the re-ordered ports and the other types whose pin tables change (their kits
+regenerate). A bound-RTL gate (default `PLANDIR/bind/bound_r8/rtl`) keeps a member whose bound netlist differs (R8
+pads, narrowed ports) as its own type. Members that differ only in contents params are reported STRAP candidates, and
+members that differ in ft-slot population FT-POP families; neither is merged (no tie-offs: a strap is a planned lane
+from a configuration register, an unused slot is an unbound bus). Ports, lanes, latency and census are never changed;
+`verify()` re-checks that, and the output must pass G0 (`check.py`) like any plan. Results: `results/type_dedup/`.
+
+## Whole-die CI (`die_ci.py`, lane DIE-CI, owner-approved 2026-10-24)
+
+```
+python3 tools/die_plan/die_ci.py run [--mode commit|nightly] [--g2 auto|all|none] [--views-root DIR]   # -> results/die_ci/<date>_<sha12>/
+python3 tools/die_plan/die_ci.py margins --derive --out tools/die_plan/die_ci_margins.json            # liberty-derived margin numbers
+```
+
+One entry point re-runs the whole-die prototype of every plan (s81, s81_head, qwen_compute, qwen_kvsys, hbm; hbm_arch B2
+once on main) on one sha: G0 + G0C (one `check.py --completeness`), cross-die (PLAN-TOOL5 in-die rules + `xdie_io.py`
+on the rack tables), G2 (`g2.py` die + 5 worst types; CARRIED in commit mode when the plan and G2 tools are unchanged),
+census + latency consistency (the `<die>_latency.json` carrying the current plan digest equals `Plan.lane_latency()`),
+and die STA through DIE-STA's `die_sta.py` (ILM) on a sub-top of the partitions registered in `die_ci_views.json`,
+with stand-in budgets (kit SDC contract composition, else the R2 face-flop estimate) for every other seam.
+Per die: `<die>.json` + `<die>.md` (gate status, counts, worst seam slack, deltas vs the previous run); `SUMMARY.md`.
+
+Margins (`die_ci_margins.json`, derivations inside) are added ON TOP of the AGENTS.md policy and reported next to the
+policy slack: crosstalk per seam (|MCF-1| x R_eff x Cc over 2 x pin_reg_p90; OpenSTA has no SI), IR drop (PDNSim when a
+die PDN database exists, else 5 % VDD stated -> late cell derate via the alpha-power law), flat OCV
+(`set_timing_derate`). `check_margins` refuses any value that would relax the policy.
+
+Schedule (localhost systemd user timers, `systemd/`): `die-ci-commit.timer` hourly runs `die_ci_cron.sh commit` when main
+moved with changes under tools/die_plan or physical/die_plan; `die-ci-nightly.timer` 02:30 Pacific runs the full set.
+The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, copies the run back to
+/srv/opentallas-scratch/claude/die-ci/results, commits the JSON/MD to branch `claude/die-ci-results`, and keeps the
+`DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.

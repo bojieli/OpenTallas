@@ -1,0 +1,554 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "col_h10_r1__t1_cp1r10",
+ "generated": "2026-10-24T07:58:11-07:00",
+ "host": "eternal-dove",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base",
+  "orfs": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run",
+  "design": "dp_col_h10_r1__t1",
+  "kit": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1",
+  "odb": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/logs/asap7/dp_col_h10_r1__t1/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/logs/asap7/dp_col_h10_r1__t1/base/5_1_grt.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/reports/asap7/dp_col_h10_r1__t1/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/pins.json",
+  "sdc_lint_ctx": null,
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner"
+ },
+ "tool_commit": null,
+ "corners": {
+  "ss": {
+   "done": true,
+   "design": "s81p_col_h10_r1__t1",
+   "cells": 5776200.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "frame_int_i0",
+    "frame_int_i1"
+   ],
+   "outputs": [
+    "frame_int_o0",
+    "frame_int_o1"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -462.44,
+   "sdc_wns_min": -24.76,
+   "sdc_tns_max": -151299.16,
+   "sdc_tns_min": -178.87,
+   "sdc_nviol_max": 1153.0,
+   "sdc_nviol_min": 63.0,
+   "std_wns_max": -462.44,
+   "std_wns_min": -24.76,
+   "std_tns_max": -151299.16,
+   "std_tns_min": -178.87,
+   "std_nviol_max": 1153.0,
+   "std_nviol_min": 63.0,
+   "slew_viol": 1791.0,
+   "cap_viol": 0.0,
+   "fanout_max": 27.0,
+   "fanout_worst_net": "clknet_leaf_43_clk",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 6054,
+    "min": 283.6,
+    "mean": 318.16,
+    "max": 416.7,
+    "spread": 133.1
+   },
+   "insertion_pinflops": {
+    "n": 3027,
+    "min": 286.69,
+    "mean": 329.24,
+    "max": 359.0,
+    "spread": 72.31
+   },
+   "ocv5_wns_max": -552.18,
+   "ocv5_wns_min": -49.87,
+   "corner": "ss",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "s81p_col_h10_r1__t1",
+   "cells": 5776200.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "frame_int_i0",
+    "frame_int_i1"
+   ],
+   "outputs": [
+    "frame_int_o0",
+    "frame_int_o1"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -46.76,
+   "sdc_wns_min": 0.6,
+   "sdc_tns_max": -188.5,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 10.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -46.76,
+   "std_wns_min": -45.74,
+   "std_tns_max": -188.5,
+   "std_tns_min": -38116.71,
+   "std_nviol_max": 10.0,
+   "std_nviol_min": 1495.0,
+   "slew_viol": 1124.0,
+   "cap_viol": 0.0,
+   "fanout_max": 27.0,
+   "fanout_worst_net": "clknet_leaf_43_clk",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 6054,
+    "min": 164.19,
+    "mean": 189.25,
+    "max": 250.08,
+    "spread": 85.89
+   },
+   "insertion_pinflops": {
+    "n": 3027,
+    "min": 169.35,
+    "mean": 197.35,
+    "max": 216.66,
+    "spread": 47.31
+   },
+   "ocv5_wns_max": -104.81,
+   "ocv5_wns_min": -56.58,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "tt": {
+   "done": true,
+   "design": "s81p_col_h10_r1__t1",
+   "cells": 5776200.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "frame_int_i0",
+    "frame_int_i1"
+   ],
+   "outputs": [
+    "frame_int_o0",
+    "frame_int_o1"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -212.39,
+   "sdc_wns_min": 20.09,
+   "sdc_tns_max": -14196.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 274.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -212.39,
+   "std_wns_min": 18.02,
+   "std_tns_max": -14196.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 274.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 1278.0,
+   "cap_viol": 0.0,
+   "fanout_max": 27.0,
+   "fanout_worst_net": "clknet_leaf_43_clk",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 6054,
+    "min": 209.16,
+    "mean": 236.84,
+    "max": 312.08,
+    "spread": 102.92
+   },
+   "insertion_pinflops": {
+    "n": 3027,
+    "min": 212.69,
+    "mean": 246.15,
+    "max": 267.83,
+    "spread": 55.14
+   },
+   "ocv5_wns_max": -282.86,
+   "ocv5_wns_min": -4.63,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+  "errors": [
+   "hold: output frame_int_o0 min output delay 166.6 ps > 0 (sender hold check waived)",
+   "hold: output frame_int_o1 min output delay 166.6 ps > 0 (sender hold check waived)"
+  ],
+  "n_errors": 2,
+  "sdc": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "s81p_col_h10_r1__t1",
+  "checked": 3147,
+  "ok": 3025,
+  "fail_counts": {
+   "dropped": 120,
+   "feedthrough": 1,
+   "shared": 1
+  },
+  "fails": {
+   "dropped": [
+    "frame_int_i0[380]: no load on frame_int_i0[380] (register removed)",
+    "frame_int_i0[377]: no load on frame_int_i0[377] (register removed)",
+    "frame_int_i0[373]: no load on frame_int_i0[373] (register removed)",
+    "frame_int_i0[370]: no load on frame_int_i0[370] (register removed)",
+    "frame_int_i0[366]: no load on frame_int_i0[366] (register removed)"
+   ],
+   "feedthrough": [
+    "frame_int_o1[238]: buffered from port frame_int_o1[32]"
+   ],
+   "shared": [
+    "frame_int_o1[32]: net frame_int_o1[32] has 1 loads besides the port chain"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/pins.json"
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_ss": {
+   "verdict": "FAIL",
+   "wns_ps": -462.44,
+   "tns_ps": -151299.16,
+   "violators": 1153.0
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -45.74,
+   "tns_ps": -38116.71,
+   "violators": 1495.0,
+   "sdc_wns_ps": 0.6,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "tt": {
+   "verdict": "REPORT",
+   "setup_wns_ps": -212.39,
+   "hold_wns_ps": 18.02,
+   "hold_sdc_wns_ps": 20.09,
+   "label": "TT: pathfinding only"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "ss": {
+     "slew": 1791.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1124.0,
+     "cap": 0.0
+    },
+    "tt": {
+     "slew": 1278.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "ss": {
+     "slew": 1791.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1124.0,
+     "cap": 0.0
+    },
+    "tt": {
+     "slew": 1278.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "ss": 0.0,
+    "ff": 0.0,
+    "tt": 0.0
+   },
+   "max_fanout": 27.0,
+   "worst_net": "clknet_leaf_43_clk"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "ss": {
+     "pinflops": {
+      "n": 3027,
+      "min": 286.69,
+      "mean": 329.24,
+      "max": 359.0,
+      "spread": 72.31
+     },
+     "all": {
+      "n": 6054,
+      "min": 283.6,
+      "mean": 318.16,
+      "max": 416.7,
+      "spread": 133.1
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 3027,
+      "min": 169.35,
+      "mean": 197.35,
+      "max": 216.66,
+      "spread": 47.31
+     },
+     "all": {
+      "n": 6054,
+      "min": 164.19,
+      "mean": 189.25,
+      "max": 250.08,
+      "spread": 85.89
+     },
+     "ck_errors": 0.0
+    },
+    "tt": {
+     "pinflops": {
+      "n": 3027,
+      "min": 212.69,
+      "mean": 246.15,
+      "max": 267.83,
+      "spread": 55.14
+     },
+     "all": {
+      "n": 6054,
+      "min": 209.16,
+      "mean": 236.84,
+      "max": 312.08,
+      "spread": 102.92
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": 250.0
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+   "errors": [
+    "hold: output frame_int_o0 min output delay 166.6 ps > 0 (sender hold check waived)",
+    "hold: output frame_int_o1 min output delay 166.6 ps > 0 (sender hold check waived)"
+   ],
+   "n_errors": 2,
+   "sdc": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "s81p_col_h10_r1__t1",
+   "checked": 3147,
+   "ok": 3025,
+   "fail_counts": {
+    "dropped": 120,
+    "feedthrough": 1,
+    "shared": 1
+   },
+   "fails": {
+    "dropped": [
+     "frame_int_i0[380]: no load on frame_int_i0[380] (register removed)",
+     "frame_int_i0[377]: no load on frame_int_i0[377] (register removed)",
+     "frame_int_i0[373]: no load on frame_int_i0[373] (register removed)",
+     "frame_int_i0[370]: no load on frame_int_i0[370] (register removed)",
+     "frame_int_i0[366]: no load on frame_int_i0[366] (register removed)"
+    ],
+    "feedthrough": [
+     "frame_int_o1[238]: buffered from port frame_int_o1[32]"
+    ],
+    "shared": [
+     "frame_int_o1[32]: net frame_int_o1[32] has 1 loads besides the port chain"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/pins.json"
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "setup_ss: FAIL WNS -462.44 ps, 1153 endpoints",
+  "hold_ff: FAIL WNS -45.74 ps, 1495 endpoints",
+  "drv: FAIL SS slew 1791.0 cap 0.0, FF slew 1124.0 cap 0.0, TT slew 1278.0 cap 0.0",
+  "sdc_lint: FAIL 2 errors (first: hold: output frame_int_o0 min output delay 166.6 ps > 0 (sender hold check waived))",
+  "face_guard: FAIL {'dropped': 120, 'feedthrough': 1, 'shared': 1}"
+ ],
+ "verdict": "NOT SIGNED"
+}
