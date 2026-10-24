@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "f30a9bf1c5de508c",
+ "plan_digest": "0d80196e5d0dbcb7",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -689,12 +689,12 @@
    "width": 1
   },
   "c_E0_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E0_TF_00__RSF",
    "src": {
@@ -1905,12 +1905,12 @@
    "width": 1
   },
   "c_E1_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E1_TF_00__RSF",
    "src": {
@@ -3121,12 +3121,12 @@
    "width": 1
   },
   "c_E2_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E2_TF_00__RSF",
    "src": {
@@ -4337,12 +4337,12 @@
    "width": 1
   },
   "c_E3_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E3_TF_00__RSF",
    "src": {
@@ -5553,12 +5553,12 @@
    "width": 1
   },
   "c_E4_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E4_TF_00__RSF",
    "src": {
@@ -6769,12 +6769,12 @@
    "width": 1
   },
   "c_E5_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_E5_TF_00__RSF",
    "src": {
@@ -7985,12 +7985,12 @@
    "width": 1
   },
   "c_W0_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W0_TF_00__RSF",
    "src": {
@@ -9201,12 +9201,12 @@
    "width": 1
   },
   "c_W1_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W1_TF_00__RSF",
    "src": {
@@ -10417,12 +10417,12 @@
    "width": 1
   },
   "c_W2_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W2_TF_00__RSF",
    "src": {
@@ -11633,12 +11633,12 @@
    "width": 1
   },
   "c_W3_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W3_TF_00__RSF",
    "src": {
@@ -12849,12 +12849,12 @@
    "width": 1
   },
   "c_W4_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W4_TF_00__RSF",
    "src": {
@@ -14065,12 +14065,12 @@
    "width": 1
   },
   "c_W5_tf_00__rsf": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_C_W5_TF_00__RSF",
    "src": {
@@ -16249,13 +16249,89 @@
    },
    "width": 524
   },
-  "sl_E0_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E0_ctl__b_hw_ctl_hc0": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
+   "pad": 0,
+   "param": "LAT_SL_E0_CTL__B_HW_CTL_HC0",
+   "src": {
+    "part": "sl_E0_ctl",
+    "bus": "b_hw_hc0_o"
+   },
+   "dst": {
+    "part": "sl_E0_hc0",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E0_ctl__b_hw_ctl_hc1": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E0_CTL__B_HW_CTL_HC1",
+   "src": {
+    "part": "sl_E0_ctl",
+    "bus": "b_hw_hc1_o"
+   },
+   "dst": {
+    "part": "sl_E0_hc1",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E0_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E0_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E0_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E0_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E0_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 4,
+   "pad": 0,
+   "param": "LAT_SL_E0_CTL__B_HW_CTL_HC3",
+   "src": {
+    "part": "sl_E0_ctl",
+    "bus": "b_hw_hc3_o"
+   },
+   "dst": {
+    "part": "sl_E0_hc3",
+    "bus": "b_hw_i"
+   },
+   "width": 1592
+  },
+  "sl_E0_ctl__b_tw_data_ctl_st_a": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E0_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -16266,7 +16342,7 @@
     "part": "sl_E0_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E0_ctl__flt": {
    "cycles": 2,
@@ -16288,12 +16364,12 @@
    "width": 1
   },
   "sl_E0_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E0_CTL__X_CTL_FW",
    "src": {
@@ -16307,12 +16383,12 @@
    "width": 1262
   },
   "sl_E0_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E0_CTL__X_CTL_SC",
    "src": {
@@ -16324,25 +16400,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E0_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E0_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E0_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E0_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E0_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -16383,12 +16440,12 @@
    "width": 35
   },
   "sl_E0_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E0_CTL__X_CTL_SU_C",
    "src": {
@@ -16400,25 +16457,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E0_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E0_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E0_fe__cmd_wo_cmd_ei": {
    "cycles": 2,
@@ -16877,12 +16915,12 @@
    "width": 1088
   },
   "sl_E0_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E0_FW__X_FW_CTL",
    "src": {
@@ -16893,15 +16931,15 @@
     "part": "sl_E0_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E0_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E0_FW__X_FW_FE",
    "src": {
@@ -16934,12 +16972,12 @@
    "width": 48
   },
   "sl_E0_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E0_FW__X_FW_ST_A",
    "src": {
@@ -16953,12 +16991,12 @@
    "width": 264
   },
   "sl_E0_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E0_FW__X_FW_ST_B",
    "src": {
@@ -16989,25 +17027,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E0_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E0_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E0_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E0_hc0__cwn0": {
    "cycles": 2,
@@ -17083,45 +17102,7 @@
     "part": "sl_E0_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E0_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E0_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E0_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E0_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E0_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E0_hc1__cwn1": {
    "cycles": 2,
@@ -17180,6 +17161,25 @@
    },
    "width": 1
   },
+  "sl_E0_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E0_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E0_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E0_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E0_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -17237,63 +17237,6 @@
    },
    "width": 528
   },
-  "sl_E0_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E0_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E0_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E0_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E0_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E0_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E0_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E0_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E0_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -17346,10 +17289,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E0_tap",
+    "part": "sl_E0_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E0_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E0_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E0_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E0_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E0_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -17369,25 +17331,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E0_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E0_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E0_hc3__cwn3": {
    "cycles": 2,
@@ -17446,6 +17389,25 @@
    },
    "width": 1
   },
+  "sl_E0_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E0_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E0_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E0_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E0_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -17464,25 +17426,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E0_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E0_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E0_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E0_sc__flt": {
    "cycles": 2,
@@ -17504,12 +17447,12 @@
    "width": 1
   },
   "sl_E0_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E0_SC__X_SC_CTL",
    "src": {
@@ -17574,18 +17517,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E0_fe",
+    "part": "sl_E0_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E0_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E0_ST_A__X_ST_A_CTL",
    "src": {
@@ -17618,12 +17561,12 @@
    "width": 258
   },
   "sl_E0_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E0_ST_A__X_ST_A_ST_B",
    "src": {
@@ -17675,12 +17618,12 @@
    "width": 256
   },
   "sl_E0_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E0_ST_B__X_ST_B_FE",
    "src": {
@@ -17694,12 +17637,12 @@
    "width": 256
   },
   "sl_E0_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E0_ST_B__X_ST_B_ST_A",
    "src": {
@@ -17729,7 +17672,7 @@
     "part": "sl_E0_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E0_stm__flt": {
    "cycles": 2,
@@ -17749,25 +17692,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E0_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E0_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E0_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E0_stm__x_stm_fe": {
    "cycles": 4,
@@ -17806,25 +17730,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E0_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E0_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E0_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E0_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E0_su_c__flt": {
    "cycles": 2,
@@ -17941,12 +17846,12 @@
    "width": 1
   },
   "sl_E0_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E0_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -17960,12 +17865,12 @@
    "width": 456
   },
   "sl_E0_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E0_SU_L0__X_SU_L0_SC",
    "src": {
@@ -18036,12 +17941,12 @@
    "width": 1
   },
   "sl_E0_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E0_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -18111,64 +18016,7 @@
    },
    "width": 876
   },
-  "sl_E0_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E0_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E0_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E0_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E0_TAP__FLT",
-   "src": {
-    "part": "sl_E0_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E0_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E0_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E0_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E0_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E0_tap__x_tap_hc1": {
+  "sl_E1_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -18176,18 +18024,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E0_TAP__X_TAP_HC1",
+   "param": "LAT_SL_E1_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_E1_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E0_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_E1_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E0_tap__x_tap_hc2": {
+  "sl_E1_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -18195,43 +18043,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E0_TAP__X_TAP_HC2",
+   "param": "LAT_SL_E1_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_E1_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E0_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_E1_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E0_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E1_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E1_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E1_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E1_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E1_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E0_TAP__X_TAP_HC3",
+   "param": "LAT_SL_E1_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E0_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_E1_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E0_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_E1_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_E1_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E1_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -18242,7 +18109,7 @@
     "part": "sl_E1_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E1_ctl__flt": {
    "cycles": 2,
@@ -18264,12 +18131,12 @@
    "width": 1
   },
   "sl_E1_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E1_CTL__X_CTL_FW",
    "src": {
@@ -18283,12 +18150,12 @@
    "width": 1262
   },
   "sl_E1_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E1_CTL__X_CTL_SC",
    "src": {
@@ -18300,25 +18167,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E1_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E1_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E1_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E1_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E1_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -18359,12 +18207,12 @@
    "width": 35
   },
   "sl_E1_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E1_CTL__X_CTL_SU_C",
    "src": {
@@ -18376,25 +18224,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E1_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E1_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E1_fe__cmd_wo_cmd_ei": {
    "cycles": 2,
@@ -18872,12 +18701,12 @@
    "width": 1088
   },
   "sl_E1_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E1_FW__X_FW_CTL",
    "src": {
@@ -18888,15 +18717,15 @@
     "part": "sl_E1_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E1_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E1_FW__X_FW_FE",
    "src": {
@@ -18929,12 +18758,12 @@
    "width": 48
   },
   "sl_E1_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E1_FW__X_FW_ST_A",
    "src": {
@@ -18948,12 +18777,12 @@
    "width": 264
   },
   "sl_E1_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E1_FW__X_FW_ST_B",
    "src": {
@@ -18984,25 +18813,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E1_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E1_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E1_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E1_hc0__cwn0": {
    "cycles": 2,
@@ -19078,45 +18888,7 @@
     "part": "sl_E1_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E1_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E1_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E1_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E1_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E1_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E1_hc1__cwn1": {
    "cycles": 2,
@@ -19175,6 +18947,25 @@
    },
    "width": 1
   },
+  "sl_E1_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E1_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E1_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E1_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E1_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -19232,63 +19023,6 @@
    },
    "width": 528
   },
-  "sl_E1_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E1_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E1_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E1_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E1_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E1_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E1_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E1_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E1_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -19341,10 +19075,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E1_tap",
+    "part": "sl_E1_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E1_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E1_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E1_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E1_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E1_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -19364,25 +19117,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E1_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E1_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E1_hc3__cwn3": {
    "cycles": 2,
@@ -19441,6 +19175,25 @@
    },
    "width": 1
   },
+  "sl_E1_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E1_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E1_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E1_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E1_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -19459,25 +19212,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E1_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E1_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E1_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E1_sc__flt": {
    "cycles": 2,
@@ -19499,12 +19233,12 @@
    "width": 1
   },
   "sl_E1_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E1_SC__X_SC_CTL",
    "src": {
@@ -19569,18 +19303,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E1_fe",
+    "part": "sl_E1_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E1_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E1_ST_A__X_ST_A_CTL",
    "src": {
@@ -19613,12 +19347,12 @@
    "width": 258
   },
   "sl_E1_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E1_ST_A__X_ST_A_ST_B",
    "src": {
@@ -19670,12 +19404,12 @@
    "width": 256
   },
   "sl_E1_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E1_ST_B__X_ST_B_FE",
    "src": {
@@ -19689,12 +19423,12 @@
    "width": 256
   },
   "sl_E1_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E1_ST_B__X_ST_B_ST_A",
    "src": {
@@ -19724,7 +19458,7 @@
     "part": "sl_E1_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E1_stm__flt": {
    "cycles": 2,
@@ -19744,25 +19478,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E1_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E1_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E1_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E1_stm__x_stm_fe": {
    "cycles": 4,
@@ -19801,25 +19516,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E1_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E1_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E1_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E1_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E1_su_c__flt": {
    "cycles": 2,
@@ -19936,12 +19632,12 @@
    "width": 1
   },
   "sl_E1_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E1_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -19955,12 +19651,12 @@
    "width": 456
   },
   "sl_E1_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E1_SU_L0__X_SU_L0_SC",
    "src": {
@@ -20031,12 +19727,12 @@
    "width": 1
   },
   "sl_E1_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E1_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -20106,64 +19802,7 @@
    },
    "width": 876
   },
-  "sl_E1_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E1_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E1_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E1_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E1_TAP__FLT",
-   "src": {
-    "part": "sl_E1_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E1_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E1_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E1_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E1_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E1_tap__x_tap_hc1": {
+  "sl_E2_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -20171,18 +19810,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E1_TAP__X_TAP_HC1",
+   "param": "LAT_SL_E2_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_E2_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E1_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_E2_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E1_tap__x_tap_hc2": {
+  "sl_E2_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -20190,43 +19829,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E1_TAP__X_TAP_HC2",
+   "param": "LAT_SL_E2_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_E2_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E1_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_E2_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E1_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E2_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E2_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E2_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E2_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E2_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E1_TAP__X_TAP_HC3",
+   "param": "LAT_SL_E2_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E1_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_E2_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E1_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_E2_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_E2_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E2_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -20237,7 +19895,7 @@
     "part": "sl_E2_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E2_ctl__flt": {
    "cycles": 2,
@@ -20259,12 +19917,12 @@
    "width": 1
   },
   "sl_E2_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E2_CTL__X_CTL_FW",
    "src": {
@@ -20278,12 +19936,12 @@
    "width": 1262
   },
   "sl_E2_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E2_CTL__X_CTL_SC",
    "src": {
@@ -20295,25 +19953,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E2_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E2_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E2_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E2_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E2_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -20354,12 +19993,12 @@
    "width": 35
   },
   "sl_E2_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E2_CTL__X_CTL_SU_C",
    "src": {
@@ -20371,25 +20010,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E2_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E2_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E2_fe__cmd_wo_cmd_ei": {
    "cycles": 2,
@@ -20848,12 +20468,12 @@
    "width": 1088
   },
   "sl_E2_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E2_FW__X_FW_CTL",
    "src": {
@@ -20864,15 +20484,15 @@
     "part": "sl_E2_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E2_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E2_FW__X_FW_FE",
    "src": {
@@ -20905,12 +20525,12 @@
    "width": 48
   },
   "sl_E2_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E2_FW__X_FW_ST_A",
    "src": {
@@ -20924,12 +20544,12 @@
    "width": 264
   },
   "sl_E2_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E2_FW__X_FW_ST_B",
    "src": {
@@ -20960,25 +20580,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E2_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E2_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E2_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E2_hc0__cwn0": {
    "cycles": 2,
@@ -21054,45 +20655,7 @@
     "part": "sl_E2_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E2_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E2_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E2_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E2_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E2_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E2_hc1__cwn1": {
    "cycles": 2,
@@ -21151,6 +20714,25 @@
    },
    "width": 1
   },
+  "sl_E2_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E2_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E2_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E2_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E2_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -21208,63 +20790,6 @@
    },
    "width": 528
   },
-  "sl_E2_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E2_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E2_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E2_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E2_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E2_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E2_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E2_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E2_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -21317,10 +20842,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E2_tap",
+    "part": "sl_E2_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E2_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E2_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E2_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E2_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E2_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -21340,25 +20884,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E2_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E2_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E2_hc3__cwn3": {
    "cycles": 2,
@@ -21417,6 +20942,25 @@
    },
    "width": 1
   },
+  "sl_E2_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E2_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E2_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E2_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E2_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -21435,25 +20979,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E2_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E2_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E2_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E2_sc__flt": {
    "cycles": 2,
@@ -21475,12 +21000,12 @@
    "width": 1
   },
   "sl_E2_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E2_SC__X_SC_CTL",
    "src": {
@@ -21545,18 +21070,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E2_fe",
+    "part": "sl_E2_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E2_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E2_ST_A__X_ST_A_CTL",
    "src": {
@@ -21589,12 +21114,12 @@
    "width": 258
   },
   "sl_E2_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E2_ST_A__X_ST_A_ST_B",
    "src": {
@@ -21646,12 +21171,12 @@
    "width": 256
   },
   "sl_E2_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E2_ST_B__X_ST_B_FE",
    "src": {
@@ -21665,12 +21190,12 @@
    "width": 256
   },
   "sl_E2_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E2_ST_B__X_ST_B_ST_A",
    "src": {
@@ -21700,7 +21225,7 @@
     "part": "sl_E2_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E2_stm__flt": {
    "cycles": 2,
@@ -21720,25 +21245,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E2_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E2_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E2_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E2_stm__x_stm_fe": {
    "cycles": 4,
@@ -21777,25 +21283,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E2_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E2_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E2_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E2_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E2_su_c__flt": {
    "cycles": 2,
@@ -21912,12 +21399,12 @@
    "width": 1
   },
   "sl_E2_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E2_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -21931,12 +21418,12 @@
    "width": 456
   },
   "sl_E2_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E2_SU_L0__X_SU_L0_SC",
    "src": {
@@ -22007,12 +21494,12 @@
    "width": 1
   },
   "sl_E2_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E2_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -22082,64 +21569,7 @@
    },
    "width": 876
   },
-  "sl_E2_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E2_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E2_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E2_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E2_TAP__FLT",
-   "src": {
-    "part": "sl_E2_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E2_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E2_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E2_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E2_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E2_tap__x_tap_hc1": {
+  "sl_E3_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -22147,18 +21577,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E2_TAP__X_TAP_HC1",
+   "param": "LAT_SL_E3_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_E3_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E2_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_E3_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E2_tap__x_tap_hc2": {
+  "sl_E3_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -22166,43 +21596,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E2_TAP__X_TAP_HC2",
+   "param": "LAT_SL_E3_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_E3_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E2_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_E3_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E2_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E3_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E3_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E3_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E3_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E3_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E2_TAP__X_TAP_HC3",
+   "param": "LAT_SL_E3_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E2_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_E3_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E2_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_E3_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_E3_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E3_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -22213,7 +21662,7 @@
     "part": "sl_E3_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E3_ctl__flt": {
    "cycles": 2,
@@ -22235,12 +21684,12 @@
    "width": 1
   },
   "sl_E3_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E3_CTL__X_CTL_FW",
    "src": {
@@ -22254,12 +21703,12 @@
    "width": 1262
   },
   "sl_E3_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E3_CTL__X_CTL_SC",
    "src": {
@@ -22271,25 +21720,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E3_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E3_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E3_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E3_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E3_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -22330,12 +21760,12 @@
    "width": 35
   },
   "sl_E3_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E3_CTL__X_CTL_SU_C",
    "src": {
@@ -22347,25 +21777,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E3_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E3_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E3_fe__cmd_wo_cmd_ei": {
    "cycles": 2,
@@ -22843,12 +22254,12 @@
    "width": 1088
   },
   "sl_E3_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E3_FW__X_FW_CTL",
    "src": {
@@ -22859,15 +22270,15 @@
     "part": "sl_E3_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E3_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E3_FW__X_FW_FE",
    "src": {
@@ -22900,12 +22311,12 @@
    "width": 48
   },
   "sl_E3_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E3_FW__X_FW_ST_A",
    "src": {
@@ -22919,12 +22330,12 @@
    "width": 264
   },
   "sl_E3_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E3_FW__X_FW_ST_B",
    "src": {
@@ -22955,25 +22366,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E3_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E3_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E3_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E3_hc0__cwn0": {
    "cycles": 2,
@@ -23049,45 +22441,7 @@
     "part": "sl_E3_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E3_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E3_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E3_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E3_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E3_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E3_hc1__cwn1": {
    "cycles": 2,
@@ -23146,6 +22500,25 @@
    },
    "width": 1
   },
+  "sl_E3_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E3_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E3_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E3_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E3_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -23203,63 +22576,6 @@
    },
    "width": 528
   },
-  "sl_E3_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E3_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E3_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E3_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E3_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E3_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E3_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E3_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E3_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -23312,10 +22628,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E3_tap",
+    "part": "sl_E3_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E3_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E3_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E3_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E3_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E3_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -23335,25 +22670,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E3_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E3_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E3_hc3__cwn3": {
    "cycles": 2,
@@ -23412,6 +22728,25 @@
    },
    "width": 1
   },
+  "sl_E3_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E3_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E3_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E3_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E3_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -23430,25 +22765,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E3_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E3_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E3_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E3_sc__flt": {
    "cycles": 2,
@@ -23470,12 +22786,12 @@
    "width": 1
   },
   "sl_E3_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E3_SC__X_SC_CTL",
    "src": {
@@ -23540,18 +22856,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E3_fe",
+    "part": "sl_E3_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E3_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E3_ST_A__X_ST_A_CTL",
    "src": {
@@ -23584,12 +22900,12 @@
    "width": 258
   },
   "sl_E3_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E3_ST_A__X_ST_A_ST_B",
    "src": {
@@ -23641,12 +22957,12 @@
    "width": 256
   },
   "sl_E3_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E3_ST_B__X_ST_B_FE",
    "src": {
@@ -23660,12 +22976,12 @@
    "width": 256
   },
   "sl_E3_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E3_ST_B__X_ST_B_ST_A",
    "src": {
@@ -23695,7 +23011,7 @@
     "part": "sl_E3_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E3_stm__flt": {
    "cycles": 2,
@@ -23715,25 +23031,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E3_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E3_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E3_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E3_stm__x_stm_fe": {
    "cycles": 4,
@@ -23772,25 +23069,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E3_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E3_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E3_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E3_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E3_su_c__flt": {
    "cycles": 2,
@@ -23907,12 +23185,12 @@
    "width": 1
   },
   "sl_E3_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E3_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -23926,12 +23204,12 @@
    "width": 456
   },
   "sl_E3_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E3_SU_L0__X_SU_L0_SC",
    "src": {
@@ -24002,12 +23280,12 @@
    "width": 1
   },
   "sl_E3_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E3_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -24077,64 +23355,7 @@
    },
    "width": 876
   },
-  "sl_E3_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E3_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E3_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E3_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E3_TAP__FLT",
-   "src": {
-    "part": "sl_E3_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E3_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E3_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E3_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E3_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E3_tap__x_tap_hc1": {
+  "sl_E4_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -24142,18 +23363,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E3_TAP__X_TAP_HC1",
+   "param": "LAT_SL_E4_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_E4_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E3_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_E4_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E3_tap__x_tap_hc2": {
+  "sl_E4_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -24161,43 +23382,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E3_TAP__X_TAP_HC2",
+   "param": "LAT_SL_E4_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_E4_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E3_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_E4_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E3_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E4_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E4_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E4_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E4_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E4_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E3_TAP__X_TAP_HC3",
+   "param": "LAT_SL_E4_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E3_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_E4_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E3_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_E4_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_E4_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E4_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -24208,7 +23448,7 @@
     "part": "sl_E4_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E4_ctl__flt": {
    "cycles": 2,
@@ -24230,12 +23470,12 @@
    "width": 1
   },
   "sl_E4_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E4_CTL__X_CTL_FW",
    "src": {
@@ -24249,12 +23489,12 @@
    "width": 1262
   },
   "sl_E4_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E4_CTL__X_CTL_SC",
    "src": {
@@ -24266,25 +23506,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E4_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E4_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E4_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E4_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E4_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -24325,12 +23546,12 @@
    "width": 35
   },
   "sl_E4_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E4_CTL__X_CTL_SU_C",
    "src": {
@@ -24342,25 +23563,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E4_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E4_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E4_fe__cmd_wo_cmd_ei": {
    "cycles": 2,
@@ -24819,12 +24021,12 @@
    "width": 1088
   },
   "sl_E4_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E4_FW__X_FW_CTL",
    "src": {
@@ -24835,15 +24037,15 @@
     "part": "sl_E4_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E4_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E4_FW__X_FW_FE",
    "src": {
@@ -24876,12 +24078,12 @@
    "width": 48
   },
   "sl_E4_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E4_FW__X_FW_ST_A",
    "src": {
@@ -24895,12 +24097,12 @@
    "width": 264
   },
   "sl_E4_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E4_FW__X_FW_ST_B",
    "src": {
@@ -24931,25 +24133,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E4_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E4_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E4_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E4_hc0__cwn0": {
    "cycles": 2,
@@ -25025,45 +24208,7 @@
     "part": "sl_E4_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E4_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E4_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E4_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E4_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E4_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E4_hc1__cwn1": {
    "cycles": 2,
@@ -25122,6 +24267,25 @@
    },
    "width": 1
   },
+  "sl_E4_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E4_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E4_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E4_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E4_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -25179,63 +24343,6 @@
    },
    "width": 528
   },
-  "sl_E4_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E4_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E4_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E4_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E4_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E4_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E4_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E4_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E4_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -25288,10 +24395,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E4_tap",
+    "part": "sl_E4_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E4_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E4_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E4_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E4_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E4_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -25311,25 +24437,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E4_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E4_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E4_hc3__cwn3": {
    "cycles": 2,
@@ -25388,6 +24495,25 @@
    },
    "width": 1
   },
+  "sl_E4_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E4_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E4_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E4_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E4_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -25406,25 +24532,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E4_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E4_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E4_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E4_sc__flt": {
    "cycles": 2,
@@ -25446,12 +24553,12 @@
    "width": 1
   },
   "sl_E4_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E4_SC__X_SC_CTL",
    "src": {
@@ -25516,18 +24623,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E4_fe",
+    "part": "sl_E4_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E4_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E4_ST_A__X_ST_A_CTL",
    "src": {
@@ -25560,12 +24667,12 @@
    "width": 258
   },
   "sl_E4_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E4_ST_A__X_ST_A_ST_B",
    "src": {
@@ -25617,12 +24724,12 @@
    "width": 256
   },
   "sl_E4_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E4_ST_B__X_ST_B_FE",
    "src": {
@@ -25636,12 +24743,12 @@
    "width": 256
   },
   "sl_E4_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E4_ST_B__X_ST_B_ST_A",
    "src": {
@@ -25671,7 +24778,7 @@
     "part": "sl_E4_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E4_stm__flt": {
    "cycles": 2,
@@ -25691,25 +24798,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E4_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E4_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E4_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E4_stm__x_stm_fe": {
    "cycles": 4,
@@ -25748,25 +24836,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E4_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E4_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E4_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E4_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E4_su_c__flt": {
    "cycles": 2,
@@ -25883,12 +24952,12 @@
    "width": 1
   },
   "sl_E4_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E4_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -25902,12 +24971,12 @@
    "width": 456
   },
   "sl_E4_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E4_SU_L0__X_SU_L0_SC",
    "src": {
@@ -25978,12 +25047,12 @@
    "width": 1
   },
   "sl_E4_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E4_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -26053,64 +25122,7 @@
    },
    "width": 876
   },
-  "sl_E4_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E4_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E4_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E4_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E4_TAP__FLT",
-   "src": {
-    "part": "sl_E4_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E4_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E4_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E4_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E4_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E4_tap__x_tap_hc1": {
+  "sl_E5_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -26118,18 +25130,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E4_TAP__X_TAP_HC1",
+   "param": "LAT_SL_E5_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_E5_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E4_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_E5_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E4_tap__x_tap_hc2": {
+  "sl_E5_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -26137,43 +25149,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E4_TAP__X_TAP_HC2",
+   "param": "LAT_SL_E5_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_E5_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E4_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_E5_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E4_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_E5_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E5_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_E5_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_E5_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_E5_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E4_TAP__X_TAP_HC3",
+   "param": "LAT_SL_E5_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E4_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_E5_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E4_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_E5_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_E5_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E5_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -26184,7 +25215,7 @@
     "part": "sl_E5_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_E5_ctl__flt": {
    "cycles": 2,
@@ -26206,12 +25237,12 @@
    "width": 1
   },
   "sl_E5_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_E5_CTL__X_CTL_FW",
    "src": {
@@ -26225,12 +25256,12 @@
    "width": 1262
   },
   "sl_E5_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E5_CTL__X_CTL_SC",
    "src": {
@@ -26242,25 +25273,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_E5_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E5_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_E5_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_E5_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_E5_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -26301,12 +25313,12 @@
    "width": 35
   },
   "sl_E5_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E5_CTL__X_CTL_SU_C",
    "src": {
@@ -26318,25 +25330,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_E5_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_E5_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_E5_fe__flt": {
    "cycles": 2,
@@ -26624,12 +25617,12 @@
    "width": 1088
   },
   "sl_E5_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E5_FW__X_FW_CTL",
    "src": {
@@ -26640,15 +25633,15 @@
     "part": "sl_E5_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_E5_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E5_FW__X_FW_FE",
    "src": {
@@ -26681,12 +25674,12 @@
    "width": 48
   },
   "sl_E5_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E5_FW__X_FW_ST_A",
    "src": {
@@ -26700,12 +25693,12 @@
    "width": 264
   },
   "sl_E5_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E5_FW__X_FW_ST_B",
    "src": {
@@ -26736,25 +25729,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_E5_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E5_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_E5_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_E5_hc0__cwn0": {
    "cycles": 2,
@@ -26830,45 +25804,7 @@
     "part": "sl_E5_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_E5_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_E5_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_E5_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_E5_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E5_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_E5_hc1__cwn1": {
    "cycles": 2,
@@ -26927,6 +25863,25 @@
    },
    "width": 1
   },
+  "sl_E5_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E5_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_E5_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E5_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_E5_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -26984,63 +25939,6 @@
    },
    "width": 528
   },
-  "sl_E5_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_E5_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_E5_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_E5_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_E5_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E5_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_E5_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_E5_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_E5_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -27093,10 +25991,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E5_tap",
+    "part": "sl_E5_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_E5_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_E5_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_E5_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E5_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_E5_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -27116,25 +26033,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_E5_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_E5_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_E5_hc3__cwn3": {
    "cycles": 2,
@@ -27193,6 +26091,25 @@
    },
    "width": 1
   },
+  "sl_E5_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_E5_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_E5_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_E5_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_E5_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -27211,25 +26128,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_E5_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E5_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_E5_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_E5_sc__flt": {
    "cycles": 2,
@@ -27251,12 +26149,12 @@
    "width": 1
   },
   "sl_E5_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_E5_SC__X_SC_CTL",
    "src": {
@@ -27321,18 +26219,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_E5_fe",
+    "part": "sl_E5_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_E5_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_E5_ST_A__X_ST_A_CTL",
    "src": {
@@ -27365,12 +26263,12 @@
    "width": 258
   },
   "sl_E5_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E5_ST_A__X_ST_A_ST_B",
    "src": {
@@ -27422,12 +26320,12 @@
    "width": 256
   },
   "sl_E5_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E5_ST_B__X_ST_B_FE",
    "src": {
@@ -27441,12 +26339,12 @@
    "width": 256
   },
   "sl_E5_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_E5_ST_B__X_ST_B_ST_A",
    "src": {
@@ -27476,7 +26374,7 @@
     "part": "sl_E5_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_E5_stm__flt": {
    "cycles": 2,
@@ -27496,25 +26394,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_E5_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_E5_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_E5_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_E5_stm__x_stm_fe": {
    "cycles": 4,
@@ -27553,25 +26432,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_E5_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_E5_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_E5_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_E5_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_E5_su_c__flt": {
    "cycles": 2,
@@ -27688,12 +26548,12 @@
    "width": 1
   },
   "sl_E5_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E5_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -27707,12 +26567,12 @@
    "width": 456
   },
   "sl_E5_su_l0__x_su_l0_sc": {
-   "cycles": 4,
-   "stations": 2,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 4,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_E5_SU_L0__X_SU_L0_SC",
    "src": {
@@ -27783,12 +26643,12 @@
    "width": 1
   },
   "sl_E5_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_E5_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -27858,64 +26718,7 @@
    },
    "width": 876
   },
-  "sl_E5_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_E5_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_E5_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_E5_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_E5_TAP__FLT",
-   "src": {
-    "part": "sl_E5_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_E5_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_E5_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_E5_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_E5_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_E5_tap__x_tap_hc1": {
+  "sl_W0_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -27923,18 +26726,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E5_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W0_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W0_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_E5_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W0_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E5_tap__x_tap_hc2": {
+  "sl_W0_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -27942,43 +26745,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_E5_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W0_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W0_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_E5_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W0_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_E5_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W0_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W0_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W0_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W0_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W0_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_E5_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W0_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_E5_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W0_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_E5_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W0_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W0_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W0_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -27989,7 +26811,7 @@
     "part": "sl_W0_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W0_ctl__flt": {
    "cycles": 2,
@@ -28011,12 +26833,12 @@
    "width": 1
   },
   "sl_W0_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W0_CTL__X_CTL_FW",
    "src": {
@@ -28030,12 +26852,12 @@
    "width": 1262
   },
   "sl_W0_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W0_CTL__X_CTL_SC",
    "src": {
@@ -28047,25 +26869,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W0_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W0_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W0_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W0_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W0_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -28106,12 +26909,12 @@
    "width": 35
   },
   "sl_W0_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W0_CTL__X_CTL_SU_C",
    "src": {
@@ -28123,25 +26926,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W0_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W0_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W0_fe__cmd_eo_cmd_ei": {
    "cycles": 2,
@@ -28600,12 +27384,12 @@
    "width": 1088
   },
   "sl_W0_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W0_FW__X_FW_CTL",
    "src": {
@@ -28616,15 +27400,15 @@
     "part": "sl_W0_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W0_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W0_FW__X_FW_FE",
    "src": {
@@ -28657,12 +27441,12 @@
    "width": 48
   },
   "sl_W0_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W0_FW__X_FW_ST_A",
    "src": {
@@ -28676,12 +27460,12 @@
    "width": 264
   },
   "sl_W0_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W0_FW__X_FW_ST_B",
    "src": {
@@ -28712,25 +27496,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W0_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W0_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W0_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W0_hc0__cwn0": {
    "cycles": 2,
@@ -28806,45 +27571,7 @@
     "part": "sl_W0_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W0_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W0_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W0_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W0_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W0_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W0_hc1__cwn1": {
    "cycles": 2,
@@ -28903,6 +27630,25 @@
    },
    "width": 1
   },
+  "sl_W0_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W0_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W0_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W0_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W0_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -28960,63 +27706,6 @@
    },
    "width": 528
   },
-  "sl_W0_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W0_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W0_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W0_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W0_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W0_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W0_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W0_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W0_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -29069,10 +27758,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W0_tap",
+    "part": "sl_W0_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W0_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W0_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W0_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W0_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W0_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -29092,25 +27800,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W0_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W0_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W0_hc3__cwn3": {
    "cycles": 2,
@@ -29169,6 +27858,25 @@
    },
    "width": 1
   },
+  "sl_W0_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W0_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W0_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W0_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W0_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -29187,25 +27895,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W0_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W0_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W0_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W0_sc__flt": {
    "cycles": 2,
@@ -29227,12 +27916,12 @@
    "width": 1
   },
   "sl_W0_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W0_SC__X_SC_CTL",
    "src": {
@@ -29297,18 +27986,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W0_fe",
+    "part": "sl_W0_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W0_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W0_ST_A__X_ST_A_CTL",
    "src": {
@@ -29341,12 +28030,12 @@
    "width": 258
   },
   "sl_W0_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W0_ST_A__X_ST_A_ST_B",
    "src": {
@@ -29398,12 +28087,12 @@
    "width": 256
   },
   "sl_W0_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W0_ST_B__X_ST_B_FE",
    "src": {
@@ -29417,12 +28106,12 @@
    "width": 256
   },
   "sl_W0_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W0_ST_B__X_ST_B_ST_A",
    "src": {
@@ -29452,7 +28141,7 @@
     "part": "sl_W0_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W0_stm__flt": {
    "cycles": 2,
@@ -29472,25 +28161,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W0_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W0_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W0_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W0_stm__x_stm_fe": {
    "cycles": 4,
@@ -29529,25 +28199,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W0_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W0_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W0_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W0_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W0_su_c__flt": {
    "cycles": 2,
@@ -29664,12 +28315,12 @@
    "width": 1
   },
   "sl_W0_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W0_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -29759,12 +28410,12 @@
    "width": 1
   },
   "sl_W0_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W0_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -29834,64 +28485,7 @@
    },
    "width": 876
   },
-  "sl_W0_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W0_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W0_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W0_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W0_TAP__FLT",
-   "src": {
-    "part": "sl_W0_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W0_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W0_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W0_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W0_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W0_tap__x_tap_hc1": {
+  "sl_W1_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -29899,18 +28493,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W0_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W1_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W1_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_W0_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W1_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W0_tap__x_tap_hc2": {
+  "sl_W1_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -29918,43 +28512,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_W0_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W1_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W1_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_W0_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W1_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W0_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W1_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W1_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W1_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W1_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W1_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W0_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W1_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_W0_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W1_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_W0_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W1_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W1_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W1_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -29965,7 +28578,7 @@
     "part": "sl_W1_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W1_ctl__flt": {
    "cycles": 2,
@@ -29987,12 +28600,12 @@
    "width": 1
   },
   "sl_W1_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W1_CTL__X_CTL_FW",
    "src": {
@@ -30006,12 +28619,12 @@
    "width": 1262
   },
   "sl_W1_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W1_CTL__X_CTL_SC",
    "src": {
@@ -30023,25 +28636,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W1_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W1_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W1_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W1_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W1_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -30082,12 +28676,12 @@
    "width": 35
   },
   "sl_W1_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W1_CTL__X_CTL_SU_C",
    "src": {
@@ -30099,25 +28693,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W1_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W1_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W1_fe__cmd_eo_cmd_wi": {
    "cycles": 2,
@@ -30595,12 +29170,12 @@
    "width": 1088
   },
   "sl_W1_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W1_FW__X_FW_CTL",
    "src": {
@@ -30611,15 +29186,15 @@
     "part": "sl_W1_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W1_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W1_FW__X_FW_FE",
    "src": {
@@ -30652,12 +29227,12 @@
    "width": 48
   },
   "sl_W1_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W1_FW__X_FW_ST_A",
    "src": {
@@ -30671,12 +29246,12 @@
    "width": 264
   },
   "sl_W1_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W1_FW__X_FW_ST_B",
    "src": {
@@ -30707,25 +29282,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W1_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W1_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W1_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W1_hc0__cwn0": {
    "cycles": 2,
@@ -30801,45 +29357,7 @@
     "part": "sl_W1_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W1_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W1_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W1_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W1_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W1_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W1_hc1__cwn1": {
    "cycles": 2,
@@ -30898,6 +29416,25 @@
    },
    "width": 1
   },
+  "sl_W1_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W1_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W1_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W1_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W1_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -30955,63 +29492,6 @@
    },
    "width": 528
   },
-  "sl_W1_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W1_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W1_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W1_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W1_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W1_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W1_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W1_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W1_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -31064,10 +29544,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W1_tap",
+    "part": "sl_W1_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W1_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W1_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W1_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W1_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W1_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -31087,25 +29586,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W1_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W1_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W1_hc3__cwn3": {
    "cycles": 2,
@@ -31164,6 +29644,25 @@
    },
    "width": 1
   },
+  "sl_W1_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W1_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W1_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W1_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W1_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -31182,25 +29681,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W1_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W1_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W1_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W1_sc__flt": {
    "cycles": 2,
@@ -31222,12 +29702,12 @@
    "width": 1
   },
   "sl_W1_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W1_SC__X_SC_CTL",
    "src": {
@@ -31292,18 +29772,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W1_fe",
+    "part": "sl_W1_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W1_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W1_ST_A__X_ST_A_CTL",
    "src": {
@@ -31336,12 +29816,12 @@
    "width": 258
   },
   "sl_W1_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W1_ST_A__X_ST_A_ST_B",
    "src": {
@@ -31393,12 +29873,12 @@
    "width": 256
   },
   "sl_W1_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W1_ST_B__X_ST_B_FE",
    "src": {
@@ -31412,12 +29892,12 @@
    "width": 256
   },
   "sl_W1_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W1_ST_B__X_ST_B_ST_A",
    "src": {
@@ -31447,7 +29927,7 @@
     "part": "sl_W1_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W1_stm__flt": {
    "cycles": 2,
@@ -31467,25 +29947,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W1_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W1_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W1_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W1_stm__x_stm_fe": {
    "cycles": 4,
@@ -31524,25 +29985,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W1_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W1_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W1_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W1_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W1_su_c__flt": {
    "cycles": 2,
@@ -31659,12 +30101,12 @@
    "width": 1
   },
   "sl_W1_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W1_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -31754,12 +30196,12 @@
    "width": 1
   },
   "sl_W1_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W1_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -31829,64 +30271,7 @@
    },
    "width": 876
   },
-  "sl_W1_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W1_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W1_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W1_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W1_TAP__FLT",
-   "src": {
-    "part": "sl_W1_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W1_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W1_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W1_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W1_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W1_tap__x_tap_hc1": {
+  "sl_W2_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -31894,18 +30279,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W1_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W2_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W2_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_W1_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W2_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W1_tap__x_tap_hc2": {
+  "sl_W2_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -31913,43 +30298,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_W1_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W2_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W2_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_W1_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W2_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W1_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W2_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W2_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W2_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W2_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W2_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W1_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W2_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_W1_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W2_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_W1_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W2_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W2_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W2_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -31960,7 +30364,7 @@
     "part": "sl_W2_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W2_ctl__flt": {
    "cycles": 2,
@@ -31982,12 +30386,12 @@
    "width": 1
   },
   "sl_W2_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W2_CTL__X_CTL_FW",
    "src": {
@@ -32001,12 +30405,12 @@
    "width": 1262
   },
   "sl_W2_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W2_CTL__X_CTL_SC",
    "src": {
@@ -32018,25 +30422,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W2_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W2_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W2_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W2_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W2_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -32077,12 +30462,12 @@
    "width": 35
   },
   "sl_W2_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W2_CTL__X_CTL_SU_C",
    "src": {
@@ -32094,25 +30479,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W2_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W2_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W2_fe__cmd_eo_cmd_wi": {
    "cycles": 2,
@@ -32571,12 +30937,12 @@
    "width": 1088
   },
   "sl_W2_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W2_FW__X_FW_CTL",
    "src": {
@@ -32587,15 +30953,15 @@
     "part": "sl_W2_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W2_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W2_FW__X_FW_FE",
    "src": {
@@ -32628,12 +30994,12 @@
    "width": 48
   },
   "sl_W2_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W2_FW__X_FW_ST_A",
    "src": {
@@ -32647,12 +31013,12 @@
    "width": 264
   },
   "sl_W2_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W2_FW__X_FW_ST_B",
    "src": {
@@ -32683,25 +31049,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W2_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W2_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W2_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W2_hc0__cwn0": {
    "cycles": 2,
@@ -32777,45 +31124,7 @@
     "part": "sl_W2_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W2_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W2_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W2_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W2_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W2_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W2_hc1__cwn1": {
    "cycles": 2,
@@ -32874,6 +31183,25 @@
    },
    "width": 1
   },
+  "sl_W2_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W2_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W2_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W2_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W2_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -32931,63 +31259,6 @@
    },
    "width": 528
   },
-  "sl_W2_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W2_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W2_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W2_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W2_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W2_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W2_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W2_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W2_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -33040,10 +31311,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W2_tap",
+    "part": "sl_W2_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W2_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W2_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W2_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W2_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W2_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -33063,25 +31353,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W2_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W2_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W2_hc3__cwn3": {
    "cycles": 2,
@@ -33140,6 +31411,25 @@
    },
    "width": 1
   },
+  "sl_W2_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W2_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W2_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W2_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W2_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -33158,25 +31448,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W2_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W2_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W2_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W2_sc__flt": {
    "cycles": 2,
@@ -33198,12 +31469,12 @@
    "width": 1
   },
   "sl_W2_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W2_SC__X_SC_CTL",
    "src": {
@@ -33268,18 +31539,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W2_fe",
+    "part": "sl_W2_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W2_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W2_ST_A__X_ST_A_CTL",
    "src": {
@@ -33312,12 +31583,12 @@
    "width": 258
   },
   "sl_W2_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W2_ST_A__X_ST_A_ST_B",
    "src": {
@@ -33369,12 +31640,12 @@
    "width": 256
   },
   "sl_W2_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W2_ST_B__X_ST_B_FE",
    "src": {
@@ -33388,12 +31659,12 @@
    "width": 256
   },
   "sl_W2_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W2_ST_B__X_ST_B_ST_A",
    "src": {
@@ -33423,7 +31694,7 @@
     "part": "sl_W2_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W2_stm__flt": {
    "cycles": 2,
@@ -33443,25 +31714,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W2_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W2_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W2_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W2_stm__x_stm_fe": {
    "cycles": 4,
@@ -33500,25 +31752,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W2_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W2_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W2_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W2_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W2_su_c__flt": {
    "cycles": 2,
@@ -33635,12 +31868,12 @@
    "width": 1
   },
   "sl_W2_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W2_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -33730,12 +31963,12 @@
    "width": 1
   },
   "sl_W2_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W2_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -33805,64 +32038,7 @@
    },
    "width": 876
   },
-  "sl_W2_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W2_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W2_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W2_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W2_TAP__FLT",
-   "src": {
-    "part": "sl_W2_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W2_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W2_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W2_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W2_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W2_tap__x_tap_hc1": {
+  "sl_W3_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -33870,18 +32046,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W2_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W3_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W3_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_W2_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W3_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W2_tap__x_tap_hc2": {
+  "sl_W3_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -33889,43 +32065,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_W2_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W3_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W3_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_W2_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W3_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W2_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W3_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W3_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W3_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W3_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W3_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W2_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W3_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_W2_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W3_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_W2_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W3_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W3_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W3_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -33936,7 +32131,7 @@
     "part": "sl_W3_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W3_ctl__flt": {
    "cycles": 2,
@@ -33958,12 +32153,12 @@
    "width": 1
   },
   "sl_W3_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W3_CTL__X_CTL_FW",
    "src": {
@@ -33977,12 +32172,12 @@
    "width": 1262
   },
   "sl_W3_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W3_CTL__X_CTL_SC",
    "src": {
@@ -33994,25 +32189,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W3_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W3_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W3_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W3_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W3_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -34053,12 +32229,12 @@
    "width": 35
   },
   "sl_W3_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W3_CTL__X_CTL_SU_C",
    "src": {
@@ -34070,25 +32246,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W3_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W3_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W3_fe__cmd_eo_cmd_wi": {
    "cycles": 2,
@@ -34566,12 +32723,12 @@
    "width": 1088
   },
   "sl_W3_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W3_FW__X_FW_CTL",
    "src": {
@@ -34582,15 +32739,15 @@
     "part": "sl_W3_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W3_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W3_FW__X_FW_FE",
    "src": {
@@ -34623,12 +32780,12 @@
    "width": 48
   },
   "sl_W3_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W3_FW__X_FW_ST_A",
    "src": {
@@ -34642,12 +32799,12 @@
    "width": 264
   },
   "sl_W3_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W3_FW__X_FW_ST_B",
    "src": {
@@ -34678,25 +32835,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W3_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W3_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W3_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W3_hc0__cwn0": {
    "cycles": 2,
@@ -34772,45 +32910,7 @@
     "part": "sl_W3_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W3_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W3_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W3_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W3_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W3_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W3_hc1__cwn1": {
    "cycles": 2,
@@ -34869,6 +32969,25 @@
    },
    "width": 1
   },
+  "sl_W3_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W3_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W3_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W3_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W3_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -34926,63 +33045,6 @@
    },
    "width": 528
   },
-  "sl_W3_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W3_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W3_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W3_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W3_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W3_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W3_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W3_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W3_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -35035,10 +33097,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W3_tap",
+    "part": "sl_W3_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W3_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W3_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W3_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W3_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W3_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -35058,25 +33139,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W3_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W3_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W3_hc3__cwn3": {
    "cycles": 2,
@@ -35135,6 +33197,25 @@
    },
    "width": 1
   },
+  "sl_W3_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W3_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W3_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W3_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W3_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -35153,25 +33234,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W3_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W3_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W3_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W3_sc__flt": {
    "cycles": 2,
@@ -35193,12 +33255,12 @@
    "width": 1
   },
   "sl_W3_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W3_SC__X_SC_CTL",
    "src": {
@@ -35263,18 +33325,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W3_fe",
+    "part": "sl_W3_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W3_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W3_ST_A__X_ST_A_CTL",
    "src": {
@@ -35307,12 +33369,12 @@
    "width": 258
   },
   "sl_W3_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W3_ST_A__X_ST_A_ST_B",
    "src": {
@@ -35364,12 +33426,12 @@
    "width": 256
   },
   "sl_W3_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W3_ST_B__X_ST_B_FE",
    "src": {
@@ -35383,12 +33445,12 @@
    "width": 256
   },
   "sl_W3_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W3_ST_B__X_ST_B_ST_A",
    "src": {
@@ -35418,7 +33480,7 @@
     "part": "sl_W3_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W3_stm__flt": {
    "cycles": 2,
@@ -35438,25 +33500,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W3_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W3_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W3_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W3_stm__x_stm_fe": {
    "cycles": 4,
@@ -35495,25 +33538,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W3_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W3_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W3_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W3_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W3_su_c__flt": {
    "cycles": 2,
@@ -35630,12 +33654,12 @@
    "width": 1
   },
   "sl_W3_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W3_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -35725,12 +33749,12 @@
    "width": 1
   },
   "sl_W3_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W3_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -35800,64 +33824,7 @@
    },
    "width": 876
   },
-  "sl_W3_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W3_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W3_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W3_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W3_TAP__FLT",
-   "src": {
-    "part": "sl_W3_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W3_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W3_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W3_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W3_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W3_tap__x_tap_hc1": {
+  "sl_W4_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -35865,18 +33832,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W3_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W4_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W4_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_W3_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W4_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W3_tap__x_tap_hc2": {
+  "sl_W4_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -35884,43 +33851,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_W3_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W4_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W4_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_W3_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W4_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W3_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W4_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W4_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W4_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W4_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W4_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W3_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W4_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_W3_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W4_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_W3_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W4_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W4_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W4_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -35931,7 +33917,7 @@
     "part": "sl_W4_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W4_ctl__flt": {
    "cycles": 2,
@@ -35953,12 +33939,12 @@
    "width": 1
   },
   "sl_W4_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W4_CTL__X_CTL_FW",
    "src": {
@@ -35972,12 +33958,12 @@
    "width": 1262
   },
   "sl_W4_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W4_CTL__X_CTL_SC",
    "src": {
@@ -35989,25 +33975,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W4_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W4_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W4_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W4_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W4_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -36048,12 +34015,12 @@
    "width": 35
   },
   "sl_W4_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W4_CTL__X_CTL_SU_C",
    "src": {
@@ -36065,25 +34032,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W4_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W4_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W4_fe__cmd_eo_cmd_wi": {
    "cycles": 2,
@@ -36542,12 +34490,12 @@
    "width": 1088
   },
   "sl_W4_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W4_FW__X_FW_CTL",
    "src": {
@@ -36558,15 +34506,15 @@
     "part": "sl_W4_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W4_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W4_FW__X_FW_FE",
    "src": {
@@ -36599,12 +34547,12 @@
    "width": 48
   },
   "sl_W4_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W4_FW__X_FW_ST_A",
    "src": {
@@ -36618,12 +34566,12 @@
    "width": 264
   },
   "sl_W4_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W4_FW__X_FW_ST_B",
    "src": {
@@ -36654,25 +34602,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W4_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W4_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W4_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W4_hc0__cwn0": {
    "cycles": 2,
@@ -36748,45 +34677,7 @@
     "part": "sl_W4_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W4_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W4_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W4_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W4_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W4_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W4_hc1__cwn1": {
    "cycles": 2,
@@ -36845,6 +34736,25 @@
    },
    "width": 1
   },
+  "sl_W4_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W4_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W4_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W4_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W4_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -36902,63 +34812,6 @@
    },
    "width": 528
   },
-  "sl_W4_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W4_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W4_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W4_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W4_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W4_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W4_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W4_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W4_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -37011,10 +34864,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W4_tap",
+    "part": "sl_W4_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W4_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W4_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W4_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W4_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W4_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -37034,25 +34906,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W4_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W4_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W4_hc3__cwn3": {
    "cycles": 2,
@@ -37111,6 +34964,25 @@
    },
    "width": 1
   },
+  "sl_W4_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W4_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W4_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W4_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W4_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -37129,25 +35001,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W4_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W4_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W4_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W4_sc__flt": {
    "cycles": 2,
@@ -37169,12 +35022,12 @@
    "width": 1
   },
   "sl_W4_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W4_SC__X_SC_CTL",
    "src": {
@@ -37239,18 +35092,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W4_fe",
+    "part": "sl_W4_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W4_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W4_ST_A__X_ST_A_CTL",
    "src": {
@@ -37283,12 +35136,12 @@
    "width": 258
   },
   "sl_W4_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W4_ST_A__X_ST_A_ST_B",
    "src": {
@@ -37340,12 +35193,12 @@
    "width": 256
   },
   "sl_W4_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W4_ST_B__X_ST_B_FE",
    "src": {
@@ -37359,12 +35212,12 @@
    "width": 256
   },
   "sl_W4_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W4_ST_B__X_ST_B_ST_A",
    "src": {
@@ -37394,7 +35247,7 @@
     "part": "sl_W4_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W4_stm__flt": {
    "cycles": 2,
@@ -37414,25 +35267,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W4_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W4_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W4_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W4_stm__x_stm_fe": {
    "cycles": 4,
@@ -37471,25 +35305,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W4_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W4_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W4_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W4_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W4_su_c__flt": {
    "cycles": 2,
@@ -37606,12 +35421,12 @@
    "width": 1
   },
   "sl_W4_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W4_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -37701,12 +35516,12 @@
    "width": 1
   },
   "sl_W4_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W4_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -37776,64 +35591,7 @@
    },
    "width": 876
   },
-  "sl_W4_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W4_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W4_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W4_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W4_TAP__FLT",
-   "src": {
-    "part": "sl_W4_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W4_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W4_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W4_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W4_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W4_tap__x_tap_hc1": {
+  "sl_W5_ctl__b_hw_ctl_hc0": {
    "cycles": 4,
    "stations": 2,
    "boundary": 2,
@@ -37841,18 +35599,18 @@
    "fixed": 0,
    "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W4_TAP__X_TAP_HC1",
+   "param": "LAT_SL_W5_CTL__B_HW_CTL_HC0",
    "src": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc1_o"
+    "part": "sl_W5_ctl",
+    "bus": "b_hw_hc0_o"
    },
    "dst": {
-    "part": "sl_W4_hc1",
-    "bus": "x_tap_i"
+    "part": "sl_W5_hc0",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W4_tap__x_tap_hc2": {
+  "sl_W5_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
    "stations": 0,
    "boundary": 2,
@@ -37860,43 +35618,62 @@
    "fixed": 0,
    "natural": 2,
    "pad": 0,
-   "param": "LAT_SL_W4_TAP__X_TAP_HC2",
+   "param": "LAT_SL_W5_CTL__B_HW_CTL_HC1",
    "src": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc2_o"
+    "part": "sl_W5_ctl",
+    "bus": "b_hw_hc1_o"
    },
    "dst": {
-    "part": "sl_W4_hc2",
-    "bus": "x_tap_i"
+    "part": "sl_W5_hc1",
+    "bus": "b_hw_i"
    },
-   "width": 24
+   "width": 1591
   },
-  "sl_W4_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
+  "sl_W5_ctl__b_hw_ctl_hc2": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W5_CTL__B_HW_CTL_HC2",
+   "src": {
+    "part": "sl_W5_ctl",
+    "bus": "b_hw_hc2_o"
+   },
+   "dst": {
+    "part": "sl_W5_hc2",
+    "bus": "b_hw_i"
+   },
+   "width": 1591
+  },
+  "sl_W5_ctl__b_hw_ctl_hc3": {
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
-   "param": "LAT_SL_W4_TAP__X_TAP_HC3",
+   "param": "LAT_SL_W5_CTL__B_HW_CTL_HC3",
    "src": {
-    "part": "sl_W4_tap",
-    "bus": "x_hc3_o"
+    "part": "sl_W5_ctl",
+    "bus": "b_hw_hc3_o"
    },
    "dst": {
-    "part": "sl_W4_hc3",
-    "bus": "x_tap_i"
+    "part": "sl_W5_hc3",
+    "bus": "b_hw_i"
    },
-   "width": 25
+   "width": 1592
   },
   "sl_W5_ctl__b_tw_data_ctl_st_a": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 2,
+   "faces": 1,
    "fixed": 0,
-   "natural": 3,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W5_CTL__B_TW_DATA_CTL_ST_A",
    "src": {
@@ -37907,7 +35684,7 @@
     "part": "sl_W5_st_a",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 1167
   },
   "sl_W5_ctl__flt": {
    "cycles": 2,
@@ -37929,12 +35706,12 @@
    "width": 1
   },
   "sl_W5_ctl__x_ctl_fw": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
-   "faces": 2,
+   "faces": 6,
    "fixed": 0,
-   "natural": 3,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_SL_W5_CTL__X_CTL_FW",
    "src": {
@@ -37948,12 +35725,12 @@
    "width": 1262
   },
   "sl_W5_ctl__x_ctl_sc": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 6,
+   "faces": 1,
    "fixed": 0,
-   "natural": 9,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W5_CTL__X_CTL_SC",
    "src": {
@@ -37965,25 +35742,6 @@
     "bus": "x_ctl_i"
    },
    "width": 160
-  },
-  "sl_W5_ctl__x_ctl_st_a": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 4,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W5_CTL__X_CTL_ST_A",
-   "src": {
-    "part": "sl_W5_ctl",
-    "bus": "x_st_a_o"
-   },
-   "dst": {
-    "part": "sl_W5_st_a",
-    "bus": "x_ctl_i"
-   },
-   "width": 116
   },
   "sl_W5_ctl__x_ctl_st_b": {
    "cycles": 2,
@@ -38024,12 +35782,12 @@
    "width": 35
   },
   "sl_W5_ctl__x_ctl_su_c": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W5_CTL__X_CTL_SU_C",
    "src": {
@@ -38041,25 +35799,6 @@
     "bus": "x_ctl_i"
    },
    "width": 1655
-  },
-  "sl_W5_ctl__x_ctl_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_CTL__X_CTL_TAP",
-   "src": {
-    "part": "sl_W5_ctl",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_ctl_i"
-   },
-   "width": 4
   },
   "sl_W5_fe__cmd_eo_cmd_wi": {
    "cycles": 2,
@@ -38594,12 +36333,12 @@
    "width": 107
   },
   "sl_W5_fw__x_fw_ctl": {
-   "cycles": 3,
-   "stations": 1,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 3,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W5_FW__X_FW_CTL",
    "src": {
@@ -38610,15 +36349,15 @@
     "part": "sl_W5_ctl",
     "bus": "x_fw_i"
    },
-   "width": 1155
+   "width": 1608
   },
   "sl_W5_fw__x_fw_fe": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W5_FW__X_FW_FE",
    "src": {
@@ -38651,12 +36390,12 @@
    "width": 48
   },
   "sl_W5_fw__x_fw_st_a": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 5,
+   "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W5_FW__X_FW_ST_A",
    "src": {
@@ -38670,12 +36409,12 @@
    "width": 264
   },
   "sl_W5_fw__x_fw_st_b": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 5,
+   "faces": 1,
    "fixed": 0,
-   "natural": 10,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W5_FW__X_FW_ST_B",
    "src": {
@@ -38706,25 +36445,6 @@
     "bus": "x_fw_i"
    },
    "width": 1097
-  },
-  "sl_W5_fw__x_fw_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W5_FW__X_FW_TAP",
-   "src": {
-    "part": "sl_W5_fw",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_fw_i"
-   },
-   "width": 453
   },
   "sl_W5_hc0__cwn0": {
    "cycles": 2,
@@ -38800,45 +36520,7 @@
     "part": "sl_W5_ctl",
     "bus": "x_hc0_i"
    },
-   "width": 1
-  },
-  "sl_W5_hc0__x_hc0_tap": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC0__X_HC0_TAP",
-   "src": {
-    "part": "sl_W5_hc0",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc0_i"
-   },
-   "width": 8
-  },
-  "sl_W5_hc1__b_hw_hc1_hc0": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC1__B_HW_HC1_HC0",
-   "src": {
-    "part": "sl_W5_hc1",
-    "bus": "b_hw_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc0",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
+   "width": 9
   },
   "sl_W5_hc1__cwn1": {
    "cycles": 2,
@@ -38897,6 +36579,25 @@
    },
    "width": 1
   },
+  "sl_W5_hc1__x_hc1_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W5_HC1__X_HC1_CTL",
+   "src": {
+    "part": "sl_W5_hc1",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W5_ctl",
+    "bus": "x_hc1_i"
+   },
+   "width": 8
+  },
   "sl_W5_hc1__x_hc1_hc0": {
    "cycles": 2,
    "stations": 0,
@@ -38954,63 +36655,6 @@
    },
    "width": 528
   },
-  "sl_W5_hc1__x_hc1_tap": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC1__X_HC1_TAP",
-   "src": {
-    "part": "sl_W5_hc1",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc1_i"
-   },
-   "width": 8
-  },
-  "sl_W5_hc2__b_hw_hc2_hc1": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC2__B_HW_HC2_HC1",
-   "src": {
-    "part": "sl_W5_hc2",
-    "bus": "b_hw_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc1",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W5_hc2__b_hw_hc2_hc3": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC2__B_HW_HC2_HC3",
-   "src": {
-    "part": "sl_W5_hc2",
-    "bus": "b_hw_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc3",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
   "sl_W5_hc2__cwn2": {
    "cycles": 2,
    "stations": 0,
@@ -39063,10 +36707,29 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W5_tap",
+    "part": "sl_W5_ctl",
     "bus": "flt_hc2_i"
    },
    "width": 1
+  },
+  "sl_W5_hc2__x_hc2_ctl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_SL_W5_HC2__X_HC2_CTL",
+   "src": {
+    "part": "sl_W5_hc2",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W5_ctl",
+    "bus": "x_hc2_i"
+   },
+   "width": 8
   },
   "sl_W5_hc2__x_hc2_hc1": {
    "cycles": 2,
@@ -39086,25 +36749,6 @@
     "bus": "x_hc2_i"
    },
    "width": 1
-  },
-  "sl_W5_hc2__x_hc2_tap": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC2__X_HC2_TAP",
-   "src": {
-    "part": "sl_W5_hc2",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc2_i"
-   },
-   "width": 8
   },
   "sl_W5_hc3__cwn3": {
    "cycles": 2,
@@ -39163,6 +36807,25 @@
    },
    "width": 1
   },
+  "sl_W5_hc3__x_hc3_ctl": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 3,
+   "pad": 0,
+   "param": "LAT_SL_W5_HC3__X_HC3_CTL",
+   "src": {
+    "part": "sl_W5_hc3",
+    "bus": "x_ctl_o"
+   },
+   "dst": {
+    "part": "sl_W5_ctl",
+    "bus": "x_hc3_i"
+   },
+   "width": 8
+  },
   "sl_W5_hc3__x_hc3_hc2": {
    "cycles": 2,
    "stations": 0,
@@ -39181,25 +36844,6 @@
     "bus": "x_hc3_i"
    },
    "width": 1
-  },
-  "sl_W5_hc3__x_hc3_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W5_HC3__X_HC3_TAP",
-   "src": {
-    "part": "sl_W5_hc3",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc3_i"
-   },
-   "width": 8
   },
   "sl_W5_sc__flt": {
    "cycles": 2,
@@ -39221,12 +36865,12 @@
    "width": 1
   },
   "sl_W5_sc__x_sc_ctl": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 3,
+   "stations": 1,
    "boundary": 2,
-   "faces": 4,
+   "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 3,
    "pad": 0,
    "param": "LAT_SL_W5_SC__X_SC_CTL",
    "src": {
@@ -39291,18 +36935,18 @@
     "bus": "flt_o"
    },
    "dst": {
-    "part": "sl_W5_fe",
+    "part": "sl_W5_ctl",
     "bus": "flt_st_a_i"
    },
    "width": 1
   },
   "sl_W5_st_a__x_st_a_ctl": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 2,
+   "stations": 0,
    "boundary": 2,
-   "faces": 4,
+   "faces": 1,
    "fixed": 0,
-   "natural": 5,
+   "natural": 2,
    "pad": 0,
    "param": "LAT_SL_W5_ST_A__X_ST_A_CTL",
    "src": {
@@ -39335,12 +36979,12 @@
    "width": 258
   },
   "sl_W5_st_a__x_st_a_st_b": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W5_ST_A__X_ST_A_ST_B",
    "src": {
@@ -39392,12 +37036,12 @@
    "width": 256
   },
   "sl_W5_st_b__x_st_b_fe": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 5,
+   "stations": 3,
    "boundary": 2,
-   "faces": 6,
+   "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 5,
    "pad": 0,
    "param": "LAT_SL_W5_ST_B__X_ST_B_FE",
    "src": {
@@ -39411,12 +37055,12 @@
    "width": 256
   },
   "sl_W5_st_b__x_st_b_st_a": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 4,
+   "stations": 2,
    "boundary": 2,
-   "faces": 3,
+   "faces": 2,
    "fixed": 0,
-   "natural": 5,
+   "natural": 4,
    "pad": 0,
    "param": "LAT_SL_W5_ST_B__X_ST_B_ST_A",
    "src": {
@@ -39446,7 +37090,7 @@
     "part": "sl_W5_ctl",
     "bus": "b_tw_data_i"
    },
-   "width": 1051
+   "width": 2103
   },
   "sl_W5_stm__flt": {
    "cycles": 2,
@@ -39466,25 +37110,6 @@
     "bus": "flt_stm_i"
    },
    "width": 1
-  },
-  "sl_W5_stm__x_stm_ctl": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_STM__X_STM_CTL",
-   "src": {
-    "part": "sl_W5_stm",
-    "bus": "x_ctl_o"
-   },
-   "dst": {
-    "part": "sl_W5_ctl",
-    "bus": "x_stm_i"
-   },
-   "width": 2
   },
   "sl_W5_stm__x_stm_fe": {
    "cycles": 4,
@@ -39523,25 +37148,6 @@
     "bus": "x_stm_i"
    },
    "width": 1088
-  },
-  "sl_W5_stm__x_stm_tap": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W5_STM__X_STM_TAP",
-   "src": {
-    "part": "sl_W5_stm",
-    "bus": "x_tap_o"
-   },
-   "dst": {
-    "part": "sl_W5_tap",
-    "bus": "x_stm_i"
-   },
-   "width": 1050
   },
   "sl_W5_su_c__flt": {
    "cycles": 2,
@@ -39658,12 +37264,12 @@
    "width": 1
   },
   "sl_W5_su_l0__x_su_l0_ctl": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 8,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W5_SU_L0__X_SU_L0_CTL",
    "src": {
@@ -39753,12 +37359,12 @@
    "width": 1
   },
   "sl_W5_su_l1__x_su_l1_ctl": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
-   "faces": 4,
+   "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_SL_W5_SU_L1__X_SU_L1_CTL",
    "src": {
@@ -39827,120 +37433,6 @@
     "bus": "x_su_l1_i"
    },
    "width": 876
-  },
-  "sl_W5_tap__b_hw_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__B_HW_TAP_HC2",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "b_hw_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc2",
-    "bus": "b_hw_i"
-   },
-   "width": 1567
-  },
-  "sl_W5_tap__flt": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__FLT",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "sl_W5_sc",
-    "bus": "flt_tap_i"
-   },
-   "width": 1
-  },
-  "sl_W5_tap__x_tap_hc0": {
-   "cycles": 5,
-   "stations": 3,
-   "boundary": 2,
-   "faces": 3,
-   "fixed": 0,
-   "natural": 5,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__X_TAP_HC0",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc0_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc0",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W5_tap__x_tap_hc1": {
-   "cycles": 4,
-   "stations": 2,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 4,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__X_TAP_HC1",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc1_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc1",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W5_tap__x_tap_hc2": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__X_TAP_HC2",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc2_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc2",
-    "bus": "x_tap_i"
-   },
-   "width": 24
-  },
-  "sl_W5_tap__x_tap_hc3": {
-   "cycles": 3,
-   "stations": 1,
-   "boundary": 2,
-   "faces": 2,
-   "fixed": 0,
-   "natural": 3,
-   "pad": 0,
-   "param": "LAT_SL_W5_TAP__X_TAP_HC3",
-   "src": {
-    "part": "sl_W5_tap",
-    "bus": "x_hc3_o"
-   },
-   "dst": {
-    "part": "sl_W5_hc3",
-    "bus": "x_tap_i"
-   },
-   "width": 25
   },
   "tt_ctlm__cal_descriptor_obs_seq_descriptor_obs": {
    "cycles": 4,

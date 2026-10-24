@@ -170,6 +170,10 @@ def shared_face(P, a, b, quiet=False):
 
 PITCH = {"M4": (0.048, 0.024), "M5": (0.048, 0.024), "M6": (0.064, 0.032), "M7": (0.064, 0.032)}
 NEG_PIN_UM = float(__import__("os").environ.get("QC_NEG_PIN_UM", "5.1"))   # slice negotiation face capacity (QC-P5 10-23: 5.0 -> 5.1 pins/um, G0 face budget 6; frees the detours that padded R8 classes)
+NEG_BCAST_HOP = float(__import__("os").environ.get("QC_NEG_BCAST_HOP", "1"))  # hop-cost multiplier of broadcast-tree flows
+NEG_BCAST_FIX = __import__("os").environ.get("QC_NEG_BCAST_FIX", "1") == "1"
+NEG_HOP_UM = float(__import__("os").environ.get("QC_NEG_HOP_UM", "2500"))  # per-partition-hop cost of a slice flow (QC-P6-R8:
+                                     # every hop is a register stage; raise it to trade face detours for fewer stages)
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
 FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
 _QL = {}
@@ -392,7 +396,7 @@ def cb_links(P, variant, geo):
 # row 0/1/2; args 5517 3159 1500 <row>); fw/fe on the W/E edges of one row so they abut the neighbour slices; hc row fixed
 # on the cluster side. Best max face load 0.928 at 5.15 pins/um, 1080-um rows (fw/fe row 2: 0.959; row 0: 1.028)
 SL_CELLS_W = {"hc0": (0, 3), "hc1": (1, 3), "hc2": (2, 3), "hc3": (3, 3),
-              "st_b": (0, 2), "ctl": (1, 2), "tap": (2, 2), "st_a": (3, 2),
+              "st_b": (0, 2), "ctl": [(1, 2), (2, 2)], "st_a": (3, 2),
               "fw": (0, 1), "stm": (1, 1), "sc": (2, 1), "fe": (3, 1),
               "su_l1": (0, 0), "su_c": [(1, 0), (2, 0)], "su_l0": (3, 0)}
 # E slices: SAME layout as W (QC-P2 10-23, census coverage).  The as-built die places the e16real kit MY, so every
@@ -401,15 +405,15 @@ SL_CELLS_W = {"hc0": (0, 3), "hc1": (1, 3), "hc2": (2, 3), "hc3": (3, 3),
 # v2 mirrored E layout put fw on the E edge, so slice-to-slice traffic could not abut (57.8k bits were dropped).
 SL_CELLS_E = dict(SL_CELLS_W)
 REGION_OF = {"r_fw": "fw", "r_fe": "fe", "r_stm": "stm", "r_ctl": "ctl", "r_sc": "sc", "r_su": "su_c",
-             "r_tap": "tap", **{f"r_hc{i}": f"hc{i}" for i in range(4)},
+             "r_tap": "ctl", **{f"r_hc{i}": f"hc{i}" for i in range(4)},
              **{f"r_st{i}": ("st_a" if i < 4 else "st_b") for i in range(8)}}
 LEAF_REGION = [(r"^u_r[0-3]$", "st_a"), (r"^u_r[4-7]$", "st_b"), (r"^u_btab\b", "st_a"), (r"^u_stm", "stm"),
                (r"^u_ctl", "ctl"), (r"^u_suvm", "su_c"), (r"^u_(lrly|head|exp|rcp|rsq)([0-3])$", "su_l0"),
                (r"^u_(lrly|head|exp|rcp|rsq)([4-7])$", "su_l1"), (r"^u_xh(\d)|^u_xl(\d)_", "hc")]
 SOFT = {"fw": ["u_fdn"], "fe": ["u_fup"], "stm": ["u_stm", "u_fs (cs->cw_s forwarder: becomes plan lane)"],
-        "ctl": ["u_ctl", "u_rp"], "sc": ["u_sc"], "tap": ["u_tap"], "su_c": ["u_suvm", "u_red"],
+        "ctl": ["u_ctl", "u_rp", "u_tap"], "sc": ["u_sc"], "su_c": ["u_suvm", "u_red"],
         "hc1": ["u_fn"], "st_a": ["u_frs"]}
-SOFT_CELLS = {"fw": 60000, "fe": 50000, "stm": 60000, "ctl": 80000, "sc": 40000, "tap": 70000, "su_c": 60000,
+SOFT_CELLS = {"fw": 60000, "fe": 50000, "stm": 60000, "ctl": 150000, "sc": 40000, "su_c": 60000,
               "su_l0": 20000, "su_l1": 20000, "st_a": 20000, "st_b": 10000}
 
 
@@ -470,9 +474,16 @@ def sl(geo, k, reg):
 
 
 BCAST = {  # broadcast nets of the slice record -> plan forwarding trees (registered relay in the receiving partition)
-    ("r_tap", "hw"): [("tap", "hc2"), ("hc2", "hc1"), ("hc1", "hc0"), ("hc2", "hc3")],
+    ("r_tap", "hw"): [("ctl", "hc0"), ("ctl", "hc1"), ("ctl", "hc2"), ("ctl", "hc3")],
     ("r_stm", "tw_data"): [("stm", "ctl"), ("ctl", "st_a")],
 }
+BCAST_PATH = {("ctl", "hc1"): ["ctl", "hc1"], ("ctl", "hc2"): ["ctl", "hc2"], ("ctl", "hc0"): ["ctl", "st_b", "hc0"],
+              ("ctl", "hc3"): ["ctl", "st_a", "hc3"], ("stm", "ctl"): ["stm", "ctl"], ("ctl", "st_a"): ["ctl", "st_a"]}
+# QC-P6-R8 10-23 (COORD R8 PAD BUDGET, target < 150k pad flops): the chain tap -> hc2 -> hc1 -> hc0 / hc2 -> hc3 landed
+# hw at 2/4/6/4 (pads 4/2/0/2 x 1,573 b x 12 slices = 150k) and tw_data stm -> ctl -> st_a at 2/5.  Now r_tap and r_ctl
+# share ONE partition `ctl` spanning slice cells (1,2)+(2,2), centred under hc1|hc2: hw is a balanced tree of direct
+# lanes from it (hc1 / hc2 abut: 2 cycles; hc0 / hc3 one station: 3), and tw_data goes stm -> ctl and stm -> st_a as
+# direct lanes (2 / 3, st_a through the merged partition's station) instead of being re-launched by ctl.
 # QC-P5 10-23 (COORD R8 pad budget): the tw control bits travel WITH tw_data (same as-built cycle, same readers u_rp /
 # u_btab).  As separate x flows they lost the full stm|ctl face and detoured 6 hops (12 cycles), so the whole tw class
 # padded to 17 (331k pad flops).  One broadcast bundle keeps them on the 1-hop tree.
@@ -512,11 +523,22 @@ def slice_internal_links(P, geo, record, su_split, su_directed):
             trees[kk] = sum(nw.values())
         for row in su_directed["internal"]:
             agg[(row["src"], row["dst"])] += row["bits"]
-        flows = [(f"b_{bk[1]}_{a}_{b}", a, b, w, f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i", f"u_pstn.{bk[1]}_fwd",
-                  f"u_{b}.{bk[1]}") for bk, w in trees.items() for a, b in BCAST[bk]]
+        # QC-P6-R8: one lane per partition pair on a broadcast hop -- the pair's other bits ride the tree lane (the
+        # binder packs a pair's crossings into its lanes in path order, so a separate x lane took tree bits onto a
+        # detour: 2 tw bits at 11 cycles padded the whole tw class)
+        hopw = collections.Counter()
+        for bk, w in trees.items():
+            for a, b in BCAST[bk]:
+                hopw[(bk, a, b)] = w + agg.pop((a, b), 0)
+        flows = [(f"b_{bk[1]}_{a}_{b}", a, b, hopw[(bk, a, b)], f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i",
+                  f"u_pstn.{bk[1]}_fwd", f"u_{b}.{bk[1]}") for bk in trees for a, b in BCAST[bk]]
         flows += [(f"x_{a}_{b}", a, b, w, f"x_{b}_o", f"x_{a}_i", f"u_{a}.x_{b}", f"u_{b}.x_{a}")
                   for (a, b), w in agg.items()]
-        paths = negotiate(P, geo, k, [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3]) for f in flows])
+        hopw = [NEG_BCAST_HOP if f[0].startswith("b_") else 1.0 for f in flows]
+        fixed = [[sl(geo, k, r) for r in BCAST_PATH.get((f[1], f[2]), [])] if f[0].startswith("b_") and NEG_BCAST_FIX
+                 and (f[1], f[2]) in BCAST_PATH else None for f in flows]
+        paths = negotiate(P, geo, k, [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3], hw, fx)
+                                      for f, hw, fx in zip(flows, hopw, fixed)])
         for f, pth in zip(flows, paths):
             P.link(f[0], pth, f[4], f[5], f[3], src_leaf=f[6], dst_leaf=f[7])
 
@@ -539,12 +561,17 @@ def negotiate(P, geo, k, flows, iters=300):
     sfc = {(n, m): shared_face(P, n, m)[0] for n in nb for m, _, _ in nb[n]}
     hist = collections.Counter()
     pf = 0.5
-    order = sorted(range(len(flows)), key=lambda i: -flows[i][2])
+    order = sorted(range(len(flows)), key=lambda i: (len(flows[i]) < 5 or flows[i][4] is None, -flows[i][2]))
     for it in range(iters):
         load = collections.Counter(base)
         paths = [None] * len(flows)
         for i in order:
-            a, b, w = flows[i]
+            a, b, w, hopw, fx = (tuple(flows[i]) + (1.0, None))[:5]
+            if fx is not None:          # fixed broadcast-tree path (R8: shortest register depth, routed first)
+                paths[i] = fx
+                for x, y in zip(fx, fx[1:]):
+                    load[tuple(sorted((x, y)))] += w
+                continue
             st0 = (a, None)
             dist, prev, pq = {st0: 0.0}, {}, [(0.0, a, None)]
             end = None
@@ -568,7 +595,7 @@ def negotiate(P, geo, k, flows, iters=300):
                         continue                  # simple paths only (one slot per partition per flow)
                     e = tuple(sorted((n, m)))
                     over = max(0.0, (load[e] + w) / cap - 1.0)
-                    nd = dd + (d + 50.0) * (1 + hist[e]) * (1 + pf * over * 10)
+                    nd = dd + (d + NEG_HOP_UM * hopw) * (1 + hist[e]) * (1 + pf * over * 10)
                     if nd < dist.get((m, n), float("inf")):
                         dist[(m, n)], prev[(m, n)] = nd, (n, pn)
                         heapq.heappush(pq, (nd, m, n))

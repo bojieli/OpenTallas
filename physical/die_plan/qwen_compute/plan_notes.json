@@ -1,10 +1,10 @@
 {
  "variant": "B",
- "partitions": 388,
- "types": 56,
- "types_merged": 146,
- "ports": 3499,
- "lanes": 2130,
+ "partitions": 376,
+ "types": 55,
+ "types_merged": 135,
+ "ports": 2983,
+ "lanes": 1998,
  "die_um": [
   31216.32,
   25228.8
@@ -13,7 +13,7 @@
  "content_status_per_instance": {
   "reuse": 1717,
   "rework": 906,
-  "new": 381
+  "new": 369
  },
  "max_cells_type": [
   782764,
@@ -210,10 +210,10 @@
    "macros": 1
   },
   "sle_ctl": {
-   "cells": 183360,
+   "cells": 253360,
    "instances": 12,
    "outline_um": [
-    613.44,
+    1226.88,
     1080.0
    ],
    "macros": 0
@@ -358,15 +358,6 @@
    "instances": 6,
    "outline_um": [
     622.08,
-    1080.0
-   ],
-   "macros": 0
-  },
-  "sle_tap": {
-   "cells": 70000,
-   "instances": 12,
-   "outline_um": [
-    613.44,
     1080.0
    ],
    "macros": 0
@@ -2533,31 +2524,49 @@
    },
    "sle_ctl": {
     "root_um": [
-     311.04,
+     613.44,
      535.68
     ],
     "taps": [
      {
-      "name": "glue",
+      "name": "glue_00",
       "kind": "glue",
       "xy": [
-       311.04,
-       535.68
+       613.44,
+       267.84
       ],
       "region_um": [
        0.0,
        0.0,
+       1226.88,
+       540.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
        613.44,
+       812.16
+      ],
+      "region_um": [
+       0.0,
+       540.0,
+       1226.88,
        1080.0
       ],
-      "reach_um": 855.4,
-      "insertion_ps": 270,
+      "reach_um": 885.6,
+      "insertion_ps": 276,
       "insertion_tol_ps": 40,
-      "from_root_um": 0.0
+      "from_root_um": 276.5
      }
     ],
-    "max_from_root_um": 0.0,
-    "max_nearest_tap_um": 0.0,
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
     "glue_taps_over_290ps": []
    },
    "sle_fe_v1": {
@@ -3030,35 +3039,6 @@
        0.0,
        0.0,
        622.08,
-       1080.0
-      ],
-      "reach_um": 855.4,
-      "insertion_ps": 270,
-      "insertion_tol_ps": 40,
-      "from_root_um": 0.0
-     }
-    ],
-    "max_from_root_um": 0.0,
-    "max_nearest_tap_um": 0.0,
-    "glue_taps_over_290ps": []
-   },
-   "sle_tap": {
-    "root_um": [
-     311.04,
-     535.68
-    ],
-    "taps": [
-     {
-      "name": "glue",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       535.68
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       613.44,
        1080.0
       ],
       "reach_um": 855.4,
