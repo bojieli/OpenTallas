@@ -1,0 +1,81 @@
+{
+ "plan": "v3.7p (KV-P6-PINS 10-23)",
+ "g0": {
+  "verdict": "PASS",
+  "errors": 0
+ },
+ "g0c": {
+  "verdict": "FAIL",
+  "errors": 22,
+  "per_type": {
+   "types": 49,
+   "clean": 48,
+   "die_level": {},
+   "g3_eligible": [
+    "kv3_hg",
+    "kv3_hg_v1_r1",
+    "kv3_hg_v1_r2",
+    "kv3_hg_v1_r3",
+    "kv3_hg_v1_r4",
+    "kv3_hg_v1_r5",
+    "kv3_hg_v2",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8",
+    "kv3_hroot",
+    "kv3_hub_C",
+    "kv3_hub_Ei",
+    "kv3_hub_Eo",
+    "kv3_hub_Wo",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_io_ft",
+    "kv3_io_ft_v1",
+    "kv3_pc",
+    "kv3_pc_v1",
+    "kv3_pc_v2",
+    "kv3_pc_v3",
+    "kv3_phy",
+    "kv3_phy_v1",
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v10",
+    "kv3_pv_v11",
+    "kv3_pv_v12",
+    "kv3_pv_v2",
+    "kv3_pv_v3",
+    "kv3_pv_v4",
+    "kv3_pv_v5",
+    "kv3_pv_v6",
+    "kv3_pv_v7",
+    "kv3_pv_v8",
+    "kv3_pv_v9",
+    "kv3_sys_SD",
+    "kv3_sys_SD_v1",
+    "kv3_sys_c"
+   ],
+   "by_type": {
+    "kv3_hub_Wi": {
+     "hard_cores": 22
+    }
+   }
+  }
+ },
+ "core_faces": {
+  "groups": 6166,
+  "groups_away": 0,
+  "pins": 871343,
+  "pins_away": 53254,
+  "types_away": 0,
+  "cores": 580,
+  "cores_unchecked": 22,
+  "groups_side": 58
+ }
+}
