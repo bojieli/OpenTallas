@@ -84,7 +84,10 @@ out = {
     'grade': grade,
     'src_commit': src_commit,
     'verdict': v,
-    'verdict_scope': 'h16y head leaf RTL (ot_qfd_tt_ctlm_static_hr_safe32 H16X=2 SEGCAL=1) in qfd_tt_ctlm_dv: img0/imgh PASS, bmut3 caught, LM-head span = compiled; src_landed is a finding, not in the verdict',
+    'verdict_scope': ('h16y head leaf RTL (ot_qfd_tt_ctlm_static_hr_safe32 H16X=2 SEGCAL=1) in qfd_tt_ctlm_dv: img0/imgh PASS, bmut3 caught, LM-head span = compiled; src_landed is a finding, not in the verdict'
+                      if grade == 'RTL-functional (source assembly)' else
+                      'die-selected head leaf ot_qfd_tt_ctlm_static_hr_safe32_native32_1r (STAGE_ME 1, SEGCAL 1; ' + ('RTL h16za/native32_1r_param.v' if 'leaf' in grade else 'GEN carve') +
+                      ') through the native32 vehicle in qfd_tt_ctlm_dv: img0/imgh PASS, bmut3 caught, LM-head span = compiled; src_landed not run (the abandoned generic LP is not the die parent)'),
     'findings': findings,
     'golden': ('compiled ctlm deployment images results/rtl/qlb_c4b_1018/lmh_cal/codex_r1 img0/imgh (ctlm_image.py '
                '--lm-head): every slice command word, LOCAL start, head fixed issue/END (pc,unit), ROM go, native go, XPF '

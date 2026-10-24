@@ -21,6 +21,7 @@ module tb_qfd_dv2 (input wire ck);
     parameter integer MUT = 0, N = 2, SU_LT = 0, HD_W130 = 0;   // MU-SLICE-GATE: the kitted slice is SU_LT 1, HD_W130 1
     parameter integer MU_NU = 1;     // MU-ADOPT-SLICE: qfd_dv_slice2 MU_NU (R4 per-user LM-head argmax)
     parameter integer FACE = 0;      // 0 master qfd_dv_slice2; 1 the W face qfd_dv_slice2_w; 2 the E face qfd_dv_slice2_e
+                                     // 3 (TOK-QW 10-24) the BOUND compute-die slice of chain position k (s8die/qfd_dv_slice_die.sv)
     parameter integer ARF = 0, RP = 0;   // QW-LAYERGAP: qfd_dv_slice2 AR message framer / RoPE row from the return chain
     reg rst_n = 1'b0;
     reg  [115:0]  cmd0;
@@ -48,11 +49,13 @@ module tb_qfd_dv2 (input wire ck);
 `endif
     assign cmdc[0] = cmd0; assign hrc[0] = hr0; assign stu[0] = swi; assign scu[0] = 48'd0; assign chr[0] = ret0;
     assign std_[N] = 1088'd0; assign scd[N] = 48'd0; assign cho[N] = 1095'd0; assign agc[N] = 10'd0;
+    wire [8:0] treqc [0:N];          // FACE 3: bound table-request lane tt_ctlm -> slice 0 (W5) -> ... (tied 0 at the head)
+    assign treqc[0] = 9'd0;
     genvar k;
     generate for (k = 0; k < N; k = k + 1) begin : g_s
         wire [515:0] cn0, cn1, cn2, cn3, cs0, cs1, cs2, cs3;
         wire [513:0] l9i = (k % 2 == 0) ? ((k + 1 < N) ? l9o[k+1] : 514'd0) : l9o[k-1];
-        tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
+        tb_dv2_slice #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .FACE(FACE), .ARF(ARF), .RP(RP), .SIDX(k)) u (.treq_i(treqc[k]), .treq_o(treqc[k+1]),.ck(ck), .rst_n(rst_n), .cmd_i(cmdc[k]), .cmd_o(cmdc[k+1]),
             .hr_i(hrc[k]), .hr_o(hrc[k+1]), .rs_s(rss[k]), .rs_n(rsn[k]), .l9_i(l9i), .l9_o(l9o[k]),
             .st_up_i(stu[k]), .st_up_o(stu[k+1]), .st_dn_i(std_[k+1]), .st_dn_o(std_[k]),
             .sc_up_i(scu[k]), .sc_up_o(scu[k+1]), .sc_dn_i(scd[k+1]), .sc_dn_o(scd[k]),
@@ -155,7 +158,8 @@ endmodule
 // so every dv_bench2 bench runs unchanged on the face RTL (the face is a port map: dn face = master W for _w, E for _e).
 module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, parameter integer HD_W130 = 0,
                       parameter integer MU_NU = 1, parameter integer FACE = 0, parameter integer ARF = 0,
-                      parameter integer RP = 0) (
+                      parameter integer RP = 0, parameter integer SIDX = 0) (
+    input  wire [8:0] treq_i, output wire [8:0] treq_o,
     input  wire ck, input wire rst_n,
     input  wire [115:0] cmd_i, output wire [115:0] cmd_o, input wire [452:0] hr_i, output wire [452:0] hr_o,
     input  wire [1027:0] rs_s, input wire [1027:0] rs_n, input wire [513:0] l9_i, output wire [513:0] l9_o,
@@ -197,7 +201,7 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
         assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
         assign xt_v = u.u_core.xt_v; assign xt_a = u.u_core.xt_a; assign hd_fault = u.u_core.hd_fault;
-    end else begin : g_e
+    end else if (FACE == 2) begin : g_e
         qfd_dv_slice2_e #(.MUT(MUT), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP)) u (.ck(ck), .rst_n(rst_n), .cmd_ei(cmd_i), .cmd_wo(cmd_o),
             .hr_ei(hr_i), .hr_wo(hr_o), .st_eo(st_dn_o), .st_ei(st_up_i), .st_wo(st_up_o), .st_wi(st_dn_i),
             .sc_eo(sc_dn_o), .sc_ei(sc_up_i), .sc_wo(sc_up_o), .sc_wi(sc_dn_i),
@@ -216,5 +220,19 @@ module tb_dv2_slice #(parameter integer MUT = 0, parameter integer SU_LT = 0, pa
             .cw_s1(cw_s1), .cw_s2(cw_s2), .cw_s3(cw_s3));
         assign vw_v = u.u_core.st_vm; assign vw_a = u.u_core.r_addr;
         assign xt_v = u.u_core.xt_v; assign xt_a = u.u_core.xt_a; assign hd_fault = u.u_core.hd_fault;
+    end else begin : g_die
+        // FACE 3 (TOK-QW 10-24): the bound die slice at this position; MUT / SU_LT / HD_W130 / MU_NU / ARF / RP do not
+        // apply (the bound s8 slice is fixed: SU_LT 1, HD_W130 1, MU_NU 4, ARF 1, RP 1 equivalent, HARD leaves)
+        qfd_dv_slice_die #(.SIDX(SIDX)) u (.ck(ck), .rst_n(rst_n), .cmd_i(cmd_i), .cmd_o(cmd_o),
+            .hr_i(hr_i), .hr_o(hr_o), .rs_s(rs_s), .rs_n(rs_n), .l9_i(l9_i), .l9_o(l9_o),
+            .st_up_i(st_up_i), .st_up_o(st_up_o), .st_dn_i(st_dn_i), .st_dn_o(st_dn_o),
+            .sc_up_i(sc_up_i), .sc_up_o(sc_up_o), .sc_dn_i(sc_dn_i), .sc_dn_o(sc_dn_o),
+            .ch_up_i(ch_up_i), .ch_dn_o(ch_dn_o), .ch_dn_i(ch_dn_i), .ch_up_o(ch_up_o),
+            .cw_n0(cw_n0), .cw_n1(cw_n1), .cw_n2(cw_n2), .cw_n3(cw_n3), .cw_s0(cw_s0), .cw_s1(cw_s1), .cw_s2(cw_s2),
+            .cw_s3(cw_s3), .st(st), .cc_o(cc_o), .ag_up_i(ag_up_i), .ag_dn_o(ag_dn_o), .treq_i(treq_i), .treq_o(treq_o),
+            .vw_v(vw_v), .vw_a(vw_a), .xt_v(xt_v), .xt_a(xt_a), .hd_fault(hd_fault));
+    end endgenerate
+    generate if (FACE != 3) begin : g_notreq
+        assign treq_o = 9'd0;
     end endgenerate
 endmodule
