@@ -79,7 +79,32 @@ def inject_cycles(schedule):
         raise ValueError("unqualified or inconsistent XR timing contract")
     return c["v_ctl_inject"]
 
-def check_run_source(contract, run):
+ENTRY_SCHEMA = 'opentallas.s81_tokfunc.entry_replay.v1'
+SELF_ENTRY = 'self-entry'
+
+
+def xrt_runtime_proof(proof, contract):
+    """The selected-XRT HOST/control runtime proof (TOKi-S81E 10-23).  `proof` is either SELF_ENTRY -- the caller is
+    the native entry replay (run_entry_replay.py) on the HOST/control cut, i.e. this run IS the proof and its own entry
+    verdict (bench fault 0, line bit-exact, every job) carries it -- or the path of a terminal entry_replay.json with
+    verdict PASS_CUT_COMPONENT whose recorded transport sources equal the contract's.  Returns the proof basis string;
+    anything else raises (the PENDING guard of 28ae20d13 stands)."""
+    if not proof:
+        raise ValueError('selected XRT source pinned, but current HOST/control runtime proof remains PENDING')
+    if proof == SELF_ENTRY:
+        return SELF_ENTRY
+    import json
+    d = json.loads(Path(proof).read_text())
+    if d.get('schema') != ENTRY_SCHEMA or d.get('verdict') != 'PASS_CUT_COMPONENT':
+        raise ValueError('XRT runtime proof is not a PASS_CUT_COMPONENT entry replay: ' + str(proof))
+    got = d.get('xrt_transport_sources') or {}
+    for path, sha in contract['transport_sources'].items():
+        if got.get(path) != sha:
+            raise ValueError('XRT runtime proof covers other transport source: ' + path + ' ' + str(got.get(path)))
+    return 'ENTRY ' + str(proof)
+
+
+def check_run_source(contract, run, runtime_proof=None):
     if contract is None: return
     inject_cycles({'timing_contract': contract})
     p = Path(run) / "sources.sha256"
@@ -90,7 +115,7 @@ def check_run_source(contract, run):
             if actual != {sha}:
                 raise ValueError('selected transport does not match simulator source: '+path+' '+str(actual))
         if any(p['family']=='XRT' for p in contract['selected_transports'].values()):
-            raise ValueError('selected XRT source pinned, but current HOST/control runtime proof remains PENDING')
+            return xrt_runtime_proof(runtime_proof, contract)
         return
     if any(len(parts)==2 and parts[1].endswith(XRT_PATH) for parts in inventory):
         raise ValueError('legacy XR-only contract cannot qualify an XRT-containing kit; selected-wrapper contract required')

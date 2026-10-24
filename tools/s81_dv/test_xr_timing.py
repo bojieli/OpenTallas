@@ -41,5 +41,21 @@ class TimingTest(unittest.TestCase):
             p.write_text(sha+'  src/'+XRT_PATH+'\n')
             with self.assertRaisesRegex(ValueError,'runtime proof remains PENDING'):
                 check_run_source(c,d)
+            # the native entry replay on the HOST/control cut is the proof (its own verdict carries it)
+            self.assertEqual(check_run_source(c,d,'self-entry'),'self-entry')
+            # a cited proof must be a PASS_CUT_COMPONENT entry replay over the same transport source
+            import json
+            e=Path(d)/'entry_replay.json'
+            e.write_text(json.dumps(dict(schema='opentallas.s81_tokfunc.entry_replay.v1',verdict='FAIL',
+                                         xrt_transport_sources={XRT_PATH:sha})))
+            with self.assertRaisesRegex(ValueError,'not a PASS_CUT_COMPONENT'):
+                check_run_source(c,d,str(e))
+            e.write_text(json.dumps(dict(schema='opentallas.s81_tokfunc.entry_replay.v1',verdict='PASS_CUT_COMPONENT',
+                                         xrt_transport_sources={XRT_PATH:'0'*64})))
+            with self.assertRaisesRegex(ValueError,'covers other transport source'):
+                check_run_source(c,d,str(e))
+            e.write_text(json.dumps(dict(schema='opentallas.s81_tokfunc.entry_replay.v1',verdict='PASS_CUT_COMPONENT',
+                                         xrt_transport_sources={XRT_PATH:sha})))
+            self.assertTrue(check_run_source(c,d,str(e)).startswith('ENTRY '))
 
 if __name__ == "__main__": unittest.main()

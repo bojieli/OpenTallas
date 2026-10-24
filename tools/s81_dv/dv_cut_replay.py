@@ -928,7 +928,8 @@ def value_at(changes, c):
 
 def check(a):
     rp = json.loads((Path(a.replay) / 'replay.json').read_text())
-    check_run_source(rp.get('timing_contract'), a.run)
+    xrt_proof = check_run_source(rp.get('timing_contract'), a.run,
+                                 a.xrt_runtime_proof or os.environ.get('OT_S81_XRT_RUNTIME_PROOF'))
     cut = Cut(rp['cut'])
     tr = read_trace(a.run)
     t0 = rp['t0']
@@ -957,7 +958,7 @@ def check(a):
                         unscheduled=extra[:20], n_unscheduled=len(extra), strict=strict, ok=n_bad == 0))
     sim_pass = 'TB_DV_SLICE PASS' in status
     doc = dict(schema=SCHEMA + '.check', replay=str(a.replay), run=str(a.run), verdict_kind=rp['verdict_kind'],
-               sim_pass=sim_pass, trace_mismatches=bad, partial=rp['partial'],
+               sim_pass=sim_pass, trace_mismatches=bad, partial=rp['partial'], xrt_runtime_proof=xrt_proof,
                verdict='PASS' if (sim_pass and bad == 0) else 'FAIL', ports=res)
     Path(a.out or (Path(a.replay) / 'check.json')).write_text(json.dumps(doc, indent=1) + '\n')
     print(f'dv_cut_replay check: {doc["verdict"]} (sim {"PASS" if sim_pass else "FAIL"}, trace mismatches {bad}, '
@@ -1058,6 +1059,9 @@ def main(argv=None):
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)
     g.add_argument('--out')
+    g.add_argument('--xrt-runtime-proof', default=None,
+                   help="selected-XRT HOST/control runtime proof: 'self-entry' (only run_entry_replay.py: this run is "
+                        "the proof) or a PASS_CUT_COMPONENT entry_replay.json (env OT_S81_XRT_RUNTIME_PROOF)")
     g = sp.add_parser('compose')
     g.add_argument('--cut', action='append', required=True, help='NAME=REPLAY_DIR:RUN_DIR')
     g.add_argument('--out', required=True)
