@@ -235,3 +235,22 @@ G0 checks:
 3. Reset or clock rows count as dropped unless an explicit `exempt` entry lists them. Exempt totals appear in the
    summary.
 4. A group spanning several partitions gets a WARN: the traffic inside it needs a finer census.
+
+## TYPE-DEDUP (`dedup.py`, `gen.py dedup`; opt-in, writes a copy)
+
+```
+python3 tools/die_plan/dedup.py analyze  PLAN.json [--fix-order] [--out report.json]
+python3 tools/die_plan/gen.py   dedup    PLAN.json --out-plan COPY/die_plan.json [--fix-order] [--only canon,..]
+python3 tools/die_plan/dedup.py variants PLAN.json [--rtl BOUND_RTL_DIR]     # bound modules per plan type (kit count)
+```
+
+Merges near-duplicate partition types only when the merge is exact: the same netlist key (outline, bus interface with
+leaf binds, ft slots, contents with params, hard-core modules) and, per instance, an orient under which every port keeps
+its die pins and the instance's type-frame pin table equals the canonical type's. `--fix-order` also accepts members
+that match up to the bit order of some ports (same faces and tracks) and re-solves port / type orders die-wide as
+parity constraints; the provenance lists the re-ordered ports and the other types whose pin tables change (their kits
+regenerate). A bound-RTL gate (default `PLANDIR/bind/bound_r8/rtl`) keeps a member whose bound netlist differs (R8
+pads, narrowed ports) as its own type. Members that differ only in contents params are reported STRAP candidates, and
+members that differ in ft-slot population FT-POP families; neither is merged (no tie-offs: a strap is a planned lane
+from a configuration register, an unused slot is an unbound bus). Ports, lanes, latency and census are never changed;
+`verify()` re-checks that, and the output must pass G0 (`check.py`) like any plan. Results: `results/type_dedup/`.
