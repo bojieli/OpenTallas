@@ -1,0 +1,784 @@
+{
+ "schema": "opentallas.s81_tokfunc.entry_replay.v1",
+ "grade": "RTL-functional (source assembly)",
+ "scope": "cut_3S_ctl native entry HOST jobs: u_seqhost boot + KS start -> bk_sel/column-4 CTL -> slices",
+ "die_v": "/home/ubuntu/s81p10/fc31/tree_fc31/results/arch/s81_dv_1016/bind9/die.v.gz",
+ "die_v_sha256": "fefe73382fe3c6eceff0ab082f57721fec27ec430b9e7a57266d5cfeac95d76c",
+ "kit": "/home/ubuntu/s81p10/fc31/cuts/K_cut_3S_ctl",
+ "obj": "/home/ubuntu/s81p10/fc31/cuts/out_cut_3S_ctl/obj",
+ "idle_run": "/home/ubuntu/s81p10/fc31/cuts/out_cut_3S_ctl",
+ "ks_user": 0,
+ "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+ "full_stage": false,
+ "full_token": false,
+ "global_clock_route_phase_qualified": false,
+ "verdict": "FAIL",
+ "jobs": [
+  {
+   "job": 15,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job15",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2310
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2690,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2299
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2679,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 494
+  },
+  {
+   "job": 16,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job16",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2310
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2690,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2299
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2679,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 494
+  },
+  {
+   "job": 17,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job17",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 460,
+   "ncyc": 2795,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 459
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2795,
+    "in_events": 841,
+    "out_checks": 460,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 51,
+     "observed": 51,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2310
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2689,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 51,
+     "observed": 51,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2299
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2678,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 493
+  },
+  {
+   "job": 20,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job20",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2324
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2690,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2313
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2679,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 494
+  },
+  {
+   "job": 21,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job21",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2324
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2690,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2313
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2679,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 494
+  },
+  {
+   "job": 22,
+   "mutant": null,
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job22",
+   "gen_rc": 0,
+   "verdict_kind": "SCHEDULE",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 460,
+   "ncyc": 2795,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 459
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2795,
+    "in_events": 841,
+    "out_checks": 460,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 51,
+     "observed": 51,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2324
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2689,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 51,
+     "observed": 51,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2313
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2678,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS",
+   "layer_cycles": 493
+  }
+ ],
+ "mutants": [
+  {
+   "job": 15,
+   "mutant": "corrupt:hf_7N_l0:13",
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job15_mut_corrupt_hf_7N_l0_13",
+   "gen_rc": 0,
+   "verdict_kind": "MUTANT",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 0,
+   "check_rc": 0,
+   "check": {
+    "verdict": "PASS"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2310
+     ],
+     "first_cycle": 2450,
+     "last_cycle": 2690,
+     "verdict": "PASS"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 102,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [
+      2299
+     ],
+     "first_cycle": 2439,
+     "last_cycle": 2679,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "MISSED",
+   "layer_cycles": 494
+  },
+  {
+   "job": 15,
+   "mutant": "corrupt:hf_7N_l0:33",
+   "dir": "/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31/job15_mut_corrupt_hf_7N_l0_33",
+   "gen_rc": 0,
+   "verdict_kind": "MUTANT",
+   "partial": false,
+   "in_events": 841,
+   "out_check_lines": 817,
+   "ncyc": 2796,
+   "unencoded_total": 0,
+   "by_kind": {
+    "CTL": {
+     "out_checks": 816
+    },
+    "HOST": {
+     "in_words": 834
+    },
+    "KS": {
+     "in_words": 3,
+     "out_checks": 1
+    },
+    "LF": {
+     "in_words": 1
+    }
+   },
+   "host_boot": {
+    "boot_start": 147,
+    "words": 417,
+    "ks": 2297,
+    "ks_word": "1000082e4fffff",
+    "t0": 2302,
+    "ks_provenance": {
+     "status": "SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER",
+     "fixture_meta_sha256": "d7f2eb6175bec6a21f2ccede5a103842d7d03e36c54b4859b967a6e04ba44b28",
+     "user": 0,
+     "token": 16754,
+     "position": 1048575,
+     "runtime_provenance_qualified": false
+    }
+   },
+   "sim_rc": 1,
+   "check_rc": 1,
+   "check_error": "dv_cut_replay check: FAIL (sim FAIL, trace mismatches 204, MUTANT, partial False)",
+   "check": {
+    "verdict": "FAIL"
+   },
+   "bench": {
+    "cycles": 2796,
+    "in_events": 841,
+    "out_checks": 817,
+    "mismatches": 204,
+    "fault_cycles": 0,
+    "first_fault": -1
+   },
+   "inputs_all_applied": true,
+   "line": {
+    "W": {
+     "receiver": "u_s_2S.ri_e",
+     "expected": 102,
+     "observed": 0,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [],
+     "first_cycle": null,
+     "last_cycle": null,
+     "verdict": "FAIL"
+    },
+    "E": {
+     "receiver": "u_s_5S.ri_w",
+     "expected": 102,
+     "observed": 0,
+     "mismatches": 0,
+     "first_mismatch": [],
+     "offsets": [],
+     "first_cycle": null,
+     "last_cycle": null,
+     "verdict": "FAIL"
+    }
+   },
+   "verdict": "CAUGHT",
+   "layer_cycles": 494
+  }
+ ],
+ "ks_probe": [
+  {
+   "ks": 2296,
+   "t_host": {
+    "changes": [
+     [
+      139,
+      "800"
+     ],
+     [
+      2342,
+      "c2a"
+     ]
+    ],
+    "accepted": false,
+    "fault_code": 5
+   }
+  },
+  {
+   "ks": 2297,
+   "t_host": {
+    "changes": [
+     [
+      139,
+      "800"
+     ],
+     [
+      2343,
+      "801"
+     ],
+     [
+      2744,
+      "800"
+     ]
+    ],
+    "accepted": true,
+    "fault_code": 0
+   }
+  },
+  {
+   "ks": 2298,
+   "t_host": {
+    "changes": [
+     [
+      139,
+      "800"
+     ],
+     [
+      2344,
+      "c2a"
+     ]
+    ],
+    "accepted": false,
+    "fault_code": 5
+   }
+  },
+  {
+   "ks": 2299,
+   "t_host": {
+    "changes": [
+     [
+      139,
+      "800"
+     ],
+     [
+      2345,
+      "c2a"
+     ]
+    ],
+    "accepted": false,
+    "fault_code": 5
+   }
+  }
+ ],
+ "ks": 2297,
+ "xrt_transport_sources": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64"
+ },
+ "reason": "a negative control was not caught"
+}

@@ -568,6 +568,8 @@ def gen(a):
         if not by_link:
             continue
         bage = max(die.links[lk]['age'] for lk in by_link)     # the port is whole when its slowest lane lands
+        if w.get('bundle_age') is not None:                   # a part-word of a wider port bundle (held KS payload /
+            bage = w['bundle_age']                            # start pulse): launched with the whole bundle
         for lk, lb in by_link.items():
             L = die.links[lk]
             src_in = bool({i for i, _ in L['src']} & cut.insts)
@@ -602,7 +604,7 @@ def gen(a):
                             vv = 1 - v
                     put(pin['port'], kk, sb[1], vv, f'{w["event"]["tag"]} {lk}')
                     hit.add(pin['port'])
-                if w.get('hold') and w['cycle_land'] != w['hold']:
+                if w.get('hold') is not None and w['cycle_land'] != w['hold']:
                     continue
                 rec_in.append(dict(lane=lk, tag=w['event']['tag'], kind=w['event']['kind'], at=f'{w["inst"]}.{w["port"]}',
                                    cycle_land=w['cycle_land'], drive_cycle=k, lane_age=L['age'], bundle_age=bage,
@@ -755,6 +757,35 @@ def word_at(die, inst, port, val, cycle_land, kind, tag, hold=None):
     return w
 
 
+KS_START_BIT = 52     # f_ks = {start, user 10, tok 21, pos 21}
+
+
+def ks_source_words(die, ksw, ks_land, end):
+    """S81-P10 10-24 (fc30 entry, every job: the KS word lands TORN on eks_7N, bits of hf_7N_l1 (age 38) one edge before
+    those of hf_7N_l2 (age 39)): model the REAL f_ks producer, not a one-edge pulse of the whole word.  The producer is
+    the host RX of u_s_7N (ot_s81sl_lep g_hrx): fk_d = f_ks[51:0] is a register loaded only on a KS frame and HELD,
+    fk_s = f_ks[52] (start) is a one-edge pulse; both launch on the same source edge.  Every consumer (dsdv_seq_host
+    ks_q, dsdv_eng_rr ks) samples the payload on the start edge, so a bundle whose lanes differ in age is whole at the
+    start's landed edge as long as start rides the slowest lane or the payload is held (KS frames >= skew + 1 apart).
+    Returns the start pulse word (landed at ks_land) + the payload held from ks_land to end, all launched with the whole
+    f_ks bundle (bundle_age = its slowest lane)."""
+    pb = die.port_bits('u_seqhost', 'f_ks')
+    if not pb:
+        raise SystemExit('no port u_seqhost.f_ks in the die build')
+    lanes = {lane_of_net(die, nb[0]) for nb in pb if nb}
+    bage = max(die.links[lk]['age'] for lk in lanes if lk in die.links) if lanes - {None} else None
+    w0 = word_at(die, 'u_seqhost', 'f_ks', ksw, ks_land, 'KS', 'job start')
+    pulse = dict(w0, bits={nb: v for nb, v in w0['bits'].items() if nb == pb[KS_START_BIT]}, bundle_age=bage)
+    pay = ksw & ((1 << KS_START_BIT) - 1)
+    out = [pulse]
+    for c in range(math.floor(ks_land), math.ceil(end)):
+        w = word_at(die, 'u_seqhost', 'f_ks', pay, c, 'KS', 'job start payload (held)', hold=math.floor(ks_land))
+        w['bits'] = {nb: v for nb, v in w['bits'].items() if nb != pb[KS_START_BIT]}
+        w['bundle_age'] = bage
+        out.append(w)
+    return out
+
+
 def ks_engram_words(die, ksw, ks_land):
     """TOKj-S81 10-23 (fc30 entry, every job: 2 unscheduled words on the strict lane eks_7N at 2307 / 2308): with
     HOSTB_ENABLE 0, dsdv_hostb_seqhost_mux forwards the landed f_ks pins combinationally on engram_f_ks (hostb_landing
@@ -880,8 +911,15 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     out = list(words)
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
             for i, h in enumerate(hs)]
-    out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
-    out += ks_engram_words(die, ksw, ks - a.t0)
+    if getattr(a, 'ks_payload', 'hold') == 'pulse':      # legacy (10-21..10-23): the whole word a one-edge pulse
+        out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
+    else:
+        out += ks_source_words(die, ksw, ks - a.t0, end - a.t0)
+    eng = ks_engram_words(die, ksw, ks - a.t0)
+    if eng and getattr(a, 'ks_payload', 'hold') != 'pulse':
+        # u_eng.f_ks carries the held payload between starts: a value change is a new word only with start [52] set
+        S.setdefault('port_valid', []).append(dict(inst='u_eng', ports=['f_ks'], bit=KS_START_BIT))
+    out += eng
     lf_age = max(die.links[die.by_out[n]]['age'] for n, _ in die.port_bits('u_seqhost', 'f_lf') if n in die.by_out)
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
@@ -1080,6 +1118,9 @@ def main(argv=None):
     g.add_argument('--idle-run', default=None, help='idle run dir of this cut build (trace.txt): derives u_seqhost reset '
                    'release; --host-boot defaults to it + 8 and is refused below it + 2')
     g.add_argument('--ks', type=int, default=None)
+    g.add_argument('--ks-payload', choices=('hold', 'pulse'), default='hold',
+                   help='f_ks producer model: hold (default, S81-P10 10-24: the u_s_7N host RX holds the payload fk_d and '
+                        'pulses start fk_s) or pulse (legacy: the whole word for one edge; a torn bundle then misses)')
     g.add_argument('--ks-word', default=None, help='opaque diagnostic word, or exact fixture descriptor checked against --ks-fixture-meta/--ks-user')
     g.add_argument('--ks-fixture-meta', help='fixture meta.json; native entry replay requires this descriptor provenance')
     g.add_argument('--ks-user', type=int, help='explicit incoming HOST user; not inferred from fixture rank')
