@@ -26,7 +26,9 @@ One logic design for all layer dies (RELEASE_RACK 2.1): every die gets the 6th S
 | xdie_io (H=s81_head, S=B=s81) | FAIL 130 err (4x32 missing EN2/EN3/WS2/WS3 + host S + host B) | PASS 0 err, 2952 circuits, 4 warn (role B does not use EN2/3, WS2/3) |
 | col_* frame types | 7 | unchanged (byte-identical type defs) |
 | census dropped | 0 | 0 |
-Files: g0_summary.json, g0c_summary.json, xdie_io_report.json here.
+Files: g0_summary.json, g0c_summary.json, xdie_io_report.json here, all re-run on the committed tree (fix commit after
+ffeace5ae4: that commit missed the regenerated census_map.json / instance_map.json / cells_est.json, so G0 at
+ffeace5ae4 FAILs 12 census errors on the old s_0S_x / s_7N_x names; fixed in the next commit). census_cov dropped 0.
 
 ## unit__s_7N_LP__seqhost (604 b, 14 faces): keep
 604 = f_host 515 + f_ks 53 + mu_rt 32 + f_lf 4 (census s81_lanes.tsv, u_s_7N -> u_seqhost); the reverse lane

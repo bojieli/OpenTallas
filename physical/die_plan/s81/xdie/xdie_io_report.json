@@ -3,8 +3,8 @@
  "conn": "results/arch/release_rack_1021/connections_s81.csv",
  "roles": {
   "H": "physical/die_plan/s81_head/die_io.json",
-  "S": "/tmp/s81x/new/die_io.json",
-  "B": "/tmp/s81x/new/die_io.json"
+  "S": "physical/die_plan/s81/die_io.json",
+  "B": "physical/die_plan/s81/die_io.json"
  },
  "verdict": "PASS",
  "errors": 0,

@@ -26,7 +26,7 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 91,
    "cell_sources": [
-    "/tmp/s81x/new/cells_est.json"
+    "/home/ubuntu/wt/s81-xdie/physical/die_plan/s81/cells_est.json"
    ],
    "no_cells": []
   },
@@ -5525,7 +5525,7 @@
     "over_sites": 0,
     "host_mode": "in_band"
    },
-   "source": "/tmp/s81x/new/die_io.json"
+   "source": "/home/ubuntu/wt/s81-xdie/physical/die_plan/s81/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -6495,7 +6495,6 @@
     }
    ],
    "dropped_bits": 0
-  },
-  "png": "/tmp/s81x/new/g0/die_plan.png"
+  }
  }
 }
