@@ -41,6 +41,8 @@ def main(argv=None):
     ap.add_argument("--expect", type=Path)
     ap.add_argument("--smoke", default="print", choices=["submit", "print", "skip"])
     ap.add_argument("--work", type=Path, help="scratch dir for the smoke vehicle (default BIND_DIR/smoke/work)")
+    ap.add_argument("--src-rev", help="bind_smoke: git revision of the as-built source tree bind.f refers to (QC)")
+    ap.add_argument("--asbuilt", type=Path, help="bind_smoke: the bind as-built recipe JSON (QC; default from README)")
     ap.add_argument("--src-root", type=Path, default=RC.REPO)
     ap.add_argument("--hbm-tools", type=Path)
     a = ap.parse_args(argv)
@@ -66,6 +68,10 @@ def main(argv=None):
     rep = B / "smoke" / "smoke_report.json"
     cmd = [sys.executable, str(smoke_py), "--die", a.die, "--bound", str(B), "--constants", str(rd / "constants.json"),
            "--work", str(a.work or (B / "smoke" / "work"))]
+    if a.src_rev:
+        cmd += ["--src-rev", a.src_rev]
+    if a.asbuilt:
+        cmd += ["--asbuilt", str(a.asbuilt)]
     smoke = dict(command=" ".join(cmd + ["--submit"]))
     if not smoke_py.exists():
         smoke["verdict"] = "PENDING"
