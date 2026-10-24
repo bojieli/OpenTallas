@@ -54,6 +54,12 @@ def render(P, geo, R, out_png, title=None):
             o = P.orient(n)
             ax.text((x0 + x1) / 2, (y0 + y1) / 2, f"{n}\n{p['type']}" + ("" if o == "R0" else f" {o}"),
                     ha="center", va="center", fontsize=6, zorder=6)
+    # die IO windows (PLAN-TOOL5 die_io.py): bump fields of the link / HBM PHYs, the host link starred
+    for w in P.die.get("io") or []:
+        x0, y0, x1, y1 = w["rect_um"]
+        ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc="none", ec="magenta", hatch="xx", lw=1.0, zorder=6))
+        if w.get("host") or w.get("iface") == "host":
+            ax.plot([(x0 + x1) / 2], [(y0 + y1) / 2], marker="H", ms=9, color="magenta", zorder=7)
     root = P.clock.get("spine", {}).get("root_um")
     if root:
         ax.plot([root[0]], [root[1]], marker="P", ms=10, color="crimson", zorder=7)
@@ -101,6 +107,10 @@ def render(P, geo, R, out_png, title=None):
                 Line2D([], [], color="darkorange", marker="*", ls="", ms=6), Line2D([], [], color="navy", lw=2.2),
                 Line2D([], [], color="crimson", marker="P", ls="", ms=8), Line2D([], [], color="red", lw=1.4)]
     labels += ["lane", "station", "clock tap", "port window", "spine root", "G0 error"]
+    if P.die.get("io"):
+        handles += [Rectangle((0, 0), 1, 1, fc="none", ec="magenta", hatch="xx"),
+                    Line2D([], [], color="magenta", marker="H", ls="", ms=7)]
+        labels += ["die IO window", "host link"]
     if any(t.get("clock", {}).get("taps") for t in P.types.values()):
         handles.append(Line2D([], [], color="purple", marker=".", ls="", ms=4))
         labels.append("declared clock tap")
@@ -117,5 +127,5 @@ def render(P, geo, R, out_png, title=None):
 if __name__ == "__main__":
     import check
     raw = S.load(sys.argv[1])
-    R, _ = check.run(raw, png=sys.argv[2])
+    R, _ = check.run(raw, png=sys.argv[2], plan_dir=Path(sys.argv[1]).resolve().parent)   # PLANDIR sidecars (die_io)
     print(sys.argv[2])

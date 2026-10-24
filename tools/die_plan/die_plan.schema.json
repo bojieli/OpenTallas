@@ -150,6 +150,14 @@
         "minimum": 0,
         "maximum": 1
        }
+      },
+      "ft_route_layers": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "minItems": 1
       }
      }
     },
@@ -162,8 +170,7 @@
        "kind",
        "rect_um",
        "sites",
-       "part",
-       "ports"
+       "part"
       ],
       "additionalProperties": false,
       "properties": {
@@ -209,6 +216,26 @@
          "minLength": 1
         },
         "minItems": 1
+       },
+       "iface": {
+        "enum": [
+         "serdes",
+         "ucie",
+         "hbm_phy",
+         "host",
+         "refclk",
+         "other"
+        ]
+       },
+       "signals": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "host": {
+        "type": "boolean"
+       },
+       "basis": {
+        "type": "string"
        },
        "note": {
         "type": "string"
@@ -345,6 +372,10 @@
       },
       "minItems": 2,
       "maxItems": 2
+     },
+     "cells": {
+      "type": "integer",
+      "minimum": 0
      },
      "hard": {
       "type": "boolean"
@@ -544,6 +575,20 @@
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
+       },
+       "tap_mode": {
+        "enum": [
+         "grid",
+         "sinks"
+        ]
+       },
+       "tap_radius_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_max_sinks": {
+        "type": "integer",
+        "minimum": 1
        },
        "taps": {
         "type": "array",
@@ -789,6 +834,10 @@
          "type": "string",
          "pattern": "^M[1-9]$"
         },
+        "cells": {
+         "type": "integer",
+         "minimum": 0
+        },
         "bind": {
          "type": "object",
          "additionalProperties": {
@@ -834,6 +883,63 @@
        }
       }
      },
+     "internal_stations": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "from_um",
+        "to_um",
+        "regs_um"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "conn": {
+         "type": "string"
+        },
+        "from_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "to_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "regs_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        },
+        "bits": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "launch": {
+         "type": "string"
+        },
+        "capture": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "channels": {
       "type": "array",
       "items": {
@@ -863,6 +969,14 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1
+     },
+     "ft_budget": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
      },
      "face_layers": {
       "type": "object",
@@ -1131,6 +1245,14 @@
       "type": "string",
       "pattern": "^[A-Z][A-Z0-9_]*$"
      },
+     "route_layers": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^M[1-9]$"
+      },
+      "minItems": 1
+     },
      "note": {
       "type": "string"
      }
@@ -1205,6 +1327,10 @@
      "minimum": 0
     },
     "neighbour_skew_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
     },
@@ -1370,6 +1496,14 @@
      "exclusiveMinimum": 0
     },
     "tap_pitch_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "reach_margin": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "io_edge_max_um": {
      "type": "number",
      "exclusiveMinimum": 0
     }

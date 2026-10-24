@@ -6,7 +6,10 @@ Per non-hard partition type, DIR/<module>.sv:
   - ports: clk (the partition's clock entry = its spine tap), arst_n (die reset, asynchronous), one port per bus of
     width + 1 when the bus carries the lane epoch bit (bit [width] = epoch, schema.has_epoch()), else width.
   - one ot_reset_sync (rtl/lib/ot_reset_sync.sv, ASYNC_STAGES = type reset.sync_stages) -> rst_n: async assert, sync
-    release.  It is the only reset source of the partition.
+    release.  It is the only reset source of the partition.  A type with an R4 tap grid (>1 tap) instead gets one
+    LOCAL synchroniser per tap (ot_dp_rsync_s<N> u_rsync_t<i> -> rst_n_t<i>, rst_n = rst_n_t0); every boundary flop /
+    ft station takes one of them (its epoch source too), and the kit's reset_taps.tcl re-points each FIRM-placed one to
+    the synchroniser of its nearest tap (recovery / release paths stay inside one tap tree).
   - a boundary flop ot_dp_st on every bus: in buses register at the pin (q -> leaves), out buses register before the
     pin (leaves -> d).  ot_dp_st data has NO reset; its one epoch bit is cleared by rst_n and loads the upstream epoch
     (an in bus) or rst_n itself (an out bus: the source's released reset is the lane epoch).
@@ -43,6 +46,23 @@ module ot_dp_st #(parameter integer W = 1) (
     always @(posedge clk) q <= d;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
+endmodule
+// ot_dp_rsync_s<N>: one LOCAL reset synchroniser per clock tap region (KV-P5 10-23, COORD R4: the release of a tap
+// region's flops is timed from a synchroniser on the SAME tap, not across the tap-to-tap skew).  keep_hierarchy: the
+// per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
+(* keep_hierarchy *)
+module ot_dp_rsync_s2 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    (* async_reg = "true" *) reg [1:0] p;
+    always @(posedge clk or negedge async_rst_n)
+        if (!async_rst_n) p <= 2'b0; else p <= {p[0], 1'b1};
+    assign sync_rst_n = p[1];
+endmodule
+(* keep_hierarchy *)
+module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    (* async_reg = "true" *) reg [2:0] p;
+    always @(posedge clk or negedge async_rst_n)
+        if (!async_rst_n) p <= 3'b0; else p <= {p[1:0], 1'b1};
+    assign sync_rst_n = p[2];
 endmodule
 `default_nettype wire
 """
@@ -136,7 +156,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for n, x, y in S.tap_grid(P, tn)[1:]:
         ports.append((f"input  wire {n}", f"spine tap at ({x:.0f}, {y:.0f}) um: the kit (clock_taps.tcl) moves the "
                       "nearest sinks onto it before CTS; same die clock"))
-    ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through u_rst_sync"))
+    ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
+                  ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
     decl, body = [], []
     for b in buses:
         w = b["width"] + (1 if b["ep"] else 0)
@@ -149,8 +170,29 @@ def wrapper(P, tn, epochs, rtl_root=None):
             w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
             ports.append((f"{d} wire [{w - 1}:0] {sv_id(s['name'] + sfx)}", f"ft slot {s['name']} "
                           f"({s['in_face']} -> {s['out_face']}, {s.get('stations', 1)} station(s))"))
-    body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({ns})) u_rst_sync "
-                f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+    taps = S.tap_grid(P, tn)
+    if len(taps) > 1:
+        # one local synchroniser per tap region (u_rsync_t<i>, rst_n_t<i>); rst_n = tap 0 (leaves).  Boundary flops and
+        # ft stations take the region syncs round-robin here; the kit (reset_taps.tcl, pre-GPL) re-points every FIRM
+        # placed one to the synchroniser of its nearest tap and places each synchroniser FIRM at its tap.
+        if ns not in (2, 3):
+            raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
+        for i in range(len(taps)):
+            body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
+                        f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
+        body.append("    wire rst_n = rst_n_t0;")
+        rr = [0]
+
+        def rsel():
+            r = f"rst_n_t{rr[0] % len(taps)}"
+            rr[0] += 1
+            return r
+    else:
+        body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({ns})) u_rst_sync "
+                    f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+
+        def rsel():
+            return "rst_n"
     sig = {}          # bind keyword -> expression
     need_rst = False
     pads, bad = P.bus_pads()
@@ -161,13 +203,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
         pad = pads.get((tn, b["name"]), 0)   # R8 latency-group pad stages (Plan.bus_pads)
         if b["dir"] == "in":
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
-            ea = f"{n}[{W}]" if b["ep"] else "rst_n"
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), "
+            r = rsel()
+            ea = f"{n}[{W}]" if b["ep"] else r
+            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({n}[{W - 1}:0]), "
                         f".ea({ea}), .q({n}_q), .eq({n}_eq));")
             q, eq = f"{n}_q", f"{n}_eq"
             for j in range(pad):
                 decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n}_pad{j} (.clk(clk), .rst_n(rst_n), .d({q}), .ea({eq}), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n}_pad{j} (.clk(clk), .rst_n({rsel()}), .d({q}), .ea({eq}), "
                             f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
                 q, eq = f"{n}_p{j}_q", f"{n}_p{j}_eq"
             sig[f"bus:{b['name']}"] = q
@@ -177,20 +220,22 @@ def wrapper(P, tn, epochs, rtl_root=None):
             eq = f"{n}[{W}]" if b["ep"] else f"{n}_eo"
             if not b["ep"]:
                 decl.append(f"    wire {n}_eo;  // epoch of a die-IO / non-lane output: not carried off the partition")
-            d, ea = f"{n}_d", "rst_n"
+            r = rsel()
+            d, ea = f"{n}_d", r
             for j in range(pad):
                 decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
-                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ea}), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                             f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
                 d, ea = f"{n}_p{j}_q", f"{n}_p{j}_eq"
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ea}), "
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                         f".q({n}[{W - 1}:0]), .eq({eq}));")
             sig[f"bus:{b['name']}"] = f"{n}_d"
     for s in slots:
         n, W, k = sv_id(s["name"]), s["width"], int(s.get("stations", 1))
         ep_i = epochs.get((tn, s["name"] + "_i"), True)
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
-        d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else "rst_n")
+        r = rsel()
+        d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
         for j in range(k):
             last = j == k - 1
             if last:
@@ -200,7 +245,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             else:
                 q, eq = f"{n}_s{j}_q", f"{n}_s{j}_eq"
                 decl.append(f"    wire [{W - 1}:0] {q};\n    wire {eq};")
-            body.append(f"    ot_dp_st #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ea}), "
+            body.append(f"    ot_dp_st #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel()}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
             d, ea = q, eq
     for nt in t.get("nets", []):
@@ -308,7 +353,7 @@ def write_rtl(raw, out, rtl_root=None, types=None):
     (out / "ot_dp_cells.sv").write_text(CELLS)
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
-        if t.get("hard") or (types and tn not in types):
+        if t.get("hard") or (types is not None and tn not in types):
             continue
         f = out / f"{t['module']}.sv"
         f.write_text(wrapper(P, tn, ep, rtl_root))

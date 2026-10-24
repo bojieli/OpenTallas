@@ -41,3 +41,72 @@ if {[llength $ct_taps] < 2} {
   }
   puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off clk: [lsort -stride 2 -index 0 $cnt]"
 }
+# COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
+# tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
+# assignment), so dense regions spread over the neighbouring taps instead of one deep tree (CP1 r6: 3.6-4.8k-sink
+# taps 300-313 ps while 9 of 16 taps were empty; a buffer split behind the tap measured worse, 437 ps).
+set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 3000}]
+# a re-assigned sink may add at most half a tap pitch of distance (CP1 r6 probe: sinks moved ~300 um to an empty
+# tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
+set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
+if {[llength $ct_taps] >= 2} {
+  set ct_by {}
+  foreach tp $ct_taps {
+    set l {}
+    foreach it [[lindex $tp 1] getITerms] {
+      if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
+    }
+    dict set ct_by [lindex $tp 0] $l
+  }
+  set ct_moves 0
+  set ct_stuck {}
+  for {set pass 0} {$pass < 8 * [llength $ct_taps]} {incr pass} {
+    set over ""
+    foreach tp $ct_taps {
+      if {[lindex $tp 0] ni $ct_stuck && [llength [dict get $ct_by [lindex $tp 0]]] > $ct_cap} { set over $tp; break }
+    }
+    if {$over eq ""} break
+    set on [lindex $over 0]
+    set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
+    # extra distance of each sink to every other tap with room
+    set cand {}
+    foreach it [dict get $ct_by $on] {
+      set loc [[$it getInst] getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1]
+      set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
+      set best ""; set bd 0
+      foreach tp $ct_taps {
+        if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
+        set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
+        if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+      }
+      if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
+    }
+    if {![llength $cand]} {
+      # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate
+      puts "OT_CLOCK_TAPS WARN $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
+      lappend ct_stuck $on
+      continue
+    }
+    set cand [lsort -real -index 0 $cand]
+    # move the cheapest sinks toward ONE target per pass (keeps targets under cap), then re-evaluate
+    set tgt [lindex $cand 0 2]; set tn [lindex $tgt 0]
+    set room [expr {$ct_cap - [llength [dict get $ct_by $tn]]}]
+    set keep [dict get $ct_by $on]; set add [dict get $ct_by $tn]
+    set n 0
+    foreach c $cand {
+      if {$n >= $excess || $n >= $room} break
+      if {[lindex $c 2 0] ne $tn} continue
+      set it [lindex $c 1]
+      $it disconnect; $it connect [lindex $tgt 1]
+      set keep [lsearch -all -inline -not -exact $keep $it]
+      lappend add $it
+      incr n
+    }
+    dict set ct_by $on $keep; dict set ct_by $tn $add
+    incr ct_moves $n
+  }
+  set l {}
+  foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
+  puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
+}

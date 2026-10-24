@@ -67,12 +67,34 @@ module ot_dp_st #(parameter integer W = 1) (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
 endmodule
+// ot_dp_rsync: a reset spine landing (asbuilt.reset_spines): W active-low resets, each asserted asynchronously and
+// released after S (>= 2) clocks of the receiving partition.
+module ot_dp_rsync #(parameter integer W = 1, parameter integer S = 2) (
+    input  wire         clk,
+    input  wire [W-1:0] a,
+    output wire [W-1:0] q
+);
+    genvar g;
+    generate for (g = 0; g < W; g = g + 1) begin : b
+        reg [S-1:0] r;
+        always @(posedge clk or negedge a[g])
+            if (!a[g]) r <= {S{1'b0}}; else r <= {r[S-2:0], 1'b1};
+        assign q[g] = r[S-1];
+    end endgenerate
+endmodule
 // ot_dp_or: N-input OR of a re-emitted fault tree (an as-built reducer chain, removed and rebuilt per sink partition).
 module ot_dp_or #(parameter integer N = 1) (
     input  wire [N-1:0] a,
     output wire         y
 );
     assign y = |a;
+endmodule
+// ot_dp_and: N-input AND of a re-emitted AND join (an as-built AND reducer, e.g. link-up, rebuilt per sink partition).
+module ot_dp_and #(parameter integer N = 1) (
+    input  wire [N-1:0] a,
+    output wire         y
+);
+    assign y = &a;
 endmodule
 // ot_dp_dly: D reset-less register stages (D >= 1): the as-built transport stages of an INTRA-partition path, kept.
 module ot_dp_dly #(parameter integer W = 1, parameter integer D = 1) (
@@ -125,6 +147,7 @@ class Rules:
         self.parts = dict(mp.get("parts", {}))
         self.rules = [(re.compile(a), b) for a, b in mp.get("rules", [])]
         self.ignore_out = [re.compile(r) for r in ab.get("open_outputs", [])]
+        self.keep_reducer = set()            # reducer instances the plan keeps as contents (stay leaves)
 
     @staticmethod
     def _first(lst, s):
@@ -136,8 +159,12 @@ class Rules:
     def transport_of(self, m):
         return self._first(self.transport, m)
 
-    def reducer_of(self, m):
-        return self._first(self.reducers, m)
+    def reducer_of(self, m, path=None):
+        """reducer rule of module m (optionally scoped to instances by the rule's `inst` regex on the cell path)"""
+        for rx, r in self.reducers:
+            if rx.fullmatch(m) and (not r.get("inst") or path is not None and re.fullmatch(r["inst"], path)):
+                return r
+        return None
 
     def source_of(self, m):
         return self._first(self.sources, m)
@@ -203,14 +230,22 @@ class Graph:
         self.kind = []                     # per cell: leaf | glue | transport | reducer | source
         self.spec = []
         self.dirs = []
+        self.leaf_src = {}                 # source cells kept as leaves (rule keep_leaf): ci -> rule
         for ci, c in enumerate(F.cells):
             t = rules.transport_of(c.module)
-            r = rules.reducer_of(c.module) if t is None else None
+            r = rules.reducer_of(c.module, c.path) if t is None else None
+            if r is not None and c.path in rules.keep_reducer and c.kind == "leaf":
+                r = None            # a plan content (status reuse): instantiated as a leaf in its partition
             s = rules.source_of(c.module) if t is None and r is None else None
             if t is not None:
                 k, sp = "transport", t
             elif r is not None:
                 k, sp = "reducer", r
+            elif s is not None and s.get("keep_leaf") and c.kind == "leaf":
+                # a plan content (e.g. the PLL in its partition): instantiated as a leaf; the outputs its rule names
+                # are still clock / reset sources (the bound die takes those from its top ports), the rest are pins
+                k, sp = "leaf", None
+                self.leaf_src[ci] = s
             elif s is not None:
                 k, sp = "source", s
             elif c.kind == "unknown":
@@ -308,21 +343,25 @@ class Graph:
                         st = int(str(c.params.get(sp["stages_param"], st)).strip('"'))
                     res = _add_stages(up, st)
             elif k == "reducer":
+                # op or (default): fault OR tree; op and: an AND join (e.g. a link-up AND) re-emitted per sink partition
+                op = self.spec[ci].get("op", "or")
+                if op == "and" and len(c.ports[self.spec[ci]["out"]]) != 1:
+                    self.err.append(f"REDUCER_WIDTH {c.path}: an AND reducer must have a 1-bit output")
                 ups = []
                 for ip, bits in sorted(c.ports.items()):
                     if ip == self.spec[ci]["out"] or ip in self.spec[ci].get("drop_in", []):
                         continue
                     for b in bits:
                         u = self.source(b, depth + 1)
-                        if u[0] in ("const",) and u[1] == "0":
+                        if u[0] in ("const",) and u[1] == ("0" if op == "or" else "1"):
                             continue
                         if u[0] in ("dropped", "undriven"):
                             continue
-                        if u[0] == "or":
+                        if u[0] == op:
                             ups.extend(u[1])
                         else:
                             ups.append(u)
-                res = ("or", ups, int(self.spec[ci].get("stages", 0)))
+                res = (op, ups, int(self.spec[ci].get("stages", 0)))
             elif k == "source":
                 sp = self.spec[ci]
                 o = _src_out(sp, pn)
@@ -332,6 +371,9 @@ class Graph:
                     res = ("clock", o[1])
                 else:
                     res = ("reset", o[1], 0)
+            elif ci in self.leaf_src and _src_out(self.leaf_src[ci], pn) is not None:
+                o = _src_out(self.leaf_src[ci], pn)
+                res = ("clock", o[1]) if o[0] == "clock" else ("reset", o[1], 0)
             elif k == "glue" and c.ytype in ("$not", "$pos", "$buf") and pn == "Y" and bit < len(c.ports.get("A", [])):
                 # a constant expression of the as-built die (e.g. far_n = ~far): folded, so a declared strap stays a
                 # strap (partition parameter) on the far side of the inverter
@@ -384,8 +426,8 @@ def _add_stages(s, n):
         return (s[0], s[1], s[2] + n)
     if s[0] == "top":
         return s[:3] + (s[3] + n,)
-    if s[0] == "or":
-        return ("or", s[1], s[2] + n)
+    if s[0] in ("or", "and"):
+        return (s[0], s[1], s[2] + n)
     return s
 
 
@@ -411,10 +453,34 @@ def rel(path, root):
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
+        self.plan_dir = Path(plan_dir)
         self.ab = plan["asbuilt"]
+        self.base = base or str(E.REPO)
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
-        self.F = E.flatten(yjs, self.ab["top"])
+        self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        for r in self.F.parent_variants:
+            if r["dropped_net_ports"]:
+                self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
+                                   f"lacks: {r['dropped_net_ports'][:8]}")
+            if r["new_unconnected_ports"]:
+                self.errors.append(f"PARENT_VARIANT_NEW {r['inst']} -> {r['variant']}: ports not in the as-built "
+                                   f"instance: {r['new_unconnected_ports'][:8]}")
+        if self.ab.get("reducers_keep_plan_contents"):
+            # asbuilt.reducers_keep_plan_contents: a reducer instance (fault OR ...) that the plan lists in its
+            # partition type's `contents` stays a leaf there instead of being dissolved and re-emitted per sink
+            cont = {}
+            for pp in plan["partitions"]:
+                t = plan["partition_types"].get(pp["type"], {})
+                cont[pp["name"]] = {x["inst"] for x in t.get("contents", []) if isinstance(x, dict) and "inst" in x}
+            for c in self.F.cells:
+                if self.R.reducer_of(c.module, c.path) is None:
+                    continue
+                p = self.R.part_of(c.path)
+                lo = self.R.local_of(c.path)
+                names = {c.path, c.path.split(".")[-1]} | ({lo} if lo else set())
+                if p in cont and names & cont[p]:
+                    self.R.keep_reducer.add(c.path)
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
@@ -424,6 +490,153 @@ class Binder:
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+        self.rewire, self.rewire_stats = {}, {}
+        # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
+        self.die_port_name = {}
+        if self.ab.get("port_names"):
+            f = self.ab["port_names"]
+            f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
+            for v in json.loads(Path(f).read_text()).get("masters", {}).values():
+                for bd in v.get("bundles", {}).values():
+                    if len(bd.get("die_ports", [])) == 1 and len(bd.get("rtl_ports", [])) == 1 and \
+                            bd["die_ports"][0] != bd["rtl_ports"][0]:
+                        self.die_port_name[(v.get("module"), bd["rtl_ports"][0])] = bd["die_ports"][0]
+        if self.ab.get("rewires"):
+            self.apply_rewires(base or str(E.REPO))
+        self.pc = None
+        if self.ab.get("plan_cells"):
+            import bind_plancells
+            f = self.ab["plan_cells"]
+            f = f if Path(f).is_absolute() else str(Path(base or str(E.REPO)) / f)
+            self.pc = bind_plancells.PlanCells(self, f, base or str(E.REPO))
+
+    def apply_rewires(self, base):
+        """asbuilt.rewires {"file": plan rewires (schema *.plan_rewires.v1), "classes": [names]}: connectivity the plan
+        declares different from the as-built die (e.g. a static-schedule relabel, a reversed chain).  Each class lists
+        as-built block edges removed and plan edges added ({s, sp, d, dp, bits}: block = flattened instance path).  An
+        added edge s.sp -> d.dp takes its per-bit map from a TEMPLATE: the removed edge with the same s.sp and d port
+        (its as-built bit map and register stages, e.g. host.chf0 -> hsl_0.fi for host.chf0 -> hsl_31.fi), else the
+        removed edge into the same d.dp from the same source port (bit for bit).  The sink bits of every removed edge
+        must be re-driven by an added edge; a bit that is not stays as built and is an error (never tied)."""
+        rw = self.ab["rewires"]
+        f = rw["file"] if Path(rw["file"]).is_absolute() else str(Path(base) / rw["file"])
+        doc = json.loads(Path(f).read_text())
+        G = self.G
+        byp = {c.path: ci for ci, c in enumerate(self.F.cells)}
+        st = defaultdict(int)
+        # die-port -> RTL port translation (GEN bundle-wrapper masters bound to RTL modules: a die port is a slice of an
+        # RTL port; equal-width die ports of one bundle, in order)
+        pmap = defaultdict(dict)                     # RTL module -> die port -> (rtl port, offset, width)
+        if rw.get("port_map"):
+            pm = rw["port_map"] if Path(rw["port_map"]).is_absolute() else str(Path(base) / rw["port_map"])
+            pmd = json.loads(Path(pm).read_text())
+            for gm, v in pmd.get("masters", {}).items():
+                for bn, bd in v.get("bundles", {}).items():
+                    dps, rps = bd.get("die_ports", []), bd.get("rtl_ports", [])
+                    if len(rps) != 1 or not dps or bd.get("die_bits", 0) % len(dps):
+                        continue
+                    w = bd["die_bits"] // len(dps)
+                    for k, dp in enumerate(dps):
+                        pmap[v.get("module")][dp] = (rps[0], k * w, w if len(dps) > 1 else None)
+
+        def tr(block, port):
+            ci = byp.get(block)
+            if ci is None:
+                return None, (port, 0, None)
+            c = self.F.cells[ci]
+            if port in c.ports:
+                return ci, (port, 0, None)
+            return ci, pmap.get(c.module, {}).get(port, (port, 0, None))
+
+        def edge(e):
+            sc, (sp, so, sw) = tr(e["s"], e["sp"])
+            dc, (dp, do, dw) = tr(e["d"], e["dp"])
+            return dict(e, sc=sc, dc=dc, rsp=sp, so=so, sw=sw, rdp=dp, do=do, dw=dw)
+
+        def asb_map(x):
+            """as-built bits of edge x: {sink bit (relative): (source bit (relative), stages)}"""
+            sc, dc = x["sc"], x["dc"]
+            if sc is None or dc is None or x["rdp"] not in self.F.cells[dc].ports:
+                return None
+            m = {}
+            for i, b in enumerate(self.F.cells[dc].ports[x["rdp"]]):
+                if i < x["do"] or (x["dw"] and i >= x["do"] + x["dw"]):
+                    continue
+                src = G.source(b)
+                if src[0] == "pin" and src[1] == sc and src[2] == x["rsp"] and src[3] >= x["so"] and \
+                        (not x["sw"] or src[3] < x["so"] + x["sw"]):
+                    m[i - x["do"]] = (src[3] - x["so"], src[4])
+            return m
+        for cl in rw.get("classes", []):
+            c = doc["classes"].get(cl)
+            if c is None:
+                self.errors.append(f"REWIRE_CLASS {cl}: not in {rw['file']}")
+                continue
+            rem = [edge(e) for e in c["removed"]]
+            by_sport = defaultdict(list)
+            by_dport = defaultdict(list)
+            for e in rem:
+                by_sport[(e["s"], e["sp"], e["dp"])].append(e)
+                by_dport[(e["d"], e["dp"])].append(e)
+            covered = set()
+            for e in map(edge, c["added"]):
+                sc, dc = e["sc"], e["dc"]
+                if sc is None or dc is None:
+                    self.errors.append(f"REWIRE_BLOCK {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: no such instance")
+                    continue
+                cands = [(t, False) for t in by_sport.get((e["s"], e["sp"], e["dp"]), []) if t["d"] != e["d"]] + \
+                    [(t, True) for t in by_dport.get((e["d"], e["dp"]), []) if t["sp"] == e["sp"]]
+                m, tmpl, same = None, [], False
+                for t, sm in cands:             # first template whose as-built bits survive (a variant may drop a port)
+                    m = asb_map(t)
+                    if m:
+                        tmpl, same = [t], sm
+                        break
+                if not m and e.get("bit_map") == "identity" and e.get("beside"):
+                    # template-less added edge (no as-built edge: e.g. QC-P5-TIE treq lanes twinned with cmd): bit i ->
+                    # bit i, register stages = the as-built stages of its 'beside' edge (one value over its bits)
+                    bm = asb_map(edge(e["beside"])) or {}
+                    stg = {v[1] for v in bm.values()}
+                    if len(stg) != 1:
+                        self.errors.append(f"REWIRE_BESIDE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: beside edge "
+                                           f"{e['beside']['s']}.{e['beside']['sp']} has as-built stages {sorted(stg)}")
+                        continue
+                    m = {i: (i, next(iter(stg))) for i in range(int(e["bits"]))}
+                    tmpl = []
+                if not m:
+                    self.errors.append(f"REWIRE_NO_TEMPLATE {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}")
+                    continue
+                if len(m) != e["bits"]:
+                    self.errors.append(f"REWIRE_WIDTH {cl}: {e['s']}.{e['sp']} -> {e['d']}.{e['dp']}: template "
+                                       f"{tmpl[0]['s'] if tmpl else 'beside'}->{tmpl[0]['d'] if tmpl else ''} maps "
+                                       f"{len(m)} b, edge says {e['bits']}")
+                cs = self.F.cells[sc]
+                if e["rsp"] not in cs.ports:
+                    # an output the as-built leaves open (e.g. the tail of a chain the plan reverses): give it nets
+                    tc = self.F.cells[tmpl[0]["sc"]] if tmpl else None
+                    w = (len(tc.ports.get(tmpl[0]["rsp"], [])) if tc else 0) or (max(sb for sb, _ in m.values()) + 1)
+                    if not hasattr(self, "_rw_net"):
+                        self._rw_net = 1 + max((b for c2 in self.F.cells for bs in c2.ports.values() for b in bs
+                                                if not isinstance(b, str)), default=0)
+                    cs.ports[e["rsp"]] = list(range(self._rw_net, self._rw_net + w))
+                    self._rw_net += w
+                    G.dirs[sc][e["rsp"]] = "output"
+                    st["opened outputs"] += 1
+                for i, (sb, stg) in m.items():
+                    k = (dc, e["rdp"], e["do"] + i)
+                    self.rewire[k] = ("pin", sc, e["rsp"], e["so"] + sb, stg)
+                    covered.add(k)
+                st[cl + (" (template-less, beside)" if not tmpl else " (same-sink template)" if same else "")] += len(m)
+            dropped = 0
+            for e in rem:
+                for i in (asb_map(e) or {}):
+                    if (e["dc"], e["rdp"], e["do"] + i) not in covered:
+                        dropped += 1
+                        if dropped <= 20:
+                            self.errors.append(f"REWIRE_DROPPED {cl}: {e['d']}.{e['dp']}[{i}] loses {e['s']}.{e['sp']} "
+                                               f"and no added edge drives it (kept as built)")
+            st[cl + " dropped"] = dropped
+        self.rewire_stats = dict(st)
 
     def substitute_inst(self, base):
         """asbuilt.substitute_inst [{"inst": regex on the flattened instance path, "module": variant, "reason": ...}]:
@@ -536,6 +749,7 @@ class Binder:
         self.sinks = {}                                      # (ci, port, bit) -> descriptor
         self.reset_age = defaultdict(list)                   # part -> as-built release stages of replaced resets
         cnt = defaultdict(int)
+        plan_rw = self.pc.rewired_keys() if self.pc else set()
         for ci, c in enumerate(F.cells):
             if ci not in self.cpart:
                 continue
@@ -545,9 +759,14 @@ class Binder:
                 if d.get(pn) != "input":
                     continue
                 for i, b in enumerate(bits):
-                    s = G.source(b)
+                    if (ci, pn, i) in plan_rw:
+                        self.sinks[(ci, pn, i)] = ("plan_rewired",)     # set by the plan cells below; no crossing
+                        continue
+                    s = self.rewire.get((ci, pn, i)) or G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
         self.counts = dict(cnt)
+        if self.pc:
+            self.pc.apply_sinks()
 
     def _src_desc(self, p, s, cnt, ci, pn, i):
         """a non-OR logical source as seen from partition p"""
@@ -602,7 +821,7 @@ class Binder:
         return ("err", k)
 
     def _classify(self, p, ci, pn, i, s, cnt):
-        if s[0] == "or":
+        if s[0] in ("or", "and"):
             subs = [self._src_desc(p, u, cnt, ci, pn, i) for u in s[1]]
             subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "top")]
             cnt["or_input"] += 1
@@ -610,7 +829,7 @@ class Binder:
                 cnt["or_empty"] += 1
                 self.errors.append(f"OR_EMPTY {self.F.cells[ci].path}.{pn}[{i}]: fault tree with no live source")
                 return ("err", "or_empty")
-            return ("or", tuple(sorted(subs, key=repr)))
+            return (s[0], tuple(sorted(subs, key=repr)))
         return self._src_desc(p, s, cnt, ci, pn, i)
 
     # -- buses
@@ -655,10 +874,20 @@ class Binder:
     def _norm(s):
         return re.sub(r"[^0-9a-z]", "", s.lower())
 
+    @staticmethod
+    def _aff(s):
+        """name-affinity key of a plan bus name or an as-built source pin: direction prefix, replica tokens (Q, N, p,
+        quadrant, digits) and separators removed, e.g. o_astk_Q__u_strip_u_ctl_qo == astk_WN__u_strip_u_ctl.qo"""
+        s = re.sub(r"^[oi]_", "", s)
+        toks = [t for t in re.split(r"[_.\[\]]+", s) if t and not re.fullmatch(r"Q|N|p|[EW][NS]|[NS]|\d+", t)]
+        return "".join(toks).lower()
+
     def build_buses(self):
         """every crossing bit rides plan lanes from its source partition to each sink partition.
 
-        Pass 1: the pair's own lanes (chosen by leaf name, then packed by width).  Pass 2: bits left over are routed over
+        Pass 1a: the pair's own lanes matching the source pin by name (plan bus name / leaf, replica tokens ignored);
+        pass 2a: forwarding over name-matching lanes only (a plan chain carrying that signal keeps its width for it);
+        pass 1b: the pair's other own lanes, packed by width.  Pass 2b: bits left over are routed over
         the lane graph (multi-source shortest path from every partition that already holds the bits, residual lane
         widths; a lane carries a bit once however many sinks it serves): the plan's forwarding stations (u_pstn trees).
         Bits with no lane path are UNPLANNED (an error) and get a direct boundary-flop pair.  A plan without lanes binds
@@ -671,6 +900,7 @@ class Binder:
         self.bitpos = {}                     # (src part, dst part, src cell, port, bit) -> (bus, lane bit)
         self.bitcyc = {}                     # same key -> bound register stages
         self.unplanned = defaultdict(int)
+        self.unplanned_bits = []            # per bit (first 5000): driver pin, sink ports (relative), partitions
         self.forwarded = defaultdict(int)    # (src part, dst part) -> bits carried over >1 lane
         self.fwd_parts = defaultdict(int)    # forwarding partition -> bits forwarded
         lanes = self.plan_lanes()
@@ -679,6 +909,10 @@ class Binder:
         allL = [L for ls in lanes.values() for L in ls]
         for L in allL:
             L.update(items=[], carried={}, left=L["cap"])
+        resv = self.pc.reserved_buses() if self.pc else set()
+        for L in allL:
+            if (L["src"], L["oname"]) in resv:
+                L.update(left=0, plan=True)     # a plan-cell bus: its payload comes from plan cells, no as-built bit
         out_of = defaultdict(list)
         for L in sorted(allL, key=lambda L: L["id"]):
             out_of[L["src"]].append(L)
@@ -704,8 +938,19 @@ class Binder:
             return k
         direct = []
         todo = []
+        laff = {L["id"]: {self._aff(L["oname"]), self._aff(L["iname"])} for L in allL}
+
+        def affine(L, key):
+            return key in laff[L["id"]]
+
+        # pass 1a: the pair's own lanes whose plan name / leaf matches the source pin (bits reserved for their bus)
+        pend = []
         for (sp, dp), groups in sorted(self.cross.items()):
-            items = sorted(groups.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1]))
+            # asbuilt.pack_by_rel (KV-P5 15:59 type-split ask): order a pair's source pins by their PARTITION-RELATIVE
+            # leaf name, so replicas of one type pack the same pins onto the same lanes (full paths sort differently
+            # per quadrant / instance and split the type by width packing)
+            items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+                           if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
             if not use_lanes:
                 direct += [(sp, dp, sci, spn, sorted(bits)) for (sci, spn), bits in items]
                 continue
@@ -713,9 +958,12 @@ class Binder:
             for (sci, spn), bits in items:
                 srel = self.rel_of(sci)
                 sinks = self.cross_sinks[(sp, dp, sci, spn)]
+                ak = self._aff(f"{F.cells[sci].path}.{spn}")
+                dpn = self.die_port_name.get((F.cells[sci].module, spn))
+                ak2 = self._aff(f"{F.cells[sci].path}.{dpn}") if dpn else None
 
                 def score(L):
-                    s = 0
+                    s = 4 * (affine(L, ak) or (ak2 is not None and affine(L, ak2)))
                     if L["sleaf"]:
                         s += 4 * (self._norm(L["sleaf"]) == self._norm(f"{srel}.{spn}")) + \
                             2 * (L["sleaf"].rpartition(".")[2] == spn)
@@ -724,20 +972,23 @@ class Binder:
                             any(L["dleaf"].rpartition(".")[2] == q for r, q in sinks)
                     return s
                 rest = sorted(bits)
-                for L in sorted(cand, key=lambda L: (-score(L), L["id"])):
+                ranked = sorted(cand, key=lambda L: (-score(L), L["id"]))
+                for L in ranked:
+                    if score(L) <= 0:
+                        break
                     while rest and L["left"] > 0:
                         put(L, (sci, spn, rest.pop(0)), None)
                 if rest:
-                    todo.append((sp, dp, sci, spn, rest))
-        # pass 2: forwarded routes over residual lane widths
-        for sp, dp, sci, spn, rest in todo:
+                    pend.append((sp, dp, sci, spn, rest, ak, [L for L in ranked if score(L) <= 0]))
+
+        def forward(sp, dp, sci, spn, rest, only=None):
             rest = [b for b in rest if (dp, sci, spn, b) not in recv]
             guard = 0
             while rest and guard < 64:
                 guard += 1
                 keys = [(sci, spn, b) for b in rest]
                 srcs = {sp} | {x for x in holders.get(keys[0], ()) if all(x in holders.get(k, ()) for k in keys)}
-                path = self._route(srcs, dp, keys, out_of, heapq)
+                path = self._route(srcs, dp, keys, out_of, heapq, only)
                 if path is None:
                     break
                 nb = min(len(rest), min(L["left"] + sum(1 for k in keys if k in L["carried"]) for L in path))
@@ -749,12 +1000,50 @@ class Binder:
                 if len(path) > 1 or path[0]["src"] != sp:
                     self.forwarded[(sp, dp)] += nb
                 rest = rest[nb:]
+            return rest
+        # pass 2a: forwarded routes over name-affine lanes only (a plan chain / tree carrying this signal)
+        pend2 = []
+        for sp, dp, sci, spn, rest, ak, other in pend:
+            rest = forward(sp, dp, sci, spn, rest, only=lambda L, ak=ak: affine(L, ak))
+            if rest:
+                pend2.append((sp, dp, sci, spn, rest, other))
+        # pass 1b: the pair's remaining own lanes, packed by width.  A reset-spine pin (asbuilt.reset_spines) never takes
+        # data-lane width here or in pass 2b: unless a name-affine lane carries it (1a/2a) it rides the spine.
+        spines = [(re.compile(x["pin"]), int(x.get("sync_stages", 2))) for x in self.ab.get("reset_spines", [])]
+        spine_of = lambda sci, spn: next((ns for rx, ns in spines if rx.fullmatch(f"{F.cells[sci].path}.{spn}")), None)
+        for sp, dp, sci, spn, rest, other in pend2:
+            rest = [b for b in rest if (dp, sci, spn, b) not in recv]
+            for L in (other if spine_of(sci, spn) is None else []):
+                while rest and L["left"] > 0:
+                    put(L, (sci, spn, rest.pop(0)), None)
+            if rest:
+                todo.append((sp, dp, sci, spn, rest))
+        # pass 2b: forwarded routes over any residual lane widths
+        spine = []
+        self.spine_bits = defaultdict(int)
+        for sp, dp, sci, spn, rest in todo:
+            sx = spine_of(sci, spn)
+            if sx is None:
+                rest = forward(sp, dp, sci, spn, rest)
+            if rest and sx is not None:
+                # a plan reset spine (asbuilt.reset_spines): async to the sink partition, released by its own clock
+                spine.append((sp, dp, sci, spn, rest, sx))
+                self.spine_bits[f"{F.cells[sci].path}.{spn}"] += len(rest)
+                continue
             if rest:
                 self.unplanned[(sp, dp)] += len(rest)
                 direct.append((sp, dp, sci, spn, rest))
-        self.lanes_unused = sorted(L["id"] for L in allL if not L["items"])
+                if len(self.unplanned_bits) < 5000:
+                    sk = sorted(self.cross_sinks[(sp, dp, sci, spn)])
+                    for b in rest:
+                        self.unplanned_bits.append(dict(src_part=sp, dst_part=dp, driver=f"{F.cells[sci].path}.{spn}[{b}]",
+                                                        sink_ports=[f"{r}.{q}" for r, q in sk]))
+        self.lanes_unused = sorted(L["id"] for L in allL if not L["items"] and not L.get("plan"))
         for L in sorted(allL, key=lambda L: L["id"]):
-            if L["items"]:
+            if L.get("plan"):
+                L.update(width=L["cap"], lane=L["id"], stages=[0])
+                self.links.append(L)
+            elif L["items"]:
                 L.update(width=len(L["items"]), lane=L["id"],
                          stages=sorted({st for it in L["items"] if it[0] == "leaf"
                                         for st in self.cross_stages.get((L["src"], L["dst"], it[1], it[2]), [])} or {0}))
@@ -772,18 +1061,26 @@ class Binder:
             for k, b in enumerate(bl):
                 recv[(dp, sci, spn, b)] = (D, k, 2)
             dl.append(D)
+        for sp, dp, sci, spn, bl, ns in spine:
+            dr, dpn = min(self.cross_sinks[(sp, dp, sci, spn)])
+            D = dict(src=sp, dst=dp, items=[("leaf", sci, spn, b) for b in bl], width=len(bl), lane=None, ft=[],
+                     cycles=ns, spine=True, srel=self.rel_of(sci), port=spn, dsink=f"{dr}__{dpn}",
+                     stages=self.cross_stages[(sp, dp, sci, spn)])
+            for k, b in enumerate(bl):
+                recv[(dp, sci, spn, b)] = (D, k, ns)
+            dl.append(D)
         for side, pk in (("o", "src"), ("i", "dst")):
             per = defaultdict(lambda: defaultdict(list))
             for L in dl:
-                per[L[pk]][(L["srel"], L["port"]) if side == "o" else (L["dsink"],)].append(L)
+                per[L[pk]][((L["srel"], L["port"]) if side == "o" else (L["dsink"],)) + (bool(L.get("spine")),)].append(L)
             for part, d in per.items():
                 for key, ls in d.items():
                     if side == "o":
                         ls.sort(key=lambda L: (L["dsink"], self.parts[L["dst"]]["type"], L["dst"]))
-                        base = f"xo__{key[0]}__{key[1]}"
+                        base = f"{'rs' if key[-1] else 'xo'}__{key[0]}__{key[1]}"
                     else:
                         ls.sort(key=lambda L: (L["srel"], L["port"], self.parts[L["src"]]["type"], L["src"]))
-                        base = f"xi__{key[0]}"
+                        base = f"{'ri' if key[-1] else 'xi'}__{key[0]}"
                     for n, L in enumerate(ls):
                         L[f"{side}name"] = short_id(base, 72) + (f"__{n}" if len(ls) > 1 else "")
         self.links += dl
@@ -810,7 +1107,7 @@ class Binder:
             if not m:
                 self.root[p] = ""
 
-    def _route(self, srcs, dst, keys, out_of, heapq):
+    def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
         already carry (ties: lane id).  Falls back to the widest path when no lane path has room for the whole block."""
         best = None
@@ -825,6 +1122,8 @@ class Binder:
                 if dist.get(x, (1 << 30, ""))[:2] < (d, tie):
                     continue
                 for L in out_of.get(x, []):
+                    if only is not None and not only(L):
+                        continue
                     room = L["left"] + sum(1 for k in keys if k in L["carried"])
                     if room <= 0 or (need_all and room < len(keys)):
                         continue
@@ -866,13 +1165,373 @@ class Binder:
                     d = self.sinks[(ci, pn, i)]
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
                 conns[(r, pn)] = tuple(row)
-        obus = sorted((L["oname"], tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
+        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"]) for L in self.in_bus[p])     # the source is outside the module
+        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
-        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft, clocks=tuple(sorted(self.clk_dom[p])))
+        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
+                   clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         return sig, inst_vals
+
+    def align_landings(self):
+        """asbuilt.land_align = "cell": the crossing inputs of one sink leaf from one source partition keep their as-built
+        RELATIVE timing: each bit's bound latency minus its as-built latency is raised to the group's largest by
+        reset-less pad stages (ot_dp_dly) after the in-boundary flop, so a bus split over lanes of different depth (or a
+        valid that was one cycle ahead of its data) lands as built, shifted by one constant per group.
+        asbuilt.land_align_exclude: regexes on "<sink leaf path>.<port>" whose bits are not padded (e.g. ports whose
+        leaf parameters are re-derived from the bound lanes by param_regen instead)."""
+        self.pad_stats = dict(groups=0, padded_groups=0, padded_bits=0, pad_flops=0, max_pad=0)
+        self.land_pads = {}
+        if self.ab.get("land_align") == "r8":
+            return self.align_r8()
+        if self.ab.get("land_align") != "cell":
+            return
+        grp = defaultdict(list)
+        excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x" and not any(x.fullmatch(f"{self.F.cells[ci].path}.{pn}") for x in excl):
+                grp[(ci, d[1])].append((pn, i, d))
+        st = self.pad_stats
+        for (ci, sp), items in grp.items():
+            st["groups"] += 1
+            delta = [self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] - d[5] for _pn, _i, d in items]
+            top = max(delta)
+            if all(x == top for x in delta):
+                continue
+            st["padded_groups"] += 1
+            for (pn, i, d), x in zip(items, delta):
+                pad = top - x
+                if pad:
+                    self.sinks[(ci, pn, i)] = d + (pad,)
+                    st["padded_bits"] += 1
+                    st["max_pad"] = max(st["max_pad"], pad)
+                    lp = self.land_pads.setdefault(f"{self.F.cells[ci].path}.{pn}", dict(src_part=sp, pads=[pad, pad], bits=0))
+                    lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
+                    lp["bits"] += 1
+        # flops: one ot_dp_dly per (partition, in-bus bit, pad)
+        seen = set()
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x" and len(d) > 7:
+                L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+                k = (d[6], L["iname"], j, d[7])
+                if k not in seen:
+                    seen.add(k)
+                    st["pad_flops"] += d[7]
+
+    def _apply_inner(self, inner, cidx, st):
+        """INNER:<part>:<sink>.<port><-<source leaf>@<as-built> members of an extra pad table: every intra-partition sink
+        bit of that edge (top-level or inside an OR) gets `landed` kept stages instead of the as-built count (0 = direct);
+        ot_dp_dly instances no sink uses any more are dropped (intra_dly rebuilt from the sinks)."""
+        want, noop = {}, 0
+        for m in inner:
+            if m["sink"] == m["source"] and m["landed"] == m["asbuilt"]:
+                noop += 1          # a leaf's own loop (no binder edge), unchanged: nothing to realise
+                continue
+            ci, sci = cidx.get(m["sink"]), cidx.get(m["source"])
+            if ci is None or sci is None:
+                st["stale"] += 1
+                self.errors.append(f"R8_STALE {m['id']}: no such sink / source leaf in this bind")
+                continue
+            want[(ci, m["sink_port"], sci, int(m["asbuilt"]))] = (int(m["landed"]), m)
+        hit, changed = set(), [0]
+
+        def fix(ci, pn, d):
+            if not isinstance(d, tuple) or not d:
+                return d
+            if d[0] == "int":
+                w = want.get((ci, pn, d[1], d[4]))
+                if w is None:
+                    return d
+                hit.add((ci, pn, d[1], d[4]))
+                if w[0] != d[4]:
+                    changed[0] += 1
+                    return ("int", d[1], d[2], d[3], w[0])
+                return d
+            if d[0] in ("or", "and"):
+                return (d[0], tuple(fix(ci, pn, u) for u in d[1]))
+            return d
+        for k, d in list(self.sinks.items()):
+            nd = fix(k[0], k[1], d)
+            if nd != d:
+                self.sinks[k] = nd
+        miss = [w[1]["id"] for k, w in want.items() if k not in hit]
+        for i in miss[:30]:
+            self.errors.append(f"R8_STALE {i}: no intra-partition sink bit of this edge at that as-built depth")
+        st["stale"] += len(miss)
+        # rebuild the kept-stage set from what the sinks use
+        used = defaultdict(set)
+
+        def walk(p, d):
+            if d and d[0] == "int" and d[4]:
+                used[p].add((d[1], d[2], d[4]))
+            elif d and d[0] in ("or", "and"):
+                for u in d[1]:
+                    walk(p, u)
+        for (ci, pn, i), d in self.sinks.items():
+            walk(self.cpart.get(ci), d)
+        before = sum(len(v) for v in self.intra_dly.values())
+        for p in list(self.intra_dly):
+            self.intra_dly[p] = used.get(p, set())
+        for p, v in used.items():
+            self.intra_dly[p] = v
+        st["inner"] = dict(members=len(inner), self_noop=noop, matched=len(hit), changed_bits=changed[0], stale=len(miss),
+                           dly_sets_before=before, dly_sets_after=sum(len(v) for v in self.intra_dly.values()))
+
+    def align_r8(self):
+        """asbuilt.land_align = "r8" (COORD 10-23 16:58 R8 SOURCE OF TRUTH): the landing pads are NOT computed here but
+        read from PLAN-TOOL3's r8 landing table (tools/die_plan/r8.py; asbuilt.land_r8, default
+        PLANDIR/r8/<die>_r8_landing.json): every member (sink leaf.port[bits] <- source pin @ as-built stages) gets its
+        `pad` as reset-less ot_dp_dly stages after the sink partition's in boundary flop, so plan, bound top and compiler
+        share one table (landed = bound + pad).  Every member must match this bind (same sink bits, source pin, as-built
+        stages, bound depth): a mismatch = R8_STALE (the table was made on another bind / plan), a crossing bit the table
+        does not list (other than reset spines / reset bits, r8.is_async) = R8_UNCOVERED; both are errors.
+        asbuilt.land_align_exclude still names ports whose timing a param_regen hook carries: those get NO pad; each
+        such member whose table pad is non-zero is listed in pad_stats.r8_excluded (the table should exempt them)."""
+        import r8 as R8
+        die = self.plan["die"]["name"]
+        f = self.ab.get("land_r8")
+        if f:
+            f = Path(f) if Path(f).is_absolute() else Path(self.base) / f
+        else:
+            f = self.plan_dir / "r8" / f"{die}_r8_landing.json"
+        js = json.loads(Path(f).read_text())
+        if js.get("die") != die:
+            self.errors.append(f"R8_TABLE {f}: die {js.get('die')} != plan die {die}")
+            return
+        # pins the table left outside R8: r8.py --exempt (recorded in the table) + asbuilt.land_r8_exempt (a die's own
+        # bus-group prep, e.g. KV r8_fault_exempt.py); used only to excuse crossing bits the table does not list
+        R8.EXEMPT[:] = [re.compile(x) for x in js.get("exempt", []) + self.ab.get("land_r8_exempt", [])]
+        # asbuilt.land_r8_extra: owner pad tables in the r8 member schema (e.g. KV-P6-PV kv_pv_pads_v36.json), each
+        # AUTHORITATIVE for the ids it lists (replaces the r8 member of the same id; new ids are added); INNER:<part>:
+        # members re-size the intra-partition ot_dp_dly of one (sink leaf.port <- source leaf @ as-built stages) edge
+        inner, extra_info = [], []
+        for xf in self.ab.get("land_r8_extra", []):
+            xf = Path(xf) if Path(xf).is_absolute() else Path(self.base) / xf
+            xj = json.loads(xf.read_text())
+            xm = {m["id"]: m for m in xj["members"] if not m["id"].startswith("INNER:")}
+            inner += [m for m in xj["members"] if m["id"].startswith("INNER:")]
+            ids = {m["id"] for m in js["members"]}
+            js["members"] = [xm.get(m["id"], m) for m in js["members"]] + [m for i, m in xm.items() if i not in ids]
+            extra_info.append(dict(table=str(xf), sha=hashlib.sha256(xf.read_bytes()).hexdigest()[:16],
+                                   replaced=sum(i in ids for i in xm), added=sum(i not in ids for i in xm),
+                                   inner=sum(1 for m in xj["members"] if m["id"].startswith("INNER:"))))
+        excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
+        cidx = self.cell_index()
+        st = self.pad_stats
+        st.update(mode="r8", table=str(f), table_sha=hashlib.sha256(Path(f).read_bytes()).hexdigest()[:16],
+                  table_summary=js.get("summary", {}), members=0, stale=0, uncovered=0, excluded_bits=0,
+                  r8_excluded=[], async_bits=0, table_exempt=js.get("exempt", []), table_bus=js.get("bus"),
+                  table_replica=js.get("replica"))
+        # Yosys-internal cells ($or / $and fault reducers) are renumbered by every elaboration: a table name that is not
+        # in this bind matches the unique cell with the same canonical name ($op$<file:line$N> -> $op$#)
+        def canon(x):
+            return re.sub(r"\$(\w+)\$[\w.]+:\d+\$\d+", r"$\1$#", x)
+        cmap = defaultdict(list)
+        for k, v in cidx.items():
+            if "$" in k:
+                cmap[canon(k)].append(v)
+        xsrc = defaultdict(set)
+        for (c, pn, i), d in self.sinks.items():
+            if d[0] == "x" and "$" in self.F.cells[c].path:
+                xsrc[(c, pn)].add(canon(f"{self.F.cells[d[2]].path}.{d[3]}"))
+        st["renamed_cells"] = 0
+        st["gone_pad0"] = []
+        want = {}
+        for m in js["members"]:
+            st["members"] += 1
+            ci = cidx.get(m["sink"])
+            if ci is None and cmap.get(canon(m["sink"])):
+                cs = cmap[canon(m["sink"])]
+                if len(cs) > 1:     # several reducers of one op in that parent: the one this member's source drives
+                    cs = [c for c in cs if canon(m["source"]) in xsrc.get((c, m["sink_port"]), ())]
+                if len(cs) == 1:
+                    ci = cs[0]
+                    st["renamed_cells"] += 1
+            bits = [i for a, b in m["sink_bits"] for i in range(a, b + 1)]
+            if ci is None or m["sink_port"] not in self.F.cells[ci].ports:
+                if not m["pad"]:
+                    # a sink the RTL removed (e.g. QC-P5-TIE chain ends drop sc_dn_i / sc_up_i): no pad was due
+                    st["gone_pad0"].append(m["id"])
+                    continue
+                st["stale"] += 1
+                if st["stale"] <= 30:
+                    self.errors.append(f"R8_STALE {m['id']}: no such sink leaf/port in this bind")
+                continue
+            for i in bits:
+                want[(ci, m["sink_port"], i)] = m
+        seen = set()
+        for (ci, pn, i), d in list(self.sinks.items()):
+            if d[0] != "x":
+                continue
+            m = want.get((ci, pn, i))
+            path = self.F.cells[ci].path
+            if m is None:
+                src = f"{self.F.cells[d[2]].path}.{d[3]}"
+                L = self.bitpos[(d[1], d[6], d[2], d[3], d[4])][0]
+                lane = L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED")
+                if R8.is_async(dict(lane=lane, sink_port=pn, source=src)):
+                    st["async_bits"] += 1
+                    continue
+                st["uncovered"] += 1
+                if st["uncovered"] <= 30:
+                    self.errors.append(f"R8_UNCOVERED {path}.{pn}[{i}] <- {src}[{d[4]}]: crossing bit not in the r8 table")
+                continue
+            seen.add((ci, pn, i))
+            b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+            src = f"{self.F.cells[d[2]].path}.{d[3]}"
+            if canon(src) != canon(m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
+                st["stale"] += 1
+                if st["stale"] <= 30:
+                    self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
+                                       f"{m['source']} as-built {m['asbuilt']} bound {m['bound']}")
+                continue
+            pad = m["pad"]
+            if any(x.fullmatch(f"{path}.{pn}") for x in excl):
+                st["excluded_bits"] += 1
+                if pad and (not st["r8_excluded"] or st["r8_excluded"][-1]["id"] != m["id"]):
+                    st["r8_excluded"].append(dict(id=m["id"], table_pad=pad, applied=0))
+                continue
+            if pad:
+                self.sinks[(ci, pn, i)] = d + (pad,)
+                st["padded_bits"] += 1
+                st["max_pad"] = max(st["max_pad"], pad)
+                lp = self.land_pads.setdefault(f"{path}.{pn}", dict(src_part=d[1], pads=[pad, pad], bits=0, r8=True))
+                lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
+                lp["bits"] += 1
+        miss = [k for k in want if k not in seen]
+        for k in miss:
+            m = want[k]
+            st["stale"] += 1
+            if st["stale"] <= 30:
+                self.errors.append(f"R8_STALE {m['id']} bit {k[2]}: bit is not a crossing in this bind")
+        if extra_info:
+            st["extra_tables"] = extra_info
+            self._apply_inner(inner, cidx, st)
+        st["groups"] = len({m["id"] for m in js["members"]})
+        st["padded_groups"] = len({m["id"] for m in js["members"] if m["pad"]})
+        seen_f = set()
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x" and len(d) > 7:
+                L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+                k = (d[6], L["iname"], j, d[7])
+                if k not in seen_f:
+                    seen_f.add(k)
+                    st["pad_flops"] += d[7]
+
+    def depth(self, path, port):
+        """bound landed depth (register stages incl. landing pads) per bit of input `port` of leaf `path`:
+        {bit: stages}; a bit not on a crossing is 0 (same partition)."""
+        ci = self.cell_index()[path]
+        out = {}
+        for i in range(len(self.F.cells[ci].ports[port])):
+            d = self.sinks[(ci, port, i)]
+            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
+        return out
+
+    def cell_index(self):
+        if not hasattr(self, "_cidx"):
+            self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
+        return self._cidx
+
+    def regen_params(self):
+        """asbuilt.param_regen {file, ...}: a die hook `regen(ctx)` that re-derives leaf parameters from the BOUND lane
+        latencies (e.g. the collective calendar LS / face PHY / R from the SerDes and core<->face lanes) and returns
+        {"params": {leaf path: {param: value}}, "record": {...}}; ctx = this binder (ctx.depth(path, port), ctx.F,
+        ctx.base, ctx.ab).  Values replace the as-built parameters before the types are formed."""
+        self.param_regen = None
+        spec = self.ab.get("param_regen")
+        if not spec:
+            return
+        import importlib.util
+        f = Path(spec["file"])
+        f = f if f.is_absolute() else Path(self.base) / f
+        m = importlib.util.spec_from_file_location("bind_param_regen", f)
+        mod = importlib.util.module_from_spec(m)
+        m.loader.exec_module(mod)
+        try:
+            r = mod.regen(self)
+        except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
+            self.errors.append(f"PARAM_REGEN {f.name}: {e}")
+            return
+        changed = []
+        for path, ps in r["params"].items():
+            ci = self.cell_index().get(path)
+            if ci is None:
+                self.errors.append(f"PARAM_REGEN {path}: no such leaf")
+                continue
+            c = self.F.cells[ci]
+            for k, v in ps.items():
+                if k not in c.params:
+                    self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
+                    continue
+                old = str(c.params[k]).strip('"')
+                if old != str(v):
+                    changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
+                c.params[k] = str(v)
+        self.param_regen = dict(file=str(spec["file"]), changed=changed, record=r.get("record", {}))
+
+    def bus_groups(self):
+        """as-built timing groups for the planner (COORD R8): bits that must keep their as-built relative timing.
+        landing: per sink leaf and source partition, its crossing input bits with their as-built register stages (bits
+          with equal stages were same-cycle as built; different stages = a fixed as-built offset, e.g. valid one cycle
+          ahead of data), the lanes they ride and the bound depth per bit (before / after landing pads);
+        replica: per source pin, the sink partitions that received it at the SAME as-built depth (broadcast to replicas,
+          e.g. heads hc0..hc3): their bound depths must stay equal too."""
+        F = self.F
+
+        def ranges(xs):
+            xs = sorted(set(xs))
+            out = []
+            for x in xs:
+                if out and out[-1][1] + 1 == x:
+                    out[-1][1] = x
+                else:
+                    out.append([x, x])
+            return out
+        land = defaultdict(lambda: defaultdict(list))
+        rep = defaultdict(lambda: defaultdict(set))
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] != "x":
+                continue
+            L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+            b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+            pad = d[7] if len(d) > 7 else 0
+            land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", d[5], b0, b0 + pad,
+                              L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"))].append((i, d[4]))
+            rep[(d[2], d[3], d[4], d[5])][d[6]].add(b0 + pad)
+        groups = []
+        for (ci, sp), m in sorted(land.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1])):
+            mem = []
+            for (pn, src, st, b0, b1, lane), bl in sorted(m.items()):
+                mem.append(dict(sink_port=pn, sink_bits=ranges(x for x, _ in bl), source=src,
+                                source_bits=ranges(y for _, y in bl), asbuilt_stages=st, bound_stages=b0,
+                                landed_stages=b1, lane=lane))
+            off = {x["landed_stages"] - x["asbuilt_stages"] for x in mem}
+            off0 = {x["bound_stages"] - x["asbuilt_stages"] for x in mem}
+            groups.append(dict(sink=F.cells[ci].path, sink_part=self.cpart[ci], src_part=sp,
+                               aligned_by_lanes=len(off0) == 1, aligned_landed=len(off) == 1,
+                               asbuilt_stage_set=sorted({x["asbuilt_stages"] for x in mem}), members=mem))
+        reps = []
+        for (sci, spn, b, st), parts in rep.items():
+            if len(parts) > 1:
+                reps.append((F.cells[sci].path, spn, b, st, {p: sorted(v) for p, v in sorted(parts.items())}))
+        rg = defaultdict(list)
+        for path, spn, b, st, parts in reps:
+            rg[(path, spn, st, tuple(sorted(parts)))].append((b, parts))
+        replicas = []
+        for (path, spn, st, ps), bl in sorted(rg.items()):
+            depth = {p: sorted({x for _, pp in bl for x in pp[p]}) for p in ps}
+            replicas.append(dict(source=f"{path}.{spn}", source_bits=ranges(b for b, _ in bl), asbuilt_stages=st,
+                                 sink_parts=list(ps), bound_depths=depth,
+                                 equal=len({x for v in depth.values() for x in v}) == 1))
+        return dict(schema="opentallas.die_plan.bus_groups.v1", die=self.plan["die"]["name"],
+                    note=self.bus_groups.__doc__.split("\n\n")[0],
+                    summary=dict(landing_groups=len(groups),
+                                 landing_misaligned_by_lanes=sum(1 for g in groups if not g["aligned_by_lanes"]),
+                                 landing_misaligned_after_pads=sum(1 for g in groups if not g["aligned_landed"]),
+                                 replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
+                    landing=groups, replica=replicas)
 
     def _rel_desc(self, p, d, inst_vals, where):
         k = d[0]
@@ -880,13 +1539,40 @@ class Binder:
             return ("int", self.rel_of(d[1]), d[2], d[3], d[4])
         if k == "x":
             L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
-            return ("bus", L["iname"], j)
+            return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 else ())
         if k == "strap":
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
-        if k == "or":
-            return ("or", tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+        if k in ("or", "and"):
+            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+        if k == "clk":
+            return ("clk", self.cport(p, d[1]))
         return d
+
+    def clk_role(self, p, d):
+        """asbuilt.clock_roles [[regex, replacement], ...] (KV-P5 15:59 type-split ask): the partition-local name of die
+        clock domain d, e.g. clk_hbm_(WS|WN|ES|EN) -> clk_hbm, so per-quadrant copies of one type bind one module (the
+        top connects each instance's role port to its own die clock).  A role shared by two domains of one partition
+        keeps the domain names."""
+        if not hasattr(self, "_roles"):
+            self._roles = {}
+        if p not in self._roles:
+            rules = [(re.compile(a), b) for a, b in self.ab.get("clock_roles", [])]
+
+            def role(x):
+                for rx, b in rules:
+                    if rx.fullmatch(x):
+                        return rx.sub(b, x)
+                return x
+            m = {x: role(x) for x in self.clk_dom[p]}
+            if len(set(m.values())) != len(m):
+                m = {x: x for x in m}
+            self._roles[p] = m
+        return self._roles[p].get(d, d)
+
+    def cport(self, p, d):
+        """the partition module's clock port that carries die clock domain d"""
+        return "clk" if d == self.default_domain(p) else f"clk_{sv_id(self.clk_role(p, d))}"
 
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
@@ -986,6 +1672,7 @@ class Binder:
         (out / "bind_cells.sv").write_text(CELLS)
         files = [out / "bind_cells.sv"]
         self.pnames = {}
+        self.io_used = {}
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
             txt, pnames = self.emit_type(tn, ps[0])
@@ -1030,9 +1717,22 @@ class Binder:
                 pdecl.append(f"    parameter {nm} = {vals[0]}")
                 pnames[k] = (nm, None)
         ports = ["    input  wire clk", "    input  wire arst_n"]
-        doms = sorted(self.clk_dom[p] - {self.default_domain(p)})
+        # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
+        io = set()
+        for ci in self.members[p]:
+            for pn, bits in F.cells[ci].ports.items():
+                if G.dirs[ci].get(pn) == "input":
+                    for i in range(len(bits)):
+                        d = self.sinks[(ci, pn, i)]
+                        for x in (d[1] if d[0] in ("or", "and") else [d]):
+                            if x[0] == "top":
+                                io.add(x[1])
+        self.io_used[tn] = sorted(io)
+        for n in sorted(io):
+            ports.append(f"    input  wire [{len(F.top_ports[n][1]) - 1}:0] io_{sv_id(n)}   // die IO {n}")
+        doms = sorted(self.clk_dom[p] - {self.default_domain(p)}, key=lambda d: self.cport(p, d))
         for d in doms:
-            ports.append(f"    input  wire clk_{sv_id(d)}")
+            ports.append(f"    input  wire {self.cport(p, d)}")
         decl, body = [], []
         body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                     f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
@@ -1041,8 +1741,23 @@ class Binder:
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
         for L in ibus:
             n, W = L["iname"], L["width"]
+            if L.get("spine"):
+                ports.append(f"    input  wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'in')}")
+                decl.append(f"    wire [{W - 1}:0] {n}_q;")
+                body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
+                continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
+            pad = lane_pad(L)
+            if pad > 0:
+                # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
+                # data and epoch together, so the lane lands at its table cycles
+                decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
+                            f".q({n}_b), .eq({n}_eb));")
+                body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
+                            f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
+                continue
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), .ea({n}[{W}]), "
                         f".q({n}_q), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
@@ -1054,9 +1769,24 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
+        ub = []
+        render = None
+        if self.pc:
+            render = self.pc.emit(p, tn, {L["iname"]: L["width"] for L in ibus},
+                                  {L["oname"]: L["width"] for L in obus if L.get("plan")}, drv_w,
+                                  {self.rel_of(ci): ci for ci in self.members[p]}, decl, body, ub)
         for L in obus:
             n, W = L["oname"], L["width"]
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
+            if L.get("spine"):
+                ports[-1] = f"    output wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'out')}"
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
+                continue
+            if L.get("plan"):
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
+                            f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
+                continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
             body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
@@ -1086,7 +1816,7 @@ class Binder:
             decl.append(f"    wire [{W - 1}:0] {nm};")
             body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
-        ub = []
+        pads = {}
 
         def expr(d, ci, pn, i):
             nonlocal need_rst
@@ -1096,9 +1826,18 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
+                    key = (L["iname"], j, d[7])
+                    if key not in pads:
+                        nm = short_id(f"pd{d[7]}_{L['iname']}_{j}", 100)
+                        pads[key] = nm
+                        decl.append(f"    wire [0:0] {nm};")
+                        body.append(f"    ot_dp_dly #(.W(1), .D({d[7]})) u_{nm} (.clk(clk), .d({L['iname']}_q[{j}]), "
+                                    f".q({nm}));  // landing pad: as-built relative timing")
+                    return f"{pads[key]}[0]"
                 return f"{L['iname']}_q[{j}]"
             if k == "clk":
-                return "clk" if d[1] == self.default_domain(p) else f"clk_{sv_id(d[1])}"
+                return self.cport(p, d[1])
             if k == "rst":
                 if d[1] == "low":
                     return "rst_n"
@@ -1107,20 +1846,27 @@ class Binder:
             if k == "strap":
                 nm, _w = pnames[("strap", self.rel_of(ci), pn)]
                 return f"{nm}[{i}]"
+            if k == "plan":
+                if render is None:
+                    raise BindError(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
+                return render(d[1])
+            if k == "top" and d[1] in F.top_ports:
+                return f"io_{sv_id(d[1])}[{d[2]}]"
             if k in ("tied", "top", "err"):
                 # never a constant: an unresolved bit stays an undriven wire, reported (bind_report proof)
                 nm = f"ub_{len(ub)}"
                 ub.append(nm)
                 decl.append(f"    wire {nm};  // UNBOUND {k}: {self.F.cells[ci].path}.{pn}[{i}] (see bind_report errors)")
                 return nm
-            if k == "or":
+            if k in ("or", "and"):
                 key = d
                 if key not in orn:
-                    nm = f"or_{len(orn)}"
+                    nm = f"{k}_{len(orn)}"
                     orn[key] = nm
                     decl.append(f"    wire {nm};")
                     ins = [expr(x, ci, pn, i) for x in d[1]]
-                    body.append(f"    ot_dp_or #(.N({len(ins)})) u_{nm} (.a({_concat(ins)}), .y({nm}));  // re-emitted fault OR")
+                    body.append(f"    ot_dp_{k} #(.N({len(ins)})) u_{nm} (.a({_concat(ins)}), .y({nm}));  // re-emitted "
+                                + ("fault OR" if k == "or" else "AND join"))
                 return orn[key]
             raise BindError(f"no expression for {d}")
         insts = []
@@ -1170,13 +1916,16 @@ class Binder:
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
+        ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
         wires, insts = [], []
         conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
             for sp, sb, dp, db in hops:
                 nm = short_id(f"x_{sp}__{sb}__{dp}", 120)
-                wires.append(f"    wire [{L['width']}:0] {nm};" + (f"  // lane {L['lane']}" if L.get("lane") else ""))
+                wires.append(f"    wire [{L['width'] - (1 if L.get('spine') else 0)}:0] {nm};" +
+                             (f"  // lane {L['lane']}" if L.get("lane") else "  // reset spine" if L.get("spine") else ""))
                 conn[sp].append((sb, nm))
                 conn[dp].append((db, nm))
         for p in sorted(self.members):
@@ -1198,8 +1947,10 @@ class Binder:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
-            for d in sorted(self.clk_dom[p] - {dd}):
-                cs.append(f"        .clk_{sv_id(d)}(clk_{sv_id(d)})")
+            for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
+                cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
+            for n in self.io_used.get(tn, []):
+                cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
             for port, w in sorted(conn[p]):
                 cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""
@@ -1238,7 +1989,7 @@ class Binder:
         lat = []
         for L in self.links:
             st = L["stages"]
-            bound = 2 + sum(h["stations"] for h in L["ft"])
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -1261,6 +2012,9 @@ class Binder:
                               lane_bits=sum(L["width"] for L in self.links if L["lane"]),
                               unplanned_bits=sum(self.unplanned.values()),
                               unplanned_pairs={f"{a}->{b}": n for (a, b), n in sorted(self.unplanned.items())},
+                              unplanned_bit_list=self.unplanned_bits,
+                              reset_spine_bits=dict(self.spine_bits),
+                              landing_alignment=self.pad_stats,
                               ft_hops=sum(len(L["ft"]) for L in self.links),
                               forwarded_bits=sum(self.forwarded.values()),
                               forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
@@ -1269,7 +2023,7 @@ class Binder:
                    proof=dict(unbound=c.get("undriven", 0) + c.get("source_unmapped", 0) + sum(self.unplanned.values()),
                               tied=c.get("tied", 0),
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
-                              straps=c.get("strap", 0)),
+                              straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
         return rep, lat
 
@@ -1302,6 +2056,10 @@ def _seg_summary(L, F):
 def _bus_note(L, side):
     sg = _seg_summary(L, None)
     segs = ", ".join(sg[:3]) + (" ..." if len(sg) > 3 else "")
+    if L.get("spine"):
+        return f"reset spine {L['src']} -> {L['dst']}, released after {L['cycles']} clocks"
+    if L.get("plan"):
+        return f"lane {L['lane']}, {L.get('cycles', 2)} cycles: plan-cell bus {L['src']} -> {L['dst']}"
     lane = f"lane {L['lane']}, {L.get('cycles', 2)} cycles" if L.get("lane") else \
         "UNPLANNED direct" if L.get("unplanned") else "direct (plan has no lanes)"
     return f"{lane}: {L['src']} {segs} -> {L['dst']}" if side == "in" else f"{lane}: {segs} -> {L['dst']}"
@@ -1421,6 +2179,8 @@ def cmd_bind(a):
     B.map_cells()
     B.analyse()
     B.build_buses()
+    B.align_landings()
+    B.regen_params()
     B.check_types()
     files = []
     try:
@@ -1434,9 +2194,17 @@ def cmd_bind(a):
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
+    rep["parent_variants"] = B.F.parent_variants
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if B.param_regen:
+        rep["param_regen"] = B.param_regen
+        (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
+    if B.rewire_stats:
+        rep["rewires"] = dict(file=B.ab["rewires"]["file"], bits=B.rewire_stats)
+    if B.pc:
+        rep["plan_cells"] = dict(file=B.ab["plan_cells"], **B.pc.stats)
     rep["tied_by_port"] = dict(sorted(B.tied_by_port.items(), key=lambda kv: -kv[1]))
     names = {}
     for ci, p in B.cpart.items():
@@ -1445,13 +2213,16 @@ def cmd_bind(a):
     (out / "bind_names.json").write_text(json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
-        sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d)
+        sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
+    bg = B.bus_groups()
+    rep["bus_groups"] = bg["summary"]
+    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
-                                                           buses=lat), indent=1))
+                                                           buses=lat, landing_pads=B.land_pads), indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
@@ -1460,22 +2231,230 @@ def cmd_bind(a):
     return 1 if (B.errors and a.strict) else 0
 
 
-def _desc_json(B, d):
+def cmd_portbind(a):
+    """the strict port-bind check (tools/die_port_bind.py, owner NO STUBS rule) on the bound top: indexed against the
+    as-built source tree (asbuilt base: rtl roots, files, prefer) + the generated RTL + the plan-cell / variant files."""
+    import subprocess
+    raw = load_plan(a.plan)
+    ab = raw["asbuilt"]
+    base = Path(plan_base(a.plan, raw)).resolve()
+    out = Path(a.out).resolve()
+    rep = json.loads((out / "bind_report.json").read_text())
+    top = next((out / "rtl").glob("*_bound_top.sv"))
+    # die_port_bind indexes relative to its own repo root: run a copy in a root that mirrors the as-built base
+    root = out / "portbind_root"
+    if root.exists():
+        shutil.rmtree(root)
+    (root / "tools").mkdir(parents=True)
+    shutil.copy(HERE.parent / "die_port_bind.py", root / "tools" / "die_port_bind.py")
+    for x in base.iterdir():
+        if x.name != "tools":
+            (root / x.name).symlink_to(x)
+    absf = lambda f: str(Path(f) if Path(f).is_absolute() else base / f)
+    cmd = [sys.executable, str(root / "tools" / "die_port_bind.py"), str(top), "--top", top.stem]
+    for r in ab.get("rtl_roots", ["rtl"]):
+        cmd += ["--rtl-root", r]
+    for f in [f for f in ab.get("files", []) if Path(absf(f)).is_file()] + rep.get("extra_lib", []) + \
+            [f for f in rep["files"] if f != str(top)] + [str(E.REPO / "rtl/lib/ot_reset_sync.sv")]:
+        cmd += ["--rtl-file", absf(f)]
+    for f in ab.get("prefer", []) + ab.get("portbind_prefer", []):
+        if Path(absf(f)).is_file():
+            cmd += ["--prefer", absf(f)]
+    for d in ab.get("defines", []):
+        cmd += ["--define", d]
+    for m in ab.get("portbind_allow_model", []):
+        cmd += ["--allow-model", m]
+    cmd += ["--out", str(out / "port_bind_strict.json")]
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=root)
+    (out / "port_bind_strict.txt").write_text(r.stdout + r.stderr)
+    shutil.rmtree(root)
+    print((r.stdout.strip().splitlines() or [r.stderr[-500:]])[0])
+    return r.returncode
+
+
+def cmd_kit_rtl(a):
+    """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
+    The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
+    flops, landing pads, regenerated parameters) inside a port-only plan wrapper named like the plan type module, with
+    the plan's exact pins (gen_rtl.wrapper order: clk, R4 tap pins, arst_n, buses [width + epoch], ft slots _i/_o).
+    A bound port is matched to the plan bus of the same name; a bound port narrower than the plan bus uses the low data
+    bits + the plan epoch bit; spare plan input bits are unread, spare plan OUTPUT bits are driven 0 and listed (no
+    input is ever tied).  Bound-only pins (die IO io_*, reset spines ri_*, extra clock roles clk_*) stay wrapper pins.
+    Writes DIR/<plan module>.sv, DIR/kit_rtl.f (absolute paths: wrapper, bound module, bind_cells, the leaf sources the
+    bound module reaches) and DIR/kit_rtl.json; gen.py phys --kit-rtl T=DIR/kit_rtl.f consumes the filelist."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import gen_rtl
+    import schema as SC
+    raw = load_plan(a.plan)
+    try:
+        P = SC.Plan(raw)                       # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
+    except KeyError:
+        P = None                               # a bind-only plan (no floorplan): data/ctl buses carry an epoch, no taps
+    out = Path(a.out)
+    tn = a.type
+    if tn not in raw["partition_types"]:
+        raise BindError(f"kit-rtl: no partition type {tn} in the plan")
+    t = raw["partition_types"][tn]
+    rep = json.loads((out / "bind_report.json").read_text())
+    key = a.variant or tn
+    variants = sorted(k for k in rep["types"] if k == tn or k.startswith(tn + "__"))
+    if key not in rep["types"]:
+        raise BindError(f"kit-rtl: bound type {key} not in {out}/bind_report.json (variants: {variants})")
+    bmod = rep["types"][key]["module"]
+    bfile = out / "rtl" / f"{bmod}.sv"
+    btxt = bfile.read_text()
+    bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
+              re.finditer(r"^\s*(input|output)\s+wire\s+(?:\[(\d+):0\]\s+)?(\w+)", btxt, re.M)]
+    bmap = {n: (d, w) for d, w, n in bports}
+    eps = gen_rtl.bus_epochs(P) if P else {}
+    plan = []                                  # (dir, name, width incl epoch, data width, epoch?)
+    for b in t.get("buses", []):
+        ep = eps.get((tn, b["name"]), b.get("kind", "data") in ("data", "ctl"))
+        plan.append(("input" if b["dir"] == "in" else "output", gen_rtl.sv_id(b["name"]), b["width"] + int(ep), b["width"], ep))
+    for sl in t.get("ft_slots", []):
+        for sfx, d in (("_i", "input"), ("_o", "output")):
+            ep = eps.get((tn, sl["name"] + sfx), True)
+            plan.append((d, gen_rtl.sv_id(sl["name"] + sfx), sl["width"] + int(ep), sl["width"], ep))
+    taps = [n for n, _x, _y in SC.tap_grid(P, tn)[1:]] if P else []
+    ports = [("input  wire clk", "clock entry: spine tap 0")] + \
+        [(f"input  wire {n}", "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)") for n in taps]
+    ports.append(("input  wire arst_n", "die reset"))
+    conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
+    seen = {"clk", "arst_n"}
+    for d, n, W, Wd, ep in plan:
+        ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
+        if n not in bmap:
+            missing.append(n)
+            if d == "output":
+                body.append(f"    assign {n} = {W}'d0;  // plan bus with no bound bit (spare lane)")
+                spare.append(dict(port=n, bits=W))
+            continue
+        seen.add(n)
+        bd, bw = bmap[n]
+        if (bd == "input") != (d == "input"):
+            raise BindError(f"kit-rtl {tn}: {n} is {bd} in {bmod} but {d} in the plan")
+        bwd = bw - 1 if ep else bw              # bound data width (bound ports carry the epoch at the top bit)
+        if bwd > Wd:
+            raise BindError(f"kit-rtl {tn}: bound {n} carries {bwd} data bits > plan width {Wd}")
+        if bwd < Wd:
+            narrow.append(dict(port=n, plan=Wd, bound=bwd))
+        if d == "input":
+            sig = f"{{{n}[{W - 1}], {n}[{bwd - 1}:0]}}" if ep and bwd else (f"{n}[{W - 1}]" if ep else f"{n}[{bwd - 1}:0]")
+            conns.append(f".{n}({sig})")
+        else:
+            w = f"b_{n}"
+            body.append(f"    wire [{bw - 1}:0] {w};")
+            if ep:
+                body.append(f"    assign {n}[{W - 1}] = {w}[{bw - 1}];" + (f"\n    assign {n}[{bwd - 1}:0] = {w}[{bwd - 1}:0];" if bwd else ""))
+            else:
+                body.append(f"    assign {n}[{bwd - 1}:0] = {w}[{bwd - 1}:0];")
+            if bwd < Wd:
+                body.append(f"    assign {n}[{Wd - 1}:{bwd}] = {Wd - bwd}'d0;  // spare plan bits (bound carries {bwd})")
+                spare.append(dict(port=n, bits=Wd - bwd))
+            conns.append(f".{n}({w})")
+    extra = []
+    for d, w, n in bports:
+        if n in seen:
+            continue
+        extra.append(dict(port=n, dir=d, width=w))
+        ports.append((f"{d:6} wire [{w - 1}:0] {n}", "bound-only pin (die IO / reset spine / clock role): not a plan bus"))
+        conns.append(f".{n}({n})")
+    # per-instance parameters (straps) of the bound module, as the bound top passes them: one hardened kit = one value set
+    top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
+    pinst = {m.group(2): (m.group(1) or "").strip() for m in
+             re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+    if a.instance:
+        if a.instance not in pinst:
+            raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
+        pset = pinst[a.instance]
+    elif len(set(pinst.values())) > 1:
+        raise BindError(f"kit-rtl {tn}: instances of {bmod} carry different parameters {sorted(set(pinst.values()))[:3]}: "
+                        "pass --instance (one kit per value set)")
+    else:
+        pset = next(iter(pinst.values()), "")
+    mod = t["module"]
+    kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
+    kd.mkdir(parents=True, exist_ok=True)
+    if bmod == mod:          # bound module and plan module share a name: the kit carries the bound module renamed
+        nb = bmod + "_bound"
+        (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
+        bfile, bmod = kd / f"{nb}.sv", nb
+    txt = (f"// GENERATED by tools/die_plan/bind.py kit-rtl: G3 kit RTL of plan type {tn} = bound module {bmod}\n"
+           f"// ({out.name}) inside a port-only plan wrapper.  Do not edit.\n`timescale 1ns/1ps\n`default_nettype none\n"
+           f"module {mod} (\n" + "\n".join(f"    {d}{',' if i < len(ports) - 1 else ' '}  // {c}" for i, (d, c) in
+                                             enumerate(ports)) + "\n);\n" + "\n".join(body) + "\n" +
+           f"    {bmod} {pset + ' ' if pset else ''}u_bound (\n        " + ",\n        ".join(conns) + "\n    );\nendmodule\n`default_nettype wire\n")
+    (kd / f"{mod}.sv").write_text(txt)
+    # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
+    ab0 = raw["asbuilt"]
+    base = plan_base(a.plan, raw)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
+        rep.get("extra_lib", [])
+    leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
+                   set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
+    cl, cl_missing = E.closure(leafm, idx, prefer)
+    if cl_missing:
+        raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
+    files = [Path(f).resolve() for f in cl]
+    rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
+    fl = [kd / f"{mod}.sv", bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] + [f for f in files if f.name != "bind_cells.sv"]
+    (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
+    man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
+               plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl])
+    (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
+    print(json.dumps(dict(kit=str(kd), module=mod, bound=bmod, variants=len(variants), files=len(fl),
+                          spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
+                          bound_only=[x["port"] for x in extra])))
+    return 0
+
+
+def lane_pad(L):
+    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
+    if L.get("spine") or not L.get("lane") or "cycles" not in L:
+        return 0
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])))
+
+
+def _desc_json(B, d, ci_part=None):
     k = d[0]
     if k == "int":
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
     if k == "x":
-        st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+        st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
-    if k == "or":
-        return ["or", sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
+    if k in ("or", "and"):
+        return [k, sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]
+    if k == "plan":
+        return ["plan", _plan_expect(B, ci_part, d[1])]
     return [k] + list(d[1:2])
+
+
+def _plan_expect(B, p, a):
+    """the bound driver a plan-driven leaf input must see: a plan cell / leaf of its own partition (None: a bus or a
+    net -- any live driver, the plan's own chain connectivity)"""
+    if a[0] == "cell":
+        return f"{sv_id(p)}.u_{a[1]}.{a[2]}[{a[3]}]"
+    if a[0] == "leaf":
+        ci = {B.rel_of(c): c for c in B.members[p]}.get(a[1])
+        return f"{B.F.cells[ci].path}.{a[2]}[{a[3]}]" if ci is not None else "?"
+    return None
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for n in ("elab", "bind", "verify", "all"):
+    k = sub.add_parser("kit-rtl", help="G3 kit RTL: bound partition module inside the plan wrapper + filelist")
+    k.add_argument("plan")
+    k.add_argument("--out", required=True, help="the bind output directory")
+    k.add_argument("--type", required=True)
+    k.add_argument("--variant", help="a bound type variant (T__vN) when the type split")
+    k.add_argument("--kit", help="output directory (default OUT/kit_rtl/TYPE)")
+    k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
+    k.add_argument("--asbuilt")
+    for n in ("elab", "bind", "verify", "all", "portbind"):
         s = sub.add_parser(n)
         s.add_argument("plan")
         s.add_argument("--out", required=True)
@@ -1485,10 +2464,14 @@ def main(argv=None):
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
     try:
+        if a.cmd == "kit-rtl":
+            return cmd_kit_rtl(a)
         if a.cmd == "elab":
             return cmd_elab(a)
         if a.cmd == "bind":
             return cmd_bind(a)
+        if a.cmd == "portbind":
+            return cmd_portbind(a)
         if a.cmd == "verify":
             import bind_verify
             return bind_verify.cmd_verify(a)
