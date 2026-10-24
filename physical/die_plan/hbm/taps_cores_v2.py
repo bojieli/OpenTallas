@@ -329,7 +329,7 @@ def apply(plan, out_dir, where, ft=None):
                 else:
                     key = c['module'] if c['module'] in SPL else None
                 groups = []
-                osp = OCS.get((tn, c['module']))
+                osp = OCS.get((tn, c['module'])) or OCS.get((re.sub(r'_v\d+$', '', tn), c['module']))   # P6: new _vN variants of a split type
                 if osp:                                     # P4: measured connectivity split (HBM-P4-SPLIT)
                     groups = [(cr['core_label'], cr['cells'],
                                f"{cr['module']} ({cr['cells']} Yosys; {osp['status']})") for cr in osp['cores']]

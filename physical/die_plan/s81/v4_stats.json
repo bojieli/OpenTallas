@@ -323,10 +323,10 @@
   },
   "svc": {
    "n": 16,
-   "max_partition": 1754498,
-   "max_core": 275825,
+   "max_partition": 12917494,
+   "max_core": 205588,
    "max_glue": 60000,
-   "cores": 120
+   "cores": 1336
   },
   "slice": {
    "n": 151,
@@ -494,6 +494,6 @@
  "cells_missing": [
   "MISSING kv512 leaf; SU KV leaves kve/kvp/kvq/kvr/kvt summed",
   "seq_host_mux children: hwin core 69,671 + sh_vc/mu_hslot/seq_host_c_r3_lp flattened (whole MISSING)",
-  "svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4"
+  "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)"
  ]
 }

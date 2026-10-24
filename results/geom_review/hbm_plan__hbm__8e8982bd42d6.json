@@ -1,0 +1,11 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm@0cdd54897",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "8e8982bd42d6e56d9ae99265c171258460e4920a3c6523eb4b5ca90ccea67ef5",
+ "reasons": "[10-23 11:44] [GEOM-REVIEW4 G1, G3-readiness] die_plan.png and cores_v2.png viewed. Tool G0 run by me on tip 3087b9331 (R3 stations + R5 bitcon): PASS 0 err/1050 warn; census 513,150 b dropped 0 / unmapped 0; 1,355 taps; 675 hard cores, 236,999 core pins, 0 off track; worst cut 0.144, seg 0.358. Layout is MY/MX symmetric with quadrant-local services, a centre c0, and SM quarters as regular 4x4 core arrays. The lane bundles are heavy in the quadrant rings and around c0, but the cut numbers are low. g1_extra: no star hubs. phy aspect 7.2 is the fixed HBM PHY strip, with taps along it. q_hc 1-station slots on 804-um partitions pass the R3 750-um route/station check. GOOD: declared tap grid (600 um), C0 registered tree fan-out 4, equal-depth landed groups. The cores render shows the real gap: most SM and su/os cores are orange (no pins) or red (split proposals; 19 leaves over the 400k cap). Only about 75 as-built cores carry pins, and about 45 of those are on M3.",
+ "fixes": "G3 is NOT open die-wide (the author agrees). G3 opens per type only where every core of that type has plan pins on M4+ tracks and no over-cap leaf, and the type's tap coverage is <= 600 um. q_su2/q_su3 (743) and q_rc3 (672) need extra taps first. The SM-mode decision (OT_HBM_SM_MODE=inner FAILs G0) belongs to COORD before any SM-quarter G3. Re-pin the 45 M3 cores. Approve the 19 split proposals (score_quarter 12.4M, tkm 6.6M, sfu_core_split3 5.7M, ...) as plan cores with pins and re-REQ. G2 on this exact plan (gold1 hbm-p3-g2-1023) must report overflow 0 before the first G3.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T11:44:54-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

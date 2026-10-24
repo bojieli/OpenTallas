@@ -920,15 +920,30 @@ def os_part(n):
     return re.match(r'^(NW|NE|SW|SE)_os\d$', n) is not None
 
 
+# P6 (COORD 10-23 18:23 (1), VM|SU2 face overflow): the VM slice is the quadrant hub and its perimeter is saturated
+# (52.5 kb of endpoint traffic on 10.45 mm; every VM face at 4.4-5.4/um).  Moving lanes between VM faces is zero-sum
+# (P6 variants a/b: hb_idx__op off the VM -> vm|su2 5.41-5.43/um, hc0|hcq and rc3|rc4 worse).  The two 2.9-mm E/W
+# faces between the VM and SU1/SU2 therefore get a second face on a third pin layer from the die budget, die M8
+# (H, as the S81 svc fold faces, COORD 10-23 07:43; the os N/S faces take M9, COORD option (A)).  SM faces never do.
+VM3 = os.environ.get('OT_HBM_VM3', '1') == '1'
+
+
+def vm_su_pair(a, b):
+    r = {re.sub(r'^(NW|NE|SW|SE)_', '', n) for n in (a, b)}
+    return 'vm' in r and bool(r & {'su1', 'su2'})
+
+
 def fl3(a, b, o):
     """COORD option (A): an H boundary (N/S faces) between two non-SM partitions, one of them in the os column, takes
-    a third (die M9) pin layer.  SM faces never do."""
+    a third (die M9) pin layer.  SM faces never do.  P6: the VM|SU1 and VM|SU2 V boundaries take die M8."""
+    if VM3 and o == 'V' and vm_su_pair(a, b):
+        return True
     return OS3 and o == 'H' and not (sm_part(a) or sm_part(b)) and (os_part(a) or os_part(b))
 
 
 def lay(face, k, o):
     base = {'E': ['M6', 'M4'], 'W': ['M6', 'M4'], 'N': ['M7', 'M5'], 'S': ['M7', 'M5']}[face]
-    return base + ['M9'] if fl3(k[0], k[1], o) else base
+    return base + (['M9'] if o == 'H' else ['M8']) if fl3(k[0], k[1], o) else base
 
 
 def quadn(n):

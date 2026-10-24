@@ -230,6 +230,43 @@ def test_census_forwarded_and_broadcast():
         assert s["dropped_bits"] == 0 and s["sources"][0]["broadcast_collapsed_bits"] == 64
 
 
+def test_census_taptree_bit_audit():
+    """R5 (COORD 10-23): forward_via credit needs a bit-level tap-tree audit; a split bus on a shared trunk fails."""
+    import tempfile
+    P = schema.Plan(EX)
+    tree = [lid for lid, ln in P.lanes.items()
+            if (P.ports[ln["ports"][0]]["src"]["part"], P.ports[ln["ports"][-1]]["dst"]["part"]) in
+            (("pa", "pm1"), ("pm1", "pm2"))]
+    assert len(tree) == 2
+    w = min(int(P.ports[P.lanes[tree[0]]["ports"][0]]["width"]), 8)
+    MAP = {"parts": {"u_a": "pa", "u_b": "pb", "u_m1": "pm1", "u_m2": "pm2"}, "forward_via": ["pm1"],
+           "tree_lanes": {"u_a.c": tree}}
+    rows = [dict(src="u_a", src_bus="c", dst="u_m2", dst_bus="c", bits=w, kind="data")]
+
+    def case(d, pairs):
+        p = copy.deepcopy(EX)
+        (Path(d) / "c.json").write_text(json.dumps({"groups": rows}))
+        (Path(d) / "m.json").write_text(json.dumps(MAP))
+        src = {"rows": "c.json", "map": "m.json"}
+        if pairs is not None:
+            (Path(d) / "b.json").write_text(json.dumps({"conns": pairs}))
+            src["bitcon"] = "b.json"
+        p["census"] = [src]
+        R, summ = check.run(p, plan_dir=d)
+        return [i["msg"] for i in R.errors() if i["check"] == "census"], summ["census"]
+    with tempfile.TemporaryDirectory() as d:
+        e, s = case(d, None)                                       # tree credit without bit pairs
+        assert any("without a bit-level tap-tree audit" in m for m in e), e
+        bcast = [dict(s="u_a", sp="c", d="u_m2", dp="c", pairs=[[i, i] for i in range(w)]),
+                 dict(s="u_a", sp="c", d="u_m1", dp="c", pairs=[[i, i] for i in range(w)])]
+        e, s = case(d, bcast)                                       # broadcast: same bits everywhere -> PASS
+        assert e == [] and s["sources"][0]["taptree"]["under_carrying_lanes"] == 0, e
+        split = [dict(s="u_a", sp="c", d="u_m2", dp="c", pairs=[[i, i] for i in range(w)]),
+                 dict(s="u_a", sp="c", d="u_m1", dp="c", pairs=[[w + i, i] for i in range(w)])]
+        e, s = case(d, split)                                       # split bus: the pa->pm1 trunk needs 2w
+        assert any("deficit" in m for m in e) and s["sources"][0]["taptree"]["deficit_bits"] == w, e
+
+
 def test_face_layers_m8_and_spare_slots():
     def m8(p, fl=True):
         port(p, "x0")["layers"] = ["M8", "M4"]
@@ -333,3 +370,44 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
 
     _, R = run(lambda p, m: m.update(groups={"g": ["pa", "pm"]}), forwarders=("g",))
     assert any("witness capacity exceeds planned lanes" in e["msg"] for e in R.errors())
+
+
+def test_zroute_turn_is_L():
+    """COORD 10-23: a turning slot (perpendicular faces) routes as an L, a straight slot with a jog as a Z."""
+    assert check.zroute((0, 10), (50, 100), "W", "N") == [(0, 10), (50, 10), (50, 100)]
+    assert check.zroute((10, 0), (100, 50), "S", "E") == [(10, 0), (10, 50), (100, 50)]
+    assert check.zroute((0, 10), (100, 30), "W", "E") == [(0, 10), (50.0, 10), (50.0, 30), (100, 30)]
+
+
+def test_die_io_windows():
+    """COORD 10-23 (S81-P5): off-die ports need a pad / bump window over their host partition with enough sites."""
+    assert errs(lambda p: None, "die_io") == []
+    assert any("no pad / bump window" in m for m in errs(lambda p: p["die"]["io"].pop(), "die_io"))
+    assert any("> 20 sites" in m for m in errs(lambda p: p["die"]["io"][0].__setitem__("sites", 20), "die_io"))
+    assert any("not inside its host" in m for m in errs(
+        lambda p: p["die"]["io"][0].__setitem__("rect_um", [900, 8.64, 950, 50]), "die_io"))
+    assert any("not the host" in m for m in errs(lambda p: p["die"]["io"][0].__setitem__("ports", ["dout"]), "die_io"))
+
+
+def test_latency_groups_pad_to_slowest():
+    """R8 (COORD 10-23, QC xt1 0/64): the lanes of one as-built bus arrive in one cycle; pads are realised as type
+    stages at the destination in bus; unequal table cycles in a group or per-type pad conflicts fail G0."""
+    import gen_rtl
+    p = copy.deepcopy(EX)
+    p["latency_groups"] = [dict(name="xbus", kind="bus", lanes=["x", "cfg23"], source="BINDER2 test")]
+    P = schema.Plan(p)
+    assert P.lane_latency("cfg23")["cycles"] == 4 and P.lane_latency("cfg23")["pad"] == 2
+    assert P.bus_pads() == ({("sink", "cfg_i"): 2}, [])
+    p["latency"]["lanes"] = gen.latency_table(P)
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert [i["msg"] for i in R.errors() if i["check"] == "latency"] == []
+    stale = copy.deepcopy(p)
+    stale["latency"]["lanes"]["cfg23"]["cycles"] = 2
+    R, _ = g0(lambda q: q.update(copy.deepcopy(stale)))
+    assert any("unequal delays" in i["msg"] for i in R.errors())
+    rtl = gen_rtl.wrapper(schema.Plan(p), "sink", gen_rtl.bus_epochs(schema.Plan(p)))
+    assert "u_bin_cfg_i_pad0" in rtl and "u_bin_cfg_i_pad1" in rtl and "u_bin_cfg_i_pad2" not in rtl
+    # pads are a TYPE property: pm1 and pm2 (both 'mid') would need different cfg_i pads
+    c = copy.deepcopy(EX)
+    c["latency_groups"] = [dict(name="bad", lanes=["x", "cfg12"])]
+    assert schema.Plan(c).bus_pads()[1]

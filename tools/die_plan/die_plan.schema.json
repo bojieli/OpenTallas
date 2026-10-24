@@ -153,6 +153,69 @@
       }
      }
     },
+    "io": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name",
+       "kind",
+       "rect_um",
+       "sites",
+       "part",
+       "ports"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "kind": {
+        "enum": [
+         "bump",
+         "pad",
+         "phy_macro"
+        ]
+       },
+       "rect_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 4,
+        "maxItems": 4
+       },
+       "sites": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "layer": {
+        "type": "string",
+        "pattern": "^M[1-9]$"
+       },
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        },
+        "minItems": 1
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
+    },
     "channels": {
      "type": "array",
      "items": {
@@ -478,6 +541,10 @@
         "type": "number",
         "minimum": 0
        },
+       "tap_pitch_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
        "taps": {
         "type": "array",
         "items": {
@@ -622,6 +689,12 @@
         "pins_file": {
          "type": "string"
         },
+        "lef": {
+         "type": "string"
+        },
+        "lib": {
+         "type": "string"
+        },
         "note": {
          "type": "string"
         }
@@ -697,6 +770,20 @@
         },
         "note": {
          "type": "string"
+        },
+        "lef": {
+         "type": "string"
+        },
+        "lib": {
+         "type": "string"
+        },
+        "orient": {
+         "enum": [
+          "R0",
+          "MX",
+          "MY",
+          "R180"
+         ]
         },
         "obs_max": {
          "type": "string",
@@ -1050,6 +1137,43 @@
     }
    }
   },
+  "latency_groups": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "name",
+     "lanes"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 1
+     },
+     "kind": {
+      "enum": [
+       "bus",
+       "replica"
+      ]
+     },
+     "lanes": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "minLength": 1
+      },
+      "minItems": 2
+     },
+     "source": {
+      "type": "string"
+     },
+     "note": {
+      "type": "string"
+     }
+    }
+   }
+  },
   "clock": {
    "type": "object",
    "additionalProperties": false,
@@ -1188,6 +1312,13 @@
        "boundary": {
         "type": "integer"
        },
+       "natural": {
+        "type": "integer"
+       },
+       "pad": {
+        "type": "integer",
+        "minimum": 0
+       },
        "param": {
         "type": "string"
        }
@@ -1231,6 +1362,14 @@
      "exclusiveMinimum": 0
     },
     "pin_reg_p90_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "ft_station_max_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "tap_pitch_um": {
      "type": "number",
      "exclusiveMinimum": 0
     }

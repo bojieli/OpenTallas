@@ -1,0 +1,72 @@
+{
+ "source_commit": "fb27cfd5d",
+ "G1": "180372785 (private source1c1a1622e identical kit)",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
+ "scope": "G2 same virtual clock net with388roots+1941declared taps; no measured insertion/STA",
+ "partition_reuse": {
+  "source_commit": "fb27cfd5d",
+  "scope": "exact physical input reuse; new die probe measured separately",
+  "probes": {
+   "part_coll_core": {
+    "probe.tcl": "67c857b4a6e2e5296006397ac4281176ace0deec394d11b4d0497944cf3a83b5",
+    "probe.v": "5917b9db6e99655ac8598c9f575b59e9462478e83f84bd03678ebc6f4e7aa4d1",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "830d8716bc8cc6eac4c03db9a07ee7fce6cdedde2399a9dbd81213df4ed37454"
+   },
+   "part_coll_ftc": {
+    "probe.tcl": "2b41a7158ef5c1790f0773b6d0a7e8f2f40c35abcea2863d54bc6a210415cf22",
+    "probe.v": "1662d57f0b572e00b8184376d63b1a7798febb67b737a16e6c3cd288f30d374b",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "792d16cf3ffe358b3f097731e3be9a7da29168f542e10d6f28759463b8ba3a46"
+   },
+   "part_coll_ftm": {
+    "probe.tcl": "1a18f948ef5dc6d4aaa7e4bfdc4c578fad11be8e3274699e522f41e6137ec633",
+    "probe.v": "e040acab7d5862110b0707ee0a764a9f3f401a419fb6abd2cbc95038dc898736",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "43fff543185d6ade28719e6c84274202c04e5260572bdfcf0b02ad53e918bd2b"
+   },
+   "part_coll_s": {
+    "probe.tcl": "a65ebcc68c436b949a345d89d61f27f43c9dc0c567f98f9dd40a47402d616e03",
+    "probe.v": "de28c6a0a38ec528a68eb569ec77c40e5e306b8e803fb1a3e688aa9cc05a899d",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "6267fc8d6da7f5b4f19d041e24c56222bb42d43c5bb637f609e0b556428997e1"
+   },
+   "part_sle_sc": {
+    "probe.tcl": "8ad282f673161954785949ef8cf730019ba831a10201ed62fac7a211dc476304",
+    "probe.v": "8e03f65091cdac5297a80a667bc6daa74ce58154f9747494d131885179f0d295",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "933d5efd7858355cb572ef672553ae009b2ccca47a144071e0a8bdf84d344b95"
+   },
+   "part_sle_stm": {
+    "probe.tcl": "43a1288cc260f1f007ea035bbcace646263eb2ebec54fd61acde7910a97e2799",
+    "probe.v": "e9811a05a9941df374456ae0508031ffbadf489e58fbb53f837874cee2ab1027",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "639c50b33318010e7fe189ad230b412acf5c51a8f4008e818c0fd5bbff18bc9c"
+   },
+   "part_sle_tap": {
+    "probe.tcl": "4b031ad8355c6bd19be778c29d9be0c77d3c4a9d96abd91a0e014f7376a2ec07",
+    "probe.v": "431a345a78f6ced0e6e420d24f9b18c538c924937448ed6a3a216e8dfd399b36",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "470218b4a23386791ad1064e70f3263f806d390e81a554a20e49032e2266f239"
+   },
+   "part_slw_su_l0": {
+    "probe.tcl": "eb90d832942f1b01f87bd7f0271757396605bf8cd1beea2cc98ce5b872be8716",
+    "probe.v": "adad4355f306723c627a8a8250df20cd39002e44d0e50b03070b3d2277d21113",
+    "make_tracks.tcl": "7020f2b9fe3ebdb6a680f8cee3e4772db4c5c5372cde68414ba88dbfe520a341",
+    "io.tcl": "e376e64d417d9d1bb77391df233e3a9a42bf6bd035dd176e3f08164af60dabf1"
+   }
+  }
+ },
+ "new_die_run": {
+  "host": "ot-gold1",
+  "unit": "oth-ubuntu-499797-1792773538",
+  "files": {
+   "probe.tcl": "9490336ffbf6d9e9d2696e3910351fc2193518a7e4f92f4a9f0ba637107a23f5",
+   "probe.v": "786452a13de56cb69c54eb56d52ed7384689ae8cda412ad6ddcc57657921823b",
+   "probe.json": "818d68014a1cac00ed58bf4dcd197c01e4661c082980134d41ee31290da45ffc",
+   "grt.log": "64bbf2c7c23fbd551df64ecfdec517dd78c9e3c29d6b1f5ceb923f964d64bc03",
+   "grt.json": "46d51a962e1c2a7e8719c24f5d0d82fcd4b6a9c25507922fe1de95115036e7a1",
+   "probe.exit": "d4e49dd8b59469b9ec9b4026c9796f2e272e46b3e0dfe7486db13f05630cfbf9"
+  }
+ }
+}

@@ -53,7 +53,42 @@
      ]
     }
    ]
-  }
+  },
+  "io": [
+   {
+    "name": "io_w",
+    "kind": "bump",
+    "rect_um": [
+     8.64,
+     8.64,
+     95.04,
+     95.04
+    ],
+    "sites": 40,
+    "pitch_um": 10.8,
+    "part": "pa",
+    "ports": [
+     "din"
+    ],
+    "note": "tool example: host input bumps"
+   },
+   {
+    "name": "io_e",
+    "kind": "bump",
+    "rect_um": [
+     3360.96,
+     8.64,
+     3447.36,
+     95.04
+    ],
+    "sites": 40,
+    "pitch_um": 10.8,
+    "part": "pb",
+    "ports": [
+     "dout"
+    ]
+   }
+  ]
  },
  "partition_types": {
   "src": {
@@ -646,7 +681,8 @@
   "face_window_um": 10,
   "pin_track_max": 0.6,
   "cut_ratio_max": 0.6,
-  "cut_step_um": 250
+  "cut_step_um": 250,
+  "ft_station_max_um": 900
  },
  "latency": {
   "lanes": {

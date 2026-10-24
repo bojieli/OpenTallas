@@ -1,0 +1,27 @@
+{
+ "note": "band-to-band bits of the banded seam frame kits (frame_seam_pipe.py); keys rA->rB = band A drives band B; source = the band RTL, not a constant",
+ "masters": {
+  "h9": {
+   "r0->r1": 1167,
+   "r1->r0": 261,
+   "r1->r2": 1167,
+   "r2->r1": 321
+  },
+  "h10": {
+   "r0->r1": 1264,
+   "r1->r0": 267,
+   "r1->r2": 1230,
+   "r2->r1": 384
+  }
+ },
+ "sources": {
+  "h9": {
+   "rtl": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vgcs.sv",
+   "sha256": "1700424073bc0852ca5e0ae38a18e46856989e4789d4419c6d712818febf22ce"
+  },
+  "h10": {
+   "rtl": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h10_l4_lp_kit_vgcs.sv",
+   "sha256": "0c9b4d1700f3e38fbbb9347c3dc7d3b0ece7283a9d9102e1cb6ded98de29f1e2"
+  }
+ }
+}

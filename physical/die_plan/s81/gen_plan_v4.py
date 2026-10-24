@@ -39,6 +39,7 @@ NC, NR = 22, 20
 DIE_W = NC * PX + 2 * X0
 DIE_H = NR * PY + 2 * X0
 REACH = 1500.0
+FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
 UNIFORM_SEG = True
 SNAP = 0.192
 TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
@@ -65,7 +66,15 @@ GAP = 2.0
 XW, RW = 1104, 70
 OPP = dict(N="S", S="N", E="W", W="E")
 STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
-FRAME_INTERNAL = [("r0", "r1", 1263), ("r1", "r2", 1229), ("r2", "r1", 384), ("r1", "r0", 141)]
+# S81-P6 10-23 (COORD: census from the band RTL): frame-internal lane widths per master = the band-to-band bits of the
+# banded seam kits (frame_seam_pipe.py: band seams at plan width), via inputs/frame_band_census.json
+# (frame_band_census.py).  The v1 constant (1263 / 1229 / 384 / 141) had no basis and r1 -> r0 was 120-126 b short.
+FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
+
+
+def frame_internal(h):
+    m = json.load(open(FRAME_BAND_CENSUS))["masters"][h]
+    return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
 
 
 def mir(c):
@@ -327,9 +336,9 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
     lanes = []
     fmap = {}
 
-    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None):
+    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None, fixed=0):
         lanes.append(dict(id=lid, src=(src, sbus), dst=(dst, dbus), width=int(width), kind=kind, cls=cls,
-                          role=role or cls, path=path))
+                          role=role or cls, path=path, fixed=fixed))
 
     def cell_of(seg):
         return (seg.c0, seg.r0)
@@ -357,10 +366,10 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
                     p.ckey = "col_%s.r%d" % (h, b) + ((".p%d" % pos) if b == 0 else "")
                     p.group = f
                 fb = [frames[(side, fr, pos, b)].name for b in range(3)]
-                for a, bb, w in FRAME_INTERNAL:
+                for a, bb, w in frame_internal(h):
                     ia, ib = int(a[1]), int(bb[1])
                     L("fi_%s%d_p%d_%s%s" % (side, fr, pos, a, bb), fb[ia], "%s%s_o" % (a, bb), fb[ib], "%s%s_i" % (a, bb),
-                      w, cls="frame_int", role="fi_%s%s" % (a, bb))
+                      w, cls="frame_int", role="fi_%s%s" % (a, bb), fixed=1)   # band RTL seam = K + 1 = 3 edges
             b0 = {pos: frames[(side, fr, pos, 0)].name for pos in range(1, 7)}
             xr = x_row(fr)
             for chain, (half, base) in (("in", (inner, 1)), ("out", (outer, 4))):
@@ -501,13 +510,22 @@ def cells_core_plan(p):
                 band, v)
         return [], H9[band], "col_h9 band %s %d Yosys measured (col_h9_l4_lp_b%s); flattened" % (band, H9[band], band[1])
     if p.kind == "svc":
-        cores = [("sx_hrow_a", 4 * 50502), ("sx_hrow_b", 4 * 50502)] + \
-            [("attn_h%d" % i, 1103302 // 4) for i in range(4)] + [("se_sm_pv", 18044 + 2 * 1247)]
+        # S81-P5 10-23: MEASURED attention engine (fresh ORFS Yosys, asap7lock RVT WC, hierarchical, ep9
+        # plan-s81v4-syn2/jobs/svc_tile): one tile ot_hdc_v41x_attn_tile_s (H16 TD32 NBANK5 PWORDS2 FPL4 FML6 F12, the
+        # dsdv_svc_att engine config) = 3,097,168 cells / 353,319 um2 = 4 head groups hgrp_s (774,424 max: 30,272 local
+        # + 4 head datapaths hdp_s of 183,981 max / 20,721 um2).  The engine has NT = NL = 4 tiles -> 12.39 M cells,
+        # 1.413 mm2 std area per svc partition.  Cores <= 400k: 64 hdp cores + 16 hgrp cores (local logic, the 4 hdp
+        # as macros).  sx_hrow fresh synth 51,397 cells.  Engine staging / P.V glue (dsdv_svc_att whole) still MISSING.
+        cores = [("sx_hrow_a", 4 * 51397), ("sx_hrow_b", 4 * 51397)] + \
+            [("attn_t%d_g%d" % (t, g), 30272) for t in range(4) for g in range(4)] + \
+            [("attn_t%d_g%d_h%d" % (t, g, h), 183981) for t in range(4) for g in range(4) for h in range(4)] + \
+            [("se_sm_pv", 18044 + 2 * 1247)]
         glue = 60000
         if any(c["module"].startswith("dsfd_ctrl") for c in p.contents):
             cores.append(("ctrl_etap_irg", 2 * 21592 + 21759 + 21834 + 79867))
-        return cores, glue, ("svc MISSING as a whole: hrow x8 404,016 measured; attention engine ESTIMATED = 2 x "
-                             "hgrp8r 551,651, planned as 4 head-quarter cores (4 heads each); hrow x8 as 2 cores of 4")
+        return cores, glue, ("svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; "
+                             "one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; "
+                             "hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)")
     if p.kind == "slice":
         role = getattr(p, "role", "X")
         m = p.contents[0]["module"] if p.contents else ""
@@ -1058,7 +1076,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     eo = outs[nxt]
                     a_, b_ = port_pt(pid), port_pt(nxt)
                     Ld = abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
-                    st = max(1, math.ceil(Ld / (REACH * 0.98)))
+                    # R3 (COORD 10-23): ft stations at most FT_STATION_MAX apart along the slot route (also <= REACH)
+                    st = max(1, math.ceil(Ld / (min(REACH, FT_STATION_MAX) * 0.98)))
                     slots.append((ei, eo, st))
                     used |= {pid, nxt}
         for e in p.ents:
@@ -1155,7 +1174,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                            kind=pt["kind"], face=pt["face"], layers=face_layers(P[pt["a"]], P[pt["b"]], pt["face"]),
                            window_um=[w0, w1],
                            order=pt["order"]))
-    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]]) for l in lanes]
+    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]], **({"fixed_cycles": l["fixed"]} if l.get("fixed") else {}))
+              for l in lanes]
     plan = {
         "schema": "opentallas.die_plan.v1",
         "note": "S81 72-frame MU release die, plan v3 (PLAN-S81v3 10-23; v2 base): one 1442.88 x 1226.88 lattice, MY-mirrored "
