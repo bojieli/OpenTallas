@@ -642,7 +642,7 @@ endmodule
 // STATUS / RESULT record consumer (function of ot_qwen_d2d_status_rx): the 156 captured bits are written in NG groups,
 // group g enabled by its own (rx_event, rx_slot, fault) copies.
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_d2d_status_rx_sf #(parameter integer NG = 10) (
+module ot_qwen_d2d_status_rx_sf #(parameter integer NG = 10, parameter integer OBS1_COMPAT = 0) (
     input  wire         ck, rst_n,
     input  wire [15:0]  epoch16,
     input  wire         rx_event, rx_slot,
@@ -661,8 +661,19 @@ module ot_qwen_d2d_status_rx_sf #(parameter integer NG = 10) (
     output wire         fault
 );
     wire [511:0] d = rx_payload[511:0];
+    // Opt-in compatibility with the existing STATUS-v1 observer codec. Lower status/result fields and
+    // capture edges are unchanged. Legacy zero extension remains legal; nonzero extensions use the
+    // same validator as ot_qwen_d2d_status_rx_sfm3_obs1. No reserved bits become payload.
+    wire bad_extension;
+    generate if (OBS1_COMPAT) begin : g_obs1_compat
+        wire extension_good;
+        ot_qwen_status_obs_v1_valid u_ext_check(.x(d[511:304]), .good(extension_good));
+        assign bad_extension = |d[303:156] || ((|d[511:304]) && !extension_good);
+    end else begin : g_legacy
+        assign bad_extension = |d[511:156];
+    end endgenerate
     wire bad_hdr = rx_payload[547:543] != 0 || rx_payload[542:539] != 4'd15 || rx_payload[538:533] != 6'd63 ||
-                   rx_payload[532:517] != epoch16 || rx_payload[516:512] != 0 || d[511:156] != 0;
+                   rx_payload[532:517] != epoch16 || rx_payload[516:512] != 0 || bad_extension;
     // sticky fault: master + NG copies on one D net
     (* keep = "true", dont_touch = "true" *) reg [NG:0] fc;      // fc[0] = master
     wire fault_d = (rx_event != rx_slot || (rx_event && bad_hdr)) ? 1'b1 : fc[0];

@@ -63,6 +63,9 @@ FRAME = (1442.88, 1226.88)               # = layer-die frame (lep LP / station p
 SEAL = 103.68
 ELEM_SLOT = 345.6                        # 40 x 8.64: elemA 317.672 + ~19-um channel; 2 x 3 slots a tile
 TURN_W = 172.8                          # 566 chain pins on the U-turn N/S faces at <= 3.5 / um
+TILE_W_EXTRA = 17.28                     # 10-24 G3 floorplan review (S81-HEAD): edge strips 17.28 / 19.29 um + a
+                                         # 36.6-um centre column for the elements' W-face x pins and E-face controls
+                                         # (the 691.2 tile left 8.64-um slivers); paid by the spine column, not the die
 
 
 def _lat(x):
@@ -71,7 +74,7 @@ def _lat(x):
 
 def tile():
     cells = ELEMS["A"] * ELEM_VIEW["A"]["cells"] + ELEMS["B"] * ELEM_VIEW["B"]["cells"] + TILE_GLUE_CELLS
-    w, h = round(2 * ELEM_SLOT, 4), round(3 * ELEM_SLOT, 4)
+    w, h = round(2 * ELEM_SLOT + TILE_W_EXTRA, 4), round(3 * ELEM_SLOT, 4)
     core_um2 = ELEMS["A"] * ELEM_VIEW["A"]["um"] ** 2 + ELEMS["B"] * ELEM_VIEW["B"]["um"] ** 2
     macs = ROWS_PER_BUNDLE * D_MODEL / 8192.0           # one 16-lane BF16 word a cycle per element
     return dict(
@@ -123,10 +126,10 @@ def latency(fp):
     L = fp["spine"]["levels"]
     chain = fp["tiles"]["tiles_per_chain"]
     x_fill = L * (2 + level_st) + node_st + 2 * chain // 2           # down the spine, into the farthest chain head
-    ret = 2 * chain // 2 + 4 + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
+    ret = 2 * chain // 2 + (2 + 4) + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
     rows = dict(xb_ingress=X_BEATS + 2, x_fill_and_return=x_fill + ret, bundle=BUNDLE_GO_TO_RESULT,
-                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 2 * 48 + 10,
-                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: worst mesh core lanes LAT_HD_M0S_TX/RX = 48 each
+                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 49 + 51 + 10,
+                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: actual-bit reach repair: M0S_TX49/RX51; return turn4FT+2face stages
     tot = sum(rows.values())
     return dict(rows=rows, total=tot, calendar_head_window=CAL["head_window"],
                 vs_calendar=tot - CAL["head_window"],

@@ -129,11 +129,22 @@ def test_portless_type_passes_with_empty_pin_table():
     assert face_guard.guard(net)["verdict"] == "FAIL"
 
 
-def test_unplanned_port_not_checked():
-    """ELEM-QK 10-24: a bound-only port (kit-rtl: extra clock role clk_*, die IO) has no planned pin -> not checked."""
-    net = NET_OK.replace("module top(clk, a, o);", "module top(clk, a, o, clk_x);").replace(
-        "input clk;", "input clk; input clk_x;").replace(".CLK(clk), .D(a[1])", ".CLK(clk_x), .D(a[1])")
-    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+def test_early_core_clock_ports_are_not_data_boundaries():
+    net = NET_OK.replace("top(clk, a, o);", "top(clk, clk_c0, clk_c4, a, o);")
+    net = net.replace("input clk;", "input clk; input clk_c0; input clk_c4;")
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
     r = face_guard.guard(net, pins=pins)
-    assert r["verdict"] == "PASS" and r["unplanned_ports"] == ["clk_x"], r
-    assert face_guard.guard(net)["verdict"] == "FAIL"          # without the plan pins every port is checked
+    assert r["verdict"] == "PASS" and r["checked"] == 4 and r["ok"] == 4, r
+
+
+def test_native_scalar_pins_and_global_reset():
+    net = r"""module top(clk, rst_n, a, o);
+input clk; input rst_n; input a; output o;
+wire q; wire nq;
+DFFHQNx1_ASAP7_75t_R u_bin_a_q (.CLK(clk), .D(a), .QN(q));
+DFFHQNx1_ASAP7_75t_R u_bout_o_q (.CLK(clk), .D(q), .QN(nq));
+INVx3_ASAP7_75t_R out_inv (.A(nq), .Y(o));
+endmodule
+"""
+    r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
+    assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r

@@ -19690,13 +19690,13 @@
     {
      "name": "fltv_o",
      "dir": "out",
-     "width": 35,
+     "width": 36,
      "kind": "ctl",
      "leaf": "u_pstn.fltv_o",
      "face": "N",
      "window_um": [
       467.824,
-      475.024
+      475.232
      ],
      "layers": [
       "M7",
@@ -19888,11 +19888,11 @@
      "name": "fltv",
      "in_face": "S",
      "out_face": "N",
-     "width": 35,
+     "width": 36,
      "stations": 2,
      "out_window_um": [
       467.824,
-      475.024
+      475.232
      ],
      "layers": [
       "M7",
@@ -20288,8 +20288,8 @@
      "leaf": "u_collective.s0_tx_rec",
      "face": "N",
      "window_um": [
-      138.976,
-      253.728
+      138.96,
+      253.792
      ],
      "layers": [
       "M7",
@@ -20305,8 +20305,8 @@
      "leaf": "u_collective.s0_rx_rec",
      "face": "N",
      "window_um": [
-      25.52,
-      138.016
+      25.488,
+      138.0
      ],
      "layers": [
       "M7",
@@ -20322,8 +20322,8 @@
      "leaf": "u_coll_face_r.phy_tx",
      "face": "W",
      "window_um": [
-      386.096,
-      506.592
+      382.512,
+      501.472
      ],
      "layers": [
       "M6"
@@ -20338,8 +20338,8 @@
      "leaf": "u_coll_face_r.phy_rx",
      "face": "W",
      "window_um": [
-      265.632,
-      385.136
+      260.512,
+      381.552
      ],
      "layers": [
       "M6"
@@ -20354,8 +20354,8 @@
      "leaf": "u_coll_face_p.phy_tx",
      "face": "W",
      "window_um": [
-      134.864,
-      264.672
+      134.176,
+      259.552
      ],
      "layers": [
       "M6"
@@ -20370,8 +20370,8 @@
      "leaf": "u_coll_face_p.phy_rx",
      "face": "W",
      "window_um": [
-      7.04,
-      133.904
+      8.16,
+      133.216
      ],
      "layers": [
       "M6"
@@ -20420,7 +20420,7 @@
      "leaf": "u_pstn.flt_n_i",
      "face": "N",
      "window_um": [
-      254.688,
+      254.752,
       255.456
      ],
      "layers": [
@@ -20432,13 +20432,13 @@
     {
      "name": "flt_u_i",
      "dir": "in",
-     "width": 1,
+     "width": 4,
      "kind": "ctl",
      "leaf": "u_collective.fault_ucie",
      "face": "W",
      "window_um": [
       4.32,
-      4.72
+      5.328
      ],
      "layers": [
       "M6"
@@ -20453,8 +20453,8 @@
      "leaf": "u_collective.fault_or",
      "face": "N",
      "window_um": [
-      24.16,
-      24.56
+      24.128,
+      24.528
      ],
      "layers": [
       "M7",
@@ -20465,13 +20465,13 @@
     {
      "name": "fltv_s_i",
      "dir": "in",
-     "width": 35,
+     "width": 36,
      "kind": "ctl",
      "leaf": "u_pstn.fltv_s_i",
      "face": "S",
      "window_um": [
       467.824,
-      475.024
+      475.232
      ],
      "layers": [
       "M7",
@@ -20499,13 +20499,13 @@
     {
      "name": "fltv_o",
      "dir": "out",
-     "width": 69,
+     "width": 70,
      "kind": "ctl",
      "leaf": "u_pstn.fltv_o",
      "face": "N",
      "window_um": [
       8.576,
-      23.2
+      23.168
      ],
      "layers": [
       "M7",
@@ -21064,7 +21064,7 @@
      ],
      "regs_um": [
       [
-       196.352,
+       196.376,
        1.0
       ],
       [
@@ -21080,8 +21080,8 @@
      "width": 547,
      "stations": 2,
      "out_window_um": [
-      25.52,
-      138.016
+      25.488,
+      138.0
      ],
      "layers": [
       "M7",
@@ -21130,7 +21130,7 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      254.688,
+      254.752,
       255.456
      ],
      "layers": [
@@ -21192,7 +21192,7 @@
      "name": "fltvc",
      "in_face": "S",
      "out_face": "W",
-     "width": 69,
+     "width": 70,
      "stations": 1,
      "out_window_um": [
       5.68,
@@ -22445,8 +22445,8 @@
      "leaf": "u_pstn.shared_fault",
      "face": "E",
      "window_um": [
-      835.12,
-      835.52
+      835.728,
+      836.64
      ],
      "layers": [
       "M6"
@@ -22461,8 +22461,8 @@
      "leaf": "u_shared.r_frame",
      "face": "E",
      "window_um": [
-      1215.536,
-      1336.032
+      1211.952,
+      1330.912
      ],
      "layers": [
       "M6"
@@ -22477,8 +22477,8 @@
      "leaf": "u_shared.rx_frames",
      "face": "E",
      "window_um": [
-      1095.072,
-      1214.576
+      1089.952,
+      1210.992
      ],
      "layers": [
       "M6"
@@ -22493,8 +22493,8 @@
      "leaf": "u_shared.p_frame",
      "face": "E",
      "window_um": [
-      964.304,
-      1094.112
+      963.616,
+      1088.992
      ],
      "layers": [
       "M6"
@@ -22509,8 +22509,8 @@
      "leaf": "u_shared.rx_frames",
      "face": "E",
      "window_um": [
-      836.48,
-      963.344
+      837.6,
+      962.656
      ],
      "layers": [
       "M6"
@@ -22520,13 +22520,13 @@
     {
      "name": "flt_o",
      "dir": "out",
-     "width": 1,
+     "width": 4,
      "kind": "ctl",
      "leaf": "u_pstn.flt_o",
      "face": "E",
      "window_um": [
       833.76,
-      834.16
+      834.768
      ],
      "layers": [
       "M6"
@@ -23789,7 +23789,7 @@
     {
      "name": "coll_fltv_i",
      "dir": "in",
-     "width": 69,
+     "width": 70,
      "kind": "ctl",
      "leaf": "u_sys_face.obs_fault",
      "face": "E",
@@ -69235,7 +69235,7 @@
     "part": "coll_core",
     "bus": "flt_u_i"
    },
-   "width": 1,
+   "width": 4,
    "kind": "ctl"
   },
   {
@@ -69313,7 +69313,7 @@
     "part": "coll_f0",
     "bus": "fltv_i"
    },
-   "width": 35,
+   "width": 36,
    "kind": "ctl"
   },
   {
@@ -69326,7 +69326,7 @@
     "part": "coll_f1",
     "bus": "fltv_i"
    },
-   "width": 35,
+   "width": 36,
    "kind": "ctl"
   },
   {
@@ -69339,7 +69339,7 @@
     "part": "coll_f2",
     "bus": "fltv_i"
    },
-   "width": 35,
+   "width": 36,
    "kind": "ctl"
   },
   {
@@ -69352,7 +69352,7 @@
     "part": "coll_core",
     "bus": "fltv_s_i"
    },
-   "width": 35,
+   "width": 36,
    "kind": "ctl"
   },
   {
@@ -69417,7 +69417,7 @@
     "part": "coll_f3",
     "bus": "fltvc_i"
    },
-   "width": 69,
+   "width": 70,
    "kind": "ctl"
   },
   {
@@ -69430,7 +69430,7 @@
     "part": "glue",
     "bus": "coll_fltv_i"
    },
-   "width": 69,
+   "width": 70,
    "kind": "ctl"
   },
   {

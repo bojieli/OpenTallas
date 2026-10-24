@@ -2,6 +2,219 @@
  "schema": "opentallas.die_plan.g2.v1",
  "plan": "/srv/opentallas-scratch2/claude/s81-head/wt/physical/die_plan/s81_head/die_plan.json",
  "probes": {
+  "part_hd_tile": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 15800759,
+     "demand": 2042,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 17690312,
+     "demand": 367,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 13261326,
+     "demand": 4117,
+     "usage_pct": 0.03,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 13267734,
+     "demand": 105,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 9029516,
+     "demand": 1776,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 9034124,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 6224.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81_head",
+   "type": "hd_tile",
+   "instance": "tE0o0",
+   "outline_um": [
+    708.48,
+    1036.8
+   ],
+   "pins": 1132,
+   "flops": 1139,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_hd_spn": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 61722176,
+     "demand": 14884,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 69076728,
+     "demand": 2570427,
+     "usage_pct": 3.72,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 51805728,
+     "demand": 8963,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 51805728,
+     "demand": 263506,
+     "usage_pct": 0.51,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 35274048,
+     "demand": 4138,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 35272836,
+     "demand": 145186,
+     "usage_pct": 0.41,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1726356.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81_head",
+   "type": "hd_spn",
+   "instance": "sp0",
+   "outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "pins": 6156,
+   "flops": 9437,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
+  "part_hd_spn_end": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 61723129,
+     "demand": 14327,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 69076728,
+     "demand": 2569715,
+     "usage_pct": 3.72,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 51805728,
+     "demand": 8370,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 51805728,
+     "demand": 258763,
+     "usage_pct": 0.5,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 35274048,
+     "demand": 4055,
+     "usage_pct": 0.01,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 35272836,
+     "demand": 140846,
+     "usage_pct": 0.4,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 1718553.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0",
+   "kind": "g2-partition",
+   "die": "s81_head",
+   "type": "hd_spn_end",
+   "instance": "sp5",
+   "outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "pins": 5024,
+   "flops": 8305,
+   "leaf_blockages": 0,
+   "adjust": 0.5,
+   "route_layers": "M2-M7"
+  },
   "part_hd_turn_a": {
    "layers": {
     "M1": {

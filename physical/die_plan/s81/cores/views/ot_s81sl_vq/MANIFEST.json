@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "ot_s81sl_vq",
+ "kit": "/srv/opentallas-scratch/claude/codex-s81/cores-r12/ot_s81sl_vq_lfp",
+ "routed_db": "/srv/opentallas-scratch/claude/codex-s81/cores-r12/ot_s81sl_vq_lfp/run/results/asap7/kr_ot_s81sl_vq_lfp/base/6_final.odb",
+ "verdict": "SIGNED",
+ "scope": "routed abstract + TT/FF timing; full GDS remains blocked by missing internal SRAM GDS",
+ "pins": 830,
+ "physical_change": "59 u_c input driver-family buffers BUFx3->BUFx10; no RTL/cycle change",
+ "files": {
+  "signoff.json": "108131879bf15b796d6dcac22b41f287afd60f51429f45a89847bc4f84009fd2",
+  "ot_s81sl_vq_ff.lib": "5477305383edb03e736af732d84660184f2afa0098512d19208c09e4806cd0e1",
+  "config.mk": "f9d2cc2140ca044d7cd204fad2ff87e714da459a516b3464e8eaa217e25fc9e2",
+  "ot_s81sl_vq_tt.lib": "b93234c9c4efcc6bbe66be1ec2a21a5fae7b961e583ecf0014dc2fe56a41690d",
+  "ot_s81sl_vq.lef": "9180426bcbd1cc79f1166c1266b58a14713b09689ec241e2d260e25baf6b98c2",
+  "freeze.json": "7a47bfd1a681ba1e76392bee072894067105792b065f22c2998d65772426d581",
+  "constraint.sdc": "b322a1b3acb79f2d0b8a52bc1e7013f09ef495df3ec997fef5606a2f87859bf0",
+  "pins.json": "1dd72ddeb441a575f001586f0db05db6047b7de1496e4074bdcc2a0f8a1aa944"
+ }
+}

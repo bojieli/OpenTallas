@@ -5,7 +5,7 @@
 # face_keep_release.tcl (POST_SYNTH_TCL) releases them so repair / resizing work on them as before.
 set fk_c {}
 foreach i [get_cells -hierarchical *] {
-  if {[regexp {^u_(bin|bout|ft)_[^/]*/} [get_full_name $i]]} { lappend fk_c $i }
+  if {[regexp {(^|[/.])u_(bin|bout|ft)_[^/]*[/.]} [get_full_name $i]]} { lappend fk_c $i }
 }
 if {[llength $fk_c]} { set_dont_touch $fk_c }
 puts "OT_FACE_KEEP dont_touch [llength $fk_c] boundary cells before eliminate_dead_logic"
