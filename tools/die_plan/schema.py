@@ -186,6 +186,10 @@ SCHEMA = {
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK FAIL suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
+                        # KV-P6 10-23: "sinks" = taps AT the FIRM-planned sinks (taps.py: radius / cap bounded
+                        # k-medians of face registers + ft stations), no empty taps; default "grid"
+                        "tap_mode": {"enum": ["grid", "sinks"]}, "tap_radius_um": _pos,
+                        "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -694,7 +698,12 @@ class Plan:
 
 
 def tap_pitch(P, tn):
-    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um."""
+    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um.
+    Sink-anchored taps (clock.tap_mode "sinks"): 2 x clock.tap_radius_um (clock_taps.tcl re-assigns a sink over at
+    most pitch/2 = the radius)."""
+    ck = P.types[tn].get("clock", {})
+    if ck.get("tap_mode") == "sinks":
+        return 2.0 * float(ck.get("tap_radius_um", 250.0))
     return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 600.0)))
 
 
@@ -704,6 +713,10 @@ def tap_grid(P, tn):
     within ~300 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
     'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
     t = P.types[tn]
+    if t.get("clock", {}).get("tap_mode") == "sinks":
+        # sink-anchored taps (taps.py): every tap carries FIRM-planned sinks within clock.tap_radius_um
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.sink_taps(P, tn)]
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))

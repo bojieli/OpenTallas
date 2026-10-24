@@ -545,6 +545,20 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_mode": {
+        "enum": [
+         "grid",
+         "sinks"
+        ]
+       },
+       "tap_radius_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_max_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
        "taps": {
         "type": "array",
         "items": {
