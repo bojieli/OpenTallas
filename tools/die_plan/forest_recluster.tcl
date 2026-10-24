@@ -127,6 +127,28 @@ proc fr_freept {x y} {
   }
   return [list $x $y]
 }
+# a free point near (x, y) that keeps the hops to the neighbours a and b short: when (x, y) is inside a macro halo, the
+# rings (2.16 um) around it are searched to 120 um beyond the first free ring and the point with the smallest
+# max(|a - p|, |p - b|) wins (a stage on a line across the ROM field goes to the channel, not to the nearest edge)
+proc fr_freept2 {x y a b} {
+  global fr_dbu
+  if {[fr_free $x $y]} { return [list $x $y] }
+  set st [expr {int(2.16 * $fr_dbu)}]
+  set best ""; set bc 0; set stop 100000
+  for {set r 1} {$r < 600 && $r <= $stop} {incr r} {
+    set d [expr {$r * $st}]
+    for {set k [expr {-$r}]} {$k <= $r} {incr k} {
+      set e [expr {$k * $st}]
+      foreach {px py} [list [expr {$x + $e}] [expr {$y + $d}] [expr {$x + $e}] [expr {$y - $d}] [expr {$x + $d}] [expr {$y + $e}] [expr {$x - $d}] [expr {$y + $e}]] {
+        if {![fr_free $px $py]} continue
+        set c [expr {max([fr_md $a [list $px $py]], [fr_md [list $px $py] $b])}]
+        if {$best eq "" || $c < $bc} { set best [list $px $py]; set bc $c }
+        if {$stop == 100000} { set stop [expr {$r + int(120.0 / 2.16)}] }
+      }
+    }
+  }
+  return [expr {$best eq "" ? [fr_freept $x $y] : $best}]
+}
 proc fr_put {i x y} {
   global fr_x0 fr_y0 fr_x1 fr_y1 fr_sw fr_rh fr_orient
   lassign [fr_freept $x $y] x y
@@ -253,9 +275,14 @@ dict for {cpfx stg} $fr_ch {
   set rs 0; foreach q $lds { set rs [expr {max($rs, [fr_md $T $q])}] }
   set n [llength $L]
   set j 0
+  set prev $sxy
   foreach f $L {
     incr j
-    fr_put $f [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * $j / ($n + 1.0))}] [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * $j / ($n + 1.0))}]
+    set px [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * $j / ($n + 1.0))}]
+    set py [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * $j / ($n + 1.0))}]
+    set nx [list [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * ($j + 1) / ($n + 1.0))}] [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * ($j + 1) / ($n + 1.0))}]]
+    if {$j == $n} { set nx $T }
+    set prev [fr_put $f {*}[fr_freept2 $px $py $prev $nx]]
   }
   set ha 0; set prev $sxy
   foreach f $L { set ha [expr {max($ha, [fr_md $prev [fr_ctr $f]])}]; set prev [fr_ctr $f] }
@@ -265,7 +292,7 @@ dict for {cpfx stg} $fr_ch {
   set msg ""
   if {$ha > $fr_hop} {
     incr fr_cneed
-    set msg " NEED [expr {max($need, $n)}] stages (has $n; source->tail-load centre [format %.0f [expr {[fr_md $sxy $T] / $u}]] um)[expr {$rs > $fr_plan ? " + loads spread [format %.0f [expr {$rs / $u}]] um from their centre: split the fan-out" : ""}]"
+    set msg " NEED [expr {max($need, $n + ($need <= $n))}] stages (has $n[expr {$need <= $n ? ", a stage site is blocked by macro halos" : ""}]; source->tail-load centre [format %.0f [expr {[fr_md $sxy $T] / $u}]] um)[expr {$rs > $fr_plan ? " + loads spread [format %.0f [expr {$rs / $u}]] um from their centre: split the fan-out" : ""}]"
   }
   puts "OT_RESET_CHAIN $cpfx: $n stages, [llength $lds] loads, max hop [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um$msg"
   set fr_cb [expr {max($fr_cb, $hb)}]; set fr_ca [expr {max($fr_ca, $ha)}]
