@@ -31,6 +31,8 @@ ap.add_argument('bind'); ap.add_argument('r8'); ap.add_argument('out')
 ap.add_argument('--option', default='bound', choices=['bound', 'v36', 'turn7', 'turnC', 'mid', 'ctlmid'])
 ap.add_argument('--plan', help='v3.x die_plan.json: take V / header / cmd depths from its tap-tree lanes (+ --lat)')
 ap.add_argument('--lat', help='gen.py latency json of --plan')
+ap.add_argument('--tie-types', metavar='PLAN', help='plan json: members (and INNER delays) of partitions sharing one TYPE get equal pads (one pad per type port)')
+ap.add_argument('--tie-only', default='', help='comma list of tie classes: cross, inner, hg (default all)')
 ap.add_argument('--entry', action='store_true', help='cost pads at the sink PARTITION ENTRY: members of one source-bit range into one partition share one delay line (fanout counted once)')
 A_ = ap.parse_args()
 B, R8, OUT = A_.bind, A_.r8, A_.out
@@ -142,9 +144,39 @@ for g, lst in G.items():
         if m['a'] != 'ZERO': row[ix[m['a']]] += 1
         A.append(row); bu.append(m['asbuilt'] - m['bound'])
 A = [np.pad(r_, (0, len(c) - len(r_))) for r_ in A]
+Aeq, beq, ntie = [], [], 0
+if A_.tie_types:
+    _pt = {x['name']: x['type'] for x in json.load(open(A_.tie_types))['partitions']}
+    _cnt = collections.Counter(_pt.values())
+    def _nz(x):
+        return re.sub(r'pvw_\d', 'pvw_*', re.sub(r'(astk|vport)_([EW])[SN]_', r'\1_\2*_', x))
+    tie = collections.defaultdict(list)
+    for i, m in enumerate(mem):
+        ty = _pt.get(m['sink_part'])
+        if ty and _cnt[ty] > 1 and m['src_part'] != m['sink_part'] or (m.get('inner') and _cnt.get(_pt.get(m['sink_part']), 0) > 1):
+            tie[(ty, _nz(m['sink']), m['sink_port'], json.dumps(m['sink_bits']), _nz(m['source']), m.get('inner', False))].append(i)
+    for k_, lst in tie.items():
+        if len({mem[i]['sink_part'] for i in lst}) < 2:
+            continue
+        cls = 'inner' if k_[5] else ('hg' if not str(k_[0]).startswith('kv3_pv') else 'cross')
+        if A_.tie_only and cls not in A_.tie_only.split(','):
+            continue
+        i0 = lst[0]
+        for i in lst[1:]:
+            if mem[i]['sink_part'] == mem[i0]['sink_part']:
+                continue
+            row = np.zeros(len(c))
+            for j, sg in ((i, 1), (i0, -1)):
+                m = mem[j]
+                if m['b'] != 'ZERO': row[ix[m['b']]] += sg
+                if m['a'] != 'ZERO': row[ix[m['a']]] -= sg
+            Aeq.append(row); beq.append((mem[i]['bound'] - mem[i]['asbuilt']) - (mem[i0]['bound'] - mem[i0]['asbuilt'])); ntie += 1
 row = np.zeros(len(c)); row[ix['RH']] = -1; A.append(row); bu.append(TD_ASB)                       # TRUNK_D >= 0
 row = np.zeros(len(c)); row[ix['RH']] = 1; row[ix['FLG']] = -1; A.append(row); bu.append(FD_ASB)   # FLAG_D >= 0
-r = linprog(c, A_ub=np.array(A), b_ub=np.array(bu), bounds=bounds, method='highs', integrality=np.ones(len(c)))
+if Aeq:
+    Aeq = [np.pad(r_, (0, len(c) - len(r_))) for r_ in Aeq]
+r = linprog(c, A_ub=np.array(A), b_ub=np.array(bu), A_eq=np.array(Aeq) if Aeq else None, b_eq=np.array(beq) if Aeq else None,
+            bounds=bounds, method='highs', integrality=np.ones(len(c)))
 assert r.status == 0, r.message
 t = {v: int(round(r.x[ix[v]])) for v in var}; t['ZERO'] = 0
 out, ov, tot = [], [], collections.Counter()
@@ -184,7 +216,7 @@ shift = {v: k for v, k in t.items() if v.startswith('L:vport')}
 cross = sum(v for k, v in tot.items() if not k.startswith('inner'))
 for o in ov:
     o['r8_pad_flops'] = o['r8_pad'] * sum(hi - lo + 1 for lo, hi in r8[o['id']]['sink_bits'])
-summary = dict(entry_costed=A_.entry, entry_pad_flops=int(sum(ent.values())), entry_pad_flops_by_kind=dict(ent), option=A_.option, route=route_info, members=len(out), padded_members=sum(1 for e in out if e['pad']), crossing_pad_flops=int(cross),
+summary = dict(type_ties=ntie, entry_costed=A_.entry, entry_pad_flops=int(sum(ent.values())), entry_pad_flops_by_kind=dict(ent), option=A_.option, route=route_info, members=len(out), padded_members=sum(1 for e in out if e['pad']), crossing_pad_flops=int(cross),
                inner_delay_flops_new=int(tot['inner_other']), inner_delay_flops_bound_asis=int(tot['inner_asbuilt_other']),
                pad_flops_by_kind=dict(tot), max_pad=max(e['pad'] for e in out), lp_objective=int(round(r.fun + const)),
                TRUNK_D=TRUNK_D, FLAG_D=FLAG_D, TRUNK_D_asb=TD_ASB, FLAG_D_asb=FD_ASB,
@@ -192,5 +224,7 @@ summary = dict(entry_costed=A_.entry, entry_pad_flops=int(sum(ent.values())), en
                vport_launch_shift=shift, r8_overrides=len(ov), r8_override_pad_flops=sum(o['r8_pad_flops'] for o in ov))
 json.dump(dict(schema='opentallas.die_plan.r8_landing.v1', die='qwen_kvsys', kind='pv_trunk_pads',
                note=__doc__.strip(), merge_rule='authoritative for listed ids; replaces r8 entry of the same id; others keep r8 pad',
-               summary=summary, overrides=ov, members=out), open(OUT, 'w'), indent=1)
+               summary=summary, overrides=ov, members=out,
+               entry_groups=[dict(source=g[0], source_bits=json.loads(g[1]), sink_part=g[2], entry_pad=gval[g],
+                                  member_ids=[mem[i]['id'] for i in lst]) for g, lst in G.items()]), open(OUT, 'w'), indent=1)
 print(json.dumps(summary, indent=1))
