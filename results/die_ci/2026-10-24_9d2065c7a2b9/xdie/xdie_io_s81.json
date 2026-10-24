@@ -1,0 +1,139 @@
+{
+ "schema": "opentallas.die_plan.xdie_io.v1",
+ "conn": "/srv/opentallas-scratch2/claude/die-ci/wt/results/arch/release_rack_1021/connections_s81.csv",
+ "roles": {
+  "H": "/srv/opentallas-scratch2/claude/die-ci/wt/physical/die_plan/s81_head/die_io.json",
+  "S": "/srv/opentallas-scratch2/claude/die-ci/wt/physical/die_plan/s81/die_io.json",
+  "B": "/srv/opentallas-scratch2/claude/die-ci/wt/physical/die_plan/s81/die_io.json"
+ },
+ "verdict": "FAIL",
+ "errors": 130,
+ "error_groups": [
+  {
+   "rule": "missing",
+   "role": "S",
+   "macro": "lk_EN2",
+   "cls": "copyb_in",
+   "n": 32,
+   "example": "copyb_in s81.02708: role S has no die.io window on lk_EN2"
+  },
+  {
+   "rule": "missing",
+   "role": "S",
+   "macro": "lk_EN3",
+   "cls": "copyb_in",
+   "n": 32,
+   "example": "copyb_in s81.02708: role S has no die.io window on lk_EN3"
+  },
+  {
+   "rule": "missing",
+   "role": "S",
+   "macro": "lk_WS2",
+   "cls": "copyb_out",
+   "n": 32,
+   "example": "copyb_out s81.02714: role S has no die.io window on lk_WS2"
+  },
+  {
+   "rule": "missing",
+   "role": "S",
+   "macro": "lk_WS3",
+   "cls": "copyb_out",
+   "n": 32,
+   "example": "copyb_out s81.02714: role S has no die.io window on lk_WS3"
+  },
+  {
+   "rule": "host",
+   "role": "S",
+   "macro": null,
+   "cls": null,
+   "n": 1,
+   "example": "role S: die_io marks ['lk_WS0'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+  },
+  {
+   "rule": "host",
+   "role": "B",
+   "macro": null,
+   "cls": null,
+   "n": 1,
+   "example": "role B: die_io marks ['lk_WS0'] host: true but the rack gives this role no host circuit (host traffic is in-band)"
+  }
+ ],
+ "warnings": [],
+ "summary": {
+  "circuits_checked": 2868,
+  "by_class": {
+   "copyb_hop B-B": 160,
+   "head_hop S-H": 4,
+   "stage_hop S-S": 960,
+   "token_return H-S": 4,
+   "tp_mesh B-B": 288,
+   "tp_mesh H-H": 6,
+   "tp_mesh S-S": 1446
+  },
+  "roles": {
+   "H": {
+    "windows": 12,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_HOST0",
+     "lk_HOST1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1"
+    ],
+    "host_windows": [
+     "lk_HOST0",
+     "lk_HOST1"
+    ],
+    "unused": [],
+    "host_circuit": true
+   },
+   "S": {
+    "windows": 11,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1"
+    ],
+    "host_windows": [
+     "lk_WS0"
+    ],
+    "unused": [],
+    "host_circuit": false
+   },
+   "B": {
+    "windows": 11,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1"
+    ],
+    "host_windows": [
+     "lk_WS0"
+    ],
+    "unused": [],
+    "host_circuit": false
+   }
+  }
+ }
+}
