@@ -21,6 +21,7 @@ rtl/common/landed_parent/ot_pl_land.sv
 rtl/common/landed_parent/ot_pl_land_n32.sv
 rtl/common/landed_parent/ot_pl_land_rst_copy.sv
 rtl/common/landed_parent/ot_pl_land_reset_forest.sv
+rtl/common/landed_parent/ot_pl_land_field_copies.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv
 rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv
