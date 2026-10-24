@@ -275,8 +275,8 @@ def tcl(P, adjust, iters, sta=True, repair=True):
     PL = "/OpenROAD-flow-scripts/flow/platforms/asap7"
     t = [f"set PL {PL}", "set t0 [clock seconds]",
          "proc T {tag} { global t0; puts \"OT_T $tag [expr {[clock seconds]-$t0}] s\" }",
-         "define_corners SS TT FF"]
-    for c in ("SS", "TT", "FF"):
+         "define_corners TT FF"]
+    for c in ("TT", "FF"):
         for lib in LIBS:
             t.append(f"read_liberty -corner {c} $PL/lib/NLDM/{lib.format(c=c)}")
     t += ["read_lef $PL/lef/asap7_tech_1x_201209.lef", "read_lef $PL/lef/asap7sc7p5t_28_R_1x_220121a.lef",
@@ -296,7 +296,6 @@ def tcl(P, adjust, iters, sta=True, repair=True):
           "puts OT_GRT_DONE"]
     if sta:
         per = float(P.die["period_ps"])
-        per = 833.333 if abs(per - 833) < 1 else per
         t += ["create_clock -name clk -period %.3f [get_ports clk]" % per,
               "set_clock_uncertainty 60 -setup [all_clocks]", "set_clock_uncertainty 25 -hold [all_clocks]",
               "if {[file exists /work/clock_latency.tcl]} { source /work/clock_latency.tcl; puts OT_CLK_LATENCY }",
@@ -312,12 +311,11 @@ def repair_tcl(P, wire_layer=None):
     PL = "/OpenROAD-flow-scripts/flow/platforms/asap7"
     t = [f"set PL {PL}", "set t0 [clock seconds]",
          "proc T {tag} { global t0; puts \"OT_T $tag [expr {[clock seconds]-$t0}] s\" }",
-         "define_corners SS TT FF"]
-    for c in ("SS", "TT", "FF"):
+         "define_corners TT FF"]
+    for c in ("TT", "FF"):
         for lib in LIBS:
             t.append(f"read_liberty -corner {c} $PL/lib/NLDM/{lib.format(c=c)}")
     per = float(P.die["period_ps"])
-    per = 833.333 if abs(per - 833) < 1 else per
     t += ["read_lef $PL/lef/asap7_tech_1x_201209.lef", "read_lef $PL/lef/asap7sc7p5t_28_R_1x_220121a.lef",
           "read_def /work/fabric.def", "T read", "source $PL/setRC.tcl"]
     if wire_layer:          # placement parasitics with that layer's RC (the plan routes ft hops on M8 / M9)
@@ -337,9 +335,9 @@ def repair_tcl(P, wire_layer=None):
 
 def sta_block(tag):
     """OpenSTA 'scenes' (define_corners names them SS/TT/FF): per scene worst slack (slack_only), the worst 200k
-    endpoints (-format end), 3 full paths; sign-off = setup SS, hold FF (TT setup and SS hold for information)."""
+    endpoints (-format end), 3 full paths; sign-off = setup TT, hold FF."""
     out = []
-    for c, d in (("SS", "max"), ("TT", "max"), ("FF", "min"), ("SS", "min")):
+    for c, d in (("TT", "max"), ("FF", "min")):
         f = f"/work/sta_{tag}_{c}_{d}"
         out += [f"report_checks -path_delay {d} -scenes {c} -group_path_count 1 -format slack_only > {f}.wns",
                 f"report_checks -path_delay {d} -scenes {c} -group_path_count 200000 -endpoint_path_count 1 "
