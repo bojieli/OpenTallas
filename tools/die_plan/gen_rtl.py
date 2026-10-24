@@ -153,21 +153,37 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
     sig = {}          # bind keyword -> expression
     need_rst = False
+    pads, bad = P.bus_pads()
+    if bad:
+        raise GenError("; ".join(bad))
     for b in buses:
         n, W = sv_id(b["name"]), b["width"]
+        pad = pads.get((tn, b["name"]), 0)   # R8 latency-group pad stages (Plan.bus_pads)
         if b["dir"] == "in":
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             ea = f"{n}[{W}]" if b["ep"] else "rst_n"
             body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({n}[{W - 1}:0]), "
                         f".ea({ea}), .q({n}_q), .eq({n}_eq));")
-            sig[f"bus:{b['name']}"] = f"{n}_q"
-            sig[f"epoch:{b['name']}"] = f"{n}_eq"
+            q, eq = f"{n}_q", f"{n}_eq"
+            for j in range(pad):
+                decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n}_pad{j} (.clk(clk), .rst_n(rst_n), .d({q}), .ea({eq}), "
+                            f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
+                q, eq = f"{n}_p{j}_q", f"{n}_p{j}_eq"
+            sig[f"bus:{b['name']}"] = q
+            sig[f"epoch:{b['name']}"] = eq
         else:
             decl.append(f"    wire [{W - 1}:0] {n}_d;")
             eq = f"{n}[{W}]" if b["ep"] else f"{n}_eo"
             if not b["ep"]:
                 decl.append(f"    wire {n}_eo;  // epoch of a die-IO / non-lane output: not carried off the partition")
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({n}_d), .ea(rst_n), "
+            d, ea = f"{n}_d", "rst_n"
+            for j in range(pad):
+                decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ea}), "
+                            f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
+                d, ea = f"{n}_p{j}_q", f"{n}_p{j}_eq"
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea({ea}), "
                         f".q({n}[{W - 1}:0]), .eq({eq}));")
             sig[f"bus:{b['name']}"] = f"{n}_d"
     for s in slots:
