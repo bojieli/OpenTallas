@@ -39,6 +39,7 @@ NC, NR = 22, 20
 DIE_W = NC * PX + 2 * X0
 DIE_H = NR * PY + 2 * X0
 REACH = 1500.0
+FT_KIT_REACH_UM = 405.0  # measured M4-M7 kit reach at 833ps; M8/M9 are reserved die resources
 FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
 UNIFORM_SEG = True
 SNAP = 0.192
@@ -499,6 +500,12 @@ def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
             break
         k += 1
     return k
+
+
+def macrofree_ft_reach(plan):
+    """Use actual corresponding pin bits and the implemented M4-M7 reach."""
+    from tools.die_plan.ft_reach import resize
+    return resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98)
 
 
 def mir(c):
@@ -1697,6 +1704,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
+    STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
