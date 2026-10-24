@@ -41,16 +41,31 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     task automatic preload_plain(input integer pc, input integer bank, input integer row, input integer col, input [255:0] d);
         preload(pc, bank, row, col, encode(d));
     endtask
+    // KV-TOK 10-24: the instance names its own slice by its bound partition (phy_<S>_<j>, from %m), so no defparam is
+    // needed: +HBM_PRELOAD=<file> lines "<partition> <pc> <bank> <row> <col> <256-b plain sector hex>" (SECDED-encoded
+    // on load, as the write path's ot_qfd_emb_pcport does); PRELOAD_ID >= 0 keeps the numeric form (288-b words).
+    // +HBM_LOG=<n>: print the first n RD / WR columns of this slice (pc bank row col edge) -- the address-map self-check.
+    string part = "";
+    integer hlog = 0, nlog = 0;
     initial begin : pl
-        string f; integer fd, s, pc, b, r, c, n; reg [287:0] w;
+        string f, m, ps; integer fd, s, pc, b, r, c, n; reg [287:0] w; reg [255:0] d;
         for (int k = 0; k < 4; k++) for (int j = 0; j < 64; j++) due[k][j] = '0;
-        if (PRELOAD_ID >= 0 && $value$plusargs("HBM_PRELOAD=%s", f)) begin
+        m = $sformatf("%m");
+        for (int i = 0; i + 4 <= m.len(); i++) if (m.substr(i, i + 3) == "phy_") begin
+            int e; e = i; while (e < m.len() && m[e] != ".") e++; part = m.substr(i, e - 1); break; end
+        void'($value$plusargs("HBM_LOG=%d", hlog));
+        if ($value$plusargs("HBM_PRELOAD=%s", f)) begin
             fd = $fopen(f, "r"); n = 0;
             if (fd == 0) $fatal(1, "HBM_PRELOAD %s not readable", f);
-            while ($fscanf(fd, "%d %d %d %d %d %h\n", s, pc, b, r, c, w) == 6)
-                if (s == PRELOAD_ID) begin preload(pc, b, r, c, w); n++; end
+            if (PRELOAD_ID >= 0) begin
+                while ($fscanf(fd, "%d %d %d %d %d %h\n", s, pc, b, r, c, w) == 6)
+                    if (s == PRELOAD_ID) begin preload(pc, b, r, c, w); n++; end
+            end else begin
+                while ($fscanf(fd, "%s %d %d %d %d %h\n", ps, pc, b, r, c, d) == 6)
+                    if (ps == part) begin preload(pc, b, r, c, encode(d)); n++; end
+            end
             $fclose(fd);
-            $display("HBM_PRELOAD slice %0d words %0d", PRELOAD_ID, n);
+            if (n > 0) $display("HBM_PRELOAD %s words %0d", part, n);
         end
     end
     wire [327:0] po [0:3];
@@ -61,6 +76,11 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
             if (po[k][0] && po[k][3:1] == 3'd1) openrow[k][po[k][8:4]] = po[k][27:9];
             if (po[k][28]) begin : col
                 automatic bit [30:0] key = {2'(k), po[k][34:30], 19'(openrow[k][po[k][34:30]]), po[k][39:35]};
+                if (nlog < hlog) begin
+                    nlog++;
+                    $display("HBM_%s %s pc %0d bank %0d row %0d col %0d edge %0d", po[k][29] ? "WR" : "RD", part, k, po[k][34:30],
+                             openrow[k][po[k][34:30]], po[k][39:35], edge_n);
+                end
                 if (po[k][29]) begin mem[key] = po[k][327:40]; n_wr++; end
                 else begin
                     n_rd++;
@@ -76,5 +96,5 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
         pi2 <= due[2][(edge_n) % 64]; due[2][(edge_n) % 64] <= '0;
         pi3 <= due[3][(edge_n) % 64]; due[3][(edge_n) % 64] <= '0;
     end
-    final $display("HBM_PHY %m reads %0d writes %0d unwritten_reads %0d", n_rd, n_wr, n_rd_unwritten);
+    final $display("HBM_PHY %s reads %0d writes %0d unwritten_reads %0d", part, n_rd, n_wr, n_rd_unwritten);
 endmodule
