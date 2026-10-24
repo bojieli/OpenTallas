@@ -848,6 +848,27 @@
    "cells_est": 116000
   }
  ],
+ "a0_core_taps": {
+  "source": "a0_core_taps.json",
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "neighbour_skew_ps": 80,
+  "taps_per_core": {
+   "nk": 32,
+   "nl": 31
+  },
+  "drops_per_quad": {
+   "cbf_q00": 128,
+   "cbf_q00_s2": 128,
+   "cbf_q01": 128,
+   "cbf_q01_s2": 128,
+   "cbf_q11": 128,
+   "cbn_q00": 128,
+   "cbn_q01": 128,
+   "cbn_q11": 128,
+   "cbx_q10": 127
+  }
+ },
  "leaf_params": {
   "tt_ctlm": {
    "ot_qfd_tt_ctlm_static_hr": {
