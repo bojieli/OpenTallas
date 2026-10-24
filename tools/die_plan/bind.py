@@ -1639,7 +1639,8 @@ class Binder:
             for tn in tns:
                 new = m
                 if len(tns) > 1:
-                    new = f"{m}__{sv_id(tn)}"
+                    # keep '__' of a split variant (T__v1) distinct from a plan type named T_v1 (sv_id would merge them)
+                    new = f"{m}__{re.sub(r'[^A-Za-z0-9_]', '_', tn)}"
                 if new in leafmods:
                     new = f"{new}_part"
                 if new != m:
