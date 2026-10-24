@@ -55,8 +55,10 @@ def test_kv_hand_values():
     assert _v(d, "XDIE_DIE_STAGES") == "2,2,2,3,2,2/34,34,32,32,32,31,31"
     for k in ("RESPONSE_LAT", "QK_ISSUE_AGE", "KVN_A0", "AP_OFS"):
         assert d["constants"][k]["status"] == "OK", (k, d["constants"][k])
-    # kv39 carries the PV table KV-P6 withdrew (18:3x): its TRUNK_D/FLAG_D disagree with the pv_trunk law -> flagged
-    assert d["constants"]["TRUNK_D"]["status"] == "MISMATCH"
+    # kv39 carries the PV table KV-P6 withdrew (18:3x, TRUNK_D 56): the KV-P5 pv_trunk law on its landed depths gives
+    # 55/1 -> the table value is kept (PV table owns it) but flagged WARN with the law value
+    t = d["constants"]["TRUNK_D"]
+    assert (t["value"], t["status"], t["inputs"]["law"]) == (56, "WARN", {"TRUNK_D": 55, "FLAG_D": 1})
 
 
 def _shift(src, dst, pred, by):
@@ -114,3 +116,14 @@ def test_sv_package():
     assert "localparam int RESPONSE_LAT = 12;" in sv and "localparam logic [63:0] AP_OFS = 64'hffd2ffd1ffd1ffd1;" in sv
     assert "localparam int XDIE_SEAM_K [7] = '{34, 32, 32" not in sv and "'{34, 34, 32, 32, 32, 31, 31}" in sv
     assert sv.rstrip().endswith("endpackage : qwen_kvsys_sched_pkg")
+
+
+def test_bind_post_gate(tmp_path):
+    """the post-bind gate writes regen/constants.json + the SV package + bind_gate.json; a skipped smoke is never PASS"""
+    import bind_post
+    b = tmp_path / "qc12"
+    shutil.copytree(FX / "qc12", b)
+    assert bind_post.main(["--die", "qwen_compute", "--bound", str(b), "--smoke", "skip"]) == 1
+    g = json.loads((b / "bind_gate.json").read_text())
+    assert (g["verdict"], g["regen"]["verdict"], g["smoke"]["verdict"]) == ("INCOMPLETE", "PASS", "SKIPPED")
+    assert "localparam int COLL_LS = 389;" in (b / "regen" / "qwen_compute_sched_pkg.sv").read_text()

@@ -499,9 +499,23 @@ def kv_pv_trunk(o):
     st = "OK" if same and aligned else "WARN"
     note = None if aligned else ("column command Deltas / D+R not uniform on the landed depths: TRUNK_D/FLAG_D alone do not "
                                  "keep the pv_trunk_gen invariant -> PV pads (KV-P6-PV entry table) must equalise first")
-    o.add("TRUNK_D", regen["S"]["TRUNK_D"], "rtl", "TRUNK_D_asb + max_s Delta(cmd_s) (pv_trunk_gen)",
+    pvt = (B.param_regen.get("record") or {}).get("pv_table")
+    law = dict(TRUNK_D=regen["S"]["TRUNK_D"], FLAG_D=regen["S"]["FLAG_D"])
+    if pvt:
+        # a PV pad table (KV-P6-PV model: V-D-H launch shift, entry pads) owns TRUNK_D/FLAG_D; the KV-P5 pv_trunk law on
+        # the landed depths is the independent check.  Disagreement = table and lanes are not from one bind -> WARN.
+        app = (B.param_regen.get("record") or {}).get("applied", {})
+        for k in ("TRUNK_D", "FLAG_D"):
+            v = app.get(k)
+            agree = v == law[k]
+            o.add(k, v, "rtl", f"PV pad table {pvt.get('file')} ({pvt.get('source', '')[:80]}); check: KV-P5 pv_trunk law on "
+                  f"landed depths = {law[k]}", dict(asbuilt=TD if k == "TRUNK_D" else FD, law=law, sides=regen),
+                  inst=r"pvw_\d__u_ctl$", group="pv", status="OK" if agree and st == "OK" else "WARN",
+                  note=None if agree else f"law {law[k]} != table {v}: confirm the PV table belongs to this bind (KV owner)")
+        return
+    o.add("TRUNK_D", law["TRUNK_D"], "rtl", "TRUNK_D_asb + max_s Delta(cmd_s) (pv_trunk_gen)",
           dict(asbuilt=TD, sides=regen), inst=r"pvw_\d__u_ctl$", group="pv", status=st, note=note)
-    o.add("FLAG_D", regen["S"]["FLAG_D"], "rtl", "max_s(D_s + R_s) - TRUNK_D - (D+R - TRUNK_D - FLAG_D)_asb",
+    o.add("FLAG_D", law["FLAG_D"], "rtl", "max_s(D_s + R_s) - TRUNK_D - (D+R - TRUNK_D - FLAG_D)_asb",
           dict(asbuilt=FD), inst=r"pvw_\d__u_ctl$", group="pv", status=st, note=note)
 
 
@@ -631,7 +645,7 @@ def hbm_rules(o, src_root, hbm_tools):
         return
     banks = B.rtl_insts("|".join(BL.BANK_PIN))
     clients = B.rtl_insts("|".join(re.escape(m) for m in BL.RULES))
-    res, bad = {}, []
+    res = {}
     for inst, c in sorted(clients.items()):
         for port, kind, param, ref, ref_rt, bank_lat, why in BL.RULES[c["module"]]:
             back = BL.READ.get(port) or BL.WRITE.get(port) or port.replace("q", "r")
