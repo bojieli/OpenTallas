@@ -20,5 +20,5 @@ grep -q "fault_cycles=0 " $I/run.log || { echo "BK $Y idle faults: $(grep -h '^D
 rm -rf $O/$Y
 cd $T && python3 tools/s81_dv/tokfunc/run_entry_replay.py --src $T --die-v $C/tree_fc31/results/arch/s81_dv_1016/bind9/die.v.gz \
   --cut $C/cuts/cut_3S_ctl --kit $K --obj $OBJ --idle-run $I --progs $P --fixture-meta $F --ks-user 0 --out $O/$Y \
-  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS ${BK_SINK:+--bk-drain-sink $BK_SINK} > $O/$Y.log 2>  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS > $O/$Y.log 2>&11
+  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS ${BK_SINK:+--bk-drain-sink $BK_SINK} > $O/$Y.log 2>&1
 echo "BK $Y rc $? $(grep ENTRY_REPLAY $O/$Y.log | tail -1)"
