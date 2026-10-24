@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.7r (KV-P7-V38 10-23, GEOM-REVIEW8 FIX (3)(4) + ectl gap): 556 hg/hgi/pc/pv cores re-placed (post_v37r.py: ectl full-width 155.52 tall, pc rows 60.48/241.92 gaps, pv cores up into the top band); pins re-assigned (core_pins_v37q.py) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 504 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.7r (KV-P7-V38 10-23, GEOM-REVIEW8 FIX (3)(4) + ectl gap): 556 hg/hgi/pc/pv cores re-placed (post_v37r.py: ectl full-width 155.52 tall, pc rows 60.48/241.92 gaps, pv cores up into the top band); pins re-assigned (core_pins_v37q.py) | v3.7s (KV-P7-V38 10-23, GEOM-REVIEW8 FIX (2)): 0 hg|hgi tN / 1056-b ft port windows moved into the hgi bottom band; 144 hgi head cores on the hg row grid (rows from 302.4) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 504 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -5397,7 +5397,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -5416,7 +5416,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -5435,7 +5435,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -5454,7 +5454,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -5473,7 +5473,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -5492,7 +5492,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -5511,7 +5511,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -5530,7 +5530,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -5549,7 +5549,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -5568,7 +5568,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -5587,7 +5587,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -5606,7 +5606,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -5625,7 +5625,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -5644,7 +5644,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -5663,7 +5663,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -5682,7 +5682,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -6607,7 +6607,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -6626,7 +6626,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -6645,7 +6645,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -6664,7 +6664,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -6683,7 +6683,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -6702,7 +6702,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -6721,7 +6721,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -6740,7 +6740,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -6759,7 +6759,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -6778,7 +6778,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -6797,7 +6797,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -6816,7 +6816,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -6835,7 +6835,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -6854,7 +6854,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -6873,7 +6873,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -6892,7 +6892,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -7824,7 +7824,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -7843,7 +7843,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -7862,7 +7862,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -7881,7 +7881,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -7900,7 +7900,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -7919,7 +7919,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -7938,7 +7938,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -7957,7 +7957,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -7976,7 +7976,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -7995,7 +7995,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -8014,7 +8014,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -8033,7 +8033,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -8052,7 +8052,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -8071,7 +8071,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -8090,7 +8090,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -8109,7 +8109,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -9216,7 +9216,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -9235,7 +9235,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -9254,7 +9254,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -9273,7 +9273,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -9292,7 +9292,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -9311,7 +9311,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -9330,7 +9330,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -9349,7 +9349,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -9368,7 +9368,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -9387,7 +9387,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -9406,7 +9406,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -9425,7 +9425,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -9444,7 +9444,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -9463,7 +9463,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -9482,7 +9482,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -9501,7 +9501,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -10580,7 +10580,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -10599,7 +10599,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -10618,7 +10618,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -10637,7 +10637,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -10656,7 +10656,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -10675,7 +10675,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -10694,7 +10694,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -10713,7 +10713,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -10732,7 +10732,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -10751,7 +10751,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -10770,7 +10770,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -10789,7 +10789,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -10808,7 +10808,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -10827,7 +10827,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -10846,7 +10846,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -10865,7 +10865,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -11951,7 +11951,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -11970,7 +11970,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -11989,7 +11989,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -12008,7 +12008,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -12027,7 +12027,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -12046,7 +12046,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -12065,7 +12065,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -12084,7 +12084,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -12103,7 +12103,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -12122,7 +12122,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -12141,7 +12141,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -12160,7 +12160,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -12179,7 +12179,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -12198,7 +12198,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -12217,7 +12217,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -12236,7 +12236,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -13343,7 +13343,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -13362,7 +13362,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -13381,7 +13381,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -13400,7 +13400,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -13419,7 +13419,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -13438,7 +13438,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -13457,7 +13457,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -13476,7 +13476,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -13495,7 +13495,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -13514,7 +13514,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -13533,7 +13533,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -13552,7 +13552,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -13571,7 +13571,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -13590,7 +13590,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -13609,7 +13609,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -13628,7 +13628,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -14707,7 +14707,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -14726,7 +14726,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -14745,7 +14745,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -14764,7 +14764,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -14783,7 +14783,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -14802,7 +14802,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -14821,7 +14821,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -14840,7 +14840,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -14859,7 +14859,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -14878,7 +14878,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -14897,7 +14897,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -14916,7 +14916,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -14935,7 +14935,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -14954,7 +14954,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -14973,7 +14973,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -14992,7 +14992,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -16085,7 +16085,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       43.2,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -16104,7 +16104,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       380.16,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -16123,7 +16123,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       77.76,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -16142,7 +16142,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       380.16,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -16161,7 +16161,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       77.76,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -16180,7 +16180,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       380.16,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -16199,7 +16199,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       77.76,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -16218,7 +16218,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       380.16,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
@@ -16237,7 +16237,7 @@
      "module": "kv3_head_eighth_e0",
      "origin_um": [
       682.56,
-      25.92
+      302.4
      ],
      "outline_um": [
       285.12,
@@ -16256,7 +16256,7 @@
      "module": "kv3_head_eighth_e1",
      "origin_um": [
       1019.52,
-      25.92
+      302.4
      ],
      "outline_um": [
       233.28,
@@ -16275,7 +16275,7 @@
      "module": "kv3_head_eighth_e2",
      "origin_um": [
       717.12,
-      449.28
+      639.36
      ],
      "outline_um": [
       250.56,
@@ -16294,7 +16294,7 @@
      "module": "kv3_head_eighth_e3",
      "origin_um": [
       1019.52,
-      449.28
+      639.36
      ],
      "outline_um": [
       233.28,
@@ -16313,7 +16313,7 @@
      "module": "kv3_head_eighth_e4",
      "origin_um": [
       717.12,
-      838.08
+      941.76
      ],
      "outline_um": [
       250.56,
@@ -16332,7 +16332,7 @@
      "module": "kv3_head_eighth_e5",
      "origin_um": [
       1019.52,
-      838.08
+      941.76
      ],
      "outline_um": [
       233.28,
@@ -16351,7 +16351,7 @@
      "module": "kv3_head_eighth_e6",
      "origin_um": [
       717.12,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       250.56,
@@ -16370,7 +16370,7 @@
      "module": "kv3_head_eighth_e7",
      "origin_um": [
       1019.52,
-      1226.88
+      1244.16
      ],
      "outline_um": [
       233.28,
