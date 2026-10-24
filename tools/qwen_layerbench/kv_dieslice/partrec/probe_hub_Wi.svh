@@ -20,8 +20,8 @@
     final $display("HOSTP_END core %0d raw_rx(peer link in) %0d prog_rx %0d normal_rx %0d words %0d", core_cyc, c_raw, c_prx, c_nrx, c_w);
     // HOST PHY face: SerDes rx -> qfd_link_adp512_split (ck_phy) -> d_rv -> qkd_host_phy_cdc5 -> raw_rx_v (peer link)
     integer c_phy = 0, c_drv = 0;
-    always @(posedge dut.u_host.g_mu.u_rank.ck_phy) begin c_phy <= c_phy + `H.phy_rx_v; c_drv <= c_drv + `H.d_rv; end
-    reg [6:0] pf_q = 0; wire [6:0] pf = {`H.phy_up, `H.adapter_fault, `H.phy_faults};
+    always @(posedge dut.u_host.g_mu.u_rank.ck_phy) begin c_phy <= c_phy + dut.u_host.g_mu.u_rank.phy_rx_v; c_drv <= c_drv + `H.d_rv; end
+    reg [6:0] pf_q = 0; wire [6:0] pf = {dut.u_host.g_mu.u_rank.phy_up, `H.adapter_fault, `H.phy_faults};
     always @(posedge clk) begin pf_q <= pf; if (pf != pf_q) $display("HOSTPHY core %0d phy_up %b adapter_fault %b phy_faults %b phy_rx %0d d_rv %0d raw_rx %0d",
                                                                       core_cyc, pf[6], pf[5], pf[4:0], c_phy, c_drv, c_raw); end
     final $display("HOSTPHY_END phy_rx_v %0d adapter_out d_rv %0d raw_rx %0d d_rcr %b", c_phy, c_drv, c_raw, `H.d_rcr);
