@@ -262,7 +262,7 @@ def sdc(P, tn, pins):
            f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
            f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
            f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
-           f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
+           "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
