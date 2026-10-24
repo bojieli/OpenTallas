@@ -32,3 +32,6 @@
         if (`AB.rx_v && c_phy < 4) $display("HOSTADP core %0d rx flit seq %0d expected %0d flit[17:0] %h valid %b", core_cyc, `AB.rx_flit[7:0], `AB.rx_seq, `AB.rx_flit[17:0], `AB.rx_flit[146]);
         if (af != af_q) $display("HOSTADP core %0d fault die_ovr %b link_ovr %b seq %b cred %b", core_cyc, af[3], af[2], af[1], af[0]);
     end
+    // FDI cadence at the HOST adapter input: every core edge and every ck_phy edge in a short window
+    always @(posedge clk) if (core_cyc >= 480 && core_cyc < 512) $display("FDI core-edge core %0d phy_rx_v %b seq %0d", core_cyc, dut.u_host.g_mu.u_rank.phy_rx_v, dut.u_host.g_mu.u_rank.phy_rx_flit[7:0]);
+    always @(posedge dut.u_host.g_mu.u_rank.ck_phy[0]) if (core_cyc >= 480 && core_cyc < 512) $display("FDI phy-edge  core %0d phy_rx_v %b seq %0d", core_cyc, dut.u_host.g_mu.u_rank.phy_rx_v, dut.u_host.g_mu.u_rank.phy_rx_flit[7:0]);
