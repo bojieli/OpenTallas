@@ -1,0 +1,478 @@
+{
+ "schema": "opentallas.die_plan.regen_constants.v1",
+ "die": "qwen_kvsys",
+ "bound": "/srv/opentallas-scratch/kv-tok/kv42_bind",
+ "bound_sha": "a02bdc4519fa9f51",
+ "generator": "tools/die_plan/regen_constants.py",
+ "bind_hook": "physical/die_plan/qwen_kvsys/bind/kv_regen36e.py",
+ "verdict": {
+  "OK": 17,
+  "WARN": 3
+ },
+ "constants": {
+  "RESPONSE_LAT": {
+   "value": 12,
+   "kind": "rtl",
+   "formula": "8 (landing seg) + D(krq) + D(krs); one value on every ECTL frame (type parameter)",
+   "status": "OK",
+   "inputs": {
+    "frames": 32,
+    "round_trips": [
+     12
+    ]
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "RESPONSE_LAT"
+   },
+   "bind_applied": [
+    "12"
+   ],
+   "rtl_bound": {
+    "module": "qkd_ectl3_kiss_st\\w*",
+    "param": "RESPONSE_LAT",
+    "instances": 1,
+    "values": [
+     "12"
+    ]
+   }
+  },
+  "QK_ISSUE_AGE": {
+   "value": 34,
+   "kind": "rtl",
+   "formula": "max(34, RESPONSE_LAT + 11) (static_qk_calendar write-before-read; 34 = attn calendar QK_CONSUME floor, KV owner choice KV-P6 18:09)",
+   "status": "OK",
+   "inputs": {
+    "RESPONSE_LAT": 12
+   },
+   "group": "ectl",
+   "rtl": {
+    "inst": "(^|\\.)ectl_\\w+$",
+    "param": "QK_ISSUE_AGE"
+   },
+   "bind_applied": [
+    "34"
+   ],
+   "rtl_bound": {
+    "module": "qkd_ectl3_kiss_st\\w*",
+    "param": "QK_ISSUE_AGE",
+    "instances": 1,
+    "values": [
+     "34"
+    ]
+   }
+  },
+  "ROW_RETURN_LAT": {
+   "value": 19,
+   "kind": "rtl-derived",
+   "formula": "RESPONSE_LAT + 7 (localparam inside qkd_ectl3_kiss_st)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_ROW_LATENCY": {
+   "value": 14,
+   "kind": "compiler",
+   "formula": "row_latency_for_calendar = RESPONSE_LAT + 2 (KV-P6-BOOT qk_row_latency)",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "QK_D_QK": {
+   "value": 0,
+   "kind": "compiler",
+   "formula": "kv_qkh_safe32.calendar_d_qk: D_QK = QK_ISSUE_AGE - 34 (+ data edges); must be >= 0",
+   "status": "OK",
+   "group": "ectl"
+  },
+  "AP_OFS": {
+   "value": [
+    -47,
+    -47,
+    -47,
+    -46
+   ],
+   "kind": "rtl",
+   "formula": "AP_OFS_s = asb_s + Delta D(ap_s) + Delta D(f_aqm) (stack order WS WN ES EN = [15:0]..[63:48])",
+   "status": "OK",
+   "inputs": {
+    "asbuilt": {
+     "WS": -36,
+     "WN": -36,
+     "ES": -34,
+     "EN": -35
+    },
+    "lag": {
+     "WS": 4,
+     "WN": 4,
+     "ES": 5,
+     "EN": 5
+    }
+   },
+   "group": "ahub",
+   "rtl": {
+    "inst": "^ahub$",
+    "param": "AP_OFS"
+   },
+   "sv_literal": "64'hffd2ffd1ffd1ffd1",
+   "bind_applied": [
+    "64'hffd2ffd1ffd1ffd1"
+   ],
+   "rtl_bound": {
+    "module": "qkd_ahub_static_dw\\w*",
+    "param": "AP_OFS",
+    "instances": 1,
+    "values": [
+     "18434077502186061777"
+    ]
+   }
+  },
+  "FR_OFS": {
+   "value": -7,
+   "kind": "rtl",
+   "formula": "as-built: every FR_OFS term is intra hub_C (no lane)",
+   "status": "OK",
+   "group": "ahub",
+   "rtl": {
+    "inst": "^ahub$",
+    "param": "FR_OFS"
+   },
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)",
+   "rtl_bound": {
+    "module": "qkd_ahub_static_dw\\w*",
+    "param": "FR_OFS",
+    "instances": 1,
+    "values": [
+     "-7"
+    ]
+   }
+  },
+  "AM_LAG_DELTA": {
+   "value": {
+    "WS": -9,
+    "WN": -37,
+    "ES": -8,
+    "EN": -9
+   },
+   "kind": "compiler",
+   "formula": "compiler EXP_START per stack: Delta D(am_s) - Delta L_s (kv_static_programme)",
+   "status": "OK",
+   "group": "ahub"
+  },
+  "TRUNK_D": {
+   "value": 43,
+   "kind": "rtl",
+   "formula": "PV pad table kv_pv_entry_r8_v36.json (KV-P6-V37 claude/kv-p6-v37-1023 @0ec5c902d kv_pv_entry_pads_v36.json); check: KV-P5 pv_trunk law on landed depths = 43",
+   "status": "WARN",
+   "inputs": {
+    "asbuilt": 54,
+    "law": {
+     "TRUNK_D": 43,
+     "FLAG_D": 0
+    },
+    "sides": {
+     "S": {
+      "TRUNK_D": 43,
+      "FLAG_D": 0,
+      "cmd_delta_uniform": false,
+      "flag_uniform": false
+     },
+     "N": {
+      "TRUNK_D": 44,
+      "FLAG_D": -1,
+      "cmd_delta_uniform": false,
+      "flag_uniform": false
+     }
+    }
+   },
+   "group": "pv",
+   "rtl": {
+    "inst": "pvw_\\d__u_ctl$",
+    "param": "TRUNK_D"
+   },
+   "bind_applied": [
+    "43"
+   ],
+   "rtl_bound": {
+    "module": "ot_qwen_tp8_pv_wide_ctl_tbf\\w*",
+    "param": "TRUNK_D",
+    "instances": 2,
+    "values": [
+     "43"
+    ]
+   }
+  },
+  "FLAG_D": {
+   "value": 0,
+   "kind": "rtl",
+   "formula": "PV pad table kv_pv_entry_r8_v36.json (KV-P6-V37 claude/kv-p6-v37-1023 @0ec5c902d kv_pv_entry_pads_v36.json); check: KV-P5 pv_trunk law on landed depths = 0",
+   "status": "WARN",
+   "inputs": {
+    "asbuilt": 58,
+    "law": {
+     "TRUNK_D": 43,
+     "FLAG_D": 0
+    },
+    "sides": {
+     "S": {
+      "TRUNK_D": 43,
+      "FLAG_D": 0,
+      "cmd_delta_uniform": false,
+      "flag_uniform": false
+     },
+     "N": {
+      "TRUNK_D": 44,
+      "FLAG_D": -1,
+      "cmd_delta_uniform": false,
+      "flag_uniform": false
+     }
+    }
+   },
+   "group": "pv",
+   "rtl": {
+    "inst": "pvw_\\d__u_ctl$",
+    "param": "FLAG_D"
+   },
+   "bind_applied": [
+    "0"
+   ],
+   "rtl_bound": {
+    "module": "ot_qwen_tp8_pv_wide_ctl_tbf\\w*",
+    "param": "FLAG_D",
+    "instances": 2,
+    "values": [
+     "0"
+    ]
+   }
+  },
+  "VPORT_RT": {
+   "value": {
+    "vport_EN_0": 30,
+    "vport_EN_1": 30,
+    "vport_EN_2": 31,
+    "vport_EN_3": 30,
+    "vport_ES_0": 30,
+    "vport_ES_1": 30,
+    "vport_ES_2": 31,
+    "vport_ES_3": 30,
+    "vport_WN_0": 30,
+    "vport_WN_1": 30,
+    "vport_WN_2": 30,
+    "vport_WN_3": 30,
+    "vport_WS_0": 30,
+    "vport_WS_1": 30,
+    "vport_WS_2": 30,
+    "vport_WS_3": 30
+   },
+   "kind": "boot",
+   "formula": "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)",
+   "status": "OK",
+   "group": "vport"
+  },
+  "VPORT_DQ": {
+   "value": {
+    "vport_EN_0": 6,
+    "vport_EN_1": 7,
+    "vport_EN_2": 0,
+    "vport_EN_3": 2,
+    "vport_ES_0": 6,
+    "vport_ES_1": 8,
+    "vport_ES_2": 0,
+    "vport_ES_3": 6,
+    "vport_WN_0": 6,
+    "vport_WN_1": 8,
+    "vport_WN_2": 1,
+    "vport_WN_3": 2,
+    "vport_WS_0": 6,
+    "vport_WS_1": 9,
+    "vport_WS_2": 1,
+    "vport_WS_3": 6
+   },
+   "kind": "boot",
+   "formula": "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)",
+   "status": "OK",
+   "group": "vport"
+  },
+  "CFG_FIA": {
+   "value": 53,
+   "kind": "boot",
+   "formula": "4 + max_p(W_p + RT_p) + 1 (KV-P5 rule)",
+   "status": "WARN",
+   "group": "vport",
+   "note": "KV-P6-BOOT: the boot generator RL = 4 + WP + O + DQ + RT (adds O) and the PV entry-pad table sets cfg_fia; the compiled boot image (KV_BOOT recipe) is authoritative for cfg_fia / DQ"
+  },
+  "KVN_A0": {
+   "value": 34,
+   "kind": "rtl",
+   "formula": "KVN_A0_asb + Delta(d2d kvn_word_valid -> seq core) - Delta(d2d att_rx_v -> kvs_attn) (KV-P6 18:09: age a starts at the attention programme request, triggered by att_rx)",
+   "status": "OK",
+   "inputs": {
+    "asbuilt": 32,
+    "kvn": [
+     14,
+     39
+    ],
+    "att_rx": [
+     11,
+     34
+    ]
+   },
+   "group": "prog",
+   "rtl": {
+    "inst": "seq__u_core$",
+    "param": "KVN_A0"
+   },
+   "bind_applied": [
+    "34"
+   ],
+   "rtl_bound": {
+    "module": "qkd_seq_core_static_s\\w*",
+    "param": "KVN_A0",
+    "instances": 1,
+    "values": [
+     "34"
+    ]
+   }
+  },
+  "D2D_AGES": {
+   "value": {
+    "programme_start": [
+     32
+    ],
+    "d2d_to_attention_rx": [
+     34
+    ],
+    "d2d_to_writer": [
+     34
+    ],
+    "d2d_to_seq_kvn": [
+     39
+    ],
+    "attention_tx": [
+     31
+    ]
+   },
+   "kind": "boot",
+   "formula": "landed depth d2d_kv/dcal -> kvs_ctl / kvs_attn / seq core, attn tx -> d2d_kv (kv_boot_v36.py DIE_TABLE inputs)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "HROOT_DOWN_RET": {
+   "value": {
+    "WS": [
+     7,
+     8
+    ],
+    "WN": [
+     8,
+     8
+    ],
+    "ES": [
+     8,
+     8
+    ],
+    "EN": [
+     9,
+     8
+    ]
+   },
+   "kind": "boot",
+   "formula": "kvs_ctl.o_hroot_s -> hroot / hroot.o_ctl -> kvs_ctl landed (emb_fill / writer_die)",
+   "status": "OK",
+   "group": "prog"
+  },
+  "XDIE_SEAM_K": {
+   "value": "34,34,32,32,32,31,31",
+   "kind": "compiler",
+   "formula": "d2d_link_calendar --die-stages KV half (KV-P6-BOOT KST) = as-built seam + Delta",
+   "status": "OK",
+   "inputs": {
+    "KS_RXV": [
+     34
+    ],
+    "KS_RXP": [
+     34
+    ],
+    "KS_TXS": [
+     32
+    ],
+    "KS_TXK": [
+     32
+    ],
+    "KS_TXB": [
+     32
+    ],
+    "SK_TXV": [
+     31
+    ],
+    "SK_TXP": [
+     31
+    ]
+   },
+   "group": "xdie"
+  },
+  "D2D_TXDP_K": {
+   "value": [
+    67,
+    4,
+    3,
+    3
+   ],
+   "kind": "rtl",
+   "formula": "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar producer_txd); the compute die must bind the same pair image",
+   "status": "OK",
+   "inputs": {
+    "KS_RXV": 34,
+    "KS_RXP": 34,
+    "KS_TXS": 32,
+    "KS_TXK": 32,
+    "KS_TXB": 32,
+    "SK_TXV": 31,
+    "SK_TXP": 31
+   },
+   "group": "xdie",
+   "rtl": {
+    "inst": "d2d_kv$|u_d2d",
+    "param": "TXDP"
+   },
+   "sv_literal": "32'h03030443",
+   "bind_applied": [
+    "32'h03030443"
+   ],
+   "rtl_bound": {
+    "module": "qkd_d2d_static\\w*",
+    "param": "TXDP",
+    "instances": 1,
+    "values": [
+     "50529347"
+    ]
+   }
+  },
+  "D2D_KV_TX_LAT": {
+   "value": 67,
+   "kind": "compiler",
+   "formula": "shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
+   "status": "OK",
+   "inputs": {
+    "KS_TXS": 32,
+    "SK_TXP": 31,
+    "asbuilt": 22
+   },
+   "group": "xdie",
+   "note": "moved 22 -> 67 vs as-built: re-bind the pair image on both dies"
+  },
+  "XDIE_DIE_STAGES": {
+   "value": "2,2,2,3,2,2/34,34,32,32,32,31,31",
+   "kind": "compiler",
+   "formula": "D2D_DIE_STAGES for tools/qwen_split/d2d_cal_image_production.sh (pair calendar image; both dies bind its TXDP)",
+   "status": "OK",
+   "inputs": {
+    "peer": "physical/die_plan/qwen_compute/bind/bound_r8"
+   },
+   "group": "xdie"
+  }
+ },
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=/srv/opentallas-scratch/kv-tok/kv42_bind/bus_groups.json.gz KST=34,34,32,32,32,31,31 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)",
+  "xdie_pair_image": "D2D_DIE_STAGES=2,2,2,3,2,2/34,34,32,32,32,31,31 D2D_MU=1 D2D_EMB_WINDOW=595 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 bash tools/qwen_split/d2d_cal_image_production.sh <out>   # both dies bind its TXDP"
+ }
+}
