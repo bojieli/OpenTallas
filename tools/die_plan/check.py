@@ -553,7 +553,7 @@ def check_latency(P, R):
             R.err("latency", f"{kind} group {name}: unequal delays {got} (regenerate: gen.py latency --inplace pads "
                   "every member to the slowest)")
     _, bad = P.bus_pads()
-    for m in bad:
+    for m in bad + P.landed_skew():
         R.err("latency", m)
     return {lid: P.lane_latency(lid)["cycles"] for lid in P.lanes}
 

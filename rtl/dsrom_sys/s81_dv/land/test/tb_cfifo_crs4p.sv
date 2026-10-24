@@ -1,4 +1,4 @@
-// S81-P8 10-23: tb_cfifo_crs4 driving dsfd_cfifo_crs4p (compile with -DKP=<K>; +K must equal KP). 12/12 runs identical to crs4.
+// S81-P8 10-23: tb_cfifo_crs4 driving dsfd_cfifo_crs4p (compile with -DKP=<K>; +K must equal KP). S81-P9-CF: fault = any ring (lfc) or marker ring (lfm); run by tools/s81_dv/crs4p_bench.py.
 `timescale 1ps/1ps
 `default_nettype none
 // S81-LAND2 cfifo successor bench: dsfd_cfifo_crs4 (per-lane landings, reset read epoch) against the CLOSED
@@ -103,7 +103,7 @@ module tb_cfifo_crs4;
         // before the marker reaches the output every successor word must be a bubble (zero), as the reference's
         for (q = 0; q < MK + best && q < nh; q = q + 1) if (q >= 0 && hd[q] !== 0) dm = dm + 1;
         $display("OT_CRS4 dl=%0d,%0d,%0d,%0d k=%0d g=%0d mk=%0d slip=%0d,%0d off=%0d dmism=%0d rmism=%0d chk=%0d nz=%0d fault=%0d",
-                 DL0, DL1, DL2, DL3, K, G, MK, SLIP0, SLIP3, best, dm, rm, chk, nz, flt | u_dut.lf != 0);
+                 DL0, DL1, DL2, DL3, K, G, MK, SLIP0, SLIP3, best, dm, rm, chk, nz, flt | (u_dut.lfc != 0) | (u_dut.lfm != 0));
         $finish;
     end
 endmodule

@@ -48,7 +48,7 @@ def node_of_inst(inst, bus):
         return IMAP["inst_part"][inst]
     if inst in IMAP["slice_part"]:
         sp = IMAP["slice_part"][inst]
-        if sp["LP"] and re.match(r"(rx|tx)\d$", bus or ""):
+        if sp["LP"] and re.match(IMAP.get("lp_bus_re", r"(rx|tx)\d$"), bus or ""):
             return sp["LP"]
         return sp["C"]
     return group_of_inst(inst)

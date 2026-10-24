@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.8t (KV-P7-HUB 10-23, COORD 21:26 R4 grid): clock.tap_pitch_um 400 on hub_Ei/Eo/Wo/Wi | v3.8h (KV-P7-HUB 10-23): 4 astk hard cores on hub_Eo/Wo (post_v38h.py, as-built synth outline, top-down pins)",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.8t (KV-P7-HUB 10-23, COORD 21:26 R4 grid): clock.tap_pitch_um 400 on hub_Ei/Eo/Wo/Wi | v3.8h (KV-P7-HUB 10-23): 4 astk hard cores on hub_Eo/Wo (post_v38h.py, as-built synth outline, top-down pins) | v3.8s (KV-P8-HUB 10-23): FIRM internal_stations on the hub_Eo/Wo astk legs (post_v38s.py), lane fixed_cycles += stations",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -20134,6 +20134,262 @@
      "pins_file": "cores/kv3_astk_ES_pins.json",
      "note": "astk_core: astk_ES__g_phys_fault_u_fault + astk_ES__u_strip_u_strip_g_zn_0__u_zn + astk_ES__u_strip_u_strip_g_zn_1__u_zn + astk_ES__u_strip_u_strip_g_zn_2__u_zn + astk_ES__u_strip_u_strip_g_zn_3__u_zn + astk_ES__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:o_astk_EN__g_phys_fault_u_fault_q",
+     "from_um": [
+      1039.08,
+      1468.896
+     ],
+     "to_um": [
+      0.0,
+      19.956
+     ],
+     "regs_um": [
+      [
+       900.0,
+       985.971
+      ],
+      [
+       900.0,
+       363.966
+      ],
+      [
+       622.005,
+       19.956
+      ]
+     ],
+     "bits": 1,
+     "launch": "astk_EN.g_phys_fault_u_fault__q",
+     "capture": "face:W",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2488 um via (900,1469), 3 stations, hop 622 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_ahub_am_ES",
+     "from_um": [
+      0.0,
+      14.712
+     ],
+     "to_um": [
+      1044.372,
+      1468.896
+     ],
+     "regs_um": [
+      [
+       624.639,
+       14.712
+      ],
+      [
+       900.0,
+       363.99
+      ],
+      [
+       900.0,
+       988.629
+      ]
+     ],
+     "bits": 36,
+     "launch": "face:W",
+     "capture": "astk_EN.u_strip_u_strip_u_ctl__am",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2499 um via (900,15), 3 stations, hop 625 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_ES__u_strip_u_strip_u_ctl_ap",
+     "from_um": [
+      1055.629,
+      1468.896
+     ],
+     "to_um": [
+      0.0,
+      36.896
+     ],
+     "regs_um": [
+      [
+       900.0,
+       1002.618
+      ],
+      [
+       900.0,
+       380.71
+      ],
+      [
+       621.907,
+       36.896
+      ]
+     ],
+     "bits": 43,
+     "launch": "astk_EN.u_strip_u_strip_u_ctl__ap",
+     "capture": "face:W",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2488 um via (900,1469), 3 stations, hop 622 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_EN",
+     "from_um": [
+      0.0,
+      287.16
+     ],
+     "to_um": [
+      1220.161,
+      1468.896
+     ],
+     "regs_um": [
+      [
+       600.474,
+       287.16
+      ],
+      [
+       1200.948,
+       287.16
+      ],
+      [
+       1220.161,
+       868.422
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:W",
+     "capture": "astk_EN.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2402 um via (1220,287), 3 stations, hop 600 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_ES__g_phys_fault_u_fault_q",
+     "from_um": [
+      1036.896,
+      29.208
+     ],
+     "to_um": [
+      0.0,
+      31.264
+     ],
+     "regs_um": [
+      [
+       519.476,
+       31.264
+      ]
+     ],
+     "bits": 1,
+     "launch": "astk_ES.g_phys_fault_u_fault__q",
+     "capture": "face:W",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1039 um via (1037,31), 1 stations, hop 519 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_ahub_am_EN",
+     "from_um": [
+      0.0,
+      6.06
+     ],
+     "to_um": [
+      1036.896,
+      70.147
+     ],
+     "regs_um": [
+      [
+       550.491,
+       6.06
+      ]
+     ],
+     "bits": 36,
+     "launch": "face:W",
+     "capture": "astk_ES.u_strip_u_strip_u_ctl__am",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1101 um via (900,6), 1 stations, hop 550 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_EN__u_strip_u_strip_u_ctl_ap",
+     "from_um": [
+      1036.896,
+      157.598
+     ],
+     "to_um": [
+      0.0,
+      25.632
+     ],
+     "regs_um": [
+      [
+       584.431,
+       25.632
+      ]
+     ],
+     "bits": 43,
+     "launch": "astk_ES.u_strip_u_strip_u_ctl__ap",
+     "capture": "face:W",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1169 um via (900,158), 1 stations, hop 584 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_EN",
+     "from_um": [
+      0.0,
+      287.16
+     ],
+     "to_um": [
+      1219.524,
+      207.264
+     ],
+     "regs_um": [
+      [
+       324.855,
+       287.16
+      ],
+      [
+       649.71,
+       287.16
+      ],
+      [
+       974.565,
+       287.16
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:W",
+     "capture": "astk_ES.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1299 um via (1220,287), 3 stations, hop 325 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_ES",
+     "from_um": [
+      0.0,
+      297.528
+     ],
+     "to_um": [
+      1219.524,
+      207.264
+     ],
+     "regs_um": [
+      [
+       654.894,
+       297.528
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:W",
+     "capture": "astk_ES.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1310 um via (1220,298), 1 stations, hop 655 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_kvs_attn_acal_EN",
+     "from_um": [
+      1219.524,
+      207.264
+     ],
+     "to_um": [
+      1079.564,
+      1676.16
+     ],
+     "regs_um": [
+      [
+       900.0,
+       543.735
+      ],
+      [
+       900.0,
+       1199.729
+      ]
+     ],
+     "bits": 16,
+     "launch": "astk_ES.u_strip_u_strip_u_ctl__cal",
+     "capture": "face:N",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1968 um via (900,207), 2 stations, hop 656 <= 675 (KV owner (i) 23:24)"
+    }
    ]
   },
   "kv3_hub_Wi": {
@@ -22197,6 +22453,262 @@
      ],
      "pins_file": "cores/kv3_astk_WS_pins.json",
      "note": "astk_core: astk_WS__g_phys_fault_u_fault + astk_WS__u_strip_u_strip_g_zn_0__u_zn + astk_WS__u_strip_u_strip_g_zn_1__u_zn + astk_WS__u_strip_u_strip_g_zn_2__u_zn + astk_WS__u_strip_u_strip_g_zn_3__u_zn + astk_WS__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
+    }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:o_astk_WN__g_phys_fault_u_fault_q",
+     "from_um": [
+      54.12,
+      1468.896
+     ],
+     "to_um": [
+      1278.72,
+      19.956
+     ],
+     "regs_um": [
+      [
+       378.72,
+       1125.111
+      ],
+      [
+       378.72,
+       456.726
+      ],
+      [
+       610.335,
+       19.956
+      ]
+     ],
+     "bits": 1,
+     "launch": "astk_WN.g_phys_fault_u_fault__q",
+     "capture": "face:E",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2674 um via (379,1469), 3 stations, hop 668 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_ahub_am_WS",
+     "from_um": [
+      1278.72,
+      14.712
+     ],
+     "to_um": [
+      59.412,
+      1468.896
+     ],
+     "regs_um": [
+      [
+       610.347,
+       14.712
+      ],
+      [
+       378.72,
+       451.458
+      ],
+      [
+       378.72,
+       1119.831
+      ]
+     ],
+     "bits": 36,
+     "launch": "face:E",
+     "capture": "astk_WN.u_strip_u_strip_u_ctl__am",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2673 um via (379,15), 3 stations, hop 668 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_WN__u_strip_u_strip_u_ctl_ap",
+     "from_um": [
+      70.669,
+      1468.896
+     ],
+     "to_um": [
+      1278.72,
+      25.632
+     ],
+     "regs_um": [
+      [
+       378.72,
+       1114.118
+      ],
+      [
+       378.72,
+       451.289
+      ],
+      [
+       615.891,
+       25.632
+      ]
+     ],
+     "bits": 43,
+     "launch": "astk_WN.u_strip_u_strip_u_ctl__ap",
+     "capture": "face:E",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2651 um via (379,1469), 3 stations, hop 663 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_WN",
+     "from_um": [
+      1278.72,
+      287.16
+     ],
+     "to_um": [
+      235.201,
+      1468.896
+     ],
+     "regs_um": [
+      [
+       722.406,
+       287.16
+      ],
+      [
+       235.201,
+       356.269
+      ],
+      [
+       235.201,
+       912.582
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:E",
+     "capture": "astk_WN.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 2225 um via (235,287), 3 stations, hop 556 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_WS__g_phys_fault_u_fault_q",
+     "from_um": [
+      241.824,
+      29.208
+     ],
+     "to_um": [
+      1278.72,
+      31.264
+     ],
+     "regs_um": [
+      [
+       759.244,
+       31.264
+      ]
+     ],
+     "bits": 1,
+     "launch": "astk_WS.g_phys_fault_u_fault__q",
+     "capture": "face:E",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1039 um via (242,31), 1 stations, hop 519 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_ahub_am_WN",
+     "from_um": [
+      1278.72,
+      6.06
+     ],
+     "to_um": [
+      241.824,
+      70.147
+     ],
+     "regs_um": [
+      [
+       728.229,
+       6.06
+      ]
+     ],
+     "bits": 36,
+     "launch": "face:E",
+     "capture": "astk_WS.u_strip_u_strip_u_ctl__am",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1101 um via (379,6), 1 stations, hop 550 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_astk_WS__u_strip_u_strip_u_ctl_ap",
+     "from_um": [
+      241.824,
+      157.598
+     ],
+     "to_um": [
+      1278.72,
+      36.896
+     ],
+     "regs_um": [
+      [
+       699.921,
+       36.896
+      ]
+     ],
+     "bits": 43,
+     "launch": "astk_WS.u_strip_u_strip_u_ctl__ap",
+     "capture": "face:E",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1158 um via (242,37), 1 stations, hop 579 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_WN",
+     "from_um": [
+      1278.72,
+      287.16
+     ],
+     "to_um": [
+      234.564,
+      207.264
+     ],
+     "regs_um": [
+      [
+       997.707,
+       287.16
+      ],
+      [
+       716.694,
+       287.16
+      ],
+      [
+       435.681,
+       287.16
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:E",
+     "capture": "astk_WS.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1124 um via (235,287), 3 stations, hop 281 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:i_kvs_attn_acal_WS",
+     "from_um": [
+      1278.72,
+      297.528
+     ],
+     "to_um": [
+      234.564,
+      207.264
+     ],
+     "regs_um": [
+      [
+       711.51,
+       297.528
+      ]
+     ],
+     "bits": 48,
+     "launch": "face:E",
+     "capture": "astk_WS.u_strip_u_strip_u_ctl__cal",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1134 um via (235,298), 1 stations, hop 567 <= 675 (KV owner (i) 23:24)"
+    },
+    {
+     "conn": "bus:o_kvs_attn_acal_WN",
+     "from_um": [
+      234.564,
+      207.264
+     ],
+     "to_um": [
+      199.156,
+      1676.16
+     ],
+     "regs_um": [
+      [
+       378.72,
+       660.647
+      ],
+      [
+       378.72,
+       1258.185
+      ]
+     ],
+     "bits": 16,
+     "launch": "astk_WS.u_strip_u_strip_u_ctl__cal",
+     "capture": "face:N",
+     "note": "KV-P8-HUB v3.8s R3-INTERNAL FIRM: path 1793 um via (379,207), 2 stations, hop 598 <= 675 (KV owner (i) 23:24)"
     }
    ]
   },
@@ -141126,7 +141638,8 @@
     "L0_0",
     "L0_1"
    ],
-   "note": "p2p ahub.am_EN"
+   "note": "p2p ahub.am_EN | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L1",
@@ -141134,7 +141647,8 @@
     "L1_0",
     "L1_1"
    ],
-   "note": "p2p ahub.am_ES"
+   "note": "p2p ahub.am_ES | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L2",
@@ -141142,7 +141656,8 @@
     "L2_0",
     "L2_1"
    ],
-   "note": "p2p ahub.am_WN"
+   "note": "p2p ahub.am_WN | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L3",
@@ -141150,7 +141665,8 @@
     "L3_0",
     "L3_1"
    ],
-   "note": "p2p ahub.am_WS"
+   "note": "p2p ahub.am_WS | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L4",
@@ -141165,7 +141681,8 @@
     "L5_0",
     "L5_1"
    ],
-   "note": "p2p astk_EN__g_phys_fault_u_fault.q"
+   "note": "p2p astk_EN__g_phys_fault_u_fault.q | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L6",
@@ -141692,7 +142209,8 @@
     "L80_0",
     "L80_1"
    ],
-   "note": "p2p astk_EN__u_strip_u_strip_u_ctl.ap"
+   "note": "p2p astk_EN__u_strip_u_strip_u_ctl.ap | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L81",
@@ -141756,7 +142274,8 @@
     "L89_0",
     "L89_1"
    ],
-   "note": "p2p astk_ES__g_phys_fault_u_fault.q"
+   "note": "p2p astk_ES__g_phys_fault_u_fault.q | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L90",
@@ -142283,7 +142802,8 @@
     "L164_0",
     "L164_1"
    ],
-   "note": "p2p astk_ES__u_strip_u_strip_u_ctl.ap"
+   "note": "p2p astk_ES__u_strip_u_strip_u_ctl.ap | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L165",
@@ -142347,7 +142867,8 @@
     "L173_0",
     "L173_1"
    ],
-   "note": "p2p astk_WN__g_phys_fault_u_fault.q"
+   "note": "p2p astk_WN__g_phys_fault_u_fault.q | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L174",
@@ -142874,7 +143395,8 @@
     "L248_0",
     "L248_1"
    ],
-   "note": "p2p astk_WN__u_strip_u_strip_u_ctl.ap"
+   "note": "p2p astk_WN__u_strip_u_strip_u_ctl.ap | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L249",
@@ -142938,7 +143460,8 @@
     "L257_0",
     "L257_1"
    ],
-   "note": "p2p astk_WS__g_phys_fault_u_fault.q"
+   "note": "p2p astk_WS__g_phys_fault_u_fault.q | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L258",
@@ -143465,7 +143988,8 @@
     "L332_0",
     "L332_1"
    ],
-   "note": "p2p astk_WS__u_strip_u_strip_u_ctl.ap"
+   "note": "p2p astk_WS__u_strip_u_strip_u_ctl.ap | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L333",
@@ -151418,14 +151942,16 @@
     "L1391_0",
     "L1391_1"
    ],
-   "note": "tap_tree kvs_attn.acal_EN"
+   "note": "tap_tree kvs_attn.acal_EN | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L1392",
    "ports": [
     "L1392_0"
    ],
-   "note": "tap_tree kvs_attn.acal_EN"
+   "note": "tap_tree kvs_attn.acal_EN | +2 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 2
   },
   {
    "id": "L1393",
@@ -151482,7 +152008,8 @@
     "L1400_0",
     "L1400_1"
    ],
-   "note": "tap_tree kvs_attn.acal_ES"
+   "note": "tap_tree kvs_attn.acal_ES | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L1401",
@@ -151546,14 +152073,16 @@
     "L1409_0",
     "L1409_1"
    ],
-   "note": "tap_tree kvs_attn.acal_WN"
+   "note": "tap_tree kvs_attn.acal_WN | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L1410",
    "ports": [
     "L1410_0"
    ],
-   "note": "tap_tree kvs_attn.acal_WN"
+   "note": "tap_tree kvs_attn.acal_WN | +2 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 2
   },
   {
    "id": "L1411",
@@ -151610,7 +152139,8 @@
     "L1418_0",
     "L1418_1"
    ],
-   "note": "tap_tree kvs_attn.acal_WS"
+   "note": "tap_tree kvs_attn.acal_WS | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL)",
+   "fixed_cycles": 1
   },
   {
    "id": "L1419",
@@ -159591,42 +160121,42 @@
  "latency": {
   "lanes": {
    "L0": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L0"
    },
    "L1": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L1"
    },
    "L2": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L2"
    },
    "L3": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L3"
    },
@@ -159641,12 +160171,12 @@
     "param": "LAT_L4"
    },
    "L5": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L5"
    },
@@ -160391,12 +160921,12 @@
     "param": "LAT_L79"
    },
    "L80": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L80"
    },
@@ -160481,12 +161011,12 @@
     "param": "LAT_L88"
    },
    "L89": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L89"
    },
@@ -161231,12 +161761,12 @@
     "param": "LAT_L163"
    },
    "L164": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L164"
    },
@@ -161321,12 +161851,12 @@
     "param": "LAT_L172"
    },
    "L173": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L173"
    },
@@ -162071,12 +162601,12 @@
     "param": "LAT_L247"
    },
    "L248": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L248"
    },
@@ -162161,12 +162691,12 @@
     "param": "LAT_L256"
    },
    "L257": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L257"
    },
@@ -162911,12 +163441,12 @@
     "param": "LAT_L331"
    },
    "L332": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L332"
    },
@@ -173501,22 +174031,22 @@
     "param": "LAT_L1390"
    },
    "L1391": {
-    "cycles": 5,
+    "cycles": 8,
     "stations": 3,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 5,
+    "fixed": 3,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_L1391"
    },
    "L1392": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_L1392"
    },
@@ -173591,12 +174121,12 @@
     "param": "LAT_L1399"
    },
    "L1400": {
-    "cycles": 5,
+    "cycles": 6,
     "stations": 3,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 5,
+    "fixed": 1,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_L1400"
    },
@@ -173681,22 +174211,22 @@
     "param": "LAT_L1408"
    },
    "L1409": {
-    "cycles": 4,
+    "cycles": 7,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 3,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_L1409"
    },
    "L1410": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_L1410"
    },
@@ -173771,12 +174301,12 @@
     "param": "LAT_L1417"
    },
    "L1418": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_L1418"
    },

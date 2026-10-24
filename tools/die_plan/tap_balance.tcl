@@ -17,6 +17,23 @@ set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REP
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]
 set tb_master [[ord::get_db] findMaster $tb_cell]
+# CP2 (COORD 10-23): hard-core internal clock latency (gen.py phys core_latency.txt, env OT_CORE_LAT: `inst pin ps tap`,
+# TT lib max_clock_tree_path rise).  A core clock pin's EFFECTIVE arrival = pin arrival + internal latency (when its
+# internal flops clock).  Taps measure / balance their non-core sinks as before; core pins are balanced on their own
+# (core pass below) so their effective arrival meets the target; a core whose internal latency alone overshoots the
+# target on a grid tap is an OT_TAP_CORE WARN (it needs an early core tap: clock.taps kind core, clock.core_taps
+# early -> port clk_c<k>, whose source latency in the kit SDC is the early shift).  No table: unchanged behaviour.
+set tb_clat {}
+if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
+  set fh [open $::env(OT_CORE_LAT)]
+  foreach l [split [read $fh] "\n"] {
+    if {[string match "#*" $l] || [llength $l] < 3} continue
+    dict set tb_clat "[lindex $l 0]/[lindex $l 1]" [lindex $l 2]
+  }
+  close $fh
+}
+set tb_cores {}
+set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}
 proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]
@@ -46,26 +63,41 @@ proc tb_rise {pin half} {
   return $a
 }
 proc tb_measure {{est 1}} {
-  global tb_blk
+  global tb_blk tb_clat tb_cores tb_port_re
+  set tb_cores {}
   if {$est} { estimate_parasitics -placement }
   set_propagated_clock [all_clocks]
   set half [expr {[get_property [get_clocks clk] period] / 2.0}]
   set res {}
   foreach bt [$tb_blk getBTerms] {
     set n [$bt getName]
-    if {![regexp {^clk(_t[0-9]+)?$} $n]} continue
+    if {![regexp $tb_port_re $n]} continue
     set net [$bt getNet]
     if {$net eq "NULL"} continue
     set s 0.0; set k 0; set mx 0.0; set mn 1e9
+    set cs 0.0; set ck 0; set cmx 0.0; set cmn 1e9
     foreach p [tb_sinks $net] {
       set pin [get_pins -quiet $p]
       if {$pin eq ""} continue
       set a [tb_rise $pin $half]
       if {$a eq ""} continue
+      if {[dict exists $tb_clat $p]} {
+        # hard-core clock pin: effective arrival = pin + internal latency; kept apart from the tap's flop statistics
+        set e [expr {$a + [dict get $tb_clat $p]}]
+        lappend tb_cores [list $p $n $a [dict get $tb_clat $p]]
+        set cs [expr {$cs + $e}]; incr ck
+        set cmx [expr {max($cmx, $e)}]; set cmn [expr {min($cmn, $e)}]
+        continue
+      }
       set s [expr {$s + $a}]; incr k
       set mx [expr {max($mx, $a)}]; set mn [expr {min($mn, $a)}]
     }
-    if {$k} { dict set res $n [list [expr {$s / $k}] $mn $mx $k $bt] }
+    if {$k} {
+      dict set res $n [list [expr {$s / $k}] $mn $mx $k $bt]
+    } elseif {$ck} {
+      # a tap of core pins only (an early core tap): its statistics are the effective arrivals
+      dict set res $n [list [expr {$cs / $ck}] $cmn $cmx $ck $bt]
+    }
   }
   return $res
 }
@@ -74,6 +106,82 @@ proc tb_line {tag m} {
   dict for {n v} $m { append line " $n=[format %.0f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])" }
   return $line
 }
+# chain of nb delay cells from net src (placed from x y) to a new net that takes over iterm it
+proc tb_hang {it src nb tag x y} {
+  global tb_blk tb_master
+  set tree [odb::dbNet_create $tb_blk "${tag}_tree"]
+  $tree setSigType CLOCK
+  $it disconnect
+  $it connect $tree
+  set prev $src
+  for {set b 0} {$b < $nb} {incr b} {
+    set inst [odb::dbInst_create $tb_blk $tb_master "${tag}_d$b"]
+    set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${tag}_n$b"]}]
+    if {$nxt ne $tree} { $nxt setSigType CLOCK }
+    foreach t [$inst getITerms] {
+      set mt [$t getMTerm]
+      if {[$mt getSigType] in {POWER GROUND}} continue
+      if {[$mt getIoType] eq "INPUT"} { $t connect $prev } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $nxt }
+    }
+    $inst setLocation [expr {$x + $b * 2 * [$tb_master getWidth]}] $y
+    $inst setPlacementStatus PLACED
+    set prev $nxt
+  }
+  return $nb
+}
+# a site for delay cells next to a hard-core pin: the pin centre pushed 2 um out of the core across its nearest edge
+proc tb_outside {it} {
+  set ib [$it getBBox]
+  set x [expr {([$ib xMin] + [$ib xMax]) / 2}]; set y [expr {([$ib yMin] + [$ib yMax]) / 2}]
+  set b [[$it getInst] getBBox]
+  set m [expr {int(2.0 * [[ord::get_db_tech] getDbUnitsPerMicron])}]
+  set d [list [list [expr {$x - [$b xMin]}] [expr {[$b xMin] - $m}] $y] [list [expr {[$b xMax] - $x}] [expr {[$b xMax] + $m}] $y] \
+             [list [expr {$y - [$b yMin]}] $x [expr {[$b yMin] - $m}]] [list [expr {[$b yMax] - $y}] $x [expr {[$b yMax] + $m}]]]
+  set best [lindex [lsort -real -index 0 $d] 0]
+  return [lrange $best 1 2]
+}
+# clock buffers / inverters of the tree under a net: [list inst-name out-pin out-net x y]
+proc tb_tree_bufs {net} {
+  set out {}; set todo [list $net]; set seen {}
+  while {[llength $todo]} {
+    set n [lindex $todo end]; set todo [lrange $todo 0 end-1]
+    if {[dict exists $seen [$n getName]]} continue
+    dict set seen [$n getName] 1
+    foreach it [$n getITerms] {
+      if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+      set i [$it getInst]
+      if {![tb_is_buf $i]} continue
+      foreach o [$i getITerms] {
+        if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} {
+          set b [$i getBBox]
+          lappend out [list [$i getName] "[$i getName]/[[$o getMTerm] getName]" [$o getNet] \
+                         [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
+          lappend todo [$o getNet]
+        }
+      }
+    }
+  }
+  return $out
+}
+proc tb_core_report {tgt} {
+  global tb_cores tb_win tb_tol
+  set warn 0
+  foreach c $tb_cores {
+    lassign $c p tap a L
+    set e [expr {$a + $L}]
+    set st OK
+    if {abs($e - $tgt) > $tb_win} {
+      set st WARN; incr warn
+      if {$e > $tgt && ![string match clk_c* $tap] && $L > $tgt - 40.0} {
+        append st " internal latency [format %.0f $L] ps leaves no room on a grid tap: needs an early core tap (clock.taps kind core, clock.core_taps early; pair.py --core-taps)"
+      } elseif {$e > $tgt && [string match clk_c* $tap]} {
+        append st " early core tap still late: raise its insertion_ps (spine delivers it earlier)"
+      }
+    }
+    puts "OT_TAP_CORE $p tap $tap pin [format %.0f $a] + internal [format %.0f $L] = effective [format %.0f $e] ps (target [format %.0f $tgt], window [format %.0f $tb_win]) $st"
+  }
+  return $warn
+}
 set tb_added 0
 if {$tb_ronly} {
   set m [tb_measure 0]
@@ -81,6 +189,7 @@ if {$tb_ronly} {
   dict for {n v} $m { set lo [expr {min($lo, [lindex $v 1])}]; set hi [expr {max($hi, [lindex $v 2])}] }
   puts "[tb_line {OT_TAP_RC mean(min-max,sinks):} $m]"
   puts "OT_TAP_RC sink insertion [format %.0f $lo]..[format %.0f $hi] ps (partition skew [format %.0f [expr {$hi - $lo}]]; limit [format %.0f [expr {$tb_target + $tb_win}]])"
+  if {[llength $tb_cores]} { tb_core_report $tb_target }
 } else {
 for {set it 0} {$it < 4} {incr it} {
   set m [tb_measure]
@@ -134,6 +243,62 @@ for {set it 0} {$it < 4} {incr it} {
   if {!$todo} break
   detailed_placement
 }
+# CP2 core pass: every hard-core clock pin on a GRID tap whose effective arrival (pin + internal latency) misses the
+# target by > tol is re-hung: too late -> its own delay chain straight from the tap port (the earliest point of that
+# tap) sized for pin arrival = target - internal latency; too early -> delay cells in front of the pin.  Core pins on
+# an early core tap (clk_c<k>) were balanced with the taps above.  Up to 3 passes, padding 3/4 of the estimate.
+set tb_hung {}
+if {[dict size $tb_clat]} {
+  for {set ci 0} {$ci < 3} {incr ci} {
+    set m [tb_measure]
+    set todo 0
+    foreach c $tb_cores {
+      lassign $c p tap a L
+      if {[string match clk_c* $tap]} continue
+      set d [expr {$tgt - ($a + $L)}]
+      if {abs($d) <= $tb_tol} continue
+      set it [[ord::get_db_block] findITerm $p]
+      if {$it eq "NULL" || $it eq ""} continue
+      set bt [[ord::get_db_block] findBTerm $tap]
+      if {$d < 0} {
+        if {[dict exists $tb_hung $p]} continue
+        set need [expr {$tgt - $L}]
+        if {$need < 20.0} continue
+        # branch off the tap's own CTS tree: the tree buffer nearest the core pin whose output arrives early enough
+        # (out + ~20 ps of wire <= need); the chain sits at the pin.  The tap port itself is the last resort (a long
+        # unbuffered wire from an ideal port: CP2 probe 10-23, 505 ps slew at the chain head).
+        lassign [tb_outside $it] px py
+        set half [expr {[get_property [get_clocks clk] period] / 2.0}]
+        set best ""; set bd 0
+        foreach b [tb_tree_bufs [$bt getNet]] {
+          lassign $b bn bpin bnet bx by
+          set q [get_pins -quiet $bpin]
+          if {$q eq ""} continue
+          set ba [tb_rise $q $half]
+          if {$ba eq "" || $ba + 20.0 > $need} continue
+          set dd [expr {abs($bx - $px) + abs($by - $py)}]
+          if {$best eq "" || $dd < $bd} { set best [list $bnet $ba]; set bd $dd }
+        }
+        if {$best eq ""} {
+          set src [$bt getNet]; set base 0.0
+        } else {
+          lassign $best src base
+        }
+        set nb [expr {max(1, int(round(($need - $base - 20.0) / 18.0 * 0.75)))}]
+      } else {
+        set src [$it getNet]
+        set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+      }
+      lassign [tb_outside $it] x y
+      set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${ci}"
+      incr tb_added [tb_hang $it $src $nb $tag $x $y]
+      dict set tb_hung $p 1
+      set todo 1
+    }
+    if {!$todo} break
+    detailed_placement
+  }
+}
 set m [tb_measure]
 set lo 1e9; set hi 0.0; set fail {}
 dict for {n v} $m {
@@ -143,7 +308,11 @@ dict for {n v} $m {
 set tb_empty {}
 foreach bt [$tb_blk getBTerms] {
   set n [$bt getName]
-  if {[regexp {^clk(_t[0-9]+)?$} $n] && ![dict exists $m $n]} { lappend tb_empty $n }
+  if {[regexp $tb_port_re $n] && ![dict exists $m $n]} { lappend tb_empty $n }
+}
+if {[llength $tb_cores]} {
+  set cw [tb_core_report $tgt]
+  puts "OT_TAP_CORE [llength $tb_cores] core clock pins, $cw outside target +/- [format %.0f $tb_win] ps"
 }
 puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0f $lo]..[format %.0f $hi] ps (spread [format %.0f [expr {$hi - $lo}]], target [format %.0f $tgt]); empty taps [llength $tb_empty] $tb_empty"
 if {[llength $fail]} {
