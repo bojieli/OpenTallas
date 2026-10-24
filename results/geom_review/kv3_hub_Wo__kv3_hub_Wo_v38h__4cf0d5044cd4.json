@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Wo",
+ "kit": "physical/die_plan/qwen_kvsys@0a0966d6f (claude/kv-p7-hub-1023, KV v3.8h: astk hard cores + R4 tap grid 400)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "4cf0d5044cd4cad4ca91f5019b2ddfdc8b5e2eb3fb2af674f9cbe16fa9824bf5",
+ "reasons": "[10-23 22:30] [GEOM-REVIEW8] [G1-delta, KV-P7-HUB 21:36 REQ; answers GEOM-REVIEW7 20:18 FAIL fix (1) 'astk must be hard cores'] Gate hash recomputed by me. Author renders viewed (v38h_Eo/Wo, Eo_NE zoom); Wo is the x-mirror of Eo. Core pins read by me from cores/kv3_astk_{EN,ES}_pins.json; leg windows read from die_plan ports. Own render: /home/ubuntu/scratch/geom-review8-1023/hubv38h/r8_hubEo.png (pin groups + Manhattan legs). GOOD: 4 astk stacks (152k cells, as-built hier synth, 190.08x181.44 at 0.55) are hard cores at the corners beside their N/S astk windows (qo 572 + zn 198 on the window face, 25.92-um band). aq 540 + cal face the interior seq-fan glue. xi 267 is on the outer-face band. Faces are 1.5-4.1 pins/um (single layer each; acceptable at this density). Glue drops to ~156k flat (< 400k). The E-face ft lanes cross the cores on M6/M7 with stations outside. OPEN (R3-INTERNAL, as the author flagged in (a)): measured legs astk_EN am 36 b 1,698 um / ap 43 b 2,499 um / cal 32 b 1,241 um, and astk_ES ap 43 b 1,157 um, are > 750 with only the face register and core pin. astk_ES am 297 / cal 150 are fine. On Wo the same legs are mirrored.",
+ "fixes": "Before any hub_Eo/Wo G3 kit: either (i) internal_stations[] FIRM on those 4 legs at <= 675-um spacing (EN ap 3, EN am 2, EN cal 1, ES ap 1 stations; +cycles on am/ap/acal must be accepted by the attention schedule owner), or (ii) move the EN am/ap/acal/fault windows to y ~1450-1650 on the E/W faces (KV-P7-V38 lane re-window) so the legs drop under 750. Either one closes this with no new render (post the leg table). The R4 tap grid (400 um, COORD 21:26) is judged at CTS on face spread <= 80 TT+FF + mean vs 250.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T22:30:07-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
