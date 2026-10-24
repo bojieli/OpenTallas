@@ -273,7 +273,8 @@ Per die: `<die>.json` + `<die>.md` (gate status, counts, worst seam slack, delta
 Margins (`die_ci_margins.json`, derivations inside) are added ON TOP of the AGENTS.md policy and reported next to the
 policy slack: crosstalk per seam (|MCF-1| x R_eff x Cc over 2 x pin_reg_p90; OpenSTA has no SI), IR drop (PDNSim when a
 die PDN database exists, else 5 % VDD stated -> late cell derate via the alpha-power law), flat OCV
-(`set_timing_derate`). `check_margins` refuses any value that would relax the policy.
+(`set_timing_derate`). `check_margins` refuses any value that would relax the policy. Until the owner rules on the margin values, the die STA gate is
+the policy slack (TT setup / FF hold, 60/25 ps); the margined slack is an INFO column.
 
 Schedule (localhost systemd user timers, `systemd/`): `die-ci-commit.timer` hourly runs `die_ci_cron.sh commit` when main
 moved with changes under tools/die_plan or physical/die_plan; `die-ci-nightly.timer` 02:30 Pacific runs the full set.
