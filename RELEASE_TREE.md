@@ -25,12 +25,12 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] S81.G3 Frame partitions with R3 internal stations · S81 · RUNNING · 6/7 frame kits FAILED review (paths to 2.2 mm)
   - [ ] S81.G3.CORES Hard cores ve / eng / svc · S81 · RUNNING · svc hcore TT WNS -25.29 ps (ld_grp we decode)
 - [ ] S81.G4 Abutted die · S81 · WAITS · waits → S81.G3, SEAM.METHOD
-- [ ] S81.G5 Entry replay token pass · S81 · FAIL · 6/6 FAIL; fc30 gaps lowered (8e8db3c53); fc30 status-fault fix on s81-p9-fc
+- [ ] S81.G5 Entry replay token pass · S81 · RUNNING · fc31 native entry 6/6 PASS + mutant caught (KS pulse fix a1f22086cc, main 0e75647078); fc30 = calendar fault + replay-model torn word (not RTL); layer replays wait BK-drain fix (TOK-DS)
 
 ## DIE qwen_compute · Qwen compute
 - [x] QC.G0 Plan check · QC-P6 · PASS · d33d3c4e4 G0 PASS, G0C 52/56
 - [ ] QC.G0C Completeness 52/56 (sle_st_a/b, slw_st_a/b ft_budget M9 over) · QC-A0 · FAIL · 10-24 06:40
-- [ ] QC.G1 Plan review · COORD · WAITS · COND
+- [ ] QC.G1 Plan review · QC-A0 · WAITS · f1964316b9 PASS-COND; waits → QC.G0C, QC.G3.A0
 - [x] QC.G2 Routing probe · Codex · PASS · probe run by Codex 10-23
 - [ ] QC.G3 Partitions · QC-A0 · RUNNING · collective part routes clean; A0 cores FAIL clock (v2..v6 tap methods)
   - [ ] QC.G3.A0 A0 cores on grid taps · QC-A0 · RUNNING · qc-p6-a0v6 G0 PASS unmerged
@@ -40,14 +40,14 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
   - [x] QC.G5.TP8 tp8 · TOKEN · PASS · 10-23 14:41
   - [x] QC.G5.XDIE xdie · TOKEN · PASS · 10-23 14:41
   - [x] QC.G5.OVL4U ovl4u · TOKEN · PASS
-  - [ ] QC.G5.XT1 xt1 on bound_r8 (R8 re-bind) · QC-TOK · RUNNING · was 0/64 before R8
+  - [x] QC.G5.XT1 xt1 on bound_r8 · QC-TOK · PASS · 64/64 both clusters (CB16 + fill lead 14), main 7d75427c59
 - [ ] QC.PAD R8 delay padding 875k → <150k regs · QC-TOK · TODO · plan change (trees not chains)
 
 ## DIE qwen_kvsys · Qwen KV
 - [x] KV.G0 Plan check v3.8h · KV-P7 · PASS · 0a0966d6f
 - [x] KV.G0C Completeness v3.8u 49/49 (hub_Wi host-core pins) · KV-G3 · PASS · a7e29a44ac
-- [ ] KV.G0.V38S Plan v3.8s FIRM astk stations on main · ROOT-MERGE · RUNNING · kv-p8-hub-1023 unmerged
-- [ ] KV.G1 Plan review · ROOT-MERGE · PASS · GEOM-REVIEW8 v3.8s PASS (geom-review8-1023 unmerged)
+- [x] KV.G0.V38S Plan v3.8s FIRM astk stations on main · ROOT-MERGE · DONE · 7353065934, superseded by v3.8w main30fe617bcb G0/G0C PASS
+- [x] KV.G1 Plan review · ROOT-MERGE · PASS · f1964316b9 independent PASS-COND v3.8v; hub tile FAIL remains KV.G3 blocker
 - [ ] KV.G2 Routing probe · KV-G3 · TODO
 - [ ] KV.G3 Hub + row partitions from bound RTL · KV-G3 · RUNNING · IO parts 2 PASS 1 COND; hub_Ei waits clock variant spread <= 80
 - [ ] KV.G4 Abutted die · KV-G3 · WAITS · waits → KV.G3, SEAM.METHOD
@@ -69,7 +69,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [x] INFRA.FLEET New fleet provisioned (toolchain + ORFS image on 5 hosts) · COORD · DONE · 2026-10-24
 
 - [ ] INFRA.MERGE 10-23 review queue merged · ROOT-MERGE · RUNNING · lanes/COORD-REVIEW-QUEUE.md
-- [ ] INFRA.WATCH auto_owner watchers redeployed against this tree · COORD · TODO
+- [x] INFRA.WATCH release-task liveness watcher redeployed against this tree · CODEX · DONE · acfb8a36e7; read-only timer, all5hosts; legacy element auto-submit held for current-plan/review adaptation
 
 ## WAITS · who
 ### Waiting on the owner
@@ -91,8 +91,8 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
   - [ ] TOK.HDS.VEH Shared d4g layer bench DS + Qwen · TOK-HBM · RUNNING
   - [ ] TOK.HDS.XDIE Cross-die collectives co-sim · TOK-HBM · TODO
 - [ ] TOK.HQ HBM-Qwen d4g single-user (L0 + chain; SM RD_LAT fix 045b6666c) · TOK-HBM · RUNNING
-- [ ] TOK.FREEZE Final evidence run at RTL freeze · COORD · WAITS
-- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS
+- [ ] TOK.FREEZE Final evidence run at RTL freeze · CODEX · WAITS · waits → S81.G5, QC.G5, KV.G5, HBM.G5
+- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · CODEX · WAITS · waits → TOK.FREEZE
 
 ## INFRA · added 10-24
 - [x] INFRA.OTRUN ot-run live on 5 hosts · FLEET-NEW3 · DONE · 8a5d1f3dab
