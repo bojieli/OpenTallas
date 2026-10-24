@@ -1,0 +1,1372 @@
+{
+ "schema": "opentallas.qwen_kv_static.die_ages.v1",
+ "status": "PLAN_PRICED_NOT_ROUTED",
+ "source": {
+  "path": "results/arch/qwen_kv_static_programme_1017/kvs13l4_plan_ages_source.json",
+  "plan": "kvs13l4-pvclean (KVPLAN3/4: kvs13l3 flags + PVT pins/hdr ctl/fork gap/seam, PV_W 82 / AGE 95)",
+  "source_commit": "6949bdd68",
+  "plan_json_sha256": "fee560b885a4d19b8343f6fc3b9762519ff0fe31e457aab2f7927558a1ef751d",
+  "relay_stages_json_sha256": "7910eda138fa67432793c1371c4504c3334bb0f221bfbe90464b048c4aefaff0",
+  "stage_definition": "registered relay flops on the die path between the source pin and the destination pin, excluding the source/destination tile pin registers; one stage = one clock of fixed latency",
+  "reach_um": 446.0,
+  "note": "KV-P6-BOOT: kvs13l4 source with the die K paths krq/krs (kv_static_params.path_keys) and OT_KV_K_RT=12; vport / pv from kv_static_params.schedule; link from link_overlay(die table)"
+ },
+ "k_issuer": {
+  "ki_WS_0": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_0.rq -> land_WS.rq0",
+    "land_WS.rs0 -> ectl_WS_0.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_1": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_1.rq -> land_WS.rq1",
+    "land_WS.rs1 -> ectl_WS_1.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_2": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_2.rq -> land_WS.rq2",
+    "land_WS.rs2 -> ectl_WS_2.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_3": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_3.rq -> land_WS.rq3",
+    "land_WS.rs3 -> ectl_WS_3.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_4": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_4.rq -> land_WS.rq4",
+    "land_WS.rs4 -> ectl_WS_4.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_5": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_5.rq -> land_WS.rq5",
+    "land_WS.rs5 -> ectl_WS_5.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_6": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_6.rq -> land_WS.rq6",
+    "land_WS.rs6 -> ectl_WS_6.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WS_7": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WS_7.rq -> land_WS.rq7",
+    "land_WS.rs7 -> ectl_WS_7.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_0": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_0.rq -> land_WN.rq0",
+    "land_WN.rs0 -> ectl_WN_0.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_1": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_1.rq -> land_WN.rq1",
+    "land_WN.rs1 -> ectl_WN_1.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_2": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_2.rq -> land_WN.rq2",
+    "land_WN.rs2 -> ectl_WN_2.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_3": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_3.rq -> land_WN.rq3",
+    "land_WN.rs3 -> ectl_WN_3.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_4": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_4.rq -> land_WN.rq4",
+    "land_WN.rs4 -> ectl_WN_4.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_5": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_5.rq -> land_WN.rq5",
+    "land_WN.rs5 -> ectl_WN_5.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_6": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_6.rq -> land_WN.rq6",
+    "land_WN.rs6 -> ectl_WN_6.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_WN_7": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_WN_7.rq -> land_WN.rq7",
+    "land_WN.rs7 -> ectl_WN_7.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_0": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_0.rq -> land_ES.rq0",
+    "land_ES.rs0 -> ectl_ES_0.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_1": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_1.rq -> land_ES.rq1",
+    "land_ES.rs1 -> ectl_ES_1.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_2": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_2.rq -> land_ES.rq2",
+    "land_ES.rs2 -> ectl_ES_2.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_3": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_3.rq -> land_ES.rq3",
+    "land_ES.rs3 -> ectl_ES_3.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_4": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_4.rq -> land_ES.rq4",
+    "land_ES.rs4 -> ectl_ES_4.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_5": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_5.rq -> land_ES.rq5",
+    "land_ES.rs5 -> ectl_ES_5.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_6": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_6.rq -> land_ES.rq6",
+    "land_ES.rs6 -> ectl_ES_6.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_ES_7": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_ES_7.rq -> land_ES.rq7",
+    "land_ES.rs7 -> ectl_ES_7.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_0": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_0.rq -> land_EN.rq0",
+    "land_EN.rs0 -> ectl_EN_0.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_1": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_1.rq -> land_EN.rq1",
+    "land_EN.rs1 -> ectl_EN_1.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_2": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_2.rq -> land_EN.rq2",
+    "land_EN.rs2 -> ectl_EN_2.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_3": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_3.rq -> land_EN.rq3",
+    "land_EN.rs3 -> ectl_EN_3.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_4": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_4.rq -> land_EN.rq4",
+    "land_EN.rs4 -> ectl_EN_4.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_5": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_5.rq -> land_EN.rq5",
+    "land_EN.rs5 -> ectl_EN_5.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_6": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_6.rq -> land_EN.rq6",
+    "land_EN.rs6 -> ectl_EN_6.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  },
+  "ki_EN_7": {
+   "RESPONSE_LAT": 12,
+   "request_relays": 2,
+   "response_relays": 2,
+   "landing_seg": 8,
+   "cls": "PLAN_ANALOG",
+   "buses": [
+    "ectl_EN_7.rq -> land_EN.rq7",
+    "land_EN.rs7 -> ectl_EN_7.rs"
+   ],
+   "natural_response_lat": 12,
+   "request_pad": 0
+  }
+ },
+ "ectla": {
+  "ectl_a_WS_0": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_1": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_2": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_3": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_4": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_5": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_6": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WS_7": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_0": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_1": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_2": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_3": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_4": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_5": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_6": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_WN_7": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_0": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_1": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_2": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_3": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_4": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_5": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_6": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_ES_7": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_0": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_1": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_2": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_3": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_4": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_5": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_6": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  },
+  "ectl_a_EN_7": {
+   "ROW_RETURN_LAT": 19,
+   "QK_ISSUE_AGE": 34,
+   "cls": "DERIVED"
+  }
+ },
+ "vport": {
+  "vport_WS_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 9,
+   "W": 20,
+   "RL0": 54,
+   "DQ": 9,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 9,
+   "O": 5,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_2": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 15,
+   "O": 13,
+   "W": 28,
+   "RL0": 62,
+   "DQ": 1,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 12,
+   "O": 2,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 9,
+   "W": 20,
+   "RL0": 54,
+   "DQ": 9,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 9,
+   "O": 5,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_2": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 16,
+   "O": 12,
+   "W": 28,
+   "RL0": 62,
+   "DQ": 1,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 14,
+   "O": 0,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 8,
+   "W": 19,
+   "RL0": 53,
+   "DQ": 10,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 10,
+   "O": 4,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_2": {
+   "sides": [
+    22,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 31,
+   "WP": 16,
+   "O": 11,
+   "W": 27,
+   "RL0": 62,
+   "DQ": 1,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 12,
+   "O": 2,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 8,
+   "W": 19,
+   "RL0": 53,
+   "DQ": 10,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 10,
+   "O": 4,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_2": {
+   "sides": [
+    22,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 31,
+   "WP": 16,
+   "O": 12,
+   "W": 28,
+   "RL0": 63,
+   "DQ": 0,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 14,
+   "O": 0,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  }
+ },
+ "phase_launch": {
+  "PH0": 0,
+  "SAFE_LOW_U": 200,
+  "SAFE_HIGH_U": 600,
+  "META_HOLD_CORE": 8,
+  "cls": "DIE_CONTRACT",
+  "basis": {
+   "PH0": "die contract: the reset release edge is beat aligned (qkd_kv_landing_cal PH0; the template binds every landing calendar at PH0 0, and the phase launch must use the same origin)",
+   "window_u": [
+    200,
+    600
+   ],
+   "setup_side_ps": 266.7,
+   "hold_side_ps": 224.0,
+   "setup_need_u": 200,
+   "hold_need_u": 87,
+   "budget": "skew 80 + setup unc 60 + cell 126 ps / skew 80 + hold unc 25 + cell 10 ps",
+   "meta_hold_min": 6
+  },
+  "open": "native CDC STA of the closed per-group control tile must confirm the window; token run starts must sit at a fixed HBM-beat phase or a launch can fall outside it (kv_static_programme reports)"
+ },
+ "link": {
+  "programme_start": {
+   "edges": 32,
+   "cls": "DIE_TABLE",
+   "bus": "dcal.tks -> kvs_ctl.st (sys_c -> hub_C)"
+  },
+  "programme_to_attention": {
+   "edges": 4,
+   "cls": "DIE_TABLE",
+   "bus": "kvs_ctl.o_attn -> kvs_attn.i_ctl (intra hub_C)"
+  },
+  "d2d_to_attention_rx": {
+   "edges": 32,
+   "cls": "DIE_TABLE",
+   "bus": "d2d_kv.srx -> kvs_attn.d2d__srx (sys_c -> hub_C)"
+  },
+  "programme_to_writer": {
+   "edges": 0,
+   "cls": "COLOCATED",
+   "note": "layer programme and native writer both in kvs_ctl"
+  },
+  "d2d_to_writer": {
+   "edges": 32,
+   "cls": "DIE_TABLE",
+   "bus": "d2d_kv.skw -> kvs_ctl.d2d__skw"
+  },
+  "programme_to_groups": {
+   "edges": 26,
+   "cls": "DIE_TABLE",
+   "per_stack": {
+    "WS": {
+     "o_hroot": 7,
+     "o_kg_max": 16,
+     "total": 23
+    },
+    "WN": {
+     "o_hroot": 8,
+     "o_kg_max": 16,
+     "total": 24
+    },
+    "ES": {
+     "o_hroot": 8,
+     "o_kg_max": 17,
+     "total": 25
+    },
+    "EN": {
+     "o_hroot": 9,
+     "o_kg_max": 17,
+     "total": 26
+    }
+   },
+   "note": "kvs_ctl.o_hroot_s -> hroot (+ hroot fan, compiler cal_deltas) -> o_kg -> ECTL frames; rows padded to the stack max (KV-P5 kg landing pads), one root for all 32 groups"
+  },
+  "group_internal": {
+   "edges": 0,
+   "cls": "COLOCATED",
+   "note": "phase launch, front calendar and the four pc_path calendars share the per-group control tile / abut it; landing calendar beside its landing segment"
+  },
+  "return_to_landing_ld": {
+   "LD": 1,
+   "cls": "COLOCATED",
+   "note": "qkd_kv_landing_cal LD = return-slot output register + relays; pc_path children abut their landing group"
+  }
+ },
+ "notes": [
+  "PV pair FIRST_INPUT_AGE 96 != the plan-accepted 95"
+ ],
+ "qk": {
+  "response_lat_range": [
+   12,
+   12
+  ],
+  "natural_response_lat_range": [
+   12,
+   12
+  ],
+  "k_rt_budget": 12,
+  "QK_ISSUE_AGE": 34,
+  "QK_ISSUE_AGE_kit": 34,
+  "row_latency_for_calendar": 14,
+  "rule": "QK_ISSUE_AGE >= max RESPONSE_LAT + 11 (static_qk_calendar write-before-read); one age for all 32 ECTL A: the slowest group binds the layer anyway, so equal ages cost nothing over it; KV-ECTL4: every frame K round trip padded to K_RT_BUDGET on its request chain (kv_k_rt_eq.py)"
+ },
+ "pv": {
+  "RL": 63,
+  "FIRST_INPUT_AGE": 64,
+  "W": [
+   14,
+   19,
+   20,
+   27,
+   28
+  ],
+  "rule": "kv_static_params.schedule: RL = 4 + W + DQ + RT, W = pvrq + O; FIRST_INPUT_AGE = RL + 1"
+ },
+ "schedule": {
+  "ectl": {
+   "ectl_WS_0": {
+    "group": 0,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_1": {
+    "group": 1,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_2": {
+    "group": 2,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_3": {
+    "group": 3,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_4": {
+    "group": 4,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_5": {
+    "group": 5,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_6": {
+    "group": 6,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WS_7": {
+    "group": 7,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_0": {
+    "group": 0,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_1": {
+    "group": 1,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_2": {
+    "group": 2,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_3": {
+    "group": 3,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_4": {
+    "group": 4,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_5": {
+    "group": 5,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_6": {
+    "group": 6,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_WN_7": {
+    "group": 7,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_0": {
+    "group": 0,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_1": {
+    "group": 1,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_2": {
+    "group": 2,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_3": {
+    "group": 3,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_4": {
+    "group": 4,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_5": {
+    "group": 5,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_6": {
+    "group": 6,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_ES_7": {
+    "group": 7,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_0": {
+    "group": 0,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_1": {
+    "group": 1,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_2": {
+    "group": 2,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_3": {
+    "group": 3,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_4": {
+    "group": 4,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_5": {
+    "group": 5,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_6": {
+    "group": 6,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   },
+   "ectl_EN_7": {
+    "group": 7,
+    "krq": 2,
+    "krs": 2,
+    "RESPONSE_LAT": 12
+   }
+  },
+  "vport": {
+   "vport_WS_0": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 11,
+    "O": 9,
+    "W": 20,
+    "RL0": 54,
+    "DQ": 9
+   },
+   "vport_WS_1": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 9,
+    "O": 5,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_WS_2": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 15,
+    "O": 13,
+    "W": 28,
+    "RL0": 62,
+    "DQ": 1
+   },
+   "vport_WS_3": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 12,
+    "O": 2,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_WN_0": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 11,
+    "O": 9,
+    "W": 20,
+    "RL0": 54,
+    "DQ": 9
+   },
+   "vport_WN_1": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 9,
+    "O": 5,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_WN_2": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 16,
+    "O": 12,
+    "W": 28,
+    "RL0": 62,
+    "DQ": 1
+   },
+   "vport_WN_3": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 14,
+    "O": 0,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_ES_0": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 11,
+    "O": 8,
+    "W": 19,
+    "RL0": 53,
+    "DQ": 10
+   },
+   "vport_ES_1": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 10,
+    "O": 4,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_ES_2": {
+    "sides": [
+     22,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 31,
+    "WP": 16,
+    "O": 11,
+    "W": 27,
+    "RL0": 62,
+    "DQ": 1
+   },
+   "vport_ES_3": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 12,
+    "O": 2,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_EN_0": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 11,
+    "O": 8,
+    "W": 19,
+    "RL0": 53,
+    "DQ": 10
+   },
+   "vport_EN_1": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 10,
+    "O": 4,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   },
+   "vport_EN_2": {
+    "sides": [
+     22,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 31,
+    "WP": 16,
+    "O": 12,
+    "W": 28,
+    "RL0": 63,
+    "DQ": 0
+   },
+   "vport_EN_3": {
+    "sides": [
+     21,
+     14
+    ],
+    "sides_equal": false,
+    "RT": 30,
+    "WP": 14,
+    "O": 0,
+    "W": 14,
+    "RL0": 48,
+    "DQ": 15
+   }
+  },
+  "pv": {
+   "RL": 63,
+   "FIRST_INPUT_AGE": 64,
+   "W": [
+    14,
+    19,
+    20,
+    27,
+    28
+   ]
+  },
+  "attn": {
+   "PV_LEAD_by_pair": [
+    38,
+    38
+   ],
+   "PV_LEAD": 38,
+   "pvfst": 45,
+   "pvp": [
+    7,
+    7
+   ],
+   "pvfin_start_align": [
+    0,
+    0
+   ],
+   "fin": 46,
+   "face_land_fin": 1,
+   "F_DLY": 55
+  },
+  "rule": "RESPONSE_LAT = 8 + krq + krs; vport RT = 9 + pvvq_g + pvrs_g (both sides equal); RL = 4 + W + DQ + RT with W = pvrq + O equal on all 16 ports, pair FIRST_INPUT_AGE = RL + 1; PV_LEAD = D(ks_pvst) to both pairs; pvfin start aligned: D(ks_pvfst) - PV_LEAD == D(ks_pvp_p); F_DLY = 1 + (D(ks_pvfst) - PV_LEAD) + D(ks_pvfin) [+ face land]"
+ }
+}
