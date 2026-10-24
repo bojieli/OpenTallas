@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8)",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -1168,1187 +1168,6 @@
      },
      "status": "new",
      "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
-    },
-    {
-     "inst": "u_id_next",
-     "module": "ot_dp_id_add",
-     "params": {
-      "W": 5,
-      "K": 1
-     },
-     "status": "new",
-     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
-    }
-   ]
-  },
-  "kv3_hg_v1": {
-   "module": "kv3_hg_v1_part",
-   "outline_um": [
-    1278.72,
-    1520.64
-   ],
-   "hard": false,
-   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves)",
-   "buses": [
-    {
-     "name": "o_ectl_Q_N_eN",
-     "dir": "out",
-     "width": 32,
-     "kind": "data"
-    },
-    {
-     "name": "o_ectl_Q_N_tN",
-     "dir": "out",
-     "width": 1559,
-     "kind": "data"
-    },
-    {
-     "name": "i_head_Q_N_N__u_fts_s_b",
-     "dir": "in",
-     "width": 34,
-     "kind": "data"
-    },
-    {
-     "name": "i_hst_Q_N_N_sN_s_b",
-     "dir": "in",
-     "width": 34,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
-     "dir": "out",
-     "width": 1,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
-     "dir": "out",
-     "width": 44,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
-     "dir": "out",
-     "width": 4,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
-     "dir": "out",
-     "width": 44,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
-     "dir": "out",
-     "width": 256,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
-     "dir": "out",
-     "width": 4,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
-     "dir": "out",
-     "width": 267,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
-     "dir": "in",
-     "width": 522,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
-     "dir": "out",
-     "width": 651,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
-     "dir": "in",
-     "width": 572,
-     "kind": "data"
-    },
-    {
-     "name": "i_fch_hg_Q_N_q",
-     "dir": "in",
-     "width": 1,
-     "kind": "data"
-    },
-    {
-     "name": "o_idhg_Q_N_y",
-     "dir": "out",
-     "width": 5,
-     "kind": "data"
-    },
-    {
-     "name": "i_kvs_attn_acal_Q",
-     "dir": "in",
-     "width": 16,
-     "kind": "data"
-    },
-    {
-     "name": "i_kvs_hroot_Q_o_cN",
-     "dir": "in",
-     "width": 40,
-     "kind": "data"
-    },
-    {
-     "name": "i_kvs_hroot_Q_o_kg",
-     "dir": "in",
-     "width": 23,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
-     "dir": "in",
-     "width": 1,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
-     "dir": "in",
-     "width": 44,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
-     "dir": "in",
-     "width": 4,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
-     "dir": "in",
-     "width": 44,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
-     "dir": "in",
-     "width": 256,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
-     "dir": "in",
-     "width": 4,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
-     "dir": "in",
-     "width": 267,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
-     "dir": "out",
-     "width": 522,
-     "kind": "data"
-    },
-    {
-     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
-     "dir": "in",
-     "width": 651,
-     "kind": "data"
-    },
-    {
-     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
-     "dir": "out",
-     "width": 572,
-     "kind": "data"
-    },
-    {
-     "name": "o_fch_hg_Q_N_q",
-     "dir": "out",
-     "width": 1,
-     "kind": "data"
-    },
-    {
-     "name": "i_idhg_Q_N_y",
-     "dir": "in",
-     "width": 5,
-     "kind": "data"
-    },
-    {
-     "name": "o_kvs_attn_acal_Q",
-     "dir": "out",
-     "width": 16,
-     "kind": "data"
-    },
-    {
-     "name": "o_kvs_hroot_Q_o_cN",
-     "dir": "out",
-     "width": 40,
-     "kind": "data"
-    },
-    {
-     "name": "o_kvs_hroot_Q_o_kg",
-     "dir": "out",
-     "width": 23,
-     "kind": "data"
-    },
-    {
-     "name": "o_ectl_Q_N_kf",
-     "dir": "out",
-     "width": 1,
-     "kind": "data"
-    },
-    {
-     "name": "o_ectl_Q_N_rq",
-     "dir": "out",
-     "width": 38,
-     "kind": "data"
-    },
-    {
-     "name": "i_slg_Q_N_krsp",
-     "dir": "in",
-     "width": 1062,
-     "kind": "data"
-    }
-   ],
-   "ft_slots": [
-    {
-     "name": "ft0",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 1,
-     "stations": 2
-    },
-    {
-     "name": "ft1",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 15,
-     "stations": 2
-    },
-    {
-     "name": "ft2",
-     "in_face": "S",
-     "out_face": "N",
-     "width": 1,
-     "stations": 3
-    },
-    {
-     "name": "ft3",
-     "in_face": "W",
-     "out_face": "E",
-     "width": 1056,
-     "stations": 2
-    }
-   ],
-   "clock": {
-    "tap_um": [
-     639.36,
-     760.32
-    ],
-    "layer": "M9",
-    "insertion_ps": 420.0,
-    "insertion_tol_ps": 40.0
-   },
-   "reset": {
-    "tap_um": [
-     639.36,
-     760.32
-    ],
-    "sync_stages": 2
-   },
-   "contents": [
-    {
-     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
-     "module": "qkd_astk_er_owner_st",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row)"
-    },
-    {
-     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
-     "module": "qkd_astk_ex_s",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row)"
-    },
-    {
-     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
-     "module": "qkd_astk_ex_s",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row)"
-    },
-    {
-     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
-     "module": "qkd_astk_ex_s",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row)"
-    },
-    {
-     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
-     "module": "qkd_astk_ex_s",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row)"
-    },
-    {
-     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
-     "module": "qkd_astk_ep_s_e",
-     "status": "rework",
-     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "EO_E": 9,
-      "EO_RL": 3
-     }
-    },
-    {
-     "inst": "ectl",
-     "module": "qkd_ectlk",
-     "status": "rework",
-     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
-    },
-    {
-     "inst": "head0__g_front_0__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_front_1__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_front_2__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_front_3__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_t_0__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_t_0__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_0__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_10__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head0__g_t_10__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_10__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_11__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head0__g_t_11__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_11__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_12__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head0__g_t_12__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_12__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_13__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head0__g_t_13__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_13__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_14__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head0__g_t_14__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_14__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_15__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head0__g_t_15__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_15__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_1__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_t_1__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_1__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_2__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_t_2__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_2__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_3__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head0__g_t_3__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_3__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_4__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head0__g_t_4__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_4__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_5__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head0__g_t_5__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_5__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_6__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head0__g_t_6__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_6__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_7__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head0__g_t_7__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_7__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_8__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head0__g_t_8__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_8__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_9__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head0__g_t_9__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__g_t_9__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__u_kt",
-     "module": "ot_qkh_ktree_lk",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head0__u_score",
-     "module": "ot_qkh_head_score4_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_front_0__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_front_1__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_front_2__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_front_3__u_front",
-     "module": "ot_qkh_head_frontq_native_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "HID": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_t_0__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head1__g_t_0__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_0__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_10__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head1__g_t_10__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_10__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_11__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head1__g_t_11__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_11__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_12__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head1__g_t_12__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_12__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_13__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head1__g_t_13__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_13__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_14__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head1__g_t_14__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_14__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_15__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b11"
-     }
-    },
-    {
-     "inst": "head1__g_t_15__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_15__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_1__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head1__g_t_1__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_1__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_2__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head1__g_t_2__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_2__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_3__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b00"
-     }
-    },
-    {
-     "inst": "head1__g_t_3__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_3__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_4__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_t_4__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_4__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_5__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_t_5__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_5__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_6__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_t_6__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_6__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_7__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b01"
-     }
-    },
-    {
-     "inst": "head1__g_t_7__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_7__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_8__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head1__g_t_8__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_8__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_9__u_l8",
-     "module": "ot_qkh_lane8_p",
-     "status": "rework",
-     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
-     "params": {
-      "BSEL": "2'b10"
-     }
-    },
-    {
-     "inst": "head1__g_t_9__u_stin",
-     "module": "ot_qkh_head_stin_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__g_t_9__u_stk",
-     "module": "ot_qkh_head_stk_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__u_ftg",
-     "module": "qkh_head_gather_stage",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__u_fts",
-     "module": "qkh_head_sstage",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__u_kt",
-     "module": "ot_qkh_ktree_lk",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "head1__u_score",
-     "module": "ot_qkh_head_score4_native",
-     "status": "reuse",
-     "note": "head leaf"
-    },
-    {
-     "inst": "hst0_g",
-     "module": "qkd_hgs",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst0_s1",
-     "module": "qkd_hss",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst0_t2",
-     "module": "qkd_hgs",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst1_g",
-     "module": "qkd_hgs",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst1_s1",
-     "module": "qkd_hss",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst1_s2",
-     "module": "qkd_hss",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst1_t1",
-     "module": "qkd_hgs",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "hst1_t2",
-     "module": "qkd_hgs",
-     "status": "reuse",
-     "note": "hst tree stage (registered)"
-    },
-    {
-     "inst": "u_efault",
-     "module": "ot_dp_efault",
-     "status": "new",
-     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
-     "params": {
-      "N": "IN_LANES",
-      "AGE": "REL_AGE"
-     }
-    },
-    {
-     "inst": "u_fch",
-     "module": "qkd_hp_or2",
-     "status": "reuse",
-     "note": "fault or"
     },
     {
      "inst": "u_id_next",
@@ -33092,6 +31911,5911 @@
      "note": "UCIe PHY hard IP"
     }
    ]
+  },
+  "kv3_hg_v1_r1": {
+   "module": "kv3_hg_v1_part_r1",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves) | v3.6 (KV-P5 10-23): row 1 of the former kv3_hg_v1 (R8 row landing pads)",
+   "buses": [
+    {
+     "name": "o_ectl_Q_N_eN",
+     "dir": "out",
+     "width": 32,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_tN",
+     "dir": "out",
+     "width": 1559,
+     "kind": "data"
+    },
+    {
+     "name": "i_head_Q_N_N__u_fts_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "i_hst_Q_N_N_sN_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "out",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "out",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "out",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "in",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "i_fch_hg_Q_N_q",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_idhg_Q_N_y",
+     "dir": "out",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_attn_acal_Q",
+     "dir": "in",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_cN",
+     "dir": "in",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_kg",
+     "dir": "in",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "in",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "in",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "in",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "out",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "o_fch_hg_Q_N_q",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_idhg_Q_N_y",
+     "dir": "in",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_attn_acal_Q",
+     "dir": "out",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_cN",
+     "dir": "out",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_kg",
+     "dir": "out",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_kf",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_rq",
+     "dir": "out",
+     "width": 38,
+     "kind": "data"
+    },
+    {
+     "name": "i_slg_Q_N_krsp",
+     "dir": "in",
+     "width": 1062,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "ft0",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 1,
+     "stations": 2
+    },
+    {
+     "name": "ft1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 15,
+     "stations": 2
+    },
+    {
+     "name": "ft2",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3
+    },
+    {
+     "name": "ft3",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 1056,
+     "stations": 2
+    }
+   ],
+   "clock": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "layer": "M9",
+    "insertion_ps": 420.0,
+    "insertion_tol_ps": 40.0
+   },
+   "reset": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "sync_stages": 2
+   },
+   "contents": [
+    {
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "module": "qkd_astk_er_owner_st",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "module": "qkd_astk_ep_s_e",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "EO_E": 9,
+      "EO_RL": 3
+     }
+    },
+    {
+     "inst": "ectl",
+     "module": "qkd_ectlk",
+     "status": "rework",
+     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
+    },
+    {
+     "inst": "head0__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_ftg",
+     "module": "qkh_head_gather_stage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_fts",
+     "module": "qkh_head_sstage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "hst0_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s2",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t1",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "u_efault",
+     "module": "ot_dp_efault",
+     "status": "new",
+     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
+     "params": {
+      "N": "IN_LANES",
+      "AGE": "REL_AGE"
+     }
+    },
+    {
+     "inst": "u_fch",
+     "module": "qkd_hp_or2",
+     "status": "reuse",
+     "note": "fault or"
+    },
+    {
+     "inst": "u_id_next",
+     "module": "ot_dp_id_add",
+     "params": {
+      "W": 5,
+      "K": 1
+     },
+     "status": "new",
+     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
+    }
+   ]
+  },
+  "kv3_hg_v1_r2": {
+   "module": "kv3_hg_v1_part_r2",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves) | v3.6 (KV-P5 10-23): row 2 of the former kv3_hg_v1 (R8 row landing pads)",
+   "buses": [
+    {
+     "name": "o_ectl_Q_N_eN",
+     "dir": "out",
+     "width": 32,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_tN",
+     "dir": "out",
+     "width": 1559,
+     "kind": "data"
+    },
+    {
+     "name": "i_head_Q_N_N__u_fts_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "i_hst_Q_N_N_sN_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "out",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "out",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "out",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "in",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "i_fch_hg_Q_N_q",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_idhg_Q_N_y",
+     "dir": "out",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_attn_acal_Q",
+     "dir": "in",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_cN",
+     "dir": "in",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_kg",
+     "dir": "in",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "in",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "in",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "in",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "out",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "o_fch_hg_Q_N_q",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_idhg_Q_N_y",
+     "dir": "in",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_attn_acal_Q",
+     "dir": "out",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_cN",
+     "dir": "out",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_kg",
+     "dir": "out",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_kf",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_rq",
+     "dir": "out",
+     "width": 38,
+     "kind": "data"
+    },
+    {
+     "name": "i_slg_Q_N_krsp",
+     "dir": "in",
+     "width": 1062,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "ft0",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 1,
+     "stations": 2
+    },
+    {
+     "name": "ft1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 15,
+     "stations": 2
+    },
+    {
+     "name": "ft2",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3
+    },
+    {
+     "name": "ft3",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 1056,
+     "stations": 2
+    }
+   ],
+   "clock": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "layer": "M9",
+    "insertion_ps": 420.0,
+    "insertion_tol_ps": 40.0
+   },
+   "reset": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "sync_stages": 2
+   },
+   "contents": [
+    {
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "module": "qkd_astk_er_owner_st",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "module": "qkd_astk_ep_s_e",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "EO_E": 9,
+      "EO_RL": 3
+     }
+    },
+    {
+     "inst": "ectl",
+     "module": "qkd_ectlk",
+     "status": "rework",
+     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
+    },
+    {
+     "inst": "head0__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_ftg",
+     "module": "qkh_head_gather_stage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_fts",
+     "module": "qkh_head_sstage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "hst0_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s2",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t1",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "u_efault",
+     "module": "ot_dp_efault",
+     "status": "new",
+     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
+     "params": {
+      "N": "IN_LANES",
+      "AGE": "REL_AGE"
+     }
+    },
+    {
+     "inst": "u_fch",
+     "module": "qkd_hp_or2",
+     "status": "reuse",
+     "note": "fault or"
+    },
+    {
+     "inst": "u_id_next",
+     "module": "ot_dp_id_add",
+     "params": {
+      "W": 5,
+      "K": 1
+     },
+     "status": "new",
+     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
+    }
+   ]
+  },
+  "kv3_hg_v1_r3": {
+   "module": "kv3_hg_v1_part_r3",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves) | v3.6 (KV-P5 10-23): row 3 of the former kv3_hg_v1 (R8 row landing pads)",
+   "buses": [
+    {
+     "name": "o_ectl_Q_N_eN",
+     "dir": "out",
+     "width": 32,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_tN",
+     "dir": "out",
+     "width": 1559,
+     "kind": "data"
+    },
+    {
+     "name": "i_head_Q_N_N__u_fts_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "i_hst_Q_N_N_sN_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "out",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "out",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "out",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "in",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "i_fch_hg_Q_N_q",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_idhg_Q_N_y",
+     "dir": "out",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_attn_acal_Q",
+     "dir": "in",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_cN",
+     "dir": "in",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_kg",
+     "dir": "in",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "in",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "in",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "in",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "out",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "o_fch_hg_Q_N_q",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_idhg_Q_N_y",
+     "dir": "in",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_attn_acal_Q",
+     "dir": "out",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_cN",
+     "dir": "out",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_kg",
+     "dir": "out",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_kf",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_rq",
+     "dir": "out",
+     "width": 38,
+     "kind": "data"
+    },
+    {
+     "name": "i_slg_Q_N_krsp",
+     "dir": "in",
+     "width": 1062,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "ft0",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 1,
+     "stations": 2
+    },
+    {
+     "name": "ft1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 15,
+     "stations": 2
+    },
+    {
+     "name": "ft2",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3
+    },
+    {
+     "name": "ft3",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 1056,
+     "stations": 2
+    }
+   ],
+   "clock": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "layer": "M9",
+    "insertion_ps": 420.0,
+    "insertion_tol_ps": 40.0
+   },
+   "reset": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "sync_stages": 2
+   },
+   "contents": [
+    {
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "module": "qkd_astk_er_owner_st",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "module": "qkd_astk_ep_s_e",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "EO_E": 9,
+      "EO_RL": 3
+     }
+    },
+    {
+     "inst": "ectl",
+     "module": "qkd_ectlk",
+     "status": "rework",
+     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
+    },
+    {
+     "inst": "head0__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_ftg",
+     "module": "qkh_head_gather_stage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_fts",
+     "module": "qkh_head_sstage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "hst0_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s2",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t1",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "u_efault",
+     "module": "ot_dp_efault",
+     "status": "new",
+     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
+     "params": {
+      "N": "IN_LANES",
+      "AGE": "REL_AGE"
+     }
+    },
+    {
+     "inst": "u_fch",
+     "module": "qkd_hp_or2",
+     "status": "reuse",
+     "note": "fault or"
+    },
+    {
+     "inst": "u_id_next",
+     "module": "ot_dp_id_add",
+     "params": {
+      "W": 5,
+      "K": 1
+     },
+     "status": "new",
+     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
+    }
+   ]
+  },
+  "kv3_hg_v1_r4": {
+   "module": "kv3_hg_v1_part_r4",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves) | v3.6 (KV-P5 10-23): row 4 of the former kv3_hg_v1 (R8 row landing pads)",
+   "buses": [
+    {
+     "name": "o_ectl_Q_N_eN",
+     "dir": "out",
+     "width": 32,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_tN",
+     "dir": "out",
+     "width": 1559,
+     "kind": "data"
+    },
+    {
+     "name": "i_head_Q_N_N__u_fts_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "i_hst_Q_N_N_sN_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "out",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "out",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "out",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "in",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "i_fch_hg_Q_N_q",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_idhg_Q_N_y",
+     "dir": "out",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_attn_acal_Q",
+     "dir": "in",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_cN",
+     "dir": "in",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_kg",
+     "dir": "in",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "in",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "in",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "in",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "out",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "o_fch_hg_Q_N_q",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_idhg_Q_N_y",
+     "dir": "in",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_attn_acal_Q",
+     "dir": "out",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_cN",
+     "dir": "out",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_kg",
+     "dir": "out",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_kf",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_rq",
+     "dir": "out",
+     "width": 38,
+     "kind": "data"
+    },
+    {
+     "name": "i_slg_Q_N_krsp",
+     "dir": "in",
+     "width": 1062,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "ft0",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 1,
+     "stations": 2
+    },
+    {
+     "name": "ft1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 15,
+     "stations": 2
+    },
+    {
+     "name": "ft2",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3
+    },
+    {
+     "name": "ft3",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 1056,
+     "stations": 2
+    }
+   ],
+   "clock": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "layer": "M9",
+    "insertion_ps": 420.0,
+    "insertion_tol_ps": 40.0
+   },
+   "reset": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "sync_stages": 2
+   },
+   "contents": [
+    {
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "module": "qkd_astk_er_owner_st",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "module": "qkd_astk_ep_s_e",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "EO_E": 9,
+      "EO_RL": 3
+     }
+    },
+    {
+     "inst": "ectl",
+     "module": "qkd_ectlk",
+     "status": "rework",
+     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
+    },
+    {
+     "inst": "head0__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_ftg",
+     "module": "qkh_head_gather_stage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_fts",
+     "module": "qkh_head_sstage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "hst0_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s2",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t1",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "u_efault",
+     "module": "ot_dp_efault",
+     "status": "new",
+     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
+     "params": {
+      "N": "IN_LANES",
+      "AGE": "REL_AGE"
+     }
+    },
+    {
+     "inst": "u_fch",
+     "module": "qkd_hp_or2",
+     "status": "reuse",
+     "note": "fault or"
+    },
+    {
+     "inst": "u_id_next",
+     "module": "ot_dp_id_add",
+     "params": {
+      "W": 5,
+      "K": 1
+     },
+     "status": "new",
+     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
+    }
+   ]
+  },
+  "kv3_hg_v1_r5": {
+   "module": "kv3_hg_v1_part_r5",
+   "outline_um": [
+    1278.72,
+    1520.64
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 hg; representative hg_WS_1 (R0); L1 est. 4.97 M std cells flattened (4.58 M in replicated datapath leaves) | v3.6 (KV-P5 10-23): row 5 of the former kv3_hg_v1 (R8 row landing pads)",
+   "buses": [
+    {
+     "name": "o_ectl_Q_N_eN",
+     "dir": "out",
+     "width": 32,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_tN",
+     "dir": "out",
+     "width": 1559,
+     "kind": "data"
+    },
+    {
+     "name": "i_head_Q_N_N__u_fts_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "i_hst_Q_N_N_sN_s_b",
+     "dir": "in",
+     "width": 34,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "out",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "out",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "out",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "out",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo",
+     "dir": "out",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "in",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "i_fch_hg_Q_N_q",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_idhg_Q_N_y",
+     "dir": "out",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_attn_acal_Q",
+     "dir": "in",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_cN",
+     "dir": "in",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "i_kvs_hroot_Q_o_kg",
+     "dir": "in",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_fault",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_next_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_addr",
+     "dir": "in",
+     "width": 44,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+     "dir": "in",
+     "width": 256,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_v",
+     "dir": "in",
+     "width": 4,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_xo",
+     "dir": "in",
+     "width": 267,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_astk_Q__u_strip_u_strip_g_ep_N__u_ep_zo_d1",
+     "dir": "in",
+     "width": 651,
+     "kind": "data"
+    },
+    {
+     "name": "o_astk_Q__u_strip_u_strip_u_ctl_qo",
+     "dir": "out",
+     "width": 572,
+     "kind": "data"
+    },
+    {
+     "name": "o_fch_hg_Q_N_q",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "i_idhg_Q_N_y",
+     "dir": "in",
+     "width": 5,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_attn_acal_Q",
+     "dir": "out",
+     "width": 16,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_cN",
+     "dir": "out",
+     "width": 40,
+     "kind": "data"
+    },
+    {
+     "name": "o_kvs_hroot_Q_o_kg",
+     "dir": "out",
+     "width": 23,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_kf",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_ectl_Q_N_rq",
+     "dir": "out",
+     "width": 38,
+     "kind": "data"
+    },
+    {
+     "name": "i_slg_Q_N_krsp",
+     "dir": "in",
+     "width": 1062,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [
+    {
+     "name": "ft0",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 1,
+     "stations": 2
+    },
+    {
+     "name": "ft1",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 15,
+     "stations": 2
+    },
+    {
+     "name": "ft2",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3
+    },
+    {
+     "name": "ft3",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 1056,
+     "stations": 2
+    }
+   ],
+   "clock": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "layer": "M9",
+    "insertion_ps": 420.0,
+    "insertion_tol_ps": 40.0
+   },
+   "reset": {
+    "tap_um": [
+     639.36,
+     760.32
+    ],
+    "sync_stages": 2
+   },
+   "contents": [
+    {
+     "inst": "astk__u_strip_g_er_chain_u_er_g_owner_p__u_owner",
+     "module": "qkd_astk_er_owner_st",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex",
+     "module": "qkd_astk_ex_s",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row)"
+    },
+    {
+     "inst": "astk__u_strip_u_strip_g_ep_p__u_ep",
+     "module": "qkd_astk_ep_s_e",
+     "status": "rework",
+     "note": "astk segment moved into its head-group row (chain position = plan row); v3.2 strap-free variant of qkd_astk_ep_s (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "EO_E": 9,
+      "EO_RL": 3
+     }
+    },
+    {
+     "inst": "ectl",
+     "module": "qkd_ectlk",
+     "status": "rework",
+     "note": "RESPONSE_LAT / QK_ISSUE_AGE from the plan latency table (parameter)"
+    },
+    {
+     "inst": "head0__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head0__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head0__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head0__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head0__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head0__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_front_0__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_1__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_2__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_front_3__u_front",
+     "module": "ot_qkh_head_frontq_native_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_head_frontq_native (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "HID": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_0__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_0__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_10__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_10__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_11__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_11__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_12__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_12__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_13__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_13__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_14__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_14__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b11"
+     }
+    },
+    {
+     "inst": "head1__g_t_15__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_15__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_1__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_1__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_2__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_2__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b00"
+     }
+    },
+    {
+     "inst": "head1__g_t_3__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_3__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_4__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_4__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_5__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_5__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_6__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_6__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b01"
+     }
+    },
+    {
+     "inst": "head1__g_t_7__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_7__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_8__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_8__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_l8",
+     "module": "ot_qkh_lane8_p",
+     "status": "rework",
+     "note": "head leaf; v3.2 strap-free variant of ot_qkh_lane8 (claude/kv-p3-leaf-1023 392d86eb2 rtl/qwen_sys/kv_plan_leaves_1023)",
+     "params": {
+      "BSEL": "2'b10"
+     }
+    },
+    {
+     "inst": "head1__g_t_9__u_stin",
+     "module": "ot_qkh_head_stin_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__g_t_9__u_stk",
+     "module": "ot_qkh_head_stk_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_ftg",
+     "module": "qkh_head_gather_stage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_fts",
+     "module": "qkh_head_sstage",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_kt",
+     "module": "ot_qkh_ktree_lk",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "head1__u_score",
+     "module": "ot_qkh_head_score4_native",
+     "status": "reuse",
+     "note": "head leaf"
+    },
+    {
+     "inst": "hst0_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst0_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_g",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s1",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_s2",
+     "module": "qkd_hss",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t1",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "hst1_t2",
+     "module": "qkd_hgs",
+     "status": "reuse",
+     "note": "hst tree stage (registered)"
+    },
+    {
+     "inst": "u_efault",
+     "module": "ot_dp_efault",
+     "status": "new",
+     "note": "v3.2 plan landing check (replaces the qkd_landsh fault outputs): N = in-lane epochs, AGE = counted release age from the latency table (BINDER)",
+     "params": {
+      "N": "IN_LANES",
+      "AGE": "REL_AGE"
+     }
+    },
+    {
+     "inst": "u_fch",
+     "module": "qkd_hp_or2",
+     "status": "reuse",
+     "note": "fault or"
+    },
+    {
+     "inst": "u_id_next",
+     "module": "ot_dp_id_add",
+     "params": {
+      "W": 5,
+      "K": 1
+     },
+     "status": "new",
+     "note": "v3.2 counted ID lane (astk chain position: sq / owner_id)"
+    }
+   ]
   }
  },
  "partitions": [
@@ -33106,7 +37830,7 @@
   },
   {
    "name": "hg_EN_1",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r1",
    "origin_um": [
     7637.76,
     22965.12
@@ -33115,7 +37839,7 @@
   },
   {
    "name": "hg_EN_2",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r2",
    "origin_um": [
     7637.76,
     21444.48
@@ -33124,7 +37848,7 @@
   },
   {
    "name": "hg_EN_3",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r3",
    "origin_um": [
     7637.76,
     19923.84
@@ -33133,7 +37857,7 @@
   },
   {
    "name": "hg_EN_4",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r4",
    "origin_um": [
     7637.76,
     18403.2
@@ -33142,7 +37866,7 @@
   },
   {
    "name": "hg_EN_5",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r5",
    "origin_um": [
     7637.76,
     16882.56
@@ -33178,7 +37902,7 @@
   },
   {
    "name": "hg_ES_1",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r1",
    "origin_um": [
     7637.76,
     1520.64
@@ -33187,7 +37911,7 @@
   },
   {
    "name": "hg_ES_2",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r2",
    "origin_um": [
     7637.76,
     3041.28
@@ -33196,7 +37920,7 @@
   },
   {
    "name": "hg_ES_3",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r3",
    "origin_um": [
     7637.76,
     4561.92
@@ -33205,7 +37929,7 @@
   },
   {
    "name": "hg_ES_4",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r4",
    "origin_um": [
     7637.76,
     6082.56
@@ -33214,7 +37938,7 @@
   },
   {
    "name": "hg_ES_5",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r5",
    "origin_um": [
     7637.76,
     7603.2
@@ -33250,7 +37974,7 @@
   },
   {
    "name": "hg_WN_1",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r1",
    "origin_um": [
     1900.8,
     22965.12
@@ -33259,7 +37983,7 @@
   },
   {
    "name": "hg_WN_2",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r2",
    "origin_um": [
     1900.8,
     21444.48
@@ -33268,7 +37992,7 @@
   },
   {
    "name": "hg_WN_3",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r3",
    "origin_um": [
     1900.8,
     19923.84
@@ -33277,7 +38001,7 @@
   },
   {
    "name": "hg_WN_4",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r4",
    "origin_um": [
     1900.8,
     18403.2
@@ -33286,7 +38010,7 @@
   },
   {
    "name": "hg_WN_5",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r5",
    "origin_um": [
     1900.8,
     16882.56
@@ -33322,7 +38046,7 @@
   },
   {
    "name": "hg_WS_1",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r1",
    "origin_um": [
     1900.8,
     1520.64
@@ -33331,7 +38055,7 @@
   },
   {
    "name": "hg_WS_2",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r2",
    "origin_um": [
     1900.8,
     3041.28
@@ -33340,7 +38064,7 @@
   },
   {
    "name": "hg_WS_3",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r3",
    "origin_um": [
     1900.8,
     4561.92
@@ -33349,7 +38073,7 @@
   },
   {
    "name": "hg_WS_4",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r4",
    "origin_um": [
     1900.8,
     6082.56
@@ -33358,7 +38082,7 @@
   },
   {
    "name": "hg_WS_5",
-   "type": "kv3_hg_v1",
+   "type": "kv3_hg_v1_r5",
    "origin_um": [
     1900.8,
     7603.2
