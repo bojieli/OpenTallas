@@ -158,6 +158,8 @@ def main():
     ap.add_argument("--plan-commit", default="0ea1350db")
     ap.add_argument("--util", type=float, default=0.5)
     ap.add_argument("--sigmax", default="M5")
+    ap.add_argument("--pins-file", default=None, help="pick the plan core with this pins_file when one type id has "
+                    "several (e.g. hfd_ep_static, vm_calendar pv0/pv1); the kit dir gets the pins-file stem as suffix")
     a = ap.parse_args()
     TOOL = Path(a.tool)
     repo = Path(a.repo)
@@ -168,18 +170,19 @@ def main():
     for tn, t in plan["partition_types"].items():
         for c in t.get("hard_cores", []):
             tid = f"{c['module']}__{c['outline_um'][0]:g}x{c['outline_um'][1]:g}"
-            if tid == a.type:
+            if tid == a.type and (a.pins_file is None or Path(c["pins_file"]).name == Path(a.pins_file).name):
                 hit = hit or (tn, c)
     if not hit:
         raise SystemExit(f"type {a.type} not in plan")
     tn, c = hit
     w, h = c["outline_um"]
     rec_all = json.load(open(a.recipes))
-    rec = rec_all.get(a.type) or rec_all.get(c["module"])
+    pstem = Path(c["pins_file"]).stem
+    rec = (rec_all.get(f"{a.type}@{pstem}") if a.pins_file else None) or rec_all.get(a.type) or rec_all.get(c["module"])
     if not rec:
         raise SystemExit(f"no recipe for {a.type} / {c['module']}")
     pins = json.load(open(plandir / c["pins_file"]))
-    kd = Path(a.out) / a.type
+    kd = Path(a.out) / (a.type + (f"@{pstem}" if a.pins_file else ""))
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
