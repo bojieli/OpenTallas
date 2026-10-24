@@ -1,0 +1,9 @@
+{"core": "ot_s81c_attn_hcore", "kit": "physical/die_plan/s81/cores/svc/kits/ot_s81c_attn_hcore__157.68x259.2", "kit_hash": "0c0a55daad85f3af",
+ "commit": "d03c32ba7", "geom": "GEOM-REVIEW8 PASS 10-23 21:28", "host": "ot-epyc7", "unit": "oth-ubuntu-1153007-1792816135",
+ "dir": "/srv/opentallas-scratch/claude/core-s81-1023/svc/kits/ot_s81c_attn_hcore__157.68x259.2/run", "finished": "10-23 22:19",
+ "corner": "TT (TC), 833 ps, IO 0.2T, unc 60/25", "grt_overflow": 0, "grt_usage": {"M2": 0.257, "M3": 0.414, "M4": 0.039, "M5": 0.112},
+ "drt_drc": 0, "antenna": 0, "pin_audit": "PASS 1214/1214", "unreg_pins": 0, "hold_violations": 0,
+ "setup": {"wns_ps": -25.29, "tns_ps": -639.63, "violating_endpoints": 88,
+           "worst_path": "u_h.g_h[0].u_rc kreg (r_ld_grp) -> write-enable decode (ld_grp compare) -> hdp ab[*] DFFE enables (internal reg->reg)"},
+ "verdict": "NOT CLOSED (TT setup -25 ps, internal ld_grp write-enable decode); geometry/route clean",
+ "next": "fallbacks: (a) SKIP_LAST_GASP=0 repair; (b) RTL post-decode of the write predicates from the R0 kregs (hgrp8x WRITE_POSTDECODE class, +0 edges) -- both need a new kit hash"}

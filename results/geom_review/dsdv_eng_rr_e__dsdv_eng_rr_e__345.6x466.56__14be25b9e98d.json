@@ -1,0 +1,11 @@
+{
+ "element": "dsdv_eng_rr_e",
+ "kit": "claude/core-s81-eng-1023@e684da414:physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56",
+ "verdict": "PASS",
+ "hash": "14be25b9e98dc80e",
+ "reasons": "[10-23 23:36] [GEOM-REVIEW8] [CORE-S81-ENG 21:13 REQ, missed by my watcher (filter bug, fixed 23:35); reviewed 23:4x] Gate git-blob hash recomputed by me at e684da414. I viewed the author renders core_e/core_h0/core_h1/eng_t1.png and read the kits (macro_place, io, sdc, face_flops, rtl). E 345.6x466.56: 15 macros in 3 columns (2 ROM stacks of 4 plus 7 wide macros), all on lattice, halo 4.32, pins W/E with std channels on both sides; a std band of >= 40 um below u_wl and at the N edge; fill of free 0.21. Pins: S 1,220 (3.53/um, 0.17 of M5 tracks), N 1,157 (3.35/um), W 321 (0.69/um), each spread across most of its face (no partial-face cluster). H0/H1 164.16x267.84, no macros, 176k cells at 56% fill of free (PLACE_DENSITY 0.65); N 644 pins (3.92/um, 0.19 of tracks), ck on W. E<->H crossing: 1,220 b at identical x across a 17.28-um abutment = straight M5 drops, so no along-channel demand. Every partition pin is FIRM-registered at its face (face_flops). The crossings are half-cycle (negedge launch -> posedge capture, 417 ps, as in the monolith); acceptable at a 17-um hop.",
+ "fixes": "Route gate ALLOWED. Clock (COORD 23:22): because the E<->H crossings are half-cycle, the related launch/capture pair skew with CPPR across E|H0 and E|H1 must be <= 80 ps at TT and FF in the eng__t1 parent STA, plus sign-off; spread is reported only. PARENT eng__t1 (not this core): E's N-face pins (die x ~1060-1340) to the frame N partition pins unit/xtier (x 560-830) run up to ~820 um Manhattan, over the 750 rule. Add a firm station or shift E/H west by >= ~100 um; there is room, and the ft station sites are already clear.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T23:36:42-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

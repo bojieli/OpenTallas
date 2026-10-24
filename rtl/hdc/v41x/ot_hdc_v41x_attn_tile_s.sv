@@ -257,6 +257,16 @@ module ot_hdc_v41x_attn_tile_s #(
     output wire [H*32-1:0]   oy,
     output wire [H-1:0]      oflt
 );
+`ifdef OT_ATTN_HCORE
+    // CORE-S81-SVC (10-23): the S81 tile as 16 one-head hard cores ot_s81c_attn_hcore (= hgrp_s at HG 1, PCOLP 1,
+    // register on every pin; rtl/hdc/v41x/ot_s81c_attn_hcore.sv, bench tb_s81c_hcore); same ports, same cycles
+    generate if (H != 16 || TD != 32 || NBANK != 5 || BW != 3 || PWORDS != 2 || FPL != 4 || FML != 6 || F12 != 1)
+    begin : g_bad_hc
+        initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HCORE needs the S81 engine parameters");
+    end endgenerate
+    ot_s81c_attn_tile_hc u_hc (.clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank),
+        .ld_grp(ld_grp), .ld_w(ld_w), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+`else
     localparam integer NG = H / HG;
     localparam integer RT = TD / H;
     wire [NG-1:0] gov;
@@ -310,6 +320,7 @@ module ot_hdc_v41x_attn_tile_s #(
         end
     endgenerate
     assign ov = gov[0];
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------

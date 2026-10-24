@@ -6,16 +6,27 @@
 # their landing seams), so each branch sat at the centroid of 32 scattered leaves: branch -> leaf hops 1.0-1.7 mm in
 # every S81 frame band (u_r<k>.u_lpr_r<k>).
 # Function: every branch flop has the SAME D (the last prefix flop, through the same buffer/inverter parity), the same
-# clock and the same master, so all branch outputs carry the identical value every cycle; which branch feeds which leaf
-# is functionally irrelevant.  The step checks exactly that per forest (else the forest is left alone and logged as
-# SKIP) and the only netlist edit is: a leaf's D moves from a net of branch a to the net of the SAME parity
-# (relative to the branch output pin) of branch b.  A missing parity-1 net gets one new inverter at branch b; buffers /
-# inverters left without loads are removed (repair_design re-buffers).  Every edit -> $RESULTS_DIR/ot_forest_recluster.txt.
-# Placement (PLACED, DPL legalises): each leaf moves to the bbox centre of its loads; the leaves are split into
-# BRANCHES groups of <= OT_FOREST_BRANCH_CAP (32, the RTL fan-out) by recursive bisection that minimises the larger
-# half's extent; branch b sits at its group's bbox centre (pulled toward the hub when the hub is > hop away); the last
-# prefix flop (the hub) at the bbox centre of the branches; prefix flops 0..P-2 evenly on the line from prefix[0]'s
-# driver to the hub.  Hops that still exceed the limit are reported as OT_FOREST_RECLUSTER WARN (geometry, not tool).
+# clock and the same cell FUNCTION (master name without drive strength / VT: timing-driven GPL resizes single kept
+# copies, h10_r1 g_branch[0] DFFHQNx2 vs [1] DFFHQNx1), so all branch outputs carry the identical value every cycle;
+# which branch feeds which leaf is functionally irrelevant.  The step checks exactly that per forest (else the forest is
+# left alone and logged as SKIP with what differs) and the only netlist edit is: a leaf's D moves from a net of branch a
+# to the net of the SAME parity (relative to the branch output pin) of branch b.  A missing parity-1 net gets one new
+# inverter at branch b; buffers / inverters left without loads are removed (repair_design re-buffers).  Every edit ->
+# $RESULTS_DIR/ot_forest_recluster.txt.
+# Placement (PLACED, DPL legalises), S81-P9-TOOL2 10-23:
+#  - each leaf moves to the L1 minimax centre of its loads, traced through its output buffer/inverter tree (a kept copy
+#    maps to DFFHQN + INV, so the QN net's only load is that INV: the old bbox of the QN loads left the leaf where GPL
+#    put it, h9_r1 g_leaf[63] -> u_lpl_10_w clear 785 um); the leaf's first-level output cells go with it;
+#  - the hub (last prefix flop) at the L1 minimax centre of all leaves;
+#  - leaves -> BRANCHES groups of <= OT_FOREST_BRANCH_CAP (32, the RTL fan-out), minimising the largest group
+#    cost = max(u span, v span) of {group leaves + hub} (u = x + y, v = x - y): a branch at the L1 minimax point of
+#    its leaves and the hub has every hop (hub -> branch, branch -> leaf) <= cost / 2, so the forest fits iff the
+#    cost <= 2 x plan.  Candidates: contiguous angular sectors around the hub (greedy + bisection on the cost) and
+#    recursive x/y bisection; the lower cost wins.  The old group-centre branches with a hub at the centre of the
+#    branches left hub -> branch 796-915 um in h9_r0_p1 / h9_r0_p3 / h10_r0_p1 (groups spread over the whole frame);
+#  - prefix flops 0..P-2 evenly on the line from prefix[0]'s driver to the hub.
+#  A point inside a macro halo goes to the free point (rings to +120 um) with the smallest max hop to its neighbours.
+#  Hops that still exceed the limit are reported as OT_FOREST_RECLUSTER WARN (geometry, not tool).
 uplevel #0 {
 set fr_blk [ord::get_db_block]
 set fr_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -127,6 +138,49 @@ proc fr_freept {x y} {
   }
   return [list $x $y]
 }
+# a free point near (x, y) that keeps the max L1 hop to the neighbour points nb short: when (x, y) is inside a macro
+# halo, the rings (2.16 um) around it are searched to 120 um beyond the first free ring and the point with the smallest
+# max |p - q| over nb wins (a stage on a line across the ROM field goes to the channel, not to the nearest edge).
+# max over q of |p - q|_1 = max(pu - umin, umax - pu, pv - vmin, vmax - pv), u = x + y, v = x - y: O(1) per candidate.
+proc fr_freeptN {x y nb} {
+  global fr_dbu
+  if {[fr_free $x $y]} { return [list $x $y] }
+  if {![llength $nb]} { return [fr_freept $x $y] }
+  set u0 1e18; set u1 -1e18; set v0 1e18; set v1 -1e18
+  foreach q $nb {
+    set u [expr {[lindex $q 0] + [lindex $q 1]}]; set v [expr {[lindex $q 0] - [lindex $q 1]}]
+    set u0 [expr {min($u0, $u)}]; set u1 [expr {max($u1, $u)}]; set v0 [expr {min($v0, $v)}]; set v1 [expr {max($v1, $v)}]
+  }
+  set st [expr {int(2.16 * $fr_dbu)}]
+  set best ""; set bc 0; set stop 100000
+  for {set r 1} {$r < 600 && $r <= $stop} {incr r} {
+    set d [expr {$r * $st}]
+    for {set k [expr {-$r}]} {$k <= $r} {incr k} {
+      set e [expr {$k * $st}]
+      foreach {px py} [list [expr {$x + $e}] [expr {$y + $d}] [expr {$x + $e}] [expr {$y - $d}] [expr {$x + $d}] [expr {$y + $e}] [expr {$x - $d}] [expr {$y + $e}]] {
+        if {![fr_free $px $py]} continue
+        set pu [expr {$px + $py}]; set pv [expr {$px - $py}]
+        set c [expr {max($pu - $u0, $u1 - $pu, $pv - $v0, $v1 - $pv)}]
+        if {$best eq "" || $c < $bc} { set best [list $px $py]; set bc $c }
+        if {$stop == 100000} { set stop [expr {$r + int(120.0 / 2.16)}] }
+      }
+    }
+  }
+  return [expr {$best eq "" ? [fr_freept $x $y] : $best}]
+}
+proc fr_freept2 {x y a b} { return [fr_freeptN $x $y [list $a $b]] }
+# cell function: master without drive strength / VT (DFFHQNx1_ASAP7_75t_R == DFFHQNx2_ASAP7_75t_L; DFFHQN != DFFHQ)
+proc fr_fn {i} {
+  set m [[$i getMaster] getName]
+  regsub {x[0-9]+[a-z]*_ASAP7_75t_[A-Z]+$} $m {} m
+  return $m
+}
+proc fr_netname {n} { return [expr {$n eq "NULL" || $n eq "" ? "NULL" : [$n getName]}] }
+proc fr_srcdesc {s} {
+  if {$s eq {}} { return "untraceable" }
+  if {[lindex $s 0] eq "PORT"} { return "port [lindex $s 1] parity [lindex $s 2]" }
+  return "[string map {\\ {}} [[lindex $s 0] getName]] parity [lindex $s 1]"
+}
 proc fr_put {i x y} {
   global fr_x0 fr_y0 fr_x1 fr_y1 fr_sw fr_rh fr_orient
   lassign [fr_freept $x $y] x y
@@ -222,7 +276,7 @@ proc fr_loads {net depth} {
   foreach it [$net getITerms] {
     if {[[$it getMTerm] getIoType] ne "INPUT"} continue
     set i [$it getInst]
-    if {$depth < 64 && ([fr_is_buf $i] || [fr_is_inv $i])} {
+    if {$depth < 512 && ([fr_is_buf $i] || [fr_is_inv $i])} {
       set o [fr_out $i]
       if {$o ne ""} { set r [concat $r [fr_loads [$o getNet] [expr {$depth + 1}]]] }
       continue
@@ -253,9 +307,14 @@ dict for {cpfx stg} $fr_ch {
   set rs 0; foreach q $lds { set rs [expr {max($rs, [fr_md $T $q])}] }
   set n [llength $L]
   set j 0
+  set prev $sxy
   foreach f $L {
     incr j
-    fr_put $f [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * $j / ($n + 1.0))}] [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * $j / ($n + 1.0))}]
+    set px [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * $j / ($n + 1.0))}]
+    set py [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * $j / ($n + 1.0))}]
+    set nx [list [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * ($j + 1) / ($n + 1.0))}] [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * ($j + 1) / ($n + 1.0))}]]
+    if {$j == $n} { set nx $T }
+    set prev [fr_put $f {*}[fr_freept2 $px $py $prev $nx]]
   }
   set ha 0; set prev $sxy
   foreach f $L { set ha [expr {max($ha, [fr_md $prev [fr_ctr $f]])}]; set prev [fr_ctr $f] }
@@ -265,7 +324,7 @@ dict for {cpfx stg} $fr_ch {
   set msg ""
   if {$ha > $fr_hop} {
     incr fr_cneed
-    set msg " NEED [expr {max($need, $n)}] stages (has $n; source->tail-load centre [format %.0f [expr {[fr_md $sxy $T] / $u}]] um)[expr {$rs > $fr_plan ? " + loads spread [format %.0f [expr {$rs / $u}]] um from their centre: split the fan-out" : ""}]"
+    set msg " NEED [expr {max($need, $n + ($need <= $n))}] stages (has $n[expr {$need <= $n ? ", a stage site is blocked by macro halos" : ""}]; source->tail-load centre [format %.0f [expr {[fr_md $sxy $T] / $u}]] um)[expr {$rs > $fr_plan ? " + loads spread [format %.0f [expr {$rs / $u}]] um from their centre: split the fan-out" : ""}]"
   }
   puts "OT_RESET_CHAIN $cpfx: $n stages, [llength $lds] loads, max hop [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um$msg"
   set fr_cb [expr {max($fr_cb, $hb)}]; set fr_ca [expr {max($fr_ca, $ha)}]
@@ -273,6 +332,71 @@ dict for {cpfx stg} $fr_ch {
 }
 puts "OT_RESET_CHAIN $fr_cn chains placed on their source->load lines ($fr_cneed still over [expr {$fr_hop / double($fr_dbu)}] um); max hop [format %.0f [expr {$fr_cb / double($fr_dbu)}]] -> [format %.0f [expr {$fr_ca / double($fr_dbu)}]] um"
 
+# ---- forest grouping (S81-P9-TOOL2 10-23).  pts = list of {id x y}; hub = {x y}.
+# cost of a group = max(u span, v span) of its points plus the hub: a branch at their L1 minimax point is within
+# cost / 2 of the hub and of every leaf of the group.
+proc fr_gcost {g hub} {
+  set u0 [expr {[lindex $hub 0] + [lindex $hub 1]}]; set u1 $u0
+  set v0 [expr {[lindex $hub 0] - [lindex $hub 1]}]; set v1 $v0
+  foreach p $g {
+    set u [expr {[lindex $p 1] + [lindex $p 2]}]; set v [expr {[lindex $p 1] - [lindex $p 2]}]
+    set u0 [expr {min($u0, $u)}]; set u1 [expr {max($u1, $u)}]; set v0 [expr {min($v0, $v)}]; set v1 [expr {max($v1, $v)}]
+  }
+  return [expr {max($u1 - $u0, $v1 - $v0)}]
+}
+proc fr_gmax {grp hub} { set c 0; foreach g $grp { if {[llength $g]} { set c [expr {max($c, [fr_gcost $g $hub])}] } }; return $c }
+# greedy contiguous chunks of the angle-sorted list s (elements {id x y ang u v}) from index st, each <= cap points and
+# cost <= T; returns the chunks (lists of {id x y}) or {} when more than B are needed
+proc fr_greedy {s st cap T B hu hv} {
+  set n [llength $s]
+  set out {}; set cur {}
+  set u0 $hu; set u1 $hu; set v0 $hv; set v1 $hv
+  for {set k 0} {$k < $n} {incr k} {
+    lassign [lindex $s [expr {($st + $k) % $n}]] id x y a u v
+    set nu0 [expr {min($u0, $u)}]; set nu1 [expr {max($u1, $u)}]; set nv0 [expr {min($v0, $v)}]; set nv1 [expr {max($v1, $v)}]
+    if {[llength $cur] < $cap && max($nu1 - $nu0, $nv1 - $nv0) <= $T} {
+      lappend cur [list $id $x $y]; set u0 $nu0; set u1 $nu1; set v0 $nv0; set v1 $nv1
+      continue
+    }
+    if {![llength $cur]} { return {} }
+    lappend out $cur
+    if {[llength $out] >= $B} { return {} }
+    set cur [list [list $id $x $y]]
+    set u0 [expr {min($hu, $u)}]; set u1 [expr {max($hu, $u)}]; set v0 [expr {min($hv, $v)}]; set v1 [expr {max($hv, $v)}]
+    if {max($u1 - $u0, $v1 - $v0) > $T} { return {} }
+  }
+  if {[llength $cur]} { lappend out $cur }
+  return $out
+}
+# B contiguous angular sectors around the hub with the smallest max cost (bisection on T; starts every n/128 points)
+proc fr_sectors {pts B cap hub} {
+  global fr_dbu
+  set n [llength $pts]
+  if {$n == 0} { return {} }
+  lassign $hub hx hy
+  set hu [expr {$hx + $hy}]; set hv [expr {$hx - $hy}]
+  set s {}
+  foreach p $pts {
+    lassign $p id x y
+    lappend s [list $id $x $y [expr {atan2(double($y - $hy), double($x - $hx))}] [expr {$x + $y}] [expr {$x - $y}]]
+  }
+  set s [lsort -real -index 3 $s]
+  set step [expr {max(1, $n / 128)}]
+  set hi [fr_gcost $pts $hub]; set lo 0
+  set best ""
+  for {set st 0} {$st < $n && $best eq ""} {incr st $step} { set best [fr_greedy $s $st $cap $hi $B $hu $hv] }
+  if {$best eq ""} { return {} }
+  while {$hi - $lo > $fr_dbu} {
+    set T [expr {($hi + $lo) / 2}]
+    set got ""
+    for {set st 0} {$st < $n} {incr st $step} {
+      set got [fr_greedy $s $st $cap $T $B $hu $hv]
+      if {$got ne ""} break
+    }
+    if {$got ne ""} { set hi $T; set best $got } else { set lo $T }
+  }
+  return $best
+}
 # ---- forests by name
 set fr_f {}
 foreach i [$fr_blk getInsts] {
@@ -297,28 +421,36 @@ dict for {pfx lst} $fr_f {
   set npre [dict size $pre]
   set preL {}; foreach k [lsort -integer [dict keys $pre]] { lappend preL [dict get $pre $k] }
   set brL {}; foreach k [lsort -integer [dict keys $br]] { lappend brL [dict get $br $k] }
-  # identical branches: same master, clock net, D source + parity
+  # identical branches: same cell function (drive strength / VT may differ), clock net, D source + parity
   if {$bad eq ""} {
     set b0 [lindex $brL 0]
-    set m0 [[$b0 getMaster] getName]
-    set c0 [[fr_pin $b0 CLK] getNet]
-    set s0 [fr_src [[fr_pin $b0 D] getNet]]
-    if {$s0 eq {} || [lindex $s0 0] ne [lindex $preL end]} { set bad "branch D source is not the last prefix flop" }
+    set f0 [fr_fn $b0]
+    set c0 [expr {[fr_pin $b0 CLK] eq "" ? "NULL" : [[fr_pin $b0 CLK] getNet]}]
+    set s0 [expr {[fr_pin $b0 D] eq "" ? {} : [fr_src [[fr_pin $b0 D] getNet]]}]
+    if {$s0 eq {} || [lindex $s0 0] ne [lindex $preL end]} { set bad "branch [$b0 getName] D source is [fr_srcdesc $s0], not the last prefix flop" }
+    set nsz 0
     foreach b $brL {
       if {$bad ne ""} break
       set ck [fr_pin $b CLK]; set dp [fr_pin $b D]
-      if {$ck eq "" || $dp eq "" || [[$b getMaster] getName] ne $m0 || [$ck getNet] ne $c0 || [fr_src [$dp getNet]] ne $s0} {
-        set bad "branch [$b getName] not identical to [$b0 getName]"
+      set why {}
+      if {$ck eq "" || $dp eq ""} { lappend why "no CLK / D pin ([[$b getMaster] getName])" } else {
+        if {[fr_fn $b] ne $f0} { lappend why "function [[$b getMaster] getName] vs [[$b0 getMaster] getName]" }
+        if {[$ck getNet] ne $c0} { lappend why "clock [fr_netname [$ck getNet]] vs [fr_netname $c0]" }
+        set s [fr_src [$dp getNet]]
+        if {$s ne $s0} { lappend why "D [fr_srcdesc $s] vs [fr_srcdesc $s0]" }
       }
       foreach it [$b getITerms] {
-        if {[[$it getMTerm] getName] in {SETN RESETN} && [$it getNet] ne "NULL"} { set bad "branch [$b getName] has an async set/reset" }
+        if {[[$it getMTerm] getName] in {SETN RESETN} && [$it getNet] ne "NULL"} { lappend why "async [[$it getMTerm] getName] on [fr_netname [$it getNet]]" }
       }
+      if {[llength $why]} { set bad "branch [$b getName] not identical to [$b0 getName]: [join $why {; }]" }
+      if {[[$b getMaster] getName] ne [[$b0 getMaster] getName]} { incr nsz }
     }
+    if {$bad eq "" && $nsz} { puts "OT_FOREST_RECLUSTER $pfx: $nsz branch flops differ from [$b0 getName] only in drive strength / VT ([lsort -unique [lmap b $brL {[$b getMaster] getName}]]): identical function" }
   }
   if {$bad ne ""} { incr fr_skip; puts "OT_FOREST_RECLUSTER SKIP $pfx: $bad"; puts $fr_log "# SKIP $pfx $bad"; continue }
   # branch output trees: net per parity (shallowest), and their buffer / inverter cells
   set fr_cells {}
-  set rep {}; set brof {}
+  set rep {}
   foreach b $brL {
     foreach np [fr_tree $b fr_cells] {
       lassign $np net par
@@ -326,30 +458,24 @@ dict for {pfx lst} $fr_f {
     }
   }
   foreach c $fr_cells { if {[fr_is_inv $c] && $fr_inv_master eq ""} { set fr_inv_master [$c getMaster] } }
-  # leaves: current branch + parity, target = bbox centre of their loads
-  set pts {}; set lcur {}; set lpos {}
+  # leaves: current branch + parity, loads traced through the leaf's output buffer / inverter tree
+  set lcur {}; set lpos {}
   foreach k [lsort -integer [dict keys $lv]] {
     set l [dict get $lv $k]
     set s [fr_src [[fr_pin $l D] getNet]]
     if {$s eq {} || [lsearch -exact $brL [lindex $s 0]] < 0} { puts $fr_log "# KEEP [$l getName]: D not from a branch"; continue }
     dict set lcur [$l getName] $s
     set lo [fr_out $l]
-    set lp {}
-    if {$lo ne ""} {
-      foreach it [[$lo getNet] getITerms] {
-        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
-        set li [$it getInst]
-        if {[[$li getMaster] isBlock]} { set bb [$it getBBox]; lappend lp [list x [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}]] } else { lappend lp [concat x [fr_ctr $li]] }
-      }
-      foreach bt [[$lo getNet] getBTerms] { set bb [$bt getBBox]; lappend lp [list x [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}]] }
-    }
-    set c [expr {[llength $lp] ? [fr_bbc $lp] : [fr_ctr $l]}]
-    dict set lpos [$l getName] [list $l $c]
-    lappend pts [list [$l getName] [lindex $c 0] [lindex $c 1]]
+    set lp [expr {$lo eq "" ? {} : [fr_loads [$lo getNet] 0]}]
+    dict set lpos [$l getName] [list $l $lp]
   }
   # before (GPL positions, RTL assignment)
-  set hb 0
-  dict for {ln s} $lcur { set hb [expr {max($hb, [fr_md [fr_ctr [lindex [dict get $lpos $ln] 0]] [fr_ctr [lindex $s 0]]])}] }
+  set hb 0; set hlb 0
+  dict for {ln s} $lcur {
+    lassign [dict get $lpos $ln] l lp
+    set hb [expr {max($hb, [fr_md [fr_ctr $l] [fr_ctr [lindex $s 0]]])}]
+    foreach q $lp { set hlb [expr {max($hlb, [fr_md [fr_ctr $l] $q])}] }
+  }
   set psrc [fr_src [[fr_pin [lindex $preL 0] D] getNet]]
   set src_xy ""
   if {$psrc ne {} && [lindex $psrc 0] ne "PORT"} { set src_xy [fr_ctr [lindex $psrc 0]] }
@@ -358,47 +484,55 @@ dict for {pfx lst} $fr_f {
   set prev $src_xy
   foreach p $preL { if {$prev ne ""} { set hpb [expr {max($hpb, [fr_md $prev [fr_ctr $p]])}] }; set prev [fr_ctr $p] }
   foreach b $brL { set hpb [expr {max($hpb, [fr_md [fr_ctr [lindex $preL end]] [fr_ctr $b]])}] }
-  # groups -> branches (group g -> the branch flop nearest its centre, greedy by group size)
-  set grp [fr_split $pts [llength $brL] $fr_cap]
-  set gc {}
-  foreach g $grp { lappend gc [expr {[llength $g] ? [fr_bbc $g] : ""}] }
-  # hub = weighted L1 minimax point: a branch whose leaves span r may sit up to (plan - r) from its group centre, so
-  # the hub must lie within 2*plan - r of that centre (rotated-box intersection; its centre when empty)
-  set hub_pts {}
-  set gi 0
-  foreach g $grp {
-    set c [lindex $gc $gi]; incr gi
-    if {$c eq ""} continue
-    set r 0; foreach p $g { set r [expr {max($r, [fr_md $c [lrange $p 1 2]])}] }
-    lappend hub_pts [list [lindex $c 0] [lindex $c 1] [expr {max(0.0, 2.0 * $fr_plan - $r)}]]
-  }
-  set hub [fr_minimax $hub_pts]
-  # pull a branch toward the hub when the hub is beyond one hop (keeps its leaves within reach if they allow it)
-  set bxy {}
-  set gi 0
-  foreach g $grp {
-    set c [lindex $gc $gi]; incr gi
-    if {$c eq ""} { lappend bxy $hub; continue }
-    set r 0; foreach p $g { set r [expr {max($r, [fr_md $c [lrange $p 1 2]])}] }
-    set d [fr_md $c $hub]
-    if {$d > $fr_plan} {
-      set t [expr {min($d - $fr_plan, max(0.0, $fr_plan - $r))}]
-      set f [expr {$t / double($d)}]
-      set c [list [expr {int([lindex $c 0] + ([lindex $hub 0] - [lindex $c 0]) * $f)}] [expr {int([lindex $c 1] + ([lindex $hub 1] - [lindex $c 1]) * $f)}]]
+  # leaves -> the L1 minimax centre of their loads (free point with the smallest max hop to them); their first-level
+  # output cells (the kept copy's QN inverter) go with them
+  set pts {}; set lspread 0
+  dict for {ln e} $lpos {
+    lassign $e l lp
+    if {[llength $lp]} {
+      set mm {}; foreach q $lp { lappend mm [list {*}$q 0] }
+      set c [fr_minimax $mm]
+      foreach q $lp { set lspread [expr {max($lspread, [fr_md $c $q])}] }
+      fr_put $l {*}[fr_freeptN {*}$c $lp]
+      set lo [fr_out $l]
+      foreach it [[$lo getNet] getITerms] {
+        set ci [$it getInst]
+        if {[[$it getMTerm] getIoType] eq "INPUT" && ([fr_is_buf $ci] || [fr_is_inv $ci])} { fr_put $ci {*}[fr_ctr $l] }
+      }
     }
-    lappend bxy $c
+    lappend pts [list $ln {*}[fr_ctr $l]]
+  }
+  # hub = L1 minimax centre of the leaves; groups = the lower max cost of angular sectors / x-y bisection
+  set mm {}; set lxy {}
+  foreach p $pts { lappend mm [list {*}[lrange $p 1 2] 0]; lappend lxy [lrange $p 1 2] }
+  set hub [fr_freeptN {*}[fr_minimax $mm] $lxy]
+  set B [llength $brL]
+  set grp [fr_split $pts $B $fr_cap]
+  set gsrc bisection
+  set sec [fr_sectors $pts $B $fr_cap $hub]
+  if {[llength $sec] && [fr_gmax $sec $hub] < [fr_gmax $grp $hub]} { set grp $sec; set gsrc sectors }
+  while {[llength $grp] < $B} { lappend grp {} }
+  set gcost [fr_gmax $grp $hub]
+  # branch b at the L1 minimax point of its group's leaves and the hub
+  set bxy {}
+  foreach g $grp {
+    if {![llength $g]} { lappend bxy $hub; continue }
+    set mm [list [list {*}$hub 0]]; set nb [list $hub]
+    foreach p $g { lappend mm [list {*}[lrange $p 1 2] 0]; lappend nb [lrange $p 1 2] }
+    lappend bxy [fr_freeptN {*}[fr_minimax $mm] $nb]
   }
   # netlist: leaf -> branch of its group (same parity net)
   set nmv 0
   set gi 0
   foreach g $grp {
     set b [lindex $brL $gi]
-    lassign [fr_put $b {*}[lindex $bxy $gi]] bx by
+    fr_put $b {*}[lindex $bxy $gi]
+    lassign [fr_ctr $b] bx by
     foreach p $g {
       set ln [lindex $p 0]
       lassign [dict get $lcur $ln] ob par
       set l [lindex [dict get $lpos $ln] 0]
-      lassign [fr_put $l [lindex $p 1] [lindex $p 2]] lx ly
+      lassign [fr_ctr $l] lx ly
       if {$ob ne $b} {
         if {![dict exists $rep "[$b getName],$par"]} {
           # parity 1 below branch b does not exist yet: one new inverter at the branch
@@ -452,16 +586,21 @@ dict for {pfx lst} $fr_f {
     fr_tree $b bc
     foreach c $bc { fr_put $c {*}[fr_ctr $b] }
   }
-  # prefix chain: last = hub, the rest evenly on the line from prefix[0]'s source
+  # prefix chain: last = hub, the rest evenly on the line from prefix[0]'s source (free points keep both hops short)
   set P [llength $preL]
   if {$src_xy eq ""} { set src_xy $hub }
-  set j 0
+  set j 0; set prev $src_xy
   foreach p $preL {
     incr j
-    fr_put $p [expr {int([lindex $src_xy 0] + ([lindex $hub 0] - [lindex $src_xy 0]) * $j / double($P))}] [expr {int([lindex $src_xy 1] + ([lindex $hub 1] - [lindex $src_xy 1]) * $j / double($P))}]
+    if {$j == $P} { fr_put $p {*}$hub; break }
+    set px [expr {int([lindex $src_xy 0] + ([lindex $hub 0] - [lindex $src_xy 0]) * $j / double($P))}]
+    set py [expr {int([lindex $src_xy 1] + ([lindex $hub 1] - [lindex $src_xy 1]) * $j / double($P))}]
+    set nx [list [expr {int([lindex $src_xy 0] + ([lindex $hub 0] - [lindex $src_xy 0]) * ($j + 1) / double($P))}] [expr {int([lindex $src_xy 1] + ([lindex $hub 1] - [lindex $src_xy 1]) * ($j + 1) / double($P))}]]
+    fr_put $p {*}[fr_freept2 $px $py $prev $nx]
+    set prev [fr_ctr $p]
   }
   # after: planned hops (pre-DPL positions)
-  set ha 0; set hpa 0
+  set ha 0; set hpa 0; set hla 0
   set prev $src_xy
   foreach p $preL { set hpa [expr {max($hpa, [fr_md $prev [fr_ctr $p]])}]; set prev [fr_ctr $p] }
   foreach b $brL { set hpa [expr {max($hpa, [fr_md [fr_ctr [lindex $preL end]] [fr_ctr $b]])}] }
@@ -473,12 +612,15 @@ dict for {pfx lst} $fr_f {
       }
     }
   }
+  dict for {ln e} $lpos { lassign $e l lp; foreach q $lp { set hla [expr {max($hla, [fr_md [fr_ctr $l] $q])}] } }
   set u [expr {double($fr_dbu)}]
-  set w [expr {max($ha, $hpa) > $fr_hop ? " WARN > [expr {$fr_hop / $u}] um" : ""}]
+  set w [expr {max($ha, $hpa, $hla) > $fr_hop ? " WARN > [expr {$fr_hop / $u}] um" : ""}]
+  if {$w ne "" && $gcost > 2 * $fr_plan} { append w " (groups: the best $B-way split of the leaves around the hub needs [format %.0f [expr {$gcost / 2.0 / $u}]] um hops: a branch fan stage or more branches)" }
+  if {$w ne "" && $lspread > $fr_plan} { append w " (a leaf's loads spread [format %.0f [expr {$lspread / $u}]] um from their centre: split the leaf)" }
   if {$w ne ""} { incr fr_warn }
-  puts "OT_FOREST_RECLUSTER $pfx: $P prefix / [llength $brL] branch / [llength $pts] leaf flops, $nmv leaves re-pointed; branch->leaf max [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um, prefix/hub->branch max [format %.0f [expr {$hpb / $u}]] -> [format %.0f [expr {$hpa / $u}]] um$w"
-  puts $fr_log "# $pfx branch->leaf [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um prefix/hub->branch [format %.0f [expr {$hpb / $u}]] -> [format %.0f [expr {$hpa / $u}]] um"
-  set fr_wmax_b [expr {max($fr_wmax_b, $hb)}]; set fr_wmax_a [expr {max($fr_wmax_a, $ha, $hpa)}]
+  puts "OT_FOREST_RECLUSTER $pfx: $P prefix / $B branch / [llength $pts] leaf flops, $nmv leaves re-pointed ($gsrc groups, cost/2 [format %.0f [expr {$gcost / 2.0 / $u}]] um); branch->leaf max [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um, prefix/hub->branch max [format %.0f [expr {$hpb / $u}]] -> [format %.0f [expr {$hpa / $u}]] um, leaf->load max [format %.0f [expr {$hlb / $u}]] -> [format %.0f [expr {$hla / $u}]] um$w"
+  puts $fr_log "# $pfx branch->leaf [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um prefix/hub->branch [format %.0f [expr {$hpb / $u}]] -> [format %.0f [expr {$hpa / $u}]] um leaf->load [format %.0f [expr {$hlb / $u}]] -> [format %.0f [expr {$hla / $u}]] um"
+  set fr_wmax_b [expr {max($fr_wmax_b, $hb, $hpb, $hlb)}]; set fr_wmax_a [expr {max($fr_wmax_a, $ha, $hpa, $hla)}]
   incr fr_tot_mv $nmv; incr fr_tot_leaf [llength $pts]; incr fr_done
 }
 close $fr_log
