@@ -108,6 +108,7 @@
   "view_port_bits": 7688
  },
  "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6": {
+  "macro_place_halo_um": 2.16,
   "top": "ot_hbm_svc_sm_xcal_rel_t",
   "files": [
    "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
@@ -130,7 +131,41 @@
   "source_commit": "d34578d6f",
   "view_cell": "ot_hbm_svc_sm_xcal_rel_t",
   "view_kind": "SYNTH",
-  "view_port_bits": 507
+  "view_port_bits": 507,
+  "macro_placement": [
+   {
+    "inst": "u_xcal.g_t2.u_tab_hi",
+    "xy_um": [
+     107.784,
+     8.64
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_xcal.g_t2.u_tab_lo",
+    "xy_um": [
+     8.64,
+     8.64
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_hi",
+    "xy_um": [
+     17.28,
+     54.024
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_lo",
+    "xy_um": [
+     17.28,
+     128.832
+    ],
+    "orient": "R0"
+   }
+  ]
  },
  "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88": {
   "top": "ot_hbm_svc_vm_kshare_splitstrap",

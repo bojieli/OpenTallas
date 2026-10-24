@@ -490,9 +490,18 @@ def main():
            *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
-                "export MACRO_PLACE_HALO = 4.32 4.32",
+                f"export MACRO_PLACE_HALO = {rec.get('macro_place_halo_um', 4.32):g} {rec.get('macro_place_halo_um', 4.32):g}",
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)}"]
+    if rec.get("macro_placement"):
+        lines = []
+        for placement in rec["macro_placement"]:
+            x, y = placement["xy_um"]
+            inst = placement["inst"]
+            orient = placement.get("orient", "R0")
+            lines.append(f"place_macro -macro_name {{{inst}}} -location {{{x:g} {y:g}}} -orientation {orient} -exact")
+        (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
+        cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
