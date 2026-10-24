@@ -11,6 +11,9 @@
    in the slice); launch 47 instead of 48 -> every check moves; both differ from the profile output.
 4. --codex-retiming: the tool's retiming of DS L0 rec2 equals the hand-built, slice-validated corrected_rec2 change set.
 5. A launch lane trailing the calendar launch by more than the 96-edge grant margin is refused (format_open).
+6. TOKj-HBM 10-23 kq landing write lanes (kq_write_edges per bank): only the check-edge-T events (VM sectors + fault
+   guards) move, by (max over landed sectors of publish + kq[bank]) - (max publish); ring outputs / drives unchanged;
+   write reservations move per bank; kq all 0 == no kq.  r18h5 land-direct: T 366 -> 402 PASS 287/287, 389 FAIL.
 """
 from __future__ import annotations
 
@@ -32,6 +35,7 @@ FIX = TOOLS.parent / "results/rtl/hbm_ds_layer_tput_1018/fixtures/L00"
 R18H5 = dict(schema="opentallas.hbm_coll_transport.v1", launch_edges=48, calendar_launch_edges=24,
              ingress_edges={"hb_coll_NW__pr_cw_o": 6, "hb_coll_SE__pr_ccw_o": 18, "hcollb_NW__cw_o": 4,
                             "hcollb_SE__ccw_o": 20})
+R18H5_KQ = {"0": 31, "1": 30, "2": 39, "3": 38, "4": 28, "5": 28, "6": 28, "7": 30}   # coll_transport kq_write_edges (r18h5 die.v)
 
 
 def rec(i_rec, fix):
@@ -74,6 +78,7 @@ def main():
     ap.add_argument("--tb", type=Path)
     a = ap.parse_args()
     T = json.loads(a.transport.read_text()) if a.transport else R18H5
+    KQ = {int(b): int(v) for b, v in (T.pop("kq_write_edges", None) or R18H5_KQ).items()}
     O = rec(a.record, a.fixtures)
     base = CI.gather_record(O, a.record, vm_rt=a.vm_rt)
     assert base["status"] == "emitted"
@@ -124,6 +129,19 @@ def main():
     T3 = copy.deepcopy(T)
     T3["calendar_launch_edges"] = Ls - 97
     assert CI.gather_record(O, a.record, vm_rt=a.vm_rt, transport=T3)["status"] == "format_open"
+    # 6
+    Tk = dict(copy.deepcopy(T), kq_write_edges={str(b): v for b, v in KQ.items()})
+    gk = CI.gather_record(O, a.record, vm_rt=a.vm_rt, transport=Tk)
+    dk = deltas(evs(g), evs(gk))
+    pub = [(CI.issue_rel(i // 2) + g["fire"] + CI.PUBLISH_WRITE + a.vm_rt + 2 * h) for i in range(g["F"]) for h in (1, 2, 3)]
+    shift = gk["check_cyc"] - g["check_cyc"]
+    assert shift == gk["last_write"] - g["last_write"] and shift >= min(KQ.values()), (shift, KQ)
+    assert all(dl == shift and (p == "vm" or "fault" in p) for ((k, p), dl) in dk), dk
+    assert sum(dk.values()) == len(g["chk_vm"]) + sum(1 for e in g["chk_misc"] if e["cyc"] == g["check_cyc"])
+    assert gk["collq_reservations"]["last"] - g["collq_reservations"]["last"] == shift
+    T0 = dict(copy.deepcopy(T), kq_write_edges={str(b): 0 for b in range(8)})
+    assert evs(CI.gather_record(O, a.record, vm_rt=a.vm_rt, transport=T0)) == evs(g)
+    print(f"kq write lanes OK: {dict(sorted(KQ.items()))} -> T +{shift} ({sum(dk.values())} checks), kq 0 == none")
     print("TEST_COLL_TRANSPORT PASS")
 
 
