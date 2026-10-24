@@ -1,0 +1,8 @@
+{
+  "element": "KV hub_Ei reach405/grid200",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T09:31:53.382793-07:00",
+  "picture": "/srv/opentallas-scratch/claude/codex-kv-hub/hub_reach405_review.png",
+  "reasons": "Viewed macro-free1278.72x1676.16um dataflow. All76 FT slots carry actual-bit-sized chains; sampled worst hop393.856um<405um; R3 ledger adds139stages and79lane latencies(+1..4cycles).63 regular grid200um taps keep clock sources near stations; local reset hook now handles bound hierarchy. Pin windows unchanged,G0cut0.2592. No macro walls/slivers; PG grid unchanged/continuous. Full hub lockstep152383checks PASS with per-output cycle shifts and bypassmutantCAUGHT. Full-die rebinding to revised latency remains pending; this is a G3 vehicle."
+}

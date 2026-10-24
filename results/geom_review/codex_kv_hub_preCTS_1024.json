@@ -1,0 +1,8 @@
+{
+  "element": "KV hub_Ei reach405/grid200 preCTS-budget prototype",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T10:02:59.045380-07:00",
+  "picture": "/srv/opentallas-scratch/claude/codex-kv-hub/hub_reach405_review.png",
+  "reasons": "Same reviewed macro-free393.856um sampled FT hops,63grid taps,all76FTchainsand152383checkmiter/mutant. Prototype pre-floorplan ideal networkbudget250ps is removedbeforeCTS; realOpenSTA pre/postserializedSDC confirms removal,virtualIOsource250 remains. NativeMM tc/bc libraries make setupTT/holdFF repair explicit. Golden833ps/60-25SDC and propagated-clock finalsignoff determine closure. Current preCTSrepair saw invariant-232.9ps on7295input endpoints from omitted networkbudget; this prototype corrects that estimator."
+}
