@@ -300,6 +300,136 @@ NONFRAME_HC = {
                              ("u_lf.u_vs", (924.48, 587.52)), ("u_lf.u_vsw", (1175.04, 561.6)),
                              ("u_lf.u_ve", (812.16, 803.52)), ("u_lf.u_rxsf", (941.76, 432.0)),
                              ("u_lf.u_rxsb", (941.76, 276.48))]),
+                 # S81-CORES 10-24: per-type escape variants (tried in order only where the base adds ft-slot stations:
+                 # diagonal slots of 6 leaf types cross vn / ve / the lane block; found by an exact search over
+                 # ft_stations_macro + the core-face / bundle-length rules, ~/scratch opt3; noted per first type)
+                 alt_place=[
+                     {  # t14
+                      "u_lf.u_vp.u_b1": (302.4, 535.68),
+                      "u_lf.u_vn": (302.4, 639.36),
+                     },
+                     {  # t21
+                      "u_lf.u_vp.g_ln[0].u_l": (34.56, 34.56),
+                      "u_lf.u_vp.g_ln[1].u_l": (34.56, 164.16),
+                      "u_lf.u_vp.g_ln[2].u_l": (34.56, 293.76),
+                      "u_lf.u_vp.g_ln[3].u_l": (34.56, 423.36),
+                      "u_lf.u_vp.g_ln[4].u_l": (34.56, 760.32),
+                      "u_lf.u_vp.g_ln[5].u_l": (34.56, 889.92),
+                      "u_lf.u_vp.g_ln[6].u_l": (34.56, 1019.52),
+                      "u_lf.u_vp.g_ln[7].u_l": (172.8, 34.56),
+                      "u_lf.u_vp.g_ln[8].u_l": (172.8, 164.16),
+                      "u_lf.u_vp.g_ln[9].u_l": (172.8, 293.76),
+                      "u_lf.u_vp.g_ln[10].u_l": (172.8, 423.36),
+                      "u_lf.u_vp.g_ln[11].u_l": (172.8, 760.32),
+                      "u_lf.u_vp.g_ln[12].u_l": (172.8, 889.92),
+                      "u_lf.u_vp.g_ln[13].u_l": (172.8, 1019.52),
+                      "u_lf.u_vp.g_ln[14].u_l": (345.6, 164.16),
+                      "u_lf.u_vp.g_ln[15].u_l": (345.6, 293.76),
+                     },
+                     {  # t33
+                      "u_lf.u_ve": (812.16, 838.08),
+                     },
+                     {  # t39
+                      "u_lf.u_vn": (432.0, 820.8),
+                     },
+                     {  # t52
+                      "u_lf.u_vq": (561.6, 345.6),
+                      "u_lf.u_vs": (803.52, 492.48),
+                      "u_lf.u_vsw": (1088.64, 483.84),
+                      "u_lf.u_ve": (725.76, 682.56),
+                      "u_lf.u_rxsf": (803.52, 328.32),
+                      "u_lf.u_rxsb": (820.8, 103.68),
+                     },
+                     {  # t28 (its ft4 / ft5 +1 is the sampled-hop model's own, with or without cores)
+                      "u_lf.u_vp.u_b0": (302.4, 734.4),
+                      "u_lf.u_vp.u_b1": (527.04, 648.0),
+                      "u_lf.u_vn": (302.4, 803.52),
+                      "u_lf.u_ve": (803.52, 838.08),
+                      "u_lf.u_vs": (915.84, 587.52),
+                      "u_lf.u_vq": (725.76, 613.44),
+                     },
+                     {  # R3 bus-reach family bin3 (leafdn window x 600..800) (opt4)
+                      "u_lf.u_vp.g_ln[0].u_l": (86.4, 466.56),
+                      "u_lf.u_vp.g_ln[1].u_l": (267.84, 362.88),
+                      "u_lf.u_vp.g_ln[2].u_l": (224.64, 492.48),
+                      "u_lf.u_vp.g_ln[3].u_l": (501.12, 336.96),
+                      "u_lf.u_vp.g_ln[4].u_l": (241.92, 207.36),
+                      "u_lf.u_vp.g_ln[5].u_l": (43.2, 665.28),
+                      "u_lf.u_vp.g_ln[6].u_l": (354.24, 527.04),
+                      "u_lf.u_vp.g_ln[7].u_l": (838.08, 86.4),
+                      "u_lf.u_vp.g_ln[8].u_l": (51.84, 1071.36),
+                      "u_lf.u_vp.g_ln[9].u_l": (406.08, 181.44),
+                      "u_lf.u_vp.g_ln[10].u_l": (129.6, 43.2),
+                      "u_lf.u_vp.g_ln[11].u_l": (915.84, 414.72),
+                      "u_lf.u_vp.g_ln[12].u_l": (552.96, 198.72),
+                      "u_lf.u_vp.g_ln[13].u_l": (362.88, 43.2),
+                      "u_lf.u_vp.g_ln[14].u_l": (77.76, 803.52),
+                      "u_lf.u_vp.g_ln[15].u_l": (95.04, 941.76),
+                      "u_lf.u_vp.u_b0": (250.56, 708.48),
+                      "u_lf.u_vp.u_b1": (207.36, 656.64),
+                      "u_lf.u_vn": (241.92, 760.32),
+                      "u_lf.u_vq": (501.12, 604.8),
+                      "u_lf.u_vs": (691.2, 630.72),
+                      "u_lf.u_vsw": (1019.52, 587.52),
+                      "u_lf.u_ve": (622.08, 820.8),
+                      "u_lf.u_rxsf": (725.76, 414.72),
+                      "u_lf.u_rxsb": (734.4, 224.64),
+                     },
+                     {  # R3 bus-reach family bin4 (x 800..1000) (opt4)
+                      "u_lf.u_vp.g_ln[0].u_l": (103.68, 1028.16),
+                      "u_lf.u_vp.g_ln[1].u_l": (34.56, 250.56),
+                      "u_lf.u_vp.g_ln[2].u_l": (457.92, 1054.08),
+                      "u_lf.u_vp.g_ln[3].u_l": (596.16, 1071.36),
+                      "u_lf.u_vp.g_ln[4].u_l": (216.0, 95.04),
+                      "u_lf.u_vp.g_ln[5].u_l": (1131.84, 250.56),
+                      "u_lf.u_vp.g_ln[6].u_l": (1002.24, 380.16),
+                      "u_lf.u_vp.g_ln[7].u_l": (604.8, 198.72),
+                      "u_lf.u_vp.g_ln[8].u_l": (311.04, 1054.08),
+                      "u_lf.u_vp.g_ln[9].u_l": (190.08, 414.72),
+                      "u_lf.u_vp.g_ln[10].u_l": (164.16, 276.48),
+                      "u_lf.u_vp.g_ln[11].u_l": (60.48, 898.56),
+                      "u_lf.u_vp.g_ln[12].u_l": (138.24, 760.32),
+                      "u_lf.u_vp.g_ln[13].u_l": (406.08, 120.96),
+                      "u_lf.u_vp.g_ln[14].u_l": (86.4, 578.88),
+                      "u_lf.u_vp.g_ln[15].u_l": (388.8, 293.76),
+                      "u_lf.u_vp.u_b0": (380.16, 630.72),
+                      "u_lf.u_vp.u_b1": (345.6, 578.88),
+                      "u_lf.u_vn": (285.12, 682.56),
+                      "u_lf.u_vq": (665.28, 604.8),
+                      "u_lf.u_vs": (855.36, 604.8),
+                      "u_lf.u_vsw": (1131.84, 552.96),
+                      "u_lf.u_ve": (777.6, 794.88),
+                      "u_lf.u_rxsf": (838.08, 354.24),
+                      "u_lf.u_rxsb": (846.72, 164.16),
+                     },
+                     {  # R3 bus-reach family bin5 (x 1000..1200) (opt4)
+                      "u_lf.u_vp.g_ln[0].u_l": (302.4, 432.0),
+                      "u_lf.u_vp.g_ln[1].u_l": (648.0, 596.16),
+                      "u_lf.u_vp.g_ln[2].u_l": (466.56, 267.84),
+                      "u_lf.u_vp.g_ln[3].u_l": (259.2, 285.12),
+                      "u_lf.u_vp.g_ln[4].u_l": (267.84, 138.24),
+                      "u_lf.u_vp.g_ln[5].u_l": (648.0, 172.8),
+                      "u_lf.u_vp.g_ln[6].u_l": (60.48, 544.32),
+                      "u_lf.u_vp.g_ln[7].u_l": (1131.84, 328.32),
+                      "u_lf.u_vp.g_ln[8].u_l": (51.84, 881.28),
+                      "u_lf.u_vp.g_ln[9].u_l": (864.0, 86.4),
+                      "u_lf.u_vp.g_ln[10].u_l": (483.84, 449.28),
+                      "u_lf.u_vp.g_ln[11].u_l": (216.0, 812.16),
+                      "u_lf.u_vp.g_ln[12].u_l": (216.0, 1028.16),
+                      "u_lf.u_vp.g_ln[13].u_l": (743.04, 397.44),
+                      "u_lf.u_vp.g_ln[14].u_l": (172.8, 682.56),
+                      "u_lf.u_vp.g_ln[15].u_l": (449.28, 60.48),
+                      "u_lf.u_vp.u_b0": (449.28, 682.56),
+                      "u_lf.u_vp.u_b1": (501.12, 734.4),
+                      "u_lf.u_vn": (362.88, 786.24),
+                      "u_lf.u_vq": (794.88, 691.2),
+                      "u_lf.u_vs": (984.96, 639.36),
+                      "u_lf.u_vsw": (1175.04, 596.16),
+                      "u_lf.u_ve": (907.2, 838.08),
+                      "u_lf.u_rxsf": (959.04, 440.64),
+                      "u_lf.u_rxsb": (967.68, 267.84),
+                     },
+                 ],
                  # the leaf bus face picks the variant: N bus = as placed, S bus = y mirror (every core MX'd with it)
                  mirrors=((False, False), (False, True)), mirror_by_bus=True),
     # S81-CORES 10-24: the attention engine as 64 ot_s81c_attn_hcore (CORE-S81-SVC: one head + its own hgrp_s HG1 PCOLP1
@@ -318,8 +448,9 @@ NONFRAME_HC = {
                        for r in range(4) for b in range(2)],
                 gaps=[],
                 replaces=64 * 183981 + 16 * 30272 + 8 * 51397,
+                # half rows at 43.2 + 172.8 k in the centre band; r0b0 at the 34.56 edge (svc_hi_rs t1 ft1 N->W escape <= 61 um)
                 place=dict([(c_["inst"], tuple(c_["origin_um"])) for c_ in _SVC_HC] +
-                           [("u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), (round(51.84 + 172.8 * (2 * r + b), 4), 1140.48))
+                           [("u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), (round(43.2 + 172.8 * (2 * r + b), 4) if r or b else 34.56, 1140.48))
                             for r in range(4) for b in range(2)]),
                 mirrors=((False, False),)),
     # S81-CORES 10-24: dsdv_eng_rr -> 3 hard cores E/H0/H1 (CORE-S81-ENG dsdv_eng_rr_split.sv, lockstep vs the monolith
@@ -534,18 +665,42 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         bf = {b.get("face") for b in buses if b.get("face") in ("N", "S")}
         if len(bf) == 1:
             variants = [v for v in variants if v[1] == (bf == {"S"})]
+    # S81-CORES 10-24 (GEOM review): a core port wired to a type bus must sit within the R3 reach of its face window
+    # (window centre -> core box <= FT_STATION_MAX; check.py's R3-INTERNAL measures only window -> leaf box).  Candidates
+    # (base + alt_place, each with its mirror variants) rank by (reach excess um, added ft stations, order)
+    bw_ = {}
+    for b_ in buses:
+        m_ = sum(b_["window_um"]) / 2
+        bw_[b_["name"]] = dict(N=(m_, h), S=(m_, 0), E=(w, m_), W=(0, m_)).get(b_.get("face"))
+    cbus = {ci: {t_[4:] for tg_ in pp.values() for t_ in tg_ if t_.startswith("bus:")}
+            for ci, pp in CORE_CONNS.get(k, {}).items()}
+
+    def reach_excess(o):
+        ex = 0.0
+        for c in o:
+            x0_, y0_ = c["origin_um"][0] + c["track_offset_um"][0], c["origin_um"][1] + c["track_offset_um"][1]
+            x1_, y1_ = x0_ + c["outline_um"][0], y0_ + c["outline_um"][1]
+            for bn in cbus.get(c["inst"], ()):
+                a_ = bw_.get(bn)
+                if a_:
+                    d_ = max(x0_ - a_[0], 0, a_[0] - x1_) + max(y0_ - a_[1], 0, a_[1] - y1_)
+                    ex += max(0.0, d_ - FT_STATION_MAX)
+        return round(ex, 1)
     for ai, base_ in enumerate([out] + alts):
         for mx, my in variants:
             o = mirrored(mx, my, base_)
             if not legal(o):
                 continue
-            add = sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl)
-            if best is None or add < best[0]:
-                best = (add, o, (mx, my), ai)
-            if add == 0:
+            key = (reach_excess(o), sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl))
+            if best is None or key < best[0]:
+                best = (key, o, (mx, my), ai)
+            if key == (0, 0):
                 break
-        if best is not None and best[0] == 0:
+        if best is not None and best[0] == (0, 0):
             break
+    if best is not None:
+        rep["bus_reach_excess_um"] = best[0][0]
+        best = (best[0][1],) + best[1:]
     if best is None:
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
     rep["emitted"] = True
