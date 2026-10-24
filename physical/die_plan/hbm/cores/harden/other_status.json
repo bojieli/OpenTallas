@@ -1578,7 +1578,8 @@
    ],
    "plan_pins": 4783,
    "plan_note": "as-built pins of ot_hbm_idx_selector_static_sel (r18h5 view LEF), platform tracks + offset; cells 205021 (SYNAREA)",
-   "synth": "NO RESULT"
+   "synth": "NOT COMPLETED",
+   "synth_note": "ORFS flat yosys (SYNTH_HIERARCHICAL 0) sat in EXTRACT_FA > 2 h at 18.6 GB with no progress; stopped 10-23 20:51 on COORD order (d4g now fallback). The r18h5 view was synthesized by synth_master.sh HIER=1 (plan note 205,021 cells); a re-run needs hierarchical synth or no extract_fa."
   },
   "ot_hbm_idx_topk_link_static__650.16x500.04": {
    "type_id": "ot_hbm_idx_topk_link_static__650.16x500.04",
@@ -1599,7 +1600,8 @@
    ],
    "plan_pins": 4597,
    "plan_note": "as-built pins of ot_hbm_idx_topk_link_static (r18h5 view LEF), platform tracks + offset; cells 189951 (SYNAREA)",
-   "synth": "NO RESULT"
+   "synth": "NOT COMPLETED",
+   "synth_note": "ORFS flat yosys OOM at 32 GB and 64 GB (peak 66.9 GB in techmap/opt: the dynamic-index record packer of ot_hbm_idx_topk_link_static_core); at 160 GB it reached EXTRACT_FA and sat there 40+ min; stopped 10-23 20:51 on COORD order. View synth (synth_master.sh HIER=1) gave std 20,895 um2 (plan note 189,951 cells)."
   }
  }
 }
