@@ -22,6 +22,8 @@ if [ "${HIER:-1}" = 1 ]; then
 fi
 { echo '`verilator_config'; for m in $(grep -ho '^module kv3_[A-Za-z0-9_]*' $RD/kv3_*.sv | awk '{print $2}' | sort -u); do
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
+R=$(cd $H/../../.. && pwd)
+IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
 cat > $O/vl.f <<EOF
 -Wno-fatal
 -Wno-lint
@@ -35,6 +37,11 @@ cat > $O/vl.f <<EOF
 $H/kvs_link_phy_models.sv
 $H/qkd_pll_analog_model_bench.sv
 $H/qkd_hbm3e_phy_pc4_bench.sv
+$H/kvs_compute_end.sv
+$R/rtl/qwen_split/qfd_kvn_static_transport.sv
+$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+$R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
++incdir+$IMGD
 $H/tb_kvslice.sv
 EOF
 cat $O/hostside.f $O/files.f $O/incdirs.f >> $O/vl.f

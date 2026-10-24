@@ -27,12 +27,20 @@ module tb_kvslice;
     // ------------------------------------------------------------------ link far ends (read by the PHY models)
     wire         h2d_v;
     wire [1042:0] h2d_flit;
-    reg          c2k_v = 0;
-    reg  [582:0] c2k_flit = '0;
+    wire         c2k_v;
+    wire [582:0] c2k_flit;
     qwen_kvsys_bound_top dut (
         .rst_n(rst_n), .clk_clk_fwd(ck_core), .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm),
         .clk_clk_hbm_WS(ck_hbm), .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
         .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
+    // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
+    // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
+    // + KVN transport on the pair image of the KV boot image; see that file).  +FAR=0 (default): the link is silent.
+    reg far_en = 0, far_m1 = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
+    kvs_compute_end u_far (.ck(ck_core), .rst_n(rst_n), .en(far_en), .epb(far_epb), .epoch(dut.sys_c.i_host_token_epoch_q),
+        .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
+        .kv_fwd_ep_pad(dut.sys_c.d5_d2d_kv_fwd_epoch[0]), .kv_fwd_lrst_pad(dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
+        .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
     // die host TX (two halves) -> host board port RX
     wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
     wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
@@ -99,6 +107,26 @@ module tb_kvslice;
         if (b_fault && t_bfault < 0) begin t_bfault = cyc_core; $display("BOOT_FAULT cyc %0d target %0d", cyc_core, b_target); end
         if (setup && t_setup < 0) begin t_setup = cyc_core; $display("SETUP_READY cyc %0d", cyc_core); end
     end
+    // ------------------------------------------------------------------ post-boot observation (+POST=<core cycles>)
+    // KV-TOK 10-24: after the boot verdict, keep running and print every change of the die's own token-start chain in
+    // sys_c (non-hier partition: host boot_go / link reset / program begin -> d2d_kv fwd epoch -> dcal admission ->
+    // AUTO token start; d2d abort / fault / transport fault).  Diagnostic only; no verdict.
+    wire [11:0] po_sig = {dut.sys_c.i_host_boot_go_q[0], dut.sys_c.i_host_link_rst_n_q[0], dut.sys_c.i_host_program_begin_v_q[0],
+                          dut.sys_c.w_d2d_kv_fwd_epoch[0], dut.sys_c.w_d2d_kv_fwd_link_rst_n[0], dut.sys_c.w_dcal_cal_ready[0],
+                          dut.sys_c.w_dcal_adm_done[0], dut.sys_c.w_dcal_tok_start[0], dut.sys_c.w_dcal_running[0],
+                          dut.sys_c.w_d2d_kv_epoch_abort[0], dut.sys_c.w_d2d_kv_fault[0], dut.sys_c.w_dcal_fault[0]};
+    reg [11:0] po_q = 0; integer po_n = 0, ftx_n = 0;
+    always @(posedge ck_core) begin
+        po_q <= po_sig; if (dut.sys_c.w_d2d_kv_fdi_tx_v[0]) ftx_n <= ftx_n + 1;
+        if (po_sig != po_q && po_n < 400) begin
+            po_n <= po_n + 1;
+            $display("POSTOBS cyc %0d boot_go %b link_rst_n %b prog_begin %b fwd_epoch %b fwd_lrst_n %b cal_ready %b adm_done %b tok_start %b running %b epoch_abort %b d2d_fault %b dcal_fault %b tf %h link_up %b token_epoch %h fdi_tx %0d",
+                cyc_core, po_sig[11], po_sig[10], po_sig[9], po_sig[8], po_sig[7], po_sig[6], po_sig[5], po_sig[4], po_sig[3],
+                po_sig[2], po_sig[1], po_sig[0], dut.sys_c.w_d2d_kv_transport_fault, dut.sys_c.w_d2d_kv_link_up,
+                dut.sys_c.i_host_token_epoch_q, ftx_n);
+        end
+    end
+    integer post = 0;
     initial begin
         integer fd, t; reg [63:0] d;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
@@ -107,6 +135,13 @@ module tb_kvslice;
         if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 200000;
         if (!$value$plusargs("SETUP_WAIT=%d", setup_wait)) setup_wait = 20000;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
+        if (!$value$plusargs("POST=%d", post)) post = 0;
+        begin : farcfg integer x;
+            if ($value$plusargs("FAR=%d", x)) far_en = (x != 0);
+            if ($value$plusargs("EPB=%d", x)) far_epb = 5'(x);
+            if ($value$plusargs("CTX=%d", x)) far_pos = 13'(x - 1);
+            if ($test$plusargs("MUT_CMD_LATE")) far_m1 = 1;
+        end
         fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
         while (!$feof(fd) && $fscanf(fd, "%h\n", frames[nfr]) == 1) nfr = nfr + 1;
         $fclose(fd);
@@ -126,6 +161,11 @@ module tb_kvslice;
             (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault) ? "PASS" : "FAIL",
             sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, rx_words,
             t_last, cyc_core);
+        if (post > 0) begin
+            repeat (post) @(posedge ck_core);
+            $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);
+            if (far_en) u_far.report();
+        end
         $finish;
     end
 endmodule
