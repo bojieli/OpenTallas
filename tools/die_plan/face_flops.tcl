@@ -133,8 +133,10 @@ foreach pass {INPUT OUTPUT} {
     }
     if {!$placed} { incr ff_miss; continue }
     set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
-    $f setLocation $cx $cy
+    # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
+    # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+    $f setLocation $cx $cy
     $f setPlacementStatus FIRM
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
@@ -175,8 +177,8 @@ proc ff_put_near {f x y} {
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
         dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
-        $f setLocation $cx $cy
         if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        $f setLocation $cx $cy
         $f setPlacementStatus FIRM
         return [list $cx $cy]
       }
@@ -220,6 +222,8 @@ foreach bt [$ff_blk getBTerms] {
 }
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+# per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
+if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
 # S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
