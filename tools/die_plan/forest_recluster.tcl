@@ -68,7 +68,7 @@ proc fr_in1 {i} {
 # source of a net through buffers / inverters: {inst parity} (inst = the driving non-buffer cell), {PORT name 0}, or {}
 proc fr_src {net} {
   set par 0
-  for {set d 0} {$d < 16} {incr d} {
+  for {set d 0} {$d < 512} {incr d} {   ;# timing-driven GPL repeater chains run > 16 deep (h10_r0_p1: 20+)
     if {$net eq "NULL" || $net eq ""} { return {} }
     foreach bt [$net getBTerms] { return [list PORT [$bt getName] $par] }
     set drv ""
@@ -222,7 +222,7 @@ proc fr_loads {net depth} {
   foreach it [$net getITerms] {
     if {[[$it getMTerm] getIoType] ne "INPUT"} continue
     set i [$it getInst]
-    if {$depth < 8 && ([fr_is_buf $i] || [fr_is_inv $i])} {
+    if {$depth < 64 && ([fr_is_buf $i] || [fr_is_inv $i])} {
       set o [fr_out $i]
       if {$o ne ""} { set r [concat $r [fr_loads [$o getNet] [expr {$depth + 1}]]] }
       continue
