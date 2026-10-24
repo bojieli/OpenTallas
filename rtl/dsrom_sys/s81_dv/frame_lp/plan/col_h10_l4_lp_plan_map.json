@@ -532,6 +532,10 @@
   "r1 (h) u_lpl_23_w: u_y_es_p4_0 (dsfd_rly_2_ES, sole load) folded into the writer station u_lpl_23_w.u_y_w",
   "r1 (h) u_lpl_2_w: u_y_rt_10a_4 (dsfd_rly_63_NS, sole load) folded into the writer station u_lpl_2_w.u_y_w",
   "r1 (h) u_lpl_3_w: u_y_rt_10b_1 (dsfd_rly_63_WS, sole load) folded into the writer station u_lpl_3_w.u_y_w",
+  "r1 (i) u_lpl_10_w: hard-core-fed writer -> registered writer, station u_lpl_10_w.u_y_w, +1 edge",
+  "r1 (i) u_lpl_5_w: hard-core-fed writer -> registered writer, station u_lpl_5_w.u_y_w, +1 edge",
+  "r1 (i) u_lpl_6_r: 2nd station u_y_lpl6_n23_0 (66 b) after u_lpl_6_r.u_y_q, +1 edge",
+  "r1 (i) u_n24.fo -> u_n23.fi: 1-b station u_y_flt_n24_n23_0, +1 edge (fault chain)",
   "r2 (g) u_y_xa_8_bs12_0 -> u_bs12.i_x0 (283 b)",
   "r2 (g) u_y_xb_8_bs12_0 -> u_bs12.i_x1 (266 b)",
   "r2 (h) 6 seam readers -> ot_pl_seam_r_plq (flop-last station u_y_q)",
@@ -546,6 +550,12 @@
   "x_i0_to_xo_o0": 2,
   "x_i0_to_xo_o0_was": 1,
   "seam_K_plus_1": 3,
-  "note": "seams (frame_int) unchanged; x arrival at chain position j (0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents"
+  "note": "seams (frame_int) unchanged; x arrival at chain position j (0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents",
+  "plus_one": [
+   "r1 (i) u_lpl_10_w: hard-core-fed writer -> registered writer, station u_lpl_10_w.u_y_w, +1 edge",
+   "r1 (i) u_lpl_5_w: hard-core-fed writer -> registered writer, station u_lpl_5_w.u_y_w, +1 edge",
+   "r1 (i) u_lpl_6_r: 2nd station u_y_lpl6_n23_0 (66 b) after u_lpl_6_r.u_y_q, +1 edge",
+   "r1 (i) u_n24.fo -> u_n23.fi: 1-b station u_y_flt_n24_n23_0, +1 edge (fault chain)"
+  ]
  }
 }

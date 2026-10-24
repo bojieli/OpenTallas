@@ -66,6 +66,14 @@ X = 2                                   # boundary flops per plan crossing (gen_
 # (g) far-qbank twins (S81-P8 r3_internal_v45: u_y_x{a,b}_<s>_0 -> u_bs<q> 765-873 um); {master: {band: {relay lane: qbank}}}
 XQ_SPLIT = {'col_h9': {0: {'2': 'u_bs3'}},
             'col_h10': {0: {'3': 'u_bs4'}, 1: {'5': 'u_bs7', '6': 'u_bs9'}, 2: {'8': 'u_bs12'}}}
+# (i) +1 FIRM stations (S81-P9 10-23, closure-first; no re-site fixes them): hard-core-fed frame_int writers become
+# registered writers (ot_pl_seam_w_plr: station <w>.u_y_w, +1 edge), a reader whose flop-last -> hard sink spans > 2 x 750
+# um gets a 2nd station u_y_<..>, and a node fault chain fo -> fi hop gets a 1-b station.  Spans: kits47 placed probe
+# (ep9 s81-p9-g3/probe/out/col_h10_r1__t1.pairs.tsv): n24.o -> frame_int_o0 1154, n12.fo -> frame_int_o1 857,
+# n24.fo -> n23.fi 837, frame_int_i0 -> lpl_6 u_y_q -> n23.b 1547 um.  Return-tree link deltas (schedule topology):
+# n25.link_a (n24, via lpl_10) +1, n23.link_b (n27, via lpl_6) +1; fault bits (lpl_5, n24 -> n23 fi) +1 (sticky OR chain).
+R3_PLUS = {'col_h10': {1: dict(writers=['u_lpl_10_w', 'u_lpl_5_w'], readers={'u_lpl_6_r': 'u_y_lpl6_n23_0'},
+                               fault=[('u_n24', 'u_n23', 'u_y_flt_n24_n23_0')])}}
 RLY_MASTERS = ['rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv'] + \
     ['rtl/dsrom_sys/s81_glue/dsfd_rly_masters%s.sv' % x for x in ('', '_266ew', '_536', '_c26l', '_gen18', '_v16')]
 NET = r'\b[A-Za-z_]\w*(?:\[\d+\])?'
@@ -171,6 +179,60 @@ def r3_band(text, master, k, hard, rsreg, log):
             log.append(f'r{k} (h) {wi}: {rn} ({rmod}, sole load) folded into the writer station {wi}.u_y_w')
         else:
             log.append(f'r{k} (h) {wi}: twin of {rn} ({rmod}, hard source; relay kept for its other loads) = {wi}.u_y_w')
+    L = [ln for m, ln in enumerate(L) if m not in drop]
+    return r3_plus('\n'.join(L), master, k, log)
+
+
+def leaf0(rsi):
+    """first leaf of a seam's rsi slice 'v[(a) +: n]' -> 'v[a]'"""
+    m = re.match(r'^(\w+)\[\((\d+)\)\s*\+:\s*\d+\]$', rsi)
+    return f'{m.group(1)}[{m.group(2)}]' if m else rsi
+
+
+def r3_plus(text, master, k, log):
+    """(i) +1 FIRM stations (R3_PLUS)"""
+    spec = R3_PLUS.get(master, {}).get(k)
+    if not spec:
+        return text
+    ins = inst_lines(text)
+    L = text.split('\n')
+    asg = {m.group(1): (n, m.group(2)) for n, ln in enumerate(L)
+           for m in [re.match(r'^\s*assign (\w+) = (\{.*\}|\w+(?:\[\d+\])?);\s*$', ln)] if m}
+    drop = set()
+    for wi in spec['writers']:
+        n, mod, c = ins[wi]
+        assert mod == 'ot_pl_seam_w_pl', (wi, mod)
+        e = c['i']
+        lpg = asg.get(e)
+        ir = lpg[1] if lpg else e
+        if lpg:
+            drop.add(lpg[0])
+            dn = [m for m, ln in enumerate(L) if re.match(r'^\s*wire \[\d+:0\] %s;\s*$' % e, ln)]
+            assert len(dn) == 1, (wi, e)
+            drop.add(dn[0])
+        W = re.search(r'\.W\((.*?)\), \.CHUNK', L[n]).group(1)
+        L[n] = (f'    ot_pl_seam_w_plr #(.W({W}), .CHUNK_BITS(24), .RSREG(1)) {wi} (.ck({c["ck"]}), .rsi({c["rsi"]}), '
+                f'.rse({leaf0(c["rsi"])}), .ir({ir}), .q({c["q"]}));   // (i) +1 FIRM station {wi}.u_y_w (hard-core source)')
+        log.append(f'r{k} (i) {wi}: hard-core-fed writer -> registered writer, station {wi}.u_y_w, +1 edge')
+    for ri, st in spec['readers'].items():
+        n, mod, c = ins[ri]
+        assert mod == 'ot_pl_seam_r_plq', (ri, mod)
+        o = c['o']
+        w = int(re.search(r'\.W\(\(\((\d+)\) - \(0\) \+ 1\)\)', L[n]).group(1)) + 1
+        L[n] = L[n].replace(f'.o({o}))', f'.o({o}__s0))', 1)
+        assert f'.o({o}__s0))' in L[n], ri
+        L[n] = (f'    wire [{w - 1}:0] {o}__s0;   // (i) +1 FIRM station: {ri}.u_y_q -> {st} -> sink\n' + L[n] +
+                f'\n    ot_s81_rly #(.W({w}), .RSREG(1)) {st} (.ck({c["ck"]}), .rs({leaf0(c["rsi"])}), .i({o}__s0), .o({o}));')
+        log.append(f'r{k} (i) {ri}: 2nd station {st} ({w} b) after {ri}.u_y_q, +1 edge')
+    for a, b, st in spec['fault']:
+        na, _, ca = ins[a]
+        nb, _, cb = ins[b]
+        f = ca['fo']
+        assert cb['fi'] == f, (a, b, f, cb['fi'])
+        L[nb] = L[nb].replace(f'.fi({f})', f'.fi({f}__s0)', 1)
+        L[nb] = (f'    wire {f}__s0;   // (i) +1 FIRM station: {a}.fo -> {st} -> {b}.fi (sticky fault chain)\n'
+                 f'    ot_s81_rly #(.W(1), .RSREG(1)) {st} (.ck({ca["clk"]}), .rs({ca["rst_n"]}), .i({f}), .o({f}__s0));\n' + L[nb])
+        log.append(f'r{k} (i) {a}.fo -> {b}.fi: 1-b station {st}, +1 edge (fault chain)')
     L = [ln for m, ln in enumerate(L) if m not in drop]
     return '\n'.join(L)
 
@@ -450,7 +512,8 @@ def main():
     # lanes only: an xo lane's cycles are its 2 boundary flops; the source frame's own x_i0 -> xo_o0 forward is internal)
     bmap['latency_edges'] = dict(x_i0_to_xo_o0=2 if R3 else 1, x_i0_to_xo_o0_was=1,
                                  seam_K_plus_1=X + 1, note='seams (frame_int) unchanged; x arrival at chain position j '
-                                 '(0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents')
+                                 '(0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents',
+                                 plus_one=[x for x in (R3LOG if R3 else []) if ' (i) ' in x])
     Path(a.map).write_text(json.dumps(bmap, indent=1) + '\n')
     for ln in R3LOG:
         print(ln)
