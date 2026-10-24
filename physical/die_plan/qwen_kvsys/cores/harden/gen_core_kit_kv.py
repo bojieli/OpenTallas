@@ -329,7 +329,10 @@ def main():
     # Declaration context only: unused clock aliases and reset ports are not data.
     # Data pins still require their physical boundary registers without exceptions.
     unused_clks = sorted({split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk_unused"})
-    shutil.copyfile(a.core_json, kd / "core.json")
+    core_contract = dict(cj)
+    core_contract["boundary_role"] = {split_name(n)[0]: c for n, c in cj["pin_class"].items()}
+    core_contract["boundary_role"].update({n: "reset" for n in rsts})
+    (kd / "core.json").write_text(json.dumps(core_contract, indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
         clock_ports=clks, unused_clock_ports=unused_clks, reset_ports=rsts,
