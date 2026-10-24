@@ -1,0 +1,27 @@
+{
+ "TT": {
+  "taps": 2370,
+  "min_ps": 5616.847168,
+  "max_ps": 5659.697266,
+  "spread_ps": 42.85009799999989
+ },
+ "FF": {
+  "taps": 2370,
+  "min_ps": 4720.228516,
+  "max_ps": 4778.284668,
+  "spread_ps": 58.05615200000011
+ },
+ "status": "ABSTRACT_CLOCK_BUDGET_FEASIBILITY_ONLY_NOT_SIGNED",
+ "padding_buffers": 11970,
+ "added_data_cycles": 0,
+ "baseline_spread_ps": {
+  "TT": 211.928,
+  "FF": 193.154
+ },
+ "finer_grid_failed_spread_ps": {
+  "TT": 193.85,
+  "FF": 178.85
+ },
+ "qualification": "2370abstract taps. Legalisation, area/power and common clock absolute latency reconciliation required before adoption.",
+ "scratch": "/srv/opentallas-scratch/claude/codex-qwen/kv_clock200_pad2"
+}

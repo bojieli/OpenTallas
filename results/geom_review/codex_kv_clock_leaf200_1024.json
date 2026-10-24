@@ -1,0 +1,15 @@
+{
+ "verdict": "PASS-COND",
+ "image": "/srv/opentallas-scratch/claude/codex-qwen/kv_clock200/review_clock.png",
+ "scope": "clock-only trial, same2370 taps and oldtrial plan hash269a391d6d566e05970ca4f91e1dce1aa1a37687c992ab92a1c7cf821b21b2e5",
+ "findings": [
+  "Regular symmetric H-tree;200um leaf grid shortens variable last-mile tap wires from661627um total to164116um.",
+  "Repeaters remain250um max, root/stub unchanged, routing stays on reserved M8/M9 over the macro field.",
+  "Buffer count6286->37006; area/power must be priced before any design adoption. This probe checks whether last-mile dispersion caused the212ps TT skew."
+ ],
+ "corners": [
+  "TT",
+  "FF"
+ ],
+ "added_data_cycles": 0
+}
