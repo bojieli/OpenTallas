@@ -104,6 +104,17 @@
    "pinned_cycles": 34801,
    "twin_cycles": 34803,
    "lockstep": "TKM_LOCKSTEP PASS events=257 writes=256 shift=2"
+  },
+  "hc_root": {
+   "tool": "OT_HBM_LEAF_SPLIT=1 tools/hbm_split/run_hc_root_s.sh OUT 0 LS (emits from the gate default = leaf_split_latency hc_tail_result 7)",
+   "host": "ot-epyc5 (ot-run, --mem 120 -j 8; 48 GB/-j16 OOM)",
+   "pos": "HC_ENG PASS mixes 24 mixbad 0 outs 4 outbad 0, first_out_t 2958 (pinned emit 2951: +7), HC_MIX_CYCLES 1014",
+   "neg": "emit +0 on the split root: HC_ENG_FAULT t=2951 tail=1, rc 1 as required"
   }
- }
+ },
+ "open": [
+  "die-slice token replays (tok_func_hbm.sh) on a slice assembled with the twins: not run (needs a twin-bound die contract; ~7 h builds)",
+  "SU: whole-SU top bench (su_top_run.sh) has no PIN_REG build parameter; evidence = RTLB leaf benches first_output 36->40",
+  "TKM: no TP192 uop row compiler exists (coll_ops_images needs_tp192_programme); +2 lives in the table and the pricer only"
+ ]
 }
