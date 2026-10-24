@@ -1,0 +1,11 @@
+{
+ "element": "ot_s81c_attn_hcore",
+ "kit": "claude/core-s81-svc-1023@d03c32ba7:physical/die_plan/s81/cores/svc/kits/ot_s81c_attn_hcore__157.68x259.2",
+ "verdict": "PASS",
+ "hash": "0c0a55daad85f3af",
+ "reasons": "[10-23 21:28] [GEOM-REVIEW8] [New S81 svc hard core, CORE-S81-SVC 21:19 REQ] Kit hash recomputed by me with the kit tool's own scheme (gen_core_kit_s81.kit_hash: sorted path+bytes, excluding run/, run_*, freeze.json) = 0c0a55daad85f3af. The gate tool's git-blob hash for the same kit@commit is 8f9515e690ff5cac. I dumped 3_place.odb (ot-epyc7) myself and rendered it: /home/ubuntu/scratch/geom-review8-1023/hcore/r7.png. 157.68x259.2, no macros, 164,051 cells = 50% of free (author 55%), 28,019 FF, buf/inv 21% by count / 8% by area. Density is uniform, with no dense core band or empty islands (empty only at the SW/SE corners and a 4-um ring). Pins: W M4 590 (ld_*, 2.3/um), N M5 580 (ib/ibank/iv, 3.7/um), E M4 42 (oy/ov/oflt + gid), S clk/rst_n. 1212/1212 signal pins registered, pin->reg p90 6.8 / max 9.6 um. RTL read: ld_w[511:0] and ib[575:0] are BROADCAST to all 16 heads of a tile (ot_s81c_attn_tile_hc); only ld_wp (64 b) and oy (32 b) are per head. Bench PASS + mutants caught (author). Each face uses one layer only; at <= 3.7/um (0.18 of M5 tracks) this is acceptable for the core.",
+ "fixes": "Route gate ALLOWED for the core. SVC PLACEMENT (svc_placement.png, plan owner S81-P9, NOT this kit): 64 R0 heads with 15.1-um column gaps and 17.3-um row gaps put a tile's broadcast ld trunk (~590 b) into one column gap (590 / 551 M5+M7 tracks = 1.07) and its ib trunk (580 b) into one row gap (580 / 630 M4+M6 = 0.92). Both are over 0.6. Required before the svc G1 PASS: mirror pairs. MY on alternate columns puts W faces face to face across one ~28-um ld channel, with E faces (42 pins) at minimum gap. MX on the upper row of each tile puts both rows' N faces on one ~28-um ib channel, with S faces (clk/rst) at minimum gap. By my sum this fits 1442.88 x 2453.76 (4 x 2 x 157.68 + 4 x 28 + 3 x 5 = 1,388 um wide). Also post the trunk lengths and stations from the engine band to t0/t3 (~1.0-1.1 mm, over 750). The 8 sx_hrow cores that do not fit are S81-P9's call.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T21:28:06-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
