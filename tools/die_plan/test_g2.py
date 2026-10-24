@@ -511,3 +511,9 @@ def test_pair_drops_hard_cores():
     assert all("hard_cores" not in t for t in out["partition_types"].values())
     assert "1 hard_cores dropped" in out["partition_types"][tn]["note"]
     assert not schema.validate(out)
+
+
+def test_run_die_signoff_corners():
+    """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
+    import gen_phys
+    assert "for c in SS TT FF" in gen_phys.RUN_DIE
