@@ -762,20 +762,27 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
     L += [f"source {tab}",
 
           "array set ffarr {}",
+          # no find_timing_paths here: a -through query re-runs the search (~1 s each at die scale)
+          "proc ot_ffarr {lv fan} { set out {}; foreach q $lv { set a [ot_arr [get_full_name $q]]; if {$a ne \"NA\"} { lappend out [list [get_full_name $q] $a] } }; "
+          "if {[llength $out] || ![llength $lv]} { return $out }; "
+          "if {$fan eq \"out\"} { set fl [get_fanout -from $lv -endpoints_only -flat] } else { set fl [get_fanin -to $lv -startpoints_only -flat] }; "
+          "foreach q $fl { set a [ot_arr [get_full_name $q]]; if {$a ne \"NA\"} { lappend out [list [get_full_name $q] $a] } }; return $out }",
+          # full timing update BEFORE any pin arrival query (an arrival query first segfaults OpenSTA be771a0)
+          "set ot_w [sta::worst_slack_cmd max]; set ot_w [sta::worst_slack_cmd min]",
           "foreach g $OT_SEAMS { lassign $g gname bits",
-          "  foreach dly {max min} { set n($dly) 0; set nneg($dly) 0; set tns($dly) 0.0; set w($dly) \"\"; set wq($dly) \"\" }",
-          "  foreach b $bits { lassign $b d s; set lv [ot_leaf $d input]",
+          "  foreach dly {max min} { set n($dly) 0; set nneg($dly) 0; set tns($dly) 0.0; set w($dly) \"\"; set wb($dly) {} }",
+          "  foreach b $bits { lassign $b d s; set lv [ot_leaf $d input]; set lo [ot_leaf $s output]",
+          "    set cap [ot_ffarr $lv out]; set lau [ot_ffarr $lo in]",
+          "    foreach x [concat $cap $lau] { lassign $x nm a; lappend ffarr([lindex [split $nm /] 0]) $a }",
           "    foreach dly {max min} { set best \"\"; foreach q $lv { set x [get_property $q slack_$dly]; "
-          "if {$x eq \"\" || [string match *INF* $x]} { continue }; if {$best eq \"\" || $x < $best} { set best $x; set bq $q } }; "
+          "if {$x eq \"\" || [string match *INF* $x]} { continue }; if {$best eq \"\" || $x < $best} { set best $x } }; "
           "if {$best eq \"\"} { continue }; incr n($dly); if {$best < 0} { incr nneg($dly); set tns($dly) [expr {$tns($dly) + $best}] }; "
-          "if {$w($dly) eq \"\" || $best < $w($dly)} { set w($dly) $best; set wq($dly) $bq } }",
-          "    if {[llength $lv]} { foreach q [get_fanout -from $lv -endpoints_only -flat] { set nm [get_full_name $q]; set a [ot_arr $nm]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $nm /] 0]) $a } } }",
-          "    set lo [ot_leaf $s output]; if {[llength $lo]} { foreach q [get_fanin -to $lo -startpoints_only -flat] { set nm [get_full_name $q]; set a [ot_arr $nm]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $nm /] 0]) $a } } } }",
+          "if {$w($dly) eq \"\" || $best < $w($dly)} { set w($dly) $best; set wb($dly) [list $lau $cap $s $d] } } }",
           "  foreach dly {max min} { if {$n($dly) == 0} { puts $fh \"SEAM $gname $dly NO_PATH\"; continue }",
-          "    set ps [find_timing_paths -through $wq($dly) -path_delay $dly -group_path_count 1]; set p [lindex $ps 0]",
-          "    set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]",
+          "    lassign $wb($dly) lau cap s d; set sp $s; set la NA; set ep $d; set ca NA",
+          "    if {[llength $lau]} { lassign [lindex $lau 0] sp la }; if {[llength $cap]} { lassign [lindex $cap 0] ep ca }",
           "    puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s\" "
-          "$gname $dly $n($dly) $w($dly) $nneg($dly) $tns($dly) [ot_arr $sp] [ot_arr $ep] $sp $ep] } }",
+          "$gname $dly $n($dly) $w($dly) $nneg($dly) $tns($dly) $la $ca $sp $ep] } }",
           "foreach i [lsort [array names ffarr]] { set v [lsort -unique -real $ffarr($i)]; set mn [tcl::mathfunc::min {*}$v]; "
           "set mx [tcl::mathfunc::max {*}$v]; puts $fh [format \"FFSPREAD %s n %d min %.2f max %.2f spread %.2f\" "
           "$i [llength $ffarr($i)] $mn $mx [expr {$mx - $mn}]] }",
