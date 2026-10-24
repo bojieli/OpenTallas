@@ -122,7 +122,7 @@ class Hosts(unittest.TestCase):
             otr.write_text('HOSTS = ["ot-epyc4", "ot-run-only"]\n')
             with patch.object(R, "HOSTS_JSON", [str(hj)]), patch.object(R, "OT_RUN", str(otr)):
                 hs = R.fleet_hosts()
-        for h in ("ot-epyc4", "ot-epyc5", "ot-agidock128", "ot-pve1", "ot-new9", "ot-run-only"):
+        for h in ("ot-epyc4", "ot-epyc7", "ot-agidock128", "ot-pve1", "ot-new9", "ot-run-only"):
             self.assertIn(h, hs)
         self.assertNotIn("localhost", hs)
         self.assertEqual(len(hs), len(set(hs)))

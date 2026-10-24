@@ -28,10 +28,10 @@ import collections, datetime as dt, fcntl, glob, json, os, subprocess, sys
 
 JOBS = os.path.expanduser("~/.local/state/closure_loop/jobs")
 LOG = os.path.expanduser("~/claude-takeover-20261007/ot-reaper.log")
-STATIC_HOSTS = ["ot-epyc4", "ot-epyc5", "ot-epyc7", "ot-epyc8", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-agidock128", "ot-pve1"]   # epyc6/7 FLEET-NEW 2026-10-19
+STATIC_HOSTS = ["ot-epyc4", "ot-epyc7", "ot-epyc8", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-agidock128", "ot-pve1"]   # epyc6/7 FLEET-NEW 2026-10-19
 HOSTS_JSON = [os.path.expanduser("~/wt-claude-closure-daemon-1010/tools/closure_loop/hosts.json")]   # the LIVE daemon's
 OT_RUN = os.path.expanduser("~/bin/ot-run")
-RETIRED = {"ot-epyc1", "ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-epyc6", "localhost"}
+RETIRED = {"ot-epyc1", "ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-epyc5", "ot-epyc6", "localhost"}
 FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", "REFUSED", "CANCELLED", "INVALID",
         "EARLY_FAIL"}                                   # + every EARLY_FAIL_* (strippable_status)
 TAKEOVER = os.path.expanduser("~/claude-takeover-20261007")

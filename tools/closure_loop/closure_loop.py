@@ -2040,7 +2040,7 @@ def host_cores(cfg):
     return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
-TOOL_REF_HOST = "ot-epyc5"  # EPYC4-RETIRE 10-19: ot-epyc4 terminated (toolchain probe identical on epyc5/6/8); 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
+TOOL_REF_HOST = "ot-epyc7"  # EPYC5-RETIRE 10-23: ot-epyc5 retiring (toolchain probe identical on epyc5/7/9/gold1/gold2); EPYC4-RETIRE 10-19: ot-epyc4 terminated (toolchain probe identical on epyc5/6/8); 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
