@@ -9,7 +9,7 @@ A fleet row is never dropped: a host that cannot be reached keeps its last contr
 """
 import json, math, os, subprocess, sys
 
-HOSTS = ["ot-epyc4", "ot-epyc7", "ot-epyc8", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]   # epyc5 was missing (10-18); epyc6/7 FLEET-NEW 2026-10-19
+HOSTS = ["epyc2", "epyc3", "intel1", "intel2", "localhost"]   # FLEET-NEW3 2026-10-24 new fleet; before: ["ot-epyc4", "ot-epyc7", "ot-epyc8", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]; epyc5 was missing (10-18); epyc6/7 FLEET-NEW 2026-10-19
 D = "/var/tmp/ot-heavy"
 SSH = ["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes"]
 
