@@ -1,0 +1,21 @@
+{
+ "pass_": false,
+ "stats": {
+  "groups": 1736,
+  "groups_unequal": 3,
+  "inversions": 0,
+  "replica_sets": 609,
+  "replica_unequal": 1,
+  "types_conflicting": 0,
+  "replica_mode": "all",
+  "bus_mode": "part",
+  "async_skipped": 1,
+  "depth_source": "bus_groups landed_stages"
+ },
+ "messages": [
+  "R8 bus group io_collective.u_io.g_face[2].u_face <- io_serdes (coll_n): unequal added delay [-11, -10]; (port, as-built, landed) [('phy_rx', 12, 2), ('phy_rx_valid', 13, 2), ('phy_up', 13, 2)]",
+  "R8 bus group io_collective.u_io.g_face[4].u_face <- io_serdes_2 (coll_s): unequal added delay [0, 1]; (port, as-built, landed) [('phy_rx', 9, 10), ('phy_rx_valid', 10, 10), ('phy_up', 10, 10)]",
+  "R8 bus group io_collective.u_io.u_collective <- coll_s (coll_core): unequal added delay [3, 8]; (port, as-built, landed) [('sr1_rec', 0, 8), ('sr1_valid', 0, 8), ('sr2_rec', 5, 8), ('sr2_valid', 5, 8)]",
+  "R8 replica io_collective.u_io.u_collective.sx0_valid (as-built 0): unequal added delay per sink partition {'coll_n': [7], 'coll_s': [8]}"
+ ]
+}
