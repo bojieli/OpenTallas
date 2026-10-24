@@ -1,0 +1,11 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@d741a5368 (claude/kv-p6-spine-1023, KV v3.7s spine re-route on v3.7 4da93d994)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "91ffaba1a9df7004c1d6e4e78f64c2af30277dac17a708ed37838bed171b02cb",
+ "reasons": "[10-23 20:27] [GEOM-REVIEW7] [G1 delta, KV-P6-SPINE 20:26 REQ] Gate hash recomputed by me. Diff vs 4da93d994 checked by me: die_plan.json changes only in note / partition_types (ft_slots) / ports / lanes. Partitions, outlines and hard_cores are identical, so my 19:5x v3.7-cores FAIL (hg/hgi 17.3-um bands, pc placement) still stands and is separate. G0 run by me at d741a5368: PASS 0 err / 2300 warn, worst cut 0.071, worst segment 0.259 (hub_Ei). Render viewed: /home/ubuntu/scratch/kv-spine/die_plan_v37s_render.png (vs the before image /home/ubuntu/scratch/coord-die-review-1023/qwen_kvsys.png). L2045 (522 b) now follows the E corridor beside the existing E bundle, then turns W across the bottom of pv_N_7 into hgi_WN_7. It has the same 12 crossings and 36 stages, and the route drops from 18.3 to 16.9 mm. Answers: (1) the pv_N_7 bottom-band crossing is ACCEPTABLE. pv has no S windows, and its cores sit 34.6 um above the S face. 522 b at 0.6 of M4+M6 horizontal tracks (20.8 + 15.6 /um) needs about 24 um of band, which fits, and the 449-um top band stays free for relays/vports. (2) 57/42 is ACCEPTED. Corridor balance is not a rule: the worst N segment is 0.219 of 0.6, and a hub re-cut for balance alone is not justified (owner: only significant gains).",
+ "fixes": "Conditions: (a) pv_v12 G3 kit: keep the bottom crossing band core-free, >= 34 um (no pv core may move down into it), with the L2045 stations FIRM in that band at <= 675/750-um spacing. (b) BINDER3 regenerates the ft modules for the moved slots before the bound top (as posted). (c) The v3.7-cores FAIL items (hg/hgi/pc) still apply to this plan.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T20:27:41-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
