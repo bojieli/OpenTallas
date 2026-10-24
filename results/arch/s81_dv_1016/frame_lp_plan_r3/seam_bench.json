@@ -75,5 +75,28 @@
   "latency_neutral": "ret words (plan set 14/10, BF 6/6) edge+value IDENTICAL to the P7 contents control (c_*, --no-r3); BF words = S81-P8-B measured LP calendar (h9 408..430, h10 407 410 417 418 420 426)",
   "mutants": "caught: late9/late13/late17/late32 (BF seam mismatches 8), short, landread, reset; unland NOT caught (plan generator wires the twin MUT-1 bypass as MUT 0 by construction: blind in the control too)",
   "bf_calendar": "FAIL in every run incl. control: the P7 bfvec predicts 405/401 (pre-P8-B calendar); on ep9 the fixtures path was also missing -- re-checked locally: values equal, edges = the P8-B measured calendar"
+ },
+ "twin_fix": {
+  "rtl_commit": "0598ee503",
+  "dir": "ep9 s81-p9-rtl/sbk_h10",
+  "kit_synth": "ORFS synth col_h10_r1__t1 kit (local docker): u_y_x{a,b}_5_bs7_0, _6_bs9_0 and originals u_y_x{a,b}_{5,6}_0 each 283/266 data flops + rq",
+  "h10_base": "PASS plan 0 seam mismatch, ret words = no-R3 control (10 words 356..387)",
+  "h10_late32": "caught (BF seam mismatches 8, fault 4)"
+ },
+ "plus_one": {
+  "rtl_commit": "385204d21",
+  "dir": "ep9 s81-p9-rtl/sbp_h10",
+  "frame_sched": "results/arch/s81_dv_1016/frame_lp_plan_r3/col_h10_schedule_r3plus.json",
+  "ref": "frame_seam_ref.py REF_PLUS: lpl_5_w.i, lpl_10_w.i, lpl_6_r.o->n23, n24.fo->n23.fi each +1 in the vgch ref",
+  "h10_base": "PASS plan: 0 seam mismatch over 33 seams (lpl_10 2063 / lpl_6 2726 toggles; lpl_5 fault bit 0), ret words = re-legalised calendar exactly (12 words 360..389; old 10 words 356..387)",
+  "h10_late32": "caught (BF seam mismatches 8, fault 4)",
+  "deltas_edges": {
+   "lpl_10 (n24.o -> frame_int_o0, ret link n24->n25)": 1,
+   "lpl_6 -> n23.b (ret link n27->n23)": 1,
+   "lpl_5 (n12.fo fault)": 1,
+   "n24.fo -> n23.fi (fault)": 1,
+   "ret words through n24 (both links in series)": 2,
+   "bench phase last ret word": "387 -> 389 (+2); words 10 -> 12 (re-legalised merges)"
+  }
  }
 }
