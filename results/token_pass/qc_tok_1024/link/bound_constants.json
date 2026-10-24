@@ -1,0 +1,575 @@
+{
+ "schema": "opentallas.die_plan.regen_constants.v1",
+ "die": "qwen_compute",
+ "bound": "/home/ubuntu/scratch/binder4-1023/qc12",
+ "bound_sha": "9f5a9878dd2325cf",
+ "generator": "tools/die_plan/regen_constants.py",
+ "bind_hook": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+ "verdict": {
+  "OK": 23
+ },
+ "constants": {
+  "COLL_LS": {
+   "value": 389,
+   "kind": "rtl",
+   "formula": "L_j = KC + KW + 17 + PS + LX_j + R_j + R_peer(j); LS = max_j L_j; LU = KC + KW + 17 + PU + 2 RU",
+   "status": "OK",
+   "inputs": {
+    "TX": [
+     2,
+     2,
+     10
+    ],
+    "RX": [
+     2,
+     2,
+     10
+    ],
+    "RS": [
+     7,
+     8,
+     8
+    ],
+    "LX": [
+     12,
+     4,
+     12
+    ],
+    "PS": 339,
+    "KC": 4,
+    "KW": 2
+   },
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.(u_collective|g_face\\[[234]\\]\\.u_face)$",
+    "param": "LS",
+    "also": "face L"
+   },
+   "bind_applied": [
+    "389"
+   ],
+   "rtl_bound": {
+    "module": "qfd_io_collective_static\\w*",
+    "param": "LS",
+    "instances": 1,
+    "values": [
+     "389"
+    ]
+   }
+  },
+  "MU_CAL_LS": {
+   "value": 389,
+   "kind": "compiler",
+   "formula": "tp8 MU window calendar period = COLL_LS (TOKh 14:17: regenerated at LS 389)",
+   "status": "OK",
+   "inputs": {
+    "COLL_LS": 389
+   },
+   "group": "coll"
+  },
+  "COLL_F2_PHY": {
+   "value": 351,
+   "kind": "rtl",
+   "formula": "PS + LX_j",
+   "status": "OK",
+   "inputs": {
+    "PS": 339,
+    "LX": 12
+   },
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[2\\]\\.u_face$",
+    "param": "PHY"
+   },
+   "bind_applied": [
+    "351"
+   ]
+  },
+  "COLL_F2_L": {
+   "value": 389,
+   "kind": "rtl",
+   "formula": "L = LS",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[2\\]\\.u_face$",
+    "param": "L"
+   },
+   "bind_applied": [
+    "389"
+   ]
+  },
+  "COLL_F2_R": {
+   "value": 7,
+   "kind": "rtl",
+   "formula": "R = RS_j (core<->face relay depth)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[2\\]\\.u_face$",
+    "param": "R"
+   },
+   "bind_applied": [
+    "7"
+   ]
+  },
+  "COLL_F2_PEER_R": {
+   "value": 8,
+   "kind": "rtl",
+   "formula": "PEER_R = RS_peer(j)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[2\\]\\.u_face$",
+    "param": "PEER_R"
+   },
+   "bind_applied": [
+    "8"
+   ]
+  },
+  "COLL_F3_PHY": {
+   "value": 343,
+   "kind": "rtl",
+   "formula": "PS + LX_j",
+   "status": "OK",
+   "inputs": {
+    "PS": 339,
+    "LX": 4
+   },
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[3\\]\\.u_face$",
+    "param": "PHY"
+   },
+   "bind_applied": [
+    "343"
+   ]
+  },
+  "COLL_F3_L": {
+   "value": 389,
+   "kind": "rtl",
+   "formula": "L = LS",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[3\\]\\.u_face$",
+    "param": "L"
+   },
+   "bind_applied": [
+    "389"
+   ]
+  },
+  "COLL_F3_R": {
+   "value": 8,
+   "kind": "rtl",
+   "formula": "R = RS_j (core<->face relay depth)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[3\\]\\.u_face$",
+    "param": "R"
+   },
+   "bind_applied": [
+    "8"
+   ]
+  },
+  "COLL_F3_PEER_R": {
+   "value": 8,
+   "kind": "rtl",
+   "formula": "PEER_R = RS_peer(j)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[3\\]\\.u_face$",
+    "param": "PEER_R"
+   },
+   "bind_applied": [
+    "8"
+   ]
+  },
+  "COLL_F4_PHY": {
+   "value": 351,
+   "kind": "rtl",
+   "formula": "PS + LX_j",
+   "status": "OK",
+   "inputs": {
+    "PS": 339,
+    "LX": 12
+   },
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[4\\]\\.u_face$",
+    "param": "PHY"
+   },
+   "bind_applied": [
+    "351"
+   ]
+  },
+  "COLL_F4_L": {
+   "value": 389,
+   "kind": "rtl",
+   "formula": "L = LS",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[4\\]\\.u_face$",
+    "param": "L"
+   },
+   "bind_applied": [
+    "389"
+   ]
+  },
+  "COLL_F4_R": {
+   "value": 8,
+   "kind": "rtl",
+   "formula": "R = RS_j (core<->face relay depth)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[4\\]\\.u_face$",
+    "param": "R"
+   },
+   "bind_applied": [
+    "8"
+   ]
+  },
+  "COLL_F4_PEER_R": {
+   "value": 7,
+   "kind": "rtl",
+   "formula": "PEER_R = RS_peer(j)",
+   "status": "OK",
+   "group": "coll",
+   "rtl": {
+    "inst": "io_collective\\.u_io\\.g_face\\[4\\]\\.u_face$",
+    "param": "PEER_R"
+   },
+   "bind_applied": [
+    "7"
+   ]
+  },
+  "COLL_BENCH_ARGS": {
+   "value": "--relays 0 7 8 8 --lanes 2 2 10 2 2 10 --lx 12 4 12",
+   "kind": "compiler",
+   "formula": "tp8/tp8_mu bench arguments",
+   "status": "OK",
+   "group": "coll"
+  },
+  "COLL_SLICE_LEGS": {
+   "value": {
+    "cmd": {
+     "landed": [
+      8,
+      9
+     ],
+     "asbuilt": [
+      11,
+      12
+     ],
+     "delta": [
+      -3
+     ]
+    },
+    "in": {
+     "landed": [
+      6,
+      7,
+      8
+     ],
+     "asbuilt": [
+      9,
+      10,
+      11
+     ],
+     "delta": [
+      -3
+     ]
+    },
+    "out": {
+     "landed": [
+      6,
+      7
+     ],
+     "asbuilt": [
+      10,
+      11
+     ],
+     "delta": [
+      -4
+     ]
+    }
+   },
+   "kind": "compiler",
+   "formula": "landed depth of the slice<->collective cmd / in / out legs (per-bit as-built offsets kept by R8 when delta is one value)",
+   "status": "OK",
+   "group": "coll"
+  },
+  "TREQ_CMD_OFFSET": {
+   "value": 0,
+   "kind": "compiler",
+   "formula": "per slice hop landed(treq_i) - landed(cmd_i) at u_fdn (treq_vs_cmd.py); one value -> scalar",
+   "status": "OK",
+   "inputs": {
+    "hops": 12
+   },
+   "group": "treq"
+  },
+  "TREQ_HOPS": {
+   "value": [
+    {
+     "src": "dvs_E0.u_core.u_sub.u_fup",
+     "sink": "dvs_E1.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_E1.u_core.u_sub.u_fup",
+     "sink": "dvs_E2.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_E2.u_core.u_sub.u_fup",
+     "sink": "dvs_E3.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_E3.u_core.u_sub.u_fup",
+     "sink": "dvs_E4.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_E4.u_core.u_sub.u_fup",
+     "sink": "dvs_E5.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W0.u_core.u_sub.u_fup",
+     "sink": "dvs_E0.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W1.u_core.u_sub.u_fup",
+     "sink": "dvs_W0.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W2.u_core.u_sub.u_fup",
+     "sink": "dvs_W1.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W3.u_core.u_sub.u_fup",
+     "sink": "dvs_W2.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W4.u_core.u_sub.u_fup",
+     "sink": "dvs_W3.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "dvs_W5.u_core.u_sub.u_fup",
+     "sink": "dvs_W4.u_core.u_sub.u_fdn",
+     "treq": [
+      2
+     ],
+     "cmd": [
+      2
+     ],
+     "offset": 0
+    },
+    {
+     "src": "tt_ctlm",
+     "sink": "dvs_W5.u_core.u_sub.u_fdn",
+     "treq": [
+      8
+     ],
+     "cmd": [
+      8
+     ],
+     "offset": 0
+    }
+   ],
+   "kind": "compiler",
+   "formula": "per hop table",
+   "status": "OK",
+   "group": "treq"
+  },
+  "XDIE_SEAM_C": {
+   "value": "2,2,2,3,2,2",
+   "kind": "compiler",
+   "formula": "d2d_link_calendar --die-stages compute half CS_TXS,CS_RXV,CS_RXP,CS_X3S,SC_TX,SC_X3 = as-built seam + Delta(bundle)",
+   "status": "OK",
+   "inputs": {
+    "CS_TXS": {
+     "landed": [
+      2
+     ],
+     "anchor": 2
+    },
+    "CS_RXV": {
+     "landed": [
+      2,
+      3
+     ],
+     "anchor": 2
+    },
+    "CS_RXP": {
+     "landed": [
+      3
+     ],
+     "anchor": 2
+    },
+    "CS_X3S": {
+     "landed": [
+      3
+     ],
+     "anchor": 3
+    },
+    "SC_TX": {
+     "landed": [
+      2,
+      3
+     ],
+     "anchor": 2
+    },
+    "SC_X3": {
+     "landed": [
+      2,
+      3
+     ],
+     "anchor": 2
+    }
+   },
+   "group": "xdie"
+  },
+  "D2D_TXDP_C": {
+   "value": [
+    8,
+    3,
+    1,
+    10
+   ],
+   "kind": "rtl",
+   "formula": "producer_txd_c + PINREG_EXT (d2d_link_calendar.py); byte p = port p",
+   "status": "OK",
+   "inputs": {
+    "CS_TXS": 2,
+    "CS_RXV": 2,
+    "CS_RXP": 2,
+    "CS_X3S": 3,
+    "SC_TX": 2,
+    "SC_X3": 2
+   },
+   "group": "xdie",
+   "rtl": {
+    "inst": "(^|\\.)d2d_rom$|u_d2d",
+    "param": "TXDP"
+   },
+   "sv_literal": "32'h0a010308",
+   "bind_applied": "not in param_regen.json (as-built value kept by the bind, or no hook)"
+  },
+  "D2D_KV_TX_LAT": {
+   "value": 67,
+   "kind": "compiler",
+   "formula": "from the KV peer bound top (--peer): shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
+   "status": "OK",
+   "inputs": {
+    "KS_TXS": 32,
+    "SK_TXP": 31,
+    "asbuilt": 22,
+    "peer": "/home/ubuntu/scratch/binder4-1023/kv/kv41"
+   },
+   "group": "xdie",
+   "note": "moved 22 -> 67 vs as-built: re-bind the pair image on both dies"
+  },
+  "D2D_TXDP_K": {
+   "value": [
+    67,
+    4,
+    3,
+    3
+   ],
+   "kind": "compiler",
+   "formula": "pair image KV TXDP from the KV peer bound top",
+   "status": "OK",
+   "inputs": {
+    "peer": "/home/ubuntu/scratch/binder4-1023/kv/kv41"
+   },
+   "group": "xdie",
+   "sv_literal": "32'h03030443"
+  },
+  "XDIE_DIE_STAGES": {
+   "value": "2,2,2,3,2,2/34,34,32,32,32,31,31",
+   "kind": "compiler",
+   "formula": "D2D_DIE_STAGES for tools/qwen_split/d2d_cal_image_production.sh (pair calendar image; both dies bind its TXDP)",
+   "status": "OK",
+   "inputs": {
+    "peer": "/home/ubuntu/scratch/binder4-1023/kv/kv41"
+   },
+   "group": "xdie"
+  }
+ },
+ "recipes": {
+  "xdie_pair_image": "D2D_DIE_STAGES=2,2,2,3,2,2/34,34,32,32,32,31,31 D2D_MU=1 D2D_EMB_WINDOW=595 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 bash tools/qwen_split/d2d_cal_image_production.sh <out>   # both dies bind its TXDP",
+  "tp8_bench": "tp8 / tp8_mu link benches: --relays 0 7 8 8 --lanes 2 2 10 2 2 10 --lx 12 4 12 (LS 389)"
+ }
+}

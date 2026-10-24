@@ -1,0 +1,104 @@
+cal codec1 pass rc=0
+cal codec1 collide rc=0
+cal codec1 slot rc=0
+cal codec1 user rc=0
+cal codec2 pass rc=0
+cal codec2 collide rc=0
+cal codec2 slot rc=0
+cal codec2 user rc=0
+==== codec1
+asbuilt_one_playhead expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4211: dir 1: rx_event 0000 != compiled rx_slot 0010
+    D2DOVL_FAIL OVL 0
+mut_collide expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4244: master fault (calendar / stray / collision / codec): compute 1 KV 0
+    D2DOVL_FAIL OVL 1
+mut_slot expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 20877: dir 1: rx_event 0000 != compiled rx_slot 0001
+    D2DOVL_FAIL OVL 1
+mut_user expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 24108: dir 0: rx_user 3 != sender user 2 (kind 1)
+    D2DOVL_FAIL OVL 1
+pass expect=PASS got=PASS -> OK
+    D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4768.1
+    D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 4470.1
+    D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2384.0
+    D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 2086.0
+    D2DOVL_MEAS H 4026800 frames C->K 63098 K->C 57783 aggregate 13708.2 tok/s (frame start 4206)
+    D2DOVL_REL written C->K 63098 K->C 57783 delivered C->K 63098 K->C 57783; KV STATUS results 1704 KVN words 6632; pin rx C 57783 K 54761
+    D2DOVL_PASS OVL 1
+rc=0
+==== codec2
+asbuilt_one_playhead expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4210: dir 1: rx_event 0000 != compiled rx_slot 0010
+    D2DOVL_FAIL OVL 0
+mut_collide expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4243: master fault (calendar / stray / collision / codec): compute 1 KV 0
+    D2DOVL_FAIL OVL 1
+mut_slot expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 20877: dir 1: rx_event 0000 != compiled rx_slot 0001
+    D2DOVL_FAIL OVL 1
+mut_user expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 24106: dir 0: rx_user 3 != sender user 2 (kind 1)
+    D2DOVL_FAIL OVL 1
+pass expect=PASS got=PASS -> OK
+    D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4768.1
+    D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 4470.1
+    D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2384.0
+    D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 2086.0
+    D2DOVL_MEAS H 4026800 frames C->K 63098 K->C 57783 aggregate 13708.2 tok/s (frame start 4205)
+    D2DOVL_REL written C->K 63098 K->C 57783 delivered C->K 63098 K->C 57783; KV STATUS results 1704 KVN words 6632; pin rx C 57783 K 54761
+    D2DOVL_PASS OVL 1
+rc=0
+{
+ "stage": "ovl4u",
+ "grade": "RTL-functional (source assembly)",
+ "src_commit": "3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a",
+ "verdict": "PASS",
+ "cycles": {
+  "H_frame": 4026800,
+  "frames_C2K": 63098,
+  "frames_K2C": 57783,
+  "aggregate_tok_s_bench": 13708.2,
+  "tokens_per_frame": {
+   "0": 16,
+   "1": 15,
+   "2": 8,
+   "3": 7
+  },
+  "exchanges_per_frame": {
+   "0": 576,
+   "1": 540,
+   "2": 288,
+   "3": 252
+  },
+  "cycles_per_token_per_user": {
+   "0": 251675.0,
+   "1": 268453.3,
+   "2": 503350.0,
+   "3": 575257.1
+  },
+  "tok_s_per_user_833ps": {
+   "0": 4768.1,
+   "1": 4470.1,
+   "2": 2384.0,
+   "3": 2086.0
+  },
+  "aggregate_cycles_per_token": 87539.1,
+  "aggregate_tok_s_833ps": 13708.2,
+  "codec": 2,
+  "codec1_H_frame": 4026800,
+  "codec1_aggregate_tok_s_833ps": 13708.2
+ },
+ "mutants": {
+  "codec1_asbuilt_one_playhead": "FAIL as required",
+  "codec1_mut_collide": "FAIL as required",
+  "codec1_mut_slot": "FAIL as required",
+  "codec1_mut_user": "FAIL as required",
+  "codec2_asbuilt_one_playhead": "FAIL as required",
+  "codec2_mut_collide": "FAIL as required",
+  "codec2_mut_slot": "FAIL as required",
+  "codec2_mut_user": "FAIL as required"
+ }
+}
+rc=0
