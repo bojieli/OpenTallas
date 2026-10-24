@@ -205,7 +205,9 @@ def frame_early_clock(ty):
     for c in ty.get("hard_cores", []):
         if c.get("module") not in ("ot_v41_rom_elem_q_qxpq_w10", "ot_v41_bf_col"):
             continue
-        pins = clock_pins(c)
+        pins = clock_pins(c, root=os.environ.get("S81_CORE_VIEW_ROOT"))
+        if not pins:
+            raise ValueError("selected frame core has no readable clock timing view: " + c["inst"])
         for pin, timing in pins.items():
             latency = timing["rise"]
             if latency <= 250:
