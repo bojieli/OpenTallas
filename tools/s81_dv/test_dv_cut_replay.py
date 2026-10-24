@@ -12,7 +12,8 @@
     strict replay FAILS the check
   4 event words (LB2-S81/EVENTS): out-event streams (valid bit, masked data) checked at edge + age, consumer cuts driven
     with the full words, in-event words, producer gaps -> unencoded, offdie / internal events apart, class mutants
-  6 entry lowering (TOKj 10-23): line CTL rows derive the column-4 V rung beat; KS job start forwarded to u_eng.f_ks
+  6 entry lowering (TOKj 10-23): line CTL rows derive the column-4 V rung beat; KS job start forwarded to u_eng.f_ks;
+    S81-P10 10-24: f_ks producer model (start pulse + held payload, bundle launch)
 """
 import json
 import shutil
@@ -374,6 +375,27 @@ def entry_lowering(tmp):
        'KS job start forwarded whole to u_eng.f_ks at landed -5 + eks age 11 = 6')
     E.inst = dict(E.inst, u_seqhost=dict(master='dsdv_hostb_seqhost_mux', params='.HOSTB_ENABLE(1)'))
     ok(R.ks_engram_words(E(), 1, -5) == [], 'hostb-enabled seqhost: no KS forward encoded')
+    # (c) S81-P10 10-24: f_ks producer = start pulse + HELD payload, both launched with the whole bundle (lanes 38 / 39)
+    class F:
+        links = {'hf_l1': dict(age=38, out_net='w_hf_l1_lnd'), 'hf_l2': dict(age=39, out_net='w_hf_l2_lnd')}
+        def port_bits(self, inst, port):
+            if (inst, port) == ('u_seqhost', 'f_ks'):
+                return [('w_hf_l1_src', 243 + i) for i in range(33)] + [('w_hf_l2_src', i) for i in range(20)]
+            return []
+    keep = R.lane_of_net
+    R.lane_of_net = lambda die, n: n[2:-4] if n.startswith('w_hf_') else None
+    try:
+        ws = R.ks_source_words(F(), 0x1000082e4fffff, 100, 104)
+    finally:
+        R.lane_of_net = keep
+    st, pay = ws[0], ws[1:]
+    ok(list(st['bits']) == [('w_hf_l2_src', 19)] and st['bits'][('w_hf_l2_src', 19)] == 1 and st['cycle_land'] == 100
+       and st['bundle_age'] == 39, 'KS start: one-edge pulse of bit 52 only (lane l2), launched with the bundle age 39')
+    ok([w['cycle_land'] for w in pay] == [100, 101, 102, 103] and all(w['hold'] == 100 and w['bundle_age'] == 39
+       and ('w_hf_l2_src', 19) not in w['bits'] for w in pay), 'KS payload held from the start landing to the end, no start bit')
+    l1 = sum(v << (b - 243) for (n, b), v in pay[0]['bits'].items() if n == 'w_hf_l1_src')
+    l2 = sum(v << b for (n, b), v in pay[0]['bits'].items() if n == 'w_hf_l2_src')
+    ok(l1 | (l2 << 33) == 0x1000082e4fffff & ((1 << 52) - 1), 'held payload = f_ks[51:0] (l1[275:243] + l2[18:0])')
 
 
 def main():

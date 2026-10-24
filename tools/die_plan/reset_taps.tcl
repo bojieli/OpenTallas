@@ -22,11 +22,25 @@ proc rt_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "HB*" $m]}]
 }
-# tap 0's synchroniser net keeps the RTL alias name rst_n (wire rst_n = rst_n_t0)
+# Bound kits nest the partition below u_bound. Resolve the actual hierarchical
+# net names once; findNet rst_n_tN alone silently skipped all local resets.
+set rt_named_nets {}; set rt_zero_aliases {}
+foreach net [$rt_blk getNets] {
+  set name [$net getName]
+  if {[regexp {(^|[/.])rst_n_t([0-9]+)$} $name -> prefix i]} {
+    if {[dict exists $rt_named_nets $i] && [dict get $rt_named_nets $i] ne $net} {
+      error "OT_RESET_TAPS ambiguous synchroniser net for tap $i"
+    }
+    dict set rt_named_nets $i $net
+  } elseif {[regexp {(^|[/.])rst_n$} $name]} { lappend rt_zero_aliases $net }
+}
+if {![dict exists $rt_named_nets 0] && [llength $rt_zero_aliases] == 1} {
+  dict set rt_named_nets 0 [lindex $rt_zero_aliases 0]
+}
 proc rt_tapnet {blk i} {
-  set n [$blk findNet rst_n_t$i]
-  if {$n eq "NULL" && $i == 0} { set n [$blk findNet rst_n] }
-  return $n
+  global rt_named_nets
+  if {[dict exists $rt_named_nets $i]} { return [dict get $rt_named_nets $i] }
+  return "NULL"
 }
 set rt_have 0
 foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { incr rt_have } }
@@ -66,7 +80,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   set rt_sync 0
   set rt_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
   foreach ins [$rt_blk getInsts] {
-    if {![regexp {^u_rsync_t([0-9]+)[/.]} [$ins getName] -> i]} continue
+    if {![regexp {(^|[/.])u_rsync_t([0-9]+)[/.]} [$ins getName] -> prefix i]} continue
     if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
     foreach tp $rt_taps {
       if {[lindex $tp 0] == $i} {
@@ -82,7 +96,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   set rt_cnt {}
   foreach ins [$rt_blk getInsts] {
     if {[$ins getPlacementStatus] ne "FIRM" || ![string match "*DFF*" [[$ins getMaster] getName]]} continue
-    if {[regexp {^u_rsync_t} [$ins getName]]} continue
+    if {[regexp {(^|[/.])u_rsync_t[0-9]+[/.]} [$ins getName]]} continue
     lassign [$ins getLocation] x y
     set best ""; set bd 0
     foreach tp $rt_taps {

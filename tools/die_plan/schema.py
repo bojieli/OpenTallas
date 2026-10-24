@@ -133,14 +133,16 @@ SCHEMA = {
                 "io": {"type": "array", "items": {
                     # PLAN-TOOL5 (die_io.py): a PHY-macro window may instead declare its interface class + off-die
                     # signal count (`iface`, `signals`; the modelled PHY has no RTL pad ports), and `host` when it
-                    # also carries the die's host link
+                    # also carries the die's host link (true), or, on a die without a host link, its host traffic
+                    # in-band ("in_band", with the on-die `host_route`; S81-XDIE 10-24)
                     "type": "object", "required": ["name", "kind", "rect_um", "sites", "part"],
                     "additionalProperties": False,
                     "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
                                    "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
                                    "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                                    "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
-                                   "signals": {"type": "integer", "minimum": 1}, "host": {"type": "boolean"},
+                                   "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
+                                   "host_route": {"type": "string"},
                                    "basis": {"type": "string"}, "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
@@ -192,6 +194,8 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
                                        "layers": _lays, "order": _order}}},
@@ -206,6 +210,11 @@ SCHEMA = {
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
+                        # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
+                        # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
+                        # plan records only (unchanged kits).
+                        "core_taps": {"enum": ["early"]},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -308,7 +317,8 @@ SCHEMA = {
         # automatically (Plan.latency_groups()).
         "latency_groups": {"type": "array", "items": {
             "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
-            "properties": {"name": _name, "kind": {"enum": ["bus", "replica"]},
+            "properties": {"name": _name, "kind": {"enum": ["bus", "replica", "landed"]},
+                           "window": {"type": "integer", "minimum": 2},
                            "lanes": {"type": "array", "items": _name, "minItems": 2},
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
@@ -320,7 +330,13 @@ SCHEMA = {
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
-                "topology": {"enum": ["htree", "fishbone", "mesh"]}}}}},
+                "topology": {"enum": ["htree", "fishbone", "mesh"]},
+                # CP2 branch model (spine.py, pair plans): the FULL die's root / outline and each partition's origin
+                # in that die; branch latency = H-tree path length x branch_ps_per_mm (default 60), recursion down to
+                # regions <= branch_leaf_um (default budgets.tap_pitch_um)
+                "die_root_um": _xy, "die_outline_um": _xy,
+                "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
+                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
@@ -651,6 +667,24 @@ class Plan:
                 out.append((f"replica:{sp}.{sb}->{dt}.{db}", "replica", sorted(lids)))
         return out
 
+    def landed_skew(self):
+        """LANDED BUNDLES (COORD rule 10-23, r8.py doc): a latency group of kind `landed` = the lanes of one bundle
+        that lands in ONE forwarded-clock landing ring with one K strap (window = ring depth D cycles, default 4).  The
+        bundle arrives at ONE group depth (lane_pads pads every lane to the slowest, as a bus group); its natural
+        per-lane spread must stay under the landing window margin D - 1, else the bundle cannot land coherently and the
+        stations must be re-planned.  Returns [message] for every landed group over the margin."""
+        bad = []
+        for g in self.raw.get("latency_groups", []):
+            if g.get("kind") != "landed" or not all(l in self.lanes for l in g["lanes"]):
+                continue
+            nat = {l: self.lane_natural(l)["cycles"] for l in g["lanes"]}
+            d = g.get("window", 4)
+            if max(nat.values()) - min(nat.values()) > d - 1:
+                bad.append(f"landed group {g['name']}: natural lane spread {max(nat.values()) - min(nat.values())} "
+                           f"cycles {nat} > landing window margin {d - 1} (re-plan the stations so the bundle lands "
+                           "in one window)")
+        return bad
+
     def lane_pads(self):
         """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""
         if getattr(self, "_pads", None) is not None:
@@ -763,6 +797,25 @@ def tap_grid(P, tn):
             x, y = tap_clear(t, x, y, [(a, b) for _, a, b in out])
             out.append((f"clk_t{len(out)}", x, y))
     return out
+
+
+def core_taps(P, tn):
+    """CP2: the type's EARLY core taps [(port, x, y, tap)] (type frame, unsnapped): clock.taps[] kind 'core' when
+    clock.core_taps == 'early', ports clk_c<k> in taps[] order.  A tap names its core (`<inst>`, every clock pin) or one
+    clock pin (`<inst>.<pin>`); tap['insertion_ps'] = the core's internal clock latency.  Otherwise []."""
+    ck = P.types[tn].get("clock", {}) or {}
+    if ck.get("core_taps") != "early":
+        return []
+    out = []
+    for tp in ck.get("taps", []) or []:
+        if tp.get("kind") == "core":
+            out.append((f"clk_c{len(out)}", float(tp["xy"][0]), float(tp["xy"][1]), tp))
+    return out
+
+
+def core_tap_early_ps(P, tp):
+    """how early the spine delivers a core tap: max(0, insertion_ps - the die common latency)."""
+    return max(0.0, float(tp.get("insertion_ps", 0.0)) - float(P.clock["insertion_ps"]))
 
 
 def _grid_taps(P, tn):
@@ -992,6 +1045,11 @@ def validate(raw):
         if dup:
             errs.append(f"type {tn}: bus names defined twice: {sorted(dup)}")
         for s in t.get("ft_slots", []):
+            from ft_bit_sites import validate_slot
+            try:
+                validate_slot(s)
+            except ValueError as exc:
+                errs.append(f"type {tn} slot {s['name']}: {exc}")
             if s["in_face"] == s["out_face"]:
                 errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
             if "regs_um" in s and len(s["regs_um"]) != s.get("stations", 1):

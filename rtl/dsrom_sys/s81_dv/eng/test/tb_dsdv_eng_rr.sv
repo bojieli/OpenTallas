@@ -44,6 +44,29 @@ module tb_dsdv_eng_rr;
     dsdv_eng_rr_c #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT)) u_rr (.ck(ck), .rst_n(rst), .cfg_en(1'b1),
         .cfg_layer(1'b1), .cfg_rank(RANK), .f_ks(f_ks), .rco(rco_h), .pci(pci_h), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n),
         .vo_n(vo_n), .st(st));
+`ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
+    // CORE-S81-ENG 10-23: the three-core split (dsdv_eng_rr_split = cores E + H0 + H1) runs in LOCKSTEP beside the monolith on
+    // the same inputs; every output bit is compared on every edge after reset release (and the crossing against the
+    // monolith's lookup -> xq nets).  SPLIT_MUT 1 / 2 = negative controls (hash crossing bit flip / layer halves swapped).
+    parameter integer SPLIT_MUT = 0;
+    wire [42:0] rco_sp; wire [275:0] vo_s_sp, vo_n_sp; wire [3:0] st_sp;
+    dsdv_eng_rr_split #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT), .SPLIT_MUT(SPLIT_MUT)) u_sp (.ck(ck),
+        .rst_n(rst), .cfg_en(1'b1), .cfg_layer(1'b1), .cfg_rank(RANK), .f_ks(f_ks), .rco(rco_sp), .pci(pci_h), .vi_s(vi_s),
+        .vo_s(vo_s_sp), .vi_n(vi_n), .vo_n(vo_n_sp), .st(st_sp));
+    longint lk_cyc = 0, lk_bad = 0, lk_xv = 0, lk_rco = 0, lk_vo = 0;
+    always @(negedge ck) if (rst) begin
+        lk_cyc <= lk_cyc + 1;
+        if (u_rr.o_v) lk_xv <= lk_xv + 1;
+        if (rco_h[0]) lk_rco <= lk_rco + 1;
+        if (vo_s[0] || vo_n[0]) lk_vo <= lk_vo + 1;
+        if (rco_sp !== rco_h || vo_s_sp !== vo_s || vo_n_sp !== vo_n || st_sp !== st ||
+            {u_sp.hx_w, u_sp.res_m} !== {u_rr.u_lkp.u_e.win_n, u_rr.u_lkp.u_e.hres}) begin
+            lk_bad <= lk_bad + 1;
+            if (lk_bad < 4) $display("TB_ENG_RR_LOCKSTEP mismatch cyc %0d rco %0d vo_s %0d vo_n %0d st %b/%b", cyc,
+                                     rco_sp !== rco_h, vo_s_sp !== vo_s, vo_n_sp !== vo_n, st_sp, st);
+        end
+    end
+`endif
     // ------------------------------------------------------------------ taps, chains, controllers, PHY
     wire [42:0]  rci [0:15]; wire [42:0] rco [0:15]; wire [267:0] pci [0:15]; wire [267:0] pco [0:15];
     wire [91:0]  rqi [0:15]; wire [91:0] rqo [0:15]; wire [543:0] rri [0:15]; wire [543:0] rro [0:15];
@@ -277,6 +300,11 @@ module tb_dsdv_eng_rr;
         if (st !== 4'd0 || tf !== 16'd0) begin e_flt = e_flt + 1; $display("TB_ENG_RR faults st %b taps %b", st, tf); end
         for (kk = 0; kk < 16; kk = kk + 1) if (rd[kk][561] !== 1'b0) begin e_flt = e_flt + 1; $display("TB_ENG_RR controller %0d status fault", kk); end
         errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt;
+`ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
+        $display("TB_ENG_RR_LOCKSTEP split_mut %0d cycles %0d row_beats %0d rco_words %0d rung_words %0d mismatches %0d",
+                 SPLIT_MUT, lk_cyc, lk_xv, lk_rco, lk_vo, lk_bad);
+        if (lk_bad != 0 || lk_xv == 0) errs = errs + 1;
+`endif
         $display("TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v %0d first_request %0d max_response_age %0d / RETURN_AGE %0d first_fragment %0d last_fragment %0d",
                  l_win, l_rq, age_max, RETURN_AGE, l_x0 + 1, l_x1 + 1);
         $display("TB_ENG_RR_STATS xq_mut %0d tap_mut %0d seed %0d lat %0d windows %0d row_beats %0d xq %0d/%0d reader rq %0d beats %0d pops %0d rung %0d errs win %0d ob %0d xq %0d rd %0d rung %0d flt %0d",

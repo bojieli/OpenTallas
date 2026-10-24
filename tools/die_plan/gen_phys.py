@@ -116,7 +116,7 @@ def tap_points(P, tn):
     tap missing, or on a clock tap (two pins on one spot = GRT-0080), sits one lattice step (8.64 um) away."""
     t = P.types[tn]
     h = t["outline_um"][1]
-    cks = [(x, y) for _, x, y in S.tap_grid(P, tn)]
+    cks = [(x, y) for _, x, y in S.tap_grid(P, tn)] + [(x, y) for _, x, y, _ in S.core_taps(P, tn)]
     ck = list(cks[0])
     rs = list(t.get("reset", {}).get("tap_um", ck))
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
@@ -126,9 +126,35 @@ def tap_points(P, tn):
     return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
 
 
+def core_tap_pins(P, tn):
+    """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
+    return [(n,) + _snap_tap(P, x, y) for n, x, y, _ in S.core_taps(P, tn)]
+
+
+def core_tap_rows(P, tn):
+    """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
+    `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin."""
+    insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
+    out = []
+    for n, _, _, tp in S.core_taps(P, tn):
+        nm = tp["name"]
+        hit = None
+        for i in sorted(insts, key=len, reverse=True):
+            if nm == i:
+                hit = (i, "*")
+            elif nm.startswith(i + "."):
+                hit = (i, nm[len(i) + 1:])
+            if hit:
+                break
+        if not hit:
+            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
+        out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp), float(tp.get("insertion_ps", 0.0))))
+    return out
+
+
 def tap_pins(P, tn):
-    """[(port, x, y)]: every clock tap + the reset tap."""
-    return clock_pins(P, tn) + [("arst_n",) + tuple(tap_points(P, tn)[1])]
+    """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap."""
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + tuple(tap_points(P, tn)[1])]
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -203,6 +229,7 @@ def hold_in_min_ps(P):
 # COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
 # the sender (clk -> vclk: out ports) and the receiver (vclk -> clk: in ports); clk -> clk keeps the full value.
 UNC_SPLIT = 0.5
+HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sdc_lint: must be <= 0)
 
 
 def _tap_cap(t):
@@ -218,7 +245,7 @@ def sdc(P, tn, pins):
     per = t_lib(P.die["period_ps"])
     lat = t_lib(P.clock["insertion_ps"])
     io = IO_BUDGET * per
-    cks = [n for n, _, _ in clock_pins(P, tn)]
+    cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
     ft_out = " ".join(f"{n}_o[*]" for n in slots)
@@ -235,17 +262,24 @@ def sdc(P, tn, pins):
            f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
            f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
            f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
-           f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
-           f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
-           f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n")
+           "set non_clk_in [all_inputs -no_clocks]\n"
+           f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
+           f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
+    for n, inst, pin, early, ins in core_tap_rows(P, tn):
+        out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
+                f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
-                f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+                f"set_input_delay -max {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                f"set_output_delay -max {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
     out += (f"set_input_delay -min {t_lib(hold_in_min_ps(P)):.4f} -clock vclk $non_clk_in\n")
+    # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
+    # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
+    # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
+    out += (f"set_output_delay -min {t_lib(HOLD_OUT_MIN_PS):.4f} -clock vclk [all_outputs]\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -275,12 +309,41 @@ def type_macros(P, tn):
     return out
 
 
+def core_latency_files(P, tn, kd, root=None):
+    """CP2: per kit, the hard cores' internal clock latency (core inst -> clock pin -> TT lib max_clock_tree_path,
+    rise; 0 when the core has no lib or the pin no arc) -> core_latency.json + core_latency.txt (`inst pin ps tap`,
+    read by tap_balance.tcl), and the early core taps -> core_taps.txt (`port inst pin|* early_ps`, read by
+    clock_taps.tcl).  Types without hard cores write nothing (kits unchanged)."""
+    import cores as C
+    rows = C.latency_table(P, tn, root) if P.types[tn].get("hard_cores") else []
+    taps = core_tap_rows(P, tn)
+    if rows:
+        (kd / "core_latency.json").write_text(json.dumps(dict(type=tn, edge="rise", target_ps=P.clock["insertion_ps"],
+                                                              rows=rows), indent=1) + "\n")
+        (kd / "core_latency.txt").write_text(
+            "# inst pin max_clock_tree_path_rise_ps tap   (GENERATED by gen.py phys; TT lib of each hard core)\n" +
+            "".join(f"{r['inst']} {r['pin']} {r['rise_ps']:g} {r['tap']}\n" for r in rows))
+    if taps:
+        (kd / "core_taps.txt").write_text("# port inst pin|* early_ps insertion_ps   (GENERATED; CP2 early core taps)\n" +
+                                          "".join(f"{n} {i} {p} {e:g} {ins:g}\n" for n, i, p, e, ins in taps))
+    return dict(rows=rows, taps=taps)
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     t = P.types[tn]
     w, h = t["outline_um"]
+    macros = type_macros(P, tn)
+    # A physical abstract alone leaves macro paths untimed and prevents load-driven
+    # buffering (S81 frame review, 2026-10-24). Reject before writing a partial kit.
+    missing_libs = [f"{inst} ({mod})" for inst, mod, lef, lib, x, y, o in macros if not lib]
+    if missing_libs:
+        raise ValueError(f"type {tn}: macros have LEF but no timing liberty: " + ", ".join(missing_libs))
+    ss_libs = [f"{inst} ({lib})" for inst, mod, lef, lib, x, y, o in macros
+               if re.search(r"_ss\.lib(?:\.gz)?$", str(lib), re.I)]
+    if ss_libs:
+        raise ValueError(f"type {tn}: implementation requires TT macro liberty, not SS: " + ", ".join(ss_libs))
     kd = Path(out) / tn
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
-    macros = type_macros(P, tn)
     mlef, mlib, mplace = [], [], ["# GENERATED by tools/die_plan/gen.py phys: content macros at their plan sites."]
     if macros:
         (kd / "macros").mkdir(exist_ok=True)
@@ -288,12 +351,22 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         for inst, mod, lef, lib, x, y, o in macros:
             for src, lst in ((lef, mlef), (lib, mlib)):
                 if src:
-                    f = base / src
+                    f = base / src         # an absolute view path (pair.py --core-views) stays as is
                     if not f.is_file():
                         raise FileNotFoundError(f"type {tn}: macro {inst} view {f} missing")
                     if f"/work/macros/{f.name}" not in lst:
                         shutil.copyfile(f, kd / "macros" / f.name)
                         lst.append(f"/work/macros/{f.name}")
+                    if lst is mlib:
+                        # Keep per-corner timing views beside the declared TT view.
+                        # signoff.py selects TT/FF by filename; ORFS still uses only
+                        # the declared typical library during implementation.
+                        match = re.match(r"^(.*)_(tt|typ|ff|ss)(\.lib(?:\.gz)?)$", f.name)
+                        if match:
+                            for corner in ("tt", "typ", "ff"):
+                                sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
+                                if sibling.is_file() and sibling != f:
+                                    shutil.copyfile(sibling, kd / "macros" / sibling.name)
             mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:
@@ -329,6 +402,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
+    # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
+    import sdc_lint
+    lctx = sdc_lint.kit_context(P, tn)
+    (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
+    shutil.copyfile(Path(__file__).with_name("sdc_lint.py"), kd / "sdc_lint.py")
+    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
+    if lerr:
+        raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
+    clat = core_latency_files(P, tn, kd, root)
     m = CORE_MARGIN_UM
     forest = any(Path(f).name == "ot_pl_land_reset_forest.sv" for f in srcs)
     cfg = [f"# GENERATED by tools/die_plan/gen.py phys: partition type {tn} of die_plan {P.name}. Do not edit.",
@@ -355,6 +438,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
+           # CP1-R10 10-24: ORFS synth_odb.tcl eliminate_dead_logic deleted face registers whose q the leaf leaves
+           # unused (r10b: 120 in-bus flops); boundary cells dont_touch around that step only
+           "export PRE_SYNTH_TCL = /work/face_keep.tcl",
+           "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
               "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
            "export TNS_END_PERCENT = 100",
@@ -370,8 +457,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
            f"export OT_TAP_WINDOW_PS = {float(P.clock['insertion_tol_ps']):g}",
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
+           # CP2: hard-core internal clock latency (core_latency.txt: inst pin ps tap) for tap_balance.tcl's effective
+           # arrival, and the early core taps (core_taps.txt) clock_taps.tcl hangs the core clock pins on
+           *(["export OT_CORE_LAT = /work/core_latency.txt"] if clat["rows"] else []),
+           *(["export OT_CORE_TAPS = /work/core_taps.txt"] if clat["taps"] else []),
            # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
            "export CORNER = TC",
+           # Native TT/FF repair for macro-free kits. Macro parents need their
+           # child timing libraries separated explicitly by corner.
+           *(["export CORNERS = tc bc",
+              "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
+              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
@@ -381,10 +477,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
+              "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
+    # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
+    ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    if ist:
+        shutil.copyfile(ist[0], kd / "istations.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -394,6 +495,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
+    from ft_bit_sites import table as ft_bit_sites_table
+    (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(t.get("ft_slots", [])))
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
@@ -407,11 +510,21 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins)
+                                     for n, i, p_, e, ins in clat["taps"]],
                           uncertainty_split=UNC_SPLIT),
+               core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
+    # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
+    shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
+        shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
+    shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
+    shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
     return kd
@@ -419,7 +532,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
 
 RUN_KIT = r"""#!/bin/bash
 # GENERATED by tools/die_plan/gen.py phys: run one partition kit through ORFS in docker (synth .. route, abstract,
-# pin audit of the routed ODB against the plan pins).  Outputs are chowned back to the caller.
+# pin audit of the routed ODB against the plan pins). Route goal builds routed abstracts without GDS;
+# finish retains full GDS obligations. Outputs are chowned back to the caller.
+# Fail-closed gates (CP1-R10 10-24): sdc_lint.py against the image's liberty time_unit BEFORE synth, face_guard.py on
+# the Yosys netlist AND on 1_synth.odb (after ORFS eliminate_dead_logic) right AFTER synth (every planned face register
+# its own flop driving only its port); any failing stops the kit (sdc_lint.log / face_guard.json / face_guard_odb.json).
 #   run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8]       (heavy: call it through ot-run --mem MEM_GB)
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
@@ -427,9 +544,16 @@ IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
-  M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
-  \$M $GOAL; rc=\$?; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M generate_abstract; rc=\$?; fi; \
+  M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
+  if [ -f /work/sdc_lint.py ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
+  if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
+  N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
+  if [ \$rc = 0 ] && [ -f /work/face_guard.py ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; fi; \
+  D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
+  if [ \$rc = 0 ] && [ -f /work/face_guard.py ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
+  if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
@@ -437,6 +561,15 @@ rc=$?
 # a killed / OOM container skips its chown: hand the tree back anyway (else root-owned stale results survive)
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+# SIGNOFF (10-24): every routed kit gets the uniform verdict (TT setup / FF hold with the standard boundary-hold
+# overlay / DRV / unconstrained / pin-flop spread <= 80 + insertion / sdc_lint / face_guard / DRC + antenna) in
+# KIT/signoff/signoff.json.  The verdict does not change this script's exit code (the route itself succeeded); a kit
+# is closed only when that file says SIGNED.
+if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; } && [ -f "$K/signoff.py" ]; then
+  SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-docker} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
+    --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+fi
 exit $rc
 """
 
@@ -593,7 +726,10 @@ def write_assembly(raw, out, views, rtl_root=None):
            "export LEC_CHECK = 0",
            "export SKIP_LAST_GASP = 1"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    (kd / "sta_die.tcl").write_text(sta_die_tcl(P))
+    import spine
+    br = spine.branch_table(P, dropped)
+    (kd / "spine_branch.json").write_text(json.dumps(br, indent=1) + "\n")
+    (kd / "sta_die.tcl").write_text(sta_die_tcl(P, br))
     seams = []
     for pid, pr in sorted(P.ports.items()):
         if DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
@@ -614,10 +750,15 @@ def write_assembly(raw, out, views, rtl_root=None):
     return kd
 
 
-def sta_die_tcl(P):
+def sta_die_tcl(P, branch=None):
     """die STA over the REAL routed partitions: their final netlists + SPEF under the die top (+ the die SPEF), clocks
     propagated through each partition's own tree.  env: CORNER (TT|FF), PARTS (dir with <type>/6_final.v|.spef),
-    DIE (dir with the die's 6_final.v|.spef, optional), OUT."""
+    DIE (dir with the die's 6_final.v|.spef, optional), OUT.
+    CP2 spine branch model (branch = spine.branch_table, written to spine_branch.json): env SPINE=branch (the default
+    for a pair plan, i.e. one with clock.spine.die_root_um) puts a generated clock on every connected partition tap
+    pin with source latency = its offset_ps (the die H-tree branch mismatch, minus the early shift of a core tap); this
+    REPLACES the pair die's own short spine RC up to that pin.  SPINE=routed: one clock from the die clk port through
+    the routed pair spine (CP1 behaviour; early core taps then see no early shift)."""
     import gen_rtl
     top = f"{gen_rtl.sv_id(P.name)}_top"
     per = t_lib(P.die["period_ps"])
@@ -654,14 +795,29 @@ def sta_die_tcl(P):
         lines.append(f"  read_spef -path {gen_rtl.sv_id(n)} $::env(PARTS)/{p['type']}/6_final.spef")
     lines.append("}")
     lines += ["if {[info exists ::env(DIE)] && [file exists $::env(DIE)/6_final.spef]} { read_spef $::env(DIE)/6_final.spef }",
-              f"create_clock -name clk -period {per:.4f} [get_ports clk]",
-              "set_propagated_clock [get_clocks clk]",
+              f"create_clock -name clk -period {per:.4f} [get_ports clk]"]
+    pair = bool((P.clock.get("spine", {}) or {}).get("die_root_um"))
+    lines.append(f"set SPINE [expr {{[info exists ::env(SPINE)] ? $::env(SPINE) : \"{'branch' if pair else 'routed'}\"}}]")
+    if branch:
+        lines.append(f"# spine branch model: die root {branch['die_root_um']}, {branch['branch_ps_per_mm']:g} ps/mm, "
+                     f"leaf {branch['branch_leaf_um']:g} um, ref {branch['ref_branch_ps']:g} ps (spine_branch.json)")
+        lines.append("if {$SPINE == \"branch\"} {")
+        for n, r in sorted(branch["parts"].items()):
+            for port, v in sorted(r["taps"].items()):
+                ck = f"ck_{gen_rtl.sv_id(n)}_{port}"
+                lines.append(f"  create_generated_clock -name {ck} -source [get_ports clk] -divide_by 1 "
+                             f"[get_pins {gen_rtl.sv_id(n)}/{port}]")
+                lines.append(f"  set_clock_latency -source {t_lib(v['offset_ps']):.4f} [get_clocks {ck}]   "
+                             f";# branch {v['branch_ps']:g} ps ({v['length_um']:g} um), early {v['early_ps']:g}")
+        lines.append("}")
+    lines += ["puts \"OT_SPINE $SPINE\"",
+              "set_propagated_clock [all_clocks]",
               f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]",
               f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]",
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",
-              "puts $fh \"mode $MODE corner $::env(CORNER)\"",
+              "puts $fh \"mode $MODE corner $::env(CORNER) spine $SPINE\"",
               # R4 revised: seam skew on RC = rise-edge clock arrival at the capture CK minus the launch CK (OpenSTA
               # arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2)
               "proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq \"\"} { return \"\" }; "
@@ -685,6 +841,16 @@ def sta_die_tcl(P):
             lines.append(f"foreach r $rows {{ lassign $r sl sp ep; puts $fh \"PORT {pid} {dly} slack $sl "
                          f"skew [ot_skew $sp $ep] from $sp to $ep\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
+    # R4 face-flop spread (CP1-R10): rise-edge CK arrival over every pin register (u_bin_* / u_bout_* boundary flops)
+    # per partition instance, and over the whole die: FFSPREAD <inst|ALL> n lo hi spread (ps, propagated, RC)
+    lines += ["set ff_all {}",
+              "foreach c [all_registers -cells] { set n [get_full_name $c]; "
+              "if {![regexp {^([^/]+)/u_(bin|bout)_} $n -> pi]} { continue }; "
+              "set q [ot_ckpin $n/D]; if {$q eq \"\"} { continue }; set a [ot_ck $q]; if {$a eq \"\"} { continue }; "
+              "dict lappend ff_all $pi $a; dict lappend ff_all ALL $a }",
+              "foreach k [dict keys $ff_all] { set v [lsort -real [dict get $ff_all $k]]; "
+              "puts $fh [format \"FFSPREAD %s n %d lo %.1f hi %.1f spread %.1f\" $k [llength $v] [lindex $v 0] "
+              "[lindex $v end] [expr {[lindex $v end] - [lindex $v 0]}]] }"]
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
               "close $fh",
               "report_checks -path_delay max -through [get_pins -hierarchical */x_i*] -format full_clock_expanded "
@@ -744,7 +910,9 @@ def die_flow_tcl(P, lefs, libs):
 
 RUN_DIE = r"""#!/bin/bash
 # GENERATED by tools/die_plan/gen.py assembly: route the die, audit the seams, die STA two ways (flat stitched: the
-# routed partition netlists + per-instance SPEF; ETM: the partitions' abstract .lib + die SPEF), TT setup / FF hold.
+# routed partition netlists + per-instance SPEF; ETM: the partitions' abstract .lib + die SPEF) at SS / TT / FF
+# (sign-off per AGENTS.md as restated 2026-10-24: setup at TT, hold at FF; SS is reported for information only and
+# never gates -- CP1-R10 added the SS run as information).
 #   run_die.sh DIEDIR PARTS_DIR [MEM_GB=32] [CPUS=8]   (heavy: through ot-run)   env OT_ORFS_IMAGE picks the image
 #   PARTS_DIR/<type>/6_final.v|.spef = each partition kit's routed netlist + SPEF
 set -uo pipefail
@@ -755,7 +923,7 @@ docker run --rm --name dpdie-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   -e HUID=$(id -u) -e HGID=$(id -g) -w /work "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   /usr/bin/time -v openroad -threads $CPUS -exit /work/die_flow.tcl > /work/die_flow.log 2>&1; echo FLOW_EXIT \$? >> /work/die_flow.log; \
   ODB=/work/die_routed.odb SEAMS=/work/seams.json OUT=/work/abut_audit.json openroad -python -exit /work/abut_audit.py > /work/abut_audit.log 2>&1; \
-  for m in flat etm; do T=openroad; [ \$m = flat ] && T='sta -no_splash'; for c in TT FF; do MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt \$T -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
+  for m in flat etm; do T=openroad; [ \$m = flat ] && T='sta -no_splash'; for c in SS TT FF; do MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt \$T -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
   chown -R \$HUID:\$HGID /work"
 tail -3 "$K/die_flow.log"; tail -2 "$K/abut_audit.log"; tail -n 3 "$K"/sta_*.txt 2>/dev/null
 """

@@ -59,7 +59,12 @@ module dsdv_svc_rs_c #(
     parameter integer DIE_ID = 0,
     parameter integer ST = 0,
     parameter bit SRAM_MACRO = 0,
-    parameter integer PV_IDENTITY = 0, parameter bit SMT = 1
+    parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
+    // S81-P9-FACE (10-23): face mask {SO, SI, GO, GI, RO, RI, UO, UI, DO, DI}, 4 b each, bit f = face N / E / S / W
+    // (tools/s81_dv/svc_rs/svc_rs_faces.py from the role ROMs).  A face whose bit is 0 has no flop, relay or logic in
+    // this core (generate): its input is never read, its output is constant 0 and the port variant
+    // (dsdv_svc_rs_fv.sv) does not carry it.  All ones (default) = the pre-mask slice, unchanged.
+    parameter logic [39:0] FM = {40{1'b1}}
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -112,7 +117,10 @@ module dsdv_svc_rs_c #(
 `endif
 );
 `include "dsdv_svc_rs_roles.svh"
+`include "dsdv_svc_rs_faces.svh"
     localparam integer DW = 805, UW = 16;
+    localparam logic [3:0] FM_DI = FM[3:0], FM_DO = FM[7:4], FM_UI = FM[11:8], FM_UO = FM[15:12], FM_RI = FM[19:16],
+                           FM_RO = FM[23:20], FM_GI = FM[27:24], FM_GO = FM[31:28], FM_SI = FM[35:32], FM_SO = FM[39:36];
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
@@ -147,12 +155,16 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ dn tree: faces in (pin flop + relay)
     wire [DW-1:0] dfi [0:3];
     generate for (f = 0; f < 4; f = f + 1) begin : g_di
+      if (FM_DI[f]) begin : g_on
         reg [DW-1:0] p0, p1;
         always @(posedge ck or negedge rn) if (!rn) begin p0[0] <= 1'b0; p0[513] <= 1'b0; p1[0] <= 1'b0; p1[513] <= 1'b0; end
             else begin p0[0] <= dn_i[DW*f]; p0[513] <= dn_i[DW*f + 513]; p1[0] <= p0[0]; p1[513] <= p0[513]; end
         always @(posedge ck) begin p0[512:1] <= dn_i[DW*f + 1 +: 512]; p0[DW-1:514] <= dn_i[DW*f + 514 +: DW - 514];
                                    p1[512:1] <= p0[512:1]; p1[DW-1:514] <= p0[DW-1:514]; end
         assign dfi[f] = p1;
+      end else begin : g_off
+        assign dfi[f] = '0;                           // not a parent face of this variant: no pin flops
+      end
     end endgenerate
     // entry: host pins (pin flop) -> job gate (same cycle) -> relay
     wire [DW-1:0] hst;
@@ -183,12 +195,16 @@ module dsdv_svc_rs_c #(
     always @(posedge ck) begin cs[512:1] <= cin[512:1]; cs[DW-1:514] <= cin[DW-1:514]; end
     // faces out (relay + pin flop) to the children
     generate for (f = 0; f < 4; f = f + 1) begin : g_do
+      if (FM_DO[f]) begin : g_on
         reg [DW-1:0] o0, o1;
         always @(posedge ck or negedge rn) if (!rn) begin o0[0] <= 1'b0; o0[513] <= 1'b0; o1[0] <= 1'b0; o1[513] <= 1'b0; end
             else begin o0[0] <= cs[0] && chm[f]; o0[513] <= cs[513] && chm[f]; o1[0] <= o0[0]; o1[513] <= o0[513]; end
         always @(posedge ck) begin o0[512:1] <= cs[512:1]; o0[DW-1:514] <= cs[DW-1:514];
                                    o1[512:1] <= o0[512:1]; o1[DW-1:514] <= o0[DW-1:514]; end
         assign dn_o[DW*f +: DW] = o1;
+      end else begin : g_off
+        assign dn_o[DW*f +: DW] = '0;                 // not a child face of this variant (port absent)
+      end
     end endgenerate
     // stray stream valid on a face that is not this slice's parent (static-schedule check)
     reg dstray;
@@ -222,7 +238,7 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
     reg pl_v; reg [2131:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
-    dsdv_svc_sx #(.MUT(0)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
+    dsdv_svc_sx #(.MUT(0), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
 
@@ -369,11 +385,15 @@ module dsdv_svc_rs_c #(
     wire [RW-1:0] rfi [0:3];
     wire [3:0] chr = chm | pf[7:4];                   // return-tree children + the P path's extra in face (rsv_07: E)
     generate for (f = 0; f < 4; f = f + 1) begin : g_ri
+      if (FM_RI[f]) begin : g_on
         reg p0v, p1v; reg [RW-2:0] p0d, p1d;
         always @(posedge ck or negedge rn) if (!rn) begin p0v <= 1'b0; p1v <= 1'b0; end
             else begin p0v <= ri[RW*f]; p1v <= p0v; end
         always @(posedge ck) begin p0d <= ri[RW*f + 1 +: RW - 1]; p1d <= p0d; end
         assign rfi[f] = {p1d, p1v};
+      end else begin : g_off
+        assign rfi[f] = '0;                           // not a return-tree child / P-in face of this variant
+      end
     end endgenerate
     always @(posedge ck or negedge rn)
         if (!rn) begin rm_v <= 1'b0; r_f <= 1'b0; end
@@ -399,6 +419,7 @@ module dsdv_svc_rs_c #(
         for (int i = 0; i < 4; i++) if (rfi[i][0] && chr[i]) rm_d <= rfi[i][RW-1:1];
     end
     generate for (f = 0; f < 4; f = f + 1) begin : g_ro
+      if (FM_RO[f]) begin : g_on
         reg o0v, o1v; reg [RW-2:0] o0d, o1d;
         always @(posedge ck or negedge rn) if (!rn) begin o0v <= 1'b0; o1v <= 1'b0; end
             else begin o0v <= rm_v && (par == 3'(f + 1) || (pwin && pf[f])); o1v <= o0v; end   // + P out face (rsv_09: W)
@@ -409,6 +430,9 @@ module dsdv_svc_rs_c #(
         always @(posedge ck) begin o0d <= rm_d; o1d <= o0d; end
 `endif
         assign ro[RW*f +: RW] = {o1d, o1v};
+      end else begin : g_off
+        assign ro[RW*f +: RW] = '0;                   // not a return-tree parent / P-out face of this variant
+      end
     end endgenerate
     always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0 && !pwin;
     always @(posedge ck) pv_d <= rm_d;
@@ -422,7 +446,17 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ controller status, local fault
     // hs = {fault, live} per PC controller (dsfd_svc_hs's synchroniser and rule: a fault, or live dropping after it
     // rose, is a sticky slice fault; the job-done half of dsfd_svc_hs lives at the entry's job gate, not here)
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e);
+    // S81-P9-FACE: a strap sid whose role needs a face this variant does not carry is a sticky fault (FM all ones: none)
+    wire fm_f;
+    generate if (FM != {40{1'b1}}) begin : g_fmchk
+        reg fmf; reg [39:0] need;
+        always @(posedge ck or negedge rn) if (!rn) begin need <= '0; fmf <= 1'b0; end
+            else begin need <= rs_fmask(sid); if (|(need & ~FM)) fmf <= 1'b1; end
+        assign fm_f = fmf;
+    end else begin : g_nofmchk
+        assign fm_f = 1'b0;
+    end endgenerate
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e) | fm_f;
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
@@ -437,7 +471,7 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ up tree: {rg fault, rg live, done, fault, cr 6, ack 6}
     // (dsdv_svc_rs_up below; RTL-BUILD-S81 10-18: + the region status {fault, live} of the half's ctrl_rg2 controllers)
     wire [UW-1:0] uc;
-    dsdv_svc_rs_up #(.UW(UW)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
+    dsdv_svc_rs_up #(.UW(UW), .FM_UI(FM_UI), .FM_UO(FM_UO)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
         .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
 
     // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault
@@ -543,7 +577,8 @@ endmodule
 // in flops).  Bits [15:14] = the region status of the controllers below and at this slice: fault = OR of hs fault,
 // live = AND of hs live (hs_s = this slice's synchronised ctrl_rg2 hs = {fault, live}).  No flow control.
 // ---------------------------------------------------------------------------------------------------------------------
-module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) (   // UPMUT: bench negative control only
+module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0,   // UPMUT: bench negative control only
+                       parameter logic [3:0] FM_UI = 4'hf, FM_UO = 4'hf) (   // S81-P9-FACE face masks (child in / parent out)
     input  wire            ck,
     input  wire            rn,
     input  wire [3:0]      chm,
@@ -560,10 +595,14 @@ module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) 
     wire [UW-1:0] ufi [0:3];
     genvar f;
     generate for (f = 0; f < 4; f = f + 1) begin : g_ui
+      if (FM_UI[f]) begin : g_on
         reg [UW-1:0] p0, p1;
         always @(posedge ck or negedge rn) if (!rn) begin p0 <= '0; p1 <= '0; end
             else begin p0 <= up_i[UW*f +: UW]; p1 <= p0; end
         assign ufi[f] = p1;
+      end else begin : g_off
+        assign ufi[f] = '0;                           // not a child face of this variant
+      end
     end endgenerate
     always @(posedge ck or negedge rn)
         if (!rn) uc <= '0;
@@ -577,10 +616,14 @@ module dsdv_svc_rs_up #(parameter integer UW = 16, parameter integer UPMUT = 0) 
             uc <= {rgf, rgl, dn_all, fl_, c6, a6};
         end
     generate for (f = 0; f < 4; f = f + 1) begin : g_uo
+      if (FM_UO[f]) begin : g_on
         reg [UW-1:0] o0, o1;
         always @(posedge ck or negedge rn) if (!rn) begin o0 <= '0; o1 <= '0; end
             else begin o0 <= (par == 3'(f + 1)) ? uc : '0; o1 <= o0; end
         assign up_o[UW*f +: UW] = o1;
+      end else begin : g_off
+        assign up_o[UW*f +: UW] = '0;                 // not the parent face of this variant
+      end
     end endgenerate
 endmodule
 

@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Wi",
+ "kit": "physical/die_plan/qwen_kvsys@366980c5d9 plan v3.8u (KVG3-WI host-core pins)",
+ "verdict": "AUTHOR-REVIEW (pass-conditional; not an independent GEOM-REVIEW verdict)",
+ "hash": "366980c5d9",
+ "reasons": "[10-24 KV-G3 author review of v38u_Wi.png] 22 host cores placed as in v3.1 (origins unchanged); pins on all 4 faces face their largest partners (G0C core_faces mean cos +0.73..+1.00, 0 facing away). Floorplan concerns: (a) phy_adp x8 + phy_pad + cdc_pc sit in the N half while their partner windows are at the NW corner and the cluster plan intent put the PHY band at the S edge over the FDI; (b) core-to-core legs ~950 um (cdc_hi <-> ingest_eng), ~800-1100 um (NW corner window -> phy_adp_0..3) exceed R3 750 with no internal_stations; (c) 2,055 cdc_hi/ci/ch pin bits face the type centre (partners are the unplaced native_qm/fence glue).",
+ "fixes": "Pins accepted for G0C. Before the hub_Wi G3 kit: re-place the host cores (PHY band next to its windows, cdc_hi/ci next to ingest_eng) or add internal_stations for legs > 750 um; place the native_qm/fence glue region.",
+ "reviewer": "KV-G3 (author self-review)",
+ "at": "2026-10-24T08:40:00-07:00",
+ "rule": "lane task: own visual review of renders"
+}

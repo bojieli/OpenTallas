@@ -1,0 +1,668 @@
+{
+ "die": "qwen_compute",
+ "rtl_dir": "/home/ubuntu/scratch/type-dedup/base_qwen_compute/bind/bound_r8/rtl",
+ "plan_types": 56,
+ "bound_modules": 80,
+ "types_with_variants": 21,
+ "by_class": {
+  "param+port_width": 2,
+  "identical": 1,
+  "other+port_width": 10,
+  "port_width": 14,
+  "other+pad+port_width": 5,
+  "other+pad": 1
+ },
+ "types": {
+  "?ot_qkvd_ucie_x64_phy_part": {
+   "modules": [
+    "ot_qkvd_ucie_x64_phy_part"
+   ],
+   "diffs": []
+  },
+  "?qfd_qc_sle_tap": {
+   "modules": [
+    "qfd_qc_sle_tap"
+   ],
+   "diffs": []
+  },
+  "cbf_q00_s2": {
+   "modules": [
+    "qfd_qc_cb_f_q00__cbf_q00",
+    "qfd_qc_cb_f_q00__cbf_q00_s2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_cb_f_q00__cbf_q00_s2",
+     "lines": 55,
+     "cats": {
+      "param": 8,
+      "port_width": 32,
+      "wire": 15
+     },
+     "cls": "param+port_width"
+    }
+   ]
+  },
+  "cbf_q01_s2": {
+   "modules": [
+    "qfd_qc_cb_f_q01__cbf_q01",
+    "qfd_qc_cb_f_q01__cbf_q01_s2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_cb_f_q01__cbf_q01_s2",
+     "lines": 55,
+     "cats": {
+      "param": 8,
+      "port_width": 32,
+      "wire": 15
+     },
+     "cls": "param+port_width"
+    }
+   ]
+  },
+  "cbf_q11": {
+   "modules": [
+    "qfd_qc_cb_f_q11"
+   ],
+   "diffs": []
+  },
+  "cbn_q00": {
+   "modules": [
+    "qfd_qc_cb_n_q00"
+   ],
+   "diffs": []
+  },
+  "cbn_q01": {
+   "modules": [
+    "qfd_qc_cb_n_q01"
+   ],
+   "diffs": []
+  },
+  "cbn_q11": {
+   "modules": [
+    "qfd_qc_cb_n_q11"
+   ],
+   "diffs": []
+  },
+  "cbx_q10": {
+   "modules": [
+    "qfd_qc_cb_x_q10"
+   ],
+   "diffs": []
+  },
+  "coll_core": {
+   "modules": [
+    "qfd_qc_coll_core_part"
+   ],
+   "diffs": []
+  },
+  "coll_ft": {
+   "modules": [
+    "qfd_qc_coll_ft_part"
+   ],
+   "diffs": []
+  },
+  "coll_ftc": {
+   "modules": [
+    "qfd_qc_coll_ftc_part"
+   ],
+   "diffs": []
+  },
+  "coll_ftm": {
+   "modules": [
+    "qfd_qc_coll_ftm_part"
+   ],
+   "diffs": []
+  },
+  "coll_ftn": {
+   "modules": [
+    "qfd_qc_coll_ftn_part"
+   ],
+   "diffs": []
+  },
+  "coll_n": {
+   "modules": [
+    "qfd_qc_coll_n_part"
+   ],
+   "diffs": []
+  },
+  "coll_s": {
+   "modules": [
+    "qfd_qc_coll_s_part"
+   ],
+   "diffs": []
+  },
+  "glue": {
+   "modules": [
+    "qfd_qc_glue_part"
+   ],
+   "diffs": []
+  },
+  "native59": {
+   "modules": [
+    "qfd_qc_native59_part"
+   ],
+   "diffs": []
+  },
+  "phy_serdes": {
+   "modules": [
+    "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes",
+    "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b"
+   ],
+   "diffs": [
+    {
+     "module": "ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b",
+     "lines": 0,
+     "cats": {},
+     "cls": "identical"
+    }
+   ]
+  },
+  "sle_ctl": {
+   "modules": [
+    "qfd_qc_sle_ctl",
+    "qfd_qc_sle_ctl_v1",
+    "qfd_qc_sle_ctl_v2",
+    "qfd_qc_sle_ctl_v3"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_ctl_v1",
+     "lines": 11,
+     "cats": {
+      "port_width": 4,
+      "wire": 3,
+      "other": 4
+     },
+     "cls": "other+port_width"
+    },
+    {
+     "module": "qfd_qc_sle_ctl_v2",
+     "lines": 11,
+     "cats": {
+      "port_width": 4,
+      "wire": 3,
+      "other": 4
+     },
+     "cls": "other+port_width"
+    },
+    {
+     "module": "qfd_qc_sle_ctl_v3",
+     "lines": 11,
+     "cats": {
+      "port_width": 4,
+      "wire": 3,
+      "other": 4
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "sle_fe_v3": {
+   "modules": [
+    "qfd_qc_sle_fe__sle_fe_v1",
+    "qfd_qc_sle_fe__sle_fe_v2",
+    "qfd_qc_sle_fe__sle_fe_v3"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_fe__sle_fe_v2",
+     "lines": 10,
+     "cats": {
+      "port_width": 9,
+      "wire": 1
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_sle_fe__sle_fe_v3",
+     "lines": 94,
+     "cats": {
+      "port_width": 59,
+      "wire": 25,
+      "other": 10
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "sle_fw_v2": {
+   "modules": [
+    "qfd_qc_sle_fw__sle_fw_v1",
+    "qfd_qc_sle_fw__sle_fw_v2",
+    "qfd_qc_sle_fw_v1__sle_fw_v1_v1",
+    "qfd_qc_sle_fw_v1__sle_fw_v2_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_fw__sle_fw_v2",
+     "lines": 2100,
+     "cats": {
+      "port_width": 10,
+      "wire": 12,
+      "pad": 2065,
+      "other": 13
+     },
+     "cls": "other+pad+port_width"
+    },
+    {
+     "module": "qfd_qc_sle_fw_v1__sle_fw_v1_v1",
+     "lines": 2066,
+     "cats": {
+      "pad": 2065,
+      "other": 1
+     },
+     "cls": "other+pad"
+    },
+    {
+     "module": "qfd_qc_sle_fw_v1__sle_fw_v2_v1",
+     "lines": 2106,
+     "cats": {
+      "port_width": 12,
+      "wire": 14,
+      "pad": 2065,
+      "other": 15
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "sle_hc0": {
+   "modules": [
+    "qfd_qc_sle_hc0"
+   ],
+   "diffs": []
+  },
+  "sle_hc1": {
+   "modules": [
+    "qfd_qc_sle_hc1"
+   ],
+   "diffs": []
+  },
+  "sle_hc2": {
+   "modules": [
+    "qfd_qc_sle_hc2"
+   ],
+   "diffs": []
+  },
+  "sle_hc3": {
+   "modules": [
+    "qfd_qc_sle_hc3"
+   ],
+   "diffs": []
+  },
+  "sle_sc": {
+   "modules": [
+    "qfd_qc_sle_sc",
+    "qfd_qc_sle_sc_v1",
+    "qfd_qc_sle_sc_v2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_sc_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_sle_sc_v2",
+     "lines": 22,
+     "cats": {
+      "port_width": 14,
+      "wire": 5,
+      "other": 3
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "sle_st_a": {
+   "modules": [
+    "qfd_qc_sle_st_a",
+    "qfd_qc_sle_st_a_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_st_a_v1",
+     "lines": 536,
+     "cats": {
+      "port_width": 2,
+      "wire": 2,
+      "pad": 524,
+      "other": 8
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "sle_st_b": {
+   "modules": [
+    "qfd_qc_sle_st_b",
+    "qfd_qc_sle_st_b_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_st_b_v1",
+     "lines": 20,
+     "cats": {
+      "port_width": 2,
+      "wire": 2,
+      "other": 16
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "sle_stm": {
+   "modules": [
+    "qfd_qc_sle_stm",
+    "qfd_qc_sle_stm_v1",
+    "qfd_qc_sle_stm_v2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_stm_v1",
+     "lines": 12,
+     "cats": {
+      "port_width": 10,
+      "wire": 2
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_sle_stm_v2",
+     "lines": 22,
+     "cats": {
+      "port_width": 15,
+      "wire": 4,
+      "other": 3
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "sle_su_c": {
+   "modules": [
+    "qfd_qc_sle_su_c",
+    "qfd_qc_sle_su_c_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_su_c_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "sle_su_l0": {
+   "modules": [
+    "qfd_qc_sle_su_l0"
+   ],
+   "diffs": []
+  },
+  "sle_su_l1": {
+   "modules": [
+    "qfd_qc_sle_su_l1",
+    "qfd_qc_sle_su_l1_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_sle_su_l1_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "slw_fe_v1": {
+   "modules": [
+    "qfd_qc_slw_fe__slw_fe_v1",
+    "qfd_qc_slw_fe__slw_fe_v2",
+    "qfd_qc_slw_fe_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_fe__slw_fe_v2",
+     "lines": 15,
+     "cats": {
+      "port_width": 15
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_slw_fe_v1",
+     "lines": 20,
+     "cats": {
+      "port_width": 19,
+      "wire": 1
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "slw_fw_v1": {
+   "modules": [
+    "qfd_qc_slw_fw__slw_fw_v1",
+    "qfd_qc_slw_fw__slw_fw_v2",
+    "qfd_qc_slw_fw__slw_fw_v3"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_fw__slw_fw_v2",
+     "lines": 33,
+     "cats": {
+      "port_width": 6,
+      "wire": 11,
+      "other": 16
+     },
+     "cls": "other+port_width"
+    },
+    {
+     "module": "qfd_qc_slw_fw__slw_fw_v3",
+     "lines": 2254,
+     "cats": {
+      "port_width": 38,
+      "wire": 14,
+      "pad": 2184,
+      "other": 18
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "slw_hc0": {
+   "modules": [
+    "qfd_qc_slw_hc0"
+   ],
+   "diffs": []
+  },
+  "slw_hc1": {
+   "modules": [
+    "qfd_qc_slw_hc1"
+   ],
+   "diffs": []
+  },
+  "slw_hc2": {
+   "modules": [
+    "qfd_qc_slw_hc2"
+   ],
+   "diffs": []
+  },
+  "slw_hc3": {
+   "modules": [
+    "qfd_qc_slw_hc3"
+   ],
+   "diffs": []
+  },
+  "slw_sc": {
+   "modules": [
+    "qfd_qc_slw_sc",
+    "qfd_qc_slw_sc_v1",
+    "qfd_qc_slw_sc_v2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_sc_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_slw_sc_v2",
+     "lines": 12,
+     "cats": {
+      "port_width": 6,
+      "wire": 3,
+      "other": 3
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "slw_st_a": {
+   "modules": [
+    "qfd_qc_slw_st_a",
+    "qfd_qc_slw_st_a_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_st_a_v1",
+     "lines": 536,
+     "cats": {
+      "port_width": 2,
+      "wire": 2,
+      "pad": 524,
+      "other": 8
+     },
+     "cls": "other+pad+port_width"
+    }
+   ]
+  },
+  "slw_st_b": {
+   "modules": [
+    "qfd_qc_slw_st_b",
+    "qfd_qc_slw_st_b_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_st_b_v1",
+     "lines": 20,
+     "cats": {
+      "port_width": 2,
+      "wire": 2,
+      "other": 16
+     },
+     "cls": "other+port_width"
+    }
+   ]
+  },
+  "slw_stm": {
+   "modules": [
+    "qfd_qc_slw_stm",
+    "qfd_qc_slw_stm_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_stm_v1",
+     "lines": 12,
+     "cats": {
+      "port_width": 10,
+      "wire": 2
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "slw_su_c": {
+   "modules": [
+    "qfd_qc_slw_su_c",
+    "qfd_qc_slw_su_c_v1",
+    "qfd_qc_slw_su_c_v2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_su_c_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_slw_su_c_v2",
+     "lines": 10,
+     "cats": {
+      "port_width": 8,
+      "wire": 2
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "slw_su_l0": {
+   "modules": [
+    "qfd_qc_slw_su_l0",
+    "qfd_qc_slw_su_l0_v1"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_su_l0_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "slw_su_l1": {
+   "modules": [
+    "qfd_qc_slw_su_l1",
+    "qfd_qc_slw_su_l1_v1",
+    "qfd_qc_slw_su_l1_v2"
+   ],
+   "diffs": [
+    {
+     "module": "qfd_qc_slw_su_l1_v1",
+     "lines": 5,
+     "cats": {
+      "port_width": 4,
+      "wire": 1
+     },
+     "cls": "port_width"
+    },
+    {
+     "module": "qfd_qc_slw_su_l1_v2",
+     "lines": 10,
+     "cats": {
+      "port_width": 8,
+      "wire": 2
+     },
+     "cls": "port_width"
+    }
+   ]
+  },
+  "tt_ctlm": {
+   "modules": [
+    "qfd_qc_tt_ctlm_part"
+   ],
+   "diffs": []
+  }
+ }
+}

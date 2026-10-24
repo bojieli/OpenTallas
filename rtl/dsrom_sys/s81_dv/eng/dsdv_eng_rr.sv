@@ -167,10 +167,219 @@ endmodule
 // Faults (st, sticky): reader word and Engram word on one lane edge; Engram request at occupancy >= RFD; owner FIFO
 // overflow / pop with empty FIFO; Engram hold ring overflow; an Engram code response with no Engram request out.
 // ---------------------------------------------------------------------------------------------------------------------
+// SAFE successor (TOK-FUNC2-ENG_TAP 10-21, safe checklist 3/8): the same tap, cycle for cycle, built from kept-hierarchy
+// leaves so that NO native driver exceeds 32 loads (mapped native census) and every reset leaf has <= 32 sinks:
+//   * the 2 x 6 x 263-b hold rings are 12 bit slices (dsdv_eng_tap_hs, 22 b a slice); each slice keeps its own copies
+//     of the ring pointers / occupancy, its own Engram decode, own slot / take decode and its share of the pco mux
+//     (write enable 22 loads, read select 24, take select 22);
+//   * the 44-b request data mux of a lane is 2 x 22-b kept leaves (dsdv_eng_tap_rqd) with their own hit decode;
+//   * the 32-entry owner FIFO of a lane is 4 x 8-entry kept banks (dsdv_eng_tap_ofb) with their own write-pointer copy;
+//   * lane request control (dsdv_eng_tap_rqc) and response control (dsdv_eng_tap_rsc) are kept leaves;
+//   * reset: ot_rst_relay_bounded32 (same 3-edge release as SYNC2 / TREE1), 30 leaves of <= 25 sinks;
+//   * the strap sid is registered in every leaf (port sid -> <= 27 flop D pins).
+// occ (== on_ by construction: both + out - pop from 0) is folded into on_.  Same ports, same edges, same faults.
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_slot (
+    input wire pv_in, input wire [3:0] own, input wire [3:0] sq, output wire myslot
+);
+    assign myslot = !pv_in && own == sq;
+endmodule
+
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_take (
+    input wire myslot, input wire nz0, input wire nz1, output wire [1:0] take
+);
+    assign take = {myslot && nz1 && !nz0, myslot && nz0};
+endmodule
+
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_we (
+    input wire eng, input wire [5:0] hw, output wire [5:0] we
+);
+    assign we = {6{eng}} & hw;
+endmodule
+
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_hit #(parameter integer P = 0) (
+    input wire [5:0] rci, input wire [3:0] sq, output wire hit
+);
+    assign hit = rci[0] && rci[5:2] == sq && (P == 1 ? rci[1] : !rci[1]);
+endmodule
+
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_eng #(parameter integer MUT = 0) (
+    input wire bv, input wire [9:0] bt, output wire eng
+);
+    assign eng = (MUT == 1) ? (bv && !bt[9] && bt[5:2] != 4'd0) : (bv && !bt[9] && bt[1] && bt[5:2] != 4'd0);
+endmodule
+
+// one 22-b bit slice of both lanes' hold rings and of the response-chain payload register
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_hs #(parameter integer MUT = 0, parameter integer W = 22) (
+    input  wire        ck, input wire rn0, input wire rn1, input wire [3:0] sid,
+    input  wire        pv_in, input wire [3:0] own,
+    input  wire        bv0, input wire [9:0] bt0, input wire bv1, input wire [9:0] bt1,
+    input  wire [W-1:0] hin0, input wire [W-1:0] hin1, input wire [W-1:0] pci_d,
+    output reg  [W-1:0] pco_d
+);
+    localparam integer EH = 6;
+    reg [3:0] sq;
+    always @(posedge ck) sq <= sid;
+    wire myslot, e0, e1;
+    wire [1:0] tk_d, tk_c;
+    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .sq(sq), .myslot(myslot));
+    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .eng(e0));
+    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .eng(e1));
+    reg [EH-1:0] hw0, hr0, hw1, hr1;
+    reg [3:0]    hn0, hn1;
+    wire nz0 = hn0 != 4'd0, nz1 = hn1 != 4'd0;
+    dsdv_eng_tap_take u_td (.myslot(myslot), .nz0(nz0), .nz1(nz1), .take(tk_d));
+    dsdv_eng_tap_take u_tc (.myslot(myslot), .nz0(nz0), .nz1(nz1), .take(tk_c));
+    always @(posedge ck or negedge rn0)
+        if (!rn0) begin hw0 <= EH'(1); hr0 <= EH'(1); hn0 <= 4'd0; end
+        else begin
+            if (e0) hw0 <= {hw0[EH-2:0], hw0[EH-1]};
+            if (tk_c[0]) hr0 <= {hr0[EH-2:0], hr0[EH-1]};
+            hn0 <= hn0 + (e0 ? 4'd1 : 4'd0) - (tk_c[0] ? 4'd1 : 4'd0);
+        end
+    always @(posedge ck or negedge rn1)
+        if (!rn1) begin hw1 <= EH'(1); hr1 <= EH'(1); hn1 <= 4'd0; end
+        else begin
+            if (e1) hw1 <= {hw1[EH-2:0], hw1[EH-1]};
+            if (tk_c[1]) hr1 <= {hr1[EH-2:0], hr1[EH-1]};
+            hn1 <= hn1 + (e1 ? 4'd1 : 4'd0) - (tk_c[1] ? 4'd1 : 4'd0);
+        end
+    wire [EH-1:0] we0, we1;
+    dsdv_eng_tap_we u_w0 (.eng(e0), .hw(hw0), .we(we0));
+    dsdv_eng_tap_we u_w1 (.eng(e1), .hw(hw1), .we(we1));
+    reg [W-1:0] he0 [0:EH-1];
+    reg [W-1:0] he1 [0:EH-1];
+    integer e;
+    always @(posedge ck)
+        for (e = 0; e < EH; e = e + 1) begin
+            if (we0[e]) he0[e] <= hin0;
+            if (we1[e]) he1[e] <= hin1;
+        end
+    reg [W-1:0] hs0, hs1;
+    always @* begin
+        hs0 = '0; hs1 = '0;
+        for (e = 0; e < EH; e = e + 1) begin
+            hs0 = hs0 | ({W{hr0[e]}} & he0[e]);
+            hs1 = hs1 | ({W{hr1[e]}} & he1[e]);
+        end
+    end
+    always @(posedge ck) pco_d <= tk_d[0] ? hs0 : tk_d[1] ? hs1 : pci_d;
+endmodule
+
+// 22 b of a lane's request data register (reader word, or the injected Engram word on a hit)
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_rqd #(parameter integer P = 0, parameter integer W = 22) (
+    input wire ck, input wire [3:0] sid, input wire [5:0] rci,
+    input wire [W-1:0] ew_d, input wire [W-1:0] rq_d, output reg [W-1:0] rqo_d
+);
+    reg [3:0] sq;
+    always @(posedge ck) sq <= sid;
+    wire hit;
+    dsdv_eng_tap_hit #(.P(P)) u_h (.rci(rci), .sq(sq), .hit(hit));
+    always @(posedge ck) rqo_d <= hit ? ew_d : rq_d;
+endmodule
+
+// one 8-entry bank (entries 8 B .. 8 B + 7) of a lane's 32-entry owner FIFO, with its own write-pointer copy
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_ofb #(parameter integer P = 0, parameter integer B = 0) (
+    input wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci, input wire rv,
+    input wire [2:0] orp_lo, input wire popv, output wire rd
+);
+    reg [3:0] sq;
+    always @(posedge ck) sq <= sid;
+    wire hit;
+    dsdv_eng_tap_hit #(.P(P)) u_h (.rci(rci), .sq(sq), .hit(hit));
+    wire out_v = hit | rv;
+    reg [4:0] owp;
+    reg [7:0] ofi;
+    always @(posedge ck or negedge rn) if (!rn) owp <= 5'd0; else if (out_v) owp <= owp + 5'd1;
+    always @(posedge ck) if (out_v && owp[4:3] == 2'(B)) ofi[owp[2:0]] <= hit;
+`ifdef OT_S81ENG_TAP_N32R2
+    reg [2:0] rp;
+    always @(posedge ck or negedge rn) if (!rn) rp <= 3'd0; else if (popv) rp <= rp + 3'd1;
+    assign rd = ofi[rp];
+`else
+    assign rd = ofi[orp_lo];
+`endif
+endmodule
+
+// a lane's request control: Engram-outstanding count, lane occupancy, owner FIFO read pointer, pops, request faults
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_rqc #(parameter integer P = 0, parameter integer RFD = 24,
+                                                  parameter integer MUT = 0) (
+    input  wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci,
+    input  wire rv, input wire rsl, input wire pop, input wire [3:0] bank_rd,
+    output reg  rqo_v, output reg rqo_sl, output reg rro_pop, output wire [4:0] orp_o, output wire popv_o, output reg fl
+);
+    localparam integer OQ = 32;
+    reg [3:0] sq;
+    always @(posedge ck) sq <= sid;
+    wire hit;
+    dsdv_eng_tap_hit #(.P(P)) u_h (.rci(rci), .sq(sq), .hit(hit));
+    wire out_v = hit | rv;
+    reg [5:0] eo, on_;
+    reg [4:0] orp;
+    assign orp_o = orp;
+    wire nz    = on_ != 6'd0;
+    wire popv  = pop && nz;
+    assign popv_o = popv;
+    wire ofr   = bank_rd[orp[4:3]];
+    wire pop_e = popv && ofr;
+    wire pop_r = (MUT == 2) ? pop : (pop && !(nz && ofr));
+    always @(posedge ck or negedge rn)
+        if (!rn) begin rqo_v <= 1'b0; rqo_sl <= 1'b0; rro_pop <= 1'b0; eo <= '0; on_ <= '0; orp <= '0; fl <= 1'b0; end
+        else begin
+            rqo_v   <= out_v;
+            rqo_sl  <= rsl | hit | (eo != 6'd0);
+            rro_pop <= pop_r;
+            eo  <= eo + (hit ? 6'd1 : 6'd0) - (pop_e ? 6'd1 : 6'd0);
+            if (popv) orp <= orp + 5'd1;
+            on_ <= on_ + (out_v ? 6'd1 : 6'd0) - (popv ? 6'd1 : 6'd0);
+            if ((hit && rv) || (hit && on_ >= 6'(RFD)) || (out_v && on_ == 6'(OQ)) || (pop && on_ == 6'd0)) fl <= 1'b1;
+        end
+endmodule
+
+// response control of both lanes: reader-valid demux, held-beat counts (fault copy), expected responses, chain valid
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_rsc #(parameter integer MUT = 0) (
+    input  wire ck, input wire rn, input wire [3:0] sid, input wire [5:0] rci,
+    input  wire pv_in, input wire [3:0] own,
+    input  wire bv0, input wire [9:0] bt0, input wire bv1, input wire [9:0] bt1,
+    output reg  rro_v0, output reg rro_v1, output reg pco_v, output reg [1:0] fxl
+);
+    localparam integer EH = 6;
+    reg [3:0] sq;
+    always @(posedge ck) sq <= sid;
+    wire h0, h1, e0, e1, myslot;
+    wire [1:0] tk;
+    dsdv_eng_tap_hit #(.P(0)) u_h0 (.rci(rci), .sq(sq), .hit(h0));
+    dsdv_eng_tap_hit #(.P(1)) u_h1 (.rci(rci), .sq(sq), .hit(h1));
+    dsdv_eng_tap_eng #(.MUT(MUT)) u_e0 (.bv(bv0), .bt(bt0), .eng(e0));
+    dsdv_eng_tap_eng #(.MUT(MUT)) u_e1 (.bv(bv1), .bt(bt1), .eng(e1));
+    dsdv_eng_tap_slot u_sl (.pv_in(pv_in), .own(own), .sq(sq), .myslot(myslot));
+    reg [3:0] hn0, hn1;
+    reg [5:0] er0, er1;
+    dsdv_eng_tap_take u_t (.myslot(myslot), .nz0(hn0 != 4'd0), .nz1(hn1 != 4'd0), .take(tk));
+    always @(posedge ck or negedge rn)
+        if (!rn) begin rro_v0 <= 1'b0; rro_v1 <= 1'b0; pco_v <= 1'b0; fxl <= 2'b0; hn0 <= '0; hn1 <= '0; er0 <= '0; er1 <= '0; end
+        else begin
+            rro_v0 <= bv0 && !e0;
+            rro_v1 <= bv1 && !e1;
+            pco_v  <= pv_in | (|tk);
+            hn0 <= hn0 + (e0 ? 4'd1 : 4'd0) - (tk[0] ? 4'd1 : 4'd0);
+            hn1 <= hn1 + (e1 ? 4'd1 : 4'd0) - (tk[1] ? 4'd1 : 4'd0);
+            er0 <= er0 + (h0 ? 6'd1 : 6'd0) - (e0 ? 6'd1 : 6'd0);
+            er1 <= er1 + (h1 ? 6'd1 : 6'd0) - (e1 ? 6'd1 : 6'd0);
+            if ((e0 && hn0 == 4'(EH)) || (e0 && er0 == 6'd0)) fxl[0] <= 1'b1;
+            if ((e1 && hn1 == 4'(EH)) || (e1 && er1 == 6'd0)) fxl[1] <= 1'b1;
+        end
+endmodule
+
+// The configuration strap settles one edge earlier in this tree than in its existing
+// per-consumer captures. No protocol data/control pipeline age changes.
+(* keep_hierarchy = 1 *) module dsdv_eng_tap_sid4(input wire ck,input wire[3:0] d,output reg[3:0] q);
+ always @(posedge ck)q<=d;
+endmodule
+
 module dsdv_eng_tap_c #(
     parameter bit WEST = 0,
     parameter integer RFD = 24,
-    parameter integer EH  = 6,        // held Engram beats a lane: <= 6 (a row's 9 consecutive atoms touch a PC once)
+    parameter integer EH  = 6,        // held Engram beats a lane: fixed 6 in the slices (a row's 9 atoms touch a PC once)
     parameter integer MUT = 0         // bench negative controls: 1 demux on g only (sc ignored), 2 pops not filtered
 ) (
     input  wire          ck,
@@ -179,117 +388,85 @@ module dsdv_eng_tap_c #(
     input  wire [42:0]   rci,
     output reg  [42:0]   rco,
     input  wire [267:0]  pci,
-    output reg  [267:0]  pco,
+    output wire [267:0]  pco,
     input  wire [91:0]   rqi,         // from the reader
-    output reg  [91:0]   rqo,         // to the controller rrq
+    output wire [91:0]   rqo,         // to the controller rrq
     input  wire [543:0]  rri,         // from the controller rrd
-    output reg  [543:0]  rro,         // to the reader
+    output wire [543:0]  rro,         // to the reader
     output reg           fault
 );
-    localparam integer OQ = 32;       // owner FIFO entries a lane (>= RFD + lane / move stages)
-    wire [3:0] rl;
-    ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
-    reg [3:0] sid_q;
-    always @(posedge ck) sid_q <= sid;
-    // request chain forward + decode
+`ifdef OT_S81ENG_TAP_N32R2
+    localparam integer NS = 24, NR = 62, SW = 11, RDCH = 4;
+    wire [3:0] sd [0:3];
+    for(genvar sg=0;sg<4;sg=sg+1)begin:g_sid
+        dsdv_eng_tap_sid4 u_s(.ck(ck),.d(sid),.q(sd[sg]));
+    end
+`else
+    localparam integer NR = 30, SW = 22, RDCH = 2;
+    wire [3:0] sd [0:3];
+    for(genvar sg=0;sg<4;sg=sg+1)begin:g_sid_direct assign sd[sg]=sid; end
+    localparam integer NS = 12;       // hold-ring / payload bit slices of 22 b (12 x 22 = 264 >= 263)
+`endif
+    generate if (EH != 6) begin : bad_eh dsdv_eng_tap_c_EH_must_be_6 trap(); end endgenerate
+    wire [NR-1:0] rl;
+    ot_rst_relay_bounded32 #(.REGIONS(NR)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    // request chain forward
     always @(posedge ck or negedge rl[0]) if (!rl[0]) rco[0] <= 1'b0; else rco[0] <= rci[0];
     always @(posedge ck) rco[42:1] <= rci[42:1];
-    wire [1:0] hit = {rci[0] && rci[5:2] == sid_q && rci[1], rci[0] && rci[5:2] == sid_q && !rci[1]};
-    wire [9:0] t10 = {1'b0, rci[38:36], {1'b0, rci[42:40]} + 4'd1, 1'b1, rci[39]};
-    wire [43:0] ew = {t10, 4'd1, rci[35:6]};
+    wire [9:0]  t10 = {1'b0, rci[38:36], {1'b0, rci[42:40]} + 4'd1, 1'b1, rci[39]};
+    wire [43:0] ew  = {t10, 4'd1, rci[35:6]};
     // response chain slot
-    reg [3:0] gen;
+    reg [3:0]  gen;
     wire       pv_in = WEST ? 1'b0 : pci[0];
     wire [3:0] own   = WEST ? gen : pci[4:1];
-    wire       myslot = !pv_in && own == sid_q;
-    reg [1:0]  fl;                    // per-lane faults (request side)
-    reg [1:0]  fxl;                   // per-lane faults (response side)
-    wire [1:0] hold_ne;
-    wire [1:0] take = {myslot && hold_ne[1] && !hold_ne[0], myslot && hold_ne[0]};
-    wire [262:0] hb [0:1];
-    genvar p;
+    wire [1:0] fl, fxl;
+    wire [9:0] bt0 = rri[6 +: 10], bt1 = rri[272 + 6 +: 10];
+    wire       bv0 = rri[0], bv1 = rri[272];
+    genvar p, b;
     generate for (p = 0; p < 2; p = p + 1) begin : g_ln
-        // ---------------------------------------------------------------- request lane
-        wire        rv  = rqi[46 * p];
-        wire        rsl = rqi[46 * p + 1];
-        reg  [5:0]  eo;               // Engram requests on this lane not yet popped
-        reg  [5:0]  occ;              // lane requests not yet popped (reader + Engram)
-        reg  [OQ-1:0] ofi;            // owner FIFO: bit = 1 Engram
-        reg  [4:0]  owp, orp;
-        reg  [5:0]  on_;
-        wire        out_v = hit[p] | rv;
-        wire        pop = rri[272 * p + 1];
-        wire        pop_e = pop && on_ != 6'd0 && ofi[orp];
-        always @(posedge ck or negedge rl[1 + p])
-            if (!rl[1 + p]) begin
-                rqo[46 * p] <= 1'b0; rqo[46 * p + 1] <= 1'b0; eo <= '0; occ <= '0; owp <= '0; orp <= '0; on_ <= '0;
-                fl[p] <= 1'b0;
-            end else begin
-                rqo[46 * p]     <= out_v;
-                rqo[46 * p + 1] <= rsl | hit[p] | (eo != 6'd0);
-                eo  <= eo + (hit[p] ? 6'd1 : 6'd0) - (pop_e ? 6'd1 : 6'd0);
-                occ <= occ + (out_v ? 6'd1 : 6'd0) - ((pop && on_ != 6'd0) ? 6'd1 : 6'd0);
-                if (out_v) owp <= owp + 5'd1;
-                if (pop && on_ != 6'd0) orp <= orp + 5'd1;
-                on_ <= on_ + (out_v ? 6'd1 : 6'd0) - ((pop && on_ != 6'd0) ? 6'd1 : 6'd0);
-                if ((hit[p] && rv) || (hit[p] && occ >= 6'(RFD)) || (out_v && on_ == 6'(OQ)) || (pop && on_ == 6'd0))
-                    fl[p] <= 1'b1;
-            end
-        always @(posedge ck) begin
-            if (out_v) ofi[owp] <= hit[p];
-            rqo[46 * p + 2 +: 44] <= hit[p] ? ew : rqi[46 * p + 2 +: 44];
+        wire [3:0] brd;
+        wire [4:0] orp;
+        wire popv;
+        dsdv_eng_tap_rqc #(.P(p), .RFD(RFD), .MUT(MUT)) u_c (.ck(ck), .rn(rl[1 + p]), .sid(sd[0]), .rci(rci[5:0]),
+            .rv(rqi[46 * p]), .rsl(rqi[46 * p + 1]), .pop(rri[272 * p + 1]), .bank_rd(brd),
+            .rqo_v(rqo[46 * p]), .rqo_sl(rqo[46 * p + 1]), .rro_pop(rro[272 * p + 1]), .orp_o(orp), .popv_o(popv), .fl(fl[p]));
+        for (b = 0; b < 4; b = b + 1) begin : g_ob
+            dsdv_eng_tap_ofb #(.P(p), .B(b)) u_b (.ck(ck), .rn(rl[(NR==62)?54+4*p+b:3+p]), .sid(sd[1]), .rci(rci[5:0]),
+                .rv(rqi[46 * p]), .orp_lo(orp[2:0]), .popv(popv), .rd(brd[b]));
         end
-        // ---------------------------------------------------------------- response lane demux
-        wire        bv  = rri[272 * p];
-        wire [9:0]  bt  = rri[272 * p + 6 +: 10];
-        wire        eng = (MUT == 1) ? (bv && !bt[9] && bt[5:2] != 4'd0) : (bv && !bt[9] && bt[1] && bt[5:2] != 4'd0);
-        wire        pop_r = (MUT == 2) ? pop : (pop && !(on_ != 6'd0 && ofi[orp]));
-        always @(posedge ck or negedge rl[1 + p])
-            if (!rl[1 + p]) begin rro[272 * p] <= 1'b0; rro[272 * p + 1] <= 1'b0; end
-            else begin rro[272 * p] <= bv && !eng; rro[272 * p + 1] <= pop_r; end
-        always @(posedge ck) rro[272 * p + 2 +: 270] <= rri[272 * p + 2 +: 270];
-        // ---------------------------------------------------------------- hold ring (EH x 263 b flops, one-hot pointers)
-        reg [EH-1:0]  hw, hr;          // one-hot write / read pointers
-        reg [3:0]     hn;
-        reg [262:0]   he [0:EH-1];
-        wire [3:0]    colp = bt[5:2] - 4'd1;
-        wire [262:0]  hin = {rri[272 * p + 16 +: 256], colp[2:0], bt[0], bt[8:6]};   // {d 256, col 3, atom 4}
-        integer e;
-        always @(posedge ck) for (e = 0; e < EH; e = e + 1) if (eng && hw[e]) he[e] <= hin;
-        always @(posedge ck or negedge rl[3])
-            if (!rl[3]) begin hw <= EH'(1); hr <= EH'(1); hn <= 4'd0; end
-            else begin
-                if (eng) hw <= {hw[EH-2:0], hw[EH-1]};
-                if (take[p]) hr <= {hr[EH-2:0], hr[EH-1]};
-                hn <= hn + (eng ? 4'd1 : 4'd0) - (take[p] ? 4'd1 : 4'd0);
-            end
-        reg [262:0] hsel;
-        always @* begin
-            hsel = '0;
-            for (e = 0; e < EH; e = e + 1) hsel = hsel | ({263{hr[e]}} & he[e]);
+        for (b = 0; b < RDCH; b = b + 1) begin : g_rd
+            dsdv_eng_tap_rqd #(.P(p),.W(SW)) u_d (.ck(ck), .sid(sd[2]), .rci(rci[5:0]), .ew_d(ew[SW * b +: SW]),
+                .rq_d(rqi[46 * p + 2 + SW * b +: SW]), .rqo_d(rqo[46 * p + 2 + SW * b +: SW]));
         end
-        assign hb[p] = hsel;
-        assign hold_ne[p] = hn != 4'd0;
-        reg [5:0] er;                 // Engram responses still expected on this lane
-        always @(posedge ck or negedge rl[3])
-            if (!rl[3]) begin fxl[p] <= 1'b0; er <= 6'd0; end
-            else begin
-                er <= er + (hit[p] ? 6'd1 : 6'd0) - (eng ? 6'd1 : 6'd0);
-                if ((eng && hn == 4'(EH)) || (eng && er == 6'd0)) fxl[p] <= 1'b1;
-            end
+        reg [269:0] rro_d;
+        always @(posedge ck) rro_d <= rri[272 * p + 2 +: 270];
+        assign rro[272 * p + 2 +: 270] = rro_d;
     end endgenerate
-    // response chain out: own beat in the own slot, else forward
+    wire rro_v0, rro_v1, pco_v;
+    assign rro[0] = rro_v0;
+    assign rro[272] = rro_v1;
+    dsdv_eng_tap_rsc #(.MUT(MUT)) u_rs (.ck(ck), .rn(rl[5]), .sid(sd[3]), .rci(rci[5:0]), .pv_in(pv_in), .own(own),
+        .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .rro_v0(rro_v0), .rro_v1(rro_v1), .pco_v(pco_v), .fxl(fxl));
+    // hold-ring entries {d 256, col 3, atom 4} = {rri d, cell - 1, s3, slot3}
+    wire [3:0]   colp0 = bt0[5:2] - 4'd1, colp1 = bt1[5:2] - 4'd1;
+    wire [263:0] hin0 = {1'b0, rri[16 +: 256], colp0[2:0], bt0[0], bt0[8:6]};
+    wire [263:0] hin1 = {1'b0, rri[272 + 16 +: 256], colp1[2:0], bt1[0], bt1[8:6]};
+    wire [263:0] pcd  = {1'b0, pci[267:5]};
+    wire [263:0] pcq;
+    generate for (b = 0; b < NS; b = b + 1) begin : g_hs
+        dsdv_eng_tap_hs #(.MUT(MUT),.W(SW)) u_s (.ck(ck), .rn0(rl[6 + 2 * b]), .rn1(rl[7 + 2 * b]), .sid(sd[b%4]), .pv_in(pv_in),
+            .own(own), .bv0(bv0), .bt0(bt0), .bv1(bv1), .bt1(bt1), .hin0(hin0[SW * b +: SW]),
+            .hin1(hin1[SW * b +: SW]), .pci_d(pcd[SW * b +: SW]), .pco_d(pcq[SW * b +: SW]));
+    end endgenerate
+    reg [3:0] own_q;
+    always @(posedge ck) own_q <= own;
+    assign pco = {pcq[262:0], own_q, pco_v};
     always @(posedge ck or negedge rl[0])
-        if (!rl[0]) begin pco[0] <= 1'b0; gen <= 4'd0; fault <= 1'b0; end
+        if (!rl[0]) begin gen <= 4'd0; fault <= 1'b0; end
         else begin
-            pco[0] <= pv_in | (|take);
             gen <= gen + 4'd1;
             fault <= fault | (|fl) | (|fxl);
         end
-    always @(posedge ck) begin
-        pco[4:1] <= own;
-        pco[267:5] <= take[0] ? hb[0] : take[1] ? hb[1] : pci[267:5];
-    end
 endmodule
 
 // parameter-free die masters (die.v passes no parameters): the middle / east taps and the west-end tap (generates the
@@ -463,13 +640,23 @@ module dsdv_eng_rr_c #(
     input  wire [275:0]  vi_n, output wire [275:0] vo_n,
     output reg  [3:0]    st
 );
-    wire [1:0] rl;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    wire[31:0] rl;
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_reset3n32 #(.LEAVES(32)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
+`else
+    ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl[1:0]));
+    assign rl[31:2]=0;
+`endif
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
-    ot_s81eng_win u_win (.ck(ck), .rst_n(rl[0]), .en(en_q), .ks_v(ks[52]), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_win_n32 u_win (.ck(ck),.rst_n(rl[2]),.rst_copy_n(rl[6:5]),
+`else
+    ot_s81eng_win u_win (.ck(ck), .rst_n(rl[0]),
+`endif
+        .en(en_q), .ks_v(ks[52]), .ks_user(ks[51:42]), .ks_tok(ks[41:21]),
         .ks_pos(ks[20:0]), .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids), .fault(wf));
     wire hq_v, hr_v, o_v, st_v, st_bad, lf; wire [30:0] hq_atom; wire [2:0] hq_tag, hr_slot, hr_tag, o_beat, o_slot, st_slot;
     wire [3:0] hr_idx; wire [255:0] hr_d; wire [4:0] o_col; wire [263:0] o_d;
@@ -484,18 +671,48 @@ module dsdv_eng_rr_c #(
 `else
     dsfd_engram_lkp_ra640 #(.RETURN_AGE(RETURN_AGE)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}),
 `endif
-        .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]), .cfg_layer(ly_q), .cfg_rank(rk_q),
+        .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]),
+`ifdef OT_S81ENG_RR_N32
+`ifndef OT_ENG_LKP_STATIC14
+`ifndef OT_ENG_LKP_RA512
+        .rst_regions(rl[31:16]),
+`endif
+`endif
+`endif
+        .cfg_layer(ly_q), .cfg_rank(rk_q),
         .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids),
         .hq_v(hq_v), .hq_atom(hq_atom), .hq_tag(hq_tag),
         .hr_v(hr_v), .hr_slot(hr_slot), .hr_tag(hr_tag), .hr_idx(hr_idx), .hr_d(hr_d),
         .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_slot(o_slot), .o_d(o_d),
         .st_v(st_v), .st_slot(st_slot), .st_bad(st_bad), .fault(lf));
     wire hf;
-    ot_s81eng_head #(.PCBASE(PCBASE)) u_head (.ck(ck), .rst_n(rl[0]), .win_v(win_v), .win_slot(win_slot), .hq_v(hq_v),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_head_n32 #(.PCBASE(PCBASE)) u_head
+`else
+    ot_s81eng_head #(.PCBASE(PCBASE)) u_head
+`endif
+        (.ck(ck), .rst_n(
+`ifdef OT_S81ENG_RR_N32
+        rl[3]
+`else
+        rl[0]
+`endif
+        ), .win_v(win_v), .win_slot(win_slot), .hq_v(hq_v),
         .hq_atom(hq_atom), .hq_tag(hq_tag), .rco(rco), .pci(pci), .hr_v(hr_v), .hr_slot(hr_slot), .hr_tag(hr_tag),
         .hr_idx(hr_idx), .hr_d(hr_d), .fault(hf));
     wire xf;
-    ot_s81eng_xq #(.MUT(XQ_MUT)) u_xq (.ck(ck), .rst_n(rl[1]), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
+`ifdef OT_S81ENG_RR_N32
+    ot_s81eng_xq_n32 #(.MUT(XQ_MUT)) u_xq
+`else
+    ot_s81eng_xq #(.MUT(XQ_MUT)) u_xq
+`endif
+      (.ck(ck), .rst_n(
+`ifdef OT_S81ENG_RR_N32
+        rl[4]
+`else
+        rl[1]
+`endif
+        ), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
         .vi_a(vi_s), .vo_a(vo_s), .vi_b(vi_n), .vo_b(vo_n), .fault(xf));
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) st <= 4'd0;

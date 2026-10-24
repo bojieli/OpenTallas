@@ -1,0 +1,118 @@
+{
+ "summaries": [
+  {
+   "corner": "TT",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -679.34,
+    "tns_ps": -75302.05,
+    "whs_ps": -71.71,
+    "ths_ps": -306478.23
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 79.11,
+      "worst_signed_ps": -79.11,
+      "p99_abs_ps": 46.46,
+      "worst_launch": "u_bound.u_hp_fault_1087.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1132.q$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 68.38,
+      "worst_signed_ps": 68.38,
+      "p99_abs_ps": 60.43,
+      "worst_launch": "u_bound.u_ft_ft38_o_0.q[96]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft38_o_1.q[96]$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 79.11,
+      "worst_signed_ps": -79.11,
+      "p99_abs_ps": 51.96,
+      "worst_launch": "u_bound.u_hp_fault_1087.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1132.q$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 207.71,
+    "max_ps": 295.59,
+    "spread_ps": 87.88,
+    "p1_ps": 216.08,
+    "p99_ps": 277.9,
+    "p1_p99_ps": 61.82
+   },
+   "spread_face": null
+  },
+  {
+   "corner": "FF",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -486.25,
+    "tns_ps": -388402.1,
+    "whs_ps": -25.21,
+    "ths_ps": -6038.77
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 15763,
+      "worst_abs_ps": 67.1,
+      "worst_signed_ps": -67.1,
+      "p99_abs_ps": 53.56,
+      "worst_launch": "u_bound.u_hp_fault_1087.q$_DFF_P_",
+      "worst_capture": "u_bound.u_hp_fault_1132.q$_DFF_P_"
+     },
+     "hold": {
+      "n": 15763,
+      "worst_abs_ps": 72.67,
+      "worst_signed_ps": 72.67,
+      "p99_abs_ps": 56.6,
+      "worst_launch": "u_bound.u_ft_ft38_o_0.q[85]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft38_o_1.q[85]$_DFF_P_"
+     },
+     "all": {
+      "n": 31526,
+      "worst_abs_ps": 72.67,
+      "worst_signed_ps": 72.67,
+      "p99_abs_ps": 54.73,
+      "worst_launch": "u_bound.u_ft_ft38_o_0.q[85]$_DFF_P_",
+      "worst_capture": "u_bound.u_ft_ft38_o_1.q[85]$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 23064,
+    "min_ps": 159.81,
+    "max_ps": 242.61,
+    "spread_ps": 82.8,
+    "p1_ps": 166.55,
+    "p99_ps": 220.15,
+    "p1_p99_ps": 53.6
+   },
+   "spread_face": null
+  }
+ ],
+ "gate": {
+  "verdict": "PASS",
+  "limit_ps": 80.0,
+  "worst_abs_ps": {
+   "TT_intra": 79.11,
+   "FF_intra": 72.67
+  },
+  "fails": [],
+  "notes": []
+ },
+ "files": [
+  "vC_4_cts_TT.tsv",
+  "vC_4_cts_FF.tsv"
+ ]
+}

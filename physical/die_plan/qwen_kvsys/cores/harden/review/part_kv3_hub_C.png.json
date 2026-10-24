@@ -1,0 +1,44 @@
+{
+ "ahub": {
+  "module": "qkd_ahub",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 482,
+   "E": 147,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    90.72,
+    "edge"
+   ],
+   "S": null,
+   "E": null,
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "kvs_ctl": {
+  "module": "qkd_kvs_ctl",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1645,
+   "S": 100,
+   "E": 2526,
+   "W": 2524
+  },
+  "nearest_on_face": {
+   "N": [
+    1114.56,
+    "edge"
+   ],
+   "S": null,
+   "E": null,
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ }
+}

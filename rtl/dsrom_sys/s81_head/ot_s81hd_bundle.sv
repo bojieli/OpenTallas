@@ -17,15 +17,26 @@
 // the rank continues the same tree over its bundles.
 // Timing: `go` at G; xa/xb must carry slice m at cycle G + 5 + m (m = 0 .. 8192 + 7 SK - 1).
 // ---------------------------------------------------------------------------
+// CV element parameters: simulation models take the ROM image prefix; the synthesis black boxes take none.
+`ifdef SYNTHESIS
+`define OT_S81HD_CVP(X)
+`else
+`define OT_S81HD_CVP(X) #(.INSTANCE(X))
+`endif
 module ot_s81hd_bundle #(
     parameter integer BST = 2,
-    parameter [8:0] CUT = 9'b1_0111_1011,
-    parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
+    parameter [8:0] CUT = 9'b1_1111_1111,  // 10-24: the closed element views' CUT (was 0x17b)
+    parameter integer SPLIT9 = 1,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows); 10-24: 1 (was 0)
     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 1,            // ot_s81hd_elem SAFE (registered argmax compare; required)
-    parameter integer A_INPUT_STAGES = 0   // opt-in aligned A transport; model prices every added cycle
+    parameter integer A_INPUT_STAGES = 0,  // opt-in aligned A transport; model prices every added cycle
+    // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
+    // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
+    // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
+    // head_v / head_d / head_row are not view pins: 0 under CV (the tile leaves them unused).
+    parameter integer CV = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -60,10 +71,17 @@ module ot_s81hd_bundle #(
     wire        nc_lv, nc_done;
     wire [31:0] nc_ld, nc_bits, nc_key;
     wire [16:0] nc_row;
-    ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_b (
-        .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
-        .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
-        .fault(b_fault));
+    generate if (CV) begin : g_cvb
+        ot_s81hd_elemB_cv `OT_S81HD_CVP($sformatf("%sb", INSTANCE)) u_eB (
+            .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
+            .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
+            .fault(b_fault));
+    end else begin : g_rtlb
+        ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_b (
+            .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
+            .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
+            .fault(b_fault));
+    end endgenerate
     reg [1:0]  bq;
     reg [3:0]  bv_r;
     reg [31:0] bd_r;
@@ -80,26 +98,50 @@ module ot_s81hd_bundle #(
     wire [31:0] a_bits [0:3];
     wire [31:0] a_key [0:3];
     wire [3:0] a_go;
+    wire [16:0]  row_a [0:3];
+    wire [255:0] x_a [0:3];
+    wire [3:0]   bv_a;
+    wire [31:0]  bd_a [0:3];
     generate for (q = 0; q < 4; q = q + 1) begin : g_a
         wire ov, lv;
         wire [31:0] od, ld;
-        wire [16:0] row_a;
         wire [16:0] row_in = row0 + 17'd32 * q;
-        wire [255:0] x_a;
-        wire bv_a;
-        wire [31:0] bd_a;
         // All 307 bits use the same depth. Validity alone resets; payload
         // travels continuously, retaining the original systolic and B join alignment.
         // Physical implementation must land these groups at the actual A faces.
         ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES), .RESET(1)) u_av (
-            .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a}));
+            .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a[q]}));
         ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) u_ad (
-            .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a, x_a, bd_a}));
+            .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a[q], x_a[q], bd_a[q]}));
+        if (!CV) begin : g_rtl
         ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
-            .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a), .x(x_a), .b_v(bv_a), .b_d(bd_a),
+            .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a[q]), .x(x_a[q]), .b_v(bv_a[q]), .b_d(bd_a[q]),
             .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld),
             .head_v(head_v[q]), .head_d(head_d[32*q+:32]), .head_row(head_row[17*q+:17]), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
             .best_key(a_key[q]), .fault(a_fault[q]));
+        end
+    end endgenerate
+    generate if (CV) begin : g_cv
+        // closed-view parameter point (ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1): refuse anything else
+        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1 || A_INPUT_STAGES != 0) begin : g_bad
+            ot_s81hd_cv_params_differ_from_the_closed_views u_refuse ();   // elaboration error by design
+        end
+        wire [3:0] ov, lv;
+        wire [31:0] od [0:3];
+        wire [31:0] ld [0:3];
+        assign head_v = 4'd0;
+        assign head_d = 128'd0;
+        assign head_row = 68'd0;
+`define OT_S81HD_EA(Q) \
+        ot_s81hd_elemA_cv `OT_S81HD_CVP($sformatf("%sa%0d", INSTANCE, Q)) u_eA``Q ( \
+            .clk(clk), .rst_n(rst_n), .go(a_go[Q]), .row0(row_a[Q]), .x(x_a[Q]), .b_v(bv_a[Q]), .b_d(bd_a[Q]), \
+            .o_v(ov[Q]), .o_d(od[Q]), .l_v(lv[Q]), .l_d(ld[Q]), .done(a_done[Q]), .best_row(a_row[Q]), \
+            .best_bits(a_bits[Q]), .best_key(a_key[Q]), .fault(a_fault[Q]));
+        `OT_S81HD_EA(0)
+        `OT_S81HD_EA(1)
+        `OT_S81HD_EA(2)
+        `OT_S81HD_EA(3)
+`undef OT_S81HD_EA
     end endgenerate
     // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2
     function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}

@@ -110,14 +110,19 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["epyc2", "epyc3", "intel1", "intel2", "localhost"]   # FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+HOST_ROLE = {"epyc2": "normal", "epyc3": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+# 2026-10-24 COORD (owner order): old-fleet nvme0n1 wiped -> /srv/opentallas-scratch2 (intel1/intel2 3.4 TB, epyc2 879 GB); intel1/intel2 no longer smalldisk.
+# FLEET-NEW3 2026-10-24: epyc2 (2x EPYC 7543) / epyc3 (2x EPYC 7443) are the die-level hosts (normal); intel1/intel2
+# (2x Xeon Gold 6330, ~400 GB root disk) are smalldisk; localhost (EPYC 9754, shared with ~10 agent sessions) is "coord":
+# it gets a job only when no other host admits it now (or when pinned with --hosts localhost), never receives spills,
+# and its ot-heavy keeps 15 % of RAM free (/etc/ot-heavy.conf MIN_AVAIL_FRAC=0.15).  ot-* entries are history (selftest).
 # FLEET-GOLD 2026-10-19: ot-gold1/2 (Cherry 1037247/1037249, Chicago 2x Xeon Gold 6330 Ice Lake, AVX-512 F present -> NOT in
 # NO_AVX512) pre-set "normal" (= no special role); NOT in HOSTS until lanes/fleet-gold/bringup_gold.sh registers them.
 # ot-epyc9 (Cherry 1036669, Chicago 2x EPYC 7543, Zen 3): role pre-set; it is NOT in HOSTS until it answers ssh and is
@@ -128,6 +133,11 @@ HOST_ROLE = {"ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "thr
 # queues on a capped host that is full; it goes elsewhere (or waits elsewhere and is re-placed every REQUEUE_S).
 HOST_MAX_DIE = {}   # v10 FLEET-PLACE 2026-10-19: the die COUNT cap is gone (ot-epyc8 1 -> the S81 MU die case waited
 # ~90 min); replaced by DISK admission (drop_low_disk).  Kept (empty) so v9 clients that re-read it drop their caps.
+# HOST RESERVE (FLEET-DISK 2026-10-24, coordinator): localhost was role "coord" (last resort) and sat at ~50-70/256 load
+# while lanes queued; the old coord host was shared with ~10 agent sessions, this one runs ~30 agents that use little CPU.
+# It is now a normal host minus a per-host reserve for the agents and merges: placement sees ncpu - threads and
+# admit/free/total RAM - GB (the host's own ot-heavy MIN_AVAIL_FRAC=0.15 still applies on top).  host -> (threads, GB)
+HOST_RESERVE = {"localhost": (32, 64)}
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
@@ -154,9 +164,21 @@ def probe(host, d, spill_ok=False):
 
 
 # v12 SCRATCH2: free GB of every scratch root on the host (one line each, before the --free JSON line)
-SCRATCH_FREE_SH = ("for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && "
-                   "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r | tail -1 | tr -dc 0-9); done; ")
+# v13 SCRATCH-DISK (FLEET-DISK 2026-10-24, owner 07:30 "never use root disks for work"): each line also says whether the
+# root's claude/ dir sits on the ROOT filesystem (1) or on a separate disk (0), measured on <root>/claude (a symlinked
+# claude/ counts where it points); one OT_ROOTFS line gives the root fs use % and free GB, one OT_DIR_ONROOT line whether
+# the --dir itself is on the root fs.
+SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && "
+                   "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) "
+                   "$([ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && echo 1 || echo 0); done; "
+                   "echo OT_ROOTFS $(df --output=pcent / | tail -1 | tr -dc 0-9) $(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
+                   "echo OT_DIR_ONROOT $([ \"$(stat -L -c %d \"$t\" 2>/dev/null)\" = \"$rd\" ] && echo 1 || echo 0); ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
+# v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
+# (NOT RUN / placed elsewhere) instead of falling back to the root fs.
+SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
+# v13 DISK GUARD: a host whose root fs is more than this % full admits no new job (any host, md0 included).
+ROOTFS_MAX_PCT = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT", "85"))
 
 
 def scratch2_on():
@@ -167,17 +189,48 @@ def scratch_disk(row, d, out):
     """v12 SCRATCH2: a scratch --dir's disk_gb = the most free scratch root on the host (new run dirs go there), unless
     the named root itself is nearly full (< SCRATCH_OWN_FLOOR_GB: files written straight into an existing --dir land
     there).  The --dir's own figure is kept as disk_own_gb."""
-    if not (scratch2_on() and d and SCRATCH_RE.match(os.path.normpath(d)) and isinstance(row, dict) and "disk_gb" in row):
+    if not (isinstance(row, dict) and "disk_gb" in row):
         return row
-    roots = {}
+    roots, onroot, extra = {}, set(), {}
     for ln in out.splitlines():
         f = ln.split()
-        if len(f) == 3 and f[0] == "OT_SCRATCH_FREE" and f[2].isdigit():
+        if len(f) in (3, 4) and f[0] == "OT_SCRATCH_FREE" and f[2].isdigit():
             roots[f[1]] = int(f[2])
+            if f[3:] == ["1"]:
+                onroot.add(f[1])
+        elif len(f) == 3 and f[0] == "OT_ROOTFS" and f[1].isdigit() and f[2].isdigit():
+            extra.update(rootfs_pct=int(f[1]), rootfs_free_gb=int(f[2]))
+        elif len(f) == 2 and f[0] == "OT_DIR_ONROOT":
+            extra["dir_onroot"] = f[1] == "1"
+    # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
+    disk_roots = {r: v for r, v in roots.items() if r not in onroot}
+    if disk_roots and (onroot or "rootfs_pct" in extra):     # v13 probe: every root off the root fs = scratch disk
+        extra.update(scratch_disk=max(disk_roots, key=disk_roots.get), scratch_disk_gb=max(disk_roots.values()))
+        roots = disk_roots
+    row = dict(row, **extra)
+    if not (scratch2_on() and d and SCRATCH_RE.match(os.path.normpath(d))):
+        return row
     own = row["disk_gb"]
+    if "scratch_disk" in row and (row.get("dir_onroot") or max(roots.values()) > own):
+        return dict(row, disk_own_gb=own, disk_gb=max(roots.values()))   # new run dirs go to the disk, never the root fs
     if roots and own >= SCRATCH_OWN_FLOOR_GB and max(roots.values()) > own:
         row = dict(row, disk_own_gb=own, disk_gb=max(roots.values()))
     return row
+
+
+def host_refusal(row):
+    """v13 (FLEET-DISK 2026-10-24): why this host admits no new job, or '' -- root fs > ROOTFS_MAX_PCT % full, or its
+    separate scratch disk below SCRATCH_DISK_FLOOR_GB (the root fs is never the fallback).  Rows of older probes: ''."""
+    if not isinstance(row, dict):
+        return ""
+    pct = row.get("rootfs_pct")
+    if pct is not None and pct > ROOTFS_MAX_PCT:
+        return (f"ROOT FS {pct}% full > {ROOTFS_MAX_PCT}% (DISK GUARD, owner 2026-10-24: never use root disks for work; "
+                f"move data to the scratch disk, OT_RUN_ROOTFS_MAX_PCT overrides)")
+    if row.get("scratch_disk") and row.get("scratch_disk_gb", 0) < SCRATCH_DISK_FLOOR_GB:
+        return (f"scratch disk {row['scratch_disk']} has {row['scratch_disk_gb']} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB "
+                f"(the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)")
+    return ""
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
@@ -192,7 +245,7 @@ SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
 
 
-CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512")
+CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512", "HOST_RESERVE")
 
 
 def reload_conf(path=None):
@@ -426,10 +479,23 @@ def score(r, mem, threads):
     return (1 - w) * cpu + w * memh
 
 
+def reserved(h, r):
+    """HOST_RESERVE: the row as placement sees it (threads and GB kept back for the agents on that host)"""
+    t, g = HOST_RESERVE.get(h, (0, 0))
+    if not (t or g) or not isinstance(r, dict) or r.get("error") or not r.get("ncpu"):
+        return r
+    r = dict(r, ncpu=max(1, r["ncpu"] - t), reserve_threads=t, reserve_gb=g)
+    for k in ("admit_gb", "free_gb", "die_admit_gb", "total_gb"):
+        if isinstance(r.get(k), (int, float)):
+            r[k] = r[k] - g
+    return r
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
     TPUT_BONUS on a throughput host that stays <= 1.0 x cores.  Among the hosts that admit it now: the best score()."""
+    res = {h: reserved(h, r) for h, r in res.items()}
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
@@ -438,8 +504,13 @@ def choose(res, mem, threads=THREADS, die=False):
               for h, r in ok.items()}
     tput = lambda h: HOST_ROLE.get(h) == "throughput"
     nodie = lambda h: HOST_ROLE.get(h) in ("throughput", "smalldisk")
+    coord = lambda h: HOST_ROLE.get(h) == "coord"
+    if any(not coord(h) for h in ok) and any(not coord(h) and ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem for h in ok):
+        ok = {h: r for h, r in ok.items() if not coord(h)}   # FLEET-NEW3: the shared coordinator host only as a last resort
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
     if not fits:                                   # nobody admits it now: queue where the most memory is free
+        if any(not coord(h) for h in ok):
+            ok = {h: r for h, r in ok.items() if not coord(h)}
         if die and any(not nodie(h) for h in ok):
             ok = {h: r for h, r in ok.items() if not nodie(h)}
         return max(ok, key=lambda h: ok[h]["free_gb"]), True
@@ -481,6 +552,11 @@ def choose_selftest():
         # v11 (REFILL-0325 2026-10-20, the 03:24 fleet): CPU-heavy job -> lowest load/cores among the hosts that admit it
         ("CPU-heavy job: the 44/128 host over the 313/128 one", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 64, 16, "ot-epyc5"),
         ("1-thread 48 GB job: still the idle-CPU host when both have RAM", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 48, 1, "ot-epyc5"),
+        # FLEET-DISK 2026-10-24: localhost = normal host minus HOST_RESERVE (32 threads, 64 GB) for the agents
+        ("localhost idle, server busy: localhost takes it now", {"localhost": row(700, 60, 256), "epyc2": row(300, 120)}, 32, 16, "localhost"),
+        ("localhost when no server admits the request now", {"localhost": row(700, 10, 256), "epyc2": row(20, 10)}, 300, 16, "localhost"),
+        ("localhost 64 GB reserve: 100 GB free admits no 48 GB job", {"localhost": row(100, 10, 256), "epyc2": row(60, 100)}, 48, 16, "epyc2"),
+        ("localhost 32-thread reserve: 200/256 load counts as 200/224", {"localhost": row(700, 200, 256), "epyc2": row(300, 100)}, 8, 16, "epyc2"),
     ]
     cases = [c if len(c) == 6 else c + (False,) for c in cases]
     bad = [f"{n}: got {choose(r, m, t, dj)[0]}, want {w}" for n, r, m, t, w, dj in cases if choose(r, m, t, dj)[0] != w]
@@ -558,11 +634,15 @@ def status(hosts):
         if not r or r.get("error"):
             out.append(f"{h} unreachable")
             continue
+        if host_refusal(r):
+            out.append(f"{h} REFUSED ({host_refusal(r)})")
+            continue
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
-                   + f" run {r['running']}")
+                   + f" run {r['running']}" + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
+                   + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else ""))
     live = {h: r for h, r in res.items() if h not in held and r and not r.get("error") and r.get("ncpu")
-            and r["disk_gb"] >= 20 and physically_capable(r, 32)}
+            and r["disk_gb"] >= 20 and physically_capable(r, 32) and not host_refusal(r)}
     best, queue = choose(live, 32)
     next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else " | next 16-thread 32 GB job: no eligible host"
     print("ot-run status: " + " | ".join(out) + next_job)
@@ -641,9 +721,24 @@ def cancel(sub, all_dirs):
 # while scratch was at 47 %, EPYC4's scratch at 79 % vs scratch2 36 %): every job gets OT_SCRATCH = the
 # /srv/opentallas-scratch* mount with the most free space on its host.  New job / lane / die-chain directories belong
 # under $OT_SCRATCH/claude/<lane>; existing directories stay where they are (never move a live job dir).
-SCRATCH_ENV = ("export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && "
-               "echo $(df -BG --output=avail $r | tail -1) $r; done | sort -n | tail -1 | awk '{print $2}'); "
-               "OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
+# v13 SCRATCH-DISK (FLEET-DISK 2026-10-24): roots whose claude/ is on the ROOT fs are skipped whenever another root is
+# on a separate disk (intel1/intel2/epyc2: always /srv/opentallas-scratch2, even when the root fs has more free space);
+# hosts with only the root fs (localhost/epyc3 md0) keep the most-free rule.
+SCRATCH_ENV = ("export OT_SCRATCH=$(rd=$(stat -c %d /); for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do "
+               "test -d $r/claude || continue; o=0; [ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && o=1; "
+               "echo $o $(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9) $r; done | "
+               "awk '{k[NR]=$0; if ($1==0) d=1} END {for (i in k) {split(k[i],f,\" \"); if (!d || f[1]==0) print f[2], f[3]}}' "
+               "| sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
+# v13 DISK GUARD on the job host (the client checked the probe; this re-checks at submission, so a stale probe or an
+# old client cannot start work on a full root fs, nor on a scratch-disk host whose disk is below its floor).
+def disk_guard_sh(tag):
+    return (f"p=$(df --output=pcent / | tail -1 | tr -dc 0-9); if [ \"${{p:-0}}\" -gt {ROOTFS_MAX_PCT} ]; then "
+            f"echo \"ot-run: DISK GUARD: root fs $p% full > {ROOTFS_MAX_PCT}% on $(hostname -s); no new job admitted "
+            f"(owner 2026-10-24: never use root disks for work)\" >&2; echo OT_RUN_ROOTFULL {tag} >&2; exit 97; fi; "
+            f"if sd=$(stat -L -c %d \"$OT_SCRATCH/claude\" 2>/dev/null) && [ \"$sd\" != \"$(stat -c %d /)\" ]; then "
+            f"f=$(df -BG --output=avail $OT_SCRATCH/claude/ | tail -1 | tr -dc 0-9); if [ \"${{f:-0}}\" -lt {SCRATCH_DISK_FLOOR_GB} ]; then "
+            f"echo \"ot-run: scratch disk $OT_SCRATCH has ${{f}} GB free < floor {SCRATCH_DISK_FLOOR_GB} GB on $(hostname -s); "
+            f"the root fs is never a fallback\" >&2; echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; fi; fi; ")
 
 
 # v12 SCRATCH2 (SCRATCH2-1021 2026-10-21): runs on the job host before `cd --dir`; see the header.  Never fails the job.
@@ -655,17 +750,26 @@ LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-
 SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
 say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
 d, cmd, dry = sys.argv[1], json.loads(base64.b64decode(sys.argv[2])), len(sys.argv) > 3
-free, devs = {}, set()
+FLOOR = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB") or 50) << 30
+free, devs, onroot = {}, set(), set()
+try:
+    rdev = os.stat("/").st_dev
+except OSError:
+    rdev = None
 for r in ROOTS:
     try:
-        st = os.stat(r)
+        st = os.stat(r + "/claude")            # v13: measured where claude/ really lives (a symlinked claude/ counts there)
         if os.path.isdir(r + "/claude") and st.st_dev not in devs:
             devs.add(st.st_dev)
-            v = os.statvfs(r)
+            v = os.statvfs(r + "/claude")
             free[r] = v.f_bavail * v.f_frsize
+            if st.st_dev == rdev:
+                onroot.add(r)
     except OSError:
         pass
-best = max(free, key=free.get) if free else None
+# v13 SCRATCH-DISK (FLEET-DISK 2026-10-24): when a root sits on a separate disk, the root-fs roots never get new run dirs
+disk = {r: v for r, v in free.items() if r not in onroot} if onroot and len(onroot) < len(free) else {}
+best = max(disk or free, key=(disk or free).get) if free else None
 texts = [" ".join(cmd)]
 for t in list(dict.fromkeys(cmd + re.findall(r"/[^\s'\";|&()<>$]+\.sh(?![\w.])", texts[0])))[:20]:
     p = t if t.startswith("/") else os.path.join(d or "/", t)
@@ -710,6 +814,27 @@ for p in cands:
     # deeper is split off (`..` out of a moved dir resolves on the other root)
     if not os.path.lexists(nxt) and nxt not in placed:
         placed.add(nxt)
+        if disk and req in onroot:              # v13: must go to the scratch disk; never created on the root fs
+            tgt = best + nxt[len(req):]
+            if free[best] < FLOOR:
+                say(f"NOT RUN: {nxt} would land on the root fs; scratch disk {best} has {free[best] >> 30} GB < floor {FLOOR >> 30} GB")
+                sys.exit(3)
+            if os.path.lexists(tgt):
+                say(f"NOT RUN: {nxt} would land on the root fs and {tgt} already exists on the scratch disk; name {tgt} instead")
+                sys.exit(3)
+            if dry:
+                say(f"would place {nxt} on scratch disk {best} (root fs never used)")
+                continue
+            try:
+                os.makedirs(lroot, exist_ok=True)
+                os.makedirs(tgt)
+                os.symlink(tgt, nxt)
+                say(f"{nxt} -> {tgt} (scratch disk; root fs never used)")
+            except OSError as e:
+                if not (os.path.islink(nxt) and os.path.realpath(nxt) == os.path.realpath(tgt)):
+                    say(f"NOT RUN: {nxt}: cannot place on scratch disk {best} ({e})")
+                    sys.exit(3)
+            continue
         if req in free and best != req and free[best] > free[req] + MARGIN and not os.path.lexists(best + nxt[len(req):]):
             tgt = best + nxt[len(req):]
             if dry:
@@ -730,8 +855,9 @@ for p in cands:
 '''
 
 
-def scratch_place_sh(d, cmd, dry=False):
-    """the remote shell snippet that places new run dirs on the emptiest scratch root ('' when disabled)"""
+def scratch_place_sh(d, cmd, dry=False, tag="otrun"):
+    """the remote shell snippet that places new run dirs on the emptiest scratch root ('' when disabled).  v13: on a host
+    with a separate scratch disk a new run dir that cannot go to that disk stops the job (OT_RUN_SCRATCHLOW, exit 98)."""
     if not scratch2_on():
         return ""
     import base64
@@ -739,8 +865,10 @@ def scratch_place_sh(d, cmd, dry=False):
     arg = base64.b64encode(json.dumps(list(cmd)).encode()).decode()
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
-    return (f'{{ timeout 60 python3 -c "$(echo {code} | base64 -d)" {shlex.quote(d or "")} {arg}'
-            + (" dry" if dry else "") + "; } 2>&1 >/dev/null | head -20 >&2; ")
+    return (f'pl=$(OT_RUN_SCRATCH_DISK_FLOOR_GB={SCRATCH_DISK_FLOOR_GB} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
+            f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
+            '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '
+            f'[ $prc = 3 ] && {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; ')
 
 
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
@@ -756,11 +884,11 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     # Recheck before output placement: never recreate an input directory that
     # disappeared after the probe and then launch in an empty source tree.
     workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
-    remote = SCRATCH_ENV + workdir_guard + scratch_place_sh(d, cmd) \
+    remote = SCRATCH_ENV + disk_guard_sh(tag) + workdir_guard + scratch_place_sh(d, cmd, tag=tag) \
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
-    state = dict(started=False, rc=None, nocd=False, unit="?")
+    state = dict(started=False, rc=None, nocd=False, unit="?", refused=None)
     unblock = lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, SIGS)
 
     def stop(sig, who):
@@ -797,6 +925,10 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         if "OT_RUN_NOCD" in ln and tag in ln:
             state["nocd"] = True
             continue
+        if tag in ln and ("OT_RUN_ROOTFULL" in ln or "OT_RUN_SCRATCHLOW" in ln):     # v13 DISK GUARD on the host
+            state["refused"] = ("root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln
+                                else "scratch disk below its floor / new run dir could not be placed on it (root fs never used)")
+            continue
         if "OT_RUN_START" in ln and tag in ln:
             state["started"] = True
             state["unit"] = next((w for w in ln.split() if w.startswith("oth-")), "?")
@@ -817,7 +949,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         say(f"ot-run: NOT COMPLETED: the command started on {host} (unit {state['unit']}) but the connection ended (ssh status "
             f"{ssh_rc}) before it reported an exit status; it may still be running there")
         return (ssh_rc or 255), False
-    why = f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
+    why = state["refused"] if state["refused"] else f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
     if not (quiet_notrun and state["rc"] == 75):
         say(f"ot-run: NOT RUN on {host}: {why}")
@@ -970,7 +1102,8 @@ def main():
                     sys.exit(75)
                 spill = spill and not permanent
         if not best:
-            sys.exit("ot-run: no host qualifies")
+            why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
+            sys.exit(f"ot-run: NOT RUN: no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
               file=sys.stderr)
         if pick:
@@ -1017,8 +1150,8 @@ def trigger_reaper(host, why):
 
 
 SPILL_MARK = ".ot-run-spill-copy"
-SPILL_HOSTS_EXCLUDE = {"ot-pve1", "ot-agidock128"}          # small / shared hosts never receive spills
-NO_AVX512 = {"ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
+SPILL_HOSTS_EXCLUDE = {"localhost", "ot-pve1", "ot-agidock128"}          # small / shared hosts never receive spills
+NO_AVX512 = {"epyc2", "epyc3", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
 
 
@@ -1142,7 +1275,7 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
     with cf.ThreadPoolExecutor(len(cands)) as ex:
         res = dict(ex.map(lambda h: (h, [probe(h, b)[1] for b in bases]), cands))
     ok = {h: rs[0] for h, rs in res.items() if all(r and not r.get("error") for r in rs) and rs[0].get("ncpu")
-          and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem)
+          and min(r["disk_gb"] for r in rs) >= disk + size_gb and physically_capable(rs[0], mem) and not host_refusal(rs[0])
           and (max_ratio is None or ratio(rs[0], threads) <= max_ratio)}
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
@@ -1170,12 +1303,15 @@ def spill_lock(roots):
 # already held a copy of it (a second job of the lane, a re-place) "failed".  --overwrite-dir / --no-overwrite-dir are
 # refused together with --keep-newer-files, so the extraction filters exactly that error: it counts only for a path that
 # is NOT a directory after the run; any other tar or zstd error still fails the copy.
-TAR_X = ("e=$(mktemp); zstd -q -d | tar -C / \"${OT_TAR_TRANSFORMS[@]}\" --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
+# FLEET-NEW3 2026-10-24: Ubuntu 26.04 GNU tar 1.35 prefixes its messages "/usr/bin/tar: " (was "tar: "), so the
+# forgiven existing-directory errors were not recognised and every re-spill FAILED (test_ot_run_spill 5 failures); the
+# real tar now emits them itself, so the directory test is relative to the extraction root (cd /, as tar -C /).
+TAR_X = ("cd / || exit 97; e=$(mktemp); zstd -q -d | tar -C / \"${OT_TAR_TRANSFORMS[@]}\" --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
          "if [ ${s[0]} -ne 0 ]; then cat $e >&2; rm -f $e; exit ${s[0]}; fi; rc=${s[1]}; "
          "if grep -q 'Warning: Cannot stat:' $e; then cat $e >&2; rm -f $e; exit 97; fi; "
-         "if [ $rc -ne 0 ]; then bad=$(grep -v -x 'tar: Exiting with failure status due to previous errors' $e | "
-         "while IFS= read -r l; do p=${l#tar: }; q=${p%: Unexpected inconsistency when making directory}; "
-         "if [ \"$q\" = \"$p\" ] || ! [ -d \"/$q\" ]; then echo \"$l\"; fi; done); "
+         "if [ $rc -ne 0 ]; then bad=$(grep -v -x -E '(/usr/bin/)?tar: Exiting with failure status due to previous errors' $e | "
+         "while IFS= read -r l; do p=${l#tar: }; p=${p#/usr/bin/tar: }; q=${p%: Unexpected inconsistency when making directory}; "
+         "if [ \"$q\" = \"$p\" ] || ! { [ -d \"$q\" ] || [ -d \"/$q\" ]; }; then echo \"$l\"; fi; done); "
          "if [ -z \"$bad\" ]; then rc=0; else echo \"$bad\" >&2; fi; fi; rm -f $e; exit $rc")
 
 
@@ -1421,6 +1557,9 @@ def trigger_sweep():
         pass
 
 
+PLACE_NOTES = {}      # host -> why place() dropped it ('' = qualified); for the NOT RUN message
+
+
 def place(hosts, d, disk, mem, quiet=False):
     """probe the hosts; return host -> row for every host that qualifies (dir, disk, physical RAM).  No load test."""
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
@@ -1432,8 +1571,14 @@ def place(hosts, d, disk, mem, quiet=False):
             note = "probe without ncpu"
         if r and not r.get("error") and not physically_capable(r, mem):
             note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
+        if r and not r.get("error") and host_refusal(r):
+            note = host_refusal(r)                      # v13 DISK GUARD / scratch-disk floor: refused, never queued here
         if r and not r.get("error") and r["disk_gb"] < disk and trigger_reaper(h, note):
             note += " (ot-reaper started for this host)"
+        if r and not r.get("error") and r.get("dir_onroot") and r.get("scratch_disk") and d and not quiet:
+            print(f"ot-run: WARNING: {h}: --dir {d} is on the ROOT filesystem; move it to {r['scratch_disk']}/claude/<lane> "
+                  f"(owner 2026-10-24: never use root disks for work)", file=sys.stderr)
+        PLACE_NOTES[h] = note
         if r and not r.get("error"):
             if not quiet:
                 print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, {memory_charge_note(r)}, headroom "

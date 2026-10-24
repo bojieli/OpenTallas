@@ -10,6 +10,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_dsdv_svc_rs_up #(parameter integer MUT = 0, parameter integer EPOCHS = 400, parameter integer HOLD = 40);
 `include "dsdv_svc_rs_roles.svh"
+`ifdef UP_FMASK
+`include "dsdv_svc_rs_faces.svh"
+`endif
     localparam integer UW = 16;
     reg ck = 0, rst = 0;
     always #0.5 ck = ~ck;
@@ -38,7 +41,14 @@ module tb_dsdv_svc_rs_up #(parameter integer MUT = 0, parameter integer EPOCHS =
                 assign up_i[gs][UW*gf +: UW] = '0;
             end
         end
+`ifdef UP_FMASK
+        // S81-P9-FACE: each slice's up node built with its variant's role face masks (rs_fmask: UI = [11:8], UO = [15:12])
+        localparam logic [39:0] FMS = rs_fmask(4'(gs));
+        dsdv_svc_rs_up #(.UW(UW), .UPMUT(MUT), .FM_UI(FMS[11:8]), .FM_UO(FMS[15:12])) u (.ck(ck), .rn(rn), .chm(RL[7:4]),
+            .par(RL[10:8]), .done(done[gs]),
+`else
         dsdv_svc_rs_up #(.UW(UW), .UPMUT(MUT)) u (.ck(ck), .rn(rn), .chm(RL[7:4]), .par(RL[10:8]), .done(done[gs]),
+`endif
             .fl(fl[gs]), .hcr(hcr[gs]), .hack(hack[gs]), .hs_s(hs[gs]), .up_i(up_i[gs]), .up_o(up_o[gs]), .uc(uc[gs]));
     end endgenerate
     // half membership: follow the parent faces to an entry

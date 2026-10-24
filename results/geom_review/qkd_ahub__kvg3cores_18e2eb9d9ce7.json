@@ -1,0 +1,15 @@
+{
+ "element": "qkd_ahub",
+ "kit": "KVG3-CORES core kit qkd_ahub (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (partition only; tile run still in synthesis/floorplan at review time)",
+ "hash": "18e2eb9d9ce7ace7",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hub_C.png"
+ ],
+ "reasons": "Partition kv3_hub_C: ahub pins S 482 / E 147, no core within 60 um of a pin face (0 detour), kvs_ctl neighbour far.",
+ "fixes": "tile review at 3_place before any rerun.",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}
