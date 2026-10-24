@@ -1,0 +1,278 @@
+{
+ "schema": "opentallas.die_plan.lane_delta.v1",
+ "note": "KV-P8-HUB 10-23 v3.8s = v3.8h (main 3e05af806) + post_v38s.py: FIRM astk internal stations on hub_Eo/Wo (R3-INTERNAL, KV owner option (i) 23:24); per lane: cycles before/after (gen.py latency, R8 pads unchanged). Bind: the stations are realised as the lane's table cycles; for OUTBOUND lanes (src hub_Eo/Wo) the stages belong in the SOURCE partition (between the core pin and the window, regs_um of internal_stations), not as a pad at the hub_C in bus.",
+ "plan_digest_before": "37664d8fe23faa17",
+ "plan_digest_after": "40304c28dd8e1d6b",
+ "lanes": {
+  "L0": {
+   "param": "LAT_L0",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_ahub_am_EN"
+   },
+   "dst": {
+    "part": "hub_Eo",
+    "bus": "i_ahub_am_EN"
+   },
+   "width": 36,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L1": {
+   "param": "LAT_L1",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_ahub_am_ES"
+   },
+   "dst": {
+    "part": "hub_Eo",
+    "bus": "i_ahub_am_ES"
+   },
+   "width": 36,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L2": {
+   "param": "LAT_L2",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_ahub_am_WN"
+   },
+   "dst": {
+    "part": "hub_Wo",
+    "bus": "i_ahub_am_WN"
+   },
+   "width": 36,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L3": {
+   "param": "LAT_L3",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_ahub_am_WS"
+   },
+   "dst": {
+    "part": "hub_Wo",
+    "bus": "i_ahub_am_WS"
+   },
+   "width": 36,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L5": {
+   "param": "LAT_L5",
+   "src": {
+    "part": "hub_Eo",
+    "bus": "o_astk_EN__g_phys_fault_u_fault_q"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_EN__g_phys_fault_u_fault_q"
+   },
+   "width": 1,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L80": {
+   "param": "LAT_L80",
+   "src": {
+    "part": "hub_Eo",
+    "bus": "o_astk_EN__u_strip_u_strip_u_ctl_ap"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_EN__u_strip_u_strip_u_ctl_ap"
+   },
+   "width": 43,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L89": {
+   "param": "LAT_L89",
+   "src": {
+    "part": "hub_Eo",
+    "bus": "o_astk_ES__g_phys_fault_u_fault_q"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_ES__g_phys_fault_u_fault_q"
+   },
+   "width": 1,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L164": {
+   "param": "LAT_L164",
+   "src": {
+    "part": "hub_Eo",
+    "bus": "o_astk_ES__u_strip_u_strip_u_ctl_ap"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_ES__u_strip_u_strip_u_ctl_ap"
+   },
+   "width": 43,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L173": {
+   "param": "LAT_L173",
+   "src": {
+    "part": "hub_Wo",
+    "bus": "o_astk_WN__g_phys_fault_u_fault_q"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_WN__g_phys_fault_u_fault_q"
+   },
+   "width": 1,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L248": {
+   "param": "LAT_L248",
+   "src": {
+    "part": "hub_Wo",
+    "bus": "o_astk_WN__u_strip_u_strip_u_ctl_ap"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_WN__u_strip_u_strip_u_ctl_ap"
+   },
+   "width": 43,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L257": {
+   "param": "LAT_L257",
+   "src": {
+    "part": "hub_Wo",
+    "bus": "o_astk_WS__g_phys_fault_u_fault_q"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_WS__g_phys_fault_u_fault_q"
+   },
+   "width": 1,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L332": {
+   "param": "LAT_L332",
+   "src": {
+    "part": "hub_Wo",
+    "bus": "o_astk_WS__u_strip_u_strip_u_ctl_ap"
+   },
+   "dst": {
+    "part": "hub_C",
+    "bus": "i_astk_WS__u_strip_u_strip_u_ctl_ap"
+   },
+   "width": 43,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  },
+  "L1391": {
+   "param": "LAT_L1391",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_kvs_attn_acal_EN"
+   },
+   "dst": {
+    "part": "hub_Eo",
+    "bus": "i_kvs_attn_acal_EN"
+   },
+   "width": 48,
+   "before": 5,
+   "after": 8,
+   "delta": 3
+  },
+  "L1392": {
+   "param": "LAT_L1392",
+   "src": {
+    "part": "hub_Eo",
+    "bus": "o_kvs_attn_acal_EN"
+   },
+   "dst": {
+    "part": "hg_EN_7",
+    "bus": "i_kvs_attn_acal_Q"
+   },
+   "width": 16,
+   "before": 2,
+   "after": 4,
+   "delta": 2
+  },
+  "L1400": {
+   "param": "LAT_L1400",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_kvs_attn_acal_ES"
+   },
+   "dst": {
+    "part": "hub_Eo",
+    "bus": "i_kvs_attn_acal_ES"
+   },
+   "width": 48,
+   "before": 5,
+   "after": 6,
+   "delta": 1
+  },
+  "L1409": {
+   "param": "LAT_L1409",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_kvs_attn_acal_WN"
+   },
+   "dst": {
+    "part": "hub_Wo",
+    "bus": "i_kvs_attn_acal_WN"
+   },
+   "width": 48,
+   "before": 4,
+   "after": 7,
+   "delta": 3
+  },
+  "L1410": {
+   "param": "LAT_L1410",
+   "src": {
+    "part": "hub_Wo",
+    "bus": "o_kvs_attn_acal_WN"
+   },
+   "dst": {
+    "part": "hg_WN_7",
+    "bus": "i_kvs_attn_acal_Q"
+   },
+   "width": 16,
+   "before": 2,
+   "after": 4,
+   "delta": 2
+  },
+  "L1418": {
+   "param": "LAT_L1418",
+   "src": {
+    "part": "hub_C",
+    "bus": "o_kvs_attn_acal_WS"
+   },
+   "dst": {
+    "part": "hub_Wo",
+    "bus": "i_kvs_attn_acal_WS"
+   },
+   "width": 48,
+   "before": 4,
+   "after": 5,
+   "delta": 1
+  }
+ }
+}
