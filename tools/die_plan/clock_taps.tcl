@@ -16,6 +16,41 @@ foreach bt [$ct_blk getBTerms] {
   $net setSigType CLOCK
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
+# CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
+# clock.core_taps 'early').  Each line `port inst pin|*`: the hard core's clock pin(s) leave the clk net for the core
+# tap port's own net BEFORE the nearest-tap split, so the core hangs on the tap the spine delivers early (its internal
+# clock latency exceeds the common latency).  Ports clk_c<k> are not grid taps: no flop is ever moved onto them.
+if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
+  set ct_root [[$ct_blk findBTerm clk] getNet]
+  set fh [open $::env(OT_CORE_TAPS)]; set ct_cl [split [read $fh] "\n"]; close $fh
+  foreach l $ct_cl {
+    if {[string match "#*" $l] || [llength $l] < 3} continue
+    lassign $l port iname pin
+    set bt [$ct_blk findBTerm $port]
+    set inst [$ct_blk findInst $iname]
+    if {$bt eq "NULL" || $bt eq "" || $inst eq "NULL" || $inst eq ""} {
+      puts "OT_CLOCK_TAPS WARN core tap $port: port or core instance $iname missing"
+      continue
+    }
+    set net [$bt getNet]
+    if {$net eq "NULL" || $net eq ""} {
+      set net [odb::dbNet_create $ct_blk "${port}_net"]
+      $bt connect $net
+    }
+    $net setSigType CLOCK
+    set k 0
+    foreach it [$inst getITerms] {
+      set n0 [$it getNet]
+      if {$n0 eq "NULL" || $n0 eq "" || $n0 ne $ct_root} continue
+      if {$pin ne "*" && [[$it getMTerm] getName] ne $pin} continue
+      $it disconnect
+      $it connect $net
+      incr k
+    }
+    puts "OT_CLOCK_TAPS core tap $port <- $iname/$pin: $k clock pin(s)"
+    if {!$k} { puts "OT_CLOCK_TAPS WARN core tap $port: no clock pin of $iname/$pin on clk" }
+  }
+}
 if {[llength $ct_taps] < 2} {
   puts "OT_CLOCK_TAPS single tap: nothing to split"
 } else {
