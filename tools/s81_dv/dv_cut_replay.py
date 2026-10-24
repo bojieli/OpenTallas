@@ -303,6 +303,14 @@ def derive_line_events(S, die):
             for c in path[:path.index(col) + 1]:
                 t_out -= hop(prev, c)
                 prev = c
+            # TOKj-S81 10-23 (fc30 entry job17: 51 u_s_3N.ri_e rows, w_tvN_seqhost_lnd 51 words unscheduled): a line
+            # beat compiled at a stop is the seq_host V rung beat re-injected by the column-4 slice, so the rung word
+            # on <u_s_4T>.vi is derived too (inverse of the vi branch above; ctl_beat leaves a vi beat unrewritten).
+            v = dict(e, cycle=t_out + RSTOP_HOP - inject_cycles(S), inst=f'u_s_{LINE_INJECT_COL}{tier}', port='vi',
+                     derived_from=f'{e["inst"]}@{e["cycle"]}')
+            if (v['inst'], 'vi', v['cycle'], v['payload']) not in have:
+                have.add((v['inst'], 'vi', v['cycle'], v['payload']))
+                out.append(v)
         for path, port in ((W, 'ri_e'), (E, 'ri_w')):
             t, prev = t_out, LINE_INJECT_COL
             for c in path:
@@ -747,6 +755,25 @@ def word_at(die, inst, port, val, cycle_land, kind, tag, hold=None):
     return w
 
 
+def ks_engram_words(die, ksw, ks_land):
+    """TOKj-S81 10-23 (fc30 entry, every job: 2 unscheduled words on the strict lane eks_7N at 2307 / 2308): with
+    HOSTB_ENABLE 0, dsdv_hostb_seqhost_mux forwards the landed f_ks pins combinationally on engram_f_ks (hostb_landing
+    `assign engram_f_ks = legacy_f_ks`) to u_eng.f_ks.  The engram engine must receive the job-start word WHOLE, at
+    the f_ks landed edge + the forward bundle's slowest lane age (the port model: a port is whole when its slowest lane
+    lands).  Encoded as the u_eng.f_ks pin word, so a cut holding u_seqhost CHECKS it (a torn f_ks bundle -- lanes of
+    unequal age -- then fails here instead of passing as two unexpected words).  Any other seqhost master (hostb
+    landing / starter in the path) has its own latency: the forward is then not encoded (returns none)."""
+    sh = die.inst.get('u_seqhost')
+    if not sh or sh['master'] != 'dsdv_hostb_seqhost_mux' or not re.search(r'\.HOSTB_ENABLE\(\s*0\s*\)', sh['params']):
+        return []
+    fb = die.port_bits('u_seqhost', 'engram_f_ks')
+    lanes = {lane_of_net(die, nb[0]) for nb in fb if nb}
+    if not fb or None in lanes or not die.port_bits('u_eng', 'f_ks'):
+        return []
+    age = max(die.links[lk]['age'] for lk in lanes)
+    return [word_at(die, 'u_eng', 'f_ks', ksw, ks_land + age, 'KS', 'job start -> engram f_ks (u_seqhost forward)')]
+
+
 def seqhost_live(die, cut, idle_run):
     """TOK-S81-GAPS/CTL: the bench cycle from which u_seqhost captures host words.  dsdv_sh_lk gates the host valid with
     its relayed reset (fi[0] <= rn & f_host[0]) and t_host <= rn ? {alive 1, ...} : 0, so the first edge t_host's alive bit
@@ -854,6 +881,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
             for i, h in enumerate(hs)]
     out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
+    out += ks_engram_words(die, ksw, ks - a.t0)
     lf_age = max(die.links[die.by_out[n]]['age'] for n, _ in die.port_bits('u_seqhost', 'f_lf') if n in die.by_out)
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
