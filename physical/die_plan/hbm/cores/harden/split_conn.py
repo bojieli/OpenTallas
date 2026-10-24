@@ -210,7 +210,7 @@ def signature(P):
     ren, k = {}, 0
     sig = []
     for _, t, role in P.members:
-        sig.append(('M', role, netcut.base(t)))
+        sig.append(('M', role, re.sub(r'__d4g_\w+$', '', netcut.base(t))))
     for key in sorted(P.pins):
         pdir, cls = P.pins[key]
         row = []

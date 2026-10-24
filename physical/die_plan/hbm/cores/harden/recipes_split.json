@@ -1,4 +1,140 @@
 {
+ "ot_hbm_hc_bankq0_static__lanes0_2__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq0_static__lanes0_2__362.88x362.88\"]; straps {'lg0_fst': '1', 'lg2_fst': '1', 'lg1_fst': '1'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq0_static__lanes3_5__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq0_static__lanes3_5__362.88x362.88\"]; straps {'lg0_fst': '1', 'lg2_fst': '1', 'lg1_fst': '1'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes0_2__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_ft_static__lanes0_2__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes3_5__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_ft_static__lanes3_5__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_static__lanes0_2__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_static__lanes0_2__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_static__lanes3_5__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_static__lanes3_5__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_term_static__lanes0_2__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_term_static__lanes0_2__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
+ "ot_hbm_hc_bankq_term_static__lanes3_5__362.88x362.88": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_lanes3_core.sv"
+  ],
+  "functional_type": "bankq_lanes3",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_hc_bankq_lanes3_core ports; cut pin -> canonical map in canonical_ports_split.json types.bankq_lanes3.type_ids[\"ot_hbm_hc_bankq_term_static__lanes3_5__362.88x362.88\"]; straps {'lg0_fst': '0', 'lg2_fst': '0', 'lg1_fst': '0'} tied at the parent",
+  "source": "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)",
+  "top": "ot_hbm_hc_bankq_lanes3_core"
+ },
  "ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52": {
   "defines": [],
   "files": [

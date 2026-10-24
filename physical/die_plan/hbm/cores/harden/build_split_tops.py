@@ -34,6 +34,11 @@ def tkm_tile(n, m):
     return {m + '__tile' + rx.search(tp).group(1): ([tp], []) for tp in tiles}
 
 
+def bankq_lanes(n, m):
+    lg = sorted(g.find_paths(n, m, r'hcp_lanes'), key=lambda p: int(re.search(r'\[(\d+)\]\D*$', p).group(1)))
+    return {f'{m}__lanes0_2': (lg[0:3], []), f'{m}__lanes3_5': (lg[3:6], [])}
+
+
 def score_tail(n, m):
     out = {}
     for tp in g.find_paths(n, m, r'idx_tail_native'):
@@ -60,6 +65,15 @@ PIECES = {
         rtl=None, straps=[],
         src='rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv ge[e] tail (ot_hbm_idx_tail_native, '
             'verbatim in the _h twin)'),
+    'bankq_lanes3': dict(
+        master='ot_hbm_hc_bankq_static', top='ot_hbm_hc_bankq_lanes3_core', pieces=bankq_lanes,
+        masters=['ot_hbm_hc_bankq_static', 'ot_hbm_hc_bankq_ft_static', 'ot_hbm_hc_bankq0_static',
+                 'ot_hbm_hc_bankq_term_static'],
+        rtl={'u_lg0': ('ot_hdc_v41x_hcp_lanes', ''), 'u_lg1': ('ot_hdc_v41x_hcp_lanes', ''),
+             'u_lg2': ('ot_hdc_v41x_hcp_lanes', '')},
+        straps=[('u_lg0', 'fst'), ('u_lg1', 'fst'), ('u_lg2', 'fst')],
+        src='rtl/hdc/v41x/ot_hdc_v41x_hcp.sv ot_hdc_v41x_hcp_stage g_grp[gg].u_lg x3 (hard child, no parameter '
+            'overrides in every bankq variant; bankq0 = first stage: fst 1, s_i tied 0 at the parent)'),
 }
 
 
@@ -198,13 +212,16 @@ def main():
     for key, cfg in PIECES.items():
         if a.only and key not in a.only.split(','):
             continue
-        m = cfg['master']
-        n = nets.get(m) or nets.setdefault(m, netcut.Netlist(os.path.join(a.net, f'{m}.netlist.v')))
-        pcs = cfg['pieces'](n, m)
+        masters = cfg.get('masters') or [cfg['master']]
+        m = masters[0]
+        order = []
+        for mm in masters:
+            n = nets.get(mm) or nets.setdefault(mm, netcut.Netlist(os.path.join(a.net, f'{mm}.netlist.v')))
+            order += [(k, v, n, mm) for k, v in cfg['pieces'](n, mm).items()]
+        pcs = {k: v for k, v, _, _ in order}
         sig0, P0, rec = None, None, {}
         straps = {tuple(s) for s in cfg.get('straps', [])}
-        order = list(pcs.items())
-        for cut_mod, (inc, exc) in order:
+        for cut_mod, (inc, exc), n, m in order:
             strip = inc[0].rsplit('/', 1)[0] + '/'
             P = sc.analyse(n, m, inc, exc, strip=strip)
             sig = [s for s in sc.signature(P) if not (isinstance(s[0], tuple) and s[0] in straps)]
@@ -227,6 +244,7 @@ def main():
             if sub is not None:
                 rec[cut_mod]['subset_of_reference'] = sub
             print(cut_mod, P.cut_bits, 'same' if same else ('SUBSET ' + json.dumps({k: v for k, v in sub.items() if k != 'detail'}) if sub['ok'] else 'DIFFERENT'), strap_v)
+        m = masters[0]
         if cfg['rtl'] is None:
             res[key] = dict(master=m, top=cfg['top'], file=None, pieces=rec, src=cfg['src'], direct=True)
             json.dump(res, open(a.out, 'w'), indent=1)
