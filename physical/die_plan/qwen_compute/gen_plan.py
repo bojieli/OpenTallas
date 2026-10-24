@@ -1384,59 +1384,51 @@ def materialize(P):
     return ports, lanes
 
 
-def stagger_coll_ft_stations(P, tap_clear=24.0):
-    """QC-P5 10-23 (coll_ftc GRT probe: overflow 368, all at the partition centre): in the single-instance coll ft
-    segments every k=2 slot put its station 1 at L/2 of a midpoint-Z / L route, so the straight slots shared one jog
-    column and the turn slots met there too, on top of the clock/reset tap.  Here station 1 of each 2-station slot gets
-    an explicit site (regs_um, honoured by face_flops.tcl) at a STAGGERED fraction of its own route (first leg normal to
-    the in face, as the tool routes it), widest slots first, kept >= tap_clear um off the clock/reset tap; station 0
-    stays at the in-face pin centre.  Every hop stays <= ST_LEN."""
-    fr = [0.50, 0.38, 0.62, 0.44, 0.56, 0.32, 0.68, 0.41, 0.59, 0.35, 0.65, 0.47, 0.53]
+def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
+    """QC-P5 10-23 (coll_ftc GRT probes: 368 overflow at the partition centre on the tool's midpoint-Z / L stations;
+    1,697 with stations only re-spaced along those routes, because the wires of every slot whose in->out box spans the
+    centre still crossed the clock/reset tap).  Station 1 of each 2-station slot gets an explicit site (regs_um, honoured
+    by face_flops.tcl) chosen so that NEITHER hop's bounding box (in pin -> site, site -> out pin) touches the
+    tap keep-out (tap +/- tap_keep um): the router can then take any L/Z inside each box without crossing the tap.
+    Among the legal sites (grid step um, every hop <= ST_LEN), widest slots first: >= site_sep um from the sites already
+    taken, then the most balanced hops.  Station 0 stays at the in-face pin centre."""
     for tn in sorted({P.parts[p]["type"] for p in FT_COLL if p in P.parts}):
         t = P.types[tn]
         W, H = t["outline_um"]
         tap = t.get("clock", {}).get("tap_um", [W / 2, H / 2])
+        kx0, kx1, ky0, ky1 = tap[0] - tap_keep, tap[0] + tap_keep, tap[1] - tap_keep, tap[1] + tap_keep
         slots = [s for s in t["ft_slots"] if int(s.get("stations", 1)) == 2 and s.get("out_window_um")]
         slots.sort(key=lambda s: -s["width"])
-        for i, s in enumerate(slots):
+        taken = []
+
+        def hits(p, q):
+            return not (max(p[0], q[0]) < kx0 or min(p[0], q[0]) > kx1 or max(p[1], q[1]) < ky0 or min(p[1], q[1]) > ky1)
+        for s in slots:
             gi = P.in_geo.get((tn, s["name"] + "_i"))
             if not gi:
                 continue
-            fi, fo = s["in_face"], s["out_face"]
             ci, co = sum(gi["window_um"]) / 2, sum(s["out_window_um"]) / 2
-            pin = {"E": (W, ci), "W": (0.0, ci), "N": (ci, H), "S": (ci, 0.0)}
-            pout = {"E": (W, co), "W": (0.0, co), "N": (co, H), "S": (co, 0.0)}
-            a, b = pin[fi], pout[fo]
-            # route corners: first leg normal to the in face
-            if fi in "EW":
-                corner = (b[0], a[1]) if fo in "NS" else ((a[0] + b[0]) / 2, a[1])
-            else:
-                corner = (a[0], b[1]) if fo in "EW" else (a[0], (a[1] + b[1]) / 2)
-            pts = [a, corner] + ([] if fo in ("NS" if fi in "EW" else "EW") else
-                                 [(corner[0], b[1]) if fi in "EW" else (b[0], corner[1])]) + [b]
-            segs = [(p, q, abs(p[0] - q[0]) + abs(p[1] - q[1])) for p, q in zip(pts, pts[1:])]
-            L = sum(x[2] for x in segs)
-
-            def at(u):
-                for p, q, l in segs:
-                    if u <= l or (p, q, l) == segs[-1]:
-                        r = 0 if l == 0 else min(1.0, u / l)
-                        return (p[0] + (q[0] - p[0]) * r, p[1] + (q[1] - p[1]) * r)
-                    u -= l
-            site = None
-            for j in range(len(fr)):
-                f_ = fr[(i + j) % len(fr)]
-                if f_ * L > ST_LEN or (1 - f_) * L > ST_LEN:
-                    continue
-                x, y = at(f_ * L)
-                if abs(x - tap[0]) + abs(y - tap[1]) >= tap_clear:
-                    site = (round(x, 3), round(y, 3))
-                    break
-            if site is None:
+            fp = {"E": lambda c: (W, c), "W": lambda c: (0.0, c), "N": lambda c: (c, H), "S": lambda c: (c, 0.0)}
+            a, b = fp[s["in_face"]](ci), fp[s["out_face"]](co)
+            best = None
+            nx, ny = int(W / step), int(H / step)
+            for ix in range(1, nx):
+                for iy in range(1, ny):
+                    x, y = ix * step, iy * step
+                    h1 = abs(x - a[0]) + abs(y - a[1])
+                    h2 = abs(x - b[0]) + abs(y - b[1])
+                    if h1 > ST_LEN or h2 > ST_LEN or hits(a, (x, y)) or hits((x, y), b):
+                        continue
+                    crowd = min((abs(x - u) + abs(y - v) for u, v in taken), default=1e9)
+                    key = (crowd < site_sep, h1 + h2, abs(h1 - h2))
+                    if best is None or key < best[0]:
+                        best = (key, (round(x, 3), round(y, 3)))
+            if best is None:
+                print(f"stagger_coll_ft_stations: {tn}.{s['name']}: no site keeps both hops off the tap; tool route kept")
                 continue
+            taken.append(best[1])
             s0 = (round(min(max(a[0], 1.0), W - 1.0), 3), round(min(max(a[1], 1.0), H - 1.0), 3))
-            s["regs_um"] = [list(s0), list(site)]
-
+            s["regs_um"] = [list(s0), list(best[1])]
 
 def ft_fracs(P):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
