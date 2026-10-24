@@ -585,3 +585,13 @@ def test_g0c_gated():
     g = summ["g0c"]
     assert g["by_type"] == {"mid": {"hard_cores": 1}} and g["die_level"] == {"complete:common_latency": 1}
     assert g["g3_eligible"] == [] and g["clean"] == 2
+
+
+def test_core_face_broadcast_station_capture_scope():
+    """A later broadcast leg to another core must not replace this core's final relay."""
+    def stations(t):
+        t['internal_stations'] = [
+            dict(conn='bus:din', capture='u_core.din', from_um=[0,110], to_um=[648,432], regs_um=[[700,432]]),
+            dict(conn='bus:din', capture='u_other.din', from_um=[0,110], to_um=[100,432], regs_um=[[100,432]])]
+    assert errs(_face_core(dict(din='E', x='E'), conns=stations), 'core_faces') == []
+    assert len(errs(_face_core(dict(din='W', x='E'), conns=stations), 'core_faces')) == 1

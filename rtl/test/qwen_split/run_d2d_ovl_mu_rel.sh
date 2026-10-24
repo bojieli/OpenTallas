@@ -15,7 +15,7 @@ SRC=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_static_sl
  "$D/ot_qwen_d2d_dies_ovl.sv" "$D/ot_qwen_d2d_safe5.sv" "$D/ot_qwen_d2d_safe7.sv" "$D/ot_qwen_d2d_dies_ovl_sf7.sv"
  "$D/ot_qwen_d2d_safe_fo.sv" "$D/ot_qwen_d2d_sfm.sv" "$D/ot_qwen_d2d_sfm3.sv" "$D/ot_qwen_d2d_cal_seq.sv" "$D/ot_qwen_d2d_ovl_seq.sv"
  "$M/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
- "$M/ot_sram_1r1w_64x137_m1_r2c2_p192/ot_sram_1r1w_64x137_m1_r2c2_p192.v"
+ "$M/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v"
  "$M/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.v"
  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv" "rtl/test/qwen_split/tb_d2d_ovl_mu_rel.sv")
 mkdir -p "$OUT"; "$V" --version > "$OUT/verilator.txt"

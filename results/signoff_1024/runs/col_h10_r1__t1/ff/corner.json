@@ -1,0 +1,91 @@
+{
+ "done": true,
+ "design": "s81p_col_h10_r1__t1",
+ "cells": 5776200.0,
+ "parasitics": "spef",
+ "clocks": [
+  "clk",
+  "vclk"
+ ],
+ "vclks": [
+  "vclk"
+ ],
+ "periods": {
+  "clk": 833.0,
+  "vclk": 833.0
+ },
+ "clock_ports": [
+  "clk",
+  "clk_t1",
+  "clk_t10",
+  "clk_t11",
+  "clk_t12",
+  "clk_t13",
+  "clk_t14",
+  "clk_t15",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5",
+  "clk_t6",
+  "clk_t7",
+  "clk_t8",
+  "clk_t9"
+ ],
+ "inputs": [
+  "arst_n",
+  "frame_int_i0",
+  "frame_int_i1"
+ ],
+ "outputs": [
+  "frame_int_o0",
+  "frame_int_o1"
+ ],
+ "overlay": "applied vclk in_min -40 out_min 0",
+ "sdc_wns_max": -46.76,
+ "sdc_wns_min": 0.6,
+ "sdc_tns_max": -188.5,
+ "sdc_tns_min": 0.0,
+ "sdc_nviol_max": 10.0,
+ "sdc_nviol_min": 0.0,
+ "std_wns_max": -46.76,
+ "std_wns_min": -45.74,
+ "std_tns_max": -188.5,
+ "std_tns_min": -38116.71,
+ "std_nviol_max": 10.0,
+ "std_nviol_min": 1495.0,
+ "slew_viol": 1124.0,
+ "cap_viol": 0.0,
+ "fanout_max": 27.0,
+ "fanout_worst_net": "clknet_leaf_43_clk",
+ "fanout_viol": 0.0,
+ "check_setup": {
+  "unconstrained": 0,
+  "unclocked": 0,
+  "loops": 0,
+  "multiple_clock": 0,
+  "generated": 0
+ },
+ "ck_errors": 0.0,
+ "insertion_all": {
+  "n": 6054,
+  "min": 164.19,
+  "mean": 189.25,
+  "max": 250.08,
+  "spread": 85.89
+ },
+ "insertion_pinflops": {
+  "n": 3027,
+  "min": 169.35,
+  "mean": 197.35,
+  "max": 216.66,
+  "spread": 47.31
+ },
+ "ocv5_wns_max": -104.81,
+ "ocv5_wns_min": -56.58,
+ "corner": "ff",
+ "rc": 0,
+ "macro_libs": [],
+ "macro_missing": [],
+ "errors": []
+}

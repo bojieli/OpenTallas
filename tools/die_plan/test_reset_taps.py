@@ -1,0 +1,40 @@
+"""Exercise hierarchical reset-net discovery with a small OpenDB interface mock."""
+import shutil
+import subprocess
+from pathlib import Path
+
+import pytest
+
+HOOK = Path(__file__).with_name('reset_taps.tcl')
+
+
+def run_hook(tmp_path, names):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    nets = ' '.join(f'n{i}' for i in range(len(names)))
+    mock = ['namespace eval ord {}', 'proc ord::get_db_block {} {return blk}',
+            'proc ord::get_db_tech {} {return tech}',
+            'proc tech {method} {return 1000}',
+            f'proc blk {{method args}} {{switch $method {{getNets {{return {{{nets}}}}} getBTerms {{return {{}}}} findNet {{return NULL}}}}}}']
+    for i, name in enumerate(names):
+        mock.append(f'proc n{i} {{method}} {{return {{{name}}}}}')
+    script = '\n'.join(mock) + f'\nsource {{{HOOK}}}\nputs "RES [rt_tapnet blk 0] [rt_tapnet blk 20]"\n'
+    return subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+
+
+@pytest.mark.parametrize('prefix', ['', 'u_bound.', 'u_bound/'])
+def test_reset_tap_flat_and_bound_names(tmp_path, prefix):
+    p = run_hook(tmp_path, [prefix + 'rst_n_t0', prefix + 'rst_n_t20'])
+    assert not p.stderr, p.stderr
+    assert 'RES n0 n1' in p.stdout
+
+
+def test_reset_tap_zero_alias(tmp_path):
+    p = run_hook(tmp_path, ['u_bound.rst_n', 'u_bound.rst_n_t20'])
+    assert not p.stderr, p.stderr
+    assert 'RES n0 n1' in p.stdout
+
+
+def test_reset_tap_ambiguous_nested_partitions(tmp_path):
+    p = run_hook(tmp_path, ['a.rst_n_t20', 'b.rst_n_t20'])
+    assert 'ambiguous synchroniser net for tap 20' in p.stderr

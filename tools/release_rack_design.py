@@ -409,12 +409,12 @@ def build_s81():
                     total_dies=S["dies"], hbm_stacks=sum(t["hbm_stacks"] for t in tray_rows), stage_source=S["src"],
                     grade="MODEL" if not S["inp"].get("qualified") else "spec"),
         die_power_src=dict(rank=N(84.1, "spec", "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w (old 10-04 S81 die report, busiest layer die; no 72-frame die power report yet) via results/arch/dsrom_s81_rack_20261006/rack.json die_w"),
-                           head=N(92.34, "MODEL", "results/arch/dsrom_s81_rack_20261006/rack.json die_w.head_table (C1 ledger)"),
+                           head=N(92.34, "MODEL", "results/arch/dsrom_s81_rack_20261006/rack.json die_w.head_table (C1 ledger); not re-derived for the 4-die, HBM-free head (OWNER 2026-10-24)"),
                            stack=P("hbm3e_stack_static_w")),
         die_links=dict(rank=N(10, "spec", "OWNER-approved 5th link (10-21): 5 lane pairs = TP4 full mesh 3 + prev/next stage 2 (reports/s81_links_1021.md s2 option A)"),
                        copy_ab=N(12, "spec", "pre-/post-group rank dies carry a 6th pair (chain_plan extra_circuits_on_existing_dies; lep_mu_ab)"),
                        copy_b=N(10, "MODEL", "copy-B dies use the rank die master (chain_plan: same masks fabricated twice)"),
-                       head=N(12, "MODEL", "head die as a rank-die master + 1 host SerDes pair (S81.HOST); its +5 draft fan-out SerDes are placeholders and not wired here")),
+                       head=N(12, "spec", "head die plan physical/die_plan/s81_head (S81-HEAD 10-24): 12 SerDes = 5 lane pairs + the host pair lk_HOST0+1 (S81.HOST); no draft fan-out SerDes: the MTP composition of record uses no head-die draft link (OWNER 2026-10-24 lean: the draft rides copy-B; to confirm)")),
         extra=dict(host_plan=dict(S81_HOST, head_host_circuits=sum(1 for r in rows if r["cls"] == "host"),
                                   stage_die_host_circuits=0, mgmt_rows=len(tray_rows))))
     # per-tray management sideband (not a SerDes, not a circuit of the data plane): one row per tray to the rack mgmt switch

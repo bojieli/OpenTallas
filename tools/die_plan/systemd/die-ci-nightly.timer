@@ -1,0 +1,9 @@
+[Unit]
+Description=DIE-CI nightly full run (02:30 Pacific)
+
+[Timer]
+OnCalendar=*-*-* 02:30:00 America/Los_Angeles
+Persistent=true
+
+[Install]
+WantedBy=timers.target

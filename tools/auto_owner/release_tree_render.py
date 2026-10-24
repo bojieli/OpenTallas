@@ -14,7 +14,7 @@ Hourly: release-tree-render.timer (user). fleet-viz also re-renders on page load
 """
 import argparse, collections, datetime, html, json, os, pathlib, re, sys, tempfile, urllib.request
 
-BASE = pathlib.Path('/home/ubuntu/claude-takeover-20261007')
+BASE = pathlib.Path(os.environ.get('OT_COORD_DIR', str(pathlib.Path.home() / 'coord')))
 CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_elements_cache.json'
 STATUSES = ['RUNNING', 'WAITS', 'TODO', 'NEW', 'COORD', 'OWNER', 'FAIL', 'PASS', 'DONE', 'BLOCKED']
 CHIP = dict(DONE='ok', PASS='ok', RUNNING='run', WAITS='wait', TODO='wait', BLOCKED='wait', NEW='new', COORD='me', OWNER='me', FAIL='me')

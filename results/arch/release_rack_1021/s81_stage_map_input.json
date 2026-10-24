@@ -18,10 +18,10 @@
     "position_rule": "copy-A run starts at round(s81 * stages / 81); exact positions come from the qualified map"
   },
   "head": {
-    "grade": "MODEL",
-    "dies": 12,
-    "hbm_stacks_per_die": 4,
-    "source": "results/arch/dsrom_s81_rack_20261006/rack.json counts.head (head model recommended_head_dies 12); there is no dv / 72-frame head die yet (reports/s81_links_1021.md section 1)"
+    "grade": "spec",
+    "dies": 4,
+    "hbm_stacks_per_die": 0,
+    "source": "OWNER 2026-10-24 (07:30 PDT via coordinator): head dies 12 -> 4 (one TP4 group: 4 dies x 32,320 vocab rows = 129,280) and NO HBM on head dies; head die plan physical/die_plan/s81_head (S81-HEAD lane, results/uarch/s81_head_die.json). Was: 12 dies x 4 HBM3E (results/arch/dsrom_s81_rack_20261006/rack.json counts.head, MODEL)"
   },
   "users_ar": 46,
   "token_cycles_ar": 980428,
