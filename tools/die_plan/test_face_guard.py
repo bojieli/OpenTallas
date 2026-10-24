@@ -83,3 +83,32 @@ def test_yosys_keep_attributes_prevent_merges():
     r = face_guard.guard(_synth(bare), skip_re=r"^(clk|rst_n)$")
     assert r["verdict"] == "FAIL", r
     assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))
+
+
+NET_FT1 = r"""
+module top(clk, ft0_i, ft0_o, ft1_i, ft1_o);
+  input clk; input [1:0] ft0_i; output [1:0] ft0_o; input ft1_i; output ft1_o;
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft0_s0.q[0]$_DFF_P_  (.CLK(clk), .D(ft0_i[0]), .QN(ft0_o[0]));
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft0_s0.q[1]$_DFF_P_  (.CLK(clk), .D(ft0_i[1]), .QN(ft0_o[1]));
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft1_s0.q[0]$_DFF_P_  (.CLK(clk), .D(ft1_i), .QN(ft1_o));
+endmodule
+"""
+
+
+def test_one_station_ft_slot_shares_its_register(tmp_path):
+    """ELEM-S81 10-24: a 1-station ft slot's single station register is both its in- and out-face register."""
+    assert face_guard.guard(NET_FT1)["verdict"] == "FAIL"                       # without the slot table: merged
+    r = face_guard.guard(NET_FT1, ft1={"ft0", "ft1"})
+    assert r["verdict"] == "PASS" and r["ok"] == 6 and r["ft1_stations"] == 3, r
+    r = face_guard.guard(NET_FT1, ft1={"ft0"})                                 # ft1 has 2 stations by plan -> merged
+    assert r["fail_counts"] == {"merged": 2}, r
+    (tmp_path / "ft_stations.txt").write_text("# slot stations in out\nft0 1 S W\nft1 2 S W\n")
+    assert face_guard.read_ft1(tmp_path / "ft_stations.txt") == {"ft0"}
+    cross = NET_FT1.replace(".QN(ft0_o[1])", ".QN(_x_)").replace(".D(ft0_i[1])", ".D(ft0_i[1])")
+    assert face_guard.guard(cross, ft1={"ft0", "ft1"})["verdict"] == "FAIL"
+
+
+def test_portless_type_passes_with_empty_pin_table():
+    net = "module top(clk);\n  input clk;\nendmodule\n"
+    assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
+    assert face_guard.guard(net)["verdict"] == "FAIL"
