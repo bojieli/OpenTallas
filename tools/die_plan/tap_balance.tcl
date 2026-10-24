@@ -229,16 +229,24 @@ for {set it 0} {$it < [llength $tb_plan]} {incr it} {
   }
   set tb_prev {}
   set longest 0.0
-  dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
+  dict for {n v} $m { if {[lindex $v 3] >= 32} { set longest [expr {max($longest, [lindex $v 0])}] } }
   # target fixed at the first pass (padding overshoot must not ratchet it up); a padded tree's slowest sink stays
   # <= ins + tol
   # KV-P5 17:34 / KV-P6: the target is the PLAN insertion (OT_TAP_TARGET_PS = clock.insertion_ps = the vclk source
   # latency of the IO SDC and the neighbours' insertion), not the slowest local tree: kits8 trees at 205-222 ps
   # balanced to their own 222 ps captured every in2reg path ~30 ps early (TT in2reg -76.6).  Trees already above the
   # target stay as built (<= ins + win, else OT_TAP_CHECK WARN).  OT_TAP_BALANCE_TO=longest restores the old rule.
-  if {$it == 0} {
-    if {[info exists ::env(OT_TAP_BALANCE_TO)] && $::env(OT_TAP_BALANCE_TO) eq "longest"} {
+  # CLK-STD: OT_TAP_BALANCE_TO "auto" (default): the target is re-fixed at the first measurement of each RC phase as
+  # the slowest tree clamped to [common, common + window] -- trees that CTS built above the common latency cannot be
+  # padded down, so the short ones go to the slowest within the window (cross-tap pair skew), never past it.
+  # "common": exactly the common latency (KV-P6 rule); "longest": the old clamp to common +/- window.
+  set tb_to [expr {[info exists ::env(OT_TAP_BALANCE_TO)] ? $::env(OT_TAP_BALANCE_TO) : "auto"}]
+  if {$it == 0 || ($tb_rc_used eq "grt" && ![info exists tb_tgt_grt])} {
+    if {$tb_rc_used eq "grt"} { set tb_tgt_grt 1 }
+    if {$tb_to eq "longest"} {
       set tgt [expr {min($tb_target + $tb_win, max($tb_target - $tb_win, $longest))}]
+    } elseif {$tb_to eq "auto"} {
+      set tgt [expr {min($tb_target + $tb_win, max($tb_target, $longest))}]
     } else {
       set tgt $tb_target
     }
@@ -347,7 +355,7 @@ set m [tb_measure]
 set lo 1e9; set hi 0.0; set fail {}
 dict for {n v} $m {
   set lo [expr {min($lo, [lindex $v 0])}]; set hi [expr {max($hi, [lindex $v 0])}]
-  if {abs([lindex $v 0] - $tgt) > $tb_win} { lappend fail "$n=[format %.0f [lindex $v 0]]" }
+  if {abs([lindex $v 0] - $tb_target) > $tb_win} { lappend fail "$n=[format %.0f [lindex $v 0]]" }
 }
 puts "[tb_line "OT_TAP_FINAL rc $tb_rc_used target [format %.0f $tgt] window [format %.0f $tb_win] mean(min-max,sinks):" $m]"
 set tb_empty {}
@@ -364,9 +372,9 @@ if {[llength $fail]} {
   # CLK-STD (owner 10-23): the gate is related launch/capture PAIR skew with CPPR <= 80 ps (pair_skew.tcl / .py on the
   # routed kit and the die); a tree mean outside the window is a WARN with its cause: below = padding did not converge,
   # above = a deep tree (more / density taps: clock.tap_mode density, clock.tap_max_sinks)
-  puts "OT_TAP_CHECK WARN tap means outside [format %.0f $tgt] +/- [format %.0f $tb_win] ps (rc $tb_rc_used): $fail"
+  puts "OT_TAP_CHECK WARN tap means outside common [format %.0f $tb_target] +/- [format %.0f $tb_win] ps (rc $tb_rc_used, balance target [format %.0f $tgt]): $fail"
 } else {
-  puts "OT_TAP_CHECK OK every tap mean within [format %.0f $tgt] +/- [format %.0f $tb_win] ps (rc $tb_rc_used)"
+  puts "OT_TAP_CHECK OK every tap mean within common [format %.0f $tb_target] +/- [format %.0f $tb_win] ps (rc $tb_rc_used, balance target [format %.0f $tgt])"
 }
 }
 }

@@ -155,9 +155,12 @@ if {[llength $ct_taps] < 2} {
   # cluster with no tap with room within half a pitch: CP1 r9 clk 3.9k / clk_t4 3.7k sinks, 4-5-level 312-326 ps
   # trees) is split into k = ceil(n / cap) SUB-TAPS: k-medians of its sinks, one sub-tap driver (OT_SUBTAP_CELL,
   # BUFx16f) at each cluster's median, fed by the tap net; CTS then builds one local tree per sub-tap (each <= cap
-  # sinks) and the tap net itself only carries k driver inputs.  OT_SUBTAP=0 disables.
+  # sinks) and the tap net itself only carries k driver inputs.  OPT-IN (OT_SUBTAP=1): MEASURED WORSE on CP1 r9 t1
+  # (probe 10-24, placement RC): clk 3,916 sinks 312 -> 361 ps, clk_t4 3,665 270 -> 352 ps -- CTS builds a tree on
+  # the tap net to the k drivers, then each sub-tree still holds 1.1-1.6k sinks: one stage more, no level less.
+  # Dense clusters need plan-level taps (clock.tap_mode density), not sub-taps behind one port.
   set ct_sub 0
-  if {![info exists ::env(OT_SUBTAP)] || $::env(OT_SUBTAP)} {
+  if {[info exists ::env(OT_SUBTAP)] && $::env(OT_SUBTAP)} {
     set ct_scell [expr {[info exists ::env(OT_SUBTAP_CELL)] ? $::env(OT_SUBTAP_CELL) : "BUFx16f_ASAP7_75t_R"}]
     set ct_smaster [[ord::get_db] findMaster $ct_scell]
     for {set k 0} {$k < [llength $ct_taps]} {incr k} {
