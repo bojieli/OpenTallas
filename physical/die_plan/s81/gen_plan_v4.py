@@ -483,6 +483,72 @@ def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
     return k
 
 
+FT_REGS = []
+FT_CELL_UM2 = 0.6          # station footprint per bit (DFF ~0.29 um2 at ~50% cluster fill)
+
+
+def ft_regs_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
+    """S81-P10 10-24 (GEOM-REVIEW batch 1, condition 2): declared station SITES (regs_um) for an ft slot whose
+    interpolated station points (L*j/k on the centre line, check.lane_geometry / face_flops.tcl) land on a hard core.
+    face_flops.tcl clusters a slot's bits around regs_um[j] (spiral), so the site must be macro-free over the cluster
+    footprint (+ FT_HALO).  Greedy per station: the free 8.64-lattice site nearest the interpolated point whose worst-bit
+    hop from the previous site (+ half the in/out window spread) <= smax and from which the out face stays reachable
+    in the remaining hops.  Returns (regs_um incl. j=0 = in-face centre, k) or (None, k) when no point is on a core;
+    k may grow by up to 2 when no feasible site chain exists."""
+    k = s["stations"]
+    if not cores or k < 2:
+        return None, k
+    half = 0.5 * math.sqrt(s["width"] * FT_CELL_UM2) + FT_HALO
+    boxes = [(c["origin_um"][0] - half, c["origin_um"][1] - half, c["origin_um"][0] + c["outline_um"][0] + half,
+              c["origin_um"][1] + c["outline_um"][1] + half) for c in cores]
+
+    def blocked(x, y):
+        return any(a < x < c and b < y < d for (a, b, c, d) in boxes) or not (half <= x <= w - half and
+                                                                                half <= y <= h - half)
+
+    def fpt(face, win):
+        p = 0.5 * (win[0] + win[1])
+        return {"E": (w, p), "W": (0.0, p), "N": (p, h), "S": (p, 0.0)}[face]
+    a, b = fpt(s["in_face"], s["in_window_um"]), fpt(s["out_face"], s["out_window_um"])
+    sp_in = 0.5 * abs(s["in_window_um"][1] - s["in_window_um"][0])
+    sp_out = 0.5 * abs(s["out_window_um"][1] - s["out_window_um"][0])
+
+    def d(p, q):
+        return abs(p[0] - q[0]) + abs(p[1] - q[1])
+
+    def ideal(kk):
+        # centre-line points of check.lane_geometry (straight E-W / N-S slots; turning slots: the zroute L legs)
+        pts = [a, (b[0], a[1]) if s["in_face"] in "EW" and s["out_face"] not in "EW" else
+               ((a[0], b[1]) if s["in_face"] not in "EW" and s["out_face"] in "EW" else b), b]
+        L = d(pts[0], pts[1]) + d(pts[1], pts[2])
+        out = []
+        for j in range(1, kk):
+            t = L * j / kk
+            p, q = (pts[0], pts[1]) if t <= d(pts[0], pts[1]) else (pts[1], pts[2])
+            t = t if p is pts[0] else t - d(pts[0], pts[1])
+            f = 0.0 if d(p, q) == 0 else t / d(p, q)
+            out.append((p[0] + f * (q[0] - p[0]), p[1] + f * (q[1] - p[1])))
+        return out
+    if not any(blocked(x, y) for x, y in ideal(k)):
+        return None, k
+    grid = [(i * G, j * G) for i in range(int(w / G) + 1) for j in range(int(h / G) + 1)]
+    free = [p for p in grid if not blocked(*p)]
+    for kk in (k, k + 1, k + 2):
+        regs, prev, sp, ok = [[round(a[0], 3), round(a[1], 3)]], a, sp_in, True
+        for j, q in enumerate(ideal(kk), start=1):
+            left = kk - j               # hops still to come after this site (the last one lands on the out face)
+            cand = [p for p in free if d(prev, p) + sp <= smax and d(p, b) + sp_out <= smax * left]
+            if not cand:
+                ok = False
+                break
+            prev = min(cand, key=lambda p: (d(p, q), d(p, b)))
+            regs.append([round(prev[0], 3), round(prev[1], 3)])
+            sp = 0.0
+        if ok:
+            return regs, kk
+    return None, k
+
+
 def mir(c):
     return NC - 1 - c
 
@@ -1454,7 +1520,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 raw[pt["id"]], pos = (pos - Lw, pos), pos - Lw - g
             else:
                 raw[pt["id"]], pos = (pos, pos + Lw), pos + Lw + g
-    STATS_V4.update(ft_macro_add=FT_MACRO_ADD, xo_joined=sorted(XO_JOINED), runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
+    STATS_V4.update(ft_macro_add=FT_MACRO_ADD, ft_regs=FT_REGS, xo_joined=sorted(XO_JOINED), runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
                     run_fallback_ports=len(single), overfull_faces=sorted("|".join(map(str, k)) for k in over_faces))
     win = {}
     over = []
@@ -1625,6 +1691,12 @@ def emit(parts, lanes, routes, chans, fmap, out):
             s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
             if s_["stations"] != k0:
                 FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
+            if tn.startswith("col_"):          # S81-P10 10-24: frame ft station sites off the ROM / bf macros
+                k1 = s_["stations"]
+                regs, k2 = ft_regs_macro(s_, hc_, rep.w, rep.h)
+                if regs:
+                    s_["stations"], s_["regs_um"] = k2, regs
+                    FT_REGS.append(dict(type=tn, slot=s_["name"], stations=[k1, k2], regs_um=regs))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
                   clock=dict(tap_um=[round(rep.w / 2 / G) * G, round(rep.h / 2 / G) * G], layer="M9"),
                   reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
