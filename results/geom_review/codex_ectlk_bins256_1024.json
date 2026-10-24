@@ -1,0 +1,7 @@
+{
+ "image": "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/qkd_ectlk/review.png",
+ "verdict": "CONDITIONAL_PLACE_ONLY",
+ "findings": "Unplaced snapshot has four SRAM macros at W with channels, continuous outline/PDN, wide S/W/E buses and1.7%std-cell utilization. Prior tiny-bin density inflation causedNaN. Retry256bins is a placement-only diagnostic; actual placed register-to-pin paths must be reviewed before routing.",
+ "changed": "Only bin grid2048->256, safe clock-excluded SDC and current runner; unchanged RTL/pins/macros/dimensions",
+ "route_authorized": false
+}

@@ -1,0 +1,5 @@
+PASS ASTK_R4 checks=9992 valid=2491 mutant_mismatches=4982 added_cycles=0
+- tb.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 51us; walltime 0.055 s; speed 920.184 us/s
+- Verilator: cpu 0.055 s on 1 threads; allocated 8 MB

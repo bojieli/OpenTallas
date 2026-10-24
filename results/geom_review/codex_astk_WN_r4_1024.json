@@ -1,0 +1,9 @@
+{
+ "image": "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_astk_WN/review.png",
+ "verdict": "PASS_FOR_CANDIDATE",
+ "findings": "Macro-free square core,48%free-area fill,16%empty. Wide N/S faces close to boundary FFs(p90 8.33um); channels and PDN continuous, no macro wall. Same geometry/pins;80additional keptread-controlFF limit address fanout in4Znodes without adding stages.",
+ "functional_gate": "9992same-cyclechecks,2491validoutputs,4982mutantmismatchesPASS",
+ "added_cycles": 0,
+ "added_FFs": 80,
+ "scope": "RTL alternative physical candidate, not canonical adoption or signoff"
+}
