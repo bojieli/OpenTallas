@@ -25,8 +25,8 @@ G = 8.64
 GAP, EDGE = 13.8, 4 * 8.64
 TOFF = (0.108, 0.012)
 MOD = "ot_s81c_attn_hcore"
-W, H = 157.68, 218.16           # 73 x 2.16, 101 x 2.16
-PX, PY = 172.8, 233.28          # origin pitches (20 / 27 lattice): gaps 15.12 / 15.12
+W, H = 157.68, 259.2            # 73 x 2.16, 120 x 2.16 (synth 202,789 cells / 23,384 um2 -> 62.6% of the core area)
+PX, PY = 172.8, 276.48          # origin pitches (20 / 32 lattice): gaps 15.12 / 17.28
 HROW = ("dsdv_svc_sx_hrow", 216.0, 216.0)
 SVC_OUT = (1442.88, 2453.76)
 
@@ -120,7 +120,7 @@ def up(v):
 
 
 def placement():
-    """64 heads (8 per row) + 8 hrow cores, R0, lattice origins"""
+    """64 heads (8 per row, tile t = rows 2t, 2t+1) around a centre engine band, R0, lattice origins"""
     w, h = SVC_OUT
     cores = []
     x0 = y0 = up(EDGE)
@@ -128,9 +128,10 @@ def placement():
     y = y0
     for r in range(4):
         rows.append(y); y += PY
-    band_y = up(y - PY + H + TOFF[1] + GAP)          # hrow band above head row 3
-    hy = [band_y, up(band_y + HROW[2] + GAP)]
-    y = up(hy[1] + HROW[2] + GAP)
+    band_y = up(rows[-1] + H + TOFF[1] + GAP)          # engine band above head row 3 (tiles 0-1 below, 2-3 above)
+    top0 = math.floor(round((h - EDGE - TOFF[1] - H - 3 * PY) / G, 6)) * G
+    hy = []
+    y = top0
     for r in range(4):
         rows.append(y); y += PY
     for r, yy in enumerate(rows):
@@ -140,13 +141,6 @@ def placement():
             cores.append(dict(inst=f"u_rsv.u_att.u_eng.g_t[{t}].g_ts.u_t.u_hc.g_h[{hd}].u_c", module=MOD,
                               plan_core=f"attn_t{t}_h{hd}", origin_um=[round(x0 + c * PX, 3), round(yy, 3)],
                               outline_um=[W, H], orient="R0", track_offset_um=list(TOFF)))
-    hpx = up(HROW[1] + GAP)
-    for r in range(2):
-        for b in range(4):
-            k = r * 4 + b
-            cores.append(dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (k // 2, k % 2), module=HROW[0],
-                              plan_core="sx_hrow_ab", origin_um=[round(x0 + b * hpx, 3), round(hy[r], 3)],
-                              outline_um=[HROW[1], HROW[2]], orient="R0", track_offset_um=list(TOFF)))
     # checks: inside the edge keep-off, pairwise gaps
     errs = []
     for c in cores:
@@ -164,7 +158,7 @@ def placement():
             dx = max(bx - (ax + aw), ax - (bx + bw)); dy = max(by - (ay + ah), ay - (by + bh))
             if max(dx, dy) < GAP - 1e-6:
                 errs.append(("gap", a["inst"], b["inst"], round(max(dx, dy), 3)))
-    soft = [round(x0 + 4 * hpx - GAP + GAP, 3), round(hy[0], 3), round(w - EDGE, 3), round(hy[1] + HROW[2], 3)]
+    soft = [round(x0, 3), round(band_y, 3), round(w - EDGE, 3), round(top0 - GAP, 3)]
     return cores, errs, soft
 
 
@@ -220,10 +214,10 @@ def render_svc(cores, soft, tn, path):
             ax.text(x + cw / 2, y + ch / 2, "sx_hrow", fontsize=6, ha="center")
     ax.add_patch(plt.Rectangle((soft[0], soft[1]), soft[2] - soft[0], soft[3] - soft[1], fc="none", ec="tab:green",
                                lw=1.2, ls="--"))
-    ax.text((soft[0] + soft[2]) / 2, (soft[1] + soft[3]) / 2, "engine / svc_att staging\n(soft + 8 SRAM)", fontsize=7,
+    ax.text((soft[0] + soft[2]) / 2, (soft[1] + soft[3]) / 2, "engine / svc_att staging band (soft + 8 SRAM)\nsx_hrow x8 (216x216) do NOT fit: plan owner", fontsize=7,
             ha="center", color="tab:green")
     ax.plot([725.76], [1226.88], marker="*", color="orange", ms=12)
-    ax.set_title(f"{tn}: 64 x {MOD} ({W}x{H}) + 8 sx_hrow, R0, lattice origins\n"
+    ax.set_title(f"{tn}: 64 x {MOD} ({W}x{H}) + engine band, R0, lattice origins\n"
                  "tiles t0..t3 coloured; red=W ld pins, blue=N ib pins, purple=E results; star = clock tap", fontsize=8)
     ax.set_xlim(-20, w + 20); ax.set_ylim(-20, h + 20); ax.set_aspect("equal")
     fig.savefig(path, dpi=110); plt.close(fig)
@@ -263,9 +257,9 @@ def main():
         t = plan["partition_types"][tn]
         others = [c["module"] for c in t["contents"] if c["module"] not in ("dsdv_svc_rs", "dsdv_svc_pvso_entry")]
         fits[tn] = dict(outline_um=t["outline_um"], heads=64, hrow=8, extra_contents=others,
-                        fits=(not errs and not others and t["outline_um"] == list(SVC_OUT)),
-                        note=("extra contents need area outside the 64+8 core array: " + ", ".join(others)
-                              if others else "64 heads + 8 hrow + engine soft region fit"))
+                        fits=False,
+                        note="64 heads at <=63% fill + a 179-um centre engine band fill the partition; the 8 sx_hrow "
+                             "cores (216 x 216, closed view) do not fit" + ("; also no room for " + ", ".join(others) if others else ""))
     out = dict(schema="opentallas.s81.svc_cores.v1", author="CORE-S81-SVC", date="2026-10-23",
                core=dict(module=MOD, rtl="rtl/hdc/v41x/ot_s81c_attn_hcore.sv", select_define="OT_ATTN_HCORE",
                          outline_um=[W, H], pins_file=f"cores/svc/pins/{MOD}.json", lef=lef_rel, pins=len(P),
@@ -276,7 +270,7 @@ def main():
                          "outputs: ov/oy/oflt registers (hgrp_s HG1 PCOLP1)"),
                replaces=dict(hdp_s="64 x 183,981", hgrp_s_local="16 x 30,272", why="one head + own front end = "
                              "hgrp_s at HG 1: every pin registered, one master, no G->head fan-out cores"),
-               placement=dict(svc_outline_um=list(SVC_OUT), orient="R0", gap_um=GAP, edge_um=EDGE,
+               placement=dict(not_placed=["8 x dsdv_svc_sx_hrow 216x216 (closed view): no room at <=70% head fill"], svc_outline_um=list(SVC_OUT), orient="R0", gap_um=GAP, edge_um=EDGE,
                               pitch_um=[PX, PY], track_offset_um=list(TOFF), hard_cores=cores, errors=errs,
                               soft_region_um=soft),
                types=fits)

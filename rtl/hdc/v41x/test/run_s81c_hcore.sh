@@ -2,7 +2,7 @@
 # CORE-S81-SVC bench: run_s81c_hcore.sh OUTDIR [DEFINE...]  (repo root = cwd). Builds + runs seeds 1..3.
 set -euo pipefail
 O=$1; shift; mkdir -p "$O"
-R=rtl/hdc
+R=$(pwd)/rtl/hdc
 F="$R/v41x/test/tb_s81c_hcore.sv $R/v41x/ot_s81c_attn_hcore.sv $R/v41x/ot_hdc_v41x_attn_tile_s.sv $R/v41x/ot_hdc_v41x_kreg.sv
    $R/v41x/ot_hdc_v41x_attn_tile.sv $R/v41x/ot_hdc_v41x_attn_tile_lat.sv $R/ot_hdc_fp32_f12.sv $R/ot_hdc_fp32_add_lat.sv
    $R/ot_hdc_prefix.sv $R/ot_hdc_fastfp.sv $R/v41x/ot_dsrom_su_add6.sv"
