@@ -139,7 +139,7 @@ def _eval_obj(ctx, w):
     a = _words(w[1:-1])
     c = a[0]
     if c == "all_inputs":
-        return ("ports", ctx.inputs + ctx.clock_ports)
+        return ("ports", list(ctx.inputs) if "-no_clocks" in a[1:] else ctx.inputs + ctx.clock_ports)
     if c == "all_outputs":
         return ("ports", list(ctx.outputs))
     if c == "all_clocks":
