@@ -194,6 +194,8 @@ module tb_kvslice;
             force dut.x_hub_Wi_rs_host_die_rst_n_92_pc_WS_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
             force dut.x_hub_Wi_rs_host_die_rst_n_96_pc_WS_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
     end
+    // partition input record (+REC_hub_Wi=<file>, partrec/gen_partrec.py) for the flat replay sub-bench
+`include "partrec_hub_Wi.svh"
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
     initial void'($value$plusargs("HB=%d", hb));
