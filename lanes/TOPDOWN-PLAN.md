@@ -60,3 +60,8 @@ taps at 400 um (CP1 r8 RULING 21:26), common latency 250 ps, face-flop spread an
 - kv-p7-1023 (boot image on kv41, PV not final: record)
 - NOT to merge yet: hbm-arch-1023 (WIP), tokj-kvslice-1023 (WIP), kv-p7-v38-1023 (G0 FAIL WIP), core-hbm-1023 (stopped by COORD)
 - superseded, leave: kv-p6-*, qc-a0v2..v5, plan-*-1023 older, codex/*-1023 04:xx batch (pre-05:08 bottom-up)
+
+## Queued lanes (waiting for a subagent slot; 20-concurrent cap reached 2026-10-24 07:05)
+- DIE-STA: abstract-model (ETM/ILM) die STA validated vs flat stitched STA on CP1; flat die STA capacity on 1 TB host. (SDC lint + boundary-register guard given to CP1-R10.)
+- PART-CAP: measure OpenROAD scaling at 400k / 800k / 1.6M / 3M cells on ASAP7 833 ps; find origin of the 400k cap; recommend partition size (fewer seams, fewer types).
+- TYPE-DEDUP: collapse near-duplicate partition types (S81 74 ot_s81sl_leaf__t*, QC 20 / KV 5 / HBM 18 in near-duplicate groups) into one netlist with strap pins.

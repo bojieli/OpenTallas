@@ -60,10 +60,8 @@ co-sims, see old tree section "Token-pass gate" in ~/coord/old_tree.txt).
 - Use ot-run once FLEET-NEW3 announces it in HANDOFF.md; it balances across hosts automatically.
 - Timestamps in HANDOFF.md are PDT (`TZ=America/Los_Angeles date '+%F %H:%M'`).
 
-## Old-fleet scratch (read-only, do NOT format or write)
-intel1 = old ot-gold1, intel2 = old ot-gold2, epyc3 = old ot-epyc7, epyc2 = old ot-epyc9 (reinstalled). Their old
-scratch disks are mounted READ-ONLY at /mnt/old-nvme0 on intel1 (228 lane dirs under claude/) and intel2 (192).
-Before re-running something from 10-23, look there for its run dir (e.g. intel1: qc-p6-xt1, kv-p7-1023, tokj-1023,
-core-s81-1023, hbm-p5-rtla/rtlb-1023; intel2: kv-p8-seam-1023, kv-p8-hub-1023, s81-p9-fc-1023, clk-std-1023,
-core-s81-1023, tokj-1023). Completed outputs there (logs, reports, built binaries) can be recovered as evidence if
-their source sha is recorded; say so in the commit ("recovered from old ot-gold1 scratch").
+## Old-fleet scratch: WIPED (owner order 2026-10-24 07:03 PDT)
+The old ot-gold1/gold2/epyc9 scratch disks were wiped and reformatted. They are now new scratch at
+/srv/opentallas-scratch2 on intel1 (3.5 TB), intel2 (3.5 TB) and epyc2 (894 GB). Nothing from the old fleet remains;
+re-run anything you did not copy out before 07:03.
+All hosts run on Pacific time (America/Los_Angeles) since 06:54 PDT.
