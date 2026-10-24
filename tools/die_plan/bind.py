@@ -2526,6 +2526,50 @@ def cmd_kit_rtl(a):
                 body.append(f"    assign {n}[{Wd - 1}:{bwd}] = {Wd - bwd}'d0;  // spare plan bits (bound carries {bwd})")
                 spare.append(dict(port=n, bits=Wd - bwd))
             conns.append(f".{n}({w})")
+    # QC-A0 10-24 (CP1-R10 face_guard: coll_ftc kit FAILed dropped 8 / shared 8 = the spare bits of narrow ft slots: unread
+    # input bits + constant output bits): the spare bits of an ft slot whose _i and _o are BOTH narrow / unbound by the
+    # same bits ride the slot's own station chain (stations x ot_dp_st, keep) from S_i to S_o, so every plan pin bit is
+    # registered at its face like a bound bit.  Spare bits of other buses keep the rule above (listed in spare_out_bits).
+    spare_in = {}
+    for d, n, W, Wd, ep in plan:
+        if d != "input":
+            continue
+        if n not in bmap:
+            spare_in[n] = (0, W)                         # whole bus (data + epoch) unread
+        else:
+            bwd = bmap[n][1] - 1 if ep else bmap[n][1]
+            if bwd < Wd:
+                spare_in[n] = (bwd, Wd)
+    spare_pass = []
+    for sl in t.get("ft_slots", []):
+        ni, no = gen_rtl.sv_id(sl["name"] + "_i"), gen_rtl.sv_id(sl["name"] + "_o")
+        k = max(1, int(sl.get("stations", 1)))
+        so = next((x for x in spare if x["port"] == no), None)
+        if ni not in spare_in or so is None:
+            continue
+        lo, hi = spare_in[ni]
+        if hi - lo != so["bits"]:
+            continue
+        wd = hi - lo
+        if no in bmap:
+            old_a = f"    assign {no}[{hi - 1}:{lo}] = {wd}'d0;  // spare plan bits (bound carries {lo})"
+        else:
+            old_a = f"    assign {no} = {hi}'d0;  // plan bus with no bound bit (spare lane)"
+        if old_a not in body:
+            continue
+        i = body.index(old_a)
+        chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
+        prev = f"{ni}[{hi - 1}:{lo}]"
+        for j in range(k):
+            q = f"{no}[{hi - 1}:{lo}]" if j == k - 1 else f"sp_{no}_s{j}"
+            if j < k - 1:
+                chain.append(f"    wire [{wd - 1}:0] {q};")
+            chain.append(f"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), "
+                         f".q({q}), .eq());")
+            prev = q
+        body[i:i + 1] = chain
+        spare.remove(so)
+        spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
     extra = []
     for d, w, n in bports:
         if n in seen:
@@ -2585,7 +2629,7 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined,
                hard_macros=dict(sorted(macros.items())),
