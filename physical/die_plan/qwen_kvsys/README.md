@@ -109,3 +109,39 @@ COORD 06:33 open items + census coverage (scripts plan_v31.py / emit_v31.py / co
 hub_Wi through hgi_WN_7, instead of W along the IO row (sys_c, io_W3) and down the W corridor. Same 12 crossings, 36
 stages (R8 phy_rx_flit alignment with L2048 kept), latency table unchanged, route 18.3 -> 16.9 mm. North W corridor
 65 % -> 57 % of the IO-row <-> hub bits, E 33 % -> 42 % (g2_columns_v37s_report.json). No other move is cycle-neutral.
+
+## v3.8u (KVG3-WI, 10-24) -- hub_Wi host-root core pins (G0C 'no pins listed' x22)
+
+`run_v38u.sh V38S_PLAN OUT RTL KIT_RTL_F` = `core_pins_hr.py` + `post_v38u.py`; touches only
+`partition_types.kv3_hub_Wi.hard_cores[].{pins_file, orient, note}` and `core_conns.json[kv3_hub_Wi]` (die_plan.json
+regenerated in place: a pure superset, 22 pins_file + 22 notes + 5 orients; no lane / latency change).
+- The 22 cores (15 modules) are children of the host-root cluster plan
+  (`results/arch/qwen_split_1014/host_root_cluster/partition_plan.json`) INSIDE the hub_Wi leaf `host` = bound `u_host`
+  (`qkd_host_root_admission_obsx`, binder kv41, RTL e33504a6f).  core_pins_v37p logic one level deeper: the leaf is
+  elaborated hierarchically with yosys (kit filelist, -DSYNTHESIS, the u_host parameters, proc, no flatten; a scratch
+  copy of the obsx file hoists its forward-used g_mu net declarations, a reading aid only), member paths are mapped onto
+  the obsx hierarchy (`g_mu.` scopes), boundary bits = member port bits whose net leaves the core; partners = other cores,
+  host-leaf ports -> their partition partners (bus windows; glue leaf / ot_dp_st / ot_dp_dly one hop), glue cells up to
+  3 deep (<= 8 targets).  Faces / orients / spread = v37p choose() / balance() / plan tracks.
+- **Glue rule**: a core = ONLY its real instance members.  The `glue:*` members (qm_core / qm_host / qm_ingest /
+  fence_core / fence_host / fence_sync = the A1/A2 re-cut of native_qm and visibility_fence own logic) do not exist in the
+  bound RTL and stay hub_Wi partition glue, as do the instances no child lists (`u_rank/u_fence`, the `u_qm` reset syncs
+  and own logic, obsx-only `u_control/u_obs`, `u_control/u_hc`).  Every core stays derivable from the bound RTL and
+  hardenable without an RTL re-cut; no child is empty (host_qm = u_bridge/u_pacer only, 10 pins).  All 38 real member instances
+  (8 adapter slices included) exist (0 missing); `core_pins_hr_report.json` lists the mapping.
+- Pins: ingest_eng 1399, core_order 2286, cdc_ch 1208, cdc_pc 2168, core_peer 3849, core_tx 3772, core_rx 2137,
+  core_guard 1176, core_queue 1472, core_prompt 5131, cdc_hi 1177, cdc_ci 1106, phy_pad 1577, phy_adp 560 (x8, MX/MY
+  per instance), host_qm 10.  core_faces: 567 new groups, 0 away, 0 side-WARN, per-core mean cos +0.73..+1.00 (v38u_Wi.png).
+  Ports whose partners are only the native_qm / fence glue (cdc_hi 659, cdc_ci 812, cdc_ch 584 bits) have no positioned
+  partner and face the type centre.
+- G0 PASS 0 err / 1788 warn (v3.8s 0 / 1811); G0C PASS 0 err (v3.8s FAIL 22), 49/49 types clean (g0_summary_v38u.json).
+
+## v3.8v (KV-G3, 10-24) -- hub_Ei fault-OR plan cells FIRM + internal stations (plan-cell R3-INTERNAL)
+`run_v38v.sh die_plan(v3.8u).json OUT` = `post_v38v.py` + `gen.py latency --groups r8/bus_groups.json` + G0/G0C
+(against the unchanged r8/ table). The hub_Ei G3 4_cts STA found TT -679 ps on hp_fault_1052 (qkd_hp_or2): plan cells
+had no site and their legs had no stations. v3.8v puts the four OR cells FIRM at the W face beside o_hp_fault_N_q,
+adds 3 FIRM stations on i_dcal_flt (N->W, hop 556 um) and 2 on i_hp_fault_N_q (E->W, hop 504 um): lanes L357 +3 and
+L758 +2 cycles (fault age). G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38v.json). Kits realise them with
+`tools/die_plan/kit_istations.py PLAN TYPE KIT_RTL_DIR` (after kit_rsync.py): stations in the bound RTL + istations.tcl
+(FIRM sites, sourced by face_flops.tcl). The kv41 bind does not carry these 5 stages yet (re-bind on v3.8v).
+Review renders: g3/review/die_v38v.png, g3/review/hubEi_plan_v38v.png (g3/render_type_plan.py).

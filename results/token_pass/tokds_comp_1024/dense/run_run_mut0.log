@@ -1,0 +1,55 @@
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e4e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e14b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e14b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e14_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e14_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e12b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e12b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e12_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/claude/tok-ds/comp/dense/vec/f_e12_0.viamap.hex:0: $readmem file not found
+XCTRL 390 cfg=1 go=0
+FRAME_CC 395000 tb_dense_xs_cap.u_frame.u_f.u_cf.u_dense_probe cfg=1 go=0 ph=0
+XCTRL 453 cfg=0 go=1
+FRAME_CC 458000 tb_dense_xs_cap.u_frame.u_f.u_cf.u_dense_probe cfg=0 go=1 ph=0
+ELEMENT_GO 465000 tb_dense_xs_cap.u_frame.u_f.u_e1.u_dense_probe
+ELEMENT_GO 465000 tb_dense_xs_cap.u_frame.u_f.u_e0.u_dense_probe
+ELEMENT_GO 467000 tb_dense_xs_cap.u_frame.u_f.u_e3.u_dense_probe
+ELEMENT_GO 467000 tb_dense_xs_cap.u_frame.u_f.u_e2.u_dense_probe
+ELEMENT_GO 474000 tb_dense_xs_cap.u_frame.u_f.u_e6.u_dense_probe
+ELEMENT_GO 474000 tb_dense_xs_cap.u_frame.u_f.u_e5.u_dense_probe
+ELEMENT_GO 476000 tb_dense_xs_cap.u_frame.u_f.u_e9.u_dense_probe
+ELEMENT_GO 476000 tb_dense_xs_cap.u_frame.u_f.u_e7.u_dense_probe
+ELEMENT_GO 483000 tb_dense_xs_cap.u_frame.u_f.u_e11.u_dense_probe
+ELEMENT_GO 483000 tb_dense_xs_cap.u_frame.u_f.u_e10.u_dense_probe
+RET 726 17ad4f2ee1050804b
+RET 727 07a60907c1050c04b
+RET 735 179e0713e1050088b
+RET 736 176a4d5601050488b
+RET 737 0763ed8701050888b
+RET 738 079a6233e1050c88b
+RET 742 0780397b81050044b
+RET 743 17b22e69c1050444b
+RET 744 17a67ae121050844b
+RET 745 079aed8001050c44b
+RET 751 17a9b2f541050004b
+RET 752 0763080101050404b
+CAP S 817 0 10 bdca0000
+CAP S 818 0 11 3dc30000
+CAP S 824 0 8 bd930000
+CAP S 825 0 9 bd930000
+DENSE_SOURCE_END cycles=2905 events=85 consumed=85 xs_fault=0 frame_fault=0 cap_fault=0 mutant=0
+- tools/s81_dv/tokfunc/tb_dense_xs_cap.sv:90: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 18.427 s; speed 157.675 ns/s
+- Verilator: cpu 18.426 s on 1 threads; allocated 62 MB
