@@ -129,8 +129,12 @@ class Bound:
         """{(inst, param): (asbuilt str, bound value)} from param_regen.json changed[]"""
         return {(c["inst"], c["param"]): (c["asbuilt"], c["bound"]) for c in self.param_regen.get("changed", [])}
 
-    def asbuilt_param(self, inst_re, param, default=None):
+    def asbuilt_param(self, inst_re, param, default=None, module=None):
+        """as-built value: param_regen.json changed[].asbuilt; a bind WITHOUT a param_regen hook still carries the
+        as-built values in its RTL -> read them from BIND_DIR/rtl (module regex)."""
         vals = {a for (i, p), (a, b) in self.applied().items() if p == param and re.search(inst_re, i)}
+        if not vals and module and not self.param_regen.get("changed") and (self.dir / "rtl").is_dir():
+            vals = {v["params"][param] for v in self.rtl_insts(module).values() if param in v["params"]}
         if len(vals) > 1:
             raise RuleError(f"as-built {param} differs across {inst_re}: {sorted(vals)}")
         return next(iter(vals)) if vals else default
@@ -461,7 +465,7 @@ def kv_ectl(o):
 
 def kv_ahub(o):
     B = o.B
-    asb = B.asbuilt_param(r"^ahub$", "AP_OFS")
+    asb = B.asbuilt_param(r"^ahub$", "AP_OFS", module=r"qkd_ahub_static_dw\w*")
     if asb is None:
         raise RuleError("as-built AP_OFS not in param_regen.json (bind without the KV hook)")
     v = _int(asb)
@@ -493,8 +497,8 @@ def kv_ahub(o):
 
 def kv_pv_trunk(o):
     B = o.B
-    TD = B.asbuilt_param(r"pvw_\d__u_ctl$", "TRUNK_D")
-    FD = B.asbuilt_param(r"pvw_\d__u_ctl$", "FLAG_D")
+    TD = B.asbuilt_param(r"pvw_\d__u_ctl$", "TRUNK_D", module=r"ot_qwen_tp8_pv_wide_ctl_tbf\w*")
+    FD = B.asbuilt_param(r"pvw_\d__u_ctl$", "FLAG_D", module=r"ot_qwen_tp8_pv_wide_ctl_tbf\w*")
     if TD is None or FD is None:
         raise RuleError("as-built TRUNK_D/FLAG_D not in param_regen.json")
     TD, FD = int(TD), int(FD)
@@ -577,7 +581,7 @@ def kv_vport(o):
 
 def kv_prog(o):
     B = o.B
-    a0 = B.asbuilt_param(r"seq__u_core$", "KVN_A0", KV_ANCHOR["KVN_A0"])
+    a0 = B.asbuilt_param(r"seq__u_core$", "KVN_A0", KV_ANCHOR["KVN_A0"], module=r"qkd_seq_core_static_s\w*")
     kvn, mk = B.one("kvn -> seq core", source=r"^d2d_kv\.kvn_word_valid$", sink=r"^seq__u_core$")
     rx, mr = B.one("att_rx -> kvs_attn", source=r"^d2d_kv\.att_rx_v$", sink=r"^kvs_attn$")
     dk, dr = kvn - mk[0]["asb"], rx - mr[0]["asb"]
@@ -627,6 +631,11 @@ def kv_seam(o):
               "producer_txd); the compute die must bind the same pair image", dict(st), inst=r"d2d_kv$|u_d2d", param="TXDP",
               group="xdie")
     r["sv_literal"] = f"32'h{_txdp_word(k):08x}"
+    asb = KV_ANCHOR["seam"]["KS_TXS"] + KV_CODEC_LANDED + KV_ANCHOR["seam"]["SK_TXP"] + PINREG_EXT["K"][0]
+    o.add("D2D_KV_TX_LAT", k[0], "compiler", "shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + "
+          "SK_TXP + PR pin flops, from the KV bound top; BOTH dies bind the same pair image (QC emits it with --peer)",
+          dict(KS_TXS=st["KS_TXS"], SK_TXP=st["SK_TXP"], asbuilt=asb), group="xdie",
+          note=None if k[0] == asb else f"moved {asb} -> {k[0]} vs as-built: re-bind the pair image on both dies")
 
 
 # ============================================================================================================ HBM
@@ -792,6 +801,14 @@ def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
         theirs = po["constants"]
         cs = (mine if die == "qwen_compute" else theirs).get("XDIE_SEAM_C", {}).get("value")
         ks = (theirs if die == "qwen_compute" else mine).get("XDIE_SEAM_K", {}).get("value")
+        if die == "qwen_compute" and theirs.get("D2D_KV_TX_LAT", {}).get("status") == "OK":
+            t = theirs["D2D_KV_TX_LAT"]
+            o.add("D2D_KV_TX_LAT", t["value"], "compiler", "from the KV peer bound top (--peer): " + t["formula"],
+                  dict(t["inputs"], peer=str(peer)), group="xdie", note=t.get("note"))
+            k = theirs["D2D_TXDP_K"]
+            r = o.add("D2D_TXDP_K", k["value"], "compiler", "pair image KV TXDP from the KV peer bound top", dict(peer=str(peer)),
+                      group="xdie")
+            r["sv_literal"] = k.get("sv_literal")
         if cs and ks:
             o.add("XDIE_DIE_STAGES", f"{cs}/{ks}", "compiler", "D2D_DIE_STAGES for tools/qwen_split/d2d_cal_image_production.sh "
                   "(pair calendar image; both dies bind its TXDP)", dict(peer=str(peer)), group="xdie")

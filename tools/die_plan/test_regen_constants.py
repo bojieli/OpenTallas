@@ -139,3 +139,25 @@ def test_bound_rtl_must_carry_regen_values(tmp_path):
             f"module kv3_sys_c_part; qkd_d2d_static_sfm #(.PR(1), .TXDP({txdp})) u_d2d_kv (.clk(clk)); endmodule\n")
         d = RC.run("qwen_kvsys", b)
         assert d["constants"]["D2D_TXDP_K"]["status"] == want, d["constants"]["D2D_TXDP_K"]
+
+
+def test_pair_image_kv_tx_latency(tmp_path):
+    """COORD 10-23: the shared QC<->KV pair image's KV TX latency comes from the KV bound top and is emitted for BOTH
+    dies.  As built (KV seam 11,11,9,9,9,9,9 -- the value kv35's RTL still carries) = 22; kv39 bound seam
+    34,34,32,32,32,31,31 = 67 (KV-P6 boot image @dd512c5ca TXDP K [67,4,3,3])."""
+    kv39 = RC.run("qwen_kvsys", FX / "kv39")
+    assert _v(kv39, "D2D_KV_TX_LAT") == 67
+    qc = RC.run("qwen_compute", FX / "qc12", peer=FX / "kv39")
+    assert _v(qc, "D2D_KV_TX_LAT") == 67 and qc["constants"]["D2D_TXDP_K"]["sv_literal"] == "32'h03030443"
+    # as-built depths (every landed = as-built stages) -> 22
+    b = tmp_path / "asb"
+    shutil.copytree(FX / "kv39", b)
+    p = b / "bus_groups.json.gz"
+    bg = json.load(gzip.open(p, "rt"))
+    for g in bg["landing"]:
+        for m in g["members"]:
+            m["landed_stages"] = m["bound_stages"] = m["asbuilt_stages"]
+    json.dump(bg, gzip.open(p, "wt"))
+    asb = RC.run("qwen_kvsys", b)
+    assert _v(asb, "D2D_KV_TX_LAT") == 22 and _v(asb, "D2D_TXDP_K") == [22, 4, 3, 3]
+    assert _v(RC.run("qwen_compute", FX / "qc12", peer=b), "D2D_KV_TX_LAT") == 22
