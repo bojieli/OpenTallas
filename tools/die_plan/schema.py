@@ -157,6 +157,9 @@ SCHEMA = {
                 "properties": {
                     "module": _name,                 # generated wrapper module name
                     "outline_um": _wh,
+                    # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
+                    # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
+                    "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
                     "note": {"type": "string"},
@@ -184,7 +187,7 @@ SCHEMA = {
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
-                        # (OT_TAP_CHECK FAIL suggests it); default budgets.tap_pitch_um
+                        # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
                         # KV-P6 10-23: "sinks" = taps AT the FIRM-planned sinks (taps.py: radius / cap bounded
                         # k-medians of face registers + ft stations), no empty taps; default "grid"
@@ -227,6 +230,7 @@ SCHEMA = {
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
+                                       "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
@@ -236,6 +240,14 @@ SCHEMA = {
                     "nets": {"type": "array", "items": {                         # internal leaf-to-leaf nets
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "width": {"type": "integer", "minimum": 1}}}},
+                    # R3-INTERNAL (COORD 10-23 18:15): FIRM stations of an internal reg-reg connection > 750 um
+                    # (face window -> internal block, block -> block); type frame; every hop <= ft_station_max_um
+                    "internal_stations": {"type": "array", "items": {
+                        "type": "object", "required": ["from_um", "to_um", "regs_um"], "additionalProperties": False,
+                        "properties": {"conn": {"type": "string"},    # "bus:<bus>" | "<leaf inst>.<port>" | "<a>|<b>"
+                                       "from_um": _xy, "to_um": _xy, "regs_um": {"type": "array", "items": _xy},
+                                       "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
+                                       "capture": {"type": "string"}, "note": {"type": "string"}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -283,6 +295,10 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
+            # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
+            # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
+            # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
+            "common_latency_ps": _pos,
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
@@ -391,6 +407,8 @@ class Plan:
         self.ports = {p["id"]: self._resolve_port(p) for p in raw["ports"]}
         self.lanes = {l["id"]: l for l in raw["lanes"]}
         self.clock = dict(DEFAULT_CLOCK, **raw.get("clock", {}))
+        if "common_latency_ps" in self.clock:       # R4 owner rule: the ONE die-wide target is the insertion every
+            self.clock["insertion_ps"] = float(self.clock["common_latency_ps"])   # kit balances to + vclk latency
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
 

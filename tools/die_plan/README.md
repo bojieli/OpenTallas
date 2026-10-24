@@ -111,7 +111,29 @@ The checks are listed in the `check.py` docstring:
 - hops <= reach;
 - latency table complete and equal;
 - a clock tap and a reset synchronizer per partition type;
-- leaf bindings.
+- leaf bindings;
+- hard cores (COORD 10-23 CORE-KS): a type over 400k cells needs `hard_cores[]`; core pins on the plan tracks after
+  `track_offset_um` and the orient (M2/M3 skipped in mirrored die frames). Cell estimates come from `cells.py`
+  (`type.cells`, `contents[].cells`, or evidence files in the plan dir: `cells_est.json`, `plan_notes.json`
+  cells_per_type, `l1_cores_v3*.json`, `inputs/cells_evidence.json`, `cells/*.stat`; or `--cells-evidence FILE`);
+  `python3 tools/die_plan/cells.py PLAN.json` lists the types over 400k without cores;
+- core faces (`core_faces`, PLAN-TOOL4): every hard-core port sits on a core face that faces its partner (partition
+  face via `buses[].leaf` / `contents[].bind` `bus:`, or another core / placed leaf via `net:` binds or the
+  `core_conns.json` sidecar `{type: {core: {port: ["bus:B" | "core:C" | "leaf:L" | "face:N"]}}}`). ERROR when the
+  mean best cosine (pin face normal vs direction from the core centre to a partner) is < -0.1, WARN up to 0; the
+  message names the face to re-pin to. Cores with no known connectivity are WARNed as unchecked;
+- completeness (`complete`, COORD 10-23): a missing field is an ERROR, counted per field in `summary.complete`:
+  cells, `track_offset_um` on every hard core, a clock method (`tap_um` / `taps` / `tap_mode`), the die
+  `clock.common_latency_ps` (R4 owner rule: the one target every partition balances its face flops to; also the
+  vclk latency), type `insertion_ps` equal to it, a reset sync, face-flop pin geometry, and `internal_stations[]` for
+  every estimated internal reg-reg connection over `ft_station_max_um` (R3-INTERNAL).
+
+G0C (COORD 10-23): the `hard_cores`, `core_faces` and `complete` findings are ERRORs only with
+`check.py --completeness`; plain G0 reports them as WARN `[G0C] ...`. `summary.g0c` lists findings per partition type
+(`g3_eligible` = types with none and no die-level gap).
+
+R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
+WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
 
 A synthetic 24x24-partition plan (22k ports, 960 lanes) checks in about 5 s, including the render.
 

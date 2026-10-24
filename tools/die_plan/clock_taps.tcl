@@ -83,7 +83,8 @@ if {[llength $ct_taps] >= 2} {
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
     }
     if {![llength $cand]} {
-      puts "OT_CLOCK_TAPS FAIL $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
+      # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate
+      puts "OT_CLOCK_TAPS WARN $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
       lappend ct_stuck $on
       continue
     }
