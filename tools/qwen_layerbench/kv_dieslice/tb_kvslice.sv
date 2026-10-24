@@ -156,6 +156,44 @@ module tb_kvslice;
         if (sst != sst_q) $display("SLICEBOOT cyc %0d done/ok/fault WS %0d/%0d/%0d WN %0d/%0d/%0d ES %0d/%0d/%0d EN %0d/%0d/%0d", cyc_core,
             sst[95:88], sst[87:80], sst[79:72], sst[71:64], sst[63:56], sst[55:48], sst[47:40], sst[39:32], sst[31:24], sst[23:16], sst[15:8], sst[7:0]);
     end
+    // DIAGNOSTIC ONLY (+DIAG_KVPC_RST_HBM): the 32 kvpc reset spines (bound to HOST die_rst_n) follow hbm_rst_n instead.
+    // The kvpc holds qkd_static_kv_pc_es_merge_b (the slice's boot-window controller face hes/her), so with die_rst_n held
+    // until every slice reports boot_done the cold-boot scratch check cannot reach the controller; this tests that claim.
+    initial if ($test$plusargs("DIAG_KVPC_RST_HBM")) begin
+            $display("DIAG kvpc reset spines forced to hbm_rst_n (32 spines)");
+            force dut.x_hub_Wi_rs_host_die_rst_n_65_pc_EN_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_69_pc_EN_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_70_pc_EN_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_71_pc_EN_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_72_pc_EN_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_73_pc_EN_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_89_pc_EN_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_93_pc_EN_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_66_pc_ES_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_74_pc_ES_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_75_pc_ES_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_76_pc_ES_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_77_pc_ES_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_78_pc_ES_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_90_pc_ES_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_94_pc_ES_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_67_pc_WN_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_79_pc_WN_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_80_pc_WN_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_81_pc_WN_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_82_pc_WN_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_83_pc_WN_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_91_pc_WN_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_95_pc_WN_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_68_pc_WS_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_84_pc_WS_1 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_85_pc_WS_2 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_86_pc_WS_3 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_87_pc_WS_4 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_88_pc_WS_5 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_92_pc_WS_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+            force dut.x_hub_Wi_rs_host_die_rst_n_96_pc_WS_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
+    end
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
     initial void'($value$plusargs("HB=%d", hb));
