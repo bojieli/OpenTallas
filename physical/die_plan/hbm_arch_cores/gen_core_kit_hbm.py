@@ -150,7 +150,7 @@ def sdc(per, ins, tol, clks, rsts, tag):
          f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {(1 - UNC_SPLIT) * UNC_SETUP_PS:.4f}\n"
          f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {UNC_SPLIT * UNC_HOLD_PS:.4f}\n"
          f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {(1 - UNC_SPLIT) * UNC_HOLD_PS:.4f}\n"
-         f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({cre})(\\[[0-9]+\\])?$}}]\n"
+         "set non_clk_in [all_inputs -no_clocks]\n"
          f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
          f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
@@ -224,6 +224,70 @@ def yosys_ports(files, top, params, defines, incdir):
     if not ports:
         raise SystemExit(f"yosys portlist of {top}: no ports parsed\n{r.stdout[-2000:]}")
     return ports
+
+
+def retain_unused_inputs(files, top, retained, kd):
+    """Keep declared reserved input bits physically registered without changing outputs."""
+    if not retained:
+        return None
+    body = []
+    for port, bits in retained.items():
+        width = len(bits)
+        expr = "{" + ", ".join(f"{port}[{int(b)}]" for b in bits) + "}"
+        body += [f"    (* keep = 1 *) wire [{width-1}:0] keep_unused_{port};",
+                 f"    (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_input_sink #(.W({width})) u_bin_unused_{port} "
+                 f"(.clk(clk), .d({expr}), .q(keep_unused_{port}));"]
+    rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
+    matches = 0
+    for f in files:
+        p = Path(f)
+        if p.suffix not in (".sv", ".v"):
+            continue
+        text = p.read_text()
+        text, n = rx.subn(lambda m: m[1] + "\n" + "\n".join(body) + "\n" + m[2], text)
+        if n:
+            p.write_text(text); matches += n
+    if matches != 1:
+        raise ValueError(f"reserved-input retention expected one {top}, found {matches}")
+    helper = Path(kd) / "rtl" / "ot_hbm_face_input_sink.sv"
+    helper.write_text("(* keep_hierarchy = 1 *) module ot_hbm_face_input_sink #(parameter W=1)(input clk,input [W-1:0] d,output [W-1:0] q);\n"
+                      "(* keep = 1 *) reg [W-1:0] state_q;always @(posedge clk) state_q <= d;assign q=state_q;\nendmodule\n")
+    return helper
+
+
+def clone_output_state(files, top, clone, kd):
+    """Duplicate an existing state DFF at each output face, preserving its edge/reset."""
+    if not clone:
+        return None
+    state, nxt, width, reset = (clone[k] for k in ("state", "next", "width", "reset"))
+    wire = "face_clone_" + state
+    extra = (f"\n    wire [{width-1}:0] {wire};\n"
+             f"    generate for (genvar cp=0;cp<{width};cp=cp+1) begin:g_face_clone_{state}\n"
+             f"        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_bout_copy "
+             f"(.clk(clk),.rst_n({reset}),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
+    rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
+    matches = 0
+    def patch(m):
+        text = m[1]
+        for port in clone["ports"]:
+            pattern = r"(assign\s+" + re.escape(port) + r"\s*=\s*)" + re.escape(state) + r"(?=\[)"
+            text, n = re.subn(pattern, lambda q: q[1] + wire, text)
+            if n != 1:
+                raise ValueError(f"expected one output state assignment for {port}")
+        return text + extra + m[2]
+    for f in files:
+        p=Path(f)
+        if p.suffix not in (".v", ".sv"):
+            continue
+        text,n=rx.subn(patch,p.read_text())
+        if n:
+            p.write_text(text); matches += n
+    if matches != 1:
+        raise ValueError(f"output clone expected one {top}, found {matches}")
+    helper=Path(kd)/"rtl"/"ot_hbm_face_state_bit.sv"
+    helper.write_text("(* keep_hierarchy = 1 *) module ot_hbm_face_state_bit(input clk,rst_n,d,output reg q);\n"
+                      "always @(posedge clk or negedge rst_n) if(!rst_n) q<=1'b0;else q<=d;\nendmodule\n")
+    return helper
 
 
 def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=None):
@@ -358,6 +422,15 @@ def main():
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
+    retained = rec.get("retain_unused_input_bits", {})
+    retention_helper = retain_unused_inputs(local, top, retained, kd)
+    if retention_helper:
+        srcs.append(f"/work/rtl/{retention_helper.name}")
+        local.append(str(retention_helper))
+    output_helper = clone_output_state(local, top, rec.get("clone_output_state", {}), kd)
+    if output_helper:
+        srcs.append(f"/work/rtl/{output_helper.name}")
+        local.append(str(output_helper))
     wrap_rep = None
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
@@ -430,15 +503,25 @@ def main():
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl"):
+    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py"):
         shutil.copyfile(TOOL / f, kd / f)
-    lefs, libs = [], []
+    shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    tb = (TOOL / "tap_balance.tcl").read_text()
+    tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
+    (kd / "tap_balance.tcl").write_text(tb)
+    (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
+    lefs, libs, ttlibs, fflibs = [], [], [], []
     for m in rec.get("macros", []):
         md = REPO / "physical" / "asap7_memory_macros_v2" / m
         (kd / "macros").mkdir(exist_ok=True)
         for ext in (".lef", "_tt.lib", "_ff.lib", "_ss.lib"):
             if (md / f"{m}{ext}").is_file():
                 shutil.copyfile(md / f"{m}{ext}", kd / "macros" / f"{m}{ext}")
+        for suffix in ("_tt.lib", "_ff.lib"):
+            if not (md / f"{m}{suffix}").is_file():
+                raise SystemExit(f"macro {m} lacks mandatory {suffix} timing view")
+        ttlibs.append(f"/work/macros/{m}_tt.lib")
+        fflibs.append(f"/work/macros/{m}_ff.lib")
         lefs.append(f"/work/macros/{m}.lef")
         cl = {"WC": "_ss.lib", "TC": "_tt.lib", "BC": "_ff.lib"}[a.corner]
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
@@ -446,7 +529,8 @@ def main():
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (TOOL / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
+    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
+    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
     assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
@@ -484,15 +568,33 @@ def main():
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            "export TNS_END_PERCENT = 100",
+           "export PRE_SYNTH_TCL = /work/face_keep.tcl",
+           "export POST_SYNTH_TCL = /work/post_synth_actual.tcl",
+           "export POST_CTS_TCL = /work/tap_balance.tcl",
+           f"export OT_TAP_TARGET_PS = {ins:g}",
+           f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
-           f"export CORNER = {a.corner}",
+           "export CORNERS = tc bc",
+           "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(ttlibs),
+           "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
+           "export ADDITIONAL_LIBS =",
+           "override export LIB_FILES = $(TC_LIB_FILES)",
            *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
-        cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
-                "export MACRO_PLACE_HALO = 4.32 4.32",
+        cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
+                f"export MACRO_PLACE_HALO = {rec.get('macro_place_halo_um', 4.32):g} {rec.get('macro_place_halo_um', 4.32):g}",
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)}"]
+    if rec.get("macro_placement"):
+        lines = []
+        for placement in rec["macro_placement"]:
+            x, y = placement["xy_um"]
+            inst = placement["inst"]
+            orient = placement.get("orient", "R0")
+            lines.append(f"place_macro -macro_name {{{inst}}} -location {{{x:g} {y:g}}} -orientation {orient} -exact")
+        (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
+        cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")

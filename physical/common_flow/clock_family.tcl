@@ -115,12 +115,17 @@ proc ot_cf_active {p} {
   return $active
 }
 proc ot_cf_wire {pin clock {scene {}}} {
+  return [ot_cf_wire_transition $pin $clock [ot_cf_active $pin] $scene]
+}
+# Also supports clock-buffer outputs, which have no sequential active-edge arc.
+proc ot_cf_wire_transition {pin clock transition {scene {}}} {
+  if {$transition ni {rise fall}} {error "OT_CLOCK_FAMILY: invalid transition $transition"}
   if {$scene eq ""} {set scene [get_property [sta::cmd_scene] name]}
   set cn [get_full_name $clock]; set waveform {}
   foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
   if {[llength $waveform] != 2} {error "OT_CLOCK_FAMILY: invalid waveform $cn"}
   foreach time $waveform {if {![string is double -strict $time] || [regexp -nocase {inf|nan} $time]} {error "OT_CLOCK_FAMILY: nonfinite waveform $cn"}}
-  set transition [ot_cf_active $pin]; set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
+  set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
   set values {}
   foreach vertex [$pin vertices] {
     if {$vertex eq "NULL"} continue

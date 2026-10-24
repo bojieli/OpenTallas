@@ -5,6 +5,8 @@ foreach l $::env(OT_LEFS) { read_lef $l }
 foreach l $::env(OT_LIBS) { read_liberty $l }
 read_db $::env(RES)/6_final.odb
 read_sdc $::env(RES)/6_final.sdc
+set_propagated_clock [get_clocks clk]
+source /work/clock_family.tcl
 if {[file exists $::env(RES)/6_final.spef]} { read_spef $::env(RES)/6_final.spef; set par spef } else { estimate_parasitics -placement; set par placement }
 set_propagated_clock [get_clocks clk]
 set c $::env(OT_CORNER)
@@ -20,7 +22,7 @@ set thns [total_negative_slack -min]
 set nv [nviol max]
 set nh [nviol min]
 # R4 face-flop spread: rise CK arrival at every register within 2 buffers of a signal port (face_flops.tcl list)
-proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq ""} { return "" }; return $a }
+proc ot_ck {pin} { ot_cf_refresh; return [ot_cf_wire $pin [get_clocks clk]] }
 set arr {}
 set ffl $::env(RES)/ot_face_flops.txt
 if {[file exists $ffl]} {

@@ -15,7 +15,7 @@ set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup 30.000
 set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup 30.0000
 set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold 12.5000
 set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold 12.5000
-set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(ck)$}]
+set non_clk_in [all_inputs -no_clocks]
 set_input_delay -max 166.6000 -clock vclk $non_clk_in
 set_input_delay -min -40.0000 -clock vclk $non_clk_in
 set_output_delay -max 166.6000 -clock vclk [all_outputs]
@@ -234,3 +234,23 @@ def test_gen_phys_kit_runs_signoff_last():
     k = gen_phys.RUN_KIT
     assert "signoff.py\" run --run-dir \"$K/run\"" in k
     assert k.index("generate_abstract") < k.index("signoff.py\" run") < k.rindex("exit $rc")
+
+
+def test_corner_scoped_macro_libs(tmp_path):
+    kit = tmp_path / "kit"; (kit / "macros").mkdir(parents=True)
+    (kit / "macros/child_tt.lib").write_text("library(child) {}")
+    (kit / "macros/child_ff.lib").write_text("library(child) {}")
+    (kit / "config.mk").write_text("export ADDITIONAL_LIBS =\n"
+        "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/child_tt.lib\n"
+        "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/child_ff.lib\n")
+    for c in ("tt", "ff"):
+        libs, missing = signoff.macro_libs(kit, c)
+        assert libs == [str(kit / f"macros/child_{c}.lib")] and missing == []
+    (kit / "macros/child_ff.lib").unlink()
+    assert signoff.macro_libs(kit, "ff")[1]  # missing FF remains blocking
+
+
+def test_corner_scoped_generic_lib_name(tmp_path):
+    (tmp_path / "ff").mkdir(); (tmp_path / "ff/core.lib").write_text("library(c) {}")
+    (tmp_path / "config.mk").write_text("export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/ff/core.lib\n")
+    assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "ff/core.lib")], [])

@@ -14,7 +14,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   rc=0; python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
-  N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v /work/run/results/asap7/*/base/1_synth.v 2>/dev/null | head -1); \
+  N=\$(ls /work/run/results/asap7/*/base/1_synth.v /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | head -1); \
   if [ \$rc = 0 ] && [ -n \"\$N\" ]; then python3 -I /work/face_guard_core.py \$N /work > /work/face_guard.log 2>&1; echo \"face_guard rc \$?\"; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; \
@@ -24,10 +24,10 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ -f \$R/3_place.odb ]; then ODB=\$R/3_place.odb OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; cp \$R/ot_face_flops.txt /work/ 2>/dev/null; fi; \
   if [ -f \$R/6_final.odb ]; then \
     mkdir -p /work/views; \
-    LIBS_TT=\$(\$M print-LIB_FILES 2>/dev/null | sed -n 's/^LIB_FILES = //p' | sed 's/_SS_/_TT_/g; s/_FF_/_TT_/g; s/_ss\.lib/_tt.lib/g; s/_ff\.lib/_tt.lib/g'); \
+    LIBS_TT=\$(\$M print-TC_LIB_FILES 2>/dev/null | sed -n 's/^TC_LIB_FILES = //p' | sed 's/_SS_/_TT_/g; s/_FF_/_TT_/g; s/_ss\.lib/_tt.lib/g; s/_ff\.lib/_tt.lib/g'); \
     LEFS=\"\$(\$M print-TECH_LEF 2>/dev/null | sed -n 's/^TECH_LEF = //p') \$(\$M print-SC_LEF 2>/dev/null | sed -n 's/^SC_LEF = //p') \$(\$M print-ADDITIONAL_LEFS 2>/dev/null | sed -n 's/^ADDITIONAL_LEFS = //p')\"; \
     echo \"LIBS_TT=\$LIBS_TT\" > /work/views/libs.txt; \
-    for c in ss ff tt; do \
+    for c in ff tt; do \
       case \$c in tt) L=\$LIBS_TT;; ff) L=\$(echo \$LIBS_TT | sed 's/_TT_/_FF_/g; s/_tt\.lib/_ff.lib/g');; ss) L=\$(echo \$LIBS_TT | sed 's/_TT_/_SS_/g; s/_tt\.lib/_ss.lib/g');; esac; \
       echo \"LIBS_\$c=\$L\" >> /work/views/libs.txt; \
       OT_CORNER=\$c OT_LIBS=\"\$L\" OT_LEFS=\"\$LEFS\" RES=\$R OT_MOD=\$(sed -n 's/^export DESIGN_NAME = //p' /work/config.mk) OT_OUT=/work/views OT_PER=\$(sed -n 's/^create_clock -name clk -period \([0-9.]*\).*/\1/p' /work/constraint.sdc) \
@@ -39,4 +39,9 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
 rc=$?
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+if [ "$rc" = 0 ] && [ "$GOAL" = finish ]; then
+  SO="$K/signoff"
+  [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)"
+  python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" || rc=1
+fi
 exit $rc

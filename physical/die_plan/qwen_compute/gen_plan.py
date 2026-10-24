@@ -1163,7 +1163,8 @@ def fault_links(P, variant, geo):
            kind="ctl", src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_s_i")
     P.link("fltk", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "flt_o", "flt_n_i", 1, kind="ctl",
            src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_n_i")
-    P.link("fltu", [COLL_UCIE[0], "coll_core"], "flt_o", "flt_u_i", 1, kind="ctl",
+    # P6 bound census: UCIe rx_valid[1:0] and tx_up need three status bits besides the fault bit.
+    P.link("fltu", [COLL_UCIE[0], "coll_core"], "flt_o", "flt_u_i", 4, kind="ctl",
            src_leaf="u_pstn.flt_o", dst_leaf="u_collective.fault_ucie")
     P.link("fltc", ws_path(P, "coll_core", "glue"), "flt_o", "coll_flt_i", 1, kind="ctl",
            src_leaf="u_collective.fault_or", dst_leaf="u_sys_face.obs_fault_coll")
@@ -1176,11 +1177,12 @@ def fault_links(P, variant, geo):
     # rx_valid -> coll_core reduce-ORs and sr*_valid) where the 1-b flt lanes above carry only the OR, plus the two
     # MU fault bits glue -> tt_ctlm and the KV PHY reset glue -> ucie_kv.  Planned as static ctl lanes at the as-built
     # widths: S chain 9 (to coll_core) + 26 (forwarded to glue), N chain 4 + 13, coll_core -> glue 30 + 26 + 13.
-    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 35, kind="ctl",
+    # P6 bound census includes g_face[4].fault_cause[7] in sys_face.obs_fault.
+    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 36, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("fltv", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "fltv_o", "fltv_n_i", 17, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
-    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 69, kind="ctl",
+    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 70, kind="ctl",
            src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
     P.link("mufl", ws_path(P, "glue", "tt_ctlm"), "mu_flt_o", "mu_flt_i", 2, kind="ctl",
            src_leaf="mu_ctxrx.mu_fault", dst_leaf="core.mu_fault")

@@ -46,15 +46,15 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import release_tree_render as rtr        # noqa: E402  (same directory: deployed copy or tools/auto_owner)
 
-BASE = Path('/home/ubuntu/claude-takeover-20261007')
+BASE = Path(os.environ.get('OT_COORD_DIR', str(Path.home() / 'coord')))
 MD = BASE / 'RELEASE_TREE.md'
 LANES = BASE / 'lanes'
 HANDOFF = BASE / 'HANDOFF.md'
 PENDING = BASE / 'pending_results.txt'
 JOBS = Path.home() / '.local/state/closure_loop/jobs'
 FLEET_URL = 'http://127.0.0.1:8765/api/fleetjobs'
-OT_RUN = Path('/home/ubuntu/bin/ot-run')
-DEFAULT_HOSTS = ['ot-epyc4', 'ot-epyc5', 'ot-pve1', 'ot-agidock128']
+OT_RUN = Path.home() / '.local/bin/ot-run'
+DEFAULT_HOSTS = ['epyc2', 'epyc3', 'intel1', 'intel2']
 SCAN_ROOTS = ['/srv/opentallas-scratch/claude', '/srv/opentallas-scratch/codex', '/srv/opentallas-scratch2/claude',
               '/srv/opentallas-scratch2/codex', '/home/ubuntu/artifacts']
 NOT_RUN_RX = re.compile(r'^/home/ubuntu/(OpenTallas|\.ssh|\.claude|\.codex|\.config|bin)(/|$)')
@@ -660,7 +660,7 @@ def main(argv=None):
     paths = set().union(*[t['refs']['paths'] | t['refs']['lane_paths'] for t in tasks]) if tasks else set()
     tags = set().union(*[t['refs']['tags'] for t in tasks]) if tasks else set()
     pids = set().union(*[t['refs']['pids'] for t in tasks]) if tasks else set()
-    hosts = ['localhost'] + ([] if a.no_remote else fleet_hosts())
+    hosts = list(dict.fromkeys(['localhost'] + ([] if a.no_remote else fleet_hosts())))
     log('tasks %d open; probing %s for %d paths / %d tags' % (len(tasks), ','.join(hosts), len(paths), len(tags)))
     probes, errs = probe_all(hosts, paths, tags, pids)
     jobs = load_jobs()

@@ -467,6 +467,16 @@ class Binder:
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        # Yosys omits instance parameters when a leaf uses its declared defaults. Keep their
+        # declarations for param_regen, without changing otherwise untouched leaf interfaces.
+        # Key by both original Yosys type and RTL master so a substituted variant cannot
+        # accidentally acquire parameters declared only on the predecessor master.
+        self.param_defaults = {}
+        for c in self.F.cells:
+            key = (c.ytype, c.module)
+            if key not in self.param_defaults:
+                self.param_defaults[key] = {k: E._pval(v)[0] for k, v in
+                    yjs["modules"].get(c.ytype, {}).get("parameter_default_values", {}).items()}
         for r in self.F.parent_variants:
             if r["dropped_net_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
@@ -1470,10 +1480,11 @@ class Binder:
                 continue
             c = self.F.cells[ci]
             for k, v in ps.items():
-                if k not in c.params:
+                defaults = self.param_defaults.get((c.ytype, c.module), {})
+                if k not in c.params and k not in defaults:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
-                old = str(c.params[k]).strip('"')
+                old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
                 if old != str(v):
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)

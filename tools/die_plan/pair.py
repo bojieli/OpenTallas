@@ -249,6 +249,12 @@ def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False,
         # hard_cores[] with LEF views; kept, the kit's macro_place.tcl places instances the proof netlist does not
         # have (ORFS stops in floorplan).  Dropped with a note, so the pair kit is the seam vehicle only.
         hc = None if cores else t.pop("hard_cores", None)      # CP2 --cores keeps them (black boxes in the leaf)
+        if not cores:
+            # Dedicated early taps refer to the hard cores removed from this proof leaf.
+            ck = t.get("clock", {})
+            if "taps" in ck:
+                ck["taps"] = [tap for tap in ck["taps"] if tap.get("kind") != "core"]
+            ck.pop("core_taps", None)
         if hc:
             t["note"] = (t.get("note", "") + f" [pair.py: {len(hc)} hard_cores dropped, proof leaf only]").strip()
         types[tn] = t

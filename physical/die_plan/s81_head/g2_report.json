@@ -48,19 +48,19 @@
     },
     "M8": {
      "resource": 355833216,
-     "demand": 41625,
-     "usage_pct": 0.01,
+     "demand": 63361,
+     "usage_pct": 0.02,
      "overflow": 0
     },
     "M9": {
      "resource": 355705938,
-     "demand": 65973,
-     "usage_pct": 0.02,
+     "demand": 34646,
+     "usage_pct": 0.01,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 1068969.0,
+   "wirelength_um": 969110.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {},
@@ -68,12 +68,12 @@
    "reach": {
     "clk": {
      "max_um": 16998.1,
-     "p90_um": 13158.7,
-     "taps": 2540
+     "p90_um": 13154.4,
+     "taps": 2504
     },
     "rst": {
      "max_um": 16086.6,
-     "p90_um": 12536.7,
+     "p90_um": 12765.6,
      "taps": 326
     }
    },
@@ -81,7 +81,7 @@
    "exit": "EXIT 0",
    "kind": "g2-die",
    "die": "s81_head",
-   "taps": 2540,
+   "taps": 2504,
    "pg_stripes": 8118,
    "channels": 8,
    "route_layers": [

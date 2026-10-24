@@ -510,3 +510,32 @@ def test_kit_rtl(tmp_path):
         assert re.search(rf"\b{b['name']}\b", w), b["name"]
     man = json.loads((kd / "kit_rtl.json").read_text())
     assert man["plan_module"] == t["module"] and man["params"]
+
+
+def test_param_regen_declared_default_and_unknown(tmp_path):
+    """A default-only leaf must accept its declared parameter, and reject a typo.
+
+    Reproduces the real D2D TXDP=0 leaf, whose Yosys cell parameters are empty while
+    its master declares TXDP. The old binder rejected every valid regeneration.
+    """
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    leaf = src / "leaves.sv"
+    leaf.write_text(leaf.read_text().replace("module lf_sink (",
+        "module lf_sink #(parameter integer DELTA = 0) (").replace(
+        "q <= {flt, d0 ^ d1};", "q <= {flt, d0 ^ d1} + DELTA;"))
+    hook = tmp_path / "regen_default.py"
+    hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'DELTA': 3}})\n")
+    plan = json.loads((EX / "die_plan_lanes.json").read_text())
+    plan["asbuilt"]["base"] = str(src)
+    plan["asbuilt"]["param_regen"] = {"file": str(hook)}
+    pp = tmp_path / "plan.json"
+    pp.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pp, out, "elab", "bind") == 0
+    pr = json.loads((out / "param_regen.json").read_text())
+    assert pr["changed"] == [dict(inst="snk", param="DELTA", asbuilt="0", bound=3)]
+    assert ".DELTA(3)" in "".join(f.read_text() for f in (out / "rtl").glob("*.sv"))
+    hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'NOT_A_PARAMETER': 3}})\n")
+    assert bind.main(["bind", str(pp), "--out", str(out), "--strict"]) != 0
+    assert any("NOT_A_PARAMETER: not a parameter" in e for e in report(out)["errors"])

@@ -1,10 +1,10 @@
 # KVG3-CORES (gen_core_kit_kv.py): re-time the routed core at one corner (RCX SPEF of 6_final) and write its ETM.
-# env: OT_CORNER (tt|ff|ss) OT_LIBS (liberty list of that corner) OT_LEFS (tech + std + macro LEFs) RES (results dir)
+# env: OT_CORNER (tt|ff) OT_LIBS (liberty list of that corner) OT_LEFS (tech + std + macro LEFs) RES (results dir)
 #      OT_MOD (module) OT_OUT (output dir)
 foreach l $::env(OT_LEFS) { read_lef $l }
 foreach l $::env(OT_LIBS) { read_liberty $l }
 read_db $::env(RES)/6_final.odb
-read_sdc $::env(RES)/6_final.sdc
+if {[info exists ::env(OT_SDC)]} { read_sdc $::env(OT_SDC) } else { read_sdc $::env(RES)/6_final.sdc }
 if {[file exists $::env(RES)/6_final.spef]} { read_spef $::env(RES)/6_final.spef; set par spef } else { estimate_parasitics -placement; set par placement }
 set_propagated_clock [get_clocks clk]
 set c $::env(OT_CORNER)

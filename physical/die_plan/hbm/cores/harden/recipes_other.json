@@ -108,6 +108,7 @@
   "view_port_bits": 7688
  },
  "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6": {
+  "macro_place_halo_um": 2.16,
   "top": "ot_hbm_svc_sm_xcal_rel_t",
   "files": [
    "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
@@ -130,7 +131,41 @@
   "source_commit": "d34578d6f",
   "view_cell": "ot_hbm_svc_sm_xcal_rel_t",
   "view_kind": "SYNTH",
-  "view_port_bits": 507
+  "view_port_bits": 507,
+  "macro_placement": [
+   {
+    "inst": "u_xcal.g_t2.u_tab_hi",
+    "xy_um": [
+     107.784,
+     8.64
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_xcal.g_t2.u_tab_lo",
+    "xy_um": [
+     8.64,
+     8.64
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_hi",
+    "xy_um": [
+     17.28,
+     54.024
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_lo",
+    "xy_um": [
+     17.28,
+     128.832
+    ],
+    "orient": "R0"
+   }
+  ]
  },
  "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88": {
   "top": "ot_hbm_svc_vm_kshare_splitstrap",
@@ -365,7 +400,33 @@
   "view_cell": "ot_hgi_coll_gq_land",
   "view_kind": "ROUTED_UNBOUND",
   "view_port_bits": 3880,
-  "closed_view_dir": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land"
+  "closed_view_dir": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land",
+  "retain_unused_input_bits": {
+   "ld_desc": [
+    50,
+    39,
+    38,
+    37,
+    36,
+    35,
+    34,
+    33,
+    32,
+    15,
+    14,
+    13
+   ]
+  },
+  "clone_output_state": {
+   "state": "vm_kq",
+   "next": "kq_n",
+   "width": 2248,
+   "reset": "rn",
+   "ports": [
+    "vm_kq_lo",
+    "vm_kq_hi"
+   ]
+  }
  },
  "ot_hgi_coll_inj_idx_join_rg__216x432": {
   "top": "ot_hgi_coll_inj_idx_join_rg",

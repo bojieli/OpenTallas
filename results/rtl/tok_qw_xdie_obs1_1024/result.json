@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS",
+ "scope": "bound compute/KV master modules with explicit OBS1_COMPAT=1 and regenerated pair calendars; not generated bound-top adoption or physical signoff",
+ "cases": {
+  "compat_pair": "PASS35 layers T256",
+  "compat_pair_t8192": "PASS35 layers T8192",
+  "compat_mut_result": "CAUGHT1 mismatch",
+  "compat_mut_status": "CAUGHT1092 mismatches"
+ },
+ "cycles": {
+  "cmd_c2k": 55,
+  "result_k2c": 53,
+  "status_k2c": 49,
+  "roundtrip": 1887,
+  "kv_service": 1779,
+  "period": 7056,
+  "added_cycles": 0
+ },
+ "remaining": [
+  "Enable opt-in on the bound KV instance only after context timing closure.",
+  "F1 compute TXDP missing, F5 p192 macro name, F7 stale image bindings remain separate."
+ ]
+}

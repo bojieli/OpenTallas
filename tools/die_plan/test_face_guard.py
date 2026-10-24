@@ -127,3 +127,24 @@ def test_portless_type_passes_with_empty_pin_table():
     net = "module top(clk);\n  input clk;\nendmodule\n"
     assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
     assert face_guard.guard(net)["verdict"] == "FAIL"
+
+
+def test_early_core_clock_ports_are_not_data_boundaries():
+    net = NET_OK.replace("top(clk, a, o);", "top(clk, clk_c0, clk_c4, a, o);")
+    net = net.replace("input clk;", "input clk; input clk_c0; input clk_c4;")
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
+    r = face_guard.guard(net, pins=pins)
+    assert r["verdict"] == "PASS" and r["checked"] == 4 and r["ok"] == 4, r
+
+
+def test_native_scalar_pins_and_global_reset():
+    net = r"""module top(clk, rst_n, a, o);
+input clk; input rst_n; input a; output o;
+wire q; wire nq;
+DFFHQNx1_ASAP7_75t_R u_bin_a_q (.CLK(clk), .D(a), .QN(q));
+DFFHQNx1_ASAP7_75t_R u_bout_o_q (.CLK(clk), .D(q), .QN(nq));
+INVx3_ASAP7_75t_R out_inv (.A(nq), .Y(o));
+endmodule
+"""
+    r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
+    assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r
