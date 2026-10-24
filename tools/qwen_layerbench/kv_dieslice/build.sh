@@ -13,11 +13,12 @@ grep -v '/qkd_pll_analog_model.sv$' $O/files.f > $O/f.tmp && mv $O/f.tmp $O/file
 # hierarchical Verilator blocks = every bound partition type except the PHY-model hosts (phy_*, sys_SD*, sys_c: their PHY
 # bench models read the bench far ends by hierarchical reference) -> the top only wires lanes (monolithic: > 400 GB)
 TOPF=$(grep '/qwen_kvsys_bound_top.sv$' $O/files.f); RD=$(dirname $TOPF)
-# KV-TOK 10-24: partition instances with #() overrides are not matched to their (default-parameter) hier blocks by
-# Verilator 5.050 and get inlined into the top; the bound top's overrides all equal the defaults -> drop them (exact)
+# KV-TOK 10-24: Verilator 5.050 inlines every hier_block module that has parameters -> top without the (== default)
+# overrides + partition types with header localparams (exact; strip_default_params.py); the lists point at those copies
 if [ "${HIER:-1}" = 1 ]; then
-  mkdir -p $O/top_s && python3 $H/strip_default_params.py $TOPF $RD $O/top_s/qwen_kvsys_bound_top.sv || exit 2
-  sed -i "s#^$TOPF\$#$O/top_s/qwen_kvsys_bound_top.sv#" $O/files.f
+  rm -rf $O/top_s; python3 $H/strip_default_params.py $TOPF $RD $O/top_s || exit 2
+  sed -i -E "s#^$RD/((qwen_kvsys_bound_top|kv3_[A-Za-z0-9_]+)\.sv)\$#$O/top_s/\1#" $O/files.f
+  sed -i "s#^-y $RD\$#-y $O/top_s\n-y $RD#" $O/incdirs.f
 fi
 { echo '`verilator_config'; for m in $(grep -ho '^module kv3_[A-Za-z0-9_]*' $RD/kv3_*.sv | awk '{print $2}' | sort -u); do
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
