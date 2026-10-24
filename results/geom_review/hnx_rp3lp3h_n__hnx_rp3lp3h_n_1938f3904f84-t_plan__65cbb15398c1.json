@@ -1,0 +1,17 @@
+{
+ "element": "hnx_rp3lp3h_n",
+ "view": "hnx_rp3lp3h_n@1938f3904f84",
+ "kit": "physical/die_plan/hbm_arch_cores (kit hnx_rp3lp3h_n_1938f3904f84-t, B2r2 pins 1938f3904f84, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "65cbb15398c1884e",
+ "reasons": "Flat kit (hnx-sm4p cluster children not closed: xs3n FAIL spread, bdc/tct/tcl old views SS -48/-18/-30 ps, tr_group WARN) from RTL @4d6f5439dc proven = hnx_rp3lp3x_flat by the lockstep+MUT1-4 bench. Pins = hnx-sm4p kit pins +0.012 um track snap, names equal. No macros. Seam sb_bank/sb_vld 604 bits: N.S face == S.N face x and layer (M5), 0 mismatches. Peak 10-um pin density 5.3/um < 6. Plan pin layers M4/M5 only -> MAX_ROUTING_LAYER M5. Data flow: W->E beat path bin->pinbeat->beat_t->beat_e->bout and row path rin->pinrow->row_w->row_e->rout are registered at every stage (>=3 flops across the 630.72 um width, <=405 um reach per hop by placement); context q_sm0: 8 columns x (S,N) tiles abutted, no channel. N: W/E mirrored (bin/bout, rin_n/rout_n same y, 0 mismatches) so the E->W row chain abuts aligned; one root ck_n on N face x 315.4 (centre) -> balanced tree start; N face gin 100 b x 21.6-40.6 abuts the upper tile's S face gout 200 b x 2.4-40.6 (width differs: die-composition item, HBM-ARCH). Risk: face flops on all four faces of a 630x1210 um tile -> CK spread <=80 ps is the main risk (xs3n alone measured pin spread 82.8/81.2).",
+ "fixes": "Condition: placed-stage review (density, face-flop spread) on the pathfinding runs before sign-off; if spread > 80, CTS variant (sink clustering / balanced face-flop groups) before RTL change.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/hnx_rp3lp3h_n_1938f3904f84/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/hnx_rp3lp3h_n_1938f3904f84/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:22:29-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
