@@ -21252,11 +21252,12 @@
       362.88
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_ingest_eng (97410 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_ingest_eng; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_eng'] in u_host (obsx); glue members glue:qm_ingest NOT in the core (stay hub_Wi partition glue, no RTL re-cut); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_ingest_eng_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_order",
@@ -21270,11 +21271,12 @@
       328.32
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_order (79710 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_order; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_chain', 'u_dispatch'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_order_pins.json"
     },
     {
      "inst": "host__qkd_hr_cdc_ch",
@@ -21288,11 +21290,12 @@
       319.68
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_cdc_ch (76392 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_cdc_ch; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_done', 'u_ing'] in u_host (obsx); glue members glue:fence_sync NOT in the core (stay hub_Wi partition glue, no RTL re-cut); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_cdc_ch_pins.json"
     },
     {
      "inst": "host__qkd_hr_cdc_pc",
@@ -21306,11 +21309,12 @@
       319.68
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_cdc_pc (76242 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_cdc_pc; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_rx', 'u_tx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_cdc_pc_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_peer",
@@ -21324,11 +21328,12 @@
       311.04
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_peer (71728 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_peer; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_coordinator', 'u_peer', 'u_peer_codec', 'u_root_mux'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_peer_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_tx",
@@ -21342,11 +21347,12 @@
       267.84
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_tx (54742 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_tx; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_axi', 'u_ctrl', 'u_tx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_tx_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_rx",
@@ -21360,11 +21366,12 @@
       259.2
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_rx (49650 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_rx; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_rx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_rx_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_guard",
@@ -21378,11 +21385,12 @@
       250.56
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_guard (47616 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_guard; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_guard', 'u_native'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_guard_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_queue",
@@ -21396,11 +21404,12 @@
       241.92
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_queue (43301 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_queue; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_bootbarrier', 'u_marker_consumer', 'u_queue'] in u_host (obsx); glue members glue:qm_core, glue:fence_core NOT in the core (stay hub_Wi partition glue, no RTL re-cut); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_queue_pins.json"
     },
     {
      "inst": "host__qkd_hr_core_prompt",
@@ -21414,11 +21423,12 @@
       233.28
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_core_prompt (40025 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_core_prompt; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_control', 'u_program', 'u_program_rx', 'u_records'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_core_prompt_pins.json"
     },
     {
      "inst": "host__qkd_hr_cdc_hi",
@@ -21432,11 +21442,12 @@
       224.64
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_cdc_hi (37795 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_cdc_hi; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_cx', 'u_hx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_cdc_hi_pins.json"
     },
     {
      "inst": "host__qkd_hr_cdc_ci",
@@ -21450,11 +21461,12 @@
       216.0
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_cdc_ci (35764 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_cdc_ci; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_ox', 'u_rx'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_cdc_ci_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_pad",
@@ -21468,11 +21480,12 @@
       129.6
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_pad (13017 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_pad; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_pad'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_pad_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_0",
@@ -21486,11 +21499,12 @@
       95.04
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_1",
@@ -21504,11 +21518,12 @@
       95.04
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_2",
@@ -21521,12 +21536,13 @@
       103.68,
       95.04
      ],
-     "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "orient": "MX",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_3",
@@ -21540,11 +21556,12 @@
       95.04
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_4",
@@ -21557,12 +21574,13 @@
       103.68,
       95.04
      ],
-     "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "orient": "MY",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_5",
@@ -21575,12 +21593,13 @@
       103.68,
       95.04
      ],
-     "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "orient": "MY",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_6",
@@ -21593,12 +21612,13 @@
       103.68,
       95.04
      ],
-     "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "orient": "MY",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_phy_adp_7",
@@ -21611,12 +21631,13 @@
       103.68,
       95.04
      ],
-     "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_phy_adp (6924 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "orient": "MY",
+     "note": "qkd_host_rt cluster child qkd_hr_phy_adp; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['g_slice[0].u_slice'] in u_host (obsx); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_phy_adp_pins.json"
     },
     {
      "inst": "host__qkd_hr_host_qm",
@@ -21630,11 +21651,12 @@
       77.76
      ],
      "orient": "R0",
-     "note": "qkd_host_rt cluster child qkd_hr_host_qm (4249 cells hier, measured); PLANNED core: lef/lib/pins pending (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_host_rt cluster child qkd_hr_host_qm; PLANNED core: pins top-down (core_pins_hr.py, KVG3-WI v3.8u) from the real instance members ['u_pacer'] in u_host (obsx); glue members glue:qm_host, glue:fence_host NOT in the core (stay hub_Wi partition glue, no RTL re-cut); lef/lib pending (CORE-KS harden)",
      "track_offset_um": [
       0.0,
       0.0
-     ]
+     ],
+     "pins_file": "cores/qkd_hr_host_qm_pins.json"
     }
    ]
   },
