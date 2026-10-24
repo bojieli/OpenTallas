@@ -350,7 +350,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         f"\nendmodule : {mod}\n`default_nettype wire\n"
 
 
-def die_top(P, epochs):
+def die_top(P, epochs, dropped=None):
     io, wires, insts = [], [], []
     for pid, pr in P.ports.items():
         n = S.port_pins_count(pr)
@@ -374,7 +374,9 @@ def die_top(P, epochs):
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
     for name, p in P.parts.items():
         t = P.types[p["type"]]
-        cs = ["        .clk(clk)"] + [f"        .{n}(clk)" for n, _, _ in S.tap_grid(P, p["type"])[1:]] + \
+        # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
+        dr = (dropped or {}).get(p["type"], ())
+        cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
             ["        .arst_n(rst_n)"] + \
             [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")

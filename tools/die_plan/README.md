@@ -155,6 +155,10 @@ ERROR only under `--completeness`, counts in `summary.xdie_counts`):
 
 R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
 WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
+Tap method (CP1 r8 RULING, COORD 10-23 21:26): every partition gets a GRID of clock taps at `budgets.tap_pitch_um`
+(default 400 um, or type `clock.tap_pitch_um`), every sink on its nearest tap, trees balanced to the common latency.
+`clock.tap_mode` `grid+sinks` (alias `sinks`) only ADDS sink-anchored taps (taps.py) for face-register clusters after
+the grid taps; they never replace the grid.  Kit SDC seam-hold padding: min input delay = -`clock.insertion_tol_ps`.
 
 A synthetic 24x24-partition plan (22k ports, 960 lanes) checks in about 5 s, including the render.
 

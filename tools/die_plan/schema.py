@@ -65,9 +65,10 @@ GRID_UM = 8.64
 
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
                        cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
-                       # COORD 10-23 R3: ft stations at most 750 um apart on every die; R4: partition clock tap grid
-                       # pitch (the die spine delivers one tap per <= 600 x 600 cell, local trees <= ~300 um)
-                       ft_station_max_um=750.0, tap_pitch_um=600.0,
+                       # COORD 10-23 R3: ft stations at most 750 um apart on every die; R4 (CP1 r8 RULING 21:26):
+                       # partition clock tap GRID at <= 400 um pitch covering all sinks (CP1 r6: 16 taps @400 =
+                       # face-flop spread 68/57 ps TT, seam skew <= 52)
+                       ft_station_max_um=750.0, tap_pitch_um=400.0,
                        # PLAN-TOOL5 (COORD 10-23 die review): G0C reach = hop <= reach_margin x the per-layer measured
                        # reach (reach.py); die IO bump fields within io_edge_max_um of a die edge (die_io.py)
                        reach_margin=0.9, io_edge_max_um=200.0)
@@ -199,9 +200,11 @@ SCHEMA = {
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
-                        # KV-P6 10-23: "sinks" = taps AT the FIRM-planned sinks (taps.py: radius / cap bounded
-                        # k-medians of face registers + ft stations), no empty taps; default "grid"
-                        "tap_mode": {"enum": ["grid", "sinks"]}, "tap_radius_um": _pos,
+                        # default "grid" (R4, CP1 r8 RULING 21:26).  "grid+sinks" (alias "sinks", KV-P6) = the
+                        # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
+                        # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
+                        # 4.5-5.7k sinks piled on one tap, spread 133 ps)
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
@@ -731,25 +734,40 @@ class Plan:
 
 
 def tap_pitch(P, tn):
-    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um.
-    Sink-anchored taps (clock.tap_mode "sinks"): 2 x clock.tap_radius_um (clock_taps.tcl re-assigns a sink over at
-    most pitch/2 = the radius)."""
-    ck = P.types[tn].get("clock", {})
-    if ck.get("tap_mode") == "sinks":
-        return 2.0 * float(ck.get("tap_radius_um", 250.0))
-    return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 600.0)))
+    """R4 revised: the type's tap GRID pitch (clock.tap_pitch_um, sized from the measured trees) else
+    budgets.tap_pitch_um (400).  Also with added sink-anchored taps: the grid stays (CP1 r8 RULING)."""
+    return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 400.0)))
+
+
+def sink_tap_mode(t):
+    """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
+    "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks")
 
 
 def tap_grid(P, tn):
     """COORD 10-23 R4: the partition's clock taps, [(port, x, y)] in the type frame (unsnapped).  A grid of
-    ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 600), so every sink is
-    within ~300 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
-    'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
+    ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 400), so every sink is
+    within ~200 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
+    'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl).
+    CP1 r8 RULING (COORD 10-23 21:26): the grid is THE method on every die; clock.tap_mode "grid+sinks" (or "sinks")
+    only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
+    a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
-    if t.get("clock", {}).get("tap_mode") == "sinks":
-        # sink-anchored taps (taps.py): every tap carries FIRM-planned sinks within clock.tap_radius_um
+    out = _grid_taps(P, tn)
+    if sink_tap_mode(t):
         import taps
-        return [(n, x, y) for n, x, y, _, _ in taps.sink_taps(P, tn)]
+        for _, x, y, _, _ in taps.sink_taps(P, tn):
+            if any(abs(x - a) + abs(y - b) < taps.SEP_UM for _, a, b in out):
+                continue
+            x, y = tap_clear(t, x, y, [(a, b) for _, a, b in out])
+            out.append((f"clk_t{len(out)}", x, y))
+    return out
+
+
+def _grid_taps(P, tn):
+    """the R4 pitch grid of tap_grid (no added sink taps)."""
+    t = P.types[tn]
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
