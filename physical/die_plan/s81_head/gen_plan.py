@@ -245,29 +245,45 @@ SLOT_E = M.ELEM_SLOT
 
 def core(inst, view, cells, x, y, um):
     v = M.ELEM_VIEW[view[-1]]
-    return dict(inst=inst, module="ot_dsrom_head_elem", origin_um=[lat(x), lat(y)], outline_um=[um, um], orient="R0",
+    cv = f"ot_s81hd_{view}_cv"
+    return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient="R0",
                 track_offset_um=[0.012, 0.012], pins_file=f"cores/{view}_pins.json",
-                lef=f"physical/dsrom_fh_safe/closed/{view}/ot_dsrom_head_elem.lef",
-                lib=f"physical/dsrom_fh_safe/closed/{view}/ot_dsrom_head_elem_ss.lib",
+                lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
+                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_ss.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
-                     f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates "
-                     "the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or "
-                     "re-close the copy")
+                     f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed {cv} "
+                     "(tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point "
+                     "(ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there "
+                     "(tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)")
 
 
-tile_cores = [core("u_eA0", "elemA", EA["cells"], G, G, EA["um"]),
-              core("u_eA1", "elemA", EA["cells"], SLOT_E + G, G, EA["um"]),
-              core("u_eA2", "elemA", EA["cells"], G, SLOT_E + G, EA["um"]),
-              core("u_eA3", "elemA", EA["cells"], SLOT_E + G, SLOT_E + G, EA["um"]),
-              core("u_eB", "elemB", EB["cells"], G, 2 * SLOT_E + G, EB["um"])]
-T("hd_tile", "ot_s81hd_tile", (TW, TH), MD["tile"]["cells"],
+CVA, CVB = "u_core.u_b.g_cv.u_eA", "u_core.u_b.g_cvb.u_eB"     # ot_s81hd_bundle CV = 1 instance paths
+tile_cores = [core(CVA + "0", "elemA", EA["cells"], G, G, EA["um"]),
+              core(CVA + "1", "elemA", EA["cells"], SLOT_E + G, G, EA["um"]),
+              core(CVA + "2", "elemA", EA["cells"], G, SLOT_E + G, EA["um"]),
+              core(CVA + "3", "elemA", EA["cells"], SLOT_E + G, SLOT_E + G, EA["um"]),
+              core(CVB, "elemB", EB["cells"], G, 2 * SLOT_E + G, EB["um"])]
+HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv",
+          "rtl/hdc/ot_hdc_delay.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v", "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
+          "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
+          "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
+T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; ROM code "
-                                       "and the row0 / ten straps are per-instance mask programme (no die ports)")],
+                 cells=TILE_GLUE, params={"CV": "1"},
+                 bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
+                 note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
+                      "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
+            dict(inst="u_strap", module="ot_s81hd_strap", status="new", cells=18, params={"ROW0": "0", "TEN": "1"},
+                 bind={"row0": "net:row0", "ten": "net:ten"},
+                 note="per-instance position straps row0 / ten = 18 mask-programmed TIEHI / TIELO cells (same footprint, "
+                      "the ROM-code mask-variant class); the kit is built at ROW0 0 / TEN 1, instance k differs only by "
+                      "the tie masters (no die ports)")],
+  nets=[dict(name="row0", width=17), dict(name="ten", width=1)],
+  sources=HD_SRC,
   note=f"LM-head tile = 1 bundle (128 vocab rows, 10 ROM4096) on bus B 565; {MD['tile']['cells_basis']}",
   hard_cores=tile_cores)
-BUS("hd_tile", "i", "in", 565)
-BUS("hd_tile", "o", "out", 565)
+BUS("hd_tile", "i", "in", 565, "u_core.i")
+BUS("hd_tile", "o", "out", 565, "u_core.o")
 
 T("hd_turn_a", "ot_s81hd_turn_a", (TURNW, TH), 2_000, note="row-pair chain U-turn, out-row half (ft stations only)")
 SLOT("hd_turn_a", "t", 565, 0)
