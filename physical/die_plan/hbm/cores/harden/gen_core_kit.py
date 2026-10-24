@@ -247,7 +247,7 @@ def main():
     assert "ot_unreg_pins" in ff and "puts $ff_unreg" in ff, "face_flops.tcl miss anchor changed"
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(TOOL / "face_flops_release.tcl", kd / "face_flops_release.tcl")
-    shutil.copyfile(TOOL / "pin_audit.py", kd / "pin_audit.py")
+    shutil.copyfile(Path(__file__).with_name("pin_audit_core.py"), kd / "pin_audit.py")
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     m = CORE_MARGIN_UM
     params = rec.get("params", {})
@@ -281,7 +281,11 @@ def main():
            "export CORNER = TC",
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *([f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
-              "export MACRO_PLACE_HALO = 4.32 4.32"] if lefs else [])]
+              "export MACRO_PLACE_HALO = 4.32 4.32",
+              # TritonCTS over-balances the SRAM clk tree with delay buffers (h9b: 9 delaybufs, SRAM clk 191 ps vs
+              # flops 134 ps BC -> -64 ps hold on every SRAM wd_in); half the delay-buffer target puts them level
+              "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
+              f"{rec.get('cts_delay_buffer_derate', 0.5)}"] if lefs else [])]
     if rec.get("synth_memory_max_bits"):
         # a logic ROM/LUT the closed view also built in std cells (e.g. the sfu lane function table, 15.6 kb)
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
