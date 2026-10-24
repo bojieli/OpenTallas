@@ -166,6 +166,46 @@ def render(lst, tag, png):
     plt.close(fig)
 
 
+def center_sequencers(lst):
+    """Put right-bank address sequencers inside their seven-ROM row.
+
+    Repacking the same seven 38.04-um ROM abstracts at 51.84-um steps
+    preserves >=13.8-um channels and creates a central sequencer slot.
+    The staggered h9 r0 left row has an existing central opening instead.
+    This is placement only; logical paths and pipeline cycles are unchanged.
+    """
+    changes = []
+    for seq in lst:
+        match = re.search(r'\.u_s(\d+)$', seq['inst'])
+        if not match:
+            continue
+        index = int(match[1])
+        roms = sorted((e for e in lst if re.search(rf'\.u_c{index}_[0-6]$', e['inst'])),
+                      key=lambda e: int(e['inst'].rsplit('_', 1)[1]))
+        if len(roms) != 7:
+            continue
+        before = {e['inst']: list(e['origin_um']) for e in [seq, *roms]}
+        if min(e['origin_um'][0] for e in roms) >= 600:
+            x = min(e['origin_um'][0] for e in roms)
+            y = roms[0]['origin_um'][1]
+            assert len({e['origin_um'][1] for e in roms}) == 1
+            for j, rom in enumerate(roms):
+                if j == 3:
+                    seq['origin_um'] = [round(x, 4), y]
+                    x += 34.56
+                rom['origin_um'] = [round(x, 4), y]
+                x += 51.84
+        elif seq['inst'] == 'u_r0.u_s0' and seq['origin_um'] == [552.96, 146.88]:
+            seq['origin_um'] = [345.6, 120.96]
+        else:
+            continue
+        errors = check(lst, 'center sequencers') + gap_check(lst, 'center sequencers')
+        if errors:
+            raise ValueError('; '.join(errors))
+        changes.append(dict(inst=seq['inst'], before=before[seq['inst']], after=seq['origin_um']))
+    return changes
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', required=True)
@@ -227,6 +267,7 @@ def main():
                 res['sources'][f'{m}_{b}'] += f', {n} row(s) lifted to the {MIN_GAP}-um macro gap'
     for m, bands in res['masters'].items():
         for b, lst in bands.items():
+            center_sequencers(lst)
             errs += check(lst, f'{m}_{b}')
             errs += gap_check(lst, f'{m}_{b}')
             if a.png_dir:

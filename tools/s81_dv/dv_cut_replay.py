@@ -920,6 +920,19 @@ def host_boot_words(a, die, prog, S, words, cut=None):
         # u_eng.f_ks carries the held payload between starts: a value change is a new word only with start [52] set
         S.setdefault('port_valid', []).append(dict(inst='u_eng', ports=['f_ks'], bit=KS_START_BIT))
     out += eng
+    # Host CSR 0x14 emits a real G-unit configuration beat seven producer
+    # edges after the host lane lands (one pin capture plus six internal edges). Include those bytes in strict boundary checks.
+    for i, h in enumerate(hs):
+        d = h >> 1
+        if not h & 1 or h >> 513 or (d & 255) != 0x14:
+            continue
+        value = 1 | ((d >> 8) & 1023) << 1 | ((d >> 32) & ((1 << 256)-1)) << 11
+        cycle = a.host_boot + 5 * i + 7 - a.t0
+        event = dict(cycle=cycle, inst='u_seqhost', port='cw_v', ports=['cw_v','cw_a','cw_d'],
+                     dir='out', kind='HOST_CW', tag=f'host_boot[{i}] CSR14', valid_bit=0,
+                     words=[[cycle, f'{value:x}', f'{(1 << 267)-1:x}']])
+        out += event_words(event, die)
+        S.setdefault('port_valid', []).append(dict(inst='u_seqhost', ports=['cw_v','cw_a','cw_d'], bit=0))
     lf_age = max(die.links[die.by_out[n]]['age'] for n, _ in die.port_bits('u_seqhost', 'f_lf') if n in die.by_out)
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
