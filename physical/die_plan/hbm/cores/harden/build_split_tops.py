@@ -43,6 +43,12 @@ def hcp_sys1(n, m):
     return {f'{m}__hcp_sys1': (g.find_paths(n, m, r'hcp_sys1'), [])}
 
 
+def coll_one(rx, lbl):
+    def f(n, m):
+        return {f'{m}__{lbl}': (g.find_paths(n, m, rx), [])}
+    return f
+
+
 def score_tail(n, m):
     out = {}
     for tp in g.find_paths(n, m, r'idx_tail_native'):
@@ -86,6 +92,16 @@ PIECES = {
         straps=[],
         src='rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv u_core (die params QDRLY 2, QCHX 11 from '
             'r18h5 views.json -> SYS_LAT = 100 + 46 = 146); constant command fields tied inside as in the master'),
+    'coll_q2_ring_ag': dict(
+        master='ot_hfd_coll_q2_hard_v8g', top='ot_hfd_coll_q2_ring_ag_core', pieces=coll_one(r'coll_ring_ag$', 'ring_ag'),
+        rtl={'u_ring': ('ot_hgi_coll_ring_ag', '#(.SPLIT_CLOCKS(1),.AG(1))')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_ring (clk = clk_ctl = clk_ring[0])'),
+    'coll_q2_reduce': dict(
+        master='ot_hfd_coll_q2_hard_v8g', top='ot_hfd_coll_q2_reduce_core', pieces=coll_one(r'coll_reduce_static$', 'reduce'),
+        rtl={'u_reduce': ('ot_hgi_coll_reduce_static_pr', '')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr '
+            '(HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9\'h1ff '
+            'inside as the master'),
 }
 
 

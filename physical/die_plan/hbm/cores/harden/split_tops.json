@@ -4212,5 +4212,670 @@
     "#(.W(256),.TL(4),.PMAX(8),.OMAX(32),.AW(10),.CW(16),.ML(2),.DF(32),.STATIC_CALENDAR(1),.SYS(1),.SYS_LAT(146),.TPRE(6))"
    ]
   }
+ },
+ "coll_q2_ring_ag": {
+  "master": "ot_hfd_coll_q2_hard_v8g",
+  "top": "ot_hfd_coll_q2_ring_ag_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv",
+  "ports": [
+   [
+    "ring_clk",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_clk_state",
+    "input",
+    8,
+    0
+   ],
+   [
+    "ring_clk_add",
+    "input",
+    8,
+    0
+   ],
+   [
+    "ring_qid",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_cw_i",
+    "input",
+    280,
+    0
+   ],
+   [
+    "ring_ccw_i",
+    "input",
+    280,
+    0
+   ],
+   [
+    "ring_lp_we",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_lp_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_lp_data",
+    "input",
+    256,
+    0
+   ],
+   [
+    "ring_state_read_add",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_state_read_tx",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_state_read_rr",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_state_add_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_state_tx_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_state_rr_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_state_add_src",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_state_add_rhs_acc",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_state_tx_acc",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_add_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_add_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_add_src",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_add_rhs_acc",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_tx_inject",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_tx_forward",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_tx_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_tx_dst",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_tx_result",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_tx_acc",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_tx_gather",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_tx_ttl",
+    "input",
+    4,
+    0
+   ],
+   [
+    "ring_rx_slot",
+    "input",
+    2,
+    0
+   ],
+   [
+    "ring_rx_kind",
+    "input",
+    4,
+    0
+   ],
+   [
+    "ring_rx_src",
+    "input",
+    4,
+    0
+   ],
+   [
+    "ring_rx_tag",
+    "input",
+    6,
+    0
+   ],
+   [
+    "ring_rr_local",
+    "input",
+    1,
+    0
+   ],
+   [
+    "ring_rr_local_tag",
+    "input",
+    3,
+    0
+   ],
+   [
+    "ring_cw_o",
+    "output",
+    280,
+    0
+   ],
+   [
+    "ring_ccw_o",
+    "output",
+    280,
+    0
+   ],
+   [
+    "ring_rr_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "ring_rr_tag",
+    "output",
+    3,
+    0
+   ],
+   [
+    "ring_rr_d",
+    "output",
+    256,
+    0
+   ],
+   [
+    "ring_ag_v",
+    "output",
+    2,
+    0
+   ],
+   [
+    "ring_ag_src",
+    "output",
+    4,
+    0
+   ],
+   [
+    "ring_ag_tag",
+    "output",
+    6,
+    0
+   ],
+   [
+    "ring_ag_d",
+    "output",
+    512,
+    0
+   ],
+   [
+    "ring_fault",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+    "cut_bits": {
+     "inp": 899,
+     "out": 1345
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_ring": {
+      "ring_clk": 1,
+      "ring_clk_state": 8,
+      "ring_clk_add": 8
+     },
+     "rst_n": {
+      "ring_rst_n": 1
+     },
+     "qid": {
+      "ring_qid": 2
+     },
+     "pr_cw_i": {
+      "ring_cw_i": 280
+     },
+     "pr_ccw_i": {
+      "ring_ccw_i": 280
+     },
+     "pr_cw_o": {
+      "ring_cw_o": 280
+     },
+     "pr_ccw_o": {
+      "ring_ccw_o": 280
+     },
+     "ra_lp_we": {
+      "ring_lp_we": 1
+     },
+     "ra_lp_tag": {
+      "ring_lp_tag": 3
+     },
+     "ra_lp_data": {
+      "ring_lp_data": 256
+     },
+     "ra_state_read_add": {
+      "ring_state_read_add": 1
+     },
+     "ra_state_read_tx": {
+      "ring_state_read_tx": 1
+     },
+     "ra_state_read_rr": {
+      "ring_state_read_rr": 1
+     },
+     "ra_state_add_tag": {
+      "ring_state_add_tag": 3
+     },
+     "ra_state_tx_tag": {
+      "ring_state_tx_tag": 3
+     },
+     "ra_state_rr_tag": {
+      "ring_state_rr_tag": 3
+     },
+     "ra_state_add_src": {
+      "ring_state_add_src": 2
+     },
+     "ra_state_add_rhs_acc": {
+      "ring_state_add_rhs_acc": 1
+     },
+     "ra_state_tx_acc": {
+      "ring_state_tx_acc": 1
+     },
+     "ra_add_v": {
+      "ring_add_v": 1
+     },
+     "ra_add_tag": {
+      "ring_add_tag": 3
+     },
+     "ra_add_src": {
+      "ring_add_src": 2
+     },
+     "ra_add_rhs_acc": {
+      "ring_add_rhs_acc": 1
+     },
+     "ra_tx_inject": {
+      "ring_tx_inject": 2
+     },
+     "ra_tx_forward": {
+      "ring_tx_forward": 2
+     },
+     "ra_tx_tag": {
+      "ring_tx_tag": 3
+     },
+     "ra_tx_dst": {
+      "ring_tx_dst": 2
+     },
+     "ra_tx_result": {
+      "ring_tx_result": 1
+     },
+     "ra_tx_acc": {
+      "ring_tx_acc": 1
+     },
+     "ra_tx_gather": {
+      "ring_tx_gather": 1
+     },
+     "ra_tx_ttl": {
+      "ring_tx_ttl": 4
+     },
+     "ra_rx_slot": {
+      "ring_rx_slot": 2
+     },
+     "ra_rx_kind": {
+      "ring_rx_kind": 4
+     },
+     "ra_rx_src": {
+      "ring_rx_src": 4
+     },
+     "ra_rx_tag": {
+      "ring_rx_tag": 6
+     },
+     "ra_rr_local": {
+      "ring_rr_local": 1
+     },
+     "ra_rr_local_tag": {
+      "ring_rr_local_tag": 3
+     },
+     "rr_v": {
+      "ring_rr_v": 1
+     },
+     "rr_tag": {
+      "ring_rr_tag": 3
+     },
+     "rr_d": {
+      "ring_rr_d": 256
+     },
+     "ag_v": {
+      "ring_ag_v": 2
+     },
+     "ag_src": {
+      "ring_ag_src": 4
+     },
+     "ag_tag": {
+      "ring_ag_tag": 6
+     },
+     "ag_d": {
+      "ring_ag_d": 512
+     },
+     "u_ring_fault": {
+      "ring_fault": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_ring (clk = clk_ctl = clk_ring[0])",
+  "rtl": {
+   "u_ring": [
+    "ot_hgi_coll_ring_ag",
+    "#(.SPLIT_CLOCKS(1),.AG(1))"
+   ]
+  }
+ },
+ "coll_q2_reduce": {
+  "master": "ot_hfd_coll_q2_hard_v8g",
+  "top": "ot_hfd_coll_q2_reduce_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv",
+  "ports": [
+   [
+    "reduce_clk_control",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_clk_state",
+    "input",
+    16,
+    0
+   ],
+   [
+    "reduce_clk_add",
+    "input",
+    16,
+    0
+   ],
+   [
+    "reduce_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_clear",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_in_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_in_flit",
+    "input",
+    545,
+    0
+   ],
+   [
+    "reduce_load_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_load_tag",
+    "input",
+    4,
+    0
+   ],
+   [
+    "reduce_add_read",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_read_tag",
+    "input",
+    4,
+    0
+   ],
+   [
+    "reduce_add_issue",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_pub_read",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_pub_tag_a",
+    "input",
+    4,
+    0
+   ],
+   [
+    "reduce_pub_tag_b",
+    "input",
+    4,
+    0
+   ],
+   [
+    "reduce_pub_bf16",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_pub_meta",
+    "input",
+    24,
+    0
+   ],
+   [
+    "reduce_pub_release",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_pub_issue",
+    "input",
+    1,
+    0
+   ],
+   [
+    "reduce_out_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "reduce_out_flit",
+    "output",
+    545,
+    0
+   ],
+   [
+    "reduce_fault",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hfd_coll_q2_hard_v8g__reduce": {
+    "cut_bits": {
+     "inp": 628,
+     "out": 547
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_reduce": {
+      "reduce_clk_control": 1,
+      "reduce_clk_state": 16,
+      "reduce_clk_add": 16
+     },
+     "rst_n": {
+      "reduce_rst_n": 1
+     },
+     "u_reduce_clear": {
+      "reduce_clear": 1
+     },
+     "u_reduce_in_v": {
+      "reduce_in_v": 1
+     },
+     "u_reduce_in_flit": {
+      "reduce_in_flit": 545
+     },
+     "u_reduce_load_v": {
+      "reduce_load_v": 1
+     },
+     "u_reduce_load_tag": {
+      "reduce_load_tag": 4
+     },
+     "u_reduce_add_read": {
+      "reduce_add_read": 1
+     },
+     "u_reduce_read_tag": {
+      "reduce_read_tag": 4
+     },
+     "u_reduce_add_issue": {
+      "reduce_add_issue": 1
+     },
+     "u_reduce_pub_read": {
+      "reduce_pub_read": 1
+     },
+     "u_reduce_pub_tag_a": {
+      "reduce_pub_tag_a": 4
+     },
+     "u_reduce_pub_tag_b": {
+      "reduce_pub_tag_b": 4
+     },
+     "u_reduce_pub_bf16": {
+      "reduce_pub_bf16": 1
+     },
+     "u_reduce_pub_meta": {
+      "reduce_pub_meta": 24
+     },
+     "u_reduce_pub_release": {
+      "reduce_pub_release": 1
+     },
+     "u_reduce_pub_issue": {
+      "reduce_pub_issue": 1
+     },
+     "u_reduce_out_v": {
+      "reduce_out_v": 1
+     },
+     "u_reduce_out_flit": {
+      "reduce_out_flit": 545
+     },
+     "u_reduce_fault": {
+      "reduce_fault": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr (HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9'h1ff inside as the master",
+  "rtl": {
+   "u_reduce": [
+    "ot_hgi_coll_reduce_static_pr",
+    ""
+   ]
+  }
  }
 }

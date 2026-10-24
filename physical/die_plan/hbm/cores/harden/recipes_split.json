@@ -1757,6 +1757,42 @@
   "source": "u_side.u_sp of ot_hbm_su_static_side_s (HBM-P5-RTLB twin): ot_hbm_su_static_side_softplus_s #(LM 3, LA 3, FREG 1)",
   "top": "ot_hbm_su_side_softplus_core"
  },
+ "ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv"
+  ],
+  "functional_type": "coll_q2_reduce",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hfd_coll_q2_reduce_core ports; cut pin -> canonical map in canonical_ports_split.json types.coll_q2_reduce.type_ids[\"ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28\"]",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr (HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9'h1ff inside as the master",
+  "top": "ot_hfd_coll_q2_reduce_core"
+ },
+ "ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv"
+  ],
+  "functional_type": "coll_q2_ring_ag",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hfd_coll_q2_ring_ag_core ports; cut pin -> canonical map in canonical_ports_split.json types.coll_q2_ring_ag.type_ids[\"ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28\"]",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_ring (clk = clk_ctl = clk_ring[0])",
+  "top": "ot_hfd_coll_q2_ring_ag_core"
+ },
  "ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6": {
   "defines": [],
   "files": [
