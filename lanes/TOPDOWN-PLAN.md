@@ -65,3 +65,13 @@ taps at 400 um (CP1 r8 RULING 21:26), common latency 250 ps, face-flop spread an
 - DIE-STA: abstract-model (ETM/ILM) die STA validated vs flat stitched STA on CP1; flat die STA capacity on 1 TB host. (SDC lint + boundary-register guard given to CP1-R10.)
 - PART-CAP: measure OpenROAD scaling at 400k / 800k / 1.6M / 3M cells on ASAP7 833 ps; find origin of the 400k cap; recommend partition size (fewer seams, fewer types).
 - TYPE-DEDUP: collapse near-duplicate partition types (S81 74 ot_s81sl_leaf__t*, QC 20 / KV 5 / HBM 18 in near-duplicate groups) into one netlist with strap pins.
+
+## Lanes added 2026-10-24 07:30-07:45 PDT (owner: fill the fleet; industry workflows, trial die runs, close open elements)
+| lane | scope |
+|---|---|
+| FLEET-DISK | ot-run never places work on root disks; root >85% guard; move remaining root users |
+| DIE-CI | tools/die_plan/die_ci.py: whole-die prototype per plan on every main change + nightly; SI/IR/OCV margins |
+| ELASTIC | owner-approved opt-in elastic-seam experiment on Qwen compute longest lanes |
+| ELEM-S81 / ELEM-QK / ELEM-HBM | close the still-open hard elements (OPEN_ELEMENTS.md) through the new kit gates |
+| SIGNOFF | uniform MCMM re-signoff of every block called closed; SIGNED / NOT SIGNED / NEEDS RE-RUN |
+| TRIAL-S81 / TRIAL-QK / TRIAL-HBM | trial die-level runs (abstracts + PDN + die clock + die GRT + die STA + IR) on S81 + head, Qwen compute + KV, HBM B2 |

@@ -99,6 +99,17 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] INFRA.OLDSCR Old-fleet scratch on intel1/intel2 /mnt/old-nvme0 (read-only): recover 10-23 outputs, then decide reformat · OWNER · OWNER · 3.5 TB each
 - [ ] S81.G0C.CORES Hard cores for the 92 G0C-failing S81 types · S81-CORES · RUNNING
 
+## INFRA · industry flow lanes (owner 10-24 07:40)
+- [ ] FLOW.DISK ot-run scratch-only placement + root guard · FLEET-DISK · RUNNING
+- [ ] FLOW.CI Whole-die prototype CI per plan (G0/G0C/xdie/G2/die STA + SI/IR margins) · DIE-CI · RUNNING
+- [ ] FLOW.SIGNOFF Uniform MCMM re-signoff of every closed block · SIGNOFF · RUNNING
+- [ ] FLOW.TRIAL.S81 Trial die run S81 layer + head · TRIAL-S81 · RUNNING
+- [ ] FLOW.TRIAL.QK Trial die run Qwen compute + KV · TRIAL-QK · RUNNING
+- [ ] FLOW.TRIAL.HBM Trial die run HBM B2 (verify cut 0.55) · TRIAL-HBM · RUNNING
+- [ ] ELEM.S81 Open S81 elements (lep, slices 13/21, col FIFO 5/10, seq_host, sh_lk spread, coll_lane, gunit) · ELEM-S81 · RUNNING
+- [ ] ELEM.QK Open Qwen/KV elements (c_b16_dv, native59 service, kvs_grp, pv_fin_s, d2d spread, host_root) · ELEM-QK · RUNNING
+- [ ] ELEM.HBM Open HBM engines for B2 (coll_gq_issue, sm_pv_merge, idx_selector, su_cxport, sfu_split3, svc_sm, hc_bankq0, pdie_serdes) · ELEM-HBM · RUNNING
+
 ## OWNER · open owner decisions (2026-10-24)
 - [ ] OWN.ELASTIC Elastic seams: owner APPROVED opt-in experiment 10-24 07:35 · ELASTIC · RUNNING · Qwen compute longest lanes; adopt only at >=1% priced + RTL-confirmed
 - [x] OWN.HEADCNT S81 head dies 12 → 4 (one group meets AR+MTP at <=35% busy; saves 8 dies + 8 host links) · OWNER · DONE · approved 10-24 07:30
