@@ -103,6 +103,33 @@ def lanes_of_concat(inst, name, port):
     return out
 
 
+def downstream_profile(die_v):
+    """Expose every distinct command/data/calendar leg below the programme sequencer.
+
+    Concatenations are traced element by element: one shortest component would hide
+    the R8 skew that corrupts commands even when the programme start is aligned.
+    """
+    names = set()
+    for line in Path(die_v).open():
+        m = re.match(r"\s*\w+\s*(?:#\(.*?\))?\s+(\w+)\s*\(\s*$", line)
+        if m and re.match(r"(?:su_|vmb_|calendar_|pgp_|suc|pg|vmd|vmstat|fr_)", m[1]):
+            names.add(m[1])
+    inst = CT.parse_instances(die_v, names)
+    out = {}
+    interesting = re.compile(r"control|command|vm[wr]_cmd|tree_cmd|lg_(read|write|rr|w_done)|rslot|wslot|rq[0-4]|wq[01]|launch_v|bank_enable|bank_client|client_seq|response|in$")
+    for name in sorted(names & inst.keys()):
+        ports = {}
+        for port in inst[name][1]:
+            if not interesting.search(port):
+                continue
+            legs = lanes_of_concat(inst, name, port)
+            unique = {(x['latency_edges'], x['root']): x for x in legs}
+            ports[port] = list(unique.values())
+        if ports:
+            out[name] = ports
+    return out
+
+
 def profile(die_v, leaf_lat=2):
     names = {f"pgp_{q}" for q in QS} | {f"hc_{q}" for q in QS} | {f"hleaf_{q}" for q in QS} | {"hc_eng"}
     inst = CT.parse_instances(die_v, names)
@@ -125,6 +152,7 @@ def profile(die_v, leaf_lat=2):
     xru = lanes_of_concat(inst, "hc_eng", "qps_v") if "hc_eng" in inst and "qps_v" in inst["hc_eng"][1] else []
     launch = {t: v["launch_v"]["latency_edges"] for t, v in hc.items() if "launch_v" in v}
     return dict(schema=SCHEMA, die_v=str(die_v), leaf_latency_edges=leaf_lat,
+                downstream=downstream_profile(die_v),
                 su_cfg={q: {k: v[k] for k in ("edges", "skew", "we_minus_row", "start_edges")} for q, v in su.items()},
                 hc_launch_edges=launch, hc_launch_skew=(max(launch.values()) - min(launch.values())) if launch else None,
                 hc_cfg_edges={t: v["cfg_v"]["latency_edges"] for t, v in hc.items() if "cfg_v" in v},
