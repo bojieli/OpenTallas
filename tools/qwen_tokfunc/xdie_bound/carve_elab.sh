@@ -8,7 +8,7 @@ set -u
 O=$1; mkdir -p "$O"
 X=tools/qwen_tokfunc/xdie_bound
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-REV=$(git rev-parse HEAD)
+REV=${SRC_REV:-$(git rev-parse HEAD)}   # RTL source revision for the binder resolver (git archive runs: set SRC_REV)
 QB=physical/die_plan/qwen_compute/bind/bound_r8; KB=physical/die_plan/qwen_kvsys/bind/bound_pv
 python3 $X/bound_carve.py --top $QB/rtl/qwen_compute_bound_top.sv --seeds glue,ucie_kv,native59 --name qc_d2d_carve --out "$O" || exit 2
 python3 $X/bound_carve.py --top $KB/rtl/qwen_kvsys_bound_top.sv --seeds sys_c --name kv_d2d_carve --out "$O" || exit 2
