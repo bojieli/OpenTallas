@@ -469,6 +469,33 @@ NONFRAME_HC = {
                       "u_lf.u_rxsf": (959.04, 440.64),
                       "u_lf.u_rxsb": (967.68, 267.84),
                      },
+                     {  # R3 bus-reach family bin3 at the 405-um FT reach (opt4 r3)
+                      "u_lf.u_vp.g_ln[0].u_l": (1226.88, 103.68),
+                      "u_lf.u_vp.g_ln[1].u_l": (604.8, 319.68),
+                      "u_lf.u_vp.g_ln[2].u_l": (112.32, 466.56),
+                      "u_lf.u_vp.g_ln[3].u_l": (604.8, 112.32),
+                      "u_lf.u_vp.g_ln[4].u_l": (302.4, 362.88),
+                      "u_lf.u_vp.g_ln[5].u_l": (1019.52, 354.24),
+                      "u_lf.u_vp.g_ln[6].u_l": (432.0, 1054.08),
+                      "u_lf.u_vp.g_ln[7].u_l": (112.32, 768.96),
+                      "u_lf.u_vp.g_ln[8].u_l": (432.0, 259.2),
+                      "u_lf.u_vp.g_ln[9].u_l": (216.0, 103.68),
+                      "u_lf.u_vp.g_ln[10].u_l": (60.48, 959.04),
+                      "u_lf.u_vp.g_ln[11].u_l": (224.64, 1028.16),
+                      "u_lf.u_vp.g_ln[12].u_l": (1261.44, 311.04),
+                      "u_lf.u_vp.g_ln[13].u_l": (155.52, 319.68),
+                      "u_lf.u_vp.g_ln[14].u_l": (362.88, 86.4),
+                      "u_lf.u_vp.g_ln[15].u_l": (86.4, 146.88),
+                      "u_lf.u_vp.u_b0": (267.84, 578.88),
+                      "u_lf.u_vp.u_b1": (311.04, 527.04),
+                      "u_lf.u_vn": (293.76, 630.72),
+                      "u_lf.u_vq": (535.68, 466.56),
+                      "u_lf.u_vs": (725.76, 604.8),
+                      "u_lf.u_vsw": (1071.36, 552.96),
+                      "u_lf.u_ve": (665.28, 794.88),
+                      "u_lf.u_rxsf": (743.04, 345.6),
+                      "u_lf.u_rxsb": (760.32, 155.52),
+                     },
                  ],
                  # the leaf bus face picks the variant: N bus = as placed, S bus = y mirror (every core MX'd with it)
                  mirrors=((False, False), (False, True)), mirror_by_bus=True),
@@ -731,7 +758,8 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
             o = mirrored(mx, my, base_)
             if not legal(o):
                 continue
-            key = (reach_excess(o), sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl))
+            key = (reach_excess(o), sum(ft_stations_macro(s_, o, w, h, **({"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98}
+                                                                  if k in CORES_405_KEYS else {})) - s_["stations"] for s_ in ftsl))
             if best is None or key < best[0]:
                 best = (key, o, (mx, my), ai)
             if key == (0, 0):
@@ -755,6 +783,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
 
 FT_MACRO_ADD = []
 NF_HC_TYPES = []
+CORES_405_KEYS = ("leaf", "svc", "eng")   # S81-CORES-hardened keys sized at the 405-um kit reach
 FT_HALO = 8.64
 
 
@@ -1913,6 +1942,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 s_.pop("layers")
         nf_ = nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl, buses)
         hc_ = frame_hard_cores(rep.contents, buses) + nf_   # S81-P9-HC
+        nf_ = nf_ if nonframe_hc_key(rep) in CORES_405_KEYS else []   # S81-CORES scope (other keys: S81's 750 model)
         if nf_:
             # S81-CORES: a type hardened here is skipped by macrofree_ft_reach (it has hard_cores); its slots are sized at
             # the implemented M4-M7 kit reach around the cores here, and by the actual pin bits at the end (corefull)
