@@ -182,7 +182,7 @@ def main():
     if not rec:
         raise SystemExit(f"no recipe for {a.type} / {c['module']}")
     pins = json.load(open(plandir / c["pins_file"]))
-    kd = Path(a.out) / (a.type + (f"@{pstem}" if a.pins_file else ""))
+    kd = Path(a.out) / (a.type + (f"-{pstem}" if a.pins_file else ""))   # docker names allow [A-Za-z0-9_.-] only
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
@@ -193,7 +193,8 @@ def main():
         if dst.exists() and dst.read_bytes() != src.read_bytes():
             raise SystemExit(f"rtl name clash {dst.name}")
         shutil.copyfile(src, dst)
-        srcs.append(f"/work/rtl/{dst.name}")
+        if not f.endswith((".svh", ".vh")):     # headers: copied, read through VERILOG_INCLUDE_DIRS only
+            srcs.append(f"/work/rtl/{dst.name}")
     lefs, libs = [], []
     for m in rec.get("macros", []):
         md = repo / "physical" / "asap7_memory_macros_v2" / m
@@ -237,6 +238,7 @@ def main():
            f"export DESIGN_NAME = {rec.get('top', c['module'])}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
+           "export VERILOG_INCLUDE_DIRS = /work/rtl",
            "export VERILOG_DEFINES = " + " ".join(["-DSYNTHESIS"] + [f"-D{d}" for d in rec.get("defines", [])]),
            *([f"export VERILOG_TOP_PARAMS = " + " ".join(f"{k} {v}" for k, v in params.items())] if params else []),
            "export SDC_FILE = /work/constraint.sdc",
