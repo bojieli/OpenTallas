@@ -31,7 +31,9 @@ fleet), ~/OpenTallas/tools/die_plan/README.md (G0-G5 flow, rules R2-R8, clock ru
   `git -C ~/wt/<lane> pull <host>:wt/<lane> HEAD`, or rsync'd back into your localhost worktree.
 - Merging finished work to main (AGENTS.md "merge finished work at once"): take the lock and merge in the central
   checkout:
-  `flock ~/coord/merge.lock bash -c 'cd ~/OpenTallas && git fetch origin && git merge --ff-only origin/main && git merge --no-ff -X ours claude/<lane>-1024 -m "Merge claude/<lane>-1024 @<sha> (<one line: what passed>; 0 deletions)" && git push origin main'`
+  `flock ~/coord/merge.lock bash -c 'cd ~/OpenTallas && git checkout -q main && git fetch origin && git merge --ff-only origin/main && git merge --no-ff claude/<lane>-1024 -m "Merge claude/<lane>-1024 @<sha> (<one line: what passed>; 0 deletions)" && git push origin main && test $(git rev-parse HEAD) = $(git rev-parse origin/main)'`
+  NEVER use -X ours/-X theirs (it silently dropped DIE-CI README content 10-24). On a conflict: `git merge --abort`,
+  merge origin/main into YOUR branch in your worktree, resolve keeping both sides, re-run your gate, then merge again.
   Before merging: the change's own gate/tests pass, no file deletions of others' work, failed verdicts are never
   overwritten. If a merge would touch files another lane owns, do not merge; report it instead.
 - Commit messages: end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
@@ -72,3 +74,20 @@ All hosts run on Pacific time (America/Los_Angeles) since 06:54 PDT.
   /srv/opentallas-scratch2/claude/wt/<lane>). ~/wt/*, ~/OpenTallas, ~/scratch there are now symlinks into scratch2.
 - localhost / epyc3 have a single RAID1 md0 (no separate disk); use /srv/opentallas-scratch there.
 - If you find your data on a root fs of intel1/intel2/epyc2, move it (when no process uses it) and leave a symlink.
+
+## Review before you route (owner order 2026-10-24 08:05 PDT): look at the design, don't just submit it
+Do not send a die plan, partition kit or hard core to P&R / STA just because the scripted gates passed. First LOOK at it
+and review it the way an industry floorplan/physical-design review would:
+1. Render it: die/plan level with tools/die_plan/render.py (partitions, port windows, lanes by width, stations, clock
+   taps, channels, G0 errors); tile level from your own placement/route (ORFS final images, or a placement + density +
+   congestion + clock-tree plot from the ODB). Look at the picture yourself (Read the PNG) and write what you see.
+2. Ask the review questions (industry practice): Is the floorplan data-flow-driven (big buses short, producers next to
+   consumers)? Pins on abutting faces aligned and ordered, no crossing? Any long wires without stations (reach vs 833 ps)?
+   Feedthrough/channel capacity and pin density per edge OK? Macro (ROM/SRAM) placement: edges, halos, orientation,
+   no slivers/notches? Aspect ratios and utilization sane? Clock source/taps placed for balanced latency? PDN straps
+   continuous across seams? Congestion/density hotspots? Is a repeated tile really identical (mirroring, pin order)?
+3. If anything looks wrong, REVISE the plan/RTL/floorplan first. A route or STA run is for confirming a design you
+   expect to close, not for finding out what the design is.
+4. Record the review (picture path + findings + verdict PASS / PASS-COND / FAIL) in results/geom_review/ (existing
+   GEOM-REVIEW record format) and in your lane file. Lane GEOM-REVIEW does independent second reviews; a kit without a
+   recorded review is not to be submitted.
