@@ -353,6 +353,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                     if f"/work/macros/{f.name}" not in lst:
                         shutil.copyfile(f, kd / "macros" / f.name)
                         lst.append(f"/work/macros/{f.name}")
+                    if lst is mlib:
+                        # Keep per-corner timing views beside the declared TT view.
+                        # signoff.py selects TT/FF by filename; ORFS still uses only
+                        # the declared typical library during implementation.
+                        match = re.match(r"^(.*)_(tt|typ|ff|ss)(\.lib(?:\.gz)?)$", f.name)
+                        if match:
+                            for corner in ("tt", "typ", "ff"):
+                                sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
+                                if sibling.is_file() and sibling != f:
+                                    shutil.copyfile(sibling, kd / "macros" / sibling.name)
             mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:

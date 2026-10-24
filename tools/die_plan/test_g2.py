@@ -271,14 +271,16 @@ def test_kit_places_content_macros(tmp_path):
     import pytest
     raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
-    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_tt.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
-    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
                                              origin_um=[17.28, 25.92], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
-                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m.lib")]
+                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
     kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    assert (kd / "macros/m_ff.lib").read_text() == "library(m_ff) {}\n"
     assert (kd / "face_keep.tcl").is_file()
     assert (kd / "face_keep_release.tcl").is_file()
     mp = (kd / "macro_place.tcl").read_text()
@@ -290,7 +292,7 @@ def test_kit_places_content_macros(tmp_path):
     with pytest.raises(ValueError, match="LEF but no timing liberty"):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
     assert not (tmp_path / "missing_lib").exists()
-    t["hard_cores"][0]["lib"] = "m.lib"
+    t["hard_cores"][0]["lib"] = "m_tt.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
