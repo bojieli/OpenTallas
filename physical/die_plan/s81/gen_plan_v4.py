@@ -36,7 +36,25 @@ MINW = 17.28                       # minimum port window (um): narrow ID-ring/ct
 PX, PY = 167 * G, 142 * G          # 1442.88 x 1226.88 cell (= frame band)
 X0 = 12 * G                        # 103.68 seal ring
 NC, NR = 22, 20
-DIE_W = NC * PX + 2 * X0
+# v4.9 (S81-P9-PLAN49, COORD 23:38 RULING CORE-S81): the centre columns 7..14 (slice leaves / C hubs, svc, top units,
+# HBM PHY row, eng) are WIDE_DX wider than the frame band: GEOM-REVIEW8 failed the leaf in 1442.88 (vp's closed pins put
+# vs-bound groups on its W face and vn-bound groups on its E face: [ve/vs col | vp | vn+vq] needs >= 1533.2 um).  +12
+# lattice steps (103.68) -> 1546.56; die width 32,780.16 um (<= the 33-mm reticle field with scribe margin).  Frame
+# columns (0..5, 16..21) keep the 1442.88 band; the halves stay mirror-symmetric (col c <-> NC-1-c).
+WIDE_COLS = (7, 14)
+WIDE_DX = 0.0 if os.environ.get("S81_V49_NARROW") else 12 * G
+
+
+def CX(c):
+    """die x of the W edge of lattice column c (0..NC)."""
+    return X0 + c * PX + WIDE_DX * max(0, min(c, WIDE_COLS[1] + 1) - WIDE_COLS[0])
+
+
+def CW(c):
+    return CX(c + 1) - CX(c)
+
+
+DIE_W = CX(NC) + X0
 DIE_H = NR * PY + 2 * X0
 REACH = 1500.0
 FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
@@ -273,27 +291,198 @@ NONFRAME_HC = {
                  # the N bus; E column top row vn + vq (both on the N bus, vq takes vn's y), ve under vn with vsw on
                  # its E side, vs (the ve / vsw / rx / vp hub) centred under ve so ve's W (reduce) and E (add) faces
                  # are equidistant from it, rxsf -> rxsb E of vs
-                 place={"u_lf.u_vp": (34.56, 319.68), "u_lf.u_vn": (786.24, 829.44), "u_lf.u_vq": (1157.76, 1054.08),
-                        "u_lf.u_ve": (786.24, 466.56), "u_lf.u_vsw": (1149.12, 587.52), "u_lf.u_vs": (872.64, 276.48),
-                        "u_lf.u_rxsf": (1062.72, 276.48), "u_lf.u_rxsb": (1218.24, 276.48)},
-                 # vp / vn / vq carry the N-face leaf bus: only the x mirror keeps them under it
-                 mirrors=((False, False), (True, False))),
-    "svc": dict(cores=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
-                            lef=_rt("dsdv_svc_sx_hrow", "dsdv_svc_sx_hrow"), plan_core="sx_hrow_ab")
-                       for r in range(4) for b in range(2)],
-                gaps=[dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>", module="ot_hdc_v41x_attn_tile_s:hdp_s",
-                           cells=64 * 183981, plan_core="attn_t*_g*_h* (x64)",
-                           why="no physical view of the attention head datapath hdp_s (183,981 cells x 64)"),
-                      dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>", module="ot_hdc_v41x_attn_tile_s:hgrp_s",
-                           cells=16 * 30272, plan_core="attn_t*_g* (x16)",
-                           why="no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"),
-                      dict(inst="u_rsv (SE/SM/P.V)", module="se_sm_pv", cells=18044 + 2 * 1247, plan_core="se_sm_pv",
-                           why="no view (flattened, small)")]),
-    "eng": dict(cores=[], gaps=[dict(inst="u_eng", module="dsdv_eng_rr", cells=418942, plan_core="eng_rr_a/eng_rr_b",
-                                     why="no closed view of dsdv_eng_rr (no LEF in ref_tile / s81_die_views / "
-                                         "closed_archive); 418,942 cells as one module is itself over the cap")]),
+                 # v4.9 (S81-P9-PLAN49; GEOM-REVIEW8 FAIL of the 1442.88 'place' above): leaf 1546.56 wide (WIDE_DX), order
+                 # [ve / vs / vsw / rx col | vp | vn (+ vq under vp's E half)] from the CORE-S81 study (leaf_G_1581) and
+                 # an annealed search on the closed cores' pin-group centroids (cores/ve/leaf_pairs.py metric): vp<->vn
+                 # 79 um, every bundle <= 450 um except vs->vq u/um 895, vn->vq y 892, vp->vq m 762, ve->vs o 461, which
+                 # get FIRM plan stations (LEAF_BUNDLES -> internal_stations, <= 450 um per hop).  No re-pin of vp / vq.
+                 place={"u_lf.u_vp": (397.44, 293.76), "u_lf.u_vn": (1149.12, 492.48), "u_lf.u_vq": (959.04, 146.88),
+                        "u_lf.u_ve": (34.56, 717.12), "u_lf.u_vsw": (129.6, 285.12), "u_lf.u_vs": (207.36, 527.04),
+                        "u_lf.u_rxsf": (138.24, 120.96), "u_lf.u_rxsb": (293.76, 77.76)},
+                 bundles=[("u_lf.u_vp", "hw_ hq_ hr_ n_ wl_", "u_lf.u_vn", "hw_ hq_ hr_ n_ wl_"),
+                          ("u_lf.u_vp", "s_", "u_lf.u_vs", "s_"), ("u_lf.u_vp", "x_q x_r", "u_lf.u_vs", "x_q x_r"),
+                          ("u_lf.u_vp", "x_w", "u_lf.u_vs", "x_w"), ("u_lf.u_vp", "m_", "u_lf.u_vq", "m_"),
+                          ("u_lf.u_vn", "y", "u_lf.u_vq", "y"), ("u_lf.u_vs", "u um_", "u_lf.u_vq", "u um_"),
+                          ("u_lf.u_ve", "r_ p_", "u_lf.u_vs", "ve_r ve_p"), ("u_lf.u_ve", "a_", "u_lf.u_vs", "ve_a"),
+                          ("u_lf.u_ve", "o_", "u_lf.u_vs", "ve_o"),
+                          ("u_lf.u_vs", "sw_v sw_d sw_w sw_lim", "u_lf.u_vsw", "i_"),
+                          ("u_lf.u_vsw", "o_", "u_lf.u_vs", "sw_vi sw_ri sw_fi"),
+                          ("u_lf.u_vs", "ra_v ra_x", "u_lf.u_rxsf", "i_"), ("u_lf.u_rxsf", "o_", "u_lf.u_rxsb", "i_"),
+                          ("u_lf.u_rxsb", "o_", "u_lf.u_vs", "ra_vi ra_ri ra_fi")],
+                 # v4.9: R0 cores only, so a mirrored packing would turn vp's E-face (vn) and W-face (vs) groups away
+                 # from their partners: the leaf placement is not mirrored
+                 mirrors=((False, False),)),
+    # v4.9 (S81-P9-PLAN49; COORD 23:38 RULING CORE-S81, claude/core-s81-svc-1023 @748770e1b): 64 x ONE planned head
+    # core ot_s81c_attn_hcore (hgrp_s HG1 / PCOLP1, every pin registered; build needs +define+OT_ATTN_HCORE) replace
+    # the hdp_s / hgrp_s gaps; 8 x 8 grid (tiles t0..t3 = row pairs bottom-up) around a centre engine band.  The svc
+    # slot is the die's (2 x WIDE centre cells, 1546.56 x 2453.76): the 8 closed sx_hrow cores (216 x 216, pin-limited,
+    # 3,853 pins) do NOT fit next to 64 heads at 259.2 (band 190 um): see SVC_HROW_GAP (open item, die at reticle width).
+    "svc": dict(cores=[dict(inst="u_rsv.u_att.u_eng.g_t[%d].g_ts.u_t.u_hc.g_h[%d].u_c" % (t, hd),
+                            module="ot_s81c_attn_hcore", cells=202789, plan_core="attn_t%d_h%d" % (t, hd),
+                            lef="physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef")
+                       for t in range(4) for hd in range(16)],
+                gaps=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
+                           plan_core="sx_hrow_ab",
+                           why="closed view (216 x 216, 3,853 pins) has no room in the reticle-limited svc slot "
+                               "1546.56 x 2453.76 next to 64 heads at 157.68 x 259.2 (engine band 190 um < 216 + 2 gaps); "
+                               "flattened into the svc engine band until COORD rules (see hard_core_gaps.json)")
+                      for r in range(4) for b in range(2)] +
+                     [dict(inst="u_rsv (SE/SM/P.V)", module="se_sm_pv", cells=18044 + 2 * 1247, plan_core="se_sm_pv",
+                           why="no view (flattened, small)")],
+                place=lambda w, h: svc_place(w, h), mirrors=((False, False),), stations=lambda w, h, out: svc_stations(
+                    w, h, out)),
+    # v4.9 (claude/core-s81-eng-1023 @e684da414): dsdv_eng_rr as 3 cores on the monolith's own half-cycle hops
+    # (0 cycles): E 96k (15 macros) + hash H0 / H1 176k; origins from cores/eng/cores_eng.json (GEOM PASS x3)
+    "eng": dict(cores=[dict(inst="u_eng.u_e", module="dsdv_eng_rr_e", cells=96256, plan_core="eng_rr_e",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef"),
+                       dict(inst="u_eng.u_h0", module="dsdv_eng_rr_h0", cells=175659, plan_core="eng_rr_h0",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef"),
+                       dict(inst="u_eng.u_h1", module="dsdv_eng_rr_h1", cells=176214, plan_core="eng_rr_h1",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h1.lef")],
+                gaps=[],
+                place={"u_eng.u_e": (1028.16, 717.12), "u_eng.u_h0": (1028.16, 432.0), "u_eng.u_h1": (1209.6, 432.0)},
+                mirrors=((False, False),)),
 }
+SVC_HC = dict(w=157.68, h=259.2, px=172.8, py=276.48)
+SVC_INFO = {}
+
+
+def svc_place(w, h):
+    """v4.9: 64 heads, 8 columns centred on the type, rows 0-3 (t0, t1) from the S edge, rows 4-7 (t2, t3) from the N
+    edge, the engine band between; origins on the 8.64 lattice."""
+    hw, hh, px, py = SVC_HC["w"], SVC_HC["h"], SVC_HC["px"], SVC_HC["py"]
+    dx, dy = CORE_TRACK_OFFSET
+    x0 = math.floor(round((w - (7 * px + hw)) / 2 / G, 6)) * G
+    y0 = math.ceil(round(HC_EDGE_UM / G, 6)) * G
+    top0 = math.floor(round((h - HC_EDGE_UM - dy - hh - 3 * py) / G, 6)) * G
+    rows = [y0 + r * py for r in range(4)] + [top0 + r * py for r in range(4)]
+    out = {}
+    for r, yy in enumerate(rows):
+        t = r // 2
+        for c in range(8):
+            out["u_rsv.u_att.u_eng.g_t[%d].g_ts.u_t.u_hc.g_h[%d].u_c" % (t, (r % 2) * 8 + c)] = (
+                round(x0 + c * px, 4), round(yy, 4))
+    band = (rows[3] + dy + hh, top0 + dy)
+    xg = x0 + dx + 3 * px + hw + (px - hw) / 2          # centre column gap
+    SVC_INFO.update(band_um=[round(band[0], 3), round(band[1], 3)], engine_um=[round(xg, 3), round(sum(band) / 2, 3)],
+                    rows=rows, x0=x0)
+    return out
+
+
+def _even_stations(pts, smax):
+    """stations evenly along the polyline pts (n hops of <= smax)."""
+    seg = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
+    L = sum(seg)
+    n = max(1, math.ceil(L / smax - 1e-9))
+    regs = []
+    for k in range(1, n):
+        d = L * k / n
+        for (a, b), sl in zip(zip(pts, pts[1:]), seg):
+            if d <= sl + 1e-9 and sl > 0:
+                t = d / sl
+                regs.append([round(a[0] + t * (b[0] - a[0]), 3), round(a[1] + t * (b[1] - a[1]), 3)])
+                break
+            d -= sl
+    return regs, L
+
+
+STATION_MAX_UM = 450.0      # owner 10-23: repeater / relay reach 405-450 um per registered hop
+SVC_TRUNK_STEP = 432.0      # svc engine -> head trunk: stations every 432 um of route from the engine, so heads that
+                            # share the column-gap trunk / row-gap branch share its station sites (a registered tree)
+
+
+def _step_stations(pts, step):
+    """stations at route distances step, 2 step, ... (< L) along the polyline pts."""
+    seg = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
+    L = sum(seg)
+    regs, d = [], step
+    while d < L - 1e-6:
+        dd = d
+        for (a, b), sl in zip(zip(pts, pts[1:]), seg):
+            if dd <= sl + 1e-9 and sl > 0:
+                t = dd / sl
+                regs.append([round(a[0] + t * (b[0] - a[0]), 3), round(a[1] + t * (b[1] - a[1]), 3)])
+                break
+            dd -= sl
+        d += step
+    return regs, L
+
+
+def svc_stations(w, h, out):
+    """engine -> every head (ld trunk on the head W face, ib operands on its N face; one shared registered trunk): up the
+    centre column gap, along the row gap next to the head row, into the head; FIRM stations <= STATION_MAX_UM apart."""
+    ex, ey = SVC_INFO["engine_um"]
+    dx, dy = CORE_TRACK_OFFSET
+    res = []
+    for c in out:
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        tx, ty = ox + dx, oy + dy + ch / 2                       # W-face centre (ld) of the head
+        gy = oy + dy + ch + (SVC_HC["py"] - ch) / 2 if oy + dy < ey else oy + dy - (SVC_HC["py"] - ch) / 2
+        pts = [(ex, ey), (ex, gy), (tx, gy), (tx, ty)]
+        regs, L = _step_stations(pts, SVC_TRUNK_STEP)
+        if not regs:
+            continue
+        res.append(dict(conn="engine|%s" % c["inst"], from_um=[round(ex, 3), round(ey, 3)],
+                        to_um=[round(tx, 3), round(ty, 3)], regs_um=regs, bits=590 + 580,
+                        note="svc engine -> head ld (W) / ib (N) trunk, %.0f um routed (column gap, row gap); trunk "
+                             "stations shared where coincident" % L))
+    return res
+
+
+_PINC = {}
+
+
+def _pin_centroid(module, groups):
+    k = (module, groups)
+    if k not in _PINC:
+        ps = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "core_pins",
+                                         module + ".json")))["pins"]
+        sel = [p for p in ps if any(re.sub(r"\[.*", "", p["name"]).startswith(q) for q in groups.split())]
+        _PINC[k] = (len(sel), sum(p["x"] for p in sel) / len(sel), sum(p["y"] for p in sel) / len(sel))
+    return _PINC[k]
+
+
+LEAF_HOPS = {}
+
+
+def core_bundle_stations(spec, out, tn, w, h):
+    """v4.9: every core <-> core bundle of spec['bundles'] (pin-group centroid -> centroid, Manhattan, the
+    cores/ve/leaf_pairs.py metric) longer than STATION_MAX_UM gets FIRM stations on an L path (both bend orders tried)
+    whose sites are outside every core box (+ 8.64 halo); every hop <= STATION_MAX_UM."""
+    dx, dy = CORE_TRACK_OFFSET
+    by = {c["inst"]: c for c in out}
+    cbox = [(c["origin_um"][0] + dx, c["origin_um"][1] + dy, c["origin_um"][0] + dx + c["outline_um"][0],
+             c["origin_um"][1] + dy + c["outline_um"][1]) for c in out]
+    boxes = [(b[0] - 2.0, b[1] - 2.0, b[2] + 2.0, b[3] + 2.0) for b in cbox]     # station sites off every core (+2 um)
+    res, hops = [], []
+    for a, ga, b, gb in spec.get("bundles", []):
+        n, ax, ay = _pin_centroid(by[a]["module"], ga)
+        _, bx, by_ = _pin_centroid(by[b]["module"], gb)
+        A = (by[a]["origin_um"][0] + dx + ax, by[a]["origin_um"][1] + dy + ay)
+        B = (by[b]["origin_um"][0] + dx + bx, by[b]["origin_um"][1] + dy + by_)
+        d = abs(A[0] - B[0]) + abs(A[1] - B[1])
+        rec = dict(a=a, b=b, groups=ga, bits=n, manhattan_um=round(d, 1), stations=0)
+        if d > STATION_MAX_UM:
+            hb = [(b_[0] - 6.64, b_[1] - 6.64, b_[2] + 6.64, b_[3] + 6.64) for b_ in boxes]   # 8.64 halo
+            sites = bfs_sites(A, B, hb, w, h, STATION_MAX_UM, step=8.64)
+            if sites is None:
+                raise SystemExit("S81-P9-PLAN49: type %s bundle %s -> %s (%s): no station sites off the cores" % (
+                    tn, a, b, ga))
+            best = ([[round(x, 3), round(y, 3)] for x, y in sites], None)
+            res.append(dict(conn="%s|%s" % (a, b), from_um=[round(A[0], 3), round(A[1], 3)],
+                            to_um=[round(B[0], 3), round(B[1], 3)], regs_um=best[0], bits=n,
+                            note="leaf core bundle %s (%d b, %.0f um centroid Manhattan): FIRM plan stations" % (
+                                ga, n, d)))
+            rec["stations"] = len(best[0])
+        pts = [A] + [tuple(r) for r in (res[-1]["regs_um"] if rec["stations"] else [])] + [B]
+        rec["worst_hop_um"] = round(max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])), 1)
+        hops.append(rec)
+    LEAF_HOPS[tn] = hops
+    return res
+
+
 HC_REPORT = {}
+HC_STATIONS = {}     # v4.9: type -> internal_stations[] (FIRM plan stations of core <-> core / engine -> head links)
 
 
 def nonframe_hc_key(p):
@@ -333,7 +522,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     height, rows bottom-up, origins on the 8.64 lattice, >= HC_GAP_UM between facing core boxes (after the track
     offset), HC_EDGE_UM keep-off from the outline, orient R0, track_offset CORE_TRACK_OFFSET, CORE-KS pins_file."""
     k = nonframe_hc_key(p)
-    if k is None:
+    if k is None or (os.environ.get("S81_V49_DIAG_SOFT") and k in os.environ["S81_V49_DIAG_SOFT"].split(",")):
         return []
     spec = NONFRAME_HC[k]
     cores, glue, basis = cells_core_plan(p)
@@ -365,8 +554,9 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     if spec.get("place"):
         # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
         # fit; the corner mirroring and the gap / edge legality below still apply
+        pl = spec["place"](w, h) if callable(spec["place"]) else spec["place"]
         for c, (cw, ch) in items:
-            ox_, oy_ = spec["place"][c["inst"]]
+            ox_, oy_ = pl[c["inst"]]
             out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[ox_, oy_], outline_um=[cw, ch],
                             orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
                             pins_file="inputs/core_pins/%s.json" % c["module"]))
@@ -421,6 +611,12 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
     rep["emitted"] = True
     rep["corner"] = "%s%s" % ("E" if best[2][0] else "W", "N" if best[2][1] else "S")
+    ist = core_bundle_stations(spec, best[1], tn, w, h)
+    if spec.get("stations"):
+        ist += spec["stations"](w, h, best[1])
+    if ist:
+        HC_STATIONS[tn] = ist
+        rep["internal_stations"] = len(ist)
     rep["ft_stations_added"] = best[0]
     return best[1]
 
@@ -467,6 +663,86 @@ def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
     return k
 
 
+def bfs_sites(A, B, boxes, w, h, smax, mi=0.0, mo=0.0, step=17.28):
+    """v4.9: fewest-hop station sites from A to B over a step-um grid of sites outside boxes; every hop <= smax (mi / mo
+    added to the first / last hop); ties -> shortest total.  Returns [(x, y)] (may be empty) or None."""
+    import numpy as np
+    xs, ys = np.meshgrid(np.arange(step / 2, w, step), np.arange(step / 2, h, step))
+    xs, ys = xs.ravel(), ys.ravel()
+    ok = np.ones(xs.shape, bool)
+    for a, b, c, d in boxes:
+        ok &= ~((xs > a) & (xs < c) & (ys > b) & (ys < d))
+    xs, ys = xs[ok], ys[ok]
+    if abs(A[0] - B[0]) + abs(A[1] - B[1]) + mi + mo <= smax:
+        return []
+    dA = np.abs(xs - A[0]) + np.abs(ys - A[1]) + mi
+    dB = np.abs(xs - B[0]) + np.abs(ys - B[1]) + mo
+    lvl = np.full(xs.shape, -1)
+    pred = np.full(xs.shape, -1)
+    cost = np.full(xs.shape, np.inf)
+    cur = np.where(dA <= smax)[0]
+    lvl[cur] = 1
+    cost[cur] = dA[cur]
+    k = 1
+    while True:
+        if len(cur) == 0 or k > 8:
+            return None
+        hit = cur[dB[cur] <= smax]
+        if len(hit):
+            end = hit[np.argmin(cost[hit] + dB[hit])]
+            break
+        nxt_mask = lvl < 0
+        idx = np.where(nxt_mask)[0]
+        if len(idx) == 0:
+            return None
+        D = np.abs(xs[idx][:, None] - xs[cur][None, :]) + np.abs(ys[idx][:, None] - ys[cur][None, :])
+        tot = np.where(D <= smax, D + cost[cur][None, :], np.inf)
+        j = np.argmin(tot, axis=1)
+        reach = np.isfinite(tot[np.arange(len(idx)), j])
+        new = idx[reach]
+        lvl[new] = k + 1
+        pred[new] = cur[j[reach]]
+        cost[new] = tot[np.arange(len(idx)), j][reach]
+        cur = new
+        k += 1
+    path = []
+    p = end
+    while p >= 0:
+        path.append((float(xs[p]), float(ys[p])))
+        p = pred[p]
+    path.reverse()
+    return path
+
+
+def ft_corridor(s, cores, w, h, smax=FT_STATION_MAX * 0.98, step=17.28):
+    """v4.9 (S81-P9-PLAN49): an ft slot blocked by hard cores gets FIRM station sites (regs_um, type frame; regs_um[0] =
+    the entry window centre, as the default j = 0 station) on free sites off the cores (+ FT_HALO) instead of the
+    straight-line sites legalisation would push off a core: fewest-hop path over a 17.28-um grid of free sites, every
+    hop <= smax for the worst bit of both windows (window half-widths added to the first / last hop).  Returns
+    (stations, regs_um) or None."""
+    import numpy as np
+    if not cores:
+        return None
+    boxes = [(c["origin_um"][0] - FT_HALO, c["origin_um"][1] - FT_HALO, c["origin_um"][0] + c["outline_um"][0] + FT_HALO,
+              c["origin_um"][1] + c["outline_um"][1] + FT_HALO) for c in cores]
+
+    def face_pt(face, win):
+        p = (win[0] + win[1]) / 2
+        return {"E": (w, p), "W": (0.0, p), "N": (p, h), "S": (p, 0.0)}[face]
+    A = face_pt(s["in_face"], s["in_window_um"])
+    B = face_pt(s["out_face"], s["out_window_um"])
+    mi = (s["in_window_um"][1] - s["in_window_um"][0]) / 2
+    mo = (s["out_window_um"][1] - s["out_window_um"][0]) / 2
+    path = bfs_sites(A, B, boxes, w, h, smax, mi, mo, step)
+    if path is None:
+        return None
+    regs = [[round(A[0], 3), round(A[1], 3)]] + [[round(x, 3), round(y, 3)] for x, y in path]
+    return len(regs), regs
+
+
+FT_CORRIDOR = []
+
+
 def mir(c):
     return NC - 1 - c
 
@@ -484,7 +760,7 @@ class Part:
 
     @property
     def x0(self):
-        return X0 + self.c0 * PX
+        return CX(self.c0)
 
     @property
     def y0(self):
@@ -492,7 +768,7 @@ class Part:
 
     @property
     def w(self):
-        return self.nc * PX
+        return CX(self.c0 + self.nc) - CX(self.c0)
 
     @property
     def h(self):
@@ -686,7 +962,7 @@ def build(ab):
                                                         note="re-aspected 907x4536 -> 3-cell row slot")],
              ckey="bk_sel"))
     add(Part("eng", "unit", 14, 0, contents=[C("u_eng", "dsdv_eng_rr")], ckey="eng"))
-    chans = [dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 2) * PX, X0 + (r + 1) * PY],
+    chans = [dict(rect_um=[CX(c), X0 + r * PY, CX(c + 2), X0 + (r + 1) * PY],
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
              for c, r in ((0, 0), (20, 0), (20, 19))]
@@ -1010,7 +1286,7 @@ def span(pa, pb, a, b):
         return X0 + r0 * PY, X0 + r1 * PY, True
     c0 = max(pa.c0, pb.c0)
     c1 = min(pa.c0 + pa.nc, pb.c0 + pb.nc)
-    return X0 + c0 * PX, X0 + c1 * PX, False
+    return CX(c0), CX(c1), False
 
 
 def seg_path(a, b):
@@ -1374,7 +1650,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         hi = min(fspan[k][1] for k in keys) - EDGE
         L = max(wlen(PT[p]) for p in r["ports"])
         if r["line"][0] == "V":
-            from_hi = X0 + (r["line"][1] + 0.5) * PX > DIE_CX
+            from_hi = (CX(r["line"][1]) + CX(r["line"][1] + 1)) / 2 > DIE_CX
         else:
             from_hi = falloc[keys[0]].yflip
         got = place(keys, lo, hi, L, from_hi) if hi - lo >= L else None
@@ -1500,10 +1776,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
         pt = PT[pid]
         w0, w1 = win[pid]
         m = (w0 + w1) / 2
-        x0 = X0 + pt["ca"][0] * PX
+        x0 = CX(pt["ca"][0])
         y0 = X0 + pt["ca"][1] * PY
         f = pt["face"]
-        return {"E": (x0 + PX, m), "W": (x0, m), "N": (m, y0 + PY), "S": (m, y0)}[f]
+        return {"E": (x0 + CW(pt["ca"][0]), m), "W": (x0, m), "N": (m, y0 + PY), "S": (m, y0)}[f]
 
     sigs = {}
     for p in parts:
@@ -1580,6 +1856,11 @@ def emit(parts, lanes, routes, chans, fmap, out):
         for s_ in ftsl:
             k0 = s_["stations"]
             s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
+            if hc_ and s_["stations"] > k0:
+                cr = ft_corridor(s_, hc_, rep.w, rep.h)
+                if cr and cr[0] < s_["stations"]:
+                    FT_CORRIDOR.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"], cr[0]]))
+                    s_["stations"], s_["regs_um"] = cr
             if s_["stations"] != k0:
                 FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
@@ -1587,6 +1868,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
                   **({"sources": FRAME_SOURCES(rep.contents)} if FRAME_SOURCES(rep.contents) else {}),
                   **({"hard_cores": hc_} if hc_ else {}),
+                  **({"internal_stations": HC_STATIONS[tn]} if hc_ and tn in HC_STATIONS else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
         out_types[tn] = ty
@@ -1651,7 +1933,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "lanes": olanes,
         "clock": {"source": {"part": "@die", "bus": "clk"}, "insertion_ps": 250, "common_latency_ps": 250, "insertion_tol_ps": 40,   # R4 die-wide common latency (COORD G0C)
                   "neighbour_skew_ps": 80, "face_xing": "budgeted",
-                  "spine": {"layers": ["M8", "M9"], "root_um": [round(X0 + 11 * PX, 4), round(X0 + 10 * PY, 4)],
+                  "spine": {"layers": ["M8", "M9"], "root_um": [round(CX(11), 4), round(X0 + 10 * PY, 4)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "@die", "bus": "rst_n"}, "sync_stages": 2, "data_reset": False,
                   "epoch_bit": True, "release": "counted"},
@@ -1665,7 +1947,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "
-                        "with no closed view)" % HC_CELLS_MAX, types=HC_REPORT),
+                        "with no closed view)" % HC_CELLS_MAX, types=HC_REPORT,
+                   v49=dict(die_um=[round(DIE_W, 3), round(DIE_H, 3)], wide_cols=list(WIDE_COLS), wide_dx_um=WIDE_DX,
+                            station_max_um=STATION_MAX_UM, leaf_bundles=LEAF_HOPS, svc=SVC_INFO,
+                            ft_corridor=FT_CORRIDOR)),
               open(out / "hard_core_gaps.json", "w"), indent=1)
     census_map(plan, lanes, fmap, out)
     # ---- metrics ----
@@ -1747,7 +2032,7 @@ def main():
         x0, y0, x1, y1 = ch["rect_um"]
         for c in range(NC):
             for r in range(NR):
-                cx, cy = X0 + (c + .5) * PX, X0 + (r + .5) * PY
+                cx, cy = (CX(c) + CX(c + 1)) / 2, X0 + (r + .5) * PY
                 if x0 < cx < x1 and y0 < cy < y1:
                     chan_cells.add((c, r))
     miss = [(c, r) for c in range(NC) for r in range(NR) if (c, r) not in grid.owner and (c, r) not in chan_cells]
