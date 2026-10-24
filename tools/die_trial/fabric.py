@@ -268,7 +268,8 @@ def write_def(P, path, cells, nets, blks, clk_xy):
             x = min(max(x - 0.54, 0.0), W - 1.08)
             y = min(max(y - 0.135, 0.0), H - 0.27)
             master = kind[4:] if kind.startswith("buf:") else FLOP
-            f.write(f"- {nm} {master} + PLACED ( {fmt(x)} {fmt(y)} ) N ;\n")
+            orient = "FS" if kind.startswith("buf:") and round(y / 0.27) % 2 else "N"
+            f.write(f"- {nm} {master} + PLACED ( {fmt(x)} {fmt(y)} ) {orient} ;\n")
         f.write("END COMPONENTS\n")
         f.write(f"PINS 1 ;\n- clk + NET clk + DIRECTION INPUT + USE CLOCK\n  + LAYER M9 ( -20 0 ) ( 20 320 )\n"
                 f"  + PLACED ( {fmt(clk_xy[0])} {fmt(clk_xy[1])} ) N ;\nEND PINS\n")
