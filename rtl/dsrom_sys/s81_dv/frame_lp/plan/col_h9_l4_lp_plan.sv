@@ -20521,7 +20521,7 @@ module col_h9_l4_lp_r0 #(
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl1 (.clk(xk[1]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[1]));
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl2 (.clk(xk[2]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[2]));
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl3 (.clk(xk[3]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[3]));
-    ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_r0), .d(n257), .q(lpr_root));
+    ot_pl_pad #(.W(1), .N(2)) u_lpr_root (.ck(ck_r0), .d(n257), .q(lpr_root));
     ot_pl_land_reset_forest #(.DEPTH(6), .LEAVES(LPR_LEAVES_r0), .ROOT_LOADS(3)) u_lpr_r0 (.ck(ck_r0), .d(lpr_root__age), .q(lpr_r0_leaves));
     ot_pl_seam_r_plq #(.W(((65) - (0) + 1)), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_r0), .rsi(lpr_r0_leaves[(1) +: 3]), .d(lpl_0_d), .o(lpl_0_o));
     ot_pl_seam_r_plq #(.W(1), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_r0), .rsi(lpr_r0_leaves[(4) +: 1]), .d(lpl_1_d), .o(lpl_1_o));
@@ -82711,7 +82711,7 @@ module col_h9_l4_lp_r0_nx #(
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl1 (.clk(xk[1]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[1]));
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl2 (.clk(xk[2]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[2]));
     ot_reset_sync #(.ASYNC_STAGES(2)) u_xrl3 (.clk(xk[3]), .async_rst_n(rst_n__frl), .sync_rst_n(rst_n__xk[3]));
-    ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_r0), .d(n257), .q(lpr_root));
+    ot_pl_pad #(.W(1), .N(2)) u_lpr_root (.ck(ck_r0), .d(n257), .q(lpr_root));
     ot_pl_land_reset_forest #(.DEPTH(6), .LEAVES(LPR_LEAVES_r0), .ROOT_LOADS(3)) u_lpr_r0 (.ck(ck_r0), .d(lpr_root__age), .q(lpr_r0_leaves));
     ot_pl_seam_r_plq #(.W(((65) - (0) + 1)), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_r0), .rsi(lpr_r0_leaves[(1) +: 3]), .d(lpl_0_d), .o(lpl_0_o));
     ot_pl_seam_r_plq #(.W(1), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_r0), .rsi(lpr_r0_leaves[(4) +: 1]), .d(lpl_1_d), .o(lpl_1_o));
