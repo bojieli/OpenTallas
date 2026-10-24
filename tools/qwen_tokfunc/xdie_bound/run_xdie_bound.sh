@@ -72,7 +72,7 @@ SRC=("rtl/lib/ot_rst_pipe.sv" "$S/ot_qwen_crc_parallel.sv" "$S/ot_qwen_static_sl
  # the bound compute master's closure (bound_carve + stage_closure of bound_r8 glue)
  "$D/ot_qwen_status_observers_v1.sv" "$D/ot_qwen_d2d_safe7.sv" "$D/ot_qwen_d2d_safe5.sv"
  "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v"
- "$X/sram_p192_shim.sv")
+)
 mkdir -p "$OUT"
 python3 $X/make_tb.py rtl/test/qwen_split/tb_xdie_qwen_exchange.sv "$OUT/tb_xdie_bound.sv" > /dev/null || exit 2
 sha256sum "${SRC[@]}" rtl/test/qwen_split/tb_xdie_qwen_exchange.sv "$OUT/tb_xdie_bound.sv" tools/qwen_split/xdie_exchange_cal.py \
