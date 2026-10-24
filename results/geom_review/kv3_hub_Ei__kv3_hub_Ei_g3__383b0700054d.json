@@ -1,0 +1,11 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Ei (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "383b0700054d54a3",
+ "reasons": "[10-23 20:11] [GEOM-REVIEW7] [AMENDS my 19:5x record on this hash under COORD 19:55 R4 CORRECTED (owner clock rule): tap sink counts and reach are now guidance, not gates] Geometry review unchanged (render /home/ubuntu/scratch/geom-review7-1023/hubEi/r7.png: stations on the straight/diagonal in->out lines, face regs on the windows, 81% buf/inv acceptable for transit). The grid taps (up to 5.5k sinks, 354-487-um reach) are a RISK to the face-flop spread, not a FAIL.",
+ "fixes": "CTS/route gate ALLOWED (ot-run). Judge it on the owner rule: face-flop spread <= 80 at TT and FF on RC, and face-flop mean within 80 of the KV common latency 250 (KV-P6 19:56). If (a) fails, re-kit with tap_mode sinks + per-tap rsync (tap-only delta, no new render needed).",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T20:11:43-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

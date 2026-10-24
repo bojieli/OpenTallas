@@ -50,6 +50,7 @@ TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.
 # grant is M9, the vertical die layer (die M9 PG bands avoided; the kit routes M2-M9 and obstructs the die M8/M9 bands).
 FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M9"]
 STATS_V4 = {}
+XO_JOINED = []     # v4.6: xo lanes that share the x lane window (S81-P9)
 
 
 def face_layers(pa, pb, face):
@@ -75,6 +76,367 @@ FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "in
 def frame_internal(h):
     m = json.load(open(FRAME_BAND_CENSUS))["masters"][h]
     return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
+
+
+# S81-P7 10-23 (COORD G3 band blockers): frame-band contents bound to the plan buses.  The band RTL
+# rtl/dsrom_sys/s81_dv/frame_lp/plan/col_<M>_l4_lp_plan.sv (tools/s81_dv/frame_band_plan.py) has exactly the plan
+# ports (frame_int_*, x/xo/ret, clk, rst_n; LK parameter; xk = clk; registered lpr_root ft), and the band macros /
+# hard children sit at the positions of inputs/frame_band_macros.json (tools/s81_dv/frame_band_macros.py).
+FRAME_BAND_MACROS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_macros.json")
+
+
+def frame_contents(contents, buses):
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return contents
+    c = dict(contents[0])
+    m, b = c["module"].split(".")
+    k = int(b[1:])
+    names = {x["name"] for x in buses}
+    xo = "xo_o0" in names
+    c["module"] = "%s_r%d%s" % (m, k, "_nx" if (k == 0 and not xo) else "")
+    bind = {"clk": "clk"}
+    if k == 0:
+        bind.update(rst_n="rst_n", x_i0="bus:" + ("x_i0" if "x_i0" in names else "xo_i0"), ret_o0="bus:ret_o0")
+        if xo:
+            bind["xo_o0"] = "bus:xo_o0"
+    for n in sorted(names):
+        if n.startswith("frame_int_"):
+            bind[n] = "bus:" + n
+    c["bind"] = bind
+    c.pop("status", None)
+    c["status"] = "new"
+    # LK: the x-lane landing strap of every frame = E 2 (the framed seam bench value); XO_EN is the module variant
+    c["params"] = {"LK": "{4{3'd2}}"} if k == 0 else None
+    if c["params"] is None:
+        c.pop("params")
+    return [c]
+
+
+def FRAME_SOURCES(contents):
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return None
+    # the KIT form of the band contents (hard children without #() overrides, as the frame kits) + the soft leaves
+    # of the frame kits (physical/ref_tile/s81frame_col_h9_vgch_b*/spec.json sources) + the plan seam primitives
+    return ["rtl/common/landed_parent/ot_pl_land.sv",   # ot_reset_sync: the tool adds it
+            "rtl/common/landed_parent/ot_pl_land_field_copies.sv", "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+            "rtl/common/landed_parent/ot_pl_seam.sv", "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+            "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv"] + \
+        ["rtl/dsrom_sys/s81_glue/dsfd_rly_masters%s.sv" % x for x in ("", "_266ew", "_536", "_c26l", "_gen18", "_v16")] + \
+        ["rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv",
+         "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+         "rtl/dsrom_sys/s81_dv/frame_lp/plan/%s_plan_kit.sv" % contents[0]["module"].split(".")[0]]
+
+
+CORE_TRACK_OFFSET = [0.108, 0.012]
+CORE_PINS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "core_pins")
+CORE_OFFSET_LOG = {}
+
+
+def core_track_offset(e):
+    """S81-P9 10-23 (COORD 19:36): sub-lattice track offset of one frame core, ORIENT-AWARE.  CORE-KS's [0.108, 0.012]
+    puts R0 cores on the kit tracks; a mirrored core (MY flips x, MX flips y) lands its pins at outline - x, which
+    is on track only for an offset that matches the outline residue.  Pick, per core, the (dx, dy) on the 0.012-um
+    sub-grid (< one base lattice) with the fewest off-track M2-M7 pins in the type frame (die-frame M2/M3 of mirrored
+    partitions are skipped by G0 like M1); ties keep CORE_TRACK_OFFSET.  Shapes are LEF pin centres (CORE-KS table)."""
+    import sys as _s
+    _s.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools", "die_plan"))
+    import schema as _S
+    L = {x["name"]: x for x in _S.ASAP7_LAYERS}
+    f = os.path.join(CORE_PINS_DIR, e["module"] + ".json")
+    if not os.path.exists(f):
+        return CORE_TRACK_OFFSET
+    js = json.load(open(f)); pins = js.get("pins", js) if isinstance(js, dict) else js
+    w, h = e["size_um"]; o = e["orient"]; ox, oy = e["origin_um"]
+
+    def pt(x, y):
+        return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+    def off(c, l):
+        k = (c - l["offset_um"]) / l["pitch_um"]
+        return abs(k - round(k)) > 1e-4
+    V = [(pt(q["x"], q["y"])[0], L[q["layer"]]) for q in pins if q["layer"] in L and q["layer"] != "M1" and L[q["layer"]]["dir"] == "V"]
+    H = [(pt(q["x"], q["y"])[1], L[q["layer"]]) for q in pins if q["layer"] in L and q["layer"] != "M1" and L[q["layer"]]["dir"] == "H"]
+    cand = [round(0.012 * k, 3) for k in range(0, 24)]
+
+    def best(P, c0, base):
+        sc = {d: sum(off(base + d + c, l) for c, l in P) for d in cand}
+        m = min(sc.values())
+        return (c0 if sc[c0] == m else min(d for d in cand if sc[d] == m)), m
+    dx, bx = best(V, CORE_TRACK_OFFSET[0], ox)
+    dy, by = best(H, CORE_TRACK_OFFSET[1], oy)
+    CORE_OFFSET_LOG[(e["inst"], e["module"], o)] = (dx, dy, bx, by)
+    return [dx, dy]
+
+
+def frame_hard_cores(contents, buses):
+    """band macros / hardened children of a frame type at their plan sites (lattice origins, frame_band_macros.json)"""
+    if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
+        return []
+    m, b = contents[0]["module"].split(".")
+    mac = json.load(open(FRAME_BAND_MACROS))["masters"][m.replace("_l4_lp", "")][b]
+    nx = b == "r0" and "xo_o0" not in {x["name"] for x in buses}
+    # the chain-end variant col_<M>_l4_lp_r0_nx is r0 without the x-forward stations u_xo<j> (no xo bus)
+    return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
+                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"],
+                 # S81-P9 10-23 (COORD 19:36, CORE-KS): core signal pins sit on the M4/M5 0.012 sub-grid (kit tracks
+                 # 0.024): shift every frame core by the sub-lattice track offset + list its pins for the G0 track check
+                 track_offset_um=core_track_offset(e), pins_file=f"inputs/core_pins/{e['module']}.json") for e in mac
+            if not re.match(r"u_r0\.u_xo\d+$", e["inst"])]   # v4.6: u_xo -> soft u_y_xo<j>_0/_1 chain (S81-P9-RTL)
+
+
+# ---- S81-P9-HC 10-23 (COORD G0C): hard_cores[] of the NON-frame types over the 400k-cell cap -------------------------
+# One entry per RTL child instance that has a closed physical view (LEF), keyed like cells_core_plan's partition kinds.
+# cells: the cells_core_plan count of that child (plan_core = the planned core it belongs to; bucket=True: the planned
+# core's count covers several children, carried once on its first member).  gaps[]: children with NO closed view (never
+# invented): they stay soft until a view exists.  A type gets hard_cores[] only when its residual soft cells
+# (type cells - hard-core cells) are <= HC_CELLS_MAX: a partial core list on a type still far over the cap would mark it
+# G0C clean (and G3-eligible) while it cannot be built; such types keep the G0C error and are listed in hard_core_gaps.json.
+HC_CELLS_MAX = 400_000
+HC_GAP_UM = 13.8          # facing core-core gap (GEOM rule)
+HC_EDGE_UM = 4 * 8.64     # core keep-off from the type outline (face flops / ft stations / tap channel)
+_RT = "physical/ref_tile/%s/views/%s/%s.lef"
+
+
+def _rt(kit, mod):
+    return _RT % (kit, mod, mod)
+
+
+_ARCH_SRC = "/home/ubuntu/closed_archive/%s/%s/run/record/views/%s/%s.lef.zst"
+# S81-P9: the closed-archive views are imported into the repo (physical/s81_die_views/closed_import/<m>/, see PROVENANCE)
+_ARCH = "physical/s81_die_views/closed_import/%s/%.0s%.0s%s.lef"
+_C_COMMON = [dict(inst="u_c.u_eg", module="ot_s81sl_eg", lef=_rt("s81sl_eg", "ot_s81sl_eg"), cells=261681, plan_core="eg"),
+             dict(inst="u_c.u_xf", module="ot_s81dv_xfin", lef=_rt("s81dv_xfin", "ot_s81dv_xfin"), cells=135954,
+                  plan_core="xf_cap"),
+             dict(inst="u_c.u_cap", module="ot_s81sl_capc5r", lef=_rt("s81sl_capc5r", "ot_s81sl_capc5r"), cells=22959,
+                  plan_core="xf_cap")]
+_C_GAPS = [dict(inst="u_c.u_xg", module="ot_s81sl_xg", cells=174928, plan_core="xg_xr",
+                why="stand-in view only (physical/ref_tile/s81dv_slice_lp_k8a|b/standin_views/ot_s81sl_xg, 648x561.6): "
+                    "no closed view")]
+_GU = "physical/ref_tile/dsdv_gunit_%s/views/dsdv_gunit_%s/dsdv_gunit_%s.lef"
+NONFRAME_HC = {
+    "C:xrt1": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt1", plan_core="xg_xr", cells=67849,
+                                           lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS),
+    "C:xrt3": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt3", plan_core="xg_xr", cells=78456,
+                                           lef=_rt("s81sl_xrt3_b", "ot_s81sl_xrt3"))], gaps=_C_GAPS),
+    "gunit": dict(cores=[dict(inst="u_gunit.u_" + m, module="dsdv_gunit_" + m, lef=_GU % (m, m, m), plan_core=pc,
+                              cells=c, bucket=c is not None and pc != "l5f")
+                         for m, pc, c in [("l0", "l0_l1_l2", 8213 + 110419 + 9853 + 43954 + 8215),
+                                          ("l0r", "l0_l1_l2", None), ("l1", "l0_l1_l2", None),
+                                          ("l1c", "l0_l1_l2", None), ("l2", "l0_l1_l2", None),
+                                          ("l3", "l3_l4", 40887 + 81348 + 73342), ("l4", "l3_l4", None),
+                                          ("l4r", "l3_l4", None), ("l5f", "l5f", 97736), ("l5", None, None)]],
+                  gaps=[dict(inst="u_gunit.g_l1f[%d].u_l1f" % q, module="dsdv_gunit_l1f", cells=None, plan_core=None,
+                             why="no closed view of dsdv_gunit_l1f (views exist only for the band split "
+                                 "dsdv_gunit_l1f_ba0/ba1 of dsdv_gunit_l1f_band, not instantiated by dsdv_gunit); "
+                                 "cells not in the plan basis") for q in range(4)]),
+    "bk_sel": dict(cores=[dict(inst="u_bk_sel.u_sel.u_c", module="dsdv_bksel_c", lef=_rt("s81dvbk_selc2", "dsdv_bksel_c"),
+                               cells=260094, plan_core="bksel_c_pa")] +
+                   [dict(inst="u_bk_sel.u_sel.g_q[%d].u_q" % q, module="dsdv_bksel_q",
+                         lef=_rt("s81dvbk_sq_hq3", "dsdv_bksel_q"), cells=113262,
+                         plan_core="bksel_q01" if q < 2 else "bksel_q23") for q in range(4)] +
+                   [dict(inst="u_bk_sel.u_sel.u_g", module="dsdv_bk_g", lef=_rt("s81dvbk_g2", "dsdv_bk_g"), cells=25144,
+                         plan_core="bkg_tx_vmux"),
+                    dict(inst="u_bk_sel.u_tx", module="dsdv_idx_tx_n32", cells=31602, plan_core="bkg_tx_vmux",
+                         lef=_ARCH % ("dsdv_idx_tx_n32", "s81dv_idxtxn32x2-x2-b642addfb", "dsdv_idx_tx_n32",
+                                      "dsdv_idx_tx_n32"))],
+                   gaps=[dict(inst="u_bk_sel.u_vm", module="dsdv_idx_vmux", cells=3547, plan_core="bkg_tx_vmux",
+                              why="views are of dsdv_idx_vmux_n32, a different module; flattened (small)")]),
+    "leaf": dict(cores=[dict(inst="u_lf.u_vp", module="ot_s81sl_vp", cells=36056 + 16 * 50540, plan_core="vp_abc",
+                             lef=_ARCH_SRC % ("ot_s81sl_vp", "s81sl_vp9_fb-s81sl_vp9_fb1-7d8e05c33", "ot_s81sl_vp",
+                                          "ot_s81sl_vp")),
+                        dict(inst="u_lf.u_vn", module="ot_s81sl_vn", lef=_rt("s81sl_vn", "ot_s81sl_vn"), cells=375145,
+                             plan_core="vn"),
+                        dict(inst="u_lf.u_vs", module="ot_s81sl_vs", lef=_rt("s81sl_vs", "ot_s81sl_vs"), cells=117971,
+                             plan_core="vs_vsw"),
+                        dict(inst="u_lf.u_vsw", module="ot_s81sl_vsw", lef=_rt("s81sl_vsw", "ot_s81sl_vsw"),
+                             cells=120703, plan_core="vs_vsw"),
+                        dict(inst="u_lf.u_vq", module="ot_s81sl_vq", lef=_rt("s81sl_vq", "ot_s81sl_vq"), cells=46676,
+                             plan_core="vq_rx"),
+                        dict(inst="u_lf.u_rxsf", module="dsfd_su_t_rxsf", lef=_rt("s81su_rxsf_ref", "dsfd_su_t_rxsf"),
+                             cells=82916, plan_core="vq_rx"),
+                        dict(inst="u_lf.u_rxsb", module="dsfd_su_t_rxsb", lef=_rt("s81su_rxsb_ref", "dsfd_su_t_rxsb"),
+                             cells=99597, plan_core="vq_rx")],
+                 gaps=[dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve_a/ve_b",
+                            why="no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no "
+                                "final/ views; repo has stand-in views only); 460,279 cells is itself over the cap")]),
+    "svc": dict(cores=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
+                            lef=_rt("dsdv_svc_sx_hrow", "dsdv_svc_sx_hrow"), plan_core="sx_hrow_ab")
+                       for r in range(4) for b in range(2)],
+                gaps=[dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>", module="ot_hdc_v41x_attn_tile_s:hdp_s",
+                           cells=64 * 183981, plan_core="attn_t*_g*_h* (x64)",
+                           why="no physical view of the attention head datapath hdp_s (183,981 cells x 64)"),
+                      dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>", module="ot_hdc_v41x_attn_tile_s:hgrp_s",
+                           cells=16 * 30272, plan_core="attn_t*_g* (x16)",
+                           why="no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"),
+                      dict(inst="u_rsv (SE/SM/P.V)", module="se_sm_pv", cells=18044 + 2 * 1247, plan_core="se_sm_pv",
+                           why="no view (flattened, small)")]),
+    "eng": dict(cores=[], gaps=[dict(inst="u_eng", module="dsdv_eng_rr", cells=418942, plan_core="eng_rr_a/eng_rr_b",
+                                     why="no closed view of dsdv_eng_rr (no LEF in ref_tile / s81_die_views / "
+                                         "closed_archive); 418,942 cells as one module is itself over the cap")]),
+}
+HC_REPORT = {}
+
+
+def nonframe_hc_key(p):
+    m = p.contents[0]["module"] if p.contents else ""
+    if p.kind == "svc":
+        return "svc"
+    if p.kind == "slice":
+        role = getattr(p, "role", "X")
+        if role == "C":
+            return "C:xrt3" if "c3x" in m else "C:xrt1"
+        if role.startswith("L") and "kv_leaf" not in m:
+            return "leaf"
+        return None
+    return p.name if p.name in NONFRAME_HC else None
+
+
+def _lef_size(lef):
+    import subprocess as _sp
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")
+    if os.path.exists(os.path.join(root, lef)):
+        raw = open(os.path.join(root, lef), "rb").read()
+    elif os.path.exists(lef):
+        raw = open(lef, "rb").read()
+    else:
+        raw = _sp.run(["git", "-C", root, "show", "HEAD:" + lef], check=True, capture_output=True).stdout
+    if lef.endswith(".zst"):
+        raw = _sp.run(["zstd", "-dc"], input=raw, check=True, capture_output=True).stdout
+    sz = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", raw.decode())
+    return [float(sz.group(1)), float(sz.group(2))]
+
+
+_LEF_SIZE = {}
+
+
+def nonframe_hard_cores(p, w, h, tn, ftsl=()):
+    """hard_cores[] of one non-frame type (S81-P9-HC): packed shelf placement (first cut for GEOM review): cores sorted by
+    height, rows bottom-up, origins on the 8.64 lattice, >= HC_GAP_UM between facing core boxes (after the track
+    offset), HC_EDGE_UM keep-off from the outline, orient R0, track_offset CORE_TRACK_OFFSET, CORE-KS pins_file."""
+    k = nonframe_hc_key(p)
+    if k is None:
+        return []
+    spec = NONFRAME_HC[k]
+    cores, glue, basis = cells_core_plan(p)
+    total = sum(c for _, c in cores) + glue
+    hard = sum(c["cells"] or 0 for c in spec["cores"])
+    resid = total - hard
+    if total <= HC_CELLS_MAX:
+        return []
+    rep = dict(key=k, cells=total, hard_cells=hard, residual_soft_cells=resid, basis=basis,
+               gaps=[{kk: v for kk, v in g.items()} for g in spec["gaps"]], cores=len(spec["cores"]))
+    HC_REPORT[tn] = rep
+    if not spec["cores"] or resid > HC_CELLS_MAX:
+        rep["emitted"] = False
+        rep["why"] = "residual soft cells %d > %d with the closed views available: real gap (see gaps)" % (
+            resid, HC_CELLS_MAX)
+        return []
+    dx, dy = CORE_TRACK_OFFSET
+    items = []
+    for c in spec["cores"]:
+        if c["lef"] not in _LEF_SIZE:
+            _LEF_SIZE[c["lef"]] = _lef_size(c["lef"])
+        items.append((c, _LEF_SIZE[c["lef"]]))
+    items.sort(key=lambda t: (-t[1][1], -t[1][0], t[0]["inst"]))
+
+    def up(v):
+        return math.ceil(round(v / G, 6)) * G
+    x0 = y0 = up(HC_EDGE_UM)
+    x, y, row_h, out = x0, y0, 0.0, []
+    for c, (cw, ch) in items:
+        if x + dx + cw > w - HC_EDGE_UM:
+            x, y, row_h = x0, up(y + dy + row_h + HC_GAP_UM), 0.0
+        if x + dx + cw > w - HC_EDGE_UM or y + dy + ch > h - HC_EDGE_UM:
+            raise SystemExit("S81-P9-HC: type %s: core %s (%gx%g) does not fit the %gx%g outline" % (
+                tn, c["inst"], cw, ch, w, h))
+        out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[round(x, 4), round(y, 4)],
+                        outline_um=[cw, ch], orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
+                        pins_file="inputs/core_pins/%s.json" % c["module"]))
+        x = up(x + dx + cw + HC_GAP_UM)
+        row_h = max(row_h, ch)
+    # corner choice: the packed block is mirrored to each outline corner (lattice-snapped); the first variant that adds no
+    # ft-slot station (ft_stations_macro: a core on a slot's in->out line pushes its stations off) and keeps the gap /
+    # edge rules wins; else the one adding fewest stations
+    def mirrored(mx, my):
+        o = []
+        for c in out:
+            (x_, y_), (cw, ch) = c["origin_um"], c["outline_um"]
+            if mx:
+                x_ = math.floor(round((w - (x_ + dx + cw) - dx) / G, 6)) * G
+            if my:
+                y_ = math.floor(round((h - (y_ + dy + ch) - dy) / G, 6)) * G
+            o.append(dict(c, origin_um=[round(x_, 4), round(y_, 4)]))
+        return o
+
+    def legal(o):
+        bx = [(c["origin_um"][0] + dx, c["origin_um"][1] + dy, c["origin_um"][0] + dx + c["outline_um"][0],
+               c["origin_um"][1] + dy + c["outline_um"][1]) for c in o]
+        if any(b_[0] < HC_EDGE_UM - 1e-6 or b_[1] < HC_EDGE_UM - 1e-6 or b_[2] > w - HC_EDGE_UM + 1e-6 or
+               b_[3] > h - HC_EDGE_UM + 1e-6 for b_ in bx):
+            return False
+        for i, a_ in enumerate(bx):
+            for b_ in bx[i + 1:]:
+                if max(b_[0] - a_[2], a_[0] - b_[2], b_[1] - a_[3], a_[1] - b_[3]) < HC_GAP_UM - 1e-6:
+                    return False
+        return True
+    best = None
+    for mx, my in ((False, False), (False, True), (True, False), (True, True)):
+        o = mirrored(mx, my)
+        if not legal(o):
+            continue
+        add = sum(ft_stations_macro(s_, o, w, h) - s_["stations"] for s_ in ftsl)
+        if best is None or add < best[0]:
+            best = (add, o, (mx, my))
+        if add == 0:
+            break
+    if best is None:
+        raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
+    rep["emitted"] = True
+    rep["corner"] = "%s%s" % ("E" if best[2][0] else "W", "N" if best[2][1] else "S")
+    rep["ft_stations_added"] = best[0]
+    return best[1]
+
+
+FT_MACRO_ADD = []
+FT_HALO = 8.64
+
+
+def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
+    """v4.6 (S81-P9 10-23, R3 ft0 'jog' fix): station count of an ft slot from its ROUTE around the hard cores.  Station
+    j of k sits at L*j/k on the straight in->out line of each bit (face_flops.tcl); a site inside a hard core (+ halo)
+    is pushed off the core by legalisation, which adds the escape distance to both of its hops (S81 r0 ft0: s1 jogged
+    120 um off the bf row -> 753-841-um hops).  k grows until every sampled bit's hop (L/k + escape) <= smax."""
+    if not cores:
+        return s["stations"]
+    boxes = [(c["origin_um"][0] - FT_HALO, c["origin_um"][1] - FT_HALO, c["origin_um"][0] + c["outline_um"][0] + FT_HALO,
+              c["origin_um"][1] + c["outline_um"][1] + FT_HALO) for c in cores]
+
+    def face_pt(face, win, t):
+        p = win[0] + t * (win[1] - win[0])
+        return {"E": (w, p), "W": (0.0, p), "N": (p, h), "S": (p, 0.0)}[face]
+
+    def escape(x, y):
+        e = 0.0
+        for (a, b, c, d) in boxes:
+            if a < x < c and b < y < d:
+                e = max(e, min(x - a, c - x, y - b, d - y))
+        return e
+    k = s["stations"]
+    for _ in range(4):
+        worst = 0.0
+        for i in range(64):
+            t = (i + 0.5) / 64
+            ax, ay = face_pt(s["in_face"], s["in_window_um"], t)
+            bx, by = face_pt(s["out_face"], s["out_window_um"], t)
+            L = abs(ax - bx) + abs(ay - by)
+            for j in range(1, k):
+                x, y = ax + (bx - ax) * j / k, ay + (by - ay) * j / k
+                worst = max(worst, L / k + escape(x, y))
+            worst = max(worst, L / k)
+        if worst <= smax:
+            break
+        k += 1
+    return k
 
 
 def mir(c):
@@ -898,6 +1260,25 @@ def emit(parts, lanes, routes, chans, fmap, out):
             if grid_owner[x] != grid_owner[y]:
                 cur["ports"].append(next(pids))
     runs = [r for r in runs if r["ports"]]
+    # v4.6 (S81-P9 10-23, COORD R3-INTERNAL): the x forward of an r0 frame (x_i0 / xo_i0 E window -> u_y_xo stations ->
+    # xo_o0 W window) is a straight E->W chain like an ft slot.  The xo lanes of a chain join the x lane's last straight
+    # run on the frame row, so x_i0, every xo window and the in-frame forward share ONE die-y window (v4.5: x_i0 E at
+    # 740-980 vs xo W at 98-336 = a 2.1-2.2 mm in-partition traverse).
+    by_lane = collections.defaultdict(list)
+    for r in runs:
+        by_lane[r["lane"]].append(r)
+    XO_JOINED.clear()
+    for lk in lanes:
+        if lk["cls"] != "x" or not by_lane.get(lk["id"]):
+            continue
+        last = by_lane[lk["id"]][-1]
+        for suf in ("a", "b"):
+            for r in by_lane.get("xo_%s_%s" % (lk["id"][2:], suf), []):
+                if r["line"] == last["line"]:
+                    last["ports"] += r["ports"]
+                    XO_JOINED.append(r["lane"])
+                    r["ports"] = []
+    runs = [r for r in runs if r["ports"]]
     occ = collections.defaultdict(list)          # face key -> [(lo, hi)] occupied (die coords, incl. GAP)
     DIE_CX, DIE_CY = DIE_W / 2.0, X0 + NR * PY / 2.0
 
@@ -969,7 +1350,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 raw[pt["id"]], pos = (pos - Lw, pos), pos - Lw - g
             else:
                 raw[pt["id"]], pos = (pos, pos + Lw), pos + Lw + g
-    STATS_V4.update(runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
+    STATS_V4.update(ft_macro_add=FT_MACRO_ADD, xo_joined=sorted(XO_JOINED), runs=len(runs), runs_multi=sum(1 for r in runs if len(r["ports"]) > 1),
                     run_fallback_ports=len(single), overfull_faces=sorted("|".join(map(str, k)) for k in over_faces))
     win = {}
     over = []
@@ -1134,9 +1515,17 @@ def emit(parts, lanes, routes, chans, fmap, out):
         for s_ in ftsl:
             if s_["layers"] is None:
                 s_.pop("layers")
+        hc_ = frame_hard_cores(rep.contents, buses) + nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl)   # S81-P9-HC
+        for s_ in ftsl:
+            k0 = s_["stations"]
+            s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
+            if s_["stations"] != k0:
+                FT_MACRO_ADD.append(dict(type=tn, slot=s_["name"], stations=[k0, s_["stations"]]))
         ty = dict(module="s81p_" + tn, outline_um=[rep.w, rep.h], hard=rep.hard, buses=buses, ft_slots=ftsl,
                   clock=dict(tap_um=[round(rep.w / 2 / G) * G, round(rep.h / 2 / G) * G], layer="M9"),
-                  reset=dict(sync_stages=2), contents=rep.contents,
+                  reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
+                  **({"sources": FRAME_SOURCES(rep.contents)} if FRAME_SOURCES(rep.contents) else {}),
+                  **({"hard_cores": hc_} if hc_ else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
         out_types[tn] = ty
@@ -1199,7 +1588,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "partitions": oparts,
         "ports": oports,
         "lanes": olanes,
-        "clock": {"source": {"part": "@die", "bus": "clk"}, "insertion_ps": 250, "insertion_tol_ps": 40,
+        "clock": {"source": {"part": "@die", "bus": "clk"}, "insertion_ps": 250, "common_latency_ps": 250, "insertion_tol_ps": 40,   # R4 die-wide common latency (COORD G0C)
                   "neighbour_skew_ps": 80, "face_xing": "budgeted",
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(X0 + 11 * PX, 4), round(X0 + 10 * PY, 4)],
                             "topology": "htree"}},
@@ -1214,6 +1603,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
+    json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "
+                        "with no closed view)" % HC_CELLS_MAX, types=HC_REPORT),
+              open(out / "hard_core_gaps.json", "w"), indent=1)
     census_map(plan, lanes, fmap, out)
     # ---- metrics ----
     lb, det = [], []

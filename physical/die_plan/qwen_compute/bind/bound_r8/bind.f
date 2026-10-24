@@ -33,6 +33,7 @@ rtl/physical/qcluster/qfd_c_stn.sv
 rtl/physical/qcluster/qfd_c_land.sv
 physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v
 physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v
+rtl/qwen_dv/s5/qfd_dv_s5_sc2_ce_leaf.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/bind_cells.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_cb_f_q00__cbf_q00.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_cb_f_q00__cbf_q00_s2.sv
@@ -58,6 +59,7 @@ physical/die_plan/qwen_compute/bind/bound_r8/rtl/ot_qkvd_ucie_x64_phy_part.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_ctl.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_ctl_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_ctl_v2.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_ctl_v3.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_fe__sle_fe_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_fe__sle_fe_v2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_fe__sle_fe_v3.sv
@@ -87,6 +89,7 @@ physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_su_l1_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_sle_tap.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fe__slw_fe_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fe__slw_fe_v2.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fe_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fw__slw_fw_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fw__slw_fw_v2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_fw__slw_fw_v3.sv
@@ -96,6 +99,7 @@ physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_hc2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_hc3.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_sc.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_sc_v1.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_sc_v2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_st_a.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_st_a_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_st_b.sv
@@ -104,8 +108,11 @@ physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_stm.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_stm_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_c.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_c_v1.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_c_v2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_l0.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_l0_v1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_l1.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_l1_v1.sv
+physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_slw_su_l1_v2.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_tt_ctlm_part.sv
 physical/die_plan/qwen_compute/bind/bound_r8/rtl/qwen_compute_bound_top.sv

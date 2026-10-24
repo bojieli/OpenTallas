@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_cor_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_cor_v1, tool bf48d82a6)@3845962a2",
+ "verdict": "PASS",
+ "hash": "b9f067a5124aba0f",
+ "reasons": "[10-23 12:44] [GEOM-REVIEW5] Supersedes the 12:17 PASS (ns-SDC kit). PLACED render viewed; stats, ft_stations.txt, pins.json and constraint.sdc read; kit hash recomputed by me (sha256 of the kit files concatenated in sorted path order, kits4/kv3_io_cor_v1). SDC is now in ps: period 833, ft_i in 624.75 (0.75 T), ft_o out 208.25 (0.25 T). 25 slots: 21 with 2 stations (worst L 1,386 um, hop L/2 = 693 um) and 4 with 3 stations (E->W 1,555 and W->E 1,701 um, hop <= 567 um). Every hop is <= 750 um (R3). Turning slots are now L routes: the E->S stations form the vertical column at x ~580-640 at pin height (y 0-630), and the S->E stations lie on the L-corner loci. The flop histogram shows no stacking: max 86 flops and 0.16 std density per 16-um bin. buf/inv fell 60.6k -> 30.5k (BUFx3 17.2k, BUFx16f 3.1k, BUFx2 3.1k, INVx1 6.6k), as expected once the 0.833-ps clock is gone. HPWL is 4,343 mm. The 102.9k TAPCELLs and the y~515 dotted row are PG/tap pins, not logic. Fill 0.4%: a pure ft corner, inherent.",
+ "fixes": "None before route. Watch items for the GRT gate: tap skew s0->s1 <= 80 ps (io_ft/io_ft_v1 measured 89-93 ps at 12:43: needs PLAN-TOOL2 per-tap latency balancing in clock_taps.tcl); GRT overflow 0 in the x 480-800 station column; TT setup on the 693-um hops.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T12:44:46-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

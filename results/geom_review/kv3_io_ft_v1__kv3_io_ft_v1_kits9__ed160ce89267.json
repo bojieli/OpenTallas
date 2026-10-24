@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_ft_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_ft_v1, plan v3.6 @400b811e5 + tap_mode sinks, tool claude/kv-p6-tap-1023 c1bae2221; scratch/kv-p6-1023/tap/kits9)",
+ "verdict": "PASS",
+ "hash": "ed160ce892672ec4",
+ "reasons": "[10-23 18:32] [GEOM-REVIEW7] [KV-P6-TAP 18:31 REQ, tap-only delta on the GEOM-PASS geometry] Kit hash recomputed by me (C-sorted cat, 17 files) on the local kit AND on the probe's gold2 copy: both ed160ce892672ec4. kits7->kits9 diff read by me: pins.json, ft_stations.txt and pdn.tcl are identical. Changed: io.tcl M7 taps (sink-anchored), RTL tap ports + per-tap ot_reset_sync, tap_balance.tcl, face_flops.tcl (+ff_chain_out), OT_TAP_MAX_SINKS 1500, HOLD_SLACK_MARGIN 15, SDC clk<->vclk uncertainty 30/12.5 + min input delay 0 (COORD 16:58). Placed 4_cts.odb dumped and rendered by me: /home/ubuntu/scratch/geom-review7-1023/kv9_kv3_io_ft_v1/r7.png. Also viewed the author's /home/ubuntu/scratch/kv-p6-1023/tap/placed_kv3_io_ft_v1.png and plan_taps_kits9.png. 2,106 FF; 3 taps 527-1,052 sinks, reach 64-109 um; balanced 245-255 ps (max sink 263), 19 delay cells; stations in one column at x ~640 = L/2. EMPTY TAPS 0 (kits7 had 6/12). OT_TAP_CHECK OK in the probe's 4_1_cts.log (read by me). Tap means are within 18 ps, so neighbour-tap skew is far below 80. Stations and face flops are where the PASS geometry put them.",
+ "fixes": "PASS: route gate allowed (ot-run). The route gate's TT/FF seam STA is the timing criterion (COORD 16:58 SDC proxy); it is not a geometry condition. TOOL note: io_cor_v1 clk_t3/clk_t6 share the x ~565 station column. That is OK at <= 119-um reach; keep the k-medians cap 1.5k.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T18:32:48-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

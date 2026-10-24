@@ -1,0 +1,488 @@
+{
+ "schema": "opentallas.die_plan.r8_landing.v1",
+ "die": "qwen_compute",
+ "kind": "treq_twin_pads",
+ "note": "BINDER3: R8 members for the QC-P5-TIE treq lanes (plan e3f313354; not in the QC-P5 r8 table @c0152774b) in the r8\nmember schema, for asbuilt.land_r8_extra: each treq hop lands with its cmd twin (pad = max cmd landed - treq bound on\nthe same source leaf -> sink leaf hop, 0 when the hop has no cmd twin), so treq and cmd keep their as-built relative\ntiming at every slice entry (COORD 18:4x: W5 0 .. E5 11 = the leaf-internal 1 edge/slice only).\n    treq_pads.py BIND_DIR OUT.json",
+ "members": [
+  {
+   "id": "dvs_E0.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W0.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E0.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E0_fw",
+   "src_part": "sl_W0_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W0_fe__treq_eo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E0.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E0.u_core.u_sub.u_stm",
+   "sink_part": "sl_E0_stm",
+   "src_part": "sl_E0_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E0_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_E0.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E1.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E1_fw",
+   "src_part": "sl_E0_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E0_fe__treq_wo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E1.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E1.u_core.u_sub.u_stm",
+   "sink_part": "sl_E1_stm",
+   "src_part": "sl_E1_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E1_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_E1.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E2.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E2_fw",
+   "src_part": "sl_E1_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E1_fe__treq_wo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E2.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E2.u_core.u_sub.u_stm",
+   "sink_part": "sl_E2_stm",
+   "src_part": "sl_E2_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E2_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_E2.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E3.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E3_fw",
+   "src_part": "sl_E2_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E2_fe__treq_wo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E3.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E3.u_core.u_sub.u_stm",
+   "sink_part": "sl_E3_stm",
+   "src_part": "sl_E3_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E3_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_E3.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E4.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E4_fw",
+   "src_part": "sl_E3_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E3_fe__treq_wo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E4.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E4.u_core.u_sub.u_stm",
+   "sink_part": "sl_E4_stm",
+   "src_part": "sl_E4_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E4_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_E4.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_E5.u_core.u_sub.u_fdn",
+   "sink_part": "sl_E5_fw",
+   "src_part": "sl_E4_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E4_fe__treq_wo_treq_ei",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_E5.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_E5.u_core.u_sub.u_stm",
+   "sink_part": "sl_E5_stm",
+   "src_part": "sl_E5_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_E5_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W1.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_W0.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W0_fw",
+   "src_part": "sl_W1_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W1_fe__treq_eo_treq_wi",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W0.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W0.u_core.u_sub.u_stm",
+   "sink_part": "sl_W0_stm",
+   "src_part": "sl_W0_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W0_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W2.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_W1.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W1_fw",
+   "src_part": "sl_W2_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W2_fe__treq_eo_treq_wi",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W1.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W1.u_core.u_sub.u_stm",
+   "sink_part": "sl_W1_stm",
+   "src_part": "sl_W1_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W1_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W3.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_W2.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W2_fw",
+   "src_part": "sl_W3_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W3_fe__treq_eo_treq_wi",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W2.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W2.u_core.u_sub.u_stm",
+   "sink_part": "sl_W2_stm",
+   "src_part": "sl_W2_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W2_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W4.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_W3.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W3_fw",
+   "src_part": "sl_W4_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W4_fe__treq_eo_treq_wi",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W3.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W3.u_core.u_sub.u_stm",
+   "sink_part": "sl_W3_stm",
+   "src_part": "sl_W3_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W3_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_fdn.treq_i[0:8]<-dvs_W5.u_core.u_sub.u_fup.treq_o@2",
+   "sink": "dvs_W4.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W4_fw",
+   "src_part": "sl_W5_fe",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_fup.treq_o",
+   "asbuilt": 2,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W5_fe__treq_eo_treq_wi",
+   "cmd_twin_landed": 2
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W4.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W4.u_core.u_sub.u_stm",
+   "sink_part": "sl_W4_stm",
+   "src_part": "sl_W4_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W4_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_fdn.treq_i[0:8]<-tt_ctlm.table_req@27",
+   "sink": "dvs_W5.u_core.u_sub.u_fdn",
+   "sink_part": "sl_W5_fw",
+   "src_part": "tt_ctlm",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "tt_ctlm.table_req",
+   "asbuilt": 27,
+   "bound": 4,
+   "pad": 4,
+   "landed": 8,
+   "lane": "tt_ctlm__table_req_treq_wi",
+   "cmd_twin_landed": 8
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_stm.treq_i[0:8]<-dvs_W5.u_core.u_sub.u_fdn.treq_c@0",
+   "sink": "dvs_W5.u_core.u_sub.u_stm",
+   "sink_part": "sl_W5_stm",
+   "src_part": "sl_W5_fw",
+   "sink_port": "treq_i",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_fdn.treq_c",
+   "asbuilt": 0,
+   "bound": 2,
+   "pad": 0,
+   "landed": 2,
+   "lane": "sl_W5_fw__x_fw_stm",
+   "cmd_twin_landed": null
+  }
+ ]
+}

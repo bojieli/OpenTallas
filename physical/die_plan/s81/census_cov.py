@@ -184,7 +184,7 @@ def main():
         p0 = ports[ln["ports"][0]]
         sp, dp = p0["src"]["part"], ports[ln["ports"][-1]]["dst"]["part"]
         mod = plan["partition_types"][ptype[sp]]["contents"][0]["module"]          # col_h10_l4_lp.r0
-        m = re.match(r"col_(h\d+)_l4_lp\.r(\d)", mod).group(1)
+        m = re.match(r"col_(h\d+)_l4_lp[._]r(\d)", mod).group(1)   # col_h10_l4_lp.r0 (v4.2) or col_h10_l4_lp_r0[_nx] (v4.3 plan contents)
         fband[(sp.rsplit("_b", 1)[0], m)]["r%s->r%s" % (sp[-1], dp[-1])] = p0["width"]
     fb_drop = []
     for (fr, m), got in sorted(fband.items()):

@@ -34,6 +34,7 @@ module qfd_qc_sle_fe__sle_fe_v2 (
     output wire [1:0] rv_wo,   // 1 data + epoch [1]: lane sl_E1_fe__rv_wo_rv_ei, 2 cycles: hr_o[1] -> sl_E2_fw
     output wire [48:0] sc_wo,   // 48 data + epoch [48]: lane sl_E1_fe__sc_wo_sc_ei, 2 cycles: sc_up_o[48] -> sl_E2_fw
     output wire [1088:0] st_wo,   // 1088 data + epoch [1088]: lane sl_E1_fe__st_wo_st_ei, 2 cycles: st_up_o[1088] -> sl_E2_fw
+    output wire [9:0] treq_wo,   // 9 data + epoch [9]: lane sl_E1_fe__treq_wo_treq_ei, 2 cycles: treq_o[9] -> sl_E2_fw
     output wire [1105:0] x_fw_o,   // 1105 data + epoch [1105]: lane sl_E1_fe__x_fe_fw, 4 cycles: agu_q[10], chu_q[1095] -> sl_E1_fw
     output wire [47:0] x_sc_o,   // 47 data + epoch [47]: lane sl_E1_fe__x_fe_sc, 2 cycles: scd_q[47] -> sl_E1_sc
     output wire [1088:0] x_stm_o,   // 1088 data + epoch [1088]: lane sl_E1_fe__x_fe_stm, 3 cycles: se_q[1088] -> sl_E1_stm
@@ -2012,6 +2013,7 @@ module qfd_qc_sle_fe__sle_fe_v2 (
     ot_dp_st #(.W(1)) u_bout_rv_wo (.clk(clk), .rst_n(rst_n), .d(w_core_hr_o[452]), .ea(rst_n), .q(rv_wo[0:0]), .eq(rv_wo[1]));
     ot_dp_st #(.W(48)) u_bout_sc_wo (.clk(clk), .rst_n(rst_n), .d(w_core_sc_up_o[47:0]), .ea(rst_n), .q(sc_wo[47:0]), .eq(sc_wo[48]));
     ot_dp_st #(.W(1088)) u_bout_st_wo (.clk(clk), .rst_n(rst_n), .d(w_core_st_up_o[1087:0]), .ea(rst_n), .q(st_wo[1087:0]), .eq(st_wo[1088]));
+    ot_dp_st #(.W(9)) u_bout_treq_wo (.clk(clk), .rst_n(rst_n), .d(w_core_treq_o[8:0]), .ea(rst_n), .q(treq_wo[8:0]), .eq(treq_wo[9]));
     ot_dp_st #(.W(1105)) u_bout_x_fw_o (.clk(clk), .rst_n(rst_n), .d({w_core_chu_q[1094:0], w_core_agu_q[9:0]}), .ea(rst_n), .q(x_fw_o[1104:0]), .eq(x_fw_o[1105]));
     ot_dp_st #(.W(47)) u_bout_x_sc_o (.clk(clk), .rst_n(rst_n), .d(w_core_scd_q[47:1]), .ea(rst_n), .q(x_sc_o[46:0]), .eq(x_sc_o[47]));
     ot_dp_st #(.W(1088)) u_bout_x_stm_o (.clk(clk), .rst_n(rst_n), .d(w_core_se_q[1087:0]), .ea(rst_n), .q(x_stm_o[1087:0]), .eq(x_stm_o[1088]));

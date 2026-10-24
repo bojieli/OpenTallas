@@ -18,6 +18,7 @@ module qfd_qc_slw_fw__slw_fw_v1 (
     input  wire [1:0] rv_wi,   // 1 data + epoch [1]: lane sl_W1_fe__rv_eo_rv_wi, 2 cycles: sl_W1_fe l9_o[1] -> sl_W0_fw
     input  wire [48:0] sc_wi,   // 48 data + epoch [48]: lane sl_W1_fe__sc_eo_sc_wi, 2 cycles: sl_W1_fe sc_up_o[48] -> sl_W0_fw
     input  wire [1088:0] st_wi,   // 1088 data + epoch [1088]: lane sl_W1_fe__st_eo_st_wi, 2 cycles: sl_W1_fe st_up_o[1088] -> sl_W0_fw
+    input  wire [9:0] treq_wi,   // 9 data + epoch [9]: lane sl_W1_fe__treq_eo_treq_wi, 2 cycles: sl_W1_fe treq_o[9] -> sl_W0_fw
     input  wire [1262:0] x_ctl_i,   // 1262 data + epoch [1262]: lane sl_W0_ctl__x_ctl_fw, 3 cycles: sl_W0_ctl ag_own[10], cc_o[50], own_ch[1095] ... -> sl_W0_fw
     input  wire [1105:0] x_fe_i,   // 1105 data + epoch [1105]: lane sl_W0_fe__x_fe_fw, 4 cycles: sl_W0_fe agu_q[10], chu_q[1095] -> sl_W0_fw
     input  wire [48:0] x_sc_i,   // 48 data + epoch [48]: lane sl_W0_sc__x_sc_fw, 7 cycles: sl_W0_sc dn_o[48] -> sl_W0_fw
@@ -70,6 +71,8 @@ module qfd_qc_slw_fw__slw_fw_v1 (
     wire sc_wi_eq;
     wire [1087:0] st_wi_q;
     wire st_wi_eq;
+    wire [8:0] treq_wi_q;
+    wire treq_wi_eq;
     wire [1261:0] x_ctl_i_q;
     wire x_ctl_i_eq;
     wire [1104:0] x_fe_i_q;
@@ -104,15 +107,6 @@ module qfd_qc_slw_fw__slw_fw_v1 (
     wire [516:0] cws0_o_s0;
     wire [34:0] x_ctl_stm_o_s0;
     wire [93:0] x_su_c_ctl_o_s0;
-    wire ub_0;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[0] (see bind_report errors)
-    wire ub_1;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[1] (see bind_report errors)
-    wire ub_2;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[2] (see bind_report errors)
-    wire ub_3;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[3] (see bind_report errors)
-    wire ub_4;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[4] (see bind_report errors)
-    wire ub_5;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[5] (see bind_report errors)
-    wire ub_6;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[6] (see bind_report errors)
-    wire ub_7;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[7] (see bind_report errors)
-    wire ub_8;  // UNBOUND tied: dvs_W0.u_core.u_sub.u_fdn.treq_i[8] (see bind_report errors)
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(116)) u_bin_cmd_wi (.clk(clk), .rst_n(rst_n), .d(cmd_wi[115:0]), .ea(cmd_wi[116]), .q(cmd_wi_q), .eq(cmd_wi_eq));
@@ -127,6 +121,7 @@ module qfd_qc_slw_fw__slw_fw_v1 (
     ot_dp_st #(.W(1)) u_bin_rv_wi (.clk(clk), .rst_n(rst_n), .d(rv_wi[0:0]), .ea(rv_wi[1]), .q(rv_wi_q), .eq(rv_wi_eq));
     ot_dp_st #(.W(48)) u_bin_sc_wi (.clk(clk), .rst_n(rst_n), .d(sc_wi[47:0]), .ea(sc_wi[48]), .q(sc_wi_q), .eq(sc_wi_eq));
     ot_dp_st #(.W(1088)) u_bin_st_wi (.clk(clk), .rst_n(rst_n), .d(st_wi[1087:0]), .ea(st_wi[1088]), .q(st_wi_q), .eq(st_wi_eq));
+    ot_dp_st #(.W(9)) u_bin_treq_wi (.clk(clk), .rst_n(rst_n), .d(treq_wi[8:0]), .ea(treq_wi[9]), .q(treq_wi_q), .eq(treq_wi_eq));
     ot_dp_st #(.W(1262)) u_bin_x_ctl_i (.clk(clk), .rst_n(rst_n), .d(x_ctl_i[1261:0]), .ea(x_ctl_i[1262]), .q(x_ctl_i_q), .eq(x_ctl_i_eq));
     ot_dp_st #(.W(1105)) u_bin_x_fe_i (.clk(clk), .rst_n(rst_n), .d(x_fe_i[1104:0]), .ea(x_fe_i[1105]), .q(x_fe_i_q), .eq(x_fe_i_eq));
     ot_dp_st #(.W(48)) u_bin_x_sc_i (.clk(clk), .rst_n(rst_n), .d(x_sc_i[47:0]), .ea(x_sc_i[48]), .q(x_sc_i_q), .eq(x_sc_i_eq));
@@ -194,7 +189,7 @@ module qfd_qc_slw_fw__slw_fw_v1 (
         .st_up_i(st_wi_q[1087:0]),
         .sw_q(w_core_sw_q),
         .treq_c(w_core_treq_c),
-        .treq_i({ub_8, ub_7, ub_6, ub_5, ub_4, ub_3, ub_2, ub_1, ub_0}),
+        .treq_i(treq_wi_q[8:0]),
         .treq_q(w_core_treq_q)
     );
 endmodule

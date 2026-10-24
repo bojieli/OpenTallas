@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/home/ubuntu/wt/qc-p5-tie-1023/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "errors": 0,
  "warnings": 72,
@@ -16,9 +16,9 @@
    "near_duplicate_types": 20,
    "mergeable_saving": 10
   },
-  "ports": 3703,
-  "lanes": 2142,
-  "bits": 1398951,
+  "ports": 3716,
+  "lanes": 2154,
+  "bits": 1399068,
   "taps_cores": {
    "taps": 136,
    "hard_cores": 36,
@@ -167,33 +167,33 @@
     },
     {
      "at_um": 1000,
-     "bits": 2842,
+     "bits": 2851,
      "tracks": 368057,
      "ratio": 0.0077,
      "m89_only_ratio": 0.009,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1241,
-     "worst_part_bits": 2842
+     "worst_part_ratio": 0.1245,
+     "worst_part_bits": 2851
     },
     {
      "at_um": 1250,
-     "bits": 3958,
+     "bits": 3967,
      "tracks": 368057,
      "ratio": 0.0108,
      "m89_only_ratio": 0.0126,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1729,
-     "worst_part_bits": 3958
+     "worst_part_ratio": 0.1733,
+     "worst_part_bits": 3967
     },
     {
      "at_um": 1500,
-     "bits": 3958,
+     "bits": 3967,
      "tracks": 368057,
      "ratio": 0.0108,
      "m89_only_ratio": 0.0126,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1729,
-     "worst_part_bits": 3958
+     "worst_part_ratio": 0.1733,
+     "worst_part_bits": 3967
     },
     {
      "at_um": 1750,
@@ -4113,6 +4113,18 @@
    "ucie_kv__rx_flit_fdi_rx_flit": 2,
    "ucie_kv__rx_v_fdi_rx_v": 2,
    "ucie_kv__tx_up_fdi_tx_up": 2,
+   "sl_E0_fe__treq_wo_treq_ei": 2,
+   "sl_E1_fe__treq_wo_treq_ei": 2,
+   "sl_E2_fe__treq_wo_treq_ei": 2,
+   "sl_E3_fe__treq_wo_treq_ei": 2,
+   "sl_E4_fe__treq_wo_treq_ei": 2,
+   "sl_W0_fe__treq_eo_treq_ei": 2,
+   "sl_W1_fe__treq_eo_treq_wi": 2,
+   "sl_W2_fe__treq_eo_treq_wi": 2,
+   "sl_W3_fe__treq_eo_treq_wi": 2,
+   "sl_W4_fe__treq_eo_treq_wi": 2,
+   "sl_W5_fe__treq_eo_treq_wi": 2,
+   "tt_ctlm__table_req_treq_wi": 4,
    "coll_core__crec_tx_s1": 8,
    "coll_s__crec_rx_s1": 8,
    "coll_core__crec_tx_s2": 8,
@@ -4502,24 +4514,9 @@
    "glue__mufl": 4,
    "glue__kvrst": 2
   },
-  "r8": {
-   "groups": 1736,
-   "groups_unequal": 0,
-   "inversions": 0,
-   "replica_sets": 609,
-   "replica_unequal": 0,
-   "types_conflicting": 0,
-   "replica_mode": "all",
-   "bus_mode": "part",
-   "async_skipped": 1,
-   "depth_source": "landing file",
-   "checked": true,
-   "groups_file": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/home/ubuntu/wt/qc-p5-plan/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
-  },
   "seams": {
    "nets": {
-    "abutted": 1402654,
+    "abutted": 1402784,
     "channel": 0
    },
    "pairs": {
@@ -6980,55 +6977,55 @@
      "channel": 0
     },
     "sl_E0_fw|sl_W0_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E0_fe|sl_E1_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_E1_fe|sl_E2_fw": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E2_fe|sl_E3_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_E3_fe|sl_E4_fw": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E4_fe|sl_E5_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W0_fw|sl_W1_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W1_fw|sl_W2_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_W2_fw|sl_W3_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W3_fw|sl_W4_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_W4_fw|sl_W5_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "coll_f4|sl_W5_fw": {
-     "abutted": 3980,
+     "abutted": 3990,
      "channel": 0
     },
     "coll_f4|tt_ctlm": {
-     "abutted": 1779,
+     "abutted": 1789,
      "channel": 0
     },
     "coll_f3|coll_f4": {
@@ -7233,7 +7230,8 @@
     }
    ],
    "dropped_bits": 0
-  }
+  },
+  "png": "/home/ubuntu/wt/qc-p5-tie-1023/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {

@@ -78,8 +78,8 @@ module qfd_qc_coll_core_part (
     wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y;
     wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y;
     wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y;
-    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y;
-    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y;
+    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30100_Y;
+    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30101_Y;
     wire [3:0] w_io_collective_u_io_g_face_0_u_face_cdc_fault;
     wire [0:0] w_io_collective_u_io_g_face_0_u_face_epoch_abort;
     wire [7:0] w_io_collective_u_io_g_face_0_u_face_fault_cause;
@@ -260,7 +260,7 @@ module qfd_qc_coll_core_part (
     ot_dp_st #(.W(1)) u_bout_io_collective__out_last (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_last[0]), .ea(rst_n), .q(io_collective__out_last[0:0]), .eq(io_collective__out_last[1]));
     ot_dp_st #(.W(3)) u_bout_io_collective__out_rank (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_rank[2:0]), .ea(rst_n), .q(io_collective__out_rank[2:0]), .eq(io_collective__out_rank[3]));
     ot_dp_st #(.W(1)) u_bout_io_collective__out_valid (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_valid[0]), .ea(rst_n), .q(io_collective__out_valid[0:0]), .eq(io_collective__out_valid[1]));
-    ot_dp_st #(.W(1)) u_bout_io_collective__shared_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y[0]), .ea(rst_n), .q(io_collective__shared_fault[0:0]), .eq(io_collective__shared_fault[1]));
+    ot_dp_st #(.W(1)) u_bout_io_collective__shared_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30101_Y[0]), .ea(rst_n), .q(io_collective__shared_fault[0:0]), .eq(io_collective__shared_fault[1]));
     ot_dp_st #(.W(548)) u_bout_rec_tx_s0 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx0_valid[0], w_io_collective_u_io_u_collective_sx0_peer_slot[0], w_io_collective_u_io_u_collective_sx0_rec[545:0]}), .ea(rst_n), .q(rec_tx_s0[547:0]), .eq(rec_tx_s0[548]));
     ot_dp_st #(.W(549)) u_bout_rec_tx_s1 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx2_rec[2:0], w_io_collective_u_io_u_collective_sx1_rec[545:0]}), .ea(rst_n), .q(rec_tx_s1[548:0]), .eq(rec_tx_s1[549]));
     ot_dp_st #(.W(548)) u_bout_rec_tx_s2 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx2_valid[0], w_io_collective_u_io_u_collective_sx2_peer_slot[0], w_io_collective_u_io_u_collective_sx1_valid[0], w_io_collective_u_io_u_collective_sx1_peer_slot[0], w_io_collective_u_io_u_collective_sx0_valid[0], w_io_collective_u_io_u_collective_sx2_rec[545:3]}), .ea(rst_n), .q(rec_tx_s2[547:0]), .eq(rec_tx_s2[548]));
@@ -373,13 +373,13 @@ module qfd_qc_coll_core_part (
     qfd_sigbump u_bump_pkg_s1 (
         .o(w_bump_pkg_s1_o)
     );
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y = w_io_collective_u_io_u_collective_fault[0] | w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.44
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.67
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.86
-    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y = |{fltv_s_i_q[6:3], fltv_s_i_q[0], flt_s_i_q[0], rec_rx_s2_i_q[546:545], fltv_n_i_q[1:0], flt_n_i_q[0], rec_rx_s0_i_q[546], w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0], w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:0]};  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.46-66.66
-    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y = |{fltv_s_i_q[7], fltv_s_i_q[1], fltv_n_i_q[2], w_io_collective_u_io_g_face_1_u_face_epoch_abort[0], w_io_collective_u_io_g_face_0_u_face_epoch_abort[0]};  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.69-66.85
-    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y = w_io_collective_u_io_u_shared_fault[0] | w_io_collective_u_io_g_six_five_u_gearbox_core_fault[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.45
-    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y = w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y[0] | w_io_collective_u_io_g_six_five_u_gearbox_fdi_fault[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.58
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y = w_io_collective_u_io_u_collective_fault[0] | w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30101_Y[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.44
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.67
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.86
+    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y = |{fltv_s_i_q[6:3], fltv_s_i_q[0], flt_s_i_q[0], rec_rx_s2_i_q[546:545], fltv_n_i_q[1:0], flt_n_i_q[0], rec_rx_s0_i_q[546], w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0], w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:0]};  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io_production.sv:66.46-66.66
+    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y = |{fltv_s_i_q[7], fltv_s_i_q[1], fltv_n_i_q[2], w_io_collective_u_io_g_face_1_u_face_epoch_abort[0], w_io_collective_u_io_g_face_0_u_face_epoch_abort[0]};  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io_production.sv:66.69-66.85
+    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30100_Y = w_io_collective_u_io_u_shared_fault[0] | w_io_collective_u_io_g_six_five_u_gearbox_core_fault[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.45
+    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30101_Y = w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_30100_Y[0] | w_io_collective_u_io_g_six_five_u_gearbox_fdi_fault[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.58
     // as-built io_collective.u_io.g_face[0].u_face
     qfd_coll_static_face #(.FW(546), .L(53), .PEER_R(5), .PHY(20), .PLAND(0), .PLD(2), .PLK(1), .R(5), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_io_collective_u_io_g_face_0_u_face (
         .cal_ck(clk_coll),

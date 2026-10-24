@@ -3,8 +3,8 @@
  "partitions": 388,
  "types": 56,
  "types_merged": 146,
- "ports": 3703,
- "lanes": 2142,
+ "ports": 3716,
+ "lanes": 2154,
  "die_um": [
   31216.32,
   25228.8
@@ -587,11 +587,122 @@
    "tt_ctlm"
   ],
   "fault_sources_without_plan_lane": [],
-  "l9_face_flip_buses": [
-   "l9_eo",
-   "l9_wi"
-  ],
+  "l9_face_flip_buses": [],
   "cb_mismatches": []
+ },
+ "treq_lanes": {
+  "note": "QC-P5-TIE: tt_ctlm.table_req -> every slice treq_i beside cmd (TREQ_BUS, treq_links); producer = HP13 cpub39 CALR treq_q (live, open in r56 die.v); the binder connects it with asbuilt rewire class 'treq' (bind/plan_rewires_treq.json)",
+  "lanes": [
+   {
+    "lane_role": "treq_wo_treq_ei",
+    "path": [
+     "sl_E0_fe",
+     "sl_E1_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_E0.cmd_wo -> dvs_E1.cmd_ei"
+   },
+   {
+    "lane_role": "treq_wo_treq_ei",
+    "path": [
+     "sl_E1_fe",
+     "sl_E2_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_E1.cmd_wo -> dvs_E2.cmd_ei"
+   },
+   {
+    "lane_role": "treq_wo_treq_ei",
+    "path": [
+     "sl_E2_fe",
+     "sl_E3_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_E2.cmd_wo -> dvs_E3.cmd_ei"
+   },
+   {
+    "lane_role": "treq_wo_treq_ei",
+    "path": [
+     "sl_E3_fe",
+     "sl_E4_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_E3.cmd_wo -> dvs_E4.cmd_ei"
+   },
+   {
+    "lane_role": "treq_wo_treq_ei",
+    "path": [
+     "sl_E4_fe",
+     "sl_E5_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_E4.cmd_wo -> dvs_E5.cmd_ei"
+   },
+   {
+    "lane_role": "treq_eo_treq_ei",
+    "path": [
+     "sl_W0_fe",
+     "sl_E0_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W0.cmd_eo -> dvs_E0.cmd_ei"
+   },
+   {
+    "lane_role": "treq_eo_treq_wi",
+    "path": [
+     "sl_W1_fe",
+     "sl_W0_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W1.cmd_eo -> dvs_W0.cmd_wi"
+   },
+   {
+    "lane_role": "treq_eo_treq_wi",
+    "path": [
+     "sl_W2_fe",
+     "sl_W1_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W2.cmd_eo -> dvs_W1.cmd_wi"
+   },
+   {
+    "lane_role": "treq_eo_treq_wi",
+    "path": [
+     "sl_W3_fe",
+     "sl_W2_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W3.cmd_eo -> dvs_W2.cmd_wi"
+   },
+   {
+    "lane_role": "treq_eo_treq_wi",
+    "path": [
+     "sl_W4_fe",
+     "sl_W3_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W4.cmd_eo -> dvs_W3.cmd_wi"
+   },
+   {
+    "lane_role": "treq_eo_treq_wi",
+    "path": [
+     "sl_W5_fe",
+     "sl_W4_fw"
+    ],
+    "bits": 9,
+    "twin_of": "dvs_W5.cmd_eo -> dvs_W4.cmd_wi"
+   },
+   {
+    "lane_role": "table_req_treq_wi",
+    "path": [
+     "tt_ctlm",
+     "coll_f4",
+     "sl_W5_fw"
+    ],
+    "bits": 9,
+    "twin_of": "tt_ctlm.cmd -> dvs_W5.cmd_wi"
+   }
+  ]
  },
  "planned_cores": [
   {

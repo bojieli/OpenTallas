@@ -16,6 +16,7 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     input  wire [3:0] rr_wi,   // 3 data + epoch [3]: lane coll_core__out_rank_rr_wi, 6 cycles: coll_core out_rank[3] -> sl_W5_fw
     input  wire [1:0] rv_wi,   // 1 data + epoch [1]: lane coll_core__out_valid_rv_wi, 6 cycles: coll_core out_valid[1] -> sl_W5_fw
     input  wire [1088:0] st_wi,   // 1088 data + epoch [1088]: lane tt_ctlm__tl_st_wi, 4 cycles: tt_ctlm tl[1088] -> sl_W5_fw
+    input  wire [9:0] treq_wi,   // 9 data + epoch [9]: lane tt_ctlm__table_req_treq_wi, 4 cycles: tt_ctlm table_req[9] -> sl_W5_fw
     input  wire [1262:0] x_ctl_i,   // 1262 data + epoch [1262]: lane sl_W5_ctl__x_ctl_fw, 3 cycles: sl_W5_ctl ag_own[10], cc_o[50], own_ch[1095] ... -> sl_W5_fw
     input  wire [1105:0] x_fe_i,   // 1105 data + epoch [1105]: lane sl_W5_fe__x_fe_fw, 4 cycles: sl_W5_fe agu_q[10], chu_q[1095] -> sl_W5_fw
     input  wire [48:0] x_sc_i,   // 48 data + epoch [48]: lane sl_W5_sc__x_sc_fw, 7 cycles: sl_W5_sc dn_o[48] -> sl_W5_fw
@@ -34,7 +35,6 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     output wire [107:0] ss_wo,   // 107 data + epoch [107]: lane sl_W5_fw__ss_wo_ss5, 4 cycles: st[107] -> tt_ctlm
     output wire [1155:0] x_ctl_o,   // 1155 data + epoch [1155]: lane sl_W5_fw__x_fw_ctl, 3 cycles: chd_q[1038], cmd_q[116], pc_bad[1] -> sl_W5_ctl
     output wire [1616:0] x_fe_o,   // 1616 data + epoch [1616]: lane sl_W5_fw__x_fw_fe, 6 cycles: chd_q[1038], cmd_q[116], hr_q[453] ... -> sl_W5_fe
-    output wire [48:0] x_sc_o,   // 48 data + epoch [48]: lane sl_W5_fw__x_fw_sc, 10 cycles: scu_q[48] -> sl_W5_sc
     output wire [1097:0] x_stm_o,   // 1097 data + epoch [1097]: lane sl_W5_fw__x_fw_stm, 2 cycles: sw_q[1088], treq_c[9] -> sl_W5_stm
     output wire [453:0] x_tap_o,   // 453 data + epoch [453]: lane sl_W5_fw__x_fw_tap, 11 cycles: hr_q[453] -> sl_W5_tap
     input  wire [516:0] cws0_i,   // ft cws0 lane sl_W5_hc0__cws0: sl_W5_hc0 -> c_W5_bn_00
@@ -64,6 +64,8 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     wire rv_wi_eq;
     wire [1087:0] st_wi_q;
     wire st_wi_eq;
+    wire [8:0] treq_wi_q;
+    wire treq_wi_eq;
     wire [1261:0] x_ctl_i_q;
     wire x_ctl_i_eq;
     wire [1104:0] x_fe_i_q;
@@ -80,7 +82,6 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     wire [452:0] w_core_hr_q;
     wire [0:0] w_core_pc_bad;
     wire [47:0] w_core_sc_dn_o;
-    wire [47:0] w_core_scu_q;
     wire [106:0] w_core_st;
     wire [1087:0] w_core_st_dn_o;
     wire [1087:0] w_core_sw_q;
@@ -1170,63 +1171,15 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     wire [0:0] pd4_hr_wi_450;
     wire [0:0] pd4_hr_wi_451;
     wire [0:0] pd4_hr_wi_452;
-    wire ub_0;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[0] (see bind_report errors)
-    wire ub_1;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[1] (see bind_report errors)
-    wire ub_2;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[2] (see bind_report errors)
-    wire ub_3;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[3] (see bind_report errors)
-    wire ub_4;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[4] (see bind_report errors)
-    wire ub_5;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[5] (see bind_report errors)
-    wire ub_6;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[6] (see bind_report errors)
-    wire ub_7;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[7] (see bind_report errors)
-    wire ub_8;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[8] (see bind_report errors)
-    wire ub_9;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[9] (see bind_report errors)
-    wire ub_10;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[10] (see bind_report errors)
-    wire ub_11;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[11] (see bind_report errors)
-    wire ub_12;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[12] (see bind_report errors)
-    wire ub_13;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[13] (see bind_report errors)
-    wire ub_14;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[14] (see bind_report errors)
-    wire ub_15;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[15] (see bind_report errors)
-    wire ub_16;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[16] (see bind_report errors)
-    wire ub_17;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[17] (see bind_report errors)
-    wire ub_18;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[18] (see bind_report errors)
-    wire ub_19;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[19] (see bind_report errors)
-    wire ub_20;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[20] (see bind_report errors)
-    wire ub_21;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[21] (see bind_report errors)
-    wire ub_22;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[22] (see bind_report errors)
-    wire ub_23;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[23] (see bind_report errors)
-    wire ub_24;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[24] (see bind_report errors)
-    wire ub_25;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[25] (see bind_report errors)
-    wire ub_26;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[26] (see bind_report errors)
-    wire ub_27;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[27] (see bind_report errors)
-    wire ub_28;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[28] (see bind_report errors)
-    wire ub_29;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[29] (see bind_report errors)
-    wire ub_30;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[30] (see bind_report errors)
-    wire ub_31;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[31] (see bind_report errors)
-    wire ub_32;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[32] (see bind_report errors)
-    wire ub_33;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[33] (see bind_report errors)
-    wire ub_34;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[34] (see bind_report errors)
-    wire ub_35;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[35] (see bind_report errors)
-    wire ub_36;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[36] (see bind_report errors)
-    wire ub_37;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[37] (see bind_report errors)
-    wire ub_38;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[38] (see bind_report errors)
-    wire ub_39;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[39] (see bind_report errors)
-    wire ub_40;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[40] (see bind_report errors)
-    wire ub_41;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[41] (see bind_report errors)
-    wire ub_42;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[42] (see bind_report errors)
-    wire ub_43;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[43] (see bind_report errors)
-    wire ub_44;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[44] (see bind_report errors)
-    wire ub_45;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[45] (see bind_report errors)
-    wire ub_46;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[46] (see bind_report errors)
-    wire ub_47;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.sc_up_i[47] (see bind_report errors)
-    wire ub_48;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[0] (see bind_report errors)
-    wire ub_49;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[1] (see bind_report errors)
-    wire ub_50;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[2] (see bind_report errors)
-    wire ub_51;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[3] (see bind_report errors)
-    wire ub_52;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[4] (see bind_report errors)
-    wire ub_53;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[5] (see bind_report errors)
-    wire ub_54;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[6] (see bind_report errors)
-    wire ub_55;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[7] (see bind_report errors)
-    wire ub_56;  // UNBOUND tied: dvs_W5.u_core.u_sub.u_fdn.treq_i[8] (see bind_report errors)
+    wire [0:0] pd4_treq_wi_0;
+    wire [0:0] pd4_treq_wi_1;
+    wire [0:0] pd4_treq_wi_2;
+    wire [0:0] pd4_treq_wi_3;
+    wire [0:0] pd4_treq_wi_4;
+    wire [0:0] pd4_treq_wi_5;
+    wire [0:0] pd4_treq_wi_6;
+    wire [0:0] pd4_treq_wi_7;
+    wire [0:0] pd4_treq_wi_8;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(116)) u_bin_cmd_wi (.clk(clk), .rst_n(rst_n), .d(cmd_wi[115:0]), .ea(cmd_wi[116]), .q(cmd_wi_q), .eq(cmd_wi_eq));
@@ -1239,6 +1192,7 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     ot_dp_st #(.W(3)) u_bin_rr_wi (.clk(clk), .rst_n(rst_n), .d(rr_wi[2:0]), .ea(rr_wi[3]), .q(rr_wi_q), .eq(rr_wi_eq));
     ot_dp_st #(.W(1)) u_bin_rv_wi (.clk(clk), .rst_n(rst_n), .d(rv_wi[0:0]), .ea(rv_wi[1]), .q(rv_wi_q), .eq(rv_wi_eq));
     ot_dp_st #(.W(1088)) u_bin_st_wi (.clk(clk), .rst_n(rst_n), .d(st_wi[1087:0]), .ea(st_wi[1088]), .q(st_wi_q), .eq(st_wi_eq));
+    ot_dp_st #(.W(9)) u_bin_treq_wi (.clk(clk), .rst_n(rst_n), .d(treq_wi[8:0]), .ea(treq_wi[9]), .q(treq_wi_q), .eq(treq_wi_eq));
     ot_dp_st #(.W(1262)) u_bin_x_ctl_i (.clk(clk), .rst_n(rst_n), .d(x_ctl_i[1261:0]), .ea(x_ctl_i[1262]), .q(x_ctl_i_q), .eq(x_ctl_i_eq));
     ot_dp_st #(.W(1105)) u_bin_x_fe_i (.clk(clk), .rst_n(rst_n), .d(x_fe_i[1104:0]), .ea(x_fe_i[1105]), .q(x_fe_i_q), .eq(x_fe_i_eq));
     ot_dp_st #(.W(48)) u_bin_x_sc_i (.clk(clk), .rst_n(rst_n), .d(x_sc_i[47:0]), .ea(x_sc_i[48]), .q(x_sc_i_q), .eq(x_sc_i_eq));
@@ -1257,7 +1211,6 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     ot_dp_st #(.W(107)) u_bout_ss_wo (.clk(clk), .rst_n(rst_n), .d(w_core_st[106:0]), .ea(rst_n), .q(ss_wo[106:0]), .eq(ss_wo[107]));
     ot_dp_st #(.W(1155)) u_bout_x_ctl_o (.clk(clk), .rst_n(rst_n), .d({w_core_pc_bad[0], w_core_cmd_q[115:0], w_core_chd_q[1037:0]}), .ea(rst_n), .q(x_ctl_o[1154:0]), .eq(x_ctl_o[1155]));
     ot_dp_st #(.W(1616)) u_bout_x_fe_o (.clk(clk), .rst_n(rst_n), .d({w_core_treq_q[8:0], w_core_hr_q[452:0], w_core_cmd_q[115:0], w_core_chd_q[1037:0]}), .ea(rst_n), .q(x_fe_o[1615:0]), .eq(x_fe_o[1616]));
-    ot_dp_st #(.W(48)) u_bout_x_sc_o (.clk(clk), .rst_n(rst_n), .d(w_core_scu_q[47:0]), .ea(rst_n), .q(x_sc_o[47:0]), .eq(x_sc_o[48]));
     ot_dp_st #(.W(1097)) u_bout_x_stm_o (.clk(clk), .rst_n(rst_n), .d({w_core_treq_c[8:0], w_core_sw_q[1087:0]}), .ea(rst_n), .q(x_stm_o[1096:0]), .eq(x_stm_o[1097]));
     ot_dp_st #(.W(453)) u_bout_x_tap_o (.clk(clk), .rst_n(rst_n), .d(w_core_hr_q[452:0]), .ea(rst_n), .q(x_tap_o[452:0]), .eq(x_tap_o[453]));
     ot_dp_st #(.W(516)) u_ft_cws0_o_0 (.clk(clk), .rst_n(rst_n), .d(cws0_i[515:0]), .ea(cws0_i[516]), .q(cws0_o_s0[515:0]), .eq(cws0_o_s0[516]));
@@ -2347,8 +2300,17 @@ module qfd_qc_slw_fw__slw_fw_v3 (
     ot_dp_dly #(.W(1), .D(4)) u_pd4_hr_wi_450 (.clk(clk), .d(hr_wi_q[450]), .q(pd4_hr_wi_450));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(4)) u_pd4_hr_wi_451 (.clk(clk), .d(hr_wi_q[451]), .q(pd4_hr_wi_451));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(4)) u_pd4_hr_wi_452 (.clk(clk), .d(hr_wi_q[452]), .q(pd4_hr_wi_452));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_0 (.clk(clk), .d(treq_wi_q[0]), .q(pd4_treq_wi_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_1 (.clk(clk), .d(treq_wi_q[1]), .q(pd4_treq_wi_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_2 (.clk(clk), .d(treq_wi_q[2]), .q(pd4_treq_wi_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_3 (.clk(clk), .d(treq_wi_q[3]), .q(pd4_treq_wi_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_4 (.clk(clk), .d(treq_wi_q[4]), .q(pd4_treq_wi_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_5 (.clk(clk), .d(treq_wi_q[5]), .q(pd4_treq_wi_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_6 (.clk(clk), .d(treq_wi_q[6]), .q(pd4_treq_wi_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_7 (.clk(clk), .d(treq_wi_q[7]), .q(pd4_treq_wi_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_treq_wi_8 (.clk(clk), .d(treq_wi_q[8]), .q(pd4_treq_wi_8));  // landing pad: as-built relative timing
     // as-built dvs_W5.u_core.u_sub.u_fdn
-    qfd_dv_s8_fdn_arf1_l9h #(.CE_MUT(0), .USE_SEL_COPIES(0)) u_core (
+    qfd_dv_s8_fdn_arf1_w5 #(.CE_MUT(0), .USE_SEL_COPIES(0)) u_core (
         .ag_dn_o(w_core_ag_dn_o),
         .ag_own(x_ctl_i_q[9:0]),
         .agu_q(x_fe_i_q[9:0]),
@@ -2368,8 +2330,6 @@ module qfd_qc_slw_fw__slw_fw_v3 (
         .rst_n(rst_n),
         .sc_dn_c(x_sc_i_q[47:0]),
         .sc_dn_o(w_core_sc_dn_o),
-        .sc_up_i({ub_47, ub_46, ub_45, ub_44, ub_43, ub_42, ub_41, ub_40, ub_39, ub_38, ub_37, ub_36, ub_35, ub_34, ub_33, ub_32, ub_31, ub_30, ub_29, ub_28, ub_27, ub_26, ub_25, ub_24, ub_23, ub_22, ub_21, ub_20, ub_19, ub_18, ub_17, ub_16, ub_15, ub_14, ub_13, ub_12, ub_11, ub_10, ub_9, ub_8, ub_7, ub_6, ub_5, ub_4, ub_3, ub_2, ub_1, ub_0}),
-        .scu_q(w_core_scu_q),
         .st(w_core_st),
         .st_c(x_ctl_i_q[1261:1155]),
         .st_dn_c({x_stm_i_q[1086:0], flt_stm_i_q[0]}),
@@ -2377,7 +2337,7 @@ module qfd_qc_slw_fw__slw_fw_v3 (
         .st_up_i(st_wi_q[1087:0]),
         .sw_q(w_core_sw_q),
         .treq_c(w_core_treq_c),
-        .treq_i({ub_56, ub_55, ub_54, ub_53, ub_52, ub_51, ub_50, ub_49, ub_48}),
+        .treq_i({pd4_treq_wi_8[0], pd4_treq_wi_7[0], pd4_treq_wi_6[0], pd4_treq_wi_5[0], pd4_treq_wi_4[0], pd4_treq_wi_3[0], pd4_treq_wi_2[0], pd4_treq_wi_1[0], pd4_treq_wi_0[0]}),
         .treq_q(w_core_treq_q)
     );
 endmodule

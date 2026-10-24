@@ -1,0 +1,11 @@
+TKM_LOCKSTEP PASS events=65 writes=64 shift=2 pinned_cycles=25201 twin_cycles=25203
+TKM_LOCKSTEP PASS events=65 writes=64 shift=0 pinned_cycles=25201 twin_cycles=25201
+TKM_LOCKSTEP FAIL
+ 9
+ first:
+ event 0: pinned t25071 ('1', '0000030000', 'ffff') twin t25072 ('1', '0000030000', 'ffff')
+ event 1: pinned t25072 ('1', '0000034000', 'ffff') twin t25073 ('1', '0000034000', 'ffff')
+ event 2: pinned t25075 ('1', '0000030010', 'ffff') twin t25076 ('1', '0000030010', 'ffff')
+ event 3: pinned t25076 ('1', '0000034010', 'ffff') twin t25077 ('1', '0000034010', 'ffff')
+ event 4: pinned t25079 ('1', '0000030020', 'ffff') twin t25080 ('1', '0000030020', 'ffff')
+ event 5: pinned t25080 ('1', '0000034020', 'ffff') twin t25081 ('1', '0000034020', 'ffff')

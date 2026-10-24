@@ -18,7 +18,7 @@ def g0(mut=None):
     p = copy.deepcopy(EX)
     if mut:
         mut(p)
-    R, summ = check.run(p)
+    R, summ = check.run(p, completeness=True)
     return R, summ
 
 
@@ -102,7 +102,7 @@ def test_cut_overflow():
 
 
 def test_clock_reset_leaf():
-    assert any("no clock tap" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("clock")))
+    assert any("no clock method" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("clock")))
     assert any("no reset" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("reset")))
     assert any("unknown instance" in x for x in
                errs(lambda p: p["partition_types"]["mid"]["buses"][0].update(leaf="u_x.cfg_i")))
@@ -411,3 +411,165 @@ def test_latency_groups_pad_to_slowest():
     c = copy.deepcopy(EX)
     c["latency_groups"] = [dict(name="bad", lanes=["x", "cfg12"])]
     assert schema.Plan(c).bus_pads()[1]
+
+
+def test_core_ks_rules(monkeypatch):
+    """COORD 10-23 CORE-KS: (a) a type over 400k cells needs hard_cores[], a core without pins is an ERROR;
+    (b) M2/M3 core pins are not checked in a mirrored instance's die frame (platform cell-access tracks)."""
+    def core(o, pins):
+        def m(p):
+            p["partitions"][0]["orient"] = o
+            p["partition_types"]["src"]["hard_cores"] = [dict(
+                inst="u_core", origin_um=[8.64, 8.64], outline_um=[21.6, 21.6], track_offset_um=[0.012, 0.012],
+                pins=pins)]
+        return m
+    m3 = [dict(name="m3p", layer="M3", xy=[0.033, 5.0])]
+    assert errs(core("R0", m3), "hard_cores") == []
+    assert errs(core("MY", m3), "hard_cores") == []
+    monkeypatch.setattr(check, "MIRROR_SKIP", ())
+    assert any("pin m3p M3" in m for m in errs(core("MY", m3), "hard_cores"))
+    monkeypatch.undo()
+    assert any("no pins listed" in m for m in errs(core("R0", []), "hard_cores"))
+    big = lambda n: lambda p: p["partition_types"]["src"].__setitem__("cells", n)  # noqa: E731
+    assert any("no hard_cores" in m for m in errs(big(450_000), "hard_cores"))
+    assert errs(big(350_000), "hard_cores") == []
+    assert errs(lambda p: (big(450_000)(p), core("R0", m3)(p)), "hard_cores") == []
+
+
+def test_cells_estimator(tmp_path):
+    """PLAN-TOOL4 (COORD 10-23): types without type.cells get a cell estimate from evidence files (by type, by
+    partition = max over instances, per_type rep -> partition, module table / Yosys stat), and the 400k hard-core
+    rule bites on it."""
+    import cells
+    p = copy.deepcopy(EX)
+    for t in p["partition_types"].values():
+        t.pop("cells", None)
+    (tmp_path / "bt.json").write_text(json.dumps({"cells_per_type": {"src": {"cells": 500_000}}}))
+    (tmp_path / "bp.json").write_text(json.dumps({"pm1": {"cells": 10}, "pm2": {"cells": 30}}))
+    (tmp_path / "rep.json").write_text(json.dumps({"per_type": {"old_sink": {"rep": "pb", "flat_k": 2.5}}}))
+    est, used = cells.estimate(p, None, [tmp_path / "bt.json", tmp_path / "bp.json", tmp_path / "rep.json"])
+    assert est["src"] == (500_000, "by_type bt.json") and est["mid"][0] == 30 and est["sink"][0] == 2500
+    assert [r[0] for r in cells.over_cap(p, est)] == ["src"]
+    stat = ("=== tiny_src_core ===\n   Number of wires: 3\n   Number of cells:  4321\n"
+            "=== other ===\n   Number of cells: 7\n")
+    (tmp_path / "y.stat").write_text(stat)
+    assert cells.parse_stat(stat) == {"tiny_src_core": 4321, "other": 7}
+    est, _ = cells.estimate(p, None, [tmp_path / "y.stat"])
+    assert est["src"] == (4321, "modules 1/1")
+    R, summ = check.run(p, evidence=[tmp_path / "bt.json"], completeness=True)
+    e = [i["msg"] for i in R.errors() if i["check"] == "hard_cores"]
+    assert len(e) == 1 and "500000 cells (by_type bt.json)" in e[0] and summ["taps_cores"]["over_cap_no_cores"] == 1
+    # auto-discovery in the plan directory
+    (tmp_path / "plan_notes.json").write_text(json.dumps({"cells_per_type": {"mid": {"cells": 900_000}}}))
+    R, _ = check.run(p, plan_dir=tmp_path, completeness=True)
+    assert any("type mid: 900000 cells" in i["msg"] for i in R.errors())
+
+
+def _face_core(pin_faces, orient="R0", conns=None):
+    """src type gets hard core u_core (box 216..648, centre 432,432) with one pin per port on the given core face;
+    tiny_plan: src bus din (leaf u_core.din) enters on W (y 100-120), x_o (leaf u_core.x) leaves on E (y 400-420)."""
+    pos = dict(W=(0.0, 200.0), E=(432.0, 200.0), S=(200.0, 0.0), N=(200.0, 432.0))
+
+    def m(p):
+        t = p["partition_types"]["src"]
+        t["hard_cores"] = [dict(inst="u_core", origin_um=[216.0, 216.0], outline_um=[432.0, 432.0], orient=orient,
+                                pins=[dict(name=f"{port}[0]", layer="M4", xy=list(pos[f]))
+                                      for port, f in pin_faces.items()])]
+        if conns:
+            conns(t)
+    return m
+
+
+def test_core_face_rule():
+    """PLAN-TOOL4 (COORD 10-23, GEOM face rule): a hard-core port must sit on a core face that faces its partner."""
+    ok = errs(_face_core(dict(din="W", x="E")), "core_faces")
+    assert ok == []
+    e = errs(_face_core(dict(din="E", x="E")), "core_faces")
+    assert len(e) == 1 and "port din" in e[0] and "re-pin to face W" in e[0]
+    e = errs(_face_core(dict(din="W", x="W")), "core_faces")
+    assert len(e) == 1 and "port x" in e[0] and "re-pin to face E" in e[0]
+    # the core orient is applied: MY swaps the E/W pins, so the R0-correct pins now face away
+    assert len(errs(_face_core(dict(din="W", x="E"), "MY"), "core_faces")) == 2
+    assert errs(_face_core(dict(din="E", x="W"), "MY"), "core_faces") == []
+    # perpendicular (N face for a W partner well below the core centre): cos ~ -0.1..0 -> WARN, not ERROR
+    R, summ = g0(_face_core(dict(din="W", x="N")))
+    assert [i for i in R.errors() if i["check"] == "core_faces"] == []
+    assert summ["core_faces"]["groups"] == 2
+
+
+def test_core_face_rule_core_to_core(tmp_path):
+    """leaf-to-leaf nets (contents bind net:) and the core_conns.json sidecar name core-to-core partners."""
+    def two(t, via_sidecar=False):
+        t["hard_cores"].append(dict(inst="u_b", origin_um=[8.64, 8.64], outline_um=[100.0, 100.0],
+                                    pins=[dict(name="y", layer="M4", xy=[100.0, 50.0])]))
+        if not via_sidecar:
+            t["contents"][0]["bind"]["q"] = "net:n_qy"
+            t["contents"].append(dict(inst="u_b", module="tiny_b", status="new", bind={"y": "net:n_qy"}))
+    # u_core port q on its E face; the partner u_b sits SW of u_core -> faces away; u_b's y (E face) faces u_core
+    m = _face_core(dict(din="W", x="E", q="E"), conns=two)
+    e = errs(m, "core_faces")
+    assert len(e) == 1 and "core u_core port q" in e[0] and "u_b (net n_qy)" in e[0]
+    assert errs(_face_core(dict(din="W", x="E", q="S"), conns=two), "core_faces") == []
+    p = copy.deepcopy(EX)
+    _face_core(dict(din="W", x="E", q="E"), conns=lambda t: two(t, True))(p)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"src": {"u_core": {"q": ["core:u_b"]}}}))
+    R, summ = check.run(p, plan_dir=tmp_path, completeness=True)
+    e = [i["msg"] for i in R.errors() if i["check"] == "core_faces"]
+    assert len(e) == 1 and "port q" in e[0]
+    assert summ["core_faces"]["cores_unchecked"] == 1      # u_b: no connectivity named for it
+
+
+def test_plan_completeness():
+    """PLAN COMPLETENESS (COORD 10-23): a missing field is an ERROR, counted per field in summary.complete."""
+    def fields(mut):
+        R, summ = g0(mut)
+        return sorted({i["field"] for i in R.errors() if i["check"] == "complete"}), summ["complete"]
+    assert fields(None)[0] == []
+    f, miss = fields(lambda p: p["clock"].pop("common_latency_ps"))
+    assert f == ["common_latency"] and miss["common_latency"] == 1
+    assert fields(lambda p: p["partition_types"]["mid"]["clock"].__setitem__("insertion_ps", 300))[0] == \
+        ["insertion_target"]
+    assert fields(lambda p: p["partition_types"]["mid"].pop("reset"))[0] == ["reset_sync"]
+    assert fields(lambda p: p["partition_types"]["mid"].pop("cells", None) or
+                  p["partition_types"]["mid"].__setitem__("contents", [dict(inst="u", module="m", status="new")]))[0] \
+        == ["cells"]
+
+    def core(off=True, st=None):
+        def m(p):
+            t = p["partition_types"]["src"]
+            hc = dict(inst="u_core", origin_um=[803.52, 803.52], outline_um=[51.84, 51.84],
+                      pins=[dict(name="din[0]", layer="M4", xy=[0.0, 1.0])])
+            if off:
+                hc["track_offset_um"] = [0.0, 0.0]
+            t["hard_cores"] = [hc]
+            if st is not None:
+                t["internal_stations"] = st
+        return m
+    # src bus din enters on W at y 100-120; the core sits at the NE corner: >= 1384 um internal -> stations needed
+    f, _ = fields(core())
+    assert f == ["internal_station"]
+    assert "track_offset" in fields(core(off=False))[0]
+    good = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52],
+                 regs_um=[[400.0, 110.0], [700.0, 500.0]])]
+    assert fields(core(st=good))[0] == []
+    far = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52], regs_um=[[700.0, 500.0]])]
+    assert fields(core(st=far))[0] == ["internal_station"]          # first hop 1090 um
+    # face_flop: a bus with no planned port / pin geometry is already a schema ERROR (no face-flop site)
+    extra = lambda p: p["partition_types"]["src"]["buses"].append(dict(name="zz_o", dir="out", width=4))  # noqa
+    assert any("unbound" in m for m in errs(extra, "schema"))
+
+
+def test_g0c_gated():
+    """COORD 10-23: completeness / hard-core findings are ERRORs only with --completeness (G0C); plain G0 WARNs."""
+    def m(p):
+        p["clock"].pop("common_latency_ps")
+        p["partition_types"]["mid"]["cells"] = 450_000
+    p = copy.deepcopy(EX)
+    m(p)
+    R, summ = check.run(p)
+    assert R.errors() == [] and any(i["msg"].startswith("[G0C]") for i in R.items)
+    R, summ = check.run(copy.deepcopy(p), completeness=True)
+    assert {i["check"] for i in R.errors()} == {"hard_cores", "complete"}
+    g = summ["g0c"]
+    assert g["by_type"] == {"mid": {"hard_cores": 1}} and g["die_level"] == {"complete:common_latency": 1}
+    assert g["g3_eligible"] == [] and g["clean"] == 2

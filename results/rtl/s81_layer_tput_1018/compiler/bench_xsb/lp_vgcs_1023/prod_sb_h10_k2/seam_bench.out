@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: ot-epyc9       admits   539 GB (avail 609, reserve 0, fresh 0, peak 5.3, headroom 0, waiters 0/0 GB) load 75/128 running 22 disk 2296 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-p8b
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2443180-1792798492 after 1 s
+SEAM_BENCH h10 base: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=PASS
+SEAM_BENCH_EXIT h10 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2443180-1792798492): exit 0

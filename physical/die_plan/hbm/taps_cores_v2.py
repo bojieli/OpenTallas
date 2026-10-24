@@ -30,6 +30,8 @@ HARDEN_MIN = 20_000            # leaves below this (and without macros) are flat
 GLUE_CELLS_PER_BIT = 2         # boundary / station / fork register bit: 1 flop + ~1 buffer/hold cell (EST)
 INS_PS, INS_TOL = 250.0, 40.0
 SM_MOD = 'ot_hbm_accel_smh_attn'
+# HBM-P5-PINS: the SM synthetic cores lx / tp are real modules now (rtl/hbm_accel/sm/attn/qsplit, lock-step == tile)
+SM_WRAP = {'lx': 'ot_hbm_sm_attn_leafh_lx', 'tp': 'ot_hbm_sm_attn_tile_tp'}
 HARD_IP = {'ot_hbm3e_phy_rc_e8p5'}
 LAYER = {'M2': ('H', 0.036, 0.045), 'M3': ('V', 0.036, 0.009), 'M4': ('H', 0.048, 0.024), 'M5': ('V', 0.048, 0.024),
          'M6': ('H', 0.064, 0.032), 'M7': ('V', 0.064, 0.032), 'M8': ('H', 0.080, 0.040), 'M9': ('V', 0.080, 0.040)}
@@ -142,12 +144,29 @@ def place_taps(w, h, cores, root):
             taps.append(glue_tap(f'g{i}_{j}.ck', cx, cy, root))
     k = 0
     while True:                                         # refine: no lattice point farther than REACH from a tap
-        worst, wp = tap_worst(w, h, taps, cores=cores)
+        worst, wp = tap_worst(w, h, taps, step=1, cores=cores)   # P4: step 1 (the metric's grid): 8.64-um channels
         if worst <= REACH or k > 400:
             break
         cx, cy = off_core(*wp, w, h, cores)
         taps.append(glue_tap(f'gr{k}.ck', cx, cy, root))
         k += 1
+    for b in range(64):                                 # P4: bridge taps until the <= REACH tap graph is connected
+        pts = [t['xy'] for t in taps]
+        seen, todo = {0}, [0]
+        while todo:
+            a_ = todo.pop()
+            for j in range(len(pts)):
+                if j not in seen and l1(pts[a_], pts[j]) <= REACH:
+                    seen.add(j); todo.append(j)
+        if len(seen) == len(pts):
+            break
+        i, j = min(((i, j) for i in seen for j in range(len(pts)) if j not in seen),
+                   key=lambda ij: l1(pts[ij[0]], pts[ij[1]]))
+        mx, my = (pts[i][0] + pts[j][0]) / 2, (pts[i][1] + pts[j][1]) / 2
+        cx, cy = off_core(mx, my, w, h, cores)
+        if l1((cx, cy), pts[i]) > REACH or l1((cx, cy), pts[j]) > REACH:
+            cx, cy = mx, my                             # bridge inside a core's halo: keep the midpoint
+        taps.append(glue_tap(f'gb{b}.ck', cx, cy, root))
     return taps
 
 
@@ -214,6 +233,10 @@ def load_blocks(ft):
     return m
 
 
+HC_ARR = os.environ.get('OT_HBM_HC_ARR', '1') != '0'
+HC_ARR_V = os.environ.get('OT_HBM_HC_ARR', 'A')
+
+
 def apply(plan, out_dir, where, ft=None):
     ft = ft or os.path.join(HERE, 'inputs')
     ev_all = json.load(open(os.path.join(HERE, 'inputs', 'cells_evidence.json')))
@@ -237,6 +260,26 @@ def apply(plan, out_dir, where, ft=None):
                  glue_cells_per_bit=GLUE_CELLS_PER_BIT, tap_metric='L1 (Manhattan) um', tap_reach_um=REACH,
                  a_cell_um2=ev_all['a_cell_um2'], types={}, over_cap=[], pins_files=[])
     pins_used = set()
+    pp_used = set()
+    OCS = {}                                            # (type, module) -> measured split (over_cap_split/)
+    oci = os.path.join(HERE, 'over_cap_split', 'index.json')
+    if os.path.exists(oci):
+        for mst, e in json.load(open(oci))['masters'].items():
+            sp = json.load(open(os.path.join(HERE, 'over_cap_split', e['file'])))
+            sp['_file'] = e['file']
+            for tn_ in e.get('plan_types', []):
+                OCS[(tn_, re.sub(r'__pv\d+$', '', mst))] = sp
+    ppi = os.path.join(HERE, 'cores', 'pins_plan', 'index.json')
+    PP = ({k: v['file'] for k, v in json.load(open(ppi))['done'].items()} if os.path.exists(ppi) else {})
+    # P7: adopt CORE-HBM re-pin v3 (claude/core-hbm-1023 @f36c41c75 pins_v3_proposal, byte-identical copies).  Excluded:
+    # collar_idx256r (closed view = plan core, CORE-HBM keeps the published pins), h9b (gate on the published pins),
+    # kshare_splitstrap (face rule FAIL at 146.88: outline decision pending with the VM slice).
+    V3_EXCL = os.environ.get('OT_HBM_V3_EXCL', 'ot_hbm_static_cfg_collar_idx256r,ot_hbm_svc_pc_ctrl_leaf_cfg_h9b,'
+                             'ot_hbm_svc_vm_kshare_splitstrap').split(',')
+    v3i = os.path.join(HERE, 'cores', 'pins_plan_v3', 'summary.json')
+    V3 = ({k: v['pins_file'] for k, v in json.load(open(v3i)).items() if k.split('__')[0] not in V3_EXCL}
+          if os.path.exists(v3i) and os.environ.get('OT_HBM_PINS_V3', '1') == '1' else {})
+    v3_used = set()
     for tn in sorted(types):
         t = types[tn]
         w, h = t['outline_um']
@@ -254,11 +297,13 @@ def apply(plan, out_dir, where, ft=None):
             m_ = 4 * G
             box = (m_, m_, lat_floor(w - m_), lat_floor(h - m_))
             for i, ((sx, sy, sw, sh), sc) in enumerate(zip(grid_split(box, len(sq['cores'])), sq['cores'])):
-                cores.append(dict(inst=f"sm_{sc['role']}{i}", module=sc['module'].split(' ')[0],
+                cores.append(dict(inst=f"sm_{sc['role']}{i}", module=SM_WRAP.get(sc['role'], sc['module'].split(' ')[0]),
                                   origin_um=[r3(sx), r3(sy)], outline_um=[r3(sw), r3(sh)], orient='R0',
                                   track_offset_um=[0.0, 0.0],
                                   note=f"SM quarter {q} core {sc['name']} ({sc['module']}): {sc['cells']} cells "
-                                       f"{sc['label']} (sm_split); outline EST (grid of the quarter), no pins",
+                                       f"{sc['label']} (sm_split); outline EST (grid of the quarter)"
+                                       + (f"; wrapper RTL {SM_WRAP[sc['role']]} (rtl/hbm_accel/sm/attn/qsplit)"
+                                          if sc['role'] in SM_WRAP else ''),
                                   _cells=sc['cells'], _box=(sx, sy, sw, sh)))
             flat.append(dict(inst='sm_glue', module=f"SM quarter {q} glue ({sq['glue_note']})",
                              cells=sq['glue_cells'], basis='sm_split glue_cells_with_relays_est', macros=0))
@@ -297,7 +342,15 @@ def apply(plan, out_dir, where, ft=None):
                 else:
                     key = c['module'] if c['module'] in SPL else None
                 groups = []
-                if key:
+                osp = OCS.get((tn, c['module'])) or OCS.get((re.sub(r'_v\d+$', '', tn), c['module']))   # P6: new _vN variants of a split type
+                if osp:                                     # P4: measured connectivity split (HBM-P4-SPLIT)
+                    groups = [(cr['core_label'], cr['cells'],
+                               f"{cr['module']} ({cr['cells']} Yosys; {osp['status']})") for cr in osp['cores']]
+                    sub_glue = osp.get('glue_cells') or 0
+                    sbasis = f"YOSYS {osp['basis']}"
+                    snote = (f"over_cap_split/{osp['_file']} {osp['status']}: {len(groups)} cores by connectivity, "
+                             f"max {max(g[1] for g in groups)}")
+                elif key:
                     sp = SPL[key]
                     for nm, n, each in sp['parts']:
                         per = max(1, CORE_BUDGET // each) if each <= CORE_BUDGET else 0
@@ -326,6 +379,20 @@ def apply(plan, out_dir, where, ft=None):
                              f'area is a PROPOSAL; the RTL owner partitions it into {n} cores of <= 350k'
                              + (f'; its {macros} SRAM macros go with the sub-cores' if macros else ''))
                 subs = grid_split(box, len(groups))
+                if HC_ARR and c['module'].startswith('ot_hbm_hc_bankq') and len(groups) == 3:
+                    # P7 (G2 hc congestion, GEOM/COORD 18:23 (2)): the 2x2 grid of 362.88 cores blocked M1-M5 over
+                    # 54% of the tile and left 17-um N/E strips; the ~3 kb/face transit then only had M6/M7 over
+                    # the cores.  Lane cores at content size (288.9k cells x 0.11 um2 = 31.8k um2 -> 172.8 x 345.6
+                    # = 53% std fill, 2.7k pins = 2.6/um), bank core (12 SRAM) unchanged 362.88; bank top-left,
+                    # lanes bottom-right, no two cores share an x column or a y row -> every horizontal cut keeps
+                    # >= 440 um and every vertical cut >= 544 um of M2-M5, face strips >= 43 um.
+                    if HC_ARR_V == 'B':                 # realistic bank: 12 SRAM 114k um2 + 22.9k std -> 72% fill
+                        subs = [(59 * G, 5 * G, 20 * G, 34 * G), (80 * G, 5 * G, 20 * G, 34 * G),
+                                (5 * G, 39 * G, 52 * G, 49 * G)]
+                    else:
+                        L, B_ = 20 * G, 42 * G
+                        subs = [(53 * G, 6 * G, L, 2 * L), (78 * G, 6 * G, L, 2 * L), (6 * G, 46 * G, B_, B_)]
+                    assert all(sx + sw <= w + 1e-6 and sy + sh <= h + 1e-6 for sx, sy, sw, sh in subs), (tn, w, h)
                 for (nm, cc, why), (sx, sy, sw, sh) in zip(groups, subs):
                     cores.append(dict(inst=f"{c['inst']}_{nm}", module=f"{c['module']}__{nm}", origin_um=[r3(sx), r3(sy)],
                                       outline_um=[r3(sw), r3(sh)], orient='R0', track_offset_um=[0.0, 0.0],
@@ -408,6 +475,24 @@ def apply(plan, out_dir, where, ft=None):
                         and b[1] < a[1] + a[3] - 1e-6:
                     ov += 1
         tinfo['core_overlaps'] = ov
+        for c in cores:                                 # P7: CORE-HBM connectivity-aware re-pin v3 (adopted 10-23)
+            k3 = f"{c['module']}__{c['outline_um'][0]:g}x{c['outline_um'][1]:g}"
+            if k3 in V3:
+                c['pins_file'] = f'cores/pins_plan_v3/{V3[k3]}'
+                c['track_offset_um'] = [0.0, 0.0]
+                c['note'] = (c.get('note', '') + '; P7 re-pin v3 (CORE-HBM, plan M4/M5 die-lattice tracks, '
+                             'face rule <= 4.5/um)')
+                v3_used.add(V3[k3])
+        for c in cores:                                 # P4: plan-derived pins (pins_plan_v2.py) where none exist
+            if 'pins_file' in c:
+                continue
+            fn = PP.get(f"{c['module']}@{c['outline_um'][0]}x{c['outline_um'][1]}") or \
+                PP.get(f"{c['module']}@{c['outline_um'][0]:g}x{c['outline_um'][1]:g}")
+            if fn:
+                c['pins_file'] = f'cores/pins_plan/{fn}'
+                c['track_offset_um'] = [0.0, 0.0]
+                c['note'] = (c.get('note', '') + '; P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)')
+                pp_used.add(fn)
         if cores:
             t['hard_cores'] = [{k: v for k, v in c.items() if not k.startswith('_')} for c in cores]
         # ---------------- type note
@@ -425,6 +510,16 @@ def apply(plan, out_dir, where, ft=None):
         for m in sorted(pins_used):
             shutil.copyfile(os.path.join(HERE, 'cores', 'pins', f'{m}.json'),
                             os.path.join(out_dir, 'cores', 'pins', f'{m}.json'))
+    notes['pins_plan_files'] = sorted(pp_used)
+    if pp_used and os.path.realpath(os.path.join(out_dir, 'cores')) != os.path.realpath(os.path.join(HERE, 'cores')):
+        os.makedirs(os.path.join(out_dir, 'cores', 'pins_plan'), exist_ok=True)
+        for m in sorted(pp_used):
+            shutil.copyfile(os.path.join(HERE, 'cores', 'pins_plan', m), os.path.join(out_dir, 'cores', 'pins_plan', m))
+    notes['pins_plan_v3_files'] = sorted(v3_used)
+    if v3_used and os.path.realpath(os.path.join(out_dir, 'cores')) != os.path.realpath(os.path.join(HERE, 'cores')):
+        os.makedirs(os.path.join(out_dir, 'cores', 'pins_plan_v3'), exist_ok=True)
+        for m in sorted(v3_used):
+            shutil.copyfile(os.path.join(HERE, 'cores', 'pins_plan_v3', m), os.path.join(out_dir, 'cores', 'pins_plan_v3', m))
     notes['c0_tree'] = c0_tree(plan)
     notes['summary'] = summarise(notes)
     json.dump(notes, open(os.path.join(out_dir, 'plan_notes_v2.json'), 'w'), indent=1, sort_keys=True)

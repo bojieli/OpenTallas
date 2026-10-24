@@ -1,0 +1,139 @@
+[
+ {
+  "name": "io_NW_io_u2",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NW_io",
+  "rect_um": [
+   1369.872,
+   17604.0,
+   1969.92,
+   18204.48
+  ],
+  "sites": 16,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 1370 um",
+  "note": "die_io.py plan: u2"
+ },
+ {
+  "name": "io_NE_io_u2",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NE_io",
+  "rect_um": [
+   18247.68,
+   17604.0,
+   18847.728,
+   18204.48
+  ],
+  "sites": 16,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 1370 um",
+  "note": "die_io.py plan: u2"
+ },
+ {
+  "name": "io_SW_io_u3",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "SW_io",
+  "rect_um": [
+   17.28,
+   14783.04,
+   617.328,
+   15383.52
+  ],
+  "sites": 16,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 17 um",
+  "note": "die_io.py plan: u3"
+ },
+ {
+  "name": "io_SW_io_u4",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "SW_io",
+  "rect_um": [
+   625.968,
+   14783.04,
+   1226.016,
+   15383.52
+  ],
+  "sites": 16,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 626 um",
+  "note": "die_io.py plan: u4"
+ },
+ {
+  "name": "io_SE_io_u2",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "SE_io",
+  "rect_um": [
+   18247.68,
+   14783.04,
+   18847.728,
+   15383.52
+  ],
+  "sites": 16,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 1370 um",
+  "note": "die_io.py plan: u2"
+ },
+ {
+  "name": "io_C0_u19",
+  "kind": "phy_macro",
+  "iface": "ucie",
+  "part": "C0",
+  "rect_um": [
+   10406.88,
+   14783.04,
+   10666.08,
+   16338.24
+  ],
+  "sites": 170,
+  "pitch_um": 45.0,
+  "signals": 144,
+  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 9552 um",
+  "note": "die_io.py plan: u19; host link (BFS 0 port hop(s) from C0): CONFIRM",
+  "host": true
+ },
+ {
+  "name": "io_PHY_N_u0",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "PHY_N",
+  "rect_um": [
+   5875.2,
+   31803.84,
+   14359.68,
+   32970.24
+  ],
+  "sites": 3234,
+  "pitch_um": 55.0,
+  "signals": 1900,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 17 um",
+  "note": "die_io.py plan: u0"
+ },
+ {
+  "name": "io_PHY_S_u0",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "PHY_S",
+  "rect_um": [
+   5875.2,
+   17.28,
+   14359.68,
+   1183.68
+  ],
+  "sites": 3234,
+  "pitch_um": 55.0,
+  "signals": 1900,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 17 um",
+  "note": "die_io.py plan: u0"
+ }
+]

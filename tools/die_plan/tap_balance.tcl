@@ -4,7 +4,7 @@
 # (SPEF), never the measured insertion in the IO SDC.  Here each tree's mean / max sink insertion is measured on the
 # RISE edge (OpenSTA arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2: 438.8 vs 21.7 ps on CP1 r4),
 # short trees get a delay chain (tap port -> bufs -> root) up to T = the plan insertion (KV-P6), and a tree
-# over ins + tol is an OT_TAP_CHECK FAIL with the tap pitch that would fit (the generator re-sizes the grid:
+# over ins + tol is an OT_TAP_CHECK WARN with the tap pitch that would fit (the generator re-sizes the grid:
 # partition clock.tap_pitch_um).  OT_TAP_REPORT_ONLY=1: measure only, on the parasitics the caller loaded (post-route
 # SPEF) -> OT_TAP_RC line.
 uplevel #0 {
@@ -91,7 +91,7 @@ for {set it 0} {$it < 4} {incr it} {
   # KV-P5 17:34 / KV-P6: the target is the PLAN insertion (OT_TAP_TARGET_PS = clock.insertion_ps = the vclk source
   # latency of the IO SDC and the neighbours' insertion), not the slowest local tree: kits8 trees at 205-222 ps
   # balanced to their own 222 ps captured every in2reg path ~30 ps early (TT in2reg -76.6).  Trees already above the
-  # target stay as built (<= ins + win, else OT_TAP_CHECK FAIL).  OT_TAP_BALANCE_TO=longest restores the old rule.
+  # target stay as built (<= ins + win, else OT_TAP_CHECK WARN).  OT_TAP_BALANCE_TO=longest restores the old rule.
   if {$it == 0} {
     if {[info exists ::env(OT_TAP_BALANCE_TO)] && $::env(OT_TAP_BALANCE_TO) eq "longest"} {
       set tgt [expr {min($tb_target + $tb_win, max($tb_target - $tb_win, $longest))}]
@@ -149,7 +149,9 @@ puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0
 if {[llength $fail]} {
   # insertion ~ grows with the tree span; shrink the pitch by the overshoot ratio
   set sug [expr {$tb_pitch * ($tb_target + $tb_win) / max($hi, 1.0)}]
-  puts "OT_TAP_CHECK FAIL trees over [format %.0f [expr {$tb_target + $tb_win}]] ps: $fail; re-pitch taps to <= [format %.0f $sug] um (partition clock.tap_pitch_um)"
+  # COORD 10-23 19:55 (owner clock rule): absolute insertion is GUIDANCE -> WARN; the hard clock checks are face-flop
+  # spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the die common latency (clock.common_latency_ps)
+  puts "OT_TAP_CHECK WARN trees over [format %.0f [expr {$tb_target + $tb_win}]] ps: $fail; re-pitch taps to <= [format %.0f $sug] um (partition clock.tap_pitch_um)"
 } else {
   puts "OT_TAP_CHECK OK every tap tree <= [format %.0f [expr {$tb_target + $tb_win}]] ps"
 }

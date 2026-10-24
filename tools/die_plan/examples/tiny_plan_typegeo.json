@@ -70,7 +70,7 @@
     "ports": [
      "din"
     ],
-    "note": "tool example: host input bumps"
+    "host": true, "note": "tool example: host input bumps"
    },
    {
     "name": "io_e",
@@ -186,7 +186,8 @@
    ],
    "sources": [
     "tools/die_plan/examples/tiny_leaves.sv"
-   ]
+   ],
+   "cells": 20000
   },
   "mid": {
    "module": "tiny_mid_part",
@@ -292,7 +293,8 @@
    ],
    "sources": [
     "tools/die_plan/examples/tiny_leaves.sv"
-   ]
+   ],
+   "cells": 20000
   },
   "sink": {
    "module": "tiny_sink_part",
@@ -389,7 +391,8 @@
    ],
    "sources": [
     "tools/die_plan/examples/tiny_leaves.sv"
-   ]
+   ],
+   "cells": 20000
   }
  },
  "partitions": [
@@ -650,6 +653,7 @@
    "bus": "clk"
   },
   "insertion_ps": 250,
+  "common_latency_ps": 250,
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "face_xing": "budgeted",

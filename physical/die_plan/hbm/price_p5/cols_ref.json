@@ -1,0 +1,143 @@
+{
+ "v1": {
+  "plan": "/home/ubuntu/scratch/hbm-p5-1023/ref/4c078ead5/die_plan.json",
+  "lanes": 7988,
+  "bit_mm": 2533393,
+  "bands": {
+   "edge_W": {
+    "range_um": [
+     300.0,
+     2500.0
+    ],
+    "worst_ratio": 0.1679,
+    "at_um": 20500.0,
+    "bits": 6138,
+    "tracks": 36552
+   },
+   "edge_E": {
+    "range_um": [
+     23271.5,
+     25571.5
+    ],
+    "worst_ratio": 0.1389,
+    "at_um": 12500.0,
+    "bits": 5309,
+    "tracks": 38214
+   },
+   "cross_V": {
+    "range_um": [
+     11894.6,
+     14094.6
+    ],
+    "worst_ratio": 0.3935,
+    "at_um": 15750.0,
+    "bits": 14382,
+    "tracks": 36552
+   },
+   "cross_H": {
+    "range_um": [
+     15393.8,
+     17593.8
+    ],
+    "worst_ratio": 0.4731,
+    "at_um": 9500.0,
+    "bits": 17294,
+    "tracks": 36552
+   }
+  }
+ },
+ "v2": {
+  "plan": "/home/ubuntu/scratch/hbm-p5-1023/ref/a624978f3/die_plan.json",
+  "lanes": 5600,
+  "bit_mm": 1726373,
+  "bands": {
+   "edge_W": {
+    "range_um": [
+     300.0,
+     2500.0
+    ],
+    "worst_ratio": 0.1136,
+    "at_um": 7500.0,
+    "bits": 4154,
+    "tracks": 36552
+   },
+   "edge_E": {
+    "range_um": [
+     17500.0,
+     19800.0
+    ],
+    "worst_ratio": 0.1176,
+    "at_um": 9000.0,
+    "bits": 4493,
+    "tracks": 38214
+   },
+   "cross_V": {
+    "range_um": [
+     9008.8,
+     11208.8
+    ],
+    "worst_ratio": 0.3549,
+    "at_um": 18500.0,
+    "bits": 12974,
+    "tracks": 36552
+   },
+   "cross_H": {
+    "range_um": [
+     15393.8,
+     17593.8
+    ],
+    "worst_ratio": 0.2381,
+    "at_um": 14000.0,
+    "bits": 8704,
+    "tracks": 36552
+   }
+  }
+ },
+ "P4": {
+  "plan": "die_plan.json",
+  "lanes": 8632,
+  "bit_mm": 2197491,
+  "bands": {
+   "edge_W": {
+    "range_um": [
+     300.0,
+     2500.0
+    ],
+    "worst_ratio": 0.3797,
+    "at_um": 28750.0,
+    "bits": 13878,
+    "tracks": 36552
+   },
+   "edge_E": {
+    "range_um": [
+     17500.0,
+     19800.0
+    ],
+    "worst_ratio": 0.3632,
+    "at_um": 28750.0,
+    "bits": 13878,
+    "tracks": 38214
+   },
+   "cross_V": {
+    "range_um": [
+     9008.8,
+     11208.8
+    ],
+    "worst_ratio": 0.3557,
+    "at_um": 14500.0,
+    "bits": 13002,
+    "tracks": 36552
+   },
+   "cross_H": {
+    "range_um": [
+     15393.8,
+     17593.8
+    ],
+    "worst_ratio": 0.2456,
+    "at_um": 14000.0,
+    "bits": 8976,
+    "tracks": 36552
+   }
+  }
+ }
+}

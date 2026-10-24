@@ -31,7 +31,7 @@ W0, H0 = 25988.8, 32983.12            # as-built r18h5 die
 NX, NY = 3008, 3818                   # plan die = whole 8.64 grids, even counts (centre lines on grid)
 W, H = NX * G, NY * G                 # 25989.12 x 32987.52
 CX, CY = W / 2, H / 2
-REACH = 750.0                         # COORD R3 10-23: max ft station spacing 750 um on all dies (HBM measured 1.0 mm)
+REACH = float(os.environ.get('OT_HBM_REACH', '675'))   # COORD R3 750-um max ft station spacing; P7 (COORD visual review 10-23): plan hops <= 90% of it = 675
 REACH_WIDE = 1200.0
 HOP_UM = 2000.0                       # fabric partition max side (L1 harden big partitions; L4 2-cycle hops)
 ANCHOR_MM2 = 0.2
@@ -603,6 +603,7 @@ def md(p, q):
 # ------------------------------------------------------------------------------------------------ lanes
 SPLIT_OF = {}
 SPLIT_LAND = {}          # P3 (COORD R6 R2-alt): every external SM lane lands on the front quarter c
+SM_DIRECT = os.environ.get('OT_HBM_SM_DIRECT', '1') == '1'   # P4: abutting SM-quarter lanes = one direct hop
 SM_MODE = os.environ.get('OT_HBM_SM_MODE', 'inner_c')  # inner_c (published, COORD option C+A) | off: pre-R6 | inner: COORD R6 rule, G0 FAIL on the current floorplan | strict: no route
 # | inner_c: COORD option (C) 10-23 -- SM ports on c, SM-internal lanes planned, die ft may use the inner SM faces up to
 #   their free capacity (the SM-internal lanes are routed first-class and share the face budget), plus (A) os M9 faces
@@ -618,8 +619,30 @@ def sm_pair(u, v):
     return bool(a and b and a.groups() == b.groups())
 
 
-def nearest_sub(inst, other_part, P):
-    if inst in SPLIT_LAND and other_part is not None:
+XLAND = os.environ.get('OT_HBM_XLAND', 'xw')  # P4 study 'a': all SM lanes from the VM side land on a | 'c': R2-alt
+# | P5 'xw' (default, COORD HBM PRICE RULING 14:44 (1)): only the x-write lanes (xw_*) from the VM slice land on the
+#   VM-facing quarter a; the SM relays them a->b->c inside its own stack (planned SM-internal rows, 2079 b per SM)
+
+
+def xland_a(other_part, bus=None):
+    """XLAND=a: the peer is not a per-SM service partition (svc*), so the lane lands on the nearest quarter
+    (a, facing the VM / SU row) and the SM relays it a->b->c inside (planned SM-internal rows).  XLAND=xw: the same
+    for the SM x-write buses only."""
+    if other_part is None or re.match(r'^(NW|NE|SW|SE)_svc\d$', other_part):
+        return False
+    return XLAND == 'a' or (XLAND == 'xw' and bus is not None and bus.startswith('xw_'))
+
+
+STEPC_MASTER = {
+    # COORD R6 (3) QUANT x4 (HBM-P4-QUANT claude/hbm-p4-quant-1023 @690e86d3d): the NW programme leaf has target 48
+    # hard-wired; every quadrant's engine needs its own target (0x30+Q), so all 4 use the strapped leaf.
+    'ot_hgi_qdq_nw_program_leaf': ('ot_hgi_qdq_q_program_leaf', 'new',
+                                   'Step C QUANT x4: ot_hgi_qdq_q_program_leaf (TGT 0x30+Q strap, 415 pins); no view yet'),
+}
+
+
+def nearest_sub(inst, other_part, P, bus=None):
+    if inst in SPLIT_LAND and other_part is not None and not xland_a(other_part, bus):
         return SPLIT_LAND[inst]
     subs = SPLIT_OF.get(inst)
     if not subs or other_part is None:
@@ -637,8 +660,8 @@ def bundles(cen, where, P):
         s = where.get(x['src']); t = where.get(x['dst'])
         if s is None or t is None:
             continue
-        s = nearest_sub(x['src'], t, P) or s     # split SM: the lane lands on the sub-partition facing its peer
-        t = nearest_sub(x['dst'], s, P) or t
+        s = nearest_sub(x['src'], t, P, x['src_bus']) or s     # split SM: the lane lands on the sub-partition facing its peer
+        t = nearest_sub(x['dst'], s, P, x['dst_bus']) or t
         n = nets.setdefault((x['src'], x['src_bus'], x['kind']), dict(sp=s, bits=0, dsts=set(), members=[],
                                                                        per=collections.Counter(), cap=x.get('wcap')))
         n['bits'] = max(n['bits'], x['bits'])
@@ -657,10 +680,15 @@ def bundles(cen, where, P):
         b['bits'] += n['bits']
         b['members'] += n['members']
         b['nets'].append((si, sb))
+        b.setdefault('nbits', []).append(n['bits'])      # P5: per-net bits (slice -> bus map for word landing)
     return B
 
 
+B_ALL = {}
+
+
 def orbits(B, P):
+    B_ALL.clear(); B_ALL.update(B)
     done, orb = set(), []
     for k, b in B.items():
         if k in done:
@@ -678,6 +706,7 @@ def orbits(B, P):
             mem[0] = k
         for v in mem.values():
             done.add(v)
+            B[v]['_rep'] = mem[0]               # P5: every image slices like the orbit representative
         orb.append(mem)
     return orb
 
@@ -691,7 +720,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
     jobs = []
     for oi, mem in enumerate(orb):
         rep = B[mem[0]]
-        ns = max(1, math.ceil(rep['bits'] / SLICE_BITS))
+        ns = len(slice_plan(rep))
         jobs.append((oi, ns))
     paths = {}
     load = collections.Counter()
@@ -760,6 +789,12 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
         nodes = {rep['src']}; edges = []
         allow = {quadn(rep['src'])} | {quadn(t) for t in rep['dsts']}
         smint = all(sm_pair(rep['src'], t) for t in rep['dsts'])
+        if (SM_DIRECT and smint and len(rep['dsts']) == 1
+                and tuple(sorted((rep['src'], rep['dsts'][0]))) in segs):
+            # P4: an SM-internal quarter lane between ABUTTING quarters is one direct registered hop, never split
+            # around the stack (P3 routed 59-61 slices of smq c->b/b->a around, land_pad up to 31 cycles inside
+            # the SM op).  The die ft lanes negotiate for the remaining inner-face capacity (option C).
+            return [(rep['src'], rep['dsts'][0])]
         for t in sorted(rep['dsts'], key=lambda t: md(C[rep['src']], C[t])):
             p_ = dijk(nodes, t, wbits, gbs, allow, smint)
             if p_ is None:
@@ -773,7 +808,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
         mem = orb[oi]
         for gb, k in mem.items():
             b = B[k]
-            wb = b['bits'] // ns + (1 if sl < b['bits'] % ns else 0)
+            wb = swidth(b, sl, ns)
             for u, v in edges:
                 load[tuple(sorted((P[u]['mir'][gb], P[v]['mir'][gb])))] += sign * wb
 
@@ -789,7 +824,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
                 key = (oi, sl)
                 if key in paths:
                     apply(oi, sl, ns, paths[key], -1)
-                wb = rep['bits'] // ns + 1
+                wb = swidth(rep, sl, ns) + 1
                 p_ = tree(rep, wb * len(orb[oi]), tuple(orb[oi]))
                 if p_ is None:
                     raise SystemExit(f'no route {rep["src"]}->{rep["dsts"]}')
@@ -824,7 +859,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
             apply(oi, sl, ns, edges, -1)
             rep = B[mem[0]]
             HARD = True
-            p_ = tree(rep, (rep['bits'] // ns + 1) * len(mem), tuple(mem))
+            p_ = tree(rep, (swidth(rep, sl, ns) + 1) * len(mem), tuple(mem))
             HARD = False
             if p_ is None:
                 apply(oi, sl, ns, edges, +1)
@@ -856,7 +891,7 @@ def route_all(parts, segs, adj, B, orb, iters=40, log=print):
             ovs0 = ovsum()
             apply(oi, sl, ns, edges, -1)
             NOHIST = True; PRES = 50.0
-            p_ = tree(rep, (rep['bits'] // ns + 1) * len(mem), tuple(mem))
+            p_ = tree(rep, (swidth(rep, sl, ns) + 1) * len(mem), tuple(mem))
             NOHIST = False
             if p_ is not None and plen(p_) < plen(edges) - 1e-6:
                 apply(oi, sl, ns, p_, +1)
@@ -885,15 +920,30 @@ def os_part(n):
     return re.match(r'^(NW|NE|SW|SE)_os\d$', n) is not None
 
 
+# P6 (COORD 10-23 18:23 (1), VM|SU2 face overflow): the VM slice is the quadrant hub and its perimeter is saturated
+# (52.5 kb of endpoint traffic on 10.45 mm; every VM face at 4.4-5.4/um).  Moving lanes between VM faces is zero-sum
+# (P6 variants a/b: hb_idx__op off the VM -> vm|su2 5.41-5.43/um, hc0|hcq and rc3|rc4 worse).  The two 2.9-mm E/W
+# faces between the VM and SU1/SU2 therefore get a second face on a third pin layer from the die budget, die M8
+# (H, as the S81 svc fold faces, COORD 10-23 07:43; the os N/S faces take M9, COORD option (A)).  SM faces never do.
+VM3 = os.environ.get('OT_HBM_VM3', '1') == '1'
+
+
+def vm_su_pair(a, b):
+    r = {re.sub(r'^(NW|NE|SW|SE)_', '', n) for n in (a, b)}
+    return 'vm' in r and bool(r & {'su1', 'su2'})
+
+
 def fl3(a, b, o):
     """COORD option (A): an H boundary (N/S faces) between two non-SM partitions, one of them in the os column, takes
-    a third (die M9) pin layer.  SM faces never do."""
+    a third (die M9) pin layer.  SM faces never do.  P6: the VM|SU1 and VM|SU2 V boundaries take die M8."""
+    if VM3 and o == 'V' and vm_su_pair(a, b):
+        return True
     return OS3 and o == 'H' and not (sm_part(a) or sm_part(b)) and (os_part(a) or os_part(b))
 
 
 def lay(face, k, o):
     base = {'E': ['M6', 'M4'], 'W': ['M6', 'M4'], 'N': ['M7', 'M5'], 'S': ['M7', 'M5']}[face]
-    return base + ['M9'] if fl3(k[0], k[1], o) else base
+    return base + (['M9'] if o == 'H' else ['M8']) if fl3(k[0], k[1], o) else base
 
 
 def quadn(n):
@@ -961,10 +1011,11 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
     for (oi, sl) in paths:
         for gb, key in orb[oi].items():
             b = B[key]; ns = nsl[oi]
-            wmax[(oi, sl)] = max(wmax[(oi, sl)], b['bits'] // ns + (1 if sl < b['bits'] % ns else 0))
-            wset[(oi, sl)].add(b['bits'] // ns + (1 if sl < b['bits'] % ns else 0))   # V2
+            wmax[(oi, sl)] = max(wmax[(oi, sl)], swidth(b, sl, ns))
+            wset[(oi, sl)].add(swidth(b, sl, ns))   # V2
     own_fill = collections.Counter()
     lane_meta = {}
+    lane_words = {}
     full = {}
     for oi, mem in enumerate(orb):
         rb = B[mem[0]]
@@ -979,7 +1030,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
         for gb, key in sorted(mem.items()):
             b = B[key]
             ns = nsl[oi]
-            wb = b['bits'] // ns + (1 if sl < b['bits'] % ns else 0)
+            wb = swidth(b, sl, ns)
             if wb <= 0:
                 continue
             lid = f'L{oi}s{sl}'
@@ -989,7 +1040,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 t = where.get(x['dst'])
                 if t is None:
                     continue
-                t = nearest_sub(x['dst'], b['src'], P) or t
+                t = nearest_sub(x['dst'], b['src'], P, x['dst_bus']) or t
                 dleaf.setdefault(t, (x['dst'], x['dst_bus']))
             E = [(P[u]['mir'][gb], P[v]['mir'][gb]) for u, v in edges]
             root = b['src']
@@ -1150,6 +1201,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                 lname = f'{lid}{"abcd"[gb]}_{li}'
                 lanes.append(dict(id=lname, ports=chain, fixed_cycles=fixed))
                 lane_meta[lname] = ((oi, sl, gb), u0, 'root' if u0 == root else 'relaunch' if u0 in dsts else 'fork')
+                lane_words[lname] = slice_nets(b, sl, ns)
                 lat[lname] = dict(cycles=cyc, stations=nst, faces=len(chain), fixed=fixed)
                 kk = (oi, gb, v)
                 lane_cycles_by_dst[kk] = max(lane_cycles_by_dst.get(kk, 0), cyc)
@@ -1161,7 +1213,7 @@ def emit(parts, segs, B, orb, paths, insts, where, cen, out):
                     cut_v[xg] += wb
                 for yg in range(int(min(a_[1], c_[1]) // 250) + 1, int(max(a_[1], c_[1]) // 250) + 1):
                     cut_h[yg] += wb
-    finalize(P, ports, lanes, lane_meta, pslot, lat)
+    finalize(P, ports, lanes, lane_meta, pslot, lat, lane_words)
     return dict(ports=ports, lanes=lanes, lat=lat, pbus=pbus, pslot=pslot, warn=warn, hop_max=hop_max,
                 lane_cycles_by_dst=lane_cycles_by_dst, stn_bits=stn_total, cut_v=cut_v, cut_h=cut_h,
                 seg_fill=seg_fill)
@@ -1208,7 +1260,138 @@ def fit_len(lo, pins, layers):
         w *= 1.03
 
 
-def finalize(P, ports, lanes, lane_meta, pslot, lat):
+PAD_MODE = os.environ.get('OT_HBM_PAD', 'word')   # P5 (COORD HBM PRICE RULING 14:44 (2)): word | group (P3/P4)
+
+
+# Word element of a bus that is an ARRAY of independently consumed words (one word per bank / lane group); a word
+# is padded only against the slices that carry the same element.  Evidence:
+#   VM ring cw/ccw (ring_h/ring_v after renaming): 2224 = 8 x 278, 'lane b <-> bank b' (ot_vms_slice_clocked.sv,
+#     ot_vms_rstop per-bank eg/xq 276 b + 2 VC bits): each bank's ring lane is consumed by its own bank tile.
+#   lane-group fixed-return buses rq/rr/wq/dq (17 / 257 / 281 / 281 b per lane group: ot_vms_slice_clocked rq
+#     [RG*8*17], rr [RG*8*257], wq [WG*8*281]; ot_hgi_sfu_lg_relay c_rq/c_wq/c_rr per bank with its own valid bit).
+WORD_ELEM = [
+    (re.compile(r'^hb_vms_.*\.(pr_)?(ring_[hv]|c?cw)(_out|_in)?$'), 278),
+    (re.compile(r'\.(lg_|c_|l_)?rq\d*$'), 17),
+    (re.compile(r'\.(lg_|c_|l_)?rr\d*$'), 257),
+    (re.compile(r'\.(lg_|c_|l_)?(wq|dq)\d*$'), 281),
+]
+
+
+def word_elem(name, nb):
+    for rx, e in WORD_ELEM:
+        if rx.search(name) and nb % e == 0 and nb > e:
+            return e
+    return None
+
+
+WORD_SLICE = int(os.environ.get('OT_HBM_WORD_SLICE', '256'))   # P5: slice size inside one word (fewer windows per face)
+ALIGN = os.environ.get('OT_HBM_SLICE_ALIGN', '1') == '1' and os.environ.get('OT_HBM_PAD', 'word') == 'word'
+
+
+def slice_plan(b):
+    """P5: slice widths of bundle b.  Element-array buses (WORD_ELEM) are cut on element boundaries, so every slice
+    carries whole words of ONE element (or whole small elements packed together) and words never chain across slices;
+    the other nets are split evenly as before.  Cached on the bundle."""
+    if '_sw' in b:
+        return b['_sw']
+    if b.get('_rep') is not None and B_ALL.get(b['_rep']) is not None and B_ALL[b['_rep']] is not b:
+        R = slice_plan(B_ALL[b['_rep']])
+        if sum(R) >= b['bits']:
+            b['_sw'] = R
+        else:                               # a wider image (e.g. SW with the 5th SerDes): rep slices + the extra bits spread
+            ns, x = len(R), b['bits'] - sum(R)
+            b['_sw'] = [R[i] + x // ns + (1 if i < x % ns else 0) for i in range(ns)]
+        return b['_sw']
+    if not ALIGN or not b.get('nbits'):
+        ns = max(1, math.ceil(b['bits'] / SLICE_BITS))
+        b['_sw'] = [b['bits'] // ns + (1 if i < b['bits'] % ns else 0) for i in range(ns)]
+        return b['_sw']
+    W, rest = [], 0
+    order = canon_nets(b)
+
+    def flush():
+        nonlocal rest
+        if rest:
+            ns = max(1, math.ceil(rest / SLICE_BITS))
+            W.extend(rest // ns + (1 if i < rest % ns else 0) for i in range(ns))
+        rest = 0
+    for (si, sb), nb in order:
+        e = word_elem(f'{si}.{sb}', nb)
+        if not e and nb < SLICE_BITS // 2:
+            rest += nb                      # small fields share slices
+            continue
+        if not e:                           # a wide bus (one word): its own slices, never shared with another bus
+            flush()
+            k = math.ceil(nb / WORD_SLICE)
+            W.extend(nb // k + (1 if i < nb % k else 0) for i in range(k))
+            continue
+        flush()
+        n = nb // e
+        if e > WORD_SLICE * 3 // 2:
+            k = math.ceil(e / WORD_SLICE)
+            for _ in range(n):
+                W.extend(e // k + (1 if i < e % k else 0) for i in range(k))
+        else:
+            m = max(1, min(n, SLICE_BITS // e)) if e <= SLICE_BITS else 1
+            while n % m:
+                m -= 1
+            W.extend([m * e] * (n // m))
+    flush()
+    W = [w for w in W if w > 0] or [b['bits']]
+    x = b['bits'] - sum(W)                  # orbit width equalisation widened the bundle past its own nets: spread it
+    if x > 0:
+        ns = len(W)
+        W = [W[i] + x // ns + (1 if i < x % ns else 0) for i in range(ns)]
+    b['_sw'] = W
+    return W
+
+
+def canon_nets(b):
+    """Nets of a bundle in a quadrant-independent order (mirror images of an orbit slice identically)."""
+    pairs = list(zip(b['nets'], b.get('nbits') or [0] * len(b['nets'])))
+    if not ALIGN:
+        return pairs
+    return sorted(pairs, key=lambda t: (re.sub(r'(NW|NE|SW|SE)', 'Q', f'{t[0][0]}.{t[0][1]}'), t[1]))
+
+
+def swidth(b, sl, ns):
+    W = slice_plan(b)
+    if len(W) == ns:
+        return W[sl]
+    return b['bits'] // ns + (1 if sl < b['bits'] % ns else 0)
+
+
+def slice_nets(b, sl, ns):
+    rep = B_ALL.get(b.get('_rep')) if b.get('_rep') is not None else None
+    if rep is not None and rep is not b:
+        return slice_nets(rep, sl, ns)      # P5: words of the orbit representative (identical pads on every image)
+    return _slice_nets(b, sl, ns)
+
+
+def _slice_nets(b, sl, ns):
+    """P5: source buses (src inst.bus) carried by slice sl of bundle b.  The bundle is the concatenation of its
+    nets in b['nets'] order (b['nbits'] bits each); slice s carries bits [s*q + min(s, r), +q + (s < r))."""
+    W = slice_plan(b)
+    if len(W) == ns:
+        lo = sum(W[:sl]); hi = lo + W[sl]
+    else:
+        q, r = divmod(b['bits'], ns)
+        lo = sl * q + min(sl, r); hi = lo + q + (1 if sl < r else 0)
+    out, at = set(), 0
+    for (si, sb), nb in canon_nets(b):
+        if at < hi and at + nb > lo:
+            nm = f'{si}.{sb}'
+            e = word_elem(nm, nb)
+            if e:                                   # array of words: the slice carries elements k0..k1 of the bus
+                for k in range((max(lo, at) - at) // e, (min(hi, at + nb) - 1 - at) // e + 1):
+                    out.add(f'{nm}#{k}')
+            else:
+                out.add(nm)
+        at += nb
+    return frozenset(out)
+
+
+def finalize(P, ports, lanes, lane_meta, pslot, lat, lane_words=None):
     """Stations and latency from the exact port windows (PLAN-TOOL formula: cycles = 2 boundary flops + stations +
     fixed; station k of n sits at L*k/n from the entry pin, so n = ceil(L / reach) keeps every hop <= reach)."""
     PT = {p['id']: p for p in ports}
@@ -1244,14 +1427,42 @@ def finalize(P, ports, lanes, lane_meta, pslot, lat):
     for ln in lanes:
         (oi, sl, gb), u, kind = lane_meta[ln['id']]
         grp[(oi, gb, PT[ln['ports'][-1]]['dst']['part'])].append(ln)
+    # P5 (COORD HBM PRICE RULING 10-23 14:44 (2)): pads only where a bus is consumed as ONE WORD.  The landed group
+    # is split into words: slices that carry a common source bus (one bus split over several 128-b slices) are one
+    # word and land together (padded to the word's deepest slice); slices that share no bus are independent fields
+    # that land when they are ready and the static compiler schedules each field at its own plan latency.
+    # OT_HBM_PAD=group restores the P3/P4 rule (whole group equal depth).
+    words = []
     for k, lns in grp.items():
+        if PAD_MODE != 'word' or not lane_words:
+            words.append((lns, 'equal-depth landed group with its sibling slices'))
+            continue
+        par = {l['id']: l['id'] for l in lns}
+
+        def fnd(x):
+            while par[x] != x:
+                par[x] = par[par[x]]; x = par[x]
+            return x
+        first = {}
+        for l in lns:
+            for nm in lane_words.get(l['id'], ()):
+                if nm in first:
+                    par[fnd(l['id'])] = fnd(first[nm])
+                else:
+                    first[nm] = l['id']
+        comp = collections.defaultdict(list)
+        for l in lns:
+            comp[fnd(l['id'])].append(l)
+        for c in comp.values():
+            words.append((c, 'one-word landing: slices of one source bus land together'))
+    for lns, why in words:
         top = max(lat[l['id']]['cycles'] for l in lns)
         for l in lns:
             pad = top - lat[l['id']]['cycles']
             if pad:
                 l['fixed_cycles'] += pad
                 e = lat[l['id']]; e['cycles'] += pad; e['fixed'] += pad
-                l['note'] = f'land_pad {pad}: equal-depth landed group with its sibling slices (fixed includes it)'
+                l['note'] = f'land_pad {pad}: {why} (fixed includes it)'
 
 
 def types_and_plan(parts, insts, where, em):
@@ -1296,7 +1507,10 @@ def types_and_plan(parts, insts, where, em):
             if p['op'] in ('MX', 'R'):
                 ly = h_ - ly - I['h']
             st, note = status(I['fam'])
-            cont.append(dict(inst=i, module=I['fam'], status=st, origin_um=[round(lx, 3), round(ly, 3)],
+            mod_ = I['fam']
+            if mod_ in STEPC_MASTER:                   # P4: Step C quadrant-parameterised replacement master
+                mod_, st, note = STEPC_MASTER[mod_]
+            cont.append(dict(inst=i, module=mod_, status=st, origin_um=[round(lx, 3), round(ly, 3)],
                              outline_um=[I['w'], I['h']], note=note))
         # type-local content names (identical across mirrored instances): u<k> by module + type-frame origin
         cont.sort(key=lambda c: (c['module'], c['origin_um'][0], c['origin_um'][1]))
