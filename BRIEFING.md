@@ -91,3 +91,8 @@ and review it the way an industry floorplan/physical-design review would:
 4. Record the review (picture path + findings + verdict PASS / PASS-COND / FAIL) in results/geom_review/ (existing
    GEOM-REVIEW record format) and in your lane file. Lane GEOM-REVIEW does independent second reviews; a kit without a
    recorded review is not to be submitted.
+
+## Never use git stash (2026-10-24 12:55)
+All worktrees of ~/OpenTallas share ONE refs/stash. A `git stash pop` in your tree can apply another lane's changes
+(this happened 12:44 between ELEM-S81 and HBM-ARCH). Commit WIP to your own branch instead (`git commit -m WIP`, then
+amend or squash later).
