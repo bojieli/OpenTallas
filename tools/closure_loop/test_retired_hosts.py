@@ -50,11 +50,11 @@ class RetiredHosts(unittest.TestCase):
         self.assertIn("ot-old9", R.retired_names({"retired_hosts": ["ot-old9"]}))
 
     def test_daemon_validate_no_longer_invalid(self):
-        s = spec(hosts=["ot-epyc1tb", "ot-epyc5"], host_require=["ot-epyc1tb"])
+        s = spec(hosts=["ot-epyc1tb", "ot-epyc7"], host_require=["ot-epyc1tb"])
         self.assertTrue(any("unknown host" in e for e in cl.validate(s)), "precondition: the raw spec is rejected")
         out, warns = cl.drop_retired_hosts(s)
         self.assertFalse(any("unknown host" in e for e in cl.validate(out)), cl.validate(out))
-        self.assertEqual(out["hosts"], ["ot-epyc5"])
+        self.assertEqual(out["hosts"], ["ot-epyc7"])
         self.assertNotIn("host_require", out)
         self.assertEqual(len(warns), 2)
 

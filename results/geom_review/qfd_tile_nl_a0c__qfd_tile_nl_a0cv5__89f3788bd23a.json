@@ -1,11 +1,11 @@
 {
  "element": "qfd_tile_nl_a0c",
  "kit": "physical/ref_tile/qfd_tile_nl_a0cv5@f192e7ae8",
- "verdict": "PASS-CONDITIONAL",
+ "verdict": "FAIL",
  "hash": "89f3788bd23aa5db113cc15b9e875c9cbccd2de6c0c8885bc4133f209b35e4f8",
- "reasons": "[10-23 16:48] [GEOM-REVIEW6] [A0 v5, clock only] Supersedes my 15:49 v4 record (745df3d2b) as the current kit. Both renders viewed (core: 24 taps, nearest-tap shading, every 8th v2 sink; quad: 96 core tap points). The 745df3d2b->f192e7ae8 kit diff is clock only: floorplan.json adds ck_t20..23, spec adds OT_A0_CK_TAPS24 + cts_sink {16 sinks, 35 um, buffers every 50 um}, and OT_TAP_MAX_SINKS goes 3000->2400. Regions, macros, outline and signal pins are unchanged. Kit hash = geom_review_gate hash (the author's short hash uses another scheme). I re-ran it on all 43,119 NK v2 sinks: nearest-tap sinks/tap 477..3,357 (only ck is over the 2,400 cap; the kit re-assigns it), max reach 50-248 um (ck_t8/t9 at the S aisle end are 248/241; every other tap <= 216). Tap clearance to hard children >= 8.0 um NK / 7.7 NL. The author's v4 measured evidence (per-tap slowest sink 137-384 ps, 7,985/43,100 sinks > 290; the tail = stacked H-tree levels + 22-sink leaves behind a 130-um last wire) shows the v4 miss was tree shape, not reach. So the v5 CTS clustering/buffer-distance change addresses the measured cause, and the tap geometry is still sound.",
- "fixes": "Gate allowed. Full PASS = measured on v5: per-tap slowest sink <= 290 ps TT (macro clk pins included) and neighbour <= 80 ps TT+FF; the count of sinks > 290 is reported (v4: 7,985); clock cells are outside the hard-child boxes; hotspot-2 GRT with the denser 16-sink clustering (more leaf buffers in the 67-um aisle). PLAN (still open from v4): 96 M8->M7 drops per CB quad (~18.4k on the QC die) need a declared quad distribution + insertion + neighbour budget in the QC plan before the next QC G1.",
+ "reasons": "[10-23 20:11] [GEOM-REVIEW7] [AMENDS my 18:4x record under COORD 19:55 R4 CORRECTED] The tap-tree > 290 ps and > 3k-sink findings in my record are now guidance only. The FAIL stands on the binding check (a): QC-P6-A0 20:05 measured the NL v5 face (pin) flops on 4_cts.odb (801 flops, placement RC) at TT 202-327 (spread 125) / FF 155-270 (spread 114), both > 80. The cause is the same one I gave (wide in-tree ranges, tap means spread 86). Renders as before: /home/ubuntu/scratch/geom-review7-1023/a0v5_nl/taps.png, r7.png.",
+ "fixes": "v6 (QC-P6-A0 sink-anchored taps, balance to the common 250) is judged on face-flop spread <= 80 at TT and FF on RC plus mean within 80 of 250. Tap count and per-tree insertion are guidance.",
  "reviewer": "GEOM-REVIEW",
- "at": "2026-10-23T16:48:15-07:00",
+ "at": "2026-10-23T20:11:43-07:00",
  "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
 }

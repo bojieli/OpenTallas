@@ -79,7 +79,7 @@ class ReliabilityTests(unittest.TestCase):
         for bad in (True, False, "ot-epyc2", [], ["unknown-host"]):
             with self.subTest(value=bad):
                 self.assertTrue(any("host_require" in e for e in cl.validate(dict(spec, host_require=bad))))
-        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc5"]))))
+        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc7"]))))
 
     def test_failed_tool_probe_is_retried_without_hour_long_fleet_outage(self):
         fleet = cl.Fleet()

@@ -133,7 +133,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 15,
+     "max_cycles": 16,
      "max_hops": 1,
      "module": "hbm_ft_fork_reg",
      "out_bits": 2,
@@ -148,7 +148,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 15,
+     "max_cycles": 16,
      "max_hops": 1,
      "module": "hbm_ft_fork_reg",
      "out_bits": 2,
@@ -163,7 +163,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 15,
+     "max_cycles": 16,
      "max_hops": 1,
      "module": "hbm_ft_fork_reg",
      "out_bits": 2,
@@ -178,7 +178,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 15,
+     "max_cycles": 16,
      "max_hops": 1,
      "module": "hbm_ft_fork_reg",
      "out_bits": 2,
@@ -244,7 +244,7 @@
      "in_bits": 36,
      "in_buses": 4,
      "lanes": 8,
-     "max_cycles": 45,
+     "max_cycles": 47,
      "max_hops": 13,
      "module": "ot_hbm_router_ids_static",
      "out_bits": 388,
@@ -296,7 +296,7 @@
      "in_bits": 1116,
      "in_buses": 12,
      "lanes": 36,
-     "max_cycles": 45,
+     "max_cycles": 48,
      "max_hops": 14,
      "module": "ot_hbm_static_cfg_collar_idx256r",
      "out_bits": 4488,
@@ -504,7 +504,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 37,
+     "max_cycles": 39,
      "max_hops": 3,
      "module": "hbm_ft_fork_reg",
      "out_bits": 256,
@@ -519,7 +519,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 44,
+     "max_cycles": 45,
      "max_hops": 4,
      "module": "hbm_ft_fork_reg",
      "out_bits": 11,
@@ -534,7 +534,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 30,
+     "max_cycles": 32,
      "max_hops": 3,
      "module": "hbm_ft_fork_reg",
      "out_bits": 41,
@@ -549,7 +549,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 32,
+     "max_cycles": 33,
      "max_hops": 4,
      "module": "hbm_ft_fork_reg",
      "out_bits": 12,
@@ -564,7 +564,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 35,
+     "max_cycles": 36,
      "max_hops": 3,
      "module": "hbm_ft_fork_reg",
      "out_bits": 256,
@@ -579,7 +579,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 30,
+     "max_cycles": 31,
      "max_hops": 3,
      "module": "hbm_ft_fork_reg",
      "out_bits": 41,
@@ -594,7 +594,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 1,
-     "max_cycles": 25,
+     "max_cycles": 27,
      "max_hops": 3,
      "module": "hbm_ft_fork_reg",
      "out_bits": 234,
@@ -612,7 +612,7 @@
      "in_bits": 369,
      "in_buses": 6,
      "lanes": 34,
-     "max_cycles": 27,
+     "max_cycles": 29,
      "max_hops": 8,
      "module": "hfd_hgi_vm_calendar_f20",
      "out_bits": 4352,
@@ -628,7 +628,7 @@
      "in_bits": 7604,
      "in_buses": 24,
      "lanes": 16,
-     "max_cycles": 22,
+     "max_cycles": 24,
      "max_hops": 7,
      "module": "hfd_hgi_vms_glue_nw_t",
      "out_bits": 4448,
@@ -687,7 +687,7 @@
      "in_bits": 171,
      "in_buses": 1,
      "lanes": 6,
-     "max_cycles": 18,
+     "max_cycles": 19,
      "max_hops": 7,
      "module": "ot_hbm_idx_vm_query_static_n12",
      "out_bits": 706,
@@ -702,7 +702,7 @@
      "in_bits": 1454,
      "in_buses": 17,
      "lanes": 1,
-     "max_cycles": 13,
+     "max_cycles": 14,
      "max_hops": 5,
      "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
      "out_bits": 3,
@@ -734,7 +734,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 17,
-     "max_cycles": 13,
+     "max_cycles": 14,
      "max_hops": 5,
      "module": "ot_hbm_su_programme_pslice_c5",
      "out_bits": 3810,
@@ -792,7 +792,7 @@
      "in_bits": 0,
      "in_buses": 0,
      "lanes": 16,
-     "max_cycles": 10,
+     "max_cycles": 11,
      "max_hops": 4,
      "module": "hfd_vms_bank_native_q0_faces",
      "out_bits": 2056,
@@ -823,7 +823,7 @@
      "in_bits": 448,
      "in_buses": 4,
      "lanes": 11,
-     "max_cycles": 10,
+     "max_cycles": 11,
      "max_hops": 3,
      "module": "ot_hbm_su_static_qcore_r13",
      "out_bits": 927,
@@ -851,7 +851,7 @@
      "in_bits": 1305,
      "in_buses": 8,
      "lanes": 1,
-     "max_cycles": 22,
+     "max_cycles": 24,
      "max_hops": 6,
      "module": "ot_hbm_svc_vmdel_lane_n",
      "out_bits": 8,
@@ -898,7 +898,7 @@
      "in_bits": 1256,
      "in_buses": 8,
      "lanes": 21,
-     "max_cycles": 34,
+     "max_cycles": 37,
      "max_hops": 9,
      "module": "hfd_vms_bank_native_q0_faces",
      "out_bits": 2574,
@@ -1194,18 +1194,17 @@
   "ot_pdie_serdes"
  ],
  "pins_plan_files": [
-  "hfd_ep_static__434.72x371.52.json",
-  "ot_hbm_hc_bankq0_static__lanes0_2__362.88x362.88.json",
-  "ot_hbm_hc_bankq0_static__lanes3_5__362.88x362.88.json",
+  "ot_hbm_hc_bankq0_static__lanes0_2__172.8x345.6.json",
+  "ot_hbm_hc_bankq0_static__lanes3_5__172.8x345.6.json",
   "ot_hbm_hc_bankq0_static__lanes6_7_bank__362.88x362.88.json",
-  "ot_hbm_hc_bankq_ft_static__lanes0_2__362.88x362.88.json",
-  "ot_hbm_hc_bankq_ft_static__lanes3_5__362.88x362.88.json",
+  "ot_hbm_hc_bankq_ft_static__lanes0_2__172.8x345.6.json",
+  "ot_hbm_hc_bankq_ft_static__lanes3_5__172.8x345.6.json",
   "ot_hbm_hc_bankq_ft_static__lanes6_7_bank__362.88x362.88.json",
-  "ot_hbm_hc_bankq_static__lanes0_2__362.88x362.88.json",
-  "ot_hbm_hc_bankq_static__lanes3_5__362.88x362.88.json",
+  "ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6.json",
+  "ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6.json",
   "ot_hbm_hc_bankq_static__lanes6_7_bank__362.88x362.88.json",
-  "ot_hbm_hc_bankq_term_static__lanes0_2__362.88x362.88.json",
-  "ot_hbm_hc_bankq_term_static__lanes3_5__362.88x362.88.json",
+  "ot_hbm_hc_bankq_term_static__lanes0_2__172.8x345.6.json",
+  "ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6.json",
   "ot_hbm_hc_bankq_term_static__lanes6_7_bank__362.88x362.88.json",
   "ot_hbm_hc_root_static__hcp_sys1__155.52x172.8.json",
   "ot_hbm_hc_root_static__tail0_rest__155.52x172.8.json",
@@ -1321,14 +1320,12 @@
   "ot_hbm_su_static_pgslice_lg__side_rest__440.64x457.92.json",
   "ot_hbm_su_static_pgslice_lg__side_softplus__440.64x457.92.json",
   "ot_hbm_su_static_qcore_r13__302.4x280.8.json",
-  "ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
   "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
   "ot_hbm_svc_vmdel_lane_n__257.04x108.json",
   "ot_hbm_xp_aq_tree13_fmt__183.6x108.json",
   "ot_hfd_coll_q2_hard_v8g__body__233.28x233.28.json",
   "ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28.json",
   "ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28.json",
-  "ot_hgi_coll_gq_land__237.6x237.6.json",
   "ot_hgi_coll_tkm_m_tp192__root__319.68x345.6.json",
   "ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6.json",
   "ot_hgi_coll_tkm_m_tp192__tile10__319.68x345.6.json",
@@ -1386,6 +1383,28 @@
   "ot_hgi_sm_xload_xq_pegress__369.36x369.36.json",
   "ot_smh_static_front__362.88x319.68.json"
  ],
+ "pins_plan_v3_files": [
+  "hfd_ep_static__434.72x371.52.json",
+  "hfd_hgi_vm_calendar_f20_role__196.344x196.56.json",
+  "hfd_hgi_vm_calendar_f20_role__241.92x116.64.json",
+  "ot_hbm_argmax_static_sw_vm_r2__118.8x118.8.json",
+  "ot_hbm_hc_qhub_static__734.4x734.4.json",
+  "ot_hbm_host_cp_rxs__434.808x432.json",
+  "ot_hbm_idx_qctl_static__194.832x195.48.json",
+  "ot_hbm_idx_rootctl_static_am__475.2x259.2.json",
+  "ot_hbm_idx_selector_static_sel__600.048x450.36.json",
+  "ot_hbm_idx_topk_link_static__650.16x500.04.json",
+  "ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
+  "ot_hbm_svc_sm_group_rel_id__776.304x646.92.json",
+  "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6.json",
+  "ot_hbm_svc_wb_kport_q__475.2x475.2.json",
+  "ot_hgi_coll_gq_issue__237.6x237.6.json",
+  "ot_hgi_coll_gq_land__237.6x237.6.json",
+  "ot_hgi_coll_inj_idx_join_rg__216x432.json",
+  "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84.json",
+  "ot_hgi_sfu_programme_store_r10__1080x950.4.json",
+  "ot_pdie_serdes__600.048x600.48.json"
+ ],
  "scope": "HBM-P3-TAPS post-pass (taps_cores_v2.py); plan stage only, no P&R claim",
  "summary": {
   "all_tap_graphs_connected": false,
@@ -1396,7 +1415,7 @@
   "leaves_split": 21,
   "max_core_cells": 394328,
   "max_core_type": "io",
-  "max_glue_cells": 336226,
+  "max_glue_cells": 345324,
   "max_glue_type": "q_os2",
   "max_nn_tap_um": 1062.7,
   "max_point_to_tap_um": 1123.2,
@@ -2089,10 +2108,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 6543 + station 6439 + fork 6 bits) + flattened leaves",
-   "glue_cells": 25976,
+   "glue_basis": "EST 2 cells/bit x (boundary 6543 + station 6523 + fork 6 bits) + flattened leaves",
+   "glue_cells": 26144,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 25976,
+   "glue_regs_cells": 26144,
    "instances": 4,
    "leaves": [
     {
@@ -2119,7 +2138,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2150,10 +2169,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 6262 + fork 0 bits) + flattened leaves",
-   "glue_cells": 21470,
+   "glue_basis": "EST 2 cells/bit x (boundary 4473 + station 6808 + fork 0 bits) + flattened leaves",
+   "glue_cells": 22562,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 21470,
+   "glue_regs_cells": 22562,
    "instances": 4,
    "leaves": [
     {
@@ -2180,7 +2199,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2211,10 +2230,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 5882 + fork 0 bits) + flattened leaves",
-   "glue_cells": 22966,
+   "glue_basis": "EST 2 cells/bit x (boundary 5601 + station 6444 + fork 0 bits) + flattened leaves",
+   "glue_cells": 24090,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 22966,
+   "glue_regs_cells": 24090,
    "instances": 4,
    "leaves": [
     {
@@ -2241,7 +2260,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2302,7 +2321,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2333,10 +2352,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4728 + station 5049 + fork 234 bits) + flattened leaves",
-   "glue_cells": 20022,
+   "glue_basis": "EST 2 cells/bit x (boundary 4728 + station 5201 + fork 234 bits) + flattened leaves",
+   "glue_cells": 20326,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 20022,
+   "glue_regs_cells": 20326,
    "instances": 4,
    "leaves": [
     {
@@ -2363,7 +2382,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2394,10 +2413,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4494 + station 5925 + fork 0 bits) + flattened leaves",
-   "glue_cells": 20838,
+   "glue_basis": "EST 2 cells/bit x (boundary 4494 + station 6159 + fork 0 bits) + flattened leaves",
+   "glue_cells": 21306,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 20838,
+   "glue_regs_cells": 21306,
    "instances": 4,
    "leaves": [
     {
@@ -2424,7 +2443,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2485,7 +2504,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2516,10 +2535,10 @@
     }
    ],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 7812 + fork 0 bits) + flattened leaves",
-   "glue_cells": 24554,
+   "glue_basis": "EST 2 cells/bit x (boundary 4465 + station 7853 + fork 0 bits) + flattened leaves",
+   "glue_cells": 24636,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 24554,
+   "glue_regs_cells": 24636,
    "instances": 4,
    "leaves": [
     {
@@ -2546,7 +2565,7 @@
    ],
    "taps": {
     "connected": true,
-    "max_nn_tap_um": 345.6,
+    "max_nn_tap_um": 416.9,
     "max_point_to_tap_um": 427.7,
     "n": 7
    },
@@ -2622,10 +2641,10 @@
      "module": "ot_hbm_su_static_cxport_dl_s"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2505 + station 57057 + fork 117 bits) + flattened leaves",
-   "glue_cells": 138549,
+   "glue_basis": "EST 2 cells/bit x (boundary 2505 + station 63994 + fork 117 bits) + flattened leaves",
+   "glue_cells": 152423,
    "glue_flat_leaf_cells": 19191,
-   "glue_regs_cells": 119358,
+   "glue_regs_cells": 133232,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -2992,10 +3011,10 @@
      "module": "ot_hbm_idx_score_quarter_static (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 9898 + station 47159 + fork 4396 bits) + flattened leaves",
-   "glue_cells": 336226,
+   "glue_basis": "EST 2 cells/bit x (boundary 9898 + station 51708 + fork 4396 bits) + flattened leaves",
+   "glue_cells": 345324,
    "glue_flat_leaf_cells": 213320,
-   "glue_regs_cells": 122906,
+   "glue_regs_cells": 132004,
    "instances": 4,
    "leaves": [
     {
@@ -3037,10 +3056,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 15893 + fork 0 bits) + flattened leaves",
-   "glue_cells": 31786,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 16338 + fork 0 bits) + flattened leaves",
+   "glue_cells": 32676,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 31786,
+   "glue_regs_cells": 32676,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -3070,10 +3089,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 42151 + fork 0 bits) + flattened leaves",
-   "glue_cells": 84302,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 47573 + fork 0 bits) + flattened leaves",
+   "glue_cells": 95146,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 84302,
+   "glue_regs_cells": 95146,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -3125,10 +3144,10 @@
      "module": "ot_hbm_su_stree_leaf"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 21241 + fork 1285 bits) + flattened leaves",
-   "glue_cells": 72377,
+   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 22361 + fork 1285 bits) + flattened leaves",
+   "glue_cells": 74617,
    "glue_flat_leaf_cells": 17167,
-   "glue_regs_cells": 55210,
+   "glue_regs_cells": 57450,
    "instances": 2,
    "leaves": [
     {
@@ -3189,10 +3208,10 @@
      "module": "ot_hbm_su_stree_leaf"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 21241 + fork 1285 bits) + flattened leaves",
-   "glue_cells": 72378,
+   "glue_basis": "EST 2 cells/bit x (boundary 5079 + station 22361 + fork 1285 bits) + flattened leaves",
+   "glue_cells": 74618,
    "glue_flat_leaf_cells": 17168,
-   "glue_regs_cells": 55210,
+   "glue_regs_cells": 57450,
    "instances": 2,
    "leaves": [
     {
@@ -3231,10 +3250,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 4613 + fork 0 bits) + flattened leaves",
-   "glue_cells": 9226,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 5051 + fork 0 bits) + flattened leaves",
+   "glue_cells": 10102,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 9226,
+   "glue_regs_cells": 10102,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -3264,10 +3283,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 14368 + fork 0 bits) + flattened leaves",
-   "glue_cells": 28736,
+   "glue_basis": "EST 2 cells/bit x (boundary 0 + station 17201 + fork 0 bits) + flattened leaves",
+   "glue_cells": 34402,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 28736,
+   "glue_regs_cells": 34402,
    "instances": 4,
    "leaves": [],
    "n_cores": 0,
@@ -3297,10 +3316,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 22801 + fork 299 bits) + flattened leaves",
-   "glue_cells": 46798,
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 25293 + fork 299 bits) + flattened leaves",
+   "glue_cells": 51782,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 46798,
+   "glue_regs_cells": 51782,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -3328,10 +3347,10 @@
    "core_overlaps": 0,
    "cores": [],
    "flattened": [],
-   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 22801 + fork 299 bits) + flattened leaves",
-   "glue_cells": 46798,
+   "glue_basis": "EST 2 cells/bit x (boundary 299 + station 25293 + fork 299 bits) + flattened leaves",
+   "glue_cells": 51782,
    "glue_flat_leaf_cells": 0,
-   "glue_regs_cells": 46798,
+   "glue_regs_cells": 51782,
    "instances": 2,
    "leaves": [],
    "n_cores": 0,
@@ -3371,10 +3390,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 36273 + fork 0 bits) + flattened leaves",
-   "glue_cells": 85389,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38293 + fork 0 bits) + flattened leaves",
+   "glue_cells": 89429,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 78156,
+   "glue_regs_cells": 82196,
    "instances": 2,
    "leaves": [
     {
@@ -3425,10 +3444,10 @@
      "module": "ot_hbm_static_cfg_collar"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 36273 + fork 0 bits) + flattened leaves",
-   "glue_cells": 85389,
+   "glue_basis": "EST 2 cells/bit x (boundary 2805 + station 38293 + fork 0 bits) + flattened leaves",
+   "glue_cells": 89429,
    "glue_flat_leaf_cells": 7233,
-   "glue_regs_cells": 78156,
+   "glue_regs_cells": 82196,
    "instances": 2,
    "leaves": [
     {
@@ -3539,10 +3558,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 3169 + fork 2716 bits) + flattened leaves",
-   "glue_cells": 102491,
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 3199 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 102551,
    "glue_flat_leaf_cells": 46189,
-   "glue_regs_cells": 56302,
+   "glue_regs_cells": 56362,
    "instances": 1,
    "leaves": [
     {
@@ -3680,10 +3699,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1284 + fork 2716 bits) + flattened leaves",
-   "glue_cells": 98482,
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1314 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 98542,
    "glue_flat_leaf_cells": 45950,
-   "glue_regs_cells": 52532,
+   "glue_regs_cells": 52592,
    "instances": 1,
    "leaves": [
     {
@@ -3821,10 +3840,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 24580 + station 1284 + fork 2716 bits) + flattened leaves",
-   "glue_cells": 103340,
+   "glue_basis": "EST 2 cells/bit x (boundary 24580 + station 1314 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 103400,
    "glue_flat_leaf_cells": 46180,
-   "glue_regs_cells": 57160,
+   "glue_regs_cells": 57220,
    "instances": 1,
    "leaves": [
     {
@@ -3962,10 +3981,10 @@
      "module": "ot_hgi_coll_ring_b_stop"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1284 + fork 2716 bits) + flattened leaves",
-   "glue_cells": 98483,
+   "glue_basis": "EST 2 cells/bit x (boundary 22266 + station 1314 + fork 2716 bits) + flattened leaves",
+   "glue_cells": 98543,
    "glue_flat_leaf_cells": 45951,
-   "glue_regs_cells": 52532,
+   "glue_regs_cells": 52592,
    "instances": 1,
    "leaves": [
     {
@@ -4203,10 +4222,10 @@
      "module": "ot_hgi_sfu_lg_pair_tap_leaf_term"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14016 + station 46935 + fork 24 bits) + flattened leaves",
-   "glue_cells": 279580,
+   "glue_basis": "EST 2 cells/bit x (boundary 14016 + station 49178 + fork 24 bits) + flattened leaves",
+   "glue_cells": 284066,
    "glue_flat_leaf_cells": 157630,
-   "glue_regs_cells": 121950,
+   "glue_regs_cells": 126436,
    "instances": 4,
    "leaves": [
     {
@@ -4364,10 +4383,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 12023 + station 19030 + fork 9953 bits) + flattened leaves",
-   "glue_cells": 165470,
+   "glue_basis": "EST 2 cells/bit x (boundary 12023 + station 20257 + fork 9953 bits) + flattened leaves",
+   "glue_cells": 167924,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 82012,
+   "glue_regs_cells": 84466,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4803,10 +4822,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 21166 + fork 7674 bits) + flattened leaves",
-   "glue_cells": 163322,
+   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 21462 + fork 7674 bits) + flattened leaves",
+   "glue_cells": 163914,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 73028,
+   "glue_regs_cells": 73620,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -4946,10 +4965,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14142 + station 24372 + fork 12072 bits) + flattened leaves",
-   "glue_cells": 184630,
+   "glue_basis": "EST 2 cells/bit x (boundary 14142 + station 26381 + fork 12072 bits) + flattened leaves",
+   "glue_cells": 188648,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 101172,
+   "glue_regs_cells": 105190,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5385,10 +5404,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 21852 + fork 7674 bits) + flattened leaves",
-   "glue_cells": 164694,
+   "glue_basis": "EST 2 cells/bit x (boundary 7674 + station 23465 + fork 7674 bits) + flattened leaves",
+   "glue_cells": 167920,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 74400,
+   "glue_regs_cells": 77626,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5528,10 +5547,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14067 + station 27281 + fork 11997 bits) + flattened leaves",
-   "glue_cells": 190148,
+   "glue_basis": "EST 2 cells/bit x (boundary 14067 + station 28544 + fork 11997 bits) + flattened leaves",
+   "glue_cells": 192674,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 106690,
+   "glue_regs_cells": 109216,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -5967,10 +5986,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 26077 + fork 7579 bits) + flattened leaves",
-   "glue_cells": 172764,
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 29346 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 179302,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 82470,
+   "glue_regs_cells": 89008,
    "instances": 4,
    "leaves": [],
    "n_cores": 20,
@@ -6110,10 +6129,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 14416 + fork 9927 bits) + flattened leaves",
-   "glue_cells": 156138,
+   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 18711 + fork 9927 bits) + flattened leaves",
+   "glue_cells": 164728,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 72680,
+   "glue_regs_cells": 81270,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -6251,10 +6270,10 @@
      "module": "SM quarter a glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 14416 + fork 9927 bits) + flattened leaves",
-   "glue_cells": 156138,
+   "glue_basis": "EST 2 cells/bit x (boundary 11997 + station 16765 + fork 9927 bits) + flattened leaves",
+   "glue_cells": 160836,
    "glue_flat_leaf_cells": 83458,
-   "glue_regs_cells": 72680,
+   "glue_regs_cells": 77378,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -6827,10 +6846,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 7908 + fork 7579 bits) + flattened leaves",
-   "glue_cells": 136426,
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 8910 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 138430,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 46132,
+   "glue_regs_cells": 48136,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -6968,10 +6987,10 @@
      "module": "SM quarter d glue (BEs + new pin/relay registers (EST 2 cells/bit))"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 7908 + fork 7579 bits) + flattened leaves",
-   "glue_cells": 136426,
+   "glue_basis": "EST 2 cells/bit x (boundary 7579 + station 8910 + fork 7579 bits) + flattened leaves",
+   "glue_cells": 138430,
    "glue_flat_leaf_cells": 90294,
-   "glue_regs_cells": 46132,
+   "glue_regs_cells": 48136,
    "instances": 2,
    "leaves": [],
    "n_cores": 20,
@@ -7124,10 +7143,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7453 + station 20193 + fork 513 bits) + flattened leaves",
-   "glue_cells": 119947,
+   "glue_basis": "EST 2 cells/bit x (boundary 7453 + station 23431 + fork 513 bits) + flattened leaves",
+   "glue_cells": 126423,
    "glue_flat_leaf_cells": 63629,
-   "glue_regs_cells": 56318,
+   "glue_regs_cells": 62794,
    "instances": 4,
    "leaves": [
     {
@@ -7291,10 +7310,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 11443 + station 45964 + fork 2551 bits) + flattened leaves",
-   "glue_cells": 183545,
+   "glue_basis": "EST 2 cells/bit x (boundary 11443 + station 48956 + fork 2551 bits) + flattened leaves",
+   "glue_cells": 189529,
    "glue_flat_leaf_cells": 63629,
-   "glue_regs_cells": 119916,
+   "glue_regs_cells": 125900,
    "instances": 4,
    "leaves": [
     {
@@ -7398,10 +7417,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 14624 + station 43997 + fork 3848 bits) + flattened leaves",
-   "glue_cells": 188716,
+   "glue_basis": "EST 2 cells/bit x (boundary 14624 + station 51035 + fork 3848 bits) + flattened leaves",
+   "glue_cells": 202792,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 124938,
+   "glue_regs_cells": 139014,
    "instances": 4,
    "leaves": [
     {
@@ -7513,10 +7532,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 19352 + fork 161 bits) + flattened leaves",
-   "glue_cells": 116998,
+   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 23121 + fork 161 bits) + flattened leaves",
+   "glue_cells": 124536,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 53220,
+   "glue_regs_cells": 60758,
    "instances": 2,
    "leaves": [
     {
@@ -7608,10 +7627,10 @@
      "module": "ot_hbm_su_static_pgslice_lg (top + pinned banks)"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 19630 + fork 161 bits) + flattened leaves",
-   "glue_cells": 117554,
+   "glue_basis": "EST 2 cells/bit x (boundary 7097 + station 23121 + fork 161 bits) + flattened leaves",
+   "glue_cells": 124536,
    "glue_flat_leaf_cells": 63778,
-   "glue_regs_cells": 53776,
+   "glue_regs_cells": 60758,
    "instances": 2,
    "leaves": [
     {
@@ -7693,10 +7712,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 8195 + station 5891 + fork 828 bits) + flattened leaves",
-   "glue_cells": 33351,
+   "glue_basis": "EST 2 cells/bit x (boundary 8195 + station 6211 + fork 828 bits) + flattened leaves",
+   "glue_cells": 33991,
    "glue_flat_leaf_cells": 3523,
-   "glue_regs_cells": 29828,
+   "glue_regs_cells": 30468,
    "instances": 4,
    "leaves": [
     {
@@ -7843,10 +7862,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 10812 + station 5537 + fork 3370 bits) + flattened leaves",
-   "glue_cells": 44185,
+   "glue_basis": "EST 2 cells/bit x (boundary 10812 + station 7771 + fork 3370 bits) + flattened leaves",
+   "glue_cells": 48653,
    "glue_flat_leaf_cells": 4747,
-   "glue_regs_cells": 39438,
+   "glue_regs_cells": 43906,
    "instances": 4,
    "leaves": [
     {
@@ -8023,10 +8042,10 @@
      "module": "ot_static_run_target"
     }
    ],
-   "glue_basis": "EST 2 cells/bit x (boundary 13580 + station 2983 + fork 1125 bits) + flattened leaves",
-   "glue_cells": 45025,
+   "glue_basis": "EST 2 cells/bit x (boundary 13580 + station 3946 + fork 1125 bits) + flattened leaves",
+   "glue_cells": 46951,
    "glue_flat_leaf_cells": 9649,
-   "glue_regs_cells": 35376,
+   "glue_regs_cells": 37302,
    "instances": 4,
    "leaves": [
     {

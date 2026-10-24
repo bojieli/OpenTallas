@@ -1,0 +1,10168 @@
+{
+"schema": "opentallas.die_plan.core_pins.v1",
+"core": "kv3_astk_WN",
+"frame": "core R0, origin (0,0), outline 190.08 x 181.44",
+"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks",
+"faces": {
+"N": {
+"pins": 770,
+"layers": [
+"M5"
+]
+},
+"S": {
+"pins": 652,
+"layers": [
+"M5"
+]
+},
+"W": {
+"pins": 268,
+"layers": [
+"M4"
+]
+}
+},
+"pins": [
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[0]",
+"layer": "M5",
+"x": 2.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[1]",
+"layer": "M5",
+"x": 2.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[2]",
+"layer": "M5",
+"x": 2.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[3]",
+"layer": "M5",
+"x": 3.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[4]",
+"layer": "M5",
+"x": 3.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[5]",
+"layer": "M5",
+"x": 3.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[6]",
+"layer": "M5",
+"x": 3.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[7]",
+"layer": "M5",
+"x": 3.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[8]",
+"layer": "M5",
+"x": 4.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[9]",
+"layer": "M5",
+"x": 4.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[10]",
+"layer": "M5",
+"x": 4.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[11]",
+"layer": "M5",
+"x": 4.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[12]",
+"layer": "M5",
+"x": 5.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[13]",
+"layer": "M5",
+"x": 5.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__tc[14]",
+"layer": "M5",
+"x": 5.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[0]",
+"layer": "M5",
+"x": 5.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[1]",
+"layer": "M5",
+"x": 6.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[2]",
+"layer": "M5",
+"x": 6.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[3]",
+"layer": "M5",
+"x": 6.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[4]",
+"layer": "M5",
+"x": 6.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[5]",
+"layer": "M5",
+"x": 7.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[6]",
+"layer": "M5",
+"x": 7.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[7]",
+"layer": "M5",
+"x": 7.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[8]",
+"layer": "M5",
+"x": 7.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[9]",
+"layer": "M5",
+"x": 8.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[10]",
+"layer": "M5",
+"x": 8.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[11]",
+"layer": "M5",
+"x": 8.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[12]",
+"layer": "M5",
+"x": 8.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[13]",
+"layer": "M5",
+"x": 9.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[14]",
+"layer": "M5",
+"x": 9.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[15]",
+"layer": "M5",
+"x": 9.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[16]",
+"layer": "M5",
+"x": 9.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[17]",
+"layer": "M5",
+"x": 10.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[18]",
+"layer": "M5",
+"x": 10.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[19]",
+"layer": "M5",
+"x": 10.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[20]",
+"layer": "M5",
+"x": 10.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[21]",
+"layer": "M5",
+"x": 10.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[22]",
+"layer": "M5",
+"x": 11.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[23]",
+"layer": "M5",
+"x": 11.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[24]",
+"layer": "M5",
+"x": 11.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[25]",
+"layer": "M5",
+"x": 11.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[26]",
+"layer": "M5",
+"x": 12.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[27]",
+"layer": "M5",
+"x": 12.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[28]",
+"layer": "M5",
+"x": 12.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[29]",
+"layer": "M5",
+"x": 12.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[30]",
+"layer": "M5",
+"x": 13.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[31]",
+"layer": "M5",
+"x": 13.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[32]",
+"layer": "M5",
+"x": 13.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[33]",
+"layer": "M5",
+"x": 13.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[34]",
+"layer": "M5",
+"x": 14.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[35]",
+"layer": "M5",
+"x": 14.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[36]",
+"layer": "M5",
+"x": 14.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[37]",
+"layer": "M5",
+"x": 14.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[38]",
+"layer": "M5",
+"x": 15.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[39]",
+"layer": "M5",
+"x": 15.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[40]",
+"layer": "M5",
+"x": 15.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[41]",
+"layer": "M5",
+"x": 15.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[42]",
+"layer": "M5",
+"x": 16.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[43]",
+"layer": "M5",
+"x": 16.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[44]",
+"layer": "M5",
+"x": 16.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[45]",
+"layer": "M5",
+"x": 16.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[46]",
+"layer": "M5",
+"x": 17.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[47]",
+"layer": "M5",
+"x": 17.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[48]",
+"layer": "M5",
+"x": 17.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[49]",
+"layer": "M5",
+"x": 17.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[50]",
+"layer": "M5",
+"x": 17.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[51]",
+"layer": "M5",
+"x": 18.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[52]",
+"layer": "M5",
+"x": 18.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[53]",
+"layer": "M5",
+"x": 18.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[54]",
+"layer": "M5",
+"x": 18.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[55]",
+"layer": "M5",
+"x": 19.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[56]",
+"layer": "M5",
+"x": 19.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[57]",
+"layer": "M5",
+"x": 19.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[58]",
+"layer": "M5",
+"x": 19.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[59]",
+"layer": "M5",
+"x": 20.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[60]",
+"layer": "M5",
+"x": 20.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[61]",
+"layer": "M5",
+"x": 20.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[62]",
+"layer": "M5",
+"x": 20.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[63]",
+"layer": "M5",
+"x": 21.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[64]",
+"layer": "M5",
+"x": 21.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[65]",
+"layer": "M5",
+"x": 21.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[66]",
+"layer": "M5",
+"x": 21.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[67]",
+"layer": "M5",
+"x": 22.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[68]",
+"layer": "M5",
+"x": 22.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[69]",
+"layer": "M5",
+"x": 22.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[70]",
+"layer": "M5",
+"x": 22.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[71]",
+"layer": "M5",
+"x": 23.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[72]",
+"layer": "M5",
+"x": 23.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[73]",
+"layer": "M5",
+"x": 23.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[74]",
+"layer": "M5",
+"x": 23.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[75]",
+"layer": "M5",
+"x": 23.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[76]",
+"layer": "M5",
+"x": 24.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[77]",
+"layer": "M5",
+"x": 24.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[78]",
+"layer": "M5",
+"x": 24.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[79]",
+"layer": "M5",
+"x": 24.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[80]",
+"layer": "M5",
+"x": 25.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[81]",
+"layer": "M5",
+"x": 25.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[82]",
+"layer": "M5",
+"x": 25.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[83]",
+"layer": "M5",
+"x": 25.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[84]",
+"layer": "M5",
+"x": 26.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[85]",
+"layer": "M5",
+"x": 26.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[86]",
+"layer": "M5",
+"x": 26.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[87]",
+"layer": "M5",
+"x": 26.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[88]",
+"layer": "M5",
+"x": 27.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[89]",
+"layer": "M5",
+"x": 27.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[90]",
+"layer": "M5",
+"x": 27.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[91]",
+"layer": "M5",
+"x": 27.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[92]",
+"layer": "M5",
+"x": 28.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[93]",
+"layer": "M5",
+"x": 28.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[94]",
+"layer": "M5",
+"x": 28.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[95]",
+"layer": "M5",
+"x": 28.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[96]",
+"layer": "M5",
+"x": 29.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[97]",
+"layer": "M5",
+"x": 29.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[98]",
+"layer": "M5",
+"x": 29.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[99]",
+"layer": "M5",
+"x": 29.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[100]",
+"layer": "M5",
+"x": 30.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[101]",
+"layer": "M5",
+"x": 30.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[102]",
+"layer": "M5",
+"x": 30.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[103]",
+"layer": "M5",
+"x": 30.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[104]",
+"layer": "M5",
+"x": 30.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[105]",
+"layer": "M5",
+"x": 31.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[106]",
+"layer": "M5",
+"x": 31.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[107]",
+"layer": "M5",
+"x": 31.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[108]",
+"layer": "M5",
+"x": 31.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[109]",
+"layer": "M5",
+"x": 32.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[110]",
+"layer": "M5",
+"x": 32.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[111]",
+"layer": "M5",
+"x": 32.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[112]",
+"layer": "M5",
+"x": 32.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[113]",
+"layer": "M5",
+"x": 33.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[114]",
+"layer": "M5",
+"x": 33.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[115]",
+"layer": "M5",
+"x": 33.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[116]",
+"layer": "M5",
+"x": 33.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[117]",
+"layer": "M5",
+"x": 34.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[118]",
+"layer": "M5",
+"x": 34.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[119]",
+"layer": "M5",
+"x": 34.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[120]",
+"layer": "M5",
+"x": 34.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[121]",
+"layer": "M5",
+"x": 35.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[122]",
+"layer": "M5",
+"x": 35.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[123]",
+"layer": "M5",
+"x": 35.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[124]",
+"layer": "M5",
+"x": 35.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[125]",
+"layer": "M5",
+"x": 36.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[126]",
+"layer": "M5",
+"x": 36.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[127]",
+"layer": "M5",
+"x": 36.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[128]",
+"layer": "M5",
+"x": 36.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[129]",
+"layer": "M5",
+"x": 37.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[130]",
+"layer": "M5",
+"x": 37.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[131]",
+"layer": "M5",
+"x": 37.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[132]",
+"layer": "M5",
+"x": 37.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[133]",
+"layer": "M5",
+"x": 37.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[134]",
+"layer": "M5",
+"x": 38.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[135]",
+"layer": "M5",
+"x": 38.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[136]",
+"layer": "M5",
+"x": 38.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_0_u_zn__zi[137]",
+"layer": "M5",
+"x": 38.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[0]",
+"layer": "M5",
+"x": 39.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[1]",
+"layer": "M5",
+"x": 39.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[2]",
+"layer": "M5",
+"x": 39.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[3]",
+"layer": "M5",
+"x": 39.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[4]",
+"layer": "M5",
+"x": 40.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[5]",
+"layer": "M5",
+"x": 40.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[6]",
+"layer": "M5",
+"x": 40.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[7]",
+"layer": "M5",
+"x": 40.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[8]",
+"layer": "M5",
+"x": 41.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[9]",
+"layer": "M5",
+"x": 41.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[10]",
+"layer": "M5",
+"x": 41.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[11]",
+"layer": "M5",
+"x": 41.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[12]",
+"layer": "M5",
+"x": 42.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[13]",
+"layer": "M5",
+"x": 42.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_1_u_zn__tc[14]",
+"layer": "M5",
+"x": 42.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[0]",
+"layer": "M5",
+"x": 42.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[1]",
+"layer": "M5",
+"x": 43.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[2]",
+"layer": "M5",
+"x": 43.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[3]",
+"layer": "M5",
+"x": 43.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[4]",
+"layer": "M5",
+"x": 43.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[5]",
+"layer": "M5",
+"x": 44.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[6]",
+"layer": "M5",
+"x": 44.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[7]",
+"layer": "M5",
+"x": 44.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[8]",
+"layer": "M5",
+"x": 44.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[9]",
+"layer": "M5",
+"x": 45.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[10]",
+"layer": "M5",
+"x": 45.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[11]",
+"layer": "M5",
+"x": 45.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[12]",
+"layer": "M5",
+"x": 45.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[13]",
+"layer": "M5",
+"x": 45.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_2_u_zn__tc[14]",
+"layer": "M5",
+"x": 46.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[0]",
+"layer": "M5",
+"x": 46.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[1]",
+"layer": "M5",
+"x": 46.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[2]",
+"layer": "M5",
+"x": 46.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[3]",
+"layer": "M5",
+"x": 47.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[4]",
+"layer": "M5",
+"x": 47.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[5]",
+"layer": "M5",
+"x": 47.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[6]",
+"layer": "M5",
+"x": 47.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[7]",
+"layer": "M5",
+"x": 48.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[8]",
+"layer": "M5",
+"x": 48.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[9]",
+"layer": "M5",
+"x": 48.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[10]",
+"layer": "M5",
+"x": 48.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[11]",
+"layer": "M5",
+"x": 49.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[12]",
+"layer": "M5",
+"x": 49.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[13]",
+"layer": "M5",
+"x": 49.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_g_zn_3_u_zn__tc[14]",
+"layer": "M5",
+"x": 49.8,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[0]",
+"layer": "M5",
+"x": 50.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[1]",
+"layer": "M5",
+"x": 50.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[2]",
+"layer": "M5",
+"x": 50.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[3]",
+"layer": "M5",
+"x": 50.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[4]",
+"layer": "M5",
+"x": 51.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[5]",
+"layer": "M5",
+"x": 51.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[6]",
+"layer": "M5",
+"x": 51.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[7]",
+"layer": "M5",
+"x": 51.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[8]",
+"layer": "M5",
+"x": 51.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[9]",
+"layer": "M5",
+"x": 52.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[10]",
+"layer": "M5",
+"x": 52.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[11]",
+"layer": "M5",
+"x": 52.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[12]",
+"layer": "M5",
+"x": 52.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[13]",
+"layer": "M5",
+"x": 53.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[14]",
+"layer": "M5",
+"x": 53.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[15]",
+"layer": "M5",
+"x": 53.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[16]",
+"layer": "M5",
+"x": 53.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[17]",
+"layer": "M5",
+"x": 54.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[18]",
+"layer": "M5",
+"x": 54.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[19]",
+"layer": "M5",
+"x": 54.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[20]",
+"layer": "M5",
+"x": 54.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[21]",
+"layer": "M5",
+"x": 55.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[22]",
+"layer": "M5",
+"x": 55.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[23]",
+"layer": "M5",
+"x": 55.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[24]",
+"layer": "M5",
+"x": 55.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[25]",
+"layer": "M5",
+"x": 56.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[26]",
+"layer": "M5",
+"x": 56.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[27]",
+"layer": "M5",
+"x": 56.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[28]",
+"layer": "M5",
+"x": 56.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[29]",
+"layer": "M5",
+"x": 57.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[30]",
+"layer": "M5",
+"x": 57.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[31]",
+"layer": "M5",
+"x": 57.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[32]",
+"layer": "M5",
+"x": 57.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[33]",
+"layer": "M5",
+"x": 58.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[34]",
+"layer": "M5",
+"x": 58.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[35]",
+"layer": "M5",
+"x": 58.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[36]",
+"layer": "M5",
+"x": 58.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[37]",
+"layer": "M5",
+"x": 58.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[38]",
+"layer": "M5",
+"x": 59.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[39]",
+"layer": "M5",
+"x": 59.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[40]",
+"layer": "M5",
+"x": 59.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[41]",
+"layer": "M5",
+"x": 59.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[42]",
+"layer": "M5",
+"x": 60.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[43]",
+"layer": "M5",
+"x": 60.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[44]",
+"layer": "M5",
+"x": 60.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[45]",
+"layer": "M5",
+"x": 60.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[46]",
+"layer": "M5",
+"x": 61.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[47]",
+"layer": "M5",
+"x": 61.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[48]",
+"layer": "M5",
+"x": 61.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[49]",
+"layer": "M5",
+"x": 61.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[50]",
+"layer": "M5",
+"x": 62.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[51]",
+"layer": "M5",
+"x": 62.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[52]",
+"layer": "M5",
+"x": 62.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[53]",
+"layer": "M5",
+"x": 62.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[54]",
+"layer": "M5",
+"x": 63.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[55]",
+"layer": "M5",
+"x": 63.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[56]",
+"layer": "M5",
+"x": 63.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[57]",
+"layer": "M5",
+"x": 63.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[58]",
+"layer": "M5",
+"x": 64.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[59]",
+"layer": "M5",
+"x": 64.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[60]",
+"layer": "M5",
+"x": 64.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[61]",
+"layer": "M5",
+"x": 64.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[62]",
+"layer": "M5",
+"x": 65.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[63]",
+"layer": "M5",
+"x": 65.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[64]",
+"layer": "M5",
+"x": 65.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[65]",
+"layer": "M5",
+"x": 65.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[66]",
+"layer": "M5",
+"x": 65.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[67]",
+"layer": "M5",
+"x": 66.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[68]",
+"layer": "M5",
+"x": 66.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[69]",
+"layer": "M5",
+"x": 66.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[70]",
+"layer": "M5",
+"x": 66.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[71]",
+"layer": "M5",
+"x": 67.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[72]",
+"layer": "M5",
+"x": 67.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[73]",
+"layer": "M5",
+"x": 67.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[74]",
+"layer": "M5",
+"x": 67.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[75]",
+"layer": "M5",
+"x": 68.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[76]",
+"layer": "M5",
+"x": 68.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[77]",
+"layer": "M5",
+"x": 68.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[78]",
+"layer": "M5",
+"x": 68.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[79]",
+"layer": "M5",
+"x": 69.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[80]",
+"layer": "M5",
+"x": 69.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[81]",
+"layer": "M5",
+"x": 69.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[82]",
+"layer": "M5",
+"x": 69.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[83]",
+"layer": "M5",
+"x": 70.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[84]",
+"layer": "M5",
+"x": 70.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[85]",
+"layer": "M5",
+"x": 70.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[86]",
+"layer": "M5",
+"x": 70.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[87]",
+"layer": "M5",
+"x": 71.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[88]",
+"layer": "M5",
+"x": 71.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[89]",
+"layer": "M5",
+"x": 71.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[90]",
+"layer": "M5",
+"x": 71.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[91]",
+"layer": "M5",
+"x": 72.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[92]",
+"layer": "M5",
+"x": 72.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[93]",
+"layer": "M5",
+"x": 72.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[94]",
+"layer": "M5",
+"x": 72.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[95]",
+"layer": "M5",
+"x": 72.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[96]",
+"layer": "M5",
+"x": 73.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[97]",
+"layer": "M5",
+"x": 73.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[98]",
+"layer": "M5",
+"x": 73.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[99]",
+"layer": "M5",
+"x": 73.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[100]",
+"layer": "M5",
+"x": 74.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[101]",
+"layer": "M5",
+"x": 74.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[102]",
+"layer": "M5",
+"x": 74.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[103]",
+"layer": "M5",
+"x": 74.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[104]",
+"layer": "M5",
+"x": 75.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[105]",
+"layer": "M5",
+"x": 75.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[106]",
+"layer": "M5",
+"x": 75.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[107]",
+"layer": "M5",
+"x": 75.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[108]",
+"layer": "M5",
+"x": 76.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[109]",
+"layer": "M5",
+"x": 76.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[110]",
+"layer": "M5",
+"x": 76.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[111]",
+"layer": "M5",
+"x": 76.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[112]",
+"layer": "M5",
+"x": 77.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[113]",
+"layer": "M5",
+"x": 77.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[114]",
+"layer": "M5",
+"x": 77.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[115]",
+"layer": "M5",
+"x": 77.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[116]",
+"layer": "M5",
+"x": 78.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[117]",
+"layer": "M5",
+"x": 78.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[118]",
+"layer": "M5",
+"x": 78.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[119]",
+"layer": "M5",
+"x": 78.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[120]",
+"layer": "M5",
+"x": 78.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[121]",
+"layer": "M5",
+"x": 79.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[122]",
+"layer": "M5",
+"x": 79.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[123]",
+"layer": "M5",
+"x": 79.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[124]",
+"layer": "M5",
+"x": 79.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[125]",
+"layer": "M5",
+"x": 80.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[126]",
+"layer": "M5",
+"x": 80.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[127]",
+"layer": "M5",
+"x": 80.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[128]",
+"layer": "M5",
+"x": 80.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[129]",
+"layer": "M5",
+"x": 81.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[130]",
+"layer": "M5",
+"x": 81.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[131]",
+"layer": "M5",
+"x": 81.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[132]",
+"layer": "M5",
+"x": 81.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[133]",
+"layer": "M5",
+"x": 82.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[134]",
+"layer": "M5",
+"x": 82.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[135]",
+"layer": "M5",
+"x": 82.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[136]",
+"layer": "M5",
+"x": 82.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[137]",
+"layer": "M5",
+"x": 83.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[138]",
+"layer": "M5",
+"x": 83.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[139]",
+"layer": "M5",
+"x": 83.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[140]",
+"layer": "M5",
+"x": 83.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[141]",
+"layer": "M5",
+"x": 84.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[142]",
+"layer": "M5",
+"x": 84.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[143]",
+"layer": "M5",
+"x": 84.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[144]",
+"layer": "M5",
+"x": 84.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[145]",
+"layer": "M5",
+"x": 85.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[146]",
+"layer": "M5",
+"x": 85.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[147]",
+"layer": "M5",
+"x": 85.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[148]",
+"layer": "M5",
+"x": 85.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[149]",
+"layer": "M5",
+"x": 85.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[150]",
+"layer": "M5",
+"x": 86.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[151]",
+"layer": "M5",
+"x": 86.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[152]",
+"layer": "M5",
+"x": 86.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[153]",
+"layer": "M5",
+"x": 86.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[154]",
+"layer": "M5",
+"x": 87.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[155]",
+"layer": "M5",
+"x": 87.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[156]",
+"layer": "M5",
+"x": 87.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[157]",
+"layer": "M5",
+"x": 87.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[158]",
+"layer": "M5",
+"x": 88.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[159]",
+"layer": "M5",
+"x": 88.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[160]",
+"layer": "M5",
+"x": 88.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[161]",
+"layer": "M5",
+"x": 88.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[162]",
+"layer": "M5",
+"x": 89.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[163]",
+"layer": "M5",
+"x": 89.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[164]",
+"layer": "M5",
+"x": 89.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[165]",
+"layer": "M5",
+"x": 89.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[166]",
+"layer": "M5",
+"x": 90.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[167]",
+"layer": "M5",
+"x": 90.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[168]",
+"layer": "M5",
+"x": 90.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[169]",
+"layer": "M5",
+"x": 90.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[170]",
+"layer": "M5",
+"x": 91.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[171]",
+"layer": "M5",
+"x": 91.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[172]",
+"layer": "M5",
+"x": 91.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[173]",
+"layer": "M5",
+"x": 91.8,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[174]",
+"layer": "M5",
+"x": 92.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[175]",
+"layer": "M5",
+"x": 92.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[176]",
+"layer": "M5",
+"x": 92.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[177]",
+"layer": "M5",
+"x": 92.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[178]",
+"layer": "M5",
+"x": 93.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[179]",
+"layer": "M5",
+"x": 93.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[180]",
+"layer": "M5",
+"x": 93.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[181]",
+"layer": "M5",
+"x": 93.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[182]",
+"layer": "M5",
+"x": 93.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[183]",
+"layer": "M5",
+"x": 94.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[184]",
+"layer": "M5",
+"x": 94.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[185]",
+"layer": "M5",
+"x": 94.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[186]",
+"layer": "M5",
+"x": 94.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[187]",
+"layer": "M5",
+"x": 95.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[188]",
+"layer": "M5",
+"x": 95.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[189]",
+"layer": "M5",
+"x": 95.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[190]",
+"layer": "M5",
+"x": 95.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[191]",
+"layer": "M5",
+"x": 96.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[192]",
+"layer": "M5",
+"x": 96.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[193]",
+"layer": "M5",
+"x": 96.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[194]",
+"layer": "M5",
+"x": 96.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[195]",
+"layer": "M5",
+"x": 97.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[196]",
+"layer": "M5",
+"x": 97.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[197]",
+"layer": "M5",
+"x": 97.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[198]",
+"layer": "M5",
+"x": 97.8,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[199]",
+"layer": "M5",
+"x": 98.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[200]",
+"layer": "M5",
+"x": 98.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[201]",
+"layer": "M5",
+"x": 98.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[202]",
+"layer": "M5",
+"x": 98.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[203]",
+"layer": "M5",
+"x": 99.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[204]",
+"layer": "M5",
+"x": 99.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[205]",
+"layer": "M5",
+"x": 99.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[206]",
+"layer": "M5",
+"x": 99.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[207]",
+"layer": "M5",
+"x": 100.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[208]",
+"layer": "M5",
+"x": 100.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[209]",
+"layer": "M5",
+"x": 100.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[210]",
+"layer": "M5",
+"x": 100.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[211]",
+"layer": "M5",
+"x": 100.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[212]",
+"layer": "M5",
+"x": 101.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[213]",
+"layer": "M5",
+"x": 101.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[214]",
+"layer": "M5",
+"x": 101.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[215]",
+"layer": "M5",
+"x": 101.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[216]",
+"layer": "M5",
+"x": 102.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[217]",
+"layer": "M5",
+"x": 102.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[218]",
+"layer": "M5",
+"x": 102.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[219]",
+"layer": "M5",
+"x": 102.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[220]",
+"layer": "M5",
+"x": 103.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[221]",
+"layer": "M5",
+"x": 103.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[222]",
+"layer": "M5",
+"x": 103.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[223]",
+"layer": "M5",
+"x": 103.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[224]",
+"layer": "M5",
+"x": 104.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[225]",
+"layer": "M5",
+"x": 104.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[226]",
+"layer": "M5",
+"x": 104.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[227]",
+"layer": "M5",
+"x": 104.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[228]",
+"layer": "M5",
+"x": 105.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[229]",
+"layer": "M5",
+"x": 105.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[230]",
+"layer": "M5",
+"x": 105.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[231]",
+"layer": "M5",
+"x": 105.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[232]",
+"layer": "M5",
+"x": 106.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[233]",
+"layer": "M5",
+"x": 106.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[234]",
+"layer": "M5",
+"x": 106.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[235]",
+"layer": "M5",
+"x": 106.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[236]",
+"layer": "M5",
+"x": 106.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[237]",
+"layer": "M5",
+"x": 107.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[238]",
+"layer": "M5",
+"x": 107.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[239]",
+"layer": "M5",
+"x": 107.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[240]",
+"layer": "M5",
+"x": 107.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[241]",
+"layer": "M5",
+"x": 108.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[242]",
+"layer": "M5",
+"x": 108.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[243]",
+"layer": "M5",
+"x": 108.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[244]",
+"layer": "M5",
+"x": 108.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[245]",
+"layer": "M5",
+"x": 109.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[246]",
+"layer": "M5",
+"x": 109.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[247]",
+"layer": "M5",
+"x": 109.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[248]",
+"layer": "M5",
+"x": 109.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[249]",
+"layer": "M5",
+"x": 110.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[250]",
+"layer": "M5",
+"x": 110.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[251]",
+"layer": "M5",
+"x": 110.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[252]",
+"layer": "M5",
+"x": 110.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[253]",
+"layer": "M5",
+"x": 111.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[254]",
+"layer": "M5",
+"x": 111.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[255]",
+"layer": "M5",
+"x": 111.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[256]",
+"layer": "M5",
+"x": 111.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[257]",
+"layer": "M5",
+"x": 112.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[258]",
+"layer": "M5",
+"x": 112.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[259]",
+"layer": "M5",
+"x": 112.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[260]",
+"layer": "M5",
+"x": 112.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[261]",
+"layer": "M5",
+"x": 113.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[262]",
+"layer": "M5",
+"x": 113.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[263]",
+"layer": "M5",
+"x": 113.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[264]",
+"layer": "M5",
+"x": 113.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[265]",
+"layer": "M5",
+"x": 113.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[266]",
+"layer": "M5",
+"x": 114.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[267]",
+"layer": "M5",
+"x": 114.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[268]",
+"layer": "M5",
+"x": 114.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[269]",
+"layer": "M5",
+"x": 114.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[270]",
+"layer": "M5",
+"x": 115.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[271]",
+"layer": "M5",
+"x": 115.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[272]",
+"layer": "M5",
+"x": 115.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[273]",
+"layer": "M5",
+"x": 115.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[274]",
+"layer": "M5",
+"x": 116.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[275]",
+"layer": "M5",
+"x": 116.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[276]",
+"layer": "M5",
+"x": 116.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[277]",
+"layer": "M5",
+"x": 116.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[278]",
+"layer": "M5",
+"x": 117.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[279]",
+"layer": "M5",
+"x": 117.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[280]",
+"layer": "M5",
+"x": 117.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[281]",
+"layer": "M5",
+"x": 117.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[282]",
+"layer": "M5",
+"x": 118.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[283]",
+"layer": "M5",
+"x": 118.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[284]",
+"layer": "M5",
+"x": 118.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[285]",
+"layer": "M5",
+"x": 118.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[286]",
+"layer": "M5",
+"x": 119.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[287]",
+"layer": "M5",
+"x": 119.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[288]",
+"layer": "M5",
+"x": 119.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[289]",
+"layer": "M5",
+"x": 119.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[290]",
+"layer": "M5",
+"x": 120.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[291]",
+"layer": "M5",
+"x": 120.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[292]",
+"layer": "M5",
+"x": 120.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[293]",
+"layer": "M5",
+"x": 120.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[294]",
+"layer": "M5",
+"x": 120.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[295]",
+"layer": "M5",
+"x": 121.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[296]",
+"layer": "M5",
+"x": 121.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[297]",
+"layer": "M5",
+"x": 121.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[298]",
+"layer": "M5",
+"x": 121.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[299]",
+"layer": "M5",
+"x": 122.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[300]",
+"layer": "M5",
+"x": 122.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[301]",
+"layer": "M5",
+"x": 122.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[302]",
+"layer": "M5",
+"x": 122.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[303]",
+"layer": "M5",
+"x": 123.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[304]",
+"layer": "M5",
+"x": 123.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[305]",
+"layer": "M5",
+"x": 123.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[306]",
+"layer": "M5",
+"x": 123.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[307]",
+"layer": "M5",
+"x": 124.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[308]",
+"layer": "M5",
+"x": 124.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[309]",
+"layer": "M5",
+"x": 124.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[310]",
+"layer": "M5",
+"x": 124.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[311]",
+"layer": "M5",
+"x": 125.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[312]",
+"layer": "M5",
+"x": 125.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[313]",
+"layer": "M5",
+"x": 125.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[314]",
+"layer": "M5",
+"x": 125.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[315]",
+"layer": "M5",
+"x": 126.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[316]",
+"layer": "M5",
+"x": 126.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[317]",
+"layer": "M5",
+"x": 126.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[318]",
+"layer": "M5",
+"x": 126.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[319]",
+"layer": "M5",
+"x": 126.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[320]",
+"layer": "M5",
+"x": 127.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[321]",
+"layer": "M5",
+"x": 127.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[322]",
+"layer": "M5",
+"x": 127.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[323]",
+"layer": "M5",
+"x": 127.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[324]",
+"layer": "M5",
+"x": 128.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[325]",
+"layer": "M5",
+"x": 128.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[326]",
+"layer": "M5",
+"x": 128.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[327]",
+"layer": "M5",
+"x": 128.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[328]",
+"layer": "M5",
+"x": 129.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[329]",
+"layer": "M5",
+"x": 129.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[330]",
+"layer": "M5",
+"x": 129.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[331]",
+"layer": "M5",
+"x": 129.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[332]",
+"layer": "M5",
+"x": 130.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[333]",
+"layer": "M5",
+"x": 130.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[334]",
+"layer": "M5",
+"x": 130.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[335]",
+"layer": "M5",
+"x": 130.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[336]",
+"layer": "M5",
+"x": 131.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[337]",
+"layer": "M5",
+"x": 131.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[338]",
+"layer": "M5",
+"x": 131.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[339]",
+"layer": "M5",
+"x": 131.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[340]",
+"layer": "M5",
+"x": 132.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[341]",
+"layer": "M5",
+"x": 132.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[342]",
+"layer": "M5",
+"x": 132.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[343]",
+"layer": "M5",
+"x": 132.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[344]",
+"layer": "M5",
+"x": 133.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[345]",
+"layer": "M5",
+"x": 133.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[346]",
+"layer": "M5",
+"x": 133.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[347]",
+"layer": "M5",
+"x": 133.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[348]",
+"layer": "M5",
+"x": 133.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[349]",
+"layer": "M5",
+"x": 134.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[350]",
+"layer": "M5",
+"x": 134.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[351]",
+"layer": "M5",
+"x": 134.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[352]",
+"layer": "M5",
+"x": 134.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[353]",
+"layer": "M5",
+"x": 135.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[354]",
+"layer": "M5",
+"x": 135.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[355]",
+"layer": "M5",
+"x": 135.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[356]",
+"layer": "M5",
+"x": 135.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[357]",
+"layer": "M5",
+"x": 136.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[358]",
+"layer": "M5",
+"x": 136.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[359]",
+"layer": "M5",
+"x": 136.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[360]",
+"layer": "M5",
+"x": 136.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[361]",
+"layer": "M5",
+"x": 137.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[362]",
+"layer": "M5",
+"x": 137.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[363]",
+"layer": "M5",
+"x": 137.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[364]",
+"layer": "M5",
+"x": 137.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[365]",
+"layer": "M5",
+"x": 138.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[366]",
+"layer": "M5",
+"x": 138.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[367]",
+"layer": "M5",
+"x": 138.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[368]",
+"layer": "M5",
+"x": 138.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[369]",
+"layer": "M5",
+"x": 139.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[370]",
+"layer": "M5",
+"x": 139.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[371]",
+"layer": "M5",
+"x": 139.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[372]",
+"layer": "M5",
+"x": 139.8,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[373]",
+"layer": "M5",
+"x": 140.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[374]",
+"layer": "M5",
+"x": 140.28,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[375]",
+"layer": "M5",
+"x": 140.52,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[376]",
+"layer": "M5",
+"x": 140.76,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[377]",
+"layer": "M5",
+"x": 141.0,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[378]",
+"layer": "M5",
+"x": 141.24,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[379]",
+"layer": "M5",
+"x": 141.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[380]",
+"layer": "M5",
+"x": 141.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[381]",
+"layer": "M5",
+"x": 141.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[382]",
+"layer": "M5",
+"x": 142.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[383]",
+"layer": "M5",
+"x": 142.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[384]",
+"layer": "M5",
+"x": 142.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[385]",
+"layer": "M5",
+"x": 142.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[386]",
+"layer": "M5",
+"x": 143.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[387]",
+"layer": "M5",
+"x": 143.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[388]",
+"layer": "M5",
+"x": 143.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[389]",
+"layer": "M5",
+"x": 143.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[390]",
+"layer": "M5",
+"x": 144.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[391]",
+"layer": "M5",
+"x": 144.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[392]",
+"layer": "M5",
+"x": 144.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[393]",
+"layer": "M5",
+"x": 144.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[394]",
+"layer": "M5",
+"x": 145.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[395]",
+"layer": "M5",
+"x": 145.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[396]",
+"layer": "M5",
+"x": 145.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[397]",
+"layer": "M5",
+"x": 145.8,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[398]",
+"layer": "M5",
+"x": 146.04,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[399]",
+"layer": "M5",
+"x": 146.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[400]",
+"layer": "M5",
+"x": 146.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[401]",
+"layer": "M5",
+"x": 146.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[402]",
+"layer": "M5",
+"x": 147.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[403]",
+"layer": "M5",
+"x": 147.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[404]",
+"layer": "M5",
+"x": 147.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[405]",
+"layer": "M5",
+"x": 147.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[406]",
+"layer": "M5",
+"x": 148.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[407]",
+"layer": "M5",
+"x": 148.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[408]",
+"layer": "M5",
+"x": 148.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[409]",
+"layer": "M5",
+"x": 148.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[410]",
+"layer": "M5",
+"x": 148.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[411]",
+"layer": "M5",
+"x": 149.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[412]",
+"layer": "M5",
+"x": 149.448,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[413]",
+"layer": "M5",
+"x": 149.688,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[414]",
+"layer": "M5",
+"x": 149.928,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[415]",
+"layer": "M5",
+"x": 150.168,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[416]",
+"layer": "M5",
+"x": 150.408,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[417]",
+"layer": "M5",
+"x": 150.648,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[418]",
+"layer": "M5",
+"x": 150.888,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[419]",
+"layer": "M5",
+"x": 151.128,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[420]",
+"layer": "M5",
+"x": 151.368,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[421]",
+"layer": "M5",
+"x": 151.608,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[422]",
+"layer": "M5",
+"x": 151.848,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[423]",
+"layer": "M5",
+"x": 152.088,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[424]",
+"layer": "M5",
+"x": 152.328,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[425]",
+"layer": "M5",
+"x": 152.568,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[426]",
+"layer": "M5",
+"x": 152.808,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[427]",
+"layer": "M5",
+"x": 153.048,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[428]",
+"layer": "M5",
+"x": 153.288,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[429]",
+"layer": "M5",
+"x": 153.528,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[430]",
+"layer": "M5",
+"x": 153.768,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[431]",
+"layer": "M5",
+"x": 154.008,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[432]",
+"layer": "M5",
+"x": 154.248,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[433]",
+"layer": "M5",
+"x": 154.488,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[434]",
+"layer": "M5",
+"x": 154.728,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[435]",
+"layer": "M5",
+"x": 154.968,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[436]",
+"layer": "M5",
+"x": 155.208,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[437]",
+"layer": "M5",
+"x": 155.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[438]",
+"layer": "M5",
+"x": 155.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[439]",
+"layer": "M5",
+"x": 155.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[440]",
+"layer": "M5",
+"x": 156.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[441]",
+"layer": "M5",
+"x": 156.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[442]",
+"layer": "M5",
+"x": 156.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[443]",
+"layer": "M5",
+"x": 156.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[444]",
+"layer": "M5",
+"x": 157.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[445]",
+"layer": "M5",
+"x": 157.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[446]",
+"layer": "M5",
+"x": 157.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[447]",
+"layer": "M5",
+"x": 157.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[448]",
+"layer": "M5",
+"x": 158.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[449]",
+"layer": "M5",
+"x": 158.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[450]",
+"layer": "M5",
+"x": 158.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[451]",
+"layer": "M5",
+"x": 158.856,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[452]",
+"layer": "M5",
+"x": 159.096,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[453]",
+"layer": "M5",
+"x": 159.336,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[454]",
+"layer": "M5",
+"x": 159.576,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[455]",
+"layer": "M5",
+"x": 159.816,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[456]",
+"layer": "M5",
+"x": 160.056,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[457]",
+"layer": "M5",
+"x": 160.296,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[458]",
+"layer": "M5",
+"x": 160.536,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[459]",
+"layer": "M5",
+"x": 160.776,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[460]",
+"layer": "M5",
+"x": 161.016,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[461]",
+"layer": "M5",
+"x": 161.256,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[462]",
+"layer": "M5",
+"x": 161.496,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[463]",
+"layer": "M5",
+"x": 161.736,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[464]",
+"layer": "M5",
+"x": 161.976,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[465]",
+"layer": "M5",
+"x": 162.216,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[466]",
+"layer": "M5",
+"x": 162.456,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[467]",
+"layer": "M5",
+"x": 162.696,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[468]",
+"layer": "M5",
+"x": 162.936,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[469]",
+"layer": "M5",
+"x": 163.176,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[470]",
+"layer": "M5",
+"x": 163.416,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[471]",
+"layer": "M5",
+"x": 163.656,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[472]",
+"layer": "M5",
+"x": 163.896,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[473]",
+"layer": "M5",
+"x": 164.136,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[474]",
+"layer": "M5",
+"x": 164.376,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[475]",
+"layer": "M5",
+"x": 164.616,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[476]",
+"layer": "M5",
+"x": 164.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[477]",
+"layer": "M5",
+"x": 165.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[478]",
+"layer": "M5",
+"x": 165.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[479]",
+"layer": "M5",
+"x": 165.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[480]",
+"layer": "M5",
+"x": 165.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[481]",
+"layer": "M5",
+"x": 166.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[482]",
+"layer": "M5",
+"x": 166.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[483]",
+"layer": "M5",
+"x": 166.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[484]",
+"layer": "M5",
+"x": 166.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[485]",
+"layer": "M5",
+"x": 167.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[486]",
+"layer": "M5",
+"x": 167.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[487]",
+"layer": "M5",
+"x": 167.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[488]",
+"layer": "M5",
+"x": 167.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[489]",
+"layer": "M5",
+"x": 168.024,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[490]",
+"layer": "M5",
+"x": 168.264,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[491]",
+"layer": "M5",
+"x": 168.504,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[492]",
+"layer": "M5",
+"x": 168.744,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[493]",
+"layer": "M5",
+"x": 168.984,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[494]",
+"layer": "M5",
+"x": 169.224,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[495]",
+"layer": "M5",
+"x": 169.464,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[496]",
+"layer": "M5",
+"x": 169.704,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[497]",
+"layer": "M5",
+"x": 169.944,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[498]",
+"layer": "M5",
+"x": 170.184,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[499]",
+"layer": "M5",
+"x": 170.424,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[500]",
+"layer": "M5",
+"x": 170.664,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[501]",
+"layer": "M5",
+"x": 170.904,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[502]",
+"layer": "M5",
+"x": 171.144,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[503]",
+"layer": "M5",
+"x": 171.384,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[504]",
+"layer": "M5",
+"x": 171.624,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[505]",
+"layer": "M5",
+"x": 171.864,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[506]",
+"layer": "M5",
+"x": 172.104,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[507]",
+"layer": "M5",
+"x": 172.344,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[508]",
+"layer": "M5",
+"x": 172.584,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[509]",
+"layer": "M5",
+"x": 172.824,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[510]",
+"layer": "M5",
+"x": 173.064,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[511]",
+"layer": "M5",
+"x": 173.304,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[512]",
+"layer": "M5",
+"x": 173.544,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[513]",
+"layer": "M5",
+"x": 173.784,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[514]",
+"layer": "M5",
+"x": 174.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[515]",
+"layer": "M5",
+"x": 174.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[516]",
+"layer": "M5",
+"x": 174.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[517]",
+"layer": "M5",
+"x": 174.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[518]",
+"layer": "M5",
+"x": 175.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[519]",
+"layer": "M5",
+"x": 175.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[520]",
+"layer": "M5",
+"x": 175.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[521]",
+"layer": "M5",
+"x": 175.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[522]",
+"layer": "M5",
+"x": 175.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[523]",
+"layer": "M5",
+"x": 176.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[524]",
+"layer": "M5",
+"x": 176.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[525]",
+"layer": "M5",
+"x": 176.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[526]",
+"layer": "M5",
+"x": 176.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[527]",
+"layer": "M5",
+"x": 177.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[528]",
+"layer": "M5",
+"x": 177.432,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[529]",
+"layer": "M5",
+"x": 177.672,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[530]",
+"layer": "M5",
+"x": 177.912,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[531]",
+"layer": "M5",
+"x": 178.152,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[532]",
+"layer": "M5",
+"x": 178.392,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[533]",
+"layer": "M5",
+"x": 178.632,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[534]",
+"layer": "M5",
+"x": 178.872,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[535]",
+"layer": "M5",
+"x": 179.112,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[536]",
+"layer": "M5",
+"x": 179.352,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[537]",
+"layer": "M5",
+"x": 179.592,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[538]",
+"layer": "M5",
+"x": 179.832,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[539]",
+"layer": "M5",
+"x": 180.072,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[540]",
+"layer": "M5",
+"x": 180.312,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[541]",
+"layer": "M5",
+"x": 180.552,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[542]",
+"layer": "M5",
+"x": 180.792,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[543]",
+"layer": "M5",
+"x": 181.032,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[544]",
+"layer": "M5",
+"x": 181.272,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[545]",
+"layer": "M5",
+"x": 181.512,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[546]",
+"layer": "M5",
+"x": 181.752,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[547]",
+"layer": "M5",
+"x": 181.992,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[548]",
+"layer": "M5",
+"x": 182.232,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[549]",
+"layer": "M5",
+"x": 182.472,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[550]",
+"layer": "M5",
+"x": 182.712,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[551]",
+"layer": "M5",
+"x": 182.952,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[552]",
+"layer": "M5",
+"x": 183.192,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[553]",
+"layer": "M5",
+"x": 183.48,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[554]",
+"layer": "M5",
+"x": 183.72,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[555]",
+"layer": "M5",
+"x": 183.96,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[556]",
+"layer": "M5",
+"x": 184.2,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[557]",
+"layer": "M5",
+"x": 184.44,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[558]",
+"layer": "M5",
+"x": 184.68,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[559]",
+"layer": "M5",
+"x": 184.92,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[560]",
+"layer": "M5",
+"x": 185.16,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[561]",
+"layer": "M5",
+"x": 185.4,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[562]",
+"layer": "M5",
+"x": 185.64,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[563]",
+"layer": "M5",
+"x": 185.88,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[564]",
+"layer": "M5",
+"x": 186.12,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[565]",
+"layer": "M5",
+"x": 186.36,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[566]",
+"layer": "M5",
+"x": 186.6,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[567]",
+"layer": "M5",
+"x": 186.84,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[568]",
+"layer": "M5",
+"x": 187.08,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[569]",
+"layer": "M5",
+"x": 187.32,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[570]",
+"layer": "M5",
+"x": 187.56,
+"y": 181.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__qo[571]",
+"layer": "M5",
+"x": 187.8,
+"y": 181.344
+},
+{
+"name": "g_phys_fault_u_fault__q[0]",
+"layer": "M5",
+"x": 2.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[0]",
+"layer": "M5",
+"x": 2.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[1]",
+"layer": "M5",
+"x": 2.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[2]",
+"layer": "M5",
+"x": 3.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[3]",
+"layer": "M5",
+"x": 3.432,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[4]",
+"layer": "M5",
+"x": 3.72,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[5]",
+"layer": "M5",
+"x": 4.008,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[6]",
+"layer": "M5",
+"x": 4.296,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[7]",
+"layer": "M5",
+"x": 4.584,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[8]",
+"layer": "M5",
+"x": 4.872,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[9]",
+"layer": "M5",
+"x": 5.16,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[10]",
+"layer": "M5",
+"x": 5.448,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[11]",
+"layer": "M5",
+"x": 5.736,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[12]",
+"layer": "M5",
+"x": 6.024,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[13]",
+"layer": "M5",
+"x": 6.312,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[14]",
+"layer": "M5",
+"x": 6.6,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[15]",
+"layer": "M5",
+"x": 6.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[16]",
+"layer": "M5",
+"x": 7.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[17]",
+"layer": "M5",
+"x": 7.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[18]",
+"layer": "M5",
+"x": 7.704,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[19]",
+"layer": "M5",
+"x": 7.992,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[20]",
+"layer": "M5",
+"x": 8.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[21]",
+"layer": "M5",
+"x": 8.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[22]",
+"layer": "M5",
+"x": 8.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[23]",
+"layer": "M5",
+"x": 9.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[24]",
+"layer": "M5",
+"x": 9.432,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[25]",
+"layer": "M5",
+"x": 9.72,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[26]",
+"layer": "M5",
+"x": 10.008,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[27]",
+"layer": "M5",
+"x": 10.296,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[28]",
+"layer": "M5",
+"x": 10.584,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[29]",
+"layer": "M5",
+"x": 10.872,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[30]",
+"layer": "M5",
+"x": 11.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[31]",
+"layer": "M5",
+"x": 11.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[32]",
+"layer": "M5",
+"x": 11.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[33]",
+"layer": "M5",
+"x": 11.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[34]",
+"layer": "M5",
+"x": 12.264,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__am[35]",
+"layer": "M5",
+"x": 12.552,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[0]",
+"layer": "M5",
+"x": 12.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[1]",
+"layer": "M5",
+"x": 13.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[2]",
+"layer": "M5",
+"x": 13.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[3]",
+"layer": "M5",
+"x": 13.704,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[4]",
+"layer": "M5",
+"x": 13.992,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[5]",
+"layer": "M5",
+"x": 14.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[6]",
+"layer": "M5",
+"x": 14.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[7]",
+"layer": "M5",
+"x": 14.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[8]",
+"layer": "M5",
+"x": 15.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[9]",
+"layer": "M5",
+"x": 15.432,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[10]",
+"layer": "M5",
+"x": 15.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[11]",
+"layer": "M5",
+"x": 15.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[12]",
+"layer": "M5",
+"x": 16.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[13]",
+"layer": "M5",
+"x": 16.536,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[14]",
+"layer": "M5",
+"x": 16.824,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[15]",
+"layer": "M5",
+"x": 17.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[16]",
+"layer": "M5",
+"x": 17.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[17]",
+"layer": "M5",
+"x": 17.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[18]",
+"layer": "M5",
+"x": 17.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[19]",
+"layer": "M5",
+"x": 18.264,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[20]",
+"layer": "M5",
+"x": 18.552,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[21]",
+"layer": "M5",
+"x": 18.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[22]",
+"layer": "M5",
+"x": 19.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[23]",
+"layer": "M5",
+"x": 19.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[24]",
+"layer": "M5",
+"x": 19.704,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[25]",
+"layer": "M5",
+"x": 19.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[26]",
+"layer": "M5",
+"x": 20.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[27]",
+"layer": "M5",
+"x": 20.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[28]",
+"layer": "M5",
+"x": 20.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[29]",
+"layer": "M5",
+"x": 21.096,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[30]",
+"layer": "M5",
+"x": 21.384,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[31]",
+"layer": "M5",
+"x": 21.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[32]",
+"layer": "M5",
+"x": 21.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[33]",
+"layer": "M5",
+"x": 22.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[34]",
+"layer": "M5",
+"x": 22.536,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[35]",
+"layer": "M5",
+"x": 22.824,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[36]",
+"layer": "M5",
+"x": 23.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[37]",
+"layer": "M5",
+"x": 23.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[38]",
+"layer": "M5",
+"x": 23.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[39]",
+"layer": "M5",
+"x": 23.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[40]",
+"layer": "M5",
+"x": 24.264,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[41]",
+"layer": "M5",
+"x": 24.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__ap[42]",
+"layer": "M5",
+"x": 24.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[0]",
+"layer": "M5",
+"x": 25.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[1]",
+"layer": "M5",
+"x": 25.368,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[2]",
+"layer": "M5",
+"x": 25.656,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[3]",
+"layer": "M5",
+"x": 25.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[4]",
+"layer": "M5",
+"x": 26.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[5]",
+"layer": "M5",
+"x": 26.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[6]",
+"layer": "M5",
+"x": 26.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[7]",
+"layer": "M5",
+"x": 27.096,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[8]",
+"layer": "M5",
+"x": 27.384,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[9]",
+"layer": "M5",
+"x": 27.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[10]",
+"layer": "M5",
+"x": 27.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[11]",
+"layer": "M5",
+"x": 28.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[12]",
+"layer": "M5",
+"x": 28.536,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[13]",
+"layer": "M5",
+"x": 28.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[14]",
+"layer": "M5",
+"x": 29.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[15]",
+"layer": "M5",
+"x": 29.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[16]",
+"layer": "M5",
+"x": 29.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[17]",
+"layer": "M5",
+"x": 29.928,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[18]",
+"layer": "M5",
+"x": 30.216,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[19]",
+"layer": "M5",
+"x": 30.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[20]",
+"layer": "M5",
+"x": 30.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[21]",
+"layer": "M5",
+"x": 31.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[22]",
+"layer": "M5",
+"x": 31.368,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[23]",
+"layer": "M5",
+"x": 31.656,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[24]",
+"layer": "M5",
+"x": 31.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[25]",
+"layer": "M5",
+"x": 32.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[26]",
+"layer": "M5",
+"x": 32.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[27]",
+"layer": "M5",
+"x": 32.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[28]",
+"layer": "M5",
+"x": 33.096,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[29]",
+"layer": "M5",
+"x": 33.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[30]",
+"layer": "M5",
+"x": 33.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[31]",
+"layer": "M5",
+"x": 33.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[32]",
+"layer": "M5",
+"x": 34.2,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[33]",
+"layer": "M5",
+"x": 34.488,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[34]",
+"layer": "M5",
+"x": 34.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[35]",
+"layer": "M5",
+"x": 35.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[36]",
+"layer": "M5",
+"x": 35.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[37]",
+"layer": "M5",
+"x": 35.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[38]",
+"layer": "M5",
+"x": 35.928,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[39]",
+"layer": "M5",
+"x": 36.216,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[40]",
+"layer": "M5",
+"x": 36.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[41]",
+"layer": "M5",
+"x": 36.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[42]",
+"layer": "M5",
+"x": 37.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[43]",
+"layer": "M5",
+"x": 37.368,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[44]",
+"layer": "M5",
+"x": 37.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[45]",
+"layer": "M5",
+"x": 37.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[46]",
+"layer": "M5",
+"x": 38.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[47]",
+"layer": "M5",
+"x": 38.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[48]",
+"layer": "M5",
+"x": 38.76,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[49]",
+"layer": "M5",
+"x": 39.048,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[50]",
+"layer": "M5",
+"x": 39.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[51]",
+"layer": "M5",
+"x": 39.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[52]",
+"layer": "M5",
+"x": 39.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[53]",
+"layer": "M5",
+"x": 40.2,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[54]",
+"layer": "M5",
+"x": 40.488,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[55]",
+"layer": "M5",
+"x": 40.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[56]",
+"layer": "M5",
+"x": 41.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[57]",
+"layer": "M5",
+"x": 41.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[58]",
+"layer": "M5",
+"x": 41.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[59]",
+"layer": "M5",
+"x": 41.928,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[60]",
+"layer": "M5",
+"x": 42.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[61]",
+"layer": "M5",
+"x": 42.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[62]",
+"layer": "M5",
+"x": 42.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[63]",
+"layer": "M5",
+"x": 43.032,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[64]",
+"layer": "M5",
+"x": 43.32,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[65]",
+"layer": "M5",
+"x": 43.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[66]",
+"layer": "M5",
+"x": 43.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[67]",
+"layer": "M5",
+"x": 44.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[68]",
+"layer": "M5",
+"x": 44.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[69]",
+"layer": "M5",
+"x": 44.76,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[70]",
+"layer": "M5",
+"x": 45.048,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[71]",
+"layer": "M5",
+"x": 45.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[72]",
+"layer": "M5",
+"x": 45.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[73]",
+"layer": "M5",
+"x": 45.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[74]",
+"layer": "M5",
+"x": 46.2,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[75]",
+"layer": "M5",
+"x": 46.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[76]",
+"layer": "M5",
+"x": 46.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[77]",
+"layer": "M5",
+"x": 47.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[78]",
+"layer": "M5",
+"x": 47.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[79]",
+"layer": "M5",
+"x": 47.592,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[80]",
+"layer": "M5",
+"x": 47.88,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[81]",
+"layer": "M5",
+"x": 48.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[82]",
+"layer": "M5",
+"x": 48.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[83]",
+"layer": "M5",
+"x": 48.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[84]",
+"layer": "M5",
+"x": 49.032,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[85]",
+"layer": "M5",
+"x": 49.32,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[86]",
+"layer": "M5",
+"x": 49.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[87]",
+"layer": "M5",
+"x": 49.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[88]",
+"layer": "M5",
+"x": 50.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[89]",
+"layer": "M5",
+"x": 50.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[90]",
+"layer": "M5",
+"x": 50.76,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[91]",
+"layer": "M5",
+"x": 51.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[92]",
+"layer": "M5",
+"x": 51.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[93]",
+"layer": "M5",
+"x": 51.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[94]",
+"layer": "M5",
+"x": 51.864,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[95]",
+"layer": "M5",
+"x": 52.152,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[96]",
+"layer": "M5",
+"x": 52.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[97]",
+"layer": "M5",
+"x": 52.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[98]",
+"layer": "M5",
+"x": 53.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[99]",
+"layer": "M5",
+"x": 53.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[100]",
+"layer": "M5",
+"x": 53.592,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[101]",
+"layer": "M5",
+"x": 53.88,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[102]",
+"layer": "M5",
+"x": 54.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[103]",
+"layer": "M5",
+"x": 54.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[104]",
+"layer": "M5",
+"x": 54.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[105]",
+"layer": "M5",
+"x": 55.032,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[106]",
+"layer": "M5",
+"x": 55.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[107]",
+"layer": "M5",
+"x": 55.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[108]",
+"layer": "M5",
+"x": 55.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[109]",
+"layer": "M5",
+"x": 56.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[110]",
+"layer": "M5",
+"x": 56.424,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[111]",
+"layer": "M5",
+"x": 56.712,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[112]",
+"layer": "M5",
+"x": 57.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[113]",
+"layer": "M5",
+"x": 57.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[114]",
+"layer": "M5",
+"x": 57.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[115]",
+"layer": "M5",
+"x": 57.864,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[116]",
+"layer": "M5",
+"x": 58.152,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[117]",
+"layer": "M5",
+"x": 58.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[118]",
+"layer": "M5",
+"x": 58.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[119]",
+"layer": "M5",
+"x": 59.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[120]",
+"layer": "M5",
+"x": 59.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[121]",
+"layer": "M5",
+"x": 59.592,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[122]",
+"layer": "M5",
+"x": 59.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[123]",
+"layer": "M5",
+"x": 60.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[124]",
+"layer": "M5",
+"x": 60.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[125]",
+"layer": "M5",
+"x": 60.696,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[126]",
+"layer": "M5",
+"x": 60.984,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[127]",
+"layer": "M5",
+"x": 61.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[128]",
+"layer": "M5",
+"x": 61.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[129]",
+"layer": "M5",
+"x": 61.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[130]",
+"layer": "M5",
+"x": 62.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[131]",
+"layer": "M5",
+"x": 62.424,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[132]",
+"layer": "M5",
+"x": 62.712,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[133]",
+"layer": "M5",
+"x": 63.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[134]",
+"layer": "M5",
+"x": 63.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[135]",
+"layer": "M5",
+"x": 63.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[136]",
+"layer": "M5",
+"x": 63.864,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[137]",
+"layer": "M5",
+"x": 64.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[138]",
+"layer": "M5",
+"x": 64.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[139]",
+"layer": "M5",
+"x": 64.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[140]",
+"layer": "M5",
+"x": 64.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[141]",
+"layer": "M5",
+"x": 65.256,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[142]",
+"layer": "M5",
+"x": 65.544,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[143]",
+"layer": "M5",
+"x": 65.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[144]",
+"layer": "M5",
+"x": 66.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[145]",
+"layer": "M5",
+"x": 66.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[146]",
+"layer": "M5",
+"x": 66.696,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[147]",
+"layer": "M5",
+"x": 66.984,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[148]",
+"layer": "M5",
+"x": 67.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[149]",
+"layer": "M5",
+"x": 67.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[150]",
+"layer": "M5",
+"x": 67.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[151]",
+"layer": "M5",
+"x": 68.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[152]",
+"layer": "M5",
+"x": 68.424,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[153]",
+"layer": "M5",
+"x": 68.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[154]",
+"layer": "M5",
+"x": 68.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[155]",
+"layer": "M5",
+"x": 69.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[156]",
+"layer": "M5",
+"x": 69.528,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[157]",
+"layer": "M5",
+"x": 69.816,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[158]",
+"layer": "M5",
+"x": 70.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[159]",
+"layer": "M5",
+"x": 70.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[160]",
+"layer": "M5",
+"x": 70.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[161]",
+"layer": "M5",
+"x": 70.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[162]",
+"layer": "M5",
+"x": 71.256,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[163]",
+"layer": "M5",
+"x": 71.544,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[164]",
+"layer": "M5",
+"x": 71.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[165]",
+"layer": "M5",
+"x": 72.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[166]",
+"layer": "M5",
+"x": 72.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[167]",
+"layer": "M5",
+"x": 72.696,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[168]",
+"layer": "M5",
+"x": 72.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[169]",
+"layer": "M5",
+"x": 73.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[170]",
+"layer": "M5",
+"x": 73.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[171]",
+"layer": "M5",
+"x": 73.8,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[172]",
+"layer": "M5",
+"x": 74.088,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[173]",
+"layer": "M5",
+"x": 74.376,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[174]",
+"layer": "M5",
+"x": 74.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[175]",
+"layer": "M5",
+"x": 74.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[176]",
+"layer": "M5",
+"x": 75.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[177]",
+"layer": "M5",
+"x": 75.528,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[178]",
+"layer": "M5",
+"x": 75.816,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[179]",
+"layer": "M5",
+"x": 76.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[180]",
+"layer": "M5",
+"x": 76.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[181]",
+"layer": "M5",
+"x": 76.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[182]",
+"layer": "M5",
+"x": 76.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[183]",
+"layer": "M5",
+"x": 77.256,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[184]",
+"layer": "M5",
+"x": 77.496,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[185]",
+"layer": "M5",
+"x": 77.784,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[186]",
+"layer": "M5",
+"x": 78.072,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[187]",
+"layer": "M5",
+"x": 78.36,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[188]",
+"layer": "M5",
+"x": 78.648,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[189]",
+"layer": "M5",
+"x": 78.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[190]",
+"layer": "M5",
+"x": 79.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[191]",
+"layer": "M5",
+"x": 79.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[192]",
+"layer": "M5",
+"x": 79.8,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[193]",
+"layer": "M5",
+"x": 80.088,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[194]",
+"layer": "M5",
+"x": 80.376,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[195]",
+"layer": "M5",
+"x": 80.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[196]",
+"layer": "M5",
+"x": 80.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[197]",
+"layer": "M5",
+"x": 81.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[198]",
+"layer": "M5",
+"x": 81.528,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[199]",
+"layer": "M5",
+"x": 81.768,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[200]",
+"layer": "M5",
+"x": 82.056,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[201]",
+"layer": "M5",
+"x": 82.344,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[202]",
+"layer": "M5",
+"x": 82.632,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[203]",
+"layer": "M5",
+"x": 82.92,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[204]",
+"layer": "M5",
+"x": 83.208,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[205]",
+"layer": "M5",
+"x": 83.496,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[206]",
+"layer": "M5",
+"x": 83.784,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[207]",
+"layer": "M5",
+"x": 84.072,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[208]",
+"layer": "M5",
+"x": 84.36,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[209]",
+"layer": "M5",
+"x": 84.648,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[210]",
+"layer": "M5",
+"x": 84.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[211]",
+"layer": "M5",
+"x": 85.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[212]",
+"layer": "M5",
+"x": 85.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[213]",
+"layer": "M5",
+"x": 85.8,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[214]",
+"layer": "M5",
+"x": 86.088,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[215]",
+"layer": "M5",
+"x": 86.328,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[216]",
+"layer": "M5",
+"x": 86.616,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[217]",
+"layer": "M5",
+"x": 86.904,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[218]",
+"layer": "M5",
+"x": 87.192,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[219]",
+"layer": "M5",
+"x": 87.48,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[220]",
+"layer": "M5",
+"x": 87.768,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[221]",
+"layer": "M5",
+"x": 88.056,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[222]",
+"layer": "M5",
+"x": 88.344,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[223]",
+"layer": "M5",
+"x": 88.632,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[224]",
+"layer": "M5",
+"x": 88.92,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[225]",
+"layer": "M5",
+"x": 89.208,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[226]",
+"layer": "M5",
+"x": 89.496,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[227]",
+"layer": "M5",
+"x": 89.784,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[228]",
+"layer": "M5",
+"x": 90.072,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[229]",
+"layer": "M5",
+"x": 90.36,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[230]",
+"layer": "M5",
+"x": 90.6,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[231]",
+"layer": "M5",
+"x": 90.888,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[232]",
+"layer": "M5",
+"x": 91.176,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[233]",
+"layer": "M5",
+"x": 91.464,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[234]",
+"layer": "M5",
+"x": 91.752,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[235]",
+"layer": "M5",
+"x": 92.04,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[236]",
+"layer": "M5",
+"x": 92.328,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[237]",
+"layer": "M5",
+"x": 92.616,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[238]",
+"layer": "M5",
+"x": 92.904,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[239]",
+"layer": "M5",
+"x": 93.192,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[240]",
+"layer": "M5",
+"x": 93.48,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[241]",
+"layer": "M5",
+"x": 93.768,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[242]",
+"layer": "M5",
+"x": 94.056,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[243]",
+"layer": "M5",
+"x": 94.344,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[244]",
+"layer": "M5",
+"x": 94.632,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[245]",
+"layer": "M5",
+"x": 94.92,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[246]",
+"layer": "M5",
+"x": 95.16,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[247]",
+"layer": "M5",
+"x": 95.448,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[248]",
+"layer": "M5",
+"x": 95.736,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[249]",
+"layer": "M5",
+"x": 96.024,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[250]",
+"layer": "M5",
+"x": 96.312,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[251]",
+"layer": "M5",
+"x": 96.6,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[252]",
+"layer": "M5",
+"x": 96.888,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[253]",
+"layer": "M5",
+"x": 97.176,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[254]",
+"layer": "M5",
+"x": 97.464,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[255]",
+"layer": "M5",
+"x": 97.752,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[256]",
+"layer": "M5",
+"x": 98.04,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[257]",
+"layer": "M5",
+"x": 98.328,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[258]",
+"layer": "M5",
+"x": 98.616,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[259]",
+"layer": "M5",
+"x": 98.904,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[260]",
+"layer": "M5",
+"x": 99.192,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[261]",
+"layer": "M5",
+"x": 99.48,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[262]",
+"layer": "M5",
+"x": 99.72,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[263]",
+"layer": "M5",
+"x": 100.008,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[264]",
+"layer": "M5",
+"x": 100.296,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[265]",
+"layer": "M5",
+"x": 100.584,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[266]",
+"layer": "M5",
+"x": 100.872,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[267]",
+"layer": "M5",
+"x": 101.16,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[268]",
+"layer": "M5",
+"x": 101.448,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[269]",
+"layer": "M5",
+"x": 101.736,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[270]",
+"layer": "M5",
+"x": 102.024,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[271]",
+"layer": "M5",
+"x": 102.312,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[272]",
+"layer": "M5",
+"x": 102.6,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[273]",
+"layer": "M5",
+"x": 102.888,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[274]",
+"layer": "M5",
+"x": 103.176,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[275]",
+"layer": "M5",
+"x": 103.464,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[276]",
+"layer": "M5",
+"x": 103.752,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[277]",
+"layer": "M5",
+"x": 103.992,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[278]",
+"layer": "M5",
+"x": 104.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[279]",
+"layer": "M5",
+"x": 104.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[280]",
+"layer": "M5",
+"x": 104.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[281]",
+"layer": "M5",
+"x": 105.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[282]",
+"layer": "M5",
+"x": 105.432,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[283]",
+"layer": "M5",
+"x": 105.72,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[284]",
+"layer": "M5",
+"x": 106.008,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[285]",
+"layer": "M5",
+"x": 106.296,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[286]",
+"layer": "M5",
+"x": 106.584,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[287]",
+"layer": "M5",
+"x": 106.872,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[288]",
+"layer": "M5",
+"x": 107.16,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[289]",
+"layer": "M5",
+"x": 107.448,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[290]",
+"layer": "M5",
+"x": 107.736,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[291]",
+"layer": "M5",
+"x": 108.024,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[292]",
+"layer": "M5",
+"x": 108.312,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[293]",
+"layer": "M5",
+"x": 108.552,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[294]",
+"layer": "M5",
+"x": 108.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[295]",
+"layer": "M5",
+"x": 109.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[296]",
+"layer": "M5",
+"x": 109.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[297]",
+"layer": "M5",
+"x": 109.704,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[298]",
+"layer": "M5",
+"x": 109.992,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[299]",
+"layer": "M5",
+"x": 110.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[300]",
+"layer": "M5",
+"x": 110.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[301]",
+"layer": "M5",
+"x": 110.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[302]",
+"layer": "M5",
+"x": 111.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[303]",
+"layer": "M5",
+"x": 111.432,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[304]",
+"layer": "M5",
+"x": 111.72,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[305]",
+"layer": "M5",
+"x": 112.008,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[306]",
+"layer": "M5",
+"x": 112.296,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[307]",
+"layer": "M5",
+"x": 112.584,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[308]",
+"layer": "M5",
+"x": 112.824,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[309]",
+"layer": "M5",
+"x": 113.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[310]",
+"layer": "M5",
+"x": 113.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[311]",
+"layer": "M5",
+"x": 113.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[312]",
+"layer": "M5",
+"x": 113.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[313]",
+"layer": "M5",
+"x": 114.264,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[314]",
+"layer": "M5",
+"x": 114.552,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[315]",
+"layer": "M5",
+"x": 114.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[316]",
+"layer": "M5",
+"x": 115.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[317]",
+"layer": "M5",
+"x": 115.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[318]",
+"layer": "M5",
+"x": 115.704,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[319]",
+"layer": "M5",
+"x": 115.992,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[320]",
+"layer": "M5",
+"x": 116.28,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[321]",
+"layer": "M5",
+"x": 116.568,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[322]",
+"layer": "M5",
+"x": 116.856,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[323]",
+"layer": "M5",
+"x": 117.144,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[324]",
+"layer": "M5",
+"x": 117.384,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[325]",
+"layer": "M5",
+"x": 117.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[326]",
+"layer": "M5",
+"x": 117.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[327]",
+"layer": "M5",
+"x": 118.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[328]",
+"layer": "M5",
+"x": 118.536,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[329]",
+"layer": "M5",
+"x": 118.824,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[330]",
+"layer": "M5",
+"x": 119.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[331]",
+"layer": "M5",
+"x": 119.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[332]",
+"layer": "M5",
+"x": 119.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[333]",
+"layer": "M5",
+"x": 119.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[334]",
+"layer": "M5",
+"x": 120.264,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[335]",
+"layer": "M5",
+"x": 120.552,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[336]",
+"layer": "M5",
+"x": 120.84,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[337]",
+"layer": "M5",
+"x": 121.128,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[338]",
+"layer": "M5",
+"x": 121.416,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[339]",
+"layer": "M5",
+"x": 121.656,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[340]",
+"layer": "M5",
+"x": 121.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[341]",
+"layer": "M5",
+"x": 122.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[342]",
+"layer": "M5",
+"x": 122.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[343]",
+"layer": "M5",
+"x": 122.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[344]",
+"layer": "M5",
+"x": 123.096,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[345]",
+"layer": "M5",
+"x": 123.384,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[346]",
+"layer": "M5",
+"x": 123.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[347]",
+"layer": "M5",
+"x": 123.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[348]",
+"layer": "M5",
+"x": 124.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[349]",
+"layer": "M5",
+"x": 124.536,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[350]",
+"layer": "M5",
+"x": 124.824,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[351]",
+"layer": "M5",
+"x": 125.112,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[352]",
+"layer": "M5",
+"x": 125.4,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[353]",
+"layer": "M5",
+"x": 125.688,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[354]",
+"layer": "M5",
+"x": 125.976,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[355]",
+"layer": "M5",
+"x": 126.216,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[356]",
+"layer": "M5",
+"x": 126.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[357]",
+"layer": "M5",
+"x": 126.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[358]",
+"layer": "M5",
+"x": 127.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[359]",
+"layer": "M5",
+"x": 127.368,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[360]",
+"layer": "M5",
+"x": 127.656,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[361]",
+"layer": "M5",
+"x": 127.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[362]",
+"layer": "M5",
+"x": 128.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[363]",
+"layer": "M5",
+"x": 128.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[364]",
+"layer": "M5",
+"x": 128.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[365]",
+"layer": "M5",
+"x": 129.096,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[366]",
+"layer": "M5",
+"x": 129.384,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[367]",
+"layer": "M5",
+"x": 129.672,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[368]",
+"layer": "M5",
+"x": 129.96,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[369]",
+"layer": "M5",
+"x": 130.248,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[370]",
+"layer": "M5",
+"x": 130.488,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[371]",
+"layer": "M5",
+"x": 130.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[372]",
+"layer": "M5",
+"x": 131.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[373]",
+"layer": "M5",
+"x": 131.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[374]",
+"layer": "M5",
+"x": 131.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[375]",
+"layer": "M5",
+"x": 131.928,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[376]",
+"layer": "M5",
+"x": 132.216,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[377]",
+"layer": "M5",
+"x": 132.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[378]",
+"layer": "M5",
+"x": 132.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[379]",
+"layer": "M5",
+"x": 133.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[380]",
+"layer": "M5",
+"x": 133.368,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[381]",
+"layer": "M5",
+"x": 133.656,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[382]",
+"layer": "M5",
+"x": 133.944,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[383]",
+"layer": "M5",
+"x": 134.232,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[384]",
+"layer": "M5",
+"x": 134.52,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[385]",
+"layer": "M5",
+"x": 134.808,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[386]",
+"layer": "M5",
+"x": 135.048,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[387]",
+"layer": "M5",
+"x": 135.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[388]",
+"layer": "M5",
+"x": 135.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[389]",
+"layer": "M5",
+"x": 135.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[390]",
+"layer": "M5",
+"x": 136.2,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[391]",
+"layer": "M5",
+"x": 136.488,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[392]",
+"layer": "M5",
+"x": 136.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[393]",
+"layer": "M5",
+"x": 137.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[394]",
+"layer": "M5",
+"x": 137.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[395]",
+"layer": "M5",
+"x": 137.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[396]",
+"layer": "M5",
+"x": 137.928,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[397]",
+"layer": "M5",
+"x": 138.216,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[398]",
+"layer": "M5",
+"x": 138.504,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[399]",
+"layer": "M5",
+"x": 138.792,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[400]",
+"layer": "M5",
+"x": 139.08,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[401]",
+"layer": "M5",
+"x": 139.32,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[402]",
+"layer": "M5",
+"x": 139.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[403]",
+"layer": "M5",
+"x": 139.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[404]",
+"layer": "M5",
+"x": 140.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[405]",
+"layer": "M5",
+"x": 140.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[406]",
+"layer": "M5",
+"x": 140.76,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[407]",
+"layer": "M5",
+"x": 141.048,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[408]",
+"layer": "M5",
+"x": 141.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[409]",
+"layer": "M5",
+"x": 141.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[410]",
+"layer": "M5",
+"x": 141.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[411]",
+"layer": "M5",
+"x": 142.2,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[412]",
+"layer": "M5",
+"x": 142.488,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[413]",
+"layer": "M5",
+"x": 142.776,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[414]",
+"layer": "M5",
+"x": 143.064,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[415]",
+"layer": "M5",
+"x": 143.352,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[416]",
+"layer": "M5",
+"x": 143.64,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[417]",
+"layer": "M5",
+"x": 143.88,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[418]",
+"layer": "M5",
+"x": 144.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[419]",
+"layer": "M5",
+"x": 144.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[420]",
+"layer": "M5",
+"x": 144.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[421]",
+"layer": "M5",
+"x": 145.032,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[422]",
+"layer": "M5",
+"x": 145.32,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[423]",
+"layer": "M5",
+"x": 145.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[424]",
+"layer": "M5",
+"x": 145.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[425]",
+"layer": "M5",
+"x": 146.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[426]",
+"layer": "M5",
+"x": 146.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[427]",
+"layer": "M5",
+"x": 146.76,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[428]",
+"layer": "M5",
+"x": 147.048,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[429]",
+"layer": "M5",
+"x": 147.336,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[430]",
+"layer": "M5",
+"x": 147.624,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[431]",
+"layer": "M5",
+"x": 147.912,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[432]",
+"layer": "M5",
+"x": 148.152,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[433]",
+"layer": "M5",
+"x": 148.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[434]",
+"layer": "M5",
+"x": 148.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[435]",
+"layer": "M5",
+"x": 149.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[436]",
+"layer": "M5",
+"x": 149.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[437]",
+"layer": "M5",
+"x": 149.592,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[438]",
+"layer": "M5",
+"x": 149.88,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[439]",
+"layer": "M5",
+"x": 150.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[440]",
+"layer": "M5",
+"x": 150.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[441]",
+"layer": "M5",
+"x": 150.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[442]",
+"layer": "M5",
+"x": 151.032,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[443]",
+"layer": "M5",
+"x": 151.32,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[444]",
+"layer": "M5",
+"x": 151.608,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[445]",
+"layer": "M5",
+"x": 151.896,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[446]",
+"layer": "M5",
+"x": 152.184,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[447]",
+"layer": "M5",
+"x": 152.472,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[448]",
+"layer": "M5",
+"x": 152.712,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[449]",
+"layer": "M5",
+"x": 153.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[450]",
+"layer": "M5",
+"x": 153.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[451]",
+"layer": "M5",
+"x": 153.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[452]",
+"layer": "M5",
+"x": 153.864,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[453]",
+"layer": "M5",
+"x": 154.152,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[454]",
+"layer": "M5",
+"x": 154.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[455]",
+"layer": "M5",
+"x": 154.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[456]",
+"layer": "M5",
+"x": 155.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[457]",
+"layer": "M5",
+"x": 155.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[458]",
+"layer": "M5",
+"x": 155.592,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[459]",
+"layer": "M5",
+"x": 155.88,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[460]",
+"layer": "M5",
+"x": 156.168,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[461]",
+"layer": "M5",
+"x": 156.456,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[462]",
+"layer": "M5",
+"x": 156.744,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[463]",
+"layer": "M5",
+"x": 156.984,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[464]",
+"layer": "M5",
+"x": 157.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[465]",
+"layer": "M5",
+"x": 157.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[466]",
+"layer": "M5",
+"x": 157.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[467]",
+"layer": "M5",
+"x": 158.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[468]",
+"layer": "M5",
+"x": 158.424,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[469]",
+"layer": "M5",
+"x": 158.712,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[470]",
+"layer": "M5",
+"x": 159.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[471]",
+"layer": "M5",
+"x": 159.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[472]",
+"layer": "M5",
+"x": 159.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[473]",
+"layer": "M5",
+"x": 159.864,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[474]",
+"layer": "M5",
+"x": 160.152,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[475]",
+"layer": "M5",
+"x": 160.44,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[476]",
+"layer": "M5",
+"x": 160.728,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[477]",
+"layer": "M5",
+"x": 161.016,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[478]",
+"layer": "M5",
+"x": 161.304,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[479]",
+"layer": "M5",
+"x": 161.544,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[480]",
+"layer": "M5",
+"x": 161.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[481]",
+"layer": "M5",
+"x": 162.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[482]",
+"layer": "M5",
+"x": 162.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[483]",
+"layer": "M5",
+"x": 162.696,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[484]",
+"layer": "M5",
+"x": 162.984,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[485]",
+"layer": "M5",
+"x": 163.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[486]",
+"layer": "M5",
+"x": 163.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[487]",
+"layer": "M5",
+"x": 163.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[488]",
+"layer": "M5",
+"x": 164.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[489]",
+"layer": "M5",
+"x": 164.424,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[490]",
+"layer": "M5",
+"x": 164.712,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[491]",
+"layer": "M5",
+"x": 165.0,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[492]",
+"layer": "M5",
+"x": 165.288,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[493]",
+"layer": "M5",
+"x": 165.576,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[494]",
+"layer": "M5",
+"x": 165.816,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[495]",
+"layer": "M5",
+"x": 166.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[496]",
+"layer": "M5",
+"x": 166.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[497]",
+"layer": "M5",
+"x": 166.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[498]",
+"layer": "M5",
+"x": 166.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[499]",
+"layer": "M5",
+"x": 167.256,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[500]",
+"layer": "M5",
+"x": 167.544,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[501]",
+"layer": "M5",
+"x": 167.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[502]",
+"layer": "M5",
+"x": 168.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[503]",
+"layer": "M5",
+"x": 168.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[504]",
+"layer": "M5",
+"x": 168.696,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[505]",
+"layer": "M5",
+"x": 168.984,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[506]",
+"layer": "M5",
+"x": 169.272,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[507]",
+"layer": "M5",
+"x": 169.56,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[508]",
+"layer": "M5",
+"x": 169.848,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[509]",
+"layer": "M5",
+"x": 170.136,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[510]",
+"layer": "M5",
+"x": 170.376,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[511]",
+"layer": "M5",
+"x": 170.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[512]",
+"layer": "M5",
+"x": 170.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[513]",
+"layer": "M5",
+"x": 171.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[514]",
+"layer": "M5",
+"x": 171.528,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[515]",
+"layer": "M5",
+"x": 171.816,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[516]",
+"layer": "M5",
+"x": 172.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[517]",
+"layer": "M5",
+"x": 172.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[518]",
+"layer": "M5",
+"x": 172.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[519]",
+"layer": "M5",
+"x": 172.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[520]",
+"layer": "M5",
+"x": 173.256,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[521]",
+"layer": "M5",
+"x": 173.544,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[522]",
+"layer": "M5",
+"x": 173.832,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[523]",
+"layer": "M5",
+"x": 174.12,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[524]",
+"layer": "M5",
+"x": 174.408,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[525]",
+"layer": "M5",
+"x": 174.648,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[526]",
+"layer": "M5",
+"x": 174.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[527]",
+"layer": "M5",
+"x": 175.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[528]",
+"layer": "M5",
+"x": 175.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[529]",
+"layer": "M5",
+"x": 175.8,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[530]",
+"layer": "M5",
+"x": 176.088,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[531]",
+"layer": "M5",
+"x": 176.376,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[532]",
+"layer": "M5",
+"x": 176.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[533]",
+"layer": "M5",
+"x": 176.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[534]",
+"layer": "M5",
+"x": 177.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[535]",
+"layer": "M5",
+"x": 177.528,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[536]",
+"layer": "M5",
+"x": 177.816,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[537]",
+"layer": "M5",
+"x": 178.104,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[538]",
+"layer": "M5",
+"x": 178.392,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__aq[539]",
+"layer": "M5",
+"x": 178.68,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[0]",
+"layer": "M5",
+"x": 178.968,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[1]",
+"layer": "M5",
+"x": 179.208,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[2]",
+"layer": "M5",
+"x": 179.496,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[3]",
+"layer": "M5",
+"x": 179.784,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[4]",
+"layer": "M5",
+"x": 180.072,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[5]",
+"layer": "M5",
+"x": 180.36,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[6]",
+"layer": "M5",
+"x": 180.648,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[7]",
+"layer": "M5",
+"x": 180.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[8]",
+"layer": "M5",
+"x": 181.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[9]",
+"layer": "M5",
+"x": 181.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[10]",
+"layer": "M5",
+"x": 181.8,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[11]",
+"layer": "M5",
+"x": 182.088,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[12]",
+"layer": "M5",
+"x": 182.376,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[13]",
+"layer": "M5",
+"x": 182.664,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[14]",
+"layer": "M5",
+"x": 182.952,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[15]",
+"layer": "M5",
+"x": 183.24,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[16]",
+"layer": "M5",
+"x": 183.48,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[17]",
+"layer": "M5",
+"x": 183.768,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[18]",
+"layer": "M5",
+"x": 184.056,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[19]",
+"layer": "M5",
+"x": 184.344,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[20]",
+"layer": "M5",
+"x": 184.632,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[21]",
+"layer": "M5",
+"x": 184.92,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[22]",
+"layer": "M5",
+"x": 185.208,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[23]",
+"layer": "M5",
+"x": 185.496,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[24]",
+"layer": "M5",
+"x": 185.784,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[25]",
+"layer": "M5",
+"x": 186.072,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[26]",
+"layer": "M5",
+"x": 186.36,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[27]",
+"layer": "M5",
+"x": 186.648,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[28]",
+"layer": "M5",
+"x": 186.936,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[29]",
+"layer": "M5",
+"x": 187.224,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[30]",
+"layer": "M5",
+"x": 187.512,
+"y": 0.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__cal[31]",
+"layer": "M5",
+"x": 187.8,
+"y": 0.096
+},
+{
+"name": "g_phys_fault_u_fault__b[0]",
+"layer": "M4",
+"x": 0.096,
+"y": 2.472
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[0]",
+"layer": "M4",
+"x": 0.096,
+"y": 3.144
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[1]",
+"layer": "M4",
+"x": 0.096,
+"y": 3.816
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[2]",
+"layer": "M4",
+"x": 0.096,
+"y": 4.488
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[3]",
+"layer": "M4",
+"x": 0.096,
+"y": 5.112
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[4]",
+"layer": "M4",
+"x": 0.096,
+"y": 5.784
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[5]",
+"layer": "M4",
+"x": 0.096,
+"y": 6.456
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[6]",
+"layer": "M4",
+"x": 0.096,
+"y": 7.128
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[7]",
+"layer": "M4",
+"x": 0.096,
+"y": 7.8
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[8]",
+"layer": "M4",
+"x": 0.096,
+"y": 8.424
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[9]",
+"layer": "M4",
+"x": 0.096,
+"y": 9.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[10]",
+"layer": "M4",
+"x": 0.096,
+"y": 9.768
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[11]",
+"layer": "M4",
+"x": 0.096,
+"y": 10.44
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[12]",
+"layer": "M4",
+"x": 0.096,
+"y": 11.064
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[13]",
+"layer": "M4",
+"x": 0.096,
+"y": 11.736
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[14]",
+"layer": "M4",
+"x": 0.096,
+"y": 12.408
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[15]",
+"layer": "M4",
+"x": 0.096,
+"y": 13.08
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[16]",
+"layer": "M4",
+"x": 0.096,
+"y": 13.704
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[17]",
+"layer": "M4",
+"x": 0.096,
+"y": 14.376
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[18]",
+"layer": "M4",
+"x": 0.096,
+"y": 15.048
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[19]",
+"layer": "M4",
+"x": 0.096,
+"y": 15.72
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[20]",
+"layer": "M4",
+"x": 0.096,
+"y": 16.392
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[21]",
+"layer": "M4",
+"x": 0.096,
+"y": 17.016
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[22]",
+"layer": "M4",
+"x": 0.096,
+"y": 17.688
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[23]",
+"layer": "M4",
+"x": 0.096,
+"y": 18.36
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[24]",
+"layer": "M4",
+"x": 0.096,
+"y": 19.032
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[25]",
+"layer": "M4",
+"x": 0.096,
+"y": 19.656
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[26]",
+"layer": "M4",
+"x": 0.096,
+"y": 20.328
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[27]",
+"layer": "M4",
+"x": 0.096,
+"y": 21.0
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[28]",
+"layer": "M4",
+"x": 0.096,
+"y": 21.672
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[29]",
+"layer": "M4",
+"x": 0.096,
+"y": 22.296
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[30]",
+"layer": "M4",
+"x": 0.096,
+"y": 22.968
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[31]",
+"layer": "M4",
+"x": 0.096,
+"y": 23.64
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[32]",
+"layer": "M4",
+"x": 0.096,
+"y": 24.312
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[33]",
+"layer": "M4",
+"x": 0.096,
+"y": 24.984
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[34]",
+"layer": "M4",
+"x": 0.096,
+"y": 25.608
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[35]",
+"layer": "M4",
+"x": 0.096,
+"y": 26.28
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[36]",
+"layer": "M4",
+"x": 0.096,
+"y": 26.952
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[37]",
+"layer": "M4",
+"x": 0.096,
+"y": 27.624
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[38]",
+"layer": "M4",
+"x": 0.096,
+"y": 28.248
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[39]",
+"layer": "M4",
+"x": 0.096,
+"y": 28.92
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[40]",
+"layer": "M4",
+"x": 0.096,
+"y": 29.592
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[41]",
+"layer": "M4",
+"x": 0.096,
+"y": 30.264
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[42]",
+"layer": "M4",
+"x": 0.096,
+"y": 30.888
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[43]",
+"layer": "M4",
+"x": 0.096,
+"y": 31.56
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[44]",
+"layer": "M4",
+"x": 0.096,
+"y": 32.232
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[45]",
+"layer": "M4",
+"x": 0.096,
+"y": 32.904
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[46]",
+"layer": "M4",
+"x": 0.096,
+"y": 33.576
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[47]",
+"layer": "M4",
+"x": 0.096,
+"y": 34.2
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[48]",
+"layer": "M4",
+"x": 0.096,
+"y": 34.872
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[49]",
+"layer": "M4",
+"x": 0.096,
+"y": 35.544
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[50]",
+"layer": "M4",
+"x": 0.096,
+"y": 36.216
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[51]",
+"layer": "M4",
+"x": 0.096,
+"y": 36.84
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[52]",
+"layer": "M4",
+"x": 0.096,
+"y": 37.512
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[53]",
+"layer": "M4",
+"x": 0.096,
+"y": 38.184
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[54]",
+"layer": "M4",
+"x": 0.096,
+"y": 38.856
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[55]",
+"layer": "M4",
+"x": 0.096,
+"y": 39.48
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[56]",
+"layer": "M4",
+"x": 0.096,
+"y": 40.152
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[57]",
+"layer": "M4",
+"x": 0.096,
+"y": 40.824
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[58]",
+"layer": "M4",
+"x": 0.096,
+"y": 41.496
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[59]",
+"layer": "M4",
+"x": 0.096,
+"y": 42.168
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[60]",
+"layer": "M4",
+"x": 0.096,
+"y": 42.792
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[61]",
+"layer": "M4",
+"x": 0.096,
+"y": 43.464
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[62]",
+"layer": "M4",
+"x": 0.096,
+"y": 44.136
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[63]",
+"layer": "M4",
+"x": 0.096,
+"y": 44.808
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[64]",
+"layer": "M4",
+"x": 0.096,
+"y": 45.432
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[65]",
+"layer": "M4",
+"x": 0.096,
+"y": 46.104
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[66]",
+"layer": "M4",
+"x": 0.096,
+"y": 46.776
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[67]",
+"layer": "M4",
+"x": 0.096,
+"y": 47.448
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[68]",
+"layer": "M4",
+"x": 0.096,
+"y": 48.072
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[69]",
+"layer": "M4",
+"x": 0.096,
+"y": 48.744
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[70]",
+"layer": "M4",
+"x": 0.096,
+"y": 49.416
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[71]",
+"layer": "M4",
+"x": 0.096,
+"y": 50.088
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[72]",
+"layer": "M4",
+"x": 0.096,
+"y": 50.712
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[73]",
+"layer": "M4",
+"x": 0.096,
+"y": 51.384
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[74]",
+"layer": "M4",
+"x": 0.096,
+"y": 52.056
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[75]",
+"layer": "M4",
+"x": 0.096,
+"y": 52.728
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[76]",
+"layer": "M4",
+"x": 0.096,
+"y": 53.4
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[77]",
+"layer": "M4",
+"x": 0.096,
+"y": 54.024
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[78]",
+"layer": "M4",
+"x": 0.096,
+"y": 54.696
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[79]",
+"layer": "M4",
+"x": 0.096,
+"y": 55.368
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[80]",
+"layer": "M4",
+"x": 0.096,
+"y": 56.04
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[81]",
+"layer": "M4",
+"x": 0.096,
+"y": 56.664
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[82]",
+"layer": "M4",
+"x": 0.096,
+"y": 57.336
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[83]",
+"layer": "M4",
+"x": 0.096,
+"y": 58.008
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[84]",
+"layer": "M4",
+"x": 0.096,
+"y": 58.68
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[85]",
+"layer": "M4",
+"x": 0.096,
+"y": 59.304
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[86]",
+"layer": "M4",
+"x": 0.096,
+"y": 59.976
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[87]",
+"layer": "M4",
+"x": 0.096,
+"y": 60.648
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[88]",
+"layer": "M4",
+"x": 0.096,
+"y": 61.32
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[89]",
+"layer": "M4",
+"x": 0.096,
+"y": 61.992
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[90]",
+"layer": "M4",
+"x": 0.096,
+"y": 62.616
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[91]",
+"layer": "M4",
+"x": 0.096,
+"y": 63.288
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[92]",
+"layer": "M4",
+"x": 0.096,
+"y": 63.96
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[93]",
+"layer": "M4",
+"x": 0.096,
+"y": 64.632
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[94]",
+"layer": "M4",
+"x": 0.096,
+"y": 65.256
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[95]",
+"layer": "M4",
+"x": 0.096,
+"y": 65.928
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[96]",
+"layer": "M4",
+"x": 0.096,
+"y": 66.6
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[97]",
+"layer": "M4",
+"x": 0.096,
+"y": 67.272
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[98]",
+"layer": "M4",
+"x": 0.096,
+"y": 67.896
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[99]",
+"layer": "M4",
+"x": 0.096,
+"y": 68.568
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[100]",
+"layer": "M4",
+"x": 0.096,
+"y": 69.24
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[101]",
+"layer": "M4",
+"x": 0.096,
+"y": 69.912
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[102]",
+"layer": "M4",
+"x": 0.096,
+"y": 70.584
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[103]",
+"layer": "M4",
+"x": 0.096,
+"y": 71.208
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[104]",
+"layer": "M4",
+"x": 0.096,
+"y": 71.88
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[105]",
+"layer": "M4",
+"x": 0.096,
+"y": 72.552
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[106]",
+"layer": "M4",
+"x": 0.096,
+"y": 73.224
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[107]",
+"layer": "M4",
+"x": 0.096,
+"y": 73.848
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[108]",
+"layer": "M4",
+"x": 0.096,
+"y": 74.52
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[109]",
+"layer": "M4",
+"x": 0.096,
+"y": 75.192
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[110]",
+"layer": "M4",
+"x": 0.096,
+"y": 75.864
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[111]",
+"layer": "M4",
+"x": 0.096,
+"y": 76.488
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[112]",
+"layer": "M4",
+"x": 0.096,
+"y": 77.16
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[113]",
+"layer": "M4",
+"x": 0.096,
+"y": 77.832
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[114]",
+"layer": "M4",
+"x": 0.096,
+"y": 78.504
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[115]",
+"layer": "M4",
+"x": 0.096,
+"y": 79.176
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[116]",
+"layer": "M4",
+"x": 0.096,
+"y": 79.8
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[117]",
+"layer": "M4",
+"x": 0.096,
+"y": 80.472
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[118]",
+"layer": "M4",
+"x": 0.096,
+"y": 81.144
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[119]",
+"layer": "M4",
+"x": 0.096,
+"y": 81.816
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[120]",
+"layer": "M4",
+"x": 0.096,
+"y": 82.44
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[121]",
+"layer": "M4",
+"x": 0.096,
+"y": 83.112
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[122]",
+"layer": "M4",
+"x": 0.096,
+"y": 83.784
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[123]",
+"layer": "M4",
+"x": 0.096,
+"y": 84.456
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[124]",
+"layer": "M4",
+"x": 0.096,
+"y": 85.08
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[125]",
+"layer": "M4",
+"x": 0.096,
+"y": 85.752
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[126]",
+"layer": "M4",
+"x": 0.096,
+"y": 86.424
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[127]",
+"layer": "M4",
+"x": 0.096,
+"y": 87.096
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[128]",
+"layer": "M4",
+"x": 0.096,
+"y": 87.768
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[129]",
+"layer": "M4",
+"x": 0.096,
+"y": 88.392
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[130]",
+"layer": "M4",
+"x": 0.096,
+"y": 89.064
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[131]",
+"layer": "M4",
+"x": 0.096,
+"y": 89.736
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[132]",
+"layer": "M4",
+"x": 0.096,
+"y": 90.408
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[133]",
+"layer": "M4",
+"x": 0.096,
+"y": 91.032
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[134]",
+"layer": "M4",
+"x": 0.096,
+"y": 91.704
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[135]",
+"layer": "M4",
+"x": 0.096,
+"y": 92.376
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[136]",
+"layer": "M4",
+"x": 0.096,
+"y": 93.048
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[137]",
+"layer": "M4",
+"x": 0.096,
+"y": 93.672
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[138]",
+"layer": "M4",
+"x": 0.096,
+"y": 94.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[139]",
+"layer": "M4",
+"x": 0.096,
+"y": 95.016
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[140]",
+"layer": "M4",
+"x": 0.096,
+"y": 95.688
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[141]",
+"layer": "M4",
+"x": 0.096,
+"y": 96.36
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[142]",
+"layer": "M4",
+"x": 0.096,
+"y": 96.984
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[143]",
+"layer": "M4",
+"x": 0.096,
+"y": 97.656
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[144]",
+"layer": "M4",
+"x": 0.096,
+"y": 98.328
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[145]",
+"layer": "M4",
+"x": 0.096,
+"y": 99.0
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[146]",
+"layer": "M4",
+"x": 0.096,
+"y": 99.624
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[147]",
+"layer": "M4",
+"x": 0.096,
+"y": 100.296
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[148]",
+"layer": "M4",
+"x": 0.096,
+"y": 100.968
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[149]",
+"layer": "M4",
+"x": 0.096,
+"y": 101.64
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[150]",
+"layer": "M4",
+"x": 0.096,
+"y": 102.264
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[151]",
+"layer": "M4",
+"x": 0.096,
+"y": 102.936
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[152]",
+"layer": "M4",
+"x": 0.096,
+"y": 103.608
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[153]",
+"layer": "M4",
+"x": 0.096,
+"y": 104.28
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[154]",
+"layer": "M4",
+"x": 0.096,
+"y": 104.952
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[155]",
+"layer": "M4",
+"x": 0.096,
+"y": 105.576
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[156]",
+"layer": "M4",
+"x": 0.096,
+"y": 106.248
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[157]",
+"layer": "M4",
+"x": 0.096,
+"y": 106.92
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[158]",
+"layer": "M4",
+"x": 0.096,
+"y": 107.592
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[159]",
+"layer": "M4",
+"x": 0.096,
+"y": 108.216
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[160]",
+"layer": "M4",
+"x": 0.096,
+"y": 108.888
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[161]",
+"layer": "M4",
+"x": 0.096,
+"y": 109.56
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[162]",
+"layer": "M4",
+"x": 0.096,
+"y": 110.232
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[163]",
+"layer": "M4",
+"x": 0.096,
+"y": 110.856
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[164]",
+"layer": "M4",
+"x": 0.096,
+"y": 111.528
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[165]",
+"layer": "M4",
+"x": 0.096,
+"y": 112.2
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[166]",
+"layer": "M4",
+"x": 0.096,
+"y": 112.872
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[167]",
+"layer": "M4",
+"x": 0.096,
+"y": 113.544
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[168]",
+"layer": "M4",
+"x": 0.096,
+"y": 114.168
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[169]",
+"layer": "M4",
+"x": 0.096,
+"y": 114.84
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[170]",
+"layer": "M4",
+"x": 0.096,
+"y": 115.512
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[171]",
+"layer": "M4",
+"x": 0.096,
+"y": 116.184
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[172]",
+"layer": "M4",
+"x": 0.096,
+"y": 116.808
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[173]",
+"layer": "M4",
+"x": 0.096,
+"y": 117.48
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[174]",
+"layer": "M4",
+"x": 0.096,
+"y": 118.152
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[175]",
+"layer": "M4",
+"x": 0.096,
+"y": 118.824
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[176]",
+"layer": "M4",
+"x": 0.096,
+"y": 119.448
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[177]",
+"layer": "M4",
+"x": 0.096,
+"y": 120.12
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[178]",
+"layer": "M4",
+"x": 0.096,
+"y": 120.792
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[179]",
+"layer": "M4",
+"x": 0.096,
+"y": 121.464
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[180]",
+"layer": "M4",
+"x": 0.096,
+"y": 122.136
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[181]",
+"layer": "M4",
+"x": 0.096,
+"y": 122.76
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[182]",
+"layer": "M4",
+"x": 0.096,
+"y": 123.432
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[183]",
+"layer": "M4",
+"x": 0.096,
+"y": 124.104
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[184]",
+"layer": "M4",
+"x": 0.096,
+"y": 124.776
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[185]",
+"layer": "M4",
+"x": 0.096,
+"y": 125.4
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[186]",
+"layer": "M4",
+"x": 0.096,
+"y": 126.072
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[187]",
+"layer": "M4",
+"x": 0.096,
+"y": 126.744
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[188]",
+"layer": "M4",
+"x": 0.096,
+"y": 127.416
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[189]",
+"layer": "M4",
+"x": 0.096,
+"y": 128.04
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[190]",
+"layer": "M4",
+"x": 0.096,
+"y": 128.712
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[191]",
+"layer": "M4",
+"x": 0.096,
+"y": 129.384
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[192]",
+"layer": "M4",
+"x": 0.096,
+"y": 130.056
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[193]",
+"layer": "M4",
+"x": 0.096,
+"y": 130.728
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[194]",
+"layer": "M4",
+"x": 0.096,
+"y": 131.352
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[195]",
+"layer": "M4",
+"x": 0.096,
+"y": 132.024
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[196]",
+"layer": "M4",
+"x": 0.096,
+"y": 132.696
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[197]",
+"layer": "M4",
+"x": 0.096,
+"y": 133.368
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[198]",
+"layer": "M4",
+"x": 0.096,
+"y": 133.992
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[199]",
+"layer": "M4",
+"x": 0.096,
+"y": 134.664
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[200]",
+"layer": "M4",
+"x": 0.096,
+"y": 135.336
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[201]",
+"layer": "M4",
+"x": 0.096,
+"y": 136.008
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[202]",
+"layer": "M4",
+"x": 0.096,
+"y": 136.632
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[203]",
+"layer": "M4",
+"x": 0.096,
+"y": 137.304
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[204]",
+"layer": "M4",
+"x": 0.096,
+"y": 137.976
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[205]",
+"layer": "M4",
+"x": 0.096,
+"y": 138.648
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[206]",
+"layer": "M4",
+"x": 0.096,
+"y": 139.272
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[207]",
+"layer": "M4",
+"x": 0.096,
+"y": 139.944
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[208]",
+"layer": "M4",
+"x": 0.096,
+"y": 140.616
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[209]",
+"layer": "M4",
+"x": 0.096,
+"y": 141.288
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[210]",
+"layer": "M4",
+"x": 0.096,
+"y": 141.96
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[211]",
+"layer": "M4",
+"x": 0.096,
+"y": 142.584
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[212]",
+"layer": "M4",
+"x": 0.096,
+"y": 143.256
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[213]",
+"layer": "M4",
+"x": 0.096,
+"y": 143.928
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[214]",
+"layer": "M4",
+"x": 0.096,
+"y": 144.6
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[215]",
+"layer": "M4",
+"x": 0.096,
+"y": 145.224
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[216]",
+"layer": "M4",
+"x": 0.096,
+"y": 145.896
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[217]",
+"layer": "M4",
+"x": 0.096,
+"y": 146.568
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[218]",
+"layer": "M4",
+"x": 0.096,
+"y": 147.24
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[219]",
+"layer": "M4",
+"x": 0.096,
+"y": 147.864
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[220]",
+"layer": "M4",
+"x": 0.096,
+"y": 148.536
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[221]",
+"layer": "M4",
+"x": 0.096,
+"y": 149.208
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[222]",
+"layer": "M4",
+"x": 0.096,
+"y": 149.88
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[223]",
+"layer": "M4",
+"x": 0.096,
+"y": 150.552
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[224]",
+"layer": "M4",
+"x": 0.096,
+"y": 151.176
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[225]",
+"layer": "M4",
+"x": 0.096,
+"y": 151.848
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[226]",
+"layer": "M4",
+"x": 0.096,
+"y": 152.52
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[227]",
+"layer": "M4",
+"x": 0.096,
+"y": 153.192
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[228]",
+"layer": "M4",
+"x": 0.096,
+"y": 153.816
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[229]",
+"layer": "M4",
+"x": 0.096,
+"y": 154.488
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[230]",
+"layer": "M4",
+"x": 0.096,
+"y": 155.16
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[231]",
+"layer": "M4",
+"x": 0.096,
+"y": 155.832
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[232]",
+"layer": "M4",
+"x": 0.096,
+"y": 156.456
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[233]",
+"layer": "M4",
+"x": 0.096,
+"y": 157.128
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[234]",
+"layer": "M4",
+"x": 0.096,
+"y": 157.8
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[235]",
+"layer": "M4",
+"x": 0.096,
+"y": 158.472
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[236]",
+"layer": "M4",
+"x": 0.096,
+"y": 159.144
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[237]",
+"layer": "M4",
+"x": 0.096,
+"y": 159.768
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[238]",
+"layer": "M4",
+"x": 0.096,
+"y": 160.44
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[239]",
+"layer": "M4",
+"x": 0.096,
+"y": 161.112
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[240]",
+"layer": "M4",
+"x": 0.096,
+"y": 161.784
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[241]",
+"layer": "M4",
+"x": 0.096,
+"y": 162.408
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[242]",
+"layer": "M4",
+"x": 0.096,
+"y": 163.08
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[243]",
+"layer": "M4",
+"x": 0.096,
+"y": 163.752
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[244]",
+"layer": "M4",
+"x": 0.096,
+"y": 164.424
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[245]",
+"layer": "M4",
+"x": 0.096,
+"y": 165.048
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[246]",
+"layer": "M4",
+"x": 0.096,
+"y": 165.72
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[247]",
+"layer": "M4",
+"x": 0.096,
+"y": 166.392
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[248]",
+"layer": "M4",
+"x": 0.096,
+"y": 167.064
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[249]",
+"layer": "M4",
+"x": 0.096,
+"y": 167.736
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[250]",
+"layer": "M4",
+"x": 0.096,
+"y": 168.36
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[251]",
+"layer": "M4",
+"x": 0.096,
+"y": 169.032
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[252]",
+"layer": "M4",
+"x": 0.096,
+"y": 169.704
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[253]",
+"layer": "M4",
+"x": 0.096,
+"y": 170.376
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[254]",
+"layer": "M4",
+"x": 0.096,
+"y": 171.0
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[255]",
+"layer": "M4",
+"x": 0.096,
+"y": 171.672
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[256]",
+"layer": "M4",
+"x": 0.096,
+"y": 172.344
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[257]",
+"layer": "M4",
+"x": 0.096,
+"y": 173.016
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[258]",
+"layer": "M4",
+"x": 0.096,
+"y": 173.64
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[259]",
+"layer": "M4",
+"x": 0.096,
+"y": 174.312
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[260]",
+"layer": "M4",
+"x": 0.096,
+"y": 174.984
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[261]",
+"layer": "M4",
+"x": 0.096,
+"y": 175.656
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[262]",
+"layer": "M4",
+"x": 0.096,
+"y": 176.328
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[263]",
+"layer": "M4",
+"x": 0.096,
+"y": 176.952
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[264]",
+"layer": "M4",
+"x": 0.096,
+"y": 177.624
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[265]",
+"layer": "M4",
+"x": 0.096,
+"y": 178.296
+},
+{
+"name": "u_strip_u_strip_u_ctl__xi[266]",
+"layer": "M4",
+"x": 0.096,
+"y": 178.968
+}
+]
+}

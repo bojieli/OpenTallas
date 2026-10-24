@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.die_plan.bind_gate.v1",
+ "die": "qwen_kvsys",
+ "bound": "/home/ubuntu/scratch/binder4-1023/kv/kv41",
+ "bound_sha": "0b877c0888d9a433",
+ "time": "2026-10-23 22:49:31 PDT",
+ "regen": {
+  "verdict": "PASS",
+  "counts": {
+   "OK": 16,
+   "WARN": 4
+  },
+  "json": "/home/ubuntu/scratch/binder4-1023/kv/kv41/regen/constants.json",
+  "sv": "/home/ubuntu/scratch/binder4-1023/kv/kv41/regen/qwen_kvsys_sched_pkg.sv",
+  "sha": "9ba1b8043dc823df",
+  "seconds": 3.4,
+  "problems": {}
+ },
+ "smoke": {
+  "command": "/usr/bin/python3 /home/ubuntu/wt/binder4-1023/tools/die_plan/bind_smoke.py --die qwen_kvsys --bound /home/ubuntu/scratch/binder4-1023/kv/kv41 --constants /home/ubuntu/scratch/binder4-1023/kv/kv41/regen/constants.json --work /home/ubuntu/scratch/binder4-1023/kv/kv41/smoke/work --submit",
+  "verdict": "NOT_RUN"
+ },
+ "verdict": "INCOMPLETE",
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=/home/ubuntu/scratch/binder4-1023/kv/kv41/bus_groups.json KST=34,34,32,32,32,31,31 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)",
+  "xdie_pair_image": "D2D_DIE_STAGES=2,2,2,3,2,2/34,34,32,32,32,31,31 D2D_MU=1 D2D_EMB_WINDOW=595 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 bash tools/qwen_split/d2d_cal_image_production.sh <out>   # both dies bind its TXDP"
+ }
+}

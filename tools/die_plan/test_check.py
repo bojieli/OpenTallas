@@ -497,6 +497,18 @@ def test_core_face_rule():
     assert summ["core_faces"]["groups"] == 2
 
 
+def test_core_face_rule_internal_station():
+    """QC-P6-G0C 10-23: a bus with R3-INTERNAL stations reaches the core from its last station (regs_um[-1]), so
+    the face rule scores the pins against that register, not the face window."""
+    def st(t):
+        t["internal_stations"] = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[648.0, 432.0],
+                                       regs_um=[[324.0, 100.0], [700.0, 432.0]])]
+    # din pins on the core E face, window on W: away from the window, but the last station sits E of the core
+    assert len(errs(_face_core(dict(din="E", x="E")), "core_faces")) == 1
+    assert errs(_face_core(dict(din="E", x="E"), conns=st), "core_faces") == []
+    assert len(errs(_face_core(dict(din="W", x="E"), conns=st), "core_faces")) == 1
+
+
 def test_core_face_rule_core_to_core(tmp_path):
     """leaf-to-leaf nets (contents bind net:) and the core_conns.json sidecar name core-to-core partners."""
     def two(t, via_sidecar=False):
