@@ -581,12 +581,30 @@ def _orient_pt(o, w, h, x, y):
     return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
 
 
+CORE_CELLS_MAX = 400_000      # COORD 10-23 (CORE-KS): above this a partition type must be built from hard cores
+MIRROR_SKIP = ("M2", "M3")    # platform cell-access tracks: not the plan lattice in a mirrored instance's die frame
+
+
+def type_cells(t):
+    """estimated std cells of one instance: type.cells, else the sum of contents[].cells (None when unknown)."""
+    if "cells" in t:
+        return int(t["cells"])
+    cs = [c["cells"] for c in t.get("contents", []) if "cells" in c]
+    return sum(cs) if cs else None
+
+
 def check_taps_cores(P, R, plan_dir=None):
     """clock.taps[] inside the type outline, unique names; hard_cores[]: pins land on the plan tracks after
     origin + track_offset and the core orient, in the type frame AND in every placed instance's die frame (MX/MY)."""
-    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0)
+    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0)
     for tn, t in P.types.items():
         w, h = t["outline_um"]
+        nc = type_cells(t)
+        if nc is None:
+            out["types_no_cells"] += 1
+        elif nc > CORE_CELLS_MAX and not t.get("hard_cores"):
+            R.err("hard_cores", f"type {tn}: {nc} cells > {CORE_CELLS_MAX} and no hard_cores[] (outline, pins, "
+                  "track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)", type=tn)
         ck = t.get("clock", {})
         names = set()
         for tp in ck.get("taps", []):
@@ -622,8 +640,8 @@ def check_taps_cores(P, R, plan_dir=None):
                 except (OSError, ValueError, KeyError) as e:
                     R.err("hard_cores", f"type {tn} core {hc['inst']}: pins_file {hc['pins_file']}: {e}", type=tn)
             if not pins:
-                R.warn("hard_cores", f"type {tn} core {hc['inst']}: no pins listed; track alignment unchecked",
-                       type=tn)
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: no pins listed (pins / pins_file): the core pins "
+                      "must be proven on the kit tracks", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
             bad = 0
             for nm, ln, x, y in pins:
@@ -633,7 +651,10 @@ def check_taps_cores(P, R, plan_dir=None):
                     continue
                 tx, ty = _orient_pt(o, cw, chh, x, y)
                 tx, ty = X0 + tx, Y0 + ty
-                frames = [("type", tx, ty)] + [(pi, *P.to_die(pi, (tx, ty))) for pi in insts]
+                # M2/M3 keep the platform cell-access tracks: checked in the type frame and unmirrored instances
+                # only (a mirrored instance's die frame is not their lattice; CORE-KS false M3 errors)
+                frames = [("type", tx, ty)] + [(pi, *P.to_die(pi, (tx, ty))) for pi in insts
+                                               if ln not in MIRROR_SKIP or P.parts[pi].get("orient", "R0") == "R0"]
                 for fr, fx, fy in frames:
                     c = fx if L["dir"] == "V" else fy
                     if not on_track(c, L):
@@ -646,6 +667,9 @@ def check_taps_cores(P, R, plan_dir=None):
             out["core_pins_off_track"] += bad
             if bad > 5:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: {bad} pins off the plan tracks", type=tn)
+    if out["types_no_cells"]:
+        R.warn("hard_cores", f"{out['types_no_cells']} types without a cell estimate (type.cells or contents[].cells): "
+               f"the > {CORE_CELLS_MAX}-cell hard-core rule is unchecked for them")
     return out
 
 

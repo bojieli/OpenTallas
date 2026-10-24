@@ -346,6 +346,10 @@
       "minItems": 2,
       "maxItems": 2
      },
+     "cells": {
+      "type": "integer",
+      "minimum": 0
+     },
      "hard": {
       "type": "boolean"
      },
@@ -544,6 +548,20 @@
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
+       },
+       "tap_mode": {
+        "enum": [
+         "grid",
+         "sinks"
+        ]
+       },
+       "tap_radius_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_max_sinks": {
+        "type": "integer",
+        "minimum": 1
        },
        "taps": {
         "type": "array",
@@ -788,6 +806,10 @@
         "obs_max": {
          "type": "string",
          "pattern": "^M[1-9]$"
+        },
+        "cells": {
+         "type": "integer",
+         "minimum": 0
         },
         "bind": {
          "type": "object",

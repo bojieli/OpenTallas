@@ -28,6 +28,7 @@ import shutil
 from pathlib import Path
 
 import schema as S
+import taps as T
 from schema import DIE_PART
 
 CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
@@ -185,6 +186,17 @@ FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (th
 HOLD_IN_MIN_PS = 0.0
 
 
+# COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
+# the sender (clk -> vclk: out ports) and the receiver (vclk -> clk: in ports); clk -> clk keeps the full value.
+UNC_SPLIT = 0.5
+
+
+def _tap_cap(t):
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks for sink-anchored taps, else 3000 (COORD 10-23)."""
+    ck = t.get("clock", {})
+    return int(ck.get("tap_max_sinks", 1500)) if ck.get("tap_mode") == "sinks" else 3000
+
+
 def sdc(P, tn, pins):
     """kit SDC.  Bus ports: IO_BUDGET x T each side (both ends register at the face).  ft slot ports (COORD 10-23 R3,
     hop share): the last station drives its out port over the slot's last L/k segment, so the out port keeps only the
@@ -205,6 +217,11 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
+           f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup {t_lib(UNC_SPLIT * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
            f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
            f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n")
@@ -332,7 +349,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
-           "export OT_TAP_MAX_SINKS = 3000",   # COORD 10-23: taps sized by sink count
+           # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
+           f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
@@ -358,7 +376,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
-                          insertion_tol_ps=P.clock["insertion_tol_ps"]),
+                          insertion_tol_ps=P.clock["insertion_tol_ps"],
+                          # one clock port per tap (snapped; sink-anchored taps carry their planned sinks)
+                          tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
+                          taps=(T.report(P, tn)["taps"] if t.get("clock", {}).get("tap_mode") == "sinks" else
+                                [dict(name=n, xy=[x, y]) for n, x, y in S.tap_grid(P, tn)]),
+                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          uncertainty_split=UNC_SPLIT),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")

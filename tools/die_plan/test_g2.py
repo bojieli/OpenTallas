@@ -353,3 +353,45 @@ def test_per_tap_reset_synchronisers():
             assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
+
+
+def test_sink_anchored_taps_carry_sinks():
+    """KV-P6 10-23 (GEOM-REVIEW6 17:09: 11 of 20 grid taps empty): clock.tap_mode 'sinks' puts every tap at FIRM-planned
+    sinks (face registers, ft stations) within clock.tap_radius_um and <= clock.tap_max_sinks; no empty tap; the RTL
+    ports, kit pins, cap and budget follow the same list."""
+    import copy
+    import gen_phys
+    import taps
+    raw = copy.deepcopy(PAIR)
+    ck = raw["partition_types"]["fa"].setdefault("clock", {})
+    ck.update(tap_mode="sinks", tap_radius_um=120.0, tap_max_sinks=40)
+    P = schema.Plan(raw)
+    sinks = taps.planned_sinks(P, "fa")
+    tl = taps.sink_taps(P, "fa")
+    assert sinks and tl and tl[0][0] == "clk"
+    assert sum(t[3] for t in tl) == len(sinks) and all(t[3] > 0 for t in tl)            # no empty tap
+    assert all(t[4] <= 120.0 and t[3] <= 40 for t in tl) or len(tl) >= len(sinks)
+    assert [n for n, _, _ in schema.tap_grid(P, "fa")] == [t[0] for t in tl]
+    w, h = raw["partition_types"]["fa"]["outline_um"]
+    assert all(0 < x < w and 0 < y < h for _, x, y in schema.tap_grid(P, "fa"))
+    assert schema.tap_pitch(P, "fa") == 240.0
+    with tempfile.TemporaryDirectory() as d:
+        gen_phys.write_type_kit(P, "fa", d, [])
+        cfg = (Path(d) / "fa" / "config.mk").read_text()
+        assert "OT_TAP_MAX_SINKS = 40" in cfg
+        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())
+        assert bud["clock"]["tap_mode"] == "sinks" and len(bud["clock"]["taps"]) == len(tl)
+        assert all(t["planned_sinks"] > 0 for t in bud["clock"]["taps"])
+
+
+def test_tap_balance_to_plan_insertion_and_seam_uncertainty_once():
+    """KV-P5 17:34: tap trees balance to the plan insertion (OT_TAP_TARGET_PS), not the slowest local tree; COORD 16:58:
+    the kit SDC counts the seam uncertainty once (half on the sender clk->vclk, half on the receiver vclk->clk)."""
+    import gen_phys
+    tb = (HERE / "tap_balance.tcl").read_text()
+    assert "set tgt $tb_target" in tb and "empty taps" in tb
+    P = schema.Plan(PAIR)
+    s = gen_phys.sdc(P, "fa", gen_phys.type_pins(P, "fa"))
+    half = gen_phys.t_lib(gen_phys.UNC_SETUP_PS / 2)
+    assert f"-from [get_clocks vclk] -to [get_clocks clk] -setup {half:.4f}" in s
+    assert f"-from [get_clocks clk] -to [get_clocks vclk] -setup {half:.4f}" in s
