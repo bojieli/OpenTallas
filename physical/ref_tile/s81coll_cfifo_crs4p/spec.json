@@ -1,0 +1,218 @@
+{
+ "name": "s81coll_cfifo_crs4p",
+ "top": "dsfd_cfifo_crs4p",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4p.sv",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land_fo.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "cr",
+ "clock_ports": [
+  "cr",
+  "cr_s",
+  "xk[0]",
+  "xk[1]",
+  "xk[2]",
+  "xk[3]"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr"
+   ],
+   "inputs": [
+    "ri",
+    "st",
+    "rst"
+   ],
+   "outputs": [
+    "xa",
+    "xb",
+    "cc",
+    "x2",
+    "rs"
+   ]
+  },
+  "lane0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[0]"
+   ],
+   "inputs": [
+    "xl0"
+   ],
+   "outputs": []
+  },
+  "lane1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[1]"
+   ],
+   "inputs": [
+    "xl1"
+   ],
+   "outputs": []
+  },
+  "lane2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[2]"
+   ],
+   "inputs": [
+    "xl2"
+   ],
+   "outputs": []
+  },
+  "lane3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xk[3]"
+   ],
+   "inputs": [
+    "xl3"
+   ],
+   "outputs": []
+  },
+  "core_s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr_s"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rd"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 280.8,
+  "h": 69.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "xa",
+   "xb",
+   "x2",
+   "cr",
+   "cc",
+   "st",
+   "ri",
+   "rs"
+  ],
+  "S": [
+   "xl0",
+   "xl1",
+   "xl2",
+   "xl3",
+   "xk",
+   "rd",
+   "cr_s"
+  ],
+  "W": [
+   "rst"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/cfifo_crs4p/dsfd_cfifo_crs4p.tcl",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out: the RTL registers every data pin -- xl<k> lands directly in the ot_s81_land ring slots on xk[k] (the slots ARE the capture flops, flop-first, LANDING-CONTRACT L1), ri/st on cr (ri_q/sti); every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync_s, rs = rsync); the landing offsets are the top parameter LK (no lk port, COORD R7). A flow pin register would add an edge the die calendar does not price."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "S81-P9-CF 10-23 (COORD R7, no tie-offs): NEW top dsfd_cfifo_crs4p = dsfd_cfifo_crs4 with the landing offsets as the top parameter LK (default {4{3'd2}} = the value every S81 frame band strapped on lk[11:0]; synthesized at the default) instead of the static port lk[11:0] (12 TIEHI on the hard macro u_cf of every r0 frame band). Only change vs s81coll_cfifo_crs4: lk[11:0] removed from the W face and from the core clock-entry inputs; same 280.8 x 69.12 outline, same layer contract/recipe/hooks, every other pin at the identical location/layer (io_tcl = crs4's minus the 12 lk lines). RTL bench tb_cfifo_crs4p 12/12 identical to crs4 (a1a9ed640). GATE 1 (18:31, ep5) REFUSED by the native census (limit 32: ring wc/rc 1,116 loads, marker masks 563/536, rsync 150): census-safe restructure, same ports/pins/outline/calendar: 4-bit ot_s81_land rings (69/lane; gate 2 with 8-bit rings: rc[0] 44 loads) with one kept reset leaf each (2-level tree released on the old rsync edge), marker bits landed in 3 ot_s81_land_fo rings x 7 kept output copies, rsync_s 5 kept leaves; exactness tools/s81_dv/crs4p_bench.py vs the closed dsfd_cfifo_crs.",
+ "job": {
+  "owner": "Claude:S81-P9-CF",
+  "branch": "claude/s81-p9-cf-1023",
+  "tag": "p9a",
+  "purpose": "hardened view of dsfd_cfifo_crs4p (crs4 with LK parameter, no lk strap port)",
+  "views_to": "physical/ref_tile/s81coll_cfifo_crs4p/views",
+  "record_to": "results/rtl/ref_tile/s81coll_cfifo_crs4p",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/land",
+   "physical/s81_die_pins/cfifo_crs4p",
+   "tools/s81_dv/crs4p_bench.py",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/hdc"
+  ],
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_cfifo_crs4p u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-PINMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4p.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv rtl/dsrom_sys/s81_dv/land/ot_s81_land_fo.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_vs_crs",
+    "cmd": "python3 tools/s81_dv/crs4p_bench.py --variant base --out {RUN}/bench_pass/crs4p_base.json",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "CRS4P_BENCH PASS base sweep 20/20 slip-fault 8/8"
+   }
+  ]
+ }
+}

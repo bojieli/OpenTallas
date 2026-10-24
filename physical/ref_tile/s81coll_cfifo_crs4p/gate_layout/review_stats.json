@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.ref_tile.layout_review.v1",
+ "top": "dsfd_cfifo_crs4p",
+ "placed": true,
+ "outline_um": [
+  280.8,
+  69.12
+ ],
+ "aspect": 4.062,
+ "die_area_um2": 19408.9,
+ "macros": 0,
+ "macro_area_pct": 0.0,
+ "std_cells": 89374,
+ "std_area_um2": 10343.7,
+ "std_fill_of_free": 0.5329,
+ "ff": 12761,
+ "buf_inv": 46479,
+ "buf_share": 0.5201,
+ "pins_per_face": {
+  "N": 1169,
+  "S": 1178,
+  "W": 3
+ },
+ "pins_per_um": {
+  "N": 4.163,
+  "S": 4.195,
+  "W": 0.043
+ },
+ "pin_peak_per_um_10um": {
+  "N": 4.4,
+  "S": 4.4,
+  "W": 0.1
+ },
+ "pin_layers": {
+  "M5": 2349,
+  "M4": 1
+ },
+ "pins_registered": 1239,
+ "pins_to_macro": 0,
+ "pins_unregistered": 1105,
+ "pin_to_reg_median_um": 4.7,
+ "pin_to_reg_p90_um": 6.1,
+ "pin_to_reg_max_um": 10.32,
+ "empty_area": 0.0737,
+ "density_bin_um": 3.51,
+ "macro_obs": {},
+ "macros_pins_facing_away": [],
+ "clock_roots": 6,
+ "flags": [
+  "buf/inv 52%",
+  "pin density N 4.2/um,S 4.2/um"
+ ],
+ "png": "/home/ubuntu/wt/s81-p9-cf-1023/physical/ref_tile/s81coll_cfifo_crs4p/gate_layout/review.png",
+ "kind": "tile",
+ "verdict_items": [
+  [
+   "INFO",
+   "layout_review",
+   "280.8x69.12 um, fill 53.3% of free, empty 7%, buf/inv 52%, pin->reg p50/p90 4.7/6.1 um, pins/um {'N': 4.163, 'S': 4.195, 'W': 0.043}; flags: buf/inv 52%; pin density N 4.2/um,S 4.2/um",
+   ""
+  ]
+ ]
+}
