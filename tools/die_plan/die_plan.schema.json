@@ -1377,6 +1377,11 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "ft_hop_in_share": {
+     "type": "number",
+     "exclusiveMinimum": 0,
+     "exclusiveMaximum": 0.5
+    },
     "face_xing": {
      "enum": [
       "budgeted",

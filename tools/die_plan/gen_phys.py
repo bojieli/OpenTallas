@@ -221,6 +221,11 @@ FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (th
 # pads every seam input for the whole window.
 
 
+def ft_hop_in_share(P):
+    """the plan's ft seam receiver share (clock.ft_hop_in_share, COORD RULING 10-24 12:37), else FT_HOP_IN_SHARE."""
+    return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
+
+
 def hold_in_min_ps(P):
     """seam-hold padding: the kit's min input delay vs vclk (ps)."""
     return -float(P.clock["insertion_tol_ps"])
@@ -269,9 +274,10 @@ def sdc(P, tn, pins):
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
-        out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay -max {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
-                f"set_output_delay -max {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        sh = ft_hop_in_share(P)
+        out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
+                f"set_input_delay -max {(1 - sh) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
+                f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
