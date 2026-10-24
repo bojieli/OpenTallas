@@ -34,23 +34,6 @@
   "note": "die_io.py plan: u_io_serdes_1"
  },
  {
-  "name": "io_coll_core_u_io_ucie",
-  "kind": "phy_macro",
-  "iface": "ucie",
-  "part": "coll_core",
-  "rect_um": [
-   777.6,
-   8838.72,
-   1555.2,
-   9616.32
-  ],
-  "sites": 289,
-  "pitch_um": 45.0,
-  "signals": 144,
-  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 778 um",
-  "note": "die_io.py plan: u_io_ucie"
- },
- {
   "name": "io_io_serdes_u_io_serdes_1",
   "kind": "phy_macro",
   "iface": "serdes",
@@ -84,5 +67,22 @@
   "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
   "note": "die_io.py plan: u_ucie_kv; host link (BFS 1 port hop(s) from glue): CONFIRM",
   "host": true
+ },
+ {
+  "name": "io_coll_ucie_u_io_ucie",
+  "kind": "phy_macro",
+  "iface": "ucie",
+  "part": "coll_ucie",
+  "rect_um": [
+   0.0,
+   7603.2,
+   777.6,
+   8380.8
+  ],
+  "sites": 289,
+  "pitch_um": 45.0,
+  "signals": 144,
+  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
+  "note": "die_io.py plan: u_io_ucie"
  }
 ]

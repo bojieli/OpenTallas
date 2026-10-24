@@ -795,6 +795,8 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
             if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
                 cent[c["inst"]] = (c["origin_um"][0] + c["outline_um"][0] / 2,
                                    c["origin_um"][1] + c["outline_um"][1] / 2)
+        ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in t.get("internal_stations", [])
+                    if str(e.get("conn", "")).startswith("bus:") and e.get("regs_um")}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
             if b.get("leaf") and "." in b["leaf"]:
@@ -844,7 +846,11 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     if kind == "bus":
                         if bt is None:
                             bt = _bus_targets(P, tn)
-                        if nm in bt:
+                        if nm in ist_last:
+                            # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station
+                            # (regs_um[-1], the register next to the core pin), not from the face window
+                            pts.append((f"station {nm}", ist_last[nm]))
+                        elif nm in bt:
                             pts.append((f"face {bt[nm][0]} ({nm})", bt[nm][1]))
                     elif kind == "net":
                         pts += [(f"{oi} (net {nm})", cent[oi]) for oi in sorted(net_ends.get(nm, ()))
