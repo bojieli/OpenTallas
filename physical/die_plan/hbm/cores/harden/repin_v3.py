@@ -22,6 +22,7 @@ from pathlib import Path
 
 PITCH, OFF, INSET, KEEP = 0.048, 0.024, 0.019, 2.16
 PG_PITCH, PG_LO, PG_HI = 4.32, 1.932, 2.196
+CAP_PER_UM, BALANCE = 4.5, True
 
 
 def face_of(x, y, w, h):
@@ -65,8 +66,22 @@ def repin(pins, w, h, rules):
                 f = rf
                 break
         faces[f].append(p["name"])
+    if rules.get("balance", BALANCE):
+        # faces over CAP_PER_UM spill their tail (port order, buses kept contiguous as far as possible) to the face
+        # with the most spare capacity (adjacent faces first); the v2 face order is otherwise kept
+        cap = {f: int(CAP_PER_UM * (h if f in "EW" else w)) for f in "NSEW"}
+        adj = dict(N="EWS", S="EWN", E="NSW", W="NSE")
+        for f in "NSEW":
+            names = sorted(faces.get(f, []), key=bitkey)
+            extra = names[cap[f]:] if len(names) > cap[f] else []
+            faces[f] = names[:len(names) - len(extra)]
+            for nm in extra:
+                g = max(adj[f], key=lambda g: (cap[g] - len(faces.get(g, [])), -adj[f].index(g)))
+                faces.setdefault(g, []).append(nm)
     out, st = [], {}
     for f, names in faces.items():
+        if not names:
+            continue
         L = h if f in "EW" else w
         layer = "M4" if f in "EW" else "M5"
         names = sorted(names, key=bitkey)
