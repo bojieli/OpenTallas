@@ -1,0 +1,60 @@
+{
+  "source_synth_cells_before_fusion": 216711,
+  "fused_ao_pairs": 0,
+  "original_cells": 216711,
+  "original_by_type": {
+    "$_DFF_P_": 36247,
+    "$_DFF_PN0_": 447,
+    "$_MUX_": 51815,
+    "$_NOT_": 9600,
+    "$_AND_": 59695,
+    "$_XOR_": 19305,
+    "$_OR_": 39602
+  },
+  "final_by_type": {
+    "$_DFF_P_": 42187,
+    "$_DFF_PN0_": 589,
+    "$_MUX_": 51906,
+    "$_NOT_": 10462,
+    "$_AND_": 60175,
+    "$_XOR_": 19497,
+    "$_OR_": 40948
+  },
+  "unconsumed_cells_removed": 11757,
+  "dropped_outputs": [],
+  "unused_inputs_removed": [],
+  "holding_chain_count": 0,
+  "holding_ring_groups": [],
+  "actual_final_rings": [],
+  "ring_input_load_contract": "D%3==0 writer4slots=>4loads/bit; otherwise one prefix D; R drives one local reset branch",
+  "retention": "FF cells and added combinational cone copies retain hierarchy; ordinary logic stays available for native technology mapping",
+  "transparent_inverters": true,
+  "retain_mux": true,
+  "shared_helpers": true,
+  "final_cells": 225764,
+  "added_by_type": {
+    "$_DFF_P_": 5940,
+    "$_NOT_": 862,
+    "$_XOR_": 192,
+    "$_AND_": 480,
+    "$_OR_": 1346,
+    "$_DFF_PN0_": 142,
+    "$_MUX_": 91
+  },
+  "passes": 5,
+  "input_sha256": "e435d83f0d6c1df63acf05e21dd846d658226da6f9a7b5f0d0b2e2db2f43aaac",
+  "max_data_reset_loads": 32,
+  "internal_load_cap": 8,
+  "input_load_cap": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required",
+  "retained_driver_bits": [],
+  "retained_all_combinational_operators": false,
+  "retained_keep_nets": true,
+  "reuse_copies": true
+}

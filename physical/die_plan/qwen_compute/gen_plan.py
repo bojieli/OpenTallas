@@ -893,6 +893,42 @@ def census_links(P, geo, census, fp_pins, face_map):
     return dropped
 
 
+# QC-P5-TIE 10-23 (BINDER2 15:19 TIED treq_i 108 b): the slice table-ROM loader request treq {valid, stage 6, user 2}
+# (qfd_dv_s8_flat u_fdn.treq_i -> u_stm tload; u_fup.treq_o forwards it) has a REAL producer: the HP13 tt_ctlm leaf
+# (corepub39 cpub39_1) port table_req[8:0] = the CALR g_calr.treq_q register.  The r56 die leaves table_req open and the
+# release slice had no treq port, so the s8 substitution left every slice's treq_i open.  Contract (QDIE5-TLD 4b5a2975f,
+# QW-TLPROD CONSUMER_GAP): table_req rides BESIDE cmd on every hop -- tt_ctlm -> W5, W5 -> .. -> W0, the W0 | E0 seam,
+# E0 -> .. -> E5 -- on a lane twinned with the cmd lane of that hop (same path, same stations, same latency), so the
+# per-hop treq lane latency equals the cmd lane latency (the bound slice itself forwards treq one edge ahead of cmd:
+# s8 u_fup registers cmd_o (SETID) but passes treq_c through; that is as-built slice RTL, published per hop in
+# qwen_compute_latency.json for the compiler).
+TREQ_BUS = {"cmd": "table_req", "cmd_wi": "treq_wi", "cmd_eo": "treq_eo", "cmd_ei": "treq_ei", "cmd_wo": "treq_wo"}
+
+
+def treq_links(P, geo, census, fp_pins, face_map):
+    tw = []
+    for g in census["groups"]:
+        if g["src_bus"] in TREQ_BUS and g["dst_bus"] in TREQ_BUS and g["dst"].startswith("dvs_") and \
+                (g["src"].startswith("dvs_") or (g["src"], g["src_bus"]) == ("tt_ctlm", "cmd")):
+            t = dict(g, src_bus=TREQ_BUS[g["src_bus"]], dst_bus=TREQ_BUS[g["dst_bus"]], bits=9, relays=[],
+                     twin_of=f"{g['src']}.{g['src_bus']} -> {g['dst']}.{g['dst_bus']}")
+            tw.append(t)
+    assert len(tw) == 12, [x["twin_of"] for x in tw]
+    cov, P.cov = P.cov, collections.defaultdict(list)
+    n0 = len(P.links)
+    dropped = census_links(P, geo, {"groups": tw, "blocks": census["blocks"]}, fp_pins, face_map)
+    assert not dropped and len(P.cov["planned"]) == 12, (dropped, len(P.cov["planned"]))
+    P.cov = cov
+    new = P.links[n0:]
+    assert len(new) == 12, len(new)
+    for lk, g in zip(new, tw):
+        if lk["path"][0] == "tt_ctlm":
+            lk["src_leaf"] = "u_tt_ctlm.table_req"
+    P.treq = [{"lane_role": lk["role"], "path": lk["path"], "bits": lk["width"], "twin_of": g["twin_of"]}
+              for lk, g in zip(new, tw)]
+    return P.treq
+
+
 VARIANT = "A"
 S2_CB = {"A": ["c_W5_bf_02", "c_W5_bf_01", "c_W5_bf_00"], "B": ["c_W5_bf_01", "c_W5_bf_00"]}
 
@@ -1791,6 +1827,7 @@ def main():
     slice_internal_links(P, geo, record, su_split, su_directed)
     face_map = json.loads(Path(a.slice_face_map).read_text())
     dropped = census_links(P, geo, census, fp_pins, face_map)
+    treq_links(P, geo, census, fp_pins, face_map)
     P.coll_rows = coll_internal_links(P)
     fault_links(P, a.variant, geo)
     cov = coverage(P, census)
@@ -1864,6 +1901,10 @@ def main():
                                      f"leaves = outline area x {UTIL} / {CELL_UM2} um2 per cell (A0 calibration); "
                                      "soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
              "census_coverage": cov,
+             "treq_lanes": {"note": "QC-P5-TIE: tt_ctlm.table_req -> every slice treq_i beside cmd (TREQ_BUS, "
+                                    "treq_links); producer = HP13 cpub39 CALR treq_q (live, open in r56 die.v); the "
+                                    "binder connects it with asbuilt rewire class 'treq' (bind/plan_rewires_treq.json)",
+                            "lanes": P.treq},
              "planned_cores": P.cores,
              # QC-P2 (COORD 10-23 head landed-LP 3317/27981): leaf parameters the die netlist binder MUST pass from
              # the plan.  The old landed parents qfd_tt_ctlm_dv_lpf.sv:93 / lp/qfd_tt_ctlm_dv_lpf_lp.sv:196 /
