@@ -341,6 +341,14 @@ class Graph:
                     st = int(sp.get("stages", 1))
                     if sp.get("stages_param"):
                         st = int(str(c.params.get(sp["stages_param"], st)).strip('"'))
+                    if sp.get("stages_port"):
+                        # BINDER4: latency from a constant strap input (e.g. ot_s81_land k: K + 1 edges after the last
+                        # station), stages = value + stages_add; a non-constant strap is a RULE error
+                        kb = c.ports.get(sp["stages_port"], [])
+                        if kb and all(x in ("0", "1") for x in kb):
+                            st = int("".join(reversed(kb)), 2) + int(sp.get("stages_add", 0))
+                        else:
+                            self.err.append(f"RULE_STAGES_PORT {c.path}.{sp['stages_port']}: not a constant strap")
                     res = _add_stages(up, st)
             elif k == "reducer":
                 # op or (default): fault OR tree; op and: an AND join (e.g. a link-up AND) re-emitted per sink partition
@@ -1639,7 +1647,8 @@ class Binder:
             for tn in tns:
                 new = m
                 if len(tns) > 1:
-                    new = f"{m}__{sv_id(tn)}"
+                    # keep '__' of a split variant (T__v1) distinct from a plan type named T_v1 (sv_id would merge them)
+                    new = f"{m}__{re.sub(r'[^A-Za-z0-9_]', '_', tn)}"
                 if new in leafmods:
                     new = f"{new}_part"
                 if new != m:
@@ -2272,6 +2281,141 @@ def cmd_portbind(a):
     return r.returncode
 
 
+SIM_FILE = re.compile(r"_sim\.s?v$")
+PKG_DEF = re.compile(r"^\s*package\s+([A-Za-z_]\w*)\s*;", re.M)
+PKG_USE = re.compile(r"\b([A-Za-z_]\w*)::")
+
+
+def kit_closure(names, idx, prefer):
+    """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
+    HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
+    (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros"""
+    seen, files, missing, macros = set(), [], set(), {}
+    todo = list(names)
+    while todo:
+        n = todo.pop()
+        if n in seen:
+            continue
+        seen.add(n)
+        cands = idx.get(n, [])
+        hard = [f for f in cands if Path(f).parent.name == n and (Path(f).parent / f"{n}.lef").is_file()]
+        if hard:
+            d = Path(hard[0]).parent
+            bb, mdl = d / f"{n}_bb.v", d / f"{n}.v"
+            macros[n] = dict(dir=str(d.resolve()), lef=str((d / f"{n}.lef").resolve()),
+                             libs=[str(x.resolve()) for x in sorted(d.glob(f"{n}*.lib"))],
+                             bb=str(bb.resolve()) if bb.is_file() else None, model=str(mdl.resolve()) if mdl.is_file() else None)
+            f = macros[n]["bb"] or macros[n]["model"]
+            if f and f not in files:
+                files.append(f)
+            continue
+        nonsim = [f for f in cands if not SIM_FILE.search(f)]
+        sub = dict(idx)
+        if nonsim and len(nonsim) < len(cands):
+            sub[n] = nonsim
+        f, _ = E.pick(sub, n, prefer)
+        if f is None:
+            missing.add(n)
+            continue
+        if f not in files:
+            files.append(f)
+            for m in E.MOD_RE.finditer(E._strip(Path(f).read_text(errors="replace"))):
+                todo += sorted(E.instantiated(E.module_body(f, m.group(1)), idx))
+        todo += sorted(E.instantiated(E.module_body(f, n), idx))
+    return files, sorted(missing), macros
+
+
+def kit_packages(files, roots, base):
+    """the package files the kit's sources reference (pkg::x / import pkg::*), transitively, in dependency order --
+    they must precede their users in the filelist (KV-P6 18:51: ot_qfd_emb_pkg missing -> yosys 'unexpected import')."""
+    uses = {f: set(PKG_USE.findall(E._strip(Path(f).read_text(errors="replace")))) for f in files}
+    # packages live beside their users: index the kit files' own directories first, the whole RTL roots only when a
+    # referenced *pkg* name is still unresolved
+    pidx = _pkg_index(sorted({str(Path(f).resolve().parent) for f in files}), base, recurse=False)
+    want = {u for us in uses.values() for u in us if "pkg" in u.lower()}
+    if want - set(pidx):
+        key = (tuple(roots), str(base))
+        if key not in _PKG_CACHE:
+            _PKG_CACHE[key] = _pkg_index(roots, base)
+        pidx = {**_PKG_CACHE[key], **pidx}
+    order, seen = [], set()
+
+    def need(f, us=None):
+        for u in sorted(us if us is not None else set(PKG_USE.findall(E._strip(Path(f).read_text(errors="replace"))))):
+            if u in pidx and u not in seen:
+                seen.add(u)
+                need(pidx[u])               # its own imports first
+                order.append(Path(pidx[u]))
+    for f in files:
+        need(f, uses[f])
+    return order                            # kit_dedupe keeps the first (package-first) occurrence
+
+
+_PKG_CACHE = {}
+
+
+def _pkg_index(roots, base, recurse=True):
+    pidx = {}
+    for r in roots:
+        rp = Path(r) if Path(r).is_absolute() else Path(base) / r
+        g = rp.rglob if recurse else rp.glob
+        for p in (sorted(list(g("*.sv")) + list(g("*.v"))) if rp.is_dir() else [rp]):
+            if E.SKIP_DIR.search(str(p)):
+                continue
+            try:
+                t = p.read_text(errors="replace")
+            except OSError:
+                continue
+            if "package" in t:
+                for m in PKG_DEF.finditer(E._strip(t)):
+                    pidx.setdefault(m.group(1), str(p.resolve()))
+    return pidx
+
+
+BODY_IMPORT = re.compile(r"^[ \t]+import\s+([A-Za-z_]\w*)::\*\s*;[ \t]*$", re.M)
+
+
+def kit_inline_imports(fl, kd):
+    """Yosys read_verilog rejects a package import inside a module body ('unexpected TOK_IMPORT'): such a file is
+    copied into KIT/inline/ with each `import P::*;` replaced by P's body (the tools/emb_hbm_synth_sources.py transform,
+    original sources unchanged); the copy takes the original's place in the list.  -> files, {copy: record}"""
+    pk = {}
+    for f in fl:
+        t = Path(f).read_text(errors="replace")
+        for m in re.finditer(r"^\s*package\s+(\w+)\s*;(.*?)^\s*endpackage\b", t, re.S | re.M):
+            pk[m.group(1)] = m.group(2)
+    out, rec = [], {}
+    for f in fl:
+        t = Path(f).read_text(errors="replace")
+        hits = [m for m in BODY_IMPORT.finditer(t) if m.group(1) in pk]
+        if not hits:
+            out.append(f)
+            continue
+        new = BODY_IMPORT.sub(lambda m: pk[m.group(1)] if m.group(1) in pk else m.group(0), t)
+        d = Path(kd) / "inline"
+        d.mkdir(exist_ok=True)
+        c = d / Path(f).name
+        c.write_text(new)
+        rec[str(c)] = dict(original=str(f), packages=sorted({m.group(1) for m in hits}),
+                           original_sha256=hashlib.sha256(t.encode()).hexdigest()[:16])
+        out.append(c)
+    return out, rec
+
+
+def kit_dedupe(tn, fl):
+    """one file per basename (gen_phys flattens rtl/): identical copies are dropped, different contents are an error."""
+    out, by = [], {}
+    for f in fl:
+        f = Path(f)
+        if f.name in by:
+            if by[f.name].read_bytes() != f.read_bytes():
+                raise BindError(f"kit-rtl {tn}: two different files named {f.name}: {by[f.name]} vs {f}")
+            continue
+        by[f.name] = f
+        out.append(f)
+    return out
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -2394,16 +2538,30 @@ def cmd_kit_rtl(a):
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
-    cl, cl_missing = E.closure(leafm, idx, prefer)
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer)
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
     files = [Path(f).resolve() for f in cl]
+    pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
-    fl = [kd / f"{mod}.sv", bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] + [f for f in files if f.name != "bind_cells.sv"]
+    fl = kit_dedupe(tn, [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] +
+                    [f for f in files if f.name != "bind_cells.sv"])
+    fl, inlined = kit_inline_imports(fl, kd)
+    sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
+    if sims:
+        raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
+    # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
+    bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
+    (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
-               plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl])
+               plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
+               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined,
+               hard_macros=dict(sorted(macros.items())),
+               hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
+                                "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
+                                "type_macros); kit_rtl_sim.f carries the behavioural models")
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(kit=str(kd), module=mod, bound=bmod, variants=len(variants), files=len(fl),
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
