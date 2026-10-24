@@ -35,6 +35,11 @@ CELLS = """`timescale 1ns/1ps
 // ot_dp_st: one partition station / boundary flop.  W data bits with NO reset (flushed by the producer under the static
 // schedule) plus one epoch bit: asynchronously cleared by the partition's synchronised reset rst_n, then loading ea (the
 // upstream epoch, or rst_n itself at a lane source).  The Qwen ot_qfd_lane_st pattern on the partition clock.
+// (* keep_hierarchy, keep *) on ot_dp_st / ot_dp_ste / ot_dp_ep (CP1-R10 10-24, face_guard.py): every planned face
+// register survives Yosys as its own flop.  Flattened, opt_merge folded identical boundary flops of different buses
+// into one flop driving several ports (CP1 r6/r10: xo_o0[682] + xo_o0[225]), opt_clean dropped in-bus flops whose q
+// the leaf leaves unused (r10: 120 frame_int_i0 bits) and opt_dff / wreduce removed constant-D out flops.
+(* keep_hierarchy, keep *)
 module ot_dp_st #(parameter integer W = 1) (
     input  wire         clk,
     input  wire         rst_n,
@@ -51,11 +56,12 @@ endmodule
 // every such eq has the same D, clock and reset, so Yosys opt_merge folded them into ONE flop that drove the epoch
 // pins of several faces (S81 r0 frames: u_bout_xo_o0.eq -> ret_o0[70] 2.27 mm, unregistered at its face).  The
 // epoch flop sits in a kept module (ot_dp_ep), so each station keeps its own, placed at its own face.
-(* keep_hierarchy *)
+(* keep_hierarchy, keep *)
 module ot_dp_ep (input wire clk, input wire rst_n, input wire ea, output reg eq);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
 endmodule
+(* keep_hierarchy, keep *)
 module ot_dp_ste #(parameter integer W = 1) (
     input  wire         clk,
     input  wire         rst_n,
