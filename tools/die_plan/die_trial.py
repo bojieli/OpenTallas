@@ -560,7 +560,7 @@ def bumps_tcl(P, bumps, size=4.0):
     """
     t = ["set block [ord::get_db_block]", "set m9 [[ord::get_db_tech] findLayer M9]",
          "set bump_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
-         "set bump_shapes {}",
+         "set bump_shapes {}", "set bump_x_cache {}",
          "foreach net_name {VDD VSS} {",
          "  set shapes {}",
          "  foreach wire [[$block findNet $net_name] getSWires] {",
@@ -574,8 +574,18 @@ def bumps_tcl(P, bumps, size=4.0):
          "}"]
     for k, (net, x, y) in enumerate(bumps):
         t += [f"set bx [expr {{{x:g}*$bump_dbu}}]; set by [expr {{{y:g}*$bump_dbu}}]",
+              f"set cache_key [list {net} $bx]",
+              "if {![dict exists $bump_x_cache $cache_key]} {",
+              "  set nearest {}; set x_distance 1e30",
+              f"  foreach rect [dict get $bump_shapes {net}] {{",
+              "    lassign $rect x0 y0 x1 y1",
+              "    set dx [expr {abs(($x0+$x1)/2.0-$bx)}]",
+              "    if {$dx < $x_distance} { set x_distance $dx; set nearest [list $rect] } elseif {$dx == $x_distance} { lappend nearest $rect }",
+              "  }",
+              "  dict set bump_x_cache $cache_key $nearest",
+              "}",
               "set best {}; set best_distance 1e30",
-              f"foreach rect [dict get $bump_shapes {net}] {{",
+              "foreach rect [dict get $bump_x_cache $cache_key] {",
               "  lassign $rect x0 y0 x1 y1",
               "  set cx [expr {($x0+$x1)/2.0}]",
               f"  set half [expr {{min({size:g}*$bump_dbu/2.0,($y1-$y0)/2.0)}}]",
@@ -589,7 +599,7 @@ def bumps_tcl(P, bumps, size=4.0):
               f"set bt [odb::dbBTerm_create [$block findNet {net}] {net}_b{k}]; $bt setIoType INOUT; "
               f"$bt setSigType {'POWER' if net == 'VDD' else 'GROUND'}; set bp [odb::dbBPin_create $bt]",
               "odb::dbBox_create $bp $m9 {*}$best; $bp setPlacementStatus FIRM"]
-    t.append(f'puts "OT_BUMPS actual_m9_sources {len(bumps)}"')
+    t.append(f'puts "OT_BUMPS actual_m9_sources {len(bumps)} cached_columns [dict size $bump_x_cache]"')
     return "\n".join(t) + "\n"
 
 
