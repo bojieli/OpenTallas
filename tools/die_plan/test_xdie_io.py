@@ -30,3 +30,19 @@ def test_missing_host_flag_lanes_pitch():
     rules = {e["rule"] for e in errs}
     assert {"missing", "lanes", "pitch", "host"} <= rules
     assert any("lk_X" in w["msg"] for w in warns)
+
+
+def test_xdie_io_in_band_host():
+    S = {"lk_A": dict(part="lk_A", iface="serdes", signals=26, pitch_um=150.0, host="in_band"),
+         "lk_B": dict(part="lk_B", iface="serdes", signals=26, pitch_um=150.0)}
+    rows = [dict(id="c1", cls="stage_hop", a_unit="S1", b_unit="S2", a_macros="lk_B", b_macros="lk_A",
+                 lanes_per_dir="6")]
+    errs, warns, summ = X.check(rows, {"S": S})
+    assert not errs and summ["roles"]["S"]["in_band_host_windows"] == ["lk_A"] and summ["roles"]["S"]["host_windows"] == []
+    S["lk_B"]["host"] = True                                          # a dedicated host window without a host circuit
+    errs, _, _ = X.check(rows, {"S": S})
+    assert [e["rule"] for e in errs] == ["host"]
+    S["lk_B"].pop("host")
+    rows[0].update(a_macros="lk_B", b_macros="lk_B")                  # in-band window wired by no circuit
+    errs, _, _ = X.check(rows, {"S": S})
+    assert any("in-band host windows ['lk_A']" in e["msg"] for e in errs)

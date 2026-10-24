@@ -1,0 +1,21 @@
+
+7. Printing statistics.
+
+=== cal_pad ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      523        - wires
+     1153        - wire bits
+       11        - public wires
+      641        - public wire bits
+        3        - ports
+      129        - port bits
+     1024  171.694 cells
+      512  149.299   DFFHQNx1_ASAP7_75t_R
+      512   22.395   INVx1_ASAP7_75t_R
+
+   Chip area for module '\cal_pad': 171.694080
+     of which used for sequential elements: 149.299200 (86.96%)
+

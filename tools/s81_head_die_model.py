@@ -10,7 +10,10 @@ area / floorplan slot fit and the latency contribution to the single-user token.
 Sources (all committed):
   - head bundle RTL rtl/v41rom/ot_dsrom_head_bundle.sv: 5 logical elements = 10 x ot_rom_4096x274_m8, 128 vocab rows,
     `go` at G, x slice m at G + 5 + m (m < 8192 + 7 SK); tile README physical/ref_tile/s81hd_tile_m (go -> result
-    8,359 with IOREG 1 / SAFE 1; mini array spo -> 2 tiles -> spr 8,375, token 21946 exact).
+    8,359 with IOREG 1 / SAFE 1; mini array spo -> 2 tiles -> spr 8,375, token 21946 exact) at CUT 0x17b; the tile is
+    rebased (10-24) on the CLOSED element views' CUT 0x1ff / SPLIT9 1 (SK 11): +54 cycles (mini array 8,429, exact),
+    ot_s81hd_elem == closed RTL proven by tools/s81_head/hd_elem_eq.sh.
+  - OWNER 2026-10-24: 4 head dies (one TP4 group), no HBM on head dies.
   - CLOSED element views (SS sign-off): dshead-elemA-ss-f11f3cc47 (317.672 x 317.672, SS +133.67 / FF +10.81 ps) and
     dshead-elemB-ss-a318fdf47 (277.652 x 277.652, SS +91.75 / FF +19.13 ps), physical/dsrom_fh_safe/closed/elem{A,B}.
     elemB 163,817 cells (results/rtl/dsrom_fh_redesign_20261006/elemB_final/history/original_physical.json).
@@ -38,7 +41,8 @@ BUNDLES = VOCAB // ROWS_PER_BUNDLE       # 1010
 ELEMS = dict(A=4, B=1)                   # A: 32 rows x K 0..4095 (LV 8); B: 128 rows x K 4096..5119 (LV 6, PAD 2)
 ROM = dict(macro="ot_rom_4096x274_m8", words=4096, bits=274, per_bundle=10, area_um2=7881.4,
            src="results/uarch/v41_rom_depth_study.json")
-BUNDLE_GO_TO_RESULT = 8_359              # IOREG 1 / SAFE 1 (tile README, SAFE point 8)
+BUNDLE_GO_TO_RESULT = 8_359 + 54         # IOREG 1 / SAFE 1 (tile README, SAFE point 8) at CUT 0x17b; +54 at the CLOSED
+                                         # element views' CUT 0x1ff / SPLIT9 1 (S81-HEAD 10-24: mini array 8,375 -> 8,429)
 X_BEATS = D_MODEL * 16 // 512            # 160 beats of 512 b on the stage circuit (XB in)
 ELEM_VIEW = dict(A=dict(job="dshead-elemA-ss-f11f3cc47", um=317.672, ss_ps=133.67, ff_ps=10.81,
                         cells=None, cells_basis="ASSUMED: elemB cells x area ratio (no elemA count committed)"),
@@ -59,6 +63,9 @@ FRAME = (1442.88, 1226.88)               # = layer-die frame (lep LP / station p
 SEAL = 103.68
 ELEM_SLOT = 345.6                        # 40 x 8.64: elemA 317.672 + ~19-um channel; 2 x 3 slots a tile
 TURN_W = 172.8                          # 566 chain pins on the U-turn N/S faces at <= 3.5 / um
+TILE_W_EXTRA = 17.28                     # 10-24 G3 floorplan review (S81-HEAD): edge strips 17.28 / 19.29 um + a
+                                         # 36.6-um centre column for the elements' W-face x pins and E-face controls
+                                         # (the 691.2 tile left 8.64-um slivers); paid by the spine column, not the die
 
 
 def _lat(x):
@@ -67,7 +74,7 @@ def _lat(x):
 
 def tile():
     cells = ELEMS["A"] * ELEM_VIEW["A"]["cells"] + ELEMS["B"] * ELEM_VIEW["B"]["cells"] + TILE_GLUE_CELLS
-    w, h = round(2 * ELEM_SLOT, 4), round(3 * ELEM_SLOT, 4)
+    w, h = round(2 * ELEM_SLOT + TILE_W_EXTRA, 4), round(3 * ELEM_SLOT, 4)
     core_um2 = ELEMS["A"] * ELEM_VIEW["A"]["um"] ** 2 + ELEMS["B"] * ELEM_VIEW["B"]["um"] ** 2
     macs = ROWS_PER_BUNDLE * D_MODEL / 8192.0           # one 16-lane BF16 word a cycle per element
     return dict(
@@ -79,7 +86,7 @@ def tile():
         macs_per_cycle=macs, rom_bits_per_cycle=ELEMS["A"] * ROM["bits"] + ELEMS["B"] * ROM["bits"],
         x_in_bits_per_cycle=512, chain_bus_bits=565,
         chain_bus="bus B: x 512 (xa K0..4095 / xb K4096..5119) + go + xv + rv + row17 + bits32 (FP32 logit) + flt",
-        go_to_result=BUNDLE_GO_TO_RESULT, x_stream_cycles=8192 + 7 * 7,
+        go_to_result=BUNDLE_GO_TO_RESULT, x_stream_cycles=8192 + 7 * 11,
         face_pins=dict(i=565 + 1, o=565 + 1, note="+1 epoch bit; on a 345.6-um window with M4+M6 = 1.6 pins/um"))
 
 
@@ -119,10 +126,10 @@ def latency(fp):
     L = fp["spine"]["levels"]
     chain = fp["tiles"]["tiles_per_chain"]
     x_fill = L * (2 + level_st) + node_st + 2 * chain // 2           # down the spine, into the farthest chain head
-    ret = 2 * chain // 2 + 4 + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
+    ret = 2 * chain // 2 + (2 + 4) + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
     rows = dict(xb_ingress=X_BEATS + 2, x_fill_and_return=x_fill + ret, bundle=BUNDLE_GO_TO_RESULT,
-                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 2 * 48 + 10,
-                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: worst mesh core lanes LAT_HD_M0S_TX/RX = 48 each
+                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 49 + 51 + 10,
+                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: actual-bit reach repair: M0S_TX49/RX51; return turn4FT+2face stages
     tot = sum(rows.values())
     return dict(rows=rows, total=tot, calendar_head_window=CAL["head_window"],
                 vs_calendar=tot - CAL["head_window"],

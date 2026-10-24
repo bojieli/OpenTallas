@@ -1,0 +1,697 @@
+{
+ "schema": "opentallas.kv.core_rtl_checks.v1",
+ "source": "kv_core_rtl.py on binder4 kv41 G3 kit RTL (~/scratch/kv-g3/kit_rtl/g3), plan v3.8s",
+ "splits": {
+  "kv3_hg": {
+   "cores": [
+    "head0_e0",
+    "head0_e1",
+    "head0_e2",
+    "head0_e3",
+    "head0_e4",
+    "head0_e5",
+    "head0_e6",
+    "head0_e7",
+    "head1_e0",
+    "head1_e1",
+    "head1_e2",
+    "head1_e3",
+    "head1_e4",
+    "head1_e5",
+    "head1_e6",
+    "head1_e7",
+    "ectl"
+   ],
+   "equiv": "PASS",
+   "endpoints": 94804,
+   "groups": 45745,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_hgi": {
+   "cores": [
+    "head2_e0",
+    "head2_e1",
+    "head2_e2",
+    "head2_e3",
+    "head2_e4",
+    "head2_e5",
+    "head2_e6",
+    "head2_e7",
+    "head3_e0",
+    "head3_e1",
+    "head3_e2",
+    "head3_e3",
+    "head3_e4",
+    "head3_e5",
+    "head3_e6",
+    "head3_e7"
+   ],
+   "equiv": "PASS",
+   "endpoints": 76434,
+   "groups": 36659,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_hub_C": {
+   "cores": [
+    "ahub"
+   ],
+   "equiv": "PASS",
+   "endpoints": 86465,
+   "groups": 41207,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_hub_Eo": {
+   "cores": [
+    "astk_EN",
+    "astk_ES"
+   ],
+   "equiv": "PASS",
+   "endpoints": 57394,
+   "groups": 28143,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_hub_Wo": {
+   "cores": [
+    "astk_WN",
+    "astk_WS"
+   ],
+   "equiv": "PASS",
+   "endpoints": 57473,
+   "groups": 28181,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_pc": {
+   "cores": [
+    "kvpc0",
+    "kvpc1",
+    "kvpc2",
+    "kvpc3"
+   ],
+   "equiv": "PASS",
+   "endpoints": 52522,
+   "groups": 26168,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  },
+  "kv3_pv": {
+   "cores": [
+    "pvg0_p0",
+    "pvg0_p1",
+    "pvg0_p2",
+    "pvg0_p3",
+    "pvg1_p0",
+    "pvg1_p1",
+    "pvg1_p2",
+    "pvg1_p3",
+    "pvg2_p0",
+    "pvg2_p1",
+    "pvg2_p2",
+    "pvg2_p3",
+    "pvg3_p0",
+    "pvg3_p1",
+    "pvg3_p2",
+    "pvg3_p3"
+   ],
+   "equiv": "PASS",
+   "endpoints": 87126,
+   "groups": 38085,
+   "lint_split_with_cores": 0,
+   "lint_split_with_bb": 0
+  }
+ },
+ "cores": {
+  "kv3_head_eighth_e0": {
+   "type": "kv3_hg",
+   "inst": "head0_e0",
+   "members": 8,
+   "ports": 31,
+   "pin_bits": 1800,
+   "classes": {
+    "in": 1289,
+    "clk_unused": 7,
+    "clk": 1,
+    "out": 501,
+    "strap": 2
+   },
+   "plan_pins": 1798,
+   "kv41_boundary_pins": 1798,
+   "added": [],
+   "stale": [],
+   "straps": [
+    {
+     "pin": "g_front_0_u_front__hid",
+     "width": 2,
+     "param": "S_head0_g_front_0_u_front_hid",
+     "value": "2'b00"
+    }
+   ],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_front_0_u_front__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e1": {
+   "type": "kv3_hg",
+   "inst": "head0_e1",
+   "members": 6,
+   "ports": 20,
+   "pin_bits": 544,
+   "classes": {
+    "clk_unused": 5,
+    "clk": 1,
+    "in": 470,
+    "out": 68
+   },
+   "plan_pins": 544,
+   "kv41_boundary_pins": 544,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_t_2_u_l8__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e2": {
+   "type": "kv3_hg",
+   "inst": "head0_e2",
+   "members": 7,
+   "ports": 29,
+   "pin_bits": 1356,
+   "classes": {
+    "in": 812,
+    "clk_unused": 6,
+    "clk": 1,
+    "out": 535,
+    "strap": 2
+   },
+   "plan_pins": 1354,
+   "kv41_boundary_pins": 1354,
+   "added": [],
+   "stale": [],
+   "straps": [
+    {
+     "pin": "g_front_1_u_front__hid",
+     "width": 2,
+     "param": "S_head0_g_front_1_u_front_hid",
+     "value": "2'b00"
+    }
+   ],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_front_1_u_front__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e3": {
+   "type": "kv3_hg",
+   "inst": "head0_e3",
+   "members": 6,
+   "ports": 20,
+   "pin_bits": 544,
+   "classes": {
+    "clk_unused": 5,
+    "clk": 1,
+    "in": 470,
+    "out": 68
+   },
+   "plan_pins": 544,
+   "kv41_boundary_pins": 544,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_t_6_u_l8__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e4": {
+   "type": "kv3_hg",
+   "inst": "head0_e4",
+   "members": 7,
+   "ports": 29,
+   "pin_bits": 1356,
+   "classes": {
+    "in": 812,
+    "clk_unused": 6,
+    "clk": 1,
+    "out": 535,
+    "strap": 2
+   },
+   "plan_pins": 1354,
+   "kv41_boundary_pins": 1354,
+   "added": [],
+   "stale": [],
+   "straps": [
+    {
+     "pin": "g_front_2_u_front__hid",
+     "width": 2,
+     "param": "S_head0_g_front_2_u_front_hid",
+     "value": "2'b00"
+    }
+   ],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_front_2_u_front__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e5": {
+   "type": "kv3_hg",
+   "inst": "head0_e5",
+   "members": 6,
+   "ports": 20,
+   "pin_bits": 544,
+   "classes": {
+    "clk_unused": 5,
+    "clk": 1,
+    "in": 470,
+    "out": 68
+   },
+   "plan_pins": 544,
+   "kv41_boundary_pins": 544,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_t_10_u_l8__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e6": {
+   "type": "kv3_hg",
+   "inst": "head0_e6",
+   "members": 7,
+   "ports": 29,
+   "pin_bits": 1356,
+   "classes": {
+    "in": 812,
+    "clk_unused": 6,
+    "clk": 1,
+    "out": 535,
+    "strap": 2
+   },
+   "plan_pins": 1354,
+   "kv41_boundary_pins": 1354,
+   "added": [],
+   "stale": [],
+   "straps": [
+    {
+     "pin": "g_front_3_u_front__hid",
+     "width": 2,
+     "param": "S_head0_g_front_3_u_front_hid",
+     "value": "2'b00"
+    }
+   ],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_front_3_u_front__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_head_eighth_e7": {
+   "type": "kv3_hg",
+   "inst": "head0_e7",
+   "members": 6,
+   "ports": 20,
+   "pin_bits": 544,
+   "classes": {
+    "clk_unused": 5,
+    "clk": 1,
+    "in": 470,
+    "out": 68
+   },
+   "plan_pins": 544,
+   "kv41_boundary_pins": 544,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "g_t_14_u_l8__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 34,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "qkd_ectlk": {
+   "type": "kv3_hg",
+   "inst": "ectl",
+   "members": 1,
+   "ports": 30,
+   "pin_bits": 5497,
+   "classes": {
+    "in": 1860,
+    "clk_unused": 2,
+    "clk": 1,
+    "out": 3622,
+    "gap_out": 12
+   },
+   "plan_pins": 5485,
+   "kv41_boundary_pins": 5485,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [
+    "so[1]",
+    "so[2]",
+    "so[3]",
+    "so[4]",
+    "so[5]",
+    "so[6]",
+    "so[7]",
+    "so[8]",
+    "so[9]",
+    "so[10]",
+    "so[11]",
+    "so[12]"
+   ],
+   "clock_nets": {
+    "clk": "ck[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 8,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "qkd_ahub": {
+   "type": "kv3_hub_C",
+   "inst": "ahub",
+   "members": 1,
+   "ports": 20,
+   "pin_bits": 629,
+   "classes": {
+    "out": 290,
+    "in": 338,
+    "clk": 1
+   },
+   "plan_pins": 629,
+   "kv41_boundary_pins": 629,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_astk_EN": {
+   "type": "kv3_hub_Eo",
+   "inst": "astk_EN",
+   "members": 6,
+   "ports": 15,
+   "pin_bits": 1692,
+   "classes": {
+    "in": 1015,
+    "clk": 1,
+    "out": 616,
+    "out_alias": 60
+   },
+   "plan_pins": 1690,
+   "kv41_boundary_pins": 1702,
+   "added": [
+    {
+     "pin": "ck",
+     "bit": null,
+     "why": "clock net: no clock pin in the pins file",
+     "leaf_bits": 6
+    },
+    {
+     "pin": "rst_n",
+     "bit": null,
+     "why": "kv41 boundary net (outside driver) has no pin",
+     "leaf_bits": 6,
+     "reset": true
+    }
+   ],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck"
+   },
+   "leaf_renamed": [],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_astk_ES": {
+   "type": "kv3_hub_Eo",
+   "inst": "astk_ES",
+   "members": 6,
+   "ports": 15,
+   "pin_bits": 1692,
+   "classes": {
+    "in": 1015,
+    "clk": 1,
+    "out": 616,
+    "out_alias": 60
+   },
+   "plan_pins": 1690,
+   "kv41_boundary_pins": 1702,
+   "added": [
+    {
+     "pin": "ck",
+     "bit": null,
+     "why": "clock net: no clock pin in the pins file",
+     "leaf_bits": 6
+    },
+    {
+     "pin": "rst_n",
+     "bit": null,
+     "why": "kv41 boundary net (outside driver) has no pin",
+     "leaf_bits": 6,
+     "reset": true
+    }
+   ],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck"
+   },
+   "leaf_renamed": [],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_astk_WN": {
+   "type": "kv3_hub_Wo",
+   "inst": "astk_WN",
+   "members": 6,
+   "ports": 15,
+   "pin_bits": 1692,
+   "classes": {
+    "in": 1015,
+    "clk": 1,
+    "out": 616,
+    "out_alias": 60
+   },
+   "plan_pins": 1690,
+   "kv41_boundary_pins": 1702,
+   "added": [
+    {
+     "pin": "ck",
+     "bit": null,
+     "why": "clock net: no clock pin in the pins file",
+     "leaf_bits": 6
+    },
+    {
+     "pin": "rst_n",
+     "bit": null,
+     "why": "kv41 boundary net (outside driver) has no pin",
+     "leaf_bits": 6,
+     "reset": true
+    }
+   ],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck"
+   },
+   "leaf_renamed": [],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_astk_WS": {
+   "type": "kv3_hub_Wo",
+   "inst": "astk_WS",
+   "members": 6,
+   "ports": 15,
+   "pin_bits": 1692,
+   "classes": {
+    "in": 1015,
+    "clk": 1,
+    "out": 616,
+    "out_alias": 60
+   },
+   "plan_pins": 1690,
+   "kv41_boundary_pins": 1702,
+   "added": [
+    {
+     "pin": "ck",
+     "bit": null,
+     "why": "clock net: no clock pin in the pins file",
+     "leaf_bits": 6
+    },
+    {
+     "pin": "rst_n",
+     "bit": null,
+     "why": "kv41 boundary net (outside driver) has no pin",
+     "leaf_bits": 6,
+     "reset": true
+    }
+   ],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck"
+   },
+   "leaf_renamed": [],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "qkd_kvs_pc": {
+   "type": "kv3_pc",
+   "inst": "kvpc1",
+   "members": 1,
+   "ports": 27,
+   "pin_bits": 4396,
+   "classes": {
+    "clk": 2,
+    "in": 2097,
+    "out": 2297
+   },
+   "plan_pins": 4396,
+   "kv41_boundary_pins": 4396,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck[0]",
+    "clk_clk_hbm": "hck[0]"
+   },
+   "leaf_renamed": [
+    [
+     "qkd_kvs_pc"
+    ]
+   ],
+   "slots": 15,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "qkd_kvs_pc_h_head_p": {
+   "type": "kv3_pc",
+   "inst": "kvpc0",
+   "members": 1,
+   "ports": 22,
+   "pin_bits": 3278,
+   "classes": {
+    "clk": 2,
+    "in": 1792,
+    "out": 1484
+   },
+   "plan_pins": 3278,
+   "kv41_boundary_pins": 3278,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "ck[0]",
+    "clk_clk_hbm": "hck[0]"
+   },
+   "leaf_renamed": [
+    [
+     "qkd_kvs_pc_h_head_p"
+    ]
+   ],
+   "slots": 1,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  },
+  "kv3_pv_pair": {
+   "type": "kv3_pv",
+   "inst": "pvg0_p0",
+   "members": 2,
+   "ports": 14,
+   "pin_bits": 1652,
+   "classes": {
+    "in": 624,
+    "clk_unused": 1,
+    "clk": 1,
+    "out": 1026
+   },
+   "plan_pins": 1652,
+   "kv41_boundary_pins": 1652,
+   "added": [],
+   "stale": [],
+   "straps": [],
+   "gap_bits": [],
+   "clock_nets": {
+    "clk": "s0__clk[0]"
+   },
+   "leaf_renamed": [],
+   "slots": 208,
+   "slots_boundary_differs": 0,
+   "slots_structure_differs": 0,
+   "lint_errors": 0
+  }
+ }
+}

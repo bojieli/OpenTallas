@@ -1,0 +1,4106 @@
+{
+ "admission": {
+  "components_admitted": [],
+  "components_rejected": [],
+  "element_rules": "toksim_s81_compose strict admission (measured grade AND bit_exact); excluded: attn.wq_b",
+  "layer_cycles_admitted": [],
+  "layer_cycles_rejected": []
+ },
+ "clock_hz": 1200000000.0,
+ "design": "ds_rom (DeepSeek-V4.1) on the S81 array",
+ "die_plan": {
+  "lanes": 834,
+  "latency_table": "physical/die_plan/s81/lat/s81_latency.json",
+  "latency_table_sha256": "8f2e043792e2346a66746b72879b1e866e4a7cfa17fbde7d87d2a5d130fc705a",
+  "period_ps": 833,
+  "plan": "physical/die_plan/s81/die_plan.json",
+  "plan_digest_in_table": "b4ac6d49d5198cd0",
+  "plan_digest_of_plan": "b4ac6d49d5198cd0",
+  "r8_variant": {
+   "lanes": 820,
+   "plan_digest": "b8e46d3348066b83",
+   "table": "physical/die_plan/s81/r8/s81_latency.json",
+   "verdict": "NOT of record: BINDER4-S81 as-built bind on plan v4.6 (474d1c07a) + R8 landing pads on v4.7b bus groups; 13 shared lanes 1..2 cycles longer, 18 v4.8 lanes absent"
+  },
+  "table_of_record": true,
+  "version": "v4.8 (847f8568f, sha ea36999b, G0 PASS; G2 PASS 3be3c7df1)"
+ },
+ "grades": {
+  "measured-current-RTL": "measured on RTL whose every named module is blob-identical to this tree (or a PASS receipt with mutant CAUGHT / a PASS layer replay)",
+  "measured-old-RTL": "measured, but on RTL that has since changed (or not verifiable): does NOT count",
+  "modelled-PHY": "off-chip leg, direct cabling D_cycles_max (modelled)",
+  "plan-v4.8-lane": "plan v4.8 latency-table lanes (register stages from the plan; a model of record, not measured)",
+  "priced": "analytic price / DAG number / release model term",
+  "priced-edge": "priced source-age edge"
+ },
+ "head": "978d80201fdb5831e29cb9e86f14596644050e5a",
+ "inputs": {
+  "base": "results/arch/token_path_1018/ds_rom.json",
+  "components": null,
+  "dags": {
+   "ar": "results/arch/token_path_20261009/ds_rom.json",
+   "mtp": "results/arch/token_path_20261009/ds_rom_mtp.json"
+  },
+  "elements": "results/token_pass/measured_s81_1019/elements",
+  "hop_latency": "results/arch/release_rack_1021/hop_latency.json",
+  "ladder": "results/token_pass/tokfunc3_s81_1021/ladder.json",
+  "layer_cycles": null,
+  "toksim": "tools/toksim_s81_compose.py"
+ },
+ "lane": "TOK-DS/COMPOSE",
+ "lane_map": [
+  {
+   "critical_delta": -15834.0,
+   "dag_term": "xdie on-die leg (priced 134 / LEG p4l 140 a crossing)",
+   "formula": "crossings x 2 ends x 7 x (ring_link + 5 rstop edges)",
+   "lane_quantity": "ring_link",
+   "lanes": [
+    "xring__s_0N_C__s_1N_C",
+    "xring__s_0S_C__s_1S_C",
+    "xring__s_1N_C__s_0N_C",
+    "xring__s_1N_C__s_2N_C",
+    "..."
+   ],
+   "nodes": {
+    "crit": 236,
+    "off": 35
+   },
+   "per_crossing": 98,
+   "per_unit": 2
+  },
+  {
+   "critical_delta": -29945.0,
+   "dag_term": "field op p4l die wire (r8 wire + s81 die tiles) / missing hub return",
+   "formula": "rounds x field_round (FIELD_WIRE table)",
+   "lane_quantity": "field_round",
+   "lanes": [
+    "x_W3_out",
+    "xo_W3_out_a",
+    "xo_W3_out_b",
+    "fi_W3_p6_r0r1",
+    "fi_W3_p6_r1r0",
+    "fi_W3_p6_r1r2",
+    "fi_W3_p6_r2r1",
+    "rt_W3_out_2"
+   ],
+   "ops": {
+    "attn.a_proj": {
+     "logic": 0,
+     "nodes": 35,
+     "old_wire": 170,
+     "rounds": 1,
+     "src": "FSMALL 531 = 361 + r8 142 + tiles 28; APSP per-layer values include the same +170",
+     "where": "main"
+    },
+    "attn.wo_a": {
+     "logic": 26,
+     "nodes": 40,
+     "old_wire": 612,
+     "rounds": 4,
+     "src": "FWOA 4862 = 4224 + r8 584 (= 4 x 146) + tiles 28 + 26 CAP edges",
+     "where": "main"
+    },
+    "attn.wo_b": {
+     "logic": 26,
+     "nodes": 40,
+     "old_wire": 174,
+     "rounds": 1,
+     "src": "FWOA 1464 = 1264 + r8 146 + tiles 28 + 26 CAP edges",
+     "where": "main"
+    },
+    "attn.wq_b": {
+     "logic": 52,
+     "nodes": 40,
+     "old_wire": 143,
+     "rounds": 1,
+     "src": "WQBG tail 195 = CAP EDLY 24 + VP hand-off 28 + die wire 143",
+     "where": "tail"
+    },
+    "ffn.down": {
+     "logic": 52,
+     "nodes": 40,
+     "old_wire": 143,
+     "rounds": 1,
+     "src": "FDOWN/FSDN 3084 = frame 2889 + priced tail 195 (as wq_b); the 195 was counted as measured",
+     "where": "main"
+    },
+    "ffn.experts_gu": {
+     "logic": 0,
+     "nodes": 40,
+     "old_wire": 0,
+     "rounds": 1,
+     "src": "FGU/FSGU 3680: die wire / hub return NOT included -> v4.8 round added (was missing)",
+     "where": "add"
+    },
+    "ffn.router": {
+     "logic": 0,
+     "nodes": 40,
+     "old_wire": 150,
+     "rounds": 1,
+     "src": "FSEQ 1419 = 1269 + r8 die wire 122 + tiles 28",
+     "where": "main"
+    },
+    "ffn.shared_gu": {
+     "logic": 0,
+     "nodes": 40,
+     "old_wire": 0,
+     "rounds": 1,
+     "src": "FGU 798: die wire / hub return NOT included -> v4.8 round added (was missing)",
+     "where": "add"
+    }
+   },
+   "per_unit": 63
+  },
+  {
+   "critical_delta": null,
+   "dag_term": "SU leaf-op hub / die-tile station tails",
+   "lane_quantity": "leaf_hub_rt",
+   "lanes": [
+    "dn_s_0N_L4",
+    "up_s_2N_L4"
+   ],
+   "ops": [
+    "attn.hc_post",
+    "attn.q_rope",
+    "attn.z_quant",
+    "ffn.bias",
+    "ffn.hc_post",
+    "ffn.softplus_sqrt"
+   ],
+   "per_unit": 13
+  },
+  {
+   "critical_delta": null,
+   "dag_term": "softmax normalize SO -> XS tail",
+   "lane_quantity": "svc_to_hub",
+   "lanes": [
+    "attn__svc_11__s_4S_C"
+   ],
+   "ops": [
+    "attn.normalize"
+   ],
+   "per_unit": 11,
+   "tail_critical_delta_total": -7128.0,
+   "tail_nodes": {
+    "attn.hc_post": 40,
+    "attn.normalize": 40,
+    "attn.q_rope": 40,
+    "attn.z_quant": 40,
+    "ffn.bias": 40,
+    "ffn.hc_post": 40,
+    "ffn.softplus_sqrt": 40
+   }
+  },
+  {
+   "critical_delta": 0,
+   "dag_term": "end slice <-> link (kd/ku + coll lanes)",
+   "formula": "NOT substituted: inside the measured(-old) xdie co-sim lane legs",
+   "lane_quantity": "link_end",
+   "lanes": [
+    "coll__lk_ES1__s_7S_LP",
+    "kd_s_0N"
+   ],
+   "per_unit": 24
+  }
+ ],
+ "lane_terms": {
+  "field_round": {
+   "cycles": 63,
+   "lanes": [
+    "x_W3_out",
+    "xo_W3_out_a",
+    "xo_W3_out_b",
+    "fi_W3_p6_r0r1",
+    "fi_W3_p6_r1r0",
+    "fi_W3_p6_r1r2",
+    "fi_W3_p6_r2r1",
+    "rt_W3_out_2"
+   ],
+   "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+  },
+  "leaf_hub_rt": {
+   "cycles": 13,
+   "lanes": [
+    "dn_s_0N_L4",
+    "up_s_2N_L4"
+   ],
+   "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+  },
+  "link_end": {
+   "cycles": 24,
+   "lanes": [
+    "coll__lk_ES1__s_7S_LP",
+    "kd_s_0N"
+   ],
+   "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+  },
+  "ring_link": {
+   "cycles": 2,
+   "lanes": [
+    "xring__s_0N_C__s_1N_C",
+    "xring__s_0S_C__s_1S_C",
+    "xring__s_1N_C__s_0N_C",
+    "xring__s_1N_C__s_2N_C",
+    "xring__s_1S_C__s_0S_C",
+    "xring__s_1S_C__s_2S_C",
+    "xring__s_2N_C__s_1N_C",
+    "xring__s_2N_C__s_3N_C",
+    "xring__s_2S_C__s_1S_C",
+    "xring__s_2S_C__s_3S_C",
+    "xring__s_3N_C__s_2N_C",
+    "xring__s_3N_C__s_4N_C"
+   ],
+   "rule": "max xring lane (slice hub C -> neighbour hub C)"
+  },
+  "svc_to_hub": {
+   "cycles": 11,
+   "lanes": [
+    "attn__svc_11__s_4S_C"
+   ],
+   "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+  }
+ },
+ "regrade": {
+  "a_allgather: current S81 die RTL (G8R2 p4m: rstop + lep + la :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "allreduce_20480: current S81 die RTL (G8R2 p4m: rstop + lep  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "argmax_merge: current S81 die RTL (G8R2 p4m: rstop + lep + l :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "cand_merge: current S81 die RTL (G8R2 p4m: rstop + lep + lan :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- a_allgather: current S81 die RTL (G8R2  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- allreduce_20480: current S81 die RTL (G :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- idx_topk_merge: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- router_allgather: current S81 die RTL ( :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- rows_allgather: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p2 <- rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- a_allgather: current S81 die RTL (G8R2  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- allreduce_20480: current S81 die RTL (G :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- idx_topk_merge: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- router_allgather: current S81 die RTL ( :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- rows_allgather: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p3 <- rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- a_allgather: current S81 die RTL (G8R2  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- allreduce_20480: current S81 die RTL (G :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- idx_topk_merge: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- router_allgather: current S81 die RTL ( :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- rows_allgather: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p4 <- rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- a_allgather: current S81 die RTL (G8R2  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- allreduce_20480: current S81 die RTL (G :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- idx_topk_merge: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- router_allgather: current S81 die RTL ( :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- rows_allgather: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p5 <- rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- a_allgather: current S81 die RTL (G8R2  :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- allreduce_20480: current S81 die RTL (G :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- idx_topk_merge: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- router_allgather: current S81 die RTL ( :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- rows_allgather: current S81 die RTL (G8 :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "composite wave.p6 <- rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "eng_rows_allgather: current S81 die RTL (G8R2 p4m: rstop + l :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "extra L14.scan_d_reader": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "extra L2.scan_d_reader": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "extra L20.scan_d_l20split_k6": {
+   "detail": {
+    "why": "base layer term, no element record: not verifiable against HEAD"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "extra L8.scan_d_reader": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "idx_topk_merge: current S81 die RTL (G8R2 p4m: rstop + lep + :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FGU.json :: ffn.shared_gu": {
+   "detail": {
+    "missing": [
+     "dsfd_pq_lx"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h9_l4_nx_b",
+     "dsfd_cfifo_crs4",
+     "ot_s81_land",
+     "ot_v41_rom_elem_q_qxpq_w10",
+     "ot_v41_spine_pq_static_w17w10"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FSDN.json :: ffn.down": {
+   "detail": {
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h9_l4_nx",
+     "dsfd_cfifo_crs4",
+     "dsfd_rly_frame_exact"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FSEQ.json :: ffn.router": {
+   "detail": {
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h10_l4_b",
+     "col_h9_MX_l4_b",
+     "col_h9_l4_nx_b"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FSGU.json :: ffn.experts_gu": {
+   "detail": {
+    "missing": [
+     "dsfd_pq_lx"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h9_l4_nx_b",
+     "dsfd_cfifo_crs4",
+     "ot_s81_land",
+     "ot_v41_rom_elem_q_qxpq_w10",
+     "ot_v41_spine_pq_static_w17w10"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FWOA.json :: attn.wo_a": {
+   "detail": {
+    "changed": [
+     "dsfd_bf_front_roots"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h10_l4_b",
+     "col_h9_l4_b",
+     "dsfd_bf_col"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/FWOA.json :: attn.wo_b": {
+   "detail": {
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "col_h10_l4",
+     "col_h10_l4_b",
+     "col_h9_l4",
+     "col_h9_l4_b",
+     "ot_s81sl_xs"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/GATH.json :: attn.gather": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_att",
+     "dsdv_svc_rs"
+    ],
+    "missing": [
+     "dsdv_svc_rs_entry"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_svc_pc"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/GATH.json :: attn.window_load": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_att",
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_svc_pc"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: attn.hc.pre_post": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: attn.hc.rsqrt": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: attn.hc.sinkhorn": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: embed": {
+   "detail": {
+    "missing": [
+     "ot_rom_8192x274_m8"
+    ],
+    "rev": "824ee5a9b",
+    "same": [
+     "ot_dsrom_embed_row_reader"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: ffn.hc.pre_post": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: ffn.hc.rsqrt": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: ffn.hc.sinkhorn": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: head.hc_pre": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vn",
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81sl_vq"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/HCL.json :: head.norm.scale": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vn",
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81sl_vq"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/IDXQF.json :: attn.idx.q_field": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/MTPD.json :: draft.fixed": {
+   "detail": {
+    "missing": [
+     "ot_rom_4096x274_m8",
+     "ot_s81_bundle_token_return"
+    ],
+    "rev": "98a2f06da",
+    "same": [
+     "ot_dsrom_head_bundle",
+     "ot_dsrom_head_elem",
+     "ot_rom_argmax_rows"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/MTPW.json :: wave.handoff": {
+   "detail": {
+    "changed": [
+     "dsdv_seq_host"
+    ],
+    "missing": [
+     "dsdv_sh_sq"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_dsdv_fixed_issue",
+     "ot_s81_fixed_issue"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SMX.json :: attn.den": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81_su_smh",
+     "ot_s81_su_smq",
+     "ot_s81_su_sms"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SMX.json :: attn.exp": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81_su_smh",
+     "ot_s81_su_smq",
+     "ot_s81_su_sms"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SMX.json :: attn.max": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81_su_smh",
+     "ot_s81_su_smq",
+     "ot_s81_su_sms"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SMX.json :: attn.normalize": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81_su_smh",
+     "ot_s81_su_smq",
+     "ot_s81_su_sms"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SMX.json :: attn.sink": {
+   "detail": {
+    "changed": [
+     "dsdv_svc_rs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "same": [
+     "ot_s81_su_smh",
+     "ot_s81_su_smq",
+     "ot_s81_su_sms"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.hc_pre": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vn",
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/HCL.json",
+    "same": [
+     "ot_s81sl_vq"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.kv_norm.rsqrt": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.kv_norm.scale": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.kv_norm.sumsq": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.norm.rsqrt": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.norm.scale": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.norm.sumsq": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.q_norm.rsqrt": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.q_norm.scale": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: attn.q_norm.sumsq": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: ffn.hc_pre": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: ffn.norm.rsqrt": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: ffn.norm.sumsq": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: ffn.route_w": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/SU.json :: ffn.swiglu": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/WQBG.json :: attn.wq_b": {
+   "detail": {
+    "changed": [
+     "col_h10_l4",
+     "col_h9_l4",
+     "ot_s81sl_cap",
+     "ot_s81sl_slice",
+     "ot_s81sl_xr"
+    ],
+    "missing": [],
+    "rev": "e9ed82c83",
+    "same": [
+     "col_h9_MX_l4",
+     "dsfd_bf_col",
+     "ot_s81sl_xs",
+     "ot_v41_rom_elem_q_qxpq_w10"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.a_proj": {
+   "detail": {
+    "modules": [
+     "col_h10_l4",
+     "col_h9_MX_l4",
+     "col_h9_l4_nx"
+    ],
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/APSP.json",
+    "source": "GENmu4c19bf4121e; same FSEQ binaries",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.hc_post": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vn",
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_dsrom_su_hcpost_lane_pr"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.idx.score": {
+   "detail": {
+    "changed": [
+     "dsdv_idx_rg"
+    ],
+    "missing": [
+     "ot_hdc_v41x_idx_engine"
+    ],
+    "rev": "4cc3975d1",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/IDX.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.idx.topk_final": {
+   "detail": {
+    "changed": [
+     "dsdv_bk_v",
+     "dsdv_bksel_c",
+     "ot_s81ph_sel"
+    ],
+    "missing": [
+     "dsdv_bksel_q"
+    ],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/IDX.json",
+    "same": [
+     "dsdv_bk_sel"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.idx.topk_local": {
+   "detail": {
+    "changed": [
+     "dsdv_bk_v",
+     "dsdv_bksel_c",
+     "ot_s81ph_sel"
+    ],
+    "missing": [
+     "dsdv_bksel_q"
+    ],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/IDX.json",
+    "same": [
+     "dsdv_bk_sel"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.q_quant": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_s81dv_norm"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.q_rope": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.quant": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_s81dv_norm"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: attn.z_quant": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_s81sl_vq"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: draft.head": {
+   "detail": {
+    "missing": [
+     "ot_rom_4096x274_m8",
+     "ot_s81_bundle_token_return"
+    ],
+    "rev": "98a2f06da",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/MTPD.json",
+    "same": [
+     "ot_dsrom_head_bundle",
+     "ot_dsrom_head_elem",
+     "ot_rom_argmax_rows"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: draft.markov": {
+   "detail": {
+    "missing": [],
+    "rev": "641239174",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/MTPD.json",
+    "same": [
+     "ot_dsrom_s81_head_amax_fh",
+     "ot_rom_argmax_rows"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-current-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: eng.add": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_slice"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: eng.dot": {
+   "detail": {
+    "modules": [],
+    "source": "",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: eng.gate": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_slice"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.bias": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.hc_post": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.norm.scale": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vp"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_s81dv_norm"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.quant2": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_slice",
+     "ot_s81sl_vs"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [
+     "ot_s81sl_vq",
+     "ot_s81sl_vsw"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.softplus_sqrt": {
+   "detail": {
+    "changed": [
+     "ot_s81sl_vs"
+    ],
+    "missing": [
+     "dsfd_su_t_rxsf"
+    ],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/SU.json",
+    "same": [],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.top6": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit",
+     "dsdv_gunit_l1"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/IDX.json",
+    "same": [
+     "ot_dsrom_su_bias_select",
+     "ot_hdc_select_tree"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: ffn.top6_order": {
+   "detail": {
+    "changed": [
+     "dsdv_gunit",
+     "dsdv_gunit_l1"
+    ],
+    "missing": [],
+    "rev": "19bf4121e",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/IDX.json",
+    "same": [
+     "ot_dsrom_su_bias_select",
+     "ot_hdc_select_tree"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: head.argmax": {
+   "detail": {
+    "modules": [],
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/HEADMU.json",
+    "source": "claude/tok-s81-headb-1018@641239174",
+    "why": "unverifiable: no resolvable source revision or no RTL module named"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-old-RTL"
+  },
+  "results/token_pass/measured_s81_1019/elements/zz_curation.json :: head.lm_head": {
+   "detail": {
+    "missing": [
+     "ot_s81_bundle_token_return"
+    ],
+    "rev": "98a2f06da",
+    "rtl_from": "results/token_pass/measured_s81_1019/elements/HEADMU.json",
+    "same": [
+     "ot_dsrom_head_bundle",
+     "ot_dsrom_head_elem",
+     "ot_rom_argmax_rows"
+    ],
+    "why": "every found module blob-identical to HEAD"
+   },
+   "from_grade": "measured-newest-element-RTL",
+   "to": "measured-current-RTL"
+  },
+  "router_allgather: current S81 die RTL (G8R2 p4m: rstop + lep :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "rows_allgather: current S81 die RTL (G8R2 p4m: rstop + lep + :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  },
+  "rstop logic 5 edges a stop (LEG law) :: substage_hop0": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "dsfd_dvland_276",
+     "dsfd_dvrlyh_276",
+     "rly_masters_dv276",
+     "rly_masters_dvh"
+    ],
+    "rev": "19bf4121e",
+    "same": [
+     "dsfd_dvland",
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-release-RTL",
+   "to": "measured-old-RTL"
+  },
+  "stage_hop: current S81 die RTL (G8R2 p4m: rstop + lep + lane :: ": {
+   "detail": {
+    "changed": [
+     "ot_s81_rly",
+     "ot_s81sl_rstop"
+    ],
+    "missing": [
+     "ot_s81sl_lep_mu"
+    ],
+    "rev": "0e6b9b710",
+    "same": [
+     "ot_s81_land"
+    ],
+    "why": "RTL changed since the measurement"
+   },
+   "from_grade": "measured-current-RTL",
+   "to": "measured-old-RTL"
+  }
+ },
+ "schema": "opentallas.tokds_compose.v1",
+ "unmapped": [
+  {
+   "kind": "field-node-old",
+   "op": "attn.a_proj",
+   "why": "node keeps its old DAG number (old r8 wire + tiles embedded, not separable)"
+  },
+  {
+   "kind": "field-node-old",
+   "op": "attn.cmp.wk",
+   "why": "node keeps its old DAG number (old r8 wire + tiles embedded)"
+  },
+  {
+   "kind": "field-node-old",
+   "op": "attn.idx.q",
+   "why": "node keeps its old DAG number (old r8 wire + tiles embedded)"
+  },
+  {
+   "kind": "field-node-old",
+   "op": "eng.wkv",
+   "why": "node keeps its old DAG number (old r8 wire + tiles embedded)"
+  },
+  {
+   "kind": "tail",
+   "op": "embed",
+   "why": "embed priced 751.3 (TP4 owner->4 ranks all_gather + SU expand + board leg; not a layer-die lane)"
+  },
+  {
+   "kind": "tail",
+   "op": "head.lm_head",
+   "why": "head die wire +34 (head die is not on the S81 layer-die plan; no head plan of record)"
+  },
+  {
+   "kind": "extra",
+   "op": "L*.dv_p4l (41 layer terms)",
+   "why": "p4l DV die deltas (landing, half-cycle hops, pin registers) on the critical nodes; per-layer sums only, no per-node split -> kept priced (partly double counts the v4.8 lanes above: an upper bound)"
+  },
+  {
+   "kind": "extra",
+   "op": "price_of_record_residual / scan_d legs / reindex",
+   "why": "ledger terms with no lane content of their own; kept priced"
+  },
+  {
+   "kind": "xdie",
+   "op": "measured xdie co-sim part (rstop + lep + lane legs, G8R2 p4m)",
+   "why": "lane legs are inside a measured span; v4.8 end-slice<->link lanes (kd/ku + coll) not separable; kept"
+  },
+  {
+   "kind": "xdie",
+   "op": "token.return (modelled-PHY 2194)",
+   "why": "no per-crossing split in the base record; kept as modelled-PHY (ladder token_return D = 251 a crossing)"
+  },
+  {
+   "kind": "node",
+   "op": "SU / select / hbm measured spans",
+   "why": "spans measured on p4l RTL include p4l on-die stations internally; not re-timed to v4.8 (needs the v4.8 die = layer replays)"
+  }
+ ],
+ "workloads": {
+  "ar": {
+   "T_cycles": 1353372.6,
+   "T_cycles_fixed": 1309389.1,
+   "T_cycles_solved": 1353372.6,
+   "by_grade": {
+    "measured-current-RTL": 404739.0,
+    "measured-old-RTL": 673847.4,
+    "modelled-PHY": 88572.0,
+    "plan-v4.8-lane": 39257.0,
+    "priced": 141217.2,
+    "priced-edge": 5740.0
+   },
+   "calendar_cross_check": {
+    "calendar_T_after_override": 1353372.6,
+    "diff": 0.0,
+    "this_T": 1353372.6
+   },
+   "critical_stage_table": [
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 180080.0,
+     "grades": {
+      "measured-old-RTL": 168960.0,
+      "plan-v4.8-lane": 10080.0,
+      "priced": 1040.0
+     },
+     "kinds": {
+      "logic": 168960.0,
+      "tail": 1040.0,
+      "wire": 10080.0
+     },
+     "not_measured_current": 180080.0,
+     "op": "attn.wo_a",
+     "share_pct": 13.31,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FWOA.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 150760.0,
+     "grades": {
+      "measured-current-RTL": 147200.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced-edge": 1040.0
+     },
+     "kinds": {
+      "edge": 1040.0,
+      "logic": 147200.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 3560.0,
+     "op": "ffn.experts_gu",
+     "share_pct": 11.14,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSGU.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 139040.0,
+     "grades": {
+      "measured-old-RTL": 134360.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 80.0
+     },
+     "kinds": {
+      "edge": 80.0,
+      "logic": 134360.0,
+      "tail": 2080.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 139040.0,
+     "op": "attn.wq_b",
+     "share_pct": 10.27,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/WQBG.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 120240.0,
+     "grades": {
+      "measured-current-RTL": 115560.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 80.0
+     },
+     "kinds": {
+      "edge": 80.0,
+      "logic": 115560.0,
+      "tail": 2080.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 4680.0,
+     "op": "ffn.down",
+     "share_pct": 8.88,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSDN.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 1,
+     "cycles": 56048.0,
+     "grades": {
+      "measured-old-RTL": 37696.0,
+      "modelled-PHY": 16492.0,
+      "plan-v4.8-lane": 1736.0,
+      "priced-edge": 124.0
+     },
+     "kinds": {
+      "edge": 124.0,
+      "logic": 4340.0,
+      "offchip": 16492.0,
+      "wire": 1736.0,
+      "xdie": 33356.0
+     },
+     "not_measured_current": 56048.0,
+     "op": "unplaced_hops",
+     "share_pct": 4.14,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 54320.0,
+     "grades": {
+      "measured-current-RTL": 50760.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced-edge": 1040.0
+     },
+     "kinds": {
+      "edge": 1040.0,
+      "logic": 50760.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 3560.0,
+     "op": "ffn.router",
+     "share_pct": 4.01,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSEQ.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 54120.0,
+     "grades": {
+      "measured-current-RTL": 50560.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 1040.0
+     },
+     "kinds": {
+      "logic": 50560.0,
+      "tail": 1040.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 3560.0,
+     "op": "attn.wo_b",
+     "share_pct": 4.0,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FWOA.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "count": 8,
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 47945.0
+     },
+     "kinds": {
+      "logic": 47945.0
+     },
+     "not_measured_current": 47945.0,
+     "op": "attn.idx.topk_local",
+     "share_pct": 3.54,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "count": 40,
+     "cycles": 43040.0,
+     "grades": {
+      "priced": 43040.0
+     },
+     "kinds": {
+      "logic": 43040.0
+     },
+     "not_measured_current": 43040.0,
+     "op": "attn.pv",
+     "share_pct": 3.18,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "coll",
+     "count": 40,
+     "cycles": 41120.0,
+     "grades": {
+      "measured-old-RTL": 18640.0,
+      "modelled-PHY": 20080.0,
+      "plan-v4.8-lane": 2240.0,
+      "priced-edge": 160.0
+     },
+     "kinds": {
+      "edge": 160.0,
+      "logic": 5600.0,
+      "offchip": 20080.0,
+      "wire": 2240.0,
+      "xdie": 13040.0
+     },
+     "not_measured_current": 41120.0,
+     "op": "attn.out_allreduce",
+     "share_pct": 3.04,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 40,
+     "cycles": 41120.0,
+     "grades": {
+      "measured-old-RTL": 18640.0,
+      "modelled-PHY": 20080.0,
+      "plan-v4.8-lane": 2240.0,
+      "priced-edge": 160.0
+     },
+     "kinds": {
+      "edge": 160.0,
+      "logic": 5600.0,
+      "offchip": 20080.0,
+      "wire": 2240.0,
+      "xdie": 13040.0
+     },
+     "not_measured_current": 41120.0,
+     "op": "ffn.combine_allreduce",
+     "share_pct": 3.04,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 40,
+     "cycles": 36160.0,
+     "grades": {
+      "measured-old-RTL": 24320.0,
+      "modelled-PHY": 10640.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 80.0
+     },
+     "kinds": {
+      "edge": 80.0,
+      "logic": 2800.0,
+      "offchip": 10640.0,
+      "wire": 1120.0,
+      "xdie": 21520.0
+     },
+     "not_measured_current": 36160.0,
+     "op": "substage_hop0",
+     "share_pct": 2.67,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 35480.0,
+     "grades": {
+      "measured-current-RTL": 31920.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced-edge": 1040.0
+     },
+     "kinds": {
+      "edge": 1040.0,
+      "logic": 31920.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 3560.0,
+     "op": "ffn.shared_gu",
+     "share_pct": 2.62,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FGU.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 31058.9,
+     "grades": {
+      "measured-old-RTL": 27813.9,
+      "plan-v4.8-lane": 2205.0,
+      "priced-edge": 1040.0
+     },
+     "kinds": {
+      "edge": 1040.0,
+      "logic": 27813.9,
+      "wire": 2205.0
+     },
+     "not_measured_current": 31058.9,
+     "op": "attn.a_proj",
+     "share_pct": 2.29,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "count": 40,
+     "cycles": 30760.0,
+     "grades": {
+      "priced": 30760.0
+     },
+     "kinds": {
+      "logic": 30760.0
+     },
+     "not_measured_current": 30760.0,
+     "op": "attn.scores",
+     "share_pct": 2.27,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "count": 5,
+     "cycles": 29453.0,
+     "grades": {
+      "measured-old-RTL": 29253.0,
+      "priced": 200.0
+     },
+     "kinds": {
+      "logic": 29453.0
+     },
+     "not_measured_current": 29453.0,
+     "op": "attn.idx.score",
+     "share_pct": 2.18,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "count": 8,
+     "cycles": 27059.0,
+     "grades": {
+      "measured-old-RTL": 27059.0
+     },
+     "kinds": {
+      "logic": 27059.0
+     },
+     "not_measured_current": 27059.0,
+     "op": "attn.idx.topk_final",
+     "share_pct": 2.0,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 26547.6,
+     "grades": {
+      "priced": 26547.6
+     },
+     "kinds": {
+      "adjust": 26547.6
+     },
+     "not_measured_current": 26547.6,
+     "op": "price_of_record_residual",
+     "share_pct": 1.96,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 41,
+     "cycles": 23256.3,
+     "grades": {
+      "priced": 23256.3
+     },
+     "kinds": {
+      "layer": 23256.3
+     },
+     "not_measured_current": 23256.3,
+     "op": "L*.dv_p4l",
+     "share_pct": 1.72,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 40,
+     "cycles": 19360.0,
+     "grades": {
+      "measured-old-RTL": 7600.0,
+      "modelled-PHY": 10040.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 600.0
+     },
+     "kinds": {
+      "edge": 600.0,
+      "logic": 2800.0,
+      "offchip": 10040.0,
+      "wire": 1120.0,
+      "xdie": 4800.0
+     },
+     "not_measured_current": 19360.0,
+     "op": "attn.a_allgather",
+     "share_pct": 1.43,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 17520.0,
+     "grades": {
+      "measured-old-RTL": 17520.0
+     },
+     "kinds": {
+      "logic": 17520.0
+     },
+     "not_measured_current": 17520.0,
+     "op": "ffn.norm.scale",
+     "share_pct": 1.29,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hbm",
+     "count": 32,
+     "cycles": 17024.0,
+     "grades": {
+      "measured-old-RTL": 17024.0
+     },
+     "kinds": {
+      "logic": 17024.0
+     },
+     "not_measured_current": 17024.0,
+     "op": "attn.window_load",
+     "share_pct": 1.26,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/GATH.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 16720.0,
+     "grades": {
+      "measured-old-RTL": 16720.0
+     },
+     "kinds": {
+      "logic": 16720.0
+     },
+     "not_measured_current": 16720.0,
+     "op": "attn.quant",
+     "share_pct": 1.24,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 16720.0,
+     "grades": {
+      "measured-old-RTL": 16720.0
+     },
+     "kinds": {
+      "logic": 16720.0
+     },
+     "not_measured_current": 16720.0,
+     "op": "attn.q_quant",
+     "share_pct": 1.24,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 17,
+     "cycles": 15368.0,
+     "grades": {
+      "measured-old-RTL": 10336.0,
+      "modelled-PHY": 4522.0,
+      "plan-v4.8-lane": 476.0,
+      "priced-edge": 34.0
+     },
+     "kinds": {
+      "edge": 34.0,
+      "logic": 1190.0,
+      "offchip": 4522.0,
+      "wire": 476.0,
+      "xdie": 9146.0
+     },
+     "not_measured_current": 15368.0,
+     "op": "substage_hop1",
+     "share_pct": 1.14,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-HEAD-DIE-TB"
+     ],
+     "cls": "head",
+     "count": 1,
+     "cycles": 8450.0,
+     "grades": {
+      "measured-current-RTL": 8416.0,
+      "priced": 34.0
+     },
+     "kinds": {
+      "logic": 8416.0,
+      "tail": 34.0
+     },
+     "not_measured_current": 34.0,
+     "op": "head.lm_head",
+     "share_pct": 0.62,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 7640.0,
+     "grades": {
+      "measured-old-RTL": 7640.0
+     },
+     "kinds": {
+      "logic": 7640.0
+     },
+     "not_measured_current": 7640.0,
+     "op": "ffn.quant2",
+     "share_pct": 0.56,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 4,
+     "cycles": 7256.0,
+     "grades": {
+      "priced": 7256.0
+     },
+     "kinds": {
+      "layer": 7256.0
+     },
+     "not_measured_current": 7256.0,
+     "op": "L*.scan_d_legs_merge",
+     "share_pct": 0.54,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 8,
+     "cycles": 6264.0,
+     "grades": {
+      "measured-old-RTL": 6056.0,
+      "priced-edge": 208.0
+     },
+     "kinds": {
+      "edge": 208.0,
+      "logic": 6056.0
+     },
+     "not_measured_current": 6264.0,
+     "op": "attn.idx.q_field",
+     "share_pct": 0.46,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/IDXQF.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 5536.0,
+     "grades": {
+      "measured-old-RTL": 5536.0
+     },
+     "kinds": {
+      "layer": 5536.0
+     },
+     "not_measured_current": 5536.0,
+     "op": "L*.scan_d_l20split_k6",
+     "share_pct": 0.41,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 8,
+     "cycles": 5096.0,
+     "grades": {
+      "measured-old-RTL": 2848.0,
+      "modelled-PHY": 2008.0,
+      "plan-v4.8-lane": 224.0,
+      "priced-edge": 16.0
+     },
+     "kinds": {
+      "edge": 16.0,
+      "logic": 560.0,
+      "offchip": 2008.0,
+      "wire": 224.0,
+      "xdie": 2288.0
+     },
+     "not_measured_current": 5096.0,
+     "op": "attn.rows_allgather",
+     "share_pct": 0.38,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 4896.0,
+     "grades": {
+      "measured-old-RTL": 4896.0
+     },
+     "kinds": {
+      "logic": 4896.0
+     },
+     "not_measured_current": 4896.0,
+     "op": "attn.exp",
+     "share_pct": 0.36,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/SMX.json"
+     ]
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "select",
+     "count": 8,
+     "cycles": 4860.0,
+     "grades": {
+      "measured-old-RTL": 4860.0
+     },
+     "kinds": {
+      "logic": 4860.0
+     },
+     "not_measured_current": 4860.0,
+     "op": "attn.gather",
+     "share_pct": 0.36,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/GATH.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 8,
+     "cycles": 4024.0,
+     "grades": {
+      "measured-old-RTL": 1776.0,
+      "modelled-PHY": 2008.0,
+      "plan-v4.8-lane": 224.0,
+      "priced-edge": 16.0
+     },
+     "kinds": {
+      "edge": 16.0,
+      "logic": 560.0,
+      "offchip": 2008.0,
+      "wire": 224.0,
+      "xdie": 1216.0
+     },
+     "not_measured_current": 4024.0,
+     "op": "attn.idx.topk_merge",
+     "share_pct": 0.3,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-NORMALIZE-SO"
+     ],
+     "cls": "su",
+     "count": 40,
+     "cycles": 3840.0,
+     "grades": {
+      "measured-old-RTL": 3400.0,
+      "plan-v4.8-lane": 440.0
+     },
+     "kinds": {
+      "logic": 3400.0,
+      "wire": 440.0
+     },
+     "not_measured_current": 3840.0,
+     "op": "attn.normalize",
+     "share_pct": 0.28,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/SMX.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 4,
+     "cycles": 3132.0,
+     "grades": {
+      "priced": 3132.0
+     },
+     "kinds": {
+      "layer": 3132.0
+     },
+     "not_measured_current": 3132.0,
+     "op": "L*.scan_d_reindex",
+     "share_pct": 0.23,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 3040.0,
+     "grades": {
+      "measured-old-RTL": 2520.0,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 2520.0,
+      "wire": 520.0
+     },
+     "not_measured_current": 3040.0,
+     "op": "attn.hc_post",
+     "share_pct": 0.22,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 3040.0,
+     "grades": {
+      "measured-old-RTL": 2520.0,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 2520.0,
+      "wire": 520.0
+     },
+     "not_measured_current": 3040.0,
+     "op": "ffn.hc_post",
+     "share_pct": 0.22,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 2336.0,
+     "grades": {
+      "measured-old-RTL": 2336.0
+     },
+     "kinds": {
+      "logic": 2336.0
+     },
+     "not_measured_current": 2336.0,
+     "op": "attn.max",
+     "share_pct": 0.17,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/SMX.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 32,
+     "cycles": 2240.0,
+     "grades": {
+      "measured-old-RTL": 1824.0,
+      "plan-v4.8-lane": 416.0
+     },
+     "kinds": {
+      "logic": 1824.0,
+      "wire": 416.0
+     },
+     "not_measured_current": 2240.0,
+     "op": "attn.q_rope",
+     "share_pct": 0.17,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    }
+   ],
+   "not_measured_current_by_blocker": {
+    "(no ladder gap: needs a v4.8-die bench)": 788998.6,
+    "G-COMPILER-ROWS": 150980.7,
+    "G-HEAD-DIE-TB": 1853.0,
+    "G-HOST-CONTEXT": 2961.3,
+    "G-NORMALIZE-SO": 3840.0
+   },
+   "pct": {
+    "measured_current_rtl": 29.91,
+    "measured_old_rtl": 49.79,
+    "modelled_phy": 6.54,
+    "priced": 13.76,
+    "priced_split": {
+     "plan_v48_lane": 2.9,
+     "priced": 10.43,
+     "priced_edge": 0.42
+    }
+   },
+   "per_accepted_cycles": null,
+   "rate_basis": "max(committed critical path, re-solved DAG) + extra terms (as toksim_s81_compose)",
+   "tau": null,
+   "tok_s": 886.7,
+   "top_not_measured_current": [
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 180080.0,
+     "grades": {
+      "measured-old-RTL": 168960.0,
+      "plan-v4.8-lane": 10080.0,
+      "priced": 1040.0
+     },
+     "op": "attn.wo_a"
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 139040.0,
+     "grades": {
+      "measured-old-RTL": 134360.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 80.0
+     },
+     "op": "attn.wq_b"
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "cycles": 56048.0,
+     "grades": {
+      "measured-old-RTL": 37696.0,
+      "modelled-PHY": 16492.0,
+      "plan-v4.8-lane": 1736.0,
+      "priced-edge": 124.0
+     },
+     "op": "unplaced_hops"
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 47945.0
+     },
+     "op": "attn.idx.topk_local"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "cycles": 43040.0,
+     "grades": {
+      "priced": 43040.0
+     },
+     "op": "attn.pv"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "coll",
+     "cycles": 41120.0,
+     "grades": {
+      "measured-old-RTL": 18640.0,
+      "modelled-PHY": 20080.0,
+      "plan-v4.8-lane": 2240.0,
+      "priced-edge": 160.0
+     },
+     "op": "attn.out_allreduce"
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "cycles": 41120.0,
+     "grades": {
+      "measured-old-RTL": 18640.0,
+      "modelled-PHY": 20080.0,
+      "plan-v4.8-lane": 2240.0,
+      "priced-edge": 160.0
+     },
+     "op": "ffn.combine_allreduce"
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "cycles": 36160.0,
+     "grades": {
+      "measured-old-RTL": 24320.0,
+      "modelled-PHY": 10640.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 80.0
+     },
+     "op": "substage_hop0"
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 31058.9,
+     "grades": {
+      "measured-old-RTL": 27813.9,
+      "plan-v4.8-lane": 2205.0,
+      "priced-edge": 1040.0
+     },
+     "op": "attn.a_proj"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "cycles": 30760.0,
+     "grades": {
+      "priced": 30760.0
+     },
+     "op": "attn.scores"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "cycles": 29453.0,
+     "grades": {
+      "measured-old-RTL": 29253.0,
+      "priced": 200.0
+     },
+     "op": "attn.idx.score"
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "cycles": 27059.0,
+     "grades": {
+      "measured-old-RTL": 27059.0
+     },
+     "op": "attn.idx.topk_final"
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "cycles": 26547.6,
+     "grades": {
+      "priced": 26547.6
+     },
+     "op": "price_of_record_residual"
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "cycles": 23256.3,
+     "grades": {
+      "priced": 23256.3
+     },
+     "op": "L*.dv_p4l"
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "cycles": 19360.0,
+     "grades": {
+      "measured-old-RTL": 7600.0,
+      "modelled-PHY": 10040.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 600.0
+     },
+     "op": "attn.a_allgather"
+    }
+   ],
+   "transforms": {
+    "components": [],
+    "field_critical_delta": -29945.0,
+    "layers": [],
+    "leg_critical_delta": -15834.0,
+    "leg_nodes": {
+     "crit": 236,
+     "off": 35
+    },
+    "offchip_saved_critical": {
+     "head_hop": 196,
+     "stage_hop": 22253,
+     "tp_mesh": 51914
+    },
+    "release_critical": {
+     "attn.idx.score": 320,
+     "attn.pv": 0.0,
+     "attn.scores": 19200.0,
+     "eng.hbm_read": 0.0
+    },
+    "tail_critical_delta": -7128.0
+   },
+   "workload": "ar"
+  },
+  "mtp": {
+   "T_cycles": 1758079.8,
+   "T_cycles_fixed": 1758079.8,
+   "T_cycles_solved": 1758079.8,
+   "by_grade": {
+    "measured-current-RTL": 460439.0,
+    "measured-old-RTL": 969167.0,
+    "modelled-PHY": 118368.6,
+    "plan-v4.8-lane": 44275.0,
+    "priced": 159690.2,
+    "priced-edge": 6140.0
+   },
+   "calendar_cross_check": {
+    "calendar_T_after_override": 1763559.8,
+    "diff": 5480.0,
+    "this_T": 1758079.8
+   },
+   "critical_stage_table": [
+    {
+     "blocked_by": [],
+     "cls": "wave",
+     "count": 5,
+     "cycles": 223565.0,
+     "grades": {
+      "measured-current-RTL": 45510.0,
+      "measured-old-RTL": 157855.0,
+      "modelled-PHY": 10040.0,
+      "plan-v4.8-lane": 4650.0,
+      "priced": 4825.0,
+      "priced-edge": 685.0
+     },
+     "kinds": {
+      "edge": 685.0,
+      "logic": 200795.0,
+      "offchip": 10040.0,
+      "tail": 780.0,
+      "wire": 4650.0,
+      "xdie": 6615.0
+     },
+     "not_measured_current": 178055.0,
+     "op": "wave.busy",
+     "share_pct": 12.72,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSDN.json",
+      "results/token_pass/measured_s81_1019/elements/FSEQ.json",
+      "results/token_pass/measured_s81_1019/elements/FSGU.json",
+      "results/token_pass/measured_s81_1019/elements/FWOA.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 43,
+     "cycles": 198668.0,
+     "grades": {
+      "measured-old-RTL": 187470.0,
+      "plan-v4.8-lane": 10080.0,
+      "priced": 1040.0,
+      "priced-edge": 78.0
+     },
+     "kinds": {
+      "edge": 78.0,
+      "logic": 187470.0,
+      "tail": 1040.0,
+      "wire": 10080.0
+     },
+     "not_measured_current": 198668.0,
+     "op": "attn.wo_a",
+     "share_pct": 11.3,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FWOA.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 150760.0,
+     "grades": {
+      "measured-current-RTL": 147200.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced-edge": 1040.0
+     },
+     "kinds": {
+      "edge": 1040.0,
+      "logic": 147200.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 3560.0,
+     "op": "ffn.experts_gu",
+     "share_pct": 8.58,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSGU.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 43,
+     "cycles": 141770.0,
+     "grades": {
+      "measured-old-RTL": 137012.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 158.0
+     },
+     "kinds": {
+      "edge": 158.0,
+      "logic": 137012.0,
+      "tail": 2080.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 141770.0,
+     "op": "attn.wq_b",
+     "share_pct": 8.06,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/WQBG.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 40,
+     "cycles": 120240.0,
+     "grades": {
+      "measured-current-RTL": 115560.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 80.0
+     },
+     "kinds": {
+      "edge": 80.0,
+      "logic": 115560.0,
+      "tail": 2080.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 4680.0,
+     "op": "ffn.down",
+     "share_pct": 6.84,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSDN.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 43,
+     "cycles": 59255.0,
+     "grades": {
+      "measured-current-RTL": 50760.0,
+      "measured-old-RTL": 4857.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced-edge": 1118.0
+     },
+     "kinds": {
+      "edge": 1118.0,
+      "logic": 55617.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 8495.0,
+     "op": "ffn.router",
+     "share_pct": 3.37,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FSEQ.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 43,
+     "cycles": 56937.0,
+     "grades": {
+      "measured-current-RTL": 50560.0,
+      "measured-old-RTL": 2739.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 1040.0,
+      "priced-edge": 78.0
+     },
+     "kinds": {
+      "edge": 78.0,
+      "logic": 53299.0,
+      "tail": 1040.0,
+      "wire": 2520.0
+     },
+     "not_measured_current": 6377.0,
+     "op": "attn.wo_b",
+     "share_pct": 3.24,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/FWOA.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 1,
+     "cycles": 56048.0,
+     "grades": {
+      "measured-old-RTL": 37696.0,
+      "modelled-PHY": 16492.0,
+      "plan-v4.8-lane": 1736.0,
+      "priced-edge": 124.0
+     },
+     "kinds": {
+      "edge": 124.0,
+      "logic": 4340.0,
+      "offchip": 16492.0,
+      "wire": 1736.0,
+      "xdie": 33356.0
+     },
+     "not_measured_current": 56048.0,
+     "op": "unplaced_hops",
+     "share_pct": 3.19,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "count": 8,
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 47945.0
+     },
+     "kinds": {
+      "logic": 47945.0
+     },
+     "not_measured_current": 47945.0,
+     "op": "attn.idx.topk_local",
+     "share_pct": 2.73,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "coll",
+     "count": 43,
+     "cycles": 44204.0,
+     "grades": {
+      "measured-old-RTL": 20038.0,
+      "modelled-PHY": 21586.0,
+      "plan-v4.8-lane": 2408.0,
+      "priced-edge": 172.0
+     },
+     "kinds": {
+      "edge": 172.0,
+      "logic": 6020.0,
+      "offchip": 21586.0,
+      "wire": 2408.0,
+      "xdie": 14018.0
+     },
+     "not_measured_current": 44204.0,
+     "op": "attn.out_allreduce",
+     "share_pct": 2.51,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 43,
+     "cycles": 44204.0,
+     "grades": {
+      "measured-old-RTL": 20038.0,
+      "modelled-PHY": 21586.0,
+      "plan-v4.8-lane": 2408.0,
+      "priced-edge": 172.0
+     },
+     "kinds": {
+      "edge": 172.0,
+      "logic": 6020.0,
+      "offchip": 21586.0,
+      "wire": 2408.0,
+      "xdie": 14018.0
+     },
+     "not_measured_current": 44204.0,
+     "op": "ffn.combine_allreduce",
+     "share_pct": 2.51,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-HEAD-DIE-TB"
+     ],
+     "cls": "head",
+     "count": 5,
+     "cycles": 42250.0,
+     "grades": {
+      "measured-current-RTL": 42080.0,
+      "priced": 170.0
+     },
+     "kinds": {
+      "logic": 42080.0,
+      "tail": 170.0
+     },
+     "not_measured_current": 170.0,
+     "op": "draft.head",
+     "share_pct": 2.4,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 40,
+     "cycles": 36160.0,
+     "grades": {
+      "measured-old-RTL": 24320.0,
+      "modelled-PHY": 10640.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 80.0
+     },
+     "kinds": {
+      "edge": 80.0,
+      "logic": 2800.0,
+      "offchip": 10640.0,
+      "wire": 1120.0,
+      "xdie": 21520.0
+     },
+     "not_measured_current": 36160.0,
+     "op": "substage_hop0",
+     "share_pct": 2.06,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 43,
+     "cycles": 34883.9,
+     "grades": {
+      "measured-old-RTL": 31560.9,
+      "plan-v4.8-lane": 2205.0,
+      "priced-edge": 1118.0
+     },
+     "kinds": {
+      "edge": 1118.0,
+      "logic": 31560.9,
+      "wire": 2205.0
+     },
+     "not_measured_current": 34883.9,
+     "op": "attn.a_proj",
+     "share_pct": 1.98,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 32925.1,
+     "grades": {
+      "priced": 32925.1
+     },
+     "kinds": {
+      "adjust": 32925.1
+     },
+     "not_measured_current": 32925.1,
+     "op": "price_of_record_residual",
+     "share_pct": 1.87,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "count": 40,
+     "cycles": 30760.0,
+     "grades": {
+      "priced": 30760.0
+     },
+     "kinds": {
+      "logic": 30760.0
+     },
+     "not_measured_current": 30760.0,
+     "op": "attn.scores",
+     "share_pct": 1.75,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "count": 8,
+     "cycles": 29573.0,
+     "grades": {
+      "measured-old-RTL": 29253.0,
+      "priced": 320.0
+     },
+     "kinds": {
+      "logic": 29573.0
+     },
+     "not_measured_current": 29573.0,
+     "op": "attn.idx.score",
+     "share_pct": 1.68,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 27680.0,
+     "grades": {
+      "priced": 27680.0
+     },
+     "kinds": {
+      "layer": 27680.0
+     },
+     "not_measured_current": 27680.0,
+     "op": "wave.scan_d_l20split_k6",
+     "share_pct": 1.57,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "count": 8,
+     "cycles": 27059.0,
+     "grades": {
+      "measured-old-RTL": 27059.0
+     },
+     "kinds": {
+      "logic": 27059.0
+     },
+     "not_measured_current": 27059.0,
+     "op": "attn.idx.topk_final",
+     "share_pct": 1.54,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 41,
+     "cycles": 23256.3,
+     "grades": {
+      "priced": 23256.3
+     },
+     "kinds": {
+      "layer": 23256.3
+     },
+     "not_measured_current": 23256.3,
+     "op": "L*.dv_p4l",
+     "share_pct": 1.32,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 43,
+     "cycles": 20812.0,
+     "grades": {
+      "measured-old-RTL": 8170.0,
+      "modelled-PHY": 10793.0,
+      "plan-v4.8-lane": 1204.0,
+      "priced-edge": 645.0
+     },
+     "kinds": {
+      "edge": 645.0,
+      "logic": 3010.0,
+      "offchip": 10793.0,
+      "wire": 1204.0,
+      "xdie": 5160.0
+     },
+     "not_measured_current": 20812.0,
+     "op": "attn.a_allgather",
+     "share_pct": 1.18,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 20119.9,
+     "grades": {
+      "measured-old-RTL": 20119.9
+     },
+     "kinds": {
+      "logic": 20119.9
+     },
+     "not_measured_current": 20119.9,
+     "op": "attn.quant",
+     "share_pct": 1.14,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 43,
+     "cycles": 19952.0,
+     "grades": {
+      "measured-old-RTL": 7869.0,
+      "modelled-PHY": 10793.0,
+      "plan-v4.8-lane": 1204.0,
+      "priced-edge": 86.0
+     },
+     "kinds": {
+      "edge": 86.0,
+      "logic": 3010.0,
+      "offchip": 10793.0,
+      "wire": 1204.0,
+      "xdie": 4859.0
+     },
+     "not_measured_current": 19952.0,
+     "op": "ffn.router_allgather",
+     "share_pct": 1.13,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 18465.0,
+     "grades": {
+      "priced": 18465.0
+     },
+     "kinds": {
+      "layer": 18465.0
+     },
+     "not_measured_current": 18465.0,
+     "op": "wave.scan_d",
+     "share_pct": 1.05,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 17748.0,
+     "grades": {
+      "measured-old-RTL": 17748.0
+     },
+     "kinds": {
+      "logic": 17748.0
+     },
+     "not_measured_current": 17748.0,
+     "op": "ffn.norm.scale",
+     "share_pct": 1.01,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 17719.9,
+     "grades": {
+      "measured-old-RTL": 17719.9
+     },
+     "kinds": {
+      "logic": 17719.9
+     },
+     "not_measured_current": 17719.9,
+     "op": "attn.q_quant",
+     "share_pct": 1.01,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hbm",
+     "count": 32,
+     "cycles": 17024.0,
+     "grades": {
+      "measured-old-RTL": 17024.0
+     },
+     "kinds": {
+      "logic": 17024.0
+     },
+     "not_measured_current": 17024.0,
+     "op": "attn.window_load",
+     "share_pct": 0.97,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/GATH.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "count": 17,
+     "cycles": 15368.0,
+     "grades": {
+      "measured-old-RTL": 10336.0,
+      "modelled-PHY": 4522.0,
+      "plan-v4.8-lane": 476.0,
+      "priced-edge": 34.0
+     },
+     "kinds": {
+      "edge": 34.0,
+      "logic": 1190.0,
+      "offchip": 4522.0,
+      "wire": 476.0,
+      "xdie": 9146.0
+     },
+     "not_measured_current": 15368.0,
+     "op": "substage_hop1",
+     "share_pct": 0.87,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-HEAD-DIE-TB"
+     ],
+     "cls": "ctl",
+     "count": 1,
+     "cycles": 15357.0,
+     "grades": {
+      "measured-old-RTL": 15357.0
+     },
+     "kinds": {
+      "logic": 15357.0
+     },
+     "not_measured_current": 15357.0,
+     "op": "mc.p2.selected_path",
+     "share_pct": 0.87,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-HEAD-DIE-TB"
+     ],
+     "cls": "ctl",
+     "count": 1,
+     "cycles": 13560.0,
+     "grades": {
+      "measured-old-RTL": 13560.0
+     },
+     "kinds": {
+      "logic": 13560.0
+     },
+     "not_measured_current": 13560.0,
+     "op": "mc.wfc_kit.ar_pass",
+     "share_pct": 0.77,
+     "sources": []
+    },
+    {
+     "blocked_by": [
+      "G-HEAD-DIE-TB"
+     ],
+     "cls": "head",
+     "count": 1,
+     "cycles": 8450.0,
+     "grades": {
+      "measured-current-RTL": 8416.0,
+      "priced": 34.0
+     },
+     "kinds": {
+      "logic": 8416.0,
+      "tail": 34.0
+     },
+     "not_measured_current": 34.0,
+     "op": "head.lm_head",
+     "share_pct": 0.48,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 8147.9,
+     "grades": {
+      "measured-old-RTL": 7627.9,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 7627.9,
+      "wire": 520.0
+     },
+     "not_measured_current": 8147.9,
+     "op": "ffn.softplus_sqrt",
+     "share_pct": 0.46,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 40,
+     "cycles": 7640.0,
+     "grades": {
+      "measured-old-RTL": 7640.0
+     },
+     "kinds": {
+      "logic": 7640.0
+     },
+     "not_measured_current": 7640.0,
+     "op": "ffn.quant2",
+     "share_pct": 0.43,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 4,
+     "cycles": 7256.0,
+     "grades": {
+      "priced": 7256.0
+     },
+     "kinds": {
+      "layer": 7256.0
+     },
+     "not_measured_current": 7256.0,
+     "op": "L*.scan_d_legs_merge",
+     "share_pct": 0.41,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "count": 8,
+     "cycles": 6264.0,
+     "grades": {
+      "measured-old-RTL": 6056.0,
+      "priced-edge": 208.0
+     },
+     "kinds": {
+      "edge": 208.0,
+      "logic": 6056.0
+     },
+     "not_measured_current": 6264.0,
+     "op": "attn.idx.q_field",
+     "share_pct": 0.36,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/IDXQF.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "count": 1,
+     "cycles": 5536.0,
+     "grades": {
+      "measured-old-RTL": 5536.0
+     },
+     "kinds": {
+      "layer": 5536.0
+     },
+     "not_measured_current": 5536.0,
+     "op": "L*.scan_d_l20split_k6",
+     "share_pct": 0.31,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 5528.0,
+     "grades": {
+      "measured-old-RTL": 5008.0,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 5008.0,
+      "wire": 520.0
+     },
+     "not_measured_current": 5528.0,
+     "op": "ffn.bias",
+     "share_pct": 0.31,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "count": 8,
+     "cycles": 5096.0,
+     "grades": {
+      "measured-old-RTL": 2848.0,
+      "modelled-PHY": 2008.0,
+      "plan-v4.8-lane": 224.0,
+      "priced-edge": 16.0
+     },
+     "kinds": {
+      "edge": 16.0,
+      "logic": 560.0,
+      "offchip": 2008.0,
+      "wire": 224.0,
+      "xdie": 2288.0
+     },
+     "not_measured_current": 5096.0,
+     "op": "attn.rows_allgather",
+     "share_pct": 0.29,
+     "sources": []
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 4963.9,
+     "grades": {
+      "measured-old-RTL": 4443.9,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 4443.9,
+      "wire": 520.0
+     },
+     "not_measured_current": 4963.9,
+     "op": "attn.hc_post",
+     "share_pct": 0.28,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    },
+    {
+     "blocked_by": [],
+     "cls": "su",
+     "count": 43,
+     "cycles": 4963.9,
+     "grades": {
+      "measured-old-RTL": 4443.9,
+      "plan-v4.8-lane": 520.0
+     },
+     "kinds": {
+      "logic": 4443.9,
+      "wire": 520.0
+     },
+     "not_measured_current": 4963.9,
+     "op": "ffn.hc_post",
+     "share_pct": 0.28,
+     "sources": [
+      "results/token_pass/measured_s81_1019/elements/zz_curation.json"
+     ]
+    }
+   ],
+   "not_measured_current_by_blocker": {
+    "(no ladder gap: needs a v4.8-die bench)": 1141266.3,
+    "G-COMPILER-ROWS": 111106.0,
+    "G-HEAD-DIE-TB": 32654.7,
+    "G-HOST-CONTEXT": 5673.3,
+    "G-NORMALIZE-SO": 6940.5
+   },
+   "pct": {
+    "measured_current_rtl": 26.19,
+    "measured_old_rtl": 55.13,
+    "modelled_phy": 6.73,
+    "priced": 11.95,
+    "priced_split": {
+     "plan_v48_lane": 2.52,
+     "priced": 9.08,
+     "priced_edge": 0.35
+    }
+   },
+   "per_accepted_cycles": 422717.0,
+   "rate_basis": "max(committed critical path, re-solved DAG) + extra terms (as toksim_s81_compose)",
+   "tau": 4.159,
+   "tok_s": 2838.8,
+   "top_not_measured_current": [
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 198668.0,
+     "grades": {
+      "measured-old-RTL": 187470.0,
+      "plan-v4.8-lane": 10080.0,
+      "priced": 1040.0,
+      "priced-edge": 78.0
+     },
+     "op": "attn.wo_a"
+    },
+    {
+     "blocked_by": [],
+     "cls": "wave",
+     "cycles": 178055.0,
+     "grades": {
+      "measured-current-RTL": 45510.0,
+      "measured-old-RTL": 157855.0,
+      "modelled-PHY": 10040.0,
+      "plan-v4.8-lane": 4650.0,
+      "priced": 4825.0,
+      "priced-edge": 685.0
+     },
+     "op": "wave.busy"
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 141770.0,
+     "grades": {
+      "measured-old-RTL": 137012.0,
+      "plan-v4.8-lane": 2520.0,
+      "priced": 2080.0,
+      "priced-edge": 158.0
+     },
+     "op": "attn.wq_b"
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "cycles": 56048.0,
+     "grades": {
+      "measured-old-RTL": 37696.0,
+      "modelled-PHY": 16492.0,
+      "plan-v4.8-lane": 1736.0,
+      "priced-edge": 124.0
+     },
+     "op": "unplaced_hops"
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "cycles": 47945.0,
+     "grades": {
+      "measured-old-RTL": 47945.0
+     },
+     "op": "attn.idx.topk_local"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "coll",
+     "cycles": 44204.0,
+     "grades": {
+      "measured-old-RTL": 20038.0,
+      "modelled-PHY": 21586.0,
+      "plan-v4.8-lane": 2408.0,
+      "priced-edge": 172.0
+     },
+     "op": "attn.out_allreduce"
+    },
+    {
+     "blocked_by": [],
+     "cls": "coll",
+     "cycles": 44204.0,
+     "grades": {
+      "measured-old-RTL": 20038.0,
+      "modelled-PHY": 21586.0,
+      "plan-v4.8-lane": 2408.0,
+      "priced-edge": 172.0
+     },
+     "op": "ffn.combine_allreduce"
+    },
+    {
+     "blocked_by": [],
+     "cls": "hop",
+     "cycles": 36160.0,
+     "grades": {
+      "measured-old-RTL": 24320.0,
+      "modelled-PHY": 10640.0,
+      "plan-v4.8-lane": 1120.0,
+      "priced-edge": 80.0
+     },
+     "op": "substage_hop0"
+    },
+    {
+     "blocked_by": [],
+     "cls": "field",
+     "cycles": 34883.9,
+     "grades": {
+      "measured-old-RTL": 31560.9,
+      "plan-v4.8-lane": 2205.0,
+      "priced-edge": 1118.0
+     },
+     "op": "attn.a_proj"
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "cycles": 32925.1,
+     "grades": {
+      "priced": 32925.1
+     },
+     "op": "price_of_record_residual"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "cycles": 30760.0,
+     "grades": {
+      "priced": 30760.0
+     },
+     "op": "attn.scores"
+    },
+    {
+     "blocked_by": [
+      "G-COMPILER-ROWS"
+     ],
+     "cls": "hbm",
+     "cycles": 29573.0,
+     "grades": {
+      "measured-old-RTL": 29253.0,
+      "priced": 320.0
+     },
+     "op": "attn.idx.score"
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "cycles": 27680.0,
+     "grades": {
+      "priced": 27680.0
+     },
+     "op": "wave.scan_d_l20split_k6"
+    },
+    {
+     "blocked_by": [],
+     "cls": "select",
+     "cycles": 27059.0,
+     "grades": {
+      "measured-old-RTL": 27059.0
+     },
+     "op": "attn.idx.topk_final"
+    },
+    {
+     "blocked_by": [],
+     "cls": "extra",
+     "cycles": 23256.3,
+     "grades": {
+      "priced": 23256.3
+     },
+     "op": "L*.dv_p4l"
+    }
+   ],
+   "transforms": {
+    "components": [],
+    "field_critical_delta": -29945.0,
+    "layers": [],
+    "leg_critical_delta": -16926.0,
+    "leg_nodes": {
+     "crit": 256
+    },
+    "offchip_saved_critical": {
+     "head_hop": 196,
+     "stage_hop": 23749,
+     "tp_mesh": 55550
+    },
+    "release_critical": {
+     "attn.idx.score": 320,
+     "attn.scores": 19200.0
+    },
+    "tail_critical_delta": -7128.0
+   },
+   "workload": "mtp"
+  }
+ }
+}

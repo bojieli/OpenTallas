@@ -1,0 +1,19 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@main fd219eafe7 (v3.8v; v3.8u 2c54b9d3 same geometry)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "bc4edcd42be75a8092842315a377b9051f0783207f2081941f38673f98ebd177",
+ "reasons": "[2026-10-24 08:50] [GEOM-REVIEW die-level batch 1] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05). Tools: G0/G0C = the branch's own tools/die_plan/check.py --completeness --png (re-run by me); review pack = tools/geom_review/plan_review.py (whole die with hard cores + seams coloured by bits/um, lane bit-density heat map, auto zooms on densest bundle / longest lane / largest bit*mm lane / densest seam / clock root / IO / most core-filled partition / thinnest partition; metrics: lane bit*mm ranking, hop vs reach, per-seam bits/um, bit-order twist per ft crossing (CCW chord test; only straight/U-turn crossings with overlapping in/out windows can cost wire), computed ft-station points inside hard cores, root->tap distances, aspect / slivers / coverage). The PNGs in 'images' were looked at by me; the rest of the auto-generated pack is in 'pack'. SEEN: 10.82 x 27.04 mm (aspect 2.5, inside the reticle), 160 partitions / 49 types / 2,416 lanes, 100% covered. G0 PASS, G0C PASS 0 err (v3.8u and v3.8v both re-run). Picture: N/S-mirrored stack of 8 rows (hgi head groups with 2x head_eighth cores W/E, pv/pc cores in the centre column, hg/phy edge columns) around the hub band (hub_Wi / hub_C / hub_Ei / hub_Eo / hub_Wo at y 12.2-13.8 mm); fishbone clock rooted in hub_C. Data flow: one vertical trunk at x~4.8 mm carries the stack traffic through every pv row into the hub (heat-map peak 3,395 bits/bin at (6.95, 13.05) mm = hub_Ei W face; hub_C|hub_Ei seam 7.2 kb / 80 ports at 4.3 b/um). Longest lanes L2045 522 b 16.9 mm 36 cyc, L351 548 b 16.2 mm. Hops <= 748 um (0.62 of reach 1200). Twist: hub_Eo / hub_Wo straight ft slots reverse 1119/300/292/145-b buses, but their in/out windows are disjoint (they also step ~1 mm in y), so Z-routes take any order at no extra wire - OK. PROBLEM: 1,394 of 4,359 interpolated ft-station points fall INSIDE hard cores (kv3_hgi_v7 252, hgi_v4 240, pv_v4 96, pv_v6 88, ... head_eighth / pv cores): the plan line of the trunk and of the hgi rows runs over the macro fields, so the kit must put the stations elsewhere and the real hops grow. This is the plan-level cause of KV-G3's measured 728-um ft hops (TT -44 ps) and the DIE-STA e5e6 seam -100.8 ps.",
+ "fixes": "(1) Before more hgi / pv / hub G3 kits: give every ft slot whose straight path crosses cores declared regs_um in the core-free channel (or reserve a vertical ft channel beside the x~4.8 mm trunk), and re-run G0 hops with those sites; kits must then honour regs_um. (2) The KV-G3 OWNER? item (ft on M8/M9 per plan vs <= M7 in kits, ~400-um reach) is the same issue: until it is ruled, plan stations at <= 400 um along the path that the kit really routes. (3) hub_C|hub_Ei (80 ports) and pv_N_4|5 / pv_S_4|5 (66 ports, 4.3 b/um) are the densest seams: the hub_Ei G3 review must show the face-flop band on that face (gated kit vC routing now - tile review to follow).",
+ "images": [
+  "results/geom_review/die_1024/img/kv_v38u2/die_cores.png",
+  "results/geom_review/die_1024/img/kv_v38u2/zoom_dense.png",
+  "results/geom_review/die_1024/img/kv_v38u2/zoom_clock_root.png"
+ ],
+ "pack": "results/geom_review/die_1024/img/kv_v38u2/",
+ "metrics": "results/geom_review/die_1024/img/kv_v38u2/review.json",
+ "owner_lane": "KV-G3",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:50:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}

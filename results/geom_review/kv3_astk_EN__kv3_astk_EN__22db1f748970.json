@@ -1,0 +1,17 @@
+{
+ "element": "kv3_astk_EN",
+ "kit": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_EN__*",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "22db1f7489705f242f90d397b68179772fb64f6aa016bef04897e0514daff24d",
+ "reasons": "[2026-10-24 08:23] [GEOM-REVIEW tile GR-QK] looked at /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_astk_EN/review.png + contact sheets /srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_*.png. 190.08x181.44 um, 124875 cells, fill 47.9%, empty 17%, pins/um {'N': 4.051, 'S': 3.43, 'E': 1.477, 'W': 0.011}, pin->reg p50/p90 6.9/8.47 um, CTS WNS -8.44 ps. Repeat identity: EN/ES/WN/WS are the same leaf RTL but 4 different netlists: the top differs only by RTL strap constants (zc 4'b0111/1011/1111 vs 4'b0100/1000/1100, st 2'b11 vs 2'b00) and port order; pin plans: WN = MY mirror of EN, WS = MY mirror of ES, EN vs ES differ (N/S 4.05/3.43 vs 3.01/4.05 pins/um). Pictures alike in character (uniform 48% fill, dense 0.6-0.96 bins, red N/S pin-flop rows) but not mirror images; CTS WNS EN -8.4 / ES -1.2 / WN -4.3 / WS -77.1 ps -> the 'repeats' do not behave identically. GRT overflow 0 (usage ~21%) on all four. hash = sha256 over \"<relpath> <git blob id>\" of the kit dir files excluding run/ views/ gate_layout/ record/ *.log.",
+ "fixes": "1. Treat as 4 kits (they are 4 netlists); if one hard core per type is wanted, bring zc/st out as strap pins (tie at the parent) and place EN/WN as MY of one view. 2. WS: explain/close the -77 ps CTS WNS (others -1..-8) before route sign-off. 3. N/S faces at 4.05 pins/um with full-width pin-flop rows: confirm DRT pin access on the face rows (no GRT overflow now).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv3_astk_EN/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-QK/kv_cores/sheet_astk.png"
+ ],
+ "stage": "4_cts (GRT/DRT running)",
+ "owner_lane": "KVG3-CORES (KV-G3)",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:23:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

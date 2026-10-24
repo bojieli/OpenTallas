@@ -125,6 +125,50 @@ def test_die_io_host_bfs():
     assert "BFS 3 port hop(s) from pa" in io[0]["note"]
 
 
+def test_die_io_in_band_host():
+    """S81-XDIE 10-24: a die with no host link (S81 stage dies, RELEASE_RACK 2.1 S81.HOST) marks the link windows that
+    carry the host traffic in-band host: "in_band"; the check accepts it only with a functional lane route to the
+    host logic, and never mixed with a dedicated host window."""
+    p = copy.deepcopy(EX)
+    p["partition_types"]["sink"]["contents"][0]["module"] = "ot_qkvd_ucie_x64_phy"
+    p["partition_types"]["src"]["contents"].append(dict(inst="u_host", module="qkd_host_rt", status="new"))
+    io = die_io.plan(schema.Plan(p), in_band=["pb"])
+    assert [(w["part"], w.get("host")) for w in io] == [("pb", "in_band")]
+    assert io[0]["host_route"] == "pb -> [r] -> pa"                 # return lane r: pb -> pa (host logic)
+    p["die"]["io"] = [{k: v for k, v in w.items() if k != "host"} for w in p["die"]["io"] if not w.get("iface")] + io
+    assert not schema.validate(p)
+    R, s = check.run(copy.deepcopy(p), completeness=True)
+    assert not [i for i in R.errors() if i["check"] == "die_io_plan"], R.errors()
+    assert s["die_io"]["plan"]["host_mode"] == "in_band"
+    # a declared lane chain is checked (plan and G0C)
+    io2 = die_io.plan(schema.Plan(p), in_band=[("pb", ["r"])])
+    assert io2[0]["host_route"] == "pb -> [r] -> pa" and "declared" in io2[0]["note"]
+    with pytest.raises(SystemExit):
+        die_io.plan(schema.Plan(p), in_band=[("pb", ["x"])])           # lane x starts at pa, not pb
+    b = copy.deepcopy(p)
+    next(w for w in b["die"]["io"] if w.get("host") == "in_band")["host_route"] = "pb -> [x] -> pb"
+    R, _ = check.run(b, completeness=True)
+    assert any("lane x starts at pa, not pb" in i["msg"] for i in R.errors() if i["check"] == "die_io_plan")
+    # no functional route from the in-band window to any host logic (here: no host logic at all) -> ERROR
+    q = copy.deepcopy(p)
+    q["partition_types"]["src"]["contents"].pop()
+    R, _ = check.run(copy.deepcopy(q), completeness=True)                 # declared route no longer ends at host logic
+    assert any("route ends at pa, not at host logic" in i["msg"] for i in R.errors() if i["check"] == "die_io_plan")
+    for w in q["die"]["io"]:
+        w.pop("host_route", None)
+    R, _ = check.run(q, completeness=True)
+    assert any("in-band host, but no lane route" in i["msg"] for i in R.errors() if i["check"] == "die_io_plan")
+    # mixed dedicated + in-band -> ERROR; a bad host value -> schema ERROR
+    m = copy.deepcopy(p)
+    m["die"]["io"].append(dict(io[0], name="io_host2", host=True))
+    R, _ = check.run(m, completeness=True)
+    assert any("a die has either a host link or in-band host" in i["msg"] for i in R.errors())
+    m["die"]["io"][-1]["host"] = "maybe"
+    assert any("host" in e for e in schema.validate(m))
+    with pytest.raises(SystemExit):
+        die_io.plan(schema.Plan(p), in_band=["pm1"])                  # no serdes / ucie window there
+
+
 # ---------------------------------------------------------------------------------------- (b) cut lines
 def test_cut_lines_count_abutted_bits():
     R, s = run()
