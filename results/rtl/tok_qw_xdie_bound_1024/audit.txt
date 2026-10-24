@@ -1,0 +1,6 @@
+F1   FAIL compute bound glue.u_d2d_rom TXDP bound=00000000 regen=0a010308
+K1   OK   KV bound sys_c.u_d2d_kv TXDP bound=03030443 regen=03030443
+K2   OK   D2D_KV_TX_LAT == KV TXDP port0 bound=67 regen=67
+F6   FAIL STATUS codec pairing
+F7k  FAIL KV calendar sequencer qkd_d2d_cal_seq_pin_bc4 compiled-in image
+F7c  FAIL compute sys_face calendar producer qfd_d2d_cal_seq_ovl_rope images
