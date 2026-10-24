@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS-CONDITIONAL",
+ "reviewer": "Codex",
+ "image": "/srv/opentallas-scratch/claude/codex-s81/head_tt_early7.png",
+ "geometry_review": "s81_head_hd_tile__s81_head__99c092a95cfa.json",
+ "findings": "Carry reviewed r3 macro orientation/channels and existing G2 PASS; select TT macro libraries instead of stale SS declarations. Five dedicated early CP2 taps beside actual transformed clock pins; TT internal insertion A415.62717ps,B378.75565ps,early165.62717/128.75565ps. Tap/core clearances and PDN channels clear,no long core-clock stubs. No RTL/data-cycle change. New route required for TT/FF timing,clock spread,congestion.",
+ "kit": "intel2:/srv/opentallas-scratch2/claude/codex-s81/head_tt_g3r7/hd_tile",
+ "previous_failure": "Own head_g3r5 used historical SS macro declarations and failed CTS after18243hold buffers,max-buffer-count,worsthold-352.069ps. Failure retained; new corner+clock structure addresses unequal core/soft flop arrival."
+}
