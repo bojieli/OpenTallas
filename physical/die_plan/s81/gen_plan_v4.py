@@ -39,6 +39,7 @@ NC, NR = 22, 20
 DIE_W = NC * PX + 2 * X0
 DIE_H = NR * PY + 2 * X0
 REACH = 1500.0
+FT_KIT_REACH_UM = 405.0  # measured M4-M7 kit reach at 833ps; M8/M9 are reserved die resources
 FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
 UNIFORM_SEG = True
 SNAP = 0.192
@@ -188,6 +189,40 @@ def frame_hard_cores(contents, buses):
                  # 0.024): shift every frame core by the sub-lattice track offset + list its pins for the G0 track check
                  track_offset_um=core_track_offset(e), pins_file=f"inputs/core_pins/{e['module']}.json") for e in mac
             if not re.match(r"u_r0\.u_xo\d+$", e["inst"])]   # v4.6: u_xo -> soft u_y_xo<j>_0/_1 chain (S81-P9-RTL)
+
+
+def frame_early_clock(ty):
+    """Deliver slow frame cores early by their selected TT internal clock latency.
+
+    This uses the CP2 core-tap contract: effective core flop arrival remains the
+    common 250 ps target, with no data-cycle change. ROMs have clk->q arcs, not
+    internal clock-tree insertion, and stay on the ordinary grid.
+    """
+    from tools.die_plan.cores import clock_pins
+    from tools.die_plan.schema import tap_clear
+    ck = ty["clock"]
+    taps = []
+    for c in ty.get("hard_cores", []):
+        if c.get("module") not in ("ot_v41_rom_elem_q_qxpq_w10", "ot_v41_bf_col"):
+            continue
+        pins = clock_pins(c)
+        for pin, timing in pins.items():
+            latency = timing["rise"]
+            if latency <= 250:
+                continue
+            x, y = c["origin_um"]
+            cw, ch = c["outline_um"]
+            # A dedicated tap in the adjacent macro-free channel; tap_clear also
+            # keeps it clear of neighbouring cores and other dedicated taps.
+            xy = tap_clear(ty, x + cw / 2, y - 8.64,
+                           [t["xy"] for t in taps], clear=4.32)
+            taps.append(dict(name=c["inst"] + "." + pin, kind="core", xy=list(xy),
+                             insertion_ps=round(latency, 5),
+                             budget_owner=c["lib"],
+                             note="CP2 early core tap; selected TT max_clock_tree_path_rise"))
+    if taps:
+        ck.update(core_taps="early", taps=taps)
+    return ty
 
 
 # ---- S81-P9-HC 10-23 (COORD G0C): hard_cores[] of the NON-frame types over the 400k-cell cap -------------------------
@@ -465,6 +500,12 @@ def ft_stations_macro(s, cores, w, h, smax=FT_STATION_MAX * 0.98):
             break
         k += 1
     return k
+
+
+def macrofree_ft_reach(plan):
+    """Use actual corresponding pin bits and the implemented M4-M7 reach."""
+    from tools.die_plan.ft_reach import resize
+    return resize(plan, reach_um=min(FT_STATION_MAX, FT_KIT_REACH_UM), margin=.98)
 
 
 def mir(c):
@@ -1589,6 +1630,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   **({"hard_cores": hc_} if hc_ else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
+        if tn.startswith("col_"):
+            frame_early_clock(ty)
         out_types[tn] = ty
         for n in names:
             _, f2, s2 = sigs[n]
@@ -1661,6 +1704,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
+    STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)

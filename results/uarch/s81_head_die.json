@@ -24,11 +24,11 @@
   "tile": {
     "content": "ot_s81hd_tile = 1 bundle (4 A + 1 B elements as CLOSED hard cores) + chain glue",
     "outline_um": [
-      691.2,
+      708.48,
       1036.8
     ],
-    "area_mm2": 0.7166,
-    "core_fill": 0.671,
+    "area_mm2": 0.7346,
+    "core_fill": 0.654,
     "cells": 1071597,
     "cells_basis": "4 x elemA 214445 (ASSUMED: elemB cells x area ratio (no elemA count committed)) + elemB 163817 + glue 50000 ASSUMED",
     "hard_cores": "5 (each < 400k cells): the tile is over the 400k CORE-KS cap, so the elements are its cores",
@@ -93,14 +93,14 @@
       "used": 253,
       "dark": 11,
       "tile_um": [
-        691.2,
+        708.48,
         1036.8
       ]
     },
     "spine": {
-      "width_um": 1762.56,
+      "width_um": 1382.4,
       "node_um": [
-        1762.56,
+        1382.4,
         2073.6
       ],
       "levels": 6,
@@ -118,7 +118,7 @@
       "macs_per_cycle": 21120.0,
       "rom_bytes_per_cycle": 45210.0,
       "rom_macros": 2640,
-      "area_mm2": 189.2,
+      "area_mm2": 193.9,
       "fanout": "none: x enters a chain head once and is forwarded tile to tile (registered); best is merged forward; no mux/demux beyond the 3-way spine node copy"
     },
     "spine": {
@@ -185,16 +185,16 @@
   "latency": {
     "rows": {
       "xb_ingress": 162,
-      "x_fill_and_return": 156,
+      "x_fill_and_return": 154,
       "bundle": 8413,
       "spine_merge_fire": 12,
       "rank_merge": 357,
       "mtp_seq_token_former": 6,
       "out_hop_issue": 4
     },
-    "total": 9110,
+    "total": 9108,
     "calendar_head_window": 10357,
-    "vs_calendar": -1247,
+    "vs_calendar": -1249,
     "ar_share": 0.00723,
     "note": "x fill / return counts 2 edges a tile (registered faces) + the spine stations at 364.5 um"
   },
@@ -229,7 +229,7 @@
     },
     "spine_ns_face": {
       "bits": 1946,
-      "tracks": 38556
+      "tracks": 30240
     },
     "note": "per-face G0 numbers are recomputed by tools/die_plan/check.py on the generated plan"
   },
