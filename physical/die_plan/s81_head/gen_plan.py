@@ -662,6 +662,8 @@ plan = dict(
 )
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
+from ft_reach import resize as resize_ft_reach
+resize_ft_reach(plan, reach_um=405.0, margin=REACH / 405.0)
 S.validate  # noqa: B018  (schema import check)
 out = HERE / "die_plan.json"
 out.write_text(json.dumps(plan, indent=1) + "\n")

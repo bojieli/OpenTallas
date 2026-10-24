@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "s81_head",
- "plan_digest": "512bce22a6c7d250",
+ "plan_digest": "7de5c2de3aebf885",
  "period_ps": 833,
  "lanes": {
   "chE0_b0": {
@@ -423,12 +423,12 @@
    "width": 565
   },
   "chE0_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE0_T",
    "src": {
@@ -860,12 +860,12 @@
    "width": 565
   },
   "chE1_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE1_T",
    "src": {
@@ -1297,12 +1297,12 @@
    "width": 565
   },
   "chE2_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE2_T",
    "src": {
@@ -1734,12 +1734,12 @@
    "width": 565
   },
   "chE3_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE3_T",
    "src": {
@@ -2171,12 +2171,12 @@
    "width": 565
   },
   "chE4_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE4_T",
    "src": {
@@ -2608,12 +2608,12 @@
    "width": 565
   },
   "chE5_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHE5_T",
    "src": {
@@ -3045,12 +3045,12 @@
    "width": 565
   },
   "chW0_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW0_T",
    "src": {
@@ -3482,12 +3482,12 @@
    "width": 565
   },
   "chW1_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW1_T",
    "src": {
@@ -3919,12 +3919,12 @@
    "width": 565
   },
   "chW2_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW2_T",
    "src": {
@@ -4356,12 +4356,12 @@
    "width": 565
   },
   "chW3_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW3_T",
    "src": {
@@ -4793,12 +4793,12 @@
    "width": 565
   },
   "chW4_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW4_T",
    "src": {
@@ -5230,12 +5230,12 @@
    "width": 565
   },
   "chW5_t": {
-   "cycles": 5,
-   "stations": 3,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 5,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_CHW5_T",
    "src": {
@@ -5287,12 +5287,12 @@
    "width": 514
   },
   "coll_EN1_d": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_EN1_D",
    "src": {
@@ -5306,12 +5306,12 @@
    "width": 512
   },
   "coll_EN1_u": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_COLL_EN1_U",
    "src": {
@@ -5363,12 +5363,12 @@
    "width": 514
   },
   "coll_ES1_d": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_ES1_D",
    "src": {
@@ -5382,12 +5382,12 @@
    "width": 512
   },
   "coll_ES1_u": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_COLL_ES1_U",
    "src": {
@@ -5515,12 +5515,12 @@
    "width": 514
   },
   "coll_WN1_d": {
-   "cycles": 9,
-   "stations": 7,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 9,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_COLL_WN1_D",
    "src": {
@@ -5534,12 +5534,12 @@
    "width": 512
   },
   "coll_WN1_u": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_WN1_U",
    "src": {
@@ -5553,12 +5553,12 @@
    "width": 514
   },
   "coll_WN2_d": {
-   "cycles": 19,
-   "stations": 17,
+   "cycles": 20,
+   "stations": 18,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 19,
+   "natural": 20,
    "pad": 0,
    "param": "LAT_COLL_WN2_D",
    "src": {
@@ -5572,12 +5572,12 @@
    "width": 512
   },
   "coll_WN2_u": {
-   "cycles": 20,
-   "stations": 18,
+   "cycles": 21,
+   "stations": 19,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 20,
+   "natural": 21,
    "pad": 0,
    "param": "LAT_COLL_WN2_U",
    "src": {
@@ -5591,12 +5591,12 @@
    "width": 514
   },
   "coll_WN3_d": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_COLL_WN3_D",
    "src": {
@@ -5610,12 +5610,12 @@
    "width": 512
   },
   "coll_WN3_u": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_COLL_WN3_U",
    "src": {
@@ -5667,12 +5667,12 @@
    "width": 514
   },
   "coll_WS1_d": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_WS1_D",
    "src": {
@@ -5686,12 +5686,12 @@
    "width": 512
   },
   "coll_WS1_u": {
-   "cycles": 12,
-   "stations": 10,
+   "cycles": 13,
+   "stations": 11,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 12,
+   "natural": 13,
    "pad": 0,
    "param": "LAT_COLL_WS1_U",
    "src": {
@@ -5819,12 +5819,12 @@
    "width": 1
   },
   "m0S_rx": {
-   "cycles": 48,
-   "stations": 46,
+   "cycles": 51,
+   "stations": 49,
    "boundary": 2,
    "faces": 10,
    "fixed": 0,
-   "natural": 48,
+   "natural": 51,
    "pad": 0,
    "param": "LAT_HD_M0S_RX",
    "src": {
@@ -5838,12 +5838,12 @@
    "width": 64
   },
   "m0S_tx": {
-   "cycles": 48,
-   "stations": 46,
+   "cycles": 49,
+   "stations": 47,
    "boundary": 2,
    "faces": 10,
    "fixed": 0,
-   "natural": 48,
+   "natural": 49,
    "pad": 0,
    "param": "LAT_HD_M0S_TX",
    "src": {
@@ -5857,12 +5857,12 @@
    "width": 64
   },
   "m7N_rx": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_HD_M7N_RX",
    "src": {
@@ -5895,12 +5895,12 @@
    "width": 64
   },
   "m7S_rx": {
-   "cycles": 45,
-   "stations": 43,
+   "cycles": 47,
+   "stations": 45,
    "boundary": 2,
    "faces": 9,
    "fixed": 0,
-   "natural": 45,
+   "natural": 47,
    "pad": 0,
    "param": "LAT_HD_M7S_RX",
    "src": {
@@ -5914,12 +5914,12 @@
    "width": 64
   },
   "m7S_tx": {
-   "cycles": 45,
-   "stations": 43,
+   "cycles": 46,
+   "stations": 44,
    "boundary": 2,
    "faces": 9,
    "fixed": 0,
-   "natural": 45,
+   "natural": 46,
    "pad": 0,
    "param": "LAT_HD_M7S_TX",
    "src": {

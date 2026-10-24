@@ -1,0 +1,98 @@
+{
+ "verdict": "IMPROVED_NOT_ROUTE_READY",
+ "image": "/srv/opentallas-scratch/claude/codex-s81/frame_seq_center_candidate.png",
+ "review": "Viewed six bands:13 sequencers moved into row centers, uniform right ROM rows retain13.8um gaps;126copied core origins changed. NoRTL/cyclechange. G0PASS0errors1101warnings. Center-distance proxies are placement estimates, not timing. Qbank coupling, off-macroFTsites and frame congestion remain blockers.",
+ "metrics": [
+  {
+   "master": "col_h9",
+   "band": "r0",
+   "seq": "u_r0.u_s0",
+   "before_um": 528.38,
+   "after_um": 295.1
+  },
+  {
+   "master": "col_h9",
+   "band": "r0",
+   "seq": "u_r0.u_s1",
+   "before_um": 257.86,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h9",
+   "band": "r0",
+   "seq": "u_r0.u_s3",
+   "before_um": 430.66,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h9",
+   "band": "r1",
+   "seq": "u_r1.u_s6",
+   "before_um": 422.02,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h9",
+   "band": "r1",
+   "seq": "u_r1.u_s9",
+   "before_um": 441.98,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h9",
+   "band": "r2",
+   "seq": "u_r2.u_s11",
+   "before_um": 549.14,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h9",
+   "band": "r2",
+   "seq": "u_r2.u_s14",
+   "before_um": 441.98,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r0",
+   "seq": "u_r0.u_s2",
+   "before_um": 508.42,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r0",
+   "seq": "u_r0.u_s4",
+   "before_um": 430.66,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r1",
+   "seq": "u_r1.u_s7",
+   "before_um": 473.86,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r1",
+   "seq": "u_r1.u_s9",
+   "before_um": 551.62,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r2",
+   "seq": "u_r2.u_s12",
+   "before_um": 326.98,
+   "after_um": 206.02
+  },
+  {
+   "master": "col_h10",
+   "band": "r2",
+   "seq": "u_r2.u_s14",
+   "before_um": 441.98,
+   "after_um": 206.02
+  }
+ ]
+}

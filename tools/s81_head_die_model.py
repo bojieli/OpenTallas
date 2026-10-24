@@ -126,10 +126,10 @@ def latency(fp):
     L = fp["spine"]["levels"]
     chain = fp["tiles"]["tiles_per_chain"]
     x_fill = L * (2 + level_st) + node_st + 2 * chain // 2           # down the spine, into the farthest chain head
-    ret = 2 * chain // 2 + 4 + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
+    ret = 2 * chain // 2 + (2 + 4) + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
     rows = dict(xb_ingress=X_BEATS + 2, x_fill_and_return=x_fill + ret, bundle=BUNDLE_GO_TO_RESULT,
-                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 2 * 48 + 10,
-                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: worst mesh core lanes LAT_HD_M0S_TX/RX = 48 each
+                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 49 + 51 + 10,
+                mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: actual-bit reach repair: M0S_TX49/RX51; return turn4FT+2face stages
     tot = sum(rows.values())
     return dict(rows=rows, total=tot, calendar_head_window=CAL["head_window"],
                 vs_calendar=tot - CAL["head_window"],

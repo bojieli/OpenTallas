@@ -1,0 +1,8 @@
+{
+ "status": "SMALL_VEHICLE_PASS_NO_G3_CLAIM",
+ "change": "Keep existing head ot_qkh_relay registerbanks/hierarchy in kitcopy; apply existing ot_keep_regs synthesis and face_keep beforeOpenROADdeadlogic removal",
+ "reason": "head_e1 eightcontrolinputbits cr_i[12:9] losttheir existingboundaryFFs; nodeadflopsadded orinputexemption",
+ "gate": "1000edge samecyclelockstepPASS;bitflipmutantCAUGHT;realpinnedORFSYosys rawcontrolslice4dropped->kept28/28FACE_GUARDPASS",
+ "added_data_cycles": 0,
+ "remaining": "Fullheadphysicalkitmustbesynthesized/routedagain; clockaliases/resets needtypedguardcontext,FFhold/slew/insertion failures remain"
+}
