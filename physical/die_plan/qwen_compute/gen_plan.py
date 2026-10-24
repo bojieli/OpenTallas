@@ -726,6 +726,13 @@ WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     **{n: (tn, f"qfd_qc_{tn}_part", (COLL_W, h), (SUB_W, y0), "R0", False) for n, tn, y0, h in COLL_SEGS},
     "io_serdes": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 13746.24), "MX", True),
     "ucie_kv": ("phy_ucie_kv", "ot_qkvd_ucie_x64_phy", (SUB_W, 777.6), (0.0, 9244.8), "R0", True),
+    # QC-P6-G0C 10-23 (PLAN-TOOL5 die IO: a die PHY sits on the beachfront, <= 200 um from the edge): the coll UCIe PHY
+    # leaves coll_core (778 um behind the edge column) for its own edge-column partition directly W of coll_core,
+    # with u_shared + u_gearbox, so the FDI clocks (lclk -> fdi_ck / fdi_rx_ck) still never cross a seam.  The seam
+    # coll_core | coll_ucie carries the P/R <-> shared frames (core clock).
+    # PHY at the bottom (die y 7603-8381), share/gearbox glue band above it covers the whole coll_core seam (die y
+    # 8432-9245), so no share-frame pin sits beside the full-width PHY (G2 v1 1209.6-tall: 59.9k overflow M7/M5)
+    "coll_ucie": ("coll_ucie", "qfd_qc_coll_ucie_part", (SUB_W, 1641.6), (0.0, 7603.2), "R0", False),
     "glue": ("glue", "qfd_qc_wglue", (SUB_W, 1209.6), (0.0, 10022.4), "R0", False),
     "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0), "R0", False),
     "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4), "R0", False),
@@ -736,16 +743,19 @@ COLL_FIDX = {"p": 0, "r": 1, "s0": 2, "s1": 3, "s2": 4}
 COLL_FW = {"p": 546, "r": 514, "s0": 546, "s1": 546, "s2": 546}     # face record width W (RTL localparam)
 # face core -> (segment, origin in the segment frame)
 COLL_CORES = {"s1": ("coll_s", (8.64, 8.64)), "s2": ("coll_s", (267.84, 406.08)),
-              "p": ("coll_core", (8.64, 8.64)), "r": ("coll_core", (8.64, 1192.32)),
+              # QC-P6-G0C: R moves down beside P (the UCIe PHY left coll_core): both share-frame cores sit on the
+              # coll_core | coll_ucie seam (W face y 0-812), R3-INTERNAL <= 750 um without stations
+              "p": ("coll_core", (8.64, 8.64)), "r": ("coll_core", (8.64, 406.08)),
               "s0": ("coll_n", (8.64, 388.8))}
-COLL_UCIE = ("coll_core", (0.0, 406.08), (777.6, 777.6))
+COLL_UCIE = ("coll_ucie", (0.0, 0.0), (777.6, 777.6))  # PHY on the W die edge; share/gearbox band above it
 # coll-internal glue per segment (est.; the old one-partition coll glue was 150k): collective core + land + bumps
 # in coll_core (collective core, share, gearbox, ckdiv, clk_rx, bumps, codec_pl landing), record stations + face pin regs elsewhere
-COLL_GLUE = {"coll_s": 15000, "coll_ft": 6000, "coll_core": 150000, "coll_ftm": 8000, "coll_ftc": 8000,
+COLL_GLUE = {"coll_s": 15000, "coll_ft": 6000, "coll_core": 120000, "coll_ucie": 40000, "coll_ftm": 8000, "coll_ftc": 8000,
              "coll_ftn": 6000, "coll_n": 10000}
 # as-built census instance -> coll segment (io_collective itself is resolved per bus by coll_seg())
 COLL_INST_SEG = {i: "coll_core" for i in ("clk_rx", "ckb_core", "bump_pkg_s0", "bump_pkg_s1", "bump_die_ps",
-                                           "ckdiv_coll_blk", "io_ucie")}
+                                           "ckdiv_coll_blk")}
+COLL_INST_SEG["io_ucie"] = "coll_ucie"
 WS_CELLS = {**COLL_GLUE, "glue": 120000, "native59": 60000, "tt_ctlm": 190000}
 GLUE_INSTS = ("d2d_rom", "sys_face", "embed_prov", "mu_ctxrx", "mu_dhobs", "rstseq_rom", "ckb_rom",
               "rs_bump", "bump_fwd_epoch", "bump_fwd_lrst")
@@ -800,7 +810,7 @@ def build_west(P, census_blocks):
             for i in GLUE_INSTS:
                 cont.append({"inst": f"u_{i}", "module": census_blocks.get(i, i), "status": "reuse",
                              "note": "small W-strip block, merged into the glue partition (one clock/reset region)"})
-        elif n in COLL_PARTS:
+        elif n in COLL_PARTS or n == "coll_ucie":
             cont = coll_contents(P, n, tn, census_blocks) if tn not in P.types else []
         elif n == "tt_ctlm":
             cont.append({"inst": "u_tt_ctlm", "module": "qfd_hp13_cpub39_rp_alt", "status": "rework",
@@ -827,6 +837,8 @@ def coll_seg(other, bus):
         return "coll_n"
     if other in ("io_serdes_1", "io_serdes_2"):
         return "coll_s"
+    if other == "io_ucie" or bus == "shared_fault":
+        return "coll_ucie"          # u_shared / u_gearbox moved with the PHY (shared_fault is u_shared's)
     return "coll_core"
 
 
@@ -1011,6 +1023,10 @@ def ws_path(P, s, d):
             return list(reversed(p))
     if shared_face(P, s, d, quiet=True):
         return [s, d]
+    if COLL_UCIE[0] in (s, d):      # coll_ucie reaches the strip through coll_core (its only logic neighbour)
+        if s == COLL_UCIE[0]:
+            return [s] + ws_path(P, "coll_core", d)
+        return ws_path(P, s, "coll_core") + [d]
     for m in COLL_PARTS:
         if shared_face(P, s, m, quiet=True) and shared_face(P, m, d, quiet=True):
             return [s, m, d]
@@ -1044,15 +1060,21 @@ def coll_internal_links(P):
                      f"u_collective.{f}_tx_rec", f"u_coll_face_{f}.tx_data"))
         rows.append((f"crec_rx_{f}", seg, "coll_core", W + 1, f"rec_rx_{f}", f"rec_rx_{f}_i",
                      f"u_coll_face_{f}.rx_data", f"u_collective.{f}_rx_rec"))
-    rows.append(("cshr_rtx", "coll_core", "coll_core", 565 + 3, "shr_r_tx", "shr_r_tx_i", "u_coll_face_r.phy_tx",
+    us = COLL_UCIE[0]
+    rows.append(("cshr_rtx", "coll_core", us, 565 + 3, "shr_r_tx", "shr_r_tx_i", "u_coll_face_r.phy_tx",
                  "u_shared.r_frame"))
-    rows.append(("cshr_rrx", "coll_core", "coll_core", 565 + 1, "shr_r_rx", "shr_r_rx_i", "u_shared.rx_frames",
+    rows.append(("cshr_rrx", us, "coll_core", 565 + 1, "shr_r_rx", "shr_r_rx_i", "u_shared.rx_frames",
                  "u_coll_face_r.phy_rx"))
+    rows.append(("cshr_ptx", "coll_core", us, 600, "shr_p_tx", "shr_p_tx_i", "u_coll_face_p.phy_tx",
+                 "u_shared.p_frame"))
+    rows.append(("cshr_prx", us, "coll_core", 598, "shr_p_rx", "shr_p_rx_i", "u_shared.rx_frames",
+                 "u_coll_face_p.phy_rx"))
     for role, a, b, w, sb, db, sl_, dl in rows:
         if a == b:
             P.internal_bits[role] += w
             continue
-        P.link(role, coll_stack(a, b), sb, db, w, kind="data", src_leaf=sl_, dst_leaf=dl)
+        path = [a, b] if us in (a, b) else coll_stack(a, b)
+        P.link(role, path, sb, db, w, kind="data", src_leaf=sl_, dst_leaf=dl)
     return rows
 
 
@@ -1105,6 +1127,8 @@ def fault_links(P, variant, geo):
            kind="ctl", src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_s_i")
     P.link("fltk", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "flt_o", "flt_n_i", 1, kind="ctl",
            src_leaf="u_pstn.flt_o", dst_leaf="u_pstn.flt_n_i")
+    P.link("fltu", [COLL_UCIE[0], "coll_core"], "flt_o", "flt_u_i", 1, kind="ctl",
+           src_leaf="u_pstn.flt_o", dst_leaf="u_collective.fault_ucie")
     P.link("fltc", ws_path(P, "coll_core", "glue"), "flt_o", "coll_flt_i", 1, kind="ctl",
            src_leaf="u_collective.fault_or", dst_leaf="u_sys_face.obs_fault_coll")
     P.link("fltn", ["native59", "glue"], "flt_o", "n59_flt_i", 1, kind="ctl",
@@ -1160,11 +1184,22 @@ def quad_segments(P, ll, f, flip, ref_lo, ref_hi, prs):
         bounds.append((ref_lo + a0, ref_lo + a1) if not flip else (ref_hi - a1, ref_hi - a0))
     groups = [[], []]
     for pr in prs:
+        # QC-P6-G0C 10-23 (G0C core_faces + R3-INTERNAL): an A0 core bus (y_o/t_o/na_i/nb_i<c><r>) on EITHER side picks
+        # the segment, the SOURCE core first (its out pins), so a slot bus name on the reference side (a22_i) no
+        # longer drops the window into segment 0.  The window is then packed from the type-frame end nearest that
+        # core's data pins (A0 data pins: W edge in R0, E edge in MY = odd columns; upper part of the core).
+        cm = [re.match(r"^(y_o|t_o|na_i|nb_i)(\d)(\d)$", pr[s_]["bus"]) for s_ in ("src", "dst")]
+        cm = [m_ for m_ in cm if m_]
         bus = pr["src"]["bus"] if pr["src"]["part"] == ll else pr["dst"]["bus"]
-        mm = re.search(r"(\d)(\d)$", bus)
+        mm = cm[0] if cm else re.search(r"(\d)(\d)$", bus)
         j = 0
+        hi = False
         if mm:
-            j = (int(mm.group(1)) if f in "NS" else int(mm.group(2))) % 2
+            c_, r_ = int(mm.group(len(mm.groups()) - 1)), int(mm.group(len(mm.groups())))
+            j = (c_ if f in "NS" else r_) % 2
+            if cm:
+                hi = (c_ % 2 == 1) if f in "NS" else True
+        pr["_pack_hi"] = hi
         groups[j].append(pr)
     return [(bounds[j], groups[j]) for j in range(2) if groups[j]]
 
@@ -1341,18 +1376,23 @@ def materialize(P):
             # (5.0 -> 5.5 -> 5.8 -> 6.0 pins/um), so the G0 count (track quantisation + PG push) stays <= 6/um
             ladder = [5.0, 5.5, 5.8, None] if (a in WS or b in WS) else [None]
             for fm in ladder:
-                cur = (slo + EDGE) if not flip else (shi - EDGE)
-                for pr in sp:
-                    L = qlen(pr["width"] + 1, dens, pr["layers"], cur, flip, fmax=fm)
-                    if not flip:
-                        win = [round(cur, 4), round(cur + L, 4)]
-                        cur += L + GAP
-                    else:
-                        win = [round(cur - L, 4), round(cur, 4)]
-                        cur -= L + GAP
-                        pr["order"] = "lsb_high"
-                    pr["window_um"] = win
-                over = (not flip and cur - GAP > shi - EDGE + 1e-6) or (flip and cur + GAP < slo + EDGE - 1e-6)
+                # die-frame packing: type-frame-high windows (_pack_hi) go from the die-high end when the reference
+                # is unflipped, from the die-low end when flipped; the rest as before
+                up = [pr for pr in sp if not (pr.get("_pack_hi", False) ^ flip)]
+                dn = [pr for pr in sp if pr.get("_pack_hi", False) ^ flip]
+                cur, top = slo + EDGE, shi - EDGE
+                for pr in up:
+                    L = qlen(pr["width"] + 1, dens, pr["layers"], cur, False, fmax=fm)
+                    pr["window_um"] = [round(cur, 4), round(cur + L, 4)]
+                    pr.pop("order", None)
+                    cur += L + GAP
+                for pr in dn:
+                    L = qlen(pr["width"] + 1, dens, pr["layers"], top, True, fmax=fm)
+                    pr["window_um"] = [round(top - L, 4), round(top, 4)]
+                    pr["order"] = "lsb_high"
+                    top -= L + GAP
+                over = cur - GAP > top + GAP + 1e-6 if (up and dn) else (cur - GAP > shi - EDGE + 1e-6 or
+                                                                          top + GAP < slo + EDGE - 1e-6)
                 if not over:
                     break
             if over:
@@ -1391,7 +1431,7 @@ def materialize(P):
         if old != g:
             raise SystemExit(f"type {P.parts[d]['type']} in-bus {pr['dst']['bus']}: instances disagree {old} vs {g}")
     for pr in ports:
-        for k in ("face", "window_um", "layers", "order"):
+        for k in ("face", "window_um", "layers", "order", "_pack_hi"):
             pr.pop(k, None)
     for (tn, bn), b in bus_req.items():
         if (tn, bn) in tgeo:
@@ -1660,6 +1700,237 @@ def declare_a0_hard_cores(P):
                                   "(measured core insertion) so quad core-to-core skew stays <= 80 ps")
 
 
+# QC-P6-G0C 10-23 (COORD G0C: types > 400k cells need hard_cores[]): the slice SU partitions are built from planned
+# hard cores (variant B record: su_l0/l1 = 4 lane-group cores ~111k + ~20k glue; su_c = 8 leaf cores <= 106k + ~60k
+# glue).  Core boxes are on the 8.64 lattice with outlines that are lattice multiples, pins on the SYMMETRIC M4 (E/W
+# faces) / M5 (N/S faces) plan tracks (offset = pitch/2), so every R0/MX/MY instance frame is on track with
+# track_offset [0, 0].  Glue taps (clock_taps) stay in the channels between cores.
+SU_LANE_CORE = (535.68, 207.36)                 # 62 x 8.64 by 24 x 8.64 = 111,078 um2 (lane leaf kits 89.6-96.1k um2)
+SU_LANE_Y = (25.92, 285.12, 578.88, 838.08)      # 4 cores; gap 492.48-578.88 holds the partition glue tap (y 535.68)
+SU_LANE_X = {"su_l0": 69.12, "su_l1": 17.28}     # 69.12-um glue channel on the bus face side (su_l0 W, su_l1 E)
+# su_c: two leaf columns per half, centre channel x 561.6-665.28 keeps both glue taps (x 613.44) and the cws2 slot;
+# the top band y 734-1080 is the glue (u_suvm / u_red rework + u_pstn) under the N-face ctl/sc windows.
+SU_C_CORES = {"u_suvm_u_vm8q_u_va": (25.92, 51.84), "u_suvm_u_vm8q_u_vb": (302.4, 51.84),
+              "u_suvm_u_vm8q_u_vc": (665.28, 51.84), "u_suvm_u_vm8q_u_cl": (941.76, 51.84),
+              "u_suvm_u_vm8q_u_pg": (25.92, 380.16), "u_suvm_u_vm8q_u_ch": (302.4, 380.16),
+              "u_suvm_u_vm8q_u_bt": (665.28, 380.16), "u_suvm_u_su8": (941.76, 380.16)}
+SU_C_IO_PINS = 256                               # provisional core port 'io' until the leaf LEF port table is bound
+_NRM = dict(N=(0.0, 1.0), S=(0.0, -1.0), E=(1.0, 0.0), W=(-1.0, 0.0))
+
+
+def _face_toward(c, pt):
+    dx, dy = pt[0] - c[0], pt[1] - c[1]
+    d = math.hypot(dx, dy) or 1.0
+    return max("NSEW", key=lambda f: _NRM[f][0] * dx / d + _NRM[f][1] * dy / d)
+
+
+def _core_pin_table(cw, ch, groups):
+    """[(port, width, face)] -> pins on symmetric tracks: E/W faces M4 (pitch 0.048), N/S faces M5 (0.048); pins every
+    3rd track (0.144 um), each face's groups centred on the face."""
+    out = []
+    by_face = collections.defaultdict(list)
+    for port, wd, f in groups:
+        by_face[f].append((port, wd))
+    for f, gs in by_face.items():
+        n = sum(wd for _, wd in gs)
+        span = ch if f in "EW" else cw
+        step = 0.144
+        while n * step > span - 4.32 and step > 0.048:
+            step -= 0.048
+        assert n * step <= span - 4.32, (f, n, span)
+        k0 = int(round(((span - n * step) / 2 - 0.024) / 0.048))
+        k = 0
+        for port, wd in gs:
+            for b in range(wd):
+                a = round(0.024 + k0 * 0.048 + k * step, 4)
+                k += 1
+                nm = f"{port}[{b}]" if wd > 1 else port
+                if f in "EW":
+                    out.append({"name": nm, "layer": "M4", "x": 0.096 if f == "W" else round(cw - 0.096, 4), "y": a})
+                else:
+                    out.append({"name": nm, "layer": "M5", "x": a, "y": 0.096 if f == "S" else round(ch - 0.096, 4)})
+    return out
+
+
+def declare_su_hard_cores(P, outdir, su_directed):
+    lane_c = collections.Counter()
+    for r in su_directed["source_rows"]:
+        if r["src_group"].startswith("su_l"):
+            lane_c[int(re.sub(r"\D", "", r["src_inst"]))] += r["bits"]
+    ext = su_directed["external_directed_bits"]
+    conns, cells = {}, {}
+    pdir = Path(outdir) / "cores" / "su"
+    pdir.mkdir(parents=True, exist_ok=True)
+    for tn, t in sorted(P.types.items()):
+        m = re.match(r"^sl([we])_(su_l[01]|su_c)$", tn)
+        if not m:
+            continue
+        side, reg = m.groups()
+        bt = {b["name"]: b for b in t["buses"]}
+
+        def target(bus):
+            b = bt[bus]
+            w, h = t["outline_um"]
+            a = 0.5 * sum(b["window_um"])
+            return dict(N=(a, h), S=(a, 0.0), E=(w, a), W=(0.0, a))[b["face"]]
+        hcs, tc = [], {}
+        if reg.startswith("su_l"):
+            g = int(reg[-1])
+            cw, ch = SU_LANE_CORE
+            for j, y in enumerate(SU_LANE_Y):
+                lane = 4 * g + j
+                inst = f"u_lane{lane}"
+                c = (SU_LANE_X[reg] + cw / 2, y + ch / 2)
+                sc = ext[f"{reg}->r_sc"]
+                ports = [("c_i", 760, "x_su_c_i"), ("c_o", lane_c[lane], "x_su_c_o"),
+                         ("ctl_o", ext[f"{reg}->r_ctl"] // 4, "x_ctl_o"),
+                         ("stm_o", ext[f"{reg}->r_stm"] // 4, "x_stm_o"),
+                         ("sc_o", sc // 4 + (1 if j < sc % 4 else 0), "x_sc_o")]
+                groups = [(pn, wd, _face_toward(c, target(bus))) for pn, wd, bus in ports if wd]
+                pins = _core_pin_table(cw, ch, groups)
+                f = pdir / f"{tn}_{inst}_pins.json"
+                f.write_text(json.dumps({"schema": "opentallas.core_pins.v1", "core": f"qfd_qc_su_lane_{side}",
+                                         "frame": "core R0, origin (0,0)", "source": "QC-P6-G0C top-down plan pins",
+                                         "pins": pins}, indent=0) + "\n")
+                lv = [x for x in t["contents"] if re.match(rf"^u_(exp|rsq|head|rcp|lrly){lane}$", x["inst"])]
+                hcs.append(dict(inst=inst, module=f"qfd_qc_su_lane_{side}", origin_um=[SU_LANE_X[reg], y],
+                                outline_um=[cw, ch], orient="R0", track_offset_um=[0.0, 0.0],
+                                pins_file=str(f.relative_to(outdir)),
+                                note=f"SU lane-group {lane} hard core = {', '.join(x['inst'] for x in lv)} "
+                                     f"(closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. "
+                                     f"gb 500 broadcast, c_o {lane_c[lane]}, ctl/stm/sc share of the group)"))
+                tc[inst] = {pn: [f"bus:{bus}"] for pn, wd, bus in ports if wd}
+                cells[f"{tn}.{inst}"] = int(sum(x["outline_um"][0] * x["outline_um"][1] for x in lv) * UTIL / CELL_UM2)
+        else:
+            byi = {x["inst"]: x for x in t["contents"]}
+            glue = (613.44, 907.2)
+            for inst, (x0, y0) in SU_C_CORES.items():
+                cw, ch = byi[inst]["outline_um"]
+                c = (x0 + cw / 2, y0 + ch / 2)
+                pins = _core_pin_table(cw, ch, [("io", SU_C_IO_PINS, _face_toward(c, glue))])
+                f = pdir / f"{tn}_{inst}_pins.json"
+                f.write_text(json.dumps({"schema": "opentallas.core_pins.v1", "core": byi[inst]["module"],
+                                         "frame": "core R0, origin (0,0)",
+                                         "source": "QC-P6-G0C provisional: one 'io' group facing the glue band; the "
+                                                   "leaf LEF port table replaces it when the su_c leaves are bound",
+                                         "pins": pins}, indent=0) + "\n")
+                hcs.append(dict(inst=inst, module=byi[inst]["module"], origin_um=[x0, y0], outline_um=[cw, ch],
+                                orient="R0", track_offset_um=[0.0, 0.0], pins_file=str(f.relative_to(outdir)),
+                                note="su_c leaf hard core (closed slice leaf kit outline); pins provisional"))
+                byi[inst]["origin_um"] = [x0, y0]
+                cells[f"{tn}.{inst}"] = int(cw * ch * UTIL / CELL_UM2)
+        t["hard_cores"] = hcs
+        for h in hcs:
+            ox, oy = h["origin_um"]
+            cw, ch = h["outline_um"]
+            t["clock"].setdefault("taps", []).append(dict(
+                name=f"{h['inst']}.ck", kind="core", xy=[snap(ox + cw / 2), snap(oy + ch / 2)], orient="R0",
+                insertion_ps=250, insertion_tol_ps=40, budget_owner="SU core kit (own CTS, balanced to the die 250)"))
+        if tc:
+            conns[tn] = tc
+    (Path(outdir) / "core_conns.json").write_text(json.dumps(conns, indent=1, sort_keys=True) + "\n")
+    return cells
+
+
+def _a0_pin_groups(hc, outdir):
+    """{port: (x, y)} type-frame centroid of each A0 core pin group (pins_file, orient, origin + track_offset)."""
+    js = json.loads((Path(outdir) / hc["pins_file"]).read_text())
+    cw, ch = hc["outline_um"]
+    g = collections.defaultdict(list)
+    for q in js["pins"]:
+        x, y = q["x"], q["y"]
+        if hc.get("orient") == "MY":
+            x = cw - x
+        g[re.sub(r"\[\d+\]$", "", q["name"])].append((x, y))
+    dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+    return {k: (round(hc["origin_um"][0] + dx + sum(p[0] for p in v) / len(v), 3),
+                round(hc["origin_um"][1] + dy + sum(p[1] for p in v) / len(v), 3)) for k, v in g.items()}
+
+
+def declare_internal_stations(P, ports, lanes, outdir):
+    """R3-INTERNAL (COORD 10-23 18:15): a reg-reg path inside a partition longer than ST_LEN (face flop at the bus
+    window <-> the A0 core pin flop) gets FIRM plan stations.  Route: window -> along the face to the channel beside
+    the core's data-pin edge -> along the channel -> pin; n = ceil(len / ST_LEN) - 1 stations at equal arclength,
+    moved out of any core box.  Every lane that launches / lands on such a bus gets fixed_cycles += n (latency table
+    + R8 pads count them).  Uses the TRUE pin-group distance, not the G0C box lower bound."""
+    added = {}
+    for tn, t in sorted(P.types.items()):
+        hcs = [h for h in t.get("hard_cores", []) if h.get("module", "").startswith("qfd_tile_n")]
+        if not hcs:
+            continue
+        w, h = t["outline_um"]
+        boxes = [(hc["origin_um"][0], hc["origin_um"][1], hc["origin_um"][0] + hc["outline_um"][0],
+                  hc["origin_um"][1] + hc["outline_um"][1]) for hc in hcs]
+        pins = {hc["inst"]: (_a0_pin_groups(hc, outdir), hc) for hc in hcs}
+        ist = []
+        for b in t["buses"]:
+            li, _, lp = (b.get("leaf") or "").partition(".")
+            if li not in pins or lp not in pins[li][0] or "window_um" not in b:
+                continue
+            pp, hc = pins[li][0][lp], pins[li][1]
+            m = 0.5 * sum(b["window_um"])
+            a = dict(N=(m, h), S=(m, 0.0), E=(w, m), W=(0.0, m))[b["face"]]
+            # channel beside the data-pin edge (W edge in R0, E edge in MY), centred in the gap to the outline /
+            # to the neighbouring core
+            x0 = hc["origin_um"][0]
+            x1 = x0 + hc["outline_um"][0]
+            if hc.get("orient") == "MY":
+                nxt = min([bx[0] for bx in boxes if bx[0] >= x1 - 1e-6] + [w])
+                xc = snap(0.5 * (x1 + nxt))
+            else:
+                prv = max([bx[2] for bx in boxes if bx[2] <= x0 + 1e-6] + [0.0])
+                xc = snap(0.5 * (prv + x0))
+            if b["face"] in "NS":
+                path = [a, (xc, a[1]), (xc, pp[1]), pp]
+            else:
+                path = [a, (xc, a[1]), (xc, pp[1]), pp] if abs(a[0] - xc) < 0.5 * w else [a, (a[0], pp[1]), pp]
+            segs = [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(path, path[1:])]
+            L = sum(segs)
+            if L <= ST_LEN:
+                continue
+            n = math.ceil(L / ST_LEN) - 1
+            while True:
+                regs = []
+                for k in range(1, n + 1):
+                    d = L * k / (n + 1)
+                    for (p, q), sl in zip(zip(path, path[1:]), segs):
+                        if d <= sl + 1e-9 and sl > 0:
+                            f_ = d / sl
+                            regs.append([snap(p[0] + f_ * (q[0] - p[0])), snap(p[1] + f_ * (q[1] - p[1]))])
+                            break
+                        d -= sl
+                for r_ in regs:          # a station is glue: never inside a core box
+                    for bx in boxes:
+                        if bx[0] < r_[0] < bx[2] and bx[1] < r_[1] < bx[3]:
+                            r_[1] = snap(bx[3] + 8.64) if r_[1] > 0.5 * (bx[1] + bx[3]) else snap(bx[1] - 8.64)
+                hops = [tuple(a)] + [tuple(r_) for r_ in regs] + [tuple(pp)]
+                if max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(hops, hops[1:])) <= ST_LEN:
+                    break
+                n += 1
+            ist.append(dict(conn=f"bus:{b['name']}", from_um=[round(a[0], 3), round(a[1], 3)],
+                            to_um=[pp[0], pp[1]], regs_um=regs, bits=b["width"] + 1,
+                            launch="face flop" if b["dir"] == "in" else f"{li}.{lp}",
+                            capture=f"{li}.{lp}" if b["dir"] == "in" else "face flop",
+                            note=f"R3-INTERNAL: {L:.0f} um window<->pin route, {n} FIRM station(s) (data + epoch); "
+                                 f"counted in the lane fixed_cycles"))
+            added[(tn, b["name"])] = n
+        if ist:
+            t["internal_stations"] = ist
+    pmap = {pr["id"]: pr for pr in ports}
+    nl = 0
+    for ln in lanes:
+        a, z = pmap[ln["ports"][0]], pmap[ln["ports"][-1]]
+        k = 0
+        for e in (a["src"], z["dst"]):
+            if e["part"] in P.parts:
+                k += added.get((P.parts[e["part"]]["type"], e["bus"]), 0)
+        if k:
+            ln["fixed_cycles"] = ln.get("fixed_cycles", 0) + k
+            nl += 1
+    return {"buses": {f"{tn}.{bn}": n for (tn, bn), n in sorted(added.items())}, "lanes": nl,
+            "stations": sum(added.values())}
+
+
 def neighbours(P):
     """abutting partitions per partition (G1 star flag > 6) and the linked subset."""
     names = list(P.parts)
@@ -1712,10 +1983,10 @@ def write_census(P, geo, census, record, outdir, su_directed):
     for cl in geo["clusters"]:
         i = {("b", "far"): 0, ("b", "near"): 1, ("t", "near"): 2, ("t", "far"): 3}[(cl["half"], cl["kind"])]
         groups[f"cl_{cname[cl['col']]}_{i}"] = sorted(n for n in P.parts if n.startswith(cl["name"] + "_"))
-    groups["coll"] = list(COLL_PARTS)
+    groups["coll"] = list(COLL_PARTS) + [COLL_UCIE[0]]
     base = {i: "glue" for i in GLUE_INSTS}
     base.update({i: "coll" for i in COLL_INSTS + ("io_ucie",)})
-    base.update({i: i for i in WS if i not in COLL_PARTS})
+    base.update({i: i for i in WS if i not in COLL_PARTS and i != COLL_UCIE[0]})
     base.update({f"dvs_{nm}": f"slice_{nm}" for nm in cname})
     base.update({f"c16_{nm}_{i}": f"cl_{nm}_{i}" for nm in cname for i in range(4)})
     rows, parts = [], dict(base)
@@ -1802,7 +2073,7 @@ def write_census(P, geo, census, record, outdir, su_directed):
             rows2.append(dict(src=g["src"], src_bus=g["src_bus"], dst="u_collective", dst_bus=g["dst_bus"],
                               kind=g["kind"], bits=g["bits"]))
     parts2 = {f"face_{f}": seg for f, (seg, _) in COLL_CORES.items()}
-    parts2.update({"u_collective": "coll_core", "u_shared": "coll_core", "io_ucie": "coll_core", "io_serdes": "io_serdes",
+    parts2.update({"u_collective": "coll_core", "u_shared": COLL_UCIE[0], "io_ucie": COLL_UCIE[0], "io_serdes": "io_serdes",
                    "io_serdes_1": "io_serdes_1", "io_serdes_2": "io_serdes_2", "sys_face": "glue",
                    "dvs_W5": "slice_W5"})
     _tsv(cdir / "coll_rows.tsv.gz", rows2)
@@ -1883,8 +2154,8 @@ def main():
     merged = merge_types(P)
     bind_leaves(P)
     ft_fracs(P)
-    chans = [{"rect_um": [0.0, 4648.32, SUB_W, 9244.8],
-              "reason": "west-strip edge column below ucie_kv: the strip width is set by the serdes PHY depth "
+    chans = [{"rect_um": [0.0, 4648.32, SUB_W, 7603.2],
+              "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth "
                         "(1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD "
                         "field, no logic"},
              {"rect_um": [0.0, 12268.8, SUB_W, 13746.24],
@@ -1897,6 +2168,8 @@ def main():
     taps = clock_taps(P)
     declare_clock_taps(P, taps)
     declare_a0_hard_cores(P)
+    su_core_cells = declare_su_hard_cores(P, Path(a.out).parent, su_directed)
+    r3i = declare_internal_stations(P, ports, lanes, Path(a.out).parent)
     nbrs = neighbours(P)
     plan = {
         "schema": "opentallas.die_plan.v1",
@@ -1919,6 +2192,7 @@ def main():
                        for n, p in P.parts.items()],
         "ports": ports, "lanes": lanes,
         "clock": {"source": {"part": "coll_core", "bus": "clk_rx"}, "insertion_ps": 250, "insertion_tol_ps": 40,
+                  "common_latency_ps": 250,
                   "neighbour_skew_ps": 80, "face_xing": "budgeted",
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(W / 2, 2), round(y_sl + SLH / 2, 2)],
                             "topology": "htree"}},
@@ -1944,6 +2218,8 @@ def main():
              "content_status_per_instance": dict(st),
              "max_cells_type": max(((v["cells"] or 0, k) for k, v in cells.items())),
              "cells_per_type": cells,
+             "su_core_cells": su_core_cells,
+             "r3_internal_stations": r3i,
              "internal_bits_absorbed": dict(P.internal_bits),
              "cell_estimate_method": f"A0 = {A0_CELLS} cells (NL rpf synth_stat incl. 10 ROM leaf macros); other "
                                      f"leaves = outline area x {UTIL} / {CELL_UM2} um2 per cell (A0 calibration); "

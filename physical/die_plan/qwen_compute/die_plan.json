@@ -58,9 +58,9 @@
      0.0,
      4648.32,
      777.6,
-     9244.8
+     7603.2
     ],
-    "reason": "west-strip edge column below ucie_kv: the strip width is set by the serdes PHY depth (1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD field, no logic"
+    "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth (1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD field, no logic"
    },
    {
     "rect_um": [
@@ -174,14 +174,14 @@
      "leaf": "u_t11.n_y",
      "face": "E",
      "window_um": [
-      4.32,
-      93.408
+      2515.872,
+      2604.96
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i00",
@@ -191,14 +191,14 @@
      "leaf": "u_t00.n_b",
      "face": "N",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "bc_i00",
@@ -259,8 +259,8 @@
      "leaf": "u_pstn.flt_i",
      "face": "E",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -591,6 +591,83 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:na_i00",
+     "from_um": [
+      138.92,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      827.559
+     ],
+     "regs_um": [
+      [
+       43.2,
+       2064.96
+      ],
+      [
+       43.2,
+       1425.6
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_a",
+     "note": "R3-INTERNAL: 1921 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i00",
+     "from_um": [
+      1186.776,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      927.847
+     ],
+     "regs_um": [
+      [
+       466.56,
+       2609.28
+      ],
+      [
+       43.2,
+       2315.52
+      ],
+      [
+       43.2,
+       1598.4
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_b",
+     "note": "R3-INTERNAL: 2868 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:y_o00",
+     "from_um": [
+      140.272,
+      0.0
+     ],
+     "to_um": [
+      86.496,
+      1129.991
+     ],
+     "regs_um": [
+      [
+       43.2,
+       535.68
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t00.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1270 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbf_q01": {
@@ -642,14 +719,14 @@
      "leaf": "u_t12.n_y",
      "face": "S",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i12",
@@ -659,14 +736,14 @@
      "leaf": "u_t12.n_b",
      "face": "E",
      "window_um": [
-      1300.32,
-      1389.408
+      2524.512,
+      2613.6
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "flt_o",
@@ -692,7 +769,7 @@
      "in_face": "E",
      "out_face": "S",
      "width": 514,
-     "stations": 2,
+     "stations": 4,
      "out_window_um": [
       94.464,
       183.376
@@ -1007,6 +1084,54 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:y_o12",
+     "from_um": [
+      1186.776,
+      0.0
+     ],
+     "to_um": [
+      1149.024,
+      1121.351
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       578.88
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t12.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1170 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i12",
+     "from_um": [
+      1235.52,
+      2569.056
+     ],
+     "to_um": [
+      1149.024,
+      919.207
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       2030.4
+      ],
+      [
+       1192.32,
+       1451.52
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t12.n_b",
+     "note": "R3-INTERNAL: 1736 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbx_q10": {
@@ -1126,8 +1251,8 @@
      "leaf": "u_pstn.flt_o",
      "face": "W",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -1142,7 +1267,7 @@
      "in_face": "W",
      "out_face": "N",
      "width": 514,
-     "stations": 4,
+     "stations": 1,
      "out_window_um": [
       4.32,
       93.168
@@ -1511,14 +1636,14 @@
      "leaf": "u_t22.n_y",
      "face": "W",
      "window_um": [
-      5.664,
-      94.56
+      1202.592,
+      1291.68
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "na_i22",
@@ -1545,14 +1670,14 @@
      "leaf": "u_t23.n_y",
      "face": "W",
      "window_um": [
-      1300.32,
-      1389.408
+      2524.512,
+      2613.6
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i22",
@@ -1911,6 +2036,50 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:na_i22",
+     "from_um": [
+      48.744,
+      0.0
+     ],
+     "to_um": [
+      77.856,
+      818.919
+     ],
+     "regs_um": [
+      [
+       34.56,
+       423.36
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t22.n_a",
+     "note": "R3-INTERNAL: 876 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i22",
+     "from_um": [
+      230.144,
+      0.0
+     ],
+     "to_um": [
+      77.856,
+      919.207
+     ],
+     "regs_um": [
+      [
+       34.56,
+       380.16
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t22.n_b",
+     "note": "R3-INTERNAL: 1158 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbn_q00": {
@@ -1979,14 +2148,14 @@
      "leaf": "u_t11.n_y",
      "face": "E",
      "window_um": [
-      4.32,
-      93.408
+      2515.872,
+      2604.96
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i00",
@@ -1996,14 +2165,14 @@
      "leaf": "u_t00.n_b",
      "face": "N",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "bc_i00",
@@ -2064,8 +2233,8 @@
      "leaf": "u_pstn.flt_i",
      "face": "E",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -2412,6 +2581,83 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:na_i00",
+     "from_um": [
+      138.92,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      827.559
+     ],
+     "regs_um": [
+      [
+       43.2,
+       2064.96
+      ],
+      [
+       43.2,
+       1425.6
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_a",
+     "note": "R3-INTERNAL: 1921 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i00",
+     "from_um": [
+      1186.776,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      927.847
+     ],
+     "regs_um": [
+      [
+       466.56,
+       2609.28
+      ],
+      [
+       43.2,
+       2315.52
+      ],
+      [
+       43.2,
+       1598.4
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_b",
+     "note": "R3-INTERNAL: 2868 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:y_o00",
+     "from_um": [
+      230.152,
+      0.0
+     ],
+     "to_um": [
+      86.496,
+      1129.991
+     ],
+     "regs_um": [
+      [
+       43.2,
+       492.48
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t00.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1360 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbn_q01": {
@@ -2463,14 +2709,14 @@
      "leaf": "u_t12.n_y",
      "face": "S",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i12",
@@ -2480,14 +2726,14 @@
      "leaf": "u_t12.n_b",
      "face": "E",
      "window_um": [
-      95.712,
-      184.608
+      2524.512,
+      2613.6
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "bc_o03",
@@ -2548,8 +2794,8 @@
      "leaf": "u_pstn.flt_o",
      "face": "E",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -2564,7 +2810,7 @@
      "in_face": "E",
      "out_face": "S",
      "width": 514,
-     "stations": 2,
+     "stations": 4,
      "out_window_um": [
       94.464,
       183.376
@@ -2581,8 +2827,8 @@
      "width": 514,
      "stations": 4,
      "out_window_um": [
-      273.728,
-      362.736
+      184.336,
+      272.768
      ],
      "layers": [
       "M7",
@@ -2894,6 +3140,54 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:y_o12",
+     "from_um": [
+      1186.776,
+      0.0
+     ],
+     "to_um": [
+      1149.024,
+      1121.351
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       578.88
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t12.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1170 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i12",
+     "from_um": [
+      1235.52,
+      2569.056
+     ],
+     "to_um": [
+      1149.024,
+      919.207
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       2030.4
+      ],
+      [
+       1192.32,
+       1451.52
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t12.n_b",
+     "note": "R3-INTERNAL: 1736 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbn_q11": {
@@ -2945,14 +3239,14 @@
      "leaf": "u_t22.n_y",
      "face": "W",
      "window_um": [
-      4.32,
-      93.408
+      1202.592,
+      1291.68
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "na_i22",
@@ -2979,14 +3273,14 @@
      "leaf": "u_t23.n_y",
      "face": "W",
      "window_um": [
-      95.712,
-      184.608
+      2524.512,
+      2613.6
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i22",
@@ -3047,8 +3341,8 @@
      "leaf": "u_pstn.flt_i",
      "face": "W",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -3378,6 +3672,50 @@
      ],
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:na_i22",
+     "from_um": [
+      48.744,
+      0.0
+     ],
+     "to_um": [
+      77.856,
+      818.919
+     ],
+     "regs_um": [
+      [
+       34.56,
+       423.36
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t22.n_a",
+     "note": "R3-INTERNAL: 876 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i22",
+     "from_um": [
+      230.144,
+      0.0
+     ],
+     "to_um": [
+      77.856,
+      919.207
+     ],
+     "regs_um": [
+      [
+       34.56,
+       380.16
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t22.n_b",
+     "note": "R3-INTERNAL: 1158 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
    ]
   },
@@ -9693,6 +10031,54 @@
       "insertion_ps": 270,
       "insertion_tol_ps": 40,
       "from_root_um": 0.0
+     },
+     {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       129.6
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       388.8
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       682.56
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       941.76
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -9702,7 +10088,85 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      17.28,
+      25.92
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l1_u_lane4_pins.json",
+     "note": "SU lane-group 4 hard core = u_exp4, u_rsq4, u_head4, u_rcp4, u_lrly4 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      17.28,
+      285.12
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l1_u_lane5_pins.json",
+     "note": "SU lane-group 5 hard core = u_exp5, u_rsq5, u_head5, u_rcp5, u_lrly5 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      17.28,
+      578.88
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
+     "note": "SU lane-group 6 hard core = u_exp6, u_rsq6, u_head6, u_rcp6, u_lrly6 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      17.28,
+      838.08
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l1_u_lane7_pins.json",
+     "note": "SU lane-group 7 hard core = u_exp7, u_rsq7, u_head7, u_rcp7, u_lrly7 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    }
+   ]
   },
   "slw_su_c": {
    "module": "qfd_qc_slw_su_c",
@@ -10008,7 +10472,11 @@
       172.8,
       129.6
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      941.76,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_va",
@@ -10018,7 +10486,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      25.92,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_vb",
@@ -10028,7 +10500,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      302.4,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_vc",
@@ -10038,7 +10514,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      665.28,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_pg",
@@ -10048,7 +10528,11 @@
       259.2,
       354.24
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      25.92,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_bt",
@@ -10058,7 +10542,11 @@
       259.2,
       354.24
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      665.28,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_cl",
@@ -10068,7 +10556,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      941.76,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_ch",
@@ -10078,7 +10570,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      302.4,
+      380.16
+     ]
     },
     {
      "inst": "u_pstn",
@@ -10118,6 +10614,102 @@
       "insertion_ps": 276,
       "insertion_tol_ps": 40,
       "from_root_um": 276.5
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_va.ck",
+      "kind": "core",
+      "xy": [
+       155.52,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_vb.ck",
+      "kind": "core",
+      "xy": [
+       432.0,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_vc.ck",
+      "kind": "core",
+      "xy": [
+       794.88,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_cl.ck",
+      "kind": "core",
+      "xy": [
+       1071.36,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_pg.ck",
+      "kind": "core",
+      "xy": [
+       155.52,
+       552.96
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_ch.ck",
+      "kind": "core",
+      "xy": [
+       432.0,
+       518.4
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_bt.ck",
+      "kind": "core",
+      "xy": [
+       794.88,
+       552.96
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_su8.ck",
+      "kind": "core",
+      "xy": [
+       1028.16,
+       449.28
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -10127,7 +10719,161 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_suvm_u_vm8q_u_va",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      25.92,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_va_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vb",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      302.4,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_vb_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vc",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      665.28,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_vc_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_cl",
+     "module": "qfd_dv_s8_crh_rp1",
+     "origin_um": [
+      941.76,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_cl_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_pg",
+     "module": "qfd_dv_s8x_prog",
+     "origin_um": [
+      25.92,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      354.24
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_pg_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_ch",
+     "module": "qfd_dv_s8_crh_rp1",
+     "origin_um": [
+      302.4,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_ch_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_bt",
+     "module": "qfd_dv_s8x_btab",
+     "origin_um": [
+      665.28,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      354.24
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_su8",
+     "module": "qfd_dv_s5_su8_rst3",
+     "origin_um": [
+      941.76,
+      380.16
+     ],
+     "outline_um": [
+      172.8,
+      129.6
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_c_u_suvm_u_su8_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    }
+   ]
   },
   "slw_su_l0": {
    "module": "qfd_qc_slw_su_l0",
@@ -10529,6 +11275,54 @@
       "insertion_ps": 270,
       "insertion_tol_ps": 40,
       "from_root_um": 0.0
+     },
+     {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       129.6
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       388.8
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       682.56
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       941.76
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -10538,7 +11332,85 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      69.12,
+      25.92
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+     "note": "SU lane-group 0 hard core = u_exp0, u_rsq0, u_head0, u_rcp0, u_lrly0 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 247, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      69.12,
+      285.12
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+     "note": "SU lane-group 1 hard core = u_exp1, u_rsq1, u_head1, u_rcp1, u_lrly1 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      69.12,
+      578.88
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
+     "note": "SU lane-group 2 hard core = u_exp2, u_rsq2, u_head2, u_rcp2, u_lrly2 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_w",
+     "origin_um": [
+      69.12,
+      838.08
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
+     "note": "SU lane-group 3 hard core = u_exp3, u_rsq3, u_head3, u_rcp3, u_lrly3 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    }
+   ]
   },
   "sle_hc0": {
    "module": "qfd_qc_sle_hc0",
@@ -15157,6 +16029,54 @@
       "insertion_ps": 270,
       "insertion_tol_ps": 40,
       "from_root_um": 0.0
+     },
+     {
+      "name": "u_lane4.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       129.6
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane5.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       388.8
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane6.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       682.56
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane7.ck",
+      "kind": "core",
+      "xy": [
+       285.12,
+       941.76
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -15166,7 +16086,85 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_lane4",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      17.28,
+      25.92
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l1_u_lane4_pins.json",
+     "note": "SU lane-group 4 hard core = u_exp4, u_rsq4, u_head4, u_rcp4, u_lrly4 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane5",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      17.28,
+      285.12
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l1_u_lane5_pins.json",
+     "note": "SU lane-group 5 hard core = u_exp5, u_rsq5, u_head5, u_rcp5, u_lrly5 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane6",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      17.28,
+      578.88
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l1_u_lane6_pins.json",
+     "note": "SU lane-group 6 hard core = u_exp6, u_rsq6, u_head6, u_rcp6, u_lrly6 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane7",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      17.28,
+      838.08
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l1_u_lane7_pins.json",
+     "note": "SU lane-group 7 hard core = u_exp7, u_rsq7, u_head7, u_rcp7, u_lrly7 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    }
+   ]
   },
   "sle_su_c": {
    "module": "qfd_qc_sle_su_c",
@@ -15472,7 +16470,11 @@
       172.8,
       129.6
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      941.76,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_va",
@@ -15482,7 +16484,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      25.92,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_vb",
@@ -15492,7 +16498,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      302.4,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_vc",
@@ -15502,7 +16512,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      665.28,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_pg",
@@ -15512,7 +16526,11 @@
       259.2,
       354.24
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      25.92,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_cl",
@@ -15522,7 +16540,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      941.76,
+      51.84
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_ch",
@@ -15532,7 +16554,11 @@
       259.2,
       276.48
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      302.4,
+      380.16
+     ]
     },
     {
      "inst": "u_suvm_u_vm8q_u_bt",
@@ -15542,7 +16568,11 @@
       259.2,
       354.24
      ],
-     "note": "closed slice leaf (reference; flattened unless macro)"
+     "note": "closed slice leaf (reference; flattened unless macro)",
+     "origin_um": [
+      665.28,
+      380.16
+     ]
     },
     {
      "inst": "u_pstn",
@@ -15582,6 +16612,102 @@
       "insertion_ps": 276,
       "insertion_tol_ps": 40,
       "from_root_um": 276.5
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_va.ck",
+      "kind": "core",
+      "xy": [
+       155.52,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_vb.ck",
+      "kind": "core",
+      "xy": [
+       432.0,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_vc.ck",
+      "kind": "core",
+      "xy": [
+       794.88,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_cl.ck",
+      "kind": "core",
+      "xy": [
+       1071.36,
+       190.08
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_pg.ck",
+      "kind": "core",
+      "xy": [
+       155.52,
+       552.96
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_ch.ck",
+      "kind": "core",
+      "xy": [
+       432.0,
+       518.4
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_vm8q_u_bt.ck",
+      "kind": "core",
+      "xy": [
+       794.88,
+       552.96
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_suvm_u_su8.ck",
+      "kind": "core",
+      "xy": [
+       1028.16,
+       449.28
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -15591,7 +16717,161 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_suvm_u_vm8q_u_va",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      25.92,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_va_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vb",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      302.4,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_vb_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_vc",
+     "module": "qfd_dv_s8x_vmr",
+     "origin_um": [
+      665.28,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_vc_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_cl",
+     "module": "qfd_dv_s8x_crh",
+     "origin_um": [
+      941.76,
+      51.84
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_cl_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_pg",
+     "module": "qfd_dv_s8x_prog",
+     "origin_um": [
+      25.92,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      354.24
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_pg_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_ch",
+     "module": "qfd_dv_s8x_crh",
+     "origin_um": [
+      302.4,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      276.48
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_ch_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_vm8q_u_bt",
+     "module": "qfd_dv_s8x_btab",
+     "origin_um": [
+      665.28,
+      380.16
+     ],
+     "outline_um": [
+      259.2,
+      354.24
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_vm8q_u_bt_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    },
+    {
+     "inst": "u_suvm_u_su8",
+     "module": "qfd_dv_s5_su8_rst3",
+     "origin_um": [
+      941.76,
+      380.16
+     ],
+     "outline_um": [
+      172.8,
+      129.6
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_c_u_suvm_u_su8_pins.json",
+     "note": "su_c leaf hard core (closed slice leaf kit outline); pins provisional"
+    }
+   ]
   },
   "sle_su_l0": {
    "module": "qfd_qc_sle_su_l0",
@@ -15993,6 +17273,54 @@
       "insertion_ps": 270,
       "insertion_tol_ps": 40,
       "from_root_um": 0.0
+     },
+     {
+      "name": "u_lane0.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       129.6
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane1.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       388.8
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane2.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       682.56
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
+     },
+     {
+      "name": "u_lane3.ck",
+      "kind": "core",
+      "xy": [
+       336.96,
+       941.76
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "SU core kit (own CTS, balanced to the die 250)"
      }
     ]
    },
@@ -16002,7 +17330,85 @@
      535.68
     ],
     "sync_stages": 2
-   }
+   },
+   "hard_cores": [
+    {
+     "inst": "u_lane0",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      69.12,
+      25.92
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l0_u_lane0_pins.json",
+     "note": "SU lane-group 0 hard core = u_rsq0, u_exp0, u_rcp0, u_head0, u_lrly0 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 247, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane1",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      69.12,
+      285.12
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l0_u_lane1_pins.json",
+     "note": "SU lane-group 1 hard core = u_rsq1, u_exp1, u_rcp1, u_head1, u_lrly1 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane2",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      69.12,
+      578.88
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l0_u_lane2_pins.json",
+     "note": "SU lane-group 2 hard core = u_rsq2, u_exp2, u_rcp2, u_head2, u_lrly2 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    },
+    {
+     "inst": "u_lane3",
+     "module": "qfd_qc_su_lane_e",
+     "origin_um": [
+      69.12,
+      838.08
+     ],
+     "outline_um": [
+      535.68,
+      207.36
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/su/sle_su_l0_u_lane3_pins.json",
+     "note": "SU lane-group 3 hard core = u_rsq3, u_exp3, u_rcp3, u_head3, u_lrly3 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
+    }
+   ]
   },
   "sle_fw_v2": {
    "module": "qfd_qc_sle_fw",
@@ -18654,23 +20060,6 @@
      "order": "lsb_low"
     },
     {
-     "name": "io_collective__shared_fault",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.io_collective__shared_fault",
-     "face": "N",
-     "window_um": [
-      4.32,
-      4.896
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
-    },
-    {
      "name": "rec_tx_s1",
      "dir": "out",
      "width": 549,
@@ -18773,6 +20162,70 @@
      "order": "lsb_low"
     },
     {
+     "name": "shr_r_tx",
+     "dir": "out",
+     "width": 568,
+     "kind": "data",
+     "leaf": "u_coll_face_r.phy_tx",
+     "face": "W",
+     "window_um": [
+      386.096,
+      506.592
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_r_rx_i",
+     "dir": "in",
+     "width": 566,
+     "kind": "data",
+     "leaf": "u_coll_face_r.phy_rx",
+     "face": "W",
+     "window_um": [
+      265.632,
+      385.136
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_p_tx",
+     "dir": "out",
+     "width": 600,
+     "kind": "data",
+     "leaf": "u_coll_face_p.phy_tx",
+     "face": "W",
+     "window_um": [
+      134.864,
+      264.672
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_p_rx_i",
+     "dir": "in",
+     "width": 598,
+     "kind": "data",
+     "leaf": "u_coll_face_p.phy_rx",
+     "face": "W",
+     "window_um": [
+      7.04,
+      133.904
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
      "name": "sl_flt_i",
      "dir": "in",
      "width": 1,
@@ -18820,6 +20273,22 @@
      "layers": [
       "M7",
       "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_u_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_collective.fault_ucie",
+     "face": "W",
+     "window_um": [
+      4.32,
+      4.72
+     ],
+     "layers": [
+      "M6"
      ],
      "order": "lsb_low"
     },
@@ -18892,7 +20361,23 @@
      "order": "lsb_low"
     }
    ],
-   "ft_slots": [],
+   "ft_slots": [
+    {
+     "name": "shared_fault_io_shared_fault",
+     "in_face": "W",
+     "out_face": "N",
+     "width": 1,
+     "stations": 3,
+     "out_window_um": [
+      4.32,
+      4.896
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
    "contents": [
     {
      "inst": "u_coll_face_p",
@@ -18920,37 +20405,11 @@
      ],
      "origin_um": [
       8.64,
-      1192.32
+      406.08
      ],
      "obs_max": "M5",
      "kit": "physical/ref_tile/qfd_cb16c_r_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
      "note": "PLANNED HARD CORE coll_face_r (~116k cells est.): u_io_collective.u_io.g[1].u_face, collective face R, at its PHY"
-    },
-    {
-     "inst": "u_io_ucie",
-     "module": "ot_qfd_ucie_x64_phy",
-     "status": "reuse",
-     "outline_um": [
-      777.6,
-      777.6
-     ],
-     "origin_um": [
-      0.0,
-      406.08
-     ],
-     "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)"
-    },
-    {
-     "inst": "u_shared",
-     "module": "qfd_ucie_static_share",
-     "status": "reuse",
-     "note": "u_io_collective.u_io.u_shared (P/R frame mux onto the shared UCIe), flattened"
-    },
-    {
-     "inst": "u_gearbox",
-     "module": "qfd_ucie_six_five",
-     "status": "reuse",
-     "note": "u_io_collective.u_io.g_six_five.u_gearbox (FDI clock domains), flattened"
     },
     {
      "inst": "u_collective",
@@ -19034,24 +20493,12 @@
       "kind": "core",
       "xy": [
        267.84,
-       1382.4
+       604.8
       ],
       "insertion_ps": 250,
       "insertion_tol_ps": 40,
       "budget_owner": "face core kit (11 internal roots below this tap)",
-      "from_root_um": 708.5
-     },
-     {
-      "name": "u_io_ucie.ck",
-      "kind": "core",
-      "xy": [
-       388.8,
-       794.88
-      ],
-      "insertion_ps": 250,
-      "insertion_tol_ps": 40,
-      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
-      "from_root_um": 0.0
+      "from_root_um": 311.0
      },
      {
       "name": "glue_00",
@@ -20801,6 +22248,199 @@
     "tap_um": [
      388.8,
      388.8
+    ],
+    "sync_stages": 2
+   }
+  },
+  "coll_ucie": {
+   "module": "qfd_qc_coll_ucie_part",
+   "outline_um": [
+    777.6,
+    1641.6
+   ],
+   "buses": [
+    {
+     "name": "shared_fault",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.shared_fault",
+     "face": "E",
+     "window_um": [
+      835.12,
+      835.52
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_r_tx_i",
+     "dir": "in",
+     "width": 568,
+     "kind": "data",
+     "leaf": "u_shared.r_frame",
+     "face": "E",
+     "window_um": [
+      1215.536,
+      1336.032
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_r_rx",
+     "dir": "out",
+     "width": 566,
+     "kind": "data",
+     "leaf": "u_shared.rx_frames",
+     "face": "E",
+     "window_um": [
+      1095.072,
+      1214.576
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_p_tx_i",
+     "dir": "in",
+     "width": 600,
+     "kind": "data",
+     "leaf": "u_shared.p_frame",
+     "face": "E",
+     "window_um": [
+      964.304,
+      1094.112
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "shr_p_rx",
+     "dir": "out",
+     "width": 598,
+     "kind": "data",
+     "leaf": "u_shared.rx_frames",
+     "face": "E",
+     "window_um": [
+      836.48,
+      963.344
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "flt_o",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.flt_o",
+     "face": "E",
+     "window_um": [
+      833.76,
+      834.16
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "ft_slots": [],
+   "contents": [
+    {
+     "inst": "u_io_ucie",
+     "module": "ot_qfd_ucie_x64_phy",
+     "status": "reuse",
+     "outline_um": [
+      777.6,
+      777.6
+     ],
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)"
+    },
+    {
+     "inst": "u_shared",
+     "module": "qfd_ucie_static_share",
+     "status": "reuse",
+     "note": "u_io_collective.u_io.u_shared (P/R frame mux onto the shared UCIe), flattened"
+    },
+    {
+     "inst": "u_gearbox",
+     "module": "qfd_ucie_six_five",
+     "status": "reuse",
+     "note": "u_io_collective.u_io.g_six_five.u_gearbox (FDI clock domains), flattened"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "coll_ucie_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
+    }
+   ],
+   "note": "west strip: coll_ucie",
+   "clock": {
+    "tap_um": [
+     388.8,
+     820.8
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "taps": [
+     {
+      "name": "u_io_ucie.ck",
+      "kind": "core",
+      "xy": [
+       388.8,
+       388.8
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
+      "from_root_um": 432.0
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       406.08
+      ],
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 414.7
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       1226.88
+      ],
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     }
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     388.8,
+     820.8
     ],
     "sync_stages": 2
    }
@@ -24084,14 +25724,14 @@
      "leaf": "u_t12.n_y",
      "face": "S",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i12",
@@ -24101,14 +25741,14 @@
      "leaf": "u_t12.n_b",
      "face": "E",
      "window_um": [
-      1300.32,
-      1389.408
+      2524.512,
+      2613.6
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "flt_o",
@@ -24134,7 +25774,7 @@
      "in_face": "E",
      "out_face": "S",
      "width": 514,
-     "stations": 2,
+     "stations": 4,
      "out_window_um": [
       94.464,
       183.376
@@ -24183,8 +25823,8 @@
      "width": 597,
      "stations": 4,
      "out_window_um": [
-      273.728,
-      376.976
+      184.336,
+      287.648
      ],
      "layers": [
       "M7",
@@ -24198,8 +25838,8 @@
      "width": 1,
      "stations": 4,
      "out_window_um": [
-      377.936,
-      378.32
+      288.608,
+      288.992
      ],
      "layers": [
       "M7",
@@ -24213,8 +25853,8 @@
      "width": 1,
      "stations": 4,
      "out_window_um": [
-      484.944,
-      485.328
+      394.656,
+      395.04
      ],
      "layers": [
       "M7",
@@ -24526,6 +26166,54 @@
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
     }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:y_o12",
+     "from_um": [
+      1186.776,
+      0.0
+     ],
+     "to_um": [
+      1149.024,
+      1121.351
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       578.88
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t12.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1170 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i12",
+     "from_um": [
+      1235.52,
+      2569.056
+     ],
+     "to_um": [
+      1149.024,
+      919.207
+     ],
+     "regs_um": [
+      [
+       1192.32,
+       2030.4
+      ],
+      [
+       1192.32,
+       1451.52
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t12.n_b",
+     "note": "R3-INTERNAL: 1736 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    }
    ]
   },
   "cbf_q00_s2": {
@@ -24594,14 +26282,14 @@
      "leaf": "u_t11.n_y",
      "face": "E",
      "window_um": [
-      4.32,
-      93.408
+      2515.872,
+      2604.96
      ],
      "layers": [
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "nb_i00",
@@ -24611,14 +26299,14 @@
      "leaf": "u_t00.n_b",
      "face": "N",
      "window_um": [
-      184.336,
-      272.768
+      1142.352,
+      1231.2
      ],
      "layers": [
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "bc_i00",
@@ -24679,8 +26367,8 @@
      "leaf": "u_pstn.flt_i",
      "face": "E",
      "window_um": [
-      94.368,
-      94.752
+      4.32,
+      4.704
      ],
      "layers": [
       "M6",
@@ -24714,8 +26402,8 @@
      "width": 597,
      "stations": 4,
      "out_window_um": [
-      379.28,
-      482.64
+      289.952,
+      391.856
      ],
      "layers": [
       "M7",
@@ -24729,8 +26417,8 @@
      "width": 1,
      "stations": 4,
      "out_window_um": [
-      483.6,
-      483.984
+      392.816,
+      393.696
      ],
      "layers": [
       "M7",
@@ -25086,6 +26774,83 @@
      ],
      "pins_file": "cores/a0_nk_pins.json",
      "note": "A0 NK core (kit qfd_tile_nk_a0ck), platform-track build: placed at origin + (0, 0.012)"
+    }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:na_i00",
+     "from_um": [
+      138.92,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      827.559
+     ],
+     "regs_um": [
+      [
+       43.2,
+       2064.96
+      ],
+      [
+       43.2,
+       1425.6
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_a",
+     "note": "R3-INTERNAL: 1921 um window<->pin route, 2 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:nb_i00",
+     "from_um": [
+      1186.776,
+      2609.28
+     ],
+     "to_um": [
+      86.496,
+      927.847
+     ],
+     "regs_um": [
+      [
+       466.56,
+       2609.28
+      ],
+      [
+       43.2,
+       2315.52
+      ],
+      [
+       43.2,
+       1598.4
+      ]
+     ],
+     "bits": 515,
+     "launch": "face flop",
+     "capture": "u_t00.n_b",
+     "note": "R3-INTERNAL: 2868 um window<->pin route, 3 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
+    },
+    {
+     "conn": "bus:y_o00",
+     "from_um": [
+      140.272,
+      0.0
+     ],
+     "to_um": [
+      86.496,
+      1129.991
+     ],
+     "regs_um": [
+      [
+       43.2,
+       535.68
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t00.n_y",
+     "capture": "face flop",
+     "note": "R3-INTERNAL: 1270 um window<->pin route, 1 FIRM station(s) (data + epoch); counted in the lane fixed_cycles"
     }
    ]
   }
@@ -28445,6 +30210,15 @@
    "origin_um": [
     0.0,
     9244.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "name": "coll_ucie",
+   "type": "coll_ucie",
+   "origin_um": [
+    0.0,
+    7603.2
    ],
    "orient": "R0"
   },
@@ -60588,10 +62362,23 @@
    "kind": "ctl"
   },
   {
-   "id": "coll_core__shared_fault_io_shared_fault__0",
+   "id": "coll_ucie__shared_fault_io_shared_fault__0",
+   "src": {
+    "part": "coll_ucie",
+    "bus": "shared_fault"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "shared_fault_io_shared_fault_i"
+   },
+   "width": 1,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_ucie__shared_fault_io_shared_fault__1",
    "src": {
     "part": "coll_core",
-    "bus": "io_collective__shared_fault"
+    "bus": "shared_fault_io_shared_fault_o"
    },
    "dst": {
     "part": "coll_f3",
@@ -60601,7 +62388,7 @@
    "kind": "ctl"
   },
   {
-   "id": "coll_core__shared_fault_io_shared_fault__1",
+   "id": "coll_ucie__shared_fault_io_shared_fault__2",
    "src": {
     "part": "coll_f3",
     "bus": "shared_fault_io_shared_fault_o"
@@ -62210,6 +63997,58 @@
     "bus": "rec_rx_s0_i"
    },
    "width": 547,
+   "kind": "data"
+  },
+  {
+   "id": "coll_core__cshr_rtx__0",
+   "src": {
+    "part": "coll_core",
+    "bus": "shr_r_tx"
+   },
+   "dst": {
+    "part": "coll_ucie",
+    "bus": "shr_r_tx_i"
+   },
+   "width": 568,
+   "kind": "data"
+  },
+  {
+   "id": "coll_ucie__cshr_rrx__0",
+   "src": {
+    "part": "coll_ucie",
+    "bus": "shr_r_rx"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "shr_r_rx_i"
+   },
+   "width": 566,
+   "kind": "data"
+  },
+  {
+   "id": "coll_core__cshr_ptx__0",
+   "src": {
+    "part": "coll_core",
+    "bus": "shr_p_tx"
+   },
+   "dst": {
+    "part": "coll_ucie",
+    "bus": "shr_p_tx_i"
+   },
+   "width": 600,
+   "kind": "data"
+  },
+  {
+   "id": "coll_ucie__cshr_prx__0",
+   "src": {
+    "part": "coll_ucie",
+    "bus": "shr_p_rx"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "shr_p_rx_i"
+   },
+   "width": 598,
    "kind": "data"
   },
   {
@@ -67023,6 +68862,19 @@
    "kind": "ctl"
   },
   {
+   "id": "coll_ucie__fltu__0",
+   "src": {
+    "part": "coll_ucie",
+    "bus": "flt_o"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "flt_u_i"
+   },
+   "width": 1,
+   "kind": "ctl"
+  },
+  {
    "id": "coll_core__fltc__0",
    "src": {
     "part": "coll_core",
@@ -67287,32 +69139,37 @@
    "ports": [
     "c_W5_bf_11__a00__0",
     "c_W5_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_bf_00__a22",
    "ports": [
     "c_W5_bf_00__a22__0",
     "c_W5_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_bf_01__b00",
    "ports": [
     "c_W5_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_bf_11__b12",
    "ports": [
     "c_W5_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_bf_10__b22",
    "ports": [
     "c_W5_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_bn_00__bc01",
@@ -67343,32 +69200,37 @@
    "ports": [
     "c_W5_bn_11__a00__0",
     "c_W5_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_bn_00__a22",
    "ports": [
     "c_W5_bn_00__a22__0",
     "c_W5_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_bn_01__b00",
    "ports": [
     "c_W5_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_bn_11__b12",
    "ports": [
     "c_W5_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_bn_10__b22",
    "ports": [
     "c_W5_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_tn_00__bc01",
@@ -67399,32 +69261,37 @@
    "ports": [
     "c_W5_tn_11__a00__0",
     "c_W5_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_tn_00__a22",
    "ports": [
     "c_W5_tn_00__a22__0",
     "c_W5_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_tn_01__b00",
    "ports": [
     "c_W5_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_tn_11__b12",
    "ports": [
     "c_W5_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_tn_10__b22",
    "ports": [
     "c_W5_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_tf_00__bc01",
@@ -67455,32 +69322,37 @@
    "ports": [
     "c_W5_tf_11__a00__0",
     "c_W5_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_tf_00__a22",
    "ports": [
     "c_W5_tf_00__a22__0",
     "c_W5_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_tf_01__b00",
    "ports": [
     "c_W5_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W5_tf_11__b12",
    "ports": [
     "c_W5_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W5_tf_10__b22",
    "ports": [
     "c_W5_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_bf_00__bc01",
@@ -67511,32 +69383,37 @@
    "ports": [
     "c_W4_bf_11__a00__0",
     "c_W4_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_bf_00__a22",
    "ports": [
     "c_W4_bf_00__a22__0",
     "c_W4_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_bf_01__b00",
    "ports": [
     "c_W4_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_bf_11__b12",
    "ports": [
     "c_W4_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_bf_10__b22",
    "ports": [
     "c_W4_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_bn_00__bc01",
@@ -67567,32 +69444,37 @@
    "ports": [
     "c_W4_bn_11__a00__0",
     "c_W4_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_bn_00__a22",
    "ports": [
     "c_W4_bn_00__a22__0",
     "c_W4_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_bn_01__b00",
    "ports": [
     "c_W4_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_bn_11__b12",
    "ports": [
     "c_W4_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_bn_10__b22",
    "ports": [
     "c_W4_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_tn_00__bc01",
@@ -67623,32 +69505,37 @@
    "ports": [
     "c_W4_tn_11__a00__0",
     "c_W4_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_tn_00__a22",
    "ports": [
     "c_W4_tn_00__a22__0",
     "c_W4_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_tn_01__b00",
    "ports": [
     "c_W4_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_tn_11__b12",
    "ports": [
     "c_W4_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_tn_10__b22",
    "ports": [
     "c_W4_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_tf_00__bc01",
@@ -67679,32 +69566,37 @@
    "ports": [
     "c_W4_tf_11__a00__0",
     "c_W4_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_tf_00__a22",
    "ports": [
     "c_W4_tf_00__a22__0",
     "c_W4_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_tf_01__b00",
    "ports": [
     "c_W4_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W4_tf_11__b12",
    "ports": [
     "c_W4_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W4_tf_10__b22",
    "ports": [
     "c_W4_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_bf_00__bc01",
@@ -67735,32 +69627,37 @@
    "ports": [
     "c_W3_bf_11__a00__0",
     "c_W3_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_bf_00__a22",
    "ports": [
     "c_W3_bf_00__a22__0",
     "c_W3_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_bf_01__b00",
    "ports": [
     "c_W3_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_bf_11__b12",
    "ports": [
     "c_W3_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_bf_10__b22",
    "ports": [
     "c_W3_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_bn_00__bc01",
@@ -67791,32 +69688,37 @@
    "ports": [
     "c_W3_bn_11__a00__0",
     "c_W3_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_bn_00__a22",
    "ports": [
     "c_W3_bn_00__a22__0",
     "c_W3_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_bn_01__b00",
    "ports": [
     "c_W3_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_bn_11__b12",
    "ports": [
     "c_W3_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_bn_10__b22",
    "ports": [
     "c_W3_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_tn_00__bc01",
@@ -67847,32 +69749,37 @@
    "ports": [
     "c_W3_tn_11__a00__0",
     "c_W3_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_tn_00__a22",
    "ports": [
     "c_W3_tn_00__a22__0",
     "c_W3_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_tn_01__b00",
    "ports": [
     "c_W3_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_tn_11__b12",
    "ports": [
     "c_W3_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_tn_10__b22",
    "ports": [
     "c_W3_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_tf_00__bc01",
@@ -67903,32 +69810,37 @@
    "ports": [
     "c_W3_tf_11__a00__0",
     "c_W3_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_tf_00__a22",
    "ports": [
     "c_W3_tf_00__a22__0",
     "c_W3_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_tf_01__b00",
    "ports": [
     "c_W3_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W3_tf_11__b12",
    "ports": [
     "c_W3_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W3_tf_10__b22",
    "ports": [
     "c_W3_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_bf_00__bc01",
@@ -67959,32 +69871,37 @@
    "ports": [
     "c_W2_bf_11__a00__0",
     "c_W2_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_bf_00__a22",
    "ports": [
     "c_W2_bf_00__a22__0",
     "c_W2_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_bf_01__b00",
    "ports": [
     "c_W2_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_bf_11__b12",
    "ports": [
     "c_W2_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_bf_10__b22",
    "ports": [
     "c_W2_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_bn_00__bc01",
@@ -68015,32 +69932,37 @@
    "ports": [
     "c_W2_bn_11__a00__0",
     "c_W2_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_bn_00__a22",
    "ports": [
     "c_W2_bn_00__a22__0",
     "c_W2_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_bn_01__b00",
    "ports": [
     "c_W2_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_bn_11__b12",
    "ports": [
     "c_W2_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_bn_10__b22",
    "ports": [
     "c_W2_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_tn_00__bc01",
@@ -68071,32 +69993,37 @@
    "ports": [
     "c_W2_tn_11__a00__0",
     "c_W2_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_tn_00__a22",
    "ports": [
     "c_W2_tn_00__a22__0",
     "c_W2_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_tn_01__b00",
    "ports": [
     "c_W2_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_tn_11__b12",
    "ports": [
     "c_W2_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_tn_10__b22",
    "ports": [
     "c_W2_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_tf_00__bc01",
@@ -68127,32 +70054,37 @@
    "ports": [
     "c_W2_tf_11__a00__0",
     "c_W2_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_tf_00__a22",
    "ports": [
     "c_W2_tf_00__a22__0",
     "c_W2_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_tf_01__b00",
    "ports": [
     "c_W2_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W2_tf_11__b12",
    "ports": [
     "c_W2_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W2_tf_10__b22",
    "ports": [
     "c_W2_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_bf_00__bc01",
@@ -68183,32 +70115,37 @@
    "ports": [
     "c_W1_bf_11__a00__0",
     "c_W1_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_bf_00__a22",
    "ports": [
     "c_W1_bf_00__a22__0",
     "c_W1_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_bf_01__b00",
    "ports": [
     "c_W1_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_bf_11__b12",
    "ports": [
     "c_W1_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_bf_10__b22",
    "ports": [
     "c_W1_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_bn_00__bc01",
@@ -68239,32 +70176,37 @@
    "ports": [
     "c_W1_bn_11__a00__0",
     "c_W1_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_bn_00__a22",
    "ports": [
     "c_W1_bn_00__a22__0",
     "c_W1_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_bn_01__b00",
    "ports": [
     "c_W1_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_bn_11__b12",
    "ports": [
     "c_W1_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_bn_10__b22",
    "ports": [
     "c_W1_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_tn_00__bc01",
@@ -68295,32 +70237,37 @@
    "ports": [
     "c_W1_tn_11__a00__0",
     "c_W1_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_tn_00__a22",
    "ports": [
     "c_W1_tn_00__a22__0",
     "c_W1_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_tn_01__b00",
    "ports": [
     "c_W1_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_tn_11__b12",
    "ports": [
     "c_W1_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_tn_10__b22",
    "ports": [
     "c_W1_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_tf_00__bc01",
@@ -68351,32 +70298,37 @@
    "ports": [
     "c_W1_tf_11__a00__0",
     "c_W1_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_tf_00__a22",
    "ports": [
     "c_W1_tf_00__a22__0",
     "c_W1_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_tf_01__b00",
    "ports": [
     "c_W1_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W1_tf_11__b12",
    "ports": [
     "c_W1_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W1_tf_10__b22",
    "ports": [
     "c_W1_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_bf_00__bc01",
@@ -68407,32 +70359,37 @@
    "ports": [
     "c_W0_bf_11__a00__0",
     "c_W0_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_bf_00__a22",
    "ports": [
     "c_W0_bf_00__a22__0",
     "c_W0_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_bf_01__b00",
    "ports": [
     "c_W0_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_bf_11__b12",
    "ports": [
     "c_W0_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_bf_10__b22",
    "ports": [
     "c_W0_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_bn_00__bc01",
@@ -68463,32 +70420,37 @@
    "ports": [
     "c_W0_bn_11__a00__0",
     "c_W0_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_bn_00__a22",
    "ports": [
     "c_W0_bn_00__a22__0",
     "c_W0_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_bn_01__b00",
    "ports": [
     "c_W0_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_bn_11__b12",
    "ports": [
     "c_W0_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_bn_10__b22",
    "ports": [
     "c_W0_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_tn_00__bc01",
@@ -68519,32 +70481,37 @@
    "ports": [
     "c_W0_tn_11__a00__0",
     "c_W0_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_tn_00__a22",
    "ports": [
     "c_W0_tn_00__a22__0",
     "c_W0_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_tn_01__b00",
    "ports": [
     "c_W0_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_tn_11__b12",
    "ports": [
     "c_W0_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_tn_10__b22",
    "ports": [
     "c_W0_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_tf_00__bc01",
@@ -68575,32 +70542,37 @@
    "ports": [
     "c_W0_tf_11__a00__0",
     "c_W0_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_tf_00__a22",
    "ports": [
     "c_W0_tf_00__a22__0",
     "c_W0_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_tf_01__b00",
    "ports": [
     "c_W0_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_W0_tf_11__b12",
    "ports": [
     "c_W0_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_W0_tf_10__b22",
    "ports": [
     "c_W0_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_bf_00__bc01",
@@ -68631,32 +70603,37 @@
    "ports": [
     "c_E0_bf_11__a00__0",
     "c_E0_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_bf_00__a22",
    "ports": [
     "c_E0_bf_00__a22__0",
     "c_E0_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_bf_01__b00",
    "ports": [
     "c_E0_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_bf_11__b12",
    "ports": [
     "c_E0_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_bf_10__b22",
    "ports": [
     "c_E0_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_bn_00__bc01",
@@ -68687,32 +70664,37 @@
    "ports": [
     "c_E0_bn_11__a00__0",
     "c_E0_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_bn_00__a22",
    "ports": [
     "c_E0_bn_00__a22__0",
     "c_E0_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_bn_01__b00",
    "ports": [
     "c_E0_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_bn_11__b12",
    "ports": [
     "c_E0_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_bn_10__b22",
    "ports": [
     "c_E0_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_tn_00__bc01",
@@ -68743,32 +70725,37 @@
    "ports": [
     "c_E0_tn_11__a00__0",
     "c_E0_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_tn_00__a22",
    "ports": [
     "c_E0_tn_00__a22__0",
     "c_E0_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_tn_01__b00",
    "ports": [
     "c_E0_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_tn_11__b12",
    "ports": [
     "c_E0_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_tn_10__b22",
    "ports": [
     "c_E0_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_tf_00__bc01",
@@ -68799,32 +70786,37 @@
    "ports": [
     "c_E0_tf_11__a00__0",
     "c_E0_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_tf_00__a22",
    "ports": [
     "c_E0_tf_00__a22__0",
     "c_E0_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_tf_01__b00",
    "ports": [
     "c_E0_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E0_tf_11__b12",
    "ports": [
     "c_E0_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E0_tf_10__b22",
    "ports": [
     "c_E0_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_bf_00__bc01",
@@ -68855,32 +70847,37 @@
    "ports": [
     "c_E1_bf_11__a00__0",
     "c_E1_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_bf_00__a22",
    "ports": [
     "c_E1_bf_00__a22__0",
     "c_E1_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_bf_01__b00",
    "ports": [
     "c_E1_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_bf_11__b12",
    "ports": [
     "c_E1_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_bf_10__b22",
    "ports": [
     "c_E1_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_bn_00__bc01",
@@ -68911,32 +70908,37 @@
    "ports": [
     "c_E1_bn_11__a00__0",
     "c_E1_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_bn_00__a22",
    "ports": [
     "c_E1_bn_00__a22__0",
     "c_E1_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_bn_01__b00",
    "ports": [
     "c_E1_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_bn_11__b12",
    "ports": [
     "c_E1_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_bn_10__b22",
    "ports": [
     "c_E1_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_tn_00__bc01",
@@ -68967,32 +70969,37 @@
    "ports": [
     "c_E1_tn_11__a00__0",
     "c_E1_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_tn_00__a22",
    "ports": [
     "c_E1_tn_00__a22__0",
     "c_E1_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_tn_01__b00",
    "ports": [
     "c_E1_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_tn_11__b12",
    "ports": [
     "c_E1_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_tn_10__b22",
    "ports": [
     "c_E1_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_tf_00__bc01",
@@ -69023,32 +71030,37 @@
    "ports": [
     "c_E1_tf_11__a00__0",
     "c_E1_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_tf_00__a22",
    "ports": [
     "c_E1_tf_00__a22__0",
     "c_E1_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_tf_01__b00",
    "ports": [
     "c_E1_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E1_tf_11__b12",
    "ports": [
     "c_E1_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E1_tf_10__b22",
    "ports": [
     "c_E1_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_bf_00__bc01",
@@ -69079,32 +71091,37 @@
    "ports": [
     "c_E2_bf_11__a00__0",
     "c_E2_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_bf_00__a22",
    "ports": [
     "c_E2_bf_00__a22__0",
     "c_E2_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_bf_01__b00",
    "ports": [
     "c_E2_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_bf_11__b12",
    "ports": [
     "c_E2_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_bf_10__b22",
    "ports": [
     "c_E2_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_bn_00__bc01",
@@ -69135,32 +71152,37 @@
    "ports": [
     "c_E2_bn_11__a00__0",
     "c_E2_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_bn_00__a22",
    "ports": [
     "c_E2_bn_00__a22__0",
     "c_E2_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_bn_01__b00",
    "ports": [
     "c_E2_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_bn_11__b12",
    "ports": [
     "c_E2_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_bn_10__b22",
    "ports": [
     "c_E2_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_tn_00__bc01",
@@ -69191,32 +71213,37 @@
    "ports": [
     "c_E2_tn_11__a00__0",
     "c_E2_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_tn_00__a22",
    "ports": [
     "c_E2_tn_00__a22__0",
     "c_E2_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_tn_01__b00",
    "ports": [
     "c_E2_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_tn_11__b12",
    "ports": [
     "c_E2_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_tn_10__b22",
    "ports": [
     "c_E2_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_tf_00__bc01",
@@ -69247,32 +71274,37 @@
    "ports": [
     "c_E2_tf_11__a00__0",
     "c_E2_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_tf_00__a22",
    "ports": [
     "c_E2_tf_00__a22__0",
     "c_E2_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_tf_01__b00",
    "ports": [
     "c_E2_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E2_tf_11__b12",
    "ports": [
     "c_E2_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E2_tf_10__b22",
    "ports": [
     "c_E2_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_bf_00__bc01",
@@ -69303,32 +71335,37 @@
    "ports": [
     "c_E3_bf_11__a00__0",
     "c_E3_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_bf_00__a22",
    "ports": [
     "c_E3_bf_00__a22__0",
     "c_E3_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_bf_01__b00",
    "ports": [
     "c_E3_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_bf_11__b12",
    "ports": [
     "c_E3_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_bf_10__b22",
    "ports": [
     "c_E3_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_bn_00__bc01",
@@ -69359,32 +71396,37 @@
    "ports": [
     "c_E3_bn_11__a00__0",
     "c_E3_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_bn_00__a22",
    "ports": [
     "c_E3_bn_00__a22__0",
     "c_E3_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_bn_01__b00",
    "ports": [
     "c_E3_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_bn_11__b12",
    "ports": [
     "c_E3_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_bn_10__b22",
    "ports": [
     "c_E3_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_tn_00__bc01",
@@ -69415,32 +71457,37 @@
    "ports": [
     "c_E3_tn_11__a00__0",
     "c_E3_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_tn_00__a22",
    "ports": [
     "c_E3_tn_00__a22__0",
     "c_E3_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_tn_01__b00",
    "ports": [
     "c_E3_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_tn_11__b12",
    "ports": [
     "c_E3_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_tn_10__b22",
    "ports": [
     "c_E3_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_tf_00__bc01",
@@ -69471,32 +71518,37 @@
    "ports": [
     "c_E3_tf_11__a00__0",
     "c_E3_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_tf_00__a22",
    "ports": [
     "c_E3_tf_00__a22__0",
     "c_E3_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_tf_01__b00",
    "ports": [
     "c_E3_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E3_tf_11__b12",
    "ports": [
     "c_E3_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E3_tf_10__b22",
    "ports": [
     "c_E3_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_bf_00__bc01",
@@ -69527,32 +71579,37 @@
    "ports": [
     "c_E4_bf_11__a00__0",
     "c_E4_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_bf_00__a22",
    "ports": [
     "c_E4_bf_00__a22__0",
     "c_E4_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_bf_01__b00",
    "ports": [
     "c_E4_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_bf_11__b12",
    "ports": [
     "c_E4_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_bf_10__b22",
    "ports": [
     "c_E4_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_bn_00__bc01",
@@ -69583,32 +71640,37 @@
    "ports": [
     "c_E4_bn_11__a00__0",
     "c_E4_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_bn_00__a22",
    "ports": [
     "c_E4_bn_00__a22__0",
     "c_E4_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_bn_01__b00",
    "ports": [
     "c_E4_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_bn_11__b12",
    "ports": [
     "c_E4_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_bn_10__b22",
    "ports": [
     "c_E4_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_tn_00__bc01",
@@ -69639,32 +71701,37 @@
    "ports": [
     "c_E4_tn_11__a00__0",
     "c_E4_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_tn_00__a22",
    "ports": [
     "c_E4_tn_00__a22__0",
     "c_E4_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_tn_01__b00",
    "ports": [
     "c_E4_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_tn_11__b12",
    "ports": [
     "c_E4_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_tn_10__b22",
    "ports": [
     "c_E4_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_tf_00__bc01",
@@ -69695,32 +71762,37 @@
    "ports": [
     "c_E4_tf_11__a00__0",
     "c_E4_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_tf_00__a22",
    "ports": [
     "c_E4_tf_00__a22__0",
     "c_E4_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_tf_01__b00",
    "ports": [
     "c_E4_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E4_tf_11__b12",
    "ports": [
     "c_E4_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E4_tf_10__b22",
    "ports": [
     "c_E4_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_bf_00__bc01",
@@ -69751,32 +71823,37 @@
    "ports": [
     "c_E5_bf_11__a00__0",
     "c_E5_bf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_bf_00__a22",
    "ports": [
     "c_E5_bf_00__a22__0",
     "c_E5_bf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_bf_01__b00",
    "ports": [
     "c_E5_bf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_bf_11__b12",
    "ports": [
     "c_E5_bf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_bf_10__b22",
    "ports": [
     "c_E5_bf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_bn_00__bc01",
@@ -69807,32 +71884,37 @@
    "ports": [
     "c_E5_bn_11__a00__0",
     "c_E5_bn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_bn_00__a22",
    "ports": [
     "c_E5_bn_00__a22__0",
     "c_E5_bn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_bn_01__b00",
    "ports": [
     "c_E5_bn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_bn_11__b12",
    "ports": [
     "c_E5_bn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_bn_10__b22",
    "ports": [
     "c_E5_bn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_tn_00__bc01",
@@ -69863,32 +71945,37 @@
    "ports": [
     "c_E5_tn_11__a00__0",
     "c_E5_tn_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_tn_00__a22",
    "ports": [
     "c_E5_tn_00__a22__0",
     "c_E5_tn_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_tn_01__b00",
    "ports": [
     "c_E5_tn_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_tn_11__b12",
    "ports": [
     "c_E5_tn_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_tn_10__b22",
    "ports": [
     "c_E5_tn_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_tf_00__bc01",
@@ -69919,32 +72006,37 @@
    "ports": [
     "c_E5_tf_11__a00__0",
     "c_E5_tf_11__a00__1"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_tf_00__a22",
    "ports": [
     "c_E5_tf_00__a22__0",
     "c_E5_tf_00__a22__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_tf_01__b00",
    "ports": [
     "c_E5_tf_01__b00__0"
-   ]
+   ],
+   "fixed_cycles": 4
   },
   {
    "id": "c_E5_tf_11__b12",
    "ports": [
     "c_E5_tf_11__b12__0"
-   ]
+   ],
+   "fixed_cycles": 2
   },
   {
    "id": "c_E5_tf_10__b22",
    "ports": [
     "c_E5_tf_10__b22__0"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W5_hc0__cwn0",
@@ -69999,7 +72091,8 @@
    "ports": [
     "c_W5_tn_00__rsn__0",
     "c_W5_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_tf_00__rsf",
@@ -70008,7 +72101,8 @@
     "c_W5_tf_00__rsf__1",
     "c_W5_tf_00__rsf__2",
     "c_W5_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W5_hc0__cws0",
@@ -70078,7 +72172,8 @@
     "c_W5_bn_00__rsn__2",
     "c_W5_bn_00__rsn__3",
     "c_W5_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W5_bf_00__rsf",
@@ -70090,7 +72185,8 @@
     "c_W5_bf_00__rsf__4",
     "c_W5_bf_00__rsf__5",
     "c_W5_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_hc0__cwn0",
@@ -70145,7 +72241,8 @@
    "ports": [
     "c_W4_tn_00__rsn__0",
     "c_W4_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_tf_00__rsf",
@@ -70154,7 +72251,8 @@
     "c_W4_tf_00__rsf__1",
     "c_W4_tf_00__rsf__2",
     "c_W4_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W4_hc0__cws0",
@@ -70224,7 +72322,8 @@
     "c_W4_bn_00__rsn__2",
     "c_W4_bn_00__rsn__3",
     "c_W4_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W4_bf_00__rsf",
@@ -70236,7 +72335,8 @@
     "c_W4_bf_00__rsf__4",
     "c_W4_bf_00__rsf__5",
     "c_W4_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_hc0__cwn0",
@@ -70291,7 +72391,8 @@
    "ports": [
     "c_W3_tn_00__rsn__0",
     "c_W3_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_tf_00__rsf",
@@ -70300,7 +72401,8 @@
     "c_W3_tf_00__rsf__1",
     "c_W3_tf_00__rsf__2",
     "c_W3_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W3_hc0__cws0",
@@ -70370,7 +72472,8 @@
     "c_W3_bn_00__rsn__2",
     "c_W3_bn_00__rsn__3",
     "c_W3_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W3_bf_00__rsf",
@@ -70382,7 +72485,8 @@
     "c_W3_bf_00__rsf__4",
     "c_W3_bf_00__rsf__5",
     "c_W3_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_hc0__cwn0",
@@ -70437,7 +72541,8 @@
    "ports": [
     "c_W2_tn_00__rsn__0",
     "c_W2_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_tf_00__rsf",
@@ -70446,7 +72551,8 @@
     "c_W2_tf_00__rsf__1",
     "c_W2_tf_00__rsf__2",
     "c_W2_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W2_hc0__cws0",
@@ -70516,7 +72622,8 @@
     "c_W2_bn_00__rsn__2",
     "c_W2_bn_00__rsn__3",
     "c_W2_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W2_bf_00__rsf",
@@ -70528,7 +72635,8 @@
     "c_W2_bf_00__rsf__4",
     "c_W2_bf_00__rsf__5",
     "c_W2_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_hc0__cwn0",
@@ -70583,7 +72691,8 @@
    "ports": [
     "c_W1_tn_00__rsn__0",
     "c_W1_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_tf_00__rsf",
@@ -70592,7 +72701,8 @@
     "c_W1_tf_00__rsf__1",
     "c_W1_tf_00__rsf__2",
     "c_W1_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W1_hc0__cws0",
@@ -70662,7 +72772,8 @@
     "c_W1_bn_00__rsn__2",
     "c_W1_bn_00__rsn__3",
     "c_W1_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W1_bf_00__rsf",
@@ -70674,7 +72785,8 @@
     "c_W1_bf_00__rsf__4",
     "c_W1_bf_00__rsf__5",
     "c_W1_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_hc0__cwn0",
@@ -70729,7 +72841,8 @@
    "ports": [
     "c_W0_tn_00__rsn__0",
     "c_W0_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_tf_00__rsf",
@@ -70738,7 +72851,8 @@
     "c_W0_tf_00__rsf__1",
     "c_W0_tf_00__rsf__2",
     "c_W0_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W0_hc0__cws0",
@@ -70808,7 +72922,8 @@
     "c_W0_bn_00__rsn__2",
     "c_W0_bn_00__rsn__3",
     "c_W0_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_W0_bf_00__rsf",
@@ -70820,7 +72935,8 @@
     "c_W0_bf_00__rsf__4",
     "c_W0_bf_00__rsf__5",
     "c_W0_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_hc0__cwn0",
@@ -70875,7 +72991,8 @@
    "ports": [
     "c_E0_tn_00__rsn__0",
     "c_E0_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_tf_00__rsf",
@@ -70884,7 +73001,8 @@
     "c_E0_tf_00__rsf__1",
     "c_E0_tf_00__rsf__2",
     "c_E0_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E0_hc0__cws0",
@@ -70954,7 +73072,8 @@
     "c_E0_bn_00__rsn__2",
     "c_E0_bn_00__rsn__3",
     "c_E0_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E0_bf_00__rsf",
@@ -70966,7 +73085,8 @@
     "c_E0_bf_00__rsf__4",
     "c_E0_bf_00__rsf__5",
     "c_E0_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_hc0__cwn0",
@@ -71021,7 +73141,8 @@
    "ports": [
     "c_E1_tn_00__rsn__0",
     "c_E1_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_tf_00__rsf",
@@ -71030,7 +73151,8 @@
     "c_E1_tf_00__rsf__1",
     "c_E1_tf_00__rsf__2",
     "c_E1_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E1_hc0__cws0",
@@ -71100,7 +73222,8 @@
     "c_E1_bn_00__rsn__2",
     "c_E1_bn_00__rsn__3",
     "c_E1_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E1_bf_00__rsf",
@@ -71112,7 +73235,8 @@
     "c_E1_bf_00__rsf__4",
     "c_E1_bf_00__rsf__5",
     "c_E1_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_hc0__cwn0",
@@ -71167,7 +73291,8 @@
    "ports": [
     "c_E2_tn_00__rsn__0",
     "c_E2_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_tf_00__rsf",
@@ -71176,7 +73301,8 @@
     "c_E2_tf_00__rsf__1",
     "c_E2_tf_00__rsf__2",
     "c_E2_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E2_hc0__cws0",
@@ -71246,7 +73372,8 @@
     "c_E2_bn_00__rsn__2",
     "c_E2_bn_00__rsn__3",
     "c_E2_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E2_bf_00__rsf",
@@ -71258,7 +73385,8 @@
     "c_E2_bf_00__rsf__4",
     "c_E2_bf_00__rsf__5",
     "c_E2_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_hc0__cwn0",
@@ -71313,7 +73441,8 @@
    "ports": [
     "c_E3_tn_00__rsn__0",
     "c_E3_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_tf_00__rsf",
@@ -71322,7 +73451,8 @@
     "c_E3_tf_00__rsf__1",
     "c_E3_tf_00__rsf__2",
     "c_E3_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E3_hc0__cws0",
@@ -71392,7 +73522,8 @@
     "c_E3_bn_00__rsn__2",
     "c_E3_bn_00__rsn__3",
     "c_E3_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E3_bf_00__rsf",
@@ -71404,7 +73535,8 @@
     "c_E3_bf_00__rsf__4",
     "c_E3_bf_00__rsf__5",
     "c_E3_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_hc0__cwn0",
@@ -71459,7 +73591,8 @@
    "ports": [
     "c_E4_tn_00__rsn__0",
     "c_E4_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_tf_00__rsf",
@@ -71468,7 +73601,8 @@
     "c_E4_tf_00__rsf__1",
     "c_E4_tf_00__rsf__2",
     "c_E4_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E4_hc0__cws0",
@@ -71538,7 +73672,8 @@
     "c_E4_bn_00__rsn__2",
     "c_E4_bn_00__rsn__3",
     "c_E4_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E4_bf_00__rsf",
@@ -71550,7 +73685,8 @@
     "c_E4_bf_00__rsf__4",
     "c_E4_bf_00__rsf__5",
     "c_E4_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_hc0__cwn0",
@@ -71605,7 +73741,8 @@
    "ports": [
     "c_E5_tn_00__rsn__0",
     "c_E5_tn_00__rsn__1"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_tf_00__rsf",
@@ -71614,7 +73751,8 @@
     "c_E5_tf_00__rsf__1",
     "c_E5_tf_00__rsf__2",
     "c_E5_tf_00__rsf__3"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_E5_hc0__cws0",
@@ -71684,7 +73822,8 @@
     "c_E5_bn_00__rsn__2",
     "c_E5_bn_00__rsn__3",
     "c_E5_bn_00__rsn__4"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "c_E5_bf_00__rsf",
@@ -71696,7 +73835,8 @@
     "c_E5_bf_00__rsf__4",
     "c_E5_bf_00__rsf__5",
     "c_E5_bf_00__rsf__6"
-   ]
+   ],
+   "fixed_cycles": 1
   },
   {
    "id": "sl_W5_stm__b_tw_data_stm_ctl",
@@ -77484,10 +79624,11 @@
    ]
   },
   {
-   "id": "coll_core__shared_fault_io_shared_fault",
+   "id": "coll_ucie__shared_fault_io_shared_fault",
    "ports": [
-    "coll_core__shared_fault_io_shared_fault__0",
-    "coll_core__shared_fault_io_shared_fault__1"
+    "coll_ucie__shared_fault_io_shared_fault__0",
+    "coll_ucie__shared_fault_io_shared_fault__1",
+    "coll_ucie__shared_fault_io_shared_fault__2"
    ]
   },
   {
@@ -77991,6 +80132,30 @@
     "coll_n__crec_rx_s0__1",
     "coll_n__crec_rx_s0__2",
     "coll_n__crec_rx_s0__3"
+   ]
+  },
+  {
+   "id": "coll_core__cshr_rtx",
+   "ports": [
+    "coll_core__cshr_rtx__0"
+   ]
+  },
+  {
+   "id": "coll_ucie__cshr_rrx",
+   "ports": [
+    "coll_ucie__cshr_rrx__0"
+   ]
+  },
+  {
+   "id": "coll_core__cshr_ptx",
+   "ports": [
+    "coll_core__cshr_ptx__0"
+   ]
+  },
+  {
+   "id": "coll_ucie__cshr_prx",
+   "ports": [
+    "coll_ucie__cshr_prx__0"
    ]
   },
   {
@@ -80174,6 +82339,12 @@
    ]
   },
   {
+   "id": "coll_ucie__fltu",
+   "ports": [
+    "coll_ucie__fltu__0"
+   ]
+  },
+  {
    "id": "coll_core__fltc",
    "ports": [
     "coll_core__fltc__0",
@@ -80239,6 +82410,7 @@
   },
   "insertion_ps": 250,
   "insertion_tol_ps": 40,
+  "common_latency_ps": 250,
   "neighbour_skew_ps": 80,
   "face_xing": "budgeted",
   "spine": {
@@ -80314,52 +82486,52 @@
     "param": "LAT_C_W5_BF_10__BC31"
    },
    "c_W5_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W5_BF_11__A00"
    },
    "c_W5_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_BF_00__A22"
    },
    "c_W5_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W5_BF_01__B00"
    },
    "c_W5_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_BF_11__B12"
    },
    "c_W5_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W5_BF_10__B22"
    },
@@ -80404,52 +82576,52 @@
     "param": "LAT_C_W5_BN_10__BC31"
    },
    "c_W5_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W5_BN_11__A00"
    },
    "c_W5_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_BN_00__A22"
    },
    "c_W5_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W5_BN_01__B00"
    },
    "c_W5_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_BN_11__B12"
    },
    "c_W5_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W5_BN_10__B22"
    },
@@ -80494,52 +82666,52 @@
     "param": "LAT_C_W5_TN_10__BC31"
    },
    "c_W5_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W5_TN_11__A00"
    },
    "c_W5_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_TN_00__A22"
    },
    "c_W5_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W5_TN_01__B00"
    },
    "c_W5_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_TN_11__B12"
    },
    "c_W5_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W5_TN_10__B22"
    },
@@ -80584,52 +82756,52 @@
     "param": "LAT_C_W5_TF_10__BC31"
    },
    "c_W5_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W5_TF_11__A00"
    },
    "c_W5_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_TF_00__A22"
    },
    "c_W5_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W5_TF_01__B00"
    },
    "c_W5_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W5_TF_11__B12"
    },
    "c_W5_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W5_TF_10__B22"
    },
@@ -80674,52 +82846,52 @@
     "param": "LAT_C_W4_BF_10__BC31"
    },
    "c_W4_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W4_BF_11__A00"
    },
    "c_W4_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_BF_00__A22"
    },
    "c_W4_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W4_BF_01__B00"
    },
    "c_W4_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_BF_11__B12"
    },
    "c_W4_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W4_BF_10__B22"
    },
@@ -80764,52 +82936,52 @@
     "param": "LAT_C_W4_BN_10__BC31"
    },
    "c_W4_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W4_BN_11__A00"
    },
    "c_W4_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_BN_00__A22"
    },
    "c_W4_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W4_BN_01__B00"
    },
    "c_W4_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_BN_11__B12"
    },
    "c_W4_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W4_BN_10__B22"
    },
@@ -80854,52 +83026,52 @@
     "param": "LAT_C_W4_TN_10__BC31"
    },
    "c_W4_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W4_TN_11__A00"
    },
    "c_W4_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_TN_00__A22"
    },
    "c_W4_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W4_TN_01__B00"
    },
    "c_W4_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_TN_11__B12"
    },
    "c_W4_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W4_TN_10__B22"
    },
@@ -80944,52 +83116,52 @@
     "param": "LAT_C_W4_TF_10__BC31"
    },
    "c_W4_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W4_TF_11__A00"
    },
    "c_W4_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_TF_00__A22"
    },
    "c_W4_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W4_TF_01__B00"
    },
    "c_W4_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W4_TF_11__B12"
    },
    "c_W4_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W4_TF_10__B22"
    },
@@ -81034,52 +83206,52 @@
     "param": "LAT_C_W3_BF_10__BC31"
    },
    "c_W3_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W3_BF_11__A00"
    },
    "c_W3_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_BF_00__A22"
    },
    "c_W3_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W3_BF_01__B00"
    },
    "c_W3_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_BF_11__B12"
    },
    "c_W3_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W3_BF_10__B22"
    },
@@ -81124,52 +83296,52 @@
     "param": "LAT_C_W3_BN_10__BC31"
    },
    "c_W3_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W3_BN_11__A00"
    },
    "c_W3_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_BN_00__A22"
    },
    "c_W3_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W3_BN_01__B00"
    },
    "c_W3_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_BN_11__B12"
    },
    "c_W3_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W3_BN_10__B22"
    },
@@ -81214,52 +83386,52 @@
     "param": "LAT_C_W3_TN_10__BC31"
    },
    "c_W3_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W3_TN_11__A00"
    },
    "c_W3_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_TN_00__A22"
    },
    "c_W3_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W3_TN_01__B00"
    },
    "c_W3_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_TN_11__B12"
    },
    "c_W3_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W3_TN_10__B22"
    },
@@ -81304,52 +83476,52 @@
     "param": "LAT_C_W3_TF_10__BC31"
    },
    "c_W3_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W3_TF_11__A00"
    },
    "c_W3_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_TF_00__A22"
    },
    "c_W3_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W3_TF_01__B00"
    },
    "c_W3_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W3_TF_11__B12"
    },
    "c_W3_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W3_TF_10__B22"
    },
@@ -81394,52 +83566,52 @@
     "param": "LAT_C_W2_BF_10__BC31"
    },
    "c_W2_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W2_BF_11__A00"
    },
    "c_W2_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_BF_00__A22"
    },
    "c_W2_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W2_BF_01__B00"
    },
    "c_W2_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_BF_11__B12"
    },
    "c_W2_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W2_BF_10__B22"
    },
@@ -81484,52 +83656,52 @@
     "param": "LAT_C_W2_BN_10__BC31"
    },
    "c_W2_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W2_BN_11__A00"
    },
    "c_W2_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_BN_00__A22"
    },
    "c_W2_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W2_BN_01__B00"
    },
    "c_W2_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_BN_11__B12"
    },
    "c_W2_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W2_BN_10__B22"
    },
@@ -81574,52 +83746,52 @@
     "param": "LAT_C_W2_TN_10__BC31"
    },
    "c_W2_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W2_TN_11__A00"
    },
    "c_W2_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_TN_00__A22"
    },
    "c_W2_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W2_TN_01__B00"
    },
    "c_W2_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_TN_11__B12"
    },
    "c_W2_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W2_TN_10__B22"
    },
@@ -81664,52 +83836,52 @@
     "param": "LAT_C_W2_TF_10__BC31"
    },
    "c_W2_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W2_TF_11__A00"
    },
    "c_W2_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_TF_00__A22"
    },
    "c_W2_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W2_TF_01__B00"
    },
    "c_W2_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W2_TF_11__B12"
    },
    "c_W2_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W2_TF_10__B22"
    },
@@ -81754,52 +83926,52 @@
     "param": "LAT_C_W1_BF_10__BC31"
    },
    "c_W1_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W1_BF_11__A00"
    },
    "c_W1_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_BF_00__A22"
    },
    "c_W1_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W1_BF_01__B00"
    },
    "c_W1_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_BF_11__B12"
    },
    "c_W1_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W1_BF_10__B22"
    },
@@ -81844,52 +84016,52 @@
     "param": "LAT_C_W1_BN_10__BC31"
    },
    "c_W1_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W1_BN_11__A00"
    },
    "c_W1_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_BN_00__A22"
    },
    "c_W1_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W1_BN_01__B00"
    },
    "c_W1_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_BN_11__B12"
    },
    "c_W1_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W1_BN_10__B22"
    },
@@ -81934,52 +84106,52 @@
     "param": "LAT_C_W1_TN_10__BC31"
    },
    "c_W1_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W1_TN_11__A00"
    },
    "c_W1_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_TN_00__A22"
    },
    "c_W1_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W1_TN_01__B00"
    },
    "c_W1_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_TN_11__B12"
    },
    "c_W1_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W1_TN_10__B22"
    },
@@ -82024,52 +84196,52 @@
     "param": "LAT_C_W1_TF_10__BC31"
    },
    "c_W1_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W1_TF_11__A00"
    },
    "c_W1_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_TF_00__A22"
    },
    "c_W1_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W1_TF_01__B00"
    },
    "c_W1_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W1_TF_11__B12"
    },
    "c_W1_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W1_TF_10__B22"
    },
@@ -82114,52 +84286,52 @@
     "param": "LAT_C_W0_BF_10__BC31"
    },
    "c_W0_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W0_BF_11__A00"
    },
    "c_W0_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_BF_00__A22"
    },
    "c_W0_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W0_BF_01__B00"
    },
    "c_W0_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_BF_11__B12"
    },
    "c_W0_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W0_BF_10__B22"
    },
@@ -82204,52 +84376,52 @@
     "param": "LAT_C_W0_BN_10__BC31"
    },
    "c_W0_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W0_BN_11__A00"
    },
    "c_W0_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_BN_00__A22"
    },
    "c_W0_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W0_BN_01__B00"
    },
    "c_W0_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_BN_11__B12"
    },
    "c_W0_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W0_BN_10__B22"
    },
@@ -82294,52 +84466,52 @@
     "param": "LAT_C_W0_TN_10__BC31"
    },
    "c_W0_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W0_TN_11__A00"
    },
    "c_W0_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_TN_00__A22"
    },
    "c_W0_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W0_TN_01__B00"
    },
    "c_W0_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_TN_11__B12"
    },
    "c_W0_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W0_TN_10__B22"
    },
@@ -82384,52 +84556,52 @@
     "param": "LAT_C_W0_TF_10__BC31"
    },
    "c_W0_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_W0_TF_11__A00"
    },
    "c_W0_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_TF_00__A22"
    },
    "c_W0_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_W0_TF_01__B00"
    },
    "c_W0_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_W0_TF_11__B12"
    },
    "c_W0_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_W0_TF_10__B22"
    },
@@ -82474,52 +84646,52 @@
     "param": "LAT_C_E0_BF_10__BC31"
    },
    "c_E0_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E0_BF_11__A00"
    },
    "c_E0_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_BF_00__A22"
    },
    "c_E0_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E0_BF_01__B00"
    },
    "c_E0_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_BF_11__B12"
    },
    "c_E0_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E0_BF_10__B22"
    },
@@ -82564,52 +84736,52 @@
     "param": "LAT_C_E0_BN_10__BC31"
    },
    "c_E0_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E0_BN_11__A00"
    },
    "c_E0_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_BN_00__A22"
    },
    "c_E0_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E0_BN_01__B00"
    },
    "c_E0_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_BN_11__B12"
    },
    "c_E0_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E0_BN_10__B22"
    },
@@ -82654,52 +84826,52 @@
     "param": "LAT_C_E0_TN_10__BC31"
    },
    "c_E0_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E0_TN_11__A00"
    },
    "c_E0_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_TN_00__A22"
    },
    "c_E0_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E0_TN_01__B00"
    },
    "c_E0_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_TN_11__B12"
    },
    "c_E0_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E0_TN_10__B22"
    },
@@ -82744,52 +84916,52 @@
     "param": "LAT_C_E0_TF_10__BC31"
    },
    "c_E0_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E0_TF_11__A00"
    },
    "c_E0_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_TF_00__A22"
    },
    "c_E0_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E0_TF_01__B00"
    },
    "c_E0_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E0_TF_11__B12"
    },
    "c_E0_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E0_TF_10__B22"
    },
@@ -82834,52 +85006,52 @@
     "param": "LAT_C_E1_BF_10__BC31"
    },
    "c_E1_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E1_BF_11__A00"
    },
    "c_E1_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_BF_00__A22"
    },
    "c_E1_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E1_BF_01__B00"
    },
    "c_E1_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_BF_11__B12"
    },
    "c_E1_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E1_BF_10__B22"
    },
@@ -82924,52 +85096,52 @@
     "param": "LAT_C_E1_BN_10__BC31"
    },
    "c_E1_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E1_BN_11__A00"
    },
    "c_E1_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_BN_00__A22"
    },
    "c_E1_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E1_BN_01__B00"
    },
    "c_E1_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_BN_11__B12"
    },
    "c_E1_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E1_BN_10__B22"
    },
@@ -83014,52 +85186,52 @@
     "param": "LAT_C_E1_TN_10__BC31"
    },
    "c_E1_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E1_TN_11__A00"
    },
    "c_E1_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_TN_00__A22"
    },
    "c_E1_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E1_TN_01__B00"
    },
    "c_E1_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_TN_11__B12"
    },
    "c_E1_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E1_TN_10__B22"
    },
@@ -83104,52 +85276,52 @@
     "param": "LAT_C_E1_TF_10__BC31"
    },
    "c_E1_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E1_TF_11__A00"
    },
    "c_E1_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_TF_00__A22"
    },
    "c_E1_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E1_TF_01__B00"
    },
    "c_E1_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E1_TF_11__B12"
    },
    "c_E1_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E1_TF_10__B22"
    },
@@ -83194,52 +85366,52 @@
     "param": "LAT_C_E2_BF_10__BC31"
    },
    "c_E2_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E2_BF_11__A00"
    },
    "c_E2_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_BF_00__A22"
    },
    "c_E2_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E2_BF_01__B00"
    },
    "c_E2_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_BF_11__B12"
    },
    "c_E2_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E2_BF_10__B22"
    },
@@ -83284,52 +85456,52 @@
     "param": "LAT_C_E2_BN_10__BC31"
    },
    "c_E2_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E2_BN_11__A00"
    },
    "c_E2_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_BN_00__A22"
    },
    "c_E2_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E2_BN_01__B00"
    },
    "c_E2_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_BN_11__B12"
    },
    "c_E2_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E2_BN_10__B22"
    },
@@ -83374,52 +85546,52 @@
     "param": "LAT_C_E2_TN_10__BC31"
    },
    "c_E2_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E2_TN_11__A00"
    },
    "c_E2_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_TN_00__A22"
    },
    "c_E2_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E2_TN_01__B00"
    },
    "c_E2_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_TN_11__B12"
    },
    "c_E2_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E2_TN_10__B22"
    },
@@ -83464,52 +85636,52 @@
     "param": "LAT_C_E2_TF_10__BC31"
    },
    "c_E2_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E2_TF_11__A00"
    },
    "c_E2_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_TF_00__A22"
    },
    "c_E2_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E2_TF_01__B00"
    },
    "c_E2_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E2_TF_11__B12"
    },
    "c_E2_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E2_TF_10__B22"
    },
@@ -83554,52 +85726,52 @@
     "param": "LAT_C_E3_BF_10__BC31"
    },
    "c_E3_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E3_BF_11__A00"
    },
    "c_E3_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_BF_00__A22"
    },
    "c_E3_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E3_BF_01__B00"
    },
    "c_E3_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_BF_11__B12"
    },
    "c_E3_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E3_BF_10__B22"
    },
@@ -83644,52 +85816,52 @@
     "param": "LAT_C_E3_BN_10__BC31"
    },
    "c_E3_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E3_BN_11__A00"
    },
    "c_E3_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_BN_00__A22"
    },
    "c_E3_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E3_BN_01__B00"
    },
    "c_E3_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_BN_11__B12"
    },
    "c_E3_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E3_BN_10__B22"
    },
@@ -83734,52 +85906,52 @@
     "param": "LAT_C_E3_TN_10__BC31"
    },
    "c_E3_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E3_TN_11__A00"
    },
    "c_E3_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_TN_00__A22"
    },
    "c_E3_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E3_TN_01__B00"
    },
    "c_E3_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_TN_11__B12"
    },
    "c_E3_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E3_TN_10__B22"
    },
@@ -83824,52 +85996,52 @@
     "param": "LAT_C_E3_TF_10__BC31"
    },
    "c_E3_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E3_TF_11__A00"
    },
    "c_E3_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_TF_00__A22"
    },
    "c_E3_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E3_TF_01__B00"
    },
    "c_E3_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E3_TF_11__B12"
    },
    "c_E3_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E3_TF_10__B22"
    },
@@ -83914,52 +86086,52 @@
     "param": "LAT_C_E4_BF_10__BC31"
    },
    "c_E4_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E4_BF_11__A00"
    },
    "c_E4_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_BF_00__A22"
    },
    "c_E4_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E4_BF_01__B00"
    },
    "c_E4_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_BF_11__B12"
    },
    "c_E4_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E4_BF_10__B22"
    },
@@ -84004,52 +86176,52 @@
     "param": "LAT_C_E4_BN_10__BC31"
    },
    "c_E4_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E4_BN_11__A00"
    },
    "c_E4_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_BN_00__A22"
    },
    "c_E4_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E4_BN_01__B00"
    },
    "c_E4_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_BN_11__B12"
    },
    "c_E4_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E4_BN_10__B22"
    },
@@ -84094,52 +86266,52 @@
     "param": "LAT_C_E4_TN_10__BC31"
    },
    "c_E4_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E4_TN_11__A00"
    },
    "c_E4_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_TN_00__A22"
    },
    "c_E4_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E4_TN_01__B00"
    },
    "c_E4_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_TN_11__B12"
    },
    "c_E4_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E4_TN_10__B22"
    },
@@ -84184,52 +86356,52 @@
     "param": "LAT_C_E4_TF_10__BC31"
    },
    "c_E4_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E4_TF_11__A00"
    },
    "c_E4_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_TF_00__A22"
    },
    "c_E4_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E4_TF_01__B00"
    },
    "c_E4_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E4_TF_11__B12"
    },
    "c_E4_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E4_TF_10__B22"
    },
@@ -84274,52 +86446,52 @@
     "param": "LAT_C_E5_BF_10__BC31"
    },
    "c_E5_bf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E5_BF_11__A00"
    },
    "c_E5_bf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_BF_00__A22"
    },
    "c_E5_bf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E5_BF_01__B00"
    },
    "c_E5_bf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_BF_11__B12"
    },
    "c_E5_bf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E5_BF_10__B22"
    },
@@ -84364,52 +86536,52 @@
     "param": "LAT_C_E5_BN_10__BC31"
    },
    "c_E5_bn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E5_BN_11__A00"
    },
    "c_E5_bn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_BN_00__A22"
    },
    "c_E5_bn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E5_BN_01__B00"
    },
    "c_E5_bn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_BN_11__B12"
    },
    "c_E5_bn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E5_BN_10__B22"
    },
@@ -84454,52 +86626,52 @@
     "param": "LAT_C_E5_TN_10__BC31"
    },
    "c_E5_tn_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E5_TN_11__A00"
    },
    "c_E5_tn_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_TN_00__A22"
    },
    "c_E5_tn_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E5_TN_01__B00"
    },
    "c_E5_tn_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_TN_11__B12"
    },
    "c_E5_tn_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E5_TN_10__B22"
    },
@@ -84544,52 +86716,52 @@
     "param": "LAT_C_E5_TF_10__BC31"
    },
    "c_E5_tf_11__a00": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 4,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 2,
+    "natural": 8,
     "pad": 0,
     "param": "LAT_C_E5_TF_11__A00"
    },
    "c_E5_tf_00__a22": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 4,
+    "stations": 1,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 6,
+    "fixed": 1,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_TF_00__A22"
    },
    "c_E5_tf_01__b00": {
-    "cycles": 2,
+    "cycles": 6,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 4,
+    "natural": 6,
     "pad": 0,
     "param": "LAT_C_E5_TF_01__B00"
    },
    "c_E5_tf_11__b12": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_C_E5_TF_11__B12"
    },
    "c_E5_tf_10__b22": {
-    "cycles": 2,
+    "cycles": 3,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 1,
+    "natural": 3,
     "pad": 0,
     "param": "LAT_C_E5_TF_10__B22"
    },
@@ -84674,22 +86846,22 @@
     "param": "LAT_C_W5_TN_11__BCF3"
    },
    "c_W5_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W5_TN_00__RSN"
    },
    "c_W5_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W5_TF_00__RSF"
    },
@@ -84774,22 +86946,22 @@
     "param": "LAT_C_W5_BN_11__BCF3"
    },
    "c_W5_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W5_BN_00__RSN"
    },
    "c_W5_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W5_BF_00__RSF"
    },
@@ -84874,22 +87046,22 @@
     "param": "LAT_C_W4_TN_11__BCF3"
    },
    "c_W4_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W4_TN_00__RSN"
    },
    "c_W4_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W4_TF_00__RSF"
    },
@@ -84974,22 +87146,22 @@
     "param": "LAT_C_W4_BN_11__BCF3"
    },
    "c_W4_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W4_BN_00__RSN"
    },
    "c_W4_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W4_BF_00__RSF"
    },
@@ -85074,22 +87246,22 @@
     "param": "LAT_C_W3_TN_11__BCF3"
    },
    "c_W3_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W3_TN_00__RSN"
    },
    "c_W3_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W3_TF_00__RSF"
    },
@@ -85174,22 +87346,22 @@
     "param": "LAT_C_W3_BN_11__BCF3"
    },
    "c_W3_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W3_BN_00__RSN"
    },
    "c_W3_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W3_BF_00__RSF"
    },
@@ -85274,22 +87446,22 @@
     "param": "LAT_C_W2_TN_11__BCF3"
    },
    "c_W2_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W2_TN_00__RSN"
    },
    "c_W2_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W2_TF_00__RSF"
    },
@@ -85374,22 +87546,22 @@
     "param": "LAT_C_W2_BN_11__BCF3"
    },
    "c_W2_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W2_BN_00__RSN"
    },
    "c_W2_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W2_BF_00__RSF"
    },
@@ -85474,22 +87646,22 @@
     "param": "LAT_C_W1_TN_11__BCF3"
    },
    "c_W1_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W1_TN_00__RSN"
    },
    "c_W1_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W1_TF_00__RSF"
    },
@@ -85574,22 +87746,22 @@
     "param": "LAT_C_W1_BN_11__BCF3"
    },
    "c_W1_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W1_BN_00__RSN"
    },
    "c_W1_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W1_BF_00__RSF"
    },
@@ -85674,22 +87846,22 @@
     "param": "LAT_C_W0_TN_11__BCF3"
    },
    "c_W0_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_W0_TN_00__RSN"
    },
    "c_W0_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_W0_TF_00__RSF"
    },
@@ -85774,22 +87946,22 @@
     "param": "LAT_C_W0_BN_11__BCF3"
    },
    "c_W0_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_W0_BN_00__RSN"
    },
    "c_W0_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_W0_BF_00__RSF"
    },
@@ -85874,22 +88046,22 @@
     "param": "LAT_C_E0_TN_11__BCF3"
    },
    "c_E0_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E0_TN_00__RSN"
    },
    "c_E0_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E0_TF_00__RSF"
    },
@@ -85974,22 +88146,22 @@
     "param": "LAT_C_E0_BN_11__BCF3"
    },
    "c_E0_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E0_BN_00__RSN"
    },
    "c_E0_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E0_BF_00__RSF"
    },
@@ -86074,22 +88246,22 @@
     "param": "LAT_C_E1_TN_11__BCF3"
    },
    "c_E1_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E1_TN_00__RSN"
    },
    "c_E1_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E1_TF_00__RSF"
    },
@@ -86174,22 +88346,22 @@
     "param": "LAT_C_E1_BN_11__BCF3"
    },
    "c_E1_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E1_BN_00__RSN"
    },
    "c_E1_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E1_BF_00__RSF"
    },
@@ -86274,22 +88446,22 @@
     "param": "LAT_C_E2_TN_11__BCF3"
    },
    "c_E2_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E2_TN_00__RSN"
    },
    "c_E2_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E2_TF_00__RSF"
    },
@@ -86374,22 +88546,22 @@
     "param": "LAT_C_E2_BN_11__BCF3"
    },
    "c_E2_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E2_BN_00__RSN"
    },
    "c_E2_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E2_BF_00__RSF"
    },
@@ -86474,22 +88646,22 @@
     "param": "LAT_C_E3_TN_11__BCF3"
    },
    "c_E3_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E3_TN_00__RSN"
    },
    "c_E3_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E3_TF_00__RSF"
    },
@@ -86574,22 +88746,22 @@
     "param": "LAT_C_E3_BN_11__BCF3"
    },
    "c_E3_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E3_BN_00__RSN"
    },
    "c_E3_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E3_BF_00__RSF"
    },
@@ -86674,22 +88846,22 @@
     "param": "LAT_C_E4_TN_11__BCF3"
    },
    "c_E4_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E4_TN_00__RSN"
    },
    "c_E4_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E4_TF_00__RSF"
    },
@@ -86774,22 +88946,22 @@
     "param": "LAT_C_E4_BN_11__BCF3"
    },
    "c_E4_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E4_BN_00__RSN"
    },
    "c_E4_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E4_BF_00__RSF"
    },
@@ -86874,22 +89046,22 @@
     "param": "LAT_C_E5_TN_11__BCF3"
    },
    "c_E5_tn_00__rsn": {
-    "cycles": 4,
+    "cycles": 5,
     "stations": 2,
     "boundary": 2,
     "faces": 2,
-    "fixed": 0,
-    "natural": 4,
+    "fixed": 1,
+    "natural": 5,
     "pad": 0,
     "param": "LAT_C_E5_TN_00__RSN"
    },
    "c_E5_tf_00__rsf": {
-    "cycles": 13,
+    "cycles": 14,
     "stations": 11,
     "boundary": 2,
     "faces": 4,
-    "fixed": 0,
-    "natural": 13,
+    "fixed": 1,
+    "natural": 14,
     "pad": 0,
     "param": "LAT_C_E5_TF_00__RSF"
    },
@@ -86974,22 +89146,22 @@
     "param": "LAT_C_E5_BN_11__BCF3"
    },
    "c_E5_bn_00__rsn": {
-    "cycles": 9,
+    "cycles": 10,
     "stations": 7,
     "boundary": 2,
     "faces": 5,
-    "fixed": 0,
-    "natural": 9,
+    "fixed": 1,
+    "natural": 10,
     "pad": 0,
     "param": "LAT_C_E5_BN_00__RSN"
    },
    "c_E5_bf_00__rsf": {
-    "cycles": 17,
+    "cycles": 18,
     "stations": 15,
     "boundary": 2,
     "faces": 7,
-    "fixed": 0,
-    "natural": 17,
+    "fixed": 1,
+    "natural": 18,
     "pad": 0,
     "param": "LAT_C_E5_BF_00__RSF"
    },
@@ -95783,15 +97955,15 @@
     "pad": 0,
     "param": "LAT_COLL_S__SERDES_TX_VALID_TX_V_2"
    },
-   "coll_core__shared_fault_io_shared_fault": {
-    "cycles": 3,
-    "stations": 1,
+   "coll_ucie__shared_fault_io_shared_fault": {
+    "cycles": 6,
+    "stations": 4,
     "boundary": 2,
-    "faces": 2,
+    "faces": 3,
     "fixed": 0,
-    "natural": 3,
+    "natural": 6,
     "pad": 0,
-    "param": "LAT_COLL_CORE__SHARED_FAULT_IO_SHARED_FAULT"
+    "param": "LAT_COLL_UCIE__SHARED_FAULT_IO_SHARED_FAULT"
    },
    "io_serdes__rx_flit_serdes_rx": {
     "cycles": 2,
@@ -96552,6 +98724,46 @@
     "natural": 7,
     "pad": 0,
     "param": "LAT_COLL_N__CREC_RX_S0"
+   },
+   "coll_core__cshr_rtx": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_COLL_CORE__CSHR_RTX"
+   },
+   "coll_ucie__cshr_rrx": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_COLL_UCIE__CSHR_RRX"
+   },
+   "coll_core__cshr_ptx": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_COLL_CORE__CSHR_PTX"
+   },
+   "coll_ucie__cshr_prx": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_COLL_UCIE__CSHR_PRX"
    },
    "c_W5_tf_01__flt": {
     "cycles": 2,
@@ -100172,6 +102384,16 @@
     "natural": 7,
     "pad": 0,
     "param": "LAT_COLL_N__FLTK"
+   },
+   "coll_ucie__fltu": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_COLL_UCIE__FLTU"
    },
    "coll_core__fltc": {
     "cycles": 3,
