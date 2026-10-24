@@ -292,6 +292,10 @@ def test_kit_places_content_macros(tmp_path):
     with pytest.raises(ValueError, match="LEF but no timing liberty"):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
     assert not (tmp_path / "missing_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_ss.lib"
+    with pytest.raises(ValueError, match="requires TT macro liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "ss_lib", [], root=tmp_path)
+    assert not (tmp_path / "ss_lib").exists()
     t["hard_cores"][0]["lib"] = "m_tt.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
