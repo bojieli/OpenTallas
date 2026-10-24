@@ -1,7 +1,9 @@
 """RULE ENFORCEMENT (owner 2026-10-13, el1013-rule-enforcement).
-1. Clock rule (owner 2026-10-17 0dq, supersedes the 10-13 hard form): FAIL only on a measured pin-flop spread > 80 ps
-   at TT or FF; > 15,000 sinks on one root or insertion > 300 ps is a WARN; a declared spine or a spec waiver does not
-   waive a spread FAIL; CLOSED tiles stand.
+1. Clock rule (OWNER DECISION 2026-10-23, supersedes the 10-17 0dq spread FAIL): FAIL only on a measured related
+   launch/capture flop-pair skew with CPPR > 80 ps at TT or FF ("<c>_pair_skew_ps"); spreads are information only (a
+   measured record without pair skew WARNs); > 15,000 sinks on one root or insertion > 300 ps is a WARN; a declared
+   spine or a spec waiver does not waive a pair-skew FAIL; CLOSED tiles stand.  pre_route_gate.clock_record does not
+   carry pair skew yet, so its spread-only records are WARN, never REFUSE.
 2. Structure-repeat limit: >= 2 terminal failed routes of a block since its last CLOSED need "structural_change"."""
 import json
 import os
@@ -19,6 +21,7 @@ import pre_route_gate as PG  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 
 GOOD = {"max_root_sinks": 48000, "tt_insertion_ps": 250.0, "tt_spread_ps": 60.0}
+GOODP = dict(GOOD, tt_pair_skew_ps=60.0, ff_pair_skew_ps=50.0)
 
 
 def lint_res(n):
@@ -36,36 +39,44 @@ def gate_out(n, lo=None, hi=None, ff=(90.0, 120.0)):
 
 class ClockRule(unittest.TestCase):
     def test_constants_are_the_owner_numbers(self):
-        self.assertEqual((TL.CLK_ROOT_SINKS_MAX, TL.CLK_INSERTION_MAX_PS, TL.CLK_SPREAD_MAX_PS), (15000, 300.0, 80.0))
+        self.assertEqual((TL.CLK_ROOT_SINKS_MAX, TL.CLK_INSERTION_MAX_PS, TL.CLK_PAIR_SKEW_MAX_PS), (15000, 300.0, 80.0))
 
     def test_rule(self):
         E = TL.clock_rule_eval
         self.assertEqual(E(15000)[0], "PASS")
         self.assertEqual(E(15001)[0], "WARN")                                       # sinks alone: guidance
         self.assertTrue(TL.clock_rule(15001)[0])
-        self.assertEqual(E(48000, GOOD)[0], "WARN")
-        self.assertEqual(E(9000, dict(GOOD, max_root_sinks=9000, ff_spread_ps=40.0))[0], "PASS")
-        self.assertEqual(E(48000, dict(GOOD, tt_insertion_ps=900.0))[0], "WARN")    # insertion alone: guidance
-        self.assertEqual(E(48000, dict(GOOD, tt_spread_ps=80.0))[0], "WARN")
-        self.assertEqual(E(9000, dict(GOOD, tt_spread_ps=80.1))[0], "FAIL")
-        self.assertFalse(TL.clock_rule(9000, dict(GOOD, tt_spread_ps=80.1))[0])
-        self.assertEqual(E(9000, dict(GOOD, ff_spread_ps=80.1))[0], "FAIL")         # FF spread counts too
-        self.assertEqual(E(9000, dict(GOOD, ff_pin_spread_ps=85.0, ff_spread_ps=40.0))[0], "FAIL")
-        # the pin-flop spread outranks the all-register leaf spread
-        self.assertEqual(E(9000, dict(GOOD, tt_spread_ps=140.0, tt_pin_spread_ps=50.0))[0], "PASS")
+        self.assertEqual(E(48000, GOODP)[0], "WARN")
+        self.assertEqual(E(9000, dict(GOODP, max_root_sinks=9000))[0], "PASS")
+        self.assertEqual(E(48000, dict(GOODP, tt_insertion_ps=900.0))[0], "WARN")   # insertion alone: guidance
+        self.assertEqual(E(9000, dict(GOODP, tt_pair_skew_ps=80.0))[0], "PASS")
+        self.assertEqual(E(9000, dict(GOODP, tt_pair_skew_ps=80.1))[0], "FAIL")
+        self.assertFalse(TL.clock_rule(9000, dict(GOODP, tt_pair_skew_ps=80.1))[0])
+        self.assertEqual(E(9000, dict(GOODP, ff_pair_skew_ps=80.1))[0], "FAIL")     # FF pair skew counts too
+        # spread is information only (owner 10-23): over 80 with pair skew in limit passes, and is still printed
+        r = E(9000, dict(GOODP, tt_spread_ps=140.0, ff_pin_spread_ps=95.0))
+        self.assertEqual(r[0], "PASS")
+        self.assertIn("FF pin-flop spread 95.0 ps (info)", r[1])
+        r = E(9000, dict(GOOD, ff_pin_spread_ps=95.0))                              # spread only: WARN, not FAIL
+        self.assertEqual(r[0], "WARN")
+        self.assertIn("pair skew not measured", r[1])
+        self.assertIn("FF pair skew not measured", E(9000, dict(GOOD, tt_pair_skew_ps=50.0))[1])
         self.assertIn("FF spread not measured", E(9000, GOOD)[1])
         self.assertEqual(E(48000, dict(GOOD, tt_spread_ps=None))[0], "WARN")         # no spread measured
         self.assertIn("not this netlist", E(48000, dict(GOOD, max_root_sinks=20000))[1])
         self.assertIn("250.0 ps", TL.clock_rule(48000, GOOD)[1])
-        self.assertIn("60.0 ps", TL.clock_rule(100, GOOD)[1])                       # measured numbers always reported
+        self.assertIn("60.0 ps", TL.clock_rule(100, GOODP)[1])                      # measured numbers always reported
 
-    def test_lint_refuses_spread_in_every_mode_and_ignores_waivers(self):
-        bad = dict(GOOD, ff_pin_spread_ps=95.0)
+    def test_lint_refuses_pair_skew_in_every_mode_and_ignores_waivers(self):
+        bad = dict(GOODP, ff_pair_skew_ps=95.0)
         for mode in ("warn", "refuse"):
             r = TL.verdict(lint_res(48000), mode, waive=("clock_sinks", "clock_domain"), refuse_checks=(),
                            clock={"enforce": True, "evidence": bad})
             self.assertEqual((r["verdict"], r["refusing_checks"]), ("REFUSE", ["clock_sinks"]), mode)
-            self.assertIn("pin-flop spread", r["refuse"]["clock_sinks"][0])
+            self.assertIn("FF pair skew 95.0 ps > 80", r["refuse"]["clock_sinks"][0])
+            r = TL.verdict(lint_res(48000), mode, refuse_checks=(), clock={"enforce": True,
+                                                                           "evidence": dict(GOOD, ff_pin_spread_ps=95.0)})
+            self.assertEqual(r["refusing_checks"], [], mode)                       # spread alone never refuses
             r = TL.verdict(lint_res(48000), mode, refuse_checks=(), clock={"enforce": True})
             self.assertEqual((r["verdict"], r["refusing_checks"]), ("WARN", []), mode)   # sinks alone: WARN
             self.assertIn("clock_guidance", r["findings"])
@@ -74,7 +85,7 @@ class ClockRule(unittest.TestCase):
         self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": GOOD})["verdict"], "WARN")
         ins = dict(GOOD, tt_insertion_ps=410.0)
         self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": ins})["verdict"], "WARN")
-        bad = dict(GOOD, tt_spread_ps=95.0)
+        bad = dict(GOOD, tt_pair_skew_ps=95.0)
         self.assertEqual(TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": bad})["verdict"], "REFUSE")
         r = TL.verdict(lint_res(48000), "refuse", clock={"enforce": True, "evidence": bad, "closed_stands": True})
         self.assertEqual(r["verdict"], "PASS")                                      # CLOSED tiles are not re-judged
@@ -107,35 +118,35 @@ class GateClock(unittest.TestCase):
 
     def test_small_root_passes_and_reports_measurement(self):
         g, it = self.item(gate_out(9000, 150.0, 190.0), True)
-        self.assertEqual(it["severity"], "INFO")
+        self.assertEqual(it["severity"], "WARN")                                   # no pair skew in the gate record yet
+        self.assertIn("pair skew not measured", it["message"])
         self.assertIn("TT insertion 190.0 ps", it["message"])
         self.assertIn("TT leaf spread 40.0 ps", it["message"])
         self.assertIn("FF leaf spread 30.0 ps", it["message"])                       # the FF spread report
         self.assertEqual((g.clock["ff_insertion_ps"], g.clock["ff_spread_ps"]), (120.0, 30.0))
 
-    def test_ff_spread_fails(self):
+    def test_ff_spread_reported_not_failed(self):
         g, it = self.item(gate_out(9000, 150.0, 190.0, ff=(60.0, 150.0)), True)
-        self.assertEqual((g.verdict, it["severity"]), ("FAIL", "FAIL"))
-        self.assertIn("FF leaf spread 90.0 ps > 80", it["message"])
+        self.assertEqual(it["severity"], "WARN")                                   # owner 10-23: spread is information
+        self.assertIn("FF leaf spread 90.0 ps (info)", it["message"])
 
     def test_big_root_without_cts_warns(self):
         g, it = self.item(gate_out(48000), False)
         self.assertEqual(it["severity"], "WARN")
         self.assertIn("guidance", it["message"])
 
-    def test_declared_spine_does_not_waive(self):
+    def test_declared_spine_spread_is_not_a_fail(self):
         g, it = self.item(gate_out(48000, 190.0, 290.0), True, {"clock": "spine"})
-        self.assertEqual(it["severity"], "FAIL")
-        self.assertIn("does not waive", it["message"])
+        self.assertEqual(it["severity"], "WARN")                                   # 100 ps spread: information only
 
-    def test_big_root_fails_only_on_spread(self):
+    def test_big_root_never_fails_on_spread(self):
         g, it = self.item(gate_out(48000, 210.0, 280.0), True, {"clock": "spine"})
         self.assertEqual(it["severity"], "WARN")
         self.assertEqual((g.clock["tt_insertion_ps"], g.clock["tt_spread_ps"], g.clock["verdict"]), (280.0, 70.0, "WARN"))
         g, it = self.item(gate_out(9000, 250.0, 320.0), True)               # insertion > 300 alone: WARN
         self.assertEqual(it["severity"], "WARN")
-        g, it = self.item(gate_out(48000, 190.0, 290.0), True)              # spread miss: FAIL
-        self.assertEqual(it["severity"], "FAIL")
+        g, it = self.item(gate_out(48000, 190.0, 290.0), True)              # spread miss: information only
+        self.assertEqual(it["severity"], "WARN")
 
     def kit(self, td, clock=None, hold_context=True):
         kd = Path(td) / "kit"
@@ -162,11 +173,12 @@ class GateClock(unittest.TestCase):
             self.assertEqual(sev(self.kit(td), known_sinks=48000, closed_stands=True), "PASS")
             self.assertEqual(sev(self.kit(td), known_sinks=9000), "PASS")
             self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "WARN")   # measured, sinks > 15k: guidance
-            good9 = dict(GOOD, max_root_sinks=9000, ff_spread_ps=50.0)
+            good9 = dict(GOODP, max_root_sinks=9000, ff_spread_ps=50.0)
             self.assertEqual(sev(self.kit(td, good9), known_sinks=48000), "PASS")
             self.assertEqual(sev(self.kit(td, GOOD, hold_context=False), known_sinks=48000), "WARN")  # historical gate
-            self.assertEqual(sev(self.kit(td, dict(GOOD, tt_spread_ps=95.0))), "FAIL")
-            self.assertEqual(sev(self.kit(td, dict(GOOD, ff_pin_spread_ps=81.0))), "FAIL")
+            self.assertEqual(sev(self.kit(td, dict(GOOD, tt_spread_ps=95.0))), "WARN")        # spread: information
+            self.assertEqual(sev(self.kit(td, dict(GOODP, tt_pair_skew_ps=95.0))), "FAIL")
+            self.assertEqual(sev(self.kit(td, dict(GOODP, ff_pair_skew_ps=81.0))), "FAIL")
             self.assertEqual(sev(self.kit(td, dict(GOOD, tt_insertion_ps=None, tt_spread_ps=None))), "WARN")
             small = {"max_root_sinks": 9000, "tt_insertion_ps": None, "tt_spread_ps": None}
             self.assertEqual(sev(self.kit(td, small), known_sinks=48000), "PASS")  # rebuilt tile proved itself
@@ -360,10 +372,10 @@ class MultiDomainClockEvidence(unittest.TestCase):
                "\n".join("GATE_CK_DOMAIN " + json.dumps(r) for r in rows))
         r = PG.clock_record(out, True)
         self.assertEqual((r["tt_pin_spread_ps"], r["ff_spread_ps"], r["ff_pin_spread_ps"]), (40.0, 50.0, 90.0))
-        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertEqual(r["verdict"], "WARN")                     # owner 10-23: 90 ps FF spread is information
 
     def test_secondary_domain_cannot_borrow_primary_domain_exception(self):
-        self.assertEqual(PG.clock_record(self.output(hi=301), True)["verdict"], "REFUSE")
+        self.assertEqual(PG.clock_record(self.output(hi=301), True)["verdict"], "WARN")   # spread: information
         r = PG.clock_record(self.output(source="other"), True)
         self.assertIsNone(r["tt_insertion_ps"])
         self.assertEqual(r["verdict"], "WARN")                     # no own measurement: guidance, not a borrowed PASS
@@ -380,17 +392,17 @@ class EveryRootJudged(unittest.TestCase):
 
     def test_second_root_within_limit_passes(self):
         r = PG.clock_record(self.out(), True)
-        self.assertEqual(r["verdict"], "PASS")
-        self.assertEqual([(x["source"], x["tt_pin_spread_ps"], x["verdict"]) for x in r["other_roots"]], [("hck", 40.0, "PASS")])
+        self.assertEqual(r["verdict"], "WARN")                     # no pair skew in the gate record: WARN
+        self.assertEqual([(x["source"], x["tt_pin_spread_ps"], x["verdict"]) for x in r["other_roots"]], [("hck", 40.0, "WARN")])
 
     def test_second_root_over_limit_refuses(self):
         r = PG.clock_record(self.out(h_tt=(160, 290)), True)
-        self.assertEqual(r["verdict"], "REFUSE")
-        self.assertIn("root hck (hclk)", r["text"])
+        self.assertEqual(r["verdict"], "WARN")                     # owner 10-23: second-root spread is information
+        self.assertEqual(r["other_roots"][0]["verdict"], "WARN")
 
     def test_root_without_pin_flops_not_judged(self):
         r = PG.clock_record(self.out(h_tt=(160, 290), boundary=False), True)
-        self.assertEqual(r["verdict"], "PASS")
+        self.assertEqual(r["verdict"], "WARN")
         self.assertEqual(r["other_roots"][0]["verdict"], "INFO")
 
     def test_without_cts_unchanged(self):
@@ -417,8 +429,8 @@ class EveryRootCornersAndChildren(unittest.TestCase):
     def test_second_root_ff_alone_can_refuse_and_exact_limit_passes(self):
         f = EveryRootJudged()
         r = PG.clock_record(f.out(h_tt=(200, 280), h_ff=(100, 181)), True)
-        self.assertEqual(r["verdict"], "REFUSE")
-        self.assertEqual(PG.clock_record(f.out(h_tt=(200, 280), h_ff=(100, 180)), True)["verdict"], "PASS")
+        self.assertEqual(r["verdict"], "WARN")                     # owner 10-23: spread never refuses
+        self.assertEqual(PG.clock_record(f.out(h_tt=(200, 280), h_ff=(100, 180)), True)["verdict"], "WARN")
 
     def test_nested_child_flop_boundary_requirement_uses_compensated_span(self):
         import source_binding as SB

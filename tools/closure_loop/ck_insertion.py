@@ -23,6 +23,11 @@ from the route's config.mk, /src = the job snapshot): active-edge arrival and sl
 (macro_outliers): slew above MC_SLEW_PS at any corner, or the FF arrival more than MC_LATE_PS after the register mean
 (the SRAM wd_in / addr hold stall of ds-1010 lcrph: one shallow macro leaf, 165-260 ps slew, ~60 ps late).  The verdict is
 rec["macro_clk"]; the closure loop flags it after CTS and its auto-react class f reads it.
+
+PAIR SKEW (owner 2026-10-23 clock gate): at TT and FF the same session measures the related launch/capture flop-pair
+skew with CPPR credit over the reg->reg setup and hold path ends (tools/die_plan/pair_skew.tcl, run last: it zeroes the
+clock uncertainties); rec["tt_pair_skew_ps"] / rec["ff_pair_skew_ps"] = worst |skew|, "<c>_pair_skew_p99_ps",
+"<c>_pair_skew_pair" = [launch, capture], rec[<c>]["pair_skew"] per check.  textbook_lint.clock_rule_eval judges them.
 """
 import argparse, json, os, re, subprocess, tempfile, sys
 from pathlib import Path
@@ -192,6 +197,33 @@ if {[llength $dout]} {
 _RCC_ON = os.environ.get("OT_RC_CAL", "1") != "0"
 _RCC_R = os.environ.get("OT_RC_CAL_R", "1.40E-02")
 _RCC_C = os.environ.get("OT_RC_CAL_C", "1.05E-01")
+# PAIR SKEW (owner 2026-10-23 clock gate): related launch/capture flop-pair skew with CPPR credit, worst |.| over the
+# reg->reg setup + hold path ends at TT and FF (tools/die_plan/pair_skew.tcl; shipped flat beside this file in routes,
+# read from tools/die_plan in the source tree).  Without the helper the record says so and the gate WARNs.
+_ps_paths = (Path(__file__).resolve().with_name("pair_skew.tcl"),
+             Path(__file__).resolve().parents[1] / "die_plan/pair_skew.tcl")
+_ps_path = next((p for p in _ps_paths if p.is_file()), None)
+PAIR_SKEW_TCL = ("set ::ot_ps_lib_only 1\n" + _ps_path.read_text() + r"""
+ot_ps_zero_unc
+foreach ot_ps_d {max min} {
+  set ot_ps_s [ot_ps_summary [ot_ps_pairs $ot_ps_d [expr {[info exists ::env(OT_PS_MAX_PATHS)] ? $::env(OT_PS_MAX_PATHS) : 200000}]]]
+  puts "OT_PS_SUM\t$ot_ps_d\t[join $ot_ps_s \t]"
+}
+""") if _ps_path else ""
+
+
+def pair_skew_record(out):
+    """{"setup"|"hold": {n, worst_abs_ps, worst_signed_ps, p99_abs_ps, launch, capture}} from OT_PS_SUM lines"""
+    res = {}
+    for m in re.finditer(r"^OT_PS_SUM\t(max|min)\t(\d+)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t\n]*)$", out, re.M):
+        if int(m[2]) == 0:
+            continue
+        res["setup" if m[1] == "max" else "hold"] = dict(n=int(m[2]), worst_abs_ps=float(m[3]),
+                                                         worst_signed_ps=float(m[4]), p99_abs_ps=float(m[5]),
+                                                         launch=m[6], capture=m[7])
+    return res
+
+
 SPINE_RC_CAL_TCL = (r"""set ot_ck_sp 0
 foreach ot_ck_i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$ot_ck_i getName]]} { set ot_ck_sp 1; break } }
 if {$ot_ck_sp} { set_wire_rc -clock -resistance %s -capacitance %s; puts "OT_CK_RC_CAL spine clock wire R %s C %s" }
@@ -247,6 +279,7 @@ foreach inst [[ord::get_db_block] getInsts] {{
     puts "OT_MC [get_full_name $p] $a $sl [$n getName]"
   }}
 }}
+{PAIR_SKEW_TCL if corner.lower() in ("tt", "ff") else ""}
 exit
 """
 
@@ -465,6 +498,15 @@ def main():
                            boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                            macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
                            macro_libs=len(mlibs))
+        if corner in ("tt", "ff"):
+            ps = pair_skew_record(out)
+            rec[corner]["pair_skew"] = ps or ("not measured: pair_skew.tcl not shipped" if not PAIR_SKEW_TCL else
+                                              "no reg->reg path ends")
+            if ps:
+                w = max(ps.values(), key=lambda x: x["worst_abs_ps"])
+                rec[f"{corner}_pair_skew_ps"] = w["worst_abs_ps"]
+                rec[f"{corner}_pair_skew_p99_ps"] = max(x["p99_abs_ps"] for x in ps.values())
+                rec[f"{corner}_pair_skew_pair"] = [w["launch"], w["capture"]]
         if craw:
             rec[corner]["child_flop"] = dict(boundary=stats(cb), all=stats(cal),
                                              refs={k: dict(basis=v[0], ref_ps=round(v[1], 1), pins=v[2])

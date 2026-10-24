@@ -96,20 +96,24 @@ THRESHOLDS = {
     "macro_halo_um": 2.16,
     "channel_um": 20.0,
 }
-# CLOCK RULE (owner 2026-10-17 0dq, memory clock-rule-boundary-match-1017; supersedes the 10-13 measured hard form).
-# One place for the three numbers; pre_route_gate.py, the in-flow hook and the closure loop all read them from here.
-#   FAIL only on a measured pin-flop spread (child flops for a cluster) > CLK_SPREAD_MAX_PS at TT OR FF (ck_insertion
-#   boundary registers; the all-register leaf spread stands in for records without a pin-flop number).
-#   > CLK_ROOT_SINKS_MAX sinks on one root, or TT insertion > CLK_INSERTION_MAX_PS: WARN (guidance).  Large insertion is
-#   matched at the boundary by parent compensation or a landed link (native_pin_audit --relative-to).
+# CLOCK RULE (OWNER DECISION 2026-10-23, supersedes the 10-17 0dq spread FAIL; memory clock-rule-boundary-match-1017).
+# One place for the numbers; pre_route_gate.py, the in-flow hook and the closure loop all read them from here.
+#   FAIL only on the measured related launch/capture flop-pair skew WITH CPPR credit > CLK_PAIR_SKEW_MAX_PS at TT OR FF
+#   (evidence "tt_pair_skew_ps" / "ff_pair_skew_ps" = worst |skew| over the reg->reg setup + hold path ends:
+#   tools/die_plan/pair_skew.tcl, measured by ck_insertion.py on the CTS odb).  Sign-off = propagated-clock STA (setup
+#   TT, hold FF).  The pin-flop / leaf spread (max-min) is REPORTED only, never a FAIL; a measured clock record
+#   without pair skew is a WARN ("pair skew not measured").
+#   > CLK_ROOT_SINKS_MAX sinks on one root, or TT insertion > CLK_INSERTION_MAX_PS: WARN (guidance).
 # Sinks of a root = flops + hard-child / macro clock pins (a hard child with its own clock pin is ONE sink, never its
 # internal flops); ICGs are tree cells, the flops behind them count on the ICG's root.
 CLK_ROOT_SINKS_MAX = 15000
 CLK_INSERTION_MAX_PS = 300.0
-CLK_SPREAD_MAX_PS = 80.0
-CLOCK_RULE_FIX = ("pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops "
-                  "(clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with "
-                  "their own roots; insertion and sink count alone never split a tile")
+CLK_SPREAD_MAX_PS = 80.0          # 10-17 0dq spread number: REPORT reference only since 10-23 (closed_stands kinds)
+CLK_PAIR_SKEW_MAX_PS = 80.0       # owner 10-23: related flop-pair skew with CPPR, TT and FF
+CLOCK_RULE_FIX = ("related flop-pair skew (CPPR credited) > 80 ps at TT or FF (owner 10-23): re-balance the tree so "
+                  "related launch / capture flops share their clock path (common branch, clock entry beside the "
+                  "register mass, pin flops grouped by face) or split into hardened leaves with their own roots; "
+                  "spread, insertion and sink count alone never fail a tile")
 HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by spec
 
 # CLOSED STANDS (owner decision 2026-10-12 19:00 "M5 cap narrowed", made a submit gate 2026-10-13; logic in
@@ -199,34 +203,49 @@ def clock_spreads(ev):
     return out
 
 
+def clock_pair_skews(ev):
+    """{corner: worst |related flop-pair skew| ps (CPPR credited)} for TT and FF from a clock record
+    ("<c>_pair_skew_ps"; owner 10-23)."""
+    return {c: float(ev[f"{c}_pair_skew_ps"]) for c in ("tt", "ff") if _num(ev.get(f"{c}_pair_skew_ps"))}
+
+
 def clock_rule_eval(max_sinks, evidence=None):
-    """The clock rule (owner 2026-10-17 0dq, supersedes the 10-13 hard form): FAIL only on a measured pin-flop (child-flop
-    for a cluster) spread > CLK_SPREAD_MAX_PS at TT or FF.  Insertion > CLK_INSERTION_MAX_PS and > CLK_ROOT_SINKS_MAX
-    sinks on one root are guidance: WARN.  The neighbour-matched boundary (parent compensation or a landed link) is
-    judged by the native pin audit (tools/hier_contract/native_pin_audit.py --relative-to).  evidence: the kit gate
-    result's "clock" record ({"max_root_sinks", "tt_insertion_ps", "tt_spread_ps", "tt_pin_spread_ps",
-    "ff_insertion_ps", "ff_spread_ps", "ff_pin_spread_ps"}) or None.  Returns (level, text), level PASS / WARN / FAIL;
-    text always carries the measured numbers when they exist."""
+    """The clock rule (OWNER DECISION 2026-10-23, supersedes the 10-17 0dq spread FAIL): FAIL only on a measured
+    related launch/capture flop-pair skew with CPPR credit > CLK_PAIR_SKEW_MAX_PS at TT or FF.  The pin-flop / leaf
+    spread is reported, never a FAIL; a measured clock record without pair skew WARNs ("pair skew not measured").
+    Insertion > CLK_INSERTION_MAX_PS and > CLK_ROOT_SINKS_MAX sinks on one root are guidance: WARN.  evidence: the kit
+    gate result's "clock" record ({"max_root_sinks", "tt_insertion_ps", "tt_spread_ps", "tt_pin_spread_ps",
+    "tt_pair_skew_ps", "ff_..."}) or None.  Returns (level, text), level PASS / WARN / FAIL; text always carries the
+    measured numbers when they exist."""
     ev = evidence if isinstance(evidence, dict) else {}
     ins, evn = ev.get("tt_insertion_ps"), ev.get("max_root_sinks")
     sp = clock_spreads(ev)
+    pk = clock_pair_skews(ev)
     parts = []
     if _num(ins):
         parts.append(f"measured TT insertion {ins:.1f} ps")
     if _num(ev.get("ff_insertion_ps")):
         parts.append(f"FF insertion {ev['ff_insertion_ps']:.1f} ps")
+    for c, v in pk.items():
+        parts.append(f"{c.upper()} pair skew {v:.1f} ps")
     for c, (v, basis) in sp.items():
-        parts.append(f"{c.upper()} {basis} spread {v:.1f} ps")
+        parts.append(f"{c.upper()} {basis} spread {v:.1f} ps (info)")
     if "tt" in sp and "ff" not in sp:
         parts.append("FF spread not measured")
+    measured = bool(sp or pk or _num(ins) or _num(ev.get("ff_insertion_ps")))
     meas = ", ".join(parts) if parts else "no measured clock tree (no --cts gate evidence)"
-    fail = [f"{c.upper()} {basis} spread {v:.1f} ps > {CLK_SPREAD_MAX_PS:.0f}" for c, (v, basis) in sp.items()
-            if v > CLK_SPREAD_MAX_PS]
+    fail = [f"{c.upper()} pair skew {v:.1f} ps > {CLK_PAIR_SKEW_MAX_PS:.0f}" for c, v in pk.items()
+            if v > CLK_PAIR_SKEW_MAX_PS]
     warn = []
+    if measured and not pk:
+        warn.append("pair skew not measured (owner 10-23 gate: related flop-pair skew with CPPR <= "
+                    f"{CLK_PAIR_SKEW_MAX_PS:.0f} ps at TT and FF; spread is information only)")
+    elif pk and len(pk) < 2:
+        warn.append(f"{'FF' if 'tt' in pk else 'TT'} pair skew not measured")
     if max_sinks is not None and max_sinks > CLK_ROOT_SINKS_MAX:
         warn.append(f"{max_sinks:,} sinks on one clock root > {CLK_ROOT_SINKS_MAX:,} (guidance)")
-        if not sp:
-            warn.append("no measured spread: run the --cts gate")
+        if not measured:
+            warn.append("no measured clock tree: run the --cts gate")
         elif _num(evn) and evn < 0.9 * max_sinks:
             warn.append(f"the gate evidence was measured on a root of {evn:,} sinks, not this netlist: re-run --cts")
     if _num(ins) and ins > CLK_INSERTION_MAX_PS:
@@ -238,10 +257,10 @@ def clock_rule_eval(max_sinks, evidence=None):
         return "FAIL", f"{head}; " + " and ".join(fail)
     if warn:
         return "WARN", f"{head}; WARN: " + "; ".join(warn)
-    return "PASS", head + (f" (spread <= {CLK_SPREAD_MAX_PS:.0f} ps)" if sp else "")
+    return "PASS", head + (f" (pair skew <= {CLK_PAIR_SKEW_MAX_PS:.0f} ps)" if pk else "")
 
 
-CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess over CLK_SPREAD_MAX_PS
+CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess (over CLK_PAIR_SKEW_MAX_PS since 10-23)
 # COORD 10-20 19:25 (rule freeze; spread accepted for route, route timing decides, fail -> regional root split):
 # SCOPED caps above limit + CLOCK_WAIVER_MAX_PS, one tile each.  A waiver uses one only when it names the tile in
 # "scope" and its recorded tt_ps/ff_ps stay within the cap.  Never a general relaxation.
@@ -253,14 +272,17 @@ SCOPED_CLOCK_WAIVER_CAPS = {
 
 def clock_waiver_eval(evidence, waiver, tile=None):
     """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
-    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
-    over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
-    basis) comes from the named pair alone.  One rule for pre_route_gate and the in-flow textbook_lint.
-    Returns (applied, note, why): note is the printable waiver, why the reasons it was not applied."""
+    spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Since the owner's 10-23
+    gate it applies to the measured PAIR SKEW numbers ("<c>_pair_skew_ps") the same way it applied to spreads: every
+    over-limit corner pair skew must be <= limit + CLOCK_WAIVER_MAX_PS (or the tile's scoped cap), <= the recorded
+    value, and, when the evidence names its worst pair ("<c>_pair_skew_pair": [launch, capture]), come from the
+    named child pair.  Spread values are never judged (they no longer FAIL).  One rule for pre_route_gate and the
+    in-flow textbook_lint.  Returns (applied, note, why): note is the printable waiver, why the reasons it was not
+    applied."""
     if not isinstance(waiver, dict):
         return False, "", ["no clock_rule_waiver"]
     ev = evidence if isinstance(evidence, dict) else {}
-    lim = CLK_SPREAD_MAX_PS
+    lim = CLK_PAIR_SKEW_MAX_PS
     pair = {x.strip().removeprefix("u_") for x in str(waiver.get("pair", "")).split("-") if x.strip()}
     why = []
     if not str(waiver.get("by", "")).strip():
@@ -268,12 +290,12 @@ def clock_waiver_eval(evidence, waiver, tile=None):
     if not _num(waiver.get("limit_ps")) or float(waiver["limit_ps"]) != lim:
         why.append(f"limit_ps must be {lim:.0f}")
 
-    def named(p):     # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
-        inst = [str(p.get(k, "")).removeprefix("u_") for k in ("a", "b")]
+    def named(inst):  # waiver tokens name the child instance (u_dly / dly) or its block suffix (s81lk_kp4_ddly / ddly)
+        inst = [str(x).split("/", 1)[0].split(".", 1)[0].removeprefix("u_") for x in inst]
         return len(pair) == 2 and all(any(t.endswith(x) for t in pair) for x in inst) \
             and all(any(t.endswith(x) for x in inst) for t in pair)
     over = 0
-    for c, (v, basis) in clock_spreads(ev).items():
+    for c, v in clock_pair_skews(ev).items():
         if v <= lim:
             continue
         over += 1
@@ -289,13 +311,11 @@ def clock_waiver_eval(evidence, waiver, tile=None):
                 why.append(f"{c.upper()} {v:.1f} ps exceeds the scoped cap {cap} of {waiver.get('scope')}")
         elif v > lim + CLOCK_WAIVER_MAX_PS:
             why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
-        if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
-            bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
-                   and not named(p)]
-            if bad:
-                why.append(f"{c.upper()} pair(s) {', '.join(b['a'] + '-' + b['b'] for b in bad)} over {lim:.0f} too")
+        wp = ev.get(f"{c}_pair_skew_pair")
+        if isinstance(wp, (list, tuple)) and len(wp) == 2 and not named(wp):
+            why.append(f"{c.upper()} worst pair {wp[0]} -> {wp[1]} is not the named pair {waiver.get('pair')}")
     if not over:
-        why.append("no over-limit spread in the evidence")
+        why.append("no over-limit pair skew in the evidence")
     if why:
         return False, "", why
     note = (f"clock_rule_waiver by {waiver['by']}: pair {waiver.get('pair')} "
@@ -305,7 +325,7 @@ def clock_waiver_eval(evidence, waiver, tile=None):
 
 
 def clock_rule(max_sinks, evidence=None):
-    """(ok, text): ok is False only on the FAIL of clock_rule_eval (spread > 80 ps at TT or FF); WARN is ok."""
+    """(ok, text): ok is False only on the FAIL of clock_rule_eval (pair skew > 80 ps at TT or FF); WARN is ok."""
     level, text = clock_rule_eval(max_sinks, evidence)
     return level != "FAIL", text
 
@@ -1567,7 +1587,7 @@ def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None)
     res["clock_rule"] = dict(max_root_sinks=n, root=res.get("metrics", {}).get("clock_max_root"), ok=ok, text=text,
                              enforce=bool(clock.get("enforce")), closed_stands=bool(clock.get("closed_stands")),
                              limits=dict(sinks=CLK_ROOT_SINKS_MAX, insertion_ps=CLK_INSERTION_MAX_PS,
-                                         spread_ps=CLK_SPREAD_MAX_PS))
+                                         spread_ps=CLK_SPREAD_MAX_PS, pair_skew_ps=CLK_PAIR_SKEW_MAX_PS))
     hard = []
     if ok and "WARN:" in text and not clock.get("closed_stands"):
         res["findings"]["clock_guidance"] = [f"clock root {res['clock_rule']['root']}: {text}"]

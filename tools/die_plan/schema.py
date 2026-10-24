@@ -204,7 +204,11 @@ SCHEMA = {
                         # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
+                        # CLK-STD "density": taps.density_taps -- the pitch grid pruned (no tap over a hard core /
+                        # macro or in an empty cell) and split where a cell's expected sinks exceed tap_max_sinks
+                        # (default 1500); flop_fraction = flops per estimated cell for the interior estimate
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
+                        "flop_fraction": _pos, "tap_min_sinks": {"type": "integer", "minimum": 0},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
@@ -331,7 +335,13 @@ SCHEMA = {
                 # regions <= branch_leaf_um (default budgets.tap_pitch_um)
                 "die_root_um": _xy, "die_outline_um": _xy,
                 "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
-                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
+                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos,
+                # CLK-STD (owner 10-23): "zst" = structured spine built + balanced by construction (spine.zst_tree,
+                # default); "htree" = the CP2 bisection estimate.  ndr: the spine's non-default rule (2W2S)
+                "model": {"enum": ["zst", "htree"]}, "ndr": {"enum": ["2W2S", "1W1S"]}}},
+            # CLK-STD: die-wide default tap method for every type without its own clock.tap_mode, and the local-tree
+            # balance window (tap_balance.tcl OT_TAP_WINDOW_PS, default 20)
+            "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_window_ps": _pos}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
@@ -750,6 +760,11 @@ def tap_pitch(P, tn):
     return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 400.0)))
 
 
+def tap_mode(P, tn):
+    """CLK-STD: the type's tap method -- its clock.tap_mode, else the die clock.tap_mode, else "grid"."""
+    return (P.types[tn].get("clock", {}) or {}).get("tap_mode") or P.clock.get("tap_mode") or "grid"
+
+
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
@@ -764,7 +779,21 @@ def tap_grid(P, tn):
     CP1 r8 RULING (COORD 10-23 21:26): the grid is THE method on every die; clock.tap_mode "grid+sinks" (or "sinks")
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
+    key = (id(P), tn)
+    if key in _TG_CACHE:
+        return list(_TG_CACHE[key])
+    _TG_CACHE[key] = out = _tap_grid(P, tn)
+    return list(out)
+
+
+_TG_CACHE = {}
+
+
+def _tap_grid(P, tn):
     t = P.types[tn]
+    if tap_mode(P, tn) == "density":
+        import taps
+        return [(n, x, y) for n, x, y, _ in taps.density_taps(P, tn)]
     out = _grid_taps(P, tn)
     if sink_tap_mode(t):
         import taps

@@ -268,9 +268,9 @@ def test_branch_table_and_sta_die():
         assert "set_propagated_clock [all_clocks]" in sta
         js = json.loads((kd / "spine_branch.json").read_text())
         assert js["parts"]["pa"]["taps"]["clk_c0"]["offset_ps"] == t["clk_c0"]["offset_ps"]
-        # a full die (no die_root_um): the routed spine stays the default
+        # CLK-STD: a full die (no die_root_um) also defaults to the structured-spine branch model
         full = gen_phys.sta_die_tcl(S.Plan(copy.deepcopy(EX)), spine.branch_table(S.Plan(copy.deepcopy(EX))))
-        assert ': "routed"}]' in full
+        assert ': "branch"}]' in full and "ot_tap_wire" in full
 
 
 @pytest.mark.skipif(not shutil.which("tclsh"), reason="tclsh not installed")

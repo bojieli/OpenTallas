@@ -2,6 +2,7 @@
 # The type has one clock port per die-spine tap (clk, clk_t1, ...; pitch <= 600 um, schema.tap_grid).  The RTL
 # clocks every flop from 'clk'; here every sink on the clk net moves to the net of its NEAREST tap port, so CTS builds
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
+# CLK-STD 10-23: the assignment is by distance AND load (below), no longer the nearest tap.
 set ct_blk [ord::get_db_block]
 set ct_taps {}
 foreach bt [$ct_blk getBTerms] {
@@ -51,99 +52,184 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
     if {!$k} { puts "OT_CLOCK_TAPS WARN core tap $port: no clock pin of $iname/$pin on clk" }
   }
 }
+# CLK-STD (owner 10-23 fix 3): sink -> tap assignment by DISTANCE AND LOAD (balanced clustering), replacing
+# nearest-grid-cell + cap spill.  Every clk sink (std-cell clock pin; a hard core's clock pin at its pin centre) gets
+# its OT_TAP_K (6) nearest taps; sinks are assigned in decreasing REGRET (2nd-nearest - nearest distance: the sinks
+# with the most to lose go first) to the nearest tap that still has room (OT_TAP_MAX_SINKS) and costs at most half a
+# tap pitch extra (OT_TAP_PITCH_UM / 2), else to the nearest (an over-cap tap is a WARN: finer taps / density mode).
+# Then LIGHT taps (fewer than OT_TAP_MIN_SINKS, default 32 -- a shallow tree far below the common latency, the CP1 r9b
+# lesson) are dissolved into their sinks' next-best taps when every sink can move within the same extra-distance
+# limit, and taps left without sinks are dropped (below).
 if {[llength $ct_taps] < 2} {
   puts "OT_CLOCK_TAPS single tap: nothing to split"
 } else {
+  set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 1500}]
+  set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 32}]
+  set ct_K [expr {min([llength $ct_taps], [info exists ::env(OT_TAP_K)] ? $::env(OT_TAP_K) : 6)}]
+  set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+  set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 400.0) * $ct_dbu}]
   set root [[$ct_blk findBTerm clk] getNet]
-  set cnt {}
-  set moved 0
+  # sinks: [list iterm x y {tapidx dist ...K}]
+  set ct_s {}
   foreach it [$root getITerms] {
     if {[[$it getMTerm] getIoType] ne "INPUT"} continue
     set i [$it getInst]
-    set loc [$i getLocation]
-    set x [lindex $loc 0]; set y [lindex $loc 1]
-    set best ""; set bd 0
+    if {[[$i getMaster] isBlock]} {
+      set b [$it getBBox]
+      set x [expr {([$b xMin] + [$b xMax]) / 2}]; set y [expr {([$b yMin] + [$b yMax]) / 2}]
+    } else {
+      set loc [$i getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1]
+    }
+    set dl {}
+    set k 0
     foreach tp $ct_taps {
-      set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3])}]
-      if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+      lappend dl [list $k [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3])}]]
+      incr k
     }
-    dict incr cnt [lindex $best 0]
-    if {[lindex $best 1] ne $root} {
-      $it disconnect
-      $it connect [lindex $best 1]
-      incr moved
-    }
+    set dl [lrange [lsort -integer -index 1 $dl] 0 [expr {$ct_K - 1}]]
+    set reg [expr {[llength $dl] > 1 ? [lindex $dl 1 1] - [lindex $dl 0 1] : 0}]
+    lappend ct_s [list $it $reg $dl]
   }
-  puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off clk: [lsort -stride 2 -index 0 $cnt]"
-}
-# COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
-# tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
-# assignment), so dense regions spread over the neighbouring taps instead of one deep tree (CP1 r6: 3.6-4.8k-sink
-# taps 300-313 ps while 9 of 16 taps were empty; a buffer split behind the tap measured worse, 437 ps).
-set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 3000}]
-# a re-assigned sink may add at most half a tap pitch of distance (CP1 r6 probe: sinks moved ~300 um to an empty
-# tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
-set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
-if {[llength $ct_taps] >= 2} {
-  set ct_by {}
-  foreach tp $ct_taps {
-    set l {}
-    foreach it [[lindex $tp 1] getITerms] {
-      if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
+  set ct_load [lrepeat [llength $ct_taps] 0]
+  set ct_asg {}
+  set ct_over 0
+  foreach s [lsort -integer -decreasing -index 1 $ct_s] {
+    lassign $s it reg dl
+    set d0 [lindex $dl 0 1]
+    set pick -1
+    foreach c $dl {
+      lassign $c k d
+      if {$d - $d0 > $ct_maxx} break
+      if {[lindex $ct_load $k] < $ct_cap} { set pick $k; break }
     }
-    dict set ct_by [lindex $tp 0] $l
+    if {$pick < 0} { set pick [lindex $dl 0 0]; incr ct_over }
+    lset ct_load $pick [expr {[lindex $ct_load $pick] + 1}]
+    lappend ct_asg [list $it $pick $dl]
   }
-  set ct_moves 0
-  set ct_stuck {}
-  for {set pass 0} {$pass < 8 * [llength $ct_taps]} {incr pass} {
-    set over ""
-    foreach tp $ct_taps {
-      if {[lindex $tp 0] ni $ct_stuck && [llength [dict get $ct_by [lindex $tp 0]]] > $ct_cap} { set over $tp; break }
-    }
-    if {$over eq ""} break
-    set on [lindex $over 0]
-    set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
-    # extra distance of each sink to every other tap with room
-    set cand {}
-    foreach it [dict get $ct_by $on] {
-      set loc [[$it getInst] getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1]
-      set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
-      set best ""; set bd 0
-      foreach tp $ct_taps {
-        if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
-        set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
-        if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+  # light-tap merge
+  set ct_merged {}
+  for {set k 0} {$k < [llength $ct_taps]} {incr k} {
+    set n [lindex $ct_load $k]
+    if {$n == 0 || $n >= $ct_min} continue
+    set moves {}
+    set ok 1
+    set idx 0
+    foreach a $ct_asg {
+      if {[lindex $a 1] == $k} {
+        set d0 [lindex $a 2 0 1]
+        set to -1
+        foreach c [lindex $a 2] {
+          lassign $c kk d
+          if {$kk == $k || $kk in $ct_merged} continue
+          if {$d - $d0 > $ct_maxx} break
+          if {[lindex $ct_load $kk] < $ct_cap} { set to $kk; break }
+        }
+        if {$to < 0} { set ok 0; break }
+        lappend moves [list $idx $to]
       }
-      if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
+      incr idx
     }
-    if {![llength $cand]} {
-      # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate
-      puts "OT_CLOCK_TAPS WARN $on keeps [llength [dict get $ct_by $on]] sinks > cap $ct_cap: no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um (finer clock.tap_pitch_um)"
-      lappend ct_stuck $on
-      continue
+    if {!$ok} continue
+    foreach m $moves {
+      lassign $m idx to
+      lset ct_asg $idx 1 $to
+      lset ct_load $to [expr {[lindex $ct_load $to] + 1}]
     }
-    set cand [lsort -real -index 0 $cand]
-    # move the cheapest sinks toward ONE target per pass (keeps targets under cap), then re-evaluate
-    set tgt [lindex $cand 0 2]; set tn [lindex $tgt 0]
-    set room [expr {$ct_cap - [llength [dict get $ct_by $tn]]}]
-    set keep [dict get $ct_by $on]; set add [dict get $ct_by $tn]
-    set n 0
-    foreach c $cand {
-      if {$n >= $excess || $n >= $room} break
-      if {[lindex $c 2 0] ne $tn} continue
-      set it [lindex $c 1]
-      $it disconnect; $it connect [lindex $tgt 1]
-      set keep [lsearch -all -inline -not -exact $keep $it]
-      lappend add $it
-      incr n
-    }
-    dict set ct_by $on $keep; dict set ct_by $tn $add
-    incr ct_moves $n
+    lset ct_load $k 0
+    lappend ct_merged $k
+  }
+  set moved 0
+  foreach a $ct_asg {
+    lassign $a it k
+    set net [lindex $ct_taps $k 1]
+    if {$net ne $root} { $it disconnect; $it connect $net; incr moved }
   }
   set l {}
-  foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
-  puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
+  set k 0
+  foreach tp $ct_taps { lappend l "[lindex $tp 0] [lindex $ct_load $k]"; incr k }
+  puts "OT_CLOCK_TAPS assign (distance+load, cap $ct_cap, K $ct_K, extra <= [format %.0f [expr {$ct_maxx / $ct_dbu}]] um): [llength $ct_asg] sinks, $moved moved off clk, [llength $ct_merged] light taps (< $ct_min) merged; per tap: [join $l {, }]"
+  if {$ct_over} {
+    puts "OT_CLOCK_TAPS WARN $ct_over sinks over cap $ct_cap (no tap with room within [format %.0f [expr {$ct_maxx / $ct_dbu}]] um): density taps / finer clock.tap_pitch_um"
+  }
+  # CLK-STD fix 2 at kit time ("extra taps where clusters exceed the cap"): a tap still over the cap (a dense
+  # cluster with no tap with room within half a pitch: CP1 r9 clk 3.9k / clk_t4 3.7k sinks, 4-5-level 312-326 ps
+  # trees) is split into k = ceil(n / cap) SUB-TAPS: k-medians of its sinks, one sub-tap driver (OT_SUBTAP_CELL,
+  # BUFx16f) at each cluster's median, fed by the tap net; CTS then builds one local tree per sub-tap (each <= cap
+  # sinks) and the tap net itself only carries k driver inputs.  OT_SUBTAP=0 disables.
+  set ct_sub 0
+  if {![info exists ::env(OT_SUBTAP)] || $::env(OT_SUBTAP)} {
+    set ct_scell [expr {[info exists ::env(OT_SUBTAP_CELL)] ? $::env(OT_SUBTAP_CELL) : "BUFx16f_ASAP7_75t_R"}]
+    set ct_smaster [[ord::get_db] findMaster $ct_scell]
+    for {set k 0} {$k < [llength $ct_taps]} {incr k} {
+      set n [lindex $ct_load $k]
+      if {$n <= $ct_cap || $ct_smaster eq "NULL" || $ct_smaster eq ""} continue
+      set ns [expr {int(ceil(double($n) / $ct_cap))}]
+      set pts {}
+      foreach a $ct_asg {
+        if {[lindex $a 1] != $k} continue
+        set it [lindex $a 0]
+        set i [$it getInst]
+        set b [$i getBBox]
+        lappend pts [list $it [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]]
+      }
+      # seeds: ns points spread along the larger extent (deterministic), then 12 k-medians iterations
+      set xs [lsort -integer [lmap q $pts {lindex $q 1}]]; set ys [lsort -integer [lmap q $pts {lindex $q 2}]]
+      set ax [expr {([lindex $xs end] - [lindex $xs 0]) >= ([lindex $ys end] - [lindex $ys 0]) ? 1 : 2}]
+      set srt [lsort -integer -index $ax $pts]
+      set cen {}
+      for {set j 0} {$j < $ns} {incr j} {
+        set q [lindex $srt [expr {int(($j + 0.5) * [llength $srt] / $ns)}]]
+        lappend cen [list [lindex $q 1] [lindex $q 2]]
+      }
+      for {set iter 0} {$iter < 12} {incr iter} {
+        set grp [lrepeat $ns {}]
+        foreach q $pts {
+          set best 0; set bd -1
+          for {set j 0} {$j < $ns} {incr j} {
+            set d [expr {abs([lindex $q 1] - [lindex $cen $j 0]) + abs([lindex $q 2] - [lindex $cen $j 1])}]
+            if {$bd < 0 || $d < $bd} { set bd $d; set best $j }
+          }
+          lset grp $best [concat [lindex $grp $best] [list $q]]
+        }
+        set ncen {}
+        for {set j 0} {$j < $ns} {incr j} {
+          set g [lindex $grp $j]
+          if {![llength $g]} { lappend ncen [lindex $cen $j]; continue }
+          set gx [lsort -integer [lmap q $g {lindex $q 1}]]; set gy [lsort -integer [lmap q $g {lindex $q 2}]]
+          lappend ncen [list [lindex $gx [expr {[llength $gx] / 2}]] [lindex $gy [expr {[llength $gy] / 2}]]]
+        }
+        if {$ncen eq $cen} break
+        set cen $ncen
+      }
+      set tnet [lindex $ct_taps $k 1]
+      set tn [lindex $ct_taps $k 0]
+      set sl {}
+      for {set j 0} {$j < $ns} {incr j} {
+        set g [lindex $grp $j]
+        if {![llength $g]} continue
+        set inst [odb::dbInst_create $ct_blk $ct_smaster "${tn}_st$j"]
+        set snet [odb::dbNet_create $ct_blk "${tn}_st${j}_net"]
+        $snet setSigType CLOCK
+        foreach t [$inst getITerms] {
+          set mt [$t getMTerm]
+          if {[$mt getSigType] in {POWER GROUND}} continue
+          if {[$mt getIoType] eq "INPUT"} { $t connect $tnet } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $snet }
+        }
+        $inst setLocation [lindex $cen $j 0] [lindex $cen $j 1]
+        $inst setPlacementStatus PLACED
+        foreach q $g { set it [lindex $q 0]; $it disconnect; $it connect $snet }
+        lappend sl "${tn}_st$j:[llength $g]"
+        incr ct_sub
+      }
+      puts "OT_CLOCK_TAPS SUBTAP $tn $n sinks -> [llength $sl] sub-taps ($ct_scell): [join $sl { }]"
+    }
+    if {$ct_sub} { detailed_placement }
+  }
+  if {[info exists ::env(RESULTS_DIR)]} {
+    set fh [open $::env(RESULTS_DIR)/ot_tap_sinks.tsv w]
+    foreach a $ct_asg { puts $fh "[[[lindex $a 0] getInst] getName]\t[lindex $ct_taps [lindex $a 1] 0]" }
+    close $fh
+  }
 }
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die

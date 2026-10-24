@@ -588,6 +588,31 @@ def check_clock_reset(P, R):
                       type=tn)
 
 
+def check_clock_spine(P, R):
+    """R4 (OWNER 10-23 ~23:30, CLK-STD: industry multi-source CTS; supersedes the 10-17 max-min spread form).
+    The clock gate is the related launch/capture flop-PAIR skew with CPPR <= 80 ps at TT and FF, intra-partition and
+    across seams (tools/die_plan/pair_skew.tcl + pair_skew.py on the routed kits and the die STA), with sign-off =
+    propagated-clock STA closing (setup TT, hold FF); the max-min face-flop spread is reported only.  The plan side
+    (this G0 check, INFO): the structured spine (spine.zst_tree: zero skew by construction, M8/M9 2W2S, repeaters
+    <= rep_um) is built; its die-root -> tap length and the per-seam shared path are summarised.  A failure to build
+    it is a WARN (the die STA then has no spine model)."""
+    try:
+        import spine
+        tr = spine.zst_tree(P)
+    except Exception as e:      # noqa: BLE001 - reported, never fatal at G0
+        R.warn("clock", f"structured spine (spine.zst_tree) not built: {e}")
+        return dict(error=str(e))
+    seams = sorted(tr["seams"], key=lambda z: -z["bits"])
+    worst = min(seams, key=lambda z: z["shared_frac"]) if seams else None
+    return dict(model="zst", path_um=tr["path_um"], wire_um=tr["wire_um"], snake_um=tr["snake_um"],
+                repeaters=tr["repeaters"], seams=len(seams),
+                heaviest_seams=[dict(parts=z["parts"], bits=z["bits"], shared_frac=z["shared_frac"])
+                                for z in seams[:5]],
+                least_shared=(dict(parts=worst["parts"], bits=worst["bits"], shared_frac=worst["shared_frac"])
+                              if worst else None),
+                gate="pair skew (CPPR) <= 80 ps TT+FF on routed STA (pair_skew.py); spread reported only")
+
+
 # ------------------------------------------------------------------------------------------- taps, hard cores
 def _orient_pt(o, w, h, x, y):
     return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
@@ -921,7 +946,9 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
       cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
       track_offset     every hard_cores[] entry declares track_offset_um (pins on tracks / > 400k: hard_cores check)
       clock_method     type.clock with tap_um, taps[] or tap_mode
-      insertion_target a type clock.insertion_ps equal to the die common latency (one die-wide target, R4 b)
+      insertion_target a type clock.insertion_ps equal to the die common latency (one die-wide target, R4 b; every
+                       tap tree is balanced to it within clock.tap_window_ps, 20 -- CLK-STD; the clock GATE is the
+                       related-pair skew with CPPR <= 80 ps TT+FF, check_clock_spine)
       reset_sync       type.reset (one async-assert / sync-deassert synchronizer)
       face_flop        every type bus is carried by a planned port with face geometry (face + window + layers), so
                        the R2 face flop is FIRM at its pin (the schema pass already refuses unbound buses and ports
@@ -942,7 +969,7 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
     common = raw_ck.get("common_latency_ps")
     if common is None:
         bad("common_latency", None, "die clock.common_latency_ps missing (R4: one die-wide common latency target "
-            "every partition balances its face-flop insertion to; vclk latency of the IO SDC)")
+            "every partition balances its tap trees to; vclk latency of the IO SDC)")
     no_cells = set(no_cells)
     ends = defaultdict(set)              # type -> buses used by a port
     for pr in P.ports.values():
@@ -1211,6 +1238,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
+    summ["clock_spine"] = check_clock_spine(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
     # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))

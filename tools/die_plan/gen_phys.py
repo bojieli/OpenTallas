@@ -27,6 +27,7 @@ import re
 import shutil
 from pathlib import Path
 
+import pair_skew
 import schema as S
 import taps as T
 from schema import DIE_PART
@@ -231,9 +232,16 @@ def hold_in_min_ps(P):
 UNC_SPLIT = 0.5
 
 
-def _tap_cap(t):
-    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps)."""
-    return int(t.get("clock", {}).get("tap_max_sinks", 3000))
+def _tap_cap(t, mode="grid"):
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 1500 for density taps (CLK-STD) / 3000 (COORD 10-23)."""
+    return int(t.get("clock", {}).get("tap_max_sinks", T.DENSITY_CAP if mode == "density" else 3000))
+
+
+TAP_WINDOW_PS = 20.0     # CLK-STD (owner 10-23 fix 4): every local tree balanced to the common latency +/- 20 ps
+
+
+def tap_window(P):
+    return float(P.clock.get("tap_window_ps", TAP_WINDOW_PS))
 
 
 def sdc(P, tn, pins):
@@ -411,14 +419,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
-           # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
+           # R4 / CLK-STD fix 3: one clock port per tap; sinks are assigned to taps by distance AND load (regret-
+           # ordered capacitated assignment, light taps merged, empty taps dropped) before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
-           # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
-           f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
-           # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
+           # taps sized by sink count: the plan's clock.tap_max_sinks (density taps 1500)
+           f"export OT_TAP_MAX_SINKS = {_tap_cap(t, S.tap_mode(P, tn))}",
+           # CLK-STD fix 4: every tap tree balanced to the die common latency within +/- OT_TAP_WINDOW_PS (20) on
+           # GLOBAL-ROUTE RC (OT_TAP_RC grt; placement RC under-estimated a 4-level tap by ~90 ps: CP1 r9 clk_t3)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
-           f"export OT_TAP_WINDOW_PS = {float(P.clock['insertion_tol_ps']):g}",
+           f"export OT_TAP_WINDOW_PS = {tap_window(P):g}",
+           "export OT_TAP_RC = grt",
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
            # CP2: hard-core internal clock latency (core_latency.txt: inst pin ps tap) for tap_balance.tcl's effective
            # arrival, and the early core taps (core_taps.txt) clock_taps.tcl hangs the core clock pins on
@@ -435,7 +446,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl",
+              "tap_wire.tcl", "pair_skew.tcl"):
+        if not Path(__file__).with_name(f).is_file():
+            continue
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
@@ -454,10 +468,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
                           insertion_tol_ps=P.clock["insertion_tol_ps"],
                           # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
-                          tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
+                          tap_mode=S.tap_mode(P, tn), tap_window_ps=tap_window(P),
+                          density_taps=(T.density_report(P, tn) if S.tap_mode(P, tn) == "density" else None),
                           tap_pitch_um=S.tap_pitch(P, tn), grid_taps=len(S._grid_taps(P, tn)),
                           taps=[dict(name=n, xy=[x, y],
-                                     kind="grid" if i < len(S._grid_taps(P, tn)) else "sinks")
+                                     kind=("density" if S.tap_mode(P, tn) == "density" else
+                                           "grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
@@ -489,6 +505,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
+  R=\$(dirname \"\$O\"); if [ -n \"\$O\" ] && [ -f /work/tap_wire.tcl ]; then XL=\$(sed -n 's/^export ADDITIONAL_LIBS = //p' /work/config.mk); EXTRA_LIBS=\"\$XL\" ODB=\$O SPEF=\$R/6_final.spef SDC=\$(ls \$R/6_final.sdc \$R/5_route.sdc 2>/dev/null | head -1) OUT=\$R/tap_wire.tsv openroad -exit /work/tap_wire.tcl > /work/tap_wire.log 2>&1; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 # a killed / OOM container skips its chown: hand the tree back anyway (else root-owned stale results survive)
@@ -653,6 +670,8 @@ def write_assembly(raw, out, views, rtl_root=None):
     import spine
     br = spine.branch_table(P, dropped)
     (kd / "spine_branch.json").write_text(json.dumps(br, indent=1) + "\n")
+    if br.get("model") == "zst":       # CLK-STD: the structured spine itself (nodes, legs, repeaters, seam sharing)
+        (kd / "spine_tree.json").write_text(json.dumps(spine.zst_tree(P, dropped), indent=0) + "\n")
     (kd / "sta_die.tcl").write_text(sta_die_tcl(P, br))
     seams = []
     for pid, pr in sorted(P.ports.items()):
@@ -669,6 +688,8 @@ def write_assembly(raw, out, views, rtl_root=None):
     (kd / "die_top_struct.v").write_text(plain + "\n")
     (kd / "die_flow.tcl").write_text(die_flow_tcl(P, [Path(x).name for x in lefs], [Path(x).name for x in libs]))
     shutil.copyfile(Path(__file__).with_name("abut_audit.py"), kd / "abut_audit.py")
+    shutil.copyfile(Path(__file__).with_name("pair_skew.tcl"), kd / "pair_skew.tcl")
+    shutil.copyfile(Path(__file__).with_name("pair_skew.py"), kd / "pair_skew.py")
     (kd / "run_die.sh").write_text(RUN_DIE)
     (kd / "run_die.sh").chmod(0o755)
     return kd
@@ -720,11 +741,15 @@ def sta_die_tcl(P, branch=None):
     lines.append("}")
     lines += ["if {[info exists ::env(DIE)] && [file exists $::env(DIE)/6_final.spef]} { read_spef $::env(DIE)/6_final.spef }",
               f"create_clock -name clk -period {per:.4f} [get_ports clk]"]
-    pair = bool((P.clock.get("spine", {}) or {}).get("die_root_um"))
-    lines.append(f"set SPINE [expr {{[info exists ::env(SPINE)] ? $::env(SPINE) : \"{'branch' if pair else 'routed'}\"}}]")
+    # CLK-STD: the structured spine (spine.zst_tree) is the die clock model on every die (default SPINE=branch); the
+    # die's own routed clk net is a single unbuffered net (no spine repeaters in the die netlist), kept as SPINE=routed
+    lines.append("set SPINE [expr {[info exists ::env(SPINE)] ? $::env(SPINE) : \"branch\"}]")
     if branch:
-        lines.append(f"# spine branch model: die root {branch['die_root_um']}, {branch['branch_ps_per_mm']:g} ps/mm, "
-                     f"leaf {branch['branch_leaf_um']:g} um, ref {branch['ref_branch_ps']:g} ps (spine_branch.json)")
+        lines.append(f"# spine branch model {branch.get('model', 'htree')}: die root {branch['die_root_um']}, "
+                     f"{branch['branch_ps_per_mm']:g} ps/mm, leaf {branch.get('branch_leaf_um')} um, "
+                     f"ref {branch['ref_branch_ps']:g} ps (spine_branch.json"
+                     + (f"; zst: every tap {branch.get('path_um')} um from the die root, equal by construction)"
+                        if branch.get("model") == "zst" else ")"))
         lines.append("if {$SPINE == \"branch\"} {")
         for n, r in sorted(branch["parts"].items()):
             for port, v in sorted(r["taps"].items()):
@@ -734,7 +759,28 @@ def sta_die_tcl(P, branch=None):
                 lines.append(f"  set_clock_latency -source {t_lib(v['offset_ps']):.4f} [get_clocks {ck}]   "
                              f";# branch {v['branch_ps']:g} ps ({v['length_um']:g} um), early {v['early_ps']:g}")
         lines.append("}")
-    lines += ["puts \"OT_SPINE $SPINE\"",
+    # CLK-STD die-STA gap fix (COORD 10-23, CP1 r9 clk_t3 118 vs 158 ps): the routed wire from each partition tap
+    # port to its first loads is dropped by the flat stitch (hierarchical-pin SPEF net); re-apply it from the kit's
+    # tap_wire.tsv (tap_wire.tcl, run_kit.sh) as an assigned net delay + transition from the die clk driver
+    lines += ["proc ot_tap_wire {inst f} {",
+              "  if {![file exists $f]} { puts \"OT_TAP_WIRE MISSING $f ($inst): tap-port wire NOT modelled\"; return 0 }",
+              "  set fh [open $f]; set k 0",
+              "  while {[gets $fh l] >= 0} {",
+              "    if {[string match #* $l] || [llength $l] < 6} continue",
+              "    lassign $l port pin ar af sr sf",
+              "    set q [get_pins -quiet $inst/$pin]; if {$q eq \"\"} continue",
+              "    set_assigned_delay -net -rise -from [get_ports clk] -to $q $ar",
+              "    set_assigned_delay -net -fall -from [get_ports clk] -to $q $af",
+              "    set_assigned_transition -rise $sr $q; set_assigned_transition -fall $sf $q",
+              "    incr k",
+              "  }",
+              "  close $fh; return $k",
+              "}",
+              "set ot_tw 0"]
+    for n, p in sorted(P.parts.items()):
+        lines.append(f"incr ot_tw [ot_tap_wire {gen_rtl.sv_id(n)} $::env(PARTS)/{p['type']}/tap_wire.tsv]")
+    lines += ["puts \"OT_TAP_WIRE $ot_tw tap loads annotated\"",
+              "puts \"OT_SPINE $SPINE\"",
               "set_propagated_clock [all_clocks]",
               f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]",
               f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]",
@@ -770,6 +816,11 @@ def sta_die_tcl(P, branch=None):
               "report_checks -path_delay max -through [get_pins -hierarchical */x_i*] -format full_clock_expanded "
               "-fields {cap slew fanout}",
               "report_checks -path_delay min -through [get_pins -hierarchical */x_i*] -format full_clock_expanded"]
+    # CLK-STD gate measurement (pair_skew.tcl, LAST: it zeroes the clock uncertainties after recording sign-off):
+    # related launch/capture pair skew with CPPR per reg->reg path end, intra / seam; face flops from PARTS/<type>/
+    face = " ".join(f"{gen_rtl.sv_id(n)}=$::env(PARTS)/{p['type']}/ot_face_flops.txt" for n, p in sorted(P.parts.items()))
+    lines += [f"if {{[info exists ::env(PAIRSKEW_OUT)] && $::env(PAIRSKEW_OUT) ne \"\" && ![info exists ::env(OT_PS_FACE)]}} {{ set ::env(OT_PS_FACE) \"{face}\" }}",
+              pair_skew.DIE_HOOK]
     return "\n".join(lines) + "\n"
 
 
@@ -805,7 +856,16 @@ def die_flow_tcl(P, lefs, libs):
           "source /work/pdn.tcl", "pdngen",
           "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n -error_file /work/pg_$n.rpt} e]} "
           "{ puts \"OT_PG_CHECK_FAIL $n $e\" } else { puts \"OT_PG_CHECK_OK $n\" } }",
-          f"set_routing_layers -signal M2-{L9} -clock M2-{L9}",
+          # CLK-STD fix 1: the clock spine rides the die layers (M8/M9, drops onto the M7 tap pins) with a 2W2S
+          # non-default rule (2x width, 2x spacing, from the tech LEF) on the clk net
+          "set ot_ndr {}",
+          f"foreach L {{{L8} {L9}}} {{ set ly [[ord::get_db_tech] findLayer $L]; set u [[ord::get_db_tech] getDbUnitsPerMicron]; "
+          "lappend ot_ndr $L [expr {2.0 * [$ly getWidth] / $u}] [expr {2.0 * [$ly getSpacing] / $u}] }",
+          "set ot_w {}; set ot_s {}",
+          "foreach {L w s} $ot_ndr { lappend ot_w \"$L:$w\"; lappend ot_s \"$L:$s\" }",
+          "if {[catch {create_ndr -name OT_CLK_2W2S -width $ot_w -spacing $ot_s; assign_ndr -ndr OT_CLK_2W2S -net clk} e]} "
+          "{ puts \"OT_NDR_FAIL $e\" } else { puts \"OT_NDR OT_CLK_2W2S $ot_w $ot_s\" }",
+          f"set_routing_layers -signal M2-{L9} -clock M7-{L9}",
           "global_route -allow_congestion -verbose -congestion_report_file /work/die_grt_congestion.rpt",
           "puts \"OT_T_GRT [expr {[clock seconds]-$t0}]\"",
           "detailed_route -output_drc /work/die_drc.rpt -verbose 1",
@@ -835,7 +895,8 @@ docker run --rm --name dpdie-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   -e HUID=$(id -u) -e HGID=$(id -g) -w /work "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   /usr/bin/time -v openroad -threads $CPUS -exit /work/die_flow.tcl > /work/die_flow.log 2>&1; echo FLOW_EXIT \$? >> /work/die_flow.log; \
   ODB=/work/die_routed.odb SEAMS=/work/seams.json OUT=/work/abut_audit.json openroad -python -exit /work/abut_audit.py > /work/abut_audit.log 2>&1; \
-  for m in flat etm; do T=openroad; [ \$m = flat ] && T='sta -no_splash'; for c in TT FF; do MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt \$T -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
+  for m in flat etm; do T=openroad; [ \$m = flat ] && T='sta -no_splash'; for c in TT FF; do PS=; [ \$m = flat ] && PS=/work/pairskew_flat_\$c.tsv; MODE=\$m CORNER=\$c PARTS=/parts DIE=/work OUT=/work/sta_\${m}_\$c.txt PAIRSKEW_OUT=\$PS \$T -exit /work/sta_die.tcl > /work/sta_\${m}_\$c.log 2>&1; done; done; \
+  python3 /work/pair_skew.py gate /work/pairskew_flat_TT.tsv /work/pairskew_flat_FF.tsv --json /work/pairskew_gate.json > /work/pairskew_gate.txt 2>&1; \
   chown -R \$HUID:\$HGID /work"
 tail -3 "$K/die_flow.log"; tail -2 "$K/abut_audit.log"; tail -n 3 "$K"/sta_*.txt 2>/dev/null
 """

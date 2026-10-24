@@ -174,3 +174,153 @@ def report(P, tn):
     return dict(mode="sinks", radius_um=float(ck.get("tap_radius_um", 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])
+
+
+# ------------------------------------------------------------------------- CLK-STD density taps (owner 10-23 fix 2)
+DENSITY_FLOP_FRACTION = 0.12   # flops per estimated std cell for the interior sink estimate (clock.flop_fraction)
+DENSITY_CAP = 1500             # max expected sinks per tap (clock.tap_max_sinks): a cell over it splits 2 x 2
+DENSITY_MIN_SPLIT = 4          # a cell is split at most down to pitch / 4 (100 um at the 400-um R4 pitch)
+DENSITY_SAMPLES = 16           # free-area sampling per cell side (centroid and macro coverage)
+_DCACHE = {}
+
+
+def _boxes(t):
+    """(macro boxes, soft regions): hard_cores[] and lef contents are macros (no tap, no sinks inside but their clock
+    pins); contents[] with origin + outline + cells and no lef are soft logic regions [(box, cells)]."""
+    macros, soft = [], []
+    cores = set()
+    for c in t.get("hard_cores", []) or []:
+        dx, dy = c.get("track_offset_um", [0.0, 0.0])
+        x0, y0 = c["origin_um"][0] + dx, c["origin_um"][1] + dy
+        macros.append((x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1]))
+        cores.add(c["inst"])
+    for c in t.get("contents", []) or []:
+        if c["inst"] in cores or "origin_um" not in c or "outline_um" not in c:
+            continue
+        x0, y0 = c["origin_um"]
+        b = (x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1])
+        if c.get("lef"):
+            macros.append(b)
+        elif c.get("cells"):
+            soft.append((b, int(c["cells"])))
+    return macros, soft
+
+
+def _inside(px, py, b):
+    return b[0] <= px < b[2] and b[1] <= py < b[3]
+
+
+def density_taps(P, tn):
+    """CLK-STD fix 2: [(port, x, y, expected_sinks)] in the type frame.
+
+    Start from the R4 pitch grid (schema.tap_pitch); estimate each cell's sinks = planned FIRM sinks in it (face
+    registers, ft stations: planned_sinks) + the interior flops (flop_fraction x the type's estimated cells, minus the
+    planned sinks; a soft content region with origin/outline/cells keeps its share inside its box, the rest spreads
+    over the free (non-macro) area) + one per hard-core box centre in it.  A cell whose estimate exceeds the cap
+    (clock.tap_max_sinks, 1500) splits 2 x 2 (down to pitch / 4); a cell with an estimate below clock.tap_min_sinks
+    (default 1) -- empty, or covered by macros -- gets NO tap.  The tap sits at the cell's sink centroid (planned
+    sinks + free-area centroid weighted by the interior share), moved off macros (schema.tap_clear).  Tap 'clk' is the
+    one nearest clock.tap_um; the rest clk_t<i> in (y, x) order.  Deterministic; cached per plan object and type."""
+    import schema as S
+    key = (id(P), tn)
+    if key in _DCACHE:
+        return _DCACHE[key]
+    t = P.types[tn]
+    ck = t.get("clock", {}) or {}
+    w, h = t["outline_um"]
+    pitch = S.tap_pitch(P, tn)
+    cap = float(ck.get("tap_max_sinks", DENSITY_CAP))
+    ff = float(ck.get("flop_fraction", DENSITY_FLOP_FRACTION))
+    mn = float(ck.get("tap_min_sinks", 1))
+    macros, soft = _boxes(t)
+    planned = [(x, y) for x, y, _ in planned_sinks(P, tn)]
+    cells = t.get("cells")
+    if cells is None:
+        cells = sum(int(c.get("cells", 0)) for c in t.get("contents", []) or [])
+    soft_cells = sum(c for _, c in soft)
+    rest = max(0.0, ff * float(cells) - len(planned) - ff * soft_cells)
+    core_pts = [((b[0] + b[2]) / 2.0, (b[1] + b[3]) / 2.0) for b in macros]
+
+    def samples(x0, y0, x1, y1):
+        n = DENSITY_SAMPLES
+        return [(x0 + (i + 0.5) * (x1 - x0) / n, y0 + (j + 0.5) * (y1 - y0) / n) for i in range(n) for j in range(n)]
+
+    def free_frac(pts):
+        return [p for p in pts if not any(_inside(p[0], p[1], b) for b in macros)]
+    # total free area (for the uniform interior share) and each soft region's free area
+    allp = samples(0.0, 0.0, w, h)
+    tot_free = len(free_frac(allp)) / len(allp) * w * h or 1.0
+    soft_free = []
+    for b, c in soft:
+        sp = samples(*b)
+        soft_free.append(max(len(free_frac(sp)) / len(sp) * (b[2] - b[0]) * (b[3] - b[1]), 1e-9))
+
+    def estimate(x0, y0, x1, y1):
+        """(expected sinks, centroid) of the cell."""
+        sp = samples(x0, y0, x1, y1)
+        fr = free_frac(sp)
+        area = (x1 - x0) * (y1 - y0)
+        fa = len(fr) / len(sp) * area
+        mass = rest * fa / tot_free
+        mx = my = 0.0
+        if fr:
+            fx = sum(p[0] for p in fr) / len(fr)
+            fy = sum(p[1] for p in fr) / len(fr)
+            mx, my = mass * fx, mass * fy
+        for (b, c), sf in zip(soft, soft_free):
+            q = [p for p in fr if _inside(p[0], p[1], b)]
+            if q:
+                m = ff * c * (len(q) / len(sp) * area) / sf
+                mass += m
+                mx += m * sum(p[0] for p in q) / len(q)
+                my += m * sum(p[1] for p in q) / len(q)
+        for px, py in planned + core_pts:
+            if x0 <= px < x1 and y0 <= py < y1 or (px == w and x1 == w and y0 <= py < y1) or \
+                    (py == h and y1 == h and x0 <= px < x1):
+                mass += 1.0
+                mx += px
+                my += py
+        if mass <= 0:
+            return 0.0, ((x0 + x1) / 2.0, (y0 + y1) / 2.0)
+        return mass, (mx / mass, my / mass)
+    out = []
+    smin = pitch / DENSITY_MIN_SPLIT
+
+    def visit(x0, y0, x1, y1):
+        e, (cx, cy) = estimate(x0, y0, x1, y1)
+        if e > cap and (x1 - x0) / 2.0 >= smin - 1e-9 and (y1 - y0) / 2.0 >= smin - 1e-9:
+            xm, ym = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+            for a, b, c, d in ((x0, y0, xm, ym), (xm, y0, x1, ym), (x0, ym, xm, y1), (xm, ym, x1, y1)):
+                visit(a, b, c, d)
+            return
+        if e < mn:
+            return
+        out.append([cx, cy, e])
+    nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
+    for j in range(ny):
+        for i in range(nx):
+            visit(i * w / nx, j * h / ny, (i + 1) * w / nx, (j + 1) * h / ny)
+    if not out:
+        x, y = ck.get("tap_um", [w / 2.0, h / 2.0])
+        out = [[float(x), float(y), 0.0]]
+    root = ck.get("tap_um", [w / 2.0, h / 2.0])
+    i0 = min(range(len(out)), key=lambda i: (abs(out[i][0] - root[0]) + abs(out[i][1] - root[1]), i))
+    order = [out[i0]] + sorted((q for i, q in enumerate(out) if i != i0), key=lambda q: (round(q[1], 3), round(q[0], 3)))
+    res, taken = [], []
+    for k, (x, y, e) in enumerate(order):
+        x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
+        y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
+        x, y = S.tap_clear(t, x, y, taken)
+        taken.append((x, y))
+        res.append(("clk" if k == 0 else f"clk_t{k}", round(x, 4), round(y, 4), round(e, 1)))
+    _DCACHE[key] = res
+    return res
+
+
+def density_report(P, tn):
+    taps = density_taps(P, tn)
+    ck = P.types[tn].get("clock", {}) or {}
+    return dict(mode="density", cap=float(ck.get("tap_max_sinks", DENSITY_CAP)),
+                flop_fraction=float(ck.get("flop_fraction", DENSITY_FLOP_FRACTION)), n=len(taps),
+                expected_sinks=round(sum(t[3] for t in taps), 1),
+                taps=[dict(name=n, xy=[x, y], expected_sinks=e) for n, x, y, e in taps])

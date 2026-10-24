@@ -52,8 +52,11 @@ python3 -m pytest -q tools/die_plan/
   `out boundary flop + sum(stations of the crossed slots) + in boundary flop + fixed_cycles` (a die-IO end has no partition flop). `Plan.lane_latency()` is the only formula. The table in
   `latency.lanes` is generated, and G0 checks that it is complete and equal to the formula. `param` names the SV/compiler
   parameter.
-- **Clock**: there is one root per partition, at the type's `clock.tap_um` on a die layer (M8/M9). Insertion at the
-  boundary flops is `clock.insertion_ps` +/- `insertion_tol_ps` (250 +/- 40), and neighbour skew is <= 80 ps.
+- **Clock** (CLK-STD, owner 10-23 ~23:30: industry multi-source CTS): a structured zero-skew spine on M8/M9 (2W2S)
+  from the die root to every partition tap; each partition's taps hang under one entry node (`clock.tap_um`). Every
+  tap tree is balanced to `clock.common_latency_ps` (250) within `clock.tap_window_ps` (20). The GATE is the related
+  launch/capture pair skew with CPPR <= 80 ps at TT and FF (intra-partition and seam pairs); sign-off is the
+  propagated-clock STA (setup TT, hold FF). Face-flop max-min spread is reported only. See "Clock flow" below.
   `face_xing` = `budgeted` means abutted faces are timed as ordinary synchronous hops under that budget.
   `forwarded_landing` means a forwarded clock plus a landing at every abutted face.
 - **Reset**: there is one async-assert / sync-deassert synchronizer per partition (`sync_stages`). Data and ft flops have
@@ -153,8 +156,33 @@ ERROR only under `--completeness`, counts in `summary.xdie_counts`):
 - `ft_budget` (e): per type, over-the-top ft bits (E-W slots on M8, N-S on M9, turning slots on both) + non-ft M8 / M9
   face pins <= usable M8 / M9 tracks across the type x `type.ft_budget[L]` (default `layer_budget.cut_avail[L]`).
 
-R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
-WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
+R4 (OWNER 10-23 ~23:30, CLK-STD; supersedes the 10-17 max-min spread rule and the 19:55 spread form): the clock gate
+is the related launch/capture flop-PAIR skew with CPPR credit <= 80 ps at TT and FF, for intra-partition pairs and
+seam pairs, measured by `pair_skew.tcl` (OpenSTA: propagated clocks, CPPR on, uncertainty zeroed, PathEnd clk_skew per
+reg->reg setup and hold path end) and judged by `pair_skew.py`; sign-off = the propagated-clock STA closing (setup TT,
+hold FF). The max-min face-flop spread is reported only. `OT_TAP_CHECK` / `OT_CLOCK_TAPS` stay WARN (guidance).
+
+Clock flow (CLK-STD, `tools/die_plan`):
+1. Structured spine (`spine.zst_tree`, `clock.spine.model` "zst", default): die root (`clock.spine.root_um`) -> seam-aware
+   recursive bisection of the partitions -> each partition's entry node -> its taps; bottom-up zero-skew merge on the
+   Manhattan metric (snakes where a leg cannot be equalised), so every root -> tap path has the same length by
+   construction. H legs on M8, V legs on M9, NDR 2W2S (`die_flow.tcl` create_ndr / assign_ndr on clk, clock layers
+   M7-M9), repeaters every <= `die.rep_um`. `gen.py assembly` writes `spine_tree.json`; the die STA (`SPINE=branch`,
+   default on every die) takes each tap's branch latency from it (equal; early core taps shifted).
+2. Taps (`clock.tap_mode` "density", per type or die-wide): the pitch grid pruned and sized by expected sinks
+   (`taps.density_taps`): planned face / ft sinks + interior flops (`clock.flop_fraction` x cells), no tap over a hard
+   core / macro or in an empty cell, a cell over `clock.tap_max_sinks` (1500) splits 2 x 2.
+3. Sink -> tap assignment by distance AND load (`clock_taps.tcl`): regret-ordered capacitated assignment within half a
+   pitch extra distance, light taps (< `OT_TAP_MIN_SINKS`, 32) merged, empty taps dropped; `ot_tap_sinks.tsv`.
+4. Balance (`tap_balance.tcl`): each tap tree's mean to the common latency +/- `OT_TAP_WINDOW_PS` (20) with delay
+   chains; converged on placement RC, then corrected on global-route RC (`OT_TAP_RC` grt, default).
+5. Hard cores: internal latency from the core lib (`cores.py`, core_latency.txt) balanced at the core clock pin
+   (effective arrival = pin + internal), early core taps `clk_c<k>` when the internal latency exceeds the target (CP2).
+6. Seams: the spine bisection keeps heavy seams on one branch; `spine_tree.json` / G0 `clock_spine` report the shared
+   path per seam.
+Die STA gap fix: the flat stitch drops each partition's tap-port -> first-load wire (hierarchical-pin SPEF net). Kits
+write `tap_wire.tsv` (`tap_wire.tcl`, run_kit.sh after route); `sta_die.tcl` re-applies it (set_assigned_delay -net +
+set_assigned_transition from the die clk port). Put each kit's `tap_wire.tsv` next to its `6_final.v` in PARTS/<type>/.
 Tap method (CP1 r8 RULING, COORD 10-23 21:26): every partition gets a GRID of clock taps at `budgets.tap_pitch_um`
 (default 400 um, or type `clock.tap_pitch_um`), every sink on its nearest tap, trees balanced to the common latency.
 `clock.tap_mode` `grid+sinks` (alias `sinks`) only ADDS sink-anchored taps (taps.py) for face-register clusters after

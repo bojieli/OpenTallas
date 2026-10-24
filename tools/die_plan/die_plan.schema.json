@@ -580,12 +580,21 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
         "type": "number",
         "exclusiveMinimum": 0
+       },
+       "flop_fraction": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 0
        },
        "tap_max_sinks": {
         "type": "integer",
@@ -1406,8 +1415,32 @@
       "branch_leaf_um": {
        "type": "number",
        "exclusiveMinimum": 0
+      },
+      "model": {
+       "enum": [
+        "zst",
+        "htree"
+       ]
+      },
+      "ndr": {
+       "enum": [
+        "2W2S",
+        "1W1S"
+       ]
       }
      }
+    },
+    "tap_mode": {
+     "enum": [
+      "grid",
+      "grid+sinks",
+      "sinks",
+      "density"
+     ]
+    },
+    "tap_window_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
     }
    }
   },
