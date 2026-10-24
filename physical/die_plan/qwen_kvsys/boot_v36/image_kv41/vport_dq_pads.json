@@ -1,0 +1,41 @@
+{
+ "rule": "pad (DQ - 15) stages on the port W request lane pvw_<p>__u_ctl.req_t/req_valid -> vport pr_t/pr_valid (15 b): DQ <= 15 (RTL bound of qkd_pv16_vport_b), RL unchanged",
+ "dq_unpadded": {
+  "vport_WS_0": 8,
+  "vport_WS_1": 17,
+  "vport_WS_2": 0,
+  "vport_WS_3": 25,
+  "vport_WN_0": 9,
+  "vport_WN_1": 18,
+  "vport_WN_2": 1,
+  "vport_WN_3": 29,
+  "vport_ES_0": 9,
+  "vport_ES_1": 18,
+  "vport_ES_2": 0,
+  "vport_ES_3": 25,
+  "vport_EN_0": 10,
+  "vport_EN_1": 19,
+  "vport_EN_2": 0,
+  "vport_EN_3": 29
+ },
+ "pad_stages": {
+  "vport_WS_0": 0,
+  "vport_WS_1": 2,
+  "vport_WS_2": 0,
+  "vport_WS_3": 10,
+  "vport_WN_0": 0,
+  "vport_WN_1": 3,
+  "vport_WN_2": 0,
+  "vport_WN_3": 14,
+  "vport_ES_0": 0,
+  "vport_ES_1": 3,
+  "vport_ES_2": 0,
+  "vport_ES_3": 10,
+  "vport_EN_0": 0,
+  "vport_EN_1": 4,
+  "vport_EN_2": 0,
+  "vport_EN_3": 14
+ },
+ "pad_flops": 900,
+ "RL": 63
+}
