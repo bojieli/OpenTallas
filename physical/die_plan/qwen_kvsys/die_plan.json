@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.7q (KV-P7-V38 10-23, GEOM-REVIEW7 v3.7-cores/v3.7p FAIL fixes): 556 hg/hgi/pc/pv hard cores re-placed (post_v37q.py: ectl at the bottom beside its E/W windows, >= 25.92-um window bands, pc 2x2 beside the W/E windows, pv row gaps 77.76/51.84 from the top band); pins re-assigned (core_pins_v37q.py); channel-demand table g2_channels_v37q.py | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 504 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.7r (KV-P7-V38 10-23, GEOM-REVIEW8 FIX (3)(4) + ectl gap): 556 hg/hgi/pc/pv cores re-placed (post_v37r.py: ectl full-width 155.52 tall, pc rows 60.48/241.92 gaps, pv cores up into the top band); pins re-assigned (core_pins_v37q.py) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 504 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -1493,11 +1493,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -2999,11 +2999,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -4447,11 +4447,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -23078,7 +23078,7 @@
      "module": "qkd_kvs_pc_h_head_p",
      "origin_um": [
       60.48,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -23097,7 +23097,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -23116,7 +23116,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -23135,7 +23135,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -23703,7 +23703,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -23722,7 +23722,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -23741,7 +23741,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -23760,7 +23760,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -24328,7 +24328,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -24347,7 +24347,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -24366,7 +24366,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -24385,7 +24385,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -24925,7 +24925,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -24944,7 +24944,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      34.56
+      60.48
      ],
      "outline_um": [
       397.44,
@@ -24963,7 +24963,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       561.6,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -24982,7 +24982,7 @@
      "module": "qkd_kvs_pc",
      "origin_um": [
       60.48,
-      535.68
+      665.28
      ],
      "outline_um": [
       397.44,
@@ -25760,7 +25760,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -25779,7 +25779,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -25798,7 +25798,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -25817,7 +25817,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -25836,7 +25836,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -25857,7 +25857,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -25876,7 +25876,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -25895,7 +25895,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -25914,7 +25914,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -25933,7 +25933,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -25954,7 +25954,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -25973,7 +25973,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -25992,7 +25992,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -26011,7 +26011,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -26030,7 +26030,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -26051,7 +26051,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -26070,7 +26070,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -26089,7 +26089,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -26108,7 +26108,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -26127,7 +26127,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -26866,7 +26866,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -26885,7 +26885,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -26904,7 +26904,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -26923,7 +26923,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -26942,7 +26942,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -26963,7 +26963,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -26982,7 +26982,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -27001,7 +27001,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -27020,7 +27020,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -27039,7 +27039,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -27060,7 +27060,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -27079,7 +27079,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -27098,7 +27098,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -27117,7 +27117,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -27136,7 +27136,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -27157,7 +27157,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -27176,7 +27176,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -27195,7 +27195,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -27214,7 +27214,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -27233,7 +27233,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -27968,7 +27968,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -27987,7 +27987,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -28006,7 +28006,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -28025,7 +28025,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -28044,7 +28044,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -28065,7 +28065,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -28084,7 +28084,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -28103,7 +28103,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -28122,7 +28122,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -28141,7 +28141,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -28162,7 +28162,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -28181,7 +28181,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -28200,7 +28200,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -28219,7 +28219,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -28238,7 +28238,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -28259,7 +28259,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -28278,7 +28278,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -28297,7 +28297,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -28316,7 +28316,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -28335,7 +28335,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -29204,7 +29204,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -29223,7 +29223,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -29242,7 +29242,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -29261,7 +29261,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -29280,7 +29280,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -29301,7 +29301,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -29320,7 +29320,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -29339,7 +29339,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -29358,7 +29358,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -29377,7 +29377,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -29398,7 +29398,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -29417,7 +29417,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -29436,7 +29436,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -29455,7 +29455,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -29474,7 +29474,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -29495,7 +29495,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -29514,7 +29514,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -29533,7 +29533,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -29552,7 +29552,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -29571,7 +29571,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -30418,7 +30418,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -30437,7 +30437,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -30456,7 +30456,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -30475,7 +30475,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -30494,7 +30494,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -30515,7 +30515,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -30534,7 +30534,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -30553,7 +30553,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -30572,7 +30572,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -30591,7 +30591,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -30612,7 +30612,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -30631,7 +30631,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -30650,7 +30650,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -30669,7 +30669,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -30688,7 +30688,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -30709,7 +30709,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -30728,7 +30728,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -30747,7 +30747,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -30766,7 +30766,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -30785,7 +30785,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -31766,7 +31766,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -31785,7 +31785,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -31804,7 +31804,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -31823,7 +31823,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -31842,7 +31842,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -31863,7 +31863,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -31882,7 +31882,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -31901,7 +31901,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -31920,7 +31920,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -31939,7 +31939,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -31960,7 +31960,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -31979,7 +31979,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -31998,7 +31998,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -32017,7 +32017,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -32036,7 +32036,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -32057,7 +32057,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -32076,7 +32076,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -32095,7 +32095,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -32114,7 +32114,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -32133,7 +32133,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -33092,7 +33092,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -33111,7 +33111,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -33130,7 +33130,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -33149,7 +33149,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -33168,7 +33168,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -33189,7 +33189,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -33208,7 +33208,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -33227,7 +33227,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -33246,7 +33246,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -33265,7 +33265,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -33286,7 +33286,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -33305,7 +33305,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -33324,7 +33324,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -33343,7 +33343,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -33362,7 +33362,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -33383,7 +33383,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -33402,7 +33402,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -33421,7 +33421,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -33440,7 +33440,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -33459,7 +33459,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -34540,7 +34540,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -34559,7 +34559,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -34578,7 +34578,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -34597,7 +34597,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -34616,7 +34616,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -34637,7 +34637,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -34656,7 +34656,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -34675,7 +34675,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -34694,7 +34694,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -34713,7 +34713,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -34734,7 +34734,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -34753,7 +34753,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -34772,7 +34772,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -34791,7 +34791,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -34810,7 +34810,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -34831,7 +34831,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -34850,7 +34850,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -34869,7 +34869,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -34888,7 +34888,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -34907,7 +34907,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -35481,7 +35481,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -35500,7 +35500,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -35519,7 +35519,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -35538,7 +35538,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -35557,7 +35557,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -35578,7 +35578,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -35597,7 +35597,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -35616,7 +35616,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -35635,7 +35635,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -35654,7 +35654,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -35675,7 +35675,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -35694,7 +35694,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -35713,7 +35713,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -35732,7 +35732,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -35751,7 +35751,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -35772,7 +35772,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -35791,7 +35791,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -35810,7 +35810,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -35829,7 +35829,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -35848,7 +35848,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -36587,7 +36587,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -36606,7 +36606,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -36625,7 +36625,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -36644,7 +36644,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -36663,7 +36663,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -36684,7 +36684,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -36703,7 +36703,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -36722,7 +36722,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -36741,7 +36741,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -36760,7 +36760,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -36781,7 +36781,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -36800,7 +36800,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -36819,7 +36819,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -36838,7 +36838,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -36857,7 +36857,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -36878,7 +36878,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -36897,7 +36897,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -36916,7 +36916,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -36935,7 +36935,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -36954,7 +36954,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -37823,7 +37823,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -37842,7 +37842,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -37861,7 +37861,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -37880,7 +37880,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -37899,7 +37899,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -37920,7 +37920,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -37939,7 +37939,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -37958,7 +37958,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -37977,7 +37977,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -37996,7 +37996,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -38017,7 +38017,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -38036,7 +38036,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -38055,7 +38055,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -38074,7 +38074,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -38093,7 +38093,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -38114,7 +38114,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -38133,7 +38133,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -38152,7 +38152,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -38171,7 +38171,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -38190,7 +38190,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -39171,7 +39171,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -39190,7 +39190,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -39209,7 +39209,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -39228,7 +39228,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -39247,7 +39247,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -39268,7 +39268,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -39287,7 +39287,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -39306,7 +39306,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -39325,7 +39325,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -39344,7 +39344,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -39365,7 +39365,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -39384,7 +39384,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -39403,7 +39403,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -39422,7 +39422,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -39441,7 +39441,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -39462,7 +39462,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -39481,7 +39481,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -39500,7 +39500,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -39519,7 +39519,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -39538,7 +39538,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -40626,7 +40626,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -40645,7 +40645,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -40664,7 +40664,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -40683,7 +40683,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       60.48,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -40702,7 +40702,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       164.16,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -40723,7 +40723,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -40742,7 +40742,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -40761,7 +40761,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -40780,7 +40780,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       527.04,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -40799,7 +40799,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       630.72,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -40820,7 +40820,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -40839,7 +40839,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -40858,7 +40858,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -40877,7 +40877,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       993.6,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -40896,7 +40896,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1097.28,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -40917,7 +40917,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      34.56
+      69.12
      ],
      "outline_um": [
       380.16,
@@ -40936,7 +40936,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      302.4
+      397.44
      ],
      "outline_um": [
       380.16,
@@ -40955,7 +40955,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      803.52
+      950.4
      ],
      "outline_um": [
       380.16,
@@ -40974,7 +40974,7 @@
      "module": "kv3_pv_pair",
      "origin_um": [
       1460.16,
-      1071.36
+      1226.88
      ],
      "outline_um": [
       380.16,
@@ -40993,7 +40993,7 @@
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
       1563.84,
-      561.6
+      691.2
      ],
      "outline_um": [
       172.8,
@@ -42956,11 +42956,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -44462,11 +44462,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -45968,11 +45968,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -47474,11 +47474,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
@@ -48980,11 +48980,11 @@
       25.92
      ],
      "outline_um": [
-      881.28,
-      216.0
+      1226.88,
+      155.52
      ],
      "orient": "R0",
-     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden)",
+     "note": "qkd_ectlk leaf core at the bottom beside the E o_ectl_tN / W i_slg_krsp windows (v3.7q); PLANNED core: lef/lib pending; pins top-down (KV-P6-PINS) (top-down pin tool, then CORE-KS harden); v3.7r outline 1226.88 x 155.52 (same area; full width, ectl|head gap 120.96)",
      "track_offset_um": [
       0.0,
       0.0
