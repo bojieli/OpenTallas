@@ -8,6 +8,13 @@ import check as CK, schema as S
 d = sys.argv[1]
 raw = json.load(open(f'{d}/die_plan.json')); P = S.Plan(raw)
 lat = raw['latency']['lanes']; ports = {p['id']: p for p in raw['ports']}
+part_type = {p['name']:p['type'] for p in raw['partitions']}
+internal_bus = {}
+for tn, typ in raw['partition_types'].items():
+    for entry in typ.get('internal_stations', []):
+        key = str(entry.get('conn', ''))
+        if key.startswith('bus:'):
+            k=(tn,key[4:]);internal_bus[k]=max(internal_bus.get(k,0),len(entry['regs_um']))
 acc = collections.defaultdict(lambda: [0.0, 0.0, 0, 0])     # key -> [sum w*cyc, sum w*mm, bits, max cyc]
 for ln in raw['lanes']:
     s = ports[ln['ports'][0]]['src']['part']; t = ports[ln['ports'][-1]]['dst']['part']; w = ports[ln['ports'][0]]['width']
@@ -24,7 +31,8 @@ for ln in raw['lanes']:
     elif r(t) and re.match(r'NW_(hub|sp)', s): key = f'svc->SM {r(t)}'
     elif r(s) and re.match(r'NW_(hub|sp)', t): key = f'SM->svc {r(s)}'
     if key:
-        c = lat[ln['id']]['cycles']; a = acc[key]
+        sb=ports[ln['ports'][0]]['src']['bus'];db=ports[ln['ports'][-1]]['dst']['bus']
+        c = lat[ln['id']]['cycles']+internal_bus.get((part_type[s],sb),0)+internal_bus.get((part_type[t],db),0); a = acc[key]
         a[0] += w * c; a[1] += w * L; a[2] += w; a[3] = max(a[3], c)
 out = {k: dict(bits=v[2], mean_cycles=round(v[0] / v[2], 2), max_cycles=v[3], bit_mm=round(v[1]), mm_per_bit=round(v[1] / v[2], 2))
        for k, v in sorted(acc.items())}

@@ -36,6 +36,21 @@ def role(p):
     return 'seam'
 
 
+# FIRM internal relay legs are additional cycles beyond the plan's boundary/FT lane table.
+# A coherent broadcast prices its longest capture leg; shorter legs require matching pads in RTL.
+internal_bus = {}
+internal_core_max = 0
+for tn, typ in plan['partition_types'].items():
+    for entry in typ.get('internal_stations', []):
+        n = len(entry['regs_um'])
+        key = str(entry.get('conn', ''))
+        if key.startswith('bus:'):
+            k = (tn, key[4:])
+            internal_bus[k] = max(internal_bus.get(k, 0), n)
+        elif tn == 'q_hub':
+            internal_core_max = max(internal_core_max, n)
+part_type = {p['name']: p['type'] for p in plan['partitions']}
+internal_legs = {}
 acc = collections.defaultdict(lambda: [0.0, 0])
 for ln in plan['lanes']:
     s = ports[ln['ports'][0]]['src']['part']; d = ports[ln['ports'][-1]]['dst']['part']
@@ -43,7 +58,11 @@ for ln in plan['lanes']:
     rs, rd = role(s), role(d)
     same = s[:2] == d[:2]
     key = (rs, rd, 'x' if (rs == rd == 'hub' and not same) else '')
-    acc[key][0] += w * lat[ln['id']]['cycles']; acc[key][1] += w
+    sb = ports[ln['ports'][0]]['src']['bus']; db = ports[ln['ports'][-1]]['dst']['bus']
+    extra = internal_bus.get((part_type[s], sb), 0) + internal_bus.get((part_type[d], db), 0)
+    internal_legs[ln['id']] = dict(boundary_ft_cycles=lat[ln['id']]['cycles'], extra_internal_cycles=extra,
+                                 modeled_cycles=lat[ln['id']]['cycles']+extra)
+    acc[key][0] += w * (lat[ln['id']]['cycles'] + extra); acc[key][1] += w
 
 
 def mean(*pairs):
@@ -76,7 +95,7 @@ if B2:   # svc (ctl / vmks / svg) in the hub: SM_HBM = far-row PHY -> hub -> SM 
          # HBM_VM / VM_HBM in-hub (2); SM_X = hub -> SM
     hr = json.load(open(f'{pdir}/hbm_rows.json'))
     C['SM_HBM'] = hr['HBM read path far (PHY->hub->SM, cycles)']
-    C['HBM_VM'] = 2.0; C['VM_HBM'] = 2.0; C['KV_DESC'] = 2.0
+    C['HBM_VM'] = 2.0 + internal_core_max; C['VM_HBM'] = 2.0 + internal_core_max; C['KV_DESC'] = 2.0 + internal_core_max
     C['SM_X'] = hr['svc->SM far']['mean_cycles']
     C['SM_OUT'] = hr['SM->svc far']['mean_cycles']
 base = json.load(open(base_p))
@@ -84,11 +103,12 @@ st = dict(base['plan_b'])
 for k, v in C.items():
     if v is not None:
         st[k] = v
-st['VM_HUB'] = 2.0
-st['COLL_VM'] = 2.0
+st['VM_HUB'] = 2.0 + internal_core_max
+st['COLL_VM'] = 2.0 + internal_core_max
 for k, dd in (('SM_X', 1), ('SM_HBM', 1), ('SM_OUT', 3)):
     st[k] = round(st[k] + dd, 2)
 for sl in slots:
     base[sl] = st
 json.dump(base, open(out_p, 'w'), indent=1)
+json.dump(dict(status='MODEL ONLY: relay RTL binding and coherent padding pending', internal_hub_single_leg_extra=internal_core_max, lanes=internal_legs), open(out_p+'.internal_legs.json','w'), indent=1)
 print(json.dumps({k: st[k] for k in sorted(st)}))
