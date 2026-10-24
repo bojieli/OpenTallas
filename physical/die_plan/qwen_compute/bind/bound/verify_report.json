@@ -1,471 +1,472 @@
 {
  "top": "qwen_compute_bound_top",
- "cells": 11477,
+ "cells": 41421,
  "leaves_missing": 0,
  "leaves_missing_examples": [],
  "counts": {
-  "compared": 2735160,
-  "matched": 2729219,
-  "mismatched": 5927,
+  "compared": 2724076,
+  "matched": 2723858,
+  "mismatched": 204,
   "glue_unmatched": 14,
-  "unbound": 5927,
+  "unbound": 204,
   "tied": 0,
-  "undriven": 5927,
-  "multiply_driven": 0
+  "undriven": 204,
+  "multiply_driven": 0,
+  "plan_driven": 0
  },
  "mismatches": [
   [
-   "io_collective.u_io.u_shared.phy_rx[597]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[598]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[599]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[600]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[601]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[602]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[603]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[604]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[605]",
+   "dvs_E0.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[606]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[607]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[608]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[609]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[610]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[611]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[612]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[613]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[614]",
+   "dvs_E1.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[615]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[616]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[617]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[618]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[619]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[620]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[621]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[622]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[623]",
+   "dvs_E2.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[624]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[625]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[626]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[627]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[628]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[629]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[630]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[631]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[632]",
+   "dvs_E3.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[633]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[634]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[635]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[636]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[637]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[638]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[639]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[640]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[641]",
+   "dvs_E4.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[642]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[0]",
    [
     "tied",
     "0"
@@ -475,7 +476,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[643]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[1]",
    [
     "tied",
     "0"
@@ -485,7 +486,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[644]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[2]",
    [
     "tied",
     "0"
@@ -495,7 +496,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[645]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[3]",
    [
     "tied",
     "0"
@@ -505,7 +506,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[646]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[4]",
    [
     "tied",
     "0"
@@ -515,7 +516,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[647]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[5]",
    [
     "tied",
     "0"
@@ -525,7 +526,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[648]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[6]",
    [
     "tied",
     "0"
@@ -535,7 +536,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[649]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[7]",
    [
     "tied",
     "0"
@@ -545,7 +546,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[650]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[8]",
    [
     "tied",
     "0"
@@ -555,7 +556,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[651]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[9]",
    [
     "tied",
     "0"
@@ -565,7 +566,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[652]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[10]",
    [
     "tied",
     "0"
@@ -575,7 +576,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[653]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[11]",
    [
     "tied",
     "0"
@@ -585,7 +586,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[654]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[12]",
    [
     "tied",
     "0"
@@ -595,7 +596,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[655]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[13]",
    [
     "tied",
     "0"
@@ -605,7 +606,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[656]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[14]",
    [
     "tied",
     "0"
@@ -615,7 +616,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[657]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[15]",
    [
     "tied",
     "0"
@@ -625,7 +626,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[658]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[16]",
    [
     "tied",
     "0"
@@ -635,7 +636,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[659]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[17]",
    [
     "tied",
     "0"
@@ -645,7 +646,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[660]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[18]",
    [
     "tied",
     "0"
@@ -655,7 +656,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[661]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[19]",
    [
     "tied",
     "0"
@@ -665,7 +666,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[662]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[20]",
    [
     "tied",
     "0"
@@ -675,7 +676,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[663]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[21]",
    [
     "tied",
     "0"
@@ -685,7 +686,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[664]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[22]",
    [
     "tied",
     "0"
@@ -695,7 +696,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[665]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[23]",
    [
     "tied",
     "0"
@@ -705,7 +706,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[666]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[24]",
    [
     "tied",
     "0"
@@ -715,7 +716,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[667]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[25]",
    [
     "tied",
     "0"
@@ -725,7 +726,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[668]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[26]",
    [
     "tied",
     "0"
@@ -735,7 +736,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[669]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[27]",
    [
     "tied",
     "0"
@@ -745,7 +746,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[670]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[28]",
    [
     "tied",
     "0"
@@ -755,7 +756,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[671]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[29]",
    [
     "tied",
     "0"
@@ -765,7 +766,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[672]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[30]",
    [
     "tied",
     "0"
@@ -775,7 +776,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[673]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[31]",
    [
     "tied",
     "0"
@@ -785,7 +786,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[674]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[32]",
    [
     "tied",
     "0"
@@ -795,7 +796,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[675]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[33]",
    [
     "tied",
     "0"
@@ -805,7 +806,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[676]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[34]",
    [
     "tied",
     "0"
@@ -815,7 +816,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[677]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[35]",
    [
     "tied",
     "0"
@@ -825,7 +826,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[678]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[36]",
    [
     "tied",
     "0"
@@ -835,7 +836,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[679]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[37]",
    [
     "tied",
     "0"
@@ -845,7 +846,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[680]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[38]",
    [
     "tied",
     "0"
@@ -855,7 +856,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[681]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[39]",
    [
     "tied",
     "0"
@@ -865,7 +866,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[682]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[40]",
    [
     "tied",
     "0"
@@ -875,7 +876,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[683]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[41]",
    [
     "tied",
     "0"
@@ -885,7 +886,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[684]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[42]",
    [
     "tied",
     "0"
@@ -895,7 +896,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[685]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[43]",
    [
     "tied",
     "0"
@@ -905,7 +906,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[686]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[44]",
    [
     "tied",
     "0"
@@ -915,7 +916,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[687]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[45]",
    [
     "tied",
     "0"
@@ -925,7 +926,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[688]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[46]",
    [
     "tied",
     "0"
@@ -935,7 +936,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[689]",
+   "dvs_E5.u_core.u_sub.u_fup.sc_dn_i[47]",
    [
     "tied",
     "0"
@@ -945,547 +946,547 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[690]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[691]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[692]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[693]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[694]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[695]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[696]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[697]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[698]",
+   "dvs_E5.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[699]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[700]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[701]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[702]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[703]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[704]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[705]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[706]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[707]",
+   "dvs_W0.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[708]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[709]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[710]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[711]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[712]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[713]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[714]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[715]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[716]",
+   "dvs_W1.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[717]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[718]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[719]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[720]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[721]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[722]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[723]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[724]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[725]",
+   "dvs_W2.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[726]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[727]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[728]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[729]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[730]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[731]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[732]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[733]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[734]",
+   "dvs_W3.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[735]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[736]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[737]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[738]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[739]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[740]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[5]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[741]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[6]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[742]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[7]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[743]",
+   "dvs_W4.u_core.u_sub.u_fdn.treq_i[8]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[744]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[0]",
    [
     "tied",
     "0"
@@ -1495,7 +1496,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[745]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[1]",
    [
     "tied",
     "0"
@@ -1505,7 +1506,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[746]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[2]",
    [
     "tied",
     "0"
@@ -1515,7 +1516,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[747]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[3]",
    [
     "tied",
     "0"
@@ -1525,7 +1526,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[748]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[4]",
    [
     "tied",
     "0"
@@ -1535,7 +1536,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[749]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[5]",
    [
     "tied",
     "0"
@@ -1545,7 +1546,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[750]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[6]",
    [
     "tied",
     "0"
@@ -1555,7 +1556,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[751]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[7]",
    [
     "tied",
     "0"
@@ -1565,7 +1566,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[752]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[8]",
    [
     "tied",
     "0"
@@ -1575,7 +1576,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[753]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[9]",
    [
     "tied",
     "0"
@@ -1585,7 +1586,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[754]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[10]",
    [
     "tied",
     "0"
@@ -1595,7 +1596,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[755]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[11]",
    [
     "tied",
     "0"
@@ -1605,7 +1606,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[756]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[12]",
    [
     "tied",
     "0"
@@ -1615,7 +1616,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[757]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[13]",
    [
     "tied",
     "0"
@@ -1625,7 +1626,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[758]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[14]",
    [
     "tied",
     "0"
@@ -1635,7 +1636,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[759]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[15]",
    [
     "tied",
     "0"
@@ -1645,7 +1646,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[760]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[16]",
    [
     "tied",
     "0"
@@ -1655,7 +1656,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[761]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[17]",
    [
     "tied",
     "0"
@@ -1665,7 +1666,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[762]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[18]",
    [
     "tied",
     "0"
@@ -1675,7 +1676,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[763]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[19]",
    [
     "tied",
     "0"
@@ -1685,7 +1686,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[764]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[20]",
    [
     "tied",
     "0"
@@ -1695,7 +1696,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[765]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[21]",
    [
     "tied",
     "0"
@@ -1705,7 +1706,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[766]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[22]",
    [
     "tied",
     "0"
@@ -1715,7 +1716,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[767]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[23]",
    [
     "tied",
     "0"
@@ -1725,7 +1726,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[768]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[24]",
    [
     "tied",
     "0"
@@ -1735,7 +1736,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[769]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[25]",
    [
     "tied",
     "0"
@@ -1745,7 +1746,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[770]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[26]",
    [
     "tied",
     "0"
@@ -1755,7 +1756,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[771]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[27]",
    [
     "tied",
     "0"
@@ -1765,7 +1766,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[772]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[28]",
    [
     "tied",
     "0"
@@ -1775,7 +1776,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[773]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[29]",
    [
     "tied",
     "0"
@@ -1785,7 +1786,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[774]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[30]",
    [
     "tied",
     "0"
@@ -1795,7 +1796,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[775]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[31]",
    [
     "tied",
     "0"
@@ -1805,7 +1806,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[776]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[32]",
    [
     "tied",
     "0"
@@ -1815,7 +1816,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[777]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[33]",
    [
     "tied",
     "0"
@@ -1825,7 +1826,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[778]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[34]",
    [
     "tied",
     "0"
@@ -1835,7 +1836,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[779]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[35]",
    [
     "tied",
     "0"
@@ -1845,7 +1846,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[780]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[36]",
    [
     "tied",
     "0"
@@ -1855,7 +1856,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[781]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[37]",
    [
     "tied",
     "0"
@@ -1865,7 +1866,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[782]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[38]",
    [
     "tied",
     "0"
@@ -1875,7 +1876,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[783]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[39]",
    [
     "tied",
     "0"
@@ -1885,7 +1886,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[784]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[40]",
    [
     "tied",
     "0"
@@ -1895,7 +1896,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[785]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[41]",
    [
     "tied",
     "0"
@@ -1905,7 +1906,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[786]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[42]",
    [
     "tied",
     "0"
@@ -1915,7 +1916,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[787]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[43]",
    [
     "tied",
     "0"
@@ -1925,7 +1926,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[788]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[44]",
    [
     "tied",
     "0"
@@ -1935,7 +1936,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[789]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[45]",
    [
     "tied",
     "0"
@@ -1945,7 +1946,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[790]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[46]",
    [
     "tied",
     "0"
@@ -1955,7 +1956,7 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[791]",
+   "dvs_W5.u_core.u_sub.u_fdn.sc_up_i[47]",
    [
     "tied",
     "0"
@@ -1965,50 +1966,50 @@
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[792]",
+   "dvs_W5.u_core.u_sub.u_fdn.treq_i[0]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[793]",
+   "dvs_W5.u_core.u_sub.u_fdn.treq_i[1]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[794]",
+   "dvs_W5.u_core.u_sub.u_fdn.treq_i[2]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[795]",
+   "dvs_W5.u_core.u_sub.u_fdn.treq_i[3]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
    ]
   ],
   [
-   "io_collective.u_io.u_shared.phy_rx[796]",
+   "dvs_W5.u_core.u_sub.u_fdn.treq_i[4]",
    [
     "tied",
-    "0"
+    "z"
    ],
    [
     "undriven"
@@ -2021,11 +2022,11 @@
   "ran": true,
   "rc": 1,
   "errors": 0,
-  "warnings": 461,
+  "warnings": 484,
   "first_errors": [],
   "waived": [
-   "%Error-MODMISSING: /home/ubuntu/wt/binder-1023/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv:73:5: Cannot find file containing module: 'ot_sram_1r1w_64x137_m1_r2c2_p192'",
-   "%Error-MODMISSING: /home/ubuntu/wt/binder-1023/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'"
+   "%Error-MODMISSING: /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv:73:5: Cannot find file containing module: 'ot_sram_1r1w_64x137_m1_r2c2_p192'",
+   "%Error-MODMISSING: /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'"
   ],
   "waivers": [
    {
@@ -2037,16 +2038,17 @@
     "reason": "AS-BUILT RTL DEFECT (reported): ot_qwen_d2d_safe7.sv ot_qkvd_llr_replay_sram_leaf_s7 instantiates ot_sram_1r1w_64x137_m1_r2c2_p192, which no file on main defines (the macro is d2d_sram_1r1w_64x137_m1_r2c2_p192); the closed ucie_kv d2d view was built from a kit copy"
    }
   ],
-  "closure_files": 162,
+  "closure_files": 163,
   "closure_missing": []
  },
  "asbuilt_proof": {
-  "unbound": 85,
-  "tied": 5927,
+  "unbound": 0,
+  "tied": 204,
   "undriven": 0,
   "multiply_bound": 0,
-  "straps": 11568
+  "straps": 11568,
+  "plan_driven": 0
  },
- "asbuilt_errors": 207,
+ "asbuilt_errors": 200,
  "verdict": "FAIL"
 }

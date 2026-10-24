@@ -25,8 +25,9 @@ VERIFY_RULES = {
     "transport": [
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
+        {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
     ],
-    "reducers": [{"module": "ot_dp_or", "out": "y"}],
+    "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
     "sources": [{"module": "ot_reset_sync", "kind": "reset", "outputs": {"sync_rst_n": "low"},
                  "drop_in": ["clk", "async_rst_n"]}],
 }
@@ -40,13 +41,13 @@ def verilator():
     return None
 
 
-def lint(out, top, files, defines=(), waive=()):
+def lint(out, top, files, defines=(), waive=(), incs=()):
     v = verilator()
     if not v:
         return dict(ran=False, reason="no verilator")
     cmd = [v, "--lint-only", "-Wno-fatal", "-Wno-DECLFILENAME", "-Wno-UNUSEDSIGNAL", "-Wno-PINCONNECTEMPTY",
            "--top-module", top] + [f"+define+{d}" for d in defines] + \
-        sorted({f"-I{Path(f).parent}" for f in files}) + [str(f) for f in files]
+        sorted({f"-I{Path(f).parent}" for f in list(files) + list(incs)}) + [str(f) for f in files]
     (Path(out) / "verilator_lint.f").write_text("\n".join(cmd[1:]) + "\n")
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=out)
     errs = [ln for ln in r.stderr.splitlines() if ln.startswith("%Error") and not ln.startswith("%Error: Exiting")]
@@ -56,6 +57,45 @@ def lint(out, top, files, defines=(), waive=()):
     (Path(out) / "verilator_lint.log").write_text(r.stderr)
     return dict(ran=True, rc=r.returncode, errors=len(errs), warnings=len(warns), first_errors=errs[:20],
                 waived=waived, waivers=list(waive))
+
+
+def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
+    """asbuilt.lint_split: a die too large for one Verilator run is linted in pieces that together cover it:
+    the bound top + every partition module against leaf INTERFACE stubs, then each partition module with the real
+    RTL closure of its own leaves (one run per partition module, jobs in parallel)."""
+    from concurrent.futures import ThreadPoolExecutor
+    defines, waive = ab0.get("defines", []), ab0.get("lint_waive", [])
+    ldir = Path(out) / "lint"
+    ldir.mkdir(exist_ok=True)
+    stubs = E.lib_stubs(lib, ldir / "leaf_stubs.sv")
+    runs = {"top": [stubs, str(rs)] + gen_rtl}
+    cells = [f for f in gen_rtl if Path(f).name == "bind_cells.sv"]
+    byfile = {}
+    for f in gen_rtl:
+        if f.endswith("_bound_top.sv") or f in cells:
+            continue
+        t = Path(f).read_text(errors="replace")
+        mods = re.findall(r"^module\s+(\w+)", t, re.M)
+        leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
+        cl, _ = E.closure(leafm, idx, prefer)
+        for m in mods:
+            byfile[m] = [f] + cells + [str(rs)] + cl
+    runs.update(byfile)
+
+    def one(item):
+        name, files = item
+        d = ldir / name
+        d.mkdir(exist_ok=True)
+        # the top run reads leaf stubs, which keep the leaves' `include lines: their source directories are include dirs
+        return name, lint(d, top if name == "top" else name, files, defines, waive, lib if name == "top" else ())
+    res = dict(ThreadPoolExecutor(int(ab0.get("lint_jobs", 4))).map(one, sorted(runs.items())))
+    errs = sum(r.get("errors", 0) for r in res.values() if r.get("ran"))
+    first = [f"[{n}] {e}" for n, r in sorted(res.items()) for e in r.get("first_errors", [])][:20]
+    return dict(ran=all(r.get("ran") for r in res.values()), split=True, runs=len(res), errors=errs,
+                warnings=sum(r.get("warnings", 0) for r in res.values()), first_errors=first,
+                failed_runs=sorted(n for n, r in res.items() if r.get("errors")),
+                waived=[w for r in res.values() for w in r.get("waived", [])][:50], waivers=list(waive))
 
 
 def cmd_verify(a):
@@ -72,7 +112,9 @@ def cmd_verify(a):
               defines=raw["asbuilt"].get("defines", []), substitute={})
     full = [f for f in gen if not f.endswith("_bound_top.sv")]
     rs = Path(E.REPO / "rtl/lib/ot_reset_sync.sv")
-    lib = [f for f in srcs.get("lib", []) + rep.get("extra_lib", []) if f not in full] + \
+    # leaf interfaces: lib files, files of dissolved parents that also define leaves (not the die top / shims), variants
+    pfull = [f for f in srcs.get("full", []) if f not in srcs.get("tops", []) and not Path(f).name.startswith("shim_")]
+    lib = [f for f in srcs.get("lib", []) + pfull + rep.get("extra_lib", []) if f not in full] + \
         ([str(rs)] if str(rs) not in srcs.get("lib", []) else [])
     vdir = out / "verify"
     vdir.mkdir(exist_ok=True)
@@ -108,13 +150,13 @@ def cmd_verify(a):
             return ["top", s[1]]
         if k == "reset":
             return ["rst", s[1]]
-        if k == "or":
-            return ["or", sorted(gdesc(x)[1] for x in s[1] if x[0] == "pin")]
+        if k in ("or", "and"):
+            return [k, sorted(gdesc(x)[1] for x in s[1] if x[0] == "pin")]
         if k == "const":
             return ["tied", s[1]]
         return [k]
 
-    cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0)
+    cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
     seen = set()
     for ci, c in enumerate(F.cells):
@@ -135,6 +177,13 @@ def cmd_verify(a):
                 if got[0] in ("undriven", "dropped"):
                     cnt["undriven"] += 1
                     cnt["unbound"] += 1
+                if want and want[0] == "plan":
+                    # a plan-cell driven input: a live driver; a same-partition plan cell / leaf must be the one named
+                    cnt["plan_driven"] += 1
+                    if got[0] in ("pin", "clk", "rst", "or", "and") and (want[1] is None or got[0] == "pin" and got[1] == want[1]):
+                        cnt["compared"] += 1
+                        cnt["matched"] += 1
+                        continue
                 if got[0] == "tied" and not (want and want[0] == "strap" and want[1] == got[1]):
                     cnt["tied"] += 1
                     if len(tied_ex) < 50:
@@ -169,7 +218,10 @@ def cmd_verify(a):
     prefer += rep.get("extra_lib", [])
     cl, cl_missing = E.closure(leafm, idx, prefer)
     gen_rtl = [f for f in rep["files"]]
-    lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))
+    if not ab0.get("lint_split"):
+        lt = lint(out, top, cl + gen_rtl + [str(rs)], ab0.get("defines", []), ab0.get("lint_waive", []))
+    else:
+        lt = lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0)
     lt["closure_files"], lt["closure_missing"] = len(cl), cl_missing
     v = dict(top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
              counts=cnt, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,

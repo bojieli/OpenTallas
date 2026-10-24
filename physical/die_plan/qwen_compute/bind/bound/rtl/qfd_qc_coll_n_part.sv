@@ -11,16 +11,12 @@ module qfd_qc_coll_n_part (
     input  wire [597:0] io_collective__serdes_rx,   // 597 data + epoch [597]: lane io_serdes__rx_flit_serdes_rx, 2 cycles: io_serdes rx_flit[597] -> coll_n
     input  wire [1:0] io_collective__serdes_rx_valid,   // 1 data + epoch [1]: lane io_serdes__rx_v_serdes_rx_valid, 2 cycles: io_serdes rx_v[1] -> coll_n
     input  wire [1:0] io_collective__serdes_up,   // 1 data + epoch [1]: lane io_serdes__tx_up_serdes_up, 2 cycles: io_serdes tx_up[1] -> coll_n
-    input  wire [548:0] rec_tx_s0_i,   // 548 data + epoch [548]: lane coll_core__crec_tx_s0, 7 cycles: coll_core sx0_peer_slot[1], sx0_rec[546], sx0_valid[1] -> coll_n
-    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_n__fltk, 7 cycles: rx_data[1] -> coll_core
+    input  wire [548:0] rec_tx_s0_i,   // 548 data + epoch [548]: lane coll_core__crec_tx_s0, 7 cycles: coll_core sx0_rec[546], sx0_peer_slot[1], sx0_valid[1] -> coll_n
+    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_n__fltk, 7 cycles: cdc_fault[1] -> coll_core
+    output wire [12:0] fltv_o,   // 12 data + epoch [12]: lane coll_n__fltv, 7 cycles: cdc_fault[2], epoch_abort[1], rx_valid[1] ... -> coll_core
     output wire [597:0] io_collective__serdes_tx,   // 597 data + epoch [597]: lane coll_n__serdes_tx_tx_flit, 2 cycles: phy_tx[597] -> io_serdes
     output wire [1:0] io_collective__serdes_tx_valid,   // 1 data + epoch [1]: lane coll_n__serdes_tx_valid_tx_v, 2 cycles: phy_tx_valid[1] -> io_serdes
-    output wire [547:0] rec_rx_s0,   // 547 data + epoch [547]: lane coll_n__crec_rx_s0, 7 cycles: cdc_fault[4], epoch_abort[1], rx_data[542] -> coll_core
-    output wire [4:0] xo_core_cdc_fault,   // 4 data + epoch [4]: UNPLANNED direct: cdc_fault[4] -> glue
-    output wire [1:0] xo_core_epoch_abort,   // 1 data + epoch [1]: UNPLANNED direct: epoch_abort[1] -> glue
-    output wire [8:0] xo_core_fault_cause,   // 8 data + epoch [8]: UNPLANNED direct: fault_cause[8] -> glue
-    output wire [3:0] xo_core_rx_data,   // 3 data + epoch [3]: UNPLANNED direct: rx_data[3] -> coll_core
-    output wire [1:0] xo_core_rx_valid   // 1 data + epoch [1]: UNPLANNED direct: rx_valid[1] -> coll_core
+    output wire [547:0] rec_rx_s0   // 547 data + epoch [547]: lane coll_n__crec_rx_s0, 7 cycles: rx_data[546], cdc_fault[1] -> coll_core
 );
     wire [596:0] io_collective__serdes_rx_q;
     wire io_collective__serdes_rx_eq;
@@ -45,17 +41,13 @@ module qfd_qc_coll_n_part (
     ot_dp_st #(.W(1)) u_bin_io_collective__serdes_rx_valid (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_rx_valid[0:0]), .ea(io_collective__serdes_rx_valid[1]), .q(io_collective__serdes_rx_valid_q), .eq(io_collective__serdes_rx_valid_eq));
     ot_dp_st #(.W(1)) u_bin_io_collective__serdes_up (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_up[0:0]), .ea(io_collective__serdes_up[1]), .q(io_collective__serdes_up_q), .eq(io_collective__serdes_up_eq));
     ot_dp_st #(.W(548)) u_bin_rec_tx_s0_i (.clk(clk), .rst_n(rst_n), .d(rec_tx_s0_i[547:0]), .ea(rec_tx_s0_i[548]), .q(rec_tx_s0_i_q), .eq(rec_tx_s0_i_eq));
-    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_core_rx_data[542]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
+    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_core_cdc_fault[1]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
+    ot_dp_st #(.W(12)) u_bout_fltv_o (.clk(clk), .rst_n(rst_n), .d({w_core_fault_cause[7:0], w_core_rx_valid[0], w_core_epoch_abort[0], w_core_cdc_fault[3:2]}), .ea(rst_n), .q(fltv_o[11:0]), .eq(fltv_o[12]));
     ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx (.clk(clk), .rst_n(rst_n), .d(w_core_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx[596:0]), .eq(io_collective__serdes_tx[597]));
     ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid (.clk(clk), .rst_n(rst_n), .d(w_core_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid[0:0]), .eq(io_collective__serdes_tx_valid[1]));
-    ot_dp_st #(.W(547)) u_bout_rec_rx_s0 (.clk(clk), .rst_n(rst_n), .d({w_core_rx_data[541:0], w_core_epoch_abort[0], w_core_cdc_fault[3:0]}), .ea(rst_n), .q(rec_rx_s0[546:0]), .eq(rec_rx_s0[547]));
-    ot_dp_st #(.W(4)) u_bout_xo_core_cdc_fault (.clk(clk), .rst_n(rst_n), .d(w_core_cdc_fault[3:0]), .ea(rst_n), .q(xo_core_cdc_fault[3:0]), .eq(xo_core_cdc_fault[4]));
-    ot_dp_st #(.W(1)) u_bout_xo_core_epoch_abort (.clk(clk), .rst_n(rst_n), .d(w_core_epoch_abort[0]), .ea(rst_n), .q(xo_core_epoch_abort[0:0]), .eq(xo_core_epoch_abort[1]));
-    ot_dp_st #(.W(8)) u_bout_xo_core_fault_cause (.clk(clk), .rst_n(rst_n), .d(w_core_fault_cause[7:0]), .ea(rst_n), .q(xo_core_fault_cause[7:0]), .eq(xo_core_fault_cause[8]));
-    ot_dp_st #(.W(3)) u_bout_xo_core_rx_data (.clk(clk), .rst_n(rst_n), .d(w_core_rx_data[545:543]), .ea(rst_n), .q(xo_core_rx_data[2:0]), .eq(xo_core_rx_data[3]));
-    ot_dp_st #(.W(1)) u_bout_xo_core_rx_valid (.clk(clk), .rst_n(rst_n), .d(w_core_rx_valid[0]), .ea(rst_n), .q(xo_core_rx_valid[0:0]), .eq(xo_core_rx_valid[1]));
+    ot_dp_st #(.W(547)) u_bout_rec_rx_s0 (.clk(clk), .rst_n(rst_n), .d({w_core_cdc_fault[0], w_core_rx_data[545:0]}), .ea(rst_n), .q(rec_rx_s0[546:0]), .eq(rec_rx_s0[547]));
     // as-built io_collective.u_io.g_face[2].u_face
-    qfd_coll_static_face #(.FW(546), .L(376), .PEER_R(5), .PHY(339), .PLAND(0), .PLD(2), .PLK(1), .R(0), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_core (
+    qfd_coll_static_face #(.FW(546), .L(389), .PEER_R(8), .PHY(351), .PLAND(0), .PLD(2), .PLK(1), .R(7), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_core (
         .cal_ck(clk_coll),
         .cal_lck(clk_serdes),
         .cdc_fault(w_core_cdc_fault),
@@ -63,7 +55,7 @@ module qfd_qc_coll_n_part (
         .codec_phy_ck(clk_serdes),
         .epoch_abort(w_core_epoch_abort),
         .fault_cause(w_core_fault_cause),
-        .peer_slot(rec_tx_s0_i_q[0]),
+        .peer_slot(rec_tx_s0_i_q[546]),
         .phy_rx(io_collective__serdes_rx_q[596:0]),
         .phy_rx_slot(w_core_phy_rx_slot),
         .phy_rx_valid(io_collective__serdes_rx_valid_q[0]),
@@ -76,7 +68,7 @@ module qfd_qc_coll_n_part (
         .rx_rck(clk_coll),
         .rx_valid(w_core_rx_valid),
         .rx_wck(clk_serdes),
-        .tx_data(rec_tx_s0_i_q[546:1]),
+        .tx_data(rec_tx_s0_i_q[545:0]),
         .tx_rck(clk_serdes),
         .tx_slot(rec_tx_s0_i_q[547]),
         .tx_valid(rec_tx_s0_i_q[547]),

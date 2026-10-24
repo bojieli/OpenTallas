@@ -8,8 +8,10 @@ module qfd_qc_coll_core_part (
     input  wire arst_n,
     input  wire clk_coll,
     input  wire clk_coll_blk,
-    input  wire [1:0] flt_n_i,   // 1 data + epoch [1]: lane coll_n__fltk, 7 cycles: coll_n rx_data[1] -> coll_core
-    input  wire [1:0] flt_s_i,   // 1 data + epoch [1]: lane coll_s__fltk, 8 cycles: coll_s rx_data[1] -> coll_core
+    input  wire [1:0] flt_n_i,   // 1 data + epoch [1]: lane coll_n__fltk, 7 cycles: coll_n cdc_fault[1] -> coll_core
+    input  wire [1:0] flt_s_i,   // 1 data + epoch [1]: lane coll_s__fltk, 8 cycles: coll_s cdc_fault[1] -> coll_core
+    input  wire [12:0] fltv_n_i,   // 12 data + epoch [12]: lane coll_n__fltv, 7 cycles: coll_n cdc_fault[2], epoch_abort[1], rx_valid[1] ... -> coll_core
+    input  wire [25:0] fltv_s_i,   // 25 data + epoch [25]: lane coll_s__fltv, 8 cycles: coll_s cdc_fault[1], epoch_abort[1], rx_valid[1] ... -> coll_core
     input  wire [1:0] io_collective__cmd_mode,   // 1 data + epoch [1]: lane sl_W5_fw__ccm_wo_cmd_mode, 6 cycles: sl_W5_fw ch_dn_o[1] -> coll_core
     input  wire [32:0] io_collective__cmd_tag,   // 32 data + epoch [32]: lane sl_W5_fw__cct_wo_cmd_tag, 6 cycles: sl_W5_fw ch_dn_o[32] -> coll_core
     input  wire [1:0] io_collective__cmd_v,   // 1 data + epoch [1]: lane sl_W5_fw__ccv_wo_cmd_v, 6 cycles: sl_W5_fw ch_dn_o[1] -> coll_core
@@ -19,15 +21,12 @@ module qfd_qc_coll_core_part (
     input  wire [1:0] io_collective__in_mode,   // 1 data + epoch [1]: lane sl_W5_fw__arm_wo_in_mode, 6 cycles: sl_W5_fw ch_dn_o[1] -> coll_core
     input  wire [32:0] io_collective__in_tag,   // 32 data + epoch [32]: lane sl_W5_fw__art_wo_in_tag, 6 cycles: sl_W5_fw ch_dn_o[32] -> coll_core
     input  wire [1:0] io_collective__in_valid,   // 1 data + epoch [1]: lane sl_W5_fw__arv_wo_in_valid, 6 cycles: sl_W5_fw ch_dn_o[1] -> coll_core
-    input  wire [547:0] rec_rx_s0_i,   // 547 data + epoch [547]: lane coll_n__crec_rx_s0, 7 cycles: coll_n cdc_fault[4], epoch_abort[1], rx_data[542] -> coll_core
-    input  wire [547:0] rec_rx_s1_i,   // 547 data + epoch [547]: lane coll_s__crec_rx_s1, 8 cycles: coll_s cdc_fault[4], epoch_abort[1], rx_data[542] -> coll_core
-    input  wire [547:0] rec_rx_s2_i,   // 547 data + epoch [547]: lane coll_s__crec_rx_s2, 8 cycles: coll_s rx_data[4], rx_valid[1], cdc_fault[4] ... -> coll_core
-    input  wire [3:0] xi_io_collective_u_io_u_collective_sr0_rec,   // 3 data + epoch [3]: UNPLANNED direct: coll_n rx_data[3] -> coll_core
-    input  wire [1:0] xi_io_collective_u_io_u_collective_sr0_valid,   // 1 data + epoch [1]: UNPLANNED direct: coll_n rx_valid[1] -> coll_core
-    input  wire [8:0] xi_io_collective_u_io_u_collective_sr2_rec,   // 8 data + epoch [8]: UNPLANNED direct: coll_s rx_data[8] -> coll_core
-    input  wire [1:0] xi_io_collective_u_io_u_collective_sr2_valid,   // 1 data + epoch [1]: UNPLANNED direct: coll_s rx_valid[1] -> coll_core
-    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_core__fltc, 3 cycles: cdc_fault[1] -> glue
-    output wire [1:0] io_collective__cmd_free,   // 1 data + epoch [1]: lane coll_core__cmd_free_io_cmd_free, 3 cycles: cdc_fault[1] -> glue
+    input  wire [547:0] rec_rx_s0_i,   // 547 data + epoch [547]: lane coll_n__crec_rx_s0, 7 cycles: coll_n rx_data[546], cdc_fault[1] -> coll_core
+    input  wire [547:0] rec_rx_s1_i,   // 547 data + epoch [547]: lane coll_s__crec_rx_s1, 8 cycles: coll_s rx_data[547] -> coll_core
+    input  wire [547:0] rec_rx_s2_i,   // 547 data + epoch [547]: lane coll_s__crec_rx_s2, 8 cycles: coll_s rx_data[545], cdc_fault[2] -> coll_core
+    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_core__fltc, 3 cycles: fwd fltv_n_i[1] -> glue
+    output wire [69:0] fltv_o,   // 69 data + epoch [69]: lane coll_core__fltvc, 3 cycles: cdc_fault[4], epoch_abort[1], fault_cause[8] ... -> glue
+    output wire [1:0] io_collective__cmd_free,   // 1 data + epoch [1]: lane coll_core__cmd_free_io_cmd_free, 3 cycles: cmd_free[1] -> glue
     output wire [1:0] io_collective__fault,   // 1 data + epoch [1]: lane coll_core__fault_io_fault, 3 cycles: Y[1] -> glue
     output wire [512:0] io_collective__out_data,   // 512 data + epoch [512]: lane coll_core__out_data_rd_wi, 5 cycles: out_data[512] -> sl_W5_fw
     output wire [1:0] io_collective__out_err,   // 1 data + epoch [1]: lane coll_core__out_err_re_wi, 6 cycles: out_err[1] -> sl_W5_fw
@@ -35,22 +34,18 @@ module qfd_qc_coll_core_part (
     output wire [3:0] io_collective__out_rank,   // 3 data + epoch [3]: lane coll_core__out_rank_rr_wi, 6 cycles: out_rank[3] -> sl_W5_fw
     output wire [1:0] io_collective__out_valid,   // 1 data + epoch [1]: lane coll_core__out_valid_rv_wi, 6 cycles: out_valid[1] -> sl_W5_fw
     output wire [1:0] io_collective__shared_fault,   // 1 data + epoch [1]: lane coll_core__shared_fault_io_shared_fault, 3 cycles: Y[1] -> glue
-    output wire [548:0] rec_tx_s0,   // 548 data + epoch [548]: lane coll_core__crec_tx_s0, 7 cycles: sx0_peer_slot[1], sx0_rec[546], sx0_valid[1] -> coll_n
-    output wire [549:0] rec_tx_s1,   // 549 data + epoch [549]: lane coll_core__crec_tx_s1, 8 cycles: sx0_valid[1], sx1_peer_slot[1], sx1_rec[546] ... -> coll_s
-    output wire [548:0] rec_tx_s2,   // 548 data + epoch [548]: lane coll_core__crec_tx_s2, 8 cycles: sx2_peer_slot[1], sx2_rec[546], sx2_valid[1] -> coll_s
-    output wire [2:0] xo_io_collective_u_io_g_face_0_u_face_cdc_fault,   // 2 data + epoch [2]: UNPLANNED direct: cdc_fault[2] -> glue
-    output wire [1:0] xo_io_collective_u_io_g_face_0_u_face_epoch_abort,   // 1 data + epoch [1]: UNPLANNED direct: epoch_abort[1] -> glue
-    output wire [8:0] xo_io_collective_u_io_g_face_0_u_face_fault_cause,   // 8 data + epoch [8]: UNPLANNED direct: fault_cause[8] -> glue
-    output wire [4:0] xo_io_collective_u_io_g_face_1_u_face_cdc_fault,   // 4 data + epoch [4]: UNPLANNED direct: cdc_fault[4] -> glue
-    output wire [1:0] xo_io_collective_u_io_g_face_1_u_face_epoch_abort,   // 1 data + epoch [1]: UNPLANNED direct: epoch_abort[1] -> glue
-    output wire [8:0] xo_io_collective_u_io_g_face_1_u_face_fault_cause,   // 8 data + epoch [8]: UNPLANNED direct: fault_cause[8] -> glue
-    output wire [1:0] xo_io_collective_u_io_u_collective_cmd_free,   // 1 data + epoch [1]: UNPLANNED direct: cmd_free[1] -> glue
-    output wire [5:0] xo_io_collective_u_io_u_collective_fault_code   // 5 data + epoch [5]: UNPLANNED direct: fault_code[5] -> glue
+    output wire [548:0] rec_tx_s0,   // 548 data + epoch [548]: lane coll_core__crec_tx_s0, 7 cycles: sx0_rec[546], sx0_peer_slot[1], sx0_valid[1] -> coll_n
+    output wire [549:0] rec_tx_s1,   // 549 data + epoch [549]: lane coll_core__crec_tx_s1, 8 cycles: sx1_rec[546], sx2_rec[3] -> coll_s
+    output wire [548:0] rec_tx_s2   // 548 data + epoch [548]: lane coll_core__crec_tx_s2, 8 cycles: sx2_rec[543], sx0_valid[1], sx1_peer_slot[1] ... -> coll_s
 );
     wire [0:0] flt_n_i_q;
     wire flt_n_i_eq;
     wire [0:0] flt_s_i_q;
     wire flt_s_i_eq;
+    wire [11:0] fltv_n_i_q;
+    wire fltv_n_i_eq;
+    wire [24:0] fltv_s_i_q;
+    wire fltv_s_i_eq;
     wire [0:0] io_collective__cmd_mode_q;
     wire io_collective__cmd_mode_eq;
     wire [31:0] io_collective__cmd_tag_q;
@@ -75,24 +70,16 @@ module qfd_qc_coll_core_part (
     wire rec_rx_s1_i_eq;
     wire [546:0] rec_rx_s2_i_q;
     wire rec_rx_s2_i_eq;
-    wire [2:0] xi_io_collective_u_io_u_collective_sr0_rec_q;
-    wire xi_io_collective_u_io_u_collective_sr0_rec_eq;
-    wire [0:0] xi_io_collective_u_io_u_collective_sr0_valid_q;
-    wire xi_io_collective_u_io_u_collective_sr0_valid_eq;
-    wire [7:0] xi_io_collective_u_io_u_collective_sr2_rec_q;
-    wire xi_io_collective_u_io_u_collective_sr2_rec_eq;
-    wire [0:0] xi_io_collective_u_io_u_collective_sr2_valid_q;
-    wire xi_io_collective_u_io_u_collective_sr2_valid_eq;
     wire [0:0] w_bump_die_ps_o;
     wire [0:0] w_bump_pkg_s0_o;
     wire [0:0] w_bump_pkg_s1_o;
-    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2412_Y;
-    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2414_Y;
-    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2416_Y;
-    wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2413_Y;
-    wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2415_Y;
-    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2426_Y;
-    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2427_Y;
+    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y;
+    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y;
+    wire [0:0] w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y;
+    wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y;
+    wire [0:0] w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y;
+    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y;
+    wire [0:0] w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y;
     wire [3:0] w_io_collective_u_io_g_face_0_u_face_cdc_fault;
     wire [0:0] w_io_collective_u_io_g_face_0_u_face_epoch_abort;
     wire [7:0] w_io_collective_u_io_g_face_0_u_face_fault_cause;
@@ -162,456 +149,96 @@ module qfd_qc_coll_core_part (
     wire [0:0] d5_io_collective_u_io_u_collective_ur_peer_slot;
     wire [513:0] d5_io_collective_u_io_u_collective_ur_rec;
     wire [0:0] d5_io_collective_u_io_u_collective_ur_valid;
-    wire ub_0;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[597] (see bind_report errors)
-    wire ub_1;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[598] (see bind_report errors)
-    wire ub_2;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[599] (see bind_report errors)
-    wire ub_3;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[600] (see bind_report errors)
-    wire ub_4;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[601] (see bind_report errors)
-    wire ub_5;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[602] (see bind_report errors)
-    wire ub_6;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[603] (see bind_report errors)
-    wire ub_7;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[604] (see bind_report errors)
-    wire ub_8;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[605] (see bind_report errors)
-    wire ub_9;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[606] (see bind_report errors)
-    wire ub_10;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[607] (see bind_report errors)
-    wire ub_11;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[608] (see bind_report errors)
-    wire ub_12;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[609] (see bind_report errors)
-    wire ub_13;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[610] (see bind_report errors)
-    wire ub_14;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[611] (see bind_report errors)
-    wire ub_15;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[612] (see bind_report errors)
-    wire ub_16;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[613] (see bind_report errors)
-    wire ub_17;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[614] (see bind_report errors)
-    wire ub_18;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[615] (see bind_report errors)
-    wire ub_19;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[616] (see bind_report errors)
-    wire ub_20;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[617] (see bind_report errors)
-    wire ub_21;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[618] (see bind_report errors)
-    wire ub_22;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[619] (see bind_report errors)
-    wire ub_23;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[620] (see bind_report errors)
-    wire ub_24;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[621] (see bind_report errors)
-    wire ub_25;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[622] (see bind_report errors)
-    wire ub_26;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[623] (see bind_report errors)
-    wire ub_27;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[624] (see bind_report errors)
-    wire ub_28;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[625] (see bind_report errors)
-    wire ub_29;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[626] (see bind_report errors)
-    wire ub_30;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[627] (see bind_report errors)
-    wire ub_31;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[628] (see bind_report errors)
-    wire ub_32;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[629] (see bind_report errors)
-    wire ub_33;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[630] (see bind_report errors)
-    wire ub_34;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[631] (see bind_report errors)
-    wire ub_35;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[632] (see bind_report errors)
-    wire ub_36;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[633] (see bind_report errors)
-    wire ub_37;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[634] (see bind_report errors)
-    wire ub_38;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[635] (see bind_report errors)
-    wire ub_39;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[636] (see bind_report errors)
-    wire ub_40;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[637] (see bind_report errors)
-    wire ub_41;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[638] (see bind_report errors)
-    wire ub_42;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[639] (see bind_report errors)
-    wire ub_43;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[640] (see bind_report errors)
-    wire ub_44;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[641] (see bind_report errors)
-    wire ub_45;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[642] (see bind_report errors)
-    wire ub_46;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[643] (see bind_report errors)
-    wire ub_47;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[644] (see bind_report errors)
-    wire ub_48;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[645] (see bind_report errors)
-    wire ub_49;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[646] (see bind_report errors)
-    wire ub_50;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[647] (see bind_report errors)
-    wire ub_51;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[648] (see bind_report errors)
-    wire ub_52;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[649] (see bind_report errors)
-    wire ub_53;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[650] (see bind_report errors)
-    wire ub_54;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[651] (see bind_report errors)
-    wire ub_55;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[652] (see bind_report errors)
-    wire ub_56;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[653] (see bind_report errors)
-    wire ub_57;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[654] (see bind_report errors)
-    wire ub_58;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[655] (see bind_report errors)
-    wire ub_59;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[656] (see bind_report errors)
-    wire ub_60;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[657] (see bind_report errors)
-    wire ub_61;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[658] (see bind_report errors)
-    wire ub_62;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[659] (see bind_report errors)
-    wire ub_63;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[660] (see bind_report errors)
-    wire ub_64;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[661] (see bind_report errors)
-    wire ub_65;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[662] (see bind_report errors)
-    wire ub_66;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[663] (see bind_report errors)
-    wire ub_67;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[664] (see bind_report errors)
-    wire ub_68;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[665] (see bind_report errors)
-    wire ub_69;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[666] (see bind_report errors)
-    wire ub_70;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[667] (see bind_report errors)
-    wire ub_71;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[668] (see bind_report errors)
-    wire ub_72;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[669] (see bind_report errors)
-    wire ub_73;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[670] (see bind_report errors)
-    wire ub_74;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[671] (see bind_report errors)
-    wire ub_75;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[672] (see bind_report errors)
-    wire ub_76;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[673] (see bind_report errors)
-    wire ub_77;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[674] (see bind_report errors)
-    wire ub_78;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[675] (see bind_report errors)
-    wire ub_79;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[676] (see bind_report errors)
-    wire ub_80;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[677] (see bind_report errors)
-    wire ub_81;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[678] (see bind_report errors)
-    wire ub_82;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[679] (see bind_report errors)
-    wire ub_83;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[680] (see bind_report errors)
-    wire ub_84;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[681] (see bind_report errors)
-    wire ub_85;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[682] (see bind_report errors)
-    wire ub_86;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[683] (see bind_report errors)
-    wire ub_87;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[684] (see bind_report errors)
-    wire ub_88;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[685] (see bind_report errors)
-    wire ub_89;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[686] (see bind_report errors)
-    wire ub_90;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[687] (see bind_report errors)
-    wire ub_91;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[688] (see bind_report errors)
-    wire ub_92;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[689] (see bind_report errors)
-    wire ub_93;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[690] (see bind_report errors)
-    wire ub_94;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[691] (see bind_report errors)
-    wire ub_95;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[692] (see bind_report errors)
-    wire ub_96;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[693] (see bind_report errors)
-    wire ub_97;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[694] (see bind_report errors)
-    wire ub_98;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[695] (see bind_report errors)
-    wire ub_99;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[696] (see bind_report errors)
-    wire ub_100;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[697] (see bind_report errors)
-    wire ub_101;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[698] (see bind_report errors)
-    wire ub_102;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[699] (see bind_report errors)
-    wire ub_103;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[700] (see bind_report errors)
-    wire ub_104;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[701] (see bind_report errors)
-    wire ub_105;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[702] (see bind_report errors)
-    wire ub_106;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[703] (see bind_report errors)
-    wire ub_107;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[704] (see bind_report errors)
-    wire ub_108;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[705] (see bind_report errors)
-    wire ub_109;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[706] (see bind_report errors)
-    wire ub_110;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[707] (see bind_report errors)
-    wire ub_111;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[708] (see bind_report errors)
-    wire ub_112;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[709] (see bind_report errors)
-    wire ub_113;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[710] (see bind_report errors)
-    wire ub_114;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[711] (see bind_report errors)
-    wire ub_115;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[712] (see bind_report errors)
-    wire ub_116;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[713] (see bind_report errors)
-    wire ub_117;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[714] (see bind_report errors)
-    wire ub_118;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[715] (see bind_report errors)
-    wire ub_119;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[716] (see bind_report errors)
-    wire ub_120;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[717] (see bind_report errors)
-    wire ub_121;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[718] (see bind_report errors)
-    wire ub_122;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[719] (see bind_report errors)
-    wire ub_123;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[720] (see bind_report errors)
-    wire ub_124;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[721] (see bind_report errors)
-    wire ub_125;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[722] (see bind_report errors)
-    wire ub_126;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[723] (see bind_report errors)
-    wire ub_127;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[724] (see bind_report errors)
-    wire ub_128;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[725] (see bind_report errors)
-    wire ub_129;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[726] (see bind_report errors)
-    wire ub_130;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[727] (see bind_report errors)
-    wire ub_131;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[728] (see bind_report errors)
-    wire ub_132;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[729] (see bind_report errors)
-    wire ub_133;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[730] (see bind_report errors)
-    wire ub_134;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[731] (see bind_report errors)
-    wire ub_135;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[732] (see bind_report errors)
-    wire ub_136;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[733] (see bind_report errors)
-    wire ub_137;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[734] (see bind_report errors)
-    wire ub_138;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[735] (see bind_report errors)
-    wire ub_139;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[736] (see bind_report errors)
-    wire ub_140;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[737] (see bind_report errors)
-    wire ub_141;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[738] (see bind_report errors)
-    wire ub_142;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[739] (see bind_report errors)
-    wire ub_143;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[740] (see bind_report errors)
-    wire ub_144;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[741] (see bind_report errors)
-    wire ub_145;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[742] (see bind_report errors)
-    wire ub_146;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[743] (see bind_report errors)
-    wire ub_147;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[744] (see bind_report errors)
-    wire ub_148;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[745] (see bind_report errors)
-    wire ub_149;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[746] (see bind_report errors)
-    wire ub_150;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[747] (see bind_report errors)
-    wire ub_151;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[748] (see bind_report errors)
-    wire ub_152;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[749] (see bind_report errors)
-    wire ub_153;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[750] (see bind_report errors)
-    wire ub_154;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[751] (see bind_report errors)
-    wire ub_155;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[752] (see bind_report errors)
-    wire ub_156;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[753] (see bind_report errors)
-    wire ub_157;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[754] (see bind_report errors)
-    wire ub_158;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[755] (see bind_report errors)
-    wire ub_159;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[756] (see bind_report errors)
-    wire ub_160;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[757] (see bind_report errors)
-    wire ub_161;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[758] (see bind_report errors)
-    wire ub_162;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[759] (see bind_report errors)
-    wire ub_163;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[760] (see bind_report errors)
-    wire ub_164;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[761] (see bind_report errors)
-    wire ub_165;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[762] (see bind_report errors)
-    wire ub_166;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[763] (see bind_report errors)
-    wire ub_167;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[764] (see bind_report errors)
-    wire ub_168;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[765] (see bind_report errors)
-    wire ub_169;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[766] (see bind_report errors)
-    wire ub_170;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[767] (see bind_report errors)
-    wire ub_171;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[768] (see bind_report errors)
-    wire ub_172;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[769] (see bind_report errors)
-    wire ub_173;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[770] (see bind_report errors)
-    wire ub_174;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[771] (see bind_report errors)
-    wire ub_175;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[772] (see bind_report errors)
-    wire ub_176;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[773] (see bind_report errors)
-    wire ub_177;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[774] (see bind_report errors)
-    wire ub_178;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[775] (see bind_report errors)
-    wire ub_179;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[776] (see bind_report errors)
-    wire ub_180;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[777] (see bind_report errors)
-    wire ub_181;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[778] (see bind_report errors)
-    wire ub_182;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[779] (see bind_report errors)
-    wire ub_183;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[780] (see bind_report errors)
-    wire ub_184;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[781] (see bind_report errors)
-    wire ub_185;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[782] (see bind_report errors)
-    wire ub_186;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[783] (see bind_report errors)
-    wire ub_187;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[784] (see bind_report errors)
-    wire ub_188;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[785] (see bind_report errors)
-    wire ub_189;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[786] (see bind_report errors)
-    wire ub_190;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[787] (see bind_report errors)
-    wire ub_191;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[788] (see bind_report errors)
-    wire ub_192;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[789] (see bind_report errors)
-    wire ub_193;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[790] (see bind_report errors)
-    wire ub_194;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[791] (see bind_report errors)
-    wire ub_195;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[792] (see bind_report errors)
-    wire ub_196;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[793] (see bind_report errors)
-    wire ub_197;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[794] (see bind_report errors)
-    wire ub_198;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[795] (see bind_report errors)
-    wire ub_199;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[796] (see bind_report errors)
-    wire ub_200;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[797] (see bind_report errors)
-    wire ub_201;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[798] (see bind_report errors)
-    wire ub_202;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[799] (see bind_report errors)
-    wire ub_203;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[800] (see bind_report errors)
-    wire ub_204;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[801] (see bind_report errors)
-    wire ub_205;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[802] (see bind_report errors)
-    wire ub_206;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[803] (see bind_report errors)
-    wire ub_207;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[804] (see bind_report errors)
-    wire ub_208;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[805] (see bind_report errors)
-    wire ub_209;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[806] (see bind_report errors)
-    wire ub_210;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[807] (see bind_report errors)
-    wire ub_211;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[808] (see bind_report errors)
-    wire ub_212;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[809] (see bind_report errors)
-    wire ub_213;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[810] (see bind_report errors)
-    wire ub_214;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[811] (see bind_report errors)
-    wire ub_215;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[812] (see bind_report errors)
-    wire ub_216;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[813] (see bind_report errors)
-    wire ub_217;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[814] (see bind_report errors)
-    wire ub_218;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[815] (see bind_report errors)
-    wire ub_219;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[816] (see bind_report errors)
-    wire ub_220;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[817] (see bind_report errors)
-    wire ub_221;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[818] (see bind_report errors)
-    wire ub_222;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[819] (see bind_report errors)
-    wire ub_223;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[820] (see bind_report errors)
-    wire ub_224;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[821] (see bind_report errors)
-    wire ub_225;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[822] (see bind_report errors)
-    wire ub_226;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[823] (see bind_report errors)
-    wire ub_227;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[824] (see bind_report errors)
-    wire ub_228;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[825] (see bind_report errors)
-    wire ub_229;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[826] (see bind_report errors)
-    wire ub_230;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[827] (see bind_report errors)
-    wire ub_231;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[828] (see bind_report errors)
-    wire ub_232;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[829] (see bind_report errors)
-    wire ub_233;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[830] (see bind_report errors)
-    wire ub_234;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[831] (see bind_report errors)
-    wire ub_235;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[832] (see bind_report errors)
-    wire ub_236;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[833] (see bind_report errors)
-    wire ub_237;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[834] (see bind_report errors)
-    wire ub_238;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[835] (see bind_report errors)
-    wire ub_239;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[836] (see bind_report errors)
-    wire ub_240;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[837] (see bind_report errors)
-    wire ub_241;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[838] (see bind_report errors)
-    wire ub_242;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[839] (see bind_report errors)
-    wire ub_243;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[840] (see bind_report errors)
-    wire ub_244;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[841] (see bind_report errors)
-    wire ub_245;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[842] (see bind_report errors)
-    wire ub_246;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[843] (see bind_report errors)
-    wire ub_247;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[844] (see bind_report errors)
-    wire ub_248;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[845] (see bind_report errors)
-    wire ub_249;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[846] (see bind_report errors)
-    wire ub_250;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[847] (see bind_report errors)
-    wire ub_251;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[848] (see bind_report errors)
-    wire ub_252;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[849] (see bind_report errors)
-    wire ub_253;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[850] (see bind_report errors)
-    wire ub_254;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[851] (see bind_report errors)
-    wire ub_255;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[852] (see bind_report errors)
-    wire ub_256;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[853] (see bind_report errors)
-    wire ub_257;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[854] (see bind_report errors)
-    wire ub_258;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[855] (see bind_report errors)
-    wire ub_259;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[856] (see bind_report errors)
-    wire ub_260;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[857] (see bind_report errors)
-    wire ub_261;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[858] (see bind_report errors)
-    wire ub_262;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[859] (see bind_report errors)
-    wire ub_263;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[860] (see bind_report errors)
-    wire ub_264;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[861] (see bind_report errors)
-    wire ub_265;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[862] (see bind_report errors)
-    wire ub_266;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[863] (see bind_report errors)
-    wire ub_267;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[864] (see bind_report errors)
-    wire ub_268;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[865] (see bind_report errors)
-    wire ub_269;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[866] (see bind_report errors)
-    wire ub_270;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[867] (see bind_report errors)
-    wire ub_271;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[868] (see bind_report errors)
-    wire ub_272;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[869] (see bind_report errors)
-    wire ub_273;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[870] (see bind_report errors)
-    wire ub_274;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[871] (see bind_report errors)
-    wire ub_275;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[872] (see bind_report errors)
-    wire ub_276;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[873] (see bind_report errors)
-    wire ub_277;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[874] (see bind_report errors)
-    wire ub_278;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[875] (see bind_report errors)
-    wire ub_279;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[876] (see bind_report errors)
-    wire ub_280;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[877] (see bind_report errors)
-    wire ub_281;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[878] (see bind_report errors)
-    wire ub_282;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[879] (see bind_report errors)
-    wire ub_283;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[880] (see bind_report errors)
-    wire ub_284;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[881] (see bind_report errors)
-    wire ub_285;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[882] (see bind_report errors)
-    wire ub_286;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[883] (see bind_report errors)
-    wire ub_287;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[884] (see bind_report errors)
-    wire ub_288;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[885] (see bind_report errors)
-    wire ub_289;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[886] (see bind_report errors)
-    wire ub_290;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[887] (see bind_report errors)
-    wire ub_291;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[888] (see bind_report errors)
-    wire ub_292;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[889] (see bind_report errors)
-    wire ub_293;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[890] (see bind_report errors)
-    wire ub_294;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[891] (see bind_report errors)
-    wire ub_295;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[892] (see bind_report errors)
-    wire ub_296;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[893] (see bind_report errors)
-    wire ub_297;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[894] (see bind_report errors)
-    wire ub_298;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[895] (see bind_report errors)
-    wire ub_299;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[896] (see bind_report errors)
-    wire ub_300;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[897] (see bind_report errors)
-    wire ub_301;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[898] (see bind_report errors)
-    wire ub_302;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[899] (see bind_report errors)
-    wire ub_303;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[900] (see bind_report errors)
-    wire ub_304;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[901] (see bind_report errors)
-    wire ub_305;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[902] (see bind_report errors)
-    wire ub_306;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[903] (see bind_report errors)
-    wire ub_307;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[904] (see bind_report errors)
-    wire ub_308;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[905] (see bind_report errors)
-    wire ub_309;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[906] (see bind_report errors)
-    wire ub_310;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[907] (see bind_report errors)
-    wire ub_311;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[908] (see bind_report errors)
-    wire ub_312;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[909] (see bind_report errors)
-    wire ub_313;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[910] (see bind_report errors)
-    wire ub_314;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[911] (see bind_report errors)
-    wire ub_315;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[912] (see bind_report errors)
-    wire ub_316;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[913] (see bind_report errors)
-    wire ub_317;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[914] (see bind_report errors)
-    wire ub_318;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[915] (see bind_report errors)
-    wire ub_319;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[916] (see bind_report errors)
-    wire ub_320;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[917] (see bind_report errors)
-    wire ub_321;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[918] (see bind_report errors)
-    wire ub_322;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[919] (see bind_report errors)
-    wire ub_323;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[920] (see bind_report errors)
-    wire ub_324;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[921] (see bind_report errors)
-    wire ub_325;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[922] (see bind_report errors)
-    wire ub_326;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[923] (see bind_report errors)
-    wire ub_327;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[924] (see bind_report errors)
-    wire ub_328;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[925] (see bind_report errors)
-    wire ub_329;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[926] (see bind_report errors)
-    wire ub_330;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[927] (see bind_report errors)
-    wire ub_331;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[928] (see bind_report errors)
-    wire ub_332;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[929] (see bind_report errors)
-    wire ub_333;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[930] (see bind_report errors)
-    wire ub_334;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[931] (see bind_report errors)
-    wire ub_335;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[932] (see bind_report errors)
-    wire ub_336;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[933] (see bind_report errors)
-    wire ub_337;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[934] (see bind_report errors)
-    wire ub_338;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[935] (see bind_report errors)
-    wire ub_339;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[936] (see bind_report errors)
-    wire ub_340;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[937] (see bind_report errors)
-    wire ub_341;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[938] (see bind_report errors)
-    wire ub_342;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[939] (see bind_report errors)
-    wire ub_343;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[940] (see bind_report errors)
-    wire ub_344;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[941] (see bind_report errors)
-    wire ub_345;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[942] (see bind_report errors)
-    wire ub_346;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[943] (see bind_report errors)
-    wire ub_347;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[944] (see bind_report errors)
-    wire ub_348;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[945] (see bind_report errors)
-    wire ub_349;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[946] (see bind_report errors)
-    wire ub_350;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[947] (see bind_report errors)
-    wire ub_351;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[948] (see bind_report errors)
-    wire ub_352;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[949] (see bind_report errors)
-    wire ub_353;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[950] (see bind_report errors)
-    wire ub_354;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[951] (see bind_report errors)
-    wire ub_355;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[952] (see bind_report errors)
-    wire ub_356;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[953] (see bind_report errors)
-    wire ub_357;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[954] (see bind_report errors)
-    wire ub_358;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[955] (see bind_report errors)
-    wire ub_359;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[956] (see bind_report errors)
-    wire ub_360;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[957] (see bind_report errors)
-    wire ub_361;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[958] (see bind_report errors)
-    wire ub_362;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[959] (see bind_report errors)
-    wire ub_363;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[960] (see bind_report errors)
-    wire ub_364;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[961] (see bind_report errors)
-    wire ub_365;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[962] (see bind_report errors)
-    wire ub_366;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[963] (see bind_report errors)
-    wire ub_367;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[964] (see bind_report errors)
-    wire ub_368;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[965] (see bind_report errors)
-    wire ub_369;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[966] (see bind_report errors)
-    wire ub_370;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[967] (see bind_report errors)
-    wire ub_371;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[968] (see bind_report errors)
-    wire ub_372;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[969] (see bind_report errors)
-    wire ub_373;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[970] (see bind_report errors)
-    wire ub_374;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[971] (see bind_report errors)
-    wire ub_375;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[972] (see bind_report errors)
-    wire ub_376;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[973] (see bind_report errors)
-    wire ub_377;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[974] (see bind_report errors)
-    wire ub_378;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[975] (see bind_report errors)
-    wire ub_379;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[976] (see bind_report errors)
-    wire ub_380;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[977] (see bind_report errors)
-    wire ub_381;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[978] (see bind_report errors)
-    wire ub_382;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[979] (see bind_report errors)
-    wire ub_383;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[980] (see bind_report errors)
-    wire ub_384;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[981] (see bind_report errors)
-    wire ub_385;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[982] (see bind_report errors)
-    wire ub_386;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[983] (see bind_report errors)
-    wire ub_387;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[984] (see bind_report errors)
-    wire ub_388;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[985] (see bind_report errors)
-    wire ub_389;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[986] (see bind_report errors)
-    wire ub_390;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[987] (see bind_report errors)
-    wire ub_391;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[988] (see bind_report errors)
-    wire ub_392;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[989] (see bind_report errors)
-    wire ub_393;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[990] (see bind_report errors)
-    wire ub_394;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[991] (see bind_report errors)
-    wire ub_395;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[992] (see bind_report errors)
-    wire ub_396;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[993] (see bind_report errors)
-    wire ub_397;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[994] (see bind_report errors)
-    wire ub_398;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[995] (see bind_report errors)
-    wire ub_399;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[996] (see bind_report errors)
-    wire ub_400;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[997] (see bind_report errors)
-    wire ub_401;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[998] (see bind_report errors)
-    wire ub_402;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[999] (see bind_report errors)
-    wire ub_403;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1000] (see bind_report errors)
-    wire ub_404;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1001] (see bind_report errors)
-    wire ub_405;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1002] (see bind_report errors)
-    wire ub_406;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1003] (see bind_report errors)
-    wire ub_407;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1004] (see bind_report errors)
-    wire ub_408;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1005] (see bind_report errors)
-    wire ub_409;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1006] (see bind_report errors)
-    wire ub_410;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1007] (see bind_report errors)
-    wire ub_411;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1008] (see bind_report errors)
-    wire ub_412;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1009] (see bind_report errors)
-    wire ub_413;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1010] (see bind_report errors)
-    wire ub_414;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1011] (see bind_report errors)
-    wire ub_415;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1012] (see bind_report errors)
-    wire ub_416;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1013] (see bind_report errors)
-    wire ub_417;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1014] (see bind_report errors)
-    wire ub_418;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1015] (see bind_report errors)
-    wire ub_419;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1016] (see bind_report errors)
-    wire ub_420;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1017] (see bind_report errors)
-    wire ub_421;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1018] (see bind_report errors)
-    wire ub_422;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1019] (see bind_report errors)
-    wire ub_423;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1020] (see bind_report errors)
-    wire ub_424;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1021] (see bind_report errors)
-    wire ub_425;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1022] (see bind_report errors)
-    wire ub_426;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1023] (see bind_report errors)
-    wire ub_427;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1024] (see bind_report errors)
-    wire ub_428;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1025] (see bind_report errors)
-    wire ub_429;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1026] (see bind_report errors)
-    wire ub_430;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1027] (see bind_report errors)
-    wire ub_431;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1028] (see bind_report errors)
-    wire ub_432;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1029] (see bind_report errors)
-    wire ub_433;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1030] (see bind_report errors)
-    wire ub_434;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1031] (see bind_report errors)
-    wire ub_435;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1032] (see bind_report errors)
-    wire ub_436;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1033] (see bind_report errors)
-    wire ub_437;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1034] (see bind_report errors)
-    wire ub_438;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1035] (see bind_report errors)
-    wire ub_439;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1036] (see bind_report errors)
-    wire ub_440;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1037] (see bind_report errors)
-    wire ub_441;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1038] (see bind_report errors)
-    wire ub_442;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1039] (see bind_report errors)
-    wire ub_443;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1040] (see bind_report errors)
-    wire ub_444;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1041] (see bind_report errors)
-    wire ub_445;  // UNBOUND tied: io_collective.u_io.u_shared.phy_rx[1042] (see bind_report errors)
+    wire [0:0] pd2_io_collective_in_data_48;
+    wire [0:0] pd3_io_collective_in_data_0;
+    wire [0:0] pd3_io_collective_in_data_1;
+    wire [0:0] pd3_io_collective_in_data_2;
+    wire [0:0] pd3_io_collective_in_data_3;
+    wire [0:0] pd3_io_collective_in_data_4;
+    wire [0:0] pd3_io_collective_in_data_5;
+    wire [0:0] pd3_io_collective_in_data_6;
+    wire [0:0] pd3_io_collective_in_data_7;
+    wire [0:0] pd3_io_collective_in_data_8;
+    wire [0:0] pd3_io_collective_in_data_9;
+    wire [0:0] pd3_io_collective_in_data_10;
+    wire [0:0] pd3_io_collective_in_data_11;
+    wire [0:0] pd3_io_collective_in_data_12;
+    wire [0:0] pd3_io_collective_in_data_13;
+    wire [0:0] pd3_io_collective_in_data_14;
+    wire [0:0] pd3_io_collective_in_data_15;
+    wire [0:0] pd3_io_collective_in_data_16;
+    wire [0:0] pd3_io_collective_in_data_17;
+    wire [0:0] pd3_io_collective_in_data_18;
+    wire [0:0] pd3_io_collective_in_data_19;
+    wire [0:0] pd3_io_collective_in_data_20;
+    wire [0:0] pd3_io_collective_in_data_21;
+    wire [0:0] pd3_io_collective_in_data_22;
+    wire [0:0] pd3_io_collective_in_data_23;
+    wire [0:0] pd3_io_collective_in_data_24;
+    wire [0:0] pd3_io_collective_in_data_25;
+    wire [0:0] pd3_io_collective_in_data_26;
+    wire [0:0] pd3_io_collective_in_data_27;
+    wire [0:0] pd3_io_collective_in_data_28;
+    wire [0:0] pd3_io_collective_in_data_29;
+    wire [0:0] pd3_io_collective_in_data_30;
+    wire [0:0] pd3_io_collective_in_data_31;
+    wire [0:0] pd2_io_collective_in_data_49;
+    wire [0:0] pd3_io_collective_in_data_32;
+    wire [0:0] pd3_io_collective_in_data_33;
+    wire [0:0] pd3_io_collective_in_data_34;
+    wire [0:0] pd3_io_collective_in_data_35;
+    wire [0:0] pd3_io_collective_in_data_36;
+    wire [0:0] pd3_io_collective_in_data_37;
+    wire [0:0] pd3_io_collective_in_data_38;
+    wire [0:0] pd3_io_collective_in_data_39;
+    wire [0:0] pd3_io_collective_in_data_40;
+    wire [0:0] pd3_io_collective_in_data_41;
+    wire [0:0] pd3_io_collective_in_data_42;
+    wire [0:0] pd3_io_collective_in_data_43;
+    wire [0:0] pd3_io_collective_in_data_44;
+    wire [0:0] pd3_io_collective_in_data_45;
+    wire [0:0] pd3_io_collective_in_data_46;
+    wire [0:0] pd3_io_collective_in_data_47;
+    wire [0:0] pd1_io_collective_cmd_tag_14;
+    wire [0:0] pd2_io_collective_cmd_tag_15;
+    wire [0:0] pd2_io_collective_cmd_tag_16;
+    wire [0:0] pd2_io_collective_cmd_tag_17;
+    wire [0:0] pd2_io_collective_cmd_tag_18;
+    wire [0:0] pd2_io_collective_cmd_tag_19;
+    wire [0:0] pd2_io_collective_cmd_tag_20;
+    wire [0:0] pd2_io_collective_cmd_tag_21;
+    wire [0:0] pd2_io_collective_cmd_tag_22;
+    wire [0:0] pd2_io_collective_cmd_tag_23;
+    wire [0:0] pd2_io_collective_cmd_tag_24;
+    wire [0:0] pd2_io_collective_cmd_tag_25;
+    wire [0:0] pd2_io_collective_cmd_tag_26;
+    wire [0:0] pd2_io_collective_cmd_tag_27;
+    wire [0:0] pd2_io_collective_cmd_tag_28;
+    wire [0:0] pd2_io_collective_cmd_tag_29;
+    wire [0:0] pd2_io_collective_cmd_tag_30;
+    wire [0:0] pd2_io_collective_cmd_tag_31;
+    wire [0:0] pd2_io_collective_cmd_v_0;
+    wire [0:0] pd2_io_collective_cmd_words_0;
+    wire [0:0] pd2_io_collective_cmd_words_1;
+    wire [0:0] pd2_io_collective_cmd_words_2;
+    wire [0:0] pd2_io_collective_cmd_words_3;
+    wire [0:0] pd2_io_collective_cmd_words_4;
+    wire [0:0] pd2_io_collective_cmd_words_5;
+    wire [0:0] pd2_io_collective_cmd_words_6;
+    wire [0:0] pd2_io_collective_cmd_words_7;
+    wire [0:0] pd2_io_collective_cmd_words_8;
+    wire [0:0] pd2_io_collective_cmd_words_9;
+    wire [0:0] pd2_io_collective_cmd_words_10;
+    wire [0:0] pd2_io_collective_cmd_words_11;
+    wire [0:0] pd2_io_collective_cmd_words_12;
+    wire [0:0] pd2_io_collective_cmd_words_13;
+    wire [0:0] pd2_io_collective_cmd_words_14;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(1)) u_bin_flt_n_i (.clk(clk), .rst_n(rst_n), .d(flt_n_i[0:0]), .ea(flt_n_i[1]), .q(flt_n_i_q), .eq(flt_n_i_eq));
     ot_dp_st #(.W(1)) u_bin_flt_s_i (.clk(clk), .rst_n(rst_n), .d(flt_s_i[0:0]), .ea(flt_s_i[1]), .q(flt_s_i_q), .eq(flt_s_i_eq));
+    ot_dp_st #(.W(12)) u_bin_fltv_n_i (.clk(clk), .rst_n(rst_n), .d(fltv_n_i[11:0]), .ea(fltv_n_i[12]), .q(fltv_n_i_q), .eq(fltv_n_i_eq));
+    ot_dp_st #(.W(25)) u_bin_fltv_s_i (.clk(clk), .rst_n(rst_n), .d(fltv_s_i[24:0]), .ea(fltv_s_i[25]), .q(fltv_s_i_q), .eq(fltv_s_i_eq));
     ot_dp_st #(.W(1)) u_bin_io_collective__cmd_mode (.clk(clk), .rst_n(rst_n), .d(io_collective__cmd_mode[0:0]), .ea(io_collective__cmd_mode[1]), .q(io_collective__cmd_mode_q), .eq(io_collective__cmd_mode_eq));
     ot_dp_st #(.W(32)) u_bin_io_collective__cmd_tag (.clk(clk), .rst_n(rst_n), .d(io_collective__cmd_tag[31:0]), .ea(io_collective__cmd_tag[32]), .q(io_collective__cmd_tag_q), .eq(io_collective__cmd_tag_eq));
     ot_dp_st #(.W(1)) u_bin_io_collective__cmd_v (.clk(clk), .rst_n(rst_n), .d(io_collective__cmd_v[0:0]), .ea(io_collective__cmd_v[1]), .q(io_collective__cmd_v_q), .eq(io_collective__cmd_v_eq));
@@ -624,30 +251,19 @@ module qfd_qc_coll_core_part (
     ot_dp_st #(.W(547)) u_bin_rec_rx_s0_i (.clk(clk), .rst_n(rst_n), .d(rec_rx_s0_i[546:0]), .ea(rec_rx_s0_i[547]), .q(rec_rx_s0_i_q), .eq(rec_rx_s0_i_eq));
     ot_dp_st #(.W(547)) u_bin_rec_rx_s1_i (.clk(clk), .rst_n(rst_n), .d(rec_rx_s1_i[546:0]), .ea(rec_rx_s1_i[547]), .q(rec_rx_s1_i_q), .eq(rec_rx_s1_i_eq));
     ot_dp_st #(.W(547)) u_bin_rec_rx_s2_i (.clk(clk), .rst_n(rst_n), .d(rec_rx_s2_i[546:0]), .ea(rec_rx_s2_i[547]), .q(rec_rx_s2_i_q), .eq(rec_rx_s2_i_eq));
-    ot_dp_st #(.W(3)) u_bin_xi_io_collective_u_io_u_collective_sr0_rec (.clk(clk), .rst_n(rst_n), .d(xi_io_collective_u_io_u_collective_sr0_rec[2:0]), .ea(xi_io_collective_u_io_u_collective_sr0_rec[3]), .q(xi_io_collective_u_io_u_collective_sr0_rec_q), .eq(xi_io_collective_u_io_u_collective_sr0_rec_eq));
-    ot_dp_st #(.W(1)) u_bin_xi_io_collective_u_io_u_collective_sr0_valid (.clk(clk), .rst_n(rst_n), .d(xi_io_collective_u_io_u_collective_sr0_valid[0:0]), .ea(xi_io_collective_u_io_u_collective_sr0_valid[1]), .q(xi_io_collective_u_io_u_collective_sr0_valid_q), .eq(xi_io_collective_u_io_u_collective_sr0_valid_eq));
-    ot_dp_st #(.W(8)) u_bin_xi_io_collective_u_io_u_collective_sr2_rec (.clk(clk), .rst_n(rst_n), .d(xi_io_collective_u_io_u_collective_sr2_rec[7:0]), .ea(xi_io_collective_u_io_u_collective_sr2_rec[8]), .q(xi_io_collective_u_io_u_collective_sr2_rec_q), .eq(xi_io_collective_u_io_u_collective_sr2_rec_eq));
-    ot_dp_st #(.W(1)) u_bin_xi_io_collective_u_io_u_collective_sr2_valid (.clk(clk), .rst_n(rst_n), .d(xi_io_collective_u_io_u_collective_sr2_valid[0:0]), .ea(xi_io_collective_u_io_u_collective_sr2_valid[1]), .q(xi_io_collective_u_io_u_collective_sr2_valid_q), .eq(xi_io_collective_u_io_u_collective_sr2_valid_eq));
-    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_0_u_face_cdc_fault[1]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
-    ot_dp_st #(.W(1)) u_bout_io_collective__cmd_free (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_0_u_face_cdc_fault[0]), .ea(rst_n), .q(io_collective__cmd_free[0:0]), .eq(io_collective__cmd_free[1]));
-    ot_dp_st #(.W(1)) u_bout_io_collective__fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2416_Y[0]), .ea(rst_n), .q(io_collective__fault[0:0]), .eq(io_collective__fault[1]));
+    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(fltv_n_i_q[2]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
+    ot_dp_st #(.W(69)) u_bout_fltv_o (.clk(clk), .rst_n(rst_n), .d({fltv_s_i_q[24:17], fltv_s_i_q[7:3], fltv_s_i_q[16:9], fltv_s_i_q[1:0], flt_s_i_q[0], rec_rx_s2_i_q[546:545], fltv_n_i_q[11:4], fltv_n_i_q[1:0], flt_n_i_q[0], rec_rx_s0_i_q[546], w_io_collective_u_io_u_collective_fault_code[4:0], w_io_collective_u_io_g_face_1_u_face_fault_cause[7:0], w_io_collective_u_io_g_face_1_u_face_epoch_abort[0], w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0], w_io_collective_u_io_g_face_0_u_face_fault_cause[7:0], w_io_collective_u_io_g_face_0_u_face_epoch_abort[0], w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:0]}), .ea(rst_n), .q(fltv_o[68:0]), .eq(fltv_o[69]));
+    ot_dp_st #(.W(1)) u_bout_io_collective__cmd_free (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_cmd_free[0]), .ea(rst_n), .q(io_collective__cmd_free[0:0]), .eq(io_collective__cmd_free[1]));
+    ot_dp_st #(.W(1)) u_bout_io_collective__fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y[0]), .ea(rst_n), .q(io_collective__fault[0:0]), .eq(io_collective__fault[1]));
     ot_dp_st #(.W(512)) u_bout_io_collective__out_data (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_data[511:0]), .ea(rst_n), .q(io_collective__out_data[511:0]), .eq(io_collective__out_data[512]));
     ot_dp_st #(.W(1)) u_bout_io_collective__out_err (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_err[0]), .ea(rst_n), .q(io_collective__out_err[0:0]), .eq(io_collective__out_err[1]));
     ot_dp_st #(.W(1)) u_bout_io_collective__out_last (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_last[0]), .ea(rst_n), .q(io_collective__out_last[0:0]), .eq(io_collective__out_last[1]));
     ot_dp_st #(.W(3)) u_bout_io_collective__out_rank (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_rank[2:0]), .ea(rst_n), .q(io_collective__out_rank[2:0]), .eq(io_collective__out_rank[3]));
     ot_dp_st #(.W(1)) u_bout_io_collective__out_valid (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_out_valid[0]), .ea(rst_n), .q(io_collective__out_valid[0:0]), .eq(io_collective__out_valid[1]));
-    ot_dp_st #(.W(1)) u_bout_io_collective__shared_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2427_Y[0]), .ea(rst_n), .q(io_collective__shared_fault[0:0]), .eq(io_collective__shared_fault[1]));
-    ot_dp_st #(.W(548)) u_bout_rec_tx_s0 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx0_valid[0], w_io_collective_u_io_u_collective_sx0_rec[545:0], w_io_collective_u_io_u_collective_sx0_peer_slot[0]}), .ea(rst_n), .q(rec_tx_s0[547:0]), .eq(rec_tx_s0[548]));
-    ot_dp_st #(.W(549)) u_bout_rec_tx_s1 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx1_valid[0], w_io_collective_u_io_u_collective_sx1_rec[545:0], w_io_collective_u_io_u_collective_sx1_peer_slot[0], w_io_collective_u_io_u_collective_sx0_valid[0]}), .ea(rst_n), .q(rec_tx_s1[548:0]), .eq(rec_tx_s1[549]));
-    ot_dp_st #(.W(548)) u_bout_rec_tx_s2 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx2_valid[0], w_io_collective_u_io_u_collective_sx2_rec[545:0], w_io_collective_u_io_u_collective_sx2_peer_slot[0]}), .ea(rst_n), .q(rec_tx_s2[547:0]), .eq(rec_tx_s2[548]));
-    ot_dp_st #(.W(2)) u_bout_xo_io_collective_u_io_g_face_0_u_face_cdc_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:2]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_0_u_face_cdc_fault[1:0]), .eq(xo_io_collective_u_io_g_face_0_u_face_cdc_fault[2]));
-    ot_dp_st #(.W(1)) u_bout_xo_io_collective_u_io_g_face_0_u_face_epoch_abort (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_0_u_face_epoch_abort[0]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_0_u_face_epoch_abort[0:0]), .eq(xo_io_collective_u_io_g_face_0_u_face_epoch_abort[1]));
-    ot_dp_st #(.W(8)) u_bout_xo_io_collective_u_io_g_face_0_u_face_fault_cause (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_0_u_face_fault_cause[7:0]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_0_u_face_fault_cause[7:0]), .eq(xo_io_collective_u_io_g_face_0_u_face_fault_cause[8]));
-    ot_dp_st #(.W(4)) u_bout_xo_io_collective_u_io_g_face_1_u_face_cdc_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0]), .eq(xo_io_collective_u_io_g_face_1_u_face_cdc_fault[4]));
-    ot_dp_st #(.W(1)) u_bout_xo_io_collective_u_io_g_face_1_u_face_epoch_abort (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_1_u_face_epoch_abort[0]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_1_u_face_epoch_abort[0:0]), .eq(xo_io_collective_u_io_g_face_1_u_face_epoch_abort[1]));
-    ot_dp_st #(.W(8)) u_bout_xo_io_collective_u_io_g_face_1_u_face_fault_cause (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_g_face_1_u_face_fault_cause[7:0]), .ea(rst_n), .q(xo_io_collective_u_io_g_face_1_u_face_fault_cause[7:0]), .eq(xo_io_collective_u_io_g_face_1_u_face_fault_cause[8]));
-    ot_dp_st #(.W(1)) u_bout_xo_io_collective_u_io_u_collective_cmd_free (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_cmd_free[0]), .ea(rst_n), .q(xo_io_collective_u_io_u_collective_cmd_free[0:0]), .eq(xo_io_collective_u_io_u_collective_cmd_free[1]));
-    ot_dp_st #(.W(5)) u_bout_xo_io_collective_u_io_u_collective_fault_code (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_u_collective_fault_code[4:0]), .ea(rst_n), .q(xo_io_collective_u_io_u_collective_fault_code[4:0]), .eq(xo_io_collective_u_io_u_collective_fault_code[5]));
+    ot_dp_st #(.W(1)) u_bout_io_collective__shared_fault (.clk(clk), .rst_n(rst_n), .d(w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y[0]), .ea(rst_n), .q(io_collective__shared_fault[0:0]), .eq(io_collective__shared_fault[1]));
+    ot_dp_st #(.W(548)) u_bout_rec_tx_s0 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx0_valid[0], w_io_collective_u_io_u_collective_sx0_peer_slot[0], w_io_collective_u_io_u_collective_sx0_rec[545:0]}), .ea(rst_n), .q(rec_tx_s0[547:0]), .eq(rec_tx_s0[548]));
+    ot_dp_st #(.W(549)) u_bout_rec_tx_s1 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx2_rec[2:0], w_io_collective_u_io_u_collective_sx1_rec[545:0]}), .ea(rst_n), .q(rec_tx_s1[548:0]), .eq(rec_tx_s1[549]));
+    ot_dp_st #(.W(548)) u_bout_rec_tx_s2 (.clk(clk), .rst_n(rst_n), .d({w_io_collective_u_io_u_collective_sx2_valid[0], w_io_collective_u_io_u_collective_sx2_peer_slot[0], w_io_collective_u_io_u_collective_sx1_valid[0], w_io_collective_u_io_u_collective_sx1_peer_slot[0], w_io_collective_u_io_u_collective_sx0_valid[0], w_io_collective_u_io_u_collective_sx2_rec[545:3]}), .ea(rst_n), .q(rec_tx_s2[547:0]), .eq(rec_tx_s2[548]));
     ot_dp_dly #(.W(1), .D(5)) u_d5_bump_die_ps_o (.clk(clk), .d(w_bump_die_ps_o), .q(d5_bump_die_ps_o));
     ot_dp_dly #(.W(1), .D(5)) u_d5_bump_pkg_s0_o (.clk(clk), .d(w_bump_pkg_s0_o), .q(d5_bump_pkg_s0_o));
     ot_dp_dly #(.W(1), .D(5)) u_d5_bump_pkg_s1_o (.clk(clk), .d(w_bump_pkg_s1_o), .q(d5_bump_pkg_s1_o));
@@ -661,6 +277,90 @@ module qfd_qc_coll_core_part (
     ot_dp_dly #(.W(1), .D(5)) u_d5_io_collective_u_io_u_collective_ur_peer_slot (.clk(clk), .d(w_io_collective_u_io_u_collective_ur_peer_slot), .q(d5_io_collective_u_io_u_collective_ur_peer_slot));
     ot_dp_dly #(.W(514), .D(5)) u_d5_io_collective_u_io_u_collective_ur_rec (.clk(clk), .d(w_io_collective_u_io_u_collective_ur_rec), .q(d5_io_collective_u_io_u_collective_ur_rec));
     ot_dp_dly #(.W(1), .D(5)) u_d5_io_collective_u_io_u_collective_ur_valid (.clk(clk), .d(w_io_collective_u_io_u_collective_ur_valid), .q(d5_io_collective_u_io_u_collective_ur_valid));
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_in_data_48 (.clk(clk), .d(io_collective__in_data_q[48]), .q(pd2_io_collective_in_data_48));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_0 (.clk(clk), .d(io_collective__in_data_q[0]), .q(pd3_io_collective_in_data_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_1 (.clk(clk), .d(io_collective__in_data_q[1]), .q(pd3_io_collective_in_data_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_2 (.clk(clk), .d(io_collective__in_data_q[2]), .q(pd3_io_collective_in_data_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_3 (.clk(clk), .d(io_collective__in_data_q[3]), .q(pd3_io_collective_in_data_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_4 (.clk(clk), .d(io_collective__in_data_q[4]), .q(pd3_io_collective_in_data_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_5 (.clk(clk), .d(io_collective__in_data_q[5]), .q(pd3_io_collective_in_data_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_6 (.clk(clk), .d(io_collective__in_data_q[6]), .q(pd3_io_collective_in_data_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_7 (.clk(clk), .d(io_collective__in_data_q[7]), .q(pd3_io_collective_in_data_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_8 (.clk(clk), .d(io_collective__in_data_q[8]), .q(pd3_io_collective_in_data_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_9 (.clk(clk), .d(io_collective__in_data_q[9]), .q(pd3_io_collective_in_data_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_10 (.clk(clk), .d(io_collective__in_data_q[10]), .q(pd3_io_collective_in_data_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_11 (.clk(clk), .d(io_collective__in_data_q[11]), .q(pd3_io_collective_in_data_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_12 (.clk(clk), .d(io_collective__in_data_q[12]), .q(pd3_io_collective_in_data_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_13 (.clk(clk), .d(io_collective__in_data_q[13]), .q(pd3_io_collective_in_data_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_14 (.clk(clk), .d(io_collective__in_data_q[14]), .q(pd3_io_collective_in_data_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_15 (.clk(clk), .d(io_collective__in_data_q[15]), .q(pd3_io_collective_in_data_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_16 (.clk(clk), .d(io_collective__in_data_q[16]), .q(pd3_io_collective_in_data_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_17 (.clk(clk), .d(io_collective__in_data_q[17]), .q(pd3_io_collective_in_data_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_18 (.clk(clk), .d(io_collective__in_data_q[18]), .q(pd3_io_collective_in_data_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_19 (.clk(clk), .d(io_collective__in_data_q[19]), .q(pd3_io_collective_in_data_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_20 (.clk(clk), .d(io_collective__in_data_q[20]), .q(pd3_io_collective_in_data_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_21 (.clk(clk), .d(io_collective__in_data_q[21]), .q(pd3_io_collective_in_data_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_22 (.clk(clk), .d(io_collective__in_data_q[22]), .q(pd3_io_collective_in_data_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_23 (.clk(clk), .d(io_collective__in_data_q[23]), .q(pd3_io_collective_in_data_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_24 (.clk(clk), .d(io_collective__in_data_q[24]), .q(pd3_io_collective_in_data_24));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_25 (.clk(clk), .d(io_collective__in_data_q[25]), .q(pd3_io_collective_in_data_25));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_26 (.clk(clk), .d(io_collective__in_data_q[26]), .q(pd3_io_collective_in_data_26));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_27 (.clk(clk), .d(io_collective__in_data_q[27]), .q(pd3_io_collective_in_data_27));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_28 (.clk(clk), .d(io_collective__in_data_q[28]), .q(pd3_io_collective_in_data_28));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_29 (.clk(clk), .d(io_collective__in_data_q[29]), .q(pd3_io_collective_in_data_29));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_30 (.clk(clk), .d(io_collective__in_data_q[30]), .q(pd3_io_collective_in_data_30));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_31 (.clk(clk), .d(io_collective__in_data_q[31]), .q(pd3_io_collective_in_data_31));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_in_data_49 (.clk(clk), .d(io_collective__in_data_q[49]), .q(pd2_io_collective_in_data_49));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_32 (.clk(clk), .d(io_collective__in_data_q[32]), .q(pd3_io_collective_in_data_32));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_33 (.clk(clk), .d(io_collective__in_data_q[33]), .q(pd3_io_collective_in_data_33));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_34 (.clk(clk), .d(io_collective__in_data_q[34]), .q(pd3_io_collective_in_data_34));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_35 (.clk(clk), .d(io_collective__in_data_q[35]), .q(pd3_io_collective_in_data_35));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_36 (.clk(clk), .d(io_collective__in_data_q[36]), .q(pd3_io_collective_in_data_36));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_37 (.clk(clk), .d(io_collective__in_data_q[37]), .q(pd3_io_collective_in_data_37));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_38 (.clk(clk), .d(io_collective__in_data_q[38]), .q(pd3_io_collective_in_data_38));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_39 (.clk(clk), .d(io_collective__in_data_q[39]), .q(pd3_io_collective_in_data_39));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_40 (.clk(clk), .d(io_collective__in_data_q[40]), .q(pd3_io_collective_in_data_40));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_41 (.clk(clk), .d(io_collective__in_data_q[41]), .q(pd3_io_collective_in_data_41));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_42 (.clk(clk), .d(io_collective__in_data_q[42]), .q(pd3_io_collective_in_data_42));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_43 (.clk(clk), .d(io_collective__in_data_q[43]), .q(pd3_io_collective_in_data_43));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_44 (.clk(clk), .d(io_collective__in_data_q[44]), .q(pd3_io_collective_in_data_44));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_45 (.clk(clk), .d(io_collective__in_data_q[45]), .q(pd3_io_collective_in_data_45));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_46 (.clk(clk), .d(io_collective__in_data_q[46]), .q(pd3_io_collective_in_data_46));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_io_collective_in_data_47 (.clk(clk), .d(io_collective__in_data_q[47]), .q(pd3_io_collective_in_data_47));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_io_collective_cmd_tag_14 (.clk(clk), .d(io_collective__cmd_tag_q[14]), .q(pd1_io_collective_cmd_tag_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_15 (.clk(clk), .d(io_collective__cmd_tag_q[15]), .q(pd2_io_collective_cmd_tag_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_16 (.clk(clk), .d(io_collective__cmd_tag_q[16]), .q(pd2_io_collective_cmd_tag_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_17 (.clk(clk), .d(io_collective__cmd_tag_q[17]), .q(pd2_io_collective_cmd_tag_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_18 (.clk(clk), .d(io_collective__cmd_tag_q[18]), .q(pd2_io_collective_cmd_tag_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_19 (.clk(clk), .d(io_collective__cmd_tag_q[19]), .q(pd2_io_collective_cmd_tag_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_20 (.clk(clk), .d(io_collective__cmd_tag_q[20]), .q(pd2_io_collective_cmd_tag_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_21 (.clk(clk), .d(io_collective__cmd_tag_q[21]), .q(pd2_io_collective_cmd_tag_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_22 (.clk(clk), .d(io_collective__cmd_tag_q[22]), .q(pd2_io_collective_cmd_tag_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_23 (.clk(clk), .d(io_collective__cmd_tag_q[23]), .q(pd2_io_collective_cmd_tag_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_24 (.clk(clk), .d(io_collective__cmd_tag_q[24]), .q(pd2_io_collective_cmd_tag_24));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_25 (.clk(clk), .d(io_collective__cmd_tag_q[25]), .q(pd2_io_collective_cmd_tag_25));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_26 (.clk(clk), .d(io_collective__cmd_tag_q[26]), .q(pd2_io_collective_cmd_tag_26));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_27 (.clk(clk), .d(io_collective__cmd_tag_q[27]), .q(pd2_io_collective_cmd_tag_27));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_28 (.clk(clk), .d(io_collective__cmd_tag_q[28]), .q(pd2_io_collective_cmd_tag_28));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_29 (.clk(clk), .d(io_collective__cmd_tag_q[29]), .q(pd2_io_collective_cmd_tag_29));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_30 (.clk(clk), .d(io_collective__cmd_tag_q[30]), .q(pd2_io_collective_cmd_tag_30));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_tag_31 (.clk(clk), .d(io_collective__cmd_tag_q[31]), .q(pd2_io_collective_cmd_tag_31));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_v_0 (.clk(clk), .d(io_collective__cmd_v_q[0]), .q(pd2_io_collective_cmd_v_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_0 (.clk(clk), .d(io_collective__cmd_words_q[0]), .q(pd2_io_collective_cmd_words_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_1 (.clk(clk), .d(io_collective__cmd_words_q[1]), .q(pd2_io_collective_cmd_words_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_2 (.clk(clk), .d(io_collective__cmd_words_q[2]), .q(pd2_io_collective_cmd_words_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_3 (.clk(clk), .d(io_collective__cmd_words_q[3]), .q(pd2_io_collective_cmd_words_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_4 (.clk(clk), .d(io_collective__cmd_words_q[4]), .q(pd2_io_collective_cmd_words_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_5 (.clk(clk), .d(io_collective__cmd_words_q[5]), .q(pd2_io_collective_cmd_words_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_6 (.clk(clk), .d(io_collective__cmd_words_q[6]), .q(pd2_io_collective_cmd_words_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_7 (.clk(clk), .d(io_collective__cmd_words_q[7]), .q(pd2_io_collective_cmd_words_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_8 (.clk(clk), .d(io_collective__cmd_words_q[8]), .q(pd2_io_collective_cmd_words_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_9 (.clk(clk), .d(io_collective__cmd_words_q[9]), .q(pd2_io_collective_cmd_words_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_10 (.clk(clk), .d(io_collective__cmd_words_q[10]), .q(pd2_io_collective_cmd_words_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_11 (.clk(clk), .d(io_collective__cmd_words_q[11]), .q(pd2_io_collective_cmd_words_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_12 (.clk(clk), .d(io_collective__cmd_words_q[12]), .q(pd2_io_collective_cmd_words_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_13 (.clk(clk), .d(io_collective__cmd_words_q[13]), .q(pd2_io_collective_cmd_words_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(2)) u_pd2_io_collective_cmd_words_14 (.clk(clk), .d(io_collective__cmd_words_q[14]), .q(pd2_io_collective_cmd_words_14));  // landing pad: as-built relative timing
     // as-built bump_die_ps
     qfd_sigbump u_bump_die_ps (
         .o(w_bump_die_ps_o)
@@ -673,13 +373,13 @@ module qfd_qc_coll_core_part (
     qfd_sigbump u_bump_pkg_s1 (
         .o(w_bump_pkg_s1_o)
     );
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2412_Y = w_io_collective_u_io_u_collective_fault[0] | w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2427_Y[0];  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.44
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2414_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2412_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2413_Y[0];  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.67
-    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2416_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2414_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2415_Y[0];  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.86
-    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2413_Y = |{rec_rx_s2_i_q[8:5], rec_rx_s1_i_q[3:0], rec_rx_s0_i_q[3:0], w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0], w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:0]};  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io_production.sv:66.46-66.66
-    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_2415_Y = |{rec_rx_s2_i_q[9], rec_rx_s1_i_q[4], rec_rx_s0_i_q[4], w_io_collective_u_io_g_face_1_u_face_epoch_abort[0], w_io_collective_u_io_g_face_0_u_face_epoch_abort[0]};  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io_production.sv:66.69-66.85
-    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2426_Y = w_io_collective_u_io_u_shared_fault[0] | w_io_collective_u_io_g_six_five_u_gearbox_core_fault[0];  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.45
-    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2427_Y = w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_2426_Y[0] | w_io_collective_u_io_g_six_five_u_gearbox_fdi_fault[0];  // /home/ubuntu/wt/binder-1023/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.58
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y = w_io_collective_u_io_u_collective_fault[0] | w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.44
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_2_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.67
+    assign w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_6_Y = w_io_collective_or_ot_qfd_collective_static_io_production_sv_66_4_Y[0] | w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.15-66.86
+    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_3_Y = |{fltv_s_i_q[6:3], fltv_s_i_q[0], flt_s_i_q[0], rec_rx_s2_i_q[546:545], fltv_n_i_q[1:0], flt_n_i_q[0], rec_rx_s0_i_q[546], w_io_collective_u_io_g_face_1_u_face_cdc_fault[3:0], w_io_collective_u_io_g_face_0_u_face_cdc_fault[3:0]};  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.46-66.66
+    assign w_io_collective_reduce_or_ot_qfd_collective_static_io_production_sv_66_5_Y = |{fltv_s_i_q[7], fltv_s_i_q[1], fltv_n_i_q[2], w_io_collective_u_io_g_face_1_u_face_epoch_abort[0], w_io_collective_u_io_g_face_0_u_face_epoch_abort[0]};  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io_production.sv:66.69-66.85
+    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y = w_io_collective_u_io_u_shared_fault[0] | w_io_collective_u_io_g_six_five_u_gearbox_core_fault[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.45
+    assign w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29920_Y = w_io_collective_u_io_or_ot_qfd_collective_static_io_sv_170_29919_Y[0] | w_io_collective_u_io_g_six_five_u_gearbox_fdi_fault[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/physical/ot_qfd_collective_static_io.sv:170.22-170.58
     // as-built io_collective.u_io.g_face[0].u_face
     qfd_coll_static_face #(.FW(546), .L(53), .PEER_R(5), .PHY(20), .PLAND(0), .PLD(2), .PLK(1), .R(5), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_io_collective_u_io_g_face_0_u_face (
         .cal_ck(clk_coll),
@@ -756,7 +456,7 @@ module qfd_qc_coll_core_part (
         .tx_valid(w_io_collective_u_io_u_shared_phy_tx_valid[0])
     );
     // as-built io_collective.u_io.u_collective
-    qfd_io_collective_static #(.LS(376), .LU(53)) u_io_collective_u_io_u_collective (
+    qfd_io_collective_static #(.LS(389), .LU(53)) u_io_collective_u_io_u_collective (
         .clk(clk_coll),
         .clk_pfold0(clk_coll),
         .clk_pfold1(clk_coll),
@@ -776,10 +476,10 @@ module qfd_qc_coll_core_part (
         .clk_xfold2(clk_coll),
         .clk_xfold3(clk_coll),
         .cmd_free(w_io_collective_u_io_u_collective_cmd_free),
-        .cmd_mode(io_collective__in_data_q[48]),
-        .cmd_tag(io_collective__in_data_q[31:0]),
-        .cmd_v(io_collective__in_data_q[49]),
-        .cmd_words(io_collective__in_data_q[47:32]),
+        .cmd_mode(pd2_io_collective_in_data_48[0]),
+        .cmd_tag({pd3_io_collective_in_data_31[0], pd3_io_collective_in_data_30[0], pd3_io_collective_in_data_29[0], pd3_io_collective_in_data_28[0], pd3_io_collective_in_data_27[0], pd3_io_collective_in_data_26[0], pd3_io_collective_in_data_25[0], pd3_io_collective_in_data_24[0], pd3_io_collective_in_data_23[0], pd3_io_collective_in_data_22[0], pd3_io_collective_in_data_21[0], pd3_io_collective_in_data_20[0], pd3_io_collective_in_data_19[0], pd3_io_collective_in_data_18[0], pd3_io_collective_in_data_17[0], pd3_io_collective_in_data_16[0], pd3_io_collective_in_data_15[0], pd3_io_collective_in_data_14[0], pd3_io_collective_in_data_13[0], pd3_io_collective_in_data_12[0], pd3_io_collective_in_data_11[0], pd3_io_collective_in_data_10[0], pd3_io_collective_in_data_9[0], pd3_io_collective_in_data_8[0], pd3_io_collective_in_data_7[0], pd3_io_collective_in_data_6[0], pd3_io_collective_in_data_5[0], pd3_io_collective_in_data_4[0], pd3_io_collective_in_data_3[0], pd3_io_collective_in_data_2[0], pd3_io_collective_in_data_1[0], pd3_io_collective_in_data_0[0]}),
+        .cmd_v(pd2_io_collective_in_data_49[0]),
+        .cmd_words({pd3_io_collective_in_data_47[0], pd3_io_collective_in_data_46[0], pd3_io_collective_in_data_45[0], pd3_io_collective_in_data_44[0], pd3_io_collective_in_data_43[0], pd3_io_collective_in_data_42[0], pd3_io_collective_in_data_41[0], pd3_io_collective_in_data_40[0], pd3_io_collective_in_data_39[0], pd3_io_collective_in_data_38[0], pd3_io_collective_in_data_37[0], pd3_io_collective_in_data_36[0], pd3_io_collective_in_data_35[0], pd3_io_collective_in_data_34[0], pd3_io_collective_in_data_33[0], pd3_io_collective_in_data_32[0]}),
         .die_ps(d5_bump_die_ps_o[0]),
         .dp_rec(d5_io_collective_u_io_g_face_0_u_face_rx_data[545:0]),
         .dp_valid(d5_io_collective_u_io_g_face_0_u_face_rx_valid[0]),
@@ -788,9 +488,9 @@ module qfd_qc_coll_core_part (
         .fault(w_io_collective_u_io_u_collective_fault),
         .fault_code(w_io_collective_u_io_u_collective_fault_code),
         .in_data({io_collective__cmd_tag_q[13:0], io_collective__cmd_mode_q[0], io_collective__in_valid_q[0], io_collective__in_tag_q[31:0], io_collective__in_mode_q[0], io_collective__in_last_q[0], io_collective__in_data_q[511:50]}),
-        .in_last(io_collective__cmd_tag_q[14]),
-        .in_mode(io_collective__cmd_tag_q[15]),
-        .in_tag({io_collective__cmd_words_q[14:0], io_collective__cmd_v_q[0], io_collective__cmd_tag_q[31:16]}),
+        .in_last(pd1_io_collective_cmd_tag_14[0]),
+        .in_mode(pd2_io_collective_cmd_tag_15[0]),
+        .in_tag({pd2_io_collective_cmd_words_14[0], pd2_io_collective_cmd_words_13[0], pd2_io_collective_cmd_words_12[0], pd2_io_collective_cmd_words_11[0], pd2_io_collective_cmd_words_10[0], pd2_io_collective_cmd_words_9[0], pd2_io_collective_cmd_words_8[0], pd2_io_collective_cmd_words_7[0], pd2_io_collective_cmd_words_6[0], pd2_io_collective_cmd_words_5[0], pd2_io_collective_cmd_words_4[0], pd2_io_collective_cmd_words_3[0], pd2_io_collective_cmd_words_2[0], pd2_io_collective_cmd_words_1[0], pd2_io_collective_cmd_words_0[0], pd2_io_collective_cmd_v_0[0], pd2_io_collective_cmd_tag_31[0], pd2_io_collective_cmd_tag_30[0], pd2_io_collective_cmd_tag_29[0], pd2_io_collective_cmd_tag_28[0], pd2_io_collective_cmd_tag_27[0], pd2_io_collective_cmd_tag_26[0], pd2_io_collective_cmd_tag_25[0], pd2_io_collective_cmd_tag_24[0], pd2_io_collective_cmd_tag_23[0], pd2_io_collective_cmd_tag_22[0], pd2_io_collective_cmd_tag_21[0], pd2_io_collective_cmd_tag_20[0], pd2_io_collective_cmd_tag_19[0], pd2_io_collective_cmd_tag_18[0], pd2_io_collective_cmd_tag_17[0], pd2_io_collective_cmd_tag_16[0]}),
         .in_valid(io_collective__cmd_words_q[15]),
         .out_data(w_io_collective_u_io_u_collective_out_data),
         .out_err(w_io_collective_u_io_u_collective_out_err),
@@ -799,12 +499,12 @@ module qfd_qc_coll_core_part (
         .out_valid(w_io_collective_u_io_u_collective_out_valid),
         .pkg_s({d5_bump_pkg_s1_o[0], d5_bump_pkg_s0_o[0]}),
         .rst_n(rst_n),
-        .sr0_rec({xi_io_collective_u_io_u_collective_sr0_rec_q[2:0], flt_n_i_q[0], rec_rx_s0_i_q[546:5]}),
-        .sr0_valid(xi_io_collective_u_io_u_collective_sr0_valid_q[0]),
-        .sr1_rec({rec_rx_s2_i_q[3:0], rec_rx_s1_i_q[546:5]}),
-        .sr1_valid(rec_rx_s2_i_q[4]),
-        .sr2_rec({xi_io_collective_u_io_u_collective_sr2_rec_q[7:0], flt_s_i_q[0], rec_rx_s2_i_q[546:10]}),
-        .sr2_valid(xi_io_collective_u_io_u_collective_sr2_valid_q[0]),
+        .sr0_rec(rec_rx_s0_i_q[545:0]),
+        .sr0_valid(fltv_n_i_q[3]),
+        .sr1_rec(rec_rx_s1_i_q[545:0]),
+        .sr1_valid(fltv_s_i_q[2]),
+        .sr2_rec({rec_rx_s2_i_q[544:0], rec_rx_s1_i_q[546]}),
+        .sr2_valid(fltv_s_i_q[8]),
         .sx0_peer_slot(w_io_collective_u_io_u_collective_sx0_peer_slot),
         .sx0_rec(w_io_collective_u_io_u_collective_sx0_rec),
         .sx0_valid(w_io_collective_u_io_u_collective_sx0_valid),
@@ -822,11 +522,11 @@ module qfd_qc_coll_core_part (
         .ur_valid(w_io_collective_u_io_u_collective_ur_valid)
     );
     // as-built io_collective.u_io.u_shared
-    qfd_ucie_static_share u_io_collective_u_io_u_shared (
+    qfd_ucie_static_share #(.RXW(597)) u_io_collective_u_io_u_shared (
         .clk(clk_coll),
         .fault(w_io_collective_u_io_u_shared_fault),
         .p_frame(w_io_collective_u_io_g_face_0_u_face_phy_tx[596:0]),
-        .phy_rx({ub_445, ub_444, ub_443, ub_442, ub_441, ub_440, ub_439, ub_438, ub_437, ub_436, ub_435, ub_434, ub_433, ub_432, ub_431, ub_430, ub_429, ub_428, ub_427, ub_426, ub_425, ub_424, ub_423, ub_422, ub_421, ub_420, ub_419, ub_418, ub_417, ub_416, ub_415, ub_414, ub_413, ub_412, ub_411, ub_410, ub_409, ub_408, ub_407, ub_406, ub_405, ub_404, ub_403, ub_402, ub_401, ub_400, ub_399, ub_398, ub_397, ub_396, ub_395, ub_394, ub_393, ub_392, ub_391, ub_390, ub_389, ub_388, ub_387, ub_386, ub_385, ub_384, ub_383, ub_382, ub_381, ub_380, ub_379, ub_378, ub_377, ub_376, ub_375, ub_374, ub_373, ub_372, ub_371, ub_370, ub_369, ub_368, ub_367, ub_366, ub_365, ub_364, ub_363, ub_362, ub_361, ub_360, ub_359, ub_358, ub_357, ub_356, ub_355, ub_354, ub_353, ub_352, ub_351, ub_350, ub_349, ub_348, ub_347, ub_346, ub_345, ub_344, ub_343, ub_342, ub_341, ub_340, ub_339, ub_338, ub_337, ub_336, ub_335, ub_334, ub_333, ub_332, ub_331, ub_330, ub_329, ub_328, ub_327, ub_326, ub_325, ub_324, ub_323, ub_322, ub_321, ub_320, ub_319, ub_318, ub_317, ub_316, ub_315, ub_314, ub_313, ub_312, ub_311, ub_310, ub_309, ub_308, ub_307, ub_306, ub_305, ub_304, ub_303, ub_302, ub_301, ub_300, ub_299, ub_298, ub_297, ub_296, ub_295, ub_294, ub_293, ub_292, ub_291, ub_290, ub_289, ub_288, ub_287, ub_286, ub_285, ub_284, ub_283, ub_282, ub_281, ub_280, ub_279, ub_278, ub_277, ub_276, ub_275, ub_274, ub_273, ub_272, ub_271, ub_270, ub_269, ub_268, ub_267, ub_266, ub_265, ub_264, ub_263, ub_262, ub_261, ub_260, ub_259, ub_258, ub_257, ub_256, ub_255, ub_254, ub_253, ub_252, ub_251, ub_250, ub_249, ub_248, ub_247, ub_246, ub_245, ub_244, ub_243, ub_242, ub_241, ub_240, ub_239, ub_238, ub_237, ub_236, ub_235, ub_234, ub_233, ub_232, ub_231, ub_230, ub_229, ub_228, ub_227, ub_226, ub_225, ub_224, ub_223, ub_222, ub_221, ub_220, ub_219, ub_218, ub_217, ub_216, ub_215, ub_214, ub_213, ub_212, ub_211, ub_210, ub_209, ub_208, ub_207, ub_206, ub_205, ub_204, ub_203, ub_202, ub_201, ub_200, ub_199, ub_198, ub_197, ub_196, ub_195, ub_194, ub_193, ub_192, ub_191, ub_190, ub_189, ub_188, ub_187, ub_186, ub_185, ub_184, ub_183, ub_182, ub_181, ub_180, ub_179, ub_178, ub_177, ub_176, ub_175, ub_174, ub_173, ub_172, ub_171, ub_170, ub_169, ub_168, ub_167, ub_166, ub_165, ub_164, ub_163, ub_162, ub_161, ub_160, ub_159, ub_158, ub_157, ub_156, ub_155, ub_154, ub_153, ub_152, ub_151, ub_150, ub_149, ub_148, ub_147, ub_146, ub_145, ub_144, ub_143, ub_142, ub_141, ub_140, ub_139, ub_138, ub_137, ub_136, ub_135, ub_134, ub_133, ub_132, ub_131, ub_130, ub_129, ub_128, ub_127, ub_126, ub_125, ub_124, ub_123, ub_122, ub_121, ub_120, ub_119, ub_118, ub_117, ub_116, ub_115, ub_114, ub_113, ub_112, ub_111, ub_110, ub_109, ub_108, ub_107, ub_106, ub_105, ub_104, ub_103, ub_102, ub_101, ub_100, ub_99, ub_98, ub_97, ub_96, ub_95, ub_94, ub_93, ub_92, ub_91, ub_90, ub_89, ub_88, ub_87, ub_86, ub_85, ub_84, ub_83, ub_82, ub_81, ub_80, ub_79, ub_78, ub_77, ub_76, ub_75, ub_74, ub_73, ub_72, ub_71, ub_70, ub_69, ub_68, ub_67, ub_66, ub_65, ub_64, ub_63, ub_62, ub_61, ub_60, ub_59, ub_58, ub_57, ub_56, ub_55, ub_54, ub_53, ub_52, ub_51, ub_50, ub_49, ub_48, ub_47, ub_46, ub_45, ub_44, ub_43, ub_42, ub_41, ub_40, ub_39, ub_38, ub_37, ub_36, ub_35, ub_34, ub_33, ub_32, ub_31, ub_30, ub_29, ub_28, ub_27, ub_26, ub_25, ub_24, ub_23, ub_22, ub_21, ub_20, ub_19, ub_18, ub_17, ub_16, ub_15, ub_14, ub_13, ub_12, ub_11, ub_10, ub_9, ub_8, ub_7, ub_6, ub_5, ub_4, ub_3, ub_2, ub_1, ub_0, w_io_collective_u_io_g_six_five_u_gearbox_rx_frame[596:0]}),
+        .phy_rx(w_io_collective_u_io_g_six_five_u_gearbox_rx_frame[596:0]),
         .phy_rx_valid(w_io_collective_u_io_g_six_five_u_gearbox_rx_valid[0]),
         .phy_tx(w_io_collective_u_io_u_shared_phy_tx),
         .phy_tx_valid(w_io_collective_u_io_u_shared_phy_tx_valid),

@@ -1075,6 +1075,21 @@ def fault_links(P, variant, geo):
            src_leaf="u_native59.fault", dst_leaf="u_sys_face.obs_fault_n59")
     P.link("fltt", ["tt_ctlm", "native59", "glue"], "flt_o", "ctlm_flt_i", 1, kind="ctl",
            src_leaf="u_tt_ctlm.cf", dst_leaf="u_sys_face.obs_fault_ctlm")
+    # QC-P4 10-23 (BINDER2 per-bit UNPLANNED list on 16437c592, 85 b): the as-built carries the coll face fault
+    # VECTORS bit by bit (fault_cause/cdc_fault/epoch_abort/fault_code -> sys_face.obs_fault; side-face cdc/abort/
+    # rx_valid -> coll_core reduce-ORs and sr*_valid) where the 1-b flt lanes above carry only the OR, plus the two
+    # MU fault bits glue -> tt_ctlm and the KV PHY reset glue -> ucie_kv.  Planned as static ctl lanes at the as-built
+    # widths: S chain 9 (to coll_core) + 26 (forwarded to glue), N chain 4 + 13, coll_core -> glue 30 + 26 + 13.
+    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 35, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("fltv", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "fltv_o", "fltv_n_i", 17, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 69, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("mufl", ws_path(P, "glue", "tt_ctlm"), "mu_flt_o", "mu_flt_i", 2, kind="ctl",
+           src_leaf="mu_ctxrx.mu_fault", dst_leaf="core.mu_fault")
+    P.link("kvrst", ["glue", "ucie_kv"], "kv_phy_rst_o", "phy_rst_i", 1, kind="ctl",
+           src_leaf="d2d_rom.phy_rst_n", dst_leaf="core.rst_n")
 
 
 # ====================================================================== ports / slots / windows

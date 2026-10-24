@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "d98a32a075075797",
+ "plan_digest": "e6d553631f50e99e",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -13162,6 +13162,23 @@
    },
    "width": 1
   },
+  "coll_core__fltvc": {
+   "cycles": 3,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "param": "LAT_COLL_CORE__FLTVC",
+   "src": {
+    "part": "coll_core",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "glue",
+    "bus": "coll_fltv_i"
+   },
+   "width": 69
+  },
   "coll_core__out_data_rd_wi": {
    "cycles": 5,
    "stations": 3,
@@ -13298,6 +13315,23 @@
    },
    "width": 1
   },
+  "coll_n__fltv": {
+   "cycles": 7,
+   "stations": 5,
+   "boundary": 2,
+   "faces": 4,
+   "fixed": 0,
+   "param": "LAT_COLL_N__FLTV",
+   "src": {
+    "part": "coll_n",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "fltv_n_i"
+   },
+   "width": 17
+  },
   "coll_n__serdes_tx_tx_flit": {
    "cycles": 2,
    "stations": 0,
@@ -13382,6 +13416,23 @@
     "bus": "flt_s_i"
    },
    "width": 1
+  },
+  "coll_s__fltv": {
+   "cycles": 8,
+   "stations": 6,
+   "boundary": 2,
+   "faces": 4,
+   "fixed": 0,
+   "param": "LAT_COLL_S__FLTV",
+   "src": {
+    "part": "coll_s",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "fltv_s_i"
+   },
+   "width": 35
   },
   "coll_s__serdes_tx_tx_flit": {
    "cycles": 2,
@@ -13705,6 +13756,40 @@
     "bus": "kv_x3_slot"
    },
    "width": 1
+  },
+  "glue__kvrst": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "param": "LAT_GLUE__KVRST",
+   "src": {
+    "part": "glue",
+    "bus": "kv_phy_rst_o"
+   },
+   "dst": {
+    "part": "ucie_kv",
+    "bus": "phy_rst_i"
+   },
+   "width": 1
+  },
+  "glue__mufl": {
+   "cycles": 4,
+   "stations": 2,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "param": "LAT_GLUE__MUFL",
+   "src": {
+    "part": "glue",
+    "bus": "mu_flt_o"
+   },
+   "dst": {
+    "part": "tt_ctlm",
+    "bus": "mu_flt_i"
+   },
+   "width": 2
   },
   "glue__native_rx_slot_beat_rx_slot_beat": {
    "cycles": 2,
