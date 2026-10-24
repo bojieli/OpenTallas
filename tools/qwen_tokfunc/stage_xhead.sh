@@ -5,25 +5,40 @@
 # read_tail, global go_lag / xpf_lead) -> per-consumer go_lag / xpf_lead sweep (o, down, qkv) -> merge -> the 4 consumer
 # cases qkv / gu / o / down with the merged ages + 10 mutants (goearly / xpflate / isaxbase, each must FAIL).
 #
-#   stage_xhead.sh RUNROOT [--par N]
+#   stage_xhead.sh RUNROOT [--par N] [--reuse]
+#
+# --reuse: keep an existing RUNROOT/xhead/tree + out/build/obj_xh (cached executable) and recalibrate into out/cal_r<N>
+# (the previous out/cal is preserved).  The global go_lag sweep starts at OT_XH_GO_MIN (default -8 here: on the
+# 10-24 main tree -2..6 all PASSed, i.e. no FAIL edge; 10-23 found the edge at -3/-4).
 #
 # Inputs: RUNROOT/src (assembly), RUNROOT/stg/fx_res/results (the committed bench data files, == the assembly commit) and
 # RUNROOT/xhead/fx/results (results/rtl/qlb_c4b_1018/xhead + results/rtl/qwen_q_export_1014/xpf, git archive of the
 # assembly commit).  Ends with RUNROOT/xhead/result.json.
 set -u
 RUNROOT=$(readlink -f "$1"); shift
-PAR=24
-while [ $# -gt 0 ]; do case "$1" in --par) PAR=$2; shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+PAR=24; REUSE=0
+while [ $# -gt 0 ]; do case "$1" in --par) PAR=$2; shift 2;; --reuse) REUSE=1; shift;; *) echo "bad arg $1"; exit 2;; esac; done
+export OT_XH_GO_MIN=${OT_XH_GO_MIN:--8}
 SRC=$RUNROOT/src; S=$RUNROOT/xhead; T=$S/tree; O=$S/out
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050' || { echo "need Verilator 5.050"; exit 2; }
 [ -d "$RUNROOT/stg/fx_res/results" ] && [ -d "$S/fx/results" ] || { echo "missing bench data (stg/fx_res, xhead/fx)"; exit 2; }
-[ ! -e "$T" ] || { echo "preserve $T"; exit 5; }
-mkdir -p "$T" "$O/cal" "$O/pts" "$O/run"
-# real copy (the bench resolves ROOT from its own path)
-for d in rtl tools configs; do cp -r "$SRC/$d" "$T/"; done
-cp -as "$SRC/physical" "$T/" 2>/dev/null
-cp -r "$RUNROOT/stg/fx_res/results" "$T/"; cp -rn "$S/fx/results/." "$T/results/"
+if [ $REUSE = 1 ]; then
+  [ -x "$O/build/obj_xh/Vtb" ] && [ -d "$T" ] || { echo "--reuse needs $T and $O/build/obj_xh/Vtb"; exit 5; }
+  for d in cal pts run; do   # keep earlier attempts
+    [ -e "$O/$d" ] && { k=1; while [ -e "$O/${d}_r$k" ]; do k=$((k+1)); done; mv "$O/$d" "$O/${d}_r$k"; }
+  done
+  [ -f "$O/calibrate.out" ] && mv "$O/calibrate.out" "$O/calibrate.prev.$(date +%s).out"
+  mkdir -p "$O/cal" "$O/pts" "$O/run"
+else
+  [ ! -e "$T" ] || { echo "preserve $T"; exit 5; }
+  mkdir -p "$T" "$O/cal" "$O/pts" "$O/run" "$O/build"
+  # real copy (the bench resolves ROOT from its own path)
+  for d in rtl tools configs; do cp -r "$SRC/$d" "$T/"; done
+  cp -as "$SRC/physical" "$T/" 2>/dev/null
+  cp -r "$RUNROOT/stg/fx_res/results" "$T/"; cp -rn "$S/fx/results/." "$T/results/"
+fi
+echo "OT_XH_GO_MIN=$OT_XH_GO_MIN reuse=$REUSE" > "$O/params.txt"
 cd "$T" || exit 3
 B=rtl/test/qwen_dv/xhead_bench.py
 verilator --version > "$O/verilator.version" 2>&1
