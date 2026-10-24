@@ -144,7 +144,65 @@
      518.4
     ],
     "layer": "M9",
-    "insertion_ps": 250
+    "insertion_ps": 250,
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_core.u_b.g_cv.u_eA0.clk",
+      "kind": "core",
+      "xy": [
+       341.112,
+       8.71
+      ],
+      "insertion_ps": 415.62717,
+      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_core.u_b.g_cv.u_eA1.clk",
+      "kind": "core",
+      "xy": [
+       365.4,
+       8.71
+      ],
+      "insertion_ps": 415.62717,
+      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_core.u_b.g_cv.u_eA2.clk",
+      "kind": "core",
+      "xy": [
+       310.872,
+       704.282
+      ],
+      "insertion_ps": 415.62717,
+      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_core.u_b.g_cv.u_eA3.clk",
+      "kind": "core",
+      "xy": [
+       395.64,
+       704.282
+      ],
+      "insertion_ps": 415.62717,
+      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_core.u_b.g_cvb.u_eB.clk",
+      "kind": "core",
+      "xy": [
+       209.574,
+       991.992
+      ],
+      "insertion_ps": 378.75565,
+      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -226,7 +284,7 @@
      ],
      "pins_file": "cores/elemA_pins.json",
      "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
      "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
@@ -247,7 +305,7 @@
      ],
      "pins_file": "cores/elemA_pins.json",
      "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
      "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
@@ -268,7 +326,7 @@
      ],
      "pins_file": "cores/elemA_pins.json",
      "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
      "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
@@ -289,7 +347,7 @@
      ],
      "pins_file": "cores/elemA_pins.json",
      "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_ss.lib",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
      "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     },
     {
@@ -310,7 +368,7 @@
      ],
      "pins_file": "cores/elemB_pins.json",
      "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv.lef",
-     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_ss.lib",
+     "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
      "note": "163817 cells (measured (elemB_final original_physical.json)); CLOSED SS view dshead-elemB-ss-a318fdf47 (SS +91.75 / FF +19.13 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemB_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
     }
    ],
@@ -454,7 +512,7 @@
      "module": "ot_s81hd_spo",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spo_m",
-     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; SS sensitivity -70.45: re-close at SS)"
+     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"
     },
     {
      "inst": "u_spr",
@@ -947,7 +1005,7 @@
      "module": "ot_s81hd_spo",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spo_m",
-     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; SS sensitivity -70.45: re-close at SS)"
+     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"
     },
     {
      "inst": "u_spr",

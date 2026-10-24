@@ -254,7 +254,7 @@ def core(inst, view, cells, x, y, um, orient="R0"):
     return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient=orient,
                 track_offset_um=track, pins_file=f"cores/{view}_pins.json",
                 lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
-                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_ss.lib",
+                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_tt.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
                      f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed {cv} "
                      "(tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point "
@@ -311,7 +311,7 @@ SPINE_FT = [("hu", 276), ("hd", 276), ("au", 64), ("ad", 64), ("bu", 64), ("bd",
 for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
     T(tn, "ot_s81hd_spn" + ("_end" if end else ""), (SPW, 2 * TH), 60_000,
       contents=[dict(inst="u_spo", module="ot_s81hd_spo", status="reuse", kit="physical/ref_tile/s81hd_spo_m",
-                     note="CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; SS sensitivity -70.45: re-close at SS)"),
+                     note="CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"),
                 dict(inst="u_spr", module="ot_s81hd_spr", status="reuse", kit="physical/ref_tile/s81hd_spr_m4",
                      note="CLOSED s81hd_spr_m4-bb8dd356c")],
       note="spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged "
@@ -660,6 +660,8 @@ plan = dict(
                  cut_step_um=250),
     latency=dict(lanes={}),
 )
+from early_core_taps import add as add_early_core_taps
+add_early_core_taps(types["hd_tile"], root=ROOT)
 S.validate  # noqa: B018  (schema import check)
 out = HERE / "die_plan.json"
 out.write_text(json.dumps(plan, indent=1) + "\n")
