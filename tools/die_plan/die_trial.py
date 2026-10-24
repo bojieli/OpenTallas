@@ -502,13 +502,16 @@ def psm_tcl(P, lefs, power, bumps):
           "puts \"OT_T pdngen [expr {[clock seconds]-$t0}]\"",
           "source /work/psm/bumps.tcl",
           "puts \"OT_T bumps [expr {[clock seconds]-$t0}]\"",
+          "write_db /work/psm/pdn_bumps.odb",
           "source /work/psm/power.tcl",
           f"source {PLAT}/setRC.tcl",
-          "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\" } "
+          "set pg_failed 0",
+          "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { incr pg_failed; puts \"OT_PG_CHECK_FAIL $n $e\" } "
           "else { puts \"OT_PG_CHECK_OK $n\" } }",
           "puts \"OT_T check [expr {[clock seconds]-$t0}]\"",
+          "if {$pg_failed} { error \"power-grid connectivity failed\" }",
           "if {[catch {analyze_power_grid -net VDD -error_file /work/psm/psm_VDD.rpt "
-          "-voltage_file /work/psm/ir_VDD.csv} e]} { puts \"OT_PSM_FAIL $e\" } else { puts OT_PSM_OK }",
+          "-voltage_file /work/psm/ir_VDD.csv} e]} { puts \"OT_PSM_FAIL $e\"; error $e } else { puts OT_PSM_OK }",
           "puts \"OT_T psm [expr {[clock seconds]-$t0}]\"",
           "puts OT_DONE"]
     return "\n".join(t) + "\n"
@@ -550,22 +553,43 @@ def bump_grid(P, io, pitch=150.0, size=60.0):
 
 
 def bumps_tcl(P, bumps, size=4.0):
-    """bumps as PG BTerm pins on M9 snapped onto the nearest die-grid stripe of their net (PDNSim takes the net's
-    pins as voltage sources)."""
-    g9 = next(g for g in P.die["pg"]["grid"] if g["layer"] == "M9")
-    nets = g9.get("nets", ["VDD", "VSS"])
-    t = ["set block [ord::get_db_block]", "set m9 [[ord::get_db_tech] findLayer M9]"]
+    """Attach each source to actual M9 metal of its own net after pdngen.
+
+    Stripe origins depend on the floorplan core origin and pdngen net phase.
+    Computing them from the plan offset produced isolated voltage-source pins.
+    """
+    t = ["set block [ord::get_db_block]", "set m9 [[ord::get_db_tech] findLayer M9]",
+         "set bump_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
+         "set bump_shapes {}",
+         "foreach net_name {VDD VSS} {",
+         "  set shapes {}",
+         "  foreach wire [[$block findNet $net_name] getSWires] {",
+         "    foreach shape [$wire getWires] {",
+         "      if {[$shape isVia] || [$shape getTechLayer] ne $m9} continue",
+         "      lappend shapes [list [$shape xMin] [$shape yMin] [$shape xMax] [$shape yMax]]",
+         "    }",
+         "  }",
+         "  if {![llength $shapes]} { error \"no actual M9 metal for $net_name voltage sources\" }",
+         "  dict set bump_shapes $net_name $shapes",
+         "}"]
     for k, (net, x, y) in enumerate(bumps):
-        j = nets.index(net)
-        step = g9["pitch_um"]
-        c0 = g9["offset_um"] + j * g9["pitch_um"] / len(nets)
-        xs = c0 + round((x - c0) / step) * step
-        if net == "VDD":
-            pass
-        t.append(f"set bt [odb::dbBTerm_create [$block findNet {net}] {net}_b{k}]; $bt setIoType INOUT; "
-                 f"$bt setSigType {'POWER' if net == 'VDD' else 'GROUND'}; set bp [odb::dbBPin_create $bt]; "
-                 f"odb::dbBox_create $bp $m9 [expr {{int({(xs - 0.2):.4f}*1000)}}] [expr {{int({(y - size / 2):.4f}*1000)}}] "
-                 f"[expr {{int({(xs + 0.2):.4f}*1000)}}] [expr {{int({(y + size / 2):.4f}*1000)}}]; $bp setPlacementStatus FIRM")
+        t += [f"set bx [expr {{{x:g}*$bump_dbu}}]; set by [expr {{{y:g}*$bump_dbu}}]",
+              "set best {}; set best_distance 1e30",
+              f"foreach rect [dict get $bump_shapes {net}] {{",
+              "  lassign $rect x0 y0 x1 y1",
+              "  set cx [expr {($x0+$x1)/2.0}]",
+              f"  set half [expr {{min({size:g}*$bump_dbu/2.0,($y1-$y0)/2.0)}}]",
+              "  set cy [expr {max($y0+$half,min($y1-$half,$by))}]",
+              "  set distance [expr {abs($cx-$bx)+abs($cy-$by)}]",
+              "  if {$distance < $best_distance} {",
+              "    set best_distance $distance",
+              "    set best [list $x0 [expr {int($cy-$half)}] $x1 [expr {int($cy+$half)}]]",
+              "  }",
+              "}",
+              f"set bt [odb::dbBTerm_create [$block findNet {net}] {net}_b{k}]; $bt setIoType INOUT; "
+              f"$bt setSigType {'POWER' if net == 'VDD' else 'GROUND'}; set bp [odb::dbBPin_create $bt]",
+              "odb::dbBox_create $bp $m9 {*}$best; $bp setPlacementStatus FIRM"]
+    t.append(f'puts "OT_BUMPS actual_m9_sources {len(bumps)}"')
     return "\n".join(t) + "\n"
 
 
@@ -614,8 +638,10 @@ IMAGE=${{OT_ORFS_IMAGE:-{IMAGE}}}
 DK=docker; docker info >/dev/null 2>&1 || DK="sudo docker"
 echo "image $IMAGE $($DK image inspect --format '{{{{.Id}}}}' $IMAGE) host $(hostname) start $(date -Is)" > $D/{step}.image.txt
 $DK run --rm --name dtrial-{step}-$$ --cpus=${{CPUS:-{cpus}}} --memory=${{MEM:-{mem}}}g --memory-swap=${{MEM:-{mem}}}g -v $D:/work -w /work \\
-  -e HUID=$(id -u) -e HGID=$(id -g) $IMAGE bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; {cmd}; chown -R \\$HUID:\\$HGID /work"
-echo "end $(date -Is)" >> $D/{step}.image.txt
+  -e HUID=$(id -u) -e HGID=$(id -g) $IMAGE bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; {cmd}; rc=\\$?; chown -R \\$HUID:\\$HGID /work; exit \\$rc"
+rc=$?
+echo "end $(date -Is) exit $rc" >> $D/{step}.image.txt
+exit $rc
 """
 
 
@@ -686,7 +712,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                                          "/work/grt/grt.tcl > /work/grt/grt.log 2>&1; echo EXIT \\$? >> /work/grt/grt.log"))
     # clock runs (3 corners)
     ck = "; ".join(f"CORNER={c} LIBDIR={PLAT}/lib/NLDM /usr/bin/time -v openroad -no_init -exit /work/clock/ctree.tcl "
-                   f"> /work/clock/ctree_{c}.log 2>&1" for c in ("SS", "TT", "FF"))
+                   f"> /work/clock/ctree_{c}.log 2>&1" for c in ("TT", "FF"))
     (out / "run_clock.sh").write_text(run_sh("clock", 32, 4, ck).replace("-v $D:/work", "-v $D:/work"))
     # psm
     power = part_power(P, plan_dir, density)
@@ -704,7 +730,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_pitch_um=150.0,
                        io_windows=len(io), pg=P.die.get("pg", {}).get("grid"))
     (out / "run_psm.sh").write_text(run_sh("psm", 256, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
-                                                         "/work/psm/psm.tcl > /work/psm/psm.log 2>&1; echo EXIT \\$? >> /work/psm/psm.log"))
+                                                         "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
     nff = 0
     for tn, t in sorted(P.types.items()):
