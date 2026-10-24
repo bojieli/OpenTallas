@@ -12,3 +12,9 @@
     end
     always @(posedge dut.u_host.g_mu.u_rank.ck_program_loader) c_w <= c_w + p_w;
     always @(posedge clk) if (core_cyc % 250 == 0) $display("HOSTP_HB core %0d prog_rx %0d normal_rx %0d words %0d raw_pr %h", core_cyc, c_prx, c_nrx, c_w, `H.raw_pr[15:0]);
+    // fidelity check vs the whole-die BOOTOBS lines (host_rst_n / hbm_rst_n / boot_go to hub_C)
+    wire [2:0] fo = {o_host_host_rst_n_d1[0], o_host_hbm_rst_n[0], o_host_boot_go[0]};
+    reg [2:0] fo_q = 0;
+    always @(posedge clk) begin fo_q <= fo; if (fo != fo_q) $display("REPOBS core %0d host_rst_n %b hbm_rst_n %b boot_go %b", core_cyc, fo[2], fo[1], fo[0]); end
+    integer c_raw = 0; always @(posedge dut.u_host.g_mu.u_rank.ck_peer) c_raw <= c_raw + `H.raw_rx_v;
+    final $display("HOSTP_END core %0d raw_rx(peer link in) %0d prog_rx %0d normal_rx %0d words %0d", core_cyc, c_raw, c_prx, c_nrx, c_w);
