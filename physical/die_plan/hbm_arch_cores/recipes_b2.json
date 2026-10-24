@@ -1,0 +1,344 @@
+{
+ "_meta": {
+  "by": "ELEM-HBM/RECIPES 10-24",
+  "what": "recipes for B2r2 views CORE-HBM had no recipe for (or whose recipe failed), keyed by the plan module.  'reuse' cores = the d4g as-built: params = the die_r18h5.v instance (physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz, GEN die of source d34578d6f) of the plan's template quadrant (die_plan.json partition note 'as-built <inst>'); files = module closure at d34578d6f (read_at_commit: the generator reads them at source_commit, not from the tree)."
+ },
+ "ot_hbm_idx_query_static": {
+  "top": "ot_hbm_idx_query_static",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay_rf.sv",
+   "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_32x128_m1"
+  ],
+  "source": "d4g as-built die_r18h5.v instance hb_idx__q_NW (module ot_hbm_idx_query_static); files = closure of ot_hbm_idx_query_static at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "hb_idx__q_NW",
+  "macro_dirs": {
+   "ot_sram_1r1w_32x128_m1": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+  }
+ },
+ "ot_hbm_idx_vm_query_static_n12": {
+  "top": "ot_hbm_idx_vm_query_static_n12",
+  "files": [
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv"
+  ],
+  "defines": [],
+  "params": {
+   "VM_RT_EXTRA": 173
+  },
+  "macros": [],
+  "source": "d4g as-built die_r18h5.v instance hb_idx__op_NW (module ot_hbm_idx_vm_query_static_n12); files = closure of ot_hbm_idx_vm_query_static_n12 at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "hb_idx__op_NW"
+ },
+ "ot_hbm_idx_rootctl_static_am": {
+  "top": "ot_hbm_idx_rootctl_static_am",
+  "files": [
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv"
+  ],
+  "defines": [],
+  "params": {
+   "VM_RT": 75,
+   "CR_RT": 36,
+   "SEL_LAT": 40,
+   "RSTL": 1,
+   "FAN32": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance hb_idx__ctl (module ot_hbm_idx_rootctl_static_am); files = closure of ot_hbm_idx_rootctl_static_am at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "hb_idx__ctl"
+ },
+ "ot_hbm_xp_aq_tree13_fmt": {
+  "top": "ot_hbm_xp_aq_tree13_fmt",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv"
+  ],
+  "defines": [],
+  "params": {
+   "FP4": 0,
+   "MUT": 0
+  },
+  "macros": [],
+  "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "xl_NW_aqhi"
+ },
+ "ot_hgi_qw_dec": {
+  "top": "ot_hgi_qw_dec",
+  "files": [
+   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+   "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+   "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "d4g as-built die_r18h5.v instance hb_quant_NW__u_dec (module ot_hgi_qw_dec); files = closure of ot_hgi_qw_dec at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "hb_quant_NW__u_dec",
+  "ambiguous_defs_resolved": {
+   "ot_hfd_actquant_m": [
+    "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+   ],
+   "ot_hfd_qmul_l6r": [
+    "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+   ],
+   "ot_hdc_ksadd_k": [
+    "rtl/hdc/ot_hdc_prefix.sv"
+   ],
+   "ot_hdc_inc_k": [
+    "rtl/hdc/ot_hdc_prefix.sv"
+   ],
+   "ot_hdc_qmul_lat": [
+    "rtl/hdc/ot_hdc_fastfp_lat.sv"
+   ],
+   "ot_hdc_fp32_mul_lat5i": [
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+   ],
+   "ot_hdc_fp32_mul_lat": [
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+   ],
+   "ot_hdc_fp32_mul_lat4": [
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+   ],
+   "ot_hdc_kge": [
+    "rtl/hdc/ot_hdc_fastfp_lat.sv"
+   ]
+  }
+ },
+ "ot_hgi_sm_xload_cl2_ctlx": {
+  "top": "ot_hgi_sm_xload_cl2_ctlx",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PMAX": 8,
+   "RD_LAT": "64'h2e2c423e1e1c2c2a",
+   "NR": 32,
+   "LEAD": 8
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance xl_NW_ctl (module ot_hgi_sm_xload_cl2_ctlx); files = closure of ot_hgi_sm_xload_cl2_ctlx at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "xl_NW_ctl"
+ },
+ "ot_hgi_sm_xload_cl2_bfqg": {
+  "top": "ot_hgi_sm_xload_cl2_bfqg",
+  "files": [
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance xq_NW_p0_bfq0 (module ot_hgi_sm_xload_cl2_bfqg); files = closure of ot_hgi_sm_xload_cl2_bfqg at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "xq_NW_p0_bfq0"
+ },
+ "ot_hbm_sm_vm_wr_q_t_lanes4": {
+  "top": "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes4.sv",
+   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes_n.sv"
+  ],
+  "defines": [],
+  "params": {
+   "DEPTH": 4
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance smw_NW (module ot_hbm_sm_vm_wr_q_t_lanes4); files = closure of ot_hbm_sm_vm_wr_q_t_lanes4 at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "smw_NW"
+ },
+ "ot_hbm_su_programme_pslice_c5": {
+  "top": "ot_hbm_su_programme_pslice_c5",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+  ],
+  "defines": [],
+  "params": {
+   "SB": 2470
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance pgp_NW (module ot_hbm_su_programme_pslice_c5); files = closure of ot_hbm_su_programme_pslice_c5 at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "pgp_NW"
+ },
+ "ot_hbm_su_static_qcore_r13": {
+  "top": "ot_hbm_su_static_qcore_r13",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+   "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "COLLPORT": 1,
+   "RF_LOCAL": 1,
+   "PRETREE": 1,
+   "ROW_EN": 2,
+   "WDEC": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance sucore_NW (module ot_hbm_su_static_qcore_r13); files = closure of ot_hbm_su_static_qcore_r13 at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "sucore_NW",
+  "ambiguous_defs_resolved": {
+   "ot_hdc_ksadd_k": [
+    "rtl/hdc/ot_hdc_prefix.sv"
+   ]
+  }
+ },
+ "ot_hbm_su_static_cxport_ij_q": {
+  "top": "ot_hbm_su_static_cxport_ij_q",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+  ],
+  "defines": [],
+  "params": {
+   "SD": 0,
+   "SAFE_GATHER": 1
+  },
+  "macros": [],
+  "source": "d4g as-built die_r18h5.v instance cxij_NW_q (module ot_hbm_su_static_cxport_ij_q); files = closure of ot_hbm_su_static_cxport_ij_q at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "cxij_NW_q"
+ },
+ "hfd_hgi_vm_calendar_f20": {
+  "top": "hfd_hgi_vm_calendar_f20",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance calendar_NW (module hfd_hgi_vm_calendar_f20); files = closure of hfd_hgi_vm_calendar_f20 at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "calendar_NW"
+ },
+ "hfd_hgi_vms_glue_nw_t": {
+  "top": "hfd_hgi_vms_glue_nw_t",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "d4g as-built die_r18h5.v instance hb_vms_NW (module hfd_hgi_vms_glue_nw_t); files = closure of hfd_hgi_vms_glue_nw_t at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "hb_vms_NW"
+ },
+ "hfd_vms_bank_native_q0_faces": {
+  "top": "hfd_vms_bank_native_q0_faces",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance vmb_NW0 (module hfd_vms_bank_native_q0_faces); files = closure of hfd_vms_bank_native_q0_faces at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "vmb_NW0"
+ },
+ "ot_hbm_svc_vmdel_lane_n": {
+  "top": "ot_hbm_svc_vmdel_lane_n",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv"
+  ],
+  "defines": [],
+  "params": {
+   "NPC": 2
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "d4g as-built die_r18h5.v instance vmdel_NW0 (module ot_hbm_svc_vmdel_lane_n); files = closure of ot_hbm_svc_vmdel_lane_n at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "vmdel_NW0"
+ }
+}

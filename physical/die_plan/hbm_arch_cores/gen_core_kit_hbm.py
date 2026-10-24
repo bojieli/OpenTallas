@@ -184,9 +184,11 @@ def load_recipes():
     return rec
 
 
-def fetch(f, commit, dst):
+def fetch(f, commit, dst, at_commit=False):
+    """file f from the tree, else at `commit`; at_commit (recipe read_at_commit: true) always reads it at `commit`
+    (as-built source pin: the tree copy may be another version of the file)."""
     src = REPO / f
-    if src.is_file():
+    if src.is_file() and not at_commit:
         data = src.read_bytes()
     else:
         r = subprocess.run(["git", "-C", str(REPO), "show", f"{commit}:{f}"], capture_output=True)
@@ -208,6 +210,12 @@ def yosys_ports(files, top, params, defines, incdir):
     r = subprocess.run([YOSYS, "-q", "-p", script], capture_output=True, text=True)
     if r.returncode:   # yosys 0.68 -defer can assert on re-elaborated parametric modules: plain read
         r = subprocess.run([YOSYS, "-q", "-p", script.replace("read_verilog -sv -defer", "read_verilog -sv")],
+                           capture_output=True, text=True)
+    if r.returncode and params:   # yosys 0.68 hierarchy -chparam can assert (qcore_r13): chparam -set as ORFS does
+        cs = f"chparam {' '.join(f'-set {k} {v}' for k, v in params.items())} {top}; "
+        r = subprocess.run([YOSYS, "-q", "-p", script.replace("read_verilog -sv -defer", "read_verilog -sv")
+                            .replace(f"hierarchy -top {top} {ch}", cs + f"hierarchy -top {top}")
+                            .replace(f"portlist {top}", "portlist A:top")],
                            capture_output=True, text=True)
     plist = Path(f"{incdir}/portlist.txt").read_text() if Path(f"{incdir}/portlist.txt").is_file() else ""
     if r.returncode:
@@ -347,7 +355,7 @@ def main():
     srcs, local = [], []
     for f in files:
         dst = kd / "rtl" / Path(f).name
-        fetch(f, commit, dst)
+        fetch(f, commit, dst, at_commit=bool(rec.get("read_at_commit")))
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
@@ -427,7 +435,9 @@ def main():
         shutil.copyfile(TOOL / f, kd / f)
     lefs, libs = [], []
     for m in rec.get("macros", []):
-        md = REPO / "physical" / "asap7_memory_macros_v2" / m
+        md = REPO / (rec.get("macro_dirs", {}).get(m) or f"physical/asap7_memory_macros_v2/{m}")   # macro_dirs: v1 macros
+        if not (md / f"{m}.lef").is_file():
+            raise SystemExit(f"macro {m}: no LEF in {md}")
         (kd / "macros").mkdir(exist_ok=True)
         for ext in (".lef", "_tt.lib", "_ff.lib", "_ss.lib"):
             if (md / f"{m}{ext}").is_file():
