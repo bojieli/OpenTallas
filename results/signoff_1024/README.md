@@ -15,25 +15,42 @@ can't be re-signed from an ETM, so every one of them is **NEEDS RE-RUN**. 117 of
 (views were copied into s81_die_views / closed_import, or the kits live on unmerged branches such as
 `claude/a0-repack-1023`).
 
-| die | closed modules | SIGNED | NOT SIGNED | NEEDS RE-RUN | of which the last record fails on paper | not-closed plan cores (not counted) |
-|---|---|---|---|---|---|---|
-| s81 | 37 | 0 | 0 | 37 | 1 | 0 |
-| qwen_compute | 21 | 0 | 0 | 21 | 2 | 7 |
-| qwen_kvsys | 20 | 0 | 0 | 20 | 2 | 30 |
-| hbm | 55 | 0 | 0 | 55 | 2 | 189 |
-| s81_head (extra) | 3 | 0 | 0 | 3 | 0 | 1 |
-| hbm_b2r2 | 51 | 0 | 0 | 51 | 2 | 192 |
+| die | closed modules | SIGNED | NOT SIGNED | NEEDS RE-RUN | of which the last record fails on paper | paper PASS | not-closed plan cores (not counted) |
+|---|---|---|---|---|---|---|---|
+| s81 | 37 | 0 | 0 | 37 | 29 (SS 29, spread 1) | 7 | 0 |
+| qwen_compute | 21 | 0 | 0 | 21 | 16 (SS 16, spread 2) | 3 | 7 |
+| qwen_kvsys | 20 | 0 | 0 | 20 | 9 (SS 9, spread 2) | 11 | 30 |
+| hbm | 55 | 0 | 0 | 55 | 32 (SS 31, spread 2) | 23 | 189 |
+| s81_head (extra) | 3 | 0 | 0 | 3 | 1 (SS 1) | 1 | 1 |
+| hbm_b2r2 | 51 | 0 | 0 | 51 | 31 (SS 30, spread 2) | 20 | 192 |
 
-**Paper screen** of the last record of each NEEDS RE-RUN block (recorded pin-flop spread at TT/FF <= 80 ps, recorded
-SS setup / FF hold >= 0, DRC 0): 7 unique modules (9 die rows) fail it outright. Re-running their STA alone won't sign them; they need a
-re-close. All of them fail on recorded spread:
+### Paper screen of the last record
+
+Each NEEDS RE-RUN block's last record is screened against the standard:
+- recorded SS setup >= 0;
+- recorded FF hold >= 0;
+- recorded pin-flop spread at TT and FF <= 80 ps;
+- DRC 0.
+
+Of the 137 unique modules, **88 fail on paper**, 45 pass, 3 have no record and 1 is incomplete. A paper FAIL can't
+be signed by re-running STA on the same layout; the block needs a re-close.
+
+**SS setup is the main failure, and the records hide it.** 133 of the 134 closure_loop verdicts were accepted at
+**TT setup** (`acceptance.setup_corner: TT`, OWNER 2026-10-08 rule "TT setup >= 0 / FF hold >= 0; SS sensitivity").
+Their `metrics.ss_ps` field holds the TT slack, and the SS-library slack sits in `metrics.ss_sensitivity_ps`.
+AGENTS.md (2026-09-30) requires SS setup for a headline clock, so these are TT closures. The inventory reports the
+real SS value (`cl_ss_ps`) next to the closure corner value (`cl_setup_corner` / `cl_setup_ps`). Recorded SS runs from
+-2,935 ps to +392 ps; 47 modules are SS-clean on record.
+
+Seven modules also fail on recorded pin-flop spread:
 - s81: `dsdv_gunit_l5` 101.9/95.3 ps;
 - qwen_compute: `qfd_dv_lane_h_safe2` 82.4 TT, `qfd_dv_s8_station_tail1` 84.0/80.2;
 - qwen_kvsys: `qkd_kvs_ctl` 121.8/109.3, `qkd_kvs_emb` 149.9 TT;
 - hbm and B2: `ot_hbm_svc_pc_ctrl_leaf_cfg_h9b` 117.5/117.7, `ot_hgi_qdq_transport_rslice` 84.7/80.8.
 
-A paper PASS is not a sign-off. Those records also predate the uniform boundary-hold standard and the sdc_lint /
-face_guard gates.
+A paper PASS is not a sign-off either. Those records predate the uniform boundary-hold standard and the sdc_lint /
+face_guard gates. The ref_tile sign-off SDCs are Tcl programs (env-driven measured IO references), and sdc_lint's
+fail-closed vocabulary rejects that form, so a re-close should use the die-plan kit SDC form.
 
 Also note:
 - the HBM P7 and B2r2 plans re-pin the closed hard cores onto new plan tracks. Even a recovered DB would not match the

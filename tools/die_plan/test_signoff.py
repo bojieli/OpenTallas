@@ -185,3 +185,19 @@ def test_macro_lib_missing_blocks():
     rec["corners"]["ff"]["macro_missing"] = ["m_tt.lib (ff)"]
     rec = signoff.evaluate(rec)
     assert rec["verdict"] == "NOT SIGNED" and rec["checks"]["macro_libs"]["verdict"] == "FAIL"
+
+
+def test_paper_screen_and_true_ss():
+    import signoff_inventory
+    import signoff_summary
+    v = dict(ss_ps=17.77, setup_corner="tt", ss_sensitivity_ps=-295.16)
+    assert signoff_inventory.true_ss(v) == -295.16          # a TT-accepted closure is judged on its SS slack
+    assert signoff_inventory.true_ss(dict(ss_ps=5.0, setup_corner="ss")) == 5.0
+    rec = dict(cl_status="CLOSED", cl_ss_ps=-295.16, cl_setup_corner="tt", cl_setup_ps=17.77, cl_ff_ps=6.59,
+               cl_drc=0, spread_tt_ps=67.5, spread_ff_ps=59.6)
+    p = signoff_summary.paper_screen(rec)
+    assert p["verdict"] == "FAIL" and "closed at TT setup +17.77" in p["problems"][0]
+    rec.update(cl_ss_ps=10.0, spread_tt_ps=85.4)
+    assert signoff_summary.paper_screen(rec)["verdict"] == "FAIL"
+    rec.update(spread_tt_ps=50.0)
+    assert signoff_summary.paper_screen(rec)["verdict"] == "PASS"
