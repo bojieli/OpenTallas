@@ -96,6 +96,14 @@ proc fr_src {net} {
   return {}
 }
 # nets below a flop output through buffers / inverters: list of {net parity}, BFS order; collects the tree's cells
+# a moved prefix / hub flop takes its output buffer / inverter tree along (the kept copy's QN inverter); S81 g3k3 review
+# 10-24: the trees stayed where GPL had put them (next to prefix[0]'s source), so h10_r2 hub -> branch[3] ran
+# 635,266 -> INV 443,29 -> 1124,293 (~1400 um, WNS -282 ps at DPL) although the planned hop was 520 um
+proc fr_ptree {ff} {
+  set pc {}
+  fr_tree $ff pc
+  foreach c $pc { fr_put $c {*}[fr_ctr $ff] }
+}
 proc fr_tree {ff cellsVar} {
   upvar $cellsVar cells
   set o [fr_out $ff]
@@ -592,11 +600,12 @@ dict for {pfx lst} $fr_f {
   set j 0; set prev $src_xy
   foreach p $preL {
     incr j
-    if {$j == $P} { fr_put $p {*}$hub; break }
+    if {$j == $P} { fr_put $p {*}$hub; fr_ptree $p; break }
     set px [expr {int([lindex $src_xy 0] + ([lindex $hub 0] - [lindex $src_xy 0]) * $j / double($P))}]
     set py [expr {int([lindex $src_xy 1] + ([lindex $hub 1] - [lindex $src_xy 1]) * $j / double($P))}]
     set nx [list [expr {int([lindex $src_xy 0] + ([lindex $hub 0] - [lindex $src_xy 0]) * ($j + 1) / double($P))}] [expr {int([lindex $src_xy 1] + ([lindex $hub 1] - [lindex $src_xy 1]) * ($j + 1) / double($P))}]]
     fr_put $p {*}[fr_freept2 $px $py $prev $nx]
+    fr_ptree $p
     set prev [fr_ctr $p]
   }
   # after: planned hops (pre-DPL positions)
