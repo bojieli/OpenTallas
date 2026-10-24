@@ -341,6 +341,14 @@ class Graph:
                     st = int(sp.get("stages", 1))
                     if sp.get("stages_param"):
                         st = int(str(c.params.get(sp["stages_param"], st)).strip('"'))
+                    if sp.get("stages_port"):
+                        # BINDER4: latency from a constant strap input (e.g. ot_s81_land k: K + 1 edges after the last
+                        # station), stages = value + stages_add; a non-constant strap is a RULE error
+                        kb = c.ports.get(sp["stages_port"], [])
+                        if kb and all(x in ("0", "1") for x in kb):
+                            st = int("".join(reversed(kb)), 2) + int(sp.get("stages_add", 0))
+                        else:
+                            self.err.append(f"RULE_STAGES_PORT {c.path}.{sp['stages_port']}: not a constant strap")
                     res = _add_stages(up, st)
             elif k == "reducer":
                 # op or (default): fault OR tree; op and: an AND join (e.g. a link-up AND) re-emitted per sink partition
