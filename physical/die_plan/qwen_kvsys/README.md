@@ -101,3 +101,11 @@ COORD 06:33 open items + census coverage (scripts plan_v31.py / emit_v31.py / co
   (max layer use 21 %, hub_Ei M2).
 - F_DLY: the plan law gives 2, but the bit-exact bench (kv_params_v31.json F_DLY_bench) fails at T8191/T8192 with 2;
   the schedule keeps F_DLY 3 until new root/stack RTL.
+
+## v3.7s (KV-P6-SPINE, 10-23) -- north spine balance (COORD DIE-PLAN VISUAL REVIEW)
+
+`post_v37s.py` (appended to run_v37c.sh; lanes / ports / ft_slots only, never hard_cores): serdes_E.rx_flit (L2045,
+522 b) leaves the IO row at io_E5 and runs down the E corridor (hgi_EN_0..7), W along the pv_N_7 bottom band and into
+hub_Wi through hgi_WN_7, instead of W along the IO row (sys_c, io_W3) and down the W corridor. Same 12 crossings, 36
+stages (R8 phy_rx_flit alignment with L2048 kept), latency table unchanged, route 18.3 -> 16.9 mm. North W corridor
+65 % -> 57 % of the IO-row <-> hub bits, E 33 % -> 42 % (g2_columns_v37s_report.json). No other move is cycle-neutral.
