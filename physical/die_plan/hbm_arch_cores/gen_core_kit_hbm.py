@@ -426,7 +426,8 @@ def main():
     srcs, local = [], []
     for f in files:
         dst = kd / "rtl" / Path(f).name
-        fetch(f, commit, dst, at_commit=bool(rec.get("read_at_commit")))
+        fat = rec.get("files_at", {})        # per-file source pin (RECIPES2: as-built scoped closure + committed core)
+        fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
@@ -508,6 +509,10 @@ def main():
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
+    rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
+    if rst_in != rsts:                                               # output) is a data output, never an input delay
+        rsts = rst_in
+        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view))
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))

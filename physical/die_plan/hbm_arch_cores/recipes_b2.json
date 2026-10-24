@@ -1,7 +1,8 @@
 {
  "_meta": {
   "by": "ELEM-HBM/RECIPES 10-24",
-  "what": "recipes for B2r2 views CORE-HBM had no recipe for (or whose recipe failed), keyed by the plan module.  'reuse' cores = the d4g as-built: params = the die_r18h5.v instance (physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz, GEN die of source d34578d6f) of the plan's template quadrant (die_plan.json partition note 'as-built <inst>'); files = module closure at d34578d6f (read_at_commit: the generator reads them at source_commit, not from the tree)."
+  "what": "recipes for B2r2 views CORE-HBM had no recipe for (or whose recipe failed), keyed by the plan module.  'reuse' cores = the d4g as-built: params = the die_r18h5.v instance (physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz, GEN die of source d34578d6f) of the plan's template quadrant (die_plan.json partition note 'as-built <inst>'); files = module closure at d34578d6f (read_at_commit: the generator reads them at source_commit, not from the tree).",
+  "recipes2": "ELEM-HBM/RECIPES2 10-24: + 4 bankq lanes6_7_bank remainder recipes (files_at = per-file source pin: the scoped as-built closure at d34578d6f, the generated core from the tree). The 15 earlier reuse recipes were spot-checked (results/recipes_b2l.json)."
  },
  "ot_hbm_idx_query_static": {
   "top": "ot_hbm_idx_query_static",
@@ -340,5 +341,88 @@
   "source_commit": "d34578d6f",
   "read_at_commit": true,
   "asbuilt_inst": "vmdel_NW0"
+ },
+ "ot_hbm_hc_bankq_static__lanes6_7_bank": {
+  "top": "ot_hbm_hc_bankq_l67b_core",
+  "files": [
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_l67b_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv": "d34578d6f"
+  },
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_static #(.CPI(1),.CPO(1)) (die_r18h5.v hcb_NW1 (16 instances, all CPI 1 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+  "asbuilt_master": "ot_hbm_hc_bankq_static",
+  "functional_type": "bankq_lanes6_7_bank"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes6_7_bank": {
+  "top": "ot_hbm_hc_bankq_ft_l67b_core",
+  "files": [
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_ft_l67b_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "d34578d6f"
+  },
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_ft_static (no overrides) (die_r18h5.v hcb_NW2 (8 instances, no overrides)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+  "asbuilt_master": "ot_hbm_hc_bankq_ft_static",
+  "functional_type": "bankq_lanes6_7_bank"
+ },
+ "ot_hbm_hc_bankq_term_static__lanes6_7_bank": {
+  "top": "ot_hbm_hc_bankq_term_l67b_core",
+  "files": [
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_term_l67b_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv": "d34578d6f"
+  },
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_term_static #(.CPI(1),.CPO(1)) (die_r18h5.v hcb_NW7 (4 instances, all CPI 1 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+  "asbuilt_master": "ot_hbm_hc_bankq_term_static",
+  "functional_type": "bankq_lanes6_7_bank",
+  "retain_unused_input_bits": {
+   "d_xa": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ "ot_hbm_hc_bankq0_static__lanes6_7_bank": {
+  "top": "ot_hbm_hc_bankq0_l67b_core",
+  "files": [
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq0_l67b_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv": "d34578d6f"
+  },
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq0_static #(.DRLY(2),.CPO(1)) (die_r18h5.v hcb_NW0 (4 instances, all DRLY 2 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+  "asbuilt_master": "ot_hbm_hc_bankq0_static",
+  "functional_type": "bankq_lanes6_7_bank"
  }
 }
