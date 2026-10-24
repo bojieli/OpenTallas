@@ -13,6 +13,9 @@ set tb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGET_PS) : 250.0}]
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
 set tb_tol [expr {[info exists ::env(OT_TAP_TOL_PS)] ? $::env(OT_TAP_TOL_PS) : 15.0}]
+set tb_grt [expr {[info exists ::env(OT_TAP_USE_GRT_RC)] && $::env(OT_TAP_USE_GRT_RC)}]
+set tb_edit_active 0
+set tb_tag [expr {$tb_grt ? "grt_" : ""}]
 set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REPORT_ONLY)}]
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]
@@ -63,9 +66,18 @@ proc tb_rise {pin half} {
   return $a
 }
 proc tb_measure {{est 1}} {
-  global tb_blk tb_clat tb_cores tb_port_re
+  global tb_blk tb_clat tb_cores tb_port_re tb_grt tb_edit_active
   set tb_cores {}
-  if {$est} { estimate_parasitics -placement }
+  if {$est} {
+    if {$tb_grt} {
+      # Preserve route-based RC after each physical edit. Incremental GRT tracks
+      # the buffer/net additions and regenerates their guides before measuring.
+      if {$tb_edit_active} { global_route -end_incremental; set tb_edit_active 0 }
+      estimate_parasitics -global_routing
+      global_route -start_incremental
+      set tb_edit_active 1
+    } else { estimate_parasitics -placement }
+  }
   set_propagated_clock [all_clocks]
   set half [expr {[get_property [get_clocks clk] period] / 2.0}]
   set res {}
@@ -221,13 +233,13 @@ for {set it 0} {$it < 4} {incr it} {
     set bb [$bt getBBox]
     set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
     # the tree hangs off a new net; the chain runs tap port -> buf ... -> new net
-    set tree [odb::dbNet_create $tb_blk "${n}_tb${it}_tree"]
+    set tree [odb::dbNet_create $tb_blk "${n}_${tb_tag}tb${it}_tree"]
     $tree setSigType CLOCK
     foreach t [$root getITerms] { $t disconnect; $t connect $tree }
     set prev $root
     for {set b 0} {$b < $nb} {incr b} {
-      set inst [odb::dbInst_create $tb_blk $tb_master "${n}_tb${it}_d$b"]
-      set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${n}_tb${it}_n$b"]}]
+      set inst [odb::dbInst_create $tb_blk $tb_master "${n}_${tb_tag}tb${it}_d$b"]
+      set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${n}_${tb_tag}tb${it}_n$b"]}]
       if {$nxt ne $tree} { $nxt setSigType CLOCK }
       foreach t [$inst getITerms] {
         set mt [$t getMTerm]
@@ -290,7 +302,7 @@ if {[dict size $tb_clat]} {
         set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
       }
       lassign [tb_outside $it] x y
-      set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${ci}"
+      set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_${tb_tag}cb${ci}"
       incr tb_added [tb_hang $it $src $nb $tag $x $y]
       dict set tb_hung $p 1
       set todo 1
@@ -315,6 +327,12 @@ if {[llength $tb_cores]} {
   puts "OT_TAP_CORE [llength $tb_cores] core clock pins, $cw outside target +/- [format %.0f $tb_win] ps"
 }
 puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0f $lo]..[format %.0f $hi] ps (spread [format %.0f [expr {$hi - $lo}]], target [format %.0f $tgt]); empty taps [llength $tb_empty] $tb_empty"
+if {$tb_edit_active} {
+  global_route -end_incremental
+  set tb_edit_active 0
+  estimate_parasitics -global_routing
+  write_guides $::env(RESULTS_DIR)/route.guide
+}
 if {[llength $fail]} {
   # insertion ~ grows with the tree span; shrink the pitch by the overshoot ratio
   set sug [expr {$tb_pitch * ($tb_target + $tb_win) / max($hi, 1.0)}]
