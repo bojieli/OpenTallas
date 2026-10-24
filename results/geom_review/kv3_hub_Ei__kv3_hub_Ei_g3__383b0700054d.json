@@ -1,11 +1,11 @@
 {
  "element": "kv3_hub_Ei",
  "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Ei (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
- "verdict": "PASS-CONDITIONAL",
+ "verdict": "FAIL",
  "hash": "383b0700054d54a3",
- "reasons": "[10-23 20:11] [GEOM-REVIEW7] [AMENDS my 19:5x record on this hash under COORD 19:55 R4 CORRECTED (owner clock rule): tap sink counts and reach are now guidance, not gates] Geometry review unchanged (render /home/ubuntu/scratch/geom-review7-1023/hubEi/r7.png: stations on the straight/diagonal in->out lines, face regs on the windows, 81% buf/inv acceptable for transit). The grid taps (up to 5.5k sinks, 354-487-um reach) are a RISK to the face-flop spread, not a FAIL.",
- "fixes": "CTS/route gate ALLOWED (ot-run). Judge it on the owner rule: face-flop spread <= 80 at TT and FF on RC, and face-flop mean within 80 of the KV common latency 250 (KV-P6 19:56). If (a) fails, re-kit with tap_mode sinks + per-tap rsync (tap-only delta, no new render needed).",
+ "reasons": "[10-23 21:07] [GEOM-REVIEW8] [AMENDS GEOM-REVIEW7 20:11 PASS-COND on this hash: its condition (a) failed when measured] KV-P7-HUB 21:02 measured 4_cts.odb (placement RC, 23,058 face/FIRM flops). TT 257-599 ps (mean 373, spread 342), FF 206-495 (mean 301, spread 288). Both owner-rule checks FAIL: spread > 80, and the TT mean is 123 ps from the common 250. Cause, as GR7 flagged as the risk: grid taps. Tap means run 290-482 ps and tap_balance cannot pad down (0 delay cells); clk_t4 has 4,216 sinks. Geometry (stations, face windows) is unchanged and was not the failure.",
+ "fixes": "No re-run of this hash. The tap-only re-kit (clock.tap_mode sinks r250 cap1500, kit-rtl tap ports regenerated) is the fallback GR7 named. A tap-only delta needs a new REQ with the kit diff (no new render needed if outline/macros/pins are unchanged). Show the sink-tap counts and, after CTS, face-flop spread <= 80 at TT and FF with the mean within 80 of 250. Per-tap rsync in kit-rtl is a tool gap (BINDER/PLAN-TOOL): one bound reset sync is acceptable for the CTS gate if every reset landing fan-out stays <= 32.",
  "reviewer": "GEOM-REVIEW",
- "at": "2026-10-23T20:11:43-07:00",
+ "at": "2026-10-23T21:07:04-07:00",
  "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
 }
