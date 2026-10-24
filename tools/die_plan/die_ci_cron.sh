@@ -42,7 +42,8 @@ else
 fi
 MEM=$(python3 "$TOOLS/die_ci.py" job-mem hbm)          # the largest per-die job: hosts must admit it
 
-# hosts that have the run root and a repo clone (FLEET: intel2's ~/OpenTallas was moved off on 10-24)
+# hosts that have the run root and a repo clone (intel2's ~/OpenTallas is a symlink into scratch2; every run fetches
+# hub main first, so a lagging clone is fine)
 CANDS=""
 for h in intel1 intel2 epyc2; do
   ssh -o BatchMode=yes -o ConnectTimeout=10 "$h" "mkdir -p $R && git -C ~/OpenTallas rev-parse --git-dir >/dev/null 2>&1" \
@@ -59,6 +60,8 @@ ssh "$HOST" "set -e; cd ~/OpenTallas && git fetch -q origin main && \
   if [ -d $R/wt/.git ] || [ -f $R/wt/.git ]; then git -C $R/wt checkout -q --detach $SHA; \
   else git worktree add -q --detach $R/wt $SHA; fi; git -C $R/wt rev-parse HEAD" > "$LR/logs/wt.log" 2>&1 \
   || { log "$MODE $SHA: NOT RUN (worktree on $HOST failed: $(tail -1 $LR/logs/wt.log))"; exit 1; }
+# fail closed: the CI worktree must sit at the sha under test (a host clone can lag the hub: fetch above)
+[ "$(tail -1 "$LR/logs/wt.log")" = "$SHA" ] || { log "$MODE $SHA: NOT RUN (worktree on $HOST at $(tail -1 $LR/logs/wt.log), not $SHA)"; exit 1; }
 python3 "$TOOLS/die_ci.py" stage-views --views "$TOOLS/die_ci_views.json" \
   --host "$HOST" --dest "$R/views" > "$LR/logs/stage.log" 2>&1 || log "stage-views: some views not staged (see logs/stage.log)"
 # previous run of record (localhost store): deltas + G2 carry
