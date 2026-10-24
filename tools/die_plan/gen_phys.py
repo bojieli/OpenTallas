@@ -354,6 +354,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         dst = kd / "rtl" / Path(f).name
         if Path(f).resolve() != dst.resolve():
             shutil.copyfile(f, dst)
+        if Path(f).suffix in (".svh", ".vh", ".h"):     # `include headers: copied, not compiled (VERILOG_INCLUDE_DIRS)
+            continue
         srcs.append(f"/work/rtl/{Path(f).name}")
     pins = type_pins(P, tn)
     (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
@@ -400,6 +402,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
+           "export VERILOG_INCLUDE_DIRS = /work/rtl",
            "export VERILOG_DEFINES = -DSYNTHESIS",
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {w:g} {h:g}",

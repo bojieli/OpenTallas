@@ -106,3 +106,13 @@ def test_single_station_ft_slot(tmp_path):
     assert r["fail_counts"].get("merged") == 2, r
     (tmp_path / "ft_stations.txt").write_text("# slot stations in_face out_face\ns 1 S N\nt 2 N S\n")
     assert face_guard.ft_single(tmp_path / "ft_stations.txt") == {"s"}
+
+
+def test_unplanned_port_not_checked():
+    """ELEM-QK 10-24: a bound-only port (kit-rtl: extra clock role clk_*, die IO) has no planned pin -> not checked."""
+    net = NET_OK.replace("module top(clk, a, o);", "module top(clk, a, o, clk_x);").replace(
+        "input clk;", "input clk; input clk_x;").replace(".CLK(clk), .D(a[1])", ".CLK(clk_x), .D(a[1])")
+    pins = [dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0), dict(bus="o", bit=1)]
+    r = face_guard.guard(net, pins=pins)
+    assert r["verdict"] == "PASS" and r["unplanned_ports"] == ["clk_x"], r
+    assert face_guard.guard(net)["verdict"] == "FAIL"          # without the plan pins every port is checked

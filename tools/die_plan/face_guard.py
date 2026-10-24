@@ -334,11 +334,18 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=None):
     def fail(cls, b, why):
         res["fails"][cls].append(f"{b}: {why}")
 
+    want = {f"{x['bus']}[{x['bit']}]" for x in pins} if pins is not None else None
     for p in T.ports:
         if re.match(skip_re, p):
             continue
         d = T.dirs.get(p)
-        for b in _bits_of(T, p):
+        bits = _bits_of(T, p)
+        if want is not None and not any(b in want or f"{b}[0]" in want for b in bits):
+            # a port with no planned pin (kit-rtl bound-only pins: die IO io_*, extra clock roles clk_*, reset spines)
+            # is not a face register of the plan (ELEM-QK 10-24: KV hroot clk_clk_hbm, sys_c io_pad_por_n)
+            res.setdefault("unplanned_ports", []).append(p)
+            continue
+        for b in bits:
             res["checked"] += 1
             r = port_root[b]
             others = [x for x in roots_ports[r] if x != b]
