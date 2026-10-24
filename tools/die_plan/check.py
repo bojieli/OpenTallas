@@ -801,7 +801,7 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
         # Unscoped legacy entries retain their previous last-entry behavior.
         ist_last = {e["conn"][4:]: tuple(e["regs_um"][-1]) for e in ist_bus
                     if not e.get("capture") or str(e["capture"]).startswith("face bus ")}
-        ist_capture = {(e["conn"][4:], str(e["capture"]).split(".", 1)[0]): tuple(e["regs_um"][-1])
+        ist_capture = {(e["conn"][4:], str(e["capture"])): tuple(e["regs_um"][-1])
                        for e in ist_bus if e.get("capture") and not str(e["capture"]).startswith("face bus ")}
         conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
         for b in t.get("buses", []):
@@ -852,7 +852,9 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     if kind == "bus":
                         if bt is None:
                             bt = _bus_targets(P, tn)
-                        if (nm, ci) in ist_capture:
+                        if (nm, ci + "." + lp) in ist_capture:
+                            pts.append((f"station {nm} -> {ci}.{lp}", ist_capture[(nm, ci + "." + lp)]))
+                        elif (nm, ci) in ist_capture:
                             pts.append((f"station {nm} -> {ci}", ist_capture[(nm, ci)]))
                         elif nm in ist_last:
                             # R3-INTERNAL: a bus with FIRM internal stations reaches the core from its last station

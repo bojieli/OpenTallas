@@ -338,22 +338,19 @@ def place_flow(items, W, H, attract, obst=(), band=HALO, chan=HALO, parent=None,
 
 
 def free_point(p, boxes, W, H, m=4.32):
-    """nearest point to p that is not inside a hard core (m um clear of every box) and inside the outline."""
-    x, y = min(max(p[0], m), W - m), min(max(p[1], m), H - m)
-    hit = [b for b in boxes if b[0] - m < x < b[0] + b[2] + m and b[1] - m < y < b[1] + b[3] + m]
-    if not hit:
-        return (x, y)
-    best = None
-    for r in range(1, 400):
-        d = r * 8.64
-        for cx, cy in ((x + d, y), (x - d, y), (x, y + d), (x, y - d), (x + d, y + d), (x - d, y - d), (x + d, y - d), (x - d, y + d)):
-            if m <= cx <= W - m and m <= cy <= H - m and not any(b[0] - m < cx < b[0] + b[2] + m and b[1] - m < cy < b[1] + b[3] + m for b in boxes):
-                c = abs(cx - p[0]) + abs(cy - p[1])
-                if best is None or c < best[0]:
-                    best = (c, (cx, cy))
-        if best:
-            return best[1]
-    return (x, y)
+    """Nearest free rectangle boundary; a radial 8.64 grid can miss an entire narrow channel."""
+    x,y=min(max(p[0],m),W-m),min(max(p[1],m),H-m)
+    valid=lambda q: m-1e-6 <= q[0] <= W-m+1e-6 and m-1e-6 <= q[1] <= H-m+1e-6 and not any(
+        bx-m+1e-6 < q[0] < bx+bw+m-1e-6 and by-m+1e-6 < q[1] < by+bh+m-1e-6
+        for bx,by,bw,bh in boxes)
+    if valid((x,y)):return (x,y)
+    xs=sorted({m,W-m,*[v for bx,by,bw,bh in boxes for v in (bx-m,bx+bw+m)]})
+    ys=sorted({m,H-m,*[v for bx,by,bw,bh in boxes for v in (by-m,by+bh+m)]})
+    choices=[(xx,y) for xx in xs]+[(x,yy) for yy in ys]
+    free=[q for q in choices if valid(q)]
+    if not free:free=[(xx,yy) for xx in xs for yy in ys if valid((xx,yy))]
+    if not free:raise ValueError(f'no macro-free station at {p} in {W}x{H}')
+    return min(free,key=lambda q:abs(q[0]-p[0])+abs(q[1]-p[1]))
 
 
 class RelayRouter:
