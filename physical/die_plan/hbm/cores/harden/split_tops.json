@@ -15316,5 +15316,125 @@
     "#(.READERS(6),.RB(9))"
    ]
   }
+ },
+ "pg_pretree": {
+  "master": "ot_hbm_su_static_pgslice_lg__pv0",
+  "top": "ot_hbm_su_pg_pretree_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_pretree_core.sv",
+  "ports": [
+   [
+    "pt_clk",
+    "input",
+    1,
+    0
+   ],
+   [
+    "pt_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "pt_tree_cmd",
+    "input",
+    12,
+    0
+   ],
+   [
+    "pt_ro_x",
+    "input",
+    1024,
+    0
+   ],
+   [
+    "pt_ro_v",
+    "input",
+    32,
+    0
+   ],
+   [
+    "pt_tree_o",
+    "output",
+    67,
+    0
+   ],
+   [
+    "pt_fault",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hbm_su_static_pgslice_lg__pretree@pv0": {
+    "cut_bits": {
+     "inp": 1070,
+     "out": 68
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_ctl": {
+      "pt_clk": 1
+     },
+     "rst_n": {
+      "pt_rst_n": 1
+     },
+     "tree_cmd": {
+      "pt_tree_cmd": 12
+     },
+     "g_pretree_u_pt_ro_x": {
+      "pt_ro_x": 1024
+     },
+     "g_pretree_u_pt_ro_v": {
+      "pt_ro_v": 32
+     },
+     "tree_o": {
+      "pt_tree_o": 67
+     },
+     "g_pretree_u_pt_fault": {
+      "pt_fault": 1
+     }
+    },
+    "straps": {}
+   },
+   "ot_hbm_su_static_pgslice_lg__pretree@pv8": {
+    "cut_bits": {
+     "inp": 1070,
+     "out": 68
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_ctl": {
+      "pt_clk": 1
+     },
+     "rst_n": {
+      "pt_rst_n": 1
+     },
+     "tree_cmd": {
+      "pt_tree_cmd": 12
+     },
+     "g_pretree_u_pt_ro_x": {
+      "pt_ro_x": 1024
+     },
+     "g_pretree_u_pt_ro_v": {
+      "pt_ro_v": 32
+     },
+     "tree_o": {
+      "pt_tree_o": 67
+     },
+     "g_pretree_u_pt_fault": {
+      "pt_fault": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_pretree.u_pt (clk_ctl)",
+  "rtl": {
+   "u_pt": [
+    "ot_hbm_su_red_pretree_s",
+    "#(.LAT(6))"
+   ]
+  }
  }
 }

@@ -12568,6 +12568,126 @@
     }
    }
   },
+  "pg_pretree": {
+   "elab_bits": [
+    1070,
+    68
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_pretree_core.sv",
+   "master": "ot_hbm_su_static_pgslice_lg__pv0",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "pt_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "pt_rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "pt_tree_cmd",
+     "input",
+     12,
+     0
+    ],
+    [
+     "pt_ro_x",
+     "input",
+     1024,
+     0
+    ],
+    [
+     "pt_ro_v",
+     "input",
+     32,
+     0
+    ],
+    [
+     "pt_tree_o",
+     "output",
+     67,
+     0
+    ],
+    [
+     "pt_fault",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hbm_su_pg_pretree_core",
+   "type_ids": {
+    "ot_hbm_su_static_pgslice_lg__pretree__440.64x457.92": {
+     "check": "PASS",
+     "cut_bits": [
+      1070,
+      68
+     ],
+     "cut_pins": {
+      "clk_ctl": {
+       "pt_clk": 1
+      },
+      "g_pretree_u_pt_fault": {
+       "pt_fault": 1
+      },
+      "g_pretree_u_pt_ro_v": {
+       "pt_ro_v": 32
+      },
+      "g_pretree_u_pt_ro_x": {
+       "pt_ro_x": 1024
+      },
+      "rst_n": {
+       "pt_rst_n": 1
+      },
+      "tree_cmd": {
+       "pt_tree_cmd": 12
+      },
+      "tree_o": {
+       "pt_tree_o": 67
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    },
+    "ot_hbm_su_static_pgslice_lg__pretree__587.52x933.12": {
+     "check": "PASS",
+     "cut_bits": [
+      1070,
+      68
+     ],
+     "cut_pins": {
+      "clk_ctl": {
+       "pt_clk": 1
+      },
+      "g_pretree_u_pt_fault": {
+       "pt_fault": 1
+      },
+      "g_pretree_u_pt_ro_v": {
+       "pt_ro_v": 32
+      },
+      "g_pretree_u_pt_ro_x": {
+       "pt_ro_x": 1024
+      },
+      "rst_n": {
+       "pt_rst_n": 1
+      },
+      "tree_cmd": {
+       "pt_tree_cmd": 12
+      },
+      "tree_o": {
+       "pt_tree_o": 67
+      }
+     },
+     "excluded": "SHARED w/ q_su2",
+     "straps": {}
+    }
+   }
+  },
   "pgslice_side_rest": {
    "elab_bits": [
     76,

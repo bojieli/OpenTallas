@@ -2629,6 +2629,38 @@
   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
   "top": "ot_hbm_su_pg_lanes4_core"
  },
+ "ot_hbm_su_static_pgslice_lg__pretree__440.64x457.92": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_pretree_core.sv"
+  ],
+  "functional_type": "pg_pretree",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_pretree_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_pretree.type_ids[\"ot_hbm_su_static_pgslice_lg__pretree__440.64x457.92\"]",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_pretree.u_pt (clk_ctl)",
+  "top": "ot_hbm_su_pg_pretree_core"
+ },
+ "ot_hbm_su_static_pgslice_lg__pretree__587.52x933.12": {
+  "defines": [],
+  "files": [
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_pretree_core.sv"
+  ],
+  "functional_type": "pg_pretree",
+  "macros": [],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_pretree_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_pretree.type_ids[\"ot_hbm_su_static_pgslice_lg__pretree__587.52x933.12\"]",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_pretree.u_pt (clk_ctl)",
+  "top": "ot_hbm_su_pg_pretree_core"
+ },
  "ot_hbm_su_static_pgslice_lg__side_rest__440.64x457.92": {
   "defines": [],
   "files": [

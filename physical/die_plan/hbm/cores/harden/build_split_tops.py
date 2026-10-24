@@ -147,6 +147,12 @@ PIECES = {
              **{f'u_bank{k}': PG_BANK for k in range(4)}},
         straps=[(f'u_lane{k}', 'lane_id') for k in range(4)],
         src=PG_SRC + ' (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)'),
+    'pg_pretree': dict(
+        master='ot_hbm_su_static_pgslice_lg__pv0', top='ot_hbm_su_pg_pretree_core',
+        masters=['ot_hbm_su_static_pgslice_lg__pv0', 'ot_hbm_su_static_pgslice_lg__pv8'],
+        pieces=lambda n, m: {'ot_hbm_su_static_pgslice_lg__pretree@' + m[-3:]: (g.find_paths(n, m, r'red_pretree_s'), [])},
+        rtl={'u_pt': ('ot_hbm_su_red_pretree_s', '#(.LAT(6))')}, straps=[],
+        src='rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_pretree.u_pt (clk_ctl)'),
 }
 
 
@@ -227,6 +233,7 @@ def recipes(a):
         pw = {p[0]: p for p in ports}
         tmap, checks = {}, []
         for pm, rec in v['pieces'].items():
+            pm = pm.split('@')[0]          # same plan module cut from two masters (pretree pv0 / pv8: identical)
             cp = cut[pm][pm]
             ci = sum(p[2] for p in cp if p[1] == 'input'); co = sum(p[2] for p in cp if p[1] == 'output')
             if rec.get('cut_to_canonical') is None:
