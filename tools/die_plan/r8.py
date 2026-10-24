@@ -87,9 +87,12 @@ def is_async(m):
 def bus_key(g, m, bus):
     """the as-built bus a member belongs to: `part` = every input of one sink leaf from one source partition
     (BINDER2's landing group), `leaf` = from one source LEAF (one source module's valid + data + forwarded bits)."""
+    # bus_sub (optional, set by a die's bus-group prep, e.g. KV r8_invariant_split.py): pins of one source leaf whose
+    # as-built relative offset is NOT the same in every instance of the sink type were never one functional bus
+    sub = (m["bus_sub"],) if m.get("bus_sub") else ()
     if bus == "leaf":
-        return (g["sink"], g["src_part"], m["source"].rpartition(".")[0])
-    return (g["sink"], g["src_part"])
+        return (g["sink"], g["src_part"], m["source"].rpartition(".")[0]) + sub
+    return (g["sink"], g["src_part"]) + sub
 
 
 def nodes(bg, bus="part"):

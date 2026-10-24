@@ -21714,8 +21714,8 @@
        337.721
       ],
       [
-       285.12,
-       561.6
+       432.0,
+       414.72
       ]
      ]
     },
@@ -21930,6 +21930,9 @@
     "layer": "M9",
     "insertion_ps": 250,
     "insertion_tol_ps": 40,
+    "tap_mode": "sinks",
+    "tap_radius_um": 250.0,
+    "tap_max_sinks": 1500,
     "taps": [
      {
       "name": "glue",

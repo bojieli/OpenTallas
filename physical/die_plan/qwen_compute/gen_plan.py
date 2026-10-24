@@ -1381,7 +1381,22 @@ def materialize(P):
                 s["order"] = g["order"]
         P.types[tn]["ft_slots"].append(s)
     stagger_coll_ft_stations(P)
+    sink_anchored_taps(P)
     return ports, lanes
+
+
+# QC-P6-FTC 10-23 (GEOM-REVIEW7 18:19, coll_ftc g3g: the 2x2 R4 grid taps sat 366-456 um from their sinks and the one
+# centre u_rst_sync was a clock sink ~450 um from every tap -> 524.9 ps source latency, 324 ps setup skew).  The coll
+# feedthrough types take sink-anchored taps (tools/die_plan/taps.py, KV-P6-TAP: radius 250 um / cap 1,500 planned
+# sinks, k-medians of face registers + ft stations); with > 1 tap gen_rtl gives every tap its own reset synchroniser,
+# placed FIRM at the tap (reset_taps.tcl), so no clock or reset sink is > ~250 um from its root.
+SINK_TAP_TYPES = ("coll_ftc",)
+
+
+def sink_anchored_taps(P, radius=250.0, cap=1500):
+    for tn in SINK_TAP_TYPES:
+        if tn in P.types:
+            P.types[tn]["clock"].update(tap_mode="sinks", tap_radius_um=radius, tap_max_sinks=cap)
 
 
 def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
@@ -1410,19 +1425,36 @@ def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
             ci, co = sum(gi["window_um"]) / 2, sum(s["out_window_um"]) / 2
             fp = {"E": lambda c: (W, c), "W": lambda c: (0.0, c), "N": lambda c: (c, H), "S": lambda c: (c, 0.0)}
             a, b = fp[s["in_face"]](ci), fp[s["out_face"]](co)
-            best = None
+            # QC-P6-FTC 10-23 (GEOM-REVIEW6 17:44 / 7 18:19: 240 of dr_o_dr_wi's 521 bits had an out-box spanning the
+            # keep-out although the box to the window CENTRE was clear): test each hop against the whole pin window
+            # (both window ends), i.e. against every bit's hop box, not the centre bit's.
+            ae = [fp[s["in_face"]](c) for c in gi["window_um"]]
+            be = [fp[s["out_face"]](c) for c in s["out_window_um"]]
             nx, ny = int(W / step), int(H / step)
-            for ix in range(1, nx):
-                for iy in range(1, ny):
-                    x, y = ix * step, iy * step
-                    h1 = abs(x - a[0]) + abs(y - a[1])
-                    h2 = abs(x - b[0]) + abs(y - b[1])
-                    if h1 > ST_LEN or h2 > ST_LEN or hits(a, (x, y)) or hits((x, y), b):
-                        continue
-                    crowd = min((abs(x - u) + abs(y - v) for u, v in taken), default=1e9)
-                    key = (crowd < site_sep, h1 + h2, abs(h1 - h2))
-                    if best is None or key < best[0]:
-                        best = (key, (round(x, 3), round(y, 3)))
+
+            def search(strict):
+                best = None
+                for ix in range(1, nx):
+                    for iy in range(1, ny):
+                        x, y = ix * step, iy * step
+                        h1 = abs(x - a[0]) + abs(y - a[1])
+                        h2 = abs(x - b[0]) + abs(y - b[1])
+                        if strict:
+                            m1 = max(abs(x - p[0]) + abs(y - p[1]) for p in ae + [a])
+                            m2 = max(abs(x - p[0]) + abs(y - p[1]) for p in be + [b])
+                            bad = (m1 > ST_LEN or m2 > ST_LEN or any(hits(p, (x, y)) for p in ae)
+                                   or any(hits((x, y), p) for p in be))
+                        else:
+                            bad = h1 > ST_LEN or h2 > ST_LEN or hits(a, (x, y)) or hits((x, y), b)
+                        if bad:
+                            continue
+                        crowd = min((abs(x - u) + abs(y - v) for u, v in taken), default=1e9)
+                        key = (crowd < site_sep, h1 + h2, abs(h1 - h2))
+                        if best is None or key < best[0]:
+                            best = (key, (round(x, 3), round(y, 3)))
+                return best
+            # whole-window test first; a slot with no such site keeps the centre-bit test (pre-10-23-18:19 sites)
+            best = search(True) or search(False)
             if best is None:
                 print(f"stagger_coll_ft_stations: {tn}.{s['name']}: no site keeps both hops off the tap; tool route kept")
                 continue

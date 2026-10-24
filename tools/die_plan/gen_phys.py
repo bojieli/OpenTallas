@@ -28,6 +28,7 @@ import shutil
 from pathlib import Path
 
 import schema as S
+import taps as T
 from schema import DIE_PART
 
 CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
@@ -177,7 +178,23 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
-FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
+FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
+# COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
+# keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
+# min input delay (hold) of every partition input vs vclk (= budgeted insertion): neighbour launch at ins - tol
+# (-40 ps) + min clk-to-q + abutted wire (~+40 ps) -> 0 ps
+HOLD_IN_MIN_PS = 0.0
+
+
+# COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
+# the sender (clk -> vclk: out ports) and the receiver (vclk -> clk: in ports); clk -> clk keeps the full value.
+UNC_SPLIT = 0.5
+
+
+def _tap_cap(t):
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks for sink-anchored taps, else 3000 (COORD 10-23)."""
+    ck = t.get("clock", {})
+    return int(ck.get("tap_max_sinks", 1500)) if ck.get("tap_mode") == "sinks" else 3000
 
 
 def sdc(P, tn, pins):
@@ -200,6 +217,11 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
+           f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup {t_lib(UNC_SPLIT * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
            f"set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {{^({'|'.join(cks)})$}}]\n"
            f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n")
@@ -207,6 +229,10 @@ def sdc(P, tn, pins):
         out += (f"# ft slots: hop share {FT_HOP_IN_SHARE:g} T at the face, the rest is the last station segment\n"
                 f"set_input_delay {(1 - FT_HOP_IN_SHARE) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+    # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
+    # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
+    # short clk-to-q + abutted wire, i.e. ~at the budgeted insertion: min input delay HOLD_IN_MIN_PS on every input
+    out += (f"set_input_delay -min {t_lib(HOLD_IN_MIN_PS):.4f} -clock vclk $non_clk_in\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -311,7 +337,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
-           "export HOLD_SLACK_MARGIN = 0",
+           # FF hold margin over the TT kit corner (CP1 r6: FF seam hold 8 ps worse than TT)
+           "export HOLD_SLACK_MARGIN = 15",
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
@@ -322,6 +349,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
+           f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
@@ -334,7 +363,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
@@ -347,7 +376,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
                signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
-                          insertion_tol_ps=P.clock["insertion_tol_ps"]),
+                          insertion_tol_ps=P.clock["insertion_tol_ps"],
+                          # one clock port per tap (snapped; sink-anchored taps carry their planned sinks)
+                          tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
+                          taps=(T.report(P, tn)["taps"] if t.get("clock", {}).get("tap_mode") == "sinks" else
+                                [dict(name=n, xy=[x, y]) for n, x, y in S.tap_grid(P, tn)]),
+                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          uncertainty_split=UNC_SPLIT),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")

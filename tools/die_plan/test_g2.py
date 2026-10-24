@@ -321,3 +321,77 @@ def test_sdc_units_match_liberty():
         for f in ("constraint.sdc", "sta_die.tcl"):
             t = (Path(d) / "die" / f).read_text()
             assert abs(float(re.search(r"-period ([0-9.]+)", t).group(1)) - float(Q.die["period_ps"])) < 1e-3, f
+
+
+def test_per_tap_reset_synchronisers():
+    """KV-P5 10-23: a multi-tap type gets one kept synchroniser per tap; every station / boundary flop (and a lane-source
+    epoch) takes one of them, never a tap-0-only reset; the kit gets reset_taps.tcl sourced from face_flops.tcl."""
+    import copy
+    import re
+    import shutil
+    import subprocess
+    import gen_rtl
+    P = schema.Plan(PAIR)
+    n = len(schema.tap_grid(P, "fa"))
+    assert n > 2
+    with tempfile.TemporaryDirectory() as d:
+        gen_rtl.write_rtl(copy.deepcopy(PAIR), d)
+        mod = P.types["fa"]["module"]
+        v = (Path(d) / f"{mod}.sv").read_text()
+        assert all(f"ot_dp_rsync_s2 u_rsync_t{i} " in v for i in range(n)) and "u_rst_sync" not in v
+        rs = re.findall(r"ot_dp_st #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
+        assert rs and set(rs) == {f"rst_n_t{i}" for i in range(min(n, len(rs)))}   # round-robin over the tap syncs
+        cells = Path(d) / "ot_dp_cells.sv"
+        if shutil.which("yosys"):
+            top = Path(d) / "t.sv"
+            top.write_text("module t(input wire clk, input wire a, output wire y0, output wire y1);\n"
+                           "  ot_dp_rsync_s2 u0(.clk(clk), .async_rst_n(a), .sync_rst_n(y0));\n"
+                           "  ot_dp_rsync_s2 u1(.clk(clk), .async_rst_n(a), .sync_rst_n(y1));\nendmodule\n")
+            r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
+                               capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
+    ff = (HERE / "face_flops.tcl").read_text()
+    assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
+
+
+def test_sink_anchored_taps_carry_sinks():
+    """KV-P6 10-23 (GEOM-REVIEW6 17:09: 11 of 20 grid taps empty): clock.tap_mode 'sinks' puts every tap at FIRM-planned
+    sinks (face registers, ft stations) within clock.tap_radius_um and <= clock.tap_max_sinks; no empty tap; the RTL
+    ports, kit pins, cap and budget follow the same list."""
+    import copy
+    import gen_phys
+    import taps
+    raw = copy.deepcopy(PAIR)
+    ck = raw["partition_types"]["fa"].setdefault("clock", {})
+    ck.update(tap_mode="sinks", tap_radius_um=120.0, tap_max_sinks=40)
+    P = schema.Plan(raw)
+    sinks = taps.planned_sinks(P, "fa")
+    tl = taps.sink_taps(P, "fa")
+    assert sinks and tl and tl[0][0] == "clk"
+    assert sum(t[3] for t in tl) == len(sinks) and all(t[3] > 0 for t in tl)            # no empty tap
+    assert all(t[4] <= 120.0 and t[3] <= 40 for t in tl) or len(tl) >= len(sinks)
+    assert [n for n, _, _ in schema.tap_grid(P, "fa")] == [t[0] for t in tl]
+    w, h = raw["partition_types"]["fa"]["outline_um"]
+    assert all(0 < x < w and 0 < y < h for _, x, y in schema.tap_grid(P, "fa"))
+    assert schema.tap_pitch(P, "fa") == 240.0
+    with tempfile.TemporaryDirectory() as d:
+        gen_phys.write_type_kit(P, "fa", d, [])
+        cfg = (Path(d) / "fa" / "config.mk").read_text()
+        assert "OT_TAP_MAX_SINKS = 40" in cfg
+        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())
+        assert bud["clock"]["tap_mode"] == "sinks" and len(bud["clock"]["taps"]) == len(tl)
+        assert all(t["planned_sinks"] > 0 for t in bud["clock"]["taps"])
+
+
+def test_tap_balance_to_plan_insertion_and_seam_uncertainty_once():
+    """KV-P5 17:34: tap trees balance to the plan insertion (OT_TAP_TARGET_PS), not the slowest local tree; COORD 16:58:
+    the kit SDC counts the seam uncertainty once (half on the sender clk->vclk, half on the receiver vclk->clk)."""
+    import gen_phys
+    tb = (HERE / "tap_balance.tcl").read_text()
+    assert "set tgt $tb_target" in tb and "empty taps" in tb
+    P = schema.Plan(PAIR)
+    s = gen_phys.sdc(P, "fa", gen_phys.type_pins(P, "fa"))
+    half = gen_phys.t_lib(gen_phys.UNC_SETUP_PS / 2)
+    assert f"-from [get_clocks vclk] -to [get_clocks clk] -setup {half:.4f}" in s
+    assert f"-from [get_clocks clk] -to [get_clocks vclk] -setup {half:.4f}" in s
