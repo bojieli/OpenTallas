@@ -440,6 +440,11 @@ def main():
                                      + bench_top(a.master, bmap, kit))
     bmap['kit'] = str(Path(kit).resolve().relative_to(ROOT)) if Path(kit).resolve().is_relative_to(ROOT) else str(kit)
     bmap['r3_internal'] = R3LOG if R3 else None
+    # S81-P9-RTL: frame-internal latencies the die compiler / TOK must add to the plan lane table (die_plan latency lists
+    # lanes only: an xo lane's cycles are its 2 boundary flops; the source frame's own x_i0 -> xo_o0 forward is internal)
+    bmap['latency_edges'] = dict(x_i0_to_xo_o0=2 if R3 else 1, x_i0_to_xo_o0_was=1,
+                                 seam_K_plus_1=X + 1, note='seams (frame_int) unchanged; x arrival at chain position j '
+                                 '(0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents')
     Path(a.map).write_text(json.dumps(bmap, indent=1) + '\n')
     for ln in R3LOG:
         print(ln)

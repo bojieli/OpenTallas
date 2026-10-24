@@ -417,5 +417,11 @@
   "r2 (h) u_lpl_19_w: u_y_rt_20b_4 (dsfd_rly_63_WS, sole load) folded into the writer station u_lpl_19_w.u_y_w",
   "r2 (h) u_lpl_2_w: u_y_rt_22a_2 (dsfd_rly_63_NS, sole load) folded into the writer station u_lpl_2_w.u_y_w",
   "r0 (f) u_xo0..3 -> u_y_xo<j>_0 -> u_y_xo<j>_1 (x_i0 -> xo_o0: 2 edges, was 1); xok removed"
- ]
+ ],
+ "latency_edges": {
+  "x_i0_to_xo_o0": 2,
+  "x_i0_to_xo_o0_was": 1,
+  "seam_K_plus_1": 3,
+  "note": "seams (frame_int) unchanged; x arrival at chain position j (0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents"
+ }
 }
