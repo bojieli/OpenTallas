@@ -276,14 +276,21 @@ def test_kit_places_content_macros(tmp_path):
     t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
                                              origin_um=[17.28, 25.92], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
-                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m.lib")]
     P = schema.Plan(raw)
     kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    assert (kd / "face_keep.tcl").is_file()
+    assert (kd / "face_keep_release.tcl").is_file()
     mp = (kd / "macro_place.tcl").read_text()
     assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
     assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
     cfg = (kd / "config.mk").read_text()
     assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["hard_cores"][0]["lib"]
+    with pytest.raises(ValueError, match="LEF but no timing liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
+    assert not (tmp_path / "missing_lib").exists()
+    t["hard_cores"][0]["lib"] = "m.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
