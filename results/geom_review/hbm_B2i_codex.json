@@ -1,0 +1,12 @@
+{
+ "verdict": "BLOCKED for q_sm partition routes; die candidate PASS-CONDITIONAL",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/codex-hbm/B2i_cores.png"
+ ],
+ "findings": [
+  "Viewed hub/root/SM. Hub has34.56um face bands and17.28um channels; >1mm core bits81%\u219247.5%, >2mm65%\u219214.2%; explicit macro-free relay chains now cover long legs.",
+  "Root stack moved above straight FT corridor with34.56um outer bands and17.28um core channels.",
+  "SM horizontal row channel17.28um exists but column abutments still lack tracks for2069-bit dual-half broadcast. B2j successor adds103.68um column channels (2592 usable M4/M6 tracks at60%); no B2i q_sm route allowed.",
+  "SM wrapper/top connectivity and RTL realization of internal station cycles remain open, not signoff."
+ ]
+}

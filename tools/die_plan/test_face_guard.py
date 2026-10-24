@@ -83,3 +83,68 @@ def test_yosys_keep_attributes_prevent_merges():
     r = face_guard.guard(_synth(bare), skip_re=r"^(clk|rst_n)$")
     assert r["verdict"] == "FAIL", r
     assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))
+
+
+def test_kit_keeps_face_registers_through_eliminate_dead_logic():
+    """CP1-R10 r10b: ORFS eliminate_dead_logic (synth_odb.tcl) deleted 120 unused-q face flops after Yosys kept them:
+    the kit sets dont_touch on the boundary cells around that step and guards the 1_synth.odb netlist too."""
+    import json
+    import gen_phys
+    import schema
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "src", d, [])
+        cfg = (kd / "config.mk").read_text()
+        assert "export PRE_SYNTH_TCL = /work/face_keep.tcl" in cfg and "export POST_SYNTH_TCL = /work/face_keep_release.tcl" in cfg
+        assert "set_dont_touch" in (kd / "face_keep.tcl").read_text()
+        assert "unset_dont_touch" in (kd / "face_keep_release.tcl").read_text()
+    assert "face_guard_odb.json" in gen_phys.RUN_KIT and "1_synth.odb" in gen_phys.RUN_KIT
+
+NET_FT1 = r"""
+module top(clk, ft0_i, ft0_o, ft1_i, ft1_o);
+  input clk; input [1:0] ft0_i; output [1:0] ft0_o; input ft1_i; output ft1_o;
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft0_s0.q[0]$_DFF_P_  (.CLK(clk), .D(ft0_i[0]), .QN(ft0_o[0]));
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft0_s0.q[1]$_DFF_P_  (.CLK(clk), .D(ft0_i[1]), .QN(ft0_o[1]));
+  DFFHQNx1_ASAP7_75t_R \u_ft_ft1_s0.q[0]$_DFF_P_  (.CLK(clk), .D(ft1_i), .QN(ft1_o));
+endmodule
+"""
+
+
+def test_one_station_ft_slot_shares_its_register(tmp_path):
+    """ELEM-S81 10-24: a 1-station ft slot's single station register is both its in- and out-face register."""
+    assert face_guard.guard(NET_FT1)["verdict"] == "FAIL"                       # without the slot table: merged
+    r = face_guard.guard(NET_FT1, ft1={"ft0", "ft1"})
+    assert r["verdict"] == "PASS" and r["ok"] == 6 and r["ft1_stations"] == 3, r
+    r = face_guard.guard(NET_FT1, ft1={"ft0"})                                 # ft1 has 2 stations by plan -> merged
+    assert r["fail_counts"] == {"merged": 2}, r
+    (tmp_path / "ft_stations.txt").write_text("# slot stations in out\nft0 1 S W\nft1 2 S W\n")
+    assert face_guard.read_ft1(tmp_path / "ft_stations.txt") == {"ft0"}
+    cross = NET_FT1.replace(".QN(ft0_o[1])", ".QN(_x_)").replace(".D(ft0_i[1])", ".D(ft0_i[1])")
+    assert face_guard.guard(cross, ft1={"ft0", "ft1"})["verdict"] == "FAIL"
+
+
+def test_portless_type_passes_with_empty_pin_table():
+    net = "module top(clk);\n  input clk;\nendmodule\n"
+    assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
+    assert face_guard.guard(net)["verdict"] == "FAIL"
+
+
+def test_early_core_clock_ports_are_not_data_boundaries():
+    net = NET_OK.replace("top(clk, a, o);", "top(clk, clk_c0, clk_c4, a, o);")
+    net = net.replace("input clk;", "input clk; input clk_c0; input clk_c4;")
+    pins = [dict(bus=b, bit=i) for b in ("a", "o") for i in range(2)]
+    r = face_guard.guard(net, pins=pins)
+    assert r["verdict"] == "PASS" and r["checked"] == 4 and r["ok"] == 4, r
+
+
+def test_native_scalar_pins_and_global_reset():
+    net = r"""module top(clk, rst_n, a, o);
+input clk; input rst_n; input a; output o;
+wire q; wire nq;
+DFFHQNx1_ASAP7_75t_R u_bin_a_q (.CLK(clk), .D(a), .QN(q));
+DFFHQNx1_ASAP7_75t_R u_bout_o_q (.CLK(clk), .D(q), .QN(nq));
+INVx3_ASAP7_75t_R out_inv (.A(nq), .Y(o));
+endmodule
+"""
+    r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
+    assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r

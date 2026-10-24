@@ -1,0 +1,77 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M8": {
+   "resource": 533848698,
+   "demand": 35261,
+   "usage_pct": 0.01,
+   "overflow": 0
+  },
+  "M9": {
+   "resource": 533847487,
+   "demand": 25441,
+   "usage_pct": 0.0,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 594288.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {},
+ "pin_access_done": false,
+ "reach": {
+  "clk": {
+   "max_um": 21198.3,
+   "p90_um": 15173.7,
+   "taps": 980
+  },
+  "rst": {
+   "max_um": 18632.2,
+   "p90_um": 14921.2,
+   "taps": 88
+  }
+ },
+ "done": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.s81.dense_component_program.v1",
+  "scope": "XS4_FRAME_CAP_COMPONENT_ONLY",
+  "full_stage": false,
+  "full_token": false,
+  "stream_words": 80,
+  "calendar_rows": 90,
+  "issuer_go": 323,
+  "calendar_launch": 103,
+  "fixed_retire": 233,
+  "off": 37,
+  "xs_tag": 0,
+  "frame_operation_tag": 1,
+  "gather_parity": 0,
+  "cycles": 2905,
+  "calibrated_common_shift_model": 321,
+  "calendar_compiler_sha256": "5201899a649f081b53d46e82ba9454b1e0b21d89c0ada371df1b5d7d1bba8c40",
+  "stream_stall_edges": 19,
+  "input_boundary": "golden-quantised actual checkpoint x at XS gather pins",
+  "meta_sha256": "cf3e66c90d29a42ed4020171270c98d35df9e6f881d099217cfc9e0177189d2a",
+  "capture_map_sha256": "143965f2001b90b69a9fb39a852d9289efe82924feabfab1e8708415659a15aa"
+}

@@ -28,11 +28,11 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - Evidence is committed, source-pinned records.
 - Failed verdicts are never overwritten.
 - Clock and uncertainty constraints are never relaxed without pricing the change.
-- Sign-off corners (user decision, 2026-09-30):
-  - A headline clock frequency must close setup at the SS corner and hold at the FF corner, under the 60 ps setup / 25 ps hold uncertainty policy.
-  - TT closures are pathfinding evidence only, labelled as TT.
-  - Memory macros are checked at SS with their own clk→q; results/uarch/v41_rom_depth_study.json has the ROM macro figures.
-- Clock target (user decision, 2026-09-30): 1.2 GHz (0.833 ns) at SS; the V4.1 ROM uses 4096-row macros, 2 per element slot. Bottleneck blocks are pipelined or parallelised to meet it, and each added latency cycle is reported to the model.
+- Sign-off corners (owner, restated 2026-10-24; supersedes the 2026-09-30 SS rule):
+  - Timing closes at the TYPICAL (TT) corner: setup at TT, hold at FF, under the 60 ps setup / 25 ps hold uncertainty policy and pin-flop spread <= 80 ps. Never use SS for closure or sign-off.
+  - SS numbers may be reported for information only; they never gate a block, a die or a lever.
+  - Memory macros are checked at TT with their own clk->q; results/uarch/v41_rom_depth_study.json has the ROM macro figures.
+- Clock target (user decision, 2026-09-30; corner per the rule above): 1.2 GHz (0.833 ns) at TT; the V4.1 ROM uses 4096-row macros, 2 per element slot. Bottleneck blocks are pipelined or parallelised to meet it, and each added latency cycle is reported to the model.
 - Clock domains (root, 2026-09-30, from the measured FP32 add: 3.31 ns per add at LAT 3 against ~7 ns at the 8–9 stages 1.2 GHz needs):
   - The streaming domain runs at 1.2 GHz: ROM field and elements, index scan, attention tiles, links, the HBM service.
   - The serial-chain domain runs at 0.9 GHz (3:4) on the LAT-3 FP32 add: SU, SFU, softplus, Sinkhorn, reducers.
@@ -54,7 +54,7 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
   - passes the hub routing-layer check;
   - is adopted only if the model prices it at 1% or more of per-user rate.
 - No numerical, performance or place-and-route risk (user, 2026-10-01):
-  - a lever is adopted only after its RTL measurement confirms a gain, and any new hardware closes at SS/FF in context. A lever that measures slower, or fails to close, is rejected rather than tuned.
+  - a lever is adopted only after its RTL measurement confirms a gain, and any new hardware closes at TT setup / FF hold in context. A lever that measures slower, or fails to close, is rejected rather than tuned.
   - a contract change (class C) needs the pre-committed PPL/MMLU rule plus a numerical-stability check: no NaN/Inf, no FP8 saturation beyond the current contract's, and error and selection-flip rates within the noise floor across depth and context.
   - Norm-after-matvec, rejected 2026-09-27, is now under that check (stream QC-NAM). It is adopted only on PASS.
 - The GPU-organised HBM ablation takes only what a real GPU generation or its software stack has (register and TMEM-style epilogues, fused all-reduce plus norm, in-switch reduction, collective overlap). The HBM accelerator may adopt any exact, priced improvement, including ones first developed for the ROM accelerator.

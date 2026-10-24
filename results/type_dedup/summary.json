@@ -1,0 +1,148 @@
+{
+ "schema": "opentallas.type_dedup.summary.v1",
+ "date": "2026-10-24",
+ "plans_from": "origin/main @8a5d1f3dab physical/die_plan/<die>/die_plan.json (copies; live plans untouched)",
+ "command": "python3 tools/die_plan/dedup.py apply PLAN --fix-order --out-plan COPY/die_plan.json (bound-RTL gate: PLANDIR/bind/bound_r8/rtl); check.py COPY [--completeness]",
+ "rows": [
+  {
+   "die": "s81",
+   "types_before": 174,
+   "types_after": 161,
+   "reordered_ports": 83,
+   "touched_types": 26,
+   "verify_exact": true,
+   "g0_before": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 1105
+   },
+   "g0_after": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 1067
+   },
+   "g0c_before": {
+    "verdict": "FAIL",
+    "errors": 91,
+    "warnings": 1014
+   },
+   "g0c_after": {
+    "verdict": "FAIL",
+    "errors": 84,
+    "warnings": 983
+   }
+  },
+  {
+   "die": "qwen_compute",
+   "types_before": 56,
+   "types_after": 56,
+   "reordered_ports": 0,
+   "touched_types": 0,
+   "verify_exact": true,
+   "g0_before": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 88
+   },
+   "g0_after": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 88
+   },
+   "g0c_before": {
+    "verdict": "FAIL",
+    "errors": 4,
+    "warnings": 84
+   },
+   "g0c_after": {
+    "verdict": "FAIL",
+    "errors": 4,
+    "warnings": 84
+   }
+  },
+  {
+   "die": "qwen_kvsys",
+   "types_before": 49,
+   "types_after": 49,
+   "reordered_ports": 0,
+   "touched_types": 0,
+   "verify_exact": true,
+   "g0_before": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 1811
+   },
+   "g0_after": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 1811
+   },
+   "g0c_before": {
+    "verdict": "FAIL",
+    "errors": 22,
+    "warnings": 1789
+   },
+   "g0c_after": {
+    "verdict": "FAIL",
+    "errors": 22,
+    "warnings": 1789
+   }
+  },
+  {
+   "die": "qwen_kvsys plan-only (R8 FAIL)",
+   "types_before": 49,
+   "types_after": 45,
+   "reordered_ports": 0,
+   "touched_types": 0,
+   "verify_exact": true,
+   "g0_before": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 1811
+   },
+   "g0_after": {
+    "verdict": "FAIL",
+    "errors": 7,
+    "warnings": 1662
+   },
+   "g0c_before": {
+    "verdict": "FAIL",
+    "errors": 22,
+    "warnings": 1789
+   },
+   "g0c_after": {
+    "verdict": "FAIL",
+    "errors": 29,
+    "warnings": 1640
+   }
+  },
+  {
+   "die": "hbm",
+   "types_before": 60,
+   "types_after": 60,
+   "reordered_ports": 0,
+   "touched_types": 0,
+   "verify_exact": true,
+   "g0_before": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 516
+   },
+   "g0_after": {
+    "verdict": "PASS",
+    "errors": 0,
+    "warnings": 516
+   },
+   "g0c_before": {
+    "verdict": "FAIL",
+    "errors": 121,
+    "warnings": 395
+   },
+   "g0c_after": {
+    "verdict": "FAIL",
+    "errors": 121,
+    "warnings": 395
+   }
+  }
+ ]
+}

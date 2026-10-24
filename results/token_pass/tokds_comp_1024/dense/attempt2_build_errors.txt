@@ -1,0 +1,19 @@
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3494:5: Cannot find file containing module: 'ot_pl_land_reset_forest3'
+ 3494 |     ot_pl_land_reset_forest3 #(.DEPTH(6), .LEAVES(LPR_LEAVES_r0), .ROOT_LOADS(3)) u_lpr_r0 (.ck(ck_r0), .d(lpr_root), .q(lpr_r0_leaves));  
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+--
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3496:5: Cannot find file containing module: 'ot_pl_land_reset_forest3'
+ 3496 |     ot_pl_land_reset_forest3 #(.DEPTH(6), .LEAVES(LPR_LEAVES_r1), .ROOT_LOADS(3)) u_lpr_r1 (.ck(ck_r1), .d(lpr_root), .q(lpr_r1_leaves));  
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3498:5: Cannot find file containing module: 'ot_pl_land_reset_forest3'
+ 3498 |     ot_pl_land_reset_forest3 #(.DEPTH(6), .LEAVES(LPR_LEAVES_r2), .ROOT_LOADS(3)) u_lpr_r2 (.ck(ck_r2), .d(lpr_root), .q(lpr_r2_leaves));  
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3501:5: Cannot find file containing module: 'ot_pl_land_vector_reset_w'
+ 3501 |     ot_pl_land_vector_reset_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_r0), .rsi(lpr_r0_leaves[(1) +: 1]), .i(n24954), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3502:5: Cannot find file containing module: 'ot_pl_land_vector_reset_r'
+ 3502 |     ot_pl_land_vector_reset_r #(.W(1), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_r1), .rsi(lpr_r1_leaves[(1) +: 1]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp.sv:3506:5: Cannot find file containing module: 'ot_pl_land_vector_reset_w'
+ 3506 |     ot_pl_land_vector_reset_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_r0), .rsi(lpr_r0_leaves[(2) +: 1]), .i(n24955), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~

@@ -150,3 +150,9 @@ def test_core_tap_source_latency_only_as_planned():
     assert any("early core tap" in x for x in _errs(txt + line, ctx))
     assert _errs(txt + line, ctx, port_latency_ps={tap: -30.0}) == []
     assert any("has no source latency" in x for x in _errs(txt, ctx, port_latency_ps={tap: -30.0}))
+
+
+def test_opaque_clock_port_filter_rejected():
+    txt, ctx = _kit(TINY)
+    bad = txt.replace("[all_inputs -no_clocks]", "[lsearch -inline -all -not -regexp [all_inputs] {^(clk.*)$}]")
+    assert any("port objects" in e for e in _errs(bad, ctx))
