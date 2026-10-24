@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_col_h9_r1__t1",
+ "kit": "physical/die_plan/s81@5740859f0 kit ot-epyc9:/srv/opentallas-scratch/claude/s81-p8-g3/kits/col_h9_r1__t1",
+ "verdict": "FAIL",
+ "hash": "93e8d9667342e7f6",
+ "reasons": "[10-23 16:58] [GEOM-REVIEW6] [S81 G3 v4.5 re-REQ] Placed render (3_place) viewed. I ran my own tv.tsv stats (20-um bins, g3stat). Hop/tie probe read from /home/ubuntu/scratch/s81-p8/cond/<kit>.v45.main.txt. Kit hash recomputed on ot-epyc9 (C-sorted cat, the GEOM-REVIEW5 scheme). SDC is ps (833, 9 tap clocks), CORNER=TC. FIXED vs the 15:14 records: (b) taps off macros: 0 of 10 interior M7 pins inside a macro in every kit (h9_r1 was 10/10). (a) ties: TIEHI -> DFFASRHQN/SETN 5.2-8.0k is the unused async SET of the reset-flop cell (cell artefact, accepted); TIEHI -> D 36-47 = rsreg/synchroniser constant-1 stages (accepted). (c) buffers: the author says these are GPL repeaters on long nets. Macro sites are on the 8.64 lattice, min macro gap 13.8 um in all 5, max 20-um std density 0.31-0.39, no bins > 0.8, pins only on the plan windows (N/S x 6-353 at 4.6-4.7/um). NEW EVIDENCE (author's placed reg-reg probe): hops over the 750-um R3/reach limit remain. SPECIFIC: reg-reg > 750 = 159 (was 5,525: F>F 849->93, F>M 2,637->66, M>F 679->0, M>M 1,360->0). Left: u_y_rt_15a_1 -> u_n15 66 b at 918; u_lpr_r1 reset forest branch->leaf 45 at 1,129; u_y_x2_6_0 -> frame_int_o0 43 b at 764. 11.4k FF, N+S windows (1,490/1,430 pins), buf/inv 42.0k of 63.2k (66%).",
+ "fixes": "Near-ready: (1) u_n15 within 750 of u_y_rt_15a_1 (66 b) or a relay; (2) lpr forest leaves to their nearest branch (tool, all kits); (3) the 43-b x2_6 -> frame_int_o0 at 764 goes with the h10_r1 window decision. Re-REQ with > 750 = 0.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T16:58:40-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

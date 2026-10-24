@@ -161,17 +161,17 @@ module qfd_collective_static_io #(
  .tx_valid(mux_txv),.tx_frame(mux_tx[596:0]),.phy_tx_valid(shared_tx_valid),.phy_tx_frame(shared_tx),
  .phy_rx_valid(shared_rx_valid),.phy_rx_frame(shared_rx),.rx_valid(mux_rxv),.rx_frame(core_rx),
  .core_fault(gb_core_fault),.fdi_fault(gb_fdi_fault));
- assign mux_rx={446'b0,core_rx};
+ assign mux_rx[596:0]=core_rx;   // RXW 597: the gearbox RX frame; mux_rx[1042:597] has no load (share RXW=597)
  end else begin:g_same_clock_diagnostic
  assign {shared_tx_valid,shared_tx}={mux_txv,mux_tx};
  assign {mux_rxv,mux_rx}={shared_rx_valid,shared_rx};
  assign gb_core_fault=0;assign gb_fdi_fault=0;
  end
  assign shared_fault=mux_fault|gb_core_fault|gb_fdi_fault;
- qfd_ucie_static_share u_shared(.clk(face_ck[6]),.rst_n(rst_n),
+ qfd_ucie_static_share #(.RXW(SIX_FIVE?597:1043)) u_shared(.clk(face_ck[6]),.rst_n(rst_n),
  .tx_slot(expected_tx[1:0]),.tx_valid(phy_tx_valid[1:0]),
  .p_frame(phy_tx[0+:597]),.r_frame(phy_tx[597+:565]),
- .rx_slot(expected_rx[1:0]),.phy_rx_valid(mux_rxv),.phy_rx(mux_rx),
+ .rx_slot(expected_rx[1:0]),.phy_rx_valid(mux_rxv),.phy_rx(mux_rx[(SIX_FIVE?597:1043)-1:0]),
  .phy_tx_valid(mux_txv),.phy_tx(mux_tx),.rx_valid(shared_rv),.rx_frames(shared_rd),.fault(mux_fault));
  genvar f;
  generate for(f=0;f<5;f=f+1)begin:g_face

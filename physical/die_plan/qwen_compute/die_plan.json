@@ -4244,8 +4244,25 @@
      "leaf": "u_pstn.st_wi",
      "face": "W",
      "window_um": [
+      526.88,
+      715.136
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_wi",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_wi",
+     "face": "W",
+     "window_um": [
       524.24,
-      712.512
+      525.92
      ],
      "layers": [
       "M6",
@@ -4916,6 +4933,23 @@
      "order": "lsb_low"
     },
     {
+     "name": "treq_wi",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_wi",
+     "face": "W",
+     "window_um": [
+      888.656,
+      890.336
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
      "name": "flt_su_l1_i",
      "dir": "in",
      "width": 1,
@@ -5553,6 +5587,23 @@
      "window_um": [
       790.064,
       978.224
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_eo",
+     "dir": "out",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_eo",
+     "face": "E",
+     "window_um": [
+      979.184,
+      980.864
      ],
      "layers": [
       "M6",
@@ -8076,6 +8127,23 @@
      "order": "lsb_low"
     },
     {
+     "name": "treq_wi",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_wi",
+     "face": "W",
+     "window_um": [
+      979.184,
+      980.864
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
      "name": "flt_su_l1_i",
      "dir": "in",
      "width": 1,
@@ -9432,6 +9500,23 @@
      "window_um": [
       699.504,
       887.696
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_eo",
+     "dir": "out",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_eo",
+     "face": "E",
+     "window_um": [
+      888.656,
+      890.336
      ],
      "layers": [
       "M6",
@@ -14029,6 +14114,23 @@
      "order": "lsb_low"
     },
     {
+     "name": "treq_ei",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_ei",
+     "face": "W",
+     "window_um": [
+      888.656,
+      890.336
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
      "name": "flt_su_l1_i",
      "dir": "in",
      "width": 1,
@@ -15415,6 +15517,23 @@
      "window_um": [
       600.864,
       789.104
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_wo",
+     "dir": "out",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_wo",
+     "face": "E",
+     "window_um": [
+      979.184,
+      980.864
      ],
      "layers": [
       "M6",
@@ -17911,6 +18030,23 @@
      "order": "lsb_low"
     },
     {
+     "name": "treq_ei",
+     "dir": "in",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_ei",
+     "face": "W",
+     "window_um": [
+      979.184,
+      980.864
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
      "name": "flt_su_l1_i",
      "dir": "in",
      "width": 1,
@@ -18563,6 +18699,23 @@
      "window_um": [
       510.352,
       698.544
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "treq_wo",
+     "dir": "out",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_pstn.treq_wo",
+     "face": "E",
+     "window_um": [
+      888.656,
+      890.336
      ],
      "layers": [
       "M6",
@@ -21110,8 +21263,8 @@
      "width": 10,
      "stations": 2,
      "out_window_um": [
-      671.2432,
-      673.2432
+      670.5885,
+      672.5885
      ],
      "layers": [
       "M6",
@@ -21385,8 +21538,8 @@
      "width": 107,
      "stations": 2,
      "out_window_um": [
-      675.4358,
-      695.8678
+      674.7811,
+      694.8451
      ],
      "layers": [
       "M6",
@@ -21398,8 +21551,8 @@
        715.912
       ],
       [
-       509.76,
-       699.84
+       388.8,
+       708.48
       ]
      ]
     },
@@ -21560,7 +21713,7 @@
      "regs_um": [
       [
        1.0,
-       709.358
+       708.704
       ],
       [
        380.16,
@@ -21585,7 +21738,7 @@
      "regs_um": [
       [
        1.0,
-       769.816
+       769.186
       ],
       [
        388.8,
@@ -21600,8 +21753,8 @@
      "width": 1088,
      "stations": 2,
      "out_window_um": [
-      826.64,
-      1014.912
+      829.28,
+      1017.536
      ],
      "layers": [
       "M6",
@@ -21610,11 +21763,36 @@
      "regs_um": [
       [
        1.0,
-       921.008
+       924.776
       ],
       [
        397.44,
        924.48
+      ]
+     ]
+    },
+    {
+     "name": "table_req_treq_wi",
+     "in_face": "W",
+     "out_face": "E",
+     "width": 9,
+     "stations": 2,
+     "out_window_um": [
+      826.64,
+      828.32
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "regs_um": [
+      [
+       1.0,
+       814.351
+      ],
+      [
+       509.76,
+       820.8
       ]
      ]
     },
@@ -25019,8 +25197,8 @@
      "leaf": "u_tt_ctlm.ag5",
      "face": "E",
      "window_um": [
-      152.8432,
-      154.8432
+      152.1885,
+      154.1885
      ],
      "layers": [
       "M6",
@@ -25036,8 +25214,8 @@
      "leaf": "u_tt_ctlm.ss5",
      "face": "E",
      "window_um": [
-      157.0358,
-      177.4678
+      156.3811,
+      176.4451
      ],
      "layers": [
       "M6",
@@ -25240,8 +25418,8 @@
      "leaf": "u_tt_ctlm.cmd",
      "face": "E",
      "window_um": [
-      179.8704,
-      202.0464
+      179.2157,
+      201.3917
      ],
      "layers": [
       "M6",
@@ -25427,8 +25605,8 @@
      "leaf": "u_tt_ctlm.hr",
      "face": "E",
      "window_um": [
-      208.1923,
-      294.6403
+      207.5376,
+      294.0336
      ],
      "layers": [
       "M6",
@@ -25580,8 +25758,25 @@
      "leaf": "u_tt_ctlm.tl",
      "face": "E",
      "window_um": [
-      299.312,
-      505.904
+      303.0,
+      509.752
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "table_req",
+     "dir": "out",
+     "width": 9,
+     "kind": "data",
+     "leaf": "u_tt_ctlm.table_req",
+     "face": "E",
+     "window_um": [
+      295.039,
+      296.863
      ],
      "layers": [
       "M6",
@@ -63688,6 +63883,175 @@
    "kind": "ctl"
   },
   {
+   "id": "sl_E0_fe__treq_wo_treq_ei__0",
+   "src": {
+    "part": "sl_E0_fe",
+    "bus": "treq_wo"
+   },
+   "dst": {
+    "part": "sl_E1_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_E1_fe__treq_wo_treq_ei__0",
+   "src": {
+    "part": "sl_E1_fe",
+    "bus": "treq_wo"
+   },
+   "dst": {
+    "part": "sl_E2_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_E2_fe__treq_wo_treq_ei__0",
+   "src": {
+    "part": "sl_E2_fe",
+    "bus": "treq_wo"
+   },
+   "dst": {
+    "part": "sl_E3_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_E3_fe__treq_wo_treq_ei__0",
+   "src": {
+    "part": "sl_E3_fe",
+    "bus": "treq_wo"
+   },
+   "dst": {
+    "part": "sl_E4_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_E4_fe__treq_wo_treq_ei__0",
+   "src": {
+    "part": "sl_E4_fe",
+    "bus": "treq_wo"
+   },
+   "dst": {
+    "part": "sl_E5_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W0_fe__treq_eo_treq_ei__0",
+   "src": {
+    "part": "sl_W0_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_E0_fw",
+    "bus": "treq_ei"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W1_fe__treq_eo_treq_wi__0",
+   "src": {
+    "part": "sl_W1_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_W0_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W2_fe__treq_eo_treq_wi__0",
+   "src": {
+    "part": "sl_W2_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_W1_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W3_fe__treq_eo_treq_wi__0",
+   "src": {
+    "part": "sl_W3_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_W2_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W4_fe__treq_eo_treq_wi__0",
+   "src": {
+    "part": "sl_W4_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_W3_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "sl_W5_fe__treq_eo_treq_wi__0",
+   "src": {
+    "part": "sl_W5_fe",
+    "bus": "treq_eo"
+   },
+   "dst": {
+    "part": "sl_W4_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "tt_ctlm__table_req_treq_wi__0",
+   "src": {
+    "part": "tt_ctlm",
+    "bus": "table_req"
+   },
+   "dst": {
+    "part": "coll_f4",
+    "bus": "table_req_treq_wi_i"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
+   "id": "tt_ctlm__table_req_treq_wi__1",
+   "src": {
+    "part": "coll_f4",
+    "bus": "table_req_treq_wi_o"
+   },
+   "dst": {
+    "part": "sl_W5_fw",
+    "bus": "treq_wi"
+   },
+   "width": 9,
+   "kind": "data"
+  },
+  {
    "id": "coll_core__crec_tx_s1__0",
    "src": {
     "part": "coll_core",
@@ -80078,6 +80442,79 @@
    "id": "ucie_kv__tx_up_fdi_tx_up",
    "ports": [
     "ucie_kv__tx_up_fdi_tx_up__0"
+   ]
+  },
+  {
+   "id": "sl_E0_fe__treq_wo_treq_ei",
+   "ports": [
+    "sl_E0_fe__treq_wo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_E1_fe__treq_wo_treq_ei",
+   "ports": [
+    "sl_E1_fe__treq_wo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_E2_fe__treq_wo_treq_ei",
+   "ports": [
+    "sl_E2_fe__treq_wo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_E3_fe__treq_wo_treq_ei",
+   "ports": [
+    "sl_E3_fe__treq_wo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_E4_fe__treq_wo_treq_ei",
+   "ports": [
+    "sl_E4_fe__treq_wo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_W0_fe__treq_eo_treq_ei",
+   "ports": [
+    "sl_W0_fe__treq_eo_treq_ei__0"
+   ]
+  },
+  {
+   "id": "sl_W1_fe__treq_eo_treq_wi",
+   "ports": [
+    "sl_W1_fe__treq_eo_treq_wi__0"
+   ]
+  },
+  {
+   "id": "sl_W2_fe__treq_eo_treq_wi",
+   "ports": [
+    "sl_W2_fe__treq_eo_treq_wi__0"
+   ]
+  },
+  {
+   "id": "sl_W3_fe__treq_eo_treq_wi",
+   "ports": [
+    "sl_W3_fe__treq_eo_treq_wi__0"
+   ]
+  },
+  {
+   "id": "sl_W4_fe__treq_eo_treq_wi",
+   "ports": [
+    "sl_W4_fe__treq_eo_treq_wi__0"
+   ]
+  },
+  {
+   "id": "sl_W5_fe__treq_eo_treq_wi",
+   "ports": [
+    "sl_W5_fe__treq_eo_treq_wi__0"
+   ]
+  },
+  {
+   "id": "tt_ctlm__table_req_treq_wi",
+   "ports": [
+    "tt_ctlm__table_req_treq_wi__0",
+    "tt_ctlm__table_req_treq_wi__1"
    ]
   },
   {
@@ -98664,6 +99101,126 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_UCIE_KV__TX_UP_FDI_TX_UP"
+   },
+   "sl_E0_fe__treq_wo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_E0_FE__TREQ_WO_TREQ_EI"
+   },
+   "sl_E1_fe__treq_wo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_E1_FE__TREQ_WO_TREQ_EI"
+   },
+   "sl_E2_fe__treq_wo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_E2_FE__TREQ_WO_TREQ_EI"
+   },
+   "sl_E3_fe__treq_wo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_E3_FE__TREQ_WO_TREQ_EI"
+   },
+   "sl_E4_fe__treq_wo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_E4_FE__TREQ_WO_TREQ_EI"
+   },
+   "sl_W0_fe__treq_eo_treq_ei": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W0_FE__TREQ_EO_TREQ_EI"
+   },
+   "sl_W1_fe__treq_eo_treq_wi": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W1_FE__TREQ_EO_TREQ_WI"
+   },
+   "sl_W2_fe__treq_eo_treq_wi": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W2_FE__TREQ_EO_TREQ_WI"
+   },
+   "sl_W3_fe__treq_eo_treq_wi": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W3_FE__TREQ_EO_TREQ_WI"
+   },
+   "sl_W4_fe__treq_eo_treq_wi": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W4_FE__TREQ_EO_TREQ_WI"
+   },
+   "sl_W5_fe__treq_eo_treq_wi": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_SL_W5_FE__TREQ_EO_TREQ_WI"
+   },
+   "tt_ctlm__table_req_treq_wi": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0,
+    "param": "LAT_TT_CTLM__TABLE_REQ_TREQ_WI"
    },
    "coll_core__crec_tx_s1": {
     "cycles": 8,

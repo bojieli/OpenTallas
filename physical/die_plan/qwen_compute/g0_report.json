@@ -17,9 +17,9 @@
    "near_duplicate_types": 20,
    "mergeable_saving": 10
   },
-  "ports": 2989,
-  "lanes": 2003,
-  "bits": 1355217,
+  "ports": 3002,
+  "lanes": 2015,
+  "bits": 1355334,
   "taps_cores": {
    "taps": 170,
    "hard_cores": 68,
@@ -267,33 +267,33 @@
     },
     {
      "at_um": 1000,
-     "bits": 2842,
+     "bits": 2851,
      "tracks": 368057,
      "ratio": 0.0077,
      "m89_only_ratio": 0.009,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1241,
-     "worst_part_bits": 2842
+     "worst_part_ratio": 0.1245,
+     "worst_part_bits": 2851
     },
     {
      "at_um": 1250,
-     "bits": 3958,
+     "bits": 3967,
      "tracks": 368057,
      "ratio": 0.0108,
      "m89_only_ratio": 0.0126,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1729,
-     "worst_part_bits": 3958
+     "worst_part_ratio": 0.1733,
+     "worst_part_bits": 3967
     },
     {
      "at_um": 1500,
-     "bits": 3958,
+     "bits": 3967,
      "tracks": 368057,
      "ratio": 0.0108,
      "m89_only_ratio": 0.0126,
      "worst_part": "coll_f4",
-     "worst_part_ratio": 0.1729,
-     "worst_part_bits": 3958
+     "worst_part_ratio": 0.1733,
+     "worst_part_bits": 3967
     },
     {
      "at_um": 1750,
@@ -4069,6 +4069,18 @@
    "ucie_kv__rx_flit_fdi_rx_flit": 2,
    "ucie_kv__rx_v_fdi_rx_v": 2,
    "ucie_kv__tx_up_fdi_tx_up": 2,
+   "sl_E0_fe__treq_wo_treq_ei": 2,
+   "sl_E1_fe__treq_wo_treq_ei": 2,
+   "sl_E2_fe__treq_wo_treq_ei": 2,
+   "sl_E3_fe__treq_wo_treq_ei": 2,
+   "sl_E4_fe__treq_wo_treq_ei": 2,
+   "sl_W0_fe__treq_eo_treq_ei": 2,
+   "sl_W1_fe__treq_eo_treq_wi": 2,
+   "sl_W2_fe__treq_eo_treq_wi": 2,
+   "sl_W3_fe__treq_eo_treq_wi": 2,
+   "sl_W4_fe__treq_eo_treq_wi": 2,
+   "sl_W5_fe__treq_eo_treq_wi": 2,
+   "tt_ctlm__table_req_treq_wi": 4,
    "coll_core__crec_tx_s1": 8,
    "coll_s__crec_rx_s1": 8,
    "coll_core__crec_tx_s2": 8,
@@ -4468,7 +4480,7 @@
   },
   "seams": {
    "nets": {
-    "abutted": 1358206,
+    "abutted": 1358336,
     "channel": 0
    },
    "pairs": {
@@ -6881,55 +6893,55 @@
      "channel": 0
     },
     "sl_E0_fw|sl_W0_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E0_fe|sl_E1_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_E1_fe|sl_E2_fw": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E2_fe|sl_E3_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_E3_fe|sl_E4_fw": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_E4_fe|sl_E5_fw": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W0_fw|sl_W1_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W1_fw|sl_W2_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_W2_fw|sl_W3_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "sl_W3_fw|sl_W4_fe": {
-     "abutted": 5005,
+     "abutted": 5015,
      "channel": 0
     },
     "sl_W4_fw|sl_W5_fe": {
-     "abutted": 5520,
+     "abutted": 5530,
      "channel": 0
     },
     "coll_f4|sl_W5_fw": {
-     "abutted": 3980,
+     "abutted": 3990,
      "channel": 0
     },
     "coll_f4|tt_ctlm": {
-     "abutted": 1779,
+     "abutted": 1789,
      "channel": 0
     },
     "coll_f3|coll_f4": {
@@ -7029,16 +7041,16 @@
    "vertical": [
     {
      "at_um": 777.6,
-     "bits": 5267,
-     "abutted_bits": 5267,
+     "bits": 5277,
+     "abutted_bits": 5277,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0071
     },
     {
      "at_um": 1563.84,
-     "bits": 6384,
-     "abutted_bits": 6384,
+     "bits": 6394,
+     "abutted_bits": 6394,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0086
@@ -7069,11 +7081,11 @@
     },
     {
      "at_um": 4034.88,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 4656.96,
@@ -7101,8 +7113,8 @@
     },
     {
      "at_um": 6505.92,
-     "bits": 5005,
-     "abutted_bits": 5005,
+     "bits": 5015,
+     "abutted_bits": 5015,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0068
@@ -7133,11 +7145,11 @@
     },
     {
      "at_um": 8976.96,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 9599.04,
@@ -7165,8 +7177,8 @@
     },
     {
      "at_um": 11448.0,
-     "bits": 5005,
-     "abutted_bits": 5005,
+     "bits": 5015,
+     "abutted_bits": 5015,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0068
@@ -7197,11 +7209,11 @@
     },
     {
      "at_um": 13919.04,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 14541.12,
@@ -7229,8 +7241,8 @@
     },
     {
      "at_um": 16390.08,
-     "bits": 5005,
-     "abutted_bits": 5005,
+     "bits": 5015,
+     "abutted_bits": 5015,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0068
@@ -7261,11 +7273,11 @@
     },
     {
      "at_um": 18861.12,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 19483.2,
@@ -7293,8 +7305,8 @@
     },
     {
      "at_um": 21332.16,
-     "bits": 5005,
-     "abutted_bits": 5005,
+     "bits": 5015,
+     "abutted_bits": 5015,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0068
@@ -7325,11 +7337,11 @@
     },
     {
      "at_um": 23803.2,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 24425.28,
@@ -7357,8 +7369,8 @@
     },
     {
      "at_um": 26274.24,
-     "bits": 5005,
-     "abutted_bits": 5005,
+     "bits": 5015,
+     "abutted_bits": 5015,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0068
@@ -7389,11 +7401,11 @@
     },
     {
      "at_um": 28745.28,
-     "bits": 5520,
-     "abutted_bits": 5520,
+     "bits": 5530,
+     "abutted_bits": 5530,
      "route_bits": 0,
      "tracks": 741096,
-     "ratio": 0.0074
+     "ratio": 0.0075
     },
     {
      "at_um": 29367.36,
@@ -7741,7 +7753,7 @@
    "by_layers": {},
    "over_if_partition_layers": {
     "limit_um": 364.5,
-    "lanes": 506
+    "lanes": 507
    },
    "worst": [
     {

@@ -9,7 +9,7 @@ Unknown names that are NOT retired (typos) stay a validate() error.
 import copy
 
 # names the fleet used for retired hosts; hosts.json may add more under "retired_hosts"
-RETIRED_HOSTS = frozenset({"ot-epyc1", "ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-epyc4", "ot-epyc6"})   # ot-epyc4 terminated 2026-10-19 (EPYC4-RETIRE); ot-epyc6 retiring 2026-10-21 (EPYC6-RETIRE)
+RETIRED_HOSTS = frozenset({"ot-epyc1", "ot-epyc1tb", "ot-epyc2", "ot-epyc3", "ot-epyc4", "ot-epyc5", "ot-epyc6"})   # ot-epyc4 terminated 2026-10-19 (EPYC4-RETIRE); ot-epyc6 2026-10-21 (EPYC6-RETIRE); ot-epyc5 retiring 2026-10-23 (EPYC5-RETIRE)
 
 
 def retired_names(table_doc=None):

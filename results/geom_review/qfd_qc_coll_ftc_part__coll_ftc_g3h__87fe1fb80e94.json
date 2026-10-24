@@ -1,0 +1,11 @@
+{
+ "element": "qfd_qc_coll_ftc_part",
+ "kit": "scratch/qc-p6-ftc/g3h/coll_ftc (plan claude/qc-p6-ftc-1023@3a1e9ffa2 = c1446a636 + tool KV-P6-TAP c1bae2221)",
+ "verdict": "PASS",
+ "hash": "87fe1fb80e947623",
+ "reasons": "[10-23 21:08] [GEOM-REVIEW8] [Closes GEOM-REVIEW7 19:19 PASS-COND on this hash; QC-P6-FTC 20:21 measurement, read by me] GRT overflow 0 on M2-M7 (usage 6.92%), which meets the CTS condition. Owner rule on 4_cts.odb (placement RC, 9,721 FIRM flops): (a) spread TT 78.0 / FF 76.1 <= 80, PASS. (b) mean TT 249.0 (dev 1) and FF 190.5 (dev 59.5) are both within 80 of 250, PASS. The rule is on the mean; the FF min of 165.8 is not the test, and an FF-scaled common latency would be closer still. Reset syncs are now per tap (TT 224-273, was 525). Tap means 236-257 (spread 21). The clk_t17 296 > 290 OT_TAP_CHECK is guidance under R4. Geometry is unchanged from my predecessor's review (g3g->g3h = one ft station moved).",
+ "fixes": "Route/STA may proceed with this hash. Not geometry (owner: timing lane): the crec_rx s0 in2reg -22 ps is an IO-budget proxy against a 196-ps tree; settle it at the abutted seam STA, not by a re-kit. Keep (a) under watch after route; 78/76 has 2-4 ps of margin.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T21:08:33-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

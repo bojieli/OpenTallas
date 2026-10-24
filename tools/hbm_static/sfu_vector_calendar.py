@@ -10,6 +10,7 @@ so there are no data-dependent controller decisions or in-flight op conflicts.
 """
 from __future__ import annotations
 from sfu_control_image import pack
+import leaf_split_latency as LS   # HBM-P6-CMP: over-cap leaf-split shifts (opt-in, default 0)
 
 SFU_DEPTH = {0: 0, 1: 94, 4: 122, 5: 122} # MLAT6 ALAT6 DDIV21 DENR1
 
@@ -19,7 +20,8 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
                    e1: int=0, e2: int=0, imm1: int=0x3f800000,
                    imm2: int=0x3f800000, imm3: int=0x3f800000,
                    arnd: int=0, arelu: int=0, amin: int=0, cclip: int=0,
-                   rnd: int=0, strides: tuple[int,int,int,int,int]=(1,1,1,1,1)) -> dict:
+                   rnd: int=0, strides: tuple[int,int,int,int,int]=(1,1,1,1,1),
+                   leaf_split: bool | None=None) -> dict:
     if not isinstance(words, int) or not 1 <= words < 1 << 24:
         raise ValueError('vector length must fit 24-bit nonzero lane count')
     if len(bases) != 5 or any(not 0 <= base <= (1 << 24)-words for base in bases):
@@ -49,6 +51,9 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
     # Base pipeline: pin1 + map4 + physical input1 + leaf/fetch5 + pre1 +
     # M1(7 or22) + M2 6 + AD7 + E1 7 + E2 6 + output1 =46/61.
     horizon = 46 + (15 if m1 in (4,5) else 0) + SFU_DEPTH[sfu]
+    # Over-cap split core (ot_hgi_sfu_core_split3_sp2, store-side pin registers): results reach the output-group
+    # SRAM 3 edges later, so every op holds its control 3 more edges (LS 'sfu_op_horizon'; 0 unless enabled).
+    horizon += LS.shift('sfu_op_horizon', leaf_split)
     rows = []
     for cycle in range(lead+beats+horizon):
         beat = max(0, min(cycle-lead, beats-1))

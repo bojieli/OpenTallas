@@ -6,6 +6,7 @@ set -e
 R=$(cd "$(dirname "$0")/../../.." && pwd); D=${1:?OUTDIR}; IN=${IN:-$R/physical/die_plan/s81/inputs}
 T=${TOOL:-$R/tools/die_plan}
 python3 $R/physical/die_plan/s81/gen_plan_v4.py --asbuilt $IN/plan.json --census $IN/s81_lanes.tsv --out $D
+mkdir -p $D/inputs && rm -rf $D/inputs/core_pins && cp -r $IN/core_pins $D/inputs/   # hard_cores pins_file is plan-dir relative
 python3 $T/schema.py validate $D/die_plan.json
 python3 $T/gen.py latency $D/die_plan.json --inplace --out $D/lat
 (cd $D && python3 $T/check.py die_plan.json --out $D/g0 --png)

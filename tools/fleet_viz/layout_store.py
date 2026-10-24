@@ -45,7 +45,7 @@ RELAY_DIR = os.environ.get('LV_RELAY_DIR', '/srv/opentallas-scratch/claude/layou
 LOCAL_LOCK = WORK / '.local_cut.lock'    # cuts on this host run one at a time
 LOCAL_MAX_DB = float(os.environ.get('LV_LOCAL_MAX_DB', 400e6))   # archive DBs up to this (raw) size are cut on this host
 # active fleet only (EPYC1 terminated 2026-10-16, EPYC2/3 2026-10-12)
-STREAM_ROOT = {'ot-epyc4': '/srv/opentallas-scratch2/claude', 'ot-epyc5': '/srv/opentallas-scratch/claude',
+STREAM_ROOT = {'ot-epyc4': '/srv/opentallas-scratch2/claude',
                'ot-epyc7': '/srv/opentallas-scratch/claude', 'ot-epyc8': '/srv/opentallas-scratch/claude', 'ot-epyc9': '/srv/opentallas-scratch/claude', 'ot-gold2': '/srv/opentallas-scratch/claude', 'ot-gold1': '/srv/opentallas-scratch/claude',
                'ot-agidock128': '/srv/opentallas-scratch/claude',
                'ot-pve1': '/srv/opentallas-scratch/claude'}

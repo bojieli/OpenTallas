@@ -1,0 +1,21 @@
+{
+ "verdict": "PASS",
+ "errors": 0,
+ "r8": {
+  "groups": 3819,
+  "groups_unequal": 0,
+  "inversions": 0,
+  "replica_sets": 234,
+  "replica_unequal": 0,
+  "types_conflicting": 0,
+  "replica_mode": "type",
+  "bus_mode": "leaf",
+  "async_skipped": 6493,
+  "depth_source": "landing file",
+  "checked": true,
+  "groups_file": "/home/ubuntu/scratch/kv-p5-1023/v36/r8/bus_groups.json",
+  "landing_file": "/home/ubuntu/scratch/kv-p5-1023/v36/r8/qwen_kvsys_r8_landing.json"
+ },
+ "tool": "claude/plan-tool3-1023 @cc5ebe697 + r8.bus_key bus_sub (claude/kv-p5-r8-1023)",
+ "bus_groups_source": "BINDER2 kv35 (claude/binder-1023 @af9503427) bus_groups.json -> r8_fault_exempt.py -> r8_invariant_split.py"
+}

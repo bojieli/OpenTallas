@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.kv_p4.blockers.v34",
+ "plan": "die_plan v3.4 (main bddf24c4c / 3845962a2), lat_v34, F_DLY=3",
+ "supersedes": "bind/blockers_v32.json (KV-P3b); items keyed as COORD 07:45 KV-P2 rulings (3)/(4)",
+ "items": {
+  "a_hc_transport": {
+   "status": "DONE in RTL, NOT ON MAIN",
+   "where": "claude/kv-p3-rtl-1023 @8d7467e8a (92926aac0)",
+   "what": "START-only HC transport (HCW 39) below the OBSX station; {143'd0,cmd_hc} pad gone",
+   "evidence": "rtl/test/qwen_host/hc39_equiv eq + eq_abort 0 mismatches over 8 dies, rsv PASS, 4/4 mutants caught; hostp_hcw39 PASS + 2 mutants",
+   "binder": "bind against the HCW 39 OBSX module (asbuilt rtl6 is pre-fix)",
+   "open": "COORD approval -> ROOT-MERGE"
+  },
+  "b_undriven_13082": {
+   "status": "CLASSIFIED + FIXED (plan/RTL); binder consumer open",
+   "classes": {
+    "A_param": {
+     "bits": 5226,
+     "fix": "strap-free _p leaf variants with parameters (post_v32 content params); RTL @8d7467e8a"
+    },
+    "B_position_id": {
+     "bits": 2184,
+     "fix": "counted ID lanes; per-cell conns bind/plan_cell_conns_v34.json; 1928 b of sq/owner_id/lpc/pc__pc/cfg_stack/cfg_group/esh__stack reproduced bit-exactly (0 mismatches over 508 leaf ports); eo 256 b computed from sq inside qkd_astk_ep_s_e (no port)"
+    },
+    "C_chain_head": {
+     "bits": 5672,
+     "fix": "head-form variants (no predecessor port), BINDER2 asbuilt.substitute_inst 20 inst",
+     "binder_note": "BINDER2 removed 5,740 b: +32 ep_head eo (correct, no port) +16 zn_head zc (correct: param ZC) +20 hsl head lpc = WRONG: qkd_host_pc_slice_die_head keeps lpc[4:0] -> bind it to u_id_pc<j>.y (plan_cell_conns_v34.json)"
+    }
+   }
+  },
+  "c_rlyi_258s_128": {
+   "status": "DONE in plan (v3.2+)",
+   "what": "128 qkd_rlyi_258s = pv contents (logic leaves), chain + select lanes from bitcon"
+  },
+  "d_fault_or_356": {
+   "status": "DONE in plan (v3.2+); conns now machine-readable",
+   "what": "23 types / 88 partitions ot_dp_efault + column qkd_hp_or2 u_fch chains + 14 hub_C hp_v32 roots; 6 as-built OR inputs re-pointed (rewired[])",
+   "conns": "bind/plan_cell_conns_v34.json: efault eq = every lane in-bus epoch of the type, N/AGE resolved per type (AGE = max lane cycles over replicas + 2 sync)",
+   "edges": {
+    "fault": 165,
+    "id": 64,
+    "fault_bypass": 6
+   }
+  },
+  "e_clocks_reset": {
+   "status": "PLAN DONE (clocks_v32.json, G2 die probe overflow 0, 11 nets); tool schema open",
+   "open": "PLAN-TOOL2: clock regions / per-bus clock in schema + gen_rtl multi-clock partitions (pc_Q_k core+clk_hbm_Q, hroot core+clk_hbm_Q, hub_Wi core+phy/host/ingest, phy_Q_k clk_hbm_Q, sys_c clk_fwd); reset root hub_Wi host die_rst_n"
+  }
+ },
+ "binder_open": [
+  "consume bind/plan_cell_conns_v34.json (schema in its .py docstring): 25 types, 85 cells, 64 ID + 171 fault edges",
+  "hsl head lpc: do not remove (see b)",
+  "non-head ep -> qkd_astk_ep_s_e: agreed",
+  "GEN bundle wrappers via kv_bound_netlist (BINDER2 12:27: qkd_astk_rly_296_fl view artifacts)"
+ ],
+ "g3_order": [
+  "IO-row ft partitions (kits on bf48d82a6)",
+  "hub_Ei/hroot/hub_Wo/hub_Eo/sys_c",
+  "pc",
+  "hub_C/hub_Wi",
+  "hg/hgi/pv"
+ ]
+}

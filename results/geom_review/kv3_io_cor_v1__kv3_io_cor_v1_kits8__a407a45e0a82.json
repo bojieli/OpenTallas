@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_cor_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_cor_v1, tool 0d8b36ab6, tap_pitch 280; scratch/kv-p5-1023/kits8)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "a407a45e0a8274ff",
+ "reasons": "[10-23 17:09] [GEOM-REVIEW6] [KV kits8, no REQ filed: the gate grt8 was already admitted, so I reviewed it unasked] kits7->kits8 diff read by me: only OT_TAP_PITCH_UM 400->280 (20 interior M7 taps, SDC/RTL tap ports to match). Pins, stations, outline and pdn are unchanged from the GEOM PASS geometry. Kit hash recomputed (C-sorted cat). My 16:0x kits7 record flagged t2 (2,353 FF at 327 um) as the likely worst tap. KV-P5 then measured kits7 io_cor_v1 OT_TAP_CHECK FAIL (clk 349, t1 323, t7 337 ps). kits8 nearest-tap on the PASS placement's 7,158 flops: 9 loaded taps with 10-2,302 FF, max reach 181-253 um (was 223-328). KV-P5 measures the tap trees at 205-222 ps, spread 17. But 11 of the 20 taps carry NO sink, which means 11 dead die-spine drops + 11 unloaded per-tap synchronisers.",
+ "fixes": "Gate/STA allowed (already running). Full PASS: TT/FF clean in the abutted seam STA (COORD 16:58 SDC proxy ruling). TOOL (PLAN-TOOL2/3, 3rd instance after KV kits7 and coll_ftc): emit taps only where FIRM/planned sinks are (sink-anchored, split by count), not a pitch grid, and no taps or synchronisers in sinkless regions.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T17:09:21-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

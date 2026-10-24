@@ -76,8 +76,8 @@ def usable(lo, hi, ln):
 
 def fit_len_v2(lo, pins, layers):
     a = next_edge(lo)
-    b = next_edge(a + pins / v1.WIN_PER_UM)
     nl = len(layers)
+    b = next_edge(a + pins / (v1.WIN_PER_UM * max(2, nl) / 2))   # P6: a 3-layer face starts at 1.5x the density
     while True:
         ok = True
         for li, ln in enumerate(layers):
@@ -91,7 +91,7 @@ def fit_len_v2(lo, pins, layers):
                 while cs[i] - cs[j] > 10.0 - 1e-6:
                     j += 1
                 mx = max(mx, i - j + 1)
-            if mx <= v1.FACE_LIM:
+            if mx <= v1.FACE_LIM * max(2, nl) / 2:
                 return b - lo
         b = next_edge(b + 1e-4)
 
@@ -114,7 +114,7 @@ LAYOUT = [
     # C0 corner = x 970-1170 (die-level centre)
     ('io', 0, 0, 230, 200), ('rc2', 230, 0, 455, 200), ('rc3', 455, 0, 725, 200), ('rc4', 725, 0, 970, 200),
     # R1 (200-479): fabric/fault leaves, SFU core, hc ring 3x3 (93), r1e above C0
-    ('r1c', 0, 200, 450, 479), ('sfuc', 450, 200, 720, 479), ('r1e', 999, 200, 1170, 479),
+    ('r1c', 0, 200, 450, 479), ('sfuc', 450, 200, 720, 479), ('r1e', 720 + 3 * int(os.environ.get('OT_HBM_RING_X', '105')), 200, 1170, 479),
     # R2 (479-814): SU0 SU1 [VM slice] SU2 SU3
     ('su0', 0, 479, 225, 814), ('su1', 225, 479, 450, 814), ('vm', 450, 479, 720, 814),
     ('su2', 720, 479, 945, 814), ('su3', 945, 479, 1170, 814),
@@ -128,11 +128,15 @@ LAYOUT = [
 ]
 SMC = [(270, 495), (495, 720), (720, 945), (945, 1170)]
 RING = 93
+# P6 (COORD 10-23 18:23 (2)): q_hc2/hc7 G2 congestion is real (3 x 363-um bankq cores + 2.5-3.8 kb ft in an 803-um
+# square, M1-M5 blocked over 61%).  The die height is at the 33-mm reticle, so the hc tiles grow in x only (RING_X
+# lattice units; r1e above C0 gives up the width).  The ring's N/S faces and the free channel beside the cores grow.
+RING_X = int(os.environ.get('OT_HBM_RING_X', '105'))
 HC_X0, HC_Y0 = 720, 200
 # hc ring: as-built relative order (col0: 7,0,1 bottom->top; top row 1,2,3; col2: 3,4,5; bottom 7,6,5; qhub centre)
 HC_POS = {7: (0, 0), 0: (0, 1), 1: (0, 2), 2: (1, 2), 3: (2, 2), 4: (2, 1), 5: (2, 0), 6: (1, 0), 'q': (1, 1)}
 for k, (i, j) in HC_POS.items():
-    LAYOUT.append((f'hc{k}', HC_X0 + i * RING, HC_Y0 + j * RING, HC_X0 + (i + 1) * RING, HC_Y0 + (j + 1) * RING))
+    LAYOUT.append((f'hc{k}', HC_X0 + i * RING_X, HC_Y0 + j * RING, HC_X0 + (i + 1) * RING_X, HC_Y0 + (j + 1) * RING))
 SM_ROWS = [814, 1015, 1216, 1417, 1619]
 for k, (a, b) in enumerate(SMC):
     for j in range(4):
@@ -152,6 +156,22 @@ FIXED = [
     (r'^hb_coll_Q$', 'rc4'),
     (r'^(lk_|ep_|epcal_)', 'io'),
 ]
+# P5 (COORD HBM PRICE RULING 10-23 14:44 (1)): the VM -> SM x data path is routed directly.  The x-load egress /
+# broadcast-dequeue engines (xq_Q_p<k>_bd/eg; all inputs come from the VM slice: xl aq/ctl, bfq) sit IN the VM slice
+# partition, which abuts the SM a quarters, instead of the svc row 7 mm away on the far side of the SM stacks.  The
+# xw lanes then run VM -> sm<k>c through the SM's own a/b quarters (COORD option C inner-face capacity).
+XDIRECT = os.environ.get('OT_HBM_XDIRECT', '1') == '1'
+if XDIRECT:
+    # p1 serves SM 2/3 (above SU2/SU3): its egress + broadcast-dequeue sit in SU2 (abuts sm2a, next to the VM), so the
+    # 2 x 2079-b xw trees do not cross the full vm|su2 face; only bfq rwq + qq + lane_en (1.6 kb) do.
+    FIXED.insert(0, (r'^(xq_Q_p0_(bd|eg|bfq\d)|xq_Q_p1_bfq\d|xl_Q_(ctl|aqhi|aqlo))$', 'vm'))
+    FIXED.insert(0, (r'^xq_Q_p1_(bd|eg)$', 'su2'))
+# P6 (COORD 10-23 18:23 (1)): the VM slice perimeter is saturated (52.5 kb on 10.45 mm, vm|su2 5.37/um -> window
+# overflow).  hb_idx__op_Q narrows the die-level IDX index_rr (2056 b from C0) to block_data/head (~1.08 kb) for
+# hb_idx__q_Q in the VM; placing it next to C0 moves ~1 kb of C0 -> VM traffic off the VM faces.
+IDXOP_PART = os.environ.get('OT_HBM_IDXOP_PART', '')
+if IDXOP_PART:
+    FIXED.insert(0, (r'^hb_idx__op_Q$', IDXOP_PART))
 CTL_RE = re.compile(r'^ctl_p(\d\d)$')
 
 # ---------------------------------------------------------------------------------------------------- labels / roles
@@ -464,6 +484,10 @@ def assign_roles(insts, groups, parts):
         if tgt == 'SPLIT':
             k = int(re.match(r'^sm(\d)$', r).group(1))
             v1.SPLIT_OF[n] = [f'{q}_sm{k}{s}' for s in 'abcd']
+            if v1.SM_MODE != 'off':
+                # inner: COORD R6 R2-alt, SM ports at the front quarter c (reachable only laterally);
+                # inner_d: R2, SM ports at the svc-facing end quarter d (+ registered relay d<->c inside the SM)
+                v1.SPLIT_LAND[n] = f'{q}_sm{k}' + ('d' if v1.SM_MODE == 'inner_d' else 'c')
             where[n] = f'{q}_sm{k}a'
             continue
         if tgt:
@@ -577,6 +601,46 @@ def xq_report(groups, where, parts):
 
 
 # ---------------------------------------------------------------------------------------------------- main
+SMQ_WHERE = {}
+SM_SPLIT_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sm_split', 'sm_split.json')
+
+
+GROUPS_FOR_XLAND = []
+
+
+def sm_internal_groups(where):
+    """SM-internal quarter-to-quarter traffic (sm_split/sm_split.json crossings, HBM-P3-SM) as census rows between
+    pseudo-instances smq_<Q><k><quarter> (one per SM quarter partition).  COORD R6 R2-alt: the die lanes into the SM
+    land on c directly, so the R2 rows (SM inputs relayed d -> c) are dropped; R1/R3/R4 rows stay (registered by the
+    Step C RTL changes).  Bits are summed per direction."""
+    sp = json.load(open(SM_SPLIT_JSON))
+    per = collections.Counter()
+    for x in sp['crossings']:
+        if str(x.get('rtl_change') or '').startswith('R2') and v1.SM_MODE != 'inner_d':
+            continue
+        a_, b_ = x['dir'].split('->')
+        per[(a_, b_)] += x['bits']
+    rows = []
+    xa = collections.Counter()       # P4 XLAND=a: VM-side SM lane bits that land on a and are relayed to/from c
+    if v1.XLAND in ('a', 'xw'):
+        for g in GROUPS_FOR_XLAND:
+            for sm, peer, d, bus in ((g['dst'], g['src'], 'in', g['dst_bus']), (g['src'], g['dst'], 'out', g['src_bus'])):
+                if sm in v1.SPLIT_OF and v1.xland_a(where.get(peer), bus):
+                    xa[(sm, d)] = max(xa[(sm, d)], 0) + g['bits']
+    for n, subs in sorted(v1.SPLIT_OF.items()):
+        q, k = re.match(r'^(NW|NE|SW|SE)_sm(\d)a$', subs[0]).groups()
+        pn = collections.Counter(per)
+        if xa:
+            pn[('a', 'b')] += xa[(n, 'in')]; pn[('b', 'c')] += xa[(n, 'in')]
+            pn[('c', 'b')] += xa[(n, 'out')]; pn[('b', 'a')] += xa[(n, 'out')]
+        for (a_, b_), bits in sorted(pn.items()):
+            sn, dn = f'smq_{q}{k}{a_}', f'smq_{q}{k}{b_}'
+            SMQ_WHERE[sn] = f'{q}_sm{k}{a_}'; SMQ_WHERE[dn] = f'{q}_sm{k}{b_}'
+            rows.append(dict(src=sn, src_bus=f'x_{a_}{b_}', dst=dn, dst_bus=f'x_{a_}{b_}', kind='data', bits=bits,
+                             wcap=bits))
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default=os.path.dirname(os.path.abspath(__file__)))
@@ -605,12 +669,15 @@ def main():
               open(os.path.join(a.out, 'v2_assign.json'), 'w'), indent=1)
     if a.geom_only:
         return
+    GROUPS_FOR_XLAND[:] = groups
+    smrows = sm_internal_groups(where) if v1.SM_MODE != 'off' else []   # COORD R6 (1): SM-internal quarter lanes
+    groups = groups + smrows
     cen2 = dict(groups=groups)
     segs, adj = v1.build_graph(parts)
     for s_ in segs.values():
-        s_['cap'] *= 0.92          # window parity / 10-um margins cost up to ~15% of the face over the routing estimate
+        s_['cap'] *= float(os.environ.get('OT_HBM_LONG_CAP', '0.86')) if s_['len'] >= 1000 else float(os.environ.get('OT_HBM_SHORT_CAP', '0.65'))   # window parity / 10-um margins cost up to ~15% of the face over the routing estimate (P5: more on sub-mm faces, the 803-um hc ring)
     P = {p['name']: p for p in parts}
-    B = v1.bundles(cen2, where, P)
+    B = v1.bundles(cen2, {**where, **SMQ_WHERE}, P)
     orb = v1.orbits(B, P)
     widened = 0
     for mem in orb:                # identical quadrants: every image of a bundle carries the widest member's bits
@@ -620,7 +687,7 @@ def main():
     print('orbit width equalisation: +', widened, 'bits')
     print('segments', len(segs), 'bundles', len(B), 'orbits', len(orb), 'asym orbits', sum(1 for o in orb if len(o) == 1))
     paths, load = v1.route_all(parts, segs, adj, B, orb)
-    em = v1.emit(parts, segs, B, orb, paths, insts, where, cen2, a.out)
+    em = v1.emit(parts, segs, B, orb, paths, insts, {**where, **SMQ_WHERE}, cen2, a.out)
     for pt in em['ports']:
         lo, hi = pt['window_um']
         a_, b_ = snap_win(lo, hi)
@@ -658,7 +725,7 @@ def main():
     os.makedirs(os.path.join(a.out, 'census'), exist_ok=True)
     with gzip.open(os.path.join(a.out, 'census', 'hbm_r18h5_rows.tsv.gz'), 'wt') as fh:
         fh.write('src\tsrc_bus\tdst\tdst_bus\tkind\tbits\n')
-        for g in cen['groups']:
+        for g in cen['groups'] + smrows:
             fh.write(f"{g['src']}\t{g['src_bus']}\t{g['dst']}\t{g['dst_bus']}\t{g['kind']}\t{g['bits']}\n")
     smg = {}
     parts_map = {}
@@ -670,6 +737,7 @@ def main():
             smg[gname] = list(v1.SPLIT_OF[n]); parts_map[n] = gname
         else:
             parts_map[n] = pn
+    parts_map.update(SMQ_WHERE)                        # SM-internal quarter pseudo-instances (sm_split)
     json.dump(BUSW, gzip.open(os.path.join(a.out, 'census', 'bus_widths.json.gz'), 'wt'))
     json.dump(dict(parts=parts_map, groups=smg, rules=[], collapse=[], bus_widths='census/bus_widths.json.gz',
                    exempt=[dict(match='^clock$', kind='clock', replaced_by='die clock spine + per-partition tap',
@@ -677,6 +745,23 @@ def main():
               open(os.path.join(a.out, 'census', 'map_v2.json'), 'w'), indent=0)
     plan['census'] = [dict(rows='census/hbm_r18h5_rows.tsv.gz', map='census/map_v2.json',
                            note='r18h5 FT census (hbm_census.json.gz, 35075 groups); SM = group of 4 stacked partitions')]
+    # COORD option (A): types with a 3-layer (M7/M5 + die M9) N/S face list it in face_layers (both ends must)
+    ptype = {p['name']: p['type'] for p in plist}
+    porient = {p['name']: p.get('orient', 'R0') for p in plist}
+    for pt in em['ports']:
+        if len(pt['layers']) > 2:
+            for e in ('src', 'dst'):
+                fl = types[ptype[pt[e]['part']]].setdefault('face_layers', {})
+                if pt['face'] in ('N', 'S'):
+                    for f_ in ('N', 'S'):
+                        fl[f_] = ['M7', 'M5', 'M9']
+                else:
+                    # P6 VM3: E/W face on die M8; the face of this end in its TYPE frame (MY / R180 swap E and W)
+                    f_ = pt['face'] if e == 'src' else {'E': 'W', 'W': 'E'}[pt['face']]
+                    if porient[pt[e]['part']] in ('MY', 'R180'):
+                        f_ = {'E': 'W', 'W': 'E'}[f_]
+                    fl[f_] = ['M6', 'M4', 'M8']
+    __import__('taps_cores_v2').apply(plan, a.out, where)   # HBM-P3-TAPS post-pass: hard cores, cells, clock taps
     json.dump(plan, open(os.path.join(a.out, 'die_plan.json'), 'w'), indent=None, separators=(',', ':'))
     mem = {}
     for oi, m in enumerate(orb):

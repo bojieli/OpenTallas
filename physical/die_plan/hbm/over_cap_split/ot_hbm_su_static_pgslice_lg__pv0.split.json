@@ -1,0 +1,356 @@
+{
+ "master": "ot_hbm_su_static_pgslice_lg__pv0",
+ "plan_types": [
+  "q_su0",
+  "q_su1"
+ ],
+ "status": "DONE",
+ "measured_total": 5299195,
+ "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+ "n_cores": 23,
+ "max_core_cells": 308480,
+ "cores_cells": 5235566,
+ "glue_cells": 63629,
+ "cores": [
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp0",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 0)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp1",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 1)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp2",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 2)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp3",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 3)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp4",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 4)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp5",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 5)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp6",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 6)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp7",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 7)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp8",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 8)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp9",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 9)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp10",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 10)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp11",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 11)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp12",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 12)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp13",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 13)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp14",
+   "module": "ot_hbm_su_static_lane (KIND exp) + its pinned VM bank (6 SRAM)",
+   "members": [
+    "u_slice.g_lane[*].u_lane (exp lane 14)",
+    "its u_bank"
+   ],
+   "cells": 209541,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lane_exp_l",
+   "module": "FULL lane (KIND 2, with ins 44k) + pinned bank",
+   "members": [
+    "u_slice FULL lane",
+    "its u_bank"
+   ],
+   "cells": 234742,
+   "srams": 6,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lanes_plain0_3",
+   "module": "4 x ot_hbm_su_static_lane (plain) + 4 pinned banks",
+   "members": [
+    "plain lanes 0..3 + banks"
+   ],
+   "cells": 308480,
+   "srams": 24,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lanes_plain4_7",
+   "module": "4 x ot_hbm_su_static_lane (plain) + 4 pinned banks",
+   "members": [
+    "plain lanes 4..7 + banks"
+   ],
+   "cells": 308480,
+   "srams": 24,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lanes_plain8_11",
+   "module": "4 x ot_hbm_su_static_lane (plain) + 4 pinned banks",
+   "members": [
+    "plain lanes 8..11 + banks"
+   ],
+   "cells": 308480,
+   "srams": 24,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "lanes_plain12_15",
+   "module": "4 x ot_hbm_su_static_lane (plain) + 4 pinned banks",
+   "members": [
+    "plain lanes 12..15 + banks"
+   ],
+   "cells": 308480,
+   "srams": 24,
+   "pins_bits": null
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "side_softplus",
+   "module": "ot_hbm_su_static_side_softplus",
+   "members": [
+    "u_slice.g_side_pipe.u_side.u_sp"
+   ],
+   "cells": 223122,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 37,
+    "out": 66
+   }
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg (pv0..pv7)",
+   "core_label": "side_rest",
+   "module": "ot_hbm_su_static_side minus u_sp (rsqrt, sqrt, Engram gate exp/fdiv/sqrt, result mux)",
+   "members": [
+    "u_slice.g_side_pipe.u_side (u_rsq, u_sq, u_egc, u_egs, u_exp, u_den, u_div, mux)"
+   ],
+   "cells": 189664,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 79,
+    "out": 33
+   }
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg__pv0",
+   "core_label": "pretree",
+   "module": "ot_hbm_su_red_pretree_s #(LAT 6)",
+   "members": [
+    "u_slice.u_pt"
+   ],
+   "cells": 211003,
+   "srams": 0,
+   "pins_bits": null
+  }
+ ],
+ "crossings": [
+  {
+   "between": "side_softplus -> side_rest (result mux)",
+   "bits": 33,
+   "kind": "REG->LOGIC->REG (y_sp) + REG (fault pin register)",
+   "note": "HBM-P5-RTLB: y_sp = ot_hdc_fsqrt output register y (launch reg) -> side_rest result mux -> lane S mux -> lane E1 flop; the softplus fault OR is registered in ot_hbm_su_static_side_softplus_s (FREG 1). 0 data edges; +1 edge on the softplus fault pulse."
+  },
+  {
+   "between": "FULL lane -> side (v, x) and fn/fn_out",
+   "bits": 39,
+   "kind": "REG->LOGIC->REG with PIN_REG 1",
+   "note": "g_fn_pin registers fn/fn_out; v/x from the lane; units gate v with fn compare before their first stage"
+  },
+  {
+   "between": "lanes <-> pretree / VM banks / RF broadcast",
+   "bits": null,
+   "kind": "REG->REG with PIN_REG 1",
+   "note": "existing lane_pinreg leaf; not re-benched in this pass"
+  }
+ ],
+ "rtl": {
+  "twin": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv (+ pgslice_s.sv; generated by over_cap_split/gen_pgslice_s.py: PIN_REG default 1 = the plan variant, lanes = ot_hbm_su_static_lane_pinreg leaves); side pipe = rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv (side_softplus core = pinned softplus + fault pin register | side_rest)",
+  "cycle_cost_edges": "PIN_REG 1 (existing opt-in, now the plan variant): +2 edges on lane store / RF requests, +4 on lane writes / reducer operands (su_top_compile --pin-reg 1; leaf first_output 36 -> 40 measured); side split: 0 edges on every side DATA result (y_sp is already the fsqrt output flop `y`; only the softplus fault OR was a comb crossing) -> fault pin register: +1 edge on the sqrt(softplus) fault pulse only (status, not scheduled)",
+  "bench": "tools/hbm_split/run_pgslice_lg_s_vl.sh OUT QID G SMUT EDGES (Verilator 5.050; tb_hbm_su_pgslice_lg_s: twin pgslice_lg_s PIN_REG 1 vs PINNED pgslice_lg PIN_REG 1, d4g params MLAT 4 ALAT 3 LEAF 1 MULTIRATE 1 COLLPORT 1 RF_LOCAL 1 RSYNC 1, serial 4 / stream 3 lattice, random traffic on every input, 3 resets x 1500 serial edges; every output bit except the sticky fault equal on every serial + stream edge, fault rise <= 1 serial edge later) ; tools/hbm_static/su_lane_leaf_run.sh with SU_PINREG=1 (production lane shape, 31 classes x 64 issues, golden words + SRAM commit readback, outputs on 8 + 28 + 4 PIN_REG edges) ; tools/hbm_split/run_side_s.sh OUT SMUT N SEED (tb_hbm_su_static_side_s: side_s vs pinned side, y identical every edge, fault = rest(t) | softplus(t-1))",
+  "bench_result": "ot-gold1 @2ec95b72b SU_PINREG=1 leaf benches: kind0 lane 205 / kind1 lane 133 / kind2 lane 0 PASS (1984 outputs, 3968 checks, first_output 40 = 36 + 4 PIN_REG); mutants ADDR / DATA / PHASE FAIL for kind0 and kind1, DATA / PHASE FAIL for kind2 (kind2 MUT_ADDR passes: pre-existing tb weakness, lane 0's A-row flip reads equal data) ; ot-gold2 @8f38f3246 QID 0 G 0 (FULL lane + side): PASS checks=9000 nonzero_out_edges=8997 fault_checks=4500 resets=3; SMUT 1 (y_sp +1 edge, no re-alignment) FAIL errors=68 (slice_x mismatches) as required ; ot-gold1 @2ec95b72b side_s PASS seed 1 (30300 checks, 11220 side issues, 2899 sqrt(softplus), 222 softplus fault pulses) and seed 7 (11313 / 2800 / 249); SMUT 1 FAIL errors=3565, SMUT 2 (no fault register) FAIL errors=399"
+ },
+ "note": "exp slices: 15 exp lanes + the FULL lane (each with its pinned VM bank: 6 SRAM 128x256), 16 plain lanes 4 per core, side split softplus | rest, reduction pretree.  Lanes need the EXISTING opt-in PIN_REG=1 (lane_pinreg leaf; the views use PIN_REG 0): +2 edges on store/RF requests, +4 on writes/reducer operands (su_top_compile --pin-reg).",
+ "splits_entry": {
+  "parts": [
+   [
+    "lane_exp",
+    15,
+    209541
+   ],
+   [
+    "lane_exp_l",
+    1,
+    234742
+   ],
+   [
+    "lane4",
+    4,
+    308480
+   ],
+   [
+    "side_sp",
+    1,
+    223122
+   ],
+   [
+    "side_rest",
+    1,
+    189664
+   ],
+   [
+    "pretree",
+    1,
+    211003
+   ]
+  ],
+  "glue": 63629,
+  "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+  "total": 5299195,
+  "note": "exp slices: 15 exp lanes + the FULL lane (each with its pinned VM bank: 6 SRAM 128x256), 16 plain lanes 4 per core, side split softplus | rest, reduction pretree.  Lanes need the EXISTING opt-in PIN_REG=1 (lane_pinreg leaf; the views use PIN_REG 0): +2 edges on store/RF requests, +4 on writes/reducer operands (su_top_compile --pin-reg)."
+ }
+}

@@ -339,8 +339,22 @@ def test_per_tap_reset_synchronisers():
         mod = P.types["fa"]["module"]
         v = (Path(d) / f"{mod}.sv").read_text()
         assert all(f"ot_dp_rsync_s2 u_rsync_t{i} " in v for i in range(n)) and "u_rst_sync" not in v
-        rs = re.findall(r"ot_dp_st #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
-        assert rs and set(rs) == {f"rst_n_t{i}" for i in range(min(n, len(rs)))}   # round-robin over the tap syncs
+        rs = re.findall(r"ot_dp_ste? #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
+        assert rs and set(rs) <= {f"rst_n_t{i}" for i in range(n)}
+        # S81-P9: each boundary flop takes the synchroniser of the tap nearest its pins
+        import gen_phys
+        taps = schema.tap_grid(P, "fa")
+        pins = {}
+        for bn, _b, _l, x, y, _f in gen_phys.type_pins(P, "fa"):
+            pins.setdefault(bn, []).append((x, y))
+        for kind, bn, r in re.findall(r"ot_dp_ste? #\(\.W\(\d+\)\) u_(bin|bout)_(\w+?) \(\.clk\(clk\), \.rst_n\((\w+)\)", v):
+            key = next((k for k in pins if gen_rtl.sv_id(k) == bn), None)
+            if key is None:
+                continue
+            x = sum(p[0] for p in pins[key]) / len(pins[key])
+            y = sum(p[1] for p in pins[key]) / len(pins[key])
+            i = min(range(n), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))
+            assert r == f"rst_n_t{i}", (bn, r, i)
         cells = Path(d) / "ot_dp_cells.sv"
         if shutil.which("yosys"):
             top = Path(d) / "t.sv"
@@ -355,33 +369,55 @@ def test_per_tap_reset_synchronisers():
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
 
-def test_sink_anchored_taps_carry_sinks():
-    """KV-P6 10-23 (GEOM-REVIEW6 17:09: 11 of 20 grid taps empty): clock.tap_mode 'sinks' puts every tap at FIRM-planned
-    sinks (face registers, ft stations) within clock.tap_radius_um and <= clock.tap_max_sinks; no empty tap; the RTL
-    ports, kit pins, cap and budget follow the same list."""
+def test_grid_is_default_and_sink_taps_only_add():
+    """CP1 r8 RULING (COORD 10-23 21:26): the R4 tap GRID (<= 400 um, covering all sinks) is the default on every die;
+    clock.tap_mode 'grid+sinks' / 'sinks' (KV-P6) only ADDS sink-anchored taps after the grid taps, never replaces
+    them (CP1 r8: sink taps alone put 4.5-5.7k interior sinks on one tap, face-flop spread 133 ps)."""
     import copy
+    import math
     import gen_phys
     import taps
-    raw = copy.deepcopy(PAIR)
-    ck = raw["partition_types"]["fa"].setdefault("clock", {})
-    ck.update(tap_mode="sinks", tap_radius_um=120.0, tap_max_sinks=40)
-    P = schema.Plan(raw)
-    sinks = taps.planned_sinks(P, "fa")
-    tl = taps.sink_taps(P, "fa")
-    assert sinks and tl and tl[0][0] == "clk"
-    assert sum(t[3] for t in tl) == len(sinks) and all(t[3] > 0 for t in tl)            # no empty tap
-    assert all(t[4] <= 120.0 and t[3] <= 40 for t in tl) or len(tl) >= len(sinks)
-    assert [n for n, _, _ in schema.tap_grid(P, "fa")] == [t[0] for t in tl]
-    w, h = raw["partition_types"]["fa"]["outline_um"]
-    assert all(0 < x < w and 0 < y < h for _, x, y in schema.tap_grid(P, "fa"))
-    assert schema.tap_pitch(P, "fa") == 240.0
-    with tempfile.TemporaryDirectory() as d:
-        gen_phys.write_type_kit(P, "fa", d, [])
-        cfg = (Path(d) / "fa" / "config.mk").read_text()
-        assert "OT_TAP_MAX_SINKS = 40" in cfg
-        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())
-        assert bud["clock"]["tap_mode"] == "sinks" and len(bud["clock"]["taps"]) == len(tl)
-        assert all(t["planned_sinks"] > 0 for t in bud["clock"]["taps"])
+    P0 = schema.Plan(copy.deepcopy(PAIR))
+    w, h = PAIR["partition_types"]["fa"]["outline_um"]
+    assert P0.budgets["tap_pitch_um"] == 400.0 and schema.tap_pitch(P0, "fa") == 400.0
+    grid = schema.tap_grid(P0, "fa")
+    assert len(grid) == math.ceil(w / 400.0) * math.ceil(h / 400.0) and grid[0][0] == "clk"
+    for mode in ("grid+sinks", "sinks"):
+        raw = copy.deepcopy(PAIR)
+        raw["partition_types"]["fa"].setdefault("clock", {}).update(tap_mode=mode, tap_radius_um=120.0,
+                                                                     tap_max_sinks=40)
+        P = schema.Plan(raw)
+        tl = schema.tap_grid(P, "fa")
+        st = taps.sink_taps(P, "fa")
+        assert st and all(t[3] > 0 for t in st)                                 # sink taps carry planned sinks
+        assert tl[:len(grid)] == grid                                           # the grid stays, unchanged
+        assert len(tl) > len(grid) and len(tl) <= len(grid) + len(st)           # sink taps are additions
+        assert [n for n, _, _ in tl] == ["clk"] + [f"clk_t{i}" for i in range(1, len(tl))]
+        assert all(0 < x < w and 0 < y < h for _, x, y in tl)
+        assert schema.tap_pitch(P, "fa") == 400.0                               # grid pitch, not 2 x radius
+        with tempfile.TemporaryDirectory() as d:
+            gen_phys.write_type_kit(P, "fa", d, [])
+            cfg = (Path(d) / "fa" / "config.mk").read_text()
+            assert "OT_TAP_MAX_SINKS = 40" in cfg and "OT_TAP_PITCH_UM = 400" in cfg
+            bud = json.loads((Path(d) / "fa" / "budget.json").read_text())["clock"]
+            assert bud["grid_taps"] == len(grid) and len(bud["taps"]) == len(tl)
+            assert [t["kind"] for t in bud["taps"]] == ["grid"] * len(grid) + ["sinks"] * (len(tl) - len(grid))
+    with tempfile.TemporaryDirectory() as d:                                    # default kit: grid only, cap 3000
+        gen_phys.write_type_kit(P0, "fa", d, [])
+        assert "OT_TAP_MAX_SINKS = 3000" in (Path(d) / "fa" / "config.mk").read_text()
+        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())["clock"]
+        assert bud["tap_mode"] == "grid" and len(bud["taps"]) == len(grid) and bud["sink_taps"] == []
+
+
+def test_seam_hold_padding_min_input_delay():
+    """CP1 r9 seam-hold padding: every kit input gets min input delay -clock.insertion_tol_ps vs vclk (the neighbour's
+    face flop may launch at the fast end of the insertion window, no clk-to-q / wire credit), so the kit hold-pads
+    seam inputs (r8: 0 ps padded nothing, seam hold -50 TT)."""
+    import gen_phys
+    P = schema.Plan(PAIR)
+    sdc = gen_phys.sdc(P, "fa", gen_phys.type_pins(P, "fa"))
+    tol = P.clock["insertion_tol_ps"]
+    assert tol > 0 and f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in" in sdc
 
 
 def test_tap_balance_to_plan_insertion_and_seam_uncertainty_once():
@@ -395,3 +431,68 @@ def test_tap_balance_to_plan_insertion_and_seam_uncertainty_once():
     half = gen_phys.t_lib(gen_phys.UNC_SETUP_PS / 2)
     assert f"-from [get_clocks vclk] -to [get_clocks clk] -setup {half:.4f}" in s
     assert f"-from [get_clocks clk] -to [get_clocks vclk] -setup {half:.4f}" in s
+
+
+def test_reset_epoch_flops_not_merged():
+    """S81-P9 10-23: every station whose epoch flop loads a reset net (out buses, non-lane inputs) is an ot_dp_ste with a
+    kept ot_dp_ep, so Yosys opt_merge cannot fold the epoch flops of several faces into one (S81 r0: one eq flop drove
+    ret_o0[70] 2.27 mm away); lane-epoch stations stay plain ot_dp_st."""
+    import copy
+    import re
+    import shutil
+    import subprocess
+    import gen_rtl
+    P = schema.Plan(PAIR)
+    with tempfile.TemporaryDirectory() as d:
+        gen_rtl.write_rtl(copy.deepcopy(PAIR), d)
+        for tn, t in P.types.items():
+            if t.get("hard"):
+                continue
+            p = Path(d) / f"{t['module']}.sv"
+            if not p.is_file():
+                continue
+            for cell, ea in re.findall(r"(ot_dp_ste?) #\(\.W\(\d+\)\) \w+ \(.*?\.ea\(([^)]*)\)", p.read_text()):
+                assert (cell == "ot_dp_ste") == bool(re.fullmatch(r"rst_n(_t\d+)?", ea)), (tn, cell, ea)
+        cells = Path(d) / "ot_dp_cells.sv"
+        if shutil.which("yosys"):
+            top = Path(d) / "t.sv"
+            top.write_text("module t(input wire clk, input wire r, input wire [1:0] d, output wire [1:0] q, output wire e0, "
+                           "output wire e1);\n"
+                           "  ot_dp_ste #(.W(1)) a(.clk(clk), .rst_n(r), .d(d[0]), .ea(r), .q(q[0]), .eq(e0));\n"
+                           "  ot_dp_ste #(.W(1)) b(.clk(clk), .rst_n(r), .d(d[1]), .ea(r), .q(q[1]), .eq(e1));\nendmodule\n")
+            r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
+                               capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+            assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
+
+
+def test_empty_grid_taps_dropped_at_assembly():
+    """COORD 10-23 (CP1 r9: 7 of 16 grid taps empty): the kit's clock_taps.tcl reports per-tap sink counts and writes
+    the taps without sinks to RESULTS_DIR/ot_clock_taps.json; gen.py assembly leaves those tap ports unconnected in
+    the die top (no dead spine drop), keeps every other tap on clk, and never drops all taps of a type."""
+    import copy
+    import gen_phys
+    tcl = (HERE / "clock_taps.tcl").read_text()
+    assert "ot_clock_taps.json" in tcl and "per-tap sinks" in tcl
+    raw = copy.deepcopy(PAIR)
+    P = schema.Plan(raw)
+    grid = [n for n, _, _ in schema.tap_grid(P, "fa")]
+    assert len(grid) > 2
+    with tempfile.TemporaryDirectory() as d:
+        v = Path(d) / "views"
+        (v / "fa").mkdir(parents=True)
+        (v / "fa" / "ot_clock_taps.json").write_text(json.dumps(
+            dict(sinks={n: (0 if n in grid[1:3] else 7) for n in grid}, dropped=grid[1:3])))
+        if "fb" in raw["partition_types"]:
+            nb = [n for n, _, _ in schema.tap_grid(P, "fb")]
+            (v / "fb").mkdir()
+            (v / "fb" / "ot_clock_taps.json").write_text(json.dumps(dict(sinks={n: 0 for n in nb}, dropped=nb)))
+        kd = gen_phys.write_assembly(raw, Path(d) / "a", v)
+        top = next((Path(kd) / "rtl").glob("*_top.sv")).read_text()
+        fa_parts = [n for n, p in P.parts.items() if p["type"] == "fa"]
+        assert fa_parts
+        for n in grid[1:3]:
+            assert top.count(f".{n}()") == len(fa_parts)
+        assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
+        dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
+        assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped

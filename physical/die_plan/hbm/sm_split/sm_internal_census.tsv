@@ -1,0 +1,88 @@
+src_inst	src_port	dst_inst	dst_port	bits	src_quarter	dst_quarter	crossing	launch	capture	via_top_glue
+g_c[6].g_p[0].u_t	gout	g_c[6].g_p[1].u_t	gin	100	a	a	same	reg	reg	0
+g_c[6].g_p[0].u_t	bout	g_c[7].g_p[0].u_t	bin	2069	a	a	same	reg	reg	0
+g_c[6].g_p[0].u_t	rout	g_c[7].g_p[0].u_t	rin	1636	a	a	same	reg	reg	0
+g_c[6].g_p[1].u_t	gout	g_c[6].u_be	gin	200	a	a	same	reg	reg	0
+g_c[6].g_p[1].u_t	bout	g_c[7].g_p[1].u_t	bin	2069	a	a	same	reg	reg	0
+g_c[6].g_p[1].u_t	rout	g_c[7].g_p[1].u_t	rin	1636	a	a	same	reg	reg	0
+g_c[7].g_p[0].u_t	gout	g_c[7].g_p[1].u_t	gin	100	a	a	same	reg	reg	0
+g_c[7].g_p[1].u_t	gout	g_c[7].u_be	gin	200	a	a	same	reg	reg	0
+g_c[7].u_be	qout	g_c[6].u_be	qin	138	a	a	same	reg	reg	0
+g_c[6].u_be	qout	g_c[5].u_be	qin	138	a	b	adjacent	reg	reg	0
+g_c[5].g_p[0].u_t	bout	g_c[6].g_p[0].u_t	bin	2069	b	a	adjacent	reg	reg	0
+g_c[5].g_p[0].u_t	rout	g_c[6].g_p[0].u_t	rin	1636	b	a	adjacent	reg	reg	0
+g_c[5].g_p[1].u_t	bout	g_c[6].g_p[1].u_t	bin	2069	b	a	adjacent	reg	reg	0
+g_c[5].g_p[1].u_t	rout	g_c[6].g_p[1].u_t	rin	1636	b	a	adjacent	reg	reg	0
+g_c[4].g_p[0].u_t	gout	g_c[4].g_p[1].u_t	gin	100	b	b	same	reg	reg	0
+g_c[4].g_p[0].u_t	bout	g_c[5].g_p[0].u_t	bin	2069	b	b	same	reg	reg	0
+g_c[4].g_p[0].u_t	rout	g_c[5].g_p[0].u_t	rin	1636	b	b	same	reg	reg	0
+g_c[4].g_p[1].u_t	gout	g_c[4].u_be	gin	200	b	b	same	reg	reg	0
+g_c[4].g_p[1].u_t	bout	g_c[5].g_p[1].u_t	bin	2069	b	b	same	reg	reg	0
+g_c[4].g_p[1].u_t	rout	g_c[5].g_p[1].u_t	rin	1636	b	b	same	reg	reg	0
+g_c[5].g_p[0].u_t	gout	g_c[5].g_p[1].u_t	gin	100	b	b	same	reg	reg	0
+g_c[5].g_p[1].u_t	gout	g_c[5].u_be	gin	200	b	b	same	reg	reg	0
+g_c[5].u_be	qout	g_c[4].u_be	qin	138	b	b	same	reg	reg	0
+g_c[4].u_be	qout	u_front	qr	184	b	c	adjacent	reg	reg	0
+u_front	request	PORT:request	request	43	c	-	unconnected	logic	die-lane	0
+top_reg(be_cmd)	be_cmd	g_c[6].u_be	command	29	c	a	non-adjacent(2)	reg	reg	1
+top_reg(be_cmd)	be_cmd	g_c[7].u_be	command	29	c	a	non-adjacent(2)	reg	reg	1
+u_front	fault	PORT:fault	fault	1	c	a	non-adjacent(2)	reg	die-lane	0
+u_front	rdata	PORT:rdata	rdata	256	c	a	non-adjacent(2)	logic	die-lane	0
+u_front	rrow	PORT:rrow	rrow	12	c	a	non-adjacent(2)	reg	die-lane	0
+u_front	rv	PORT:rv	rv	1	c	a	non-adjacent(2)	reg	die-lane	0
+u_front	schedule_fault	PORT:schedule_fault	schedule_fault	1	c	a	non-adjacent(2)	logic	die-lane	1
+top_reg(be_cmd)	be_cmd	g_c[4].u_be	command	29	c	b	adjacent	reg	reg	1
+top_reg(be_cmd)	be_cmd	g_c[5].u_be	command	29	c	b	adjacent	reg	reg	1
+u_front	br	g_c[4].g_p[0].u_t	bin	2069	c	b	adjacent	reg	reg	0
+u_front	rr	g_c[4].g_p[0].u_t	rin	1636	c	b	adjacent	logic	reg	0
+u_front	br	g_c[4].g_p[1].u_t	bin	2069	c	b	adjacent	reg	reg	0
+u_front	rr	g_c[4].g_p[1].u_t	rin	1636	c	b	adjacent	logic	reg	0
+g_c[2].g_p[0].u_t	gout	g_c[2].g_p[1].u_t	gin	100	c	c	same	reg	reg	0
+g_c[2].g_p[1].u_t	gout	g_c[2].u_be	gin	200	c	c	same	reg	reg	0
+g_c[2].u_be	qout	g_c[3].u_be	qin	138	c	c	same	reg	reg	0
+g_c[3].g_p[0].u_t	bout	g_c[2].g_p[0].u_t	bin	2069	c	c	same	reg	reg	0
+g_c[3].g_p[0].u_t	rout	g_c[2].g_p[0].u_t	rin	1636	c	c	same	reg	reg	0
+g_c[3].g_p[0].u_t	gout	g_c[3].g_p[1].u_t	gin	100	c	c	same	reg	reg	0
+g_c[3].g_p[1].u_t	bout	g_c[2].g_p[1].u_t	bin	2069	c	c	same	reg	reg	0
+g_c[3].g_p[1].u_t	rout	g_c[2].g_p[1].u_t	rin	1636	c	c	same	reg	reg	0
+g_c[3].g_p[1].u_t	gout	g_c[3].u_be	gin	200	c	c	same	reg	reg	0
+g_c[3].u_be	qout	u_front	ql	184	c	c	same	reg	reg	0
+g_int8.g_hard.u_int8	o_data	u_front	packet	1024	c	c	same	reg	logic	1
+g_int8.g_hard.u_int8	o_sel	u_front	packet	1099	c	c	same	reg	logic	1
+g_int8.g_hard.u_int8	o_tag	u_front	packet	10	c	c	same	reg	logic	1
+g_int8.g_hard.u_int8	o_v	u_front	packet	1	c	c	same	reg	logic	1
+top_reg(be_cmd)	be_cmd	g_c[2].u_be	command	29	c	c	same	reg	reg	1
+top_reg(be_cmd)	be_cmd	g_c[3].u_be	command	29	c	c	same	reg	reg	1
+u_front	bl	g_c[3].g_p[0].u_t	bin	2069	c	c	same	reg	reg	0
+u_front	rl	g_c[3].g_p[0].u_t	rin	1636	c	c	same	logic	reg	0
+u_front	bl	g_c[3].g_p[1].u_t	bin	2069	c	c	same	reg	reg	0
+u_front	rl	g_c[3].g_p[1].u_t	rin	1636	c	c	same	logic	reg	0
+g_c[2].g_p[0].u_t	bout	g_c[1].g_p[0].u_t	bin	2069	c	d	adjacent	reg	reg	0
+g_c[2].g_p[0].u_t	rout	g_c[1].g_p[0].u_t	rin	1636	c	d	adjacent	reg	reg	0
+g_c[2].g_p[1].u_t	bout	g_c[1].g_p[1].u_t	bin	2069	c	d	adjacent	reg	reg	0
+g_c[2].g_p[1].u_t	rout	g_c[1].g_p[1].u_t	rin	1636	c	d	adjacent	reg	reg	0
+top_reg(be_cmd)	be_cmd	g_c[0].u_be	command	29	c	d	adjacent	reg	reg	1
+top_reg(be_cmd)	be_cmd	g_c[1].u_be	command	29	c	d	adjacent	reg	reg	1
+PORT:command		g_int8.g_hard.u_int8	i_v	1	d	c	adjacent	port	reg	1
+PORT:command		u_front	command	191	d	c	adjacent	port	logic	0
+PORT:command		u_front	packet	1099	d	c	adjacent	port	logic	1
+PORT:kv_desc		u_front	kv_desc	64	d	c	adjacent	port	logic	0
+PORT:packet		g_int8.g_hard.u_int8	i_codes	1024	d	c	adjacent	port	reg	0
+PORT:packet		g_int8.g_hard.u_int8	i_tag	10	d	c	adjacent	port	reg	0
+PORT:packet		g_int8.g_hard.u_int8	i_v	1	d	c	adjacent	port	reg	1
+PORT:packet		u_front	packet	1099	d	c	adjacent	port	logic	1
+PORT:xw_addr		u_front	xw_addr	7	d	c	adjacent	port	logic	0
+PORT:xw_data		u_front	xw_data	1920	d	c	adjacent	port	logic	0
+PORT:xw_data		u_front	xw_data	128	d	c	adjacent	port	reg	0
+PORT:xw_en		u_front	xw_en	1	d	c	adjacent	port	logic	0
+PORT:xw_grp		u_front	xw_grp	7	d	c	adjacent	port	logic	0
+g_c[1].u_be	qout	g_c[2].u_be	qin	138	d	c	adjacent	reg	reg	0
+g_c[0].g_p[0].u_t	gout	g_c[0].g_p[1].u_t	gin	100	d	d	same	reg	reg	0
+g_c[0].g_p[1].u_t	gout	g_c[0].u_be	gin	200	d	d	same	reg	reg	0
+g_c[0].u_be	qout	g_c[1].u_be	qin	138	d	d	same	reg	reg	0
+g_c[1].g_p[0].u_t	bout	g_c[0].g_p[0].u_t	bin	2069	d	d	same	reg	reg	0
+g_c[1].g_p[0].u_t	rout	g_c[0].g_p[0].u_t	rin	1636	d	d	same	reg	reg	0
+g_c[1].g_p[0].u_t	gout	g_c[1].g_p[1].u_t	gin	100	d	d	same	reg	reg	0
+g_c[1].g_p[1].u_t	bout	g_c[0].g_p[1].u_t	bin	2069	d	d	same	reg	reg	0
+g_c[1].g_p[1].u_t	rout	g_c[0].g_p[1].u_t	rin	1636	d	d	same	reg	reg	0
+g_c[1].g_p[1].u_t	gout	g_c[1].u_be	gin	200	d	d	same	reg	reg	0
