@@ -226,6 +226,70 @@ def yosys_ports(files, top, params, defines, incdir):
     return ports
 
 
+def retain_unused_inputs(files, top, retained, kd):
+    """Keep declared reserved input bits physically registered without changing outputs."""
+    if not retained:
+        return None
+    body = []
+    for port, bits in retained.items():
+        width = len(bits)
+        expr = "{" + ", ".join(f"{port}[{int(b)}]" for b in bits) + "}"
+        body += [f"    (* keep = 1 *) wire [{width-1}:0] keep_unused_{port};",
+                 f"    (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_input_sink #(.W({width})) u_bin_unused_{port} "
+                 f"(.clk(clk), .d({expr}), .q(keep_unused_{port}));"]
+    rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
+    matches = 0
+    for f in files:
+        p = Path(f)
+        if p.suffix not in (".sv", ".v"):
+            continue
+        text = p.read_text()
+        text, n = rx.subn(lambda m: m[1] + "\n" + "\n".join(body) + "\n" + m[2], text)
+        if n:
+            p.write_text(text); matches += n
+    if matches != 1:
+        raise ValueError(f"reserved-input retention expected one {top}, found {matches}")
+    helper = Path(kd) / "rtl" / "ot_hbm_face_input_sink.sv"
+    helper.write_text("(* keep_hierarchy = 1 *) module ot_hbm_face_input_sink #(parameter W=1)(input clk,input [W-1:0] d,output [W-1:0] q);\n"
+                      "(* keep = 1 *) reg [W-1:0] state_q;always @(posedge clk) state_q <= d;assign q=state_q;\nendmodule\n")
+    return helper
+
+
+def clone_output_state(files, top, clone, kd):
+    """Duplicate an existing state DFF at each output face, preserving its edge/reset."""
+    if not clone:
+        return None
+    state, nxt, width, reset = (clone[k] for k in ("state", "next", "width", "reset"))
+    wire = "face_clone_" + state
+    extra = (f"\n    wire [{width-1}:0] {wire};\n"
+             f"    generate for (genvar cp=0;cp<{width};cp=cp+1) begin:g_face_clone_{state}\n"
+             f"        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_bout_copy "
+             f"(.clk(clk),.rst_n({reset}),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
+    rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
+    matches = 0
+    def patch(m):
+        text = m[1]
+        for port in clone["ports"]:
+            pattern = r"(assign\s+" + re.escape(port) + r"\s*=\s*)" + re.escape(state) + r"(?=\[)"
+            text, n = re.subn(pattern, lambda q: q[1] + wire, text)
+            if n != 1:
+                raise ValueError(f"expected one output state assignment for {port}")
+        return text + extra + m[2]
+    for f in files:
+        p=Path(f)
+        if p.suffix not in (".v", ".sv"):
+            continue
+        text,n=rx.subn(patch,p.read_text())
+        if n:
+            p.write_text(text); matches += n
+    if matches != 1:
+        raise ValueError(f"output clone expected one {top}, found {matches}")
+    helper=Path(kd)/"rtl"/"ot_hbm_face_state_bit.sv"
+    helper.write_text("(* keep_hierarchy = 1 *) module ot_hbm_face_state_bit(input clk,rst_n,d,output reg q);\n"
+                      "always @(posedge clk or negedge rst_n) if(!rst_n) q<=1'b0;else q<=d;\nendmodule\n")
+    return helper
+
+
 def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=None):
     """pass-through wrapper `module` (plan pins pb {bus: (w, scalar)}) around `top` (tports).  cmap = {plan bus:
     {top port: bits}} (split cut map) else names must match.  Returns (text, report)."""
@@ -358,6 +422,15 @@ def main():
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
+    retained = rec.get("retain_unused_input_bits", {})
+    retention_helper = retain_unused_inputs(local, top, retained, kd)
+    if retention_helper:
+        srcs.append(f"/work/rtl/{retention_helper.name}")
+        local.append(str(retention_helper))
+    output_helper = clone_output_state(local, top, rec.get("clone_output_state", {}), kd)
+    if output_helper:
+        srcs.append(f"/work/rtl/{output_helper.name}")
+        local.append(str(output_helper))
     wrap_rep = None
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
