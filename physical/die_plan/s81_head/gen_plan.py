@@ -263,7 +263,10 @@ tile_cores = [core(CVA + "0", "elemA", EA["cells"], G, G, EA["um"]),
               core(CVA + "2", "elemA", EA["cells"], G, SLOT_E + G, EA["um"]),
               core(CVA + "3", "elemA", EA["cells"], SLOT_E + G, SLOT_E + G, EA["um"]),
               core(CVB, "elemB", EB["cells"], G, 2 * SLOT_E + G, EB["um"])]
+# CV 1: the 5 elements are the closed views' black boxes (ot_s81hd_elem_cv_bb.v); the element RTL + ROM black box are
+# read only so the parser can resolve the bundle's untaken CV 0 branch (pruned by hierarchy -top)
 HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv",
+          "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
           "rtl/hdc/ot_hdc_delay.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v", "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
           "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]

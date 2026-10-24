@@ -15,18 +15,18 @@ module ot_s81hd_strap #(
     output wire [16:0] row0,
     output wire        ten
 );
-    wire [17:0] v = {TEN[0], ROW0[16:0]};
+    localparam [17:0] V = {TEN[0], ROW0[16:0]};
     wire [17:0] o;
     genvar b;
     generate for (b = 0; b < 18; b = b + 1) begin : g_b
 `ifdef SYNTHESIS
-        if (v[b]) begin : g_h
+        if (V[b]) begin : g_h
             (* keep = 1, dont_touch = 1 *) TIEHIx1_ASAP7_75t_R u_t (.H(o[b]));
         end else begin : g_l
             (* keep = 1, dont_touch = 1 *) TIELOx1_ASAP7_75t_R u_t (.L(o[b]));
         end
 `else
-        assign o[b] = v[b];
+        assign o[b] = V[b];
 `endif
     end endgenerate
     assign row0 = o[16:0];
