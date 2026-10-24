@@ -1,0 +1,15 @@
+PASS rstop_sid 16 stops 144 checks
+MISMATCH E2 col 0 W silent (no egress unflagged)
+RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0
+EGRESS_BAD idx 0 hops 1 src 1 (want 1)
+EGRESS_BAD idx 1 hops 1 src 1 (want 1)
+EGRESS_BAD idx 2 hops 1 src 1 (want 1)
+EGRESS_BAD idx 3 hops 1 src 1 (want 1)
+EGRESS_BAD idx 4 hops 1 src 1 (want 1)
+EGRESS_BAD idx 5 hops 1 src 1 (want 1)
+EGRESS_BAD idx 6 hops 1 src 1 (want 1)
+MISMATCH R2 unflagged: no egress / no outward beat
+RSTOP_XO R2 egress 80 gather min 80 other_out 0
+FAIL rstop_xo 2 of 138 checks
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xonoflag
+rc 0

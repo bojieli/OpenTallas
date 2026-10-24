@@ -1,0 +1,9 @@
+{
+  "element": "qkd_ctrl_kc",
+  "kit": "physical/ref_tile/qkd_ctrl_kc@fe58324a6",
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "CODEX",
+  "at": "2026-10-24T08:57:17.740561-07:00",
+  "picture": "/srv/opentallas-scratch/claude/wt/elem-qk/results/elem_qk_1024/review/batch_02.png",
+  "reasons": "Viewed 65x43um macro-free rectangle; 2 south outputs, 2 west inputs, north control/clock pins. No macro walls or slivers; size keeps data wires local. Existing routing geometry unchanged. Diagnostic signoff rerun corrects double unit conversion in fallback clock measurement. Existing timing/SDC/face failures remain gating."
+}

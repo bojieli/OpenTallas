@@ -1,0 +1,17 @@
+PASS rstop_sid 16 stops 144 checks
+MISMATCH E1 col 0 W silent
+MISMATCH E1 W rule
+MISMATCH E1 W rule
+MISMATCH E1 W rule
+MISMATCH E1 W rule
+MISMATCH E1 W rule
+MISMATCH E1 W rule
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+MISMATCH E3 others silent
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xoall
+rc 0

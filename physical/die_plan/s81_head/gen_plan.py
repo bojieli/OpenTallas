@@ -243,31 +243,64 @@ EA, EB = M.ELEM_VIEW["A"], M.ELEM_VIEW["B"]
 SLOT_E = M.ELEM_SLOT
 
 
-def core(inst, view, cells, x, y, um):
+def core(inst, view, cells, x, y, um, orient="R0"):
     v = M.ELEM_VIEW[view[-1]]
-    return dict(inst=inst, module="ot_dsrom_head_elem", origin_um=[lat(x), lat(y)], outline_um=[um, um], orient="R0",
-                track_offset_um=[0.012, 0.012], pins_file=f"cores/{view}_pins.json",
-                lef=f"physical/dsrom_fh_safe/closed/{view}/ot_dsrom_head_elem.lef",
-                lib=f"physical/dsrom_fh_safe/closed/{view}/ot_dsrom_head_elem_ss.lib",
+    cv = f"ot_s81hd_{view}_cv"
+    # pins sit on the 0.048 M4 / M5 tracks (offset 0.024) at a 0.012 core shift in R0; a mirrored axis puts pin p at
+    # size - p, so its shift is (0.036 - size) mod 0.048 (elemA 317.672: 0.028)
+    def sh(mirrored):
+        return round((0.036 - um) % 0.048, 4) if mirrored else 0.012
+    track = [sh(orient in ("MY", "R180")), sh(orient in ("MX", "R180"))]
+    return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient=orient,
+                track_offset_um=track, pins_file=f"cores/{view}_pins.json",
+                lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
+                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_tt.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
-                     f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff). REWORK: the S81 tile instantiates "
-                     "the census-safe copy ot_s81hd_elem (CUT 0x17b): bind this view after an equivalence proof or "
-                     "re-close the copy")
+                     f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed {cv} "
+                     "(tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point "
+                     "(ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there "
+                     "(tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)")
 
 
-tile_cores = [core("u_eA0", "elemA", EA["cells"], G, G, EA["um"]),
-              core("u_eA1", "elemA", EA["cells"], SLOT_E + G, G, EA["um"]),
-              core("u_eA2", "elemA", EA["cells"], G, SLOT_E + G, EA["um"]),
-              core("u_eA3", "elemA", EA["cells"], SLOT_E + G, SLOT_E + G, EA["um"]),
-              core("u_eB", "elemB", EB["cells"], G, 2 * SLOT_E + G, EB["um"])]
-T("hd_tile", "ot_s81hd_tile", (TW, TH), MD["tile"]["cells"],
+CVA, CVB = "u_core.u_b.g_cv.u_eA", "u_core.u_b.g_cvb.u_eB"     # ot_s81hd_bundle CV = 1 instance paths
+# 10-24 G3 floorplan review (die_plan.png + the r2 global placement, results/geom_review s81_head_tile_r2): the 691.2 tile
+# put elemB's W face and the bus-i face window in one 8.64-um sliver, the A S-face x pins (130 each) on the tile edge
+# and the 20k skew-line flops in one 27.9-um channel.  Now (tile 708.48 x 1036.8):
+#   A block: columns at x 17.28 / 371.52 (edge strips 17.28 / 19.29, centre column 36.57), rows at y 8.64 / 380.16
+#   (centre row channel 53.85); orientation puts every A S face (130 x pins) on the centre row channel and every A
+#   E face (controls + 45 x) on the centre column: bottom-left MX, bottom-right R180, top-left R0, top-right MY.
+#   elemB centred in the top band (x 216.0, y 734.4): W region 0..216 for the bus-i face flops / BST / skew lines,
+#   E region 493.7..708.5 for the bus-o face flops / merge; B's W-face x (128) faces the skew lines.
+AX0, AX1, AY0, AY1 = 2 * G, 43 * G, G, 44 * G
+tile_cores = [core(CVA + "0", "elemA", EA["cells"], AX0, AY0, EA["um"], "MX"),
+              core(CVA + "1", "elemA", EA["cells"], AX1, AY0, EA["um"], "R180"),
+              core(CVA + "2", "elemA", EA["cells"], AX0, AY1, EA["um"], "R0"),
+              core(CVA + "3", "elemA", EA["cells"], AX1, AY1, EA["um"], "MY"),
+              core(CVB, "elemB", EB["cells"], 25 * G, 85 * G, EB["um"], "R0")]
+# CV 1: the 5 elements are the closed views' black boxes (ot_s81hd_elem_cv_bb.v); the element RTL + ROM black box are
+# read only so the parser can resolve the bundle's untaken CV 0 branch (pruned by hierarchy -top)
+HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv",
+          "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+          "rtl/hdc/ot_hdc_delay.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v", "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
+          "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv", "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
+          "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
+T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; ROM code "
-                                       "and the row0 / ten straps are per-instance mask programme (no die ports)")],
+                 cells=TILE_GLUE, params={"CV": "1"},
+                 bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
+                 note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
+                      "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
+            dict(inst="u_strap", module="ot_s81hd_strap", status="new", cells=18, params={"ROW0": "0", "TEN": "1"},
+                 bind={"row0": "net:row0", "ten": "net:ten"},
+                 note="per-instance position straps row0 / ten = 18 mask-programmed TIEHI / TIELO cells (same footprint, "
+                      "the ROM-code mask-variant class); the kit is built at ROW0 0 / TEN 1, instance k differs only by "
+                      "the tie masters (no die ports)")],
+  nets=[dict(name="row0", width=17), dict(name="ten", width=1)],
+  sources=HD_SRC,
   note=f"LM-head tile = 1 bundle (128 vocab rows, 10 ROM4096) on bus B 565; {MD['tile']['cells_basis']}",
   hard_cores=tile_cores)
-BUS("hd_tile", "i", "in", 565)
-BUS("hd_tile", "o", "out", 565)
+BUS("hd_tile", "i", "in", 565, "u_core.i")
+BUS("hd_tile", "o", "out", 565, "u_core.o")
 
 T("hd_turn_a", "ot_s81hd_turn_a", (TURNW, TH), 2_000, note="row-pair chain U-turn, out-row half (ft stations only)")
 SLOT("hd_turn_a", "t", 565, 0)
@@ -278,7 +311,7 @@ SPINE_FT = [("hu", 276), ("hd", 276), ("au", 64), ("ad", 64), ("bu", 64), ("bd",
 for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
     T(tn, "ot_s81hd_spn" + ("_end" if end else ""), (SPW, 2 * TH), 60_000,
       contents=[dict(inst="u_spo", module="ot_s81hd_spo", status="reuse", kit="physical/ref_tile/s81hd_spo_m",
-                     note="CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; SS sensitivity -70.45: re-close at SS)"),
+                     note="CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"),
                 dict(inst="u_spr", module="ot_s81hd_spr", status="reuse", kit="physical/ref_tile/s81hd_spr_m4",
                      note="CLOSED s81hd_spr_m4-bb8dd356c")],
       note="spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged "
@@ -627,6 +660,8 @@ plan = dict(
                  cut_step_um=250),
     latency=dict(lanes={}),
 )
+from early_core_taps import add as add_early_core_taps
+add_early_core_taps(types["hd_tile"], root=ROOT)
 S.validate  # noqa: B018  (schema import check)
 out = HERE / "die_plan.json"
 out.write_text(json.dumps(plan, indent=1) + "\n")

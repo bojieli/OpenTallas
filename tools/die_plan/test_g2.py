@@ -271,19 +271,32 @@ def test_kit_places_content_macros(tmp_path):
     import pytest
     raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
-    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_tt.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
-    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
                                              origin_um=[17.28, 25.92], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
-                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
     kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    assert (kd / "macros/m_ff.lib").read_text() == "library(m_ff) {}\n"
+    assert (kd / "face_keep.tcl").is_file()
+    assert (kd / "face_keep_release.tcl").is_file()
     mp = (kd / "macro_place.tcl").read_text()
     assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
     assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
     cfg = (kd / "config.mk").read_text()
     assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["hard_cores"][0]["lib"]
+    with pytest.raises(ValueError, match="LEF but no timing liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
+    assert not (tmp_path / "missing_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_ss.lib"
+    with pytest.raises(ValueError, match="requires TT macro liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "ss_lib", [], root=tmp_path)
+    assert not (tmp_path / "ss_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_tt.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
@@ -516,7 +529,7 @@ def test_pair_drops_hard_cores():
 
 
 def test_run_die_signoff_corners():
-    """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
+    """CP1-R10: the die STA runs at TT (setup sign-off), FF (hold sign-off) and SS (information only, AGENTS.md 10-24)."""
     import gen_phys
     assert "for c in SS TT FF" in gen_phys.RUN_DIE
 

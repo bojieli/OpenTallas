@@ -1,0 +1,12 @@
+PASS rstop_sid 16 stops 144 checks
+MISMATCH E1 sid 1 egress (hops 1, src 1, body)
+MISMATCH E3 sid 1 egress of a delivered line beat (src kept)
+MISMATCH E5 sid 1 egress of the V-assembled beat
+MISMATCH R1 s_0N ro_w: each of the 80 beats exactly once, exact
+RSTOP_XO R1 egress 0 (bad 0) gather min 80 other_out 0
+RSTOP_XO R2 egress 0 gather min 80 other_out 0
+MISMATCH E7 two egress sources in one cycle: sticky fault at sid 1 only
+E7 fault vector 0000
+FAIL rstop_xo 5 of 138 checks
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xooff
+rc 0
