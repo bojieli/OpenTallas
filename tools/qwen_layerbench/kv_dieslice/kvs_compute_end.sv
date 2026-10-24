@@ -133,12 +133,15 @@ module kvs_compute_end #(
         .rx_expected_epoch(epoch), .rx_expected_layer(lay_q), .rx_expected_beat(n_rb),
         .rx_valid(ca_rv), .rx_kind(ca_rk), .rx_epoch(ca_re), .rx_layer(ca_rl), .rx_beat(ca_rb), .rx_data(ca_rd),
         .fault(ca_f), .fault_cause(ca_fc));
-    // KVN: 4 words pushed into the transport's seats right after each layer's cal_start (well before its x3 slots)
+    // KVN: word j pushed into the transport's 2 seats one edge before its x3 slot reaches the transport (as
+    // tb_qwen_d2d_program); j counts the layer's x3 slots (reset at every run start)
     function automatic [2:0] ktag(input integer j); ktag = {1'(j >> 1), 1'b0, 1'(j & 1)}; endfunction
-    integer since_cs = 1 << 30;
-    always @(posedge ck) since_cs <= (s_cs && s_l != 6'h3f) ? 0 : since_cs + 1;
-    wire kvn_push = en && since_cs >= 1 && since_cs < 5;
-    wire [1:0] kj = 2'(since_cs - 1);
+    wire x3_pre;
+    kvs_dly #(1, CS_X3S + E3 - 1) d_x3pre (.ck(ck), .a(kv_x3_slot), .b(x3_pre));
+    reg [2:0] kn = 0;
+    always @(posedge ck) if (s_cs) kn <= 0; else if (x3_pre && kn < 4) kn <= kn + 1;
+    wire kvn_push = en && x3_pre && kn < 4;
+    wire [1:0] kj = kn[1:0];
     wire [511:0] kw_d = kj[1] ? (kj[0] ? kv[2 * T - 1][1023:512] : kv[2 * T - 1][511:0])
                               : (kj[0] ? kv[T - 1][1023:512] : kv[T - 1][511:0]);
     wire kvt_f;
