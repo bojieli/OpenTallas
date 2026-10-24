@@ -509,6 +509,21 @@ def die_pdn_tcl(P):
     return "\n".join(lines) + "\n"
 
 
+def dropped_taps(P, views):
+    """{type: {tap port}} of taps a kit's clock_taps.tcl found without sinks (views/<type>/ot_clock_taps.json, from
+    the kit's RESULTS_DIR); a type keeps at least one connected tap."""
+    out = {}
+    for tn in P.types:
+        f = Path(views) / tn / "ot_clock_taps.json"
+        if f.is_file():
+            d = json.loads(f.read_text())
+            names = {n for n, _, _ in S.tap_grid(P, tn)}
+            dr = set(d.get("dropped", [])) & names
+            if dr and len(dr) < len(names):          # a type keeps at least one connected tap
+                out[tn] = dr
+    return out
+
+
 def write_assembly(raw, out, views, rtl_root=None):
     """die assembly kit: ORFS config for the die top with every partition as a macro (views/<type>/<module>.lef/.lib
     from each kit's generate_abstract), exact placement, die PG, die IO pins, routing on M2..M9 (abutment nets are
@@ -518,7 +533,10 @@ def write_assembly(raw, out, views, rtl_root=None):
     kd = Path(out) / "die"
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
     ep = gen_rtl.bus_epochs(P)
-    (kd / "rtl" / f"{gen_rtl.sv_id(P.name)}_top.sv").write_text(gen_rtl.die_top(P, ep))
+    dropped = dropped_taps(P, views)
+    (kd / "rtl" / f"{gen_rtl.sv_id(P.name)}_top.sv").write_text(gen_rtl.die_top(P, ep, dropped))
+    (kd / "clock_taps.json").write_text(json.dumps(dict(dropped={k: sorted(v) for k, v in dropped.items()}),
+                                                   indent=1) + "\n")
     (kd / "macro_place.tcl").write_text(macro_place_tcl(P))
     (kd / "pdn.tcl").write_text(die_pdn_tcl(P))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
@@ -585,7 +603,7 @@ def write_assembly(raw, out, views, rtl_root=None):
             seams.append(dict(net=f"w_{gen_rtl.sv_id(pid)}[{bit}]", port=pid, kind=kind,
                               src=gen_rtl.sv_id(pr["src"]["part"]), dst=gen_rtl.sv_id(pr["dst"]["part"])))
     (kd / "seams.json").write_text(json.dumps(dict(die=P.name, seams=seams), indent=0) + "\n")
-    top_v = gen_rtl.die_top(P, ep)
+    top_v = gen_rtl.die_top(P, ep, dropped)
     plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", l) for l in top_v.splitlines()
                       if not l.startswith("`"))
     (kd / "die_top_struct.v").write_text(plain + "\n")

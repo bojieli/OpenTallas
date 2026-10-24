@@ -1,5 +1,6 @@
-/home/ubuntu/wt/cp1-r9-1023/tools/die_plan/die_plan.schema.json
-$id": "opentallas.die_plan.v1",
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "opentallas.die_plan.v1",
  "title": "OpenTallas die plan (TOPDOWN-PLAN)",
  "type": "object",
  "required": [

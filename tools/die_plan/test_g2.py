@@ -464,3 +464,35 @@ def test_reset_epoch_flops_not_merged():
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
             assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
+
+
+def test_empty_grid_taps_dropped_at_assembly():
+    """COORD 10-23 (CP1 r9: 7 of 16 grid taps empty): the kit's clock_taps.tcl reports per-tap sink counts and writes
+    the taps without sinks to RESULTS_DIR/ot_clock_taps.json; gen.py assembly leaves those tap ports unconnected in
+    the die top (no dead spine drop), keeps every other tap on clk, and never drops all taps of a type."""
+    import copy
+    import gen_phys
+    tcl = (HERE / "clock_taps.tcl").read_text()
+    assert "ot_clock_taps.json" in tcl and "per-tap sinks" in tcl
+    raw = copy.deepcopy(PAIR)
+    P = schema.Plan(raw)
+    grid = [n for n, _, _ in schema.tap_grid(P, "fa")]
+    assert len(grid) > 2
+    with tempfile.TemporaryDirectory() as d:
+        v = Path(d) / "views"
+        (v / "fa").mkdir(parents=True)
+        (v / "fa" / "ot_clock_taps.json").write_text(json.dumps(
+            dict(sinks={n: (0 if n in grid[1:3] else 7) for n in grid}, dropped=grid[1:3])))
+        if "fb" in raw["partition_types"]:
+            nb = [n for n, _, _ in schema.tap_grid(P, "fb")]
+            (v / "fb").mkdir()
+            (v / "fb" / "ot_clock_taps.json").write_text(json.dumps(dict(sinks={n: 0 for n in nb}, dropped=nb)))
+        kd = gen_phys.write_assembly(raw, Path(d) / "a", v)
+        top = next((Path(kd) / "rtl").glob("*_top.sv")).read_text()
+        fa_parts = [n for n, p in P.parts.items() if p["type"] == "fa"]
+        assert fa_parts
+        for n in grid[1:3]:
+            assert top.count(f".{n}()") == len(fa_parts)
+        assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
+        dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
+        assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
