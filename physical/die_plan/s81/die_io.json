@@ -14,8 +14,7 @@
   "pitch_um": 150.0,
   "signals": 26,
   "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy; host link (BFS 9 port hop(s) from seqhost): CONFIRM",
-  "host": true
+  "note": "die_io.py plan: u_phy"
  },
  {
   "name": "io_lk_WS1_u_phy",
@@ -83,7 +82,9 @@
   "pitch_um": 150.0,
   "signals": 26,
   "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "note": "die_io.py plan: u_phy; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+  "host": "in_band",
+  "host_route": "lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
  },
  {
   "name": "io_lk_WN3_u_phy",
@@ -100,7 +101,9 @@
   "pitch_um": 150.0,
   "signals": 26,
   "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "note": "die_io.py plan: u_phy; in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+  "host": "in_band",
+  "host_route": "lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
  },
  {
   "name": "io_lk_ES0_u_phy",
