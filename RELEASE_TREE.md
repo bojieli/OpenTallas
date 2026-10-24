@@ -45,7 +45,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## DIE qwen_kvsys · Qwen KV
 - [x] KV.G0 Plan check v3.8h · KV-P7 · PASS · 0a0966d6f
-- [ ] KV.G0C Completeness 48/49 (kv3_hub_Wi: 22 hard cores without pins) · KV-G3 · FAIL · 10-24 06:40
+- [x] KV.G0C Completeness v3.8u 49/49 (hub_Wi host-core pins) · KV-G3 · PASS · a7e29a44ac
 - [ ] KV.G0.V38S Plan v3.8s FIRM astk stations on main · ROOT-MERGE · RUNNING · kv-p8-hub-1023 unmerged
 - [ ] KV.G1 Plan review · ROOT-MERGE · PASS · GEOM-REVIEW8 v3.8s PASS (geom-review8-1023 unmerged)
 - [ ] KV.G2 Routing probe · KV-G3 · TODO
@@ -100,18 +100,16 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] S81.G0C.CORES Hard cores for the 92 G0C-failing S81 types · S81-CORES · RUNNING
 
 ## INFRA · industry flow lanes (owner 10-24 07:40)
+- [ ] ELEM.ALL Close current-plan partition types / hard cores without a SIGNED view (NOT the obsolete 10-21 element list) · ELEM-S81 / ELEM-QK / ELEM-HBM · RUNNING
 - [ ] FLOW.DISK ot-run scratch-only placement + root guard · FLEET-DISK · RUNNING
 - [ ] FLOW.CI Whole-die prototype CI per plan (G0/G0C/xdie/G2/die STA + SI/IR margins) · DIE-CI · RUNNING
 - [ ] FLOW.SIGNOFF Uniform MCMM re-signoff of every closed block · SIGNOFF · RUNNING
 - [ ] FLOW.TRIAL.S81 Trial die run S81 layer + head · TRIAL-S81 · RUNNING
 - [ ] FLOW.TRIAL.QK Trial die run Qwen compute + KV · TRIAL-QK · RUNNING
 - [ ] FLOW.TRIAL.HBM Trial die run HBM B2 (verify cut 0.55) · TRIAL-HBM · RUNNING
-- [ ] ELEM.S81 Open S81 elements (lep, slices 13/21, col FIFO 5/10, seq_host, sh_lk spread, coll_lane, gunit) · ELEM-S81 · RUNNING
-- [ ] ELEM.QK Open Qwen/KV elements (c_b16_dv, native59 service, kvs_grp, pv_fin_s, d2d spread, host_root) · ELEM-QK · RUNNING
-- [ ] ELEM.HBM Open HBM engines for B2 (coll_gq_issue, sm_pv_merge, idx_selector, su_cxport, sfu_split3, svc_sm, hc_bankq0, pdie_serdes) · ELEM-HBM · RUNNING
 
 ## OWNER · open owner decisions (2026-10-24)
-- [ ] OWN.ELASTIC Elastic seams: owner APPROVED opt-in experiment 10-24 07:35 · ELASTIC · RUNNING · Qwen compute longest lanes; adopt only at >=1% priced + RTL-confirmed
+- [x] OWN.ELASTIC Elastic seams experiment · ELASTIC · DONE · REJECT 8e69517bf2: longest lanes carry 0 pad, elastic 2.9x/5.2x pad area, 0 cyc gain; fix pads plan-side
 - [x] OWN.HEADCNT S81 head dies 12 → 4 (one group meets AR+MTP at <=35% busy; saves 8 dies + 8 host links) · OWNER · DONE · approved 10-24 07:30
 - [x] OWN.HEADHBM HBM stacks on head dies (rack: 4 each; LM head is ROM, plan has none) · OWNER · DONE · approved 10-24 07:30
 - [ ] OWN.DRAFT MTP draft on copy-B dies, no draft fan-out SerDes · S81-HEAD · RUNNING · approved if MTP compose uses no draft link (checking)
