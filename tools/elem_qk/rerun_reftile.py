@@ -43,13 +43,11 @@ def prep(kit, name, commit, out):
                  if subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", f"{sha}:physical/ref_tile/{kit}/{f}"],
                                    capture_output=True).returncode == 0)
     refs = sorted({kit} | set(re.findall(r"physical/ref_tile/([A-Za-z0-9_.-]+)/", kt)))
-    for r in list(refs):
-        if r in ("common",):
-            continue
-    have = [h for h in have if h != "physical"] + [":(exclude)physical/ref_tile"] * ("physical" in have) + (
-        ["physical"] if "physical" in have else []) + [f"physical/ref_tile/{r}" for r in refs
-        if subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", f"{sha}:physical/ref_tile/{r}"],
-                          capture_output=True).returncode == 0]
+    ref_paths = [f"physical/ref_tile/{r}" for r in refs
+                 if subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", f"{sha}:physical/ref_tile/{r}"],
+                                   capture_output=True).returncode == 0]
+    if "physical" in have:  # (an exclude pathspec also drops later includes: archive the kit dirs separately)
+        have = [h for h in have if h != "physical"] + ["physical", ":(exclude)physical/ref_tile"]
     # the host git-archives the source from its own clone (fetching origin if the commit is missing)
     main = git("rev-parse", "HEAD").decode().strip()
     label = re.sub(r"[^A-Za-z0-9_]", "_", name)
@@ -69,7 +67,8 @@ export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 mkdir -p $RUN/src $RUN/cl $RUN/so_tools $RUN/routes
 G=$HOME/OpenTallas
 for c in {sha} {main}; do git -C $G cat-file -e $c^{{commit}} 2>/dev/null || git -C $G fetch -q origin || exit 3; done
-[ -f $RUN/src/.untarred ] || {{ git -C $G archive {sha} {' '.join(shlex.quote(h) for h in have)} | tar -x -C $RUN/src && touch $RUN/src/.untarred; }} || exit 3
+[ -f $RUN/src/.untarred ] || {{ git -C $G archive {sha} {' '.join(shlex.quote(h) for h in have)} | tar -x -C $RUN/src && git -C $G archive {sha} {' '.join(ref_paths)} | tar -x -C $RUN/src && touch $RUN/src/.untarred; }} || exit 3
+[ -f $RUN/src/physical/ref_tile/{kit}/kit.env ] || {{ echo "ELEM-QK: kit dir missing in src" >&2; exit 3; }}
 git -C $G archive {main} tools/die_plan | tar -x -C $RUN/so_tools || exit 3
 cd $RUN/src
 export CL_PHASE=route CL_LABEL_SUFFIX= CL_STOP_AFTER=
