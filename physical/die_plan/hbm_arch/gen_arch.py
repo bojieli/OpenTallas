@@ -787,12 +787,35 @@ def main():
     pair, exempt = traffic(T, census, M)
     bundles = canon(T, pair)
     if T['V'].get('mirror'):
-        import emit_mirror as EM
+        import emit_mirror as EM, clock_htree as CH
+        rects = {n: tuple(u(v) for v in p['rect']) for n, p in T['parts'].items()}
+        hsegs, hleaves, hres = CH.build(u(T['W']), u(T['H']), rects)
         lanes, ports, lane_out, buses, slots, errs, unrouted, R = EM.emit_mirror(
-            T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH)
+            T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH, reserve=hres)
     else:
         lanes, ports, lane_out, buses, slots, errs, unrouted, R = emit(T, bundles, M, census, a.out)
     plan = plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, a.out)
+    if T['V'].get('mirror'):
+        # clock spine reservation -> per-type ft_budget (M8 for H, M9 for V): cut_avail minus the spine's NDR tracks
+        tracks = {}
+        for pt in plan['partitions']:
+            tn = pt['type']; w, h = plan['partition_types'][tn]['outline_um']
+            for d, ln, ext_ in (('H', 'M8', h), ('V', 'M9', w)):
+                r = hres.get((pt['name'], d), 0)
+                if r:
+                    ut = S.usable_tracks(LAYERS[ln], ln, 0.0, ext_)
+                    fb = plan['partition_types'][tn].setdefault('ft_budget', {})
+                    fb[ln] = round(min(fb.get(ln, 0.6), 0.6 - r / ut), 6)
+                    tracks[f"{pt['name']}.{ln}"] = r
+        json.dump(dict(rule=CH.__doc__, ndr_tracks=CH.NDR_TRACKS, root_um=[u(T['W']) / 2, u(T['H']) / 2],
+                       segments=[dict(xy=[s_[0], s_[1], s_[2], s_[3]], level=s_[4], layer=s_[5]) for s_ in hsegs],
+                       leaves=hleaves, reserved_tracks=tracks,
+                       hard_core_comp='SM / PHY clock pin: leaf delay = common latency 250 - core lib insertion',
+                       gate='related-pair skew with CPPR <= 80 ps at TT and FF (seam pairs share the trunk)'),
+                  open(os.path.join(a.out, 'clock_htree.json'), 'w'), indent=0)
+        CH.render(plan, hsegs, hleaves, os.path.join(a.out, 'clock_htree.png'),
+                  f"{plan['die']['name']}: MSCTS H-tree, seam trunk M9 + mirrored M8/M9 ribs, {len(hleaves)} tap drivers, "
+                  f"NDR {CH.NDR_TRACKS} tracks/wire reserved in ft_budget")
     # ft stations from the checker's own route geometry (zroute between the slot's in / out windows): <= 850 um apart
     import check as CK
     Pl = S.Plan(plan)

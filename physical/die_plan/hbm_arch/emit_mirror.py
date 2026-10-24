@@ -33,7 +33,7 @@ def window_sym(lo, n, lay, LAYERS, per_um):
     return round(hi, 4)
 
 
-def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH):
+def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH, reserve=None):
     P = T['parts']
     R, adj = adjacency(P)
     Wd = u(T['W'])
@@ -77,6 +77,7 @@ def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYER
 
     fcap_um = (8.8 if l3 else 5.8) * FACE_MAX * 0.9
     pinl = collections.defaultdict(float)
+    clk = collections.defaultdict(float, reserve or {})     # clock spine tracks (owner 10-23 MSCTS H-tree)
 
     hist = collections.defaultdict(float)     # PathFinder history cost of over-used resources
 
@@ -90,7 +91,7 @@ def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYER
             x = use[k] / c if c > 0 else 9.0
             hc = hist[('e', k)]
             for d in tdirs(fin, fout):
-                tc = FT_UM * ext(n, d) * FT_MAX - pinl[(n, d)]
+                tc = FT_UM * ext(n, d) * FT_MAX - pinl[(n, d)] - clk[(n, d)]
                 x = max(x, tuse[(n, d)] / tc if tc > 0 else 9.0)
                 hc += hist[('t', n, d)]
             return 400.0 * x * x + (4000.0 if x > 0.85 else 0.0) + (40000.0 * (x - 1.0) if x > 1.0 else 0.0) + hc
@@ -128,7 +129,7 @@ def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYER
             if v > c:
                 hist[('e', k)] += 3000.0 * (v / c - 1.0) + 500.0; hov += 1
         for (n, d), v in tuse.items():
-            tc = FT_UM * ext(n, d) * FT_MAX - pinl[(n, d)]
+            tc = FT_UM * ext(n, d) * FT_MAX - pinl[(n, d)] - clk[(n, d)]
             if v > tc:
                 hist[('t', n, d)] += 3000.0 * (v / max(tc, 1.0) - 1.0) + 500.0; hov += 1
         # endpoint layer choice per (lane, hop): on a segment whose 2-layer windows would pass FACE_MAX, the widest
@@ -163,7 +164,7 @@ def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYER
                     for p_ in ([a] if h == 0 else []) + ([b] if h == len(pth) - 2 else []):
                         pins3[(p_, d)] += (L['width'] + 1) / 3.0
         over = [(n, d) for (n, d) in set(tuse) | set(pins3)
-                if (tuse[(n, d)] + pins3[(n, d)]) > FT_UM * ext(n, d) * FT_MAX + 1]
+                if (tuse[(n, d)] + pins3[(n, d)] + clk[(n, d)]) > FT_UM * ext(n, d) * FT_MAX + 1]
         if not over and not hov:
             break
         for k in over:
@@ -259,8 +260,9 @@ def emit_mirror(T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYER
         focc.append((round(sum(y - x for x, y in iv) / c, 3), a, b))
     T['focc'] = sorted(focc, reverse=True)
     ftu = []
-    for (n, d) in set(tuse) | set(pins3):
-        ftu.append((round((tuse[(n, d)] + pins3[(n, d)]) / (FT_UM * ext(n, d)), 3), n, d, int(tuse[(n, d)]), int(pins3[(n, d)])))
+    for (n, d) in set(tuse) | set(pins3) | set(clk):
+        ftu.append((round((tuse[(n, d)] + pins3[(n, d)] + clk[(n, d)]) / (FT_UM * ext(n, d)), 3), n, d, int(tuse[(n, d)]),
+                    int(pins3[(n, d)]), int(clk[(n, d)])))
     T['ftu'] = sorted(ftu, reverse=True)
     T['util'] = sorted(((use[k] / max(contact(*k) * fcap_um / FACE_MAX, 1.0), k[0], k[1], int(use[k])) for k in use), reverse=True)
     T['tutil'] = [list(x) for x in T['ftu'][:25]]
