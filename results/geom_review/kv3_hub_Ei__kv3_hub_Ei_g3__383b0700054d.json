@@ -1,11 +1,11 @@
 {
  "element": "kv3_hub_Ei",
  "kit": "kv-p6 scratch/kv-p6-1023/g3hub/kv3_hub_Ei (gen.py phys --kit-rtl, BINDER3 kv39, tool claude/kv-p6-g3-1023@f2f808c28)",
- "verdict": "FAIL",
+ "verdict": "PASS-CONDITIONAL",
  "hash": "383b0700054d54a3",
- "reasons": "[10-23 21:07] [GEOM-REVIEW8] [AMENDS GEOM-REVIEW7 20:11 PASS-COND on this hash: its condition (a) failed when measured] KV-P7-HUB 21:02 measured 4_cts.odb (placement RC, 23,058 face/FIRM flops). TT 257-599 ps (mean 373, spread 342), FF 206-495 (mean 301, spread 288). Both owner-rule checks FAIL: spread > 80, and the TT mean is 123 ps from the common 250. Cause, as GR7 flagged as the risk: grid taps. Tap means run 290-482 ps and tap_balance cannot pad down (0 delay cells); clk_t4 has 4,216 sinks. Geometry (stations, face windows) is unchanged and was not the failure.",
- "fixes": "No re-run of this hash. The tap-only re-kit (clock.tap_mode sinks r250 cap1500, kit-rtl tap ports regenerated) is the fallback GR7 named. A tap-only delta needs a new REQ with the kit diff (no new render needed if outline/macros/pins are unchanged). Show the sink-tap counts and, after CTS, face-flop spread <= 80 at TT and FF with the mean within 80 of 250. Per-tap rsync in kit-rtl is a tool gap (BINDER/PLAN-TOOL): one bound reset sync is acceptable for the CTS gate if every reset landing fan-out stays <= 32.",
+ "reasons": "[10-23 23:23] [GEOM-REVIEW8] [RE-AMENDS my 21:07 FAIL on this hash under COORD 23:22 OWNER DECISION CLOCK: max-min face spread is now reported only] My 21:07 FAIL rested only on the clock measurement: face spread TT 342 / FF 288 and TT mean +123 vs 250 (KV-P7-HUB 21:02). Under the new rule that is information, not a gate. The binding clock check is related launch/capture pair skew with CPPR <= 80 ps at TT and FF (intra-partition + seam pairs) plus propagated-clock STA sign-off (TT setup / FF hold), and it has not been measured on this hash. Geometry is unchanged from GR7's review (stations on the in->out lines, face regs on the windows). The grid tap means of 290-482 ps remain a real RISK to seam pairs against neighbours at 250.",
+ "fixes": "Gate allowed only as before. No re-run of this hash is needed if KV-P7-HUB's grid-400 kit (v3.8t) replaces it. If this hash is used: report related-pair CPPR skew TT+FF (intra + seam to hub_C/hgi neighbours) and STA TT/FF from the existing 4_cts/route; > 80 ps on seam pairs = FAIL.",
  "reviewer": "GEOM-REVIEW",
- "at": "2026-10-23T21:07:04-07:00",
+ "at": "2026-10-23T23:23:26-07:00",
  "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
 }

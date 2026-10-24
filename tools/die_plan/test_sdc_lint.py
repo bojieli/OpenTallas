@@ -140,3 +140,13 @@ def test_relaxed_period_waveform_and_io_budget():
     assert any("below its IO budget" in x for x in _errs(txt.replace(f"set_input_delay -max {io}", "set_input_delay -max 10.0", 1), ctx))
     lat = f"{ctx['insertion_ps']:.4f}"
     assert any("source latency" in x for x in _errs(txt.replace(f"-source {lat}", "-source 200.0000"), ctx))
+
+
+def test_core_tap_source_latency_only_as_planned():
+    """CP2 early core taps: source latency on a tap port must equal the plan's -early; nothing else may carry one."""
+    txt, ctx = _kit(TINY)
+    tap = ctx["clock_ports"][0]
+    line = f"set_clock_latency -source -clock clk -30.0000 [get_ports {tap}]\n"
+    assert any("early core tap" in x for x in _errs(txt + line, ctx))
+    assert _errs(txt + line, ctx, port_latency_ps={tap: -30.0}) == []
+    assert any("has no source latency" in x for x in _errs(txt, ctx, port_latency_ps={tap: -30.0}))

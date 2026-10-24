@@ -186,9 +186,10 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None):
+         io_floor_ps=None, port_latency_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
-    {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  -> [errors]"""
+    {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
+    {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
     err = []
     u = time_unit_ps
     if liberty_unit_ps is not None and abs(liberty_unit_ps - u) > EPS:
@@ -196,6 +197,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     ctx = Ctx(inputs, outputs, clock_ports)
     clk_src = {}                      # port -> clock
     latency = {}                      # clock -> source latency (ps)
+    port_lat = {}                     # clock port -> source latency (ps) (CP2 early core taps)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
@@ -253,10 +255,15 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 if "-source" not in w:
                     err.append(f"clocks: network latency override (only -source on the virtual clock): {cmd}")
                     continue
-                v = [x for x in w[1:] if not _isopt(x) and not x.startswith("[")]
+                v = [x for i, x in enumerate(w[1:], 1) if not _isopt(x) and not x.startswith("[")
+                     and w[i - 1] != "-clock"]
                 k, cl = _eval_obj(ctx, w[-1])
-                if k != "clocks" or len(v) != 1:
+                if len(v) != 1:
                     raise SdcLintError(f"set_clock_latency: {cmd}")
+                if k == "ports":         # CP2 early core tap: -source -clock clk <-early> [get_ports tap]
+                    for x in cl:
+                        port_lat[x] = _num(v[0], "latency") * u
+                    continue
                 for x in cl:
                     latency[x] = _num(v[0], "latency") * u
                 continue
@@ -340,6 +347,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for n in virt:
         if n not in latency or abs(latency[n] - insertion_ps) > EPS:
             err.append(f"clocks: virtual clock {n} source latency {latency.get(n)} ps, plan insertion {insertion_ps:g} ps")
+    want = port_latency_ps or {}
+    for p_, v in port_lat.items():
+        if p_ not in want or abs(want[p_] - v) > EPS:
+            err.append(f"clocks: source latency {v:g} ps on port {p_}, plan early core tap {want.get(p_)}")
+    for p_ in want:
+        if p_ not in port_lat:
+            err.append(f"clocks: plan early core tap {p_} has no source latency")
     for n in latency:
         if n not in virt:
             err.append(f"clocks: source latency on real clock {n} (only the virtual IO clock carries the budget)")
@@ -391,7 +405,8 @@ def kit_context(P, tn):
     import gen_phys
     import gen_rtl
     t = P.types[tn]
-    cks = [n for n, _, _ in gen_phys.clock_pins(P, tn)]
+    cks = [n for n, _, _ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+    plat = {n: -float(early) for n, _i, _p, early, _s in gen_phys.core_tap_rows(P, tn)}
     ins, outs, floor = ["arst_n"], [], {}
     per = float(P.die["period_ps"])
     for b in t.get("buses", []):
@@ -408,7 +423,7 @@ def kit_context(P, tn):
     return dict(period_ps=per, insertion_ps=float(P.clock["insertion_ps"]),
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
-                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor)
+                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat)
 
 
 def lint_kit_files(kitdir, liberties=()):

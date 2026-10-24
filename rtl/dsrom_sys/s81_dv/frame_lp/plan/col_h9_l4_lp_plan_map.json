@@ -396,6 +396,7 @@
   }
  },
  "r3_internal": [
+  "col_h9 r0 (j) u_lpr_root N 1 -> 2 (reset-forest root +1 edge, uniform)",
   "r0 (g) u_y_xa_2_bs3_0 -> u_bs3.i_x0 (283 b)",
   "r0 (g) u_y_xb_2_bs3_0 -> u_bs3.i_x1 (266 b)",
   "r0 (h) 6 seam readers -> ot_pl_seam_r_plq (flop-last station u_y_q)",
@@ -422,6 +423,8 @@
   "x_i0_to_xo_o0": 2,
   "x_i0_to_xo_o0_was": 1,
   "seam_K_plus_1": 3,
+  "lpr_root_N": 2,
+  "reset_tree_vs_P7": 1,
   "note": "seams (frame_int) unchanged; x arrival at chain position j (0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents",
   "plus_one": []
  }

@@ -182,6 +182,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for n, x, y in S.tap_grid(P, tn)[1:]:
         ports.append((f"input  wire {n}", f"spine tap at ({x:.0f}, {y:.0f}) um: the kit (clock_taps.tcl) moves the "
                       "nearest sinks onto it before CTS; same die clock"))
+    for n, x, y, tp in S.core_taps(P, tn):
+        ports.append((f"input  wire {n}", f"EARLY core tap {tp['name']} at ({x:.0f}, {y:.0f}) um (CP2): the kit "
+                      "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
+                      f"{S.core_tap_early_ps(P, tp):g} ps early"))
     ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
                   ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
     decl, body = [], []
@@ -383,6 +387,7 @@ def die_top(P, epochs, dropped=None):
         # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
         dr = (dropped or {}).get(p["type"], ())
         cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
+            [f"        .{n}(clk)" for n, _, _, _ in S.core_taps(P, p["type"])] + \
             ["        .arst_n(rst_n)"] + \
             [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
