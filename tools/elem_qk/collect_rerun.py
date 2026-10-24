@@ -39,7 +39,7 @@ def main(hosts_txt, list_txt, out):
             c = s.get("checks", {})
             g = lambda k, f="slack_ps": (c.get(k) or {}).get(f)
             row.update(verdict=s.get("verdict"), reasons=s.get("reasons"),
-                       tt_setup_ps=g("setup_tt"), ff_hold_ps=g("hold_ff"),
+                       tt_setup_ps=g("setup_tt", "wns_ps"), ff_hold_ps=g("hold_ff", "wns_ps"),
                        checks={k: (v or {}).get("verdict") for k, v in c.items()})
         elif rc:
             row["verdict"] = "ROUTE FAIL" if "route_ok=0" in rc else "NOT RUN"
