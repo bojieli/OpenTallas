@@ -9,7 +9,8 @@ Gate = nominal run PASS and mutant run FAIL (the mutant proves the bench sees a 
 
 qwen_compute vehicle (= STEWARD-TOKh/TOKi xt1, made automatically here, never hand-edited):
   * carve of qwen_compute_bound_top: the 15 partitions of slice W5 (sl_W5_*) + the near cluster c16_W5_2 (c_W5_tn_*,
-    cid 2) [+ the far cluster c16_W5_3 (c_W5_tf_*, cid 3) with --clusters both], instance text byte-for-byte; the three
+    cid 2) [+ the far cluster c16_W5_3 (c_W5_tf_*, cid 3) with --clusters both]
+    measured 10-23 on BINDER3 bound_r8 @d4b946c05 (gold2): near 37 min (build 30.5 + sim 6.7, 43 GB) / both 64 min (76 GB), instance text byte-for-byte; the three
     tt_ctlm -> sl_W5_fw lane ends (cmd / hr / tl) are the XT1 bench event ports, every other open lane end idles at 0;
   * source closure: every module the carve instantiates, resolved from <bound>/rtl, then the bind.f files, then the
     source revision REV (git), with `include files and their incdirs; the file list is generated, not hand kept;
@@ -611,10 +612,11 @@ def main():
     ap.add_argument('--repo', type=Path, default=REPO)
     ap.add_argument('--asbuilt', type=Path, help='the bind as-built recipe JSON (rtl_roots / files / prefer / defines); '
                     'default: the --asbuilt path named in <bound>/README.md, next to the bind dir')
-    ap.add_argument('--clusters', choices=('near', 'both'), default='both')
+    ap.add_argument('--clusters', choices=('near', 'both'), default='near',
+                    help='near (default: 37 min, 43 GB measured) or both (64 min, 76 GB)')
     ap.add_argument('--ncyc', type=int, default=60 + 1600 * 4)
     ap.add_argument('--mut-skew', type=int, default=1)
-    ap.add_argument('--mem', type=int, default=90, help='ot-run --mem GB (xt1 measured 70-78 GB peak at -O2)')
+    ap.add_argument('--mem', type=int, default=None, help='ot-run --mem GB (default: near 56 / both 90; measured peak 43.4 / 75.8 GB)')
     ap.add_argument('--jobs', type=int, default=32)
     ap.add_argument('--build-jobs', type=int, default=96)
     ap.add_argument('--output-groups', type=int, default=192,
@@ -622,6 +624,8 @@ def main():
     ap.add_argument('--submit', action='store_true', help='stage to an admitting host and run through ot-run')
     ap.add_argument('--no-report', action='store_true', help='do not write <bound>/smoke/smoke_report.json')
     a = ap.parse_args()
+    if a.mem is None:
+        a.mem = 56 if a.clusters == 'near' else 90
     a.bound = a.bound.resolve()
     if a.die == 'qwen_compute':
         if not a.src_rev:
