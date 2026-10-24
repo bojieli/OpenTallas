@@ -166,8 +166,16 @@ def main():
         if probe:
             row['t_host'] = host_status(a.cut, r, d / 'run')
             return row
+        # this replay IS the selected-XRT HOST/control runtime proof (xr_timing guard 28ae20d13): the check keeps every
+        # source pin and the job verdict below still needs bench fault 0 + line bit-exact
         row['check_rc'] = sh(['python3', src / 'tools/s81_dv/dv_cut_replay.py', 'check', '--replay', d,
-                              '--run', d / 'run', '--out', d / 'check.json'], d / 'check.log', src)
+                              '--run', d / 'run', '--out', d / 'check.json', '--xrt-runtime-proof', 'self-entry'],
+                             d / 'check.log', src)
+        tc = r.get('timing_contract') or {}
+        if tc.get('transport_sources') and not mutant:
+            prev = rep.setdefault('xrt_transport_sources', dict(tc['transport_sources']))
+            if prev != tc['transport_sources']:
+                rep['xrt_transport_sources_conflict'] = True
         if row['check_rc'] and (d / 'check.log').exists():
             row['check_error'] = (d / 'check.log').read_text().strip().split('\n')[-1][-300:]
         if (d / 'check.json').exists():
@@ -220,6 +228,8 @@ def main():
         rep['mutants'].append(one(int(j), spec)); save()
     v = [r['verdict'] for r in rep['jobs']]
     rep['verdict'] = ('FAIL' if 'FAIL' in v or not v else 'PARTIAL' if 'PARTIAL' in v else 'PASS_CUT_COMPONENT')
+    if rep.get('xrt_transport_sources_conflict'):
+        rep['verdict'] = 'FAIL'; rep['reason'] = 'jobs disagree on the selected transport sources'
     if any(m['verdict'] != 'CAUGHT' for m in rep['mutants']):
         rep['verdict'] = 'FAIL'
         rep['reason'] = 'a negative control was not caught'
