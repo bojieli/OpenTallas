@@ -1,0 +1,1605 @@
+{
+ "schema": "opentallas.hbm.core_other_status.v1",
+ "by": "CORE-HBM-OTHER 10-23",
+ "plan": "claude/core-hbm-1023 die_plan.json (P6 3a7e22238)",
+ "kits": "/home/ubuntu/scratch/core-hbm-1023/kits_other (remote /srv/opentallas-scratch/claude/core-hbm-1023/kits_other)",
+ "method": "ORFS synth only (asap7lock, SYNTH_HIERARCHICAL 0), odb_stats.py + pin_reg_audit.py on 1_synth.odb; clock/reset ports (freeze.json) excluded from the pin-reg verdict; fill = area / plan outline",
+ "types": {
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52": {
+   "type_id": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52",
+   "pins_file": "cores/pins_plan/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
+   "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "params": {
+    "OREG": 1,
+    "KREG": 1,
+    "KRREG": 1,
+    "RREG": 1,
+    "WPAY": 1,
+    "QREG": 1
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "recipe_source": "closed ref_tile physical/ref_tile/hdie_pc_ctrl_cfg_h9c/kit.env (route 39834d852) = the view the r18h5 die binds (views.json view_dir); files read at d34578d6f",
+   "source_commit": "d34578d6f",
+   "die_instances": 56,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    155.52,
+    155.52
+   ],
+   "plan_pins": 1229,
+   "plan_note": "as-built ot_hbm_svc_pc_ctrl_leaf_cfg_h9b: 604 pins on ['M3'] cannot land on the plan tracks under the mirrored instances (plan M2/M3 grids are not mirror-symmetric): re-pin to M4/M5 at G3; pins_file omitted; cells 63509 (CLOSED); P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "bad434b632e96386",
+   "synth_cells": 43324,
+   "ffs": 8545,
+   "std_area_um2": 5691.26,
+   "macro_insts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+   },
+   "macro_area_um2": 7787.7,
+   "fill_std_pct": 23.5,
+   "fill_std_plus_macro_pct": 55.7,
+   "port_bits": 1229,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 1227,
+    "ok": 1215,
+    "unreg_in": 3,
+    "unreg_out": 0,
+    "const_out": 9,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "dram_rvalid": 1,
+     "k_v": 1,
+     "kr_rdy": 1
+    },
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.lef",
+    "lef_size": [
+     155.52,
+     155.52
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.json": {
+      "plan_pins": 1229,
+      "lef_pins": 1229,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     },
+     "cores/pins_plan/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json": {
+      "plan_pins": 1229,
+      "lef_pins": 1229,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 0.5085
+     }
+    }
+   }
+  },
+  "ot_hbm_static_cfg_collar_idx256r__108x108": {
+   "type_id": "ot_hbm_static_cfg_collar_idx256r__108x108",
+   "pins_file": "cores/pins/ot_hbm_static_cfg_collar_idx256r.json",
+   "top": "ot_hbm_static_cfg_collar_idx256r",
+   "params": {
+    "PAGE_W": 1,
+    "NS": 1,
+    "NPR": 6,
+    "NREC": 8,
+    "NGO": 2,
+    "NB": 2,
+    "NF": 5,
+    "XSER": 0,
+    "FAN32": 1
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hbm_static_cfg_collar_idx256r (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e4/syn/ot_hbm_static_cfg_collar_idx256r @ b6461c6df); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    108.0,
+    108.0
+   ],
+   "plan_pins": 1559,
+   "plan_note": "as-built pins of ot_hbm_static_cfg_collar_idx256r (r18h5 view LEF), platform tracks + offset; cells 24339 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "7c17a8de6421add5",
+   "synth_cells": 19980,
+   "ffs": 4601,
+   "std_area_um2": 2731.3,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 23.4,
+   "fill_std_plus_macro_pct": 23.4,
+   "port_bits": 1559,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 1556,
+    "ok": 1556,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hdie_col_idx256r_b/views/ot_hbm_static_cfg_collar_idx256r/ot_hbm_static_cfg_collar_idx256r.lef",
+    "lef_size": [
+     108.0,
+     108.0
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_hbm_static_cfg_collar_idx256r.json": {
+      "plan_pins": 1559,
+      "lef_pins": 1559,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     }
+    }
+   }
+  },
+  "ot_hbm_svc_sm_group_rel_id__776.304x646.92": {
+   "type_id": "ot_hbm_svc_sm_group_rel_id__776.304x646.92",
+   "pins_file": "cores/pins/ot_hbm_svc_sm_group_rel_id.json",
+   "top": "ot_hbm_svc_sm_group_rel_id",
+   "params": {
+    "LBANKS": 4,
+    "NID": 6,
+    "IDW": 9,
+    "PAW": 11,
+    "PREL": 1,
+    "DD": 256,
+    "ID_COHORT": 1,
+    "XSLOT": 1,
+    "OPEN_IL": 1
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_svc_sm_group_rel_id (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_group_rel_id)",
+   "source_commit": "d34578d6f",
+   "die_instances": 16,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    776.304,
+    646.92
+   ],
+   "plan_pins": 7688,
+   "plan_note": "as-built pins of ot_hbm_svc_sm_group_rel_id (r18h5 view LEF), platform tracks + offset; cells 220378 (YOSYS)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "190f9c59d29afb79",
+   "synth_cells": 287807,
+   "ffs": 39302,
+   "std_area_um2": 36534.83,
+   "macro_insts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 8,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+    "ot_sram_1r1w_128x256_m1_r2c2": 7
+   },
+   "macro_area_um2": 108666.4,
+   "fill_std_pct": 7.3,
+   "fill_std_plus_macro_pct": 28.9,
+   "port_bits": 7688,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 7688,
+    "ok": 4053,
+    "unreg_in": 1225,
+    "unreg_out": 1234,
+    "const_out": 1164,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "kr_data": 1024,
+     "kr_tag": 68,
+     "ids": 54,
+     "ids_cohort": 16,
+     "kr_beat": 16,
+     "run_count": 9,
+     "ids_layer": 8,
+     "run_base": 8,
+     "run_layer": 8,
+     "k_rdy": 4,
+     "k_wr_done": 4,
+     "kr_v": 4,
+     "ids_v": 1,
+     "run_v": 1
+    },
+    "unreg_out_buses": {
+     "sm_packet": 1089,
+     "k_addr": 120,
+     "k_len": 8,
+     "k_tag": 8,
+     "k_v": 4,
+     "kr_rdy": 4,
+     "fault": 1
+    },
+    "clock_reset_ports_ignored": [
+     "hbm_clk",
+     "hbm_fifo_clk",
+     "hbm_pc_clk",
+     "hbm_rst_n",
+     "stream_bank_clk",
+     "stream_clk",
+     "stream_rst_n"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6": {
+   "type_id": "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6",
+   "pins_file": "cores/pins/ot_hbm_svc_sm_xcal_rel_t.json",
+   "top": "ot_hbm_svc_sm_xcal_rel_t",
+   "params": {
+    "PAW": 11,
+    "PREL": 1,
+    "DD": 256,
+    "XSLOT": 1
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_svc_sm_xcal_rel_t (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_xcal_rel_t @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_xcal_rel_t)",
+   "source_commit": "d34578d6f",
+   "die_instances": 16,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    209.952,
+    210.6
+   ],
+   "plan_pins": 507,
+   "plan_note": "as-built pins of ot_hbm_svc_sm_xcal_rel_t (r18h5 view LEF), platform tracks + offset; cells 10366 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "472ce55c7acc9178",
+   "synth_cells": 8094,
+   "ffs": 2637,
+   "std_area_um2": 1210.9,
+   "macro_insts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2
+   },
+   "macro_area_um2": 32422.4,
+   "fill_std_pct": 2.7,
+   "fill_std_plus_macro_pct": 76.1,
+   "port_bits": 507,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 505,
+    "ok": 505,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "HIGH (>60% std+macro at plan util 0.5)"
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88": {
+   "type_id": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88",
+   "pins_file": "cores/pins/ot_hbm_svc_vm_kshare_splitstrap.json",
+   "top": "ot_hbm_svc_vm_kshare_splitstrap",
+   "params": {
+    "MUT": 0,
+    "KRL1": 1
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+   "source_commit": "d34578d6f",
+   "die_instances": 16,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    146.88,
+    146.88
+   ],
+   "plan_pins": 7343,
+   "plan_note": "as-built pins of ot_hbm_svc_vm_kshare_splitstrap (r18h5 view LEF), platform tracks + offset; cells 115723 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "ec8ac3325df42d2e",
+   "synth_cells": 114531,
+   "ffs": 24634,
+   "std_area_um2": 15367.66,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 71.2,
+   "fill_std_plus_macro_pct": 71.2,
+   "port_bits": 7343,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 7343,
+    "ok": 3702,
+    "unreg_in": 3636,
+    "unreg_out": 1,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "c_kr_data": 1024,
+     "g_k_wdata": 1024,
+     "w_k_wdata": 1024,
+     "g_k_wstrb": 128,
+     "g_k_addr": 120,
+     "w_k_addr": 120,
+     "c_kr_tag": 68,
+     "g_k_tag": 68,
+     "c_kr_beat": 16,
+     "g_k_len": 16,
+     "c_k_rdy": 4,
+     "c_k_wr_done": 4,
+     "c_kr_v": 4,
+     "g_k_v": 4,
+     "g_k_we": 4,
+     "g_kr_rdy": 4,
+     "w_k_v": 4
+    },
+    "unreg_out_buses": {
+     "c_k_v": 1
+    },
+    "clock_reset_ports_ignored": [
+     "hbm_clk",
+     "hbm_rst_n",
+     "stream_clk",
+     "stream_rst_n"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": "HIGH (>60% std+macro at plan util 0.5)"
+  },
+  "ot_hgi_sm_xload_cl2_bdring__86.4x302.4": {
+   "type_id": "ot_hgi_sm_xload_cl2_bdring__86.4x302.4",
+   "pins_file": "cores/pins/ot_hgi_sm_xload_cl2_bdring.json",
+   "top": "ot_hgi_sm_xload_cl2_bdring",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hgi_sm_xload_cl2_bdring (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_sm_xload_cl2_bdring @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 8,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    86.4,
+    302.4
+   ],
+   "plan_pins": 2689,
+   "plan_note": "as-built pins of ot_hgi_sm_xload_cl2_bdring (r18h5 view LEF), platform tracks + offset; cells 85191 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc7",
+   "kit_hash": "f5d2b0983672aa57",
+   "synth_cells": 72119,
+   "ffs": 11198,
+   "std_area_um2": 9648.49,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 36.9,
+   "fill_std_plus_macro_pct": 36.9,
+   "port_bits": 2689,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 2688,
+    "ok": 2686,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 2,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring/ot_hgi_sm_xload_cl2_bdring.lef",
+    "lef_size": [
+     86.4,
+     302.4
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_hgi_sm_xload_cl2_bdring.json": {
+      "plan_pins": 2689,
+      "lef_pins": 2689,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     }
+    }
+   }
+  },
+  "ot_hgi_sm_xload_xq_pegress__369.36x369.36": {
+   "type_id": "ot_hgi_sm_xload_xq_pegress__369.36x369.36",
+   "pins_file": "cores/pins_plan/ot_hgi_sm_xload_xq_pegress__369.36x369.36.json",
+   "top": "ot_hgi_sm_xload_xq_pegress",
+   "params": {
+    "PMAX": 8,
+    "NR": 32
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hgi_sm_xload_xq_pegress (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_sm_xload_xq_pegress @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 8,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    369.36,
+    369.36
+   ],
+   "plan_pins": 5184,
+   "plan_note": "no as-built LEF kept for ot_hgi_sm_xload_xq_pegress; pins from the partition plan at G3; cells 56602 (CLOSED); P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "e5ee826cae34ef79",
+   "synth_cells": 23256,
+   "ffs": 7237,
+   "std_area_um2": 3722.38,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 2.7,
+   "fill_std_plus_macro_pct": 2.7,
+   "port_bits": 5184,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 5179,
+    "ok": 5175,
+    "unreg_in": 3,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 1,
+    "unreg_in_buses": {
+     "bq_last": 1,
+     "bq_v": 1,
+     "ede": 1
+    },
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "LOW (<10%: outline oversized)",
+   "closed_view": {
+    "lef": "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress.lef",
+    "lef_size": [
+     369.36,
+     369.36
+    ],
+    "vs_plan_pins": {
+     "cores/pins_plan/ot_hgi_sm_xload_xq_pegress__369.36x369.36.json": {
+      "plan_pins": 5184,
+      "lef_pins": 5184,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 0.0008,
+      "layer_match": 0.423
+     }
+    }
+   }
+  },
+  "ot_pdie_serdes__600.048x600.48": {
+   "type_id": "ot_pdie_serdes__600.048x600.48",
+   "pins_file": "cores/pins/ot_pdie_serdes.json",
+   "top": "ot_pdie_serdes",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w2c_64x546_m1",
+    "ot_sram_1r1w_32x546_m1"
+   ],
+   "recipe_source": "r18h5 die view ot_pdie_serdes (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_pdie_serdes @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_pdie_serdes)",
+   "source_commit": "d34578d6f",
+   "die_instances": 5,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    600.048,
+    600.48
+   ],
+   "plan_pins": 2118,
+   "plan_note": "as-built pins of ot_pdie_serdes (r18h5 view LEF), platform tracks + offset; cells 394328 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "28238c7e1237f461",
+   "synth_cells": 401964,
+   "ffs": 24614,
+   "std_area_um2": 52236.47,
+   "macro_insts": {
+    "ot_sram_1r1w2c_64x546_m1": 1,
+    "ot_sram_1r1w_32x546_m1": 1
+   },
+   "macro_area_um2": 28868.4,
+   "fill_std_pct": 14.5,
+   "fill_std_plus_macro_pct": 22.5,
+   "port_bits": 2118,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 2116,
+    "ok": 2114,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": [
+     "pma_rck",
+     "pma_tck"
+    ]
+   },
+   "over_400k": true,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/asap7_v41x_pdie_macros/ot_pdie_serdes/ot_pdie_serdes.lef",
+    "lef_size": [
+     250.02,
+     2250.18
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_pdie_serdes.json": {
+      "plan_pins": 2118,
+      "lef_pins": 1025,
+      "names_equal": false,
+      "only_plan": 1093,
+      "only_lef": 0,
+      "pos_match": null
+     }
+    }
+   }
+  },
+  "hfd_hgi_vm_calendar_f20_role__196.344x196.56": {
+   "type_id": "hfd_hgi_vm_calendar_f20_role__196.344x196.56",
+   "pins_file": "cores/pins/hfd_hgi_vm_calendar_f20_role__pv2.json",
+   "top": "hfd_hgi_vm_calendar_f20_role",
+   "params": {
+    "W": 89
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv2 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv2 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv2)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    196.344,
+    196.56
+   ],
+   "plan_pins": 460,
+   "plan_note": "as-built pins of hfd_hgi_vm_calendar_f20_role__pv0 (r18h5 view LEF), platform tracks + offset; cells 11085 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "08d7f8fc7f7c1f64",
+   "synth_cells": 12352,
+   "ffs": 2582,
+   "std_area_um2": 1743.26,
+   "macro_insts": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 12317.4,
+   "fill_std_pct": 4.5,
+   "fill_std_plus_macro_pct": 36.4,
+   "port_bits": 460,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 455,
+    "ok": 455,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_hc_qhub_static__734.4x734.4": {
+   "type_id": "ot_hbm_hc_qhub_static__734.4x734.4",
+   "pins_file": "cores/pins/ot_hbm_hc_qhub_static.json",
+   "top": "ot_hbm_hc_qhub_static",
+   "params": {
+    "DRLY": 2,
+    "CHX": 11
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_hc_qhub_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2c/syn/ot_hbm_hc_qhub_static @ 8691c1b63); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_hc_qhub_static)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    734.4,
+    734.4
+   ],
+   "plan_pins": 9903,
+   "plan_note": "as-built pins of ot_hbm_hc_qhub_static (r18h5 view LEF), platform tracks + offset; cells 305805 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "fed7a9a29bec175a",
+   "synth_cells": 257283,
+   "ffs": 48692,
+   "std_area_um2": 32706.86,
+   "macro_insts": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 12317.4,
+   "fill_std_pct": 6.1,
+   "fill_std_plus_macro_pct": 8.3,
+   "port_bits": 9903,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 9901,
+    "ok": 7844,
+    "unreg_in": 2049,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "s_i": 2049
+    },
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": [
+     "rstb_e",
+     "rstb_n",
+     "rstb_s",
+     "rstb_w"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": "LOW (<10%: outline oversized)"
+  },
+  "ot_hbm_idx_qctl_static__194.832x195.48": {
+   "type_id": "ot_hbm_idx_qctl_static__194.832x195.48",
+   "pins_file": "cores/pins/ot_hbm_idx_qctl_static.json",
+   "top": "ot_hbm_idx_qctl_static",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_idx_qctl_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_idx_qctl_static @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_qctl_static)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    194.832,
+    195.48
+   ],
+   "plan_pins": 337,
+   "plan_note": "as-built pins of ot_hbm_idx_qctl_static (r18h5 view LEF), platform tracks + offset; cells 1632 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "23c41666acb9f916",
+   "synth_cells": 1149,
+   "ffs": 368,
+   "std_area_um2": 168.19,
+   "macro_insts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 7096.8,
+   "fill_std_pct": 0.4,
+   "fill_std_plus_macro_pct": 19.1,
+   "port_bits": 337,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 334,
+    "ok": 334,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_su_static_sfustore_hw__561.6x276.48": {
+   "type_id": "ot_hbm_su_static_sfustore_hw__561.6x276.48",
+   "pins_file": "cores/pins_plan/ot_hbm_su_static_sfustore_hw__561.6x276.48.json",
+   "top": "ot_hbm_su_static_sfustore_hw",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_su_static_sfustore_hw (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hbm_su_static_sfustore_hw @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    561.6,
+    276.48
+   ],
+   "plan_pins": 1829,
+   "plan_note": "no as-built LEF kept for ot_hbm_su_static_sfustore_hw; pins from the partition plan at G3; cells 18572 (CLOSED); P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "a698e9129396812f",
+   "synth_cells": 13275,
+   "ffs": 2408,
+   "std_area_um2": 1560.29,
+   "macro_insts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 16
+   },
+   "macro_area_um2": 62301.6,
+   "fill_std_pct": 1.0,
+   "fill_std_plus_macro_pct": 41.1,
+   "port_bits": 1829,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 1827,
+    "ok": 1827,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw/ot_hbm_su_static_sfustore_hw.lef",
+    "lef_size": [
+     561.6,
+     276.48
+    ],
+    "vs_plan_pins": {
+     "cores/pins_plan/ot_hbm_su_static_sfustore_hw__561.6x276.48.json": {
+      "plan_pins": 1829,
+      "lef_pins": 1829,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 0.0,
+      "layer_match": 0.3286
+     }
+    }
+   }
+  },
+  "ot_hbm_svc_wb_kport_q__475.2x475.2": {
+   "type_id": "ot_hbm_svc_wb_kport_q__475.2x475.2",
+   "pins_file": "cores/pins/ot_hbm_svc_wb_kport_q.json",
+   "top": "ot_hbm_svc_wb_kport_q",
+   "params": {
+    "WOPEN": 0,
+    "MUT": 0
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_svc_wb_kport_q (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_svc_wb_kport_q @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_wb_kport_q)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    475.2,
+    475.2
+   ],
+   "plan_pins": 7084,
+   "plan_note": "as-built pins of ot_hbm_svc_wb_kport_q (r18h5 view LEF), platform tracks + offset; cells 321528 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "b6413f8508d4d240",
+   "synth_cells": 372013,
+   "ffs": 50368,
+   "std_area_um2": 45852.77,
+   "macro_insts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+   },
+   "macro_area_um2": 124603.3,
+   "fill_std_pct": 20.3,
+   "fill_std_plus_macro_pct": 75.5,
+   "port_bits": 7084,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 7084,
+    "ok": 7059,
+    "unreg_in": 16,
+    "unreg_out": 1,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "w_k_rdy": 16
+    },
+    "unreg_out_buses": {
+     "w_k_v": 1
+    },
+    "clock_reset_ports_ignored": [
+     "hbm_clk",
+     "hbm_rst_n",
+     "stream_clk",
+     "stream_fifo_clk",
+     "stream_rst_n"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": "HIGH (>60% std+macro at plan util 0.5)"
+  },
+  "ot_hgi_coll_gq_issue__237.6x237.6": {
+   "type_id": "ot_hgi_coll_gq_issue__237.6x237.6",
+   "pins_file": "cores/pins/ot_hgi_coll_gq_issue.json",
+   "top": "ot_hgi_coll_gq_issue",
+   "params": {},
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hgi_coll_gq_issue (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_coll_gq_issue @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_coll_gq_issue)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "plan_pins": 4032,
+   "plan_note": "as-built pins of ot_hgi_coll_gq_issue (r18h5 view LEF), platform tracks + offset; cells 163041 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "29a46f0335601b27",
+   "synth_cells": 149389,
+   "ffs": 34592,
+   "std_area_um2": 20433.14,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 36.2,
+   "fill_std_plus_macro_pct": 36.2,
+   "port_bits": 4032,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 4030,
+    "ok": 3906,
+    "unreg_in": 0,
+    "unreg_out": 1,
+    "const_out": 0,
+    "unconnected": 123,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {
+     "ld_p_v": 1
+    },
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hgi_coll_gq_land__237.6x237.6": {
+   "type_id": "ot_hgi_coll_gq_land__237.6x237.6",
+   "pins_file": "cores/pins_plan/ot_hgi_coll_gq_land__237.6x237.6.json",
+   "top": "ot_hgi_coll_gq_land",
+   "params": {},
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hgi_coll_gq_land (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_coll_gq_land @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "plan_pins": 3880,
+   "plan_note": "no as-built LEF kept for ot_hgi_coll_gq_land; pins from the partition plan at G3; cells 49024 (CLOSED); P4 plan-derived pins on plan M4/M5 tracks (pins_plan_v2.py)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "23fcffbe8983baec",
+   "synth_cells": 36714,
+   "ffs": 4474,
+   "std_area_um2": 4530.01,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 8.0,
+   "fill_std_plus_macro_pct": 8.0,
+   "port_bits": 3880,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 3878,
+    "ok": 3866,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 12,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "LOW (<10%: outline oversized)",
+   "closed_view": {
+    "lef": "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land/ot_hgi_coll_gq_land.lef",
+    "lef_size": [
+     237.6,
+     237.6
+    ],
+    "vs_plan_pins": {
+     "cores/pins_plan/ot_hgi_coll_gq_land__237.6x237.6.json": {
+      "plan_pins": 3880,
+      "lef_pins": 3880,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 0.0008,
+      "layer_match": 0.3477
+     }
+    }
+   }
+  },
+  "ot_hgi_coll_inj_idx_join_rg__216x432": {
+   "type_id": "ot_hgi_coll_inj_idx_join_rg__216x432",
+   "pins_file": "cores/pins/ot_hgi_coll_inj_idx_join_rg.json",
+   "top": "ot_hgi_coll_inj_idx_join_rg",
+   "params": {
+    "INJLAT": 12
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hgi_coll_inj_idx_join_rg (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hgi_coll_inj_idx_join_rg @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    216.0,
+    432.0
+   ],
+   "plan_pins": 4761,
+   "plan_note": "as-built pins of ot_hgi_coll_inj_idx_join_rg (r18h5 view LEF), platform tracks + offset; cells 74964 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "5473f027faa81e03",
+   "synth_cells": 62028,
+   "ffs": 10017,
+   "std_area_um2": 7745.42,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 8.3,
+   "fill_std_plus_macro_pct": 8.3,
+   "port_bits": 4761,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 4758,
+    "ok": 4387,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 370,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": [
+     "rst_n_r1"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": "LOW (<10%: outline oversized)",
+   "closed_view": {
+    "lef": "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg/ot_hgi_coll_inj_idx_join_rg.lef",
+    "lef_size": [
+     216.0,
+     432.0
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_hgi_coll_inj_idx_join_rg.json": {
+      "plan_pins": 4761,
+      "lef_pins": 4761,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     }
+    }
+   }
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84": {
+   "type_id": "ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84",
+   "pins_file": "cores/pins/ot_hgi_dma_back_static_vp4_banks_cp.json",
+   "top": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hgi_dma_back_static_vp4_banks_cp (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hgi_dma_back_static_vp4_banks_cp @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_dma_back_static_vp4_banks_cp)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    239.976,
+    240.84
+   ],
+   "plan_pins": 4947,
+   "plan_note": "as-built pins of ot_hgi_dma_back_static_vp4_banks_cp (r18h5 view LEF), platform tracks + offset; cells 37867 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "7682615f202b5b22",
+   "synth_cells": 31450,
+   "ffs": 9635,
+   "std_area_um2": 4640.19,
+   "macro_insts": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 10
+   },
+   "macro_area_um2": 38938.5,
+   "fill_std_pct": 8.0,
+   "fill_std_plus_macro_pct": 75.4,
+   "port_bits": 4947,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 4943,
+    "ok": 4903,
+    "unreg_in": 8,
+    "unreg_out": 0,
+    "const_out": 24,
+    "unconnected": 0,
+    "unreg_in_buses": {
+     "rr": 8
+    },
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": [
+     "clk_bank"
+    ]
+   },
+   "over_400k": false,
+   "fill_flag": "HIGH (>60% std+macro at plan util 0.5)"
+  },
+  "ot_hgi_sfu_programme_store_r10__1080x950.4": {
+   "type_id": "ot_hgi_sfu_programme_store_r10__1080x950.4",
+   "pins_file": "cores/pins/ot_hgi_sfu_programme_store_r10.json",
+   "top": "ot_hgi_sfu_programme_store_r10",
+   "params": {
+    "PAGE_AW": 1
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_512x256_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hgi_sfu_programme_store_r10 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hgi_sfu_programme_store_r10 @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hgi_sfu_programme_store_r10)",
+   "source_commit": "d34578d6f",
+   "die_instances": 4,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    1080.0,
+    950.4
+   ],
+   "plan_pins": 2904,
+   "plan_note": "as-built pins of ot_hgi_sfu_programme_store_r10 (r18h5 view LEF), platform tracks + offset; cells 79683 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "3aec2a4431e54864",
+   "synth_cells": 61052,
+   "ffs": 18150,
+   "std_area_um2": 8605.93,
+   "macro_insts": {
+    "ot_sram_1r1w_512x256_m1_r2c2": 44
+   },
+   "macro_area_um2": 295935.7,
+   "fill_std_pct": 0.8,
+   "fill_std_plus_macro_pct": 29.7,
+   "port_bits": 2904,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 2902,
+    "ok": 2902,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "hfd_ep_static__434.72x371.52@hfd_ep_static": {
+   "type_id": "hfd_ep_static__434.72x371.52",
+   "pins_file": "cores/pins/hfd_ep_static.json",
+   "top": "hfd_ep_static",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view hfd_ep_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/hfd_ep_static @ 1fe61477b); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 3,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    434.72,
+    371.52
+   ],
+   "plan_pins": 2288,
+   "plan_note": "as-built pins of hfd_ep_static (r18h5 view LEF), platform tracks + offset; cells 46785 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc7",
+   "kit_hash": "ea0faa05923bcdff",
+   "synth_cells": 21492,
+   "ffs": 7559,
+   "std_area_um2": 3549.78,
+   "macro_insts": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "macro_area_um2": 53293.9,
+   "fill_std_pct": 2.2,
+   "fill_std_plus_macro_pct": 35.2,
+   "port_bits": 2288,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 2286,
+    "ok": 2284,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 2,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+    "lef_size": [
+     434.72,
+     371.52
+    ],
+    "vs_plan_pins": {
+     "cores/pins/hfd_ep_static.json": {
+      "plan_pins": 2288,
+      "lef_pins": 2288,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     }
+    }
+   }
+  },
+  "hfd_ep_static__434.72x371.52@hfd_ep_static__434.72x371.52": {
+   "type_id": "hfd_ep_static__434.72x371.52",
+   "pins_file": "cores/pins_plan/hfd_ep_static__434.72x371.52.json",
+   "top": "hfd_ep_static",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view hfd_ep_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/hfd_ep_static @ 1fe61477b); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 3,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    434.72,
+    371.52
+   ],
+   "plan_pins": 2288,
+   "plan_note": "as-built pins of hfd_ep_static (r18h5 view LEF), platform tracks + offset; cells 46785 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc7",
+   "kit_hash": "773dc226b4e4ab6f",
+   "synth_cells": 21492,
+   "ffs": 7559,
+   "std_area_um2": 3549.78,
+   "macro_insts": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "macro_area_um2": 53293.9,
+   "fill_std_pct": 2.2,
+   "fill_std_plus_macro_pct": 35.2,
+   "port_bits": 2288,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 2286,
+    "ok": 2284,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 2,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef",
+    "lef_size": [
+     434.72,
+     371.52
+    ],
+    "vs_plan_pins": {
+     "cores/pins_plan/hfd_ep_static__434.72x371.52.json": {
+      "plan_pins": 2288,
+      "lef_pins": 2288,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 0.7212
+     }
+    }
+   }
+  },
+  "hfd_hgi_vm_calendar_f20_role__241.92x116.64@hfd_hgi_vm_calendar_f20_role__pv0": {
+   "type_id": "hfd_hgi_vm_calendar_f20_role__241.92x116.64",
+   "pins_file": "cores/pins/hfd_hgi_vm_calendar_f20_role__pv0.json",
+   "top": "hfd_hgi_vm_calendar_f20_role",
+   "params": {
+    "W": 19
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv0 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv0 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv0)",
+   "source_commit": "d34578d6f",
+   "die_instances": 3,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    241.92,
+    116.64
+   ],
+   "plan_pins": 390,
+   "plan_note": "as-built pins of hfd_hgi_vm_calendar_f20_role__pv0 (r18h5 view LEF), platform tracks + offset; cells 11085 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc7",
+   "kit_hash": "9ff4fc3c3adf4241",
+   "synth_cells": 12154,
+   "ffs": 2512,
+   "std_area_um2": 1720.45,
+   "macro_insts": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 12317.4,
+   "fill_std_pct": 6.1,
+   "fill_std_plus_macro_pct": 49.7,
+   "port_bits": 390,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 385,
+    "ok": 385,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "hfd_hgi_vm_calendar_f20_role__241.92x116.64@hfd_hgi_vm_calendar_f20_role__pv1": {
+   "type_id": "hfd_hgi_vm_calendar_f20_role__241.92x116.64",
+   "pins_file": "cores/pins/hfd_hgi_vm_calendar_f20_role__pv1.json",
+   "top": "hfd_hgi_vm_calendar_f20_role",
+   "params": {
+    "W": 38
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view hfd_hgi_vm_calendar_f20_role__pv1 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/hfd_hgi_vm_calendar_f20_role__pv1 @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_hfd_hgi_vm_calendar_f20_role__pv1)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    241.92,
+    116.64
+   ],
+   "plan_pins": 409,
+   "plan_note": "as-built pins of hfd_hgi_vm_calendar_f20_role__pv0 (r18h5 view LEF), platform tracks + offset; cells 11085 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc7",
+   "kit_hash": "ec0d501ce109ebd0",
+   "synth_cells": 12266,
+   "ffs": 2531,
+   "std_area_um2": 1731.23,
+   "macro_insts": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 12317.4,
+   "fill_std_pct": 6.1,
+   "fill_std_plus_macro_pct": 49.8,
+   "port_bits": 409,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 404,
+    "ok": 404,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 0,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_argmax_static_sw_vm_r2__118.8x118.8": {
+   "type_id": "ot_hbm_argmax_static_sw_vm_r2__118.8x118.8",
+   "pins_file": "cores/pins/ot_hbm_argmax_static_sw_vm_r2.json",
+   "top": "ot_hbm_argmax_static_sw_vm_r2",
+   "params": {
+    "TP": 192
+   },
+   "defines": [],
+   "macros": [],
+   "recipe_source": "r18h5 die view ot_hbm_argmax_static_sw_vm_r2 (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind ROUTED_UNBOUND, synth meta /srv/opentallas-scratch/claude/hbm-die11-1020/planB/syn/ot_hbm_argmax_static_sw_vm_r2 @ 5147c2db1); files read at the die src d34578d6f; params = views.json (wrapper None)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    118.8,
+    118.8
+   ],
+   "plan_pins": 1119,
+   "plan_note": "as-built pins of ot_hbm_argmax_static_sw_vm_r2 (r18h5 view LEF), platform tracks + offset; cells 38967 (CLOSED)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "d9f4382b41030adc",
+   "synth_cells": 19877,
+   "ffs": 6240,
+   "std_area_um2": 2979.38,
+   "macro_insts": {},
+   "macro_area_um2": 0.0,
+   "fill_std_pct": 21.1,
+   "fill_std_plus_macro_pct": 21.1,
+   "port_bits": 1119,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 1117,
+    "ok": 807,
+    "unreg_in": 19,
+    "unreg_out": 1,
+    "const_out": 34,
+    "unconnected": 256,
+    "unreg_in_buses": {
+     "imm_a": 18,
+     "mode": 1
+    },
+    "unreg_out_buses": {
+     "busy": 1
+    },
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": "",
+   "closed_view": {
+    "lef": "physical/ref_tile/hbm_argmax_swvm_r2_1017/views/ot_hbm_argmax_static_sw_vm_r2/ot_hbm_argmax_static_sw_vm_r2.lef",
+    "lef_size": [
+     118.8,
+     118.8
+    ],
+    "vs_plan_pins": {
+     "cores/pins/ot_hbm_argmax_static_sw_vm_r2.json": {
+      "plan_pins": 1119,
+      "lef_pins": 1119,
+      "names_equal": true,
+      "only_plan": 0,
+      "only_lef": 0,
+      "pos_match": 1.0,
+      "layer_match": 1.0
+     }
+    }
+   }
+  },
+  "ot_hbm_host_cp_rxs__434.808x432": {
+   "type_id": "ot_hbm_host_cp_rxs__434.808x432",
+   "pins_file": "cores/pins/ot_hbm_host_cp_rxs.json",
+   "top": "ot_hbm_host_cp_rxs",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_host_cp_rxs (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2/syn/ot_hbm_host_cp_rxs @ 5b668d464); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_host_cp_rxs)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    434.808,
+    432.0
+   ],
+   "plan_pins": 1368,
+   "plan_note": "as-built pins of ot_hbm_host_cp_rxs (r18h5 view LEF), platform tracks + offset; cells 43647 (SYNAREA)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "7f38f652fa0500d9",
+   "synth_cells": 24880,
+   "ffs": 6277,
+   "std_area_um2": 3963.97,
+   "macro_insts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 2,
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "macro_area_um2": 67487.6,
+   "fill_std_pct": 2.1,
+   "fill_std_plus_macro_pct": 38.0,
+   "port_bits": 1368,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "PASS",
+    "signal_bits": 1366,
+    "ok": 1348,
+    "unreg_in": 0,
+    "unreg_out": 0,
+    "const_out": 18,
+    "unconnected": 0,
+    "unreg_in_buses": {},
+    "unreg_out_buses": {},
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_idx_rootctl_static_am__475.2x259.2": {
+   "type_id": "ot_hbm_idx_rootctl_static_am__475.2x259.2",
+   "pins_file": "cores/pins/ot_hbm_idx_rootctl_static_am.json",
+   "top": "ot_hbm_idx_rootctl_static_am",
+   "params": {
+    "VM_RT": 65,
+    "CR_RT": 36,
+    "SEL_LAT": 30,
+    "RSTL": 1,
+    "FAN32": 1
+   },
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_idx_rootctl_static_am (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_idx_rootctl_static_am @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_rootctl_static_am)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    475.2,
+    259.2
+   ],
+   "plan_pins": 5877,
+   "plan_note": "as-built pins of ot_hbm_idx_rootctl_static_am (r18h5 view LEF), platform tracks + offset; cells 63487 (YOSYS)",
+   "synth": "OK",
+   "synth_host": "ot-epyc5",
+   "kit_hash": "4c8ecef5360a0aec",
+   "synth_cells": 73251,
+   "ffs": 15366,
+   "std_area_um2": 9970.93,
+   "macro_insts": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "macro_area_um2": 7096.8,
+   "fill_std_pct": 8.1,
+   "fill_std_plus_macro_pct": 13.9,
+   "port_bits": 5877,
+   "port_bits_match_plan": true,
+   "pin_reg": {
+    "verdict": "FAIL",
+    "signal_bits": 5875,
+    "ok": 5438,
+    "unreg_in": 10,
+    "unreg_out": 144,
+    "const_out": 27,
+    "unconnected": 256,
+    "unreg_in_buses": {
+     "selected_v": 4,
+     "tree_ev": 4,
+     "lf": 1,
+     "sf": 1
+    },
+    "unreg_out_buses": {
+     "vm_rq": 136,
+     "index_rr": 8
+    },
+    "clock_reset_ports_ignored": []
+   },
+   "over_400k": false,
+   "fill_flag": ""
+  },
+  "ot_hbm_idx_selector_static_sel__600.048x450.36": {
+   "type_id": "ot_hbm_idx_selector_static_sel__600.048x450.36",
+   "pins_file": "cores/pins/ot_hbm_idx_selector_static_sel.json",
+   "top": "ot_hbm_idx_selector_static_sel",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_idx_selector_static_sel (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e3/syn/ot_hbm_idx_selector_static_sel @ 5b5d01284); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_selector_static_sel)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    600.048,
+    450.36
+   ],
+   "plan_pins": 4783,
+   "plan_note": "as-built pins of ot_hbm_idx_selector_static_sel (r18h5 view LEF), platform tracks + offset; cells 205021 (SYNAREA)",
+   "synth": "NO RESULT"
+  },
+  "ot_hbm_idx_topk_link_static__650.16x500.04": {
+   "type_id": "ot_hbm_idx_topk_link_static__650.16x500.04",
+   "pins_file": "cores/pins/ot_hbm_idx_topk_link_static.json",
+   "top": "ot_hbm_idx_topk_link_static",
+   "params": {},
+   "defines": [],
+   "macros": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ],
+   "recipe_source": "r18h5 die view ot_hbm_idx_topk_link_static (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hnl-idxd4f/syn/ot_hbm_idx_topk_link_static @ dd4b67ccc); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_idx_topk_link_static)",
+   "source_commit": "d34578d6f",
+   "die_instances": 1,
+   "census": "census_3a7e22238.json",
+   "outline_um": [
+    650.16,
+    500.04
+   ],
+   "plan_pins": 4597,
+   "plan_note": "as-built pins of ot_hbm_idx_topk_link_static (r18h5 view LEF), platform tracks + offset; cells 189951 (SYNAREA)",
+   "synth": "NO RESULT"
+  }
+ }
+}
