@@ -66,6 +66,9 @@ VAR = {
     'B2c': dict(smw=584, smh=522, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
                 spuhub=True, mirror=True, l3=True, sm_channel=2,
                 label='B2c: P=3 SM, 8 SM / 2 mirrored quad tiles, 1 HBM3E stack, SM driver channel'),
+    'B2j': dict(smw=668, smh=522, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
+                spuhub=True, mirror=True, l3=True, sm_channel=2, sm_col_channel=12,
+                label='B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels'),
 }
 SIDE = 96          # side column width
 SUH = 180          # SU band height (4 lane-group partitions per SM)
@@ -753,6 +756,11 @@ def plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, outdir):
             t['channels'] = [dict(rect_um=[0.0, round((h - chh) / 2, 4), w, round(chh, 4)],
                                   reason='SM driver channel between the two half-tile rows: clock tap drivers (tap at its '
                                          'centre), the halves rst_n landings / reset sync, spare repeaters')]
+        if p['kind'] == 'sm' and T['V'].get('sm_col_channel'):
+            gap = T['V']['sm_col_channel'] * G
+            for col in range(1,8):
+                t.setdefault('channels', []).append(dict(rect_um=[round(col*630.72+(col-1)*gap,4),0.0,gap,h],
+                    reason='SM column broadcast channel: 2069 bits into both halves, M4/M6 at 0.048um pitch and 60% usable tracks; no new pipeline stage'))
         if p['kind'] == 'phy':
             fit.pop(n, None)
         if p['kind'] not in ('phy',) and hcs:

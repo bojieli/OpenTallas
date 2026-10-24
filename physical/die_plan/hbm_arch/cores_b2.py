@@ -502,12 +502,13 @@ def main():
         items = []        # (key, w, h, kind, payload)
         if t.get('hard') and any(c['module'] == SM_MOD for c in old.values()):
             new = []
+            col_gap = next((c['rect_um'][2] for c in t.get('channels',[]) if c.get('reason','').startswith('SM column broadcast')),0.0)
             for col in range(8):
                 for row in range(2):
                     for hn, y0 in (('hnx_rp3lp3h_s', 0.0), ('hnx_rp3lp3h_n', 1036.8)):
                         hw, hh = HALVES[hn]
                         new.append(dict(inst=f'u_sm_t{row}{col}_{hn[-1]}', module=hn,
-                                        origin_um=[round(col * 630.72, 4), round(row * (h - 2246.4) + y0, 4)],   # B2c: row 1 above the SM channel
+                                        origin_um=[round(col * (630.72+col_gap), 4), round(row * (h - 2246.4) + y0, 4)],   # B2c: row 1 above the SM channel
                                         outline_um=[hw, hh], track_offset_um=[0.0, 0.0],
                                         pins_file=f'cores/{hn}.json',
                                         note='HNX-SM4P hardened half (kit pins exact, physical/hbm_next/sm4)'))
