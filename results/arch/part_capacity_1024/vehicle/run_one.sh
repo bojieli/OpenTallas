@@ -2,7 +2,7 @@
 # PART-CAP: route one capacity kit with the production ref_route.sh and sample container CPU / memory every 30 s.
 # usage (on the host, from anywhere): run_one.sh NAME OUTROOT     (worktree = ~/wt/part-cap)
 set -u
-NAME=$1; OUT=$2; WT=$HOME/wt/part-cap
+NAME=$1; OUT=$2; WT=${PART_CAP_WT:-$HOME/wt/part-cap}
 mkdir -p $OUT/$NAME
 (
   while true; do
