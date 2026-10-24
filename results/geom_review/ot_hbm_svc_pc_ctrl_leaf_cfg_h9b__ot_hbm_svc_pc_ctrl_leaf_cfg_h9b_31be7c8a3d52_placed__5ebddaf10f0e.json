@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@31be7c8a3d52",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_31be7c8a3d52, B2r2 pins 31be7c8a3d52, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "5ebddaf10f0e87a1",
+ "reasons": "placed-stage: placement of kit 8a4179920bcbfb0d reused (regenerated as 5ebddaf10f0e87a1: only post-place changes SKIP_CTS_REPAIR_TIMING=1 and PRE_GLOBAL_ROUTE hold_cap.tcl); cells 42951, flops 8546, macros 2, fill of free 0.453, buf/inv 0.07, bins>0.8 0 (max bin 0.48), face flops 1215 pin->reg p50/p90/max 5.8/7.6/12.9 um. CTS-only probe: mean insertion 273 ps, longest tree 315 ps (plan 250 +- 40).",
+ "fixes": "Route through finish + signoff.py (TT setup / FF hold, spread <= 80). Longest tree 315 ps > 290: pin-flop spread decides at signoff.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_31be7c8a3d52/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:53:59-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
