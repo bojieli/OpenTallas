@@ -28,10 +28,10 @@ OLD_SDC = GOOD_SDC.replace("set_input_delay -min -40.0000", "set_input_delay -mi
     "set_output_delay -max 166.6000", "set_output_delay 166.6000")
 
 
-def session_text(ss_setup=12.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True):
+def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True):
     out = {}
     for c, (smax, smin, sp) in dict(ss=(ss_setup, 30.0, 50.0), ff=(150.0, ff_hold, 30.0),
-                                    tt=(60.0, 10.0, spread_tt)).items():
+                                    tt=(tt_setup, 10.0, spread_tt)).items():
         L = [f"SO CORNER {c.upper()}", "SO PARASITICS spef", "SO DESIGN blk", "SO CELLS 1000",
              "SO CLOCK_PORTS ck", "SO INPUTS a b", "SO OUTPUTS y", "SO CLOCKS clk vclk", "SO VCLKS vclk",
              "SO PERIOD clk 833", "SO PERIOD vclk 833",
@@ -53,7 +53,7 @@ def session_text(ss_setup=12.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrain
 
 def record(**kw):
     rec = dict(name="blk", corners={})
-    for c, t in session_text(**{k: v for k, v in kw.items() if k in ("ss_setup", "ff_hold", "spread_tt", "slew",
+    for c, t in session_text(**{k: v for k, v in kw.items() if k in ("tt_setup", "ss_setup", "ff_hold", "spread_tt", "slew",
                                                                          "unconstrained", "done")}).items():
         r = signoff.corner_result(signoff.parse_session(t))
         r.update(corner=c, macro_missing=[])
@@ -66,7 +66,7 @@ def record(**kw):
 
 def test_parse_session_values():
     r = signoff.corner_result(signoff.parse_session(session_text()["tt"]))
-    assert r["done"] and r["sdc_wns_max"] == 60.0 and r["std_wns_min"] == 10.0
+    assert r["done"] and r["sdc_wns_max"] == 12.0 and r["std_wns_min"] == 10.0
     assert r["insertion_pinflops"]["spread"] == 40.0 and r["insertion_pinflops"]["n"] == 2
     assert r["insertion_all"]["n"] == 3
     assert r["inputs"] == ["a", "b"] and r["clock_ports"] == ["ck"] and r["vclks"] == ["vclk"]
@@ -76,12 +76,23 @@ def test_parse_session_values():
 def test_signed_when_everything_passes():
     rec = signoff.evaluate(record())
     assert rec["verdict"] == "SIGNED", rec["reasons"]
-    assert rec["checks"]["tt"]["verdict"] == "REPORT"
+    # SS is information only (owner 2026-10-24): a deeply negative SS setup never blocks
+    assert rec["checks"]["ss"]["verdict"] == "REPORT" and rec["checks"]["ss"]["setup_wns_ps"] == -150.0
 
 
-def test_ss_setup_fail():
-    rec = signoff.evaluate(record(ss_setup=-0.5))
-    assert rec["verdict"] == "NOT SIGNED" and any(r.startswith("setup_ss: FAIL") for r in rec["reasons"])
+def test_tt_setup_fail():
+    rec = signoff.evaluate(record(tt_setup=-0.5))
+    assert rec["verdict"] == "NOT SIGNED" and any(r.startswith("setup_tt: FAIL") for r in rec["reasons"])
+
+
+def test_ss_drv_is_information_only():
+    rec = record()
+    rec["corners"]["ss"]["slew_viol"] = 40.0
+    assert signoff.evaluate(rec)["verdict"] == "SIGNED"
+
+
+def test_default_corners_are_tt_ff():
+    assert signoff.CORNERS == ("tt", "ff") and "ss" not in signoff.BLOCKING
 
 
 def test_ff_hold_uses_standard_overlay():
@@ -113,7 +124,7 @@ def test_drv_unconstrained_drc_antenna():
 
 def test_not_run_is_not_signed():
     rec = signoff.evaluate(record(done=False))
-    assert rec["verdict"] == "NOT SIGNED" and "setup_ss: NOT RUN" in rec["reasons"]
+    assert rec["verdict"] == "NOT SIGNED" and "setup_tt: NOT RUN" in rec["reasons"]
     rec = signoff.evaluate(record(fg="NOT RUN"))
     assert rec["verdict"] == "NOT SIGNED"
 
@@ -187,17 +198,39 @@ def test_macro_lib_missing_blocks():
     assert rec["verdict"] == "NOT SIGNED" and rec["checks"]["macro_libs"]["verdict"] == "FAIL"
 
 
-def test_paper_screen_and_true_ss():
+def test_paper_screen_tt_rule():
     import signoff_inventory
     import signoff_summary
     v = dict(ss_ps=17.77, setup_corner="tt", ss_sensitivity_ps=-295.16)
-    assert signoff_inventory.true_ss(v) == -295.16          # a TT-accepted closure is judged on its SS slack
-    assert signoff_inventory.true_ss(dict(ss_ps=5.0, setup_corner="ss")) == 5.0
-    rec = dict(cl_status="CLOSED", cl_ss_ps=-295.16, cl_setup_corner="tt", cl_setup_ps=17.77, cl_ff_ps=6.59,
+    assert signoff_inventory.tt_setup(v) == 17.77           # metrics.ss_ps holds the TT slack of an option-B verdict
+    assert signoff_inventory.ss_info(v) == -295.16
+    assert signoff_inventory.tt_setup(dict(ss_ps=5.0, setup_corner="ss")) is None
+    rec = dict(cl_status="CLOSED", cl_tt_setup_ps=17.77, cl_ss_info_ps=-295.16, cl_setup_corner="tt", cl_ff_ps=6.59,
                cl_drc=0, spread_tt_ps=67.5, spread_ff_ps=59.6)
-    p = signoff_summary.paper_screen(rec)
-    assert p["verdict"] == "FAIL" and "closed at TT setup +17.77" in p["problems"][0]
-    rec.update(cl_ss_ps=10.0, spread_tt_ps=85.4)
+    assert signoff_summary.paper_screen(rec)["verdict"] == "PASS"     # SS never gates
+    rec.update(spread_tt_ps=85.4)
     assert signoff_summary.paper_screen(rec)["verdict"] == "FAIL"
-    rec.update(spread_tt_ps=50.0)
-    assert signoff_summary.paper_screen(rec)["verdict"] == "PASS"
+    rec.update(spread_tt_ps=50.0, cl_tt_setup_ps=-1.0)
+    p = signoff_summary.paper_screen(rec)
+    assert p["verdict"] == "FAIL" and p["problems"][0] == "recorded TT setup -1.00 ps"
+    rec.update(cl_tt_setup_ps=None, cl_setup_corner="ss")
+    assert signoff_summary.paper_screen(rec)["verdict"] == "INCOMPLETE"
+
+
+def test_route_goal_kit_uses_5_route_with_rcx(tmp_path):
+    base = tmp_path / "run" / "results" / "asap7" / "dp_y" / "base"
+    base.mkdir(parents=True)
+    (base / "5_route.odb").write_text("x")
+    (base / "6_final.spef").write_text("stale")          # a SPEF without its 6_final.odb is not used
+    assert signoff.find_base(tmp_path / "run") == base
+    d = signoff.discover(base, sdc=str(base / "6_final.spef"))
+    assert d["odb"].endswith("5_route.odb") and d["spef"] is None
+    t = signoff.session_tcl("tt", [], d["spef"], odb="5_route.odb")
+    assert "read_db /base/5_route.odb" in t and "extract_parasitics" in t
+
+
+def test_gen_phys_kit_runs_signoff_last():
+    import gen_phys
+    k = gen_phys.RUN_KIT
+    assert "signoff.py\" run --run-dir \"$K/run\"" in k
+    assert k.index("generate_abstract") < k.index("signoff.py\" run") < k.rindex("exit $rc")

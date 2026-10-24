@@ -4372,7 +4372,8 @@ if cs:
   o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
   o['sdc_name']=d.get('sdc_name') or d['hold_ff'].get('sdc_name') or '6_final.sdc'; o['setup_post_sdc']=list(d.get('setup_post_sdc') or [])
   o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
-  # OWNER OPTION B: setup closes at TT; ss_ps keeps its key for the loop's line checks but now holds the TT setup slack
+  # OWNER OPTION B (restated 2026-10-24): setup closes at TT; ss_ps keeps its key for the loop's line checks but holds the
+  # TT setup slack (published as tt_setup_ps by verdict_metrics; ss_sensitivity_ps -> ss_info_ps, information only)
   tt=d.get('setup_tt')
   if tt is None:
     try: tt=json.load(open(cs[-1]+'.tt.json')).get('setup_tt')
@@ -4420,6 +4421,33 @@ def wt_add(path, ref, sparse):
 def wt_rm(path):
     git("worktree", "remove", "--force", str(path), check=False)
     shutil.rmtree(path, ignore_errors=True)
+
+
+VERDICT_METRIC_KEYS = ("ff_ps", "drc", "clock_periods_ps", "setup_corner", "corner_sta_tt", "post_sdc", "corner_sta",
+                       "drc_metrics", "drc_skipped")
+
+
+def verdict_metrics(metrics):
+    """the published verdict metrics with HONEST names (SIGNOFF 10-24).  Internally the loop keeps the historical key
+    ss_ps for the SETUP-CORNER slack (TT since option B, 2026-10-07) and ss_sensitivity_ps for the SS-library slack.  The
+    record names them by corner: tt_setup_ps / tt_setup_tns_ps (the accepted value when setup_corner is tt/tc),
+    ss_info_ps / ss_info_tns_ps (SS, information only: owner 2026-10-24).  ss_ps / ss_tns_ps stay as DEPRECATED aliases
+    of the setup-corner slack for existing readers (closed_stands, status_report, explorers); new readers use the
+    corner-named keys.  What the loop accepts is unchanged."""
+    out = {k: metrics.get(k) for k in VERDICT_METRIC_KEYS}
+    corner = str(metrics.get("setup_corner") or "").lower()
+    if corner in ("tt", "tc", "typ"):
+        out["tt_setup_ps"], out["tt_setup_tns_ps"] = metrics.get("ss_ps"), metrics.get("ss_tns_ps")
+        out["ss_info_ps"], out["ss_info_tns_ps"] = metrics.get("ss_sensitivity_ps"), metrics.get("ss_sensitivity_tns_ps")
+    else:                                   # an SS-corner (pre option B / "keep") route: ss_ps is the SS slack
+        out["tt_setup_ps"], out["tt_setup_tns_ps"] = None, None
+        out["ss_info_ps"], out["ss_info_tns_ps"] = metrics.get("ss_ps"), metrics.get("ss_tns_ps")
+    out["ss_ps"], out["ss_tns_ps"] = metrics.get("ss_ps"), metrics.get("ss_tns_ps")          # deprecated aliases
+    out["ss_sensitivity_ps"], out["ss_sensitivity_tns_ps"] = (metrics.get("ss_sensitivity_ps"),
+                                                              metrics.get("ss_sensitivity_tns_ps"))   # deprecated
+    out["deprecated_keys"] = {"ss_ps": "setup-corner slack (= tt_setup_ps when setup_corner is tt)",
+                              "ss_sensitivity_ps": "= ss_info_ps"}
+    return out
 
 
 def setup_corner_label(metrics):
@@ -4796,10 +4824,9 @@ def publish(j, metrics):
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
-                       rule="OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), "
-                            "agreed die-clock IO budgets, DRC 0"),
-                       metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
-                                                            "drc_metrics", "drc_skipped")},
+                       rule="OWNER 2026-10-08, restated 2026-10-24 (AGENTS.md): TT setup >= 0 / FF hold >= 0 (60/25 uncertainties; +15 design target), "
+                            "agreed die-clock IO budgets, DRC 0; SS is information only"),
+                       metrics=verdict_metrics(metrics),
                        benches=j.get("benches", {}), fail_witnesses={k: dict(w, path=f"{rec_dir}/fail_witness/{label(k)}.log")
                                                                      for k, w in (j.get("fail_witnesses") or {}).items()},
                        no_bench_reason=spec.get("no_bench_reason"),

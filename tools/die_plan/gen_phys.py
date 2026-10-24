@@ -485,6 +485,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
+    shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
+    shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
     return kd
@@ -517,6 +520,15 @@ rc=$?
 # a killed / OOM container skips its chown: hand the tree back anyway (else root-owned stale results survive)
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+# SIGNOFF (10-24): every routed kit gets the uniform verdict (TT setup / FF hold with the standard boundary-hold
+# overlay / DRV / unconstrained / pin-flop spread <= 80 + insertion / sdc_lint / face_guard / DRC + antenna) in
+# KIT/signoff/signoff.json.  The verdict does not change this script's exit code (the route itself succeeded); a kit
+# is closed only when that file says SIGNED.
+if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; } && [ -f "$K/signoff.py" ]; then
+  SIGNOFF_DOCKER=${SIGNOFF_DOCKER:-docker} python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" \
+    --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+fi
 exit $rc
 """
 
