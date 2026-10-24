@@ -9,6 +9,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
+import gen_phys  # noqa: E402
 
 
 def render(P, geo, R, out_png, title=None):
@@ -44,9 +45,12 @@ def render(P, geo, R, out_png, title=None):
             ax.add_patch(Rectangle((min(a[0], b[0]), min(a[1], b[1])), abs(b[0] - a[0]), abs(b[1] - a[1]),
                                    fc="none", ec="grey", hatch="..", lw=0.3))
         ck = t.get("clock", {})
-        if "tap_um" in ck:
-            tx, ty = P.to_die(n, ck["tap_um"])
-            ax.plot([tx], [ty], marker="*", ms=6 if small else 3, color="darkorange", zorder=5)
+        # Render the same complete, snapped R4 grid + sink taps as the kit.
+        # tap_um alone is only the root-nearest reference point, not its CTS inputs.
+        clock_xy = [P.to_die(n, (x, y)) for _, x, y in gen_phys.clock_pins(P, p["type"])]
+        if clock_xy:
+            tx, ty = zip(*clock_xy)
+            ax.plot(tx, ty, marker="*", ls="", ms=6 if small else 3, color="darkorange", zorder=5)
         for tap in ck.get("taps", []):
             tx, ty = P.to_die(n, tap["xy"])
             ax.plot([tx], [ty], marker=".", ms=4 if small else 2, color="purple", zorder=5)
