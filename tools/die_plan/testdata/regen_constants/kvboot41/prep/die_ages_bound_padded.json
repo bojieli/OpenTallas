@@ -1,0 +1,243 @@
+{
+ "schema": "opentallas.qwen_kv_static.die_ages.v1",
+ "note": "KV-P8 fixture: pv + vport of the KV-P7 kv41 boot run (scratch/kv-p7-1023/boot/kv41/prep/die_ages_bound_padded.json)",
+ "pv": {
+  "RL": 63,
+  "FIRST_INPUT_AGE": 64,
+  "W": [
+   14,
+   19,
+   20,
+   21,
+   28,
+   29
+  ],
+  "rule": "kv_static_params.schedule: RL = 4 + W + DQ + RT, W = pvrq + O; FIRST_INPUT_AGE = RL + 1"
+ },
+ "vport": {
+  "vport_WS_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 10,
+   "W": 21,
+   "RL0": 55,
+   "DQ": 8,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 8,
+   "O": 6,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_2": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 15,
+   "O": 14,
+   "W": 29,
+   "RL0": 63,
+   "DQ": 0,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WS_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 3,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 9,
+   "W": 20,
+   "RL0": 54,
+   "DQ": 9,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 9,
+   "O": 5,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_2": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 16,
+   "O": 12,
+   "W": 28,
+   "RL0": 62,
+   "DQ": 1,
+   "cls": "DIE_TABLE"
+  },
+  "vport_WN_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 14,
+   "O": 0,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 9,
+   "W": 20,
+   "RL0": 54,
+   "DQ": 9,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 9,
+   "O": 5,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_2": {
+   "sides": [
+    22,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 31,
+   "WP": 16,
+   "O": 12,
+   "W": 28,
+   "RL0": 63,
+   "DQ": 0,
+   "cls": "DIE_TABLE"
+  },
+  "vport_ES_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 3,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_0": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 11,
+   "O": 8,
+   "W": 19,
+   "RL0": 53,
+   "DQ": 10,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_1": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 10,
+   "O": 4,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_2": {
+   "sides": [
+    22,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 31,
+   "WP": 16,
+   "O": 12,
+   "W": 28,
+   "RL0": 63,
+   "DQ": 0,
+   "cls": "DIE_TABLE"
+  },
+  "vport_EN_3": {
+   "sides": [
+    21,
+    14
+   ],
+   "sides_equal": false,
+   "RT": 30,
+   "WP": 14,
+   "O": 0,
+   "W": 14,
+   "RL0": 48,
+   "DQ": 15,
+   "cls": "DIE_TABLE"
+  }
+ }
+}

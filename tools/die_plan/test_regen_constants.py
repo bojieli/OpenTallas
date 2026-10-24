@@ -161,3 +161,60 @@ def test_pair_image_kv_tx_latency(tmp_path):
     asb = RC.run("qwen_kvsys", b)
     assert _v(asb, "D2D_KV_TX_LAT") == 22 and _v(asb, "D2D_TXDP_K") == [22, 4, 3, 3]
     assert _v(RC.run("qwen_compute", FX / "qc12", peer=b), "D2D_KV_TX_LAT") == 22
+
+
+def _kvboot(tmp_path, pads_zero):
+    """KV boot run fixture (KV-P7 kv41 boot: RL 63 / FIA 64, W request pads 900 flops still needed); pads_zero = the
+    same run on a bind that carries the pads (pad_stages all 0, DQ <= 15)."""
+    d = tmp_path / ("boot_padded" if pads_zero else "boot41")
+    shutil.copytree(FX / "kvboot41", d)
+    if pads_zero:
+        f = d / "prep" / "vport_dq_pads.json"
+        p = json.loads(f.read_text())
+        p["pad_stages"] = {k: 0 for k in p["pad_stages"]}
+        p["pad_flops"] = 0
+        f.write_text(json.dumps(p))
+    return d
+
+
+def test_kv_boot_is_pv_authority(tmp_path):
+    """KV-P8 (KV owner, KV-P7 23:00): with --kv-boot the boot generator's RL 63 / CFG_FIA 64 / DQ are the values of record
+    (not the KV-P5 law / entry table 67 / 68); ERROR while the boot still needs W request pads (kv41: 900 flops), OK once
+    the bind carries them."""
+    d = RC.run("qwen_kvsys", FX / "kv39", kv_boot=_kvboot(tmp_path, False))
+    c = d["constants"]
+    assert (c["PV_RL"]["value"], c["CFG_FIA"]["value"]) == (63, 64)
+    assert c["VPORT_W_PADS"]["status"] == "ERROR" and c["CFG_FIA"]["status"] == "ERROR"
+    assert c["VPORT_W_PADS"]["value"]["vport_WN_3"] == 14 and "900" in c["CFG_FIA"]["note"]
+    d = RC.run("qwen_kvsys", FX / "kv39", kv_boot=_kvboot(tmp_path, True))
+    c = d["constants"]
+    for k in ("PV_RL", "CFG_FIA", "VPORT_DQ", "VPORT_W_PADS"):
+        assert c[k]["status"] == "OK", (k, c[k])
+    assert c["CFG_FIA"]["inputs"]["law_kv_p5"]["CFG_FIA"] != 64      # the KV-P5 law value is kept as info only
+    # without --kv-boot the old KV-P5 law rows stay (WARN), unchanged
+    d = RC.run("qwen_kvsys", FX / "kv39")
+    assert d["constants"]["CFG_FIA"]["status"] == "WARN" and "PV_RL" not in d["constants"]
+
+
+def test_kv_pv_table_params_own_trunk(tmp_path):
+    """a PV table whose params the hook records (pv_table.params) and the bind applied -> TRUNK_D/FLAG_D OK, law = info"""
+    b = tmp_path / "kv"
+    shutil.copytree(FX / "kv39", b)
+    f = b / "param_regen.json"
+    pr = json.loads(f.read_text())
+    pr["record"]["pv_table"]["params"] = dict(TRUNK_D=56, FLAG_D=0)
+    f.write_text(json.dumps(pr))
+    t = RC.run("qwen_kvsys", b)["constants"]["TRUNK_D"]
+    assert (t["value"], t["status"], t["inputs"]["table"]) == (56, "OK", 56) and "info" in t["note"]
+    pr["record"]["pv_table"]["params"] = dict(TRUNK_D=43, FLAG_D=0)       # applied 56 != table 43 -> still WARN
+    f.write_text(json.dumps(pr))
+    assert RC.run("qwen_kvsys", b)["constants"]["TRUNK_D"]["status"] == "WARN"
+
+
+def test_bind_post_passes_kv_boot(tmp_path):
+    import bind_post
+    b = tmp_path / "kv39"
+    shutil.copytree(FX / "kv39", b)
+    bind_post.main(["--die", "qwen_kvsys", "--bound", str(b), "--smoke", "skip", "--kv-boot", str(_kvboot(tmp_path, False))])
+    g = json.loads((b / "bind_gate.json").read_text())
+    assert g["regen"]["verdict"] == "FAIL" and "CFG_FIA" in g["regen"]["problems"]

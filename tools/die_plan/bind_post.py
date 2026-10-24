@@ -45,6 +45,7 @@ def main(argv=None):
     ap.add_argument("--asbuilt", type=Path, help="bind_smoke: the bind as-built recipe JSON (QC; default from README)")
     ap.add_argument("--src-root", type=Path, default=RC.REPO)
     ap.add_argument("--hbm-tools", type=Path)
+    ap.add_argument("--kv-boot", type=Path, help="KV: boot run dir of this bind (regen_constants --kv-boot)")
     a = ap.parse_args(argv)
     B = a.bound.resolve()
     rd = B / "regen"
@@ -58,6 +59,8 @@ def main(argv=None):
         rargs += ["--expect", str(a.expect)]
     if a.hbm_tools:
         rargs += ["--hbm-tools", str(a.hbm_tools)]
+    if a.kv_boot:
+        rargs += ["--kv-boot", str(a.kv_boot)]
     rc = RC.main(rargs)
     doc = json.loads((rd / "constants.json").read_text())
     regen = dict(verdict="PASS" if rc == 0 else "FAIL", counts=doc["verdict"], json=str(rd / "constants.json"),

@@ -182,6 +182,7 @@ class RuleError(Exception):
 class Out:
     def __init__(self, die, B):
         self.die, self.B = die, B
+        self.kv_boot = None
         self.c = {}           # name -> record
         self.notes = []
 
@@ -536,14 +537,23 @@ def kv_pv_trunk(o):
     if pvt:
         # a PV pad table (KV-P6-PV model: V-D-H launch shift, entry pads) owns TRUNK_D/FLAG_D; the KV-P5 pv_trunk law on
         # the landed depths is the independent check.  Disagreement = table and lanes are not from one bind -> WARN.
+        # KV-P8 10-23 (KV owner, KV-P7 23:00): when the hook records the table's own params (pv_table.params) and the
+        # bind applied exactly those, the table is the authority -> OK; the KV-P5 law (whose N/S column equalisation the
+        # entry table replaces) is reported as info.  A table without recorded params (kv39's withdrawn KV-P6-PV table)
+        # keeps the law check as before (WARN on disagreement).
         app = (B.param_regen.get("record") or {}).get("applied", {})
+        tparams = pvt.get("params") or {}
         for k in ("TRUNK_D", "FLAG_D"):
             v = app.get(k)
             agree = v == law[k]
+            owned = k in tparams and v == tparams[k]
+            status = "OK" if owned or (agree and st == "OK") else "WARN"
+            note = (None if agree else f"KV-P5 law {law[k]} (info): the PV table owns {k} = {tparams[k]} and the bind applied it"
+                    if owned else None if agree else f"law {law[k]} != table {v}: confirm the PV table belongs to this bind (KV owner)")
             o.add(k, v, "rtl", f"PV pad table {pvt.get('file')} ({pvt.get('source', '')[:80]}); check: KV-P5 pv_trunk law on "
-                  f"landed depths = {law[k]}", dict(asbuilt=TD if k == "TRUNK_D" else FD, law=law, sides=regen),
-                  inst=r"pvw_\d__u_ctl$", group="pv", status="OK" if agree and st == "OK" else "WARN",
-                  note=None if agree else f"law {law[k]} != table {v}: confirm the PV table belongs to this bind (KV owner)")
+                  f"landed depths = {law[k]}", dict(asbuilt=TD if k == "TRUNK_D" else FD, law=law, sides=regen,
+                                                    table=tparams.get(k)),
+                  inst=r"pvw_\d__u_ctl$", group="pv", status=status, note=note)
         return
     o.add("TRUNK_D", law["TRUNK_D"], "rtl", "TRUNK_D_asb + max_s Delta(cmd_s) (pv_trunk_gen)",
           dict(asbuilt=TD, sides=regen), inst=r"pvw_\d__u_ctl$", group="pv", status=st, note=note)
@@ -571,12 +581,44 @@ def kv_vport(o):
     dq = {k: rl - (v["RT"] + v["W"]) for k, v in out.items()}
     o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)", group="vport",
           status="OK" if all(v["RT"] <= 31 for v in out.values()) else "ERROR")
+    if o.kv_boot:
+        return kv_vport_boot(o, dict(RL=rl, DQ=dq, CFG_FIA=VPORT_RL_BASE + rl + 1))
     o.add("VPORT_DQ", dq, "boot", "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)", group="vport",
           status="OK" if max(dq.values()) <= 15 else "WARN",
           note=None if max(dq.values()) <= 15 else f"DQ > 15 on {[k for k, v in dq.items() if v > 15]}: W request pads")
     o.add("CFG_FIA", VPORT_RL_BASE + rl + 1, "boot", "4 + max_p(W_p + RT_p) + 1 (KV-P5 rule)", group="vport", status="WARN",
           note="KV-P6-BOOT: the boot generator RL = 4 + WP + O + DQ + RT (adds O) and the PV entry-pad table sets cfg_fia; "
                "the compiled boot image (KV_BOOT recipe) is authoritative for cfg_fia / DQ")
+
+
+def kv_vport_boot(o, law):
+    """KV-P8 10-23 (KV owner, KV-P7 23:00): the compiled KV boot image is the authority for PV RL / CFG_FIA / VPORT_DQ.
+    The calibrated boot generator (boot_v36 kv_boot_v36.py, reproduces the as-built image word for word) measures W/O in
+    relay-table units (RL = 4 + W + DQ + RT, W = pvrq + O), so its RL differs from the KV-P5 law on raw landed depths
+    (kv41: boot 63 vs law/entry table 67).  --kv-boot DIR = the boot run of THIS bind (run_rebind.sh OUT dir): reads
+    DIR/prep/die_ages_bound_padded.json (pv RL / FIRST_INPUT_AGE, vport DQ) + DIR/prep/vport_dq_pads.json (pad_stages =
+    W request pads the boot still needs).  OK only when every pad_stages == 0 (the bind carries the pads); else ERROR
+    listing them (the bind must add them as W request-lane pads before the image is valid)."""
+    d = Path(o.kv_boot)
+    ages = _load(d / "prep" / "die_ages_bound_padded.json")
+    padf = d / "prep" / "vport_dq_pads.json"
+    pads = _load(padf) if padf.exists() else None
+    if ages is None or pads is None or "pv" not in ages:
+        raise RuleError(f"--kv-boot {d}: prep/die_ages_bound_padded.json (pv) + prep/vport_dq_pads.json required")
+    need = {k: v for k, v in sorted(pads["pad_stages"].items()) if v}
+    status = "OK" if not need else "ERROR"
+    note = (None if not need else f"boot needs W request pads {need} (= {pads.get('pad_flops')} flops): "
+            "the bind must carry them (pvw ctl req_t/req_valid -> vport pr_t/pr_valid)")
+    src = dict(kv_boot=str(d), law_kv_p5=law)
+    dq = {k: v["DQ"] for k, v in sorted(ages["vport"].items())}
+    o.add("VPORT_DQ", dq, "boot", "boot generator (kv_boot_v36 prep): DQ per vport, <= 15 (RTL bound of qkd_pv16_vport_b)",
+          src, group="vport", status=status if max(dq.values()) <= 15 else "ERROR", note=note)
+    o.add("PV_RL", ages["pv"]["RL"], "boot", "boot generator: RL = 4 + W + DQ + RT, W = pvrq + O (relay-table units)",
+          src, group="vport", status=status, note=note)
+    o.add("CFG_FIA", ages["pv"]["FIRST_INPUT_AGE"], "boot", "boot generator: FIRST_INPUT_AGE = RL + 1", src, group="vport",
+          status=status, note=note)
+    o.add("VPORT_W_PADS", pads["pad_stages"], "boot", "boot generator: W request pad stages still needed (all 0 = bind "
+          "carries them)", src, group="vport", status=status, note=note)
 
 
 def kv_prog(o):
@@ -774,9 +816,10 @@ def sv_package(die, doc):
     return "\n".join(L) + "\n"
 
 
-def run(die, bound, src_root=REPO, hbm_tools=None, peer=None):
+def run(die, bound, src_root=REPO, hbm_tools=None, peer=None, kv_boot=None):
     B = Bound(bound) if bound else None
     o = Out(die, B)
+    o.kv_boot = kv_boot if die == "qwen_kvsys" else None
     if die == "qwen_compute":
         o.rule("coll", qc_coll, src_root)
         o.rule("treq", qc_treq)
@@ -844,8 +887,10 @@ def main(argv=None):
     ap.add_argument("--src-root", type=Path, default=REPO, help="repo tree with tools/qwen_split + rtl (coll RTL defaults)")
     ap.add_argument("--hbm-tools", type=Path, help="dir with leaf_split_latency.py (default: <src-root>/tools/hbm_static)")
     ap.add_argument("--write-fixture", type=Path, help="write the members this run read as a small test fixture")
+    ap.add_argument("--kv-boot", type=Path, help="KV: boot run dir of this bind (boot_v36/run_rebind.sh OUT); the boot "
+                    "generator's PV RL / CFG_FIA / VPORT_DQ are authoritative, ERROR while it still needs W request pads")
     a = ap.parse_args(argv)
-    doc = run(a.die, a.bound, a.src_root, a.hbm_tools, a.peer)
+    doc = run(a.die, a.bound, a.src_root, a.hbm_tools, a.peer, a.kv_boot)
     B = doc.pop("_bound_obj")
     rc = 0
     if a.expect:

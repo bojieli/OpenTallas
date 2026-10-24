@@ -91,6 +91,10 @@ def regen(ctx):
     if pv:
         rec["applied"].update(TRUNK_D=pv["TRUNK_D"], FLAG_D=pv["FLAG_D"])
         rec["pv_table"] = dict(file=PV.name, source="KV-P6-V37 claude/kv-p6-v37-1023 @0ec5c902d kv_pv_entry_pads_v36.json",
+                               params=dict(TRUNK_D=pv["TRUNK_D"], FLAG_D=pv["FLAG_D"]),   # KV-P8: regen_constants OK rule
+                               boot_note="KV-P8 10-23 (KV owner, KV-P7 23:00): the compiled boot image (boot_v36, "
+                                         "regen_constants --kv-boot) is authoritative for RL / cfg_fia / DQ / W pads; "
+                                         "the table's boot values below are history",
                                boot=dict(pvfin_P0_P1_cal_age_shift=pv["pvfin_P0_P1_cal_age_shift"], cfg_fia=pv["cfg_fia"],
                                          RL=pv["RL"], vport=pv["boot"]))
     return dict(params=params, record=rec)
