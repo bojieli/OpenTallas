@@ -1,0 +1,20 @@
+{
+ "ot_s81c_attn_hcore": {
+  "files": [
+   "rtl/hdc/v41x/ot_s81c_attn_hcore.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+  ],
+  "defines": [],
+  "util": 0.78,
+  "orfs_vars": {"SYNTH_HDL_FRONTEND": "slang"},
+  "source": "CORE-S81-SVC 10-23: one S81 attention head + own front end (hgrp_s HG1 PCOLP1), S81-P5 svc_tile synth file list"
+ }
+}
