@@ -437,13 +437,18 @@ def main():
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
     (kd / "post_synth_actual.tcl").write_text("# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
-    lefs, libs = [], []
+    lefs, libs, ttlibs, fflibs = [], [], [], []
     for m in rec.get("macros", []):
         md = REPO / "physical" / "asap7_memory_macros_v2" / m
         (kd / "macros").mkdir(exist_ok=True)
         for ext in (".lef", "_tt.lib", "_ff.lib", "_ss.lib"):
             if (md / f"{m}{ext}").is_file():
                 shutil.copyfile(md / f"{m}{ext}", kd / "macros" / f"{m}{ext}")
+        for suffix in ("_tt.lib", "_ff.lib"):
+            if not (md / f"{m}{suffix}").is_file():
+                raise SystemExit(f"macro {m} lacks mandatory {suffix} timing view")
+        ttlibs.append(f"/work/macros/{m}_tt.lib")
+        fflibs.append(f"/work/macros/{m}_ff.lib")
         lefs.append(f"/work/macros/{m}.lef")
         cl = {"WC": "_ss.lib", "TC": "_tt.lib", "BC": "_ff.lib"}[a.corner]
         libs.append(f"/work/macros/{m}{cl if (md / f'{m}{cl}').is_file() else '_tt.lib'}")
@@ -495,10 +500,13 @@ def main():
            f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
-           f"export CORNER = {a.corner}",
+           "export CORNERS = tc bc",
+           "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(ttlibs),
+           "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
+           "export ADDITIONAL_LIBS =",
            *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
-        cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
+        cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
                 f"export MACRO_PLACE_HALO = {rec.get('macro_place_halo_um', 4.32):g} {rec.get('macro_place_halo_um', 4.32):g}",
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)}"]
