@@ -21,7 +21,7 @@ Kit = gen_core_kit.py (CORE-HBM) layout + the CP1-R10 fail-closed gates (main 4b
   * face_guard.py on the synthesised netlist (every pin bit its own register: R2), verdict recorded (a FAIL is a FAIL
     of the view; P&R still runs for the timing evidence);
   * corners_hbm.tcl after finish: SS setup / FF hold / TT, RCX SPEF, face-flop CK spread at TT/FF/SS, ETM per corner.
-ORFS optimises at --corner (default WC = SS libs: setup sign-off corner, AGENTS.md); FF hold is judged post-route.
+ORFS optimises at --corner (default TC: AGENTS.md c7ce2ed69a, sign-off = TT setup + FF hold + spread <= 80; SS info only).
 """
 import argparse
 import hashlib
@@ -290,9 +290,9 @@ def main():
     ap.add_argument("--views", required=True)
     ap.add_argument("--view", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--corner", default="WC", choices=["WC", "TC", "BC"])
+    ap.add_argument("--corner", default="TC", choices=["WC", "TC", "BC"])
     ap.add_argument("--util", type=float, default=None)
-    ap.add_argument("--sigmax", default="M5")
+    ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     ap.add_argument("--hold-margin", type=float, default=30.0, help="HOLD_SLACK_MARGIN ps at the flow corner")
@@ -315,6 +315,13 @@ def main():
                round(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048)) > 0.05]
     if off:
         raise SystemExit(f"{a.view}: {len(off)} M4/M5 pins off the plan lattice, e.g. {off[:3]}")
+    off67 = [q["name"] for q in pins if q["layer"] in ("M6", "M7") and
+             abs(((q["y"] if q["layer"] == "M6" else q["x"]) - 0.032) / 0.064 -
+                 round(((q["y"] if q["layer"] == "M6" else q["x"]) - 0.032) / 0.064)) > 0.05]
+    if off67:
+        raise SystemExit(f"{a.view}: {len(off67)} M6/M7 pins off the plan lattice, e.g. {off67[:3]}")
+    if a.sigmax == "auto":
+        a.sigmax = max(["M5"] + [q["layer"] for q in pins], key=lambda L: int(L[1:]))
     names = [p["name"] for p in pins]
     pb = buses_of(names)
     R = load_recipes()
