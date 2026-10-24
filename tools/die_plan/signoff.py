@@ -528,8 +528,8 @@ def run_face_guard(disc, clock_ports=()):
         pins = pins.get("pins")
     if pins is not None and not (isinstance(pins, list) and pins and isinstance(pins[0], dict) and "bus" in pins[0]):
         pins = None
-    skip = sorted(set(clock_ports) | {"arst_n"})
-    skip_re = r"^(clk(_t[0-9]+)?|" + "|".join(re.escape(x) for x in skip) + r")$"
+    skip = sorted(set(clock_ports) | {"arst_n", "rst_n"})
+    skip_re = r"^(clk(_t[0-9]+|_c[0-9]+)?|" + "|".join(re.escape(x) for x in skip) + r")$"
     if pins is not None:                      # the clock / reset pins are not face registers
         pins = [x for x in pins if not re.match(skip_re, str(x.get("bus")))]
     try:
