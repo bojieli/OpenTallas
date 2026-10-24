@@ -1,0 +1,11 @@
+{
+ "element": "kv_g3_kv3_io_cor_v1",
+ "kit": "claude/elem-qk-1024@88f5349870 tools (main 24b2da3433+ merged) + kv41 kit-rtl, plan copy die_plan_elemqk.json; kit intel1/intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_io_cor_v1",
+ "verdict": "PASS-COND",
+ "hash": "ec1219b2bee4633d",
+ "reasons": "[ELEMQK-KV self-review] localhost:/srv/opentallas-scratch/claude/elem-qk/review/kvg/io_cor_v1_place.png: g3g kit, face_guard yosys+odb PASS 6106/6106. IO corner partition 1278.72x1036.8: S-face (M4/M5 0..520 um) to E-face (M6/M7 0..520 um) ft corridor, stations per plan ft_stations (mostly 2: S->E, ft11/12/24 3, ft23 1); in-flops at faces (pin->ff max 10.6 um); 7158 FF / 29872 buf / 57 logic; max bin density 0.28, no bin >0.8; 12 clock taps + reset M7. Diagonal mid-station bands follow the S->E turn (expected for a corner turn). ff->ff p90 682 max 690.1 um, 663 hops >675 um (ft13/ft16 o_0->o_1 S face x~280-390 to station x~589,y~380-500), 0 >750; ff->pin max 696.4.",
+ "fixes": "Route ALLOWED as pathfinding for the >675 um hops: if TT setup fails on ft13/ft16 o_0->o_1, move the plan station (KV-G3 owns ft_stations) toward the S face or add a station. Judge TT/FF, DRC, GRT, face_guard+pin_audit, CPPR skew <= 80.",
+ "reviewer": "ELEMQK-KV (self)",
+ "at": "2026-10-24T12:42:24-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

@@ -1,0 +1,11 @@
+{
+ "element": "kv_g3_kv3_hroot",
+ "kit": "claude/elem-qk-1024@88f5349870 tools (main 24b2da3433+ merged) + kv41 kit-rtl, plan copy die_plan_elemqk.json; kit intel1/intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_hroot",
+ "verdict": "PASS-COND",
+ "hash": "ef7b91679e205bc1",
+ "reasons": "[ELEMQK-KV self-review] localhost:/srv/opentallas-scratch/claude/elem-qk/review/kvg/hroot_place.png: g3g kit, face_guard yosys+odb PASS 4313/4313 (clk_clk_hbm bound-only pin tied to clk in kit wrapper: single-clock kit, CDC to HBM clock not timed). Half-root 1900.8x838.08: logic occupies the E half (x 870..1900, y 0..460) between the S-face windows (x 870..1300) and E-face windows (y 0..460); W half empty (plan pass-through area, no pins there). 7807 FF / 21411 buf / 3355 logic, density 0.38, no bin >0.8; 15 clock taps. pin->ff max 11.9, ff->pin max 595.6. ff->ff p90 623, max 830.7 um, 555 >675, 286 >750: u_kvs_hroot.u_rly.r[*] (stack relay, placed x~1067 next to its S-face source) -> u_bout_o_kvs_hroot_Q_o_emb (E face x~1895). The relay is not midway: placement quality issue, not plan geometry.",
+ "fixes": "Route as pathfinding. If TT setup fails on u_rly->Q_o_emb: add a placement region / relay_mid-style guide centring u_kvs_hroot.u_rly between the S-face source and the E face (~x 1450), or retime the relay toward the E face. Judge TT/FF, DRC, GRT, face_guard+pin_audit, CPPR <= 80.",
+ "reviewer": "ELEMQK-KV (self)",
+ "at": "2026-10-24T12:51:26-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

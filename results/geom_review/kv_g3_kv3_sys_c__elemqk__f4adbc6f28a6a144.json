@@ -1,0 +1,11 @@
+{
+ "element": "kv_g3_kv3_sys_c",
+ "kit": "claude/elem-qk-1024@88f5349870 tools (main 24b2da3433+ merged) + kv41 kit-rtl, plan copy die_plan_elemqk.json; kit intel1/intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_sys_c",
+ "verdict": "FAIL",
+ "hash": "f4adbc6f28a6a144",
+ "reasons": "[ELEMQK-KV self-review] localhost:/srv/opentallas-scratch/claude/elem-qk/review/kvg/sys_c_place.png: g3g kit (overlay: UCIe x64 PHY 780x780 at [138.24,250.56] MX, 4 d2d SRAM p288 at x 172.8..432 y 86.4), face_guard yosys+odb PASS 4967/4967 (old dropped-23 was a stale face_keep regexp). 1900.8x1036.8; 19178 FF / 18974 logic / 55522 buf; density 0.31; pin->ff max 12.6; ff->pin max 674.8 (ft1 3-station W->E corridor p90 672). ff->ff p90 261, max 905.5, 412 >675, 34 >750: d2d_kv attention logic clusters at x~1100..1300 (between PHY and E-face dNd pins) while its 4 link-store SRAMs sit at x 173..432 under the PHY -> q_att_tx_payload -> g_bank[2].u_store.dq 905 um; q_att_rx_beat -> u_bout_o_dNd_kv_att_tx_beat (E face) 892 um. Macro placement wrong (my overlay).",
+ "fixes": "Revise overlay: move the 4 d2d SRAMs east to x 950.4..1209.6 (y 86.4) under the d2d_kv cluster, re-place (g3h), re-review. Not routed.",
+ "reviewer": "ELEMQK-KV (self)",
+ "at": "2026-10-24T13:07:25-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

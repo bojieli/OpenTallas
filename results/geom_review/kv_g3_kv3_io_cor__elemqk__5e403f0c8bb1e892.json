@@ -1,0 +1,11 @@
+{
+ "element": "kv_g3_kv3_io_cor",
+ "kit": "claude/elem-qk-1024@88f5349870 tools (main 24b2da3433+ merged) + kv41 kit-rtl, plan copy die_plan_elemqk.json; kit intel1/intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_io_cor",
+ "verdict": "PASS",
+ "hash": "5e403f0c8bb1e892",
+ "reasons": "[ELEMQK-KV self-review] localhost:/srv/opentallas-scratch/claude/elem-qk/review/kvg/io_cor_place.png: g3g kit, face_guard yosys+odb PASS 8018/8018 (ft8 bound-only dropped slot tied off in kit wrapper). IO corner 1278.72x1036.8: W-face and S-face windows to E-face windows, ft stations per plan (2 per slot) at x~640/690 and the face flops; ff->ff p90 636 max 639.4, 0 >675; pin->ff max 11.7; ff->pin max 642.3; 8020 FF / 33965 buf / 575 logic; density 0.35, none >0.8; small FF cluster at (640,520) = host/ctl logic near a clock tap. Pins only on plan windows (M4..M7).",
+ "fixes": "Route ALLOWED.",
+ "reviewer": "ELEMQK-KV (self)",
+ "at": "2026-10-24T13:07:25-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

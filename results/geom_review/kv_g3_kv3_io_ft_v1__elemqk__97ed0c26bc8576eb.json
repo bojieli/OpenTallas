@@ -1,0 +1,11 @@
+{
+ "element": "kv_g3_kv3_io_ft_v1",
+ "kit": "claude/elem-qk-1024@88f5349870 tools (main 24b2da3433+ merged) + kv41 kit-rtl, plan copy die_plan_elemqk.json; kit intel1/intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_io_ft_v1",
+ "verdict": "PASS",
+ "hash": "97ed0c26bc8576eb",
+ "reasons": "[ELEMQK-KV self-review] localhost:/srv/opentallas-scratch/claude/elem-qk/review/kvg/io_ft_v1_place.png: g3g regenerated kit (main face_keep, face_guard yosys+odb PASS 2104/2104). ft-only IO row 1278.72x1036.8, 4 ft slots x 2 stations; in-flops at faces (pin->ff p90 8.2, max 15.1 um), middle station x~637 (ff->ff p90 635.0 max 637.6; ff->pin max 646.4; 0 hops >675 um), 2102 FF / 10518 buf / 11 logic, max bin density 0.15; pins only on plan W/E windows (M4/M6, lower 210 um band), 12 clock taps + reset M7. Same geometry as the 08:23 PASS review.",
+ "fixes": "Route gate ALLOWED; judge TT setup/FF hold, DRC 0, GRT ovf 0, face_guard+pin_audit, CPPR skew <= 80.",
+ "reviewer": "ELEMQK-KV (self)",
+ "at": "2026-10-24T12:35:57-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}
