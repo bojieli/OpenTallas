@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.die_plan.xdie_io.v1",
+ "conn": "results/arch/release_rack_1021/connections_s81.csv",
+ "roles": {
+  "H": "physical/die_plan/s81_head/die_io.json",
+  "S": "/tmp/s81x/new/die_io.json",
+  "B": "/tmp/s81x/new/die_io.json"
+ },
+ "verdict": "PASS",
+ "errors": 0,
+ "error_groups": [],
+ "warnings": [
+  "role B: window lk_EN2 used by no circuit",
+  "role B: window lk_EN3 used by no circuit",
+  "role B: window lk_WS2 used by no circuit",
+  "role B: window lk_WS3 used by no circuit"
+ ],
+ "summary": {
+  "circuits_checked": 2952,
+  "by_class": {
+   "copyb_hop B-B": 160,
+   "copyb_in S-B": 32,
+   "copyb_out B-S": 32,
+   "head_hop H-H": 8,
+   "head_hop S-H": 4,
+   "stage_hop S-S": 960,
+   "token_return H-S": 4,
+   "tp_mesh B-B": 288,
+   "tp_mesh H-H": 18,
+   "tp_mesh S-S": 1446
+  },
+  "roles": {
+   "H": {
+    "windows": 12,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_HOST0",
+     "lk_HOST1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1"
+    ],
+    "host_windows": [
+     "lk_HOST0",
+     "lk_HOST1"
+    ],
+    "unused": [],
+    "host_circuit": true,
+    "in_band_host_windows": []
+   },
+   "S": {
+    "windows": 15,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_EN2",
+     "lk_EN3",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1",
+     "lk_WS2",
+     "lk_WS3"
+    ],
+    "host_windows": [],
+    "unused": [],
+    "host_circuit": false,
+    "in_band_host_windows": [
+     "lk_WN2",
+     "lk_WN3"
+    ]
+   },
+   "B": {
+    "windows": 15,
+    "used": [
+     "lk_EN0",
+     "lk_EN1",
+     "lk_ES0",
+     "lk_ES1",
+     "lk_WN0",
+     "lk_WN1",
+     "lk_WN2",
+     "lk_WN3",
+     "lk_WS0",
+     "lk_WS1"
+    ],
+    "host_windows": [],
+    "unused": [
+     "lk_EN2",
+     "lk_EN3",
+     "lk_WS2",
+     "lk_WS3"
+    ],
+    "host_circuit": false,
+    "in_band_host_windows": [
+     "lk_WN2",
+     "lk_WN3"
+    ]
+   }
+  }
+ }
+}

@@ -232,7 +232,14 @@
         "minimum": 1
        },
        "host": {
-        "type": "boolean"
+        "enum": [
+         true,
+         false,
+         "in_band"
+        ]
+       },
+       "host_route": {
+        "type": "string"
        },
        "basis": {
         "type": "string"

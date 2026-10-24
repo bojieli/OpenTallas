@@ -328,6 +328,14 @@ def _lef_size(lef):
 _LEF_SIZE = {}
 
 
+def _lef_readable(lef):
+    try:
+        _LEF_SIZE[lef] = _lef_size(lef)
+        return True
+    except Exception:
+        return False
+
+
 def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     """hard_cores[] of one non-frame type (S81-P9-HC): packed shelf placement (first cut for GEOM review): cores sorted by
     height, rows bottom-up, origins on the 8.64 lattice, >= HC_GAP_UM between facing core boxes (after the track
@@ -336,6 +344,14 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     if k is None:
         return []
     spec = NONFRAME_HC[k]
+    # S81-XDIE 10-24: a core whose view is not readable (e.g. the vp closed view LOST with rtx-pro: closed_archive path,
+    # not in the repo) is a real gap, not a generator crash: it moves to gaps, so its cells stay soft (residual check)
+    lost = [c for c in spec["cores"] if c["lef"] not in _LEF_SIZE and not _lef_readable(c["lef"])]
+    if lost:
+        spec = dict(spec, cores=[c for c in spec["cores"] if c not in lost],
+                    gaps=list(spec["gaps"]) + [dict(inst=c["inst"], module=c["module"], cells=c.get("cells"),
+                                                    plan_core=c.get("plan_core"),
+                                                    why="view not readable (LOST): %s" % c["lef"]) for c in lost])
     cores, glue, basis = cells_core_plan(p)
     total = sum(c for _, c in cores) + glue
     hard = sum(c["cells"] or 0 for c in spec["cores"])
@@ -544,12 +560,21 @@ def build(ab):
     serdes = {}
     sd = {"WS0": ("W", 0, 4), "WS1": ("W", 0, 2), "WN0": ("W", 19, 4), "WN1": ("W", 19, 2), "WN2": ("W", 19, 0),
           "WN3": ("C", 19, 6), "ES0": ("E", 0, 4), "ES1": ("E", 0, 2), "EN0": ("E", 19, 4), "EN1": ("E", 19, 2)}
-    for nm, (side, row, cw) in sd.items():
+    # S81-XDIE 10-24 (RELEASE_RACK 2.1, S81-HEAD xdie_io GAP 1): the copy-A/B reserve 6th pair on EVERY layer die (one
+    # logic design; wired on the 64 pre/post-group dies only): E column B = EN2/EN3 (s_7N pair B: copyb_in tx on
+    # pre-group dies) at the N row, W column B = WS2/WS3 (s_0S pair B: copyb_out rx on post-group dies) at the S row.
+    # Free slots: the NW/SE corner cells (were bump/ESD keep-out channels) + the top s_7N station cells (s_7N 8 -> 7
+    # rows, like every other N half) + WS3 re-aspected to a 1 x 2 cell column on the S edge in place of the two
+    # bottom s_0S station cells (s_0S rows 0-11 -> 2-11).  nc, nr default 2, 1.
+    sd.update({"WS2": ("W", 0, 0), "WS3": ("W", 0, 6, 1, 2), "EN2": ("E", 19, 6), "EN3": ("E", 19, 0)})
+    for nm, spec in sd.items():
+        side, row, cw = spec[:3]
+        nc, nr = (spec[3:] + (2, 1))[:2] if len(spec) > 3 else (2, 1)
         col = cw if side != "E" else mir(cw) - 1
         orient = "MY" if side == "E" else "R0"
-        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=2, orient=orient,
+        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=nc, nr=nr, orient=orient,
                               contents=[C("u_phy", "ot_pdie_serdes", "rework",
-                                          note="SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip "
+                                          note="SerDes PHY model re-aspected into a %.2f x %.2f slot; a strip " % (nc * PX, nr * PY) +
                                                "beside it holds the boundary flops and ft stations")],
                               ckey="serdes"))
     # ---- centre: cols 6..15 ----
@@ -610,8 +635,9 @@ def build(ab):
                 r0, nrow = 6, 6          # (10,5) = seqhost, beside the svc band
             if hn in ("s_0S", "s_7S"):
                 r0, nrow = 0, 12
-            if hn == "s_7N":
-                nrow = 8
+            if hn == "s_0S":
+                r0, nrow = 2, 10         # S81-XDIE: (6,0)-(6,1) = lk_WS3
+            # S81-XDIE: s_7N no longer takes the top row (14-15,19) = lk_EN2 (was nrow 8)
             m = blk[hn]["master"]
             lep = ncol == 2
             # inner (centre-side) column carries the normal slice; the outer column of a lep holds LP + stations
@@ -689,7 +715,7 @@ def build(ab):
     chans = [dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 2) * PX, X0 + (r + 1) * PY],
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
-             for c, r in ((0, 0), (20, 0), (20, 19))]
+             for c, r in ((20, 0),)]          # S81-XDIE: (0,0) = lk_WS2, (20,19) = lk_EN3
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -850,6 +876,17 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         ps, pd, c = e["src"], e["dst"], e["cls"]
         assert ps in P and pd in P, e
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), e["bits"], cls=c, role=c)
+    # ---- S81-XDIE 10-24: copy-A/B reserve pair (RELEASE_RACK 2.1): every layer die carries EN2/EN3 (s_7N pair B) and
+    #      WS2/WS3 (s_0S pair B); one logic design, wired on the 64 pre/post-group dies.  Same circuit as pair A: per
+    #      SerDes a 512-b tx lane LP -> lk (coll) and a 514-b rx lane lk -> LP (coll), ending at the lep LP partition.
+    #      RTL owed: the s_7N / s_0S lep cores expose pair-B coll ports (the s_0N lep already has 4 = pairs A + B). ----
+    if not v47:
+        for half, names in (("s_7N", ("EN2", "EN3")), ("s_0S", ("WS2", "WS3"))):
+            lp = slices[half]["LP"].name
+            for nm in names:
+                lk = "lk_" + nm
+                L("coll__%s__%s" % (lp, lk), lp, "coll_%s_o" % lk, lk, "coll_%s_i" % lp, 512, cls="coll", role="coll")
+                L("coll__%s__%s" % (lk, lp), lk, "coll_%s_o" % lp, lp, "coll_%s_i" % lk, 514, cls="coll", role="coll")
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1158,12 +1195,16 @@ def route_v48(grid, lanes47, lanes):
             res[lk["id"]] = res47[lk["id"]]
         else:
             todo.append(lk)
-    res.update(route(grid, todo, {}))
+    # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
+    rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
+    res.update(route(grid, [l for l in todo if l not in rsv], {}))
+    res.update(route(grid, rsv, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
 
 ROUTE_V48 = {}
+RESERVE_RE = re.compile(r"lk_(WS[23]|EN[23])\b")
 
 
 def bends(cells):
@@ -1366,7 +1407,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # v4.8: the runs of the lanes v4.8 adds / re-ends (route_v48 rerouted) are placed after every v4.7 run, so the
     # v4.7 windows (and with them the ft station spacing and lane cycles) stay where v4.7 put them
     new48 = set(ROUTE_V48.get("rerouted", ()))
-    runs.sort(key=lambda r: (r["lane"] in new48, -len(r["ports"]), -r["width"], r["role"], r["lane"], r["line"]))
+    # S81-XDIE: the copy-A/B reserve lanes' runs go after every other run (no existing window moves for them)
+    runs.sort(key=lambda r: (r["lane"] in new48, bool(RESERVE_RE.search(r["lane"])), -len(r["ports"]), -r["width"],
+                             r["role"], r["lane"], r["line"]))
     single = []
     for r in runs:
         keys = [pkey[p] for p in r["ports"]]
