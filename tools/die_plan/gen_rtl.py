@@ -353,7 +353,7 @@ def write_rtl(raw, out, rtl_root=None, types=None):
     (out / "ot_dp_cells.sv").write_text(CELLS)
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
-        if t.get("hard") or (types and tn not in types):
+        if t.get("hard") or (types is not None and tn not in types):
             continue
         f = out / f"{t['module']}.sv"
         f.write_text(wrapper(P, tn, ep, rtl_root))

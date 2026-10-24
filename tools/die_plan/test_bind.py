@@ -403,3 +403,110 @@ def test_lane_pad(tmp_path):
     assert not [e for e in report(out)["errors"] if e.startswith("LANE_CYCLES")]
     lat = json.loads((out / "bind_latency.json").read_text())
     assert any(b["lane"] == "a1s" and b["bound_stages"] == 6 for b in lat["buses"])
+
+
+def _split_d0(p):
+    for x in p["ports"]:                # snk.d0 split over a 2-cycle lane (5 b) and a forwarded 5-cycle route (3 b)
+        if x["id"] == "a0s__0":
+            x["width"] = 5
+        if x["id"] == "a1s__0":
+            x["width"] = 16
+    for b in p["partition_types"]["ta"]["buses"]:
+        if b["name"] == "ys_o":
+            b["width"] = 16
+    for b in p["partition_types"]["ts"]["buses"]:
+        if b["name"] == "d1_i":
+            b["width"] = 16
+
+
+def test_land_r8(tmp_path):
+    """asbuilt.land_align = r8 (COORD 16:58 R8 SOURCE OF TRUTH): the pads come from PLAN-TOOL3's r8 landing table
+    (PLANDIR/r8/<die>_r8_landing.json made by r8.py from this bind's bus_groups.json), realised after the in flop:
+    snk.d0 lands at one depth, the r8 G0 check passes on the bound bus groups, the proof holds; a table made for
+    another bind (wrong bound depth) is R8_STALE"""
+    import r8 as R8
+    out0 = tmp_path / "o0"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", _split_d0), out0, "elab", "bind") == 0
+    bg = json.loads((out0 / "bus_groups.json").read_text())
+
+    def edit(p):
+        _split_d0(p)
+        p["asbuilt"]["land_align"] = "r8"
+    plan = plan_copy(tmp_path, "die_plan_lanes.json", edit)
+    raw = json.loads(plan.read_text())
+    tab, sm = R8.write_pads(raw, bg, tmp_path / "r8")
+    assert sm["max_pad"] == 3
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    la = r["lanes"]["landing_alignment"]
+    assert la["mode"] == "r8" and la["stale"] == 0 and la["uncovered"] == 0 and la["padded_bits"] == 5
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    assert {sinks[f"snk.d0[{i}]"][2] for i in range(8)} == {5}
+    bg2 = json.loads((out / "bus_groups.json").read_text())
+    msgs, st = R8.check(bg2, raw)
+    assert not [m for s, m in msgs if s == "ERROR"] and st["groups_unequal"] == 0
+    assert verify(out)["verdict"] == "PASS"
+    js = json.loads(tab.read_text())
+    for m in js["members"]:
+        m["bound"] += 1
+    tab.write_text(json.dumps(js))
+    out2 = tmp_path / "o2"
+    run(plan, out2, "elab", "bind")
+    assert any(e.startswith("R8_STALE") for e in report(out2)["errors"])
+
+
+def test_clock_roles(tmp_path):
+    """per-quadrant clock domains (KV-P5 type-split ask): A0 runs on clk_q_A, A1 on clk_q_B (same partition type ta);
+    the partition module names the clock by its role, so ta binds ONE module and the top feeds each instance its own
+    die clock; the proof holds"""
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    v = (src / "die.v").read_text()
+    v = v.replace("wire ck;", "wire ck; wire ckb;").replace(
+        "tclkrx clk_rx (.pll(1'b0), .ck(ck));", "tclkrx clk_rx (.pll(1'b0), .ck(ck));\n  tclkrx2 clk_rx2 (.pll(1'b0), .ckb(ckb));")
+    v = v.replace("par #(.K(2)) p1 (.ck(ck)", "par #(.K(2)) p1 (.ck(ckb)")
+    (src / "die.v").write_text(v)
+
+    def edit(p):
+        p["asbuilt"]["sources"] = [{"module": "tclkrx", "kind": "clock", "outputs": {"ck": "clk_q_A"}, "drop_in": ["pll"]},
+                                   {"module": "tclkrx2", "kind": "clock", "outputs": {"ckb": "clk_q_B"}, "drop_in": ["pll"]}] + \
+            [x for x in p["asbuilt"]["sources"] if x["kind"] != "clock"]
+        p["asbuilt"]["default_clock"] = "clk_q_A"
+        p["asbuilt"]["clock_roles"] = [[r"clk_q_[AB]", "clk_q"]]
+    p = json.loads((EX / "die_plan.json").read_text())
+    edit(p)
+    p["asbuilt"]["base"] = str(src)
+    f = tmp_path / "die_plan.json"
+    f.write_text(json.dumps(p))
+    out = tmp_path / "o"
+    assert run(f, out, "elab", "bind", "verify") == 0, report(out)["errors"][:5]
+    r = report(out)
+    assert not [t for t in r["type_splits"] if t["type"] == "ta"], r["type_splits"]
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    assert ".clk(clk_clk_q_B)" in top and ".clk(clk_clk_q_A)" in top
+    assert verify(out)["verdict"] == "PASS"
+
+
+def test_kit_rtl(tmp_path):
+    """bind.py kit-rtl (COORD 18:04 G3 kit RTL): the bound partition module inside a wrapper with the plan type's module
+    name and exact plan pins + a filelist; instances whose straps differ need --instance; gen.py phys --kit-rtl takes it"""
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    P = json.loads(plan.read_text())
+    tn = "bt_ta" if "bt_ta" in P["partition_types"] else sorted(P["partition_types"])[0]
+    t = P["partition_types"][tn]
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", tn]) != 0       # two instances, IDs differ
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    inst = re.findall(r"^\s*\w+ #\(.*?\) (\w+) \(", top, re.M)[0]
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", tn, "--instance", inst, "--kit", str(kd)]) == 0
+    fl = (kd / "kit_rtl.f").read_text().split()
+    assert Path(fl[0]).name == f"{t['module']}.sv" and all(Path(f).is_file() for f in fl)
+    w = (kd / f"{t['module']}.sv").read_text()
+    assert re.search(rf"^module {t['module']} \(", w, re.M) and " u_bound (" in w
+    for b in t.get("buses", []):
+        assert re.search(rf"\b{b['name']}\b", w), b["name"]
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    assert man["plan_module"] == t["module"] and man["params"]

@@ -1,0 +1,359 @@
+{
+ "note": "BINDER 10-23: Qwen compute as-built = r56 GEN die.v (sha256 bdee7c3c..., /home/ubuntu/scratch/plan-qc/r56) + RTL of record. Slices: the r56 master qfd_dv_slice2_w/_e wraps qfd_dv_slice2; the plan's 15 slice regions come from the s8 landed-parent record, whose logical parent is qfd_dv_s8_flat, so qfd_dv_slice2 is substituted by qfd_dv_s8_flat (recorded; same ports except s8's extra treq_i / treq_o).",
+ "base": "../../../..",
+ "netlist": [
+  "physical/die_plan/qwen_compute/bind/inputs/die_r56.v.gz"
+ ],
+ "top": "qfd_die",
+ "rtl_roots": [
+  "rtl",
+  "physical/asap7_memory_macros_v2",
+  "physical/asap7_memory_macros"
+ ],
+ "files": [
+  "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+  "physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv"
+ ],
+ "prefer": [
+  "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
+  "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+  "physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+  "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+  "physical/asap7_memory_macros_v2",
+  "physical/asap7_memory_macros"
+ ],
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ],
+ "dissolve": [
+  "qfd_c_b16_dv",
+  "qfd_c_b16_dv_fabric",
+  "qfd_dv_slice2_w",
+  "qfd_dv_slice2_e",
+  "qfd_dv_slice2",
+  "qfd_dv_s8_flat",
+  "qfd_collective_static_io_production",
+  "qfd_collective_static_io"
+ ],
+ "substitute": {
+  "qfd_dv_slice2": {
+   "module": "qfd_dv_s8_flat",
+   "ports": {},
+   "reason": "plan slice regions = s8 landed-parent record over qfd_dv_s8_flat (QC-P2 gen_plan REGION_OF / LEAF_REGION)"
+  }
+ },
+ "transport": [
+  {
+   "module": "qfd_rst_rep(_p\\d+)?",
+   "map": {
+    "q\\d+": "d"
+   },
+   "drop_in": [
+    "clk"
+   ],
+   "stages": 1
+  },
+  {
+   "module": "qfd_rlyh_\\d+_\\w+",
+   "map": {
+    "b": "a",
+    "eb": "ea"
+   },
+   "drop_in": [
+    "ckf"
+   ],
+   "drop_out": [
+    "ck_o"
+   ],
+   "stages": 1
+  },
+  {
+   "module": "qfd_rlyh0_\\d+_\\w+",
+   "map": {
+    "b": "a"
+   },
+   "drop_in": [
+    "ck",
+    "en"
+   ],
+   "drop_out": [
+    "eb",
+    "ck_o"
+   ],
+   "stages": 1
+  },
+  {
+   "module": "qfd_landh_\\d+_\\w+",
+   "map": {
+    "b": "a"
+   },
+   "drop_in": [
+    "ea",
+    "ck",
+    "ckf",
+    "rs",
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "drop_out": [
+    "fault",
+    "tie_hi",
+    "tie_lo"
+   ],
+   "stages": 2
+  },
+  {
+   "module": "qfd_landh0_\\d+_\\w+",
+   "map": {
+    "b": "a"
+   },
+   "drop_in": [
+    "ck_s",
+    "en",
+    "ck",
+    "rs",
+    "k0",
+    "k1",
+    "k2",
+    "k3"
+   ],
+   "drop_out": [
+    "fault",
+    "tie_hi",
+    "tie_lo"
+   ],
+   "stages": 2
+  },
+  {
+   "module": "qfd_rlyr[0l]?_\\d+_\\w+",
+   "map": {
+    "b": "a"
+   },
+   "drop_in": [
+    "ck",
+    "ckf"
+   ],
+   "drop_out": [
+    "ck_o"
+   ],
+   "stages": 1
+  },
+  {
+   "module": "qfd_q3h_stn",
+   "map": {
+    "q": "d"
+   },
+   "drop_in": [
+    "ck"
+   ],
+   "stages": 1,
+   "replicate": true
+  },
+  {
+   "module": "qfd_q3h_run",
+   "map": {
+    "q": "d"
+   },
+   "drop_in": [
+    "ck"
+   ],
+   "stages": 1,
+   "stages_param": "D"
+  },
+  {
+   "module": "qfd_c_stn51[46]",
+   "map": {
+    "q": "d"
+   },
+   "drop_in": [
+    "ck"
+   ],
+   "stages": 1
+  },
+  {
+   "module": "qfd_c_land_w",
+   "map": {
+    "bank": "i"
+   },
+   "drop_in": [
+    "ck",
+    "rsi"
+   ],
+   "drop_out": [
+    "epo",
+    "vld"
+   ],
+   "stages": 1,
+   "replicate": true
+  },
+  {
+   "module": "qfd_c_land_r",
+   "map": {
+    "o": "bank"
+   },
+   "drop_in": [
+    "ck",
+    "rsi",
+    "epo",
+    "vld"
+   ],
+   "stages": 2
+  },
+  {
+   "module": "qfd_coll_static_relay",
+   "map": {
+    "q": "d"
+   },
+   "drop_in": [
+    "ck",
+    "rst_n"
+   ],
+   "stages": 1,
+   "stages_param": "N"
+  },
+  {
+   "module": "qfd_dv_s5_fs",
+   "map": {
+    "cw_s(\\d)": "cs\\1"
+   },
+   "drop_in": [
+    "ck"
+   ],
+   "stages": 0,
+   "note": "slice cs -> cw_s wire forwarder (assign only); the plan replaces it by the hc u_pstn cw_s/cw_n lanes (gen_plan SOFT stm: 'u_fs (cs->cw_s forwarder: becomes plan lane)')"
+  }
+ ],
+ "reducers": [
+  {
+   "module": "qfd_fault_or_n\\d+",
+   "out": "o",
+   "drop_in": [
+    "rs",
+    "ck"
+   ],
+   "stages": 1
+  }
+ ],
+ "sources": [
+  {
+   "module": "qfd_clkrx",
+   "kind": "clock",
+   "outputs": {
+    "pll_r\\d+": "core",
+    "pll_fwd": "core",
+    "pll_d2d": "d2d",
+    "pll_coll": "coll",
+    "pll_serdes(\\d)": "serdes"
+   }
+  },
+  {
+   "module": "qfd_ckbump",
+   "outputs": {
+    "pll_ck": {
+     "kind": "clock",
+     "value": "pll"
+    },
+    "rs": {
+     "kind": "reset",
+     "value": "low"
+    }
+   }
+  },
+  {
+   "module": "qfd_ckdiv6",
+   "kind": "clock",
+   "outputs": {
+    "blk_o": "coll_blk"
+   },
+   "drop_in": [
+    "ck",
+    "rst_n"
+   ]
+  },
+  {
+   "module": "qfd_rstsync",
+   "kind": "reset",
+   "outputs": {
+    "rso_.*": "low"
+   },
+   "drop_in": [
+    "arst_n",
+    "ck"
+   ]
+  },
+  {
+   "module": "qfd_rstseq",
+   "kind": "reset",
+   "outputs": {
+    "rso_.*": "low"
+   },
+   "drop_in": [
+    "rsi",
+    "ck"
+   ]
+  }
+ ],
+ "default_clock": "core",
+ "straps": [
+  "c16_[WE]\\d_\\d\\.u_t_\\d_\\d\\.tile_id",
+  "c16_[WE]\\d_\\d\\.u_fab\\.u_x_\\d_\\d\\.sidx",
+  "c16_[WE]\\d_\\d\\.u_fab\\.\\$not\\$.*\\.A"
+ ],
+ "map_file": "asbuilt_map.json",
+ "strap_note": "position straps (tile_id = cid/row/col, column station index, far flag): partition parameters, as built",
+ "lint_waive": [
+  {
+   "rx": "D2D_TXDP_NOT_COMPILED",
+   "reason": "elaboration trap module in a generate-if that is false for the as-built TXDP parameters (Yosys elaborates it lazily; Verilator resolves every instantiated name before parameter evaluation)"
+  },
+  {
+   "rx": "ot_sram_1r1w_64x137_m1_r2c2_p192",
+   "reason": "AS-BUILT RTL DEFECT (reported): ot_qwen_d2d_safe7.sv ot_qkvd_llr_replay_sram_leaf_s7 instantiates ot_sram_1r1w_64x137_m1_r2c2_p192, which no file on main defines (the macro is d2d_sram_1r1w_64x137_m1_r2c2_p192); the closed ucie_kv d2d view was built from a kit copy"
+  }
+ ],
+ "substitute_parent": [
+  {
+   "inst": "dvs_(E1|E3|W1|W3)\\.u_core\\.u_sub",
+   "module": "qfd_dv_s8_ce_l9h",
+   "reason": "QC-P4 chain-end variant: l9 pair head, no l9_i"
+  },
+  {
+   "inst": "dvs_W5\\.u_core\\.u_sub",
+   "module": "qfd_dv_s8_ce_w5",
+   "reason": "QC-P5-TIE @0cd1eebf3 (9bdab307e): l9h + no sc_up_i (fdn_arf1_w5, u_sc -> k79 up0 netlist)"
+  },
+  {
+   "inst": "dvs_E5\\.u_core\\.u_sub",
+   "module": "qfd_dv_s8_ce_e5",
+   "reason": "QC-P5-TIE @0cd1eebf3: far chain end, also no sc_dn_i (fup_e5, u_sc -> k79 dn0 netlist)"
+  }
+ ],
+ "land_align": "r8",
+ "portbind_prefer": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+ ],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_compute/bind/coll_regen.py",
+  "note": "COORD R8: collective LS/PHY/R/PEER_R from the bound lanes"
+ },
+ "land_align_exclude": [
+  "io_collective\\.u_io\\.g_face\\[[2-4]\\]\\.u_face\\.(phy_rx|phy_rx_valid|phy_up|tx_data|tx_valid|tx_slot|peer_slot)",
+  "io_collective\\.u_io\\.u_collective\\.sr[0-2]_(rec|valid)",
+  "io_serdes(_[12])?\\.(tx_flit|tx_v)"
+ ],
+ "rewires": {
+  "file": "physical/die_plan/qwen_compute/plan_rewires_treq.json",
+  "classes": [
+   "treq"
+  ],
+  "note": "QC-P5-TIE plan e3f313354: 12 template-less treq edges beside cmd (COORD 18:4x)"
+ },
+ "land_r8_note": "BINDER3: r8 table = QC-P5 @c0152774b (plan 9d96cdb52) + qc_treq_pads.json (treq lanes of e3f313354 land with their cmd twin; treq_pads.py)",
+ "land_r8_extra": [
+  "physical/die_plan/qwen_compute/bind/qc_treq_pads.json"
+ ]
+}

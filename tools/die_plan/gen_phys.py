@@ -416,12 +416,17 @@ exit $rc
 """
 
 
-def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False):
+def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None):
+    """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
+    port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
     P = S.Plan(raw)
     out = Path(out)
     rtl_dir = out / "_rtl"
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, types)
+    gtypes = types
+    if kit_rtl:                # kit-rtl types take the bound RTL: no generated plan wrapper for them
+        gtypes = [tn for tn in (types or P.types) if tn not in kit_rtl]
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -429,7 +434,20 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False):
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types and tn not in types):
             continue
-        mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
+        if kit_rtl and tn in kit_rtl:
+            fl = [Path(x) for x in Path(kit_rtl[tn]).read_text().split() if x and not x.startswith(("+", "-"))]
+            miss = [str(x) for x in fl if not x.is_file()]
+            if miss:
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl filelist {kit_rtl[tn]} names missing files {miss[:5]}")
+            if fl[0].name != f"{t['module']}.sv":
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl filelist must start with the wrapper {t['module']}.sv")
+            names = [x.name for x in fl]
+            dup = sorted({n for n in names if names.count(n) > 1})
+            if dup:
+                raise gen_rtl.GenError(f"type {tn}: kit-rtl files share a basename {dup[:5]} (the kit flattens rtl/)")
+            mine = fl
+        else:
+            mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)

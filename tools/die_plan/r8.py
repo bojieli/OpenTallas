@@ -73,6 +73,10 @@ class UF:
 
 
 RESET_RX = re.compile(r"(?i)(^|_)[a-z]?(rst|reset|por)(_?n|_b)?$|(^|_)[a-z]?(rst|reset)_n_")
+# --exempt RX (BINDER3 10-23, KV-P5 15:57 proposal): extra pins outside R8, e.g. sticky FAULT / health flags
+# (`(^|_)(fault|flt)$` on the source pin): a set-and-hold flag has no static-schedule term, so its as-built offset to
+# the data of the same leaf is not a functional invariant (unioning it with kreq re-padded the K request per frame).
+EXEMPT = []
 
 
 def is_async(m):
@@ -81,7 +85,10 @@ def is_async(m):
     counted by the plan's reset epoch (schema reset.release = counted), not by the as-built relay depth."""
     if m.get("lane") == "spine":
         return True
-    return bool(RESET_RX.search(m["sink_port"]) or RESET_RX.search(m["source"].rpartition(".")[2]))
+    pin = m["source"].rpartition(".")[2]
+    if any(x.search(pin) or x.search(m["sink_port"]) for x in EXEMPT):
+        return True
+    return bool(RESET_RX.search(m["sink_port"]) or RESET_RX.search(pin))
 
 
 def bus_key(g, m, bus):
@@ -290,7 +297,7 @@ def write_pads(raw, bg, out_dir, replica="all", bus="part"):
     out_dir.mkdir(parents=True, exist_ok=True)
     for m in mem:
         m.pop("cls")
-    js = dict(schema=SCHEMA, die=die, replica=replica, bus=bus, bus_groups_die=bg.get("die"),
+    js = dict(schema=SCHEMA, die=die, replica=replica, bus=bus, exempt=[x.pattern for x in EXEMPT], bus_groups_die=bg.get("die"),
               bus_groups_digest=bg_digest(bg),
               note="R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink "
                    "partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set "
@@ -310,12 +317,15 @@ def main(argv=None):
         a.add_argument("bus_groups")
         a.add_argument("--replica", choices=("all", "type"), default="all")
         a.add_argument("--bus", choices=("part", "leaf"), default="part")
+        a.add_argument("--exempt", action="append", default=[],
+                       help="regex on the source pin / sink port name: members outside R8 (sticky fault flags)")
         if n == "pads":
             a.add_argument("--out")
         else:
             a.add_argument("--landing")
             a.add_argument("--json")
     a = ap.parse_args(argv)
+    EXEMPT[:] = [re.compile(x) for x in a.exempt]
     raw = S.load(a.plan)
     bg = json.loads(Path(a.bus_groups).read_text())
     if a.cmd == "pads":
