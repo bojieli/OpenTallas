@@ -1,9 +1,9 @@
 #!/bin/bash
-# CORE-S81-ENG (10-23): lockstep bench of the two-core split dsdv_eng_rr_split (cores dsdv_eng_rr_lk + dsdv_eng_rr_xq)
+# CORE-S81-ENG (10-23): lockstep bench of the three-core split dsdv_eng_rr_split (cores dsdv_eng_rr_e + dsdv_eng_rr_h0 + dsdv_eng_rr_h1)
 # against the monolithic dsdv_eng_rr_c in tb_dsdv_eng_rr (OT_S81ENG_RR_SPLIT_LOCKSTEP): the monolith drives the bench
 # system (python bit-exact vs hdc_golden_v41 as in bench_rr_snapshot.sh), the split runs on the same inputs and every
 # output bit + the crossing is compared on every edge.   bench_rr_split.sh <work dir> <base|sm1|sm2> [plusargs...]
-# sm1 / sm2 = SPLIT_MUT negative controls (crossing bit flip / one extra crossing stage): must FAIL.
+# sm1 / sm2 = SPLIT_MUT negative controls (hash crossing bit flip / H0-H1 halves swapped): must FAIL.
 # Prints ENG_RR_SPLIT PASS <variant> or ENG_RR_SPLIT FAIL <variant>.  Run from the repo root.
 set -u
 W=$(realpath -m ${1:?work}); V=${2:?variant}; shift 2; mkdir -p $W
@@ -14,7 +14,8 @@ import re, sys
 print(' '.join(re.search(r'F=\((.*?)\)\n', open(sys.argv[1]).read(), re.S).group(1).split()))
 PY
 ))
-F=("${F[@]:0:${#F[@]}-1}" rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv "${F[@]: -1}")
+F=("${F[@]:0:${#F[@]}-1}" rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv
+   rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv "${F[@]: -1}")
 case $V in base) G=();; sm1) G=(-GSPLIT_MUT=1);; sm2) G=(-GSPLIT_MUT=2);; *) echo "ENG_RR_SPLIT FAIL bad variant $V"; exit 2;; esac
 python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom > $W/prep.log 2>&1 || { echo "ENG_RR_SPLIT FAIL prep_rom"; exit 1; }
 $VL --version
