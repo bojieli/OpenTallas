@@ -100,8 +100,8 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] S81.G0C.CORES Hard cores for the 92 G0C-failing S81 types · S81-CORES · RUNNING
 
 ## OWNER · open owner decisions (2026-10-24)
-- [ ] OWN.ELASTIC Opt-in credit/elastic seams on long die-level links (cuts R8 padding + seam risk, costs cycles) · OWNER · OWNER
-- [ ] OWN.HEADCNT S81 head dies 12 → 4 (one group meets AR+MTP at <=35% busy; saves 8 dies + 8 host links) · OWNER · OWNER
-- [ ] OWN.HEADHBM HBM stacks on head dies (rack: 4 each; LM head is ROM, plan has none) · OWNER · OWNER
-- [ ] OWN.DRAFT MTP draft on copy-B dies, no draft fan-out SerDes · OWNER · OWNER
-- [ ] OWN.COPYAB Copy-A/B 6th SerDes pair on 64 layer dies: 12-SerDes variant or ride existing pairs · OWNER · OWNER
+- [ ] OWN.ELASTIC Elastic seams: owner APPROVED opt-in experiment 10-24 07:35 · ELASTIC · RUNNING · Qwen compute longest lanes; adopt only at >=1% priced + RTL-confirmed
+- [x] OWN.HEADCNT S81 head dies 12 → 4 (one group meets AR+MTP at <=35% busy; saves 8 dies + 8 host links) · OWNER · DONE · approved 10-24 07:30
+- [x] OWN.HEADHBM HBM stacks on head dies (rack: 4 each; LM head is ROM, plan has none) · OWNER · DONE · approved 10-24 07:30
+- [ ] OWN.DRAFT MTP draft on copy-B dies, no draft fan-out SerDes · S81-HEAD · RUNNING · approved if MTP compose uses no draft link (checking)
+- [ ] OWN.COPYAB Copy-A/B 6th SerDes pair on 64 layer dies: 12-SerDes variant or ride existing pairs · S81 · RUNNING · approved: reserve pair on every layer die (rack spec)

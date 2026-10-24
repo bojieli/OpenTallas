@@ -65,3 +65,10 @@ The old ot-gold1/gold2/epyc9 scratch disks were wiped and reformatted. They are 
 /srv/opentallas-scratch2 on intel1 (3.5 TB), intel2 (3.5 TB) and epyc2 (894 GB). Nothing from the old fleet remains;
 re-run anything you did not copy out before 07:03.
 All hosts run on Pacific time (America/Los_Angeles) since 06:54 PDT.
+
+## Disks (owner order 2026-10-24 07:30 PDT): never use root disks for work
+- intel1 / intel2: 476 GB root + 3.4 TB /srv/opentallas-scratch2. epyc2: 3.5 TB root + 879 GB /srv/opentallas-scratch2.
+  ALL worktrees, builds, run dirs and copies on these hosts go under /srv/opentallas-scratch2/claude/ (worktrees:
+  /srv/opentallas-scratch2/claude/wt/<lane>). ~/wt/*, ~/OpenTallas, ~/scratch there are now symlinks into scratch2.
+- localhost / epyc3 have a single RAID1 md0 (no separate disk); use /srv/opentallas-scratch there.
+- If you find your data on a root fs of intel1/intel2/epyc2, move it (when no process uses it) and leave a symlink.
