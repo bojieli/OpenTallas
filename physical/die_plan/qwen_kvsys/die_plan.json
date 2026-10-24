@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.8t (KV-P7-HUB 10-23, COORD 21:26 R4 grid): clock.tap_pitch_um 400 on hub_Ei/Eo/Wo/Wi | v3.8h (KV-P7-HUB 10-23): 4 astk hard cores on hub_Eo/Wo (post_v38h.py, as-built synth outline, top-down pins)",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -19281,7 +19281,8 @@
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
-    "insertion_tol_ps": 40.0
+    "insertion_tol_ps": 40.0,
+    "tap_pitch_um": 400.0
    },
    "reset": {
     "tap_um": [
@@ -19914,7 +19915,8 @@
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
-    "insertion_tol_ps": 40.0
+    "insertion_tol_ps": 40.0,
+    "tap_pitch_um": 400.0
    },
    "reset": {
     "tap_um": [
@@ -20091,6 +20093,46 @@
       "W": 2,
       "V": "2'd2"
      }
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "astk_EN",
+     "module": "kv3_astk_EN",
+     "origin_um": [
+      1036.8,
+      1468.8
+     ],
+     "outline_um": [
+      190.08,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/kv3_astk_EN_pins.json",
+     "note": "astk_core: astk_EN__g_phys_fault_u_fault + astk_EN__u_strip_u_strip_g_zn_0__u_zn + astk_EN__u_strip_u_strip_g_zn_1__u_zn + astk_EN__u_strip_u_strip_g_zn_2__u_zn + astk_EN__u_strip_u_strip_g_zn_3__u_zn + astk_EN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
+    },
+    {
+     "inst": "astk_ES",
+     "module": "kv3_astk_ES",
+     "origin_um": [
+      1036.8,
+      25.92
+     ],
+     "outline_um": [
+      190.08,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/kv3_astk_ES_pins.json",
+     "note": "astk_core: astk_ES__g_phys_fault_u_fault + astk_ES__u_strip_u_strip_g_zn_0__u_zn + astk_ES__u_strip_u_strip_g_zn_1__u_zn + astk_ES__u_strip_u_strip_g_zn_2__u_zn + astk_ES__u_strip_u_strip_g_zn_3__u_zn + astk_ES__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
     }
    ]
   },
@@ -20901,7 +20943,8 @@
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
-    "insertion_tol_ps": 40.0
+    "insertion_tol_ps": 40.0,
+    "tap_pitch_um": 400.0
    },
    "reset": {
     "tap_um": [
@@ -21936,7 +21979,8 @@
     ],
     "layer": "M9",
     "insertion_ps": 250.0,
-    "insertion_tol_ps": 40.0
+    "insertion_tol_ps": 40.0,
+    "tap_pitch_um": 400.0
    },
    "reset": {
     "tap_um": [
@@ -22113,6 +22157,46 @@
       "W": 2,
       "V": "2'd0"
      }
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "astk_WN",
+     "module": "kv3_astk_WN",
+     "origin_um": [
+      51.84,
+      1468.8
+     ],
+     "outline_um": [
+      190.08,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/kv3_astk_WN_pins.json",
+     "note": "astk_core: astk_WN__g_phys_fault_u_fault + astk_WN__u_strip_u_strip_g_zn_0__u_zn + astk_WN__u_strip_u_strip_g_zn_1__u_zn + astk_WN__u_strip_u_strip_g_zn_2__u_zn + astk_WN__u_strip_u_strip_g_zn_3__u_zn + astk_WN__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
+    },
+    {
+     "inst": "astk_WS",
+     "module": "kv3_astk_WS",
+     "origin_um": [
+      51.84,
+      25.92
+     ],
+     "outline_um": [
+      190.08,
+      181.44
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.0,
+      0.0
+     ],
+     "pins_file": "cores/kv3_astk_WS_pins.json",
+     "note": "astk_core: astk_WS__g_phys_fault_u_fault + astk_WS__u_strip_u_strip_g_zn_0__u_zn + astk_WS__u_strip_u_strip_g_zn_1__u_zn + astk_WS__u_strip_u_strip_g_zn_2__u_zn + astk_WS__u_strip_u_strip_g_zn_3__u_zn + astk_WS__u_strip_u_strip_u_ctl; PLANNED core (KV-P7-HUB v3.8h): 152077 cells / 18548 um2 std as-built synth (cores/astk_synth_v38h.json) at fill 0.55; N/S band 25.92, outer-face band 51.84; lef/lib pending (CORE-KS harden)"
     }
    ]
   },
