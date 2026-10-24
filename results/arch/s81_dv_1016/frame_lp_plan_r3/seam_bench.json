@@ -98,5 +98,20 @@
    "ret words through n24 (both links in series)": 2,
    "bench phase last ret word": "387 -> 389 (+2); words 10 -> 12 (re-legalised merges)"
   }
+ },
+ "lpr_root_n2": {
+  "agent": "S81-P9-FC 10-23",
+  "change": "frame_band_plan.py (j): r0 u_lpr_root ot_pl_pad N 1 -> 2 (R3: 898+798 um h9, 969+866 um h10 > 750); plan/kit/btop regenerated (r0 and r0_nx)",
+  "host": "ot-epyc9",
+  "dir": "/srv/opentallas-scratch/claude/s81-p9-fc-lpr",
+  "bench": "frame_seam_bench.sh TWIN=plan+btop XO_LAT=2 BFVEC=p65 (h10 FRAME_SCHED=col_h10_schedule_r3plus.json)",
+  "runs": {
+   "h9_base": "SEAM_BENCH h9 base: FRAME_SET col_h9 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=14 bf_calendar=FAIL",
+   "h9_reset": "SEAM_BENCH h9 reset: FRAME_SET col_h9 MUT=reset set=plan pass=0 fail=1 seam_mismatch_lines=8 COVERAGE row 2 segments [0, 1, 2] of 4",
+   "h10_base": "SEAM_BENCH h10 base: FRAME_SET col_h10 MUT=0 set=plan pass=1 fail=0 seam_mismatch_lines=0  bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=20 bf_calendar=FAIL",
+   "h10_reset": "SEAM_BENCH h10 reset: FRAME_SET col_h10 MUT=reset set=plan pass=0 fail=1 seam_mismatch_lines=8 COVERAGE row 0 segments [1, 2, 3] of 4"
+  },
+  "verdict": "SAFE. Ret words (plan h9 14 / h10 12, BF 6/6) are identical in edge and value (md5 of RET lines) to the pre-change runs sb_h9 (968060ade) and sbp_h10 (385204d21). 0 seam mismatches vs the vgch ref on every edge. The reset mutant is caught on both masters. bf_calendar FAIL is the known stale-P7-bfvec item (FAIL in every run, including the control). The chained-frame landing calendar is unaffected: lpr_root feeds only the u_lpr_r0/r1/r2 forests, and the crs4 ring release (u_cf rsync), rst_n__frl and rst_n__xk are not downstream of it. Plan frames have no forwarded xk (rings are a same-clock fixed delay LK). Uniform +1 on the frame reset tree; no band skew; no compensation needed.",
+  "note": "The first h10 base run used the pre-R3_PLUS schedule by mistake (one ret word 388 vs 386 = the (i) +2) and was superseded and deleted."
  }
 }

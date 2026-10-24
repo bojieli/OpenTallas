@@ -1,0 +1,347 @@
+{
+ "schema": "s81.r3_internal.measured.v1",
+ "source": "S81-P9 10-23: kits48 (plan v4.7a sha 779e4774 + RTL @4f10921ce + tool @ea725a12d) 3_place ODBs, P8 probe main.py (Manhattan pin-to-pin um); supersedes the v4.5 station SPEC r3_internal_v45.json (modelled sites) as the R3-INTERNAL status",
+ "rule": "R3-INTERNAL: reg-reg inside a partition <= 750 um",
+ "kits": {
+  "col_h10_r0_p1__t1": {
+   "classes": {
+    "F>F": {
+     "n": 9996,
+     "max_um": 866,
+     "over750": 2
+    },
+    "F>M": {
+     "n": 9657,
+     "max_um": 718,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 6247,
+     "max_um": 969,
+     "over750": 1
+    },
+    "M>M": {
+     "n": 9374,
+     "max_um": 745,
+     "over750": 0
+    }
+   },
+   "over750": [
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_lpr_r0",
+     "capture": "u_r0.u_lpr_r0",
+     "max_um": 796,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 (forest_recluster)"
+    },
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_lpr_root",
+     "capture": "u_bout_frame_int_o0.q[*]",
+     "max_um": 866,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "M>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_cf",
+     "capture": "u_r0.u_lpr_root",
+     "max_um": 969,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 8,
+     "launch": "<top>:arst_n",
+     "capture": "<top>:u_rsync_tN",
+     "max_um": 1790,
+     "kind": "reset_async_port",
+     "action": "die reset distribution (raw async arst_n -> per-tap synchroniser, not a timed reg-reg path)"
+    }
+   ],
+   "data_over750": 0
+  },
+  "col_h10_r1__t1": {
+   "classes": {
+    "F>F": {
+     "n": 8014,
+     "max_um": 1280,
+     "over750": 67
+    },
+    "F>M": {
+     "n": 10182,
+     "max_um": 670,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 6680,
+     "max_um": 571,
+     "over750": 0
+    },
+    "M>M": {
+     "n": 9146,
+     "max_um": 736,
+     "over750": 0
+    }
+   },
+   "over750": [
+    {
+     "cls": "F>F data",
+     "pairs": 67,
+     "launch": "u_r1.u_lpr_r1",
+     "capture": "u_r1.u_lpr_r1",
+     "max_um": 1280,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 (forest_recluster)"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 2,
+     "launch": "<top>:arst_n",
+     "capture": "<top>:u_rsync_tN",
+     "max_um": 792,
+     "kind": "reset_async_port",
+     "action": "die reset distribution (raw async arst_n -> per-tap synchroniser, not a timed reg-reg path)"
+    }
+   ],
+   "data_over750": 0
+  },
+  "col_h10_r2__t1": {
+   "classes": {
+    "F>F": {
+     "n": 5277,
+     "max_um": 724,
+     "over750": 0
+    },
+    "F>M": {
+     "n": 6154,
+     "max_um": 586,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 3553,
+     "max_um": 538,
+     "over750": 0
+    },
+    "M>M": {
+     "n": 8992,
+     "max_um": 537,
+     "over750": 0
+    }
+   },
+   "over750": [],
+   "data_over750": 0
+  },
+  "col_h9_r0_p1__t1": {
+   "classes": {
+    "F>F": {
+     "n": 9758,
+     "max_um": 915,
+     "over750": 3
+    },
+    "F>M": {
+     "n": 8480,
+     "max_um": 665,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 6071,
+     "max_um": 898,
+     "over750": 1
+    },
+    "M>M": {
+     "n": 8760,
+     "max_um": 675,
+     "over750": 0
+    }
+   },
+   "over750": [
+    {
+     "cls": "F>F data",
+     "pairs": 2,
+     "launch": "u_r0.u_lpr_r0",
+     "capture": "u_r0.u_lpr_r0",
+     "max_um": 915,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 (forest_recluster)"
+    },
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_lpr_root",
+     "capture": "u_bout_frame_int_o0.q[*]",
+     "max_um": 798,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "M>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_cf",
+     "capture": "u_r0.u_lpr_root",
+     "max_um": 898,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 6,
+     "launch": "<top>:arst_n",
+     "capture": "<top>:u_rsync_tN",
+     "max_um": 1773,
+     "kind": "reset_async_port",
+     "action": "die reset distribution (raw async arst_n -> per-tap synchroniser, not a timed reg-reg path)"
+    }
+   ],
+   "data_over750": 0
+  },
+  "col_h9_r0_p3__t1": {
+   "classes": {
+    "F>F": {
+     "n": 6302,
+     "max_um": 826,
+     "over750": 2
+    },
+    "F>M": {
+     "n": 8480,
+     "max_um": 665,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 6071,
+     "max_um": 899,
+     "over750": 1
+    },
+    "M>M": {
+     "n": 8760,
+     "max_um": 675,
+     "over750": 0
+    }
+   },
+   "over750": [
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_lpr_r0",
+     "capture": "u_r0.u_lpr_r0",
+     "max_um": 826,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 (forest_recluster)"
+    },
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_lpr_root",
+     "capture": "u_bout_frame_int_o0.q[*]",
+     "max_um": 796,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "M>F data",
+     "pairs": 1,
+     "launch": "u_r0.u_cf",
+     "capture": "u_r0.u_lpr_root",
+     "max_um": 899,
+     "kind": "reset",
+     "action": "RTL +1 reset-forward stage (S81-P9-FC calendar check)"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 6,
+     "launch": "<top>:arst_n",
+     "capture": "<top>:u_rsync_tN",
+     "max_um": 1773,
+     "kind": "reset_async_port",
+     "action": "die reset distribution (raw async arst_n -> per-tap synchroniser, not a timed reg-reg path)"
+    }
+   ],
+   "data_over750": 0
+  },
+  "col_h9_r1__t1": {
+   "classes": {
+    "F>F": {
+     "n": 6158,
+     "max_um": 815,
+     "over750": 1
+    },
+    "F>M": {
+     "n": 8275,
+     "max_um": 616,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 5387,
+     "max_um": 742,
+     "over750": 0
+    },
+    "M>M": {
+     "n": 7591,
+     "max_um": 580,
+     "over750": 0
+    }
+   },
+   "over750": [
+    {
+     "cls": "F>F data",
+     "pairs": 1,
+     "launch": "u_r1.u_lpr_ft1",
+     "capture": "u_bout_frame_int_o0.q[*]",
+     "max_um": 815,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 / tool @9db54b73d re-place"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 24,
+     "launch": "u_r1.u_lpr_r1",
+     "capture": "u_r1.u_lpl_10_w",
+     "max_um": 785,
+     "kind": "reset",
+     "action": "S81-P9-TOOL2 / tool @9db54b73d re-place"
+    },
+    {
+     "cls": "*>F async SET/RESET",
+     "pairs": 2,
+     "launch": "<top>:arst_n",
+     "capture": "<top>:u_rsync_tN",
+     "max_um": 949,
+     "kind": "reset_async_port",
+     "action": "die reset distribution (raw async arst_n -> per-tap synchroniser, not a timed reg-reg path)"
+    }
+   ],
+   "data_over750": 0
+  },
+  "col_h9_r2__t1": {
+   "classes": {
+    "F>F": {
+     "n": 4398,
+     "max_um": 723,
+     "over750": 0
+    },
+    "F>M": {
+     "n": 6220,
+     "max_um": 627,
+     "over750": 0
+    },
+    "M>F": {
+     "n": 3070,
+     "max_um": 454,
+     "over750": 0
+    },
+    "M>M": {
+     "n": 8926,
+     "max_um": 592,
+     "over750": 0
+    }
+   },
+   "over750": [],
+   "data_over750": 0
+  }
+ }
+}

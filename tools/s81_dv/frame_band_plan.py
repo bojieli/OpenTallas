@@ -28,6 +28,8 @@ The five band RTL blockers (S81-P6 13:32 / COORD) and how this file resolves the
       one flop) and every band pads its forest input so all three forests see the same root age as before relative to
       each other (r0 +2X+2, r1 +X+1 +pad, r2 +2X+2 with X = 2 boundary flops per crossing): the whole frame reset tree is
       uniformly 2X+2 = 6 edges later than the old root; no band skew.
+  (j) S81-P9-FC 10-23: the r0 reset-forest root pad u_lpr_root N 1 -> 2 (R3: 898+798 / 969+866 um hops); the frame
+      reset tree is uniformly +1 edge (R3 form only; --no-r3 keeps N 1).
   (d) hard-core / ROM macro positions are a plan item (gen_plan_v4.py contents[].hard_cores), not RTL; not done here.
 
 S81-P9-RTL 10-23 (COORD 18:15 R3-INTERNAL: any reg-reg connection inside a partition > 750 um gets a FIRM station;
@@ -417,6 +419,15 @@ def gen(kit, master, plan):
         extra = []
         if k == 0:
             pad = 2 * X + 2
+            if R3:
+                # (j) S81-P9-FC 10-23 (R3-INTERNAL): u_lpr_root -> the first boundary flop is 898+798 um (col_h9) /
+                # 969+866 um (col_h10) > 750: the root pad gets a 2nd stage (N 1 -> 2).  The whole frame reset forest
+                # moves +1 edge uniformly (no band skew: every band's u_lpr_age pads from this root); the crs4 landing
+                # ring release (u_cf rsync), rst_n__frl and rst_n__xk are not downstream of lpr_root.
+                a = re.search(r'ot_pl_pad #\(\.W\(1\), \.N\(1\)\) u_lpr_root \(', body)
+                assert a and len(re.findall(r' u_lpr_root \(', body)) == 1, (mod, 'u_lpr_root')
+                body = body[:a.start()] + 'ot_pl_pad #(.W(1), .N(2)) u_lpr_root (' + body[a.end():]
+                R3LOG.append(f'{master} r0 (j) u_lpr_root N 1 -> 2 (reset-forest root +1 edge, uniform)')
         elif 'lpr_root__ft1' in ports[mod]:
             a = 'assign lpr_root__ft1 = lpr_root;'
             assert body.count(a) == 1, mod
@@ -511,7 +522,7 @@ def main():
     # S81-P9-RTL: frame-internal latencies the die compiler / TOK must add to the plan lane table (die_plan latency lists
     # lanes only: an xo lane's cycles are its 2 boundary flops; the source frame's own x_i0 -> xo_o0 forward is internal)
     bmap['latency_edges'] = dict(x_i0_to_xo_o0=2 if R3 else 1, x_i0_to_xo_o0_was=1,
-                                 seam_K_plus_1=X + 1, note='seams (frame_int) unchanged; x arrival at chain position j '
+                                 seam_K_plus_1=X + 1, lpr_root_N=2 if R3 else 1, reset_tree_vs_P7=1 if R3 else 0, note='seams (frame_int) unchanged; x arrival at chain position j '
                                  '(0-based from the chain head p1 / p4) moves by +j edges vs the P7 contents',
                                  plus_one=[x for x in (R3LOG if R3 else []) if ' (i) ' in x])
     Path(a.map).write_text(json.dumps(bmap, indent=1) + '\n')

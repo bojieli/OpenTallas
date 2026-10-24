@@ -54,6 +54,9 @@ def write_latency(raw, out_dir, inplace_path=None):
     if errs:
         raise SystemExit("plan invalid:\n  " + "\n  ".join(errs[:20]))
     P = S.Plan(raw)
+    sk = P.landed_skew()
+    if sk:
+        raise SystemExit("latency: landed bundle over the landing window margin:\n  " + "\n  ".join(sk))
     tab = latency_table(P)
     dig = plan_digest(raw)
     out_dir = Path(out_dir)
@@ -74,7 +77,9 @@ def write_latency(raw, out_dir, inplace_path=None):
     js = dict(schema="opentallas.die_plan.latency.v1", die=P.name, plan_digest=dig, period_ps=P.die["period_ps"],
               lanes={lid: dict(d, src=P.ports[P.lanes[lid]["ports"][0]]["src"],
                                dst=P.ports[P.lanes[lid]["ports"][-1]]["dst"],
-                               width=P.ports[P.lanes[lid]["ports"][0]]["width"]) for lid, d in sorted(tab.items())})
+                               width=P.ports[P.lanes[lid]["ports"][0]]["width"]) for lid, d in sorted(tab.items())},
+              groups=[dict(name=n, kind=k, lanes=l, cycles=tab[l[0]]["cycles"]) for n, k, l in P.latency_groups()
+                      if k == "landed" and all(x in tab for x in l)])
     (out_dir / f"{P.name}_latency.json").write_text(json.dumps(js, indent=1) + "\n")
     if inplace_path:
         raw = dict(raw)
