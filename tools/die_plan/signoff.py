@@ -519,6 +519,36 @@ def run_sdc_lint(disc, ports):
                 sdc=disc["sdc"], sdc_source=disc["sdc_source"])
 
 
+def boundary_controls(disc):
+    """Read a generated core's typed control contract; never exempt data pins."""
+    if not disc.get("kit"):
+        return [], None
+    manifest = Path(disc["kit"]) / "boundary_guard_context.json"
+    if not manifest.is_file():
+        return [], None
+    ctx = json.loads(manifest.read_text())
+    if ctx.get("schema") != "opentallas.core_boundary_guard_context.v1":
+        raise ValueError("unsupported boundary guard context schema")
+    if ctx.get("data_pin_exemptions") != []:
+        raise ValueError("boundary context cannot exempt data pins")
+    source = Path(ctx["source_core_json"])
+    if not source.is_absolute():
+        source = manifest.parent / source
+    roles = json.loads(source.read_text()).get("boundary_role")
+    if not isinstance(roles, dict):
+        raise ValueError("source core metadata lacks typed boundary_role map")
+    controls = []
+    for field, role in (("clock_ports", "clk"), ("unused_clock_ports", "clk_unused"), ("reset_ports", "reset")):
+        ports = ctx.get(field, [])
+        if not isinstance(ports, list) or any(not isinstance(x, str) or not x or "\n" in x for x in ports):
+            raise ValueError(f"invalid {field} in boundary context")
+        for port in ports:
+            if port in controls or roles.get(port) != role:
+                raise ValueError(f"boundary role mismatch or duplicate: {port} expected {role}")
+            controls.append(port)
+    return controls, dict(manifest=str(manifest), source_core_json=str(source), controls=controls)
+
+
 def run_face_guard(disc, clock_ports=()):
     import face_guard
     if not disc.get("synth"):
@@ -528,17 +558,25 @@ def run_face_guard(disc, clock_ports=()):
         pins = pins.get("pins")
     if pins is not None and not (isinstance(pins, list) and pins and isinstance(pins[0], dict) and "bus" in pins[0]):
         pins = None
-    skip = sorted(set(clock_ports) | {"arst_n", "rst_n"})
+    try:
+        typed_controls, context = boundary_controls(disc)
+    except Exception as e:
+        return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
+    skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
     skip_re = r"^(clk(_t[0-9]+|_c[0-9]+)?|" + "|".join(re.escape(x) for x in skip) + r")$"
     if pins is not None:                      # the clock / reset pins are not face registers
         pins = [x for x in pins if not re.match(skip_re, str(x.get("bus")))]
+    ft_file = Path(disc["kit"]) / "ft_stations.txt" if disc.get("kit") else (
+        Path(disc["pins"]).with_name("ft_stations.txt") if disc.get("pins") else None)
     try:
-        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re)
+        ft1 = face_guard.read_ft1(ft_file) if ft_file and ft_file.is_file() else set()
+        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
                 fail_counts=r.get("fail_counts"), fails={k: v[:5] for k, v in (r.get("fails") or {}).items()},
-                netlist=disc["synth"], pins=disc.get("pins"))
+                netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
+                one_station_ft_slots=sorted(ft1))
 
 
 # ---- verdict -------------------------------------------------------------------------------------------------------
