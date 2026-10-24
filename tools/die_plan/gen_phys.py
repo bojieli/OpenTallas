@@ -325,6 +325,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
+           f"export OT_TAP_WINDOW_PS = {float(P.clock['insertion_tol_ps']):g}",
+           f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
+           # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
+           "export CORNER = TC",
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
@@ -481,6 +485,7 @@ def write_assembly(raw, out, views, rtl_root=None):
            "export ADDITIONAL_LIBS = " + " ".join(libs),
            "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
            "export MACRO_PLACE_HALO = 0 0",
+           "export CORNER = TC",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
@@ -560,7 +565,18 @@ def sta_die_tcl(P):
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",
-              "puts $fh \"mode $MODE corner $::env(CORNER)\""]
+              "puts $fh \"mode $MODE corner $::env(CORNER)\"",
+              # R4 revised: seam skew on RC = rise-edge clock arrival at the capture CK minus the launch CK (OpenSTA
+              # arrival_max_rise of a CK pin can be the falling-edge arrival, + T/2)
+              "proc ot_ck {pin} { if {[catch {set a [get_property $pin arrival_max_rise]}] || $a eq \"\"} { return \"\" }; "
+              f"set h {per / 2.0:.4f}; if {{$a >= $h}} {{ set a [expr {{$a - $h}}] }}; return $a }}",
+              # (endpoint_clock_pin segfaults OpenSTA here: go through the instances' CLK pins by name)
+              "proc ot_ckpin {pin} { set i [file dirname $pin]; "
+              "foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; if {$q ne \"\"} { return $q } }; return \"\" }",
+              # skew from NAMES: an arrival query re-runs the search and frees the PathEnd objects (segfault)
+              "proc ot_skew {sp ep} { set s [ot_ckpin $sp]; set e [ot_ckpin $ep]; "
+              "if {$s eq \"\" || $e eq \"\"} { return NA }; set a [ot_ck $s]; set b [ot_ck $e]; "
+              "if {$a eq \"\" || $b eq \"\"} { return NA }; return [format %.1f [expr {$b - $a}]] }"]
     # every abutment port: the worst setup + hold path through its destination pins
     for pid, pr in sorted(P.ports.items()):
         if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
@@ -568,9 +584,10 @@ def sta_die_tcl(P):
         thr = f"{gen_rtl.sv_id(pr['dst']['part'])}/{gen_rtl.sv_id(pr['dst']['bus'])}[*]"
         for dly in ("max", "min"):
             lines.append(f"set ps [find_timing_paths -through [get_pins {thr}] -path_delay {dly} -group_path_count 1]")
-            lines.append(f"foreach p $ps {{ puts $fh \"PORT {pid} {dly} slack [get_property $p slack] "
-                         f"from [get_full_name [get_property $p startpoint]] to "
-                         f"[get_full_name [get_property $p endpoint]]\" }}")
+            lines.append(f"set rows {{}}; foreach p $ps {{ lappend rows [list [get_property $p slack] "
+                         f"[get_full_name [get_property $p startpoint]] [get_full_name [get_property $p endpoint]]] }}")
+            lines.append(f"foreach r $rows {{ lassign $r sl sp ep; puts $fh \"PORT {pid} {dly} slack $sl "
+                         f"skew [ot_skew $sp $ep] from $sp to $ep\" }}")
             lines.append(f"if {{[llength $ps] == 0}} {{ puts $fh \"PORT {pid} {dly} NO_PATH\" }}")
     lines += ["puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
               "close $fh",
