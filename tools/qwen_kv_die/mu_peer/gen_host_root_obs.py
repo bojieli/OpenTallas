@@ -168,6 +168,20 @@ def gen(root, ext=False):
     p_, q_, s_ = split_header(cp)
     cp = p_ + q_.rstrip() + ',\n input wire[OBS_NB-1:0] obs_bits,\n input wire[OBS_NF-1:0] obs_flt' + s_
     cp = once(cp, '\n);', f'\n);\n initial if(MU==0)$fatal(1,"qkd_host_control_packet_admission_{sfx}: MU 1 only");')
+    if ext:
+        # KV-P2-RTL 10-23 (owner: no tie-offs / open inputs): the HC broadcast station carries START only by design
+        # (pr143 = PW/DW replays locally on fixed cycles on every rank; hc[181:39] bypasses the station, see the
+        # assign below and results/rtl/kv_hostp_local_program_1023).  The source composition fed the station a
+        # 143-bit constant {143'd0,raw_hc[38:0]}; OBSX instantiates the START-only station (HCW 39) on the 39 bits it
+        # consumes.  KV-P3-RTL 10-23: the station's 39-bit command enters the START-only HC transport (u_packet HCW 39
+        # -> u_ctrl qkd_host_ctrl_token_service_packet_collected_mu HCW 39, no PW/DW command field) as cmd_hc[38:0];
+        # its 39-bit hc is the START slice of the composed hc (was {143'd0,cmd_hc} into the 182-bit transport).
+        cp = once(cp, 'wire[181:0]raw_hc,cmd_hc;wire cmd_v,cmd_cr;',
+                  'wire[181:0]raw_hc;wire[38:0]cmd_hc;wire cmd_v,cmd_cr;')
+        cp = once(cp, 'qkd_host_hc_station #(.MUT(HC_MUT))u_hc(', 'qkd_host_hc_station #(.MUT(HC_MUT),.HCW(39))u_hc(')
+        cp = once(cp, ".raw_hc({143'd0,raw_hc[38:0]})", '.raw_hc(raw_hc[38:0])')
+        cp = once(cp, 'wire[181:0]transport_hc;', 'wire[38:0]transport_hc;')
+        cp = once(cp, 'qkd_host_packet_bundle_admission_mu #(.MU(1),', 'qkd_host_packet_bundle_admission_mu #(.MU(1),.HCW(39),')
     g = cp.index('begin:g_mu')
     st = cp.index('qkd_host_packet_bundle_admission_mu #(', g)     # the u_packet statement
     k = cp.index(')u_packet(', st)

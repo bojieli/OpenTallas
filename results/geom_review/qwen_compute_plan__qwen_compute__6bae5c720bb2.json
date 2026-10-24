@@ -1,0 +1,19 @@
+{
+ "element": "qwen_compute_plan",
+ "kit": "physical/die_plan/qwen_compute@1c1a1622e",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "6bae5c720bb29fed8b464e5fbc9072cc5724f41c8a335c10b70ba6be3e3234c9",
+ "reviewer": "CODEX-GEOM-0911-1023 (independent)",
+ "at": "2026-10-23T09:37:09-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
+ "reasons": "[CODEX-GEOM G1 tap declaration migration] Actual new die_plan.png viewed: existing mirrored CB quad arrays, central slice band and stacked collective column are unchanged; purple declared taps now appear within their intended core/glue regions. Independent comparison with55e0ec7fa proves all plan fields semantic-identical after removing the new clock.taps arrays.51types carry134type taps(42core/92glue), expanded to1941extra placed terminals alongside388unchanged partition roots. Max declared root-to-tap Manhattan1054.08um; coll P/R face taps708.5um from root, mirrored core ck pairs remain balanced. Own candidate1c1a1622e G0 PASS0errors/84warnings, with134schema taps/hard_cores0; cut0.2051/segment0.4535. This resolves the note-only visibility of these existing tap coordinates; it does not measure clock insertion or skew.",
+ "fixes": "Preserve prior74588724a PASS-CONDITIONAL G3 scope only on each partition own REQ and existing prerequisites. Slice-band G3 still waits for su_c/su_l0/su_l1 census split and504bit L0<->L1 lane/source binding. Actual hard-core pin/outline/track-offset bindings remain open(hard_cores0); registering tap declarations does not validate actual core pins. Declared insertion budgets remain estimates; measured insertion/neighbour skew/STA/reset behavior, CP1 and source-bound partition G3 pin access/clock/routing conditions remain. G2 virtual same-clock-net terminal enumeration is declarative infrastructure, not a fresh physical/G2 result; no previous-pin/previous-terminal physical result or token claim transfers. No blanket P&R grant.",
+ "evidence": {
+  "g0_report": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/qc-taps-g0/g0_report.json",
+  "migration_audit": "results/arch/qc_clock_taps_1023/migration_audit.json",
+  "render": "physical/die_plan/qwen_compute/die_plan.png",
+  "render_sha256": "73ad85f66757c37daa466087c1dec694ea9e0f7f00d4f34ddac6f69da1d00ae7",
+  "base": "55e0ec7fa"
+ }
+}

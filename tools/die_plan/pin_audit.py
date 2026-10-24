@@ -7,6 +7,7 @@ A pin passes when its BTerm has one box on the plan layer whose centre lies on t
 (+/- 0.001 um) and which touches the plan face.  Output: {pins, ok, missing, wrong_layer, wrong_place, extra}.
 """
 import json
+import re
 import os
 
 import odb  # noqa: E402  (OpenROAD python)
@@ -27,7 +28,8 @@ def main():
     for bt in block.getBTerms():
         n = bt.getName()
         if n not in want:
-            if n not in ("clk", "arst_n") and not bt.getSigType() in ("POWER", "GROUND"):
+            # clock taps (R4: clk, clk_t<i>) and the reset tap are interior die-spine pins, not face pins
+            if not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)

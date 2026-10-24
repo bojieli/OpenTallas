@@ -155,7 +155,8 @@ def extract(raw, parts, channel_um=0.0, name=None):
         lanes.append({"id": chain[0], "ports": chain})
     out = {"schema": raw["schema"], "note": f"CP1 pair cut from {P.name} by tools/die_plan/pair.py",
            "die": die, "partition_types": types, "partitions": newparts, "ports": ports, "lanes": lanes,
-           "clock": copy.deepcopy(raw["clock"]), "reset": copy.deepcopy(raw["reset"])}
+           "clock": copy.deepcopy(raw["clock"]), "reset": copy.deepcopy(raw["reset"]),
+           "census": {"none": f"CP1 proof pair cut from {P.name}: census coverage is checked on the full plan"}}
     if "budgets" in raw:
         out["budgets"] = copy.deepcopy(raw["budgets"])
     sp = out["clock"].setdefault("spine", {})

@@ -1,0 +1,14 @@
+{
+  "generic_defaults": "main v3.1 entire coverage summary and findings exactly identical to74588724a",
+  "main_v31_plan_sha256": "40c59e4d99692c3e3d237ccc6e62dfca4354c18a397e1a76298f74e87d82b41c",
+  "generic_dropped_bits": 51031,
+  "current_v32_G0": "PASS0errors1588warnings",
+  "full_suite": "44 passed",
+  "source_bound_replay": "17 cases PASS",
+  "new_causal_regressions": [
+    "overlapping witness rows with shared lane IDs rejected",
+    "grouped capacity underflow rejected",
+    "direct control lane not credited twice"
+  ],
+  "checker_sha256": "b794501e16745b1cbf9f02ac7e19297dc20065a00d392f2bd01eb21aff2541fb"
+}

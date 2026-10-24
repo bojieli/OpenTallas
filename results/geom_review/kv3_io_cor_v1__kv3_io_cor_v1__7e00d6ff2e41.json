@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_cor_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_cor_v1, tool 3087b9331)@3845962a2",
+ "verdict": "PASS",
+ "hash": "7e00d6ff2e41f4f5",
+ "reasons": "[10-23 12:17] [GEOM-REVIEW4 G3] Answers my 10:37 FAIL. PLACED render viewed; stats and ft_stations.txt read; kit hash recomputed. 7,158 FF = 3,053 s0 FIRM at the in faces + 4,103 stations j>=1 at L*j/k (0 missing). The flop x/y histograms show no stacking: E-face s0 in the 1120-1279 bin (1,865), the W 3-station slots (ft23/24, 1,701 um, hops 567 um) spread over x, and the S->E slots' stations lie on the diagonal Z-route loci visible in the render. All hops are <= 750 um (R3). The corner turn (S x 0-430 / E y 0-630 / W y 0-210) is set by the neighbour windows. Logic stays below y 640, with nothing in the empty top. Fill 0.8%, buf/inv 60.6k (about 8.5 per flop) and HPWL 4,345 mm are inherent to a pure ft corner of 6,106 pins.",
+ "fixes": "None before route. Watch items: setup on the diagonal S->E hops at TT; tap skew <= 80 ps across clk/clk_t*; GRT overflow 0, especially in the dense diagonal band x 600-1279 / y 0-260.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T12:17:35-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

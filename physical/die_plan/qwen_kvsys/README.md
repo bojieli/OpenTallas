@@ -55,3 +55,49 @@ COORD 05:29 v3 items on the v2 lattice (scripts plan_v3.py / emit_v3.py / kv_par
   ceiling: flagged); 1451 cores on the die. pv_slice_t / kvs_pc / ahub / host_rt counts are density estimates.
 - G2 (g2_v3_report.json): die probe overflow 0, clk/rst reach max 17.7 / p90 15.1 mm; FT probes on the worst 5 types
   (hub_Ei, hgi_v3 = W corridor, hub_Eo, hub_Wo, hgi_v4) all EXIT 0, overflow 0, no pin without access, max layer use 21%.
+
+## v3.1 (KV-P2, 10-23) -- die_plan.json is now v3.1 (v3 at 9292db97f)
+
+COORD 06:33 open items + census coverage (scripts plan_v31.py / emit_v31.py / coverage_v31.py / l1_cores_v31.py):
+- IO row 1728 -> 1036.8 um, one clock tap per IO partition (each <= 1900.8 um wide): sys_SW | io_W2 | io_W3 | sys_c |
+  io_E5 | io_E6 | sys_SE.  The x12 host SerDes is MIRRORED as two x6 halves (0.30 mm2/lane kept, 1.81 mm2 each, same
+  223-cycle latency; flit striped 522 W / 521 E, tx_v broadcast, tx_up / rx_v AND-joined): the empty N-W corner is gone,
+  die 27734.4 -> 27043.2 um tall (-7.5 mm2).  sys_c (col 4) = UCIe + d2d + fwd/clk bumps + dcal; io_W3 / io_E5 = the
+  corridor heads (d2d/SerDes <-> hub_Wi, d2d <-> hub_Ei/hub_C); io_W2 / io_E6 = SerDes-half feedthrough cells.
+- Host core: qkd_host_rt was a 403k density estimate; the HOST root is MEASURED 784k hier / 571k flat and already splits
+  exactly into the qkd_hr_cluster children (gen_cluster.py, lockstep-proven) -> 22 planned cores in hub_Wi, max 97k
+  (l1_cores_v31.json; no core or glue over the 400k cap on the die).
+- Census coverage (coverage_v31.json, COORD G1 rule): as-built inter-partition bits 412,179; planned 379,407 tree +
+  32,772 gather-chain; DROPPED 0.  Spine-replaced, listed by source: reset host.die_rst_n 5,760 b (the reset spine
+  root must be driven by host.die_rst_n); clock pll core taps 9,126 b + NON-CORE clocks pll_hbm_{WS,WN,ES,EN} 168 b,
+  pll_phy/host/ingest/fwd 21 b (OPEN: the plan has one clk_core spine; the HBM and host-family clocks need their own
+  spines/taps).  Fixed vs v3: (1) extract_asbuilt counted the mixed-direction FDI bundles host.fdi (2,089 b) and
+  d2d_kv.fdi (1,169 b) as 1-2 bits (+4,878 b now carried); (2) v3 dropped 512 b of narrow port families (phy fh#/rh#:
+  family offset keyed on destination count, members to one partition collided); (3) the host's sequenced functional
+  resets hbm_rst_n / host_rst_n / link_rst_n (432 b) are control lanes, not the reset spine; (4) pll.locked is data.
+- Pins: windows sized for the plan-tool PG-band exclusion (5c83c4b9a/2bb9e12ba); an odd-count layer gets an odd usable
+  track count and a tie-free centre, so replicas share one pin table (tools/die_plan/schema.spread now exact arithmetic).
+
+    python3 plan_v31.py --asbuilt asbuilt_rtl6_e33504a6f.json.gz --out /tmp/stage1_v31.json.gz
+    python3 emit_v31.py --stage1 /tmp/stage1_v31.json.gz --asbuilt asbuilt_rtl6_e33504a6f.json.gz --out die_plan.json --report plan_report_v31.json
+    T=<plan-tool>/tools/die_plan; python3 $T/gen.py latency die_plan.json --inplace --out gen; python3 $T/check.py die_plan.json --png
+    python3 coverage_v31.py /tmp/stage1_v31.json.gz asbuilt_rtl6_e33504a6f.json.gz die_plan.json > coverage_v31.json
+    python3 kv_params_v3.py /tmp/stage1_v31.json.gz > kv_params_v31.json
+    python3 l1_cores_v31.py /tmp/stage1_v31.json.gz asbuilt_rtl6_e33504a6f.json.gz plan_report_v31.json > l1_cores_v31.json
+- Generated-die blockers (bind/bitcon.py = bit-level as-built die.v connectivity with LSB-first port directions;
+  bind/blockers.py -> bind/blockers_v31.json): the plan declares no leaf bindings yet; as built, 13,082 leaf-input bits
+  (41 ports: lane8 bsel, astk ep zi/xi, owner prev_*, frontq hid, kvs_pc pc__pc/cfg_stack, hslice chain ends ...) are
+  undriven straps that the GEN tie-cell pass turns into TIEHI/TIELO -> leaf parameters first; 356 fault-OR inputs come
+  from landing cells the plan removes; 128 qkd_rlyi_258s MUX relays (the PV result T-chain behind the 8 RH gathers) were
+  collapsed as pass cells by extract_asbuilt (so the census above counts the gathers as wires, not as select stages);
+  8 non-core clocks and the reset root (host.die_rst_n) have no plan spine.
+- 10-23 tip re-emit (plan-tool @5dd34afa0, uniform spreader + PG-band windows + mandatory census): die_plan.json is
+  unchanged except the new `census` key (census_rows_v31.py -> census/; 2,849 rows, gathers as qkd_rlyi_258s T-chain
+  hops). G0 on the tip checker: 0 pin/abutment errors; census_cov reports 51,031 b "dropped" over 264 pairs, ALL of
+  them tap-tree destinations reached through forwarding partitions (hub_Eo -> hg_EN_7 -> ... -> hg_EN_0): census_cov
+  credits only lane END pairs and a tap tree is a chain of per-hop lanes (census/census_taptree_v31.json: 0 b not
+  carried by a tree). Needs a census_cov rule for forwarded lanes (PLAN-TOOL), not a plan change.
+- G2 (g2_v31_report.json): die probe + FT probes of the 5 worst types and all IO types: every probe EXIT 0, GRT overflow 0
+  (max layer use 21 %, hub_Ei M2).
+- F_DLY: the plan law gives 2, but the bit-exact bench (kv_params_v31.json F_DLY_bench) fails at T8191/T8192 with 2;
+  the schedule keeps F_DLY 3 until new root/stack RTL.

@@ -1,0 +1,37 @@
+{
+ "note": "QC-FIX io_collective internal census map (gen_plan.py write_census [2]; widths from rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
+ "parts": {
+  "face_s1": "coll_s",
+  "face_s2": "coll_s",
+  "face_p": "coll_core",
+  "face_r": "coll_core",
+  "face_s0": "coll_n",
+  "u_collective": "coll_core",
+  "u_shared": "coll_core",
+  "io_ucie": "coll_core",
+  "io_serdes": "io_serdes",
+  "io_serdes_1": "io_serdes_1",
+  "io_serdes_2": "io_serdes_2",
+  "sys_face": "glue",
+  "dvs_W5": "slice_W5"
+ },
+ "groups": {
+  "slice_W5": [
+   "sl_W5_ctl",
+   "sl_W5_fe",
+   "sl_W5_fw",
+   "sl_W5_hc0",
+   "sl_W5_hc1",
+   "sl_W5_hc2",
+   "sl_W5_hc3",
+   "sl_W5_sc",
+   "sl_W5_st_a",
+   "sl_W5_st_b",
+   "sl_W5_stm",
+   "sl_W5_su_c",
+   "sl_W5_su_l0",
+   "sl_W5_su_l1",
+   "sl_W5_tap"
+  ]
+ }
+}

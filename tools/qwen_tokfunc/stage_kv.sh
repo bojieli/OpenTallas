@@ -27,8 +27,14 @@ NET=""; EXPL=""
 #   ROOT-approved explicit genuine-archive binding (b0cc8cdca, kv_explicit_r17/): top-only frontend (~1 s / ~100 MB instead
 #   of the ~590 GB implicit hierarchical top) + the 35 child archives of OBJDIR, admitted only when their sha256 and their
 #   whole child source readset match the approved table / the assembly bytes (kv_explicit_build.py).  Memory ~16 GB.
+# --plan-frame (KV-P2-RTL 10-23, needs --explicit-r17): the data path in the KV die plan v3 frame
+#   (kv_planframe/kvattn_rel_dp.sv, PV_LAND 0: pvst / pvfst unlanded = D(pvp) 0 -> F_DLY law 2); run.sh calibrates FD.
+# --dqk N (with --plan-frame): kvs_ctl D_QK cfg of every run (kv_planframe/tb_kvattn_rel.sv +DQK; default 0).  The plan
+#   frame keeps the QK words' landing edge, so its QK path is one edge longer than its PV path: D_QK 1.
+PF=0; DQK=0
 while [ $# -gt 0 ]; do case "$1" in --die-netlist) NET=$(readlink -f "$2"); shift 2;;
-  --explicit-r17) EXPL=$(readlink -f "$2"); shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+  --explicit-r17) EXPL=$(readlink -f "$2"); shift 2;; --plan-frame) PF=1; shift;; --dqk) DQK=$2; shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+[ $PF = 0 ] || [ -n "$EXPL" ] || { echo "--plan-frame needs --explicit-r17"; exit 2; }
 SRC=$RUNROOT/src; S=$RUNROOT/kv; FX=$S/fx; T=$S/tree; O=$S/out; HERE=$(dirname "$(readlink -f "$0")")
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050'
@@ -51,10 +57,14 @@ if [ -n "$EXPL" ]; then
   [ -z "$NET" ] || { echo "--explicit-r17 and --die-netlist are exclusive"; exit 2; }
   E=$HERE/kv_explicit_r17; BD=$T/rtl/test/qwen_kv_die/kvattn_rel_1019; SL=$T/tools/qwen_layerbench/kvattn_rel/sources.txt
   rm -f "$BD/kvattn_rel_dp.sv"; cp "$E/kvattn_rel_dp.sv" "$E/kvattn_rel_pv_bound.sv" "$BD/"
+  OVL=(); if [ $PF = 1 ]; then cp "$HERE/kv_planframe/kvattn_rel_dp.sv" "$BD/kvattn_rel_dp.sv"; OVL=(--overlay-dp "$HERE/kv_planframe/kvattn_rel_dp.sv"); GRADE="$GRADE, plan frame PV_LAND 0 D_QK $DQK"
+    cp "$HERE/kv_planframe/tb_kvattn_rel.sv" "$BD/tb_kvattn_rel.sv"
+    sed -i 's#"\$B" "\$@" >#"$B" "$@" +DQK='"$DQK"' >#' "$T/tools/qwen_layerbench/kvattn_rel/run.sh"
+    grep -q "+DQK=$DQK" "$T/tools/qwen_layerbench/kvattn_rel/run.sh" || { echo "run.sh DQK patch failed"; exit 2; }; fi
   sed -i 's#qkd_kvs_attn_r16\.sv#qkd_kvs_attn_r17.sv#; s#qkd_kvs_attn_fl_r16\.sv#qkd_kvs_attn_fl_r17.sv#' "$SL"
   echo rtl/test/qwen_kv_die/kvattn_rel_1019/kvattn_rel_pv_bound.sv >> "$SL"
   echo "$(cat $SRC/ASM_COMMIT) assembly: current r17 KV attention (qkd_kvs_attn_r17/fl_r17) + bench 0e597ed1c + explicit genuine-archive binding b0cc8cdca (tb sha $(sha256sum $BD/tb_kvattn_rel.sv | cut -c1-16))" > "$O/SOURCE_COMMIT.txt"
-  python3 "$HERE/kv_explicit_build.py" --tree "$T" --out "$O" --archives "$EXPL" > "$O/build.out" 2>&1 || { echo BUILD_FAIL; tail -30 "$O/build.out"; exit 1; }
+  python3 "$HERE/kv_explicit_build.py" --tree "$T" --out "$O" --archives "$EXPL" "${OVL[@]}" > "$O/build.out" 2>&1 || { echo BUILD_FAIL; tail -30 "$O/build.out"; exit 1; }
 else
 VJOBS=${VJOBS:-2} JOBS=${JOBS:-6} bash "$T/tools/qwen_layerbench/kvattn_rel/build.sh" "$T" "$O" > "$O/build.out" 2>&1 || { echo BUILD_FAIL; tail -30 "$O/build.log"; exit 1; }
 fi

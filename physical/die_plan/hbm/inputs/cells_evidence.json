@@ -1,0 +1,2607 @@
+{
+ "a_cell_um2": 0.11,
+ "masters": {
+  "hbfd_qdq_split_and": {
+   "base": "hbfd_qdq_split_and",
+   "basis": "SYNAREA EST r18h5 views/synth/hbfd_qdq_split_and/meta.json std_area 0 um2 / 0.11 um2",
+   "cells": 1,
+   "clock_pins": [],
+   "lef_um": [
+    24.192,
+    24.84
+   ],
+   "macros": {},
+   "pins": 3,
+   "source": "rtl/hbm_accel/die_glue/hbfd_qdq_split_glue.sv",
+   "std_area_um2": 0.08748,
+   "view": "SYNTH"
+  },
+  "hbfd_qdq_split_or": {
+   "base": "hbfd_qdq_split_or",
+   "basis": "SYNAREA EST r18h5 views/synth/hbfd_qdq_split_or/meta.json std_area 0 um2 / 0.11 um2",
+   "cells": 1,
+   "clock_pins": [],
+   "lef_um": [
+    24.192,
+    24.84
+   ],
+   "macros": {},
+   "pins": 3,
+   "source": "rtl/hbm_accel/die_glue/hbfd_qdq_split_glue.sv",
+   "std_area_um2": 0.08748,
+   "view": "SYNTH"
+  },
+  "hfd_ep_static": {
+   "base": "hfd_ep_static",
+   "basis": "CLOSED hep_static_w5b_1016-w5b-ec8a8d6f7 std cells (die 161507 um2)",
+   "cells": 46785,
+   "clock_pins": [],
+   "lef_um": [
+    434.72,
+    371.52
+   ],
+   "macros": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "pins": 2288,
+   "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+   "std_area_um2": 3498.29604,
+   "view": "ROUTED_UNBOUND"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+   "base": "hfd_hgi_vm_calendar_f20",
+   "basis": "CLOSED hv16_vm_cal_f20_ww-ww0900-ad9c630eb std cells (die 28217.5 um2)",
+   "cells": 23959,
+   "clock_pins": [],
+   "lef_um": [
+    241.92,
+    116.64
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "pins": 558,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "std_area_um2": 1274.93352,
+   "view": "ROUTED_UNBOUND"
+  },
+  "hfd_hgi_vm_calendar_f20_role__pv0": {
+   "base": "hfd_hgi_vm_calendar_f20_role",
+   "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv0/meta.json std_area 1219 um2 / 0.11 um2",
+   "cells": 11085,
+   "clock_pins": [
+    "clk",
+    "clk_cap",
+    "clk_mem",
+    "clk_tgt"
+   ],
+   "lef_um": [
+    241.92,
+    116.64
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "pins": 390,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "std_area_um2": 1219.29624,
+   "view": "SYNTH"
+  },
+  "hfd_hgi_vm_calendar_f20_role__pv1": {
+   "base": "hfd_hgi_vm_calendar_f20_role",
+   "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv1/meta.json std_area 1228 um2 / 0.11 um2",
+   "cells": 11162,
+   "clock_pins": [
+    "clk",
+    "clk_cap",
+    "clk_mem",
+    "clk_tgt"
+   ],
+   "lef_um": [
+    241.92,
+    116.64
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "pins": 409,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "std_area_um2": 1227.76722,
+   "view": "SYNTH"
+  },
+  "hfd_hgi_vm_calendar_f20_role__pv2": {
+   "base": "hfd_hgi_vm_calendar_f20_role",
+   "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vm_calendar_f20_role__pv2/meta.json std_area 1246 um2 / 0.11 um2",
+   "cells": 11323,
+   "clock_pins": [
+    "clk",
+    "clk_cap",
+    "clk_mem",
+    "clk_tgt"
+   ],
+   "lef_um": [
+    196.344,
+    196.56
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "pins": 460,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "std_area_um2": 1245.55482,
+   "view": "SYNTH"
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+   "base": "hfd_hgi_vms_glue_nw_t",
+   "basis": "SYNAREA EST r18h5 views/synth/hfd_hgi_vms_glue_nw_t/meta.json std_area 14725 um2 / 0.11 um2",
+   "cells": 133859,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    403.272,
+    403.92
+   ],
+   "macros": {},
+   "pins": 20160,
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+   "std_area_um2": 14724.53154,
+   "view": "SYNTH"
+  },
+  "hfd_vms_bank_native_q0_faces": {
+   "base": "hfd_vms_bank_native_q0_faces",
+   "basis": "CLOSED vm_native_q0_faces_g313c-mclkC-1ad8c4984 std cells (die 84564 um2)",
+   "cells": 64722,
+   "clock_pins": [],
+   "lef_um": [
+    270.0,
+    313.2
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 3
+   },
+   "pins": 3919,
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "std_area_um2": 3287.89206,
+   "view": "ROUTED_UNBOUND"
+  },
+  "hfd_vms_wq2_merge": {
+   "base": "hfd_vms_wq2_merge",
+   "basis": "CLOSED hfd_vms_wq2_merge-m1-8500666e1 std cells (die 3528.36 um2)",
+   "cells": 5610,
+   "clock_pins": [],
+   "lef_um": [
+    59.4,
+    59.4
+   ],
+   "macros": {},
+   "pins": 849,
+   "source": "rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+   "std_area_um2": 287.26974,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm3e_phy_rc_e8p5": {
+   "base": "ot_hbm3e_phy_rc_e8p5",
+   "basis": "NONE (no closed run, no synthesis area)",
+   "cells": null,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    8500.032,
+    1177.2
+   ],
+   "macros": {},
+   "pins": 18722,
+   "source": "physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_bb.v",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_accel_smh_attn": {
+   "base": "ot_hbm_accel_smh_attn",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_accel_smh_attn/ot_hbm_accel_smh_attn.stat",
+   "cells": 1203,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    1939.68,
+    6955.2
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 129,
+    "ot_sram_1r1w_64x512_m1_r2c2": 40
+   },
+   "pins": 3734,
+   "source": "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "std_area_um2": 1519934.2362,
+   "view": "SYNTH"
+  },
+  "ot_hbm_argmax_static_sw_vm_r2": {
+   "base": "ot_hbm_argmax_static_sw_vm_r2",
+   "basis": "CLOSED hbm_argmax_swvm_r2_g2c_1019-g2c-c11f3bb33 std cells (die 14113.4 um2)",
+   "cells": 38967,
+   "clock_pins": [],
+   "lef_um": [
+    118.8,
+    118.8
+   ],
+   "macros": {},
+   "pins": 1119,
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "std_area_um2": 6483.05532,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_fault_leaf__pv0": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_fault_leaf__pv0/meta.json std_area 7 um2 / 0.11 um2",
+   "cells": 60,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 16,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 6.59016,
+   "view": "SYNTH"
+  },
+  "ot_hbm_fault_leaf__pv1": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_fault_leaf__pv1/meta.json std_area 7 um2 / 0.11 um2",
+   "cells": 60,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 16,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 6.59016,
+   "view": "SYNTH"
+  },
+  "ot_hbm_fault_leaf__pv2": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_fault_leaf__pv2/meta.json std_area 7 um2 / 0.11 um2",
+   "cells": 64,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 17,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 6.9984,
+   "view": "SYNTH"
+  },
+  "ot_hbm_fault_leaf__pv3": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_fault_leaf__pv3/meta.json std_area 7 um2 / 0.11 um2",
+   "cells": 64,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 17,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 6.9984,
+   "view": "SYNTH"
+  },
+  "ot_hbm_fault_leaf__pv4": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "CLOSED hdie_fault_leaf_n7_s20_r1-hfl-n7_s20-12e0fbbd1 std cells (die 466.56 um2)",
+   "cells": 40,
+   "clock_pins": [],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 7,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 2.44944,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_fault_leaf__pv5": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "CLOSED hdie_fault_leaf_n7_s20_r1-hfl-n7_s20-12e0fbbd1 std cells (die 466.56 um2)",
+   "cells": 40,
+   "clock_pins": [],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 8,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 2.8431,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_fault_leaf__pv6": {
+   "base": "ot_hbm_fault_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_fault_leaf__pv6/meta.json std_area 5 um2 / 0.11 um2",
+   "cells": 49,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 9,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+   "std_area_um2": 5.40918,
+   "view": "SYNTH"
+  },
+  "ot_hbm_fault_leaf_n8_s0": {
+   "base": "ot_hbm_fault_leaf_n8_s0",
+   "basis": "CLOSED hdie_fault_leaf_w_n8_s0-hflw-n8s0-3e59abf7b std cells (die 466.56 um2)",
+   "cells": 36,
+   "clock_pins": [],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 11,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv",
+   "std_area_um2": 3.7179,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_hc_bankq0_static": {
+   "base": "ot_hbm_hc_bankq0_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq0_static/meta.json std_area 93076 um2 / 0.11 um2",
+   "cells": 846145,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    734.4,
+    734.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+    "ot_sram_1r1w_128x256_m1_r2c2": 4
+   },
+   "pins": 6480,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+   "std_area_um2": 93075.9498,
+   "view": "SYNTH"
+  },
+  "ot_hbm_hc_bankq_ft_static": {
+   "base": "ot_hbm_hc_bankq_ft_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_ft_static/meta.json std_area 91189 um2 / 0.11 um2",
+   "cells": 828986,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    734.4,
+    734.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+    "ot_sram_1r1w_128x256_m1_r2c2": 4
+   },
+   "pins": 5527,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+   "std_area_um2": 91188.51048,
+   "view": "SYNTH"
+  },
+  "ot_hbm_hc_bankq_static": {
+   "base": "ot_hbm_hc_bankq_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_static/meta.json std_area 92398 um2 / 0.11 um2",
+   "cells": 839978,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    734.4,
+    734.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+    "ot_sram_1r1w_128x256_m1_r2c2": 4
+   },
+   "pins": 4431,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+   "std_area_um2": 92397.52782,
+   "view": "SYNTH"
+  },
+  "ot_hbm_hc_bankq_term_static": {
+   "base": "ot_hbm_hc_bankq_term_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_bankq_term_static/meta.json std_area 92388 um2 / 0.11 um2",
+   "cells": 839887,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    734.4,
+    734.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+    "ot_sram_1r1w_128x256_m1_r2c2": 4
+   },
+   "pins": 4402,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+   "std_area_um2": 92387.52594,
+   "view": "SYNTH"
+  },
+  "ot_hbm_hc_qhub_static": {
+   "base": "ot_hbm_hc_qhub_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_hc_qhub_static/meta.json std_area 33639 um2 / 0.11 um2",
+   "cells": 305805,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    734.4,
+    734.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 1
+   },
+   "pins": 9903,
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "std_area_um2": 33638.56776,
+   "view": "SYNTH"
+  },
+  "ot_hbm_hc_root_static": {
+   "base": "ot_hbm_hc_root_static",
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_root_static/ot_hbm_hc_root_static.stat",
+   "cells": 1514498,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    496.8,
+    540.0
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2
+   },
+   "pins": 3986,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/hc.sv",
+   "std_area_um2": 144020.35062,
+   "view": "SYNTH"
+  },
+  "ot_hbm_host_cfg_leaf_nw": {
+   "base": "ot_hbm_host_cfg_leaf_nw",
+   "basis": "CLOSED hdie_host_cfg_leaf_nw_r1-r1-1c5f19b5e std cells (die 4777.57 um2)",
+   "cells": 3695,
+   "clock_pins": [],
+   "lef_um": [
+    69.12,
+    69.12
+   ],
+   "macros": {},
+   "pins": 1096,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+   "std_area_um2": 273.06882,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_host_cp_rxs": {
+   "base": "ot_hbm_host_cp_rxs",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_host_cp_rxs/meta.json std_area 4801 um2 / 0.11 um2",
+   "cells": 43647,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    434.808,
+    432.0
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 2,
+    "ot_sram_1r1w_64x512_m1_r2c2": 4
+   },
+   "pins": 1368,
+   "source": "rtl/hbm_accel/host_ep_20261018/ot_hbm_host_cp_rxs.sv",
+   "std_area_um2": 4801.20858,
+   "view": "SYNTH"
+  },
+  "ot_hbm_host_static_ingress_obs": {
+   "base": "ot_hbm_host_static_ingress_obs",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_host_static_ingress_obs/meta.json std_area 524 um2 / 0.11 um2",
+   "cells": 4765,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    29.592,
+    30.24
+   ],
+   "macros": {},
+   "pins": 512,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv",
+   "std_area_um2": 524.10726,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_qctl_static": {
+   "base": "ot_hbm_idx_qctl_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_qctl_static/meta.json std_area 180 um2 / 0.11 um2",
+   "cells": 1632,
+   "clock_pins": [
+    "clk_program",
+    "clk_program_mem"
+   ],
+   "lef_um": [
+    194.832,
+    195.48
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "pins": 337,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_qctl_static.sv",
+   "std_area_um2": 179.52354,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_query_static": {
+   "base": "ot_hbm_idx_query_static",
+   "basis": "CLOSED hidx_q_r4-r4-05854d3ef std cells (die 28012.3 um2)",
+   "cells": 95793,
+   "clock_pins": [],
+   "lef_um": [
+    170.64,
+    164.16
+   ],
+   "macros": {
+    "ot_sram_1r1w_32x128_m1": 5
+   },
+   "pins": 1633,
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "std_area_um2": 8562.96522,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+   "base": "ot_hbm_idx_rootctl_static_am",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_idx_rootctl_static_am/ot_hbm_idx_rootctl_static_am.stat",
+   "cells": 63487,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    475.2,
+    259.2
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 1
+   },
+   "pins": 5877,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "std_area_um2": 8292.50622,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_score_quarter_static": {
+   "base": "ot_hbm_idx_score_quarter_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_score_quarter_static/meta.json std_area 1366457 um2 / 0.11 um2",
+   "cells": 12422337,
+   "clock_pins": [
+    "clk_chunk[0]",
+    "clk_chunk[1]",
+    "clk_chunk[2]",
+    "clk_chunk[3]",
+    "clk_chunk[4]",
+    "clk_chunk[5]",
+    "clk_chunk[6]",
+    "clk_chunk[7]"
+   ],
+   "lef_um": [
+    1512.0,
+    1512.0
+   ],
+   "macros": {},
+   "pins": 5757,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static.sv",
+   "std_area_um2": 1366457.04972,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_selector_static_sel": {
+   "base": "ot_hbm_idx_selector_static_sel",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_selector_static_sel/meta.json std_area 22552 um2 / 0.11 um2",
+   "cells": 205021,
+   "clock_pins": [
+    "clk_ctl",
+    "clk_mem[0]",
+    "clk_mem[10]",
+    "clk_mem[11]",
+    "clk_mem[1]",
+    "clk_mem[2]",
+    "clk_mem[3]",
+    "clk_mem[4]"
+   ],
+   "lef_um": [
+    600.048,
+    450.36
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 12
+   },
+   "pins": 4783,
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+   "std_area_um2": 22552.31484,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_topk_link_static": {
+   "base": "ot_hbm_idx_topk_link_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_idx_topk_link_static/meta.json std_area 20895 um2 / 0.11 um2",
+   "cells": 189951,
+   "clock_pins": [
+    "clk",
+    "clk_mem[0]",
+    "clk_mem[1]",
+    "clk_mem[2]",
+    "clk_mem[3]",
+    "clk_mem[4]",
+    "clk_mem[5]",
+    "clk_mem[6]"
+   ],
+   "lef_um": [
+    650.16,
+    500.04
+   ],
+   "macros": {
+    "ot_sram_1r1w_64x512_m1_r2c2": 8
+   },
+   "pins": 4597,
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+   "std_area_um2": 20894.56884,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+   "base": "ot_hbm_idx_vm_query_static_n12",
+   "basis": "CLOSED hidx_op_n12_1018-n12-7bfb8c78c std cells (die 23328 um2)",
+   "cells": 47385,
+   "clock_pins": [],
+   "lef_um": [
+    216.0,
+    108.0
+   ],
+   "macros": {},
+   "pins": 3286,
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+   "std_area_um2": 4191.021,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_idx_vm_share2_static_r": {
+   "base": "ot_hbm_idx_vm_share2_static_r",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_idx_vm_share2_static_r/ot_hbm_idx_vm_share2_static_r.stat",
+   "cells": 4853,
+   "clock_pins": [
+    "clk_pair[0]",
+    "clk_pair[1]",
+    "clk_pair[2]",
+    "clk_pair[3]"
+   ],
+   "lef_um": [
+    131.76,
+    131.76
+   ],
+   "macros": {},
+   "pins": 6582,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "std_area_um2": 830.87046,
+   "view": "SYNTH"
+  },
+  "ot_hbm_idx_xq_node_static__pv0": {
+   "base": "ot_hbm_idx_xq_node_static",
+   "basis": "CLOSED hidx_xq_node_w297-x1-8835479e1 std cells (die 16796.2 um2)",
+   "cells": 5324,
+   "clock_pins": [],
+   "lef_um": [
+    129.6,
+    129.6
+   ],
+   "macros": {},
+   "pins": 1190,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+   "std_area_um2": 503.57862,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_idx_xq_node_static__pv1": {
+   "base": "ot_hbm_idx_xq_node_static",
+   "basis": "CLOSED hidx_xq_node_w594-x1-8835479e1 std cells (die 55987.2 um2)",
+   "cells": 12138,
+   "clock_pins": [],
+   "lef_um": [
+    259.2,
+    216.0
+   ],
+   "macros": {},
+   "pins": 2378,
+   "source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+   "std_area_um2": 1005.88878,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_kqs_fault_or4": {
+   "base": "ot_hbm_kqs_fault_or4",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_kqs_fault_or4/meta.json std_area 0 um2 / 0.11 um2",
+   "cells": 1,
+   "clock_pins": [],
+   "lef_um": [
+    43.2,
+    43.2
+   ],
+   "macros": {},
+   "pins": 5,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_kqs_fault_or4.sv",
+   "std_area_um2": 0.10206,
+   "view": "SYNTH"
+  },
+  "ot_hbm_obs_leaf__pv0": {
+   "base": "ot_hbm_obs_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_obs_leaf__pv0/meta.json std_area 217 um2 / 0.11 um2",
+   "cells": 1976,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 266,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+   "std_area_um2": 217.3149,
+   "view": "SYNTH"
+  },
+  "ot_hbm_obs_leaf__pv1": {
+   "base": "ot_hbm_obs_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_obs_leaf__pv1/meta.json std_area 217 um2 / 0.11 um2",
+   "cells": 1975,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 266,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+   "std_area_um2": 217.27116,
+   "view": "SYNTH"
+  },
+  "ot_hbm_obs_leaf__pv2": {
+   "base": "ot_hbm_obs_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_obs_leaf__pv2/meta.json std_area 243 um2 / 0.11 um2",
+   "cells": 2205,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 292,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+   "std_area_um2": 242.56746,
+   "view": "SYNTH"
+  },
+  "ot_hbm_obs_leaf__pv3": {
+   "base": "ot_hbm_obs_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_obs_leaf__pv3/meta.json std_area 244 um2 / 0.11 um2",
+   "cells": 2214,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 293,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+   "std_area_um2": 243.58806,
+   "view": "SYNTH"
+  },
+  "ot_hbm_obs_leaf__pv4": {
+   "base": "ot_hbm_obs_leaf",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_obs_leaf__pv4/meta.json std_area 128 um2 / 0.11 um2",
+   "cells": 1165,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 179,
+   "source": "rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+   "std_area_um2": 128.09988,
+   "view": "SYNTH"
+  },
+  "ot_hbm_pc_refresh_cfg": {
+   "base": "ot_hbm_pc_refresh_cfg",
+   "basis": "CLOSED hbm_refcfg_q_1022-q1-855b716d0 std cells (die 2687.39 um2)",
+   "cells": 1652,
+   "clock_pins": [],
+   "lef_um": [
+    51.84,
+    51.84
+   ],
+   "macros": {},
+   "pins": 421,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+   "std_area_um2": 134.63172,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_router_ids_static": {
+   "base": "ot_hbm_router_ids_static",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_router_ids_static/meta.json std_area 233 um2 / 0.11 um2",
+   "cells": 2117,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.816,
+    22.68
+   ],
+   "macros": {},
+   "pins": 588,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_router_ids_static.sv",
+   "std_area_um2": 232.88634,
+   "view": "SYNTH"
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+   "base": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "basis": "CLOSED hsm_smvm_wrq_t4_r1-q4-bf8dd74e8 std cells (die 55427.3 um2)",
+   "cells": 48877,
+   "clock_pins": [],
+   "lef_um": [
+    142.56,
+    388.8
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+   },
+   "pins": 3673,
+   "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes4.sv",
+   "std_area_um2": 3219.67224,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_static_cfg_collar__pv0": {
+   "base": "ot_hbm_static_cfg_collar",
+   "basis": "CLOSED hdie_col_su_r1-r3-7a1d8a612 std cells (die 2687.39 um2)",
+   "cells": 7233,
+   "clock_pins": [],
+   "lef_um": [
+    51.84,
+    51.84
+   ],
+   "macros": {},
+   "pins": 1048,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "std_area_um2": 412.14744,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_static_cfg_collar__pv1": {
+   "base": "ot_hbm_static_cfg_collar",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/codex-hbmc-r18h5-2140-1022/chainsM/syn/ot_hbm_static_cfg_collar__pv1/ot_hbm_static_cfg_collar__pv1.stat",
+   "cells": 4739,
+   "clock_pins": [
+    "clk",
+    "clk_in"
+   ],
+   "lef_um": [
+    52.056,
+    52.92
+   ],
+   "macros": {},
+   "pins": 1056,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+   "std_area_um2": 678.14496,
+   "view": "SYNTH"
+  },
+  "ot_hbm_static_cfg_collar_idx256r": {
+   "base": "ot_hbm_static_cfg_collar_idx256r",
+   "basis": "CLOSED hdie_col_idx256r_b-rb1-a22fe0816 std cells (die 11664 um2)",
+   "cells": 24339,
+   "clock_pins": [],
+   "lef_um": [
+    108.0,
+    108.0
+   ],
+   "macros": {},
+   "pins": 1559,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv",
+   "std_area_um2": 2273.26986,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_status_join_fa": {
+   "base": "ot_hbm_status_join_fa",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_status_join_fa/meta.json std_area 200 um2 / 0.11 um2",
+   "cells": 1815,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 335,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+   "std_area_um2": 199.68768,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_bridge_release_s": {
+   "base": "ot_hbm_su_bridge_release_s",
+   "basis": "CLOSED hbm_su_bridge_release_1018-r2-1ed83738e std cells (die 167.962 um2)",
+   "cells": 55,
+   "clock_pins": [],
+   "lef_um": [
+    12.96,
+    12.96
+   ],
+   "macros": {},
+   "pins": 5,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv",
+   "std_area_um2": 4.41774,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "base": "ot_hbm_su_programme_pslice_c5",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_programme_pslice_c5/ot_hbm_su_programme_pslice_c5.stat",
+   "cells": 78181,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    939.6,
+    760.32
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 100
+   },
+   "pins": 2789,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+   "std_area_um2": 9757.31508,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_programme_root_h5": {
+   "base": "ot_hbm_su_programme_root_h5",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_programme_root_h5/meta.json std_area 131 um2 / 0.11 um2",
+   "cells": 1190,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    86.4,
+    86.4
+   ],
+   "macros": {},
+   "pins": 652,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
+   "std_area_um2": 130.89924,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_q": {
+   "base": "ot_hbm_su_static_cxport_dl_q",
+   "basis": "CLOSED hbm_su_cx_dlq_1018-x1-68deb77b7 std cells (die 23328 um2)",
+   "cells": 12066,
+   "clock_pins": [],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 2112,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 499.11714,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv0": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv0/ot_hbm_su_static_cxport_dl_s__pv0.stat",
+   "cells": 4238,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.04038,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv1": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv1/ot_hbm_su_static_cxport_dl_s__pv1.stat",
+   "cells": 4239,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.04038,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv10": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv10/ot_hbm_su_static_cxport_dl_s__pv10.stat",
+   "cells": 4239,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.11328,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv11": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv11/ot_hbm_su_static_cxport_dl_s__pv11.stat",
+   "cells": 4240,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv12": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv12/ot_hbm_su_static_cxport_dl_s__pv12.stat",
+   "cells": 4240,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv13": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv13/ot_hbm_su_static_cxport_dl_s__pv13.stat",
+   "cells": 4240,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv14": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv14/ot_hbm_su_static_cxport_dl_s__pv14.stat",
+   "cells": 4240,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv15": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/claude-hbm-r17-full-1021/chainrM-s2/syn/ot_hbm_su_static_cxport_dl_s__pv15/ot_hbm_su_static_cxport_dl_s__pv15.stat",
+   "cells": 4241,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.12786,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv2": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "CLOSED hbm_su_cx_dls_1018-x1-434efd622 std cells (die 23328 um2)",
+   "cells": 7125,
+   "clock_pins": [],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.04038,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv3": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv3/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4773,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv4": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv4/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4773,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.04038,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv5": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv5/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4774,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.11328,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv6": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv6/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4774,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.11328,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv7": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv7/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4773,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.08412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv8": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv8/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4773,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.04038,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_dl_s__pv9": {
+   "base": "ot_hbm_su_static_cxport_dl_s",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_cxport_dl_s__pv9/meta.json std_area 525 um2 / 0.11 um2",
+   "cells": 4774,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 1653,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 525.11328,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+   "base": "ot_hbm_su_static_cxport_ij_q",
+   "basis": "CLOSED hbm_su_cx_ijq_1019t-t1-5a6486280 std cells (die 83980.8 um2)",
+   "cells": 39043,
+   "clock_pins": [],
+   "lef_um": [
+    216.0,
+    388.8
+   ],
+   "macros": {},
+   "pins": 6213,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_cxport_ij_s__pv0": {
+   "base": "ot_hbm_su_static_cxport_ij_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_cxport_ij_s__pv0/ot_hbm_su_static_cxport_ij_s__pv0.stat",
+   "cells": 5180,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    388.8
+   ],
+   "macros": {},
+   "pins": 3302,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 569.48022,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_ij_s__pv1": {
+   "base": "ot_hbm_su_static_cxport_ij_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_cxport_ij_s__pv1/ot_hbm_su_static_cxport_ij_s__pv1.stat",
+   "cells": 5184,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    388.8
+   ],
+   "macros": {},
+   "pins": 3302,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 569.74266,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_ij_s__pv2": {
+   "base": "ot_hbm_su_static_cxport_ij_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_cxport_ij_s__pv2/ot_hbm_su_static_cxport_ij_s__pv2.stat",
+   "cells": 5184,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    388.8
+   ],
+   "macros": {},
+   "pins": 3302,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 569.74266,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_ij_s__pv3": {
+   "base": "ot_hbm_su_static_cxport_ij_s",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_cxport_ij_s__pv3/ot_hbm_su_static_cxport_ij_s__pv3.stat",
+   "cells": 5184,
+   "clock_pins": [
+    "clk_s"
+   ],
+   "lef_um": [
+    108.0,
+    388.8
+   ],
+   "macros": {},
+   "pins": 3302,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 569.74266,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_cxport_rc_q": {
+   "base": "ot_hbm_su_static_cxport_rc_q",
+   "basis": "CLOSED hbm_su_cx_rcq_1018-x1-1bfbf1c90 std cells (die 74649.6 um2)",
+   "cells": 11730,
+   "clock_pins": [],
+   "lef_um": [
+    172.8,
+    432.0
+   ],
+   "macros": {},
+   "pins": 2490,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 867.97656,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_cxport_rc_s": {
+   "base": "ot_hbm_su_static_cxport_rc_s",
+   "basis": "CLOSED hbm_su_cx_rcs_1018-x1-7c296a9ce std cells (die 74649.6 um2)",
+   "cells": 17220,
+   "clock_pins": [],
+   "lef_um": [
+    172.8,
+    432.0
+   ],
+   "macros": {},
+   "pins": 3166,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+   "std_area_um2": 1029.30426,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv0": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+   "cells": 5299387,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 583188.93378,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv1": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv1/ot_hbm_su_static_pgslice_lg__pv1.stat",
+   "cells": 4864062,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534571.1802,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv10": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv10/ot_hbm_su_static_pgslice_lg__pv10.stat",
+   "cells": 2744842,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287691.51024,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv11": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv11/ot_hbm_su_static_pgslice_lg__pv11.stat",
+   "cells": 2744937,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287694.68868,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv12": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv12/ot_hbm_su_static_pgslice_lg__pv12.stat",
+   "cells": 2745404,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287721.92412,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv13": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv13/ot_hbm_su_static_pgslice_lg__pv13.stat",
+   "cells": 2745038,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287692.61832,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv14": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv14/ot_hbm_su_static_pgslice_lg__pv14.stat",
+   "cells": 2744911,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287690.46048,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv15": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv15/ot_hbm_su_static_pgslice_lg__pv15.stat",
+   "cells": 2745167,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287694.71784,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv2": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv2/ot_hbm_su_static_pgslice_lg__pv2.stat",
+   "cells": 4863872,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534566.3688,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv3": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv3/ot_hbm_su_static_pgslice_lg__pv3.stat",
+   "cells": 4863887,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534566.79162,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv4": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv4/ot_hbm_su_static_pgslice_lg__pv4.stat",
+   "cells": 4864220,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534566.71872,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv5": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv5/ot_hbm_su_static_pgslice_lg__pv5.stat",
+   "cells": 4864261,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534577.36212,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv6": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv6/ot_hbm_su_static_pgslice_lg__pv6.stat",
+   "cells": 4864062,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534576.18114,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv7": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_pgslice_lg__pv7/meta.json std_area 534574 um2 / 0.11 um2",
+   "cells": 4859759,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 534573.52758,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv8": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv8/ot_hbm_su_static_pgslice_lg__pv8.stat",
+   "cells": 2745321,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287715.49434,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_pgslice_lg__pv9": {
+   "base": "ot_hbm_su_static_pgslice_lg",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_su_static_pgslice_lg__pv9/meta.json std_area 287692 um2 / 0.11 um2",
+   "cells": 2615377,
+   "clock_pins": [
+    "clk_bank[0]",
+    "clk_bank[10]",
+    "clk_bank[11]",
+    "clk_bank[12]",
+    "clk_bank[13]",
+    "clk_bank[14]",
+    "clk_bank[15]",
+    "clk_bank[16]"
+   ],
+   "lef_um": [
+    1797.12,
+    2825.28
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 192
+   },
+   "pins": 7541,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+   "std_area_um2": 287691.51024,
+   "view": "SYNTH"
+  },
+  "ot_hbm_su_static_qcore_r13": {
+   "base": "ot_hbm_su_static_qcore_r13",
+   "basis": "CLOSED hbm_su_qcore_r19b_1022-r19b-042177969 std cells (die 84913.9 um2)",
+   "cells": 168514,
+   "clock_pins": [],
+   "lef_um": [
+    302.4,
+    280.8
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+   },
+   "pins": 1473,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+   "std_area_um2": 15519.76848,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "base": "ot_hbm_su_static_sfustore_hw",
+   "basis": "CLOSED hbm_su_sfustore_hw_1018-r3-9767724e6 std cells (die 155271 um2)",
+   "cells": 18572,
+   "clock_pins": [],
+   "lef_um": [
+    561.6,
+    276.48
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 16
+   },
+   "pins": 1829,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw.sv",
+   "std_area_um2": 1314.28494,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_stree_leaf": {
+   "base": "ot_hbm_su_stree_leaf",
+   "basis": "CLOSED hbm_su_stree_leaf_1017-t1-81eb10546 std cells (die 1866.24 um2)",
+   "cells": 861,
+   "clock_pins": [],
+   "lef_um": [
+    43.2,
+    43.2
+   ],
+   "macros": {},
+   "pins": 412,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+   "std_area_um2": 70.02774,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_su_stree_root": {
+   "base": "ot_hbm_su_stree_root",
+   "basis": "CLOSED hbm_su_stree_root_1017-t1-81eb10546 std cells (die 1866.24 um2)",
+   "cells": 2575,
+   "clock_pins": [],
+   "lef_um": [
+    43.2,
+    43.2
+   ],
+   "macros": {},
+   "pins": 822,
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+   "std_area_um2": 111.537,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "base": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "basis": "CLOSED hdie_pc_ctrl_cfg_h9b-h9b-pinflop-ring-7c8e3dc3c std cells (largest closed run; outline differs from the r18h5 view)",
+   "cells": 63509,
+   "clock_pins": [],
+   "lef_um": [
+    155.52,
+    155.52
+   ],
+   "macros": {},
+   "pins": 1229,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_svc_sm_group_rel_id": {
+   "base": "ot_hbm_svc_sm_group_rel_id",
+   "basis": "YOSYS /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_group_rel_id/ot_hbm_svc_sm_group_rel_id.stat",
+   "cells": 220378,
+   "clock_pins": [
+    "hbm_clk",
+    "hbm_fifo_clk[0]",
+    "hbm_fifo_clk[1]",
+    "hbm_pc_clk[0]",
+    "hbm_pc_clk[1]",
+    "hbm_pc_clk[2]",
+    "hbm_pc_clk[3]",
+    "stream_bank_clk[0]"
+   ],
+   "lef_um": [
+    776.304,
+    646.92
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+    "ot_sram_1r1w_128x256_m1_r2c2": 7,
+    "ot_sram_1r1w_256x256_m2_r2c2": 8
+   },
+   "pins": 7688,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+   "std_area_um2": 26729.33904,
+   "view": "SYNTH"
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+   "base": "ot_hbm_svc_sm_xcal_rel_t",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_sm_xcal_rel_t/meta.json std_area 1140 um2 / 0.11 um2",
+   "cells": 10366,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    209.952,
+    210.6
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+   },
+   "pins": 507,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "std_area_um2": 1140.28722,
+   "view": "SYNTH"
+  },
+  "ot_hbm_svc_stack_fault": {
+   "base": "ot_hbm_svc_stack_fault",
+   "basis": "CLOSED hdie_svc_stack_fault-hkb-sf-5f7d151bc std cells (die 466.56 um2)",
+   "cells": 1188,
+   "clock_pins": [],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 157,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv",
+   "std_area_um2": 125.70876,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap": {
+   "base": "ot_hbm_svc_vm_kshare_splitstrap",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_vm_kshare_splitstrap/meta.json std_area 12730 um2 / 0.11 um2",
+   "cells": 115723,
+   "clock_pins": [
+    "hbm_clk",
+    "stream_clk"
+   ],
+   "lef_um": [
+    146.88,
+    146.88
+   ],
+   "macros": {},
+   "pins": 7343,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "std_area_um2": 12729.5064,
+   "view": "SYNTH"
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "base": "ot_hbm_svc_vmdel_lane_n",
+   "basis": "CLOSED hv18_vmdel_lane2-q2-f966c98c9 std cells (die 27760.3 um2)",
+   "cells": 9991,
+   "clock_pins": [],
+   "lef_um": [
+    257.04,
+    108.0
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2
+   },
+   "pins": 929,
+   "source": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+   "std_area_um2": 566.3601,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "base": "ot_hbm_svc_wb_kport_q",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hbm_svc_wb_kport_q/meta.json std_area 35368 um2 / 0.11 um2",
+   "cells": 321528,
+   "clock_pins": [
+    "hbm_clk",
+    "stream_clk",
+    "stream_fifo_clk[0]",
+    "stream_fifo_clk[1]",
+    "stream_fifo_clk[2]",
+    "stream_fifo_clk[3]"
+   ],
+   "lef_um": [
+    475.2,
+    475.2
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+   },
+   "pins": 7084,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv",
+   "std_area_um2": 35368.03278,
+   "view": "SYNTH"
+  },
+  "ot_hbm_svc_wbw_copy": {
+   "base": "ot_hbm_svc_wbw_copy",
+   "basis": "CLOSED hdie_svc_wbw_copy-hbmasvc-wbwc-9a071ce97 std cells (die 466.56 um2)",
+   "cells": 777,
+   "clock_pins": [],
+   "lef_um": [
+    21.6,
+    21.6
+   ],
+   "macros": {},
+   "pins": 217,
+   "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "std_area_um2": 29.0142,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+   "base": "ot_hbm_xp_aq_tree13_fmt",
+   "basis": "CLOSED hxp_aq13_fmt-f1-2680d87a9 std cells (die 19828.8 um2)",
+   "cells": 81491,
+   "clock_pins": [],
+   "lef_um": [
+    183.6,
+    108.0
+   ],
+   "macros": {},
+   "pins": 1807,
+   "source": "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+   "std_area_um2": 6343.74342,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hfd_coll_q2_hard_v8g": {
+   "base": "ot_hfd_coll_q2_hard_v8g",
+   "basis": "YOSYS ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "cells": 465018,
+   "clock_pins": [
+    "clk_control",
+    "clk_issue",
+    "clk_link[0]",
+    "clk_link[1]",
+    "clk_link[2]",
+    "clk_link[3]",
+    "clk_link[4]",
+    "clk_program"
+   ],
+   "lef_um": [
+    479.52,
+    479.52
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 6,
+    "ot_sram_1r1w_64x512_m1_r2c2": 4,
+    "ot_sram_1rw_256x64_m4_r2c2": 5
+   },
+   "pins": 12538,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+   "std_area_um2": 58516.50924,
+   "view": "SYNTH"
+  },
+  "ot_hgi_coll_gq_issue": {
+   "base": "ot_hgi_coll_gq_issue",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_gq_issue/meta.json std_area 17934 um2 / 0.11 um2",
+   "cells": 163041,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    237.6,
+    237.6
+   ],
+   "macros": {},
+   "pins": 4032,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "std_area_um2": 17934.46434,
+   "view": "SYNTH"
+  },
+  "ot_hgi_coll_gq_land": {
+   "base": "ot_hgi_coll_gq_land",
+   "basis": "CLOSED hcoll_gq_land_1018-n1-537e21701 std cells (die 56453.8 um2)",
+   "cells": 49024,
+   "clock_pins": [],
+   "lef_um": [
+    237.6,
+    237.6
+   ],
+   "macros": {},
+   "pins": 3880,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "std_area_um2": 3315.8565,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_coll_inj_copy": {
+   "base": "ot_hgi_coll_inj_copy",
+   "basis": "CLOSED hcoll_injcopy-ic1-cc77f11e3 std cells (die 1194.39 um2)",
+   "cells": 1376,
+   "clock_pins": [],
+   "lef_um": [
+    34.56,
+    34.56
+   ],
+   "macros": {},
+   "pins": 326,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+   "std_area_um2": 54.50004,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_coll_inj_idx_join_rg": {
+   "base": "ot_hgi_coll_inj_idx_join_rg",
+   "basis": "CLOSED hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 std cells (die 93312 um2)",
+   "cells": 74964,
+   "clock_pins": [],
+   "lef_um": [
+    216.0,
+    432.0
+   ],
+   "macros": {},
+   "pins": 4761,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+   "std_area_um2": 6039.29844,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_coll_kq_share2_leaf": {
+   "base": "ot_hgi_coll_kq_share2_leaf",
+   "basis": "CLOSED hcoll_kqs_leaf_1018-k1-7ff7a9f0d std cells (die 16796.2 um2)",
+   "cells": 5380,
+   "clock_pins": [],
+   "lef_um": [
+    129.6,
+    129.6
+   ],
+   "macros": {},
+   "pins": 1689,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_coll_ring_b_stop": {
+   "base": "ot_hgi_coll_ring_b_stop",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_ring_b_stop/meta.json std_area 1936 um2 / 0.11 um2",
+   "cells": 17601,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    129.6,
+    129.6
+   ],
+   "macros": {},
+   "pins": 1940,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "std_area_um2": 1936.1511,
+   "view": "SYNTH"
+  },
+  "ot_hgi_coll_tkm_m_tp192": {
+   "base": "ot_hgi_coll_tkm_m_tp192",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_coll_tkm_m_tp192/meta.json std_area 727594 um2 / 0.11 um2",
+   "cells": 6614494,
+   "clock_pins": [
+    "buffer_clk",
+    "clk",
+    "tile_clk[0]",
+    "tile_clk[10]",
+    "tile_clk[11]",
+    "tile_clk[12]",
+    "tile_clk[13]",
+    "tile_clk[14]"
+   ],
+   "lef_um": [
+    2000.16,
+    2120.04
+   ],
+   "macros": {
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2
+   },
+   "pins": 2980,
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "std_area_um2": 727594.38594,
+   "view": "SYNTH"
+  },
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "base": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_dma_back_static_vp4_banks_cp/meta.json std_area 4165 um2 / 0.11 um2",
+   "cells": 37867,
+   "clock_pins": [
+    "clk",
+    "clk_bank[0]",
+    "clk_bank[1]",
+    "clk_bank[2]",
+    "clk_bank[3]",
+    "clk_bank[4]",
+    "clk_bank[5]",
+    "clk_bank[6]"
+   ],
+   "lef_um": [
+    239.976,
+    240.84
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 10
+   },
+   "pins": 4947,
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "std_area_um2": 4165.33104,
+   "view": "SYNTH"
+  },
+  "ot_hgi_qdq_lg_port_group_r2": {
+   "base": "ot_hgi_qdq_lg_port_group_r2",
+   "basis": "CLOSED hgi_qdq_lg_r2-lgr2-COMMIT-b3a4b688e std cells (die 12597.1 um2)",
+   "cells": 13219,
+   "clock_pins": [],
+   "lef_um": [
+    64.8,
+    194.4
+   ],
+   "macros": {},
+   "pins": 2222,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_qdq_nw_program_leaf": {
+   "base": "ot_hgi_qdq_nw_program_leaf",
+   "basis": "CLOSED hgi_qdq_program_nw48_r1-nw48r1-f9b815a34 std cells (die 28553.5 um2)",
+   "cells": 19101,
+   "clock_pins": [],
+   "lef_um": [
+    220.32,
+    129.6
+   ],
+   "macros": {},
+   "pins": 407,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_qdq_transport_ctl_r4": {
+   "base": "ot_hgi_qdq_transport_ctl_r4",
+   "basis": "CLOSED hgi_qdq_tsplit_ctl_r4s-ctlr4s-dbf0a4db8 std cells (die 13996.8 um2)",
+   "cells": 6950,
+   "clock_pins": [],
+   "lef_um": [
+    108.0,
+    129.6
+   ],
+   "macros": {},
+   "pins": 548,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_qdq_transport_rslice": {
+   "base": "ot_hgi_qdq_transport_rslice",
+   "basis": "CLOSED hgi_qdq_tsplit_rslice-hgiqdqtsplitrslice-01dba637f std cells (die 11197.4 um2)",
+   "cells": 8190,
+   "clock_pins": [],
+   "lef_um": [
+    129.6,
+    86.4
+   ],
+   "macros": {},
+   "pins": 772,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_qdq_transport_wslice": {
+   "base": "ot_hgi_qdq_transport_wslice",
+   "basis": "CLOSED hgi_qdq_tsplit_wslice-hgiqdqtsplitwslice-01dba637f std cells (die 3732.48 um2)",
+   "cells": 4257,
+   "clock_pins": [],
+   "lef_um": [
+    86.4,
+    43.2
+   ],
+   "macros": {},
+   "pins": 388,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_qw_dec": {
+   "base": "ot_hgi_qw_dec",
+   "basis": "CLOSED hgi_qw_dec_s260-ac62227e1-tc-cl std cells (die 67600 um2)",
+   "cells": 160001,
+   "clock_pins": [],
+   "lef_um": [
+    260.0,
+    260.0
+   ],
+   "macros": {},
+   "pins": 1670,
+   "source": "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sfu_core_split3": {
+   "base": "ot_hgi_sfu_core_split3",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_core_split3/meta.json std_area 629035 um2 / 0.11 um2",
+   "cells": 5718505,
+   "clock_pins": [
+    "clk",
+    "clk_lane[0]",
+    "clk_lane[10]",
+    "clk_lane[11]",
+    "clk_lane[12]",
+    "clk_lane[13]",
+    "clk_lane[14]",
+    "clk_lane[15]"
+   ],
+   "lef_um": [
+    1598.4,
+    1771.2
+   ],
+   "macros": {
+    "ot_sram_1r1w_256x256_m2_r2c2": 80
+   },
+   "pins": 9090,
+   "source": "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv",
+   "std_area_um2": 629035.49592,
+   "view": "SYNTH"
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf": {
+   "base": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "basis": "CLOSED hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 std cells (die 46656 um2)",
+   "cells": 18785,
+   "clock_pins": [],
+   "lef_um": [
+    216.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 3343,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "std_area_um2": 1400.0445,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+   "base": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "basis": "CLOSED hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-72af5d8b1 std cells (die 46656 um2)",
+   "cells": 13345,
+   "clock_pins": [],
+   "lef_um": [
+    216.0,
+    216.0
+   ],
+   "macros": {},
+   "pins": 2231,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+   "std_area_um2": 1152.35946,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sfu_programme_store_r10": {
+   "base": "ot_hgi_sfu_programme_store_r10",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_hgi_sfu_programme_store_r10/meta.json std_area 8765 um2 / 0.11 um2",
+   "cells": 79683,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    1080.0,
+    950.4
+   ],
+   "macros": {
+    "ot_sram_1r1w_512x256_m1_r2c2": 44
+   },
+   "pins": 2904,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+   "std_area_um2": 8765.1315,
+   "view": "SYNTH"
+  },
+  "ot_hgi_sm_xload_cl2_bdring": {
+   "base": "ot_hgi_sm_xload_cl2_bdring",
+   "basis": "CLOSED hgi_sm_xl2_bdring-cl2f-9c846fd17 std cells (die 26127.4 um2)",
+   "cells": 85191,
+   "clock_pins": [],
+   "lef_um": [
+    86.4,
+    302.4
+   ],
+   "macros": {},
+   "pins": 2689,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "std_area_um2": 6831.72144,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "base": "ot_hgi_sm_xload_cl2_bfqg",
+   "basis": "CLOSED hgi_sm_xl2_bfqg-local1r-a327f9402 std cells (die 90139.4 um2)",
+   "cells": 20345,
+   "clock_pins": [],
+   "lef_um": [
+    302.4,
+    298.08
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 8
+   },
+   "pins": 1340,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+   "std_area_um2": 1462.4469,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "base": "ot_hgi_sm_xload_cl2_ctlx",
+   "basis": "CLOSED hgi_sm_xl2_ctlx_bl-b1-f3b542177 std cells (die 151165 um2)",
+   "cells": 89302,
+   "clock_pins": [],
+   "lef_um": [
+    388.8,
+    388.8
+   ],
+   "macros": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+   },
+   "pins": 5782,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "std_area_um2": 7890.49188,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_hgi_sm_xload_xq_pegress": {
+   "base": "ot_hgi_sm_xload_xq_pegress",
+   "basis": "CLOSED hgi_sm_xq_pegress-x3-d67bfd40c std cells (die 136427 um2)",
+   "cells": 56602,
+   "clock_pins": [],
+   "lef_um": [
+    369.36,
+    369.36
+   ],
+   "macros": {},
+   "pins": 5184,
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "std_area_um2": 3099.59136,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_pdie_serdes": {
+   "base": "ot_pdie_serdes",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_pdie_serdes/meta.json std_area 43376 um2 / 0.11 um2",
+   "cells": 394328,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    600.048,
+    600.48
+   ],
+   "macros": {
+    "ot_sram_1r1w2c_64x546_m1": 1,
+    "ot_sram_1r1w_32x546_m1": 1
+   },
+   "pins": 2118,
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "std_area_um2": 43376.03946,
+   "view": "SYNTH"
+  },
+  "ot_pdie_ucie_col": {
+   "base": "ot_pdie_ucie_col",
+   "basis": "CLOSED hbm_pdie_ucie_colk-ucie7k-3e3ded5d0 std cells (die 403108 um2)",
+   "cells": 10333,
+   "clock_pins": [],
+   "lef_um": [
+    259.2,
+    1555.2
+   ],
+   "macros": {},
+   "pins": 2059,
+   "source": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
+   "std_area_um2": null,
+   "view": "ROUTED_UNBOUND"
+  },
+  "ot_static_run_target": {
+   "base": "ot_static_run_target",
+   "basis": "SYNAREA EST r18h5 views/synth/ot_static_run_target/meta.json std_area 388 um2 / 0.11 um2",
+   "cells": 3523,
+   "clock_pins": [
+    "clk"
+   ],
+   "lef_um": [
+    51.84,
+    51.84
+   ],
+   "macros": {},
+   "pins": 895,
+   "source": "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "std_area_um2": 387.55098,
+   "view": "SYNTH"
+  },
+  "ot_vms_status4_static": {
+   "base": "ot_vms_status4_static",
+   "basis": "CLOSED hv15_vm_status4_margin1-takeover-67e4e876b std cells (die 335.923 um2)",
+   "cells": 860,
+   "clock_pins": [],
+   "lef_um": [
+    17.28,
+    19.44
+   ],
+   "macros": {},
+   "pins": 97,
+   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+   "std_area_um2": 64.60398,
+   "view": "ROUTED_UNBOUND"
+  }
+ },
+ "splits": {
+  "ot_hbm_hc_root_static": {
+   "glue": 95748,
+   "note": "2 x ot_hbm_hc_tail_unit_static 673k (each OVER the cap: the 10-23 L1 study lists hbm_hc_tail_child 0.63-0.68M as never closed) -> each tail must split again (RTL: tail stage halves) ",
+   "parts": [
+    [
+     "hc_tail",
+     2,
+     673210
+    ],
+    [
+     "hcp_sys1",
+     1,
+     56692
+    ]
+   ],
+   "stat": "ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_root_static/ot_hbm_hc_root_static.stat",
+   "total": 1514498
+  },
+  "ot_hbm_su_static_pgslice_lg__exp": {
+   "glue": 36980,
+   "note": "pv0..pv7 (SU0/SU1): 32 lanes (16 with v41x exp, 16 plain) + side (softplus 223k, rsqrt 81k, exp 79k) + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256 = 192/32), so the macros sit inside the lane cores; top-level glue 37k flattened in the partition",
+   "parts": [
+    [
+     "lane_exp",
+     15,
+     209541
+    ],
+    [
+     "lane_exp_l",
+     1,
+     234742
+    ],
+    [
+     "lane",
+     16,
+     77120
+    ],
+    [
+     "side",
+     1,
+     412786
+    ],
+    [
+     "pretree",
+     1,
+     211003
+    ]
+   ],
+   "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+   "total": 5299195
+  },
+  "ot_hbm_su_static_pgslice_lg__plain": {
+   "glue": 37126,
+   "note": "pv8..pv15 (SU2/SU3): 32 plain lanes + reduction pretree; each lane core carries its pinned VM bank (3,366 cells + 6 SRAM 128x256); top-level glue 37k flattened",
+   "parts": [
+    [
+     "lane",
+     32,
+     77158
+    ],
+    [
+     "pretree",
+     1,
+     212295
+    ]
+   ],
+   "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv8/ot_hbm_su_static_pgslice_lg__pv8.stat",
+   "total": 2745129
+  },
+  "ot_hfd_coll_q2_hard_v8g": {
+   "glue": 0,
+   "note": "body 445 + ring_ag 122k + reduce_static 121k + 17 qso + rest",
+   "parts": [
+    [
+     "ring_ag",
+     1,
+     121663
+    ],
+    [
+     "reduce",
+     1,
+     120719
+    ],
+    [
+     "body",
+     1,
+     222636
+    ]
+   ],
+   "stat": "ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chainB/repair01/syn/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_hard_v8g.stat",
+   "total": 465018
+  }
+ }
+}

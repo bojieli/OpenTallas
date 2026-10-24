@@ -20,6 +20,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  r8          COORD R8 bus-coherent latency on BINDER2's as-built bus groups (--groups bus_groups.json, else
+              PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
+              as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
+              table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -158,10 +162,25 @@ def check_abutment(P, R):
     smax = lnum(P.layer_budget["partition_signal_max"])
     for pid, pr in P.ports.items():
         f = pr["face"]
+        # per-face layer sets (COORD 10-23): a type may list face_layers[type face]; then every pin layer on that
+        # face must be in the set, and a layer above partition_signal_max (M8 on S81 svc fold / rail faces) is
+        # allowed only when EVERY partition end lists it for its face
+        pend = []
+        if pr["src"]["part"] != DIE_PART:
+            pend.append((pr["src"]["part"], f))
+        if pr["dst"]["part"] != DIE_PART:
+            pend.append((pr["dst"]["part"], OPP[f] if pr["src"]["part"] != DIE_PART else f))
+        fl = [(pt, P.type_face(pt, df), P.ptype(pt).get("face_layers", {}).get(P.type_face(pt, df)))
+              for pt, df in pend]
         for ln in pr["layers"]:
-            if ln in P.layers and lnum(ln) > smax:
+            for pt, tf, allowed in fl:
+                if allowed is not None and ln not in allowed:
+                    R.err("layers", f"port {pid}: pin layer {ln} not in {pt}'s face_layers[{tf}] {allowed}",
+                          port=pid)
+            if ln in P.layers and lnum(ln) > smax and not (fl and all(a and ln in a for _, _, a in fl)):
                 R.err("layers", f"port {pid}: pin layer {ln} above partition_signal_max "
-                      f"{P.layer_budget['partition_signal_max']}", port=pid)
+                      f"{P.layer_budget['partition_signal_max']} (allowed only via the type's face_layers)",
+                      port=pid)
         try:
             pins = P.port_pins(pid)
         except (ValueError, KeyError) as e:
@@ -225,6 +244,33 @@ def check_abutment(P, R):
                 tab[(e["bus"], bit)] = (ln, tf, round(tc, 4))
             for bit, ln, c in pins:
                 face_pins[(part, df)].append((c, ln, pid))
+    # spare slots (COORD 10-23): reserved type-face windows with NO pins
+    for tn, t in P.types.items():
+        sp = t.get("spare_slots", [])
+        if not sp:
+            continue
+        w, h = t["outline_um"]
+        for s_ in sp:
+            lo, hi = sorted(s_["window_um"])
+            ext = h if s_["face"] in "EW" else w
+            if lo < -EPS or hi > ext + EPS:
+                R.err("abutment", f"type {tn} spare slot {s_['name']}: window [{lo:g},{hi:g}] outside face "
+                      f"{s_['face']} [0,{ext:g}]", type=tn)
+            for fs in t.get("ft_slots", []):
+                for fk, wk in (("in_face", "in_window_um"), ("out_face", "out_window_um")):
+                    if fs.get(fk) == s_["face"] and fs.get(wk):
+                        a, b = sorted(fs[wk])
+                        if a < hi and lo < b and set(fs.get("layers") or s_["layers"]) & set(s_["layers"]):
+                            R.err("abutment", f"type {tn} spare slot {s_['name']} overlaps ft slot {fs['name']} "
+                                  f"{wk} [{a:g},{b:g}]", type=tn)
+        for part, tab in type_tables.get(tn, {}).items():
+            for (bus, bit), (ln, tf, tc) in tab.items():
+                for s_ in sp:
+                    lo, hi = sorted(s_["window_um"])
+                    if s_["face"] == tf and ln in s_["layers"] and lo - EPS <= tc <= hi + EPS:
+                        R.err("abutment", f"{part}.{bus}[{bit}] {ln} at type {tf} {tc:g} lies in spare slot "
+                              f"{s_['name']} [{lo:g},{hi:g}] (a spare slot carries no pins)", part=part)
+                        break
     # overlapping ports on one face + layer
     for (part, df), pins in face_pins.items():
         by = defaultdict(list)
@@ -259,9 +305,13 @@ def check_faces(P, R, face_pins):
     # allowance of 2 pins per pin layer, so a window spread at exactly the budget passes (PLAN-HBM 10-23):
     # 1 pin for whole-track quantisation;
     # 1 pin for pins pushed out of the partition PG bands (schema.spread, coordinate-uniform, nearest usable track).
-    lim = B["face_pins_per_um"] * win + 2 * B["face_pin_layers"]
     worst = []
     for (part, df), pins in face_pins.items():
+        # a type face whose face_layers lists n > face_pin_layers layers (S81 svc fold: M7/M5 + M8 from the die
+        # budget, COORD 10-23 07:43) gets the per-layer budget on each layer: face_pins_per_um * n / face_pin_layers
+        fl = P.ptype(part).get("face_layers", {}).get(P.type_face(part, df))
+        nl = max(B["face_pin_layers"], len(fl) if fl else 0)
+        lim = B["face_pins_per_um"] * nl / B["face_pin_layers"] * win + 2 * nl
         cs = sorted(c for c, _, _ in pins)
         mx, at = 0, None
         for i, c in enumerate(cs):
@@ -274,14 +324,19 @@ def check_faces(P, R, face_pins):
                   f"({mx / win:.2f}/um > {B['face_pins_per_um']:g})", part=part)
     for pid, pr in P.ports.items():
         if len(pr["layers"]) > B["face_pin_layers"]:
-            R.err("faces", f"port {pid}: {len(pr['layers'])} pin layers > {B['face_pin_layers']}", port=pid)
+            ends = [(pr[k]["part"], pr["face"] if k == "src" else OPP[pr["face"]]) for k in ("src", "dst")
+                    if pr[k]["part"] != DIE_PART]
+            if not ends or not all(set(pr["layers"]) <= set(P.ptype(pt).get("face_layers", {}).get(
+                    P.type_face(pt, df), [])) for pt, df in ends):
+                R.err("faces", f"port {pid}: {len(pr['layers'])} pin layers > {B['face_pin_layers']} "
+                      "(more only on a face_layers face listed by both ends)", port=pid)
         lo, hi = sorted(pr["window_um"])
         nl = len(pr["layers"])
         for li, ln in enumerate(pr["layers"]):
             if ln not in P.layers:
                 continue
             nb = len(range(li, S.port_pins_count(pr), nl))
-            tr = max(1, int((hi - lo) / P.layers[ln]["pitch_um"]) + 1)
+            tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
             if nb / tr > B["pin_track_max"] + EPS:
                 R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > {B['pin_track_max']}",
                       port=pid)
@@ -290,10 +345,14 @@ def check_faces(P, R, face_pins):
 
 
 # ---------------------------------------------------------------------------------------------- lane routes
-def zroute(a, b, face_in):
-    """rectilinear route from a to b inside a partition entered on face_in: Z through the midpoint."""
+def zroute(a, b, face_in, face_out=None):
+    """rectilinear route from a to b inside a partition entered on face_in: an L for a turning slot (out face
+    perpendicular to the in face: along the in face's normal, then along the out face's normal), else a Z through the
+    midpoint (straight-through slot with a jog)."""
     if abs(a[0] - b[0]) < EPS or abs(a[1] - b[1]) < EPS:
         return [a, b]
+    if face_out and (face_in in "EW") != (face_out in "EW"):
+        return [a, (b[0], a[1]), b] if face_in in "EW" else [a, (a[0], b[1]), b]
     if face_in in "EW":
         xm = (a[0] + b[0]) / 2.0
         return [a, (xm, a[1]), (xm, b[1]), b]
@@ -325,7 +384,8 @@ def lane_geometry(P, lid):
         pa, pb = P.port_point(a), P.port_point(b)
         s = P.slot(part, slot) or {}
         fin = P.die_face(part, s.get("in_face", "W"))
-        seg = zroute(pa, pb, fin)
+        fout = P.die_face(part, s.get("out_face", "E"))
+        seg = zroute(pa, pb, fin, fout)
         L = plen(seg)
         k = int(s.get("stations", 1))
         if s.get("regs_um"):
@@ -350,6 +410,19 @@ def check_hops(P, R, geo):
             i = hops.index(h)
             R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
+    # COORD 10-23 R3: ft stations at most budgets.ft_station_max_um (750) apart inside every crossed partition
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    seen = set()
+    for lid, (pts, regs, xs) in geo.items():
+        for x in xs:
+            key = (P.parts[x["part"]]["type"], x["slot"])
+            if key in seen:
+                continue
+            seen.add(key)
+            sp = x["len_um"] / max(1, x["stations"])
+            if sp > smax + EPS:
+                R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
+                      f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
     worst.sort(reverse=True)
     return [dict(lane=l, hop_um=round(h, 1), reach_um=r) for _, l, h, r in worst[:10]]
 
@@ -456,6 +529,16 @@ def check_latency(P, R):
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
+    # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
+    # binder / compiler read), and pads realisable per type
+    for name, kind, lids in P.latency_groups():
+        got = {l: tab.get(l, {}).get("cycles") for l in lids if l in P.lanes}
+        if len(set(got.values())) > 1:
+            R.err("latency", f"{kind} group {name}: unequal delays {got} (regenerate: gen.py latency --inplace pads "
+                  "every member to the slowest)")
+    _, bad = P.bus_pads()
+    for m in bad:
+        R.err("latency", m)
     return {lid: P.lane_latency(lid)["cycles"] for lid in P.lanes}
 
 
@@ -493,7 +576,120 @@ def check_clock_reset(P, R):
                       type=tn)
 
 
+# ------------------------------------------------------------------------------------------- taps, hard cores
+def _orient_pt(o, w, h, x, y):
+    return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+
+def check_taps_cores(P, R, plan_dir=None):
+    """clock.taps[] inside the type outline, unique names; hard_cores[]: pins land on the plan tracks after
+    origin + track_offset and the core orient, in the type frame AND in every placed instance's die frame (MX/MY)."""
+    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0)
+    for tn, t in P.types.items():
+        w, h = t["outline_um"]
+        ck = t.get("clock", {})
+        names = set()
+        for tp in ck.get("taps", []):
+            out["taps"] += 1
+            x, y = tp["xy"]
+            if not (-EPS <= x <= w + EPS and -EPS <= y <= h + EPS):
+                R.err("clock", f"type {tn}: clock tap {tp['name']} at ({x:g},{y:g}) outside the outline", type=tn)
+            if tp["name"] in names:
+                R.err("clock", f"type {tn}: duplicate clock tap {tp['name']}", type=tn)
+            names.add(tp["name"])
+        for hc in t.get("hard_cores", []):
+            out["hard_cores"] += 1
+            cw, chh = hc["outline_um"]
+            o = hc.get("orient", "R0")
+            ox, oy = hc["origin_um"]
+            dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+            if abs(ox / P.grid - round(ox / P.grid)) > 1e-6 or abs(oy / P.grid - round(oy / P.grid)) > 1e-6:
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: origin {hc['origin_um']} not on the "
+                      f"{P.grid:g}-um lattice (put the sub-lattice shift in track_offset_um)", type=tn)
+            if max(abs(dx), abs(dy)) >= S.BASE_LATTICE_UM:
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: track_offset {hc.get('track_offset_um')} is not a "
+                      "sub-lattice shift", type=tn)
+            X0, Y0 = ox + dx, oy + dy
+            if X0 < -EPS or Y0 < -EPS or X0 + cw > w + EPS or Y0 + chh > h + EPS:
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: placed box outside the type outline", type=tn)
+            pins = [(p_["name"], p_["layer"], *p_["xy"]) for p_ in hc.get("pins", [])]
+            if hc.get("pins_file"):
+                try:
+                    js = json.loads((Path(plan_dir or ".") / hc["pins_file"]).read_text())
+                    js = js.get("pins", js) if isinstance(js, dict) else js
+                    pins += [(q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]", q["layer"], q["x"], q["y"])
+                             for q in js]
+                except (OSError, ValueError, KeyError) as e:
+                    R.err("hard_cores", f"type {tn} core {hc['inst']}: pins_file {hc['pins_file']}: {e}", type=tn)
+            if not pins:
+                R.warn("hard_cores", f"type {tn} core {hc['inst']}: no pins listed; track alignment unchecked",
+                       type=tn)
+            insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
+            bad = 0
+            for nm, ln, x, y in pins:
+                out["core_pins"] += 1
+                L = P.layers.get(ln)
+                if L is None or ln == "M1":
+                    continue
+                tx, ty = _orient_pt(o, cw, chh, x, y)
+                tx, ty = X0 + tx, Y0 + ty
+                frames = [("type", tx, ty)] + [(pi, *P.to_die(pi, (tx, ty))) for pi in insts]
+                for fr, fx, fy in frames:
+                    c = fx if L["dir"] == "V" else fy
+                    if not on_track(c, L):
+                        bad += 1
+                        if bad <= 5:
+                            R.err("hard_cores", f"type {tn} core {hc['inst']} pin {nm} {ln}: "
+                                  f"{'x' if L['dir'] == 'V' else 'y'} {c:.4f} off the plan track "
+                                  f"(offset {L['offset_um']:g}, pitch {L['pitch_um']:g}) in the {fr} frame", type=tn)
+                        break
+            out["core_pins_off_track"] += bad
+            if bad > 5:
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: {bad} pins off the plan tracks", type=tn)
+    return out
+
+
 # ------------------------------------------------------------------------------------------------------ types
+def check_die_io(P, R):
+    """COORD 10-23 (S81-P5): every off-die port lands in a declared pad / bump window over its host partition."""
+    io = P.die.get("io")
+    die_ports = {pid: pr for pid, pr in P.ports.items() if DIE_PART in (pr["src"]["part"], pr["dst"]["part"])}
+    if not io:
+        if die_ports:
+            R.warn("die_io", f"{len(die_ports)} die IO ports ({sum(int(p['width']) for p in die_ports.values())} b) "
+                   "and no die.io pad / bump windows: off-die pads (SerDes PMA, HBM PHY memory side, host) unplanned")
+        return dict(windows=0, ports=len(die_ports))
+    seen = {}
+    for w in io:
+        x0, y0, x1, y1 = w["rect_um"]
+        if not (0 <= x0 < x1 <= P.W + EPS and 0 <= y0 < y1 <= P.H + EPS):
+            R.err("die_io", f"io window {w['name']}: rect {w['rect_um']} outside the die")
+        if w["part"] not in P.parts:
+            R.err("die_io", f"io window {w['name']}: unknown host partition {w['part']}")
+            continue
+        px0, py0, px1, py1 = P.rect(w["part"])
+        if x0 < px0 - EPS or y0 < py0 - EPS or x1 > px1 + EPS or y1 > py1 + EPS:
+            R.err("die_io", f"io window {w['name']}: not inside its host partition {w['part']}")
+        bits = 0
+        for pid in w["ports"]:
+            pr = P.ports.get(pid)
+            if pr is None or pid not in die_ports:
+                R.err("die_io", f"io window {w['name']}: {pid} is not a die IO port")
+                continue
+            if pid in seen:
+                R.err("die_io", f"die IO port {pid} in two windows ({seen[pid]}, {w['name']})")
+            seen[pid] = w["name"]
+            end = pr["dst"]["part"] if pr["src"]["part"] == DIE_PART else pr["src"]["part"]
+            if end != w["part"]:
+                R.err("die_io", f"io window {w['name']}: port {pid} ends in {end}, not the host {w['part']}")
+            bits += S.port_pins_count(pr)
+        if bits > w["sites"]:
+            R.err("die_io", f"io window {w['name']}: {bits} signal bits > {w['sites']} sites")
+    for pid in sorted(set(die_ports) - set(seen)):
+        R.err("die_io", f"die IO port {pid} ({die_ports[pid]['width']} b) has no pad / bump window (die.io)")
+    return dict(windows=len(io), ports=len(die_ports), placed=len(seen))
+
+
 def check_seams(P, R):
     """Seam-net invariant (COORD 10-23, OpenROAD abutment semantics): every inter-partition port bit is ONE 2-pin net,
     boundary flop to boundary flop -- one out bus (src boundary flop or ft station) to one in bus (dst boundary flop or
@@ -551,8 +747,40 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
+def check_r8(P, R, plan_dir=None, groups=None, landing=None):
+    """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
+    import r8
+    pd = Path(plan_dir) if plan_dir else None
+    if groups is None and pd is not None:
+        groups = next((q for q in (pd / "bus_groups.json", pd / "r8" / "bus_groups.json", pd / "bind" / "bus_groups.json")
+                       if q.exists()), None)
+    if groups is None:
+        if pd is None:
+            return dict(checked=False)
+        R.warn("r8", "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)")
+        return dict(checked=False)
+    bg = json.loads(Path(groups).read_text())
+    if landing is None and pd is not None:
+        hits = sorted(pd.glob(f"*/{P.name}_r8_landing.json")) + sorted(pd.glob(f"{P.name}_r8_landing.json"))
+        landing = hits[0] if hits else None
+    lmap = None
+    if landing is not None:
+        lmap, ljs = r8.load_landing(landing)
+        if ljs.get("bus_groups_digest") != r8.bg_digest(bg):
+            R.err("r8", f"R8 landing table {landing} was made from other bus groups (digest {ljs.get('bus_groups_digest')}"
+                  f" != {r8.bg_digest(bg)}): regenerate with gen.py latency --groups")
+        mode = dict(replica=ljs.get("replica", "all"), bus=ljs.get("bus", "part"))
+    else:
+        mode = dict(replica="all", bus="part")
+    msgs, st = r8.check(bg, P.raw, lmap, **mode)
+    for sev, m in msgs:
+        (R.err if sev == "ERROR" else R.warn)("r8", m)
+    st.update(checked=True, groups_file=str(groups), landing_file=str(landing) if landing else None)
+    return st
+
+
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -563,6 +791,7 @@ def run(raw, png=None):
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
     summ["types"] = check_types(P, R)
+    summ["taps_cores"] = check_taps_cores(P, R, plan_dir)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
@@ -570,8 +799,12 @@ def run(raw, png=None):
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
+    summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
+    summ["die_io"] = check_die_io(P, R)
+    import census_cov
+    summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:
         import render
         render.render(P, geo, R, png)
@@ -586,11 +819,14 @@ def main(argv=None):
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--strict", action="store_true", help="WARN counts as failure")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
+    ap.add_argument("--landing", help="R8: <die>_r8_landing.json (default PLANDIR/*/<die>_r8_landing.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None)
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
+                  groups=a.groups, landing=a.landing)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)

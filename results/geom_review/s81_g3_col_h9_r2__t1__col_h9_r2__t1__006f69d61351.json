@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_col_h9_r2__t1",
+ "kit": "physical/die_plan/s81@5740859f0 kit ot-epyc9:/srv/opentallas-scratch/claude/s81-p8-g3/kits/col_h9_r2__t1",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "006f69d61351ff73",
+ "reasons": "[10-23 16:58] [GEOM-REVIEW6] [S81 G3 v4.5 re-REQ] Placed render (3_place) viewed. I ran my own tv.tsv stats (20-um bins, g3stat). Hop/tie probe read from /home/ubuntu/scratch/s81-p8/cond/<kit>.v45.main.txt. Kit hash recomputed on ot-epyc9 (C-sorted cat, the GEOM-REVIEW5 scheme). SDC is ps (833, 9 tap clocks), CORNER=TC. FIXED vs the 15:14 records: (b) taps off macros: 0 of 10 interior M7 pins inside a macro in every kit (h9_r1 was 10/10). (a) ties: TIEHI -> DFFASRHQN/SETN 5.2-8.0k is the unused async SET of the reset-flop cell (cell artefact, accepted); TIEHI -> D 36-47 = rsreg/synchroniser constant-1 stages (accepted). (c) buffers: the author says these are GPL repeaters on long nets. Macro sites are on the 8.64 lattice, min macro gap 13.8 um in all 5, max 20-um std density 0.31-0.39, no bins > 0.8, pins only on the plan windows (N/S x 6-353 at 4.6-4.7/um). NEW EVIDENCE (author's placed reg-reg probe): hops over the 750-um R3/reach limit remain. SPECIFIC: reg-reg > 750 = 15 (was 4,092): u_lpr_r2 reset forest branch->leaf 12 at up to 955 um, u_bn11 -> u_y_rt_22b_0 3 b at 769. All other classes are <= 750 (F>M max 626, M>M 592, async SET/RESET max 569). 8.2k FF, S window only (1,490 pins), buf/inv 31.9k of 47.1k (68%).",
+ "fixes": "GRT/route gate allowed. Full PASS: (1) the lpr forest leaf re-cluster (or show the 12 forest hops meet TT setup), (2) the 3-b bn11 hop meets TT, (3) BUFFER ORIGIN: the 68% buf/inv (31.9k for 8.2k FF) holds with only 15 long hops, so 'repeaters on long nets' does not explain it. Post the buffer count by driven-net length class (< 100 / 100-300 / 300-750 um) and by source (synth vs 3_4 repair), plus TT >= 0 / FF >= 0 and GRT overflow 0.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T16:58:40-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

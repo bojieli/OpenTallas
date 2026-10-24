@@ -1,0 +1,4349 @@
+{
+ "SPLIT:ot_hbm_idx_chunk_rt_h": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/p4s_chunk_rt_h/p4s_chunk_rt_h.stat (G-param version; MUT 0 cells identical per HALF)",
+  "macros": {},
+  "modules": {
+   "ot_hbm_idx_chunk_rt_h": {
+    "local": 6047,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay#05f11f8c"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#0cc48896"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#210542cc"
+     ],
+     [
+      1,
+      "ot_rst_relay#243f80b5"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#2df109ac"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#5dd16f99"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#66e16147"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#6ce8b8b3"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#786a1de3"
+     ],
+     [
+      1,
+      "ot_hidx_score_hcol#7d6589e5"
+     ],
+     [
+      1,
+      "ot_hdc_delay#b07e9681"
+     ]
+    ],
+    "total": 1533241
+   },
+   "ot_hdc_delay#3517edaf": {
+    "local": 2142,
+    "macros": {},
+    "subs": [],
+    "total": 2142
+   },
+   "ot_hdc_fp32_add_lat\\LAT=00000000000000000000000000000111": {
+    "local": 1581,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut#085326a0"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#22d35e22"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#61fa6860"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#891815ee"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32"
+     ]
+    ],
+    "total": 4205
+   },
+   "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat\\LAT=00000000000000000000000000000111"
+     ]
+    ],
+    "total": 4205
+   },
+   "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101": {
+    "local": 4085,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay#00e59074"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_csa#b054609e"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_csa#e2361102"
+     ],
+     [
+      1,
+      "ot_hdc_delay#ec3dfc0f"
+     ]
+    ],
+    "total": 5883
+   },
+   "ot_hidx_score_hcol#0cc48896": {
+    "local": 15311,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      1,
+      "ot_hdc_delay#0eee0e2b"
+     ],
+     [
+      4,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3517edaf"
+     ],
+     [
+      28,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3aaefd65"
+     ],
+     [
+      1,
+      "ot_hdc_delay#642d75b0"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 195127
+   },
+   "ot_hidx_score_hcol#210542cc": {
+    "local": 15247,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      5,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      27,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a3882f6"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a41c9f7"
+     ],
+     [
+      1,
+      "ot_hdc_delay#77cf9a05"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      1,
+      "ot_hdc_delay#a9a5ecca"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      15,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 186410
+   },
+   "ot_hidx_score_hcol#2df109ac": {
+    "local": 15247,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      5,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      27,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a3882f6"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a41c9f7"
+     ],
+     [
+      1,
+      "ot_hdc_delay#77cf9a05"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      1,
+      "ot_hdc_delay#a9a5ecca"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      15,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 186410
+   },
+   "ot_hidx_score_hcol#5dd16f99": {
+    "local": 15311,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      1,
+      "ot_hdc_delay#0eee0e2b"
+     ],
+     [
+      4,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3517edaf"
+     ],
+     [
+      28,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3aaefd65"
+     ],
+     [
+      1,
+      "ot_hdc_delay#642d75b0"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 195127
+   },
+   "ot_hidx_score_hcol#66e16147": {
+    "local": 15247,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      5,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      27,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a3882f6"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a41c9f7"
+     ],
+     [
+      1,
+      "ot_hdc_delay#77cf9a05"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      1,
+      "ot_hdc_delay#a9a5ecca"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      15,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 186410
+   },
+   "ot_hidx_score_hcol#6ce8b8b3": {
+    "local": 15311,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      1,
+      "ot_hdc_delay#0eee0e2b"
+     ],
+     [
+      4,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3517edaf"
+     ],
+     [
+      28,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3aaefd65"
+     ],
+     [
+      1,
+      "ot_hdc_delay#642d75b0"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 195127
+   },
+   "ot_hidx_score_hcol#786a1de3": {
+    "local": 15247,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      5,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      27,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a3882f6"
+     ],
+     [
+      1,
+      "ot_hdc_delay#6a41c9f7"
+     ],
+     [
+      1,
+      "ot_hdc_delay#77cf9a05"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      1,
+      "ot_hdc_delay#a9a5ecca"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      15,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 186410
+   },
+   "ot_hidx_score_hcol#7d6589e5": {
+    "local": 15311,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      1,
+      "ot_hdc_delay#0eee0e2b"
+     ],
+     [
+      4,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3517edaf"
+     ],
+     [
+      28,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      1,
+      "ot_hdc_delay#3aaefd65"
+     ],
+     [
+      1,
+      "ot_hdc_delay#642d75b0"
+     ],
+     [
+      2,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      4,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      16,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 195127
+   }
+  },
+  "top": "ot_hbm_idx_chunk_rt_h",
+  "total": 1533241
+ },
+ "SPLIT:ot_hdc_sinkhorn_s": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/p4s_sinkhorn_s/p4s_sinkhorn_s.stat",
+  "macros": {},
+  "modules": {
+   "ot_hdc_sinkhorn_s": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_steady#105332a0"
+     ],
+     [
+      1,
+      "ot_hdc_sk_step0#478a3ea1"
+     ]
+    ],
+    "total": 569363
+   },
+   "ot_hdc_sk_csa#47ab3f72": {
+    "local": 5382,
+    "macros": {},
+    "subs": [],
+    "total": 5382
+   },
+   "ot_hdc_sk_csa#a533ebb9": {
+    "local": 2606,
+    "macros": {},
+    "subs": [],
+    "total": 2606
+   },
+   "ot_hdc_sk_csa#c60a2599": {
+    "local": 5480,
+    "macros": {},
+    "subs": [],
+    "total": 5480
+   },
+   "ot_hdc_sk_mul#9202fdd7": {
+    "local": 486,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_csa#c60a2599"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000110101"
+     ]
+    ],
+    "total": 6983
+   },
+   "ot_hdc_sk_quot\\SUBN=00000000000000000000000000000000": {
+    "local": 891,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_mul#9202fdd7"
+     ],
+     [
+      1,
+      "ot_hdc_sk_csa#a533ebb9"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000010111"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000011011"
+     ]
+    ],
+    "total": 12434
+   },
+   "ot_hdc_sk_quot\\SUBN=00000000000000000000000000000001": {
+    "local": 1403,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_mul#9202fdd7"
+     ],
+     [
+      1,
+      "ot_hdc_sk_csa#a533ebb9"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000010111"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000011011"
+     ]
+    ],
+    "total": 12946
+   },
+   "ot_hdc_sk_recip_rom": {
+    "local": 2820,
+    "macros": {},
+    "subs": [],
+    "total": 2820
+   },
+   "ot_hdc_sk_seed": {
+    "local": 513,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_csa#47ab3f72"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd\\W=00000000000000000000000000110000"
+     ],
+     [
+      1,
+      "ot_hdc_sk_recip_rom"
+     ],
+     [
+      1,
+      "ot_hdc_sk_sq_rom"
+     ]
+    ],
+    "total": 9990
+   },
+   "ot_hdc_sk_steady#105332a0": {
+    "local": 3491,
+    "macros": {},
+    "subs": [
+     [
+      16,
+      "ot_hdc_sk_quot\\SUBN=00000000000000000000000000000000"
+     ],
+     [
+      16,
+      "ot_hdc_sk_add"
+     ],
+     [
+      4,
+      "ot_hdc_sk_seed"
+     ]
+    ],
+    "total": 267115
+   },
+   "ot_hdc_sk_step0#478a3ea1": {
+    "local": 7152,
+    "macros": {},
+    "subs": [
+     [
+      16,
+      "ot_hdc_sk_quot\\SUBN=00000000000000000000000000000001"
+     ],
+     [
+      28,
+      "ot_hdc_sk_add"
+     ],
+     [
+      20,
+      "ot_hdc_sk_norm"
+     ],
+     [
+      4,
+      "ot_hdc_sk_seed"
+     ]
+    ],
+    "total": 302248
+   }
+  },
+  "top": "ot_hdc_sinkhorn_s",
+  "total": 569363
+ },
+ "ot_hbm_hc_bankq0_static": {
+  "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq0_static/ot_hbm_hc_bankq0_static.stat",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+   "ot_sram_1r1w_128x256_m1_r2c2": 4
+  },
+  "modules": {
+   "ot_hbm_hc_bank_static__d4g_hcb0#fde4df4d": {
+    "local": 8220,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_hcp_stage__d4g_hcb0#9fdf4c1d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcb0\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 779252
+   },
+   "ot_hbm_hc_bankq0_static#c24289ff": {
+    "local": 8196,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_core__d4g_hcb0#bdcfa8e1"
+     ]
+    ],
+    "total": 797404
+   },
+   "ot_hbm_hc_bankq_core__d4g_hcb0#bdcfa8e1": {
+    "local": 9950,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bank_static__d4g_hcb0#fde4df4d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcb0\\REGIONS=00000000000000000000000000000001"
+     ]
+    ],
+    "total": 789208
+   },
+   "ot_hdc_fp32_add_lat__d4g_hcb0#2f9b38c7": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#3e73f3ba"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#bdef29db"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_hcb0"
+     ]
+    ],
+    "total": 4202
+   },
+   "ot_hdc_fp32_mul_lat__d4g_hcb0\\LAT=00000000000000000000000000001000": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#4473cf46"
+     ],
+     [
+      2,
+      "ot_hdc_w11_cut__d4g_hcb0#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#aedcbb61"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb0#cd1c1ccc"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb0\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_hcb0"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_hcb0"
+     ]
+    ],
+    "total": 7489
+   },
+   "ot_hdc_mul24_rows__d4g_hcb0": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_v41x_hcp_lanes__d4g_hcb0": {
+    "local": 2756,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_fp32_add_lat__d4g_hcb0#2f9b38c7"
+     ],
+     [
+      8,
+      "ot_hdc_fp32_mul_lat__d4g_hcb0\\LAT=00000000000000000000000000001000"
+     ]
+    ],
+    "total": 96284
+   },
+   "ot_hdc_v41x_hcp_stage__d4g_hcb0#9fdf4c1d": {
+    "local": 754,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_v41x_hcp_lanes__d4g_hcb0"
+     ]
+    ],
+    "total": 771026
+   },
+   "v16w_ot_hbm_hc_bankq0_static": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq0_static#c24289ff"
+     ]
+    ],
+    "total": 797404
+   }
+  },
+  "top": "v16w_ot_hbm_hc_bankq0_static",
+  "total": 797404
+ },
+ "ot_hbm_hc_bankq_ft_static": {
+  "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq_ft_static/ot_hbm_hc_bankq_ft_static.stat",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+   "ot_sram_1r1w_128x256_m1_r2c2": 4
+  },
+  "modules": {
+   "ot_hbm_hc_bank_static__d4g_hcbft#fde4df4d": {
+    "local": 8220,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_hcp_stage__d4g_hcbft#9fdf4c1d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcbft\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 779256
+   },
+   "ot_hbm_hc_bankq_core__d4g_hcbft\\MUT=00000000000000000000000000000000": {
+    "local": 5794,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bank_static__d4g_hcbft#fde4df4d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcbft\\REGIONS=00000000000000000000000000000001"
+     ]
+    ],
+    "total": 785056
+   },
+   "ot_hbm_hc_bankq_ft_static": {
+    "local": 1092,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_core__d4g_hcbft\\MUT=00000000000000000000000000000000"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcbft\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 786154
+   },
+   "ot_hdc_fp32_add_lat__d4g_hcbft#2f9b38c7": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#3e73f3ba"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#bdef29db"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_hcbft"
+     ]
+    ],
+    "total": 4202
+   },
+   "ot_hdc_fp32_mul_lat__d4g_hcbft\\LAT=00000000000000000000000000001000": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#4473cf46"
+     ],
+     [
+      2,
+      "ot_hdc_w11_cut__d4g_hcbft#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#aedcbb61"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbft#cd1c1ccc"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbft\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_hcbft"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_hcbft"
+     ]
+    ],
+    "total": 7489
+   },
+   "ot_hdc_mul24_rows__d4g_hcbft": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_v41x_hcp_lanes__d4g_hcbft": {
+    "local": 2756,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_fp32_add_lat__d4g_hcbft#2f9b38c7"
+     ],
+     [
+      8,
+      "ot_hdc_fp32_mul_lat__d4g_hcbft\\LAT=00000000000000000000000000001000"
+     ]
+    ],
+    "total": 96284
+   },
+   "ot_hdc_v41x_hcp_stage__d4g_hcbft#9fdf4c1d": {
+    "local": 758,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_v41x_hcp_lanes__d4g_hcbft"
+     ]
+    ],
+    "total": 771030
+   },
+   "v16w_ot_hbm_hc_bankq_ft_static": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_ft_static"
+     ]
+    ],
+    "total": 786154
+   }
+  },
+  "top": "v16w_ot_hbm_hc_bankq_ft_static",
+  "total": 786154
+ },
+ "ot_hbm_hc_bankq_static": {
+  "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_static.stat",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+   "ot_sram_1r1w_128x256_m1_r2c2": 4
+  },
+  "modules": {
+   "ot_hbm_hc_bank_static__d4g_hcb#fde4df4d": {
+    "local": 8220,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_hcp_stage__d4g_hcb#9fdf4c1d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcb\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 779257
+   },
+   "ot_hbm_hc_bankq_core__d4g_hcb#ab7947c4": {
+    "local": 14106,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bank_static__d4g_hcb#fde4df4d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcb\\REGIONS=00000000000000000000000000000001"
+     ]
+    ],
+    "total": 793369
+   },
+   "ot_hbm_hc_bankq_static#361609ed": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_core__d4g_hcb#ab7947c4"
+     ]
+    ],
+    "total": 793369
+   },
+   "ot_hdc_fp32_add_lat__d4g_hcb#2f9b38c7": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#3e73f3ba"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#bdef29db"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_hcb"
+     ]
+    ],
+    "total": 4202
+   },
+   "ot_hdc_fp32_mul_lat__d4g_hcb\\LAT=00000000000000000000000000001000": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#4473cf46"
+     ],
+     [
+      2,
+      "ot_hdc_w11_cut__d4g_hcb#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#aedcbb61"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcb#cd1c1ccc"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcb\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_hcb"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_hcb"
+     ]
+    ],
+    "total": 7489
+   },
+   "ot_hdc_mul24_rows__d4g_hcb": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_v41x_hcp_lanes__d4g_hcb": {
+    "local": 2756,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_fp32_add_lat__d4g_hcb#2f9b38c7"
+     ],
+     [
+      8,
+      "ot_hdc_fp32_mul_lat__d4g_hcb\\LAT=00000000000000000000000000001000"
+     ]
+    ],
+    "total": 96284
+   },
+   "ot_hdc_v41x_hcp_stage__d4g_hcb#9fdf4c1d": {
+    "local": 759,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_v41x_hcp_lanes__d4g_hcb"
+     ]
+    ],
+    "total": 771031
+   },
+   "v16w_ot_hbm_hc_bankq_static": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_static#361609ed"
+     ]
+    ],
+    "total": 793369
+   }
+  },
+  "top": "v16w_ot_hbm_hc_bankq_static",
+  "total": 793369
+ },
+ "ot_hbm_hc_bankq_term_static": {
+  "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq_term_static/ot_hbm_hc_bankq_term_static.stat",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+   "ot_sram_1r1w_128x256_m1_r2c2": 4
+  },
+  "modules": {
+   "ot_hbm_hc_bank_static__d4g_hcbt#fde4df4d": {
+    "local": 8220,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_hcp_stage__d4g_hcbt#9fdf4c1d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcbt\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 779253
+   },
+   "ot_hbm_hc_bankq_term_core__d4g_hcbt#ab7947c4": {
+    "local": 14048,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bank_static__d4g_hcbt#fde4df4d"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hcbt\\REGIONS=00000000000000000000000000000001"
+     ]
+    ],
+    "total": 793307
+   },
+   "ot_hbm_hc_bankq_term_static#361609ed": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_term_core__d4g_hcbt#ab7947c4"
+     ]
+    ],
+    "total": 793307
+   },
+   "ot_hdc_fp32_add_lat__d4g_hcbt#2f9b38c7": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#3e73f3ba"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#bdef29db"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_hcbt"
+     ]
+    ],
+    "total": 4202
+   },
+   "ot_hdc_fp32_mul_lat__d4g_hcbt\\LAT=00000000000000000000000000001000": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#4473cf46"
+     ],
+     [
+      2,
+      "ot_hdc_w11_cut__d4g_hcbt#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#aedcbb61"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_hcbt#cd1c1ccc"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_hcbt\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_hcbt"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_hcbt"
+     ]
+    ],
+    "total": 7489
+   },
+   "ot_hdc_mul24_rows__d4g_hcbt": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_v41x_hcp_lanes__d4g_hcbt": {
+    "local": 2756,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_fp32_add_lat__d4g_hcbt#2f9b38c7"
+     ],
+     [
+      8,
+      "ot_hdc_fp32_mul_lat__d4g_hcbt\\LAT=00000000000000000000000000001000"
+     ]
+    ],
+    "total": 96284
+   },
+   "ot_hdc_v41x_hcp_stage__d4g_hcbt#9fdf4c1d": {
+    "local": 755,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_v41x_hcp_lanes__d4g_hcbt"
+     ]
+    ],
+    "total": 771027
+   },
+   "v16w_ot_hbm_hc_bankq_term_static": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 8,
+     "ot_sram_1r1w_128x256_m1_r2c2": 4
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_bankq_term_static#361609ed"
+     ]
+    ],
+    "total": 793307
+   }
+  },
+  "top": "v16w_ot_hbm_hc_bankq_term_static",
+  "total": 793307
+ },
+ "ot_hbm_hc_root_static": {
+  "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_root_static/ot_hbm_hc_root_static.stat",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 2
+  },
+  "modules": {
+   "ot_hbm_hc_eng_seq_static__d4g_hc\\W=00000000000000000000000001111100": {
+    "local": 3714,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 1
+    },
+    "subs": [],
+    "total": 3714
+   },
+   "ot_hbm_hc_root_static#9c58aa12": {
+    "local": 95748,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_hcp_sys1_static__d4g_hc#91c98c0c"
+     ],
+     [
+      2,
+      "ot_static_program_target__d4g_hc#a84cf026"
+     ],
+     [
+      1,
+      "ot_hbm_hc_eng_seq_static__d4g_hc\\W=00000000000000000000000001111100"
+     ],
+     [
+      2,
+      "ot_hbm_hc_tail_unit_static__d4g_hc\\MUT_PRE=00000000000000000000000000000000"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_hc\\REGIONS=00000000000000000000000000000010"
+     ]
+    ],
+    "total": 1514498
+   },
+   "ot_hbm_hc_tail_unit_static__d4g_hc\\MUT_PRE=00000000000000000000000000000000": {
+    "local": 129,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hgi_hc_tail_static__d4g_hc\\MUT_PRE=00000000000000000000000000000000"
+     ]
+    ],
+    "total": 673210
+   },
+   "ot_hdc_fdiv__d4g_hc": {
+    "local": 9255,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_vline__d4g_hc\\D=00000000000000000000000000011111"
+     ]
+    ],
+    "total": 9317
+   },
+   "ot_hdc_fp32_add_fast__d4g_hc": {
+    "local": 1442,
+    "macros": {},
+    "subs": [
+     [
+      4,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_hc"
+     ]
+    ],
+    "total": 2297
+   },
+   "ot_hdc_fp32_mul_fast__d4g_hc": {
+    "local": 2402,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksa__d4g_hc\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_hc"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_hc"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_sum__d4g_hc"
+     ]
+    ],
+    "total": 6146
+   },
+   "ot_hdc_mul24_rows__d4g_hc": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_qadd_lat__d4g_hc#a0865b2c": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_fast__d4g_hc"
+     ]
+    ],
+    "total": 2298
+   },
+   "ot_hdc_qmul_lat__d4g_hc\\LAT=00000000000000000000000000000011": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_fast__d4g_hc"
+     ]
+    ],
+    "total": 6147
+   },
+   "ot_hdc_sinkhorn__d4g_hc#105332a0": {
+    "local": 8132,
+    "macros": {},
+    "subs": [
+     [
+      16,
+      "ot_hdc_sk_quot__d4g_hc\\SUBN=00000000000000000000000000000000"
+     ],
+     [
+      16,
+      "ot_hdc_sk_quot__d4g_hc\\SUBN=00000000000000000000000000000001"
+     ],
+     [
+      44,
+      "ot_hdc_sk_add__d4g_hc"
+     ],
+     [
+      20,
+      "ot_hdc_sk_norm__d4g_hc"
+     ],
+     [
+      8,
+      "ot_hdc_sk_seed__d4g_hc"
+     ]
+    ],
+    "total": 567480
+   },
+   "ot_hdc_sk_csa__d4g_hc#47ab3f72": {
+    "local": 5382,
+    "macros": {},
+    "subs": [],
+    "total": 5382
+   },
+   "ot_hdc_sk_csa__d4g_hc#a533ebb9": {
+    "local": 2606,
+    "macros": {},
+    "subs": [],
+    "total": 2606
+   },
+   "ot_hdc_sk_csa__d4g_hc#c60a2599": {
+    "local": 5480,
+    "macros": {},
+    "subs": [],
+    "total": 5480
+   },
+   "ot_hdc_sk_mul__d4g_hc#9202fdd7": {
+    "local": 486,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_csa__d4g_hc#c60a2599"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000110101"
+     ]
+    ],
+    "total": 6983
+   },
+   "ot_hdc_sk_quot__d4g_hc\\SUBN=00000000000000000000000000000000": {
+    "local": 915,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_mul__d4g_hc#9202fdd7"
+     ],
+     [
+      1,
+      "ot_hdc_sk_csa__d4g_hc#a533ebb9"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000010111"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000011011"
+     ]
+    ],
+    "total": 12458
+   },
+   "ot_hdc_sk_quot__d4g_hc\\SUBN=00000000000000000000000000000001": {
+    "local": 1400,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_mul__d4g_hc#9202fdd7"
+     ],
+     [
+      1,
+      "ot_hdc_sk_csa__d4g_hc#a533ebb9"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000010111"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000011011"
+     ]
+    ],
+    "total": 12943
+   },
+   "ot_hdc_sk_recip_rom__d4g_hc": {
+    "local": 2823,
+    "macros": {},
+    "subs": [],
+    "total": 2823
+   },
+   "ot_hdc_sk_seed__d4g_hc": {
+    "local": 513,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sk_csa__d4g_hc#47ab3f72"
+     ],
+     [
+      1,
+      "ot_hdc_sk_cadd__d4g_hc\\W=00000000000000000000000000110000"
+     ],
+     [
+      1,
+      "ot_hdc_sk_recip_rom__d4g_hc"
+     ],
+     [
+      1,
+      "ot_hdc_sk_sq_rom__d4g_hc"
+     ]
+    ],
+    "total": 10008
+   },
+   "ot_hdc_v41x_addtree__d4g_hc\\N=00000000000000000000000000000010": {
+    "local": 3,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_fast__d4g_hc"
+     ]
+    ],
+    "total": 2300
+   },
+   "ot_hdc_v41x_addtree__d4g_hc\\N=00000000000000000000000000000100": {
+    "local": 5,
+    "macros": {},
+    "subs": [
+     [
+      2,
+      "ot_hdc_v41x_addtree__d4g_hc\\N=00000000000000000000000000000010"
+     ],
+     [
+      1,
+      "ot_hdc_fp32_add_fast__d4g_hc"
+     ]
+    ],
+    "total": 6902
+   },
+   "ot_hdc_v41x_exp__d4g_hc#8150f46f": {
+    "local": 1639,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_kadd__d4g_hc#25c84dfa"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#3d4268b5"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#84a93578"
+     ],
+     [
+      8,
+      "ot_hdc_qadd_lat__d4g_hc#a0865b2c"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#c327769f"
+     ],
+     [
+      5,
+      "ot_hdc_delay__d4g_hc#cf62013b"
+     ],
+     [
+      7,
+      "ot_hdc_qmul_lat__d4g_hc\\LAT=00000000000000000000000000000011"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_hc\\D=00000000000000000000000000110001"
+     ]
+    ],
+    "total": 66520
+   },
+   "ot_hdc_v41x_fdiv__d4g_hc": {
+    "local": 11184,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_vline__d4g_hc\\D=00000000000000000000000000010011"
+     ]
+    ],
+    "total": 11222
+   },
+   "ot_hdc_v41x_hcp_sys1_static__d4g_hc#91c98c0c": {
+    "local": 16630,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#6e29065a"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_addtree__d4g_hc\\N=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_vline__d4g_hc\\D=00000000000000000000000000000110"
+     ],
+     [
+      1,
+      "ot_hdc_fdiv__d4g_hc"
+     ],
+     [
+      5,
+      "ot_hdc_fp32_add_fast__d4g_hc"
+     ],
+     [
+      2,
+      "ot_hdc_fp32_mul_fast__d4g_hc"
+     ]
+    ],
+    "total": 56692
+   },
+   "ot_hgi_hc_tail_static__d4g_hc\\MUT_PRE=00000000000000000000000000000000": {
+    "local": 18676,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_sinkhorn__d4g_hc#105332a0"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_hc#8150f46f"
+     ],
+     [
+      2,
+      "ot_hdc_delay__d4g_hc#a47a7268"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#cf90c6e5"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_hc#d136304e"
+     ],
+     [
+      1,
+      "ot_hdc_fp32_add_fast__d4g_hc"
+     ],
+     [
+      1,
+      "ot_hdc_fp32_mul_fast__d4g_hc"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_fdiv__d4g_hc"
+     ]
+    ],
+    "total": 673081
+   },
+   "ot_static_program_target__d4g_hc#a84cf026": {
+    "local": 5959,
+    "macros": {},
+    "subs": [],
+    "total": 5959
+   },
+   "v16w_ot_hbm_hc_root_static": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_hc_root_static#9c58aa12"
+     ]
+    ],
+    "total": 1514498
+   }
+  },
+  "top": "v16w_ot_hbm_hc_root_static",
+  "total": 1514498
+ },
+ "ot_hbm_idx_score_quarter_static": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hbm_idx_score_quarter_static/ot_hbm_idx_score_quarter_static.stat (r18h5 recipe: src d34578d6f, wrapper v16w TP=192, synth_master.sh HIER=1, ASAP7 RVT TT)",
+  "macros": {},
+  "modules": {
+   "hidx_meta_w25_d123_r0": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay_rf#6c077d06"
+     ]
+    ],
+    "total": 11423
+   },
+   "ot_hbm_idx_chunk_rt": {
+    "local": 128281,
+    "macros": {},
+    "subs": [
+     [
+      64,
+      "ot_hdc_delay#0459270b"
+     ],
+     [
+      1,
+      "ot_hdc_delay#05f11f8c"
+     ],
+     [
+      4,
+      "ot_hdc_delay#0eee0e2b"
+     ],
+     [
+      36,
+      "ot_hdc_delay#15dfbce3"
+     ],
+     [
+      1,
+      "ot_rst_relay#243f80b5"
+     ],
+     [
+      32,
+      "ot_hdc_delay#31076744"
+     ],
+     [
+      4,
+      "ot_hdc_delay#3517edaf"
+     ],
+     [
+      220,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      4,
+      "ot_hdc_delay#3aaefd65"
+     ],
+     [
+      4,
+      "ot_hdc_delay#642d75b0"
+     ],
+     [
+      4,
+      "ot_hdc_delay#6a3882f6"
+     ],
+     [
+      4,
+      "ot_hdc_delay#6a41c9f7"
+     ],
+     [
+      4,
+      "ot_hdc_delay#77cf9a05"
+     ],
+     [
+      16,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      4,
+      "ot_hdc_delay#a9a5ecca"
+     ],
+     [
+      32,
+      "ot_hdc_delay#b06fdc12"
+     ],
+     [
+      1,
+      "ot_hdc_delay#b07e9681"
+     ],
+     [
+      32,
+      "ot_hdc_v41x_bmul_l\\ML=00000000000000000000000000000101"
+     ],
+     [
+      124,
+      "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111"
+     ],
+     [
+      128,
+      "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101"
+     ],
+     [
+      32,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 1537571
+   },
+   "ot_hbm_idx_score_leaf\\AUXW=00000000000000000000000000011110": {
+    "local": 15004,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_idx_chunk_rt"
+     ]
+    ],
+    "total": 1552575
+   },
+   "ot_hbm_idx_score_quarter_static\\TP=00000000000000000000000011000000": {
+    "local": 11986,
+    "macros": {},
+    "subs": [
+     [
+      2,
+      "ot_hdc_delay#a0d027f3"
+     ],
+     [
+      1,
+      "ot_rst_relay#a58f2749"
+     ],
+     [
+      8,
+      "ot_hbm_idx_score_leaf\\AUXW=00000000000000000000000000011110"
+     ],
+     [
+      2,
+      "hidx_meta_w25_d123_r0"
+     ],
+     [
+      1,
+      "ot_hbm_idx_score_fault_static"
+     ],
+     [
+      2,
+      "ot_hbm_idx_tail_native"
+     ]
+    ],
+    "total": 12561840
+   },
+   "ot_hbm_idx_tail_native": {
+    "local": 1330,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay#04acdd2e"
+     ],
+     [
+      1,
+      "ot_rst_relay#243f80b5"
+     ],
+     [
+      12,
+      "ot_hdc_fp32_add_lat#2f9b38c7"
+     ],
+     [
+      12,
+      "ot_hdc_delay#3a35fe1e"
+     ],
+     [
+      4,
+      "ot_hdc_v41x_bf16"
+     ]
+    ],
+    "total": 52348
+   },
+   "ot_hdc_delay#3517edaf": {
+    "local": 2142,
+    "macros": {},
+    "subs": [],
+    "total": 2142
+   },
+   "ot_hdc_delay_rf#6c077d06": {
+    "local": 11423,
+    "macros": {},
+    "subs": [],
+    "total": 11423
+   },
+   "ot_hdc_fp32_add_lat#2f9b38c7": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#3e73f3ba"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#bdef29db"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32"
+     ]
+    ],
+    "total": 4202
+   },
+   "ot_hdc_fp32_add_lat\\LAT=00000000000000000000000000000111": {
+    "local": 1587,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut#085326a0"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#22d35e22"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#61fa6860"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#891815ee"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32"
+     ]
+    ],
+    "total": 4211
+   },
+   "ot_hdc_v41x_faddl\\LAT=00000000000000000000000000000111": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat\\LAT=00000000000000000000000000000111"
+     ]
+    ],
+    "total": 4211
+   },
+   "ot_hdc_v41x_q4dot_l\\QL=00000000000000000000000000000101": {
+    "local": 4113,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay#00e59074"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_csa#b054609e"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_csa#e2361102"
+     ],
+     [
+      1,
+      "ot_hdc_delay#ec3dfc0f"
+     ]
+    ],
+    "total": 5911
+   },
+   "v16w_ot_hbm_idx_score_quarter_static": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_idx_score_quarter_static\\TP=00000000000000000000000011000000"
+     ]
+    ],
+    "total": 12561840
+   }
+  },
+  "top": "v16w_ot_hbm_idx_score_quarter_static",
+  "total": 12561840
+ },
+ "ot_hbm_su_static_pgslice_lg__pv0": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv0/ot_hbm_su_static_pgslice_lg__pv0.stat",
+  "macros": {
+   "ot_sram_1r1w_128x256_m1_r2c2": 192
+  },
+  "modules": {
+   "ot_hbm_su_multirate_bridge__d4g_pgslice#a858bfcd": {
+    "local": 9599,
+    "macros": {},
+    "subs": [],
+    "total": 9599
+   },
+   "ot_hbm_su_red_pretree_dly#0d58d5b9": {
+    "local": 5218,
+    "macros": {},
+    "subs": [],
+    "total": 5218
+   },
+   "ot_hbm_su_red_pretree_dly#50bddf37": {
+    "local": 3750,
+    "macros": {},
+    "subs": [],
+    "total": 3750
+   },
+   "ot_hbm_su_red_pretree_dly#89ec6a22": {
+    "local": 4335,
+    "macros": {},
+    "subs": [],
+    "total": 4335
+   },
+   "ot_hbm_su_red_pretree_dly#e729dbb6": {
+    "local": 2726,
+    "macros": {},
+    "subs": [],
+    "total": 2726
+   },
+   "ot_hbm_su_red_pretree_node#1052b163": {
+    "local": 464,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat#06923a4f"
+     ]
+    ],
+    "total": 4450
+   },
+   "ot_hbm_su_red_pretree_s\\LAT=00000000000000000000000000000110": {
+    "local": 2359,
+    "macros": {},
+    "subs": [
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#0d58d5b9"
+     ],
+     [
+      30,
+      "ot_hbm_su_red_pretree_node#1052b163"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#31076744"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#50bddf37"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#89ec6a22"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#e729dbb6"
+     ]
+    ],
+    "total": 211003
+   },
+   "ot_hbm_su_static_ins__d4g_pgslice#167fc6b9": {
+    "local": 44469,
+    "macros": {},
+    "subs": [],
+    "total": 44469
+   },
+   "ot_hbm_su_static_ins__d4g_pgslice#f79ec06f": {
+    "local": 19266,
+    "macros": {},
+    "subs": [],
+    "total": 19266
+   },
+   "ot_hbm_su_static_lane__d4g_pgslice#244f0158": {
+    "local": 9556,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_kge__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#173d0c03"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#1bf434de"
+     ],
+     [
+      52,
+      "ot_hdc_kadd__d4g_pgslice#2a9984bc"
+     ],
+     [
+      2,
+      "ot_hdc_kge__d4g_pgslice#2a9984bc"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_ins__d4g_pgslice#361c334d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#5ac7310f"
+     ],
+     [
+      3,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6655575c"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#8bd7dfbe"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#ad6a3317"
+     ],
+     [
+      2,
+      "ot_hdc_kinc__d4g_pgslice#e97de43d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#f4471b2e"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_ins__d4g_pgslice#f79ec06f"
+     ],
+     [
+      5,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      2,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000011"
+     ],
+     [
+      3,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000111000"
+     ],
+     [
+      2,
+      "ot_hdc_v41x_fdiv__d4g_pgslice"
+     ]
+    ],
+    "total": 206175
+   },
+   "ot_hbm_su_static_lane__d4g_pgslice#46c959d0": {
+    "local": 9186,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_kge__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#173d0c03"
+     ],
+     [
+      52,
+      "ot_hdc_kadd__d4g_pgslice#2a9984bc"
+     ],
+     [
+      2,
+      "ot_hdc_kge__d4g_pgslice#2a9984bc"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#5ac7310f"
+     ],
+     [
+      2,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6655575c"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#8bd7dfbe"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#ad6a3317"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#d3239407"
+     ],
+     [
+      2,
+      "ot_hdc_kinc__d4g_pgslice#e97de43d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#f4471b2e"
+     ],
+     [
+      5,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000011"
+     ],
+     [
+      4,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000100"
+     ]
+    ],
+    "total": 73754
+   },
+   "ot_hbm_su_static_lane__d4g_pgslice#f3956f9b": {
+    "local": 9554,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_kge__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_ins__d4g_pgslice#167fc6b9"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#173d0c03"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#1bf434de"
+     ],
+     [
+      52,
+      "ot_hdc_kadd__d4g_pgslice#2a9984bc"
+     ],
+     [
+      2,
+      "ot_hdc_kge__d4g_pgslice#2a9984bc"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_ins__d4g_pgslice#361c334d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#5ac7310f"
+     ],
+     [
+      3,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6655575c"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#8bd7dfbe"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#ad6a3317"
+     ],
+     [
+      2,
+      "ot_hdc_kinc__d4g_pgslice#e97de43d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#f4471b2e"
+     ],
+     [
+      5,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      2,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000011"
+     ],
+     [
+      3,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000111000"
+     ],
+     [
+      2,
+      "ot_hdc_v41x_fdiv__d4g_pgslice"
+     ]
+    ],
+    "total": 231376
+   },
+   "ot_hbm_su_static_pg_lg_tap#2e20abb2": {
+    "local": 6,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_vm_lg_pair_tap#8b658e75"
+     ]
+    ],
+    "total": 7359
+   },
+   "ot_hbm_su_static_pgslice__d4g_pgslice#c94299a0": {
+    "local": 36980,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_vm_bank_leaf__d4g_pgslice#21ef31ca"
+     ],
+     [
+      15,
+      "ot_hbm_su_static_lane__d4g_pgslice#244f0158"
+     ],
+     [
+      32,
+      "ot_hbm_su_static_pinned_bank__d4g_pgslice#454f93b7"
+     ],
+     [
+      16,
+      "ot_hbm_su_static_lane__d4g_pgslice#46c959d0"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_side__d4g_pgslice#6dae8b63"
+     ],
+     [
+      2,
+      "ot_hbm_su_multirate_bridge__d4g_pgslice#a858bfcd"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_vm_bank_leaf__d4g_pgslice#bf13afc0"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_lane__d4g_pgslice#f3956f9b"
+     ],
+     [
+      1,
+      "ot_hbm_su_red_pretree_s\\LAT=00000000000000000000000000000110"
+     ]
+    ],
+    "total": 5291836
+   },
+   "ot_hbm_su_static_pgslice_lg#895b097e": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_pg_lg_tap#2e20abb2"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_pgslice__d4g_pgslice#c94299a0"
+     ]
+    ],
+    "total": 5299195
+   },
+   "ot_hbm_su_static_pinned_bank__d4g_pgslice#454f93b7": {
+    "local": 612,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 6
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_replicated_bank__d4g_pgslice#2c68e777"
+     ]
+    ],
+    "total": 3366
+   },
+   "ot_hbm_su_static_replicated_bank__d4g_pgslice#2c68e777": {
+    "local": 2754,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 6
+    },
+    "subs": [],
+    "total": 2754
+   },
+   "ot_hbm_su_static_side__d4g_pgslice#6dae8b63": {
+    "local": 423,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_kge__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_side_softplus__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_rsqrt__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000011"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000111000"
+     ],
+     [
+      2,
+      "ot_hdc_fsqrt__d4g_pgslice"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_fdiv__d4g_pgslice"
+     ]
+    ],
+    "total": 412786
+   },
+   "ot_hbm_su_static_side_softplus__d4g_pgslice#6ef3fbd3": {
+    "local": 144,
+    "macros": {},
+    "subs": [
+     [
+      7,
+      "ot_hdc_delay__d4g_pgslice#0564c059"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#26a35020"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#3d4268b5"
+     ],
+     [
+      10,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_pgslice#6ef3fbd3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6f4548f2"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#92c905cd"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#dfc74040"
+     ],
+     [
+      11,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000010110100"
+     ],
+     [
+      1,
+      "ot_hdc_fsqrt__d4g_pgslice"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_fdiv__d4g_pgslice"
+     ]
+    ],
+    "total": 223122
+   },
+   "ot_hbm_vm_lg_pair_tap#8b658e75": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      2,
+      "ot_hbm_vm_lg_static_bank#a4aa36de"
+     ]
+    ],
+    "total": 7353
+   },
+   "ot_hbm_vm_lg_static_bank#a4aa36de": {
+    "local": 3164,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_vm_lg_keep_reg"
+     ]
+    ],
+    "total": 3676
+   },
+   "ot_hdc_delay__d4g_pgslice#1bf434de": {
+    "local": 3776,
+    "macros": {},
+    "subs": [],
+    "total": 3776
+   },
+   "ot_hdc_delay__d4g_pgslice#6f4548f2": {
+    "local": 3840,
+    "macros": {},
+    "subs": [],
+    "total": 3840
+   },
+   "ot_hdc_delay__d4g_pgslice#92c905cd": {
+    "local": 9280,
+    "macros": {},
+    "subs": [],
+    "total": 9280
+   },
+   "ot_hdc_fp32_add_lat#06923a4f": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#bdef29db"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#c67cdf08"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32"
+     ]
+    ],
+    "total": 3986
+   },
+   "ot_hdc_fp32_add_lat3__d4g_pgslice": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat__d4g_pgslice\\LAT=00000000000000000000000000000011"
+     ]
+    ],
+    "total": 3398
+   },
+   "ot_hdc_fp32_add_lat__d4g_pgslice\\LAT=00000000000000000000000000000011": {
+    "local": 1576,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#0af06bfb"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#1b715d81"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#33f5d6a3"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#c8c0b240"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_pgslice"
+     ]
+    ],
+    "total": 3398
+   },
+   "ot_hdc_fp32_mul_lat4__d4g_pgslice": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ]
+    ],
+    "total": 6617
+   },
+   "ot_hdc_fp32_mul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#9086088d"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#b04138a0"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#cbb602a3"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#e4b65a31"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_pgslice"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_pgslice"
+     ]
+    ],
+    "total": 6617
+   },
+   "ot_hdc_fsqrt__d4g_pgslice": {
+    "local": 6805,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000011111"
+     ]
+    ],
+    "total": 6867
+   },
+   "ot_hdc_mul24_rows__d4g_pgslice": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat3__d4g_pgslice"
+     ]
+    ],
+    "total": 3399
+   },
+   "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_lat4__d4g_pgslice"
+     ]
+    ],
+    "total": 6618
+   },
+   "ot_hdc_v41x_exp__d4g_pgslice#6ef3fbd3": {
+    "local": 1618,
+    "macros": {},
+    "subs": [
+     [
+      5,
+      "ot_hdc_delay__d4g_pgslice#0564c059"
+     ],
+     [
+      1,
+      "ot_hdc_kadd__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#1c10df0e"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#3d4268b5"
+     ],
+     [
+      8,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#cf62013b"
+     ],
+     [
+      7,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000111000"
+     ]
+    ],
+    "total": 79357
+   },
+   "ot_hdc_v41x_fdiv__d4g_pgslice": {
+    "local": 11074,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000010011"
+     ]
+    ],
+    "total": 11112
+   },
+   "ot_hdc_v41x_ins__d4g_pgslice#361c334d": {
+    "local": 4887,
+    "macros": {},
+    "subs": [],
+    "total": 4887
+   },
+   "ot_hdc_v41x_rsqrt__d4g_pgslice#6ef3fbd3": {
+    "local": 102,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_kadd__d4g_pgslice#158916d3"
+     ],
+     [
+      3,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6655575c"
+     ],
+     [
+      2,
+      "ot_hdc_delay__d4g_pgslice#73243752"
+     ],
+     [
+      3,
+      "ot_hdc_delay__d4g_pgslice#78a02f03"
+     ],
+     [
+      10,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000101110"
+     ]
+    ],
+    "total": 81078
+   },
+   "v16w_ot_hbm_su_static_pgslice_lg__pv0": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_pgslice_lg#895b097e"
+     ]
+    ],
+    "total": 5299195
+   }
+  },
+  "top": "v16w_ot_hbm_su_static_pgslice_lg__pv0",
+  "total": 5299195
+ },
+ "ot_hbm_su_static_pgslice_lg__pv8": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_su_static_pgslice_lg__pv8/ot_hbm_su_static_pgslice_lg__pv8.stat",
+  "macros": {
+   "ot_sram_1r1w_128x256_m1_r2c2": 192
+  },
+  "modules": {
+   "ot_hbm_su_multirate_bridge__d4g_pgslice#a858bfcd": {
+    "local": 9599,
+    "macros": {},
+    "subs": [],
+    "total": 9599
+   },
+   "ot_hbm_su_red_pretree_dly#0d58d5b9": {
+    "local": 5442,
+    "macros": {},
+    "subs": [],
+    "total": 5442
+   },
+   "ot_hbm_su_red_pretree_dly#50bddf37": {
+    "local": 3699,
+    "macros": {},
+    "subs": [],
+    "total": 3699
+   },
+   "ot_hbm_su_red_pretree_dly#89ec6a22": {
+    "local": 4453,
+    "macros": {},
+    "subs": [],
+    "total": 4453
+   },
+   "ot_hbm_su_red_pretree_dly#e729dbb6": {
+    "local": 2726,
+    "macros": {},
+    "subs": [],
+    "total": 2726
+   },
+   "ot_hbm_su_red_pretree_node#1052b163": {
+    "local": 468,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat#06923a4f"
+     ]
+    ],
+    "total": 4454
+   },
+   "ot_hbm_su_red_pretree_s\\LAT=00000000000000000000000000000110": {
+    "local": 2359,
+    "macros": {},
+    "subs": [
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#0d58d5b9"
+     ],
+     [
+      30,
+      "ot_hbm_su_red_pretree_node#1052b163"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#15dfbce3"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#31076744"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#50bddf37"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#89ec6a22"
+     ],
+     [
+      4,
+      "ot_hbm_su_red_pretree_dly#e729dbb6"
+     ]
+    ],
+    "total": 212295
+   },
+   "ot_hbm_su_static_lane__d4g_pgslice#46c959d0": {
+    "local": 9224,
+    "macros": {},
+    "subs": [
+     [
+      8,
+      "ot_hdc_kge__d4g_pgslice#158916d3"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#173d0c03"
+     ],
+     [
+      52,
+      "ot_hdc_kadd__d4g_pgslice#2a9984bc"
+     ],
+     [
+      2,
+      "ot_hdc_kge__d4g_pgslice#2a9984bc"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#5ac7310f"
+     ],
+     [
+      2,
+      "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#6655575c"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#8bd7dfbe"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#ad6a3317"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#d3239407"
+     ],
+     [
+      2,
+      "ot_hdc_kinc__d4g_pgslice#e97de43d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_pgslice#f4471b2e"
+     ],
+     [
+      5,
+      "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000011"
+     ],
+     [
+      4,
+      "ot_hdc_vline__d4g_pgslice\\D=00000000000000000000000000000100"
+     ]
+    ],
+    "total": 73792
+   },
+   "ot_hbm_su_static_pg_lg_tap#2e20abb2": {
+    "local": 6,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_vm_lg_pair_tap#8b658e75"
+     ]
+    ],
+    "total": 7359
+   },
+   "ot_hbm_su_static_pgslice__d4g_pgslice#672b712c": {
+    "local": 37126,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_vm_bank_leaf__d4g_pgslice#1a244318"
+     ],
+     [
+      32,
+      "ot_hbm_su_static_pinned_bank__d4g_pgslice#454f93b7"
+     ],
+     [
+      32,
+      "ot_hbm_su_static_lane__d4g_pgslice#46c959d0"
+     ],
+     [
+      2,
+      "ot_hbm_su_multirate_bridge__d4g_pgslice#a858bfcd"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_vm_bank_leaf__d4g_pgslice#bfc5ba06"
+     ],
+     [
+      1,
+      "ot_hbm_su_red_pretree_s\\LAT=00000000000000000000000000000110"
+     ]
+    ],
+    "total": 2737770
+   },
+   "ot_hbm_su_static_pgslice_lg#bf4864f7": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_pg_lg_tap#2e20abb2"
+     ],
+     [
+      1,
+      "ot_hbm_su_static_pgslice__d4g_pgslice#672b712c"
+     ]
+    ],
+    "total": 2745129
+   },
+   "ot_hbm_su_static_pinned_bank__d4g_pgslice#454f93b7": {
+    "local": 612,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 6
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_replicated_bank__d4g_pgslice#2c68e777"
+     ]
+    ],
+    "total": 3366
+   },
+   "ot_hbm_su_static_replicated_bank__d4g_pgslice#2c68e777": {
+    "local": 2754,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 6
+    },
+    "subs": [],
+    "total": 2754
+   },
+   "ot_hbm_vm_lg_pair_tap#8b658e75": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      2,
+      "ot_hbm_vm_lg_static_bank#a4aa36de"
+     ]
+    ],
+    "total": 7353
+   },
+   "ot_hbm_vm_lg_static_bank#a4aa36de": {
+    "local": 3164,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hbm_vm_lg_keep_reg"
+     ]
+    ],
+    "total": 3676
+   },
+   "ot_hdc_fp32_add_lat#06923a4f": {
+    "local": 1578,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut#21438b7c"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#a2ce3b36"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#bdef29db"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut#c67cdf08"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32"
+     ]
+    ],
+    "total": 3986
+   },
+   "ot_hdc_fp32_add_lat3__d4g_pgslice": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat__d4g_pgslice\\LAT=00000000000000000000000000000011"
+     ]
+    ],
+    "total": 3398
+   },
+   "ot_hdc_fp32_add_lat__d4g_pgslice\\LAT=00000000000000000000000000000011": {
+    "local": 1576,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#0af06bfb"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#1b715d81"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#33f5d6a3"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#c8c0b240"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_pgslice"
+     ]
+    ],
+    "total": 3398
+   },
+   "ot_hdc_fp32_mul_lat4__d4g_pgslice": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100"
+     ]
+    ],
+    "total": 6617
+   },
+   "ot_hdc_fp32_mul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#9086088d"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#b04138a0"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#cbb602a3"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_pgslice#e4b65a31"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_pgslice\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_pgslice"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_pgslice"
+     ]
+    ],
+    "total": 6617
+   },
+   "ot_hdc_mul24_rows__d4g_pgslice": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_qadd_lat__d4g_pgslice#5f7341b8": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat3__d4g_pgslice"
+     ]
+    ],
+    "total": 3399
+   },
+   "ot_hdc_qmul_lat__d4g_pgslice\\LAT=00000000000000000000000000000100": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_lat4__d4g_pgslice"
+     ]
+    ],
+    "total": 6618
+   },
+   "v16w_ot_hbm_su_static_pgslice_lg__pv8": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_128x256_m1_r2c2": 192
+    },
+    "subs": [
+     [
+      1,
+      "ot_hbm_su_static_pgslice_lg#bf4864f7"
+     ]
+    ],
+    "total": 2745129
+   }
+  },
+  "top": "v16w_ot_hbm_su_static_pgslice_lg__pv8",
+  "total": 2745129
+ },
+ "ot_hgi_coll_tkm_m_tp192": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192.stat (r18h5 recipe)",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 2
+  },
+  "modules": {
+   "ot_hgi_coll_tkm_buffer\\DW=00000000000000000000000101011000": {
+    "local": 2114,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_rst_relay#a58f2749"
+     ]
+    ],
+    "total": 2120
+   },
+   "ot_hgi_coll_tkm_m\\TP=00000000000000000000000011000000": {
+    "local": 16,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_coll_tkm_static\\TP=00000000000000000000000011000000"
+     ]
+    ],
+    "total": 8357315
+   },
+   "ot_hgi_coll_tkm_m_tp192": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_coll_tkm_m\\TP=00000000000000000000000011000000"
+     ]
+    ],
+    "total": 8357315
+   },
+   "ot_hgi_coll_tkm_static\\TP=00000000000000000000000011000000": {
+    "local": 31659,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_coll_tkm_buffer\\DW=00000000000000000000000101011000"
+     ],
+     [
+      32,
+      "ot_hgi_coll_tkm_tile_e86"
+     ]
+    ],
+    "total": 8357299
+   },
+   "ot_hgi_coll_tkm_tile_e86": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hgi_coll_tkm_tile_rg#a96d1e09"
+     ]
+    ],
+    "total": 260110
+   },
+   "ot_hgi_coll_tkm_tile_rg#a96d1e09": {
+    "local": 61678,
+    "macros": {},
+    "subs": [
+     [
+      416,
+      "ot_tkm_lt_live\\W=00000000000000000000000001010101"
+     ]
+    ],
+    "total": 260110
+   },
+   "v16w_ot_hgi_coll_tkm_m_tp192": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_1024x256_m2_r2c2": 2
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_coll_tkm_m_tp192"
+     ]
+    ],
+    "total": 8357315
+   }
+  },
+  "top": "v16w_ot_hgi_coll_tkm_m_tp192",
+  "total": 8357315
+ },
+ "ot_hgi_sfu_core_split3": {
+  "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_sfu_core_split3/ot_hgi_sfu_core_split3.stat (r18h5 recipe, scoped_d4g/sfu.sv preferred, LWB=15 LG_PATH=31)",
+  "macros": {
+   "ot_sram_1r1w_256x256_m2_r2c2": 80
+  },
+  "modules": {
+   "ot_dsrom_fdiv_f12__d4g_sfu": {
+    "local": 6746,
+    "macros": {},
+    "subs": [
+     [
+      42,
+      "ot_hdc_kadd__d4g_sfu#11d02657"
+     ],
+     [
+      1,
+      "ot_hdc_kinc__d4g_sfu#27c3de73"
+     ],
+     [
+      1,
+      "ot_hdc_kadd__d4g_sfu#e417641d"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_sfu\\D=00000000000000000000000000010101"
+     ]
+    ],
+    "total": 23067
+   },
+   "ot_hdc_delay_ring__d4g_sfu#0338b203": {
+    "local": 12008,
+    "macros": {},
+    "subs": [],
+    "total": 12008
+   },
+   "ot_hdc_delay_ring__d4g_sfu#8d6b3def": {
+    "local": 5526,
+    "macros": {},
+    "subs": [],
+    "total": 5526
+   },
+   "ot_hdc_fp32_add_lat3__d4g_sfu": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat__d4g_sfu\\LAT=00000000000000000000000000000011"
+     ]
+    ],
+    "total": 3403
+   },
+   "ot_hdc_fp32_add_lat__d4g_sfu\\LAT=00000000000000000000000000000011": {
+    "local": 1581,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#0af06bfb"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#1b715d81"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#33f5d6a3"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#c8c0b240"
+     ],
+     [
+      4,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000001000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000011000"
+     ],
+     [
+      2,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000011100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000011111"
+     ],
+     [
+      1,
+      "ot_hdc_lzc32__d4g_sfu"
+     ]
+    ],
+    "total": 3403
+   },
+   "ot_hdc_fp32_mul_lat__d4g_sfu\\LAT=00000000000000000000000000000110": {
+    "local": 3201,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#1062cdcc"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#4473cf46"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#88caf8b4"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#aedcbb61"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#b011b62e"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#b04138a0"
+     ],
+     [
+      1,
+      "ot_hdc_w11_cut__d4g_sfu#e4b65a31"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000001100"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000011000"
+     ],
+     [
+      1,
+      "ot_hdc_ksadd_k__d4g_sfu\\W=00000000000000000000000000110000"
+     ],
+     [
+      2,
+      "ot_hdc_lzc32__d4g_sfu"
+     ],
+     [
+      1,
+      "ot_hdc_mul24_rows__d4g_sfu"
+     ]
+    ],
+    "total": 7229
+   },
+   "ot_hdc_mul24_rows__d4g_sfu": {
+    "local": 2025,
+    "macros": {},
+    "subs": [],
+    "total": 2025
+   },
+   "ot_hdc_qadd_lat__d4g_sfu#46162733": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_add_lat3__d4g_sfu"
+     ]
+    ],
+    "total": 3404
+   },
+   "ot_hdc_qmul_lat__d4g_sfu\\LAT=00000000000000000000000000000110": {
+    "local": 1,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_fp32_mul_lat__d4g_sfu\\LAT=00000000000000000000000000000110"
+     ]
+    ],
+    "total": 7230
+   },
+   "ot_hdc_v41x_exp__d4g_sfu#82307956": {
+    "local": 1636,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_kadd__d4g_sfu#158916d3"
+     ],
+     [
+      8,
+      "ot_hdc_qadd_lat__d4g_sfu#46162733"
+     ],
+     [
+      5,
+      "ot_hdc_delay__d4g_sfu#4a006920"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#74fadaec"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#cf62013b"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#edd2b320"
+     ],
+     [
+      7,
+      "ot_hdc_qmul_lat__d4g_sfu\\LAT=00000000000000000000000000000110"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_sfu\\D=00000000000000000000000001011110"
+     ]
+    ],
+    "total": 86343
+   },
+   "ot_hdc_v41x_ins__d4g_sfu#7642ef9f": {
+    "local": 5621,
+    "macros": {},
+    "subs": [],
+    "total": 5621
+   },
+   "ot_hdc_v41x_ins__d4g_sfu#b82fe5c5": {
+    "local": 57855,
+    "macros": {},
+    "subs": [],
+    "total": 57855
+   },
+   "ot_hdc_v41x_vec_lane__d4g_sfu#19e1664c": {
+    "local": 10911,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay_ring__d4g_sfu#0338b203"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#0564c059"
+     ],
+     [
+      8,
+      "ot_hdc_kge__d4g_sfu#158916d3"
+     ],
+     [
+      57,
+      "ot_hdc_kadd__d4g_sfu#2a9984bc"
+     ],
+     [
+      2,
+      "ot_hdc_kge__d4g_sfu#2a9984bc"
+     ],
+     [
+      3,
+      "ot_hdc_qadd_lat__d4g_sfu#46162733"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#6373715f"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_ins__d4g_sfu#7642ef9f"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_exp__d4g_sfu#82307956"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#99121837"
+     ],
+     [
+      1,
+      "ot_hdc_v41x_ins__d4g_sfu#b82fe5c5"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#e0ab5449"
+     ],
+     [
+      2,
+      "ot_hdc_kinc__d4g_sfu#e97de43d"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#f3c07742"
+     ],
+     [
+      1,
+      "ot_hdc_delay__d4g_sfu#fe47b1cf"
+     ],
+     [
+      5,
+      "ot_hdc_qmul_lat__d4g_sfu\\LAT=00000000000000000000000000000110"
+     ],
+     [
+      3,
+      "ot_hdc_vline__d4g_sfu\\D=00000000000000000000000000000110"
+     ],
+     [
+      2,
+      "ot_hdc_vline__d4g_sfu\\D=00000000000000000000000000000111"
+     ],
+     [
+      1,
+      "ot_hdc_vline__d4g_sfu\\D=00000000000000000000000001011111"
+     ],
+     [
+      2,
+      "ot_dsrom_fdiv_f12__d4g_sfu"
+     ]
+    ],
+    "total": 293188
+   },
+   "ot_hgi_sfu_arithmetic_grid__d4g_sfu\\BTREE=00000000000000000000000000000000": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      16,
+      "ot_su12_sfu__d4g_sfu#79ee80f8"
+     ],
+     [
+      16,
+      "ot_hgi_sfu_lane_map__d4g_sfu"
+     ]
+    ],
+    "total": 4909776
+   },
+   "ot_hgi_sfu_core_split2__d4g_sfu#c15aa173": {
+    "local": 14379,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 80
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_sfu_vm_static_bridge__d4g_sfu#0ac1cf54"
+     ],
+     [
+      1,
+      "ot_rst_relay__d4g_sfu#52d4245f"
+     ],
+     [
+      1,
+      "ot_hgi_sfu_static_engine__d4g_sfu\\LWB=00000000000000000000000000001111"
+     ]
+    ],
+    "total": 5515990
+   },
+   "ot_hgi_sfu_core_split3#bcba0432": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 80
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_sfu_core_split2__d4g_sfu#c15aa173"
+     ]
+    ],
+    "total": 5515990
+   },
+   "ot_hgi_sfu_lane_map__d4g_sfu": {
+    "local": 4663,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_delay_ring__d4g_sfu#8d6b3def"
+     ]
+    ],
+    "total": 10189
+   },
+   "ot_hgi_sfu_static_engine__d4g_sfu\\LWB=00000000000000000000000000001111": {
+    "local": 13,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 80
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_sfu_static_operand_store__d4g_sfu\\LWB=00000000000000000000000000001111"
+     ],
+     [
+      1,
+      "ot_hgi_sfu_static_quarter__d4g_sfu"
+     ]
+    ],
+    "total": 5442290
+   },
+   "ot_hgi_sfu_static_operand_store__d4g_sfu\\LWB=00000000000000000000000000001111": {
+    "local": 13974,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 80
+    },
+    "subs": [
+     [
+      4,
+      "ot_hgi_su_lgroup2__d4g_sfu#3a91b2fe"
+     ],
+     [
+      1,
+      "ot_hgi_su_lgroup2__d4g_sfu#ddfed389"
+     ]
+    ],
+    "total": 529017
+   },
+   "ot_hgi_sfu_static_quarter__d4g_sfu": {
+    "local": 3484,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hgi_sfu_arithmetic_grid__d4g_sfu\\BTREE=00000000000000000000000000000000"
+     ]
+    ],
+    "total": 4913260
+   },
+   "ot_hgi_sfu_vm_static_bridge__d4g_sfu#0ac1cf54": {
+    "local": 59315,
+    "macros": {},
+    "subs": [],
+    "total": 59315
+   },
+   "ot_hgi_su_lgroup2__d4g_sfu#3a91b2fe": {
+    "local": 105968,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 16
+    },
+    "subs": [
+     [
+      16,
+      "ot_hgi_su_lbank__d4g_sfu#de6b7cfa"
+     ]
+    ],
+    "total": 113472
+   },
+   "ot_hgi_su_lgroup2__d4g_sfu#ddfed389": {
+    "local": 53651,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 16
+    },
+    "subs": [
+     [
+      16,
+      "ot_hgi_su_lbank__d4g_sfu#de6b7cfa"
+     ]
+    ],
+    "total": 61155
+   },
+   "ot_su12_lane__d4g_sfu#512f3a3f": {
+    "local": 3484,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_hdc_v41x_vec_lane__d4g_sfu#19e1664c"
+     ]
+    ],
+    "total": 296672
+   },
+   "ot_su12_sfu__d4g_sfu#79ee80f8": {
+    "local": 0,
+    "macros": {},
+    "subs": [
+     [
+      1,
+      "ot_su12_lane__d4g_sfu#512f3a3f"
+     ]
+    ],
+    "total": 296672
+   },
+   "v16w_ot_hgi_sfu_core_split3": {
+    "local": 0,
+    "macros": {
+     "ot_sram_1r1w_256x256_m2_r2c2": 80
+    },
+    "subs": [
+     [
+      1,
+      "ot_hgi_sfu_core_split3#bcba0432"
+     ]
+    ],
+    "total": 5515990
+   }
+  },
+  "top": "v16w_ot_hgi_sfu_core_split3",
+  "total": 5515990
+ }
+}

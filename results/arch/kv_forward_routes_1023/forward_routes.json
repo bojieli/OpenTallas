@@ -1,0 +1,43 @@
+[
+  {
+    "src": "host",
+    "src_bus": "link_rst_n",
+    "dst": "d2d_kv",
+    "dst_bus": "rst_n",
+    "lanes": [
+      "L745",
+      "L746"
+    ]
+  },
+  {
+    "src": "host",
+    "src_bus": "link_rst_n",
+    "dst": "serdes_E",
+    "dst_bus": "rst_n",
+    "lanes": [
+      "L745",
+      "L746",
+      "L747"
+    ]
+  },
+  {
+    "src": "serdes_E",
+    "src_bus": "tx_up",
+    "dst": "host",
+    "dst_bus": "fdi",
+    "lanes": [
+      "L2046",
+      "L2047"
+    ]
+  },
+  {
+    "src": "serdes_W",
+    "src_bus": "tx_up",
+    "dst": "host",
+    "dst_bus": "fdi",
+    "lanes": [
+      "L2049",
+      "L2051"
+    ]
+  }
+]

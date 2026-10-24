@@ -1,19 +1,19 @@
 {
  "variant": "B",
- "partitions": 380,
- "types": 48,
- "types_merged": 148,
- "ports": 3234,
- "lanes": 1997,
+ "partitions": 388,
+ "types": 56,
+ "types_merged": 146,
+ "ports": 3703,
+ "lanes": 2142,
  "die_um": [
   31216.32,
   25228.8
  ],
  "die_mm2": 787.6,
  "content_status_per_instance": {
-  "reuse": 1715,
+  "reuse": 1717,
   "rework": 906,
-  "new": 375
+  "new": 381
  },
  "max_cells_type": [
   782764,
@@ -101,12 +101,66 @@
    ],
    "macros": 40
   },
-  "coll": {
+  "coll_core": {
    "cells": 150000,
    "instances": 1,
    "outline_um": [
     786.24,
-    9097.92
+    1589.76
+   ],
+   "macros": 0
+  },
+  "coll_ft": {
+   "cells": 6000,
+   "instances": 3,
+   "outline_um": [
+    786.24,
+    993.6
+   ],
+   "macros": 0
+  },
+  "coll_ftc": {
+   "cells": 8000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    1036.8
+   ],
+   "macros": 0
+  },
+  "coll_ftm": {
+   "cells": 8000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    1209.6
+   ],
+   "macros": 0
+  },
+  "coll_ftn": {
+   "cells": 6000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    691.2
+   ],
+   "macros": 0
+  },
+  "coll_n": {
+   "cells": 10000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    786.24
+   ],
+   "macros": 0
+  },
+  "coll_s": {
+   "cells": 15000,
+   "instances": 1,
+   "outline_um": [
+    786.24,
+    803.52
    ],
    "macros": 0
   },
@@ -247,7 +301,7 @@
   },
   "sle_sc": {
    "cells": 40000,
-   "instances": 12,
+   "instances": 6,
    "outline_um": [
     613.44,
     1080.0
@@ -274,7 +328,7 @@
   },
   "sle_stm": {
    "cells": 270598,
-   "instances": 12,
+   "instances": 6,
    "outline_um": [
     613.44,
     1080.0
@@ -398,6 +452,15 @@
    ],
    "macros": 0
   },
+  "slw_sc": {
+   "cells": 40000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
   "slw_st_a": {
    "cells": 141126,
    "instances": 6,
@@ -412,6 +475,15 @@
    "instances": 6,
    "outline_um": [
     622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_stm": {
+   "cells": 270598,
+   "instances": 6,
+   "outline_um": [
+    613.44,
     1080.0
    ],
    "macros": 0
@@ -462,24 +534,37 @@
   "bc22": 24768,
   "bc30": 24768,
   "bc32": 24768,
-  "t00": 24672,
-  "t30": 24672,
-  "t01": 24672,
-  "t31": 24672,
-  "t02": 24672,
-  "t32": 24672,
-  "t03": 24672,
-  "t33": 24672,
-  "l1a": 24672,
-  "l1b": 24672,
-  "l1c": 24672,
-  "l1d": 24672,
-  "l1e": 24672,
-  "l1f": 24672,
-  "l1g": 24672,
-  "l1h": 24672,
-  "l2a": 24672,
-  "l2c": 24672
+  "a01": 24672,
+  "a02": 24672,
+  "a03": 24672,
+  "a10": 24672,
+  "a11": 24672,
+  "a12": 24672,
+  "a13": 24672,
+  "a20": 24672,
+  "a21": 24672,
+  "a23": 24672,
+  "a31": 24672,
+  "a32": 24672,
+  "a33": 24672,
+  "b01": 24672,
+  "b02": 24672,
+  "b03": 24672,
+  "b10": 24672,
+  "b11": 24672,
+  "b13": 24672,
+  "b20": 24672,
+  "b21": 24672,
+  "b23": 24672,
+  "b31": 24672,
+  "b32": 24672,
+  "b33": 24672,
+  "crec_tx_p": 549,
+  "crec_rx_p": 547,
+  "crec_tx_r": 517,
+  "crec_rx_r": 515,
+  "cshr_rtx": 568,
+  "cshr_rrx": 566
  },
  "cell_estimate_method": "A0 = 187991 cells (NL rpf synth_stat incl. 10 ROM leaf macros); other leaves = outline area x 0.6 / 0.52 um2 per cell (A0 calibration); soft slice glue / W-strip blocks = per-region guesses (SOFT_CELLS/WS_CELLS)",
  "census_coverage": {
@@ -510,7 +595,8 @@
  },
  "planned_cores": [
   {
-   "partition_type": "coll",
+   "partition_type": "coll_s",
+   "partition": "coll_s",
    "core": "coll_face_s1",
    "inst": "u_coll_face_s1",
    "rtl_path": "u_io_collective.u_io.g[3].u_face",
@@ -526,7 +612,8 @@
    "cells_est": 116000
   },
   {
-   "partition_type": "coll",
+   "partition_type": "coll_s",
+   "partition": "coll_s",
    "core": "coll_face_s2",
    "inst": "u_coll_face_s2",
    "rtl_path": "u_io_collective.u_io.g[4].u_face",
@@ -542,14 +629,15 @@
    "cells_est": 116000
   },
   {
-   "partition_type": "coll",
+   "partition_type": "coll_core",
+   "partition": "coll_core",
    "core": "coll_face_p",
    "inst": "u_coll_face_p",
    "rtl_path": "u_io_collective.u_io.g[0].u_face",
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    4199.04
+    8.64
    ],
    "outline_um": [
     518.4,
@@ -558,14 +646,15 @@
    "cells_est": 116000
   },
   {
-   "partition_type": "coll",
+   "partition_type": "coll_core",
+   "partition": "coll_core",
    "core": "coll_face_r",
    "inst": "u_coll_face_r",
    "rtl_path": "u_io_collective.u_io.g[1].u_face",
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    5382.72
+    1192.32
    ],
    "outline_um": [
     518.4,
@@ -574,14 +663,15 @@
    "cells_est": 116000
   },
   {
-   "partition_type": "coll",
+   "partition_type": "coll_n",
+   "partition": "coll_n",
    "core": "coll_face_s0",
    "inst": "u_coll_face_s0",
    "rtl_path": "u_io_collective.u_io.g[2].u_face",
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    8700.48
+    388.8
    ],
    "outline_um": [
     518.4,
@@ -603,11 +693,3074 @@
   }
  },
  "coll_split": {
+  "segments": [
+   {
+    "part": "coll_s",
+    "type": "coll_s",
+    "y0_um": 4648.32,
+    "h_um": 803.52
+   },
+   {
+    "part": "coll_f0",
+    "type": "coll_ft",
+    "y0_um": 5451.84,
+    "h_um": 993.6
+   },
+   {
+    "part": "coll_f1",
+    "type": "coll_ft",
+    "y0_um": 6445.44,
+    "h_um": 993.6
+   },
+   {
+    "part": "coll_f2",
+    "type": "coll_ft",
+    "y0_um": 7439.04,
+    "h_um": 993.6
+   },
+   {
+    "part": "coll_core",
+    "type": "coll_core",
+    "y0_um": 8432.64,
+    "h_um": 1589.76
+   },
+   {
+    "part": "coll_f3",
+    "type": "coll_ftm",
+    "y0_um": 10022.4,
+    "h_um": 1209.6
+   },
+   {
+    "part": "coll_f4",
+    "type": "coll_ftc",
+    "y0_um": 11232.0,
+    "h_um": 1036.8
+   },
+   {
+    "part": "coll_f5",
+    "type": "coll_ftn",
+    "y0_um": 12268.8,
+    "h_um": 691.2
+   },
+   {
+    "part": "coll_n",
+    "type": "coll_n",
+    "y0_um": 12960.0,
+    "h_um": 786.24
+   }
+  ],
   "cores": 6,
   "max_core_cells_est": 116000,
-  "glue_cells_est": 150000,
+  "glue_cells_est": {
+   "coll_s": 15000,
+   "coll_ft": 6000,
+   "coll_core": 150000,
+   "coll_ftm": 8000,
+   "coll_ftc": 8000,
+   "coll_ftn": 6000,
+   "coll_n": 10000
+  },
   "cap": 400000,
   "note": "5 face cores + the UCIe PHY hard core; face cells from the COLLIO-F face kits (std ~15k um2 each); glue = collective core + gearbox + share + clkrx + land (estimate; a synth count is owed)"
  },
+ "clock_taps": {
+  "rule": "COORD 10-23 07:24 ruling (2): one spine tap per planned core or landed glue region; die_plan clock.tap_um = the partition H-tap root (centre), the taps below are its declared M8/M9 branch leaves, also carried verbatim in schema clock.taps[] (insertion values remain estimates)",
+  "insertion_model": "insertion estimate ins(R) = 78 ps + 224 ps/mm x R (R = Manhattan tap -> farthest sink of its region): a line through the PLAN-TOOL CP1 kit (one centre tap, 1.43 x 3.67 mm near-empty partition, ~650 ps at R 2.55 mm) and a ~0.1-mm leaf tree (~100 ps).  Hard cores carry their own budget below their ck pin.  To be replaced by the G3 measurement of each type.",
+  "types": {
+   "cbf_q00": {
+    "root_um": [
+     622.08,
+     1304.64
+    ],
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       521.86
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       521.86,
+       1235.52,
+       1043.71
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "region_um": [
+       0.0,
+       1043.71,
+       1235.52,
+       1565.57
+      ],
+      "reach_um": 883.0,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "region_um": [
+       0.0,
+       1565.57,
+       1235.52,
+       2087.42
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "region_um": [
+       0.0,
+       2087.42,
+       1235.52,
+       2609.28
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1045.4,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbf_q00_s2": {
+    "root_um": [
+     622.08,
+     1304.64
+    ],
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       521.86
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       521.86,
+       1235.52,
+       1043.71
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "region_um": [
+       0.0,
+       1043.71,
+       1235.52,
+       1565.57
+      ],
+      "reach_um": 883.0,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "region_um": [
+       0.0,
+       1565.57,
+       1235.52,
+       2087.42
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "region_um": [
+       0.0,
+       2087.42,
+       1235.52,
+       2609.28
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1045.4,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbf_q01": {
+    "root_um": [
+     622.08,
+     1313.28
+    ],
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       523.58
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       523.58,
+       1235.52,
+       1047.17
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "region_um": [
+       0.0,
+       1047.17,
+       1235.52,
+       1570.75
+      ],
+      "reach_um": 888.2,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "region_um": [
+       0.0,
+       1570.75,
+       1235.52,
+       2094.34
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "region_um": [
+       0.0,
+       2094.34,
+       1235.52,
+       2617.92
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1054.1,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbf_q01_s2": {
+    "root_um": [
+     622.08,
+     1313.28
+    ],
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       523.58
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       523.58,
+       1235.52,
+       1047.17
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "region_um": [
+       0.0,
+       1047.17,
+       1235.52,
+       1570.75
+      ],
+      "reach_um": 888.2,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "region_um": [
+       0.0,
+       1570.75,
+       1235.52,
+       2094.34
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "region_um": [
+       0.0,
+       2094.34,
+       1235.52,
+       2617.92
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1054.1,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbf_q11": {
+    "root_um": [
+     622.08,
+     1313.28
+    ],
+    "taps": [
+     {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 662.6
+     },
+     {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       523.58
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       523.58,
+       1235.52,
+       1047.17
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "region_um": [
+       0.0,
+       1047.17,
+       1235.52,
+       1570.75
+      ],
+      "reach_um": 888.2,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "region_um": [
+       0.0,
+       1570.75,
+       1235.52,
+       2094.34
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "region_um": [
+       0.0,
+       2094.34,
+       1235.52,
+       2617.92
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1054.1,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbn_q00": {
+    "root_um": [
+     622.08,
+     1304.64
+    ],
+    "taps": [
+     {
+      "name": "u_t00.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t10.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 628.0
+     },
+     {
+      "name": "u_t01.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t11.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       521.86
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       521.86,
+       1235.52,
+       1043.71
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "region_um": [
+       0.0,
+       1043.71,
+       1235.52,
+       1565.57
+      ],
+      "reach_um": 883.0,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "region_um": [
+       0.0,
+       1565.57,
+       1235.52,
+       2087.42
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "region_um": [
+       0.0,
+       2087.42,
+       1235.52,
+       2609.28
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1045.4,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbn_q01": {
+    "root_um": [
+     622.08,
+     1313.28
+    ],
+    "taps": [
+     {
+      "name": "u_t02.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t12.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t03.ck",
+      "kind": "core",
+      "xy": [
+       544.224,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "u_t13.ck",
+      "kind": "core",
+      "xy": [
+       691.296,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 806.4
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       523.58
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       523.58,
+       1235.52,
+       1047.17
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "region_um": [
+       0.0,
+       1047.17,
+       1235.52,
+       1570.75
+      ],
+      "reach_um": 888.2,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "region_um": [
+       0.0,
+       1570.75,
+       1235.52,
+       2094.34
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "region_um": [
+       0.0,
+       2094.34,
+       1235.52,
+       2617.92
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1054.1,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbn_q11": {
+    "root_um": [
+     622.08,
+     1313.28
+    ],
+    "taps": [
+     {
+      "name": "u_t22.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       737.196
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 662.6
+     },
+     {
+      "name": "u_t32.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       737.196
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 653.9
+     },
+     {
+      "name": "u_t23.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "u_t33.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 815.1
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       523.58
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1054.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       523.58,
+       1235.52,
+       1047.17
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 527.0
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1313.28
+      ],
+      "region_um": [
+       0.0,
+       1047.17,
+       1235.52,
+       1570.75
+      ],
+      "reach_um": 888.2,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1831.68
+      ],
+      "region_um": [
+       0.0,
+       1570.75,
+       1235.52,
+       2094.34
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2358.72
+      ],
+      "region_um": [
+       0.0,
+       2094.34,
+       1235.52,
+       2617.92
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1054.1,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "cbx_q10": {
+    "root_um": [
+     622.08,
+     1304.64
+    ],
+    "taps": [
+     {
+      "name": "u_t20.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       745.836
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 645.3
+     },
+     {
+      "name": "u_t30.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       745.836
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 636.7
+     },
+     {
+      "name": "u_t21.ck",
+      "kind": "core",
+      "xy": [
+       535.584,
+       2050.476
+      ],
+      "orient": "R0",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 832.3
+     },
+     {
+      "name": "u_t31.ck",
+      "kind": "core",
+      "xy": [
+       699.936,
+       2050.476
+      ],
+      "orient": "MY",
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "QC-A0 cores/a0_core.json (below the ck pin)",
+      "from_root_um": 823.7
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1235.52,
+       521.86
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       786.24
+      ],
+      "region_um": [
+       0.0,
+       521.86,
+       1235.52,
+       1043.71
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_02",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1304.64
+      ],
+      "region_um": [
+       0.0,
+       1043.71,
+       1235.52,
+       1565.57
+      ],
+      "reach_um": 883.0,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_03",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       1823.04
+      ],
+      "region_um": [
+       0.0,
+       1565.57,
+       1235.52,
+       2087.42
+      ],
+      "reach_um": 886.5,
+      "insertion_ps": 277,
+      "insertion_tol_ps": 40,
+      "from_root_um": 518.4
+     },
+     {
+      "name": "glue_04",
+      "kind": "glue",
+      "xy": [
+       622.08,
+       2350.08
+      ],
+      "region_um": [
+       0.0,
+       2087.42,
+       1235.52,
+       2609.28
+      ],
+      "reach_um": 884.7,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 1045.4
+     }
+    ],
+    "max_from_root_um": 1045.4,
+    "max_nearest_tap_um": 527.0,
+    "glue_taps_over_290ps": []
+   },
+   "coll_core": {
+    "root_um": [
+     388.8,
+     794.88
+    ],
+    "taps": [
+     {
+      "name": "u_coll_face_p.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       207.36
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 708.5
+     },
+     {
+      "name": "u_coll_face_r.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       1382.4
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 708.5
+     },
+     {
+      "name": "u_io_ucie.ck",
+      "kind": "core",
+      "xy": [
+       388.8,
+       794.88
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "UCIe PHY hard IP (FDI side forwarded lclk; core-clock side at this tap)",
+      "from_root_um": 0.0
+     },
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       794.88
+      ],
+      "reach_um": 794.9,
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       1192.32
+      ],
+      "region_um": [
+       0.0,
+       794.88,
+       786.24,
+       1589.76
+      ],
+      "reach_um": 794.9,
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 406.1
+     }
+    ],
+    "max_from_root_um": 708.5,
+    "max_nearest_tap_um": 406.1,
+    "glue_taps_over_290ps": []
+   },
+   "coll_ft": {
+    "root_um": [
+     388.8,
+     501.12
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       501.12
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       993.6
+      ],
+      "reach_um": 898.6,
+      "insertion_ps": 279,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ],
+    "max_from_root_um": 8.6,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "coll_ftc": {
+    "root_um": [
+     388.8,
+     518.4
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       518.4
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       1036.8
+      ],
+      "reach_um": 915.8,
+      "insertion_ps": 283,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ],
+    "max_from_root_um": 8.6,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "coll_ftm": {
+    "root_um": [
+     388.8,
+     604.8
+    ],
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       302.4
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       604.8
+      ],
+      "reach_um": 699.8,
+      "insertion_ps": 235,
+      "insertion_tol_ps": 40,
+      "from_root_um": 311.0
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       907.2
+      ],
+      "region_um": [
+       0.0,
+       604.8,
+       786.24,
+       1209.6
+      ],
+      "reach_um": 699.8,
+      "insertion_ps": 235,
+      "insertion_tol_ps": 40,
+      "from_root_um": 311.0
+     }
+    ],
+    "max_from_root_um": 311.0,
+    "max_nearest_tap_um": 604.8,
+    "glue_taps_over_290ps": []
+   },
+   "coll_ftn": {
+    "root_um": [
+     388.8,
+     345.6
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       345.6
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       691.2
+      ],
+      "reach_um": 743.0,
+      "insertion_ps": 244,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ],
+    "max_from_root_um": 8.6,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "coll_n": {
+    "root_um": [
+     388.8,
+     397.44
+    ],
+    "taps": [
+     {
+      "name": "u_coll_face_s0.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       587.52
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 311.0
+     },
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       786.24
+      ],
+      "reach_um": 794.9,
+      "insertion_ps": 256,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ],
+    "max_from_root_um": 311.0,
+    "max_nearest_tap_um": 319.7,
+    "glue_taps_over_290ps": []
+   },
+   "coll_s": {
+    "root_um": [
+     388.8,
+     397.44
+    ],
+    "taps": [
+     {
+      "name": "u_coll_face_s1.ck",
+      "kind": "core",
+      "xy": [
+       267.84,
+       207.36
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 311.0
+     },
+     {
+      "name": "u_coll_face_s2.ck",
+      "kind": "core",
+      "xy": [
+       527.04,
+       604.8
+      ],
+      "insertion_ps": 250,
+      "insertion_tol_ps": 40,
+      "budget_owner": "face core kit (11 internal roots below this tap)",
+      "from_root_um": 345.6
+     },
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       397.44,
+       397.44
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       786.24,
+       803.52
+      ],
+      "reach_um": 803.5,
+      "insertion_ps": 258,
+      "insertion_tol_ps": 40,
+      "from_root_um": 8.6
+     }
+    ],
+    "max_from_root_um": 345.6,
+    "max_nearest_tap_um": 337.0,
+    "glue_taps_over_290ps": []
+   },
+   "glue": {
+    "root_um": [
+     388.8,
+     604.8
+    ],
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       302.4
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       777.6,
+       604.8
+      ],
+      "reach_um": 691.2,
+      "insertion_ps": 233,
+      "insertion_tol_ps": 40,
+      "from_root_um": 302.4
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       907.2
+      ],
+      "region_um": [
+       0.0,
+       604.8,
+       777.6,
+       1209.6
+      ],
+      "reach_um": 691.2,
+      "insertion_ps": 233,
+      "insertion_tol_ps": 40,
+      "from_root_um": 302.4
+     }
+    ],
+    "max_from_root_um": 302.4,
+    "max_nearest_tap_um": 604.8,
+    "glue_taps_over_290ps": []
+   },
+   "native59": {
+    "root_um": [
+     388.8,
+     259.2
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       777.6,
+       518.4
+      ],
+      "reach_um": 648.0,
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_ctl": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fe_v1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fe_v2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fe_v3": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fw_v1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_fw_v2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_hc0": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_hc1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_hc2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_hc3": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_sc": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_st_a": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_st_b": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_stm": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_su_c": {
+    "root_um": [
+     613.44,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       267.84
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1226.88,
+       540.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       812.16
+      ],
+      "region_um": [
+       0.0,
+       540.0,
+       1226.88,
+       1080.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 276.5
+     }
+    ],
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
+    "glue_taps_over_290ps": []
+   },
+   "sle_su_l0": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_su_l1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "sle_tap": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_fe_v1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_fe_v2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_fw_v1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_fw_v2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_fw_v3": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_hc0": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_hc1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_hc2": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_hc3": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_sc": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_st_a": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_st_b": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_stm": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_su_c": {
+    "root_um": [
+     613.44,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue_00",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       267.84
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       1226.88,
+       540.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 267.8
+     },
+     {
+      "name": "glue_01",
+      "kind": "glue",
+      "xy": [
+       613.44,
+       812.16
+      ],
+      "region_um": [
+       0.0,
+       540.0,
+       1226.88,
+       1080.0
+      ],
+      "reach_um": 885.6,
+      "insertion_ps": 276,
+      "insertion_tol_ps": 40,
+      "from_root_um": 276.5
+     }
+    ],
+    "max_from_root_um": 276.5,
+    "max_nearest_tap_um": 544.3,
+    "glue_taps_over_290ps": []
+   },
+   "slw_su_l0": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_su_l1": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "tt_ctlm": {
+    "root_um": [
+     388.8,
+     259.2
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       388.8,
+       259.2
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       777.6,
+       518.4
+      ],
+      "reach_um": 648.0,
+      "insertion_ps": 223,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   }
+  }
+ },
+ "neighbours": {
+  "max_abutting": 7,
+  "max_linked": 6,
+  "over_6_abutting": {
+   "c_W5_bn_00": {
+    "abutting": 7,
+    "linked": 4,
+    "linked_to": [
+     "c_W5_bn_01",
+     "c_W5_bn_10",
+     "sl_W5_su_c",
+     "sl_W5_su_l1"
+    ]
+   },
+   "c_W5_bn_01": {
+    "abutting": 7,
+    "linked": 3,
+    "linked_to": [
+     "c_W5_bf_00",
+     "c_W5_bn_00",
+     "c_W5_bn_11"
+    ]
+   }
+  },
+  "coll": {
+   "coll_s": {
+    "abutting": 4,
+    "linked": 3,
+    "linked_to": [
+     "c_W5_bf_00",
+     "coll_f0",
+     "io_serdes_1"
+    ]
+   },
+   "coll_f0": {
+    "abutting": 3,
+    "linked": 2,
+    "linked_to": [
+     "coll_f1",
+     "coll_s"
+    ]
+   },
+   "coll_f1": {
+    "abutting": 3,
+    "linked": 2,
+    "linked_to": [
+     "coll_f0",
+     "coll_f2"
+    ]
+   },
+   "coll_f2": {
+    "abutting": 4,
+    "linked": 2,
+    "linked_to": [
+     "coll_core",
+     "coll_f1"
+    ]
+   },
+   "coll_core": {
+    "abutting": 4,
+    "linked": 2,
+    "linked_to": [
+     "coll_f2",
+     "coll_f3"
+    ]
+   },
+   "coll_f3": {
+    "abutting": 5,
+    "linked": 3,
+    "linked_to": [
+     "coll_core",
+     "coll_f4",
+     "glue"
+    ]
+   },
+   "coll_f4": {
+    "abutting": 6,
+    "linked": 5,
+    "linked_to": [
+     "coll_f3",
+     "coll_f5",
+     "native59",
+     "sl_W5_fw",
+     "tt_ctlm"
+    ]
+   },
+   "coll_f5": {
+    "abutting": 4,
+    "linked": 2,
+    "linked_to": [
+     "coll_f4",
+     "coll_n"
+    ]
+   },
+   "coll_n": {
+    "abutting": 4,
+    "linked": 2,
+    "linked_to": [
+     "coll_f5",
+     "io_serdes"
+    ]
+   }
+  }
+ },
+ "coll_internal_rows": [
+  {
+   "role": "crec_tx_s1",
+   "src": "coll_core",
+   "dst": "coll_s",
+   "bits": 549
+  },
+  {
+   "role": "crec_rx_s1",
+   "src": "coll_s",
+   "dst": "coll_core",
+   "bits": 547
+  },
+  {
+   "role": "crec_tx_s2",
+   "src": "coll_core",
+   "dst": "coll_s",
+   "bits": 549
+  },
+  {
+   "role": "crec_rx_s2",
+   "src": "coll_s",
+   "dst": "coll_core",
+   "bits": 547
+  },
+  {
+   "role": "crec_tx_p",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 549
+  },
+  {
+   "role": "crec_rx_p",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 547
+  },
+  {
+   "role": "crec_tx_r",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 517
+  },
+  {
+   "role": "crec_rx_r",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 515
+  },
+  {
+   "role": "crec_tx_s0",
+   "src": "coll_core",
+   "dst": "coll_n",
+   "bits": 549
+  },
+  {
+   "role": "crec_rx_s0",
+   "src": "coll_n",
+   "dst": "coll_core",
+   "bits": 547
+  },
+  {
+   "role": "cshr_rtx",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 568
+  },
+  {
+   "role": "cshr_rrx",
+   "src": "coll_core",
+   "dst": "coll_core",
+   "bits": 566
+  }
+ ],
  "census_dropped_bits": {}
 }

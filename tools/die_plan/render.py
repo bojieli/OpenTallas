@@ -47,6 +47,9 @@ def render(P, geo, R, out_png, title=None):
         if "tap_um" in ck:
             tx, ty = P.to_die(n, ck["tap_um"])
             ax.plot([tx], [ty], marker="*", ms=6 if small else 3, color="darkorange", zorder=5)
+        for tap in ck.get("taps", []):
+            tx, ty = P.to_die(n, tap["xy"])
+            ax.plot([tx], [ty], marker=".", ms=4 if small else 2, color="purple", zorder=5)
         if small:
             o = P.orient(n)
             ax.text((x0 + x1) / 2, (y0 + y1) / 2, f"{n}\n{p['type']}" + ("" if o == "R0" else f" {o}"),
@@ -98,6 +101,9 @@ def render(P, geo, R, out_png, title=None):
                 Line2D([], [], color="darkorange", marker="*", ls="", ms=6), Line2D([], [], color="navy", lw=2.2),
                 Line2D([], [], color="crimson", marker="P", ls="", ms=8), Line2D([], [], color="red", lw=1.4)]
     labels += ["lane", "station", "clock tap", "port window", "spine root", "G0 error"]
+    if any(t.get("clock", {}).get("taps") for t in P.types.values()):
+        handles.append(Line2D([], [], color="purple", marker=".", ls="", ms=4))
+        labels.append("declared clock tap")
     ax.legend(handles, labels, loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=6, frameon=False)
     ax.set_xlabel("x (um)", fontsize=7)
     ax.set_ylabel("y (um)", fontsize=7)

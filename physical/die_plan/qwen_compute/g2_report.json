@@ -1,6 +1,10 @@
 {
  "schema": "opentallas.die_plan.g2.v1",
- "plan": "/home/ubuntu/wt/qc-p2-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "source_commit": "fb27cfd5d",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
+ "verdict": "PASS",
+ "scope": "fresh declared-tap virtual die probe plus eight byte-identical reused FT probes; declared budgets are estimates, not insertion/STA; real core/binding/CP1/G3 conditions remain open",
  "probes": {
   "die": {
    "layers": {
@@ -48,50 +52,37 @@
     },
     "M8": {
      "resource": 911059500,
-     "demand": 72694,
+     "demand": 56118,
      "usage_pct": 0.01,
      "overflow": 0
     },
     "M9": {
      "resource": 911201220,
-     "demand": 5718,
-     "usage_pct": 0.0,
+     "demand": 59199,
+     "usage_pct": 0.01,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 760243.0,
+   "wirelength_um": 1134105.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {},
    "pin_access_done": false,
    "reach": {
     "clk": {
-     "max_um": 26304.5,
-     "p90_um": 19789.9,
-     "taps": 380
+     "max_um": 27349.9,
+     "p90_um": 21543.8,
+     "taps": 2329
     },
     "rst": {
      "max_um": 26313.2,
-     "p90_um": 19798.6,
-     "taps": 380
+     "p90_um": 19850.5,
+     "taps": 388
     }
    },
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-die",
-   "die": "qwen_compute",
-   "taps": 380,
-   "pg_stripes": 13064,
-   "channels": 3,
-   "route_layers": [
-    "M8",
-    "M9"
-   ],
-   "root_um": [
-    15608.16,
-    12614.4
-   ]
+   "exit": "EXIT 0"
   },
   "part_sle_sc": {
    "layers": {
@@ -149,20 +140,7 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "sle_sc",
-   "instance": "sl_W5_sc",
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "pins": 15969,
-   "flops": 11805,
-   "leaf_blockages": 0,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
   },
   "part_sle_stm": {
    "layers": {
@@ -220,20 +198,7 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "sle_stm",
-   "instance": "sl_W5_stm",
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "pins": 15234,
-   "flops": 14782,
-   "leaf_blockages": 0,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
   },
   "part_slw_su_l0": {
    "layers": {
@@ -291,20 +256,7 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "slw_su_l0",
-   "instance": "sl_W5_su_l0",
-   "outline_um": [
-    622.08,
-    1080.0
-   ],
-   "pins": 8066,
-   "flops": 8068,
-   "leaf_blockages": 0,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
   },
   "part_sle_tap": {
    "layers": {
@@ -316,43 +268,43 @@
     },
     "M2": {
      "resource": 14250427,
-     "demand": 2145628,
-     "usage_pct": 15.06,
+     "demand": 2150193,
+     "usage_pct": 15.09,
      "overflow": 0
     },
     "M3": {
      "resource": 15957990,
-     "demand": 3007341,
-     "usage_pct": 18.85,
+     "demand": 3004639,
+     "usage_pct": 18.83,
      "overflow": 0
     },
     "M4": {
      "resource": 11965825,
-     "demand": 1207849,
-     "usage_pct": 10.09,
+     "demand": 1205230,
+     "usage_pct": 10.07,
      "overflow": 0
     },
     "M5": {
      "resource": 11969439,
-     "demand": 1130043,
-     "usage_pct": 9.44,
+     "demand": 1131912,
+     "usage_pct": 9.46,
      "overflow": 0
     },
     "M6": {
      "resource": 8147425,
-     "demand": 547485,
-     "usage_pct": 6.72,
+     "demand": 545553,
+     "usage_pct": 6.7,
      "overflow": 0
     },
     "M7": {
      "resource": 8149365,
-     "demand": 194671,
-     "usage_pct": 2.39,
+     "demand": 195500,
+     "usage_pct": 2.4,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 4716890.0,
+   "wirelength_um": 4716891.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {
@@ -362,22 +314,9 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "sle_tap",
-   "instance": "sl_W5_tap",
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "pins": 13541,
-   "flops": 10940,
-   "leaf_blockages": 0,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
   },
-  "part_slw_hc1": {
+  "part_coll_ftc": {
    "layers": {
     "M1": {
      "resource": 0,
@@ -386,44 +325,44 @@
      "overflow": 0
     },
     "M2": {
-     "resource": 14252950,
-     "demand": 159929,
-     "usage_pct": 1.12,
+     "resource": 17538567,
+     "demand": 2793612,
+     "usage_pct": 15.93,
      "overflow": 0
     },
     "M3": {
-     "resource": 15957990,
-     "demand": 579113,
-     "usage_pct": 3.63,
+     "resource": 19632685,
+     "demand": 3262378,
+     "usage_pct": 16.62,
      "overflow": 0
     },
     "M4": {
-     "resource": 11965825,
-     "demand": 475354,
-     "usage_pct": 3.97,
+     "resource": 14725308,
+     "demand": 2011795,
+     "usage_pct": 13.66,
      "overflow": 0
     },
     "M5": {
-     "resource": 11969439,
-     "demand": 458712,
-     "usage_pct": 3.83,
+     "resource": 14724968,
+     "demand": 876521,
+     "usage_pct": 5.95,
      "overflow": 0
     },
     "M6": {
-     "resource": 8147425,
-     "demand": 235350,
-     "usage_pct": 2.89,
+     "resource": 10026328,
+     "demand": 470100,
+     "usage_pct": 4.69,
      "overflow": 0
     },
     "M7": {
-     "resource": 8149365,
-     "demand": 149297,
-     "usage_pct": 1.83,
+     "resource": 10026206,
+     "demand": 165936,
+     "usage_pct": 1.66,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 1185055.0,
+   "wirelength_um": 5485913.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {
@@ -433,21 +372,7 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "slw_hc1",
-   "instance": "sl_W5_hc1",
-   "outline_um": [
-    613.44,
-    1080.0
-   ],
-   "pins": 9218,
-   "flops": 7760,
-   "leaf_blockages": 0,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
   }
- },
- "verdict": "PASS"
+ }
 }

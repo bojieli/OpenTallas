@@ -25,6 +25,7 @@ Conventions (binding for every tool):
 - Part name "@die" in a port endpoint is the die boundary (bumps / die IO); its bus is the die-level port name.
 """
 import bisect
+from fractions import Fraction
 import json
 import math
 import sys
@@ -63,7 +64,10 @@ BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
-                       cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0)
+                       cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
+                       # COORD 10-23 R3: ft stations at most 750 um apart on every die; R4: partition clock tap grid
+                       # pitch (the die spine delivers one tap per <= 600 x 600 cell, local trees <= ~300 um)
+                       ft_station_max_um=750.0, tap_pitch_um=600.0)
 DEFAULT_CLOCK = dict(insertion_ps=250.0, insertion_tol_ps=40.0, neighbour_skew_ps=80.0, face_xing="budgeted")
 DEFAULT_RESET = dict(sync_stages=2, data_reset=False, epoch_bit=True, release="counted")
 DEFAULT_LAYER_BUDGET = dict(partition_signal_max="M7", die_layers=["M8", "M9"],
@@ -80,7 +84,7 @@ _rect = {"type": "array", "items": _num, "minItems": 4, "maxItems": 4}
 _name = {"type": "string", "minLength": 1}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
 _win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
-_lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2}
+_lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 only on a face_layers face (G0 faces)
 _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
@@ -117,6 +121,16 @@ SCHEMA = {
                     "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}}}},
+                # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
+                # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
+                # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).
+                "io": {"type": "array", "items": {
+                    "type": "object", "required": ["name", "kind", "rect_um", "sites", "part", "ports"],
+                    "additionalProperties": False,
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                                   "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
+                                   "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
+                                   "note": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -168,7 +182,35 @@ SCHEMA = {
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
                                        "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
-                        "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg}},
+                        "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
+                        # (OT_TAP_CHECK FAIL suggests it); default budgets.tap_pitch_um
+                        "tap_pitch_um": _pos,
+                        # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
+                        # landed glue region (COORD 10-23 07:24; QC-FIX)
+                        "taps": {"type": "array", "items": {
+                            "type": "object", "required": ["name", "xy"], "additionalProperties": False,
+                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
+                                           "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
+                                           "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
+                    # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
+                    # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
+                    "hard_cores": {"type": "array", "items": {
+                        "type": "object", "required": ["inst", "origin_um", "outline_um"],
+                        "additionalProperties": False,
+                        "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "orient": {"enum": list(ORIENTS)},
+                                       "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
+                                           "type": "object", "required": ["name", "layer", "xy"],
+                                           "additionalProperties": False,
+                                           "properties": {"name": _name, "layer": _layer, "xy": _xy}}},
+                                       "pins_file": {"type": "string"},   # JSON [{name|bus+bit, layer, x, y}]
+                                       # hardened views (repo-relative): the partition kit places the core as a
+                                       # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
                     "contents": {"type": "array", "items": {
@@ -176,6 +218,10 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
+                                       # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
+                                       # at origin_um (type frame) with orient (mandatory when lef is given)
+                                       "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
@@ -190,6 +236,18 @@ SCHEMA = {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
                     "ft_track_frac": {"type": "number", "minimum": 0, "maximum": 1},
+                    # per-face pin layer sets (type frame faces); a layer above partition_signal_max (e.g. M8 on an
+                    # S81 svc fold / rail face) is allowed only when listed here for that face (COORD 10-23)
+                    "face_layers": {"type": "object", "additionalProperties": False, "properties": {
+                        f: {"type": "array", "items": _layer, "minItems": 1} for f in FACES}},
+                    # spare slots: reserved face windows WITHOUT ports, so partitions of one slot class keep one
+                    # face layout (no tie-offs: a spare is not a port; COORD 10-23)
+                    "spare_slots": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "face", "window_um", "layers"],
+                        "additionalProperties": False,
+                        "properties": {"name": _name, "face": {"enum": list(FACES)}, "window_um": _win,
+                                       "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                       "reason": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
@@ -200,7 +258,7 @@ SCHEMA = {
             "additionalProperties": False,
             "properties": {"id": _name, "src": _end, "dst": _end, "width": {"type": "integer", "minimum": 1},
                            "kind": {"enum": list(KINDS)}, "face": {"enum": list(FACES)},
-                           "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 2},
+                           "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
                            "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
                            "note": {"type": "string"}}}},
@@ -210,6 +268,15 @@ SCHEMA = {
                            "fixed_cycles": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "note": {"type": "string"}}}},
+        # R8 (COORD 10-23): lanes that must arrive in the SAME cycle: the bits of one as-built bus (valid + data +
+        # forwarded bits, groups from BINDER2) split over several lanes.  lane_latency() pads every member to the
+        # slowest; replicated consumers of one source (same source bus, same destination type + bus) are grouped
+        # automatically (Plan.latency_groups()).
+        "latency_groups": {"type": "array", "items": {
+            "type": "object", "required": ["name", "lanes"], "additionalProperties": False,
+            "properties": {"name": _name, "kind": {"enum": ["bus", "replica"]},
+                           "lanes": {"type": "array", "items": _name, "minItems": 2},
+                           "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
@@ -225,7 +292,10 @@ SCHEMA = {
                 "properties": {"cycles": {"type": "integer", "minimum": 1}, "stations": {"type": "integer"},
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
+                               "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
                                "param": {"type": "string"}}}}}},
+        # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
+        "census": {"type": ["array", "object"]},
         "budgets": {"type": "object", "additionalProperties": False, "properties": {
             k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
     },
@@ -440,6 +510,15 @@ class Plan:
             return OPP[die_face]
         return die_face
 
+    def type_top_layer(self, tn):
+        """highest pin / route layer of a type: partition_signal_max, raised by its face_layers (M8 faces)."""
+        top = self.layer_budget["partition_signal_max"]
+        for ls in self.types[tn].get("face_layers", {}).values():
+            for ln in ls:
+                if int(ln[1:]) > int(top[1:]):
+                    top = ln
+        return top
+
     def die_face(self, part, type_face):
         return self.type_face(part, type_face)   # involution
 
@@ -516,7 +595,90 @@ class Plan:
             out.append((part, slot, a, b))
         return out
 
+    def latency_groups(self):
+        """R8: [(name, kind, [lanes])]: the plan's latency_groups (bus groups from BINDER2) + automatic replica groups
+        (lanes from one source bus into the same destination type + bus on different partitions)."""
+        out = [(g["name"], g.get("kind", "bus"), list(g["lanes"])) for g in self.raw.get("latency_groups", [])]
+        rep = {}
+        for lid, ln in self.lanes.items():
+            a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
+            if b["dst"]["part"] == DIE_PART:
+                continue
+            key = (a["src"]["part"], a["src"]["bus"], self.parts[b["dst"]["part"]]["type"], b["dst"]["bus"])
+            rep.setdefault(key, []).append(lid)
+        for (sp, sb, dt, db), lids in sorted(rep.items()):
+            if len(lids) > 1:
+                out.append((f"replica:{sp}.{sb}->{dt}.{db}", "replica", sorted(lids)))
+        return out
+
+    def lane_pads(self):
+        """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""
+        if getattr(self, "_pads", None) is not None:
+            return self._pads
+        nat = {lid: self.lane_natural(lid)["cycles"] for lid in self.lanes}
+        cyc = dict(nat)
+        groups = [g for g in self.latency_groups() if all(l in self.lanes for l in g[2])]
+        for _ in range(len(self.lanes) + 1):
+            moved = False
+            for _, _, lids in groups:
+                m = max(cyc[l] for l in lids)
+                for l in lids:
+                    if cyc[l] < m:
+                        cyc[l], moved = m, True
+            if not moved:
+                break
+        self._pads = {lid: cyc[lid] - nat[lid] for lid in self.lanes}
+        return self._pads
+
+    def lane_pad_sites(self, lid):
+        """candidate sites of a lane's pad stages, preferred first: the destination in bus, then the source out bus."""
+        ln = self.lanes[lid]
+        a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
+        out = []
+        if b["dst"]["part"] != DIE_PART:
+            out.append((self.parts[b["dst"]["part"]]["type"], b["dst"]["bus"]))
+        if a["src"]["part"] != DIE_PART:
+            out.append((self.parts[a["src"]["part"]]["type"], a["src"]["bus"]))
+        return out
+
+    def bus_pads(self):
+        """R8: ({(type, bus): pad}, [conflicts]).  Pad stages are a TYPE property (hardened once): every lane through
+        a (type, bus) site must want the same pad there.  Each padded lane takes its destination in bus, else its
+        source out bus; a lane that fits neither is a conflict (split the type, or move the delay with fixed_cycles /
+        ft stations)."""
+        pads = self.lane_pads()
+        want = {}                                  # site -> {lane: pad} for every lane touching the site
+        for lid in self.lanes:
+            for site in self.lane_pad_sites(lid):
+                want.setdefault(site, {})[lid] = None
+        chosen, bad, got = {}, [], {lid: 0 for lid in self.lanes}
+        for lid in sorted(self.lanes, key=lambda l: (-pads[l], l)):
+            need = pads[lid] - got[lid]
+            if not need:
+                continue
+            for site in self.lane_pad_sites(lid):
+                if site in chosen:
+                    continue
+                # a site pads EVERY lane through it: each must still need exactly this much
+                if all(pads[o] - got[o] == need for o in want[site]):
+                    chosen[site] = need
+                    for o in want[site]:
+                        got[o] += need
+                    break
+            else:
+                bad.append(f"lane {lid}: pad {need} fits no site {self.lane_pad_sites(lid)} (other lanes of the same "
+                           "type bus need a different pad: split the type or move the delay with fixed_cycles)")
+        return chosen, bad
+
     def lane_latency(self, lid):
+        """lane_natural() + the R8 group pad: dict(cycles, natural, pad, stations, boundary, faces, fixed)."""
+        d = self.lane_natural(lid)
+        pad = self.lane_pads()[lid]
+        d["natural"], d["pad"] = d["cycles"], pad
+        d["cycles"] += pad
+        return d
+
+    def lane_natural(self, lid):
         """dict(cycles, stations, boundary, faces, fixed).  cycles = the register stages a lane adds between the source
         leaf and the destination leaf: the source partition's out boundary flop + the stations of every crossed ft
         slot + the destination's in boundary flop (a die-IO end has no partition flop) + fixed_cycles."""
@@ -529,6 +691,31 @@ class Plan:
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
         return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+
+
+def tap_pitch(P, tn):
+    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um."""
+    return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 600.0)))
+
+
+def tap_grid(P, tn):
+    """COORD 10-23 R4: the partition's clock taps, [(port, x, y)] in the type frame (unsnapped).  A grid of
+    ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 600), so every sink is
+    within ~300 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
+    'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    pitch = tap_pitch(P, tn)
+    nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
+    if nx == 1 and ny == 1:
+        x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
+        return [("clk", float(x), float(y))]
+    out = []
+    for j in range(ny):
+        for i in range(nx):
+            k = len(out)
+            out.append(("clk" if k == 0 else f"clk_t{k}", (i + 0.5) * w / nx, (j + 0.5) * h / ny))
+    return out
 
 
 def has_epoch(port):
@@ -550,7 +737,15 @@ def port_pins_count(port):
 # tight: DRT-0073 (no access point) on an M5 pin 0.048 um from an M5 stripe in the CP1 mock run.
 # Pins on M5, M6 or M7 never sit on a stripe: the CP1 mock run on OpenROAD master found PSM-0043 shorts there
 # (check_power_grid), from M7 frame_int pins on the N face.
-PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48)}
+PART_PG_BANDS = {"M5": (4.32, 2.16, 0.264), "M6": (4.32, 2.16, 0.48), "M7": (8.64, 4.32, 0.48),
+                 # M8 (face_layers only): the DIE PG grid's M8 stripes (default die.pg: 0.48 wide, pitch 8.64,
+                 # offset 4.32, VDD/VSS -> a stripe every 4.32 at 0 mod 4.32) run over every partition
+                 "M8": (4.32, 0.0, 0.66),
+                 # M9 (face_layers only, N/S faces: the vertical die layer): die M9 stripes, same default grid as M8
+                 "M9": (4.32, 0.0, 0.66)}
+# M8 band: die.pg default M8 stripes w0.48 pitch 8.64 offset 4.32, VDD + VSS (spacing pitch/2) -> one stripe every
+# 4.32.  The band covers the stripe whether pdngen's offset names its edge ([4.32, 4.80]) or its centre ([4.08, 4.56])
+# plus 2 M8 pitches; a plan with a different die.pg M8 grid must keep its stripes inside these bands.
 
 
 def pg_blocked(ln, c):
@@ -571,7 +766,10 @@ def spread(A, n, lo, hi):
     m = len(A)
     if n == 0:
         return []
-    cen = (lo + hi) / 2.0
+    # exact arithmetic (KV-P2 10-23): window ends snapped to 1e-6 track and kept as Fractions, so the nearest-track ties
+    # resolve identically in mirrored replicas (die-frame float error broke them: G0 'pin table differs')
+    lo, hi = Fraction(str(round(lo, 6))), Fraction(str(round(hi, 6)))
+    cen = (lo + hi) / 2
     L = hi - lo
 
     def nearest(t):
@@ -579,7 +777,11 @@ def spread(A, n, lo, hi):
         best = None
         for k in (i - 1, i):
             if 0 <= k < m:
-                key = (abs(A[k] - t), abs(A[k] - cen))
+                # exact ties (fp-noise-free) -> nearer the window centre -> nearer the middle usable track (index
+                # (m-1)/2): all three commute with the frame mirror, so the pick is mirror-equivariant whenever m is
+                # odd (an odd pin count on an even usable-track count with the centre between two tracks has no
+                # mirror-symmetric pick: generators size such windows to an odd track count)
+                key = (round(abs(A[k] - t), 6), round(abs(A[k] - cen), 6), abs(2 * k - (m - 1)))
                 if best is None or key < best[0]:
                     best = (key, k)
         return best[1]
@@ -604,6 +806,27 @@ def spread(A, n, lo, hi):
         return [(m - 1) // 2]
     lowh = [((j * (m - 1)) // (n - 1)) for j in range(n // 2)]
     return lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
+
+
+def usable_tracks(L, ln, lo, hi):
+    """number of tracks of layer ln (dict L: pitch_um, offset_um) inside [lo, hi] off the partition PG bands."""
+    p, off = L["pitch_um"], L["offset_um"]
+    k0 = math.ceil((lo - off) / p - 1e-9)
+    k1 = math.floor((hi - off) / p + 1e-9)
+    return sum(1 for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p))
+
+
+def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
+    """helper for plan generators: the smallest hi (on a 0.016-um step) so that `pins` pins over the layer list `names`
+    fit [lo, hi] at <= per_um pins/um and <= track_max of the usable (PG-band-free) tracks on every layer."""
+    layers = layers or {L["name"]: L for L in ASAP7_LAYERS}
+    nl = len(names)
+    need = [len(range(i, pins, nl)) for i in range(nl)]
+    hi = lo + max(pins / per_um, 0.016)
+    while True:
+        if all(usable_tracks(layers[ln], ln, lo, hi) * track_max >= n for ln, n in zip(names, need)):
+            return round(hi, 4)
+        hi += 0.016
 
 
 def pin_positions(port, layers):
@@ -807,6 +1030,10 @@ def validate(raw):
         src = raw.get(k, {}).get("source")
         if src and src["part"] != DIE_PART and src["part"] not in P.parts:
             errs.append(f"{k}.source: unknown partition {src['part']}")
+    for g in raw.get("latency_groups", []):
+        for lid in g["lanes"]:
+            if lid not in P.lanes:
+                errs.append(f"latency_groups {g['name']}: unknown lane '{lid}'")
     # latency table keys
     lat = raw.get("latency", {}).get("lanes", {})
     for lid in lat:

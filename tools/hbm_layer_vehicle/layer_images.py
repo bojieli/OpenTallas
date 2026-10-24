@@ -953,6 +953,7 @@ def main():
     ap.add_argument("--cx-ops", default="COLL,HC")
     ap.add_argument("--cx-contract", type=Path)
     ap.add_argument("--cx-l12", type=Path)
+    ap.add_argument("--cx-coll-transport", type=Path, help="coll_transport.py profile: die lane timing for COLL gathers (TOKg 10-23)")
     ap.add_argument("--cx-checkpoint", type=Path)
     ap.add_argument("--cx-hc-source-profile", choices=["safe2_phase40_qchx12"], help="default-off bounded SAFE2 HC candidate, requires matching contract and k31 A64/O72 scope")
     ap.add_argument("--cx-chapters", default="", help="priced records starting a new VM chapter (quarter VM reset; "
@@ -1048,7 +1049,8 @@ def main():
         place = CX.make_placement(Placement, a.quarter)
         cx = CX.Cx(a.fixtures, a.rank, recs, place, contract=a.cx_contract, l12=a.cx_l12, checkpoint=a.cx_checkpoint,
                    boundary=bnd, ops=set(a.cx_ops.split(",")), skip={int(x) for x in a.cx_skip.split(",") if x},
-                   chapters={int(x) for x in a.cx_chapters.split(",") if x}, hc_source_profile=a.cx_hc_source_profile)
+                   chapters={int(x) for x in a.cx_chapters.split(",") if x}, hc_source_profile=a.cx_hc_source_profile,
+                   coll_transport=None if a.cx_coll_transport is None else __import__("hbm_layer_vehicle.coll_transport", fromlist=["load"]).load(a.cx_coll_transport))
     if cx is not None and getattr(a,'gather_binding',None):
         gathers=[x for x in cx.frecs if x['tag'].startswith('route.gather')]
         if gathers:

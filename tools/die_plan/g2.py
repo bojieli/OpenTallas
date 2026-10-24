@@ -110,10 +110,18 @@ def die_probe(P, out, mem=64):
     top_part = P.layer_budget["partition_signal_max"]
     root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
     taps = {"clk": [], "rst": []}
+    declared = []
     for n, p in sorted(P.parts.items()):
         ck, rs = gen_phys.tap_points(P, P.parts[n]["type"])
         taps["clk"].append((n, P.to_die(n, ck)))
+        for tnm, tx, ty in gen_phys.clock_pins(P, P.parts[n]["type"])[1:]:     # R4 grid taps beyond tap 0
+            taps["clk"].append((f"{n}__{tnm}", P.to_die(n, (tx, ty))))
         taps["rst"].append((n, P.to_die(n, rs)))
+        for i, tap in enumerate(P.ptype(n).get("clock", {}).get("taps", [])):
+            # xy is already in the type frame (including any core orientation). Apply only the partition transform.
+            xy = P.to_die(n, tap["xy"])
+            taps["clk"].append((f"{n}__declared_{i}", xy))
+            declared.append(dict(tap, partition=n, type=P.parts[n]["type"], xy_die_um=list(xy)))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}", "read_verilog /work/probe.v", "link_design die_probe",
            f"initialize_floorplan -die_area {{0 0 {W:g} {H:g}}} -core_area {{0 0 {W:g} {H:g}}} -site asap7sc7p5t"]
     # tracks: die layers real; M1..M7 coarse (fully blocked under the partitions) so GRT gcells stay die-sized
@@ -176,6 +184,10 @@ def die_probe(P, out, mem=64):
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-die", die=P.name, taps=len(taps["clk"]), pg_stripes=nst, channels=len(chans),
                 route_layers=die_l, root_um=root)
+    if declared:
+        meta.update(partition_root_taps=len(P.parts), grid_taps=sum(len(S.tap_grid(P, p['type'])) for p in P.parts.values()), declared_clock_taps=len(declared), declared_taps=declared,
+                    clock_scope="virtual connectivity/PG/reach only; declared insertion budgets are estimates, "
+                                "not measured regional clock-tree, STA or insertion qualification")
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
     return out
 
@@ -224,10 +236,11 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         d = "input" if (bus in buses and buses[bus]["dir"] == "in") or bus.endswith("_i") and bus[:-2] in slots \
             else "output"
         ports.append(f"  {d} [{width[bus] - 1}:0] {bus}")
-    ports.append("  input clk")
-    ports.append("  input arst_n")
-    # clock / reset entry: the interior tap pin (die spine drop) feeds a pre-placed tap buffer = partition tree root
-    for nm, (x, y) in zip(("clk", "arst_n"), gen_phys.tap_points(P, tn)):
+    tp = gen_phys.tap_pins(P, tn)
+    for nm, _, _ in tp:
+        ports.append(f"  input {nm}")
+    # clock / reset entry: each interior tap pin (die spine drop; R4 tap grid) feeds a pre-placed tap buffer = tree root
+    for nm, x, y in tp:
         cells.append(f"  {TAPBUF} tap_{nm} (.A({nm}), .Y(tapq_{nm}));")
         nets.append(f"tapq_{nm}")
         place.append((f"tap_{nm}", x + 1.0, y))
@@ -254,7 +267,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             x, y, f = pi.get(bit) or po[bit]
             xo, yo, fo = po.get(bit) or pi[bit]
             a, b = inset(x, y, f), inset(xo, yo, fo)
-            seg = check.zroute(a, b, f)
+            seg = check.zroute(a, b, f, fo)
             L = check.plen(seg)
             prev = f"{sn}_i[{bit}]" if bit in pi else f"nd_st_{sn}_{bit}"
             if bit not in pi:
@@ -273,7 +286,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         [f"  wire {n};" for n in sorted(set(x for x in nets if x))] + cells + ["endmodule"]
     (out / "probe.v").write_text("\n".join(v) + "\n")
     m = gen_phys.CORE_MARGIN_UM
-    top = P.layer_budget["partition_signal_max"]
+    top = P.type_top_layer(tn)
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}", "read_verilog /work/probe.v", "link_design ftprobe",
            f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{{m:g} {m:g} {w - m:g} {h - m:g}}} "
            "-site asap7sc7p5t", "source /work/make_tracks.tcl", "source /work/io.tcl"]
@@ -347,7 +360,7 @@ def main(argv=None):
         if a.types:
             sel = [(t, None, None) for t in a.types.split(",")]
         else:
-            R, summ = check.run(raw)
+            R, summ = check.run(raw, plan_dir=Path(a.plan).resolve().parent)
             sel = worst_types(P, summ, a.worst)
         for tn, sc, dn in sel:
             dirs.append(part_probe(P, tn, out / f"part_{tn}", a.adjust, a.mem or 32))

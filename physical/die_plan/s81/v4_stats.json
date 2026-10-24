@@ -1,0 +1,499 @@
+{
+ "die_um": [
+  31950.72,
+  24744.96
+ ],
+ "die_mm2": 790.6,
+ "partitions": 400,
+ "types": 168,
+ "types_by_kind": {
+  "frame": 12,
+  "serdes": 6,
+  "phy": 1,
+  "unit": 6,
+  "svc": 16,
+  "slice": 127
+ },
+ "singleton_types": 142,
+ "lanes": 820,
+ "ports": 2109,
+ "bends_max": 2,
+ "bends_p90": 1,
+ "bends_hist": {
+  "0": 672,
+  "1": 133,
+  "2": 15
+ },
+ "detour_p90": 1.0,
+ "detour_max": 1.191,
+ "detour_worst": [
+  [
+   1.1910328426932706,
+   "xtier__s_3S_C__gunit"
+  ],
+  [
+   1.0037568613335732,
+   "idx__s_3S_C__iqf"
+  ],
+  [
+   1.0006681430594473,
+   "unit__seqhost__eng"
+  ],
+  [
+   1.0000134752426106,
+   "x_E3_in"
+  ],
+  [
+   1.000013450110179,
+   "x_W3_in"
+  ]
+ ],
+ "face_worst": [
+  {
+   "a": "svc_15",
+   "b": "svc_14",
+   "ratio": 1.073,
+   "pins": 9289,
+   "len": 1442.9
+  },
+  {
+   "a": "svc_7",
+   "b": "svc_6",
+   "ratio": 1.034,
+   "pins": 8953,
+   "len": 1442.9
+  },
+  {
+   "a": "svc_5",
+   "b": "svc_4",
+   "ratio": 1.034,
+   "pins": 8953,
+   "len": 1442.9
+  },
+  {
+   "a": "svc_3",
+   "b": "svc_2",
+   "ratio": 1.034,
+   "pins": 8953,
+   "len": 1442.9
+  },
+  {
+   "a": "s_2N_C",
+   "b": "s_2N_L1",
+   "ratio": 0.776,
+   "pins": 6714,
+   "len": 1442.9
+  },
+  {
+   "a": "s_7N_C",
+   "b": "s_7N_L1",
+   "ratio": 0.744,
+   "pins": 6437,
+   "len": 1442.9
+  },
+  {
+   "a": "s_5N_C",
+   "b": "s_5N_L1",
+   "ratio": 0.744,
+   "pins": 6437,
+   "len": 1442.9
+  },
+  {
+   "a": "s_0N_C",
+   "b": "s_0N_L1",
+   "ratio": 0.744,
+   "pins": 6437,
+   "len": 1442.9
+  },
+  {
+   "a": "svc_1",
+   "b": "svc_0",
+   "ratio": 0.723,
+   "pins": 6262,
+   "len": 1442.9
+  },
+  {
+   "a": "s_3S_C",
+   "b": "s_3S_L1",
+   "ratio": 0.718,
+   "pins": 6218,
+   "len": 1442.9
+  }
+ ],
+ "faces_over_06": 15,
+ "channel_cells": 3,
+ "instances_per_type": {
+  "col_h10_r0_p1__t1": 6,
+  "col_h10_r1__t1": 12,
+  "col_h10_r2__t1": 12,
+  "col_h9_r0_p2__t1": 12,
+  "col_h9_r1__t1": 60,
+  "col_h9_r2__t1": 60,
+  "col_h9_r0_p3__t1": 12,
+  "col_h10_r0_p4__t1": 6,
+  "col_h9_r0_p5__t1": 12,
+  "col_h9_r0_p6__t1": 12,
+  "col_h9_r0_p1__t1": 6,
+  "col_h9_r0_p4__t1": 6,
+  "serdes__t1": 2,
+  "serdes__t2": 2,
+  "serdes__t3": 1,
+  "serdes__t4": 1,
+  "serdes__t5": 2,
+  "serdes__t6": 2,
+  "phy__t1": 1,
+  "iqf__t1": 1,
+  "seqhost__t1": 1,
+  "svc_lo_dsdv_svc_rs_w__t1": 1,
+  "svc_hi_dsdv_svc_rs__t1": 1,
+  "svc_lo_dsdv_svc_rs__t1": 1,
+  "svc_hi_dsdv_svc_rs__t2": 1,
+  "svc_lo_dsdv_svc_rs__t2": 1,
+  "svc_hi_dsdv_svc_pvso_entry__t1": 1,
+  "svc_lo_dsdv_svc_rs__t3": 1,
+  "svc_hi_dsdv_svc_rs__t3": 1,
+  "svc_lo_dsdv_svc_rs__t4": 1,
+  "svc_hi_dsdv_svc_rs__t4": 1,
+  "svc_lo_dsdv_svc_rs__t5": 1,
+  "svc_hi_dsdv_svc_pvso_entry__t2": 1,
+  "svc_lo_dsdv_svc_rs__t6": 1,
+  "svc_hi_dsdv_svc_rs__t5": 1,
+  "svc_lo_dsdv_svc_rs__t7": 1,
+  "svc_hi_dsdv_svc_rs__t6": 1,
+  "slice_station__t1": 1,
+  "slice_station__t2": 5,
+  "slice_station__t3": 2,
+  "dsdv_slice_lepw_mus_LP__t1": 1,
+  "slice_station__t4": 4,
+  "slice_station__t5": 8,
+  "slice_station__t6": 1,
+  "ot_s81sl_leaf__t1": 1,
+  "ot_s81sl_leaf__t2": 1,
+  "dsdv_slice_lepw_mus_C__t1": 1,
+  "ot_s81sl_leaf__t3": 1,
+  "ot_s81sl_leaf__t4": 1,
+  "ot_s81sl_leaf__t5": 1,
+  "dsdv_slice_lepw_mu_LP__t1": 1,
+  "slice_station__t7": 2,
+  "slice_station__t8": 2,
+  "ot_s81sl_leaf__t6": 1,
+  "ot_s81sl_leaf__t7": 1,
+  "dsdv_slice_lepw_mu_C__t1": 1,
+  "ot_s81sl_leaf__t8": 1,
+  "ot_s81sl_leaf__t9": 1,
+  "ot_s81sl_leaf__t10": 1,
+  "slice_station__t9": 1,
+  "ot_s81sl_leaf__t11": 1,
+  "ot_s81sl_leaf__t12": 1,
+  "ot_s81sl_leaf__t13": 1,
+  "dsdv_slice_c1x_C__t1": 1,
+  "ot_s81sl_leaf__t14": 1,
+  "ot_s81sl_leaf__t15": 1,
+  "slice_station__t10": 1,
+  "ot_s81sl_leaf__t16": 1,
+  "ot_s81sl_leaf__t17": 1,
+  "dsdv_slice_c1x_C__t2": 1,
+  "ot_s81sl_leaf__t18": 1,
+  "ot_s81sl_leaf__t19": 1,
+  "ot_s81sl_leaf__t20": 1,
+  "slice_station__t11": 1,
+  "slice_station__t12": 1,
+  "ot_s81sl_leaf__t21": 1,
+  "ot_s81sl_leaf__t22": 1,
+  "dsdv_slice_c1x_C__t3": 1,
+  "ot_s81sl_leaf__t23": 1,
+  "ot_s81sl_leaf__t24": 1,
+  "ot_s81sl_leaf__t25": 1,
+  "ot_s81sl_leaf__t26": 1,
+  "ot_s81sl_leaf__t27": 1,
+  "dsdv_slice_c1x_C__t4": 1,
+  "ot_s81sl_leaf__t28": 1,
+  "ot_s81sl_leaf__t29": 1,
+  "ot_s81sl_leaf__t30": 1,
+  "slice_station__t13": 1,
+  "ot_s81sl_leaf__t31": 1,
+  "ot_s81sl_leaf__t32": 1,
+  "dsdv_slice_iq_C__t1": 1,
+  "ot_s81sl_leaf__t33": 1,
+  "ot_s81sl_leaf__t34": 1,
+  "ot_s81sl_leaf__t35": 1,
+  "ot_s81sl_kv_leaf__t1": 1,
+  "ot_s81sl_kv_leaf__t2": 1,
+  "dsdv_slice_kv512_C__t1": 1,
+  "ot_s81sl_kv_leaf__t3": 1,
+  "ot_s81sl_kv_leaf__t4": 1,
+  "ot_s81sl_kv_leaf__t5": 1,
+  "slice_station__t14": 1,
+  "ot_s81sl_leaf__t36": 1,
+  "ot_s81sl_leaf__t37": 1,
+  "ot_s81sl_leaf__t38": 1,
+  "dsdv_slice_c3x_C__t1": 1,
+  "ot_s81sl_leaf__t39": 1,
+  "ot_s81sl_leaf__t40": 1,
+  "slice_station__t15": 1,
+  "ot_s81sl_leaf__t41": 1,
+  "ot_s81sl_leaf__t42": 1,
+  "dsdv_slice_c1x_C__t5": 1,
+  "ot_s81sl_leaf__t43": 1,
+  "ot_s81sl_leaf__t44": 1,
+  "ot_s81sl_leaf__t45": 1,
+  "slice_station__t16": 1,
+  "slice_station__t17": 1,
+  "ot_s81sl_leaf__t46": 1,
+  "ot_s81sl_leaf__t47": 1,
+  "dsdv_slice_c1x_C__t6": 1,
+  "ot_s81sl_leaf__t48": 1,
+  "ot_s81sl_leaf__t49": 1,
+  "ot_s81sl_leaf__t50": 1,
+  "ot_s81sl_leaf__t51": 1,
+  "ot_s81sl_leaf__t52": 1,
+  "dsdv_slice_c1x_C__t7": 1,
+  "ot_s81sl_leaf__t53": 1,
+  "ot_s81sl_leaf__t54": 1,
+  "ot_s81sl_leaf__t55": 1,
+  "ot_s81sl_leaf__t56": 1,
+  "ot_s81sl_leaf__t57": 1,
+  "ot_s81sl_leaf__t58": 1,
+  "dsdv_slice_c1x_C__t8": 1,
+  "ot_s81sl_leaf__t59": 1,
+  "ot_s81sl_leaf__t60": 1,
+  "slice_station__t18": 1,
+  "ot_s81sl_leaf__t61": 1,
+  "ot_s81sl_leaf__t62": 1,
+  "dsdv_slice_c1x_C__t9": 1,
+  "ot_s81sl_leaf__t63": 1,
+  "ot_s81sl_leaf__t64": 1,
+  "ot_s81sl_leaf__t65": 1,
+  "slice_station__t19": 1,
+  "slice_station__t20": 1,
+  "ot_s81sl_leaf__t66": 1,
+  "ot_s81sl_leaf__t67": 1,
+  "dsdv_slice_lepe_nh_mus_C__t1": 1,
+  "ot_s81sl_leaf__t68": 1,
+  "ot_s81sl_leaf__t69": 1,
+  "ot_s81sl_leaf__t70": 1,
+  "slice_station__t21": 1,
+  "slice_station__t22": 5,
+  "slice_station__t23": 2,
+  "dsdv_slice_lepe_nh_mus_LP__t1": 1,
+  "ot_s81sl_leaf__t71": 1,
+  "ot_s81sl_leaf__t72": 1,
+  "dsdv_slice_lepe_mu_C__t1": 1,
+  "ot_s81sl_leaf__t73": 1,
+  "ot_s81sl_leaf__t74": 1,
+  "ot_s81sl_leaf__t75": 1,
+  "slice_station__t24": 1,
+  "dsdv_slice_lepe_mu_LP__t1": 1,
+  "slice_station__t25": 2,
+  "slice_station__t26": 2,
+  "slice_station__t27": 1,
+  "bk_col__t1": 1,
+  "gunit__t1": 1,
+  "bk_sel__t1": 1,
+  "eng__t1": 1
+ },
+ "cells_by_kind": {
+  "frame": {
+   "n": 216,
+   "max_partition": 61760,
+   "max_core": 0,
+   "max_glue": 61760,
+   "cores": 0
+  },
+  "serdes": {
+   "n": 10,
+   "max_partition": 0,
+   "max_core": 0,
+   "max_glue": 0,
+   "cores": 0
+  },
+  "phy": {
+   "n": 1,
+   "max_partition": 0,
+   "max_core": 0,
+   "max_glue": 0,
+   "cores": 0
+  },
+  "unit": {
+   "n": 6,
+   "max_partition": 808579,
+   "max_core": 260094,
+   "max_glue": 186882,
+   "cores": 11
+  },
+  "svc": {
+   "n": 16,
+   "max_partition": 12917494,
+   "max_core": 205588,
+   "max_glue": 60000,
+   "cores": 1336
+  },
+  "slice": {
+   "n": 151,
+   "max_partition": 2162983,
+   "max_core": 375145,
+   "max_glue": 365489,
+   "cores": 653
+  }
+ },
+ "cells_over_cap": [],
+ "v4_runs": {
+  "runs": 983,
+  "runs_multi": 352,
+  "run_fallback_ports": 3,
+  "overfull_faces": [
+   "s_2N_C|s_2N_L1|False"
+  ],
+  "face_layers": [
+   {
+    "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t2",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t3",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t4",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "face": "S",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t1",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t2",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t3",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t4",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t5",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t6",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t7",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "face": "N",
+    "layers": [
+     "M7",
+     "M5",
+     "M9"
+    ]
+   }
+  ]
+ },
+ "cells_missing": [
+  "MISSING kv512 leaf; SU KV leaves kve/kvp/kvq/kvr/kvt summed",
+  "seq_host_mux children: hwin core 69,671 + sh_vc/mu_hslot/seq_host_c_r3_lp flattened (whole MISSING)",
+  "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)"
+ ]
+}

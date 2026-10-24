@@ -1,0 +1,95 @@
+{
+ "master": "ot_hbm_hc_bankq_ft_static",
+ "plan_types": [
+  "q_hc2",
+  "q_hc6"
+ ],
+ "status": "DONE",
+ "measured_total": 786154,
+ "basis": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq_ft_static/ot_hbm_hc_bankq_ft_static.stat",
+ "n_cores": 3,
+ "max_core_cells": 288852,
+ "cores_cells": 786154,
+ "glue_cells": 0,
+ "cores": [
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "core_label": "lanes0_2",
+   "module": "3 x ot_hdc_v41x_hcp_lanes (pin-registered lane-group leaf, LG 8)",
+   "members": [
+    "...u_stage.g_lg[0..2] (hcp_lanes)"
+   ],
+   "cells": 288852,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1992,
+    "out": 798
+   }
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "core_label": "lanes3_5",
+   "module": "3 x ot_hdc_v41x_hcp_lanes",
+   "members": [
+    "...u_stage.g_lg[3..5]"
+   ],
+   "cells": 288852,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 1992,
+    "out": 798
+   }
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "core_label": "lanes6_7_bank",
+   "module": "2 x hcp_lanes + hcp_stage/bank/bankq glue + 12 SRAM",
+   "members": [
+    "...u_stage.g_lg[6..7]",
+    "ot_hbm_hc_bank_static (+ SRAM 8 x 1024x256, 4 x 128x256)",
+    "bankq core/top glue"
+   ],
+   "cells": 208450,
+   "srams": 12,
+   "pins_bits": null
+  }
+ ],
+ "crossings": [
+  {
+   "between": "hcp_stage -> lane group (w_data, x_data, sum_in, ctl)",
+   "bits": 664,
+   "kind": "REG->REG",
+   "note": "the LG 8 hcp_lanes leaf: \"its pin flops ARE the old input registers (w_in, x_in, sum_q, lv_r/ss_r, gov, fst_q)\" (ot_hdc_v41x_hcp.sv); stage side = SRAM / descriptor regs"
+  },
+  {
+   "between": "lane group -> hcp_stage (sum_out, fault)",
+   "bits": 257,
+   "kind": "REG->REG",
+   "note": "adder/seam output registers + registered group fault"
+  }
+ ],
+ "rtl": {
+  "twin": null,
+  "cycle_cost_edges": 0,
+  "bench": "no RTL change (cut along existing hard lane-group leaves)"
+ },
+ "note": "8 lane-group leaves (hcp_lanes ~96k each, already pin-registered hard leaves) packed 3+3+2, the 2-group core carries the stage/bank glue and the 12 SRAM.  Cells from the r14 chainB hierarchical stats (same std area as the r18h5 views: 9.24e4 um2).",
+ "splits_entry": {
+  "parts": [
+   [
+    "lanes3",
+    2,
+    288852
+   ],
+   [
+    "lanes2_bank",
+    1,
+    208450
+   ]
+  ],
+  "glue": 0,
+  "stat": "ot-epyc9:/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chainB/syn/ot_hbm_hc_bankq_ft_static/ot_hbm_hc_bankq_ft_static.stat",
+  "total": 786154,
+  "note": "8 lane-group leaves (hcp_lanes ~96k each, already pin-registered hard leaves) packed 3+3+2, the 2-group core carries the stage/bank glue and the 12 SRAM.  Cells from the r14 chainB hierarchical stats (same std area as the r18h5 views: 9.24e4 um2)."
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "RESPONSE_LAT": {
+  "plan": 10,
+  "plan_min": 10,
+  "brief_natural": 18,
+  "v1": 12,
+  "v2": 10,
+  "rtl6": 80
+ },
+ "RL": {
+  "plan": 52,
+  "plan_min": 46,
+  "O_max": 13,
+  "WP_max": 13,
+  "brief_natural": 48,
+  "v1": 61,
+  "v2": 50,
+  "rtl6": 112
+ },
+ "F_DLY": {
+  "plan": 2,
+  "law": "1 + D(pvp) + D(fin) + face_land_fin",
+  "D_pvp": 0,
+  "D_fin": 0,
+  "face_land_fin": 1,
+  "note": "pvfin, kvs_attn and both pvw RH_r0 heads in hub_C; v2 value 1 was a fallback (no pvfin lane in dest_lat) that dropped the fin face landing; 1 only with the unlanded kvs_attn_r17",
+  "brief_natural": 14,
+  "v1": 17,
+  "v2": 1,
+  "rtl6": 55,
+  "schedule": 3,
+  "ruling": "COORD 10-23 07:45: keep F_DLY=3 (FD=2 fails T8191/T8192 stack ER faults, kv-p2-rtl ef0304185)"
+ },
+ "PV_LEAD": {
+  "plan": 16,
+  "brief_natural": 14,
+  "v1": 19,
+  "v2": 16,
+  "rtl6": 38
+ },
+ "lanes": {
+  "n": 2416,
+  "bends_max": 2,
+  "bends_p90": 0,
+  "bends_hist": {
+   "0": 2259,
+   "1": 137,
+   "2": 20
+  },
+  "detour_p90": 1.235,
+  "detour_max": 1.313,
+  "multi_hop_lanes": 446
+ },
+ "pv_result_chain": "v3.2: the 8 RH gathers are the qkd_rlyi_258s T-chain as leaves (16 registered relays per chain, 2 per pv row) + p2p chain lanes; the RH arrival = latency-table lane cycles + 16 relay stages (as built 48-56 stages)"
+}

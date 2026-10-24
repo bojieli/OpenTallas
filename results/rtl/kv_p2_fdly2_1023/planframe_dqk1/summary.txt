@@ -1,0 +1,17 @@
+cal_T1024 exit=0 KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=1024 fd=3 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_gmut1 exit=0 KVATTN_REL FAIL mode=steady gmut=1 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_gmut2 exit=0 KVATTN_REL FAIL mode=steady gmut=2 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=1 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_gmut4 exit=0 KVATTN_REL FAIL mode=steady gmut=4 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_k_late exit=0 KVATTN_REL FAIL mode=k_late gmut=0 nu=1 ctx=1024 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000011010 timeout=0 period=0
+mut_k_shift exit=0 KVATTN_REL FAIL mode=k_shift gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_q_swap exit=0 KVATTN_REL FAIL mode=q_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+mut_v_swap exit=0 KVATTN_REL FAIL mode=v_swap gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+u1_T1024 exit=0 KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+u1_T32768_bound exit=0 KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=32768 fd=2 tile_fault=1 svc_fault=0 result_fault=0 cal_fault=1 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+u1_T4096 exit=0 KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+u1_T4096_peaky exit=0 KVATTN_REL PASS mode=steady gmut=0 nu=1 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
+u1_T8191 exit=0 KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=8191 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=0
+u1_T8192 exit=0 KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=8192 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=0
+u4_T1024 exit=0 KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=1024 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025
+u4_T4096 exit=0 KVATTN_REL PASS mode=steady gmut=0 nu=4 ctx=4096 fd=2 tile_fault=0 svc_fault=0 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=2025
+u4_T8192 exit=0 KVATTN_REL FAIL mode=steady gmut=0 nu=4 ctx=8192 fd=2 tile_fault=1 svc_fault=1 result_fault=0 cal_fault=0 root_lf=0 root_iof=0 dp_fault=0000000000010011 timeout=0 period=2025

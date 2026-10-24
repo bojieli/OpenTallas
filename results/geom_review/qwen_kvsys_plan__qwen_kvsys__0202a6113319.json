@@ -1,0 +1,20 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys@6f76bdfcb",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "0202a6113319e925d38c712cd16c5034328163924786ec5326e471ab8751375f",
+ "reasons": "[CODEX-GEOM independent G1, source-pin conversion] Original actual v3.2 PNG viewed; its report points to the paused WIP whose plan hash is byte-identical to this snapshot. Fresh exact-snapshot render generated/viewed with the independent G0 run; the old FAIL5errors title is superseded only by this new PASS0 result. Regular mirrored PHY/PC/HG/PV rows and the five-way centre hub remain abutted. Top IO row is split with mirrored SerDes halves; former empty NW IO corner is filled. North/south corridor routes stay column-local, and root at hub_C is coherent with the fishbone. Standard supplement max neighbour degree5, no star hub; hub_C260lane endpoints are distributed over local neighbours. Own fcaeb3316 G0 PASS0 errors/1588warnings:160partitions45types3939ports2416lanes; partition area292.5339mm2/full fill, face5.5pins/um, cut0.0714/segment0.2592, worst hop1188.8of1200um. No near-duplicate types. Four named controls have explicit census source/destination and ordered live lanes: host.link_rst_n to d2d_kv/serdes_E reset via L745/L746[/L747], serdes_E.tx_up via L2046/L2047, serdes_W.tx_up via L2049/L2051. Exact-route checker/capacity guards give396969inter_bits/drop0/unmapped0 with51031forwarded_bits. This verifies plan/census identity, not RTL or physical binding. Actual expanded partition contents include128qkd_rlyi_258s relays. Source notes classify straps/ID lanes/fault-tree checks and non-core clocks/reset, but G0 hard_cores/taps0/0 means actual core outlines/pins/tap implementation is not validated.",
+ "fixes": "SATISFIED by published main6f76bdfcb: exact reviewed v3.2 plan SHA256 0391633fab2e7fc5ba12fb2f01b34cc5206e1e3b7064e9b85638a44d31519d46 and generator/input/census/control-route metadata are now source-pinned. Coordinator reports byte-identical stage2 regeneration, decompressed census parity, FDLY3 schedule and clock sidecar retained. Conversion preserves the original review; no repeated review/tests or broader qualification. Preserve F_DLY=3. The F_DLY2 bit-exact T8191/T8192 stack failures remain binding; no calendar/timing waiver or latency reduction follows from control-route coverage. Complete actual RTL/BINDER integration for A5226leaf-param straps, B2184IDlane bits and C5672chain-head dead ports; do not turn metadata classes into ties or open inputs. Preserve START-only HC transport without143-bit constant padding, full128relay bindings,356fault/landing sources with registered tree and eight non-core clock/reset spine obligations. Carry source-bound per-partition hard-core/glue400k budgets, real pin/track offsets and internal clock/reset landing into G3. The hub_C500ps/hub_Wi440ps/IO370ps insertion targets are declared budgets, not measurements; measure insertion/neighbour skew on generated source-bound partitions. Existing exact-current-source G2/CP1 and each partition render/independent G3 review remain prerequisites. No prior G2/timing/token result transfers and no blanket P&R grant.",
+ "reviewer": "CODEX-GEOM-0911-1023 (independent)",
+ "at": "2026-10-23T09:25:21-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element",
+ "plan_sha256": "0391633fab2e7fc5ba12fb2f01b34cc5206e1e3b7064e9b85638a44d31519d46",
+ "render_sha256": "51f92da3c13560c98659c72d4205d1c4ebc4435ef3680e9cc0a8fdf89d66dd09",
+ "source_pin_commit": "6f76bdfcb",
+ "evidence": {
+  "original_review": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/kv-v32-g1.json",
+  "g0_report": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/kv-g0/g0_report.json",
+  "checker_commit": "fcaeb3316",
+  "conversion_scope": "source-pin satisfied only; original time and all other conditions preserved; no new G2/P&R"
+ }
+}

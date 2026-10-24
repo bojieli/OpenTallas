@@ -1,0 +1,57 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 5190868,
+   "demand": 1838,
+   "usage_pct": 0.04,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 5830136,
+   "demand": 3504,
+   "usage_pct": 0.06,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 4360435,
+   "demand": 2232,
+   "usage_pct": 0.05,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 4373640,
+   "demand": 18178,
+   "usage_pct": 0.42,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 15372968,
+   "demand": 1411,
+   "usage_pct": 0.01,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 15384184,
+   "demand": 18771,
+   "usage_pct": 0.12,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 31905.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true
+}

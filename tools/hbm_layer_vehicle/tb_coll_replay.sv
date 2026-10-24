@@ -11,6 +11,7 @@
 // Prints COLLRPL PASS / FAIL, checks, mismatches.
 module tb_coll_replay;
     parameter string EV = "events.txt";
+    parameter integer PA_DLY = 0;  // TOKg 10-23: die relay depth on the A-ring publish lane into hcollgl (r18h5 SW = 3)
     localparam integer NE = 16384;
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
     integer cnt = -1;
@@ -24,6 +25,7 @@ module tb_coll_replay;
     wire [255:0] ra_lp_d; wire [3:0] ra_ttl, ra_kind, ra_src; wire [5:0] ra_rtag;
     wire rb_lp_we, rb_rd; wire [2:0] rb_lp_tag, rb_rdt, rb_tag; wire [255:0] rb_lp_d; wire [1:0] rb_inj, rb_fwd, rb_rx;
     wire [3:0] rb_ttl, rb_kind, rb_src; wire [5:0] rb_rtag;
+    wire [1:0] ra_ag_v; wire [3:0] ra_ag_s; wire [5:0] ra_ag_t; wire [511:0] ra_ag_d;
     wire [1:0] pa_v, pb_v; wire [3:0] pa_s, pb_s; wire [5:0] pa_t, pb_t; wire [511:0] pa_d, pb_d;
     wire act, dn, tf, fi, fl, conf, f_ra, f_rb, f_rs, f_ks;
     wire [135:0] g_rq, v_rq; wire [2055:0] g_rr, v_rr, a_rr_unused; wire [2247:0] g_kq, v_kq;
@@ -56,7 +58,12 @@ module tb_coll_replay;
         .tx_inject(ra_inj), .tx_forward(ra_fwd), .tx_tag(ra_tx_tag), .tx_dst(ra_dst), .tx_result(ra_res), .tx_acc(ra_acc),
         .tx_gather(ra_gath), .tx_ttl(ra_ttl), .rx_slot(ra_rx), .rx_kind(ra_kind), .rx_src(ra_src), .rx_tag(ra_rtag),
         .rr_local(ra_rrl), .rr_local_tag(ra_rrl_tag), .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
-        .ag_v(pa_v), .ag_src(pa_s), .ag_tag(pa_t), .ag_d(pa_d), .fault(f_ra));
+        .ag_v(ra_ag_v), .ag_src(ra_ag_s), .ag_tag(ra_ag_t), .ag_d(ra_ag_d), .fault(f_ra));
+    wire [523:0] ra_ag = {ra_ag_v, ra_ag_t, ra_ag_s, ra_ag_d};
+    reg [523:0] pa_pipe [0:7];
+    always @(posedge clk) begin pa_pipe[0] <= ra_ag; for (integer j = 1; j < 8; j = j + 1) pa_pipe[j] <= pa_pipe[j-1]; end
+    wire [523:0] pa_x = (PA_DLY == 0) ? ra_ag : pa_pipe[PA_DLY-1];
+    assign {pa_v, pa_t, pa_s, pa_d} = pa_x;
     ot_hgi_coll_ring_b_stop rb(.clk(clk), .rst_n(rst_n), .qid(2'd0),
         .cw_i(b_cw_i), .ccw_i(b_ccw_i), .cw_o(b_cw_o), .ccw_o(b_ccw_o),
         .lp_we(rb_lp_we), .lp_tag(rb_lp_tag), .lp_data(rb_lp_d), .state_read_tx(rb_rd), .state_tx_tag(rb_rdt),

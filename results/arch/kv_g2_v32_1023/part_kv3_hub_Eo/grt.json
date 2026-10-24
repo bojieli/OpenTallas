@@ -1,0 +1,71 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 46142058,
+   "demand": 5732368,
+   "usage_pct": 12.42,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 51647047,
+   "demand": 3836288,
+   "usage_pct": 7.43,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 38732792,
+   "demand": 2984003,
+   "usage_pct": 7.7,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 38736020,
+   "demand": 1123345,
+   "usage_pct": 2.9,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 26372646,
+   "demand": 610493,
+   "usage_pct": 2.31,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 26374586,
+   "demand": 34524,
+   "usage_pct": 0.13,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 8191900.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true,
+ "exit": "EXIT 0",
+ "kind": "g2-partition",
+ "die": "qwen_kvsys",
+ "type": "kv3_hub_Eo",
+ "instance": "hub_Eo",
+ "outline_um": [
+  1278.72,
+  1676.16
+ ],
+ "pins": 11872,
+ "flops": 12370,
+ "leaf_blockages": 0,
+ "adjust": 0.5,
+ "route_layers": "M2-M7"
+}

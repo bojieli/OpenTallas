@@ -124,6 +124,11 @@ module tb_toksim_smhbm;
   .request(request),.xw_en(xw_en),.xw_addr(xw_addr),.xw_grp(xw_grp),.xw_data(xw_data),
   .rv(sm_rv),.rrow(rrow),.rdata(rdata),.fault(sm_fault),.schedule_fault(sm_sfault));
  // ---------------- checks / trace
+`ifdef OT_SM_QSPLIT
+ reg[1098:1088]s1v=0;always @(posedge stream)s1v<=svg.feed.s1_packet[1098:1088];
+`else
+ wire[1098:1088]s1v=svg.feed.s1_packet[1098:1088];
+`endif
  integer nres=0,ngo=0,nrun=0,i8v_n=0;reg[1:0]cr_q=0;reg[3:0]br_q=0;reg[3:0]pr_q=0;
 `ifdef PTRACE
  integer ap;always @(posedge hbm)if(hrst)for(ap=0;ap<4;ap=ap+1)if(row_v[ap])$display("A %0d %0d %0d %0d %0d",cyc,ap,row_op[ap*3+:3],row_bank[ap*5+:5],row_row[ap*19+:19]);
@@ -154,8 +159,9 @@ module tb_toksim_smhbm;
   if(xc_fault)begin $display("FAULT xc cycle %0d",cyc);$fatal(1,"xc fault");end
   // HBM-QINT8: the svg S1 copy's INT8 view must equal the packet the SM front sees (valid every edge, tag when valid)
   // (reported, then fatal 4 edges later so a die fault the mismatch causes is reported first)
-  if(i8v_n==0&&(svg.feed.s1_packet[1098]!=sm.f_packet[1098]||(sm.f_packet[1098]&&svg.feed.s1_packet[1097:1088]!=sm.f_packet[1097:1088])))begin
-   $display("I8VIEW mismatch cycle %0d svg %0d/%0d sm %0d/%0d",cyc,svg.feed.s1_packet[1098],svg.feed.s1_packet[1097:1088],sm.f_packet[1098],sm.f_packet[1097:1088]);i8v_n=1;end
+  // HBM-P4-SM (OT_SM_QSPLIT): the SM lands its inputs one cycle (R2-alt), so its front sees the svg view one edge later
+  if(i8v_n==0&&(s1v[1098]!=sm.f_packet[1098]||(sm.f_packet[1098]&&s1v[1097:1088]!=sm.f_packet[1097:1088])))begin
+   $display("I8VIEW mismatch cycle %0d svg %0d/%0d sm %0d/%0d",cyc,s1v[1098],s1v[1097:1088],sm.f_packet[1098],sm.f_packet[1097:1088]);i8v_n=1;end
   else if(i8v_n!=0)begin i8v_n=i8v_n+1;if(i8v_n==5)begin $display("FAULT i8view cycle %0d",cyc);$fatal(1,"i8 view");end end
   if(cp_fault)begin $display("FAULT cp_svg cycle %0d",cyc);$fatal(1,"cp fault");end
  end

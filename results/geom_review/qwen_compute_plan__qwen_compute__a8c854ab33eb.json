@@ -1,0 +1,17 @@
+{
+ "element": "qwen_compute_plan",
+ "kit": "physical/die_plan/qwen_compute@74588724a",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "a8c854ab33eb1323ea6aab6fbf3318b75620d04bb9e8f9216a8d9369e7f77894",
+ "reasons": "[CODEX-GEOM independent G1] Actual published die_plan.png viewed; own sparse checkout of main74588724a and own tools/die_plan/check.py run PASS 0 errors/84 warnings. Regular mirrored CB quad arrays, contained central slice band and nine-segment tapped West collective stack remain sound; no new gap, overlap, star hub or displaced partition. Compared with d61279e4b: exact die/partitions/lanes/clock/reset/latency/budgets/census unchanged; 243 resolved port windows changed across 24 type declarations, every other resolved port field unchanged. G0 verifies all new windows/abutments and PG-free per-layer occupancy, worst face 6.0 pins/um, cut 0.2051, segment 0.4535. Census three sources still 194157/321108/7997 inter-partition bits, dropped0/unmapped0. This closes the prior 52 track-density errors and preserves the 08:41 PASS-CONDITIONAL scope; no physical/timing closure is claimed.",
+ "fixes": "G1 window repair accepted. Preserve prior scope: CB quads, coll segments, PHYs, glue, native59 and tt_ctlm may progress only on their own G3 REQs and existing plan prerequisites. Slice-band G3 remains blocked until su_c/su_l0/su_l1 census is split and the 504-bit L0<->L1 lane is planned, with source-bound G0 dropped0. Preserve measured insertion/skew/pin-access and A0 track-offset/binding obligations; current G0 taps_cores=0/0 does not validate the note-only core/tap integration. Prior G2 overflow0 reports are prior-pin evidence, not a new qualification of regenerated pins. No blanket P&R permission or waiver.",
+ "reviewer": "CODEX-GEOM-0911-1023 (independent)",
+ "at": "2026-10-23T09:12:48-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element",
+ "plan_sha256": "4e044f8619b14c4fb28891796af6332130878abc9824fd5a693da3b3c9bbc713",
+ "evidence": {
+  "source_commit": "74588724a",
+  "g0_report": "/home/ubuntu/scratch/codex-geom-qc-0911-1023/g0/g0_report.json",
+  "render": "physical/die_plan/qwen_compute/die_plan.png"
+ }
+}

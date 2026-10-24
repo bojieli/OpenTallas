@@ -1,8 +1,12 @@
 {
  "schema": "opentallas.die_plan.g2.v1",
- "plan": "/home/ubuntu/wt/qc-p2-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json",
+ "source_commit": "fb27cfd5d",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
+ "verdict": "PASS",
+ "scope": "fresh declared-tap virtual die probe plus eight byte-identical reused FT probes; declared budgets are estimates, not insertion/STA; real core/binding/CP1/G3 conditions remain open",
  "probes": {
-  "part_coll": {
+  "part_coll_core": {
    "layers": {
     "M1": {
      "resource": 0,
@@ -11,44 +15,44 @@
      "overflow": 0
     },
     "M2": {
-     "resource": 119226102,
-     "demand": 2271509,
-     "usage_pct": 1.91,
+     "resource": 5190868,
+     "demand": 1838,
+     "usage_pct": 0.04,
      "overflow": 0
     },
     "M3": {
-     "resource": 133577892,
-     "demand": 875873,
-     "usage_pct": 0.66,
+     "resource": 5830136,
+     "demand": 3504,
+     "usage_pct": 0.06,
      "overflow": 0
     },
     "M4": {
-     "resource": 100068087,
-     "demand": 1389989,
-     "usage_pct": 1.39,
+     "resource": 4360435,
+     "demand": 2232,
+     "usage_pct": 0.05,
      "overflow": 0
     },
     "M5": {
-     "resource": 100187068,
-     "demand": 223816,
-     "usage_pct": 0.22,
+     "resource": 4373640,
+     "demand": 18178,
+     "usage_pct": 0.42,
      "overflow": 0
     },
     "M6": {
-     "resource": 87978410,
-     "demand": 283248,
-     "usage_pct": 0.32,
+     "resource": 15372968,
+     "demand": 1411,
+     "usage_pct": 0.01,
      "overflow": 0
     },
     "M7": {
-     "resource": 88067280,
-     "demand": 11383,
-     "usage_pct": 0.01,
+     "resource": 15384184,
+     "demand": 18771,
+     "usage_pct": 0.12,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 2902196.0,
+   "wirelength_um": 31905.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {
@@ -58,21 +62,123 @@
    "pin_access_done": true,
    "reach": {},
    "done": true,
-   "exit": "EXIT 0",
-   "kind": "g2-partition",
-   "die": "qwen_compute",
-   "type": "coll",
-   "instance": "io_collective",
-   "outline_um": [
-    786.24,
-    9097.92
-   ],
-   "pins": 10443,
-   "flops": 9991,
-   "leaf_blockages": 6,
-   "adjust": 0.5,
-   "route_layers": "M2-M7"
+   "exit": "EXIT 0"
+  },
+  "part_coll_s": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4912840,
+     "demand": 7208,
+     "usage_pct": 0.15,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5496304,
+     "demand": 2460,
+     "usage_pct": 0.04,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 4125143,
+     "demand": 4756,
+     "usage_pct": 0.12,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 4121898,
+     "demand": 14008,
+     "usage_pct": 0.34,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 7770542,
+     "demand": 1256,
+     "usage_pct": 0.02,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 7769344,
+     "demand": 13311,
+     "usage_pct": 0.17,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 30386.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
+  },
+  "part_coll_ftm": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 20466596,
+     "demand": 254643,
+     "usage_pct": 1.24,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 22917405,
+     "demand": 3315576,
+     "usage_pct": 14.47,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 17179526,
+     "demand": 187578,
+     "usage_pct": 1.09,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 17188584,
+     "demand": 1211195,
+     "usage_pct": 7.05,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 11697842,
+     "demand": 32726,
+     "usage_pct": 0.28,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 11703678,
+     "demand": 205281,
+     "usage_pct": 1.75,
+     "overflow": 0
+    }
+   },
+   "total_overflow": 0,
+   "wirelength_um": 2978966.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "pin_access_done": true,
+   "reach": {},
+   "done": true,
+   "exit": "EXIT 0"
   }
- },
- "verdict": "PASS"
+ }
 }
