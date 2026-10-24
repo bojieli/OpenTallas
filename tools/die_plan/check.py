@@ -32,6 +32,7 @@ import argparse
 import bisect
 import json
 import math
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -593,18 +594,41 @@ def type_cells(t):
     return sum(cs) if cs else None
 
 
-def check_taps_cores(P, R, plan_dir=None):
+_PIN_CACHE = {}
+
+
+def core_pins(hc, plan_dir=None):
+    """[(name, layer, x, y)] of one hard core in its own frame (R0, origin 0): pins[] + pins_file (cached)."""
+    pins = [(p_["name"], p_["layer"], *p_["xy"]) for p_ in hc.get("pins", [])]
+    if hc.get("pins_file"):
+        key = str(Path(plan_dir or ".") / hc["pins_file"])
+        if key not in _PIN_CACHE:
+            js = json.loads(Path(key).read_text())
+            js = js.get("pins", js) if isinstance(js, dict) else js
+            _PIN_CACHE[key] = [(q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]", q["layer"], q["x"], q["y"])
+                               for q in js]
+        pins += _PIN_CACHE[key]
+    return pins
+
+
+def check_taps_cores(P, R, plan_dir=None, evidence=None):
     """clock.taps[] inside the type outline, unique names; hard_cores[]: pins land on the plan tracks after
     origin + track_offset and the core orient, in the type frame AND in every placed instance's die frame (MX/MY)."""
-    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0)
+    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0, over_cap_no_cores=0)
+    import cells as CE
+    est, out["cell_sources"] = CE.estimate(P.raw, plan_dir, evidence or ())
+    no_cells = []
     for tn, t in P.types.items():
         w, h = t["outline_um"]
-        nc = type_cells(t)
+        nc, basis = est.get(tn, (None, None))
         if nc is None:
             out["types_no_cells"] += 1
+            no_cells.append(tn)
         elif nc > CORE_CELLS_MAX and not t.get("hard_cores"):
-            R.err("hard_cores", f"type {tn}: {nc} cells > {CORE_CELLS_MAX} and no hard_cores[] (outline, pins, "
-                  "track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)", type=tn)
+            out["over_cap_no_cores"] += 1
+            R.err("hard_cores", f"type {tn}: {nc} cells ({basis}) > {CORE_CELLS_MAX} and no hard_cores[] (outline, "
+                  "pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+                  type=tn)
         ck = t.get("clock", {})
         names = set()
         for tp in ck.get("taps", []):
@@ -630,15 +654,11 @@ def check_taps_cores(P, R, plan_dir=None):
             X0, Y0 = ox + dx, oy + dy
             if X0 < -EPS or Y0 < -EPS or X0 + cw > w + EPS or Y0 + chh > h + EPS:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: placed box outside the type outline", type=tn)
-            pins = [(p_["name"], p_["layer"], *p_["xy"]) for p_ in hc.get("pins", [])]
-            if hc.get("pins_file"):
-                try:
-                    js = json.loads((Path(plan_dir or ".") / hc["pins_file"]).read_text())
-                    js = js.get("pins", js) if isinstance(js, dict) else js
-                    pins += [(q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]", q["layer"], q["x"], q["y"])
-                             for q in js]
-                except (OSError, ValueError, KeyError) as e:
-                    R.err("hard_cores", f"type {tn} core {hc['inst']}: pins_file {hc['pins_file']}: {e}", type=tn)
+            try:
+                pins = core_pins(hc, plan_dir)
+            except (OSError, ValueError, KeyError) as e:
+                pins = [(p_["name"], p_["layer"], *p_["xy"]) for p_ in hc.get("pins", [])]
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: pins_file {hc['pins_file']}: {e}", type=tn)
             if not pins:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: no pins listed (pins / pins_file): the core pins "
                       "must be proven on the kit tracks", type=tn)
@@ -668,8 +688,196 @@ def check_taps_cores(P, R, plan_dir=None):
             if bad > 5:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: {bad} pins off the plan tracks", type=tn)
     if out["types_no_cells"]:
-        R.warn("hard_cores", f"{out['types_no_cells']} types without a cell estimate (type.cells or contents[].cells): "
-               f"the > {CORE_CELLS_MAX}-cell hard-core rule is unchecked for them")
+        R.warn("hard_cores", f"{out['types_no_cells']} types without a cell estimate (type.cells, contents[].cells or "
+               f"a cells.py evidence file): the > {CORE_CELLS_MAX}-cell hard-core rule is unchecked for them: "
+               f"{', '.join(no_cells[:30])}{' ...' if len(no_cells) > 30 else ''}")
+    return out
+
+
+# ------------------------------------------------------------------------------------- hard-core face rule
+_NORMAL = dict(N=(0.0, 1.0), S=(0.0, -1.0), E=(1.0, 0.0), W=(-1.0, 0.0))
+FACE_AWAY_COS = -0.1     # a core port whose pins' mean best cos(face normal, direction to a partner) is below this
+FACE_WARN_COS = 0.0      # FAILs; between the two (pins about perpendicular to the partner) it WARNs
+
+
+def _core_face(o, x, y, cw, ch):
+    """face of a core-frame pin, in the type frame after the core orient."""
+    f = min([(x, "W"), (cw - x, "E"), (y, "S"), (ch - y, "N")])[1]
+    if o in ("MX", "R180") and f in "NS":
+        f = OPP[f]
+    if o in ("MY", "R180") and f in "EW":
+        f = OPP[f]
+    return f
+
+
+def _bus_targets(P, tn):
+    """{bus: (x, y) type-frame point on the partition face that carries it}: the type's bus face/window when
+    declared, else the first planned port of an instance of the type (die window -> type frame)."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+
+    def pt(face, a, b):
+        m = 0.5 * (a + b)
+        return dict(N=(m, h), S=(m, 0.0), E=(w, m), W=(0.0, m))[face]
+    out = {}
+    for b in t.get("buses", []):
+        if "face" in b and "window_um" in b:
+            out[b["name"]] = (b["face"], pt(b["face"], *b["window_um"]))
+    insts = {n for n, p_ in P.parts.items() if p_["type"] == tn}
+    for pr in P.ports.values():
+        if "face" not in pr or "window_um" not in pr:
+            continue
+        for side in ("src", "dst"):
+            e = pr[side]
+            if e["part"] not in insts or e["bus"] in out:
+                continue
+            df = pr["face"] if side == "src" or pr["src"]["part"] == DIE_PART else OPP[pr["face"]]
+            a, b_ = pr["window_um"]
+            x0, y0, x1, y1 = P.rect(e["part"])
+            m = 0.5 * (a + b_)
+            dpt = dict(N=(m, y1), S=(m, y0), E=(x1, m), W=(x0, m))[df]
+            tf = P.type_face(e["part"], df)
+            out[e["bus"]] = (tf, P.to_type(e["part"], dpt))
+    return out
+
+
+def best_face(dirs):
+    """core face (type frame) that best faces a set of partner directions [(what, ux, uy)] (re-pin hint)."""
+    return max("NSEW", key=lambda f: sum(_NORMAL[f][0] * ux + _NORMAL[f][1] * uy for _, ux, uy in dirs))
+
+
+def load_core_conns(plan_dir=None, path=None):
+    """optional sidecar {type: {core inst: {core port: ["bus:<type bus>" | "core:<inst>" | "leaf:<content inst>" |
+    "face:<N|S|E|W>", ...]}}} (default PLANDIR/core_conns.json): core connectivity the plan JSON does not carry
+    (cores nested inside a content leaf, e.g. S81 frame qbanks; KV head cores), written by the binder / plan owner."""
+    f = Path(path) if path else Path(plan_dir or ".") / "core_conns.json"
+    return json.loads(f.read_text()) if f.is_file() else {}
+
+
+def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
+    """Connectivity-aware hard-core face rule (GEOM-REVIEW face rule; COORD 10-23 PLAN-TOOL4).
+
+    Every hard-core pin group (core port) that connects to a partition face or to another core / placed leaf must
+    sit on a core face that faces a partner.  Connectivity: type.buses[].leaf "<inst>.<port>", contents[].bind
+    "bus:/epoch:<bus>" and "net:<net>" (leaf-to-leaf), and the core_conns.json sidecar.  A core matches a leaf inst
+    when equal or split from it ("<leaf>_<piece>").  Score, in the type frame: per pin, the best cosine over the
+    port's partners between the pin's face normal and the direction from the core centre to the partner (partition
+    face: the bus window centre; core / leaf: its centre); the port FAILs when the mean over its pins is < 0
+    (most pins on the far side: the route wraps the core).  Cores with no known connectivity are counted
+    (unchecked) and WARNed per type."""
+    out = dict(groups=0, groups_away=0, pins=0, pins_away=0, types_away=0, cores=0, cores_unchecked=0)
+    side = load_core_conns(plan_dir, conns_file)
+    for tn, t in P.types.items():
+        hcs = t.get("hard_cores", [])
+        if not hcs:
+            continue
+        w, h = t["outline_um"]
+        bt = None
+        boxes = {}
+        for hc in hcs:
+            cw, ch = hc["outline_um"]
+            dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+            boxes[hc["inst"]] = (hc["origin_um"][0] + dx + cw / 2, hc["origin_um"][1] + dy + ch / 2)
+        cent = dict(boxes)
+        for c in t.get("contents", []):
+            if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
+                cent[c["inst"]] = (c["origin_um"][0] + c["outline_um"][0] / 2,
+                                   c["origin_um"][1] + c["outline_um"][1] / 2)
+        conns = {}          # (leaf inst, leaf port) -> [(kind, name)]
+        for b in t.get("buses", []):
+            if b.get("leaf") and "." in b["leaf"]:
+                li, lp = b["leaf"].split(".", 1)
+                conns.setdefault((li, lp), []).append(("bus", b["name"]))
+        net_ends = {}
+        for c in t.get("contents", []):
+            for lp, v in c.get("bind", {}).items():
+                k, _, nm = v.partition(":")
+                if k in ("bus", "epoch") and nm:
+                    conns.setdefault((c["inst"], lp), []).append(("bus", nm))
+                elif k == "net" and nm:
+                    conns.setdefault((c["inst"], lp), []).append(("net", nm))
+                    net_ends.setdefault(nm, set()).add(c["inst"])
+        for ci, ports in side.get(tn, {}).items():
+            for lp, lst in ports.items():
+                for v in lst:
+                    k, _, nm = v.partition(":")
+                    conns.setdefault((ci, lp), []).append((k, nm))
+        bad_t = unchecked = 0
+        for hc in hcs:
+            ci = hc["inst"]
+            out["cores"] += 1
+            mine = [(lp, tg) for (li, lp), tg in conns.items() if li == ci or ci.startswith(li + "_")]
+            if not mine:
+                unchecked += 1
+                continue
+            try:
+                pins = core_pins(hc, plan_dir)
+            except (OSError, ValueError, KeyError):
+                continue
+            cw, ch = hc["outline_um"]
+            o = hc.get("orient", "R0")
+            cx, cy = boxes[ci]
+            by_base = {}
+            for nm, _ln, x, y in pins:
+                by_base.setdefault(re.sub(r"\[\d+\]$", "", nm), []).append(_core_face(o, x, y, cw, ch))
+            ports = {}
+            for lp, tg in mine:
+                ports.setdefault(lp, []).extend(tg)
+            for lp, tg in ports.items():
+                faces = by_base.get(lp)
+                if not faces:
+                    continue
+                pts = []
+                for kind, nm in tg:
+                    if kind == "bus":
+                        if bt is None:
+                            bt = _bus_targets(P, tn)
+                        if nm in bt:
+                            pts.append((f"face {bt[nm][0]} ({nm})", bt[nm][1]))
+                    elif kind == "net":
+                        pts += [(f"{oi} (net {nm})", cent[oi]) for oi in sorted(net_ends.get(nm, ()))
+                                if oi != ci and not ci.startswith(oi + "_") and oi in cent]
+                    elif kind in ("core", "leaf") and nm in cent and nm != ci:
+                        pts.append((nm, cent[nm]))
+                    elif kind == "face" and nm in _NORMAL:
+                        pts.append((f"face {nm}", dict(N=(cx, h), S=(cx, 0.0), E=(w, cy), W=(0.0, cy))[nm]))
+                dirs = []
+                for what, (tx, ty) in pts:
+                    d = math.hypot(tx - cx, ty - cy)
+                    if d > 1e-6:
+                        dirs.append((what, (tx - cx) / d, (ty - cy) / d))
+                if not dirs:
+                    continue
+                best = {f: max(_NORMAL[f][0] * ux + _NORMAL[f][1] * uy for _, ux, uy in dirs) for f in set(faces)}
+                cs = [best[f] for f in faces]
+                away = sum(1 for c_ in cs if c_ < -1e-9)
+                mean = sum(cs) / len(cs)
+                out["groups"] += 1
+                out["pins"] += len(cs)
+                out["pins_away"] += away
+                if mean < FACE_WARN_COS:
+                    bf = best_face(dirs)
+                    part = ", ".join(sorted({wh for wh, _, _ in dirs})[:3]) + (" ..." if len(dirs) > 3 else "")
+                    msg = (f"type {tn} core {ci} port {lp}: {len(cs)} pins on face {'/'.join(sorted(set(faces)))} "
+                           f"face away from its partner(s) {part}: mean cos {mean:+.2f}, {away} pins on the far "
+                           f"side (re-pin to face {bf})")
+                    if mean >= FACE_AWAY_COS:
+                        out["groups_side"] = out.get("groups_side", 0) + 1
+                        if out["groups_side"] <= 50:
+                            R.warn("core_faces", msg + " [about perpendicular: WARN]", type=tn)
+                        continue
+                    out["groups_away"] += 1
+                    bad_t += 1
+                    if bad_t <= max_msgs:
+                        R.err("core_faces", msg, type=tn)
+        if bad_t > max_msgs:
+            R.err("core_faces", f"type {tn}: {bad_t} core ports face away from their partners "
+                  f"({bad_t - max_msgs} more not listed)", type=tn)
+        if unchecked:
+            R.warn("core_faces", f"type {tn}: {unchecked}/{len(hcs)} hard cores with no known connectivity (no "
+                   "buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them", type=tn)
+        out["cores_unchecked"] += unchecked
+        out["types_away"] += bool(bad_t)
     return out
 
 
@@ -804,7 +1012,7 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
 
 
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None, plan_dir=None, groups=None, landing=None):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -815,7 +1023,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None):
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
     summ["types"] = check_types(P, R)
-    summ["taps_cores"] = check_taps_cores(P, R, plan_dir)
+    summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
+    summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
@@ -845,12 +1054,16 @@ def main(argv=None):
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
     ap.add_argument("--landing", help="R8: <die>_r8_landing.json (default PLANDIR/*/<die>_r8_landing.json)")
+    ap.add_argument("--cells-evidence", action="append", default=[],
+                    help="cells.py evidence file (type / partition / module cell table or Yosys stat); repeatable; "
+                         "PLANDIR cells_est.json, plan_notes.json, l1_cores_v3*.json, cells_evidence.json are read too")
+    ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
-                  groups=a.groups, landing=a.landing)
+                  groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
