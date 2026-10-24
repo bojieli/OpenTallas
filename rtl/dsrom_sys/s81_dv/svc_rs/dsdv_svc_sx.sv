@@ -35,7 +35,11 @@ module dsdv_svc_sx #(
     parameter integer MUT = 0,
     parameter integer NR = 1,              // relay stations per hop half (IN: NR, OUT: NR + 1)
     parameter integer FX = 5,
-    parameter integer F12 = 1
+    parameter integer F12 = 1,
+    // S81-P9-FACE (10-23): gather / scatter face masks (bit f = face N / E / S / W; svc_rs_faces.py from the role ROM).
+    // A face whose bit is 0 has no relay station: its IN lanes reach the half rows as constant 0 (the role ROM never
+    // selects them, so the hardened half row reads nothing there) and its OUT lanes are constant 0 (port variant: absent).
+    parameter logic [3:0] FM_GI = 4'hf, FM_GO = 4'hf, FM_SI = 4'hf, FM_SO = 4'hf
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -81,12 +85,22 @@ module dsdv_svc_sx #(
         for (f = 0; f < 4; f = f + 1) begin : g_f
             // ---- IN stations (C): face f -> leaf; NR deep.  Gather: one station per half; scatter: the 2 halves share one
             wire [551:0] gin [0:NR]; wire [275:0] sin [0:NR];
-            assign gin[0] = {6'd0, gi_v[f], g_half(gi_d[W*f +: W], r, 1), 6'd0, gi_v[f], g_half(gi_d[W*f +: W], r, 0)};
-            assign sin[0] = {si_v[f], s_half(si_d[SW*f +: SW], r, 1), si_v[f], s_half(si_d[SW*f +: SW], r, 0)};
-            for (j = 0; j < NR; j = j + 1) begin : g_c
-                dsdv_sx_rly_in #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gin[j][275:0]),   .o(gin[j+1][275:0]));
-                dsdv_sx_rly_in #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gin[j][551:276]), .o(gin[j+1][551:276]));
-                dsdv_sx_rly_in #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sin[j]),          .o(sin[j+1]));
+            if (FM_GI[f]) begin : g_gi
+                assign gin[0] = {6'd0, gi_v[f], g_half(gi_d[W*f +: W], r, 1), 6'd0, gi_v[f], g_half(gi_d[W*f +: W], r, 0)};
+                for (j = 0; j < NR; j = j + 1) begin : g_c
+                    dsdv_sx_rly_in #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gin[j][275:0]),   .o(gin[j+1][275:0]));
+                    dsdv_sx_rly_in #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gin[j][551:276]), .o(gin[j+1][551:276]));
+                end
+            end else begin : g_gi0
+                for (j = 0; j <= NR; j = j + 1) begin : g_z assign gin[j] = '0; end
+            end
+            if (FM_SI[f]) begin : g_si
+                assign sin[0] = {si_v[f], s_half(si_d[SW*f +: SW], r, 1), si_v[f], s_half(si_d[SW*f +: SW], r, 0)};
+                for (j = 0; j < NR; j = j + 1) begin : g_c
+                    dsdv_sx_rly_in #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sin[j]),          .o(sin[j+1]));
+                end
+            end else begin : g_si0
+                for (j = 0; j <= NR; j = j + 1) begin : g_z assign sin[j] = '0; end
             end
             assign lgi[f] = gin[NR][HW:0]; assign lgi[4 + f] = gin[NR][276 +: HW + 1];
             assign lsi[f] = sin[NR][HSW:0]; assign lsi[4 + f] = sin[NR][HSW + 1 +: HSW + 1];
@@ -94,10 +108,20 @@ module dsdv_svc_sx #(
             wire [551:0] gout [0:NR+1]; wire [275:0] sout [0:NR+1];
             assign gout[0] = {6'd0, lgo[4 + f], 6'd0, lgo[f]};
             assign sout[0] = {lso[4 + f], lso[f]};
-            for (j = 0; j <= NR; j = j + 1) begin : g_ab
-                dsdv_sx_rly_out #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gout[j][275:0]),   .o(gout[j+1][275:0]));
-                dsdv_sx_rly_out #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gout[j][551:276]), .o(gout[j+1][551:276]));
-                dsdv_sx_rly_out #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sout[j]),          .o(sout[j+1]));
+            if (FM_GO[f]) begin : g_go
+                for (j = 0; j <= NR; j = j + 1) begin : g_ab
+                    dsdv_sx_rly_out #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gout[j][275:0]),   .o(gout[j+1][275:0]));
+                    dsdv_sx_rly_out #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gout[j][551:276]), .o(gout[j+1][551:276]));
+                end
+            end else begin : g_go0
+                for (j = 1; j <= NR + 1; j = j + 1) begin : g_z assign gout[j] = '0; end
+            end
+            if (FM_SO[f]) begin : g_so
+                for (j = 0; j <= NR; j = j + 1) begin : g_ab
+                    dsdv_sx_rly_out #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sout[j]),          .o(sout[j+1]));
+                end
+            end else begin : g_so0
+                for (j = 1; j <= NR + 1; j = j + 1) begin : g_z assign sout[j] = '0; end
             end
         end
         for (b = 0; b < 2; b = b + 1) begin : g_h
