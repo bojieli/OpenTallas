@@ -9,8 +9,26 @@
    ],
    "pins": 2288
   },
+  "ot_hbm_hc_bankq0_static__lanes0_2@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq0_static__lanes0_2__172.8x345.6.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1951
+  },
   "ot_hbm_hc_bankq0_static__lanes0_2@362.88x362.88": {
    "file": "ot_hbm_hc_bankq0_static__lanes0_2__362.88x362.88.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 1951
+  },
+  "ot_hbm_hc_bankq0_static__lanes3_5@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq0_static__lanes3_5__172.8x345.6.json",
    "how": "ports",
    "layers": [
     "M4",
@@ -36,8 +54,26 @@
    ],
    "pins": 10377
   },
+  "ot_hbm_hc_bankq_ft_static__lanes0_2@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_ft_static__lanes0_2__172.8x345.6.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
   "ot_hbm_hc_bankq_ft_static__lanes0_2@362.88x362.88": {
    "file": "ot_hbm_hc_bankq_ft_static__lanes0_2__362.88x362.88.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
+  "ot_hbm_hc_bankq_ft_static__lanes3_5@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_ft_static__lanes3_5__172.8x345.6.json",
    "how": "ports",
    "layers": [
     "M4",
@@ -63,8 +99,26 @@
    ],
    "pins": 4812
   },
+  "ot_hbm_hc_bankq_static__lanes0_2@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_static__lanes0_2__172.8x345.6.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
   "ot_hbm_hc_bankq_static__lanes0_2@362.88x362.88": {
    "file": "ot_hbm_hc_bankq_static__lanes0_2__362.88x362.88.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
+  "ot_hbm_hc_bankq_static__lanes3_5@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_static__lanes3_5__172.8x345.6.json",
    "how": "ports",
    "layers": [
     "M4",
@@ -90,8 +144,26 @@
    ],
    "pins": 9864
   },
+  "ot_hbm_hc_bankq_term_static__lanes0_2@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_term_static__lanes0_2__172.8x345.6.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
   "ot_hbm_hc_bankq_term_static__lanes0_2@362.88x362.88": {
    "file": "ot_hbm_hc_bankq_term_static__lanes0_2__362.88x362.88.json",
+   "how": "ports",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "pins": 2719
+  },
+  "ot_hbm_hc_bankq_term_static__lanes3_5@172.8x345.6": {
+   "file": "ot_hbm_hc_bankq_term_static__lanes3_5__172.8x345.6.json",
    "how": "ports",
    "layers": [
     "M4",
@@ -1720,5 +1792,24 @@
    "pins": 18749
   }
  },
- "skipped": {}
+ "skipped": {
+  "hfd_ep_static@434.72x371.52": "no port list",
+  "hfd_hgi_vm_calendar_f20_role@196.344x196.56": "no port list",
+  "hfd_hgi_vm_calendar_f20_role@241.92x116.64": "no port list",
+  "ot_hbm_argmax_static_sw_vm_r2@118.8x118.8": "no port list",
+  "ot_hbm_hc_qhub_static@734.4x734.4": "no port list",
+  "ot_hbm_host_cp_rxs@434.808x432.0": "no port list",
+  "ot_hbm_idx_qctl_static@194.832x195.48": "no port list",
+  "ot_hbm_idx_rootctl_static_am@475.2x259.2": "no port list",
+  "ot_hbm_idx_selector_static_sel@600.048x450.36": "no port list",
+  "ot_hbm_idx_topk_link_static@650.16x500.04": "no port list",
+  "ot_hbm_svc_sm_group_rel_id@776.304x646.92": "no port list",
+  "ot_hbm_svc_sm_xcal_rel_t@209.952x210.6": "no port list",
+  "ot_hbm_svc_wb_kport_q@475.2x475.2": "no port list",
+  "ot_hgi_coll_gq_issue@237.6x237.6": "no port list",
+  "ot_hgi_coll_inj_idx_join_rg@216.0x432.0": "no port list",
+  "ot_hgi_dma_back_static_vp4_banks_cp@239.976x240.84": "no port list",
+  "ot_hgi_sfu_programme_store_r10@1080.0x950.4": "no port list",
+  "ot_pdie_serdes@600.048x600.48": "no port list"
+ }
 }

@@ -31,7 +31,7 @@ W0, H0 = 25988.8, 32983.12            # as-built r18h5 die
 NX, NY = 3008, 3818                   # plan die = whole 8.64 grids, even counts (centre lines on grid)
 W, H = NX * G, NY * G                 # 25989.12 x 32987.52
 CX, CY = W / 2, H / 2
-REACH = 750.0                         # COORD R3 10-23: max ft station spacing 750 um on all dies (HBM measured 1.0 mm)
+REACH = float(os.environ.get('OT_HBM_REACH', '675'))   # COORD R3 750-um max ft station spacing; P7 (COORD visual review 10-23): plan hops <= 90% of it = 675
 REACH_WIDE = 1200.0
 HOP_UM = 2000.0                       # fabric partition max side (L1 harden big partitions; L4 2-cycle hops)
 ANCHOR_MM2 = 0.2
