@@ -1,0 +1,8 @@
+{
+  "status": "EXPERIMENT REJECTED FOR RELEASE; OFF MAIN",
+  "vehicle": "qkd_ctrl_kc",
+  "odb_result": "TT setup-1.13/FFhold+15.39,spread38.97/31.35",
+  "netlist_result": "TTsetup-1.13/FFhold-35.92,spread38.97/31.35,34combinational loops",
+  "diagnosis": "OpenDB output BTermkf uses netkf147 while distinct internal netkf feeds first holdpad. Verilog exporter emits assign kf=kf147 and also useskf as internal signal, falselyjoiningthem andcreatingloop. Samefor34outputs. PhysicalODBdistinctnetsverified. Rename internal nets colliding port names BEFORE BOTHfinalVandSPEF export; changing V alone breaks SPEF consistency. No netlist timing accepted. CanonicalstandardODBsignoffunchanged.",
+  "evidence": "/srv/opentallas-scratch/claude/codex-signoff/qkd_netlist_r2/ff/sta.log; odb_net_alias.tcl"
+}

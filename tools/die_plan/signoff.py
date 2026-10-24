@@ -327,13 +327,17 @@ exit
 """
 
 
-def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb"):
+def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb", netlist_top=None):
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
         par, src = (f"source {PLAT}/setRC.tcl\nextract_parasitics -ext_model_file {PLAT}/rcx_patterns.rules\n"
                     "write_spef /out/rcx.spef\nread_spef /out/rcx.spef"), "rcx"
     t = SESSION_TCL
+    if netlist_top:
+        t = t.replace("read_db /base/@ODB@", f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef\n"
+            f"foreach f [glob {PLAT}/lef/asap7sc*.lef] {{ read_lef $f }}\n"
+            f"read_verilog /base/6_final.v\nlink_design {{{netlist_top}}}")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
@@ -453,7 +457,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
     for i, lp in enumerate(mlibs):
         mounts.append((f"ml{i}", str(Path(lp).parent)))
         ml_ctr.append(f"/ml{i}/{Path(lp).name}")
-    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name))
+    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, netlist_top=disc.get("netlist_top")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -681,6 +685,19 @@ def summary_line(rec):
 def cmd_run(a):
     base = Path(a.base).resolve() if a.base else find_base(a.run_dir)
     disc = discover(base, kit=a.kit, sdc=a.sdc, record=a.record)
+    if a.netlist_sta:
+        if not disc.get("final_v") or not disc.get("spef"):
+            raise SystemExit("netlist STA requires completed routed 6_final.v and extracted 6_final.spef")
+        vt = Path(disc["final_v"]).read_text()
+        masters = re.findall(r"^[ \t]+([A-Za-z_][A-Za-z0-9_$]*)[ \t]+(?:\\\S+|[A-Za-z_][A-Za-z0-9_$]*)[ \t]*\(", vt, re.M)
+        unknown = sorted({m for m in masters if not re.fullmatch(r"[A-Za-z0-9_]+_ASAP7_75t_[A-Za-z0-9]+", m)})
+        if not masters or unknown:
+            raise SystemExit(f"netlist STA currently supports standard-cell-only partitions; other masters: {unknown[:8]}")
+        modules = re.findall(r"^\s*module\s+(\S+)\s*\(", vt, re.M)
+        if len(modules) != 1:
+            raise SystemExit("netlist STA requires one flattened routed top")
+        disc["netlist_top"] = modules[0]
+        disc["sta_view"] = "routed signal netlist + extracted SPEF (physical-only fillers omitted)"
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     out = Path(a.out).resolve()
@@ -754,6 +771,7 @@ def main(argv=None):
     r.add_argument("--docker", default=os.environ.get("SIGNOFF_DOCKER", "sudo docker"))
     r.add_argument("--insertion-target", type=float)
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--netlist-sta", action="store_true", help="standard-cell-only routed 6_final.v + extracted SPEF timing view")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
