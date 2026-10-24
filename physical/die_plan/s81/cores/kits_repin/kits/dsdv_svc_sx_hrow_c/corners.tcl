@@ -17,10 +17,10 @@ proc ot_ck {pin} { global per; if {[catch {set a [get_property $pin arrival_max_
 set arr {}
 foreach p [all_registers -clock_pins] { set a [ot_ck $p]; if {$a ne ""} { lappend arr $a } }
 set arr [lsort -real $arr]
-set ws [sta::worst_slack_cmd max]
-set hs [sta::worst_slack_cmd min]
-set tns [sta::total_negative_slack_cmd max]
-set htns [sta::total_negative_slack_cmd min]
+set ws [expr {[sta::worst_slack_cmd max] * 1e12}]
+set hs [expr {[sta::worst_slack_cmd min] * 1e12}]
+set tns [expr {[sta::total_negative_slack_cmd max] * 1e12}]
+set htns [expr {[sta::total_negative_slack_cmd min] * 1e12}]
 set nv 0; set nh 0
 foreach e [sta::endpoint_violation_count max] { set nv $e }
 foreach e [sta::endpoint_violation_count min] { set nh $e }

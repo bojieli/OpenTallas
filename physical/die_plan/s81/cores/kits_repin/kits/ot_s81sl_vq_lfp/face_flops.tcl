@@ -268,6 +268,8 @@ foreach bt [$ff_blk getBTerms] {
 }
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+# KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
+if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
 # per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
 if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }

@@ -1,0 +1,39 @@
+{
+ "core": "dsdv_svc_sx_hrow",
+ "bench": "kits_repin lockstep (verilator, random inputs every cycle incl. random async resets, every output bit compared every cycle) of the kit-local rtl_patch vs the unmodified repo module",
+ "patch_file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+ "cycles": 100000,
+ "seed": 1,
+ "base": {
+  "build": "OK",
+  "result": "PASS",
+  "lines": [
+   "LOCKSTEP cycles=100000 resets=195 mismatches=0 fault_hi_cycles=98547 fault_rises=196 outputs=11 inputs=11",
+   "PASS"
+  ]
+ },
+ "mutant": {
+  "build": "OK",
+  "result": "FAIL",
+  "lines": [
+   "MISMATCH cyc=9 fault gold=1 new=0",
+   "MISMATCH cyc=171 fault gold=1 new=0",
+   "MISMATCH cyc=405 fault gold=1 new=0",
+   "MISMATCH cyc=523 fault gold=1 new=0",
+   "MISMATCH cyc=637 fault gold=1 new=0",
+   "MISMATCH cyc=911 fault gold=1 new=0",
+   "MISMATCH cyc=1130 fault gold=1 new=0",
+   "MISMATCH cyc=2029 fault gold=1 new=0",
+   "MISMATCH cyc=2643 fault gold=1 new=0",
+   "MISMATCH cyc=3268 fault gold=1 new=0",
+   "LOCKSTEP cycles=100000 resets=195 mismatches=196 fault_hi_cycles=98547 fault_rises=196 outputs=11 inputs=11",
+   "FAIL"
+  ]
+ },
+ "mutant_edit": [
+  "else fault <= fault_q | chk;\n",
+  "else fault <= fault_q;\n"
+ ],
+ "verdict": "PASS",
+ "repo_rev": "715d0b3f91"
+}

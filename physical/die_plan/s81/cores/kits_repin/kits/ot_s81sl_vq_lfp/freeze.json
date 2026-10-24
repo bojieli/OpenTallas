@@ -17,7 +17,7 @@
  "resets": [
   "rst_n"
  ],
- "recipe_sha256": "d27571edd252c54d598c8671bb865ed68b4909711a162c61cdfa6b8e9da86944",
+ "recipe_sha256": "5a9222498e3e7b5a0cd19c2170c9f8160f498b0e269cd7e4e794987a9a461d2d",
  "period_ps": 833.0,
  "insertion_ps": 250.0,
  "insertion_tol_ps": 40.0,
@@ -27,11 +27,16 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "389a1d99a7",
+ "repo_rev": "bdb94d0158",
  "sdc_lint_sha256": "b5ee957c09da25089cc5255d6df75a0fb2830514daebe757f3460c5ceb87f588",
- "face_guard_sha256": "14aaba591aac0ec0b58511ae5e3c3578816765d56279629f6460a1f41fb64537",
+ "face_guard_sha256": "400ac78e4b647e3acf63f57a2c1ad5ba1e92cbf5e38a3a21b2d91955ceefb66b",
  "macros": [
   "ot_sram_1r1w_128x256_m1_r2c2 38.988 4.32 R0"
  ],
- "kit_hash": "e42cef4b5eec15ac"
+ "rtl_patch": {
+  "file": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+  "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) carries the sticky state; the port flop fault takes the SAME next state (fault_q | events) from fault_q, so its Q drives only the port (face_guard). Same reset, same edge: fault == fault_q every cycle; 0 added cycles; ports unchanged.",
+  "sha256": "2d0b645098a9fb325a8059f05fb5b5f2982b0a57eda65891eae03d261c33adfd"
+ },
+ "kit_hash": "9c43c4c32fa16dc1"
 }

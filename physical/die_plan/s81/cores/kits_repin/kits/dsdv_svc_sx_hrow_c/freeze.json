@@ -17,7 +17,7 @@
  "resets": [
   "rst"
  ],
- "recipe_sha256": "74d2a404d161fb50f09d7c4789942e21d7a01ee64c1c30d774d0b240060b9348",
+ "recipe_sha256": "786988233539cc99c73de059e2dec06ca31c3c2e2c0f00da7d50379d647cd087",
  "period_ps": 833.0,
  "insertion_ps": 250.0,
  "insertion_tol_ps": 40.0,
@@ -27,9 +27,14 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "db7cf6b12d",
+ "repo_rev": "bdb94d0158",
  "sdc_lint_sha256": "b5ee957c09da25089cc5255d6df75a0fb2830514daebe757f3460c5ceb87f588",
- "face_guard_sha256": "14aaba591aac0ec0b58511ae5e3c3578816765d56279629f6460a1f41fb64537",
+ "face_guard_sha256": "400ac78e4b647e3acf63f57a2c1ad5ba1e92cbf5e38a3a21b2d91955ceefb66b",
  "macros": [],
- "kit_hash": "e1e6a4f1481809c6"
+ "rtl_patch": {
+  "file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+  "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) holds the sticky state; the port flop fault <= fault_q | chk (= its own next state), so its Q drives only the port. 0 added cycles; ports unchanged.",
+  "sha256": "dff89396a4603f5c446dbcfc982f3ac205472e9a2cda2193b808c7cb59bbed94"
+ },
+ "kit_hash": "c97ebfb830c1088b"
 }

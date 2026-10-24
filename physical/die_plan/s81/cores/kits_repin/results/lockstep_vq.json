@@ -1,0 +1,39 @@
+{
+ "core": "ot_s81sl_vq",
+ "bench": "kits_repin lockstep (verilator, random inputs every cycle incl. random async resets, every output bit compared every cycle) of the kit-local rtl_patch vs the unmodified repo module",
+ "patch_file": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+ "cycles": 100000,
+ "seed": 1,
+ "base": {
+  "build": "OK",
+  "result": "PASS",
+  "lines": [
+   "LOCKSTEP cycles=100001 resets=175 mismatches=0 fault_hi_cycles=98547 fault_rises=174 outputs=4 inputs=16",
+   "PASS"
+  ]
+ },
+ "mutant": {
+  "build": "OK",
+  "result": "FAIL",
+  "lines": [
+   "MISMATCH cyc=2003 fault gold=1 new=0",
+   "MISMATCH cyc=2700 fault gold=1 new=0",
+   "MISMATCH cyc=8961 fault gold=1 new=0",
+   "MISMATCH cyc=9313 fault gold=1 new=0",
+   "MISMATCH cyc=9907 fault gold=1 new=0",
+   "MISMATCH cyc=11455 fault gold=1 new=0",
+   "MISMATCH cyc=17625 fault gold=1 new=0",
+   "MISMATCH cyc=17768 fault gold=1 new=0",
+   "MISMATCH cyc=22205 fault gold=1 new=0",
+   "MISMATCH cyc=26454 fault gold=1 new=0",
+   "LOCKSTEP cycles=100001 resets=175 mismatches=44 fault_hi_cycles=98547 fault_rises=174 outputs=4 inputs=16",
+   "FAIL"
+  ]
+ },
+ "mutant_edit": [
+  "            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);\n",
+  "            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (vo && blo && run);\n"
+ ],
+ "verdict": "PASS",
+ "repo_rev": "715d0b3f91"
+}

@@ -206,5 +206,7 @@ module dsdv_svc_sx_hrow #(
     // -> the S-face fault pin flop was the worst reg->reg path, -64.7 ps); the sticky fault reports one cycle later.
     reg chk;
     always @(posedge ck or negedge rn) if (!rn) chk <= 1'b0; else chk <= mis || stray;
-    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (chk) fault <= 1'b1;
+    (* keep *) reg fault_q;   // kits_repin: sticky state (internal); fault = the port copy
+    always @(posedge ck or negedge rn) if (!rn) fault_q <= 1'b0; else if (chk) fault_q <= 1'b1;
+    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else fault <= fault_q | chk;
 endmodule

@@ -17,8 +17,7 @@ if r["missing_n"] or r["extra_n"]:
     r["verdict"] = "FAIL"
 # self-loop classification (kits_repin, reported, never a PASS): a 'shared' output flop whose extra loads reach
 # (combinationally) nothing but its OWN D pin = a sticky / hold bit (e.g. fault <= fault | ...).  The face_guard
-# verdict stays FAIL; run_kit.sh continues the physical run only when every failure is such a self-loop, and the
-# result row carries the FAIL with this classification for a ruling.
+# verdict stays FAIL (COORD ruling 10-24: no waiver; the run stops unless the kit is labelled pathfinding).
 from collections import defaultdict as _dd
 mods = G.parse(Path(net).read_text())
 F = G.Flat(mods, top)

@@ -48,6 +48,7 @@ module ot_s81sl_vq #(
     output reg  [275:0]  xf,
     output reg           fault
 );
+    (* keep *) reg fault_q;   // kits_repin: sticky state (internal); fault = the port copy
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_q = rsv[1];
@@ -142,13 +143,14 @@ module ot_s81sl_vq #(
     // the beat being sent: header {idx, src sid, hops 1, kind, v} + payload
     assign xb_full = (st >= 6'd20) ? {59'd0, bf, gidx, sid_c, 5'd1, 3'd2, 1'b1} : {551'd0, xqd, gidx, sid_c, 5'd1, 3'd1, 1'b1};
     always @(posedge clk or negedge rs_q)
-        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault <= 1'b0; end
+        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault_q <= 1'b0; fault <= 1'b0; end
         else begin
             if (vo && blo) begin run <= 1'b1; st <= 6'd0; end
             else if (run) begin st <= st + 6'd1; if (st == 6'd39) run <= 1'b0; end
             xf_v <= run && ((mq && st[5:2] == {1'b0, k_c}) || (mb && st[5:2] == 4'd5 + {1'b0, k_c}));
             xf_s <= run && ((mq && st == {1'b0, k_c, 2'b00}) || (mb && st == 6'd20 + {1'b0, k_c, 2'b00}));
-            fault <= fault | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
+            fault_q <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
+            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
         end
     always @(posedge clk) begin
         if (vo && !blo) begin q0 <= q; e0 <= e; end

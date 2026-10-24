@@ -19,7 +19,7 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard_core.py \$N $TOP '$SKIP' /work/pins.json /work/face_guard.json; rc=\$?; \
-    if [ \$rc = 3 ]; then echo 'FACE_GUARD FAIL (self-loop only): physical run continues, FAIL recorded'; rc=0; fi; fi; \
+    if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
@@ -31,4 +31,10 @@ rc=$?
 $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"
+# SIGNOFF (main f942bf2f72): uniform verdict in KIT/signoff/signoff.json; a core is closed only when it says SIGNED.
+if [ $rc = 0 ] && [ $GOAL = finish ] && [ -f "$K/signoff.py" ]; then
+  SIGNOFF_DOCKER="$DOCKER" python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff,ss \
+    --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+fi
 exit $rc
