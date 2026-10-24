@@ -51,21 +51,23 @@ module tb_kvslice;
         .core_tx_v(hc_tx_v), .core_tx_d(hc_tx_d), .core_tx_cr(hc_tx_cr),
         .core_rx_v(hc_rx_v), .core_rx_d(hc_rx_d), .core_rx_cr(hc_rx_cr), .faults(host_faults));
     // ------------------------------------------------------------------ observation taps (ports of RTL instances only)
-    wire       b_ready  = dut.hub_Wi.w_host_boot_image_ready[0];
-    wire       b_fault  = dut.hub_Wi.w_host_boot_image_fault[0];
-    wire [3:0] b_target = dut.hub_Wi.w_host_boot_image_target;
-    wire [15:0] b_epoch = dut.hub_Wi.w_host_boot_image_epoch;
-    wire [63:0] b_dig   = dut.hub_Wi.w_host_boot_image_digest;
-    wire       setup    = dut.hub_C.w_kvs_ctl_boot_setup_ready;
-    wire       cf_fault = dut.hub_C.w_kvs_ctl_cf_root_fault;
-    wire       locked   = dut.hub_C.w_pll_locked;
+    // (top-level lane wires of the bound top, so the partitions can be hierarchical Verilator blocks; each crossing word
+    //  = data + epoch bit, one ot_dp_st stage after the source leaf -> the observed edge is +1 vs the leaf port)
+    wire       b_ready  = dut.x_hub_Wi_o_host_boot_image_ready_hub_C[0];
+    wire       b_fault  = dut.x_hub_Wi_o_host_boot_image_fault_hub_C[0];
+    wire [3:0] b_target = dut.x_hub_Wi_o_host_boot_image_target_hub_C[3:0];
+    wire [15:0] b_epoch = dut.x_hub_Wi_o_host_boot_image_epoch_hub_C[15:0];
+    wire [63:0] b_dig   = dut.x_hub_Wi_o_host_boot_image_digest_hub_C[63:0];
+    wire       setup    = dut.x_hub_C_o_kvs_ctl_boot_setup_ready_hub_Wi[0];
+    wire       cf_fault = dut.x_hub_C_o_kvs_ctl_cf_root_fault_hub_Wi[0];
+    wire       locked   = dut.x_hub_C_o_pll_locked_hub_Wi[0];
     // ------------------------------------------------------------------ stimulus
     reg [527:0] frames [0:16383];
     integer nfr = 0, mut_frame = -1, cyc_host = 0, sent = 0, credits = 4, rx_words = 0;
     integer n_ready = 0, n_exp = 0, errors = 0, ready_cyc [0:31], cyc_core = 0, t_setup = -1, t_bfault = -1, t_last = 0;
     reg [3:0] exp_t [0:31]; reg [63:0] exp_d [0:31];
     string fpath, epath, phase;
-    integer maxcyc = 4000000, epoch_exp = -1;
+    integer maxcyc = 200000, setup_wait = 20000, epoch_exp = -1;
     always @(posedge ck_core) cyc_core <= cyc_core + 1;
     always @(posedge ck_host) begin
         cyc_host <= cyc_host + 1;
@@ -102,7 +104,8 @@ module tb_kvslice;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
         if (!$value$plusargs("FRAMES=%s", fpath)) $fatal(1, "+FRAMES required");
         if (!$value$plusargs("MUT_FRAME=%d", mut_frame)) mut_frame = -1;
-        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 4000000;
+        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 200000;
+        if (!$value$plusargs("SETUP_WAIT=%d", setup_wait)) setup_wait = 20000;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
         fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
         while (!$feof(fd) && $fscanf(fd, "%h\n", frames[nfr]) == 1) nfr = nfr + 1;
@@ -116,7 +119,7 @@ module tb_kvslice;
         repeat (20) @(posedge ck_ref); por_n = 1;
         repeat (4) @(posedge ck_ref); rst_n = 1;
         repeat (64) @(posedge ck_host); host_up = 1;
-        while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + 200000)) && t_bfault < 0)
+        while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + setup_wait)) && t_bfault < 0)
             @(posedge ck_core);
         repeat (2000) @(posedge ck_core);
         $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",

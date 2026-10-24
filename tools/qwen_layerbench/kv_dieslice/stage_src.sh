@@ -8,21 +8,25 @@
 # (owner 10-14: only PHY/off-chip modelled).  Every staged dir is a flat copy (files at that level only, as -y resolves).
 set -eu
 H=$(cd "$(dirname "$0")" && pwd)
-B=$(readlink -f $1); O=$(mkdir -p $2 && readlink -f $2); INCF=${3:-$H/incdirs_order.txt}
+B=$(readlink -f $1); O=$(mkdir -p $2 && readlink -f $2); INCF=${3:-}
+if [ -z "$INCF" ]; then INCF=$O/incdirs_order.txt; python3 $H/lint_incdirs.py $B > $INCF; fi
 rm -rf $O/src; mkdir -p $O/src
 tag() { echo "$1" | sed -e "s#^$B#bind#" -e "s#^/home/ubuntu/##" -e 's#/#__#g'; }
 : > $O/incdirs.f
 stage_dir() { local d=$1 t; t=$O/src/$(tag $d); [ -d $t ] && return 0; mkdir -p $t; find $d -maxdepth 1 -type f \( -name '*.sv' -o -name '*.v' -o -name '*.svh' -o -name '*.vh' \) -exec cp -a {} $t/ \; ; }
 # the bound rtl dir first (as the lints), then the ordered leaf dirs
 stage_dir $B/rtl; echo "-y $O/src/$(tag $B/rtl)" >> $O/incdirs.f
-while read -r d; do [ -z "$d" ] && continue; [ "$d" = /home/ubuntu/scratch/binder3-1023/kv39/rtl ] && continue
+while read -r d; do [ -z "$d" ] && continue; [ "$d" = $B/rtl ] && continue
   stage_dir $d; echo "-y $O/src/$(tag $d)" >> $O/incdirs.f; done < $INCF
 # bind.f files (the bound top's file list, PHY black box removed)
 : > $O/files.f
 while read -r f; do [ -z "$f" ] && continue; case "$f" in *ot_qkvd_ucie_x64_phy_bb.v) continue;; esac
   d=$(dirname $f); stage_dir $d; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/files.f; done < $B/bind.f
+: > $O/hostside.f
 # host board-side end of the SerDes link (real host link adapter + CDC RTL = the off-die host model's transport)
 A=/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f
+# the bind source root (leaf search roots for resolve_missing.py): the tree most bind.f entries come from
+sed -n "s#/rtl/.*##p" $B/bind.f | sort | uniq -c | sort -rn | awk '{print $2}' > $O/src_roots.txt
 for f in $A/rtl/test/qwen_host/qkd_host_board_port_fixture.sv $A/rtl/physical/ot_qfd_link_adp512_split.sv; do
   d=$(dirname $f); mkdir -p $O/src/$(tag $d); cp -a $f $O/src/$(tag $d)/; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/hostside.f; done
 for f in bind_latency.json param_regen.json bus_groups.json bus_groups.json.gz; do [ -f $B/$f ] && cp -a $B/$f $O/ || true; done

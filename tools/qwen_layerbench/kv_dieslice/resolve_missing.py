@@ -5,7 +5,7 @@ binder's priority (kvsrc36 = the v3.6 bind source, then rtl6 e33504a6f as built,
     resolve_missing.py VDIR LINTLOG   -> appends to VDIR/files.f (copies into VDIR/src/extra__<root>/...)"""
 import os, re, shutil, sys
 V, LOG = os.path.abspath(sys.argv[1]), sys.argv[2]
-ROOTS = ['/home/ubuntu/scratch/binder2-1023/asap7_cells', '/home/ubuntu/scratch/binder3-1023/kvsrc36', '/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f', '/home/ubuntu/wt/binder3-1023']
+ROOTS = ['/home/ubuntu/scratch/binder2-1023/asap7_cells'] + ([l.strip() for l in open(f'{V}/src_roots.txt') if l.strip()] if os.path.exists(f'{V}/src_roots.txt') else []) + ['/home/ubuntu/scratch/binder3-1023/kvsrc36', '/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f', '/home/ubuntu/wt/binder3-1023']
 miss = sorted(set(re.findall(r"Cannot find file containing module: '(\w+)'", open(LOG).read())))
 idx = {}
 # staged dirs first, in the -y order (a module defined in a file of an included dir wins: same tree the lints used)
