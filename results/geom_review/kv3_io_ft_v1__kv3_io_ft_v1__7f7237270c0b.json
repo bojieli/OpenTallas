@@ -1,0 +1,11 @@
+{
+ "element": "kv3_io_ft_v1",
+ "kit": "physical/die_plan/qwen_kvsys(gen.py phys --types kv3_io_ft_v1, tool 1d0afd11c, tap_pitch 400)@2d9f44504",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "7f7237270c0b11eb",
+ "reasons": "[10-23 16:01] [GEOM-REVIEW6] [KV kits7, tap-grid delta on the GEOM-PASS geometry] kits6 -> kits7 diffed by me: pins.json, ft_stations, pdn, tracks and outline are identical. Changed: io.tcl clock pins (6 -> 12 interior M7 taps, 3 rows x 4 at y 173/518/864, x 160/480/799/1119), OT_TAP_PITCH_UM 600->400 + OT_TAP_MAX_SINKS 3000, per-tap ot_dp_rsync_s2 x12 + reset_taps.tcl (FIRM flops re-pointed to their nearest tap's synchroniser; the synchronisers are functionally identical, so this is equivalent), ft SDC share 0.25 -> 0.08 T (KV-P4 what-if), and pin_audit skips the interior clk/arst pins. Kit hash recomputed (C-sorted cat of the kit files, the same scheme that reproduces b9f067a5 on kits4). I assigned the PASS placement's flops (render3 tsv; geometry identical) to the kits7 taps by nearest tap. Every flop sits at pin height in 3 columns: W face, x 560-720, E face. kv3_io_ft_v1 (2,102 FF): 525/453/599/525 FF on clk/t1/t2/t3, max reach 221-327 um, and 8 of 12 taps are empty. Same structure as io_ft.",
+ "fixes": "Gate allowed (kits7 as is; the run was already admitted before this verdict, so it is recorded). Full PASS needs: OT_TAP_CHECK PASS (every tap's slowest sink <= 290 ps TT) and RC tap-to-tap skew <= 80. If t1/t2 miss again, the fix is not a smaller pitch. It is SINK-ANCHORED taps: put the taps at the FIRM station/face-flop clusters known pre-GPL (W face, L/2 column, E face; split by count). That is 3-6 taps with reach <= ~150 um and no empty drops. TOOL (PLAN-TOOL2 gen_phys): do not emit taps (or synchronisers) whose region holds no sink. Each empty tap is a die-spine drop and an unloaded rsync for nothing.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T16:01:51-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

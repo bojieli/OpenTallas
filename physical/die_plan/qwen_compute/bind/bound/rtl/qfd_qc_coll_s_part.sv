@@ -14,23 +14,16 @@ module qfd_qc_coll_s_part (
     input  wire [1:0] io_collective__serdes_rx_valid__from_io_serdes_2,   // 1 data + epoch [1]: lane io_serdes_2__rx_v_serdes_rx_valid, 10 cycles: io_serdes_2 rx_v[1] -> coll_s
     input  wire [1:0] io_collective__serdes_up__from_io_serdes_1,   // 1 data + epoch [1]: lane io_serdes_1__tx_up_serdes_up, 2 cycles: io_serdes_1 tx_up[1] -> coll_s
     input  wire [1:0] io_collective__serdes_up__from_io_serdes_2,   // 1 data + epoch [1]: lane io_serdes_2__tx_up_serdes_up, 10 cycles: io_serdes_2 tx_up[1] -> coll_s
-    input  wire [549:0] rec_tx_s1_i,   // 549 data + epoch [549]: lane coll_core__crec_tx_s1, 8 cycles: coll_core sx0_valid[1], sx1_peer_slot[1], sx1_rec[546] ... -> coll_s
-    input  wire [548:0] rec_tx_s2_i,   // 548 data + epoch [548]: lane coll_core__crec_tx_s2, 8 cycles: coll_core sx2_peer_slot[1], sx2_rec[546], sx2_valid[1] -> coll_s
-    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_s__fltk, 8 cycles: rx_data[1] -> coll_core
+    input  wire [549:0] rec_tx_s1_i,   // 549 data + epoch [549]: lane coll_core__crec_tx_s1, 8 cycles: coll_core sx1_rec[546], sx2_rec[3] -> coll_s
+    input  wire [548:0] rec_tx_s2_i,   // 548 data + epoch [548]: lane coll_core__crec_tx_s2, 8 cycles: coll_core sx2_rec[543], sx0_valid[1], sx1_peer_slot[1] ... -> coll_s
+    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane coll_s__fltk, 8 cycles: cdc_fault[1] -> coll_core
+    output wire [25:0] fltv_o,   // 25 data + epoch [25]: lane coll_s__fltv, 8 cycles: cdc_fault[1], epoch_abort[1], rx_valid[1] ... -> coll_core
     output wire [597:0] io_collective__serdes_tx__to_io_serdes_1__tx_flit,   // 597 data + epoch [597]: lane coll_s__serdes_tx_tx_flit, 2 cycles: phy_tx[597] -> io_serdes_1
     output wire [597:0] io_collective__serdes_tx__to_io_serdes_2__tx_flit,   // 597 data + epoch [597]: lane coll_s__serdes_tx_tx_flit_2, 10 cycles: phy_tx[597] -> io_serdes_2
     output wire [1:0] io_collective__serdes_tx_valid__to_io_serdes_1__tx_v,   // 1 data + epoch [1]: lane coll_s__serdes_tx_valid_tx_v, 2 cycles: phy_tx_valid[1] -> io_serdes_1
     output wire [1:0] io_collective__serdes_tx_valid__to_io_serdes_2__tx_v,   // 1 data + epoch [1]: lane coll_s__serdes_tx_valid_tx_v_2, 10 cycles: phy_tx_valid[1] -> io_serdes_2
-    output wire [547:0] rec_rx_s1,   // 547 data + epoch [547]: lane coll_s__crec_rx_s1, 8 cycles: cdc_fault[4], epoch_abort[1], rx_data[542] -> coll_core
-    output wire [547:0] rec_rx_s2,   // 547 data + epoch [547]: lane coll_s__crec_rx_s2, 8 cycles: rx_data[4], rx_valid[1], cdc_fault[4] ... -> coll_core
-    output wire [4:0] xo_g_face_3_u_face_cdc_fault,   // 4 data + epoch [4]: UNPLANNED direct: cdc_fault[4] -> glue
-    output wire [1:0] xo_g_face_3_u_face_epoch_abort,   // 1 data + epoch [1]: UNPLANNED direct: epoch_abort[1] -> glue
-    output wire [8:0] xo_g_face_3_u_face_fault_cause,   // 8 data + epoch [8]: UNPLANNED direct: fault_cause[8] -> glue
-    output wire [4:0] xo_g_face_4_u_face_cdc_fault,   // 4 data + epoch [4]: UNPLANNED direct: cdc_fault[4] -> glue
-    output wire [1:0] xo_g_face_4_u_face_epoch_abort,   // 1 data + epoch [1]: UNPLANNED direct: epoch_abort[1] -> glue
-    output wire [8:0] xo_g_face_4_u_face_fault_cause,   // 8 data + epoch [8]: UNPLANNED direct: fault_cause[8] -> glue
-    output wire [8:0] xo_g_face_4_u_face_rx_data,   // 8 data + epoch [8]: UNPLANNED direct: rx_data[8] -> coll_core
-    output wire [1:0] xo_g_face_4_u_face_rx_valid   // 1 data + epoch [1]: UNPLANNED direct: rx_valid[1] -> coll_core
+    output wire [547:0] rec_rx_s1,   // 547 data + epoch [547]: lane coll_s__crec_rx_s1, 8 cycles: rx_data[547] -> coll_core
+    output wire [547:0] rec_rx_s2   // 547 data + epoch [547]: lane coll_s__crec_rx_s2, 8 cycles: rx_data[545], cdc_fault[2] -> coll_core
 );
     wire [596:0] io_collective__serdes_rx__from_io_serdes_1_q;
     wire io_collective__serdes_rx__from_io_serdes_1_eq;
@@ -76,23 +69,16 @@ module qfd_qc_coll_s_part (
     ot_dp_st #(.W(1)) u_bin_io_collective__serdes_up__from_io_serdes_2 (.clk(clk), .rst_n(rst_n), .d(io_collective__serdes_up__from_io_serdes_2[0:0]), .ea(io_collective__serdes_up__from_io_serdes_2[1]), .q(io_collective__serdes_up__from_io_serdes_2_q), .eq(io_collective__serdes_up__from_io_serdes_2_eq));
     ot_dp_st #(.W(549)) u_bin_rec_tx_s1_i (.clk(clk), .rst_n(rst_n), .d(rec_tx_s1_i[548:0]), .ea(rec_tx_s1_i[549]), .q(rec_tx_s1_i_q), .eq(rec_tx_s1_i_eq));
     ot_dp_st #(.W(548)) u_bin_rec_tx_s2_i (.clk(clk), .rst_n(rst_n), .d(rec_tx_s2_i[547:0]), .ea(rec_tx_s2_i[548]), .q(rec_tx_s2_i_q), .eq(rec_tx_s2_i_eq));
-    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_rx_data[537]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
+    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_cdc_fault[2]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
+    ot_dp_st #(.W(25)) u_bout_fltv_o (.clk(clk), .rst_n(rst_n), .d({w_g_face_4_u_face_fault_cause[7:0], w_g_face_3_u_face_fault_cause[7:0], w_g_face_4_u_face_rx_valid[0], w_g_face_4_u_face_epoch_abort[0], w_g_face_4_u_face_cdc_fault[3:0], w_g_face_3_u_face_rx_valid[0], w_g_face_3_u_face_epoch_abort[0], w_g_face_3_u_face_cdc_fault[3]}), .ea(rst_n), .q(fltv_o[24:0]), .eq(fltv_o[25]));
     ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx__to_io_serdes_1__tx_flit[596:0]), .eq(io_collective__serdes_tx__to_io_serdes_1__tx_flit[597]));
     ot_dp_st #(.W(597)) u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_phy_tx[596:0]), .ea(rst_n), .q(io_collective__serdes_tx__to_io_serdes_2__tx_flit[596:0]), .eq(io_collective__serdes_tx__to_io_serdes_2__tx_flit[597]));
     ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid__to_io_serdes_1__tx_v (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[0:0]), .eq(io_collective__serdes_tx_valid__to_io_serdes_1__tx_v[1]));
     ot_dp_st #(.W(1)) u_bout_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_phy_tx_valid[0]), .ea(rst_n), .q(io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[0:0]), .eq(io_collective__serdes_tx_valid__to_io_serdes_2__tx_v[1]));
-    ot_dp_st #(.W(547)) u_bout_rec_rx_s1 (.clk(clk), .rst_n(rst_n), .d({w_g_face_3_u_face_rx_data[541:0], w_g_face_3_u_face_epoch_abort[0], w_g_face_3_u_face_cdc_fault[3:0]}), .ea(rst_n), .q(rec_rx_s1[546:0]), .eq(rec_rx_s1[547]));
-    ot_dp_st #(.W(547)) u_bout_rec_rx_s2 (.clk(clk), .rst_n(rst_n), .d({w_g_face_4_u_face_rx_data[536:0], w_g_face_4_u_face_epoch_abort[0], w_g_face_4_u_face_cdc_fault[3:0], w_g_face_3_u_face_rx_valid[0], w_g_face_3_u_face_rx_data[545:542]}), .ea(rst_n), .q(rec_rx_s2[546:0]), .eq(rec_rx_s2[547]));
-    ot_dp_st #(.W(4)) u_bout_xo_g_face_3_u_face_cdc_fault (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_cdc_fault[3:0]), .ea(rst_n), .q(xo_g_face_3_u_face_cdc_fault[3:0]), .eq(xo_g_face_3_u_face_cdc_fault[4]));
-    ot_dp_st #(.W(1)) u_bout_xo_g_face_3_u_face_epoch_abort (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_epoch_abort[0]), .ea(rst_n), .q(xo_g_face_3_u_face_epoch_abort[0:0]), .eq(xo_g_face_3_u_face_epoch_abort[1]));
-    ot_dp_st #(.W(8)) u_bout_xo_g_face_3_u_face_fault_cause (.clk(clk), .rst_n(rst_n), .d(w_g_face_3_u_face_fault_cause[7:0]), .ea(rst_n), .q(xo_g_face_3_u_face_fault_cause[7:0]), .eq(xo_g_face_3_u_face_fault_cause[8]));
-    ot_dp_st #(.W(4)) u_bout_xo_g_face_4_u_face_cdc_fault (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_cdc_fault[3:0]), .ea(rst_n), .q(xo_g_face_4_u_face_cdc_fault[3:0]), .eq(xo_g_face_4_u_face_cdc_fault[4]));
-    ot_dp_st #(.W(1)) u_bout_xo_g_face_4_u_face_epoch_abort (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_epoch_abort[0]), .ea(rst_n), .q(xo_g_face_4_u_face_epoch_abort[0:0]), .eq(xo_g_face_4_u_face_epoch_abort[1]));
-    ot_dp_st #(.W(8)) u_bout_xo_g_face_4_u_face_fault_cause (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_fault_cause[7:0]), .ea(rst_n), .q(xo_g_face_4_u_face_fault_cause[7:0]), .eq(xo_g_face_4_u_face_fault_cause[8]));
-    ot_dp_st #(.W(8)) u_bout_xo_g_face_4_u_face_rx_data (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_rx_data[545:538]), .ea(rst_n), .q(xo_g_face_4_u_face_rx_data[7:0]), .eq(xo_g_face_4_u_face_rx_data[8]));
-    ot_dp_st #(.W(1)) u_bout_xo_g_face_4_u_face_rx_valid (.clk(clk), .rst_n(rst_n), .d(w_g_face_4_u_face_rx_valid[0]), .ea(rst_n), .q(xo_g_face_4_u_face_rx_valid[0:0]), .eq(xo_g_face_4_u_face_rx_valid[1]));
+    ot_dp_st #(.W(547)) u_bout_rec_rx_s1 (.clk(clk), .rst_n(rst_n), .d({w_g_face_4_u_face_rx_data[0], w_g_face_3_u_face_rx_data[545:0]}), .ea(rst_n), .q(rec_rx_s1[546:0]), .eq(rec_rx_s1[547]));
+    ot_dp_st #(.W(547)) u_bout_rec_rx_s2 (.clk(clk), .rst_n(rst_n), .d({w_g_face_3_u_face_cdc_fault[1:0], w_g_face_4_u_face_rx_data[545:1]}), .ea(rst_n), .q(rec_rx_s2[546:0]), .eq(rec_rx_s2[547]));
     // as-built io_collective.u_io.g_face[3].u_face
-    qfd_coll_static_face #(.FW(546), .L(376), .PEER_R(0), .PHY(339), .PLAND(0), .PLD(2), .PLK(1), .R(0), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_3_u_face (
+    qfd_coll_static_face #(.FW(546), .L(389), .PEER_R(8), .PHY(343), .PLAND(0), .PLD(2), .PLK(1), .R(8), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_3_u_face (
         .cal_ck(clk_coll),
         .cal_lck(clk_serdes),
         .cdc_fault(w_g_face_3_u_face_cdc_fault),
@@ -100,7 +86,7 @@ module qfd_qc_coll_s_part (
         .codec_phy_ck(clk_serdes),
         .epoch_abort(w_g_face_3_u_face_epoch_abort),
         .fault_cause(w_g_face_3_u_face_fault_cause),
-        .peer_slot(rec_tx_s1_i_q[1]),
+        .peer_slot(rec_tx_s2_i_q[544]),
         .phy_rx(io_collective__serdes_rx__from_io_serdes_1_q[596:0]),
         .phy_rx_slot(w_g_face_3_u_face_phy_rx_slot),
         .phy_rx_valid(io_collective__serdes_rx_valid__from_io_serdes_1_q[0]),
@@ -113,14 +99,14 @@ module qfd_qc_coll_s_part (
         .rx_rck(clk_coll),
         .rx_valid(w_g_face_3_u_face_rx_valid),
         .rx_wck(clk_serdes),
-        .tx_data(rec_tx_s1_i_q[547:2]),
+        .tx_data(rec_tx_s1_i_q[545:0]),
         .tx_rck(clk_serdes),
-        .tx_slot(rec_tx_s1_i_q[0]),
-        .tx_valid(rec_tx_s1_i_q[548]),
+        .tx_slot(rec_tx_s2_i_q[543]),
+        .tx_valid(rec_tx_s2_i_q[545]),
         .tx_wck(clk_coll)
     );
     // as-built io_collective.u_io.g_face[4].u_face
-    qfd_coll_static_face #(.FW(546), .L(376), .PEER_R(0), .PHY(339), .PLAND(0), .PLD(2), .PLK(1), .R(5), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_4_u_face (
+    qfd_coll_static_face #(.FW(546), .L(389), .PEER_R(7), .PHY(351), .PLAND(0), .PLD(2), .PLK(1), .R(8), .SAFE(0), .TOK_REG(0), .UP_SYNC(0)) u_g_face_4_u_face (
         .cal_ck(clk_coll),
         .cal_lck(clk_serdes),
         .cdc_fault(w_g_face_4_u_face_cdc_fault),
@@ -128,7 +114,7 @@ module qfd_qc_coll_s_part (
         .codec_phy_ck(clk_serdes),
         .epoch_abort(w_g_face_4_u_face_epoch_abort),
         .fault_cause(w_g_face_4_u_face_fault_cause),
-        .peer_slot(rec_tx_s2_i_q[0]),
+        .peer_slot(rec_tx_s2_i_q[546]),
         .phy_rx(io_collective__serdes_rx__from_io_serdes_2_q[596:0]),
         .phy_rx_slot(w_g_face_4_u_face_phy_rx_slot),
         .phy_rx_valid(io_collective__serdes_rx_valid__from_io_serdes_2_q[0]),
@@ -141,9 +127,9 @@ module qfd_qc_coll_s_part (
         .rx_rck(clk_coll),
         .rx_valid(w_g_face_4_u_face_rx_valid),
         .rx_wck(clk_serdes),
-        .tx_data(rec_tx_s2_i_q[546:1]),
+        .tx_data({rec_tx_s2_i_q[542:0], rec_tx_s1_i_q[548:546]}),
         .tx_rck(clk_serdes),
-        .tx_slot(rec_tx_s1_i_q[0]),
+        .tx_slot(rec_tx_s2_i_q[543]),
         .tx_valid(rec_tx_s2_i_q[547]),
         .tx_wck(clk_coll)
     );

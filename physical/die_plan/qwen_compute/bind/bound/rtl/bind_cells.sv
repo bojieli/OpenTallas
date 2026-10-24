@@ -15,6 +15,21 @@ module ot_dp_st #(parameter integer W = 1) (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
 endmodule
+// ot_dp_rsync: a reset spine landing (asbuilt.reset_spines): W active-low resets, each asserted asynchronously and
+// released after S (>= 2) clocks of the receiving partition.
+module ot_dp_rsync #(parameter integer W = 1, parameter integer S = 2) (
+    input  wire         clk,
+    input  wire [W-1:0] a,
+    output wire [W-1:0] q
+);
+    genvar g;
+    generate for (g = 0; g < W; g = g + 1) begin : b
+        reg [S-1:0] r;
+        always @(posedge clk or negedge a[g])
+            if (!a[g]) r <= {S{1'b0}}; else r <= {r[S-2:0], 1'b1};
+        assign q[g] = r[S-1];
+    end endgenerate
+endmodule
 // ot_dp_or: N-input OR of a re-emitted fault tree (an as-built reducer chain, removed and rebuilt per sink partition).
 module ot_dp_or #(parameter integer N = 1) (
     input  wire [N-1:0] a,

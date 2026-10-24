@@ -15,13 +15,16 @@ module qfd_qc_coll_ft_part (
     input  wire [548:0] crec_tx_s2_i,   // ft crec_tx_s2 lane coll_core__crec_tx_s2: coll_core -> coll_s
     output wire [548:0] crec_tx_s2_o,   // ft crec_tx_s2: 2 station(s)
     input  wire [1:0] fltk_i,   // ft fltk lane coll_s__fltk: coll_s -> coll_core
-    output wire [1:0] fltk_o   // ft fltk: 2 station(s)
+    output wire [1:0] fltk_o,   // ft fltk: 2 station(s)
+    input  wire [25:0] fltv_i,   // ft fltv lane coll_s__fltv: coll_s -> coll_core
+    output wire [25:0] fltv_o   // ft fltv: 2 station(s)
 );
     wire [547:0] crec_rx_s1_o_s0;
     wire [547:0] crec_rx_s2_o_s0;
     wire [549:0] crec_tx_s1_o_s0;
     wire [548:0] crec_tx_s2_o_s0;
     wire [1:0] fltk_o_s0;
+    wire [25:0] fltv_o_s0;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(547)) u_ft_crec_rx_s1_o_0 (.clk(clk), .rst_n(rst_n), .d(crec_rx_s1_i[546:0]), .ea(crec_rx_s1_i[547]), .q(crec_rx_s1_o_s0[546:0]), .eq(crec_rx_s1_o_s0[547]));
@@ -34,6 +37,8 @@ module qfd_qc_coll_ft_part (
     ot_dp_st #(.W(548)) u_ft_crec_tx_s2_o_1 (.clk(clk), .rst_n(rst_n), .d(crec_tx_s2_o_s0[547:0]), .ea(crec_tx_s2_o_s0[548]), .q(crec_tx_s2_o[547:0]), .eq(crec_tx_s2_o[548]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_0 (.clk(clk), .rst_n(rst_n), .d(fltk_i[0:0]), .ea(fltk_i[1]), .q(fltk_o_s0[0:0]), .eq(fltk_o_s0[1]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_1 (.clk(clk), .rst_n(rst_n), .d(fltk_o_s0[0:0]), .ea(fltk_o_s0[1]), .q(fltk_o[0:0]), .eq(fltk_o[1]));
+    ot_dp_st #(.W(25)) u_ft_fltv_o_0 (.clk(clk), .rst_n(rst_n), .d(fltv_i[24:0]), .ea(fltv_i[25]), .q(fltv_o_s0[24:0]), .eq(fltv_o_s0[25]));
+    ot_dp_st #(.W(25)) u_ft_fltv_o_1 (.clk(clk), .rst_n(rst_n), .d(fltv_o_s0[24:0]), .ea(fltv_o_s0[25]), .q(fltv_o[24:0]), .eq(fltv_o[25]));
 
 endmodule
 `default_nettype wire

@@ -127,6 +127,30 @@ module qfd_qc_sle_hc0 (
     wire [0:0] w_u_xl0_7_wo_v;
     wire [514:0] rsf_o_s0;
     wire [514:0] rsn_o_s0;
+    wire [0:0] pd1_x_tap_i_6;
+    wire [0:0] pd1_x_tap_i_7;
+    wire [0:0] pd1_x_tap_i_8;
+    wire [0:0] pd1_x_tap_i_9;
+    wire [0:0] pd1_x_tap_i_10;
+    wire [0:0] pd1_x_tap_i_11;
+    wire [0:0] pd1_x_tap_i_12;
+    wire [0:0] pd1_x_tap_i_13;
+    wire [0:0] pd1_x_tap_i_14;
+    wire [0:0] pd1_x_tap_i_15;
+    wire [0:0] pd1_x_tap_i_16;
+    wire [0:0] pd1_x_tap_i_17;
+    wire [0:0] pd1_x_tap_i_18;
+    wire [0:0] pd1_x_tap_i_19;
+    wire [0:0] pd1_x_tap_i_20;
+    wire [0:0] pd1_x_tap_i_21;
+    wire [0:0] pd1_x_tap_i_22;
+    wire [0:0] pd1_x_tap_i_23;
+    wire [0:0] pd1_x_tap_i_0;
+    wire [0:0] pd1_x_tap_i_1;
+    wire [0:0] pd1_x_tap_i_2;
+    wire [0:0] pd1_x_tap_i_3;
+    wire [0:0] pd1_x_tap_i_4;
+    wire [0:0] pd1_x_tap_i_5;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(1550)) u_bin_b_hw_i (.clk(clk), .rst_n(rst_n), .d(b_hw_i[1549:0]), .ea(b_hw_i[1550]), .q(b_hw_i_q), .eq(b_hw_i_eq));
@@ -139,10 +163,34 @@ module qfd_qc_sle_hc0 (
     ot_dp_st #(.W(514)) u_ft_rsf_o_1 (.clk(clk), .rst_n(rst_n), .d(rsf_o_s0[513:0]), .ea(rsf_o_s0[514]), .q(rsf_o[513:0]), .eq(rsf_o[514]));
     ot_dp_st #(.W(514)) u_ft_rsn_o_0 (.clk(clk), .rst_n(rst_n), .d(rsn_i[513:0]), .ea(rsn_i[514]), .q(rsn_o_s0[513:0]), .eq(rsn_o_s0[514]));
     ot_dp_st #(.W(514)) u_ft_rsn_o_1 (.clk(clk), .rst_n(rst_n), .d(rsn_o_s0[513:0]), .ea(rsn_o_s0[514]), .q(rsn_o[513:0]), .eq(rsn_o[514]));
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_6 (.clk(clk), .d(x_tap_i_q[6]), .q(pd1_x_tap_i_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_7 (.clk(clk), .d(x_tap_i_q[7]), .q(pd1_x_tap_i_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_8 (.clk(clk), .d(x_tap_i_q[8]), .q(pd1_x_tap_i_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_9 (.clk(clk), .d(x_tap_i_q[9]), .q(pd1_x_tap_i_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_10 (.clk(clk), .d(x_tap_i_q[10]), .q(pd1_x_tap_i_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_11 (.clk(clk), .d(x_tap_i_q[11]), .q(pd1_x_tap_i_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_12 (.clk(clk), .d(x_tap_i_q[12]), .q(pd1_x_tap_i_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_13 (.clk(clk), .d(x_tap_i_q[13]), .q(pd1_x_tap_i_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_14 (.clk(clk), .d(x_tap_i_q[14]), .q(pd1_x_tap_i_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_15 (.clk(clk), .d(x_tap_i_q[15]), .q(pd1_x_tap_i_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_16 (.clk(clk), .d(x_tap_i_q[16]), .q(pd1_x_tap_i_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_17 (.clk(clk), .d(x_tap_i_q[17]), .q(pd1_x_tap_i_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_18 (.clk(clk), .d(x_tap_i_q[18]), .q(pd1_x_tap_i_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_19 (.clk(clk), .d(x_tap_i_q[19]), .q(pd1_x_tap_i_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_20 (.clk(clk), .d(x_tap_i_q[20]), .q(pd1_x_tap_i_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_21 (.clk(clk), .d(x_tap_i_q[21]), .q(pd1_x_tap_i_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_22 (.clk(clk), .d(x_tap_i_q[22]), .q(pd1_x_tap_i_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_23 (.clk(clk), .d(x_tap_i_q[23]), .q(pd1_x_tap_i_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_0 (.clk(clk), .d(x_tap_i_q[0]), .q(pd1_x_tap_i_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_1 (.clk(clk), .d(x_tap_i_q[1]), .q(pd1_x_tap_i_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_2 (.clk(clk), .d(x_tap_i_q[2]), .q(pd1_x_tap_i_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_3 (.clk(clk), .d(x_tap_i_q[3]), .q(pd1_x_tap_i_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_4 (.clk(clk), .d(x_tap_i_q[4]), .q(pd1_x_tap_i_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_tap_i_5 (.clk(clk), .d(x_tap_i_q[5]), .q(pd1_x_tap_i_5));  // landing pad: as-built relative timing
     // as-built dvs_E0.u_core.u_sub.u_xh0
     qfd_dv_s5_xhead3 u_u_xh0 (
-        .a_d({b_hw_i_q[1549:1], x_tap_i_q[23:6]}),
-        .cid(x_tap_i_q[5:0]),
+        .a_d({b_hw_i_q[1549:1], pd1_x_tap_i_23[0], pd1_x_tap_i_22[0], pd1_x_tap_i_21[0], pd1_x_tap_i_20[0], pd1_x_tap_i_19[0], pd1_x_tap_i_18[0], pd1_x_tap_i_17[0], pd1_x_tap_i_16[0], pd1_x_tap_i_15[0], pd1_x_tap_i_14[0], pd1_x_tap_i_13[0], pd1_x_tap_i_12[0], pd1_x_tap_i_11[0], pd1_x_tap_i_10[0], pd1_x_tap_i_9[0], pd1_x_tap_i_8[0], pd1_x_tap_i_7[0], pd1_x_tap_i_6[0]}),
+        .cid({pd1_x_tap_i_5[0], pd1_x_tap_i_4[0], pd1_x_tap_i_3[0], pd1_x_tap_i_2[0], pd1_x_tap_i_1[0], pd1_x_tap_i_0[0]}),
         .ck(clk),
         .fault(w_u_xh0_fault),
         .fault_i(b_hw_i_q[0]),

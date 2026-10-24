@@ -11,7 +11,9 @@ module qfd_qc_coll_ftn_part (
     input  wire [548:0] crec_tx_s0_i,   // ft crec_tx_s0 lane coll_core__crec_tx_s0: coll_core -> coll_n
     output wire [548:0] crec_tx_s0_o,   // ft crec_tx_s0: 1 station(s)
     input  wire [1:0] fltk_i,   // ft fltk lane coll_n__fltk: coll_n -> coll_core
-    output wire [1:0] fltk_o   // ft fltk: 1 station(s)
+    output wire [1:0] fltk_o,   // ft fltk: 1 station(s)
+    input  wire [12:0] fltv_i,   // ft fltv lane coll_n__fltv: coll_n -> coll_core
+    output wire [12:0] fltv_o   // ft fltv: 1 station(s)
 );
 
     wire rst_n;
@@ -19,6 +21,7 @@ module qfd_qc_coll_ftn_part (
     ot_dp_st #(.W(547)) u_ft_crec_rx_s0_o_0 (.clk(clk), .rst_n(rst_n), .d(crec_rx_s0_i[546:0]), .ea(crec_rx_s0_i[547]), .q(crec_rx_s0_o[546:0]), .eq(crec_rx_s0_o[547]));
     ot_dp_st #(.W(548)) u_ft_crec_tx_s0_o_0 (.clk(clk), .rst_n(rst_n), .d(crec_tx_s0_i[547:0]), .ea(crec_tx_s0_i[548]), .q(crec_tx_s0_o[547:0]), .eq(crec_tx_s0_o[548]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_0 (.clk(clk), .rst_n(rst_n), .d(fltk_i[0:0]), .ea(fltk_i[1]), .q(fltk_o[0:0]), .eq(fltk_o[1]));
+    ot_dp_st #(.W(12)) u_ft_fltv_o_0 (.clk(clk), .rst_n(rst_n), .d(fltv_i[11:0]), .ea(fltv_i[12]), .q(fltv_o[11:0]), .eq(fltv_o[12]));
 
 endmodule
 `default_nettype wire

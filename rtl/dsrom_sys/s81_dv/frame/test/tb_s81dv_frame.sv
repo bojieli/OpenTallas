@@ -113,6 +113,13 @@ module tb_s81dv_frame;
         if (rst_n && edge_n > 20 && (ret[69] || lx_fault) && nflt < 4) begin
             $display("FAULT edge %0d status %b lx %b", edge_n, ret[69:68], lx_fault); nflt <= nflt + 1; end
     end
+`ifdef SEAM_REF
+    // S81-P7 10-23 (tools/s81_dv/frame_seam_bench.sh): a REFERENCE banded frame (the vgch twin: D=4 landings across the
+    // band seams, lockstep- and frame-bench proven) runs on the same framed traffic, and every band-seam output of the
+    // DUT is compared with the reference landing output, every edge.  The frame-level ret/xo checks alone are blind to
+    // seam timing when the traffic has slack (x landed long before go); this makes each seam an observed contract.
+    `include "seam_ref.svh"
+`endif
     initial begin
         #5.2 rst_n = 1'b1;
         repeat (3) @(posedge clk);

@@ -1,0 +1,439 @@
+{
+ "schema": "opentallas.hbm.sm_qsplit_benches.v1",
+ "lane": "HBM-P4-SM 2026-10-23",
+ "source_commit": "8617e0378f0263bb25426143cf1914aab2952dae",
+ "rtl": "ot_hbm_accel_smh_attn QSPLIT (define OT_SM_QSPLIT), mutants OT_SM_QSPLIT_MUT=1..4; Verilator 5.050 via ot-run (ot-gold2 / ot-epyc7)",
+ "sm_elem_bench": {
+  "cmd": "tools/hbm_sm_attention/sm_elem_bench.py run --shape ds640|ds128 --ops qk_sm0,pv_sm0 (SM_ELEM_DEFINES)",
+  "bench": "rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv",
+  "runs": {
+   "base_ds640": {
+    "verdict": "PASS",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 20,
+      "expected": 20,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 334
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 562
+     }
+    ]
+   },
+   "base_ds128": {
+    "verdict": "PASS",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 4,
+      "expected": 4,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 322
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 346
+     }
+    ]
+   },
+   "qs_ds640": {
+    "verdict": "PASS",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 20,
+      "expected": 20,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 338
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 566
+     }
+    ]
+   },
+   "qs_ds128": {
+    "verdict": "PASS",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 4,
+      "expected": 4,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 326
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 350
+     }
+    ]
+   },
+   "m1_ds640": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 20,
+      "expected": 20,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 338
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 8,
+      "expected": 512,
+      "mismatches": 508,
+      "fault": true,
+      "first_result": 566
+     }
+    ]
+   },
+   "m1_ds128": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": true,
+      "results": 4,
+      "expected": 4,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 326
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 8,
+      "expected": 512,
+      "mismatches": 508,
+      "fault": true,
+      "first_result": 350
+     }
+    ]
+   },
+   "m2_ds640": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 20,
+      "mismatches": 3,
+      "fault": true,
+      "first_result": null
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "fault": true,
+      "first_result": null
+     }
+    ]
+   },
+   "m2_ds128": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 4,
+      "mismatches": 1,
+      "fault": true,
+      "first_result": null
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 512,
+      "mismatches": 512,
+      "fault": true,
+      "first_result": null
+     }
+    ]
+   },
+   "m3_ds640": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 20,
+      "mismatches": 3,
+      "fault": true,
+      "first_result": null
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 566
+     }
+    ]
+   },
+   "m3_ds128": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 0,
+      "expected": 4,
+      "mismatches": 1,
+      "fault": true,
+      "first_result": null
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": true,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 0,
+      "fault": false,
+      "first_result": 350
+     }
+    ]
+   },
+   "m4_ds640": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 20,
+      "expected": 20,
+      "mismatches": 20,
+      "fault": false,
+      "first_result": 338
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 512,
+      "fault": false,
+      "first_result": 566
+     }
+    ]
+   },
+   "m4_ds128": {
+    "verdict": "FAIL",
+    "ops": [
+     {
+      "name": "qk_sm0",
+      "pass_": false,
+      "results": 4,
+      "expected": 4,
+      "mismatches": 4,
+      "fault": false,
+      "first_result": 326
+     },
+     {
+      "name": "pv_sm0",
+      "pass_": false,
+      "results": 512,
+      "expected": 512,
+      "mismatches": 512,
+      "fault": false,
+      "first_result": 350
+     }
+    ]
+   }
+  },
+  "note": "last_result is clamped at the calendar end (tb cyc stops at N), so the latency delta is read on first_result"
+ },
+ "toksim_smhbm": {
+  "cmd": "tools/hbm_layer_vehicle/toksim_smhbm.py run --layers L00:0 (TOKSIM_DEFINES)",
+  "bench": "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv",
+  "runs": {
+   "base": {
+    "verdict": "PASS",
+    "ops_pass": 20,
+    "ops": 20,
+    "spans": [
+     182,
+     182,
+     783,
+     787,
+     389,
+     401,
+     383,
+     176,
+     176,
+     176,
+     176,
+     176,
+     176,
+     167,
+     167,
+     167,
+     167,
+     167,
+     167,
+     176
+    ],
+    "source_revision": "8617e0378f0263bb25426143cf1914aab2952dae",
+    "defines_env": ""
+   },
+   "qs": {
+    "verdict": "PASS",
+    "ops_pass": 20,
+    "ops": 20,
+    "spans": [
+     186,
+     186,
+     787,
+     791,
+     393,
+     405,
+     387,
+     180,
+     180,
+     180,
+     180,
+     180,
+     180,
+     171,
+     171,
+     171,
+     171,
+     171,
+     171,
+     180
+    ],
+    "source_revision": "8617e0378f0263bb25426143cf1914aab2952dae",
+    "defines_env": "OT_SM_QSPLIT"
+   },
+   "qsm4": {
+    "verdict": "FAIL",
+    "ops_pass": 0,
+    "ops": 20,
+    "spans": [
+     186,
+     186,
+     787,
+     791,
+     393,
+     405,
+     387,
+     180,
+     180,
+     180,
+     180,
+     180,
+     180,
+     171,
+     171,
+     171,
+     171,
+     171,
+     171,
+     180
+    ],
+    "source_revision": "8617e0378f0263bb25426143cf1914aab2952dae",
+    "defines_env": "OT_SM_QSPLIT,OT_SM_QSPLIT_MUT=4"
+   }
+  }
+ },
+ "qwen_sm_mv_unit_int8": {
+  "cmd": "tools/hbm_layer_vehicle/qwen_sm_mv_unit.py run --kv sm14/qkv/L0 --L 0 --bundle r18h5 bundle (QSM_DEFINES)",
+  "bench": "tb_hbm_smh_attn -DOT_SMH_ATTN_INT8",
+  "runs": {
+   "base": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 PASS sm0 R=48 lines=3072 packed=1536 cyc=3206 priced=3418.6 fault=None",
+    "QSM_MV L0 o INT8 m=4096 K=512 PASS sm0 R=256 lines=2048 packed=1024 cyc=2161 priced=2394.6 fault=None",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 PASS sm0 R=192 lines=12288 packed=6144 cyc=12422 priced=12634.6 fault=None",
+    "QSM_MV L0 down INT8 m=2048 K=3072 PASS sm0 R=128 lines=6144 packed=3072 cyc=6278 priced=6490.6 fault=None",
+    "QWEN_SM_MV_UNIT PASS records=4 mut=-"
+   ],
+   "qs": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 PASS sm0 R=48 lines=3072 packed=1536 cyc=3210 priced=3418.6 fault=None",
+    "QSM_MV L0 o INT8 m=4096 K=512 PASS sm0 R=256 lines=2048 packed=1024 cyc=2165 priced=2394.6 fault=None",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 PASS sm0 R=192 lines=12288 packed=6144 cyc=12426 priced=12634.6 fault=None",
+    "QSM_MV L0 down INT8 m=2048 K=3072 PASS sm0 R=128 lines=6144 packed=3072 cyc=6282 priced=6490.6 fault=None",
+    "QWEN_SM_MV_UNIT PASS records=4 mut=-"
+   ],
+   "qsm2": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 FAIL sm0 R=48 lines=3072 packed=1536 cyc=None priced=3418.6 fault=FAULT schedule cycle 863",
+    "QSM_MV L0 o INT8 m=4096 K=512 FAIL sm0 R=256 lines=2048 packed=1024 cyc=None priced=2394.6 fault=FAULT schedule cycle 135",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 FAIL sm0 R=192 lines=12288 packed=6144 cyc=None priced=12634.6 fault=FAULT schedule cycle 863",
+    "QSM_MV L0 down INT8 m=2048 K=3072 FAIL sm0 R=128 lines=6144 packed=3072 cyc=None priced=6490.6 fault=FAULT schedule cycle 655",
+    "QWEN_SM_MV_UNIT FAIL records=4 mut=-"
+   ],
+   "qslate": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 FAIL sm0 R=48 lines=3072 packed=1536 cyc=None priced=3418.6 fault=None",
+    "QSM_MV L0 o INT8 m=4096 K=512 FAIL sm0 R=256 lines=2048 packed=1024 cyc=None priced=2394.6 fault=None",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 FAIL sm0 R=192 lines=12288 packed=6144 cyc=None priced=12634.6 fault=None",
+    "QSM_MV L0 down INT8 m=2048 K=3072 FAIL sm0 R=128 lines=6144 packed=3072 cyc=None priced=6490.6 fault=None",
+    "QWEN_SM_MV_UNIT FAIL records=4 mut=late"
+   ],
+   "i8w_qs": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 PASS sm0 R=48 lines=3072 packed=1536 cyc=1665 priced=3418.6 fault=None",
+    "QSM_MV L0 o INT8 m=4096 K=512 PASS sm0 R=256 lines=2048 packed=1024 cyc=1132 priced=2394.6 fault=None",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 PASS sm0 R=192 lines=12288 packed=6144 cyc=6273 priced=12634.6 fault=None",
+    "QSM_MV L0 down INT8 m=2048 K=3072 PASS sm0 R=128 lines=6144 packed=3072 cyc=3201 priced=6490.6 fault=None",
+    "QWEN_SM_MV_UNIT PASS records=4 mut=-"
+   ],
+   "i8w_qsm2": [
+    "QSM_MV L0 qkv INT8 m=768 K=4096 FAIL sm0 R=48 lines=3072 packed=1536 cyc=None priced=3418.6 fault=FAULT schedule cycle 857",
+    "QSM_MV L0 o INT8 m=4096 K=512 FAIL sm0 R=256 lines=2048 packed=1024 cyc=None priced=2394.6 fault=FAULT schedule cycle 129",
+    "QSM_MV L0 gu INT8 m=3072 K=4096 FAIL sm0 R=192 lines=12288 packed=6144 cyc=None priced=12634.6 fault=FAULT schedule cycle 857",
+    "QSM_MV L0 down INT8 m=2048 K=3072 FAIL sm0 R=128 lines=6144 packed=3072 cyc=None priced=6490.6 fault=FAULT schedule cycle 649",
+    "QWEN_SM_MV_UNIT FAIL records=4 mut=-"
+   ]
+  },
+  "note": "i8w_* = --i8w (INT8W 1, the die's wide INT8 front); no i8w base run in this lane (QSPLIT-only), its delta is not measured"
+ },
+ "pvacc": {
+  "cmd": "rtl/hbm_accel/sm/attn/run_pvacc.sh OUT MUT 7 (iverilog)",
+  "note": "ot_hbm_accel_smh_pvacc is not instantiated in the SM top: regression only",
+  "runs": {
+   "MUT0": "PVACC EXACT PASS outputs 36/36 mismatches 0 fault 0",
+   "MUT1": "PVACC EXACT FAIL outputs 36/36 mismatches 28 fault 0"
+  }
+ }
+}

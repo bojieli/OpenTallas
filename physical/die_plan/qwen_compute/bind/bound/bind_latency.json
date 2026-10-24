@@ -12109,16 +12109,16 @@
    "planned_width": 1,
    "param": "LAT_COLL_CORE__CMD_FREE_IO_CMD_FREE",
    "leaves": [
-    "io_collective.u_io.g_face[0].u_face.cdc_fault[1]"
+    "io_collective.u_io.u_collective.cmd_free[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    0,
-    0
+    39,
+    39
    ],
    "bound_stages": 3,
    "plan_cycles": 3,
-   "delta": 3
+   "delta": -36
   },
   {
    "lane": "coll_core__crec_tx_s0",
@@ -12130,8 +12130,8 @@
    "planned_width": 549,
    "param": "LAT_COLL_CORE__CREC_TX_S0",
    "leaves": [
-    "io_collective.u_io.u_collective.sx0_peer_slot[1]",
     "io_collective.u_io.u_collective.sx0_rec[546]",
+    "io_collective.u_io.u_collective.sx0_peer_slot[1]",
     "io_collective.u_io.u_collective.sx0_valid[1]"
    ],
    "forwarded": 0,
@@ -12153,10 +12153,8 @@
    "planned_width": 549,
    "param": "LAT_COLL_CORE__CREC_TX_S1",
    "leaves": [
-    "io_collective.u_io.u_collective.sx0_valid[1]",
-    "io_collective.u_io.u_collective.sx1_peer_slot[1]",
     "io_collective.u_io.u_collective.sx1_rec[546]",
-    "io_collective.u_io.u_collective.sx1_valid[1]"
+    "io_collective.u_io.u_collective.sx2_rec[3]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12177,13 +12175,16 @@
    "planned_width": 549,
    "param": "LAT_COLL_CORE__CREC_TX_S2",
    "leaves": [
+    "io_collective.u_io.u_collective.sx2_rec[543]",
+    "io_collective.u_io.u_collective.sx0_valid[1]",
+    "io_collective.u_io.u_collective.sx1_peer_slot[1]",
+    "io_collective.u_io.u_collective.sx1_valid[1]",
     "io_collective.u_io.u_collective.sx2_peer_slot[1]",
-    "io_collective.u_io.u_collective.sx2_rec[546]",
     "io_collective.u_io.u_collective.sx2_valid[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    5,
+    0,
     5
    ],
    "bound_stages": 8,
@@ -12200,7 +12201,7 @@
    "planned_width": 1,
    "param": "LAT_COLL_CORE__FAULT_IO_FAULT",
    "leaves": [
-    "io_collective.$or$ot_qfd_collective_static_io_production.sv:66$2416.Y[1]"
+    "io_collective.$or$ot_qfd_collective_static_io_production.sv:66$6.Y[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12221,9 +12222,42 @@
    "planned_width": 1,
    "param": "LAT_COLL_CORE__FLTC",
    "leaves": [
-    "io_collective.u_io.g_face[0].u_face.cdc_fault[1]"
+    "fwd fltv_n_i[1]"
    ],
-   "forwarded": 0,
+   "forwarded": 1,
+   "asbuilt_stages": [
+    0,
+    0
+   ],
+   "bound_stages": 3,
+   "plan_cycles": 3,
+   "delta": 3
+  },
+  {
+   "lane": "coll_core__fltvc",
+   "src": "coll_core",
+   "dst": "glue",
+   "bus_out": "fltv_o",
+   "bus_in": "coll_fltv_i",
+   "width": 69,
+   "planned_width": 69,
+   "param": "LAT_COLL_CORE__FLTVC",
+   "leaves": [
+    "io_collective.u_io.g_face[0].u_face.cdc_fault[4]",
+    "io_collective.u_io.g_face[0].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[0].u_face.fault_cause[8]",
+    "io_collective.u_io.g_face[1].u_face.cdc_fault[4]",
+    "io_collective.u_io.g_face[1].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[1].u_face.fault_cause[8]",
+    "io_collective.u_io.u_collective.fault_code[5]",
+    "fwd rec_rx_s0_i[1]",
+    "fwd flt_n_i[1]",
+    "fwd fltv_n_i[10]",
+    "fwd rec_rx_s2_i[2]",
+    "fwd flt_s_i[1]",
+    "fwd fltv_s_i[23]"
+   ],
+   "forwarded": 38,
    "asbuilt_stages": [
     0,
     0
@@ -12347,7 +12381,7 @@
    "planned_width": 1,
    "param": "LAT_COLL_CORE__SHARED_FAULT_IO_SHARED_FAULT",
    "leaves": [
-    "io_collective.u_io.$or$ot_qfd_collective_static_io.sv:170$2427.Y[1]"
+    "io_collective.u_io.$or$ot_qfd_collective_static_io.sv:170$29920.Y[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12368,9 +12402,8 @@
    "planned_width": 547,
    "param": "LAT_COLL_N__CREC_RX_S0",
    "leaves": [
-    "io_collective.u_io.g_face[2].u_face.cdc_fault[4]",
-    "io_collective.u_io.g_face[2].u_face.epoch_abort[1]",
-    "io_collective.u_io.g_face[2].u_face.rx_data[542]"
+    "io_collective.u_io.g_face[2].u_face.rx_data[546]",
+    "io_collective.u_io.g_face[2].u_face.cdc_fault[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12391,7 +12424,31 @@
    "planned_width": 1,
    "param": "LAT_COLL_N__FLTK",
    "leaves": [
-    "io_collective.u_io.g_face[2].u_face.rx_data[1]"
+    "io_collective.u_io.g_face[2].u_face.cdc_fault[1]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    0,
+    0
+   ],
+   "bound_stages": 7,
+   "plan_cycles": 7,
+   "delta": 7
+  },
+  {
+   "lane": "coll_n__fltv",
+   "src": "coll_n",
+   "dst": "coll_core",
+   "bus_out": "fltv_o",
+   "bus_in": "fltv_n_i",
+   "width": 12,
+   "planned_width": 17,
+   "param": "LAT_COLL_N__FLTV",
+   "leaves": [
+    "io_collective.u_io.g_face[2].u_face.cdc_fault[2]",
+    "io_collective.u_io.g_face[2].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[2].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[2].u_face.fault_cause[8]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12454,18 +12511,17 @@
    "planned_width": 547,
    "param": "LAT_COLL_S__CREC_RX_S1",
    "leaves": [
-    "io_collective.u_io.g_face[3].u_face.cdc_fault[4]",
-    "io_collective.u_io.g_face[3].u_face.epoch_abort[1]",
-    "io_collective.u_io.g_face[3].u_face.rx_data[542]"
+    "io_collective.u_io.g_face[3].u_face.rx_data[546]",
+    "io_collective.u_io.g_face[4].u_face.rx_data[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
     0,
-    0
+    5
    ],
    "bound_stages": 8,
    "plan_cycles": 8,
-   "delta": 8
+   "delta": 3
   },
   {
    "lane": "coll_s__crec_rx_s2",
@@ -12477,11 +12533,8 @@
    "planned_width": 547,
    "param": "LAT_COLL_S__CREC_RX_S2",
    "leaves": [
-    "io_collective.u_io.g_face[3].u_face.rx_data[4]",
-    "io_collective.u_io.g_face[3].u_face.rx_valid[1]",
-    "io_collective.u_io.g_face[4].u_face.cdc_fault[4]",
-    "io_collective.u_io.g_face[4].u_face.epoch_abort[1]",
-    "io_collective.u_io.g_face[4].u_face.rx_data[537]"
+    "io_collective.u_io.g_face[4].u_face.rx_data[545]",
+    "io_collective.u_io.g_face[3].u_face.cdc_fault[2]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -12502,11 +12555,39 @@
    "planned_width": 1,
    "param": "LAT_COLL_S__FLTK",
    "leaves": [
-    "io_collective.u_io.g_face[4].u_face.rx_data[1]"
+    "io_collective.u_io.g_face[3].u_face.cdc_fault[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    5,
+    0,
+    0
+   ],
+   "bound_stages": 8,
+   "plan_cycles": 8,
+   "delta": 8
+  },
+  {
+   "lane": "coll_s__fltv",
+   "src": "coll_s",
+   "dst": "coll_core",
+   "bus_out": "fltv_o",
+   "bus_in": "fltv_s_i",
+   "width": 25,
+   "planned_width": 35,
+   "param": "LAT_COLL_S__FLTV",
+   "leaves": [
+    "io_collective.u_io.g_face[3].u_face.cdc_fault[1]",
+    "io_collective.u_io.g_face[3].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[3].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[4].u_face.cdc_fault[4]",
+    "io_collective.u_io.g_face[4].u_face.epoch_abort[1]",
+    "io_collective.u_io.g_face[4].u_face.rx_valid[1]",
+    "io_collective.u_io.g_face[3].u_face.fault_cause[8]",
+    "io_collective.u_io.g_face[4].u_face.fault_cause[8]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    0,
     5
    ],
    "bound_stages": 8,
@@ -12649,17 +12730,16 @@
    "planned_width": 2,
    "param": "LAT_GLUE__DH_USER_DH_USER",
    "leaves": [
-    "mu_ctxrx.mu_fault[1]",
-    "mu_dhobs.dh_user[1]"
+    "mu_dhobs.dh_user[2]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
     0,
-    8
+    0
    ],
    "bound_stages": 4,
    "plan_cycles": 4,
-   "delta": -4
+   "delta": 4
   },
   {
    "lane": "glue__embed_code_q_emb_code_q",
@@ -12914,6 +12994,49 @@
    "delta": -1
   },
   {
+   "lane": "glue__kvrst",
+   "src": "glue",
+   "dst": "ucie_kv",
+   "bus_out": "kv_phy_rst_o",
+   "bus_in": "phy_rst_i",
+   "width": 1,
+   "planned_width": 1,
+   "param": "LAT_GLUE__KVRST",
+   "leaves": [
+    "d2d_rom.phy_rst_n[1]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    0,
+    0
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 2
+  },
+  {
+   "lane": "glue__mufl",
+   "src": "glue",
+   "dst": "tt_ctlm",
+   "bus_out": "mu_flt_o",
+   "bus_in": "mu_flt_i",
+   "width": 2,
+   "planned_width": 2,
+   "param": "LAT_GLUE__MUFL",
+   "leaves": [
+    "mu_ctxrx.mu_fault[1]",
+    "mu_dhobs.mu_fault[1]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    8
+   ],
+   "bound_stages": 4,
+   "plan_cycles": 4,
+   "delta": -4
+  },
+  {
    "lane": "glue__native_rx_slot_beat_rx_slot_beat",
    "src": "glue",
    "dst": "native59",
@@ -13154,13 +13277,11 @@
    "planned_width": 187,
    "param": "LAT_GLUE__SEQ_DH_DH",
    "leaves": [
-    "mu_dhobs.dh_user[1]",
-    "mu_dhobs.mu_fault[1]",
-    "sys_face.seq_dh[185]"
+    "sys_face.seq_dh[187]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    0,
+    3,
     3
    ],
    "bound_stages": 4,
@@ -13177,16 +13298,16 @@
    "planned_width": 1,
    "param": "LAT_GLUE__TT_FAB_FAB",
    "leaves": [
-    "sys_face.seq_dh[1]"
+    "sys_face.tt_fab[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    3,
-    3
+    4,
+    4
    ],
    "bound_stages": 4,
    "plan_cycles": 4,
-   "delta": 1
+   "delta": 0
   },
   {
    "lane": "glue__tt_kok_kok",
@@ -13198,7 +13319,7 @@
    "planned_width": 1,
    "param": "LAT_GLUE__TT_KOK_KOK",
    "leaves": [
-    "sys_face.seq_dh[1]"
+    "sys_face.tt_kok[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -13219,16 +13340,16 @@
    "planned_width": 1,
    "param": "LAT_GLUE__TT_KWD_KWD",
    "leaves": [
-    "sys_face.tt_fab[1]"
+    "sys_face.tt_kwd[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    4,
-    4
+    3,
+    3
    ],
    "bound_stages": 4,
    "plan_cycles": 4,
-   "delta": 0
+   "delta": 1
   },
   {
    "lane": "glue__tt_pw_pw",
@@ -13240,13 +13361,11 @@
    "planned_width": 75,
    "param": "LAT_GLUE__TT_PW_PW",
    "leaves": [
-    "sys_face.tt_kok[1]",
-    "sys_face.tt_kwd[1]",
-    "sys_face.tt_pw[73]"
+    "sys_face.tt_pw[75]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
-    3,
+    4,
     4
    ],
    "bound_stages": 4,
@@ -13922,7 +14041,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E0_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -15411,10 +15531,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E0_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E0.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E0.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E0.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E0.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E0.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -15456,7 +15573,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E0_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E0.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E0.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E0.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E0.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E0.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E0.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -16316,7 +16435,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E1_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -17009,56 +17129,6 @@
    "param": "LAT_SL_E1_FW__X_FW_SC",
    "leaves": [
     "dvs_E1.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_E1_fw__x_fw_st_a",
-   "src": "sl_E1_fw",
-   "dst": "sl_E1_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E1_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_E1.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_E1_fw__x_fw_st_b",
-   "src": "sl_E1_fw",
-   "dst": "sl_E1_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E1_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_E1.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_E1.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -17826,10 +17896,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E1_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E1.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E1.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E1.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E1.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E1.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -17871,7 +17938,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E1_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E1.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E1.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E1.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E1.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E1.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E1.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -18731,7 +18800,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E2_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -20220,10 +20290,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E2_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E2.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E2.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E2.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E2.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E2.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -20265,7 +20332,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E2_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E2.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E2.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E2.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E2.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E2.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E2.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -21125,7 +21194,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E3_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -21818,56 +21888,6 @@
    "param": "LAT_SL_E3_FW__X_FW_SC",
    "leaves": [
     "dvs_E3.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_E3_fw__x_fw_st_a",
-   "src": "sl_E3_fw",
-   "dst": "sl_E3_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E3_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_E3.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_E3_fw__x_fw_st_b",
-   "src": "sl_E3_fw",
-   "dst": "sl_E3_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E3_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_E3.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_E3.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -22635,10 +22655,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E3_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E3.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E3.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E3.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E3.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E3.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -22680,7 +22697,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E3_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E3.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E3.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E3.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E3.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E3.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E3.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -23540,7 +23559,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E4_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -25029,10 +25049,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E4_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E4.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E4.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E4.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E4.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E4.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -25074,7 +25091,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E4_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E4.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E4.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E4.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E4.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E4.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E4.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -25934,7 +25953,8 @@
    "planned_width": 116,
    "param": "LAT_SL_E5_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -26083,28 +26103,6 @@
    "delta": 8
   },
   {
-   "lane": "sl_E5_fe__x_fe_fw",
-   "src": "sl_E5_fe",
-   "dst": "sl_E5_fw",
-   "bus_out": "x_fw_o",
-   "bus_in": "x_fe_i",
-   "width": 1105,
-   "planned_width": 1105,
-   "param": "LAT_SL_E5_FE__X_FE_FW",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fup.agu_q[10]",
-    "dvs_E5.u_core.u_sub.u_fup.chu_q[1095]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 4,
-   "plan_cycles": 4,
-   "delta": 4
-  },
-  {
    "lane": "sl_E5_fe__x_fe_sc",
    "src": "sl_E5_fe",
    "dst": "sl_E5_sc",
@@ -26124,27 +26122,6 @@
    "bound_stages": 2,
    "plan_cycles": 2,
    "delta": 2
-  },
-  {
-   "lane": "sl_E5_fe__x_fe_stm",
-   "src": "sl_E5_fe",
-   "dst": "sl_E5_stm",
-   "bus_out": "x_stm_o",
-   "bus_in": "x_fe_i",
-   "width": 1088,
-   "planned_width": 1088,
-   "param": "LAT_SL_E5_FE__X_FE_STM",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fup.se_q[1088]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 3,
-   "plan_cycles": 3,
-   "delta": 3
   },
   {
    "lane": "sl_E5_fw__ag_eo_ag_wi",
@@ -26415,56 +26392,6 @@
    "param": "LAT_SL_E5_FW__X_FW_SC",
    "leaves": [
     "dvs_E5.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_E5_fw__x_fw_st_a",
-   "src": "sl_E5_fw",
-   "dst": "sl_E5_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E5_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_E5_fw__x_fw_st_b",
-   "src": "sl_E5_fw",
-   "dst": "sl_E5_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_E5_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_E5.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -27232,10 +27159,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_E5_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_E5.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_E5.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_E5.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_E5.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_E5.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -27277,7 +27201,9 @@
    "planned_width": 29,
    "param": "LAT_SL_E5_STM__X_STM_CTL",
    "leaves": [
-    "dvs_E5.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_E5.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_E5.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_E5.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_E5.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_E5.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -28137,7 +28063,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W0_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -29626,10 +29553,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W0_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W0.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W0.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W0.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W0.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W0.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -29671,7 +29595,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W0_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W0.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W0.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W0.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W0.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W0.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W0.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -30531,7 +30457,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W1_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -31225,56 +31152,6 @@
    "param": "LAT_SL_W1_FW__X_FW_SC",
    "leaves": [
     "dvs_W1.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_W1_fw__x_fw_st_a",
-   "src": "sl_W1_fw",
-   "dst": "sl_W1_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W1_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_W1.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_W1_fw__x_fw_st_b",
-   "src": "sl_W1_fw",
-   "dst": "sl_W1_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W1_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_W1.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_W1.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -32042,10 +31919,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W1_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W1.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W1.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W1.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W1.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W1.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -32087,7 +31961,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W1_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W1.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W1.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W1.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W1.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W1.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W1.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -32947,7 +32823,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W2_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -34436,10 +34313,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W2_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W2.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W2.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W2.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W2.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W2.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -34481,7 +34355,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W2_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W2.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W2.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W2.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W2.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W2.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W2.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -35341,7 +35217,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W3_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -36035,56 +35912,6 @@
    "param": "LAT_SL_W3_FW__X_FW_SC",
    "leaves": [
     "dvs_W3.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_W3_fw__x_fw_st_a",
-   "src": "sl_W3_fw",
-   "dst": "sl_W3_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W3_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_W3.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_W3_fw__x_fw_st_b",
-   "src": "sl_W3_fw",
-   "dst": "sl_W3_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W3_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_W3.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_W3.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -36852,10 +36679,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W3_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W3.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W3.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W3.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W3.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W3.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -36897,7 +36721,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W3_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W3.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W3.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W3.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W3.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W3.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W3.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -37757,7 +37583,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W4_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -39246,10 +39073,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W4_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W4.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W4.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W4.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W4.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W4.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -39291,7 +39115,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W4_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W4.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W4.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W4.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W4.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W4.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W4.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -40151,7 +39977,8 @@
    "planned_width": 116,
    "param": "LAT_SL_W5_CTL__X_CTL_ST_A",
    "leaves": [
-    "fwd x_stm_i[29]"
+    "fwd b_tw_data_i[26]",
+    "fwd x_stm_i[3]"
    ],
    "forwarded": 29,
    "asbuilt_stages": [
@@ -40887,56 +40714,6 @@
    "param": "LAT_SL_W5_FW__X_FW_SC",
    "leaves": [
     "dvs_W5.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
-  },
-  {
-   "lane": "sl_W5_fw__x_fw_st_a",
-   "src": "sl_W5_fw",
-   "dst": "sl_W5_st_a",
-   "bus_out": "x_st_a_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W5_FW__X_FW_ST_A",
-   "leaves": [
-    "dvs_W5.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r0[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r1[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r2[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r3[64]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 7,
-   "plan_cycles": 7,
-   "delta": 7
-  },
-  {
-   "lane": "sl_W5_fw__x_fw_st_b",
-   "src": "sl_W5_fw",
-   "dst": "sl_W5_st_b",
-   "bus_out": "x_st_b_o",
-   "bus_in": "x_fw_i",
-   "width": 258,
-   "planned_width": 264,
-   "param": "LAT_SL_W5_FW__X_FW_ST_B",
-   "leaves": [
-    "dvs_W5.u_core.u_sub.u_fdn.l9_c[2]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r4[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r5[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r6[64]",
-    "dvs_W5.u_core.u_sub.u_fdn.l9_r7[64]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -41704,10 +41481,7 @@
    "planned_width": 1024,
    "param": "LAT_SL_W5_STM__B_TW_DATA_STM_CTL",
    "leaves": [
-    "dvs_W5.u_core.u_sub.u_stm.stm_fault[1]",
-    "dvs_W5.u_core.u_sub.u_stm.tld_fault[1]",
-    "dvs_W5.u_core.u_sub.u_stm.tw_addr[24]",
-    "dvs_W5.u_core.u_sub.u_stm.tw_data[998]"
+    "dvs_W5.u_core.u_sub.u_stm.tw_data[1024]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -41749,7 +41523,9 @@
    "planned_width": 29,
    "param": "LAT_SL_W5_STM__X_STM_CTL",
    "leaves": [
-    "dvs_W5.u_core.u_sub.u_stm.tw_data[26]",
+    "dvs_W5.u_core.u_sub.u_stm.stm_fault[1]",
+    "dvs_W5.u_core.u_sub.u_stm.tld_fault[1]",
+    "dvs_W5.u_core.u_sub.u_stm.tw_addr[24]",
     "dvs_W5.u_core.u_sub.u_stm.tw_kind[2]",
     "dvs_W5.u_core.u_sub.u_stm.tw_we[1]"
    ],
@@ -43094,489 +42870,1120 @@
    "bound_stages": 2,
    "plan_cycles": 2,
    "delta": 2
+  }
+ ],
+ "landing_pads": {
+  "d2d_rom.native_tx_v": {
+   "src_part": "native59",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_0_u_face_cdc_fault",
-   "bus_in": "xi_sys_face_obs_fault__9",
-   "width": 2,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[0].u_face.cdc_fault[2]"
+  "d2d_rom.obs_native": {
+   "src_part": "native59",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 60
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_0_u_face_epoch_abort",
-   "bus_in": "xi_sys_face_obs_fault__10",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[0].u_face.epoch_abort[1]"
+  "d2d_rom.x3": {
+   "src_part": "native59",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 524
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_0_u_face_fault_cause",
-   "bus_in": "xi_sys_face_obs_fault__11",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[0].u_face.fault_cause[8]"
+  "dvs_E0.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E0_stm",
+   "pads": [
+    8,
+    8
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 24
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_1_u_face_cdc_fault",
-   "bus_in": "xi_sys_face_obs_fault__12",
-   "width": 4,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[1].u_face.cdc_fault[4]"
+  "dvs_E0.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E0_stm",
+   "pads": [
+    8,
+    12
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1024
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_1_u_face_epoch_abort",
-   "bus_in": "xi_sys_face_obs_fault__13",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[1].u_face.epoch_abort[1]"
+  "dvs_E0.u_core.u_sub.u_fdn.ch_dn_i": {
+   "src_part": "sl_W0_fe",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1032
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_g_face_1_u_face_fault_cause",
-   "bus_in": "xi_sys_face_obs_fault__14",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[1].u_face.fault_cause[8]"
+  "dvs_E0.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E0_stm",
+   "pads": [
+    10,
+    10
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1024
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_u_collective_cmd_free",
-   "bus_in": "xi_sys_face_io_cmd_free",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.u_collective.cmd_free[1]"
+  "dvs_E0.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E0_ctl",
+   "pads": [
+    3,
+    3
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    39,
-    39
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": -37
+   "bits": 1
   },
-  {
-   "lane": null,
-   "src": "coll_core",
-   "dst": "glue",
-   "bus_out": "xo_io_collective_u_io_u_collective_fault_code",
-   "bus_in": "xi_sys_face_obs_fault__15",
-   "width": 5,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.u_collective.fault_code[5]"
+  "dvs_E0.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E0_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 18
   },
-  {
-   "lane": null,
-   "src": "coll_n",
-   "dst": "coll_core",
-   "bus_out": "xo_core_rx_data",
-   "bus_in": "xi_io_collective_u_io_u_collective_sr0_rec",
-   "width": 3,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[2].u_face.rx_data[3]"
+  "dvs_E0.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E0_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 6
   },
-  {
-   "lane": null,
-   "src": "coll_n",
-   "dst": "coll_core",
-   "bus_out": "xo_core_rx_valid",
-   "bus_in": "xi_io_collective_u_io_u_collective_sr0_valid",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[2].u_face.rx_valid[1]"
+  "dvs_E0.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E0_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 19
   },
-  {
-   "lane": null,
-   "src": "coll_n",
-   "dst": "glue",
-   "bus_out": "xo_core_cdc_fault",
-   "bus_in": "xi_sys_face_obs_fault__0",
-   "width": 4,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[2].u_face.cdc_fault[4]"
+  "dvs_E0.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E0_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 6
   },
-  {
-   "lane": null,
-   "src": "coll_n",
-   "dst": "glue",
-   "bus_out": "xo_core_epoch_abort",
-   "bus_in": "xi_sys_face_obs_fault__1",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[2].u_face.epoch_abort[1]"
+  "dvs_E1.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E1_stm",
+   "pads": [
+    8,
+    8
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 24
   },
-  {
-   "lane": null,
-   "src": "coll_n",
-   "dst": "glue",
-   "bus_out": "xo_core_fault_cause",
-   "bus_in": "xi_sys_face_obs_fault__2",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[2].u_face.fault_cause[8]"
+  "dvs_E1.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E1_stm",
+   "pads": [
+    8,
+    12
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1024
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "coll_core",
-   "bus_out": "xo_g_face_4_u_face_rx_data",
-   "bus_in": "xi_io_collective_u_io_u_collective_sr2_rec",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[4].u_face.rx_data[8]"
+  "dvs_E1.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E1_stm",
+   "pads": [
+    10,
+    10
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    5,
-    5
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": -3
+   "bits": 1024
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "coll_core",
-   "bus_out": "xo_g_face_4_u_face_rx_valid",
-   "bus_in": "xi_io_collective_u_io_u_collective_sr2_valid",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[4].u_face.rx_valid[1]"
+  "dvs_E1.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E1_ctl",
+   "pads": [
+    3,
+    3
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    5,
-    5
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": -3
+   "bits": 1
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_3_u_face_cdc_fault",
-   "bus_in": "xi_sys_face_obs_fault__3",
-   "width": 4,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[3].u_face.cdc_fault[4]"
+  "dvs_E1.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E1_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 18
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_3_u_face_epoch_abort",
-   "bus_in": "xi_sys_face_obs_fault__4",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[3].u_face.epoch_abort[1]"
+  "dvs_E1.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E1_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 6
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_3_u_face_fault_cause",
-   "bus_in": "xi_sys_face_obs_fault__5",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[3].u_face.fault_cause[8]"
+  "dvs_E1.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E1_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 19
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_4_u_face_cdc_fault",
-   "bus_in": "xi_sys_face_obs_fault__6",
-   "width": 4,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[4].u_face.cdc_fault[4]"
+  "dvs_E1.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E1_tap",
+   "pads": [
+    1,
+    1
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 6
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_4_u_face_epoch_abort",
-   "bus_in": "xi_sys_face_obs_fault__7",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[4].u_face.epoch_abort[1]"
+  "dvs_E2.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E2_stm",
+   "pads": [
+    8,
+    8
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 24
   },
-  {
-   "lane": null,
-   "src": "coll_s",
-   "dst": "glue",
-   "bus_out": "xo_g_face_4_u_face_fault_cause",
-   "bus_in": "xi_sys_face_obs_fault__8",
-   "width": 8,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "io_collective.u_io.g_face[4].u_face.fault_cause[8]"
+  "dvs_E2.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E2_stm",
+   "pads": [
+    8,
+    12
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1024
   },
-  {
-   "lane": null,
-   "src": "glue",
-   "dst": "tt_ctlm",
-   "bus_out": "xo_sys_face_tt_pw",
-   "bus_in": "xi_core_pw",
-   "width": 2,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "sys_face.tt_pw[2]"
+  "dvs_E2.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E2_stm",
+   "pads": [
+    10,
+    10
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
+   "bits": 1024
+  },
+  "dvs_E2.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E2_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_E2.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_E2.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E2.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_E2.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E3.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E3_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_E3.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E3_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_E3.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E3_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_E3.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E3_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_E3.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_E3.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E3.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_E3.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E4.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E4_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_E4.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E4_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_E4.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E4_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_E4.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E4_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_E4.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_E4.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E4.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_E4.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E5.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_E5_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_E5.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_E5_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_E5.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_E5_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_E5.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_E5_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_E5.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_E5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_E5.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_E5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_E5.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_E5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_E5.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_E5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W0.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W0_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W0.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W0_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W0.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W0_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_W0.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W0_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W0.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W0_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W0.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W0_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W0.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W0_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W0.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W0_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W1.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W1_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W1.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W1_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W1.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W1_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_W1.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W1_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W1.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W1_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W1.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W1_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W1.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W1_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W1.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W1_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W2.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W2_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W2.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W2_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W2.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W2_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_W2.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W2_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W2.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W2.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W2.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W2.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W2_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W3.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W3_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W3.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W3_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W3.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W3_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_W3.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W3_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W3.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W3.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W3.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W3.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W3_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W4.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W4_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W4.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W4_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W4.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W4_stm",
+   "pads": [
+    10,
+    10
+   ],
+   "bits": 1024
+  },
+  "dvs_W4.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W4_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W4.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W4.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W4.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W4.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W4_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W5.u_core.u_sub.u_btab.tw_addr": {
+   "src_part": "sl_W5_stm",
+   "pads": [
+    8,
+    8
+   ],
+   "bits": 24
+  },
+  "dvs_W5.u_core.u_sub.u_btab.tw_data": {
+   "src_part": "sl_W5_stm",
+   "pads": [
+    8,
+    12
+   ],
+   "bits": 1024
+  },
+  "dvs_W5.u_core.u_sub.u_fdn.ch_dn_i": {
+   "src_part": "coll_core",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 512
+  },
+  "dvs_W5.u_core.u_sub.u_fdn.cmd_i": {
+   "src_part": "tt_ctlm",
+   "pads": [
     4,
     4
    ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": -2
+   "bits": 116
   },
-  {
-   "lane": null,
-   "src": "glue",
-   "dst": "ucie_kv",
-   "bus_out": "xo_d2d_rom_phy_rst_n",
-   "bus_in": "xi_core_rst_n",
-   "width": 1,
-   "planned_width": null,
-   "param": null,
-   "leaves": [
-    "d2d_rom.phy_rst_n[1]"
+  "dvs_W5.u_core.u_sub.u_fdn.hr_i": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    4,
+    4
    ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
+   "bits": 453
+  },
+  "dvs_W5.u_core.u_sub.u_rp.tw_data": {
+   "src_part": "sl_W5_stm",
+   "pads": [
+    10,
+    10
    ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
+   "bits": 1024
+  },
+  "dvs_W5.u_core.u_sub.u_stm.sid": {
+   "src_part": "sl_W5_ctl",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "dvs_W5.u_core.u_sub.u_xh0.a_d": {
+   "src_part": "sl_W5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "dvs_W5.u_core.u_sub.u_xh0.cid": {
+   "src_part": "sl_W5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "dvs_W5.u_core.u_sub.u_xh3.a_d": {
+   "src_part": "sl_W5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 19
+  },
+  "dvs_W5.u_core.u_sub.u_xh3.cid": {
+   "src_part": "sl_W5_tap",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "embed_prov.embed_scale_addr": {
+   "src_part": "native59",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 18
+  },
+  "embed_prov.embed_scale_re": {
+   "src_part": "native59",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "io_collective.u_io.u_collective.cmd_mode": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "io_collective.u_io.u_collective.cmd_tag": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 32
+  },
+  "io_collective.u_io.u_collective.cmd_v": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "io_collective.u_io.u_collective.cmd_words": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 16
+  },
+  "io_collective.u_io.u_collective.in_last": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
+  },
+  "io_collective.u_io.u_collective.in_mode": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "io_collective.u_io.u_collective.in_tag": {
+   "src_part": "sl_W5_fw",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 32
+  },
+  "native59.head_prepare_position": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 18
+  },
+  "native59.head_prepare_token": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 18
+  },
+  "native59.head_prepare_user": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 2
+  },
+  "native59.head_prepare_v": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "native59.emb_code_q": {
+   "src_part": "glue",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 512
+  },
+  "native59.emb_scale_q": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 16
+  },
+  "native59.kv_x3_slot": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
+  },
+  "native59.native_rx_payload": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 548
+  },
+  "native59.rx_slot": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
+  },
+  "native59.rx_slot_beat": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 5
+  },
+  "native59.rx_slot_kind": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 4
+  },
+  "native59.rx_user": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 2
+  },
+  "native59.tx_user": {
+   "src_part": "glue",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 2
+  },
+  "sys_face.io_cmd_free": {
+   "src_part": "coll_core",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
+  },
+  "sys_face.seq_cfg_image_ready": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 1
+  },
+  "sys_face.seq_dc": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 56
+  },
+  "sys_face.seq_descriptor_obs": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 69
+  },
+  "sys_face.seq_program_obs": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 76
+  },
+  "sys_face.tt_command_stage": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 6
+  },
+  "sys_face.tt_control_stores_ready": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    2,
+    2
+   ],
+   "bits": 1
+  },
+  "sys_face.tt_program_obs": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    1,
+    1
+   ],
+   "bits": 76
+  },
+  "tt_ctlm.ctx_x": {
+   "src_part": "glue",
+   "pads": [
+    5,
+    5
+   ],
+   "bits": 129
+  },
+  "tt_ctlm.dh": {
+   "src_part": "glue",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 187
+  },
+  "tt_ctlm.fab": {
+   "src_part": "glue",
+   "pads": [
+    4,
+    4
+   ],
+   "bits": 1
+  },
+  "tt_ctlm.kok": {
+   "src_part": "glue",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "tt_ctlm.kwd": {
+   "src_part": "glue",
+   "pads": [
+    3,
+    3
+   ],
+   "bits": 1
+  },
+  "tt_ctlm.pw": {
+   "src_part": "glue",
+   "pads": [
+    4,
+    4
+   ],
+   "bits": 75
   }
- ]
+ }
 }

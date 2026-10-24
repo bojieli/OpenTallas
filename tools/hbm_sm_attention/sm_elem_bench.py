@@ -408,18 +408,21 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut="", *, runtime_probability_rows
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
 def build(work, probe, dmut):
-    obj = work / f"obj_p{int(probe)}_d{dmut}"
+    # HBM-P4-SM (10-23): SM_ELEM_DEFINES=OT_SM_QSPLIT[,OT_SM_QSPLIT_MUT=n] = extra build defines (opt-in RTL variants)
+    xdef = [d for d in os.environ.get("SM_ELEM_DEFINES", "").split(",") if d]
+    obj = work / (f"obj_p{int(probe)}_d{dmut}" + "".join("_" + d.replace("=", "") for d in xdef))
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
     cmd = [vl, "--binary", "-j", "16", "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
            "-Wno-MULTIDRIVEN", "--unroll-count", "256", "--top-module", "tb_hbm_smh_attn", "-DOT_SMH_HIER", "-DOT_SMH_FC_HIER",
-           f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + [str(ROOT / s) for s in SRC]
+           f"-GDMUT={dmut}", "--Mdir", str(obj)] + (["-DPROBE"] if probe else []) + [f"-D{d}" for d in xdef] + \
+          [str(ROOT / s) for s in SRC]
     r = subprocess.run(cmd, capture_output=True, text=True)
-    (work / f"build_p{int(probe)}_d{dmut}.log").write_text(r.stdout + r.stderr)
+    (work / f"build_{obj.name[4:]}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
-        raise SystemExit(f"build failed (see {work}/build_p{int(probe)}_d{dmut}.log)")
+        raise SystemExit(f"build failed (see {work}/build_{obj.name[4:]}.log)")
     return exe
 
 

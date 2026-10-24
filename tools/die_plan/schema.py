@@ -157,6 +157,9 @@ SCHEMA = {
                 "properties": {
                     "module": _name,                 # generated wrapper module name
                     "outline_um": _wh,
+                    # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
+                    # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
+                    "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
                     "note": {"type": "string"},
@@ -184,8 +187,12 @@ SCHEMA = {
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
-                        # (OT_TAP_CHECK FAIL suggests it); default budgets.tap_pitch_um
+                        # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
+                        # KV-P6 10-23: "sinks" = taps AT the FIRM-planned sinks (taps.py: radius / cap bounded
+                        # k-medians of face registers + ft stations), no empty taps; default "grid"
+                        "tap_mode": {"enum": ["grid", "sinks"]}, "tap_radius_um": _pos,
+                        "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -223,6 +230,7 @@ SCHEMA = {
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
+                                       "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
@@ -232,6 +240,14 @@ SCHEMA = {
                     "nets": {"type": "array", "items": {                         # internal leaf-to-leaf nets
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "width": {"type": "integer", "minimum": 1}}}},
+                    # R3-INTERNAL (COORD 10-23 18:15): FIRM stations of an internal reg-reg connection > 750 um
+                    # (face window -> internal block, block -> block); type frame; every hop <= ft_station_max_um
+                    "internal_stations": {"type": "array", "items": {
+                        "type": "object", "required": ["from_um", "to_um", "regs_um"], "additionalProperties": False,
+                        "properties": {"conn": {"type": "string"},    # "bus:<bus>" | "<leaf inst>.<port>" | "<a>|<b>"
+                                       "from_um": _xy, "to_um": _xy, "regs_um": {"type": "array", "items": _xy},
+                                       "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
+                                       "capture": {"type": "string"}, "note": {"type": "string"}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -279,6 +295,10 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
+            # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
+            # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
+            # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
+            "common_latency_ps": _pos,
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
@@ -387,6 +407,8 @@ class Plan:
         self.ports = {p["id"]: self._resolve_port(p) for p in raw["ports"]}
         self.lanes = {l["id"]: l for l in raw["lanes"]}
         self.clock = dict(DEFAULT_CLOCK, **raw.get("clock", {}))
+        if "common_latency_ps" in self.clock:       # R4 owner rule: the ONE die-wide target is the insertion every
+            self.clock["insertion_ps"] = float(self.clock["common_latency_ps"])   # kit balances to + vclk latency
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
 
@@ -694,7 +716,12 @@ class Plan:
 
 
 def tap_pitch(P, tn):
-    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um."""
+    """R4 revised: the type's tap pitch (clock.tap_pitch_um, sized from the measured trees) else budgets.tap_pitch_um.
+    Sink-anchored taps (clock.tap_mode "sinks"): 2 x clock.tap_radius_um (clock_taps.tcl re-assigns a sink over at
+    most pitch/2 = the radius)."""
+    ck = P.types[tn].get("clock", {})
+    if ck.get("tap_mode") == "sinks":
+        return 2.0 * float(ck.get("tap_radius_um", 250.0))
     return float(P.types[tn].get("clock", {}).get("tap_pitch_um", P.budgets.get("tap_pitch_um", 600.0)))
 
 
@@ -704,6 +731,10 @@ def tap_grid(P, tn):
     within ~300 um of a tap.  A type that fits one cell keeps its clock.tap_um.  Tap 0 is the port 'clk', the others
     'clk_t<i>' (row-major from the type's SW corner); the kit connects each flop to its nearest tap (clock_taps.tcl)."""
     t = P.types[tn]
+    if t.get("clock", {}).get("tap_mode") == "sinks":
+        # sink-anchored taps (taps.py): every tap carries FIRM-planned sinks within clock.tap_radius_um
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.sink_taps(P, tn)]
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))

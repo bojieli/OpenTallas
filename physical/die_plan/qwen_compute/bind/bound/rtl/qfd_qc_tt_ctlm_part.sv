@@ -8,15 +8,15 @@ module qfd_qc_tt_ctlm_part (
     input  wire arst_n,
     input  wire [10:0] ag5,   // 10 data + epoch [10]: lane sl_W5_fw__ag_wo_ag5, 4 cycles: sl_W5_fw ag_dn_o[10] -> tt_ctlm
     input  wire [129:0] ctx_x,   // 129 data + epoch [129]: lane glue__ctx_x_ctx_x, 4 cycles: glue ctx_x[129] -> tt_ctlm
-    input  wire [187:0] dh,   // 187 data + epoch [187]: lane glue__seq_dh_dh, 4 cycles: glue dh_user[1], mu_fault[1], seq_dh[185] -> tt_ctlm
-    input  wire [2:0] dh_user,   // 2 data + epoch [2]: lane glue__dh_user_dh_user, 4 cycles: glue mu_fault[1], dh_user[1] -> tt_ctlm
-    input  wire [1:0] fab,   // 1 data + epoch [1]: lane glue__tt_fab_fab, 4 cycles: glue seq_dh[1] -> tt_ctlm
-    input  wire [1:0] kok,   // 1 data + epoch [1]: lane glue__tt_kok_kok, 4 cycles: glue seq_dh[1] -> tt_ctlm
-    input  wire [1:0] kwd,   // 1 data + epoch [1]: lane glue__tt_kwd_kwd, 4 cycles: glue tt_fab[1] -> tt_ctlm
+    input  wire [187:0] dh,   // 187 data + epoch [187]: lane glue__seq_dh_dh, 4 cycles: glue seq_dh[187] -> tt_ctlm
+    input  wire [2:0] dh_user,   // 2 data + epoch [2]: lane glue__dh_user_dh_user, 4 cycles: glue dh_user[2] -> tt_ctlm
+    input  wire [1:0] fab,   // 1 data + epoch [1]: lane glue__tt_fab_fab, 4 cycles: glue tt_fab[1] -> tt_ctlm
+    input  wire [1:0] kok,   // 1 data + epoch [1]: lane glue__tt_kok_kok, 4 cycles: glue tt_kok[1] -> tt_ctlm
+    input  wire [1:0] kwd,   // 1 data + epoch [1]: lane glue__tt_kwd_kwd, 4 cycles: glue tt_kwd[1] -> tt_ctlm
+    input  wire [2:0] mu_flt_i,   // 2 data + epoch [2]: lane glue__mufl, 4 cycles: glue mu_fault[2] -> tt_ctlm
     input  wire [95:0] native_ret,   // 95 data + epoch [95]: lane native59__native_ret_native_ret, 2 cycles: native59 native_ret[95] -> tt_ctlm
-    input  wire [75:0] pw,   // 75 data + epoch [75]: lane glue__tt_pw_pw, 4 cycles: glue tt_kok[1], tt_kwd[1], tt_pw[73] -> tt_ctlm
+    input  wire [75:0] pw,   // 75 data + epoch [75]: lane glue__tt_pw_pw, 4 cycles: glue tt_pw[75] -> tt_ctlm
     input  wire [107:0] ss5,   // 107 data + epoch [107]: lane sl_W5_fw__ss_wo_ss5, 4 cycles: sl_W5_fw st[107] -> tt_ctlm
-    input  wire [2:0] xi_core_pw,   // 2 data + epoch [2]: UNPLANNED direct: glue tt_pw[2] -> tt_ctlm
     output wire [69:0] cal_descriptor_obs,   // 69 data + epoch [69]: lane tt_ctlm__cal_descriptor_obs_seq_descriptor_obs, 4 cycles: cal_descriptor_obs[69] -> glue
     output wire [1:0] cal_image_ready,   // 1 data + epoch [1]: lane tt_ctlm__cal_image_ready_seq_cfg_image_ready, 4 cycles: cal_image_ready[1] -> glue
     output wire [76:0] cal_program_obs,   // 76 data + epoch [76]: lane tt_ctlm__cal_program_obs_seq_program_obs, 4 cycles: cal_program_obs[76] -> glue
@@ -57,14 +57,14 @@ module qfd_qc_tt_ctlm_part (
     wire kok_eq;
     wire [0:0] kwd_q;
     wire kwd_eq;
+    wire [1:0] mu_flt_i_q;
+    wire mu_flt_i_eq;
     wire [94:0] native_ret_q;
     wire native_ret_eq;
     wire [74:0] pw_q;
     wire pw_eq;
     wire [106:0] ss5_q;
     wire ss5_eq;
-    wire [1:0] xi_core_pw_q;
-    wire xi_core_pw_eq;
     wire [68:0] w_core_cal_descriptor_obs;
     wire [0:0] w_core_cal_image_ready;
     wire [75:0] w_core_cal_program_obs;
@@ -84,7 +84,401 @@ module qfd_qc_tt_ctlm_part (
     wire [17:0] w_core_native_tok;
     wire [75:0] w_core_program_obs;
     wire [1087:0] w_core_tl;
+    wire [0:0] pd5_ctx_x_0;
+    wire [0:0] pd5_ctx_x_1;
+    wire [0:0] pd5_ctx_x_2;
+    wire [0:0] pd5_ctx_x_3;
+    wire [0:0] pd5_ctx_x_4;
+    wire [0:0] pd5_ctx_x_5;
+    wire [0:0] pd5_ctx_x_6;
+    wire [0:0] pd5_ctx_x_7;
+    wire [0:0] pd5_ctx_x_8;
+    wire [0:0] pd5_ctx_x_9;
+    wire [0:0] pd5_ctx_x_10;
+    wire [0:0] pd5_ctx_x_11;
+    wire [0:0] pd5_ctx_x_12;
+    wire [0:0] pd5_ctx_x_13;
+    wire [0:0] pd5_ctx_x_14;
+    wire [0:0] pd5_ctx_x_15;
+    wire [0:0] pd5_ctx_x_16;
+    wire [0:0] pd5_ctx_x_17;
+    wire [0:0] pd5_ctx_x_18;
+    wire [0:0] pd5_ctx_x_19;
+    wire [0:0] pd5_ctx_x_20;
+    wire [0:0] pd5_ctx_x_21;
+    wire [0:0] pd5_ctx_x_22;
+    wire [0:0] pd5_ctx_x_23;
+    wire [0:0] pd5_ctx_x_24;
+    wire [0:0] pd5_ctx_x_25;
+    wire [0:0] pd5_ctx_x_26;
+    wire [0:0] pd5_ctx_x_27;
+    wire [0:0] pd5_ctx_x_28;
+    wire [0:0] pd5_ctx_x_29;
+    wire [0:0] pd5_ctx_x_30;
+    wire [0:0] pd5_ctx_x_31;
+    wire [0:0] pd5_ctx_x_32;
+    wire [0:0] pd5_ctx_x_33;
+    wire [0:0] pd5_ctx_x_34;
+    wire [0:0] pd5_ctx_x_35;
+    wire [0:0] pd5_ctx_x_36;
+    wire [0:0] pd5_ctx_x_37;
+    wire [0:0] pd5_ctx_x_38;
+    wire [0:0] pd5_ctx_x_39;
+    wire [0:0] pd5_ctx_x_40;
+    wire [0:0] pd5_ctx_x_41;
+    wire [0:0] pd5_ctx_x_42;
+    wire [0:0] pd5_ctx_x_43;
+    wire [0:0] pd5_ctx_x_44;
+    wire [0:0] pd5_ctx_x_45;
+    wire [0:0] pd5_ctx_x_46;
+    wire [0:0] pd5_ctx_x_47;
+    wire [0:0] pd5_ctx_x_48;
+    wire [0:0] pd5_ctx_x_49;
+    wire [0:0] pd5_ctx_x_50;
+    wire [0:0] pd5_ctx_x_51;
+    wire [0:0] pd5_ctx_x_52;
+    wire [0:0] pd5_ctx_x_53;
+    wire [0:0] pd5_ctx_x_54;
+    wire [0:0] pd5_ctx_x_55;
+    wire [0:0] pd5_ctx_x_56;
+    wire [0:0] pd5_ctx_x_57;
+    wire [0:0] pd5_ctx_x_58;
+    wire [0:0] pd5_ctx_x_59;
+    wire [0:0] pd5_ctx_x_60;
+    wire [0:0] pd5_ctx_x_61;
+    wire [0:0] pd5_ctx_x_62;
+    wire [0:0] pd5_ctx_x_63;
+    wire [0:0] pd5_ctx_x_64;
+    wire [0:0] pd5_ctx_x_65;
+    wire [0:0] pd5_ctx_x_66;
+    wire [0:0] pd5_ctx_x_67;
+    wire [0:0] pd5_ctx_x_68;
+    wire [0:0] pd5_ctx_x_69;
+    wire [0:0] pd5_ctx_x_70;
+    wire [0:0] pd5_ctx_x_71;
+    wire [0:0] pd5_ctx_x_72;
+    wire [0:0] pd5_ctx_x_73;
+    wire [0:0] pd5_ctx_x_74;
+    wire [0:0] pd5_ctx_x_75;
+    wire [0:0] pd5_ctx_x_76;
+    wire [0:0] pd5_ctx_x_77;
+    wire [0:0] pd5_ctx_x_78;
+    wire [0:0] pd5_ctx_x_79;
+    wire [0:0] pd5_ctx_x_80;
+    wire [0:0] pd5_ctx_x_81;
+    wire [0:0] pd5_ctx_x_82;
+    wire [0:0] pd5_ctx_x_83;
+    wire [0:0] pd5_ctx_x_84;
+    wire [0:0] pd5_ctx_x_85;
+    wire [0:0] pd5_ctx_x_86;
+    wire [0:0] pd5_ctx_x_87;
+    wire [0:0] pd5_ctx_x_88;
+    wire [0:0] pd5_ctx_x_89;
+    wire [0:0] pd5_ctx_x_90;
+    wire [0:0] pd5_ctx_x_91;
+    wire [0:0] pd5_ctx_x_92;
+    wire [0:0] pd5_ctx_x_93;
+    wire [0:0] pd5_ctx_x_94;
+    wire [0:0] pd5_ctx_x_95;
+    wire [0:0] pd5_ctx_x_96;
+    wire [0:0] pd5_ctx_x_97;
+    wire [0:0] pd5_ctx_x_98;
+    wire [0:0] pd5_ctx_x_99;
+    wire [0:0] pd5_ctx_x_100;
+    wire [0:0] pd5_ctx_x_101;
+    wire [0:0] pd5_ctx_x_102;
+    wire [0:0] pd5_ctx_x_103;
+    wire [0:0] pd5_ctx_x_104;
+    wire [0:0] pd5_ctx_x_105;
+    wire [0:0] pd5_ctx_x_106;
+    wire [0:0] pd5_ctx_x_107;
+    wire [0:0] pd5_ctx_x_108;
+    wire [0:0] pd5_ctx_x_109;
+    wire [0:0] pd5_ctx_x_110;
+    wire [0:0] pd5_ctx_x_111;
+    wire [0:0] pd5_ctx_x_112;
+    wire [0:0] pd5_ctx_x_113;
+    wire [0:0] pd5_ctx_x_114;
+    wire [0:0] pd5_ctx_x_115;
+    wire [0:0] pd5_ctx_x_116;
+    wire [0:0] pd5_ctx_x_117;
+    wire [0:0] pd5_ctx_x_118;
+    wire [0:0] pd5_ctx_x_119;
+    wire [0:0] pd5_ctx_x_120;
+    wire [0:0] pd5_ctx_x_121;
+    wire [0:0] pd5_ctx_x_122;
+    wire [0:0] pd5_ctx_x_123;
+    wire [0:0] pd5_ctx_x_124;
+    wire [0:0] pd5_ctx_x_125;
+    wire [0:0] pd5_ctx_x_126;
+    wire [0:0] pd5_ctx_x_127;
+    wire [0:0] pd5_ctx_x_128;
+    wire [0:0] pd3_dh_0;
+    wire [0:0] pd3_dh_1;
+    wire [0:0] pd3_dh_2;
+    wire [0:0] pd3_dh_3;
+    wire [0:0] pd3_dh_4;
+    wire [0:0] pd3_dh_5;
+    wire [0:0] pd3_dh_6;
+    wire [0:0] pd3_dh_7;
+    wire [0:0] pd3_dh_8;
+    wire [0:0] pd3_dh_9;
+    wire [0:0] pd3_dh_10;
+    wire [0:0] pd3_dh_11;
+    wire [0:0] pd3_dh_12;
+    wire [0:0] pd3_dh_13;
+    wire [0:0] pd3_dh_14;
+    wire [0:0] pd3_dh_15;
+    wire [0:0] pd3_dh_16;
+    wire [0:0] pd3_dh_17;
+    wire [0:0] pd3_dh_18;
+    wire [0:0] pd3_dh_19;
+    wire [0:0] pd3_dh_20;
+    wire [0:0] pd3_dh_21;
+    wire [0:0] pd3_dh_22;
+    wire [0:0] pd3_dh_23;
+    wire [0:0] pd3_dh_24;
+    wire [0:0] pd3_dh_25;
+    wire [0:0] pd3_dh_26;
+    wire [0:0] pd3_dh_27;
+    wire [0:0] pd3_dh_28;
+    wire [0:0] pd3_dh_29;
+    wire [0:0] pd3_dh_30;
+    wire [0:0] pd3_dh_31;
+    wire [0:0] pd3_dh_32;
+    wire [0:0] pd3_dh_33;
+    wire [0:0] pd3_dh_34;
+    wire [0:0] pd3_dh_35;
+    wire [0:0] pd3_dh_36;
+    wire [0:0] pd3_dh_37;
+    wire [0:0] pd3_dh_38;
+    wire [0:0] pd3_dh_39;
+    wire [0:0] pd3_dh_40;
+    wire [0:0] pd3_dh_41;
+    wire [0:0] pd3_dh_42;
+    wire [0:0] pd3_dh_43;
+    wire [0:0] pd3_dh_44;
+    wire [0:0] pd3_dh_45;
+    wire [0:0] pd3_dh_46;
+    wire [0:0] pd3_dh_47;
+    wire [0:0] pd3_dh_48;
+    wire [0:0] pd3_dh_49;
+    wire [0:0] pd3_dh_50;
+    wire [0:0] pd3_dh_51;
+    wire [0:0] pd3_dh_52;
+    wire [0:0] pd3_dh_53;
+    wire [0:0] pd3_dh_54;
+    wire [0:0] pd3_dh_55;
+    wire [0:0] pd3_dh_56;
+    wire [0:0] pd3_dh_57;
+    wire [0:0] pd3_dh_58;
+    wire [0:0] pd3_dh_59;
+    wire [0:0] pd3_dh_60;
+    wire [0:0] pd3_dh_61;
+    wire [0:0] pd3_dh_62;
+    wire [0:0] pd3_dh_63;
+    wire [0:0] pd3_dh_64;
+    wire [0:0] pd3_dh_65;
+    wire [0:0] pd3_dh_66;
+    wire [0:0] pd3_dh_67;
+    wire [0:0] pd3_dh_68;
+    wire [0:0] pd3_dh_69;
+    wire [0:0] pd3_dh_70;
+    wire [0:0] pd3_dh_71;
+    wire [0:0] pd3_dh_72;
+    wire [0:0] pd3_dh_73;
+    wire [0:0] pd3_dh_74;
+    wire [0:0] pd3_dh_75;
+    wire [0:0] pd3_dh_76;
+    wire [0:0] pd3_dh_77;
+    wire [0:0] pd3_dh_78;
+    wire [0:0] pd3_dh_79;
+    wire [0:0] pd3_dh_80;
+    wire [0:0] pd3_dh_81;
+    wire [0:0] pd3_dh_82;
+    wire [0:0] pd3_dh_83;
+    wire [0:0] pd3_dh_84;
+    wire [0:0] pd3_dh_85;
+    wire [0:0] pd3_dh_86;
+    wire [0:0] pd3_dh_87;
+    wire [0:0] pd3_dh_88;
+    wire [0:0] pd3_dh_89;
+    wire [0:0] pd3_dh_90;
+    wire [0:0] pd3_dh_91;
+    wire [0:0] pd3_dh_92;
+    wire [0:0] pd3_dh_93;
+    wire [0:0] pd3_dh_94;
+    wire [0:0] pd3_dh_95;
+    wire [0:0] pd3_dh_96;
+    wire [0:0] pd3_dh_97;
+    wire [0:0] pd3_dh_98;
+    wire [0:0] pd3_dh_99;
+    wire [0:0] pd3_dh_100;
+    wire [0:0] pd3_dh_101;
+    wire [0:0] pd3_dh_102;
+    wire [0:0] pd3_dh_103;
+    wire [0:0] pd3_dh_104;
+    wire [0:0] pd3_dh_105;
+    wire [0:0] pd3_dh_106;
+    wire [0:0] pd3_dh_107;
+    wire [0:0] pd3_dh_108;
+    wire [0:0] pd3_dh_109;
+    wire [0:0] pd3_dh_110;
+    wire [0:0] pd3_dh_111;
+    wire [0:0] pd3_dh_112;
+    wire [0:0] pd3_dh_113;
+    wire [0:0] pd3_dh_114;
+    wire [0:0] pd3_dh_115;
+    wire [0:0] pd3_dh_116;
+    wire [0:0] pd3_dh_117;
+    wire [0:0] pd3_dh_118;
+    wire [0:0] pd3_dh_119;
+    wire [0:0] pd3_dh_120;
+    wire [0:0] pd3_dh_121;
+    wire [0:0] pd3_dh_122;
+    wire [0:0] pd3_dh_123;
+    wire [0:0] pd3_dh_124;
+    wire [0:0] pd3_dh_125;
+    wire [0:0] pd3_dh_126;
+    wire [0:0] pd3_dh_127;
+    wire [0:0] pd3_dh_128;
+    wire [0:0] pd3_dh_129;
+    wire [0:0] pd3_dh_130;
+    wire [0:0] pd3_dh_131;
+    wire [0:0] pd3_dh_132;
+    wire [0:0] pd3_dh_133;
+    wire [0:0] pd3_dh_134;
+    wire [0:0] pd3_dh_135;
+    wire [0:0] pd3_dh_136;
+    wire [0:0] pd3_dh_137;
+    wire [0:0] pd3_dh_138;
+    wire [0:0] pd3_dh_139;
+    wire [0:0] pd3_dh_140;
+    wire [0:0] pd3_dh_141;
+    wire [0:0] pd3_dh_142;
+    wire [0:0] pd3_dh_143;
+    wire [0:0] pd3_dh_144;
+    wire [0:0] pd3_dh_145;
+    wire [0:0] pd3_dh_146;
+    wire [0:0] pd3_dh_147;
+    wire [0:0] pd3_dh_148;
+    wire [0:0] pd3_dh_149;
+    wire [0:0] pd3_dh_150;
+    wire [0:0] pd3_dh_151;
+    wire [0:0] pd3_dh_152;
+    wire [0:0] pd3_dh_153;
+    wire [0:0] pd3_dh_154;
+    wire [0:0] pd3_dh_155;
+    wire [0:0] pd3_dh_156;
+    wire [0:0] pd3_dh_157;
+    wire [0:0] pd3_dh_158;
+    wire [0:0] pd3_dh_159;
+    wire [0:0] pd3_dh_160;
+    wire [0:0] pd3_dh_161;
+    wire [0:0] pd3_dh_162;
+    wire [0:0] pd3_dh_163;
+    wire [0:0] pd3_dh_164;
+    wire [0:0] pd3_dh_165;
+    wire [0:0] pd3_dh_166;
+    wire [0:0] pd3_dh_167;
+    wire [0:0] pd3_dh_168;
+    wire [0:0] pd3_dh_169;
+    wire [0:0] pd3_dh_170;
+    wire [0:0] pd3_dh_171;
+    wire [0:0] pd3_dh_172;
+    wire [0:0] pd3_dh_173;
+    wire [0:0] pd3_dh_174;
+    wire [0:0] pd3_dh_175;
+    wire [0:0] pd3_dh_176;
+    wire [0:0] pd3_dh_177;
+    wire [0:0] pd3_dh_178;
+    wire [0:0] pd3_dh_179;
+    wire [0:0] pd3_dh_180;
+    wire [0:0] pd3_dh_181;
+    wire [0:0] pd3_dh_182;
+    wire [0:0] pd3_dh_183;
+    wire [0:0] pd3_dh_184;
+    wire [0:0] pd3_dh_185;
+    wire [0:0] pd3_dh_186;
+    wire [0:0] pd4_fab_0;
+    wire [0:0] pd3_kok_0;
+    wire [0:0] pd3_kwd_0;
     wire or_0;
+    wire [0:0] pd4_pw_0;
+    wire [0:0] pd4_pw_1;
+    wire [0:0] pd4_pw_2;
+    wire [0:0] pd4_pw_3;
+    wire [0:0] pd4_pw_4;
+    wire [0:0] pd4_pw_5;
+    wire [0:0] pd4_pw_6;
+    wire [0:0] pd4_pw_7;
+    wire [0:0] pd4_pw_8;
+    wire [0:0] pd4_pw_9;
+    wire [0:0] pd4_pw_10;
+    wire [0:0] pd4_pw_11;
+    wire [0:0] pd4_pw_12;
+    wire [0:0] pd4_pw_13;
+    wire [0:0] pd4_pw_14;
+    wire [0:0] pd4_pw_15;
+    wire [0:0] pd4_pw_16;
+    wire [0:0] pd4_pw_17;
+    wire [0:0] pd4_pw_18;
+    wire [0:0] pd4_pw_19;
+    wire [0:0] pd4_pw_20;
+    wire [0:0] pd4_pw_21;
+    wire [0:0] pd4_pw_22;
+    wire [0:0] pd4_pw_23;
+    wire [0:0] pd4_pw_24;
+    wire [0:0] pd4_pw_25;
+    wire [0:0] pd4_pw_26;
+    wire [0:0] pd4_pw_27;
+    wire [0:0] pd4_pw_28;
+    wire [0:0] pd4_pw_29;
+    wire [0:0] pd4_pw_30;
+    wire [0:0] pd4_pw_31;
+    wire [0:0] pd4_pw_32;
+    wire [0:0] pd4_pw_33;
+    wire [0:0] pd4_pw_34;
+    wire [0:0] pd4_pw_35;
+    wire [0:0] pd4_pw_36;
+    wire [0:0] pd4_pw_37;
+    wire [0:0] pd4_pw_38;
+    wire [0:0] pd4_pw_39;
+    wire [0:0] pd4_pw_40;
+    wire [0:0] pd4_pw_41;
+    wire [0:0] pd4_pw_42;
+    wire [0:0] pd4_pw_43;
+    wire [0:0] pd4_pw_44;
+    wire [0:0] pd4_pw_45;
+    wire [0:0] pd4_pw_46;
+    wire [0:0] pd4_pw_47;
+    wire [0:0] pd4_pw_48;
+    wire [0:0] pd4_pw_49;
+    wire [0:0] pd4_pw_50;
+    wire [0:0] pd4_pw_51;
+    wire [0:0] pd4_pw_52;
+    wire [0:0] pd4_pw_53;
+    wire [0:0] pd4_pw_54;
+    wire [0:0] pd4_pw_55;
+    wire [0:0] pd4_pw_56;
+    wire [0:0] pd4_pw_57;
+    wire [0:0] pd4_pw_58;
+    wire [0:0] pd4_pw_59;
+    wire [0:0] pd4_pw_60;
+    wire [0:0] pd4_pw_61;
+    wire [0:0] pd4_pw_62;
+    wire [0:0] pd4_pw_63;
+    wire [0:0] pd4_pw_64;
+    wire [0:0] pd4_pw_65;
+    wire [0:0] pd4_pw_66;
+    wire [0:0] pd4_pw_67;
+    wire [0:0] pd4_pw_68;
+    wire [0:0] pd4_pw_69;
+    wire [0:0] pd4_pw_70;
+    wire [0:0] pd4_pw_71;
+    wire [0:0] pd4_pw_72;
+    wire [0:0] pd4_pw_73;
+    wire [0:0] pd4_pw_74;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
     ot_dp_st #(.W(10)) u_bin_ag5 (.clk(clk), .rst_n(rst_n), .d(ag5[9:0]), .ea(ag5[10]), .q(ag5_q), .eq(ag5_eq));
@@ -94,10 +488,10 @@ module qfd_qc_tt_ctlm_part (
     ot_dp_st #(.W(1)) u_bin_fab (.clk(clk), .rst_n(rst_n), .d(fab[0:0]), .ea(fab[1]), .q(fab_q), .eq(fab_eq));
     ot_dp_st #(.W(1)) u_bin_kok (.clk(clk), .rst_n(rst_n), .d(kok[0:0]), .ea(kok[1]), .q(kok_q), .eq(kok_eq));
     ot_dp_st #(.W(1)) u_bin_kwd (.clk(clk), .rst_n(rst_n), .d(kwd[0:0]), .ea(kwd[1]), .q(kwd_q), .eq(kwd_eq));
+    ot_dp_st #(.W(2)) u_bin_mu_flt_i (.clk(clk), .rst_n(rst_n), .d(mu_flt_i[1:0]), .ea(mu_flt_i[2]), .q(mu_flt_i_q), .eq(mu_flt_i_eq));
     ot_dp_st #(.W(95)) u_bin_native_ret (.clk(clk), .rst_n(rst_n), .d(native_ret[94:0]), .ea(native_ret[95]), .q(native_ret_q), .eq(native_ret_eq));
     ot_dp_st #(.W(75)) u_bin_pw (.clk(clk), .rst_n(rst_n), .d(pw[74:0]), .ea(pw[75]), .q(pw_q), .eq(pw_eq));
     ot_dp_st #(.W(107)) u_bin_ss5 (.clk(clk), .rst_n(rst_n), .d(ss5[106:0]), .ea(ss5[107]), .q(ss5_q), .eq(ss5_eq));
-    ot_dp_st #(.W(2)) u_bin_xi_core_pw (.clk(clk), .rst_n(rst_n), .d(xi_core_pw[1:0]), .ea(xi_core_pw[2]), .q(xi_core_pw_q), .eq(xi_core_pw_eq));
     ot_dp_st #(.W(69)) u_bout_cal_descriptor_obs (.clk(clk), .rst_n(rst_n), .d(w_core_cal_descriptor_obs[68:0]), .ea(rst_n), .q(cal_descriptor_obs[68:0]), .eq(cal_descriptor_obs[69]));
     ot_dp_st #(.W(1)) u_bout_cal_image_ready (.clk(clk), .rst_n(rst_n), .d(w_core_cal_image_ready[0]), .ea(rst_n), .q(cal_image_ready[0:0]), .eq(cal_image_ready[1]));
     ot_dp_st #(.W(76)) u_bout_cal_program_obs (.clk(clk), .rst_n(rst_n), .d(w_core_cal_program_obs[75:0]), .ea(rst_n), .q(cal_program_obs[75:0]), .eq(cal_program_obs[76]));
@@ -123,7 +517,401 @@ module qfd_qc_tt_ctlm_part (
     ot_dp_st #(.W(18)) u_bout_native_tok__to_native59__native_token (.clk(clk), .rst_n(rst_n), .d(w_core_native_tok[17:0]), .ea(rst_n), .q(native_tok__to_native59__native_token[17:0]), .eq(native_tok__to_native59__native_token[18]));
     ot_dp_st #(.W(76)) u_bout_program_obs (.clk(clk), .rst_n(rst_n), .d(w_core_program_obs[75:0]), .ea(rst_n), .q(program_obs[75:0]), .eq(program_obs[76]));
     ot_dp_st #(.W(1088)) u_bout_tl (.clk(clk), .rst_n(rst_n), .d(w_core_tl[1087:0]), .ea(rst_n), .q(tl[1087:0]), .eq(tl[1088]));
-    ot_dp_or #(.N(2)) u_or_0 (.a({dh_q[1], dh_user_q[0]}), .y(or_0));  // re-emitted fault OR
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_0 (.clk(clk), .d(ctx_x_q[0]), .q(pd5_ctx_x_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_1 (.clk(clk), .d(ctx_x_q[1]), .q(pd5_ctx_x_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_2 (.clk(clk), .d(ctx_x_q[2]), .q(pd5_ctx_x_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_3 (.clk(clk), .d(ctx_x_q[3]), .q(pd5_ctx_x_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_4 (.clk(clk), .d(ctx_x_q[4]), .q(pd5_ctx_x_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_5 (.clk(clk), .d(ctx_x_q[5]), .q(pd5_ctx_x_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_6 (.clk(clk), .d(ctx_x_q[6]), .q(pd5_ctx_x_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_7 (.clk(clk), .d(ctx_x_q[7]), .q(pd5_ctx_x_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_8 (.clk(clk), .d(ctx_x_q[8]), .q(pd5_ctx_x_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_9 (.clk(clk), .d(ctx_x_q[9]), .q(pd5_ctx_x_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_10 (.clk(clk), .d(ctx_x_q[10]), .q(pd5_ctx_x_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_11 (.clk(clk), .d(ctx_x_q[11]), .q(pd5_ctx_x_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_12 (.clk(clk), .d(ctx_x_q[12]), .q(pd5_ctx_x_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_13 (.clk(clk), .d(ctx_x_q[13]), .q(pd5_ctx_x_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_14 (.clk(clk), .d(ctx_x_q[14]), .q(pd5_ctx_x_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_15 (.clk(clk), .d(ctx_x_q[15]), .q(pd5_ctx_x_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_16 (.clk(clk), .d(ctx_x_q[16]), .q(pd5_ctx_x_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_17 (.clk(clk), .d(ctx_x_q[17]), .q(pd5_ctx_x_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_18 (.clk(clk), .d(ctx_x_q[18]), .q(pd5_ctx_x_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_19 (.clk(clk), .d(ctx_x_q[19]), .q(pd5_ctx_x_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_20 (.clk(clk), .d(ctx_x_q[20]), .q(pd5_ctx_x_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_21 (.clk(clk), .d(ctx_x_q[21]), .q(pd5_ctx_x_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_22 (.clk(clk), .d(ctx_x_q[22]), .q(pd5_ctx_x_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_23 (.clk(clk), .d(ctx_x_q[23]), .q(pd5_ctx_x_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_24 (.clk(clk), .d(ctx_x_q[24]), .q(pd5_ctx_x_24));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_25 (.clk(clk), .d(ctx_x_q[25]), .q(pd5_ctx_x_25));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_26 (.clk(clk), .d(ctx_x_q[26]), .q(pd5_ctx_x_26));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_27 (.clk(clk), .d(ctx_x_q[27]), .q(pd5_ctx_x_27));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_28 (.clk(clk), .d(ctx_x_q[28]), .q(pd5_ctx_x_28));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_29 (.clk(clk), .d(ctx_x_q[29]), .q(pd5_ctx_x_29));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_30 (.clk(clk), .d(ctx_x_q[30]), .q(pd5_ctx_x_30));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_31 (.clk(clk), .d(ctx_x_q[31]), .q(pd5_ctx_x_31));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_32 (.clk(clk), .d(ctx_x_q[32]), .q(pd5_ctx_x_32));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_33 (.clk(clk), .d(ctx_x_q[33]), .q(pd5_ctx_x_33));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_34 (.clk(clk), .d(ctx_x_q[34]), .q(pd5_ctx_x_34));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_35 (.clk(clk), .d(ctx_x_q[35]), .q(pd5_ctx_x_35));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_36 (.clk(clk), .d(ctx_x_q[36]), .q(pd5_ctx_x_36));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_37 (.clk(clk), .d(ctx_x_q[37]), .q(pd5_ctx_x_37));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_38 (.clk(clk), .d(ctx_x_q[38]), .q(pd5_ctx_x_38));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_39 (.clk(clk), .d(ctx_x_q[39]), .q(pd5_ctx_x_39));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_40 (.clk(clk), .d(ctx_x_q[40]), .q(pd5_ctx_x_40));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_41 (.clk(clk), .d(ctx_x_q[41]), .q(pd5_ctx_x_41));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_42 (.clk(clk), .d(ctx_x_q[42]), .q(pd5_ctx_x_42));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_43 (.clk(clk), .d(ctx_x_q[43]), .q(pd5_ctx_x_43));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_44 (.clk(clk), .d(ctx_x_q[44]), .q(pd5_ctx_x_44));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_45 (.clk(clk), .d(ctx_x_q[45]), .q(pd5_ctx_x_45));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_46 (.clk(clk), .d(ctx_x_q[46]), .q(pd5_ctx_x_46));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_47 (.clk(clk), .d(ctx_x_q[47]), .q(pd5_ctx_x_47));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_48 (.clk(clk), .d(ctx_x_q[48]), .q(pd5_ctx_x_48));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_49 (.clk(clk), .d(ctx_x_q[49]), .q(pd5_ctx_x_49));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_50 (.clk(clk), .d(ctx_x_q[50]), .q(pd5_ctx_x_50));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_51 (.clk(clk), .d(ctx_x_q[51]), .q(pd5_ctx_x_51));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_52 (.clk(clk), .d(ctx_x_q[52]), .q(pd5_ctx_x_52));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_53 (.clk(clk), .d(ctx_x_q[53]), .q(pd5_ctx_x_53));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_54 (.clk(clk), .d(ctx_x_q[54]), .q(pd5_ctx_x_54));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_55 (.clk(clk), .d(ctx_x_q[55]), .q(pd5_ctx_x_55));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_56 (.clk(clk), .d(ctx_x_q[56]), .q(pd5_ctx_x_56));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_57 (.clk(clk), .d(ctx_x_q[57]), .q(pd5_ctx_x_57));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_58 (.clk(clk), .d(ctx_x_q[58]), .q(pd5_ctx_x_58));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_59 (.clk(clk), .d(ctx_x_q[59]), .q(pd5_ctx_x_59));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_60 (.clk(clk), .d(ctx_x_q[60]), .q(pd5_ctx_x_60));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_61 (.clk(clk), .d(ctx_x_q[61]), .q(pd5_ctx_x_61));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_62 (.clk(clk), .d(ctx_x_q[62]), .q(pd5_ctx_x_62));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_63 (.clk(clk), .d(ctx_x_q[63]), .q(pd5_ctx_x_63));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_64 (.clk(clk), .d(ctx_x_q[64]), .q(pd5_ctx_x_64));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_65 (.clk(clk), .d(ctx_x_q[65]), .q(pd5_ctx_x_65));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_66 (.clk(clk), .d(ctx_x_q[66]), .q(pd5_ctx_x_66));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_67 (.clk(clk), .d(ctx_x_q[67]), .q(pd5_ctx_x_67));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_68 (.clk(clk), .d(ctx_x_q[68]), .q(pd5_ctx_x_68));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_69 (.clk(clk), .d(ctx_x_q[69]), .q(pd5_ctx_x_69));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_70 (.clk(clk), .d(ctx_x_q[70]), .q(pd5_ctx_x_70));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_71 (.clk(clk), .d(ctx_x_q[71]), .q(pd5_ctx_x_71));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_72 (.clk(clk), .d(ctx_x_q[72]), .q(pd5_ctx_x_72));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_73 (.clk(clk), .d(ctx_x_q[73]), .q(pd5_ctx_x_73));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_74 (.clk(clk), .d(ctx_x_q[74]), .q(pd5_ctx_x_74));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_75 (.clk(clk), .d(ctx_x_q[75]), .q(pd5_ctx_x_75));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_76 (.clk(clk), .d(ctx_x_q[76]), .q(pd5_ctx_x_76));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_77 (.clk(clk), .d(ctx_x_q[77]), .q(pd5_ctx_x_77));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_78 (.clk(clk), .d(ctx_x_q[78]), .q(pd5_ctx_x_78));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_79 (.clk(clk), .d(ctx_x_q[79]), .q(pd5_ctx_x_79));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_80 (.clk(clk), .d(ctx_x_q[80]), .q(pd5_ctx_x_80));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_81 (.clk(clk), .d(ctx_x_q[81]), .q(pd5_ctx_x_81));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_82 (.clk(clk), .d(ctx_x_q[82]), .q(pd5_ctx_x_82));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_83 (.clk(clk), .d(ctx_x_q[83]), .q(pd5_ctx_x_83));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_84 (.clk(clk), .d(ctx_x_q[84]), .q(pd5_ctx_x_84));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_85 (.clk(clk), .d(ctx_x_q[85]), .q(pd5_ctx_x_85));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_86 (.clk(clk), .d(ctx_x_q[86]), .q(pd5_ctx_x_86));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_87 (.clk(clk), .d(ctx_x_q[87]), .q(pd5_ctx_x_87));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_88 (.clk(clk), .d(ctx_x_q[88]), .q(pd5_ctx_x_88));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_89 (.clk(clk), .d(ctx_x_q[89]), .q(pd5_ctx_x_89));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_90 (.clk(clk), .d(ctx_x_q[90]), .q(pd5_ctx_x_90));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_91 (.clk(clk), .d(ctx_x_q[91]), .q(pd5_ctx_x_91));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_92 (.clk(clk), .d(ctx_x_q[92]), .q(pd5_ctx_x_92));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_93 (.clk(clk), .d(ctx_x_q[93]), .q(pd5_ctx_x_93));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_94 (.clk(clk), .d(ctx_x_q[94]), .q(pd5_ctx_x_94));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_95 (.clk(clk), .d(ctx_x_q[95]), .q(pd5_ctx_x_95));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_96 (.clk(clk), .d(ctx_x_q[96]), .q(pd5_ctx_x_96));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_97 (.clk(clk), .d(ctx_x_q[97]), .q(pd5_ctx_x_97));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_98 (.clk(clk), .d(ctx_x_q[98]), .q(pd5_ctx_x_98));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_99 (.clk(clk), .d(ctx_x_q[99]), .q(pd5_ctx_x_99));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_100 (.clk(clk), .d(ctx_x_q[100]), .q(pd5_ctx_x_100));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_101 (.clk(clk), .d(ctx_x_q[101]), .q(pd5_ctx_x_101));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_102 (.clk(clk), .d(ctx_x_q[102]), .q(pd5_ctx_x_102));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_103 (.clk(clk), .d(ctx_x_q[103]), .q(pd5_ctx_x_103));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_104 (.clk(clk), .d(ctx_x_q[104]), .q(pd5_ctx_x_104));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_105 (.clk(clk), .d(ctx_x_q[105]), .q(pd5_ctx_x_105));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_106 (.clk(clk), .d(ctx_x_q[106]), .q(pd5_ctx_x_106));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_107 (.clk(clk), .d(ctx_x_q[107]), .q(pd5_ctx_x_107));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_108 (.clk(clk), .d(ctx_x_q[108]), .q(pd5_ctx_x_108));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_109 (.clk(clk), .d(ctx_x_q[109]), .q(pd5_ctx_x_109));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_110 (.clk(clk), .d(ctx_x_q[110]), .q(pd5_ctx_x_110));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_111 (.clk(clk), .d(ctx_x_q[111]), .q(pd5_ctx_x_111));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_112 (.clk(clk), .d(ctx_x_q[112]), .q(pd5_ctx_x_112));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_113 (.clk(clk), .d(ctx_x_q[113]), .q(pd5_ctx_x_113));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_114 (.clk(clk), .d(ctx_x_q[114]), .q(pd5_ctx_x_114));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_115 (.clk(clk), .d(ctx_x_q[115]), .q(pd5_ctx_x_115));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_116 (.clk(clk), .d(ctx_x_q[116]), .q(pd5_ctx_x_116));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_117 (.clk(clk), .d(ctx_x_q[117]), .q(pd5_ctx_x_117));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_118 (.clk(clk), .d(ctx_x_q[118]), .q(pd5_ctx_x_118));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_119 (.clk(clk), .d(ctx_x_q[119]), .q(pd5_ctx_x_119));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_120 (.clk(clk), .d(ctx_x_q[120]), .q(pd5_ctx_x_120));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_121 (.clk(clk), .d(ctx_x_q[121]), .q(pd5_ctx_x_121));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_122 (.clk(clk), .d(ctx_x_q[122]), .q(pd5_ctx_x_122));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_123 (.clk(clk), .d(ctx_x_q[123]), .q(pd5_ctx_x_123));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_124 (.clk(clk), .d(ctx_x_q[124]), .q(pd5_ctx_x_124));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_125 (.clk(clk), .d(ctx_x_q[125]), .q(pd5_ctx_x_125));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_126 (.clk(clk), .d(ctx_x_q[126]), .q(pd5_ctx_x_126));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_127 (.clk(clk), .d(ctx_x_q[127]), .q(pd5_ctx_x_127));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_128 (.clk(clk), .d(ctx_x_q[128]), .q(pd5_ctx_x_128));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_0 (.clk(clk), .d(dh_q[0]), .q(pd3_dh_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_1 (.clk(clk), .d(dh_q[1]), .q(pd3_dh_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_2 (.clk(clk), .d(dh_q[2]), .q(pd3_dh_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_3 (.clk(clk), .d(dh_q[3]), .q(pd3_dh_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_4 (.clk(clk), .d(dh_q[4]), .q(pd3_dh_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_5 (.clk(clk), .d(dh_q[5]), .q(pd3_dh_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_6 (.clk(clk), .d(dh_q[6]), .q(pd3_dh_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_7 (.clk(clk), .d(dh_q[7]), .q(pd3_dh_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_8 (.clk(clk), .d(dh_q[8]), .q(pd3_dh_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_9 (.clk(clk), .d(dh_q[9]), .q(pd3_dh_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_10 (.clk(clk), .d(dh_q[10]), .q(pd3_dh_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_11 (.clk(clk), .d(dh_q[11]), .q(pd3_dh_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_12 (.clk(clk), .d(dh_q[12]), .q(pd3_dh_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_13 (.clk(clk), .d(dh_q[13]), .q(pd3_dh_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_14 (.clk(clk), .d(dh_q[14]), .q(pd3_dh_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_15 (.clk(clk), .d(dh_q[15]), .q(pd3_dh_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_16 (.clk(clk), .d(dh_q[16]), .q(pd3_dh_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_17 (.clk(clk), .d(dh_q[17]), .q(pd3_dh_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_18 (.clk(clk), .d(dh_q[18]), .q(pd3_dh_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_19 (.clk(clk), .d(dh_q[19]), .q(pd3_dh_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_20 (.clk(clk), .d(dh_q[20]), .q(pd3_dh_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_21 (.clk(clk), .d(dh_q[21]), .q(pd3_dh_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_22 (.clk(clk), .d(dh_q[22]), .q(pd3_dh_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_23 (.clk(clk), .d(dh_q[23]), .q(pd3_dh_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_24 (.clk(clk), .d(dh_q[24]), .q(pd3_dh_24));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_25 (.clk(clk), .d(dh_q[25]), .q(pd3_dh_25));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_26 (.clk(clk), .d(dh_q[26]), .q(pd3_dh_26));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_27 (.clk(clk), .d(dh_q[27]), .q(pd3_dh_27));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_28 (.clk(clk), .d(dh_q[28]), .q(pd3_dh_28));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_29 (.clk(clk), .d(dh_q[29]), .q(pd3_dh_29));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_30 (.clk(clk), .d(dh_q[30]), .q(pd3_dh_30));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_31 (.clk(clk), .d(dh_q[31]), .q(pd3_dh_31));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_32 (.clk(clk), .d(dh_q[32]), .q(pd3_dh_32));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_33 (.clk(clk), .d(dh_q[33]), .q(pd3_dh_33));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_34 (.clk(clk), .d(dh_q[34]), .q(pd3_dh_34));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_35 (.clk(clk), .d(dh_q[35]), .q(pd3_dh_35));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_36 (.clk(clk), .d(dh_q[36]), .q(pd3_dh_36));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_37 (.clk(clk), .d(dh_q[37]), .q(pd3_dh_37));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_38 (.clk(clk), .d(dh_q[38]), .q(pd3_dh_38));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_39 (.clk(clk), .d(dh_q[39]), .q(pd3_dh_39));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_40 (.clk(clk), .d(dh_q[40]), .q(pd3_dh_40));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_41 (.clk(clk), .d(dh_q[41]), .q(pd3_dh_41));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_42 (.clk(clk), .d(dh_q[42]), .q(pd3_dh_42));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_43 (.clk(clk), .d(dh_q[43]), .q(pd3_dh_43));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_44 (.clk(clk), .d(dh_q[44]), .q(pd3_dh_44));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_45 (.clk(clk), .d(dh_q[45]), .q(pd3_dh_45));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_46 (.clk(clk), .d(dh_q[46]), .q(pd3_dh_46));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_47 (.clk(clk), .d(dh_q[47]), .q(pd3_dh_47));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_48 (.clk(clk), .d(dh_q[48]), .q(pd3_dh_48));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_49 (.clk(clk), .d(dh_q[49]), .q(pd3_dh_49));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_50 (.clk(clk), .d(dh_q[50]), .q(pd3_dh_50));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_51 (.clk(clk), .d(dh_q[51]), .q(pd3_dh_51));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_52 (.clk(clk), .d(dh_q[52]), .q(pd3_dh_52));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_53 (.clk(clk), .d(dh_q[53]), .q(pd3_dh_53));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_54 (.clk(clk), .d(dh_q[54]), .q(pd3_dh_54));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_55 (.clk(clk), .d(dh_q[55]), .q(pd3_dh_55));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_56 (.clk(clk), .d(dh_q[56]), .q(pd3_dh_56));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_57 (.clk(clk), .d(dh_q[57]), .q(pd3_dh_57));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_58 (.clk(clk), .d(dh_q[58]), .q(pd3_dh_58));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_59 (.clk(clk), .d(dh_q[59]), .q(pd3_dh_59));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_60 (.clk(clk), .d(dh_q[60]), .q(pd3_dh_60));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_61 (.clk(clk), .d(dh_q[61]), .q(pd3_dh_61));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_62 (.clk(clk), .d(dh_q[62]), .q(pd3_dh_62));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_63 (.clk(clk), .d(dh_q[63]), .q(pd3_dh_63));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_64 (.clk(clk), .d(dh_q[64]), .q(pd3_dh_64));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_65 (.clk(clk), .d(dh_q[65]), .q(pd3_dh_65));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_66 (.clk(clk), .d(dh_q[66]), .q(pd3_dh_66));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_67 (.clk(clk), .d(dh_q[67]), .q(pd3_dh_67));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_68 (.clk(clk), .d(dh_q[68]), .q(pd3_dh_68));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_69 (.clk(clk), .d(dh_q[69]), .q(pd3_dh_69));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_70 (.clk(clk), .d(dh_q[70]), .q(pd3_dh_70));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_71 (.clk(clk), .d(dh_q[71]), .q(pd3_dh_71));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_72 (.clk(clk), .d(dh_q[72]), .q(pd3_dh_72));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_73 (.clk(clk), .d(dh_q[73]), .q(pd3_dh_73));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_74 (.clk(clk), .d(dh_q[74]), .q(pd3_dh_74));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_75 (.clk(clk), .d(dh_q[75]), .q(pd3_dh_75));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_76 (.clk(clk), .d(dh_q[76]), .q(pd3_dh_76));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_77 (.clk(clk), .d(dh_q[77]), .q(pd3_dh_77));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_78 (.clk(clk), .d(dh_q[78]), .q(pd3_dh_78));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_79 (.clk(clk), .d(dh_q[79]), .q(pd3_dh_79));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_80 (.clk(clk), .d(dh_q[80]), .q(pd3_dh_80));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_81 (.clk(clk), .d(dh_q[81]), .q(pd3_dh_81));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_82 (.clk(clk), .d(dh_q[82]), .q(pd3_dh_82));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_83 (.clk(clk), .d(dh_q[83]), .q(pd3_dh_83));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_84 (.clk(clk), .d(dh_q[84]), .q(pd3_dh_84));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_85 (.clk(clk), .d(dh_q[85]), .q(pd3_dh_85));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_86 (.clk(clk), .d(dh_q[86]), .q(pd3_dh_86));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_87 (.clk(clk), .d(dh_q[87]), .q(pd3_dh_87));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_88 (.clk(clk), .d(dh_q[88]), .q(pd3_dh_88));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_89 (.clk(clk), .d(dh_q[89]), .q(pd3_dh_89));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_90 (.clk(clk), .d(dh_q[90]), .q(pd3_dh_90));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_91 (.clk(clk), .d(dh_q[91]), .q(pd3_dh_91));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_92 (.clk(clk), .d(dh_q[92]), .q(pd3_dh_92));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_93 (.clk(clk), .d(dh_q[93]), .q(pd3_dh_93));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_94 (.clk(clk), .d(dh_q[94]), .q(pd3_dh_94));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_95 (.clk(clk), .d(dh_q[95]), .q(pd3_dh_95));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_96 (.clk(clk), .d(dh_q[96]), .q(pd3_dh_96));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_97 (.clk(clk), .d(dh_q[97]), .q(pd3_dh_97));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_98 (.clk(clk), .d(dh_q[98]), .q(pd3_dh_98));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_99 (.clk(clk), .d(dh_q[99]), .q(pd3_dh_99));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_100 (.clk(clk), .d(dh_q[100]), .q(pd3_dh_100));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_101 (.clk(clk), .d(dh_q[101]), .q(pd3_dh_101));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_102 (.clk(clk), .d(dh_q[102]), .q(pd3_dh_102));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_103 (.clk(clk), .d(dh_q[103]), .q(pd3_dh_103));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_104 (.clk(clk), .d(dh_q[104]), .q(pd3_dh_104));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_105 (.clk(clk), .d(dh_q[105]), .q(pd3_dh_105));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_106 (.clk(clk), .d(dh_q[106]), .q(pd3_dh_106));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_107 (.clk(clk), .d(dh_q[107]), .q(pd3_dh_107));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_108 (.clk(clk), .d(dh_q[108]), .q(pd3_dh_108));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_109 (.clk(clk), .d(dh_q[109]), .q(pd3_dh_109));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_110 (.clk(clk), .d(dh_q[110]), .q(pd3_dh_110));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_111 (.clk(clk), .d(dh_q[111]), .q(pd3_dh_111));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_112 (.clk(clk), .d(dh_q[112]), .q(pd3_dh_112));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_113 (.clk(clk), .d(dh_q[113]), .q(pd3_dh_113));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_114 (.clk(clk), .d(dh_q[114]), .q(pd3_dh_114));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_115 (.clk(clk), .d(dh_q[115]), .q(pd3_dh_115));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_116 (.clk(clk), .d(dh_q[116]), .q(pd3_dh_116));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_117 (.clk(clk), .d(dh_q[117]), .q(pd3_dh_117));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_118 (.clk(clk), .d(dh_q[118]), .q(pd3_dh_118));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_119 (.clk(clk), .d(dh_q[119]), .q(pd3_dh_119));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_120 (.clk(clk), .d(dh_q[120]), .q(pd3_dh_120));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_121 (.clk(clk), .d(dh_q[121]), .q(pd3_dh_121));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_122 (.clk(clk), .d(dh_q[122]), .q(pd3_dh_122));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_123 (.clk(clk), .d(dh_q[123]), .q(pd3_dh_123));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_124 (.clk(clk), .d(dh_q[124]), .q(pd3_dh_124));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_125 (.clk(clk), .d(dh_q[125]), .q(pd3_dh_125));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_126 (.clk(clk), .d(dh_q[126]), .q(pd3_dh_126));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_127 (.clk(clk), .d(dh_q[127]), .q(pd3_dh_127));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_128 (.clk(clk), .d(dh_q[128]), .q(pd3_dh_128));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_129 (.clk(clk), .d(dh_q[129]), .q(pd3_dh_129));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_130 (.clk(clk), .d(dh_q[130]), .q(pd3_dh_130));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_131 (.clk(clk), .d(dh_q[131]), .q(pd3_dh_131));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_132 (.clk(clk), .d(dh_q[132]), .q(pd3_dh_132));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_133 (.clk(clk), .d(dh_q[133]), .q(pd3_dh_133));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_134 (.clk(clk), .d(dh_q[134]), .q(pd3_dh_134));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_135 (.clk(clk), .d(dh_q[135]), .q(pd3_dh_135));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_136 (.clk(clk), .d(dh_q[136]), .q(pd3_dh_136));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_137 (.clk(clk), .d(dh_q[137]), .q(pd3_dh_137));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_138 (.clk(clk), .d(dh_q[138]), .q(pd3_dh_138));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_139 (.clk(clk), .d(dh_q[139]), .q(pd3_dh_139));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_140 (.clk(clk), .d(dh_q[140]), .q(pd3_dh_140));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_141 (.clk(clk), .d(dh_q[141]), .q(pd3_dh_141));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_142 (.clk(clk), .d(dh_q[142]), .q(pd3_dh_142));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_143 (.clk(clk), .d(dh_q[143]), .q(pd3_dh_143));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_144 (.clk(clk), .d(dh_q[144]), .q(pd3_dh_144));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_145 (.clk(clk), .d(dh_q[145]), .q(pd3_dh_145));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_146 (.clk(clk), .d(dh_q[146]), .q(pd3_dh_146));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_147 (.clk(clk), .d(dh_q[147]), .q(pd3_dh_147));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_148 (.clk(clk), .d(dh_q[148]), .q(pd3_dh_148));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_149 (.clk(clk), .d(dh_q[149]), .q(pd3_dh_149));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_150 (.clk(clk), .d(dh_q[150]), .q(pd3_dh_150));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_151 (.clk(clk), .d(dh_q[151]), .q(pd3_dh_151));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_152 (.clk(clk), .d(dh_q[152]), .q(pd3_dh_152));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_153 (.clk(clk), .d(dh_q[153]), .q(pd3_dh_153));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_154 (.clk(clk), .d(dh_q[154]), .q(pd3_dh_154));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_155 (.clk(clk), .d(dh_q[155]), .q(pd3_dh_155));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_156 (.clk(clk), .d(dh_q[156]), .q(pd3_dh_156));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_157 (.clk(clk), .d(dh_q[157]), .q(pd3_dh_157));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_158 (.clk(clk), .d(dh_q[158]), .q(pd3_dh_158));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_159 (.clk(clk), .d(dh_q[159]), .q(pd3_dh_159));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_160 (.clk(clk), .d(dh_q[160]), .q(pd3_dh_160));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_161 (.clk(clk), .d(dh_q[161]), .q(pd3_dh_161));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_162 (.clk(clk), .d(dh_q[162]), .q(pd3_dh_162));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_163 (.clk(clk), .d(dh_q[163]), .q(pd3_dh_163));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_164 (.clk(clk), .d(dh_q[164]), .q(pd3_dh_164));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_165 (.clk(clk), .d(dh_q[165]), .q(pd3_dh_165));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_166 (.clk(clk), .d(dh_q[166]), .q(pd3_dh_166));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_167 (.clk(clk), .d(dh_q[167]), .q(pd3_dh_167));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_168 (.clk(clk), .d(dh_q[168]), .q(pd3_dh_168));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_169 (.clk(clk), .d(dh_q[169]), .q(pd3_dh_169));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_170 (.clk(clk), .d(dh_q[170]), .q(pd3_dh_170));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_171 (.clk(clk), .d(dh_q[171]), .q(pd3_dh_171));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_172 (.clk(clk), .d(dh_q[172]), .q(pd3_dh_172));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_173 (.clk(clk), .d(dh_q[173]), .q(pd3_dh_173));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_174 (.clk(clk), .d(dh_q[174]), .q(pd3_dh_174));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_175 (.clk(clk), .d(dh_q[175]), .q(pd3_dh_175));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_176 (.clk(clk), .d(dh_q[176]), .q(pd3_dh_176));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_177 (.clk(clk), .d(dh_q[177]), .q(pd3_dh_177));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_178 (.clk(clk), .d(dh_q[178]), .q(pd3_dh_178));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_179 (.clk(clk), .d(dh_q[179]), .q(pd3_dh_179));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_180 (.clk(clk), .d(dh_q[180]), .q(pd3_dh_180));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_181 (.clk(clk), .d(dh_q[181]), .q(pd3_dh_181));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_182 (.clk(clk), .d(dh_q[182]), .q(pd3_dh_182));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_183 (.clk(clk), .d(dh_q[183]), .q(pd3_dh_183));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_184 (.clk(clk), .d(dh_q[184]), .q(pd3_dh_184));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_185 (.clk(clk), .d(dh_q[185]), .q(pd3_dh_185));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_dh_186 (.clk(clk), .d(dh_q[186]), .q(pd3_dh_186));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_fab_0 (.clk(clk), .d(fab_q[0]), .q(pd4_fab_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_kok_0 (.clk(clk), .d(kok_q[0]), .q(pd3_kok_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(3)) u_pd3_kwd_0 (.clk(clk), .d(kwd_q[0]), .q(pd3_kwd_0));  // landing pad: as-built relative timing
+    ot_dp_or #(.N(2)) u_or_0 (.a(mu_flt_i_q[1:0]), .y(or_0));  // re-emitted fault OR
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_0 (.clk(clk), .d(pw_q[0]), .q(pd4_pw_0));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_1 (.clk(clk), .d(pw_q[1]), .q(pd4_pw_1));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_2 (.clk(clk), .d(pw_q[2]), .q(pd4_pw_2));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_3 (.clk(clk), .d(pw_q[3]), .q(pd4_pw_3));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_4 (.clk(clk), .d(pw_q[4]), .q(pd4_pw_4));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_5 (.clk(clk), .d(pw_q[5]), .q(pd4_pw_5));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_6 (.clk(clk), .d(pw_q[6]), .q(pd4_pw_6));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_7 (.clk(clk), .d(pw_q[7]), .q(pd4_pw_7));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_8 (.clk(clk), .d(pw_q[8]), .q(pd4_pw_8));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_9 (.clk(clk), .d(pw_q[9]), .q(pd4_pw_9));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_10 (.clk(clk), .d(pw_q[10]), .q(pd4_pw_10));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_11 (.clk(clk), .d(pw_q[11]), .q(pd4_pw_11));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_12 (.clk(clk), .d(pw_q[12]), .q(pd4_pw_12));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_13 (.clk(clk), .d(pw_q[13]), .q(pd4_pw_13));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_14 (.clk(clk), .d(pw_q[14]), .q(pd4_pw_14));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_15 (.clk(clk), .d(pw_q[15]), .q(pd4_pw_15));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_16 (.clk(clk), .d(pw_q[16]), .q(pd4_pw_16));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_17 (.clk(clk), .d(pw_q[17]), .q(pd4_pw_17));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_18 (.clk(clk), .d(pw_q[18]), .q(pd4_pw_18));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_19 (.clk(clk), .d(pw_q[19]), .q(pd4_pw_19));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_20 (.clk(clk), .d(pw_q[20]), .q(pd4_pw_20));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_21 (.clk(clk), .d(pw_q[21]), .q(pd4_pw_21));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_22 (.clk(clk), .d(pw_q[22]), .q(pd4_pw_22));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_23 (.clk(clk), .d(pw_q[23]), .q(pd4_pw_23));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_24 (.clk(clk), .d(pw_q[24]), .q(pd4_pw_24));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_25 (.clk(clk), .d(pw_q[25]), .q(pd4_pw_25));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_26 (.clk(clk), .d(pw_q[26]), .q(pd4_pw_26));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_27 (.clk(clk), .d(pw_q[27]), .q(pd4_pw_27));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_28 (.clk(clk), .d(pw_q[28]), .q(pd4_pw_28));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_29 (.clk(clk), .d(pw_q[29]), .q(pd4_pw_29));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_30 (.clk(clk), .d(pw_q[30]), .q(pd4_pw_30));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_31 (.clk(clk), .d(pw_q[31]), .q(pd4_pw_31));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_32 (.clk(clk), .d(pw_q[32]), .q(pd4_pw_32));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_33 (.clk(clk), .d(pw_q[33]), .q(pd4_pw_33));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_34 (.clk(clk), .d(pw_q[34]), .q(pd4_pw_34));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_35 (.clk(clk), .d(pw_q[35]), .q(pd4_pw_35));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_36 (.clk(clk), .d(pw_q[36]), .q(pd4_pw_36));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_37 (.clk(clk), .d(pw_q[37]), .q(pd4_pw_37));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_38 (.clk(clk), .d(pw_q[38]), .q(pd4_pw_38));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_39 (.clk(clk), .d(pw_q[39]), .q(pd4_pw_39));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_40 (.clk(clk), .d(pw_q[40]), .q(pd4_pw_40));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_41 (.clk(clk), .d(pw_q[41]), .q(pd4_pw_41));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_42 (.clk(clk), .d(pw_q[42]), .q(pd4_pw_42));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_43 (.clk(clk), .d(pw_q[43]), .q(pd4_pw_43));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_44 (.clk(clk), .d(pw_q[44]), .q(pd4_pw_44));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_45 (.clk(clk), .d(pw_q[45]), .q(pd4_pw_45));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_46 (.clk(clk), .d(pw_q[46]), .q(pd4_pw_46));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_47 (.clk(clk), .d(pw_q[47]), .q(pd4_pw_47));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_48 (.clk(clk), .d(pw_q[48]), .q(pd4_pw_48));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_49 (.clk(clk), .d(pw_q[49]), .q(pd4_pw_49));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_50 (.clk(clk), .d(pw_q[50]), .q(pd4_pw_50));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_51 (.clk(clk), .d(pw_q[51]), .q(pd4_pw_51));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_52 (.clk(clk), .d(pw_q[52]), .q(pd4_pw_52));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_53 (.clk(clk), .d(pw_q[53]), .q(pd4_pw_53));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_54 (.clk(clk), .d(pw_q[54]), .q(pd4_pw_54));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_55 (.clk(clk), .d(pw_q[55]), .q(pd4_pw_55));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_56 (.clk(clk), .d(pw_q[56]), .q(pd4_pw_56));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_57 (.clk(clk), .d(pw_q[57]), .q(pd4_pw_57));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_58 (.clk(clk), .d(pw_q[58]), .q(pd4_pw_58));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_59 (.clk(clk), .d(pw_q[59]), .q(pd4_pw_59));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_60 (.clk(clk), .d(pw_q[60]), .q(pd4_pw_60));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_61 (.clk(clk), .d(pw_q[61]), .q(pd4_pw_61));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_62 (.clk(clk), .d(pw_q[62]), .q(pd4_pw_62));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_63 (.clk(clk), .d(pw_q[63]), .q(pd4_pw_63));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_64 (.clk(clk), .d(pw_q[64]), .q(pd4_pw_64));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_65 (.clk(clk), .d(pw_q[65]), .q(pd4_pw_65));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_66 (.clk(clk), .d(pw_q[66]), .q(pd4_pw_66));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_67 (.clk(clk), .d(pw_q[67]), .q(pd4_pw_67));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_68 (.clk(clk), .d(pw_q[68]), .q(pd4_pw_68));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_69 (.clk(clk), .d(pw_q[69]), .q(pd4_pw_69));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_70 (.clk(clk), .d(pw_q[70]), .q(pd4_pw_70));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_71 (.clk(clk), .d(pw_q[71]), .q(pd4_pw_71));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_72 (.clk(clk), .d(pw_q[72]), .q(pd4_pw_72));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_73 (.clk(clk), .d(pw_q[73]), .q(pd4_pw_73));  // landing pad: as-built relative timing
+    ot_dp_dly #(.W(1), .D(4)) u_pd4_pw_74 (.clk(clk), .d(pw_q[74]), .q(pd4_pw_74));  // landing pad: as-built relative timing
     // as-built tt_ctlm
     qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1 u_core (
         .ag5(ag5_q[9:0]),
@@ -136,18 +924,18 @@ module qfd_qc_tt_ctlm_part (
         .cmd(w_core_cmd),
         .command_stage(w_core_command_stage),
         .control_stores_ready(w_core_control_stores_ready),
-        .ctx_x(ctx_x_q[128:0]),
+        .ctx_x({pd5_ctx_x_128[0], pd5_ctx_x_127[0], pd5_ctx_x_126[0], pd5_ctx_x_125[0], pd5_ctx_x_124[0], pd5_ctx_x_123[0], pd5_ctx_x_122[0], pd5_ctx_x_121[0], pd5_ctx_x_120[0], pd5_ctx_x_119[0], pd5_ctx_x_118[0], pd5_ctx_x_117[0], pd5_ctx_x_116[0], pd5_ctx_x_115[0], pd5_ctx_x_114[0], pd5_ctx_x_113[0], pd5_ctx_x_112[0], pd5_ctx_x_111[0], pd5_ctx_x_110[0], pd5_ctx_x_109[0], pd5_ctx_x_108[0], pd5_ctx_x_107[0], pd5_ctx_x_106[0], pd5_ctx_x_105[0], pd5_ctx_x_104[0], pd5_ctx_x_103[0], pd5_ctx_x_102[0], pd5_ctx_x_101[0], pd5_ctx_x_100[0], pd5_ctx_x_99[0], pd5_ctx_x_98[0], pd5_ctx_x_97[0], pd5_ctx_x_96[0], pd5_ctx_x_95[0], pd5_ctx_x_94[0], pd5_ctx_x_93[0], pd5_ctx_x_92[0], pd5_ctx_x_91[0], pd5_ctx_x_90[0], pd5_ctx_x_89[0], pd5_ctx_x_88[0], pd5_ctx_x_87[0], pd5_ctx_x_86[0], pd5_ctx_x_85[0], pd5_ctx_x_84[0], pd5_ctx_x_83[0], pd5_ctx_x_82[0], pd5_ctx_x_81[0], pd5_ctx_x_80[0], pd5_ctx_x_79[0], pd5_ctx_x_78[0], pd5_ctx_x_77[0], pd5_ctx_x_76[0], pd5_ctx_x_75[0], pd5_ctx_x_74[0], pd5_ctx_x_73[0], pd5_ctx_x_72[0], pd5_ctx_x_71[0], pd5_ctx_x_70[0], pd5_ctx_x_69[0], pd5_ctx_x_68[0], pd5_ctx_x_67[0], pd5_ctx_x_66[0], pd5_ctx_x_65[0], pd5_ctx_x_64[0], pd5_ctx_x_63[0], pd5_ctx_x_62[0], pd5_ctx_x_61[0], pd5_ctx_x_60[0], pd5_ctx_x_59[0], pd5_ctx_x_58[0], pd5_ctx_x_57[0], pd5_ctx_x_56[0], pd5_ctx_x_55[0], pd5_ctx_x_54[0], pd5_ctx_x_53[0], pd5_ctx_x_52[0], pd5_ctx_x_51[0], pd5_ctx_x_50[0], pd5_ctx_x_49[0], pd5_ctx_x_48[0], pd5_ctx_x_47[0], pd5_ctx_x_46[0], pd5_ctx_x_45[0], pd5_ctx_x_44[0], pd5_ctx_x_43[0], pd5_ctx_x_42[0], pd5_ctx_x_41[0], pd5_ctx_x_40[0], pd5_ctx_x_39[0], pd5_ctx_x_38[0], pd5_ctx_x_37[0], pd5_ctx_x_36[0], pd5_ctx_x_35[0], pd5_ctx_x_34[0], pd5_ctx_x_33[0], pd5_ctx_x_32[0], pd5_ctx_x_31[0], pd5_ctx_x_30[0], pd5_ctx_x_29[0], pd5_ctx_x_28[0], pd5_ctx_x_27[0], pd5_ctx_x_26[0], pd5_ctx_x_25[0], pd5_ctx_x_24[0], pd5_ctx_x_23[0], pd5_ctx_x_22[0], pd5_ctx_x_21[0], pd5_ctx_x_20[0], pd5_ctx_x_19[0], pd5_ctx_x_18[0], pd5_ctx_x_17[0], pd5_ctx_x_16[0], pd5_ctx_x_15[0], pd5_ctx_x_14[0], pd5_ctx_x_13[0], pd5_ctx_x_12[0], pd5_ctx_x_11[0], pd5_ctx_x_10[0], pd5_ctx_x_9[0], pd5_ctx_x_8[0], pd5_ctx_x_7[0], pd5_ctx_x_6[0], pd5_ctx_x_5[0], pd5_ctx_x_4[0], pd5_ctx_x_3[0], pd5_ctx_x_2[0], pd5_ctx_x_1[0], pd5_ctx_x_0[0]}),
         .dc(w_core_dc),
-        .dh({kok_q[0], fab_q[0], dh_q[186:2]}),
-        .dh_user({dh_q[0], dh_user_q[1]}),
+        .dh({pd3_dh_186[0], pd3_dh_185[0], pd3_dh_184[0], pd3_dh_183[0], pd3_dh_182[0], pd3_dh_181[0], pd3_dh_180[0], pd3_dh_179[0], pd3_dh_178[0], pd3_dh_177[0], pd3_dh_176[0], pd3_dh_175[0], pd3_dh_174[0], pd3_dh_173[0], pd3_dh_172[0], pd3_dh_171[0], pd3_dh_170[0], pd3_dh_169[0], pd3_dh_168[0], pd3_dh_167[0], pd3_dh_166[0], pd3_dh_165[0], pd3_dh_164[0], pd3_dh_163[0], pd3_dh_162[0], pd3_dh_161[0], pd3_dh_160[0], pd3_dh_159[0], pd3_dh_158[0], pd3_dh_157[0], pd3_dh_156[0], pd3_dh_155[0], pd3_dh_154[0], pd3_dh_153[0], pd3_dh_152[0], pd3_dh_151[0], pd3_dh_150[0], pd3_dh_149[0], pd3_dh_148[0], pd3_dh_147[0], pd3_dh_146[0], pd3_dh_145[0], pd3_dh_144[0], pd3_dh_143[0], pd3_dh_142[0], pd3_dh_141[0], pd3_dh_140[0], pd3_dh_139[0], pd3_dh_138[0], pd3_dh_137[0], pd3_dh_136[0], pd3_dh_135[0], pd3_dh_134[0], pd3_dh_133[0], pd3_dh_132[0], pd3_dh_131[0], pd3_dh_130[0], pd3_dh_129[0], pd3_dh_128[0], pd3_dh_127[0], pd3_dh_126[0], pd3_dh_125[0], pd3_dh_124[0], pd3_dh_123[0], pd3_dh_122[0], pd3_dh_121[0], pd3_dh_120[0], pd3_dh_119[0], pd3_dh_118[0], pd3_dh_117[0], pd3_dh_116[0], pd3_dh_115[0], pd3_dh_114[0], pd3_dh_113[0], pd3_dh_112[0], pd3_dh_111[0], pd3_dh_110[0], pd3_dh_109[0], pd3_dh_108[0], pd3_dh_107[0], pd3_dh_106[0], pd3_dh_105[0], pd3_dh_104[0], pd3_dh_103[0], pd3_dh_102[0], pd3_dh_101[0], pd3_dh_100[0], pd3_dh_99[0], pd3_dh_98[0], pd3_dh_97[0], pd3_dh_96[0], pd3_dh_95[0], pd3_dh_94[0], pd3_dh_93[0], pd3_dh_92[0], pd3_dh_91[0], pd3_dh_90[0], pd3_dh_89[0], pd3_dh_88[0], pd3_dh_87[0], pd3_dh_86[0], pd3_dh_85[0], pd3_dh_84[0], pd3_dh_83[0], pd3_dh_82[0], pd3_dh_81[0], pd3_dh_80[0], pd3_dh_79[0], pd3_dh_78[0], pd3_dh_77[0], pd3_dh_76[0], pd3_dh_75[0], pd3_dh_74[0], pd3_dh_73[0], pd3_dh_72[0], pd3_dh_71[0], pd3_dh_70[0], pd3_dh_69[0], pd3_dh_68[0], pd3_dh_67[0], pd3_dh_66[0], pd3_dh_65[0], pd3_dh_64[0], pd3_dh_63[0], pd3_dh_62[0], pd3_dh_61[0], pd3_dh_60[0], pd3_dh_59[0], pd3_dh_58[0], pd3_dh_57[0], pd3_dh_56[0], pd3_dh_55[0], pd3_dh_54[0], pd3_dh_53[0], pd3_dh_52[0], pd3_dh_51[0], pd3_dh_50[0], pd3_dh_49[0], pd3_dh_48[0], pd3_dh_47[0], pd3_dh_46[0], pd3_dh_45[0], pd3_dh_44[0], pd3_dh_43[0], pd3_dh_42[0], pd3_dh_41[0], pd3_dh_40[0], pd3_dh_39[0], pd3_dh_38[0], pd3_dh_37[0], pd3_dh_36[0], pd3_dh_35[0], pd3_dh_34[0], pd3_dh_33[0], pd3_dh_32[0], pd3_dh_31[0], pd3_dh_30[0], pd3_dh_29[0], pd3_dh_28[0], pd3_dh_27[0], pd3_dh_26[0], pd3_dh_25[0], pd3_dh_24[0], pd3_dh_23[0], pd3_dh_22[0], pd3_dh_21[0], pd3_dh_20[0], pd3_dh_19[0], pd3_dh_18[0], pd3_dh_17[0], pd3_dh_16[0], pd3_dh_15[0], pd3_dh_14[0], pd3_dh_13[0], pd3_dh_12[0], pd3_dh_11[0], pd3_dh_10[0], pd3_dh_9[0], pd3_dh_8[0], pd3_dh_7[0], pd3_dh_6[0], pd3_dh_5[0], pd3_dh_4[0], pd3_dh_3[0], pd3_dh_2[0], pd3_dh_1[0], pd3_dh_0[0]}),
+        .dh_user(dh_user_q[1:0]),
         .emb_position(w_core_emb_position),
         .emb_start(w_core_emb_start),
         .emb_token(w_core_emb_token),
         .emb_user(w_core_emb_user),
-        .fab(kwd_q[0]),
+        .fab(pd4_fab_0[0]),
         .hr(w_core_hr),
-        .kok(pw_q[0]),
-        .kwd(pw_q[1]),
+        .kok(pd3_kok_0[0]),
+        .kwd(pd3_kwd_0[0]),
         .layer_context_v(w_core_layer_context_v),
         .mu_fault(or_0),
         .native_cmd(w_core_native_cmd),
@@ -155,7 +943,7 @@ module qfd_qc_tt_ctlm_part (
         .native_ret(native_ret_q[94:0]),
         .native_tok(w_core_native_tok),
         .program_obs(w_core_program_obs),
-        .pw({xi_core_pw_q[1:0], pw_q[74:2]}),
+        .pw({pd4_pw_74[0], pd4_pw_73[0], pd4_pw_72[0], pd4_pw_71[0], pd4_pw_70[0], pd4_pw_69[0], pd4_pw_68[0], pd4_pw_67[0], pd4_pw_66[0], pd4_pw_65[0], pd4_pw_64[0], pd4_pw_63[0], pd4_pw_62[0], pd4_pw_61[0], pd4_pw_60[0], pd4_pw_59[0], pd4_pw_58[0], pd4_pw_57[0], pd4_pw_56[0], pd4_pw_55[0], pd4_pw_54[0], pd4_pw_53[0], pd4_pw_52[0], pd4_pw_51[0], pd4_pw_50[0], pd4_pw_49[0], pd4_pw_48[0], pd4_pw_47[0], pd4_pw_46[0], pd4_pw_45[0], pd4_pw_44[0], pd4_pw_43[0], pd4_pw_42[0], pd4_pw_41[0], pd4_pw_40[0], pd4_pw_39[0], pd4_pw_38[0], pd4_pw_37[0], pd4_pw_36[0], pd4_pw_35[0], pd4_pw_34[0], pd4_pw_33[0], pd4_pw_32[0], pd4_pw_31[0], pd4_pw_30[0], pd4_pw_29[0], pd4_pw_28[0], pd4_pw_27[0], pd4_pw_26[0], pd4_pw_25[0], pd4_pw_24[0], pd4_pw_23[0], pd4_pw_22[0], pd4_pw_21[0], pd4_pw_20[0], pd4_pw_19[0], pd4_pw_18[0], pd4_pw_17[0], pd4_pw_16[0], pd4_pw_15[0], pd4_pw_14[0], pd4_pw_13[0], pd4_pw_12[0], pd4_pw_11[0], pd4_pw_10[0], pd4_pw_9[0], pd4_pw_8[0], pd4_pw_7[0], pd4_pw_6[0], pd4_pw_5[0], pd4_pw_4[0], pd4_pw_3[0], pd4_pw_2[0], pd4_pw_1[0], pd4_pw_0[0]}),
         .rst_n(rst_n),
         .ss5(ss5_q[106:0]),
         .tl(w_core_tl)

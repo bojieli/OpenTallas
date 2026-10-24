@@ -4,7 +4,7 @@
 "replica": "all",
 "bus": "part",
 "bus_groups_die": "qwen_compute",
-"bus_groups_digest": "5b50a39390f3ef51",
+"bus_groups_digest": "32c6bdd141b460e2",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 7789,

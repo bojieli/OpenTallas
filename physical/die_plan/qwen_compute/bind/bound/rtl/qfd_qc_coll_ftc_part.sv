@@ -38,6 +38,8 @@ module qfd_qc_coll_ftc_part (
     output wire [520:0] dr_o_dr_wi_o,   // ft dr_o_dr_wi: 2 station(s)
     input  wire [1:0] fltk_i,   // ft fltk lane coll_n__fltk: coll_n -> coll_core
     output wire [1:0] fltk_o,   // ft fltk: 2 station(s)
+    input  wire [12:0] fltv_i,   // ft fltv lane coll_n__fltv: coll_n -> coll_core
+    output wire [12:0] fltv_o,   // ft fltv: 2 station(s)
     input  wire [453:0] hr_hr_wi_i,   // ft hr_hr_wi lane tt_ctlm__hr_hr_wi: tt_ctlm -> sl_W5_fw
     output wire [453:0] hr_hr_wi_o,   // ft hr_hr_wi: 2 station(s)
     input  wire [512:0] out_data_rd_wi_i,   // ft out_data_rd_wi lane coll_core__out_data_rd_wi: coll_core -> sl_W5_fw
@@ -71,6 +73,7 @@ module qfd_qc_coll_ftc_part (
     wire [548:0] dd_wo_dd_i_o_s0;
     wire [520:0] dr_o_dr_wi_o_s0;
     wire [1:0] fltk_o_s0;
+    wire [12:0] fltv_o_s0;
     wire [453:0] hr_hr_wi_o_s0;
     wire [1:0] out_err_re_wi_o_s0;
     wire [1:0] out_last_rl_wi_o_s0;
@@ -112,6 +115,8 @@ module qfd_qc_coll_ftc_part (
     ot_dp_st #(.W(520)) u_ft_dr_o_dr_wi_o_1 (.clk(clk), .rst_n(rst_n), .d(dr_o_dr_wi_o_s0[519:0]), .ea(dr_o_dr_wi_o_s0[520]), .q(dr_o_dr_wi_o[519:0]), .eq(dr_o_dr_wi_o[520]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_0 (.clk(clk), .rst_n(rst_n), .d(fltk_i[0:0]), .ea(fltk_i[1]), .q(fltk_o_s0[0:0]), .eq(fltk_o_s0[1]));
     ot_dp_st #(.W(1)) u_ft_fltk_o_1 (.clk(clk), .rst_n(rst_n), .d(fltk_o_s0[0:0]), .ea(fltk_o_s0[1]), .q(fltk_o[0:0]), .eq(fltk_o[1]));
+    ot_dp_st #(.W(12)) u_ft_fltv_o_0 (.clk(clk), .rst_n(rst_n), .d(fltv_i[11:0]), .ea(fltv_i[12]), .q(fltv_o_s0[11:0]), .eq(fltv_o_s0[12]));
+    ot_dp_st #(.W(12)) u_ft_fltv_o_1 (.clk(clk), .rst_n(rst_n), .d(fltv_o_s0[11:0]), .ea(fltv_o_s0[12]), .q(fltv_o[11:0]), .eq(fltv_o[12]));
     ot_dp_st #(.W(453)) u_ft_hr_hr_wi_o_0 (.clk(clk), .rst_n(rst_n), .d(hr_hr_wi_i[452:0]), .ea(hr_hr_wi_i[453]), .q(hr_hr_wi_o_s0[452:0]), .eq(hr_hr_wi_o_s0[453]));
     ot_dp_st #(.W(453)) u_ft_hr_hr_wi_o_1 (.clk(clk), .rst_n(rst_n), .d(hr_hr_wi_o_s0[452:0]), .ea(hr_hr_wi_o_s0[453]), .q(hr_hr_wi_o[452:0]), .eq(hr_hr_wi_o[453]));
     ot_dp_st #(.W(512)) u_ft_out_data_rd_wi_o_0 (.clk(clk), .rst_n(rst_n), .d(out_data_rd_wi_i[511:0]), .ea(out_data_rd_wi_i[512]), .q(out_data_rd_wi_o[511:0]), .eq(out_data_rd_wi_o[512]));
