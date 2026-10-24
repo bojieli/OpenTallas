@@ -737,27 +737,39 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           "proc ot_ckpin {pin} { set i [file dirname $pin]; foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; "
           "if {$q ne \"\"} { return $q } }; return \"\" }",
           "proc ot_arr {pin} { set q [ot_ckpin $pin]; if {$q eq \"\"} { return NA }; return [ot_ck $q] }"]
-    for gname, pins, _ in groups:
-        for dly in ("max", "min"):
-            L.append(f"set ps [find_timing_paths -through [get_pins {{{' '.join(pins)}}}] -path_delay {dly} "
-                     f"-group_path_count {seam_paths} -endpoint_path_count 1 -sort_by_slack]")
-            L.append("set n [llength $ps]; set nneg 0; set tns 0.0; set rows {}")
-            L.append("foreach p $ps { set s [get_property $p slack]; if {$s < 0} { incr nneg; set tns [expr {$tns + $s}] }; "
-                     "if {[llength $rows] == 0} { set rows [list $s [get_full_name [get_property $p startpoint]] "
-                     "[get_full_name [get_property $p endpoint]]] } }")
-            L.append(f"if {{$n == 0}} {{ puts $fh \"SEAM {gname} {dly} NO_PATH\" }} else {{ lassign $rows s sp ep; "
-                     f"puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s\" "
-                     f"{gname} {dly} $n $s $nneg $tns [ot_arr $sp] [ot_arr $ep] $sp $ep] }}")
-    # R4 face-flop spread: clock arrival (rise, T/2 folded) at every register launching into / capturing from a seam
-    L.append("array set ffarr {}")
-    for gname, dpins, spins in groups:
-        L.append(f"foreach p [get_fanout -from [get_pins {{{' '.join(dpins)}}}] -endpoints_only -flat] "
-                 "{ set n [get_full_name $p]; set a [ot_arr $n]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $n /] 0]) $a } }")
-        L.append(f"foreach p [get_fanin -to [get_pins {{{' '.join(spins)}}}] -startpoints_only -flat] "
-                 "{ set n [get_full_name $p]; set a [ot_arr $n]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $n /] 0]) $a } }")
-    L += ["foreach i [lsort [array names ffarr]] { set v $ffarr($i); set mn [tcl::mathfunc::min {*}$v]; "
+    # seams per BIT: worst slack through the seam = min slack_max / slack_min over the leaf load pins of the seam net
+    # inside the destination (only paths through the seam reach them); one timing update, O(1) per pin.  Face-flop
+    # spread: clock arrival (rise, T/2 folded) at the registers on both ends of every seam bit (registered boundary).
+    tab = Path(out_txt).with_name(Path(out_txt).stem + "_seams.tcl")
+    with open(tab, "w") as f:
+        f.write("set OT_SEAMS {\n")
+        for gname, bits in groups:
+            f.write("{" + gname + " {" + " ".join("{" + d + " " + sp + "}" for d, sp in bits) + "}}\n")
+        f.write("}\n")
+    L += [f"source {tab}",
+          "proc ot_leaf {p dir} { set q [get_pins -quiet $p]; if {$q eq \"\"} { return {} }; "
+          "if {![get_property $q is_hierarchical]} { return [list $q] }; set n [get_nets -quiet $p]; "
+          "if {$n eq \"\"} { return {} }; set out {}; foreach x [get_pins -of_objects $n] { "
+          "if {[get_property $x is_hierarchical]} { continue }; if {[get_property $x direction] eq $dir} { lappend out $x } }; "
+          "return $out }",
+          "array set ffarr {}",
+          "foreach g $OT_SEAMS { lassign $g gname bits",
+          "  foreach dly {max min} { set n($dly) 0; set nneg($dly) 0; set tns($dly) 0.0; set w($dly) \"\"; set wq($dly) \"\" }",
+          "  foreach b $bits { lassign $b d s; set lv [ot_leaf $d input]",
+          "    foreach dly {max min} { set best \"\"; foreach q $lv { set x [get_property $q slack_$dly]; "
+          "if {$x eq \"\" || [string match *INF* $x]} { continue }; if {$best eq \"\" || $x < $best} { set best $x; set bq $q } }; "
+          "if {$best eq \"\"} { continue }; incr n($dly); if {$best < 0} { incr nneg($dly); set tns($dly) [expr {$tns($dly) + $best}] }; "
+          "if {$w($dly) eq \"\" || $best < $w($dly)} { set w($dly) $best; set wq($dly) $bq } }",
+          "    if {[llength $lv]} { foreach q [get_fanout -from $lv -endpoints_only -flat] { set nm [get_full_name $q]; set a [ot_arr $nm]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $nm /] 0]) $a } } }",
+          "    set lo [ot_leaf $s output]; if {[llength $lo]} { foreach q [get_fanin -to $lo -startpoints_only -flat] { set nm [get_full_name $q]; set a [ot_arr $nm]; if {$a ne \"NA\"} { lappend ffarr([lindex [split $nm /] 0]) $a } } } }",
+          "  foreach dly {max min} { if {$n($dly) == 0} { puts $fh \"SEAM $gname $dly NO_PATH\"; continue }",
+          "    set ps [find_timing_paths -through $wq($dly) -path_delay $dly -group_path_count 1]; set p [lindex $ps 0]",
+          "    set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]",
+          "    puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s\" "
+          "$gname $dly $n($dly) $w($dly) $nneg($dly) $tns($dly) [ot_arr $sp] [ot_arr $ep] $sp $ep] } }",
+          "foreach i [lsort [array names ffarr]] { set v [lsort -unique -real $ffarr($i)]; set mn [tcl::mathfunc::min {*}$v]; "
           "set mx [tcl::mathfunc::max {*}$v]; puts $fh [format \"FFSPREAD %s n %d min %.2f max %.2f spread %.2f\" "
-          "$i [llength $v] $mn $mx [expr {$mx - $mn}]] }",
+          "$i [llength $ffarr($i)] $mn $mx [expr {$mx - $mn}]] }",
           "puts \"OT_SEAMS [expr {[clock milliseconds]-$t0}]\"",
           "puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
           "puts $fh \"SECONDS [expr {([clock milliseconds]-$t0)/1000.0}]\"",
@@ -849,13 +861,10 @@ def cmd_run(a):
     if missing:
         raise SystemExit(f"die_sta: die top instantiates modules without a PARTS dir: {missing}")
     seams = die_seams(top, {m: parts[m] for m in set(inst_mods.values())})
-    groups = defaultdict(list)
+    groups = defaultdict(set)
     for s in seams:
-        groups[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].append(f"{s['dst']}/{s['dst_pin']}")
-    srcp = defaultdict(set)
-    for s in seams:
-        srcp[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].add(f"{s['src']}/{s['src_pin']}")
-    groups = sorted((g, sorted(set(p)), sorted(srcp[g])) for g, p in groups.items())
+        groups[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].add((f"{s['dst']}/{s['dst_pin']}", f"{s['src']}/{s['src_pin']}"))
+    groups = sorted((g, sorted(p)) for g, p in groups.items())
     (out / "seams.json").write_text(json.dumps(dict(top=top.name, seams=seams), indent=0) + "\n")
     mod_files, abstracts = {}, {}
     for m in sorted(set(inst_mods.values())):
