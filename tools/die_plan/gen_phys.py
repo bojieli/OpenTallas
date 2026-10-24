@@ -367,7 +367,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                                 sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
                                 if sibling.is_file() and sibling != f:
                                     shutil.copyfile(sibling, kd / "macros" / sibling.name)
-            mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+            # OpenDB keeps the bus brackets of a flattened generate path escaped (g_fifo\[0\].u_fifo): MPL-0020
+            # otherwise (ELEM-QK 10-24 tt_ctlm).  Braces keep the backslashes literal.
+            dbn = inst.replace("[", "\\[").replace("]", "\\]")
+            mplace.append(f"place_macro -macro_name {{{dbn}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
