@@ -243,11 +243,16 @@ EA, EB = M.ELEM_VIEW["A"], M.ELEM_VIEW["B"]
 SLOT_E = M.ELEM_SLOT
 
 
-def core(inst, view, cells, x, y, um):
+def core(inst, view, cells, x, y, um, orient="R0"):
     v = M.ELEM_VIEW[view[-1]]
     cv = f"ot_s81hd_{view}_cv"
-    return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient="R0",
-                track_offset_um=[0.012, 0.012], pins_file=f"cores/{view}_pins.json",
+    # pins sit on the 0.048 M4 / M5 tracks (offset 0.024) at a 0.012 core shift in R0; a mirrored axis puts pin p at
+    # size - p, so its shift is (0.036 - size) mod 0.048 (elemA 317.672: 0.028)
+    def sh(mirrored):
+        return round((0.036 - um) % 0.048, 4) if mirrored else 0.012
+    track = [sh(orient in ("MY", "R180")), sh(orient in ("MX", "R180"))]
+    return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient=orient,
+                track_offset_um=track, pins_file=f"cores/{view}_pins.json",
                 lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
                 lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_ss.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
@@ -258,11 +263,20 @@ def core(inst, view, cells, x, y, um):
 
 
 CVA, CVB = "u_core.u_b.g_cv.u_eA", "u_core.u_b.g_cvb.u_eB"     # ot_s81hd_bundle CV = 1 instance paths
-tile_cores = [core(CVA + "0", "elemA", EA["cells"], G, G, EA["um"]),
-              core(CVA + "1", "elemA", EA["cells"], SLOT_E + G, G, EA["um"]),
-              core(CVA + "2", "elemA", EA["cells"], G, SLOT_E + G, EA["um"]),
-              core(CVA + "3", "elemA", EA["cells"], SLOT_E + G, SLOT_E + G, EA["um"]),
-              core(CVB, "elemB", EB["cells"], G, 2 * SLOT_E + G, EB["um"])]
+# 10-24 G3 floorplan review (die_plan.png + the r2 global placement, results/geom_review s81_head_tile_r2): the 691.2 tile
+# put elemB's W face and the bus-i face window in one 8.64-um sliver, the A S-face x pins (130 each) on the tile edge
+# and the 20k skew-line flops in one 27.9-um channel.  Now (tile 708.48 x 1036.8):
+#   A block: columns at x 17.28 / 371.52 (edge strips 17.28 / 19.29, centre column 36.57), rows at y 8.64 / 380.16
+#   (centre row channel 53.85); orientation puts every A S face (130 x pins) on the centre row channel and every A
+#   E face (controls + 45 x) on the centre column: bottom-left MX, bottom-right R180, top-left R0, top-right MY.
+#   elemB centred in the top band (x 216.0, y 734.4): W region 0..216 for the bus-i face flops / BST / skew lines,
+#   E region 493.7..708.5 for the bus-o face flops / merge; B's W-face x (128) faces the skew lines.
+AX0, AX1, AY0, AY1 = 2 * G, 43 * G, G, 44 * G
+tile_cores = [core(CVA + "0", "elemA", EA["cells"], AX0, AY0, EA["um"], "MX"),
+              core(CVA + "1", "elemA", EA["cells"], AX1, AY0, EA["um"], "R180"),
+              core(CVA + "2", "elemA", EA["cells"], AX0, AY1, EA["um"], "R0"),
+              core(CVA + "3", "elemA", EA["cells"], AX1, AY1, EA["um"], "MY"),
+              core(CVB, "elemB", EB["cells"], 25 * G, 85 * G, EB["um"], "R0")]
 # CV 1: the 5 elements are the closed views' black boxes (ot_s81hd_elem_cv_bb.v); the element RTL + ROM black box are
 # read only so the parser can resolve the bundle's untaken CV 0 branch (pruned by hierarchy -top)
 HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv",
