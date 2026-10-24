@@ -117,7 +117,7 @@ HOSTS = ["epyc2", "epyc3", "intel1", "intel2", "localhost"]   # FLEET-NEW3 2026-
 # "smalldisk" (FLEET-NEW2 2026-10-19: ot-epyc8 has only 2x 1 TB NVMe in RAID1, ~820 GB): die-level jobs (huge die-chain
 # scratch) skip it while another host qualifies; other work places normally.  ot-epyc9 (2x EPYC 7543, Zen 3) joins as
 # "throughput" when it is provisioned.
-HOST_ROLE = {"epyc2": "normal", "epyc3": "normal", "intel1": "normal", "intel2": "normal", "localhost": "coord", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
+HOST_ROLE = {"epyc2": "normal", "epyc3": "normal", "intel1": "normal", "intel2": "normal", "localhost": "normal", "ot-epyc7": "throughput", "ot-epyc8": "smalldisk", "ot-epyc9": "throughput", "ot-gold1": "normal", "ot-gold2": "normal"}
 # 2026-10-24 COORD (owner order): old-fleet nvme0n1 wiped -> /srv/opentallas-scratch2 (intel1/intel2 3.4 TB, epyc2 879 GB); intel1/intel2 no longer smalldisk.
 # FLEET-NEW3 2026-10-24: epyc2 (2x EPYC 7543) / epyc3 (2x EPYC 7443) are the die-level hosts (normal); intel1/intel2
 # (2x Xeon Gold 6330, ~400 GB root disk) are smalldisk; localhost (EPYC 9754, shared with ~10 agent sessions) is "coord":
@@ -133,6 +133,11 @@ HOST_ROLE = {"epyc2": "normal", "epyc3": "normal", "intel1": "normal", "intel2":
 # queues on a capped host that is full; it goes elsewhere (or waits elsewhere and is re-placed every REQUEUE_S).
 HOST_MAX_DIE = {}   # v10 FLEET-PLACE 2026-10-19: the die COUNT cap is gone (ot-epyc8 1 -> the S81 MU die case waited
 # ~90 min); replaced by DISK admission (drop_low_disk).  Kept (empty) so v9 clients that re-read it drop their caps.
+# HOST RESERVE (FLEET-DISK 2026-10-24, coordinator): localhost was role "coord" (last resort) and sat at ~50-70/256 load
+# while lanes queued; the old coord host was shared with ~10 agent sessions, this one runs ~30 agents that use little CPU.
+# It is now a normal host minus a per-host reserve for the agents and merges: placement sees ncpu - threads and
+# admit/free/total RAM - GB (the host's own ot-heavy MIN_AVAIL_FRAC=0.15 still applies on top).  host -> (threads, GB)
+HOST_RESERVE = {"localhost": (32, 64)}
 DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scratch of one die chain (measured 10-19:
 # die case dirs 0.7 GB at start, die chains 16-40 GB per lane); the default --disk of a die job
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
@@ -240,7 +245,7 @@ SPILL_MAX_DIE_GB = int(os.environ.get("OT_RUN_SPILL_MAX_DIE_GB", "400"))   # v10
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|mu-die|die[_-]case|kvs14r-|dv2f\d)")  # COORD 10-19: MU die cases (mu-die-*, die-case, kvs14r-*, dv2f*) are die jobs (FLEET-DISK gap)
 
 
-CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512")
+CONF_NAMES = ("HOSTS", "HOST_ROLE", "HOST_MAX_DIE", "NO_AVX512", "HOST_RESERVE")
 
 
 def reload_conf(path=None):
@@ -474,10 +479,23 @@ def score(r, mem, threads):
     return (1 - w) * cpu + w * memh
 
 
+def reserved(h, r):
+    """HOST_RESERVE: the row as placement sees it (threads and GB kept back for the agents on that host)"""
+    t, g = HOST_RESERVE.get(h, (0, 0))
+    if not (t or g) or not isinstance(r, dict) or r.get("error") or not r.get("ncpu"):
+        return r
+    r = dict(r, ncpu=max(1, r["ncpu"] - t), reserve_threads=t, reserve_gb=g)
+    for k in ("admit_gb", "free_gb", "die_admit_gb", "total_gb"):
+        if isinstance(r.get(k), (int, float)):
+            r[k] = r[k] - g
+    return r
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
     TPUT_BONUS on a throughput host that stays <= 1.0 x cores.  Among the hosts that admit it now: the best score()."""
+    res = {h: reserved(h, r) for h, r in res.items()}
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
@@ -534,10 +552,11 @@ def choose_selftest():
         # v11 (REFILL-0325 2026-10-20, the 03:24 fleet): CPU-heavy job -> lowest load/cores among the hosts that admit it
         ("CPU-heavy job: the 44/128 host over the 313/128 one", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 64, 16, "ot-epyc5"),
         ("1-thread 48 GB job: still the idle-CPU host when both have RAM", {"ot-epyc5": row(349, 44), "ot-epyc6": row(306, 313)}, 48, 1, "ot-epyc5"),
-        # FLEET-NEW3 2026-10-24: localhost = coord (shared with the agents): last resort only
-        ("coord host idle, server busy: the server that admits it", {"localhost": row(700, 10, 256), "epyc2": row(300, 120)}, 32, 16, "epyc2"),
-        ("coord host when no server admits the request now", {"localhost": row(700, 10, 256), "epyc2": row(20, 10)}, 300, 16, "localhost"),
-        ("nobody admits: queue on a server, not the coord host", {"localhost": row(100, 10, 256), "epyc2": row(50, 10)}, 300, 16, "epyc2"),
+        # FLEET-DISK 2026-10-24: localhost = normal host minus HOST_RESERVE (32 threads, 64 GB) for the agents
+        ("localhost idle, server busy: localhost takes it now", {"localhost": row(700, 60, 256), "epyc2": row(300, 120)}, 32, 16, "localhost"),
+        ("localhost when no server admits the request now", {"localhost": row(700, 10, 256), "epyc2": row(20, 10)}, 300, 16, "localhost"),
+        ("localhost 64 GB reserve: 100 GB free admits no 48 GB job", {"localhost": row(100, 10, 256), "epyc2": row(60, 100)}, 48, 16, "epyc2"),
+        ("localhost 32-thread reserve: 200/256 load counts as 200/224", {"localhost": row(700, 200, 256), "epyc2": row(300, 100)}, 8, 16, "epyc2"),
     ]
     cases = [c if len(c) == 6 else c + (False,) for c in cases]
     bad = [f"{n}: got {choose(r, m, t, dj)[0]}, want {w}" for n, r, m, t, w, dj in cases if choose(r, m, t, dj)[0] != w]

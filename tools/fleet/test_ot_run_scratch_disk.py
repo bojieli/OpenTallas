@@ -224,5 +224,24 @@ class Placer(unittest.TestCase):
         self.assertIn('OT_RUN_SCRATCHLOW TAG', r.stderr)
 
 
+class HostReserve(unittest.TestCase):
+    """coordinator 2026-10-24: localhost is a normal host minus 32 threads / 64 GB for the agents"""
+    def test_localhost_is_normal_with_reserve(self):
+        self.assertEqual(m.HOST_ROLE['localhost'], 'normal')
+        r = m.reserved('localhost', dict(ncpu=256, free_gb=300, admit_gb=300, total_gb=755, cpu_load1=10))
+        self.assertEqual((r['ncpu'], r['admit_gb'], r['free_gb'], r['total_gb']), (224, 236, 236, 691))
+        self.assertIs(m.reserved('epyc2', dict(ncpu=128, free_gb=300)).get('reserve_gb'), None)
+
+    def test_reserve_decides_between_hosts(self):
+        row = lambda free, load, ncpu: dict(free_gb=free, load1=load, ncpu=ncpu, fresh=0)
+        self.assertEqual(m.choose({'localhost': row(100, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'epyc2')
+        self.assertEqual(m.choose({'localhost': row(200, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'localhost')
+        with mock.patch.object(m, 'HOST_RESERVE', {}):
+            self.assertEqual(m.choose({'localhost': row(100, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'localhost')
+
+    def test_reserve_is_reloadable(self):
+        self.assertIn('HOST_RESERVE', m.CONF_NAMES)
+
+
 if __name__ == '__main__':
     unittest.main()
