@@ -108,16 +108,7 @@
         "epoch": "i_slg_Q_N_krsp"
        },
        {
-        "epoch": "i_vport_Q_N_vo"
-       },
-       {
         "epoch": "i_vport_Q_N_vo_d1"
-       },
-       {
-        "epoch": "i_vport_Q_N_vo_d2"
-       },
-       {
-        "epoch": "i_vport_Q_N_vo_d3"
        }
       ],
       "rst_n": [
@@ -129,7 +120,7 @@
      "module": "ot_dp_efault",
      "params": {
       "AGE": 7,
-      "N": 13
+      "N": 10
      }
     },
     "u_fch": {
@@ -5654,7 +5645,7 @@
         0
        ],
        "inst": "dcal",
-       "port": "flt"
+       "port": "fault"
       }
      ]
     }

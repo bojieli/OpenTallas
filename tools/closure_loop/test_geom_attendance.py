@@ -53,6 +53,28 @@ class Attendance(unittest.TestCase):
         self.assertFalse(r["ot_hbm_a"]["unattended"])
         self.assertIn("AG", r["ot_hbm_a"]["owner"])
 
+    def test_geom_fail_without_viz_row(self):
+        lane = "- VERDICT s81_g3_col_h10_r1__t1 physical/die_plan/s81@abc FAIL hash=0123456789abcdef gap [01-01 00:00]\n"
+        r = self.build([], lane=lane)
+        self.assertIn("s81_g3_col_h10_r1__t1", r)
+        self.assertTrue(r["s81_g3_col_h10_r1__t1"]["failure"].startswith("GEOM FAIL"))
+        self.assertTrue(r["s81_g3_col_h10_r1__t1"]["unattended"])
+        # a re-REQ after the FAIL -> attended; a later PASS drops it from the audit
+        r = self.build([], lane=lane + "REQ s81_g3_col_h10_r1__t1 physical/die_plan/s81@def p.png s.json S81\n")
+        self.assertFalse(r["s81_g3_col_h10_r1__t1"]["unattended"])
+        r = self.build([], lane=lane + "- VERDICT s81_g3_col_h10_r1__t1 physical/die_plan/s81@def PASS hash=1 ok\n")
+        self.assertNotIn("s81_g3_col_h10_r1__t1", r)
+        # the owner lane names the kit, not the element -> counts as an action
+        r = self.build([], lane=lane, lanes=[("L", time.time(), ["- [S81-P8 01:00] col_h10_r1__t1 re-space running"])])
+        self.assertFalse(r["s81_g3_col_h10_r1__t1"]["unattended"])
+
+    def test_verdict_kit_field_with_spaces(self):
+        lane = ("REQ s81_g3_col_h9_r2__t1 physical/die_plan/s81@abc p.png s.json S81\n"
+                "- VERDICT s81_g3_col_h9_r2__t1 physical/die_plan/s81@abc kit ot-epyc9:/srv/k/col_h9_r2__t1 FAIL "
+                "hash=0123456789abcdef gap\n")
+        r = self.build([], lane=lane)
+        self.assertEqual(r["s81_g3_col_h9_r2__t1"]["review"], "FAIL")
+
     def test_scope(self):
         r = self.build([row("closed_one", cat="closed (TT era)"), row("other_die", design="old"),
                         row("qfd_bad", cat="closed (TT era)", failed=0)],

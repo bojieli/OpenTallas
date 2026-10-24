@@ -1,0 +1,536 @@
+{
+ "master": "ot_hgi_coll_tkm_m_tp192",
+ "plan_types": [
+  "c0"
+ ],
+ "status": "RTL-UNBENCHED",
+ "measured_total": 8357315,
+ "basis": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192.stat (r18h5 recipe)",
+ "n_cores": 33,
+ "max_core_cells": 260110,
+ "cores_cells": 8357315,
+ "glue_cells": 0,
+ "cores": [
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile0",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[0].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile1",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[1].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile2",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[2].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile3",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[3].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile4",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[4].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile5",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[5].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile6",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[6].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile7",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[7].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile8",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[8].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile9",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[9].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile10",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[10].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile11",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[11].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile12",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[12].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile13",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[13].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile14",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[14].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile15",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[15].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile16",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[16].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile17",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[17].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile18",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[18].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile19",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[19].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile20",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[20].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile21",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[21].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile22",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[22].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile23",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[23].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile24",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[24].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile25",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[25].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile26",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[26].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile27",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[27].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile28",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[28].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile29",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[29].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile30",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[30].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "tile31",
+   "module": "ot_hgi_coll_tkm_tile_e86 (-> ot_hgi_coll_tkm_tile_rg EW86 PT64)",
+   "members": [
+    "u.u.g_tiles[31].e86.u_tile"
+   ],
+   "cells": 260110,
+   "srams": 0,
+   "pins_bits": {
+    "inp": 715,
+    "out": 775
+   }
+  },
+  {
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "core_label": "root",
+   "module": "ot_hgi_coll_tkm_static_p (own logic) + ot_hgi_coll_tkm_buffer",
+   "members": [
+    "u.u (root logic: tick/calendar, decode + 4-sort, pass-1 capture, output lines)",
+    "u.u.u_buffer"
+   ],
+   "cells": 33795,
+   "srams": 2,
+   "pins_bits": {
+    "inp": 2721,
+    "out": 951
+   }
+  }
+ ],
+ "crossings": [
+  {
+   "between": "tile t -> tile t+1 (ins chain)",
+   "bits": 345,
+   "kind": "REG->REG",
+   "note": "ovf_v/ovf_b output regs -> p_vg/p_bg input regs"
+  },
+  {
+   "between": "tile t+1 -> tile t (up chain)",
+   "bits": 344,
+   "kind": "REG->LOGIC->REG",
+   "note": "up_out reg -> X shift-register mux (conv) -> X regs: one 2:1 mux level, kept"
+  },
+  {
+   "between": "root -> all 32 tiles (clr, conv broadcast)",
+   "bits": 2,
+   "kind": "COMB in pinned; REG->REG with PIPE 1",
+   "note": "pinned root drives clr/conv from 32-bit tick comparators; PIPE 1 launches them from root flops (all tile inputs +1 edge). The 2-bit broadcast still spans the 32-tile row (~2 mm): repeaters only; a deeper registered tree = +1 edge per level on the same pattern"
+  },
+  {
+   "between": "root -> tile 0 (entry)",
+   "bits": 345,
+   "kind": "REG->REG",
+   "note": "entry/entry_v regs (PIPE 1: one more launch reg so it stays aligned with clr/conv)"
+  },
+  {
+   "between": "tile 0 -> root (up[0])",
+   "bits": 344,
+   "kind": "REG->LOGIC->REG in pinned; REG->REG with PIPE 1",
+   "note": "PIPE 1: up0_q pin register, consumers moved 2 edges later"
+  }
+ ],
+ "rtl": {
+  "twin": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv (ot_hgi_coll_tkm_static_p #(PIPE 1); PIPE 0 = pinned)",
+  "cycle_cost_edges": 2,
+  "cost_note": "TKM finish/done/stat_cycles +2 edges (same words, same addresses, same order); compiler TKM latency +2",
+  "bench": "rtl/hbm_accel/generic/collective/tkm/run_tp192_static_p.sh OUT (golden O/R vectors syn_sel/syn_cand/rank128_zeros + lock-step vs pinned root delayed 2 edges; PIPE 0 identity; mutant MUTP 1 must FAIL)",
+  "bench_result": "NOT RUN TO COMPLETION: the TP192 lock-step tb (twin + pinned reference root, KMAX 2048, hier tiles) needs >290 GB in the top-level verilator_bin; memcg-OOM at 128 and 300 GB on ot-gold2. Next: drop the in-tb pinned reference (golden O/R vectors only) or run at TP 96 / KMAX 512; lint-clean only so far"
+ },
+ "note": "32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k).",
+ "splits_entry": {
+  "parts": [
+   [
+    "tile",
+    32,
+    260110
+   ],
+   [
+    "root",
+    1,
+    33795
+   ]
+  ],
+  "glue": 0,
+  "stat": "ot-epyc5:/srv/opentallas-scratch/claude/hbm-p4-split-1023/syn/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192.stat",
+  "total": 8357315,
+  "note": "32 x the TP192 tile (260k, already a hardened shape) + root (34k + 2 SRAM): the tile chain is the dataflow; tile pins are registered both ways; PIPE 1 registers the root side.  Root core 34k is small (could merge with its neighbouring tile: 294k)."
+ }
+}

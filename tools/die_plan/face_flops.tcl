@@ -81,6 +81,48 @@ proc ff_from_out {net depth} {
   }
   return ""
 }
+# the same, returning the cell chain [port driver ... flop]
+proc ff_chain_out {net depth} {
+  if {$net eq "NULL" || $net eq ""} { return "" }
+  foreach it [$net getITerms] {
+    if {[[$it getMTerm] getIoType] ne "OUTPUT"} continue
+    set i [$it getInst]
+    if {[ff_is_ff $i]} { return [list $i] }
+    if {$depth < 2 && [ff_is_buf $i]} {
+      foreach n [ff_sig_iterms $i in] { set c [ff_chain_out [$n getNet] [expr {$depth + 1}]]; if {$c ne ""} { return [linsert $c 0 $i] } }
+    }
+  }
+  return ""
+}
+# CP1 r6: yosys merges identical boundary flops of DIFFERENT buses (u_bout_x_o0.q[718] also drove frame_int_o0[892]
+# on the N face; the W-face x path then ran 1 mm, TT -90 ps).  A pin register already claimed by another port is
+# duplicated with its <= 2 buffer chain, and this port moves onto the copy (logically identical: same D / clock).
+set ff_ndup 0
+proc ff_clone_for {bt chain} {
+  global ff_blk ff_ndup
+  set prev ""
+  foreach i [lreverse $chain] {
+    incr ff_ndup
+    set c [odb::dbInst_create $ff_blk [$i getMaster] "[$i getName]_otdup$ff_ndup"]
+    set onet [odb::dbNet_create $ff_blk "otdup_net$ff_ndup"]
+    foreach it [$i getITerms] {
+      set mt [$it getMTerm]
+      if {[$mt getSigType] in {POWER GROUND}} continue
+      set ct [$c findITerm [$mt getName]]
+      if {[$mt getIoType] eq "INPUT"} {
+        if {$prev ne "" && ![ff_is_ff $i]} { $ct connect $prev } elseif {[$it getNet] ne "NULL"} { $ct connect [$it getNet] }
+      } elseif {[$mt getIoType] eq "OUTPUT"} {
+        # the signal output of the chain (a flop has QN only in this library)
+        if {[$it getNet] ne "NULL"} { $ct connect $onet }
+      }
+    }
+    set prev $onet
+    if {[ff_is_ff $i]} { set newff $c }
+  }
+  $bt disconnect
+  $bt connect $prev
+  return $newff
+}
 set ff_done {}
 set ff_occ {}
 set ff_n 0; set ff_miss 0
@@ -95,7 +137,10 @@ foreach pass {INPUT OUTPUT} {
     if {$pass eq "OUTPUT" && [ff_slot_of $nm _o] ne ""} continue
     set f [expr {$pass eq "INPUT" ? [ff_from_in [$bt getNet] 0] : [ff_from_out [$bt getNet] 0]}]
     if {$f eq ""} { incr ff_miss; continue }
-    if {[dict exists $ff_done [$f getName]]} continue
+    if {[dict exists $ff_done [$f getName]]} {
+      if {$pass ne "OUTPUT"} continue
+      set f [ff_clone_for $bt [ff_chain_out [$bt getNet] 0]]
+    }
     dict set ff_done [$f getName] 1
     set bb [$bt getBBox]
     set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
@@ -133,8 +178,10 @@ foreach pass {INPUT OUTPUT} {
     }
     if {!$placed} { incr ff_miss; continue }
     set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
-    $f setLocation $cx $cy
+    # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
+    # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+    $f setLocation $cx $cy
     $f setPlacementStatus FIRM
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
@@ -175,8 +222,8 @@ proc ff_put_near {f x y} {
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
         dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
-        $f setLocation $cx $cy
         if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        $f setLocation $cx $cy
         $f setPlacementStatus FIRM
         return [list $cx $cy]
       }
@@ -219,5 +266,7 @@ foreach bt [$ff_blk getBTerms] {
   }
 }
 close $ff_out
-puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+# per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
+if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
