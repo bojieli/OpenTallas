@@ -21,6 +21,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
   O=\$(ls \$R/5_route.odb \$R/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py > /work/pin_audit.log 2>&1; fi; \
+  if [ -f \$R/3_place.odb ]; then ODB=\$R/3_place.odb OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; cp \$R/ot_face_flops.txt /work/ 2>/dev/null; fi; \
   if [ -f \$R/6_final.odb ]; then \
     mkdir -p /work/views; \
     LIBS_TT=\$(\$M print-LIB_FILES 2>/dev/null | sed -n 's/^LIB_FILES = //p' | sed 's/_SS_/_TT_/g; s/_FF_/_TT_/g; s/_ss\.lib/_tt.lib/g; s/_ff\.lib/_tt.lib/g'); \

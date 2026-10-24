@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.die_ci.margins.v1",
+ "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at SS setup / FF hold, 60 ps setup / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
+ "ocv": {
+  "cell_late": 1.05,
+  "cell_early": 0.95,
+  "net_late": 1.03,
+  "net_early": 0.97,
+  "why": "Flat OCV (OpenSTA set_timing_derate) because ASAP7 ships no LVF / POCV sigma tables. +/-5 % cell is the flat derate an AOCV table gives a ~10-stage path (the partition clock trees from the tap to the face flops are 8-14 stages; flat derates of 5-10 % are the usual range without LVF, cf. Bhasker & Chadha, Static Timing Analysis for Nanometer Designs, 2009, ch. 10 on OCV derating). +/-3 % on nets. CRPR only removes the common clock path; seams share only the die clk port (ideal spine), so the whole tree of each partition is derated -- the dominant term on a seam."
+ },
+ "ir": {
+  "mode": "stated",
+  "vdd_ss_v": 0.63,
+  "vdd_drop_frac": 0.05,
+  "vt_v": 0.25,
+  "alpha": 1.3,
+  "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the SS supply (31.5 mV at 0.63 V, the total static + dynamic drop a sign-off PDN is designed to). Delay sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: d ln t / d ln V = 1 - a V / (V - Vt) = -1.155 at a = 1.3, Vt = 0.25 V (conservative ASAP7 RVT), so a 5 % drop is +5.8 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it replaces vdd_drop_frac.",
+  "pdnsim": null
+ },
+ "xtalk": {
+  "c_per_um_ff": 0.178475,
+  "cc_frac": 0.7,
+  "mcf_setup": 2.0,
+  "mcf_hold": 0.0,
+  "seam_len_um_default": 60.0,
+  "why": "OpenSTA has no SI delay. Per-seam margin = |MCF - 1| x R_eff x Cc, Cc = cc_frac x c_per_um x L_seam: c_per_um = ASAP7 M4 0.178 fF/um (ORFS platforms/asap7/setRC.tcl, the seam pin layers M4-M7 are 0.163-0.187); cc_frac 0.7 = sidewall coupling share of a min-pitch 7 nm line with both neighbours (aspect ratio ~2); Miller coupling factor 2 (opposite switching, setup) / 0 (same direction, hold) is the worst-case switch-factor bound of Kahng, Muddu & Sarto (DAC 2000); L_seam = 2 x budgets.pin_reg_p90_um (R2 face flops at both pins, G3 pin-to-reg p90 budget, 30 um per side default); R_eff = the clk->QN delay slope of DFFHQNx1 at the corner (lib below). This is a bound for an x1 face flop driving the seam unbuffered; a kit that upsizes the seam driver lowers the real push. Clock-net coupling is not added (clock trees are inside the derated OCV term)."
+ },
+ "lib": {
+  "SS": {
+   "cell": "DFFHQNx1_ASAP7_75t_R",
+   "slew_ps": 20.0,
+   "load_ff": 11.31,
+   "clk_q_max_ps": 152.25,
+   "clk_q_min_ps": 144.82,
+   "r_eff_ps_per_ff": 6.596,
+   "setup_ps": 16.21,
+   "hold_ps": 18.28,
+   "d_cap_ff": 0.524726,
+   "liberty": "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib"
+  },
+  "FF": {
+   "cell": "DFFHQNx1_ASAP7_75t_R",
+   "slew_ps": 20.0,
+   "load_ff": 11.31,
+   "clk_q_max_ps": 71.16,
+   "clk_q_min_ps": 68.92,
+   "r_eff_ps_per_ff": 2.77,
+   "setup_ps": 9.92,
+   "hold_ps": 12.28,
+   "d_cap_ff": 0.62135,
+   "liberty": "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+  },
+  "TT": {
+   "cell": "DFFHQNx1_ASAP7_75t_R",
+   "slew_ps": 20.0,
+   "load_ff": 11.31,
+   "clk_q_max_ps": 100.77,
+   "clk_q_min_ps": 96.27,
+   "r_eff_ps_per_ff": 4.103,
+   "setup_ps": 9.99,
+   "hold_ps": 12.47,
+   "d_cap_ff": 0.558822,
+   "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+  }
+ },
+ "derived_on": "2026-10-24",
+ "derived": {
+  "derates": {
+   "cell_late": 1.1107,
+   "cell_early": 0.95,
+   "net_late": 1.03,
+   "net_early": 0.97,
+   "ir_factor": 1.0578
+  },
+  "xtalk_default": {
+   "setup_ps": 49.44,
+   "hold_ps": 20.76,
+   "seam_len_um": 60.0,
+   "cc_ff": 7.496
+  },
+  "ir": {
+   "factor": 1.0578,
+   "sensitivity": 1.155,
+   "drop_frac": 0.05
+  }
+ }
+}

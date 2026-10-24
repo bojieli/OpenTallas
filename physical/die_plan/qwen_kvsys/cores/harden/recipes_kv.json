@@ -1,0 +1,5 @@
+{
+ "_default": {"util": 0.6, "sigmax": "M5", "face_flops": true},
+ "kv3_astk_*": {"util": 0.66, "synth_memory_max_bits": 32768,
+                "source": "astk_synth_v38h.json: 152k cells / 18.5k um2 hierarchical std (flop FIFOs, SYNTH_MEMORY_MAX_BITS 32768) in a 181.4 x 172.8 um core area"}
+}

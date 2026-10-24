@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -47,6 +48,8 @@ def main():
         raise ValueError('Existing VP+VS bench verdict changed; inspect before adapting')
     (out / 'tb_owner_fold.sv').write_text(text.replace(old, 'nxq == 0 && !fp && !fs && !fq && nck[11] == 1'))
     script = (root / 'tools/s81_slice/vs_bench.sh').read_text()
+    # vs_bench.sh (11ed229e0b+) prepends ${S81_VS_EXTRA_SOURCES:-}; expand it exactly as the shell would.
+    script = script.replace('${S81_VS_EXTRA_SOURCES:-}', os.environ.get('S81_VS_EXTRA_SOURCES', ''))
     src = re.search(r'srcs="(.*?)"\n', script, re.S).group(1).split()
     src = [str(root / x) for x in src if not x.endswith('/tb_s81sl_vs.sv')]
     src.append(str(out / 'tb_owner_fold.sv'))

@@ -1,0 +1,35 @@
+
+7. Printing statistics.
+
+=== cal_erx ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1064        - wires
+     1194        - wire bits
+        9        - public wires
+      135        - public wire bits
+        8        - ports
+      134        - port bits
+     1123  137.796 cells
+       64    5.599   AOI211xp5_ASAP7_75t_R
+      193    14.07   AOI21xp33_ASAP7_75t_R
+        8    3.033   DFFASRHQNx1_ASAP7_75t_R
+      256    74.65   DFFHQNx1_ASAP7_75t_R
+       70    3.062   INVx1_ASAP7_75t_R
+        1    0.102   MAJIxp5_ASAP7_75t_R
+       65    3.791   NAND2xp33_ASAP7_75t_R
+        5    0.365   NAND3xp33_ASAP7_75t_R
+      258   15.047   NOR2xp33_ASAP7_75t_R
+        1    0.073   NOR3xp33_ASAP7_75t_R
+       65    5.686   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.117   OA211x2_ASAP7_75t_R
+       64    6.532   OA21x2_ASAP7_75t_R
+       64    4.666   OAI21xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        7    0.919   XNOR2xp5_ASAP7_75t_R
+
+   Chip area for module '\cal_erx': 137.795580
+     of which used for sequential elements: 77.682240 (56.37%)
+
