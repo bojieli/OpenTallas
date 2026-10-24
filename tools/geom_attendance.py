@@ -45,7 +45,11 @@ LIVE_STATES = {"QUEUED", "RUNNING", "READY", "BENCH", "WAITING", "INGESTED", "PE
                "SMOKE_OK"}
 TERMINAL = {"CLOSED", "CANCELLED", "REFUSED", "INVALID"}
 REQ_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?REQ\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)", re.M)
-VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(\S+)\s+(PASS-CONDITIONAL|PASS|FAIL)(?![\w-])", re.M)
+# the kit field may hold spaces (die_plan G3 kits: "physical/die_plan/s81@<c> kit ot-epyc9:/srv/...", "qwen_kvsys(gen.py
+# phys --types kv3_io_ft, tool ...)@<c>"): match lazily up to the verdict word that is followed by hash= (GEOM-REVIEW6
+# 10-23: 24 of 220 verdict lines were invisible to the old single-token form, so their elements read 'requested').
+VER_RE = re.compile(r"^\s*-?\s*(?:\[[^\]]*\]\s*)?VERDICT\s+(\S+)\s+(.+?)\s+(PASS-CONDITIONAL|PASS|FAIL)(?![\w-])"
+                    r"(?=\s+hash=)", re.M)
 STALE_H = 2.0
 SUP_LANE_RE = re.compile(r"\bSUPERSEDED\s+(\S+)\s+by\s+(\S+)")
 SUP_TREE_RE = re.compile(r"\bSUPERSEDED\b(?!-)|\boff-die\b", re.I)
@@ -237,8 +241,14 @@ def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
     opened = open_on_dies(rows)
     byname = {x["element"]: x for x in rows}
     bad_tops = {t for t, v in cmap.items() if any(r[1] in G.BAD for r in v)}
-    elements = sorted(set(opened) | bad_tops)
     rstate = review_state(lane_text, verdicts)
+    # GEOM-REVIEW6 10-23: a plan partition / G3 kit whose LAST GEOM verdict is FAIL is open work even when fleet-viz
+    # does not list it (die_plan G3 kits, s81_g3_*, kv3_*, coll_ftc): audit it like any failed element.
+    # (a re-REQ after the FAIL keeps it listed as 'requested' until a PASS / PASS-CONDITIONAL lands)
+    failed_once = {m.group(1) for m in VER_RE.finditer(lane_text) if m.group(3) == "FAIL"}
+    failed_once |= {v["element"] for v in verdicts if v.get("element") and v.get("verdict") == "FAIL"}
+    geom_fail = {e for e in failed_once if rstate.get(e, ("none",))[0] in ("FAIL", "requested")}
+    elements = sorted(set(opened) | bad_tops | geom_fail)
     lane_sup, tree_toks = superseded_lane(lane_text), _tree_tokens(tree_lines)
     out = []
     for e in elements:
@@ -249,6 +259,8 @@ def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
         jobs = lidx.get(e, [])
         kits = {Path(j["kit"]).name for j in jobs if j.get("kit")}
         kits |= {r[0].split("__", 1)[1] for r in cmap.get(e, []) if "__" in r[0]}
+        if "_g3_" in e:         # s81_g3_col_h10_r1__t1: lanes name the kit (col_h10_r1__t1 / h10_r1)
+            kits.add(e.split("_g3_", 1)[1])
         names = [e] + sorted(kits)
         if superseded_by(e, names, lane_sup, tree_toks):
             continue            # superseded / off-die: not open work
@@ -264,6 +276,8 @@ def build(rows, cmap, lidx, verdicts, lane_text, tree_lines, lanes, psout):
             failure = f"viz failed={row.get('failed')} latest {lat.get('status')} {lat.get('job')}"
         if coordbad:
             failure = (failure + " + " if failure else "") + f"COORD {coordbad[0][1]} {coordbad[0][0]}"
+        if not failure and e in geom_fail:
+            failure = "GEOM FAIL" + (f" ({rstate[e][1]})" if rstate[e][0] == "FAIL" else ", re-REQ in flight")
         live_loop = [j for j in jobs if j["status"] in LIVE_STATES or (j["status"] not in TERMINAL and
                                                                       not G.is_fail_state(j["status"] or ""))]
         live_ps = [k for k in kits if k and re.search(rf"(ref_gate_|/){re.escape(k)}(_|-|/|\.)", psout)]
