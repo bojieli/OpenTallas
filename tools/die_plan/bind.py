@@ -1323,12 +1323,37 @@ class Binder:
                   table_summary=js.get("summary", {}), members=0, stale=0, uncovered=0, excluded_bits=0,
                   r8_excluded=[], async_bits=0, table_exempt=js.get("exempt", []), table_bus=js.get("bus"),
                   table_replica=js.get("replica"))
+        # Yosys-internal cells ($or / $and fault reducers) are renumbered by every elaboration: a table name that is not
+        # in this bind matches the unique cell with the same canonical name ($op$<file:line$N> -> $op$#)
+        def canon(x):
+            return re.sub(r"\$(\w+)\$[\w.]+:\d+\$\d+", r"$\1$#", x)
+        cmap = defaultdict(list)
+        for k, v in cidx.items():
+            if "$" in k:
+                cmap[canon(k)].append(v)
+        xsrc = defaultdict(set)
+        for (c, pn, i), d in self.sinks.items():
+            if d[0] == "x" and "$" in self.F.cells[c].path:
+                xsrc[(c, pn)].add(canon(f"{self.F.cells[d[2]].path}.{d[3]}"))
+        st["renamed_cells"] = 0
+        st["gone_pad0"] = []
         want = {}
         for m in js["members"]:
             st["members"] += 1
             ci = cidx.get(m["sink"])
+            if ci is None and cmap.get(canon(m["sink"])):
+                cs = cmap[canon(m["sink"])]
+                if len(cs) > 1:     # several reducers of one op in that parent: the one this member's source drives
+                    cs = [c for c in cs if canon(m["source"]) in xsrc.get((c, m["sink_port"]), ())]
+                if len(cs) == 1:
+                    ci = cs[0]
+                    st["renamed_cells"] += 1
             bits = [i for a, b in m["sink_bits"] for i in range(a, b + 1)]
             if ci is None or m["sink_port"] not in self.F.cells[ci].ports:
+                if not m["pad"]:
+                    # a sink the RTL removed (e.g. QC-P5-TIE chain ends drop sc_dn_i / sc_up_i): no pad was due
+                    st["gone_pad0"].append(m["id"])
+                    continue
                 st["stale"] += 1
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']}: no such sink leaf/port in this bind")
@@ -1355,7 +1380,7 @@ class Binder:
             seen.add((ci, pn, i))
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
             src = f"{self.F.cells[d[2]].path}.{d[3]}"
-            if src != m["source"] or d[5] != m["asbuilt"] or b0 != m["bound"]:
+            if canon(src) != canon(m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
                 st["stale"] += 1
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
