@@ -500,6 +500,7 @@ def psm_tcl(P, lefs, power, bumps):
         t.append(f"ot_place {sv(n)} {ox:g} {oy:g} {p.get('orient', 'R0')}")
     t += ["puts \"OT_T placed [expr {[clock seconds]-$t0}]\"", "source /work/psm/pdn.tcl", "pdngen",
           "puts \"OT_T pdngen [expr {[clock seconds]-$t0}]\"",
+          "write_db /work/psm/pdn_grid.odb",
           "source /work/psm/bumps.tcl",
           "puts \"OT_T bumps [expr {[clock seconds]-$t0}]\"",
           "write_db /work/psm/pdn_bumps.odb",
