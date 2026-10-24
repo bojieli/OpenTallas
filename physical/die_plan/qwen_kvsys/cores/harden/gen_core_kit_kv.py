@@ -326,6 +326,13 @@ def main():
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     shutil.copyfile(Path(a.tool) / "face_guard.py", kd / "face_guard.py")
+    # Declaration context only: unused clock aliases and reset ports are not data.
+    # Data pins still require their physical boundary registers without exceptions.
+    unused_clks = sorted({split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk_unused"})
+    (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
+        schema="opentallas.core_boundary_guard_context.v1", source_core_json=str(a.core_json),
+        clock_ports=clks, unused_clock_ports=unused_clks, reset_ports=rsts,
+        data_pin_exemptions=[]), indent=1) + "\n")
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
@@ -337,8 +344,9 @@ def main():
         (kd / name).write_text(text)
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (tool / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip regex anchor changed"
+    ff, replacements = re.subn(r"^set ff_skip_re \{[^\n]*\}$",
+                               lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
+    assert replacements == 1, "face_flops.tcl must declare exactly one skip regex"
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
