@@ -184,7 +184,9 @@ def t_lib(ps):
     return float(ps) / LIB_TIME_UNIT_PS
 
 
-FT_HOP_IN_SHARE = 0.25   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop
+FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
+# COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
+# keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
 
 
 def sdc(P, tn, pins):
@@ -329,6 +331,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
            "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           "export OT_TAP_MAX_SINKS = 3000",   # COORD 10-23: taps sized by sink count
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
@@ -342,7 +345,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl"):
+    for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
