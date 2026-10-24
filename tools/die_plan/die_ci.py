@@ -11,7 +11,7 @@ is the single entry point that does it for every die plan on one main sha:
     die_ci.py stage-views --host H --dest DIR [--views ...]   # (localhost) copy registered views to the run host
     die_ci.py render RUN_DIR                                  # re-write the Markdown from the JSON
 
-Per die (DIES below; hbm_arch B2 joins automatically once its die_plan.json is on main), every gate is PASS / FAIL /
+Per die (DIES below; hbm = HBM-ARCH B2l), every gate is PASS / FAIL /
 NOT RUN (<reason>) / N/A (<reason>) / CARRIED (<from sha>):
 
   g0        check.py --completeness, once; G0 = the ERRORs that are not G0C-class (check.py G0C_CHECKS are WARN in
@@ -78,16 +78,14 @@ DIES = [
     # G2 memory (GB, docker --memory = --memory-swap): die probe, first part try, part ceiling.  A part probe killed
     # by the cgroup (EXIT 137) is re-run alone at 2x up to the ceiling; the die's ot-run job reserves its peak.
     # HBM q_sfuc / q_su1 hit 137 at 32 GB in the 10-24 nightly -> HBM starts at 64.
-    dict(name="hbm", plans=["physical/die_plan/hbm/die_plan.json"], g2_mem=(64, 64, 128)),
-    # HBM-ARCH B2 redesign: joins when its plan is on main (B2r2 preferred over B2)
-    dict(name="hbm_arch_B2", plans=["physical/die_plan/hbm_arch/B2r2/die_plan.json",
-                                    "physical/die_plan/hbm_arch/B2/die_plan.json"], optional=True),
+    # HBM = the HBM-ARCH B2l plan of record (main 9c5104bfcc50; the d4g fallback physical/die_plan/hbm is superseded,
+    # HBM-ARCH 10-24).  B2l SerDes windows carry `rack_macro` (lk_SW0 ...) for xdie_io.
+    dict(name="hbm", plans=["physical/die_plan/hbm_arch/B2l/die_plan.json"], g2_mem=(64, 64, 128)),
 ]
 RACK = "results/arch/release_rack_1021"
 SYSTEMS = [
     dict(name="s81", conn=f"{RACK}/connections_s81.csv", roles={"H": "s81_head", "S": "s81", "B": "s81"}),
     dict(name="hbm-ds", conn=f"{RACK}/connections_hbm-ds.csv", roles={"D": "hbm"}),
-    dict(name="hbm-ds@B2", conn=f"{RACK}/connections_hbm-ds.csv", roles={"D": "hbm_arch_B2"}),
     dict(name="qwen-rom", conn=f"{RACK}/connections_qwen-rom.csv", roles=None,
          na="rack macros are io_ucie, not lk_ die.io windows (xdie_io.py checks lk_ circuits only)"),
     dict(name="hbm-qwen", conn=f"{RACK}/connections_hbm-qwen.csv", roles=None,

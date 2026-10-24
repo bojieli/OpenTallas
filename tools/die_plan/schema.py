@@ -143,7 +143,10 @@ SCHEMA = {
                                    "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
                                    "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
                                    "host_route": {"type": "string"},
-                                   "basis": {"type": "string"}, "note": {"type": "string"}}}},
+                                   "basis": {"type": "string"}, "note": {"type": "string"},
+                                   # rack table macro name (lk_<name>) of this window when its partition is not
+                                   # named after it (xdie_io.py; HBM B2l, HBM-ARCH 10-24)
+                                   "rack_macro": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
