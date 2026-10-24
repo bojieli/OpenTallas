@@ -5,7 +5,7 @@
 "summary": {
 "landing_groups": 1736,
 "landing_misaligned_by_lanes": 74,
-"landing_misaligned_after_pads": 0,
+"landing_misaligned_after_pads": 3,
 "replica_sets": 609,
 "replica_unequal": 583
 },
@@ -174161,7 +174161,7 @@
 "sink_part": "coll_n",
 "src_part": "io_serdes",
 "aligned_by_lanes": false,
-"aligned_landed": true,
+"aligned_landed": false,
 "asbuilt_stage_set": [
 12,
 13
@@ -174204,7 +174204,7 @@
 ],
 "asbuilt_stages": 13,
 "bound_stages": 2,
-"landed_stages": 3,
+"landed_stages": 2,
 "lane": "io_serdes__rx_v_serdes_rx_valid"
 },
 {
@@ -174224,7 +174224,7 @@
 ],
 "asbuilt_stages": 13,
 "bound_stages": 2,
-"landed_stages": 3,
+"landed_stages": 2,
 "lane": "io_serdes__tx_up_serdes_up"
 }
 ]
@@ -174510,7 +174510,7 @@
 "sink_part": "coll_s",
 "src_part": "io_serdes_2",
 "aligned_by_lanes": false,
-"aligned_landed": true,
+"aligned_landed": false,
 "asbuilt_stage_set": [
 9,
 10
@@ -174553,7 +174553,7 @@
 ],
 "asbuilt_stages": 10,
 "bound_stages": 10,
-"landed_stages": 11,
+"landed_stages": 10,
 "lane": "io_serdes_2__rx_v_serdes_rx_valid"
 },
 {
@@ -174573,7 +174573,7 @@
 ],
 "asbuilt_stages": 10,
 "bound_stages": 10,
-"landed_stages": 11,
+"landed_stages": 10,
 "lane": "io_serdes_2__tx_up_serdes_up"
 }
 ]
@@ -174635,7 +174635,7 @@
 "sink_part": "coll_core",
 "src_part": "coll_s",
 "aligned_by_lanes": false,
-"aligned_landed": true,
+"aligned_landed": false,
 "asbuilt_stage_set": [
 0,
 5
@@ -174698,7 +174698,7 @@
 ],
 "asbuilt_stages": 5,
 "bound_stages": 8,
-"landed_stages": 13,
+"landed_stages": 8,
 "lane": "coll_s__crec_rx_s1"
 },
 {
@@ -174718,7 +174718,7 @@
 ],
 "asbuilt_stages": 5,
 "bound_stages": 8,
-"landed_stages": 13,
+"landed_stages": 8,
 "lane": "coll_s__crec_rx_s2"
 },
 {
@@ -174738,7 +174738,7 @@
 ],
 "asbuilt_stages": 5,
 "bound_stages": 8,
-"landed_stages": 13,
+"landed_stages": 8,
 "lane": "coll_s__fltv"
 }
 ]

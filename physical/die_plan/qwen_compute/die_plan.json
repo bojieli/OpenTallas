@@ -20448,6 +20448,23 @@
       "M5"
      ],
      "order": "lsb_low"
+    },
+    {
+     "name": "fltv_o",
+     "dir": "out",
+     "width": 35,
+     "kind": "ctl",
+     "leaf": "u_pstn.fltv_o",
+     "face": "N",
+     "window_um": [
+      467.824,
+      475.024
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
     }
    ],
    "ft_slots": [],
@@ -20628,6 +20645,21 @@
       "M7",
       "M5"
      ]
+    },
+    {
+     "name": "fltv",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 35,
+     "stations": 2,
+     "out_window_um": [
+      467.824,
+      475.024
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
     }
    ],
    "contents": [],
@@ -20678,8 +20710,8 @@
      "leaf": "u_pstn.io_collective__in_data",
      "face": "N",
      "window_um": [
-      269.968,
-      376.768
+      288.64,
+      394.48
      ],
      "layers": [
       "M7",
@@ -20695,8 +20727,8 @@
      "leaf": "u_pstn.io_collective__in_last",
      "face": "N",
      "window_um": [
-      268.608,
-      269.008
+      287.28,
+      287.68
      ],
      "layers": [
       "M7",
@@ -20712,8 +20744,8 @@
      "leaf": "u_pstn.io_collective__in_mode",
      "face": "N",
      "window_um": [
-      267.248,
-      267.648
+      285.92,
+      286.32
      ],
      "layers": [
       "M7",
@@ -20729,8 +20761,8 @@
      "leaf": "u_pstn.io_collective__in_tag",
      "face": "N",
      "window_um": [
-      259.68,
-      266.288
+      278.352,
+      284.96
      ],
      "layers": [
       "M7",
@@ -20746,8 +20778,8 @@
      "leaf": "u_pstn.io_collective__in_valid",
      "face": "N",
      "window_um": [
-      258.32,
-      258.72
+      276.992,
+      277.392
      ],
      "layers": [
       "M7",
@@ -20763,8 +20795,8 @@
      "leaf": "u_pstn.io_collective__cmd_mode",
      "face": "N",
      "window_um": [
-      256.928,
-      257.36
+      275.632,
+      276.032
      ],
      "layers": [
       "M7",
@@ -20780,8 +20812,8 @@
      "leaf": "u_pstn.io_collective__cmd_tag",
      "face": "N",
      "window_um": [
-      249.36,
-      255.968
+      268.064,
+      274.672
      ],
      "layers": [
       "M7",
@@ -20797,8 +20829,8 @@
      "leaf": "u_pstn.io_collective__cmd_v",
      "face": "N",
      "window_um": [
-      248.0,
-      248.4
+      266.704,
+      267.104
      ],
      "layers": [
       "M7",
@@ -20814,8 +20846,8 @@
      "leaf": "u_pstn.io_collective__cmd_words",
      "face": "N",
      "window_um": [
-      243.632,
-      247.04
+      262.336,
+      265.744
      ],
      "layers": [
       "M7",
@@ -20865,8 +20897,8 @@
      "leaf": "u_pstn.io_collective__out_data",
      "face": "N",
      "window_um": [
-      383.712,
-      489.488
+      401.28,
+      506.912
      ],
      "layers": [
       "M7",
@@ -20882,8 +20914,8 @@
      "leaf": "u_pstn.io_collective__out_err",
      "face": "N",
      "window_um": [
-      382.352,
-      382.752
+      399.92,
+      400.32
      ],
      "layers": [
       "M7",
@@ -20899,8 +20931,8 @@
      "leaf": "u_pstn.io_collective__out_last",
      "face": "N",
      "window_um": [
-      380.992,
-      381.392
+      398.56,
+      398.96
      ],
      "layers": [
       "M7",
@@ -20916,8 +20948,8 @@
      "leaf": "u_pstn.io_collective__out_rank",
      "face": "N",
      "window_um": [
-      379.232,
-      380.032
+      396.8,
+      397.6
      ],
      "layers": [
       "M7",
@@ -20933,8 +20965,8 @@
      "leaf": "u_pstn.io_collective__out_valid",
      "face": "N",
      "window_um": [
-      377.728,
-      378.272
+      395.44,
+      395.84
      ],
      "layers": [
       "M7",
@@ -21035,8 +21067,8 @@
      "leaf": "u_collective.s0_tx_rec",
      "face": "N",
      "window_um": [
-      125.312,
-      239.952
+      138.976,
+      253.728
      ],
      "layers": [
       "M7",
@@ -21052,8 +21084,8 @@
      "leaf": "u_collective.s0_rx_rec",
      "face": "N",
      "window_um": [
-      9.936,
-      124.352
+      25.52,
+      138.016
      ],
      "layers": [
       "M7",
@@ -21069,8 +21101,8 @@
      "leaf": "u_collective.fault_sl",
      "face": "N",
      "window_um": [
-      242.272,
-      242.672
+      260.976,
+      261.376
      ],
      "layers": [
       "M7",
@@ -21103,8 +21135,8 @@
      "leaf": "u_pstn.flt_n_i",
      "face": "N",
      "window_um": [
-      240.912,
-      241.312
+      254.688,
+      255.456
      ],
      "layers": [
       "M7",
@@ -21120,8 +21152,59 @@
      "leaf": "u_collective.fault_or",
      "face": "N",
      "window_um": [
+      24.16,
+      24.56
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "fltv_s_i",
+     "dir": "in",
+     "width": 35,
+     "kind": "ctl",
+     "leaf": "u_pstn.fltv_s_i",
+     "face": "S",
+     "window_um": [
+      467.824,
+      475.024
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "fltv_n_i",
+     "dir": "in",
+     "width": 17,
+     "kind": "ctl",
+     "leaf": "u_pstn.fltv_n_i",
+     "face": "N",
+     "window_um": [
+      256.416,
+      260.016
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "fltv_o",
+     "dir": "out",
+     "width": 69,
+     "kind": "ctl",
+     "leaf": "u_pstn.fltv_o",
+     "face": "N",
+     "window_um": [
       8.576,
-      8.976
+      23.2
      ],
      "layers": [
       "M7",
@@ -21338,8 +21421,8 @@
      "width": 512,
      "stations": 2,
      "out_window_um": [
-      269.968,
-      376.768
+      288.64,
+      394.48
      ],
      "layers": [
       "M7",
@@ -21353,8 +21436,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      268.608,
-      269.008
+      287.28,
+      287.68
      ],
      "layers": [
       "M7",
@@ -21368,8 +21451,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      267.248,
-      267.648
+      285.92,
+      286.32
      ],
      "layers": [
       "M7",
@@ -21383,8 +21466,8 @@
      "width": 32,
      "stations": 2,
      "out_window_um": [
-      259.68,
-      266.288
+      278.352,
+      284.96
      ],
      "layers": [
       "M7",
@@ -21398,8 +21481,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      258.32,
-      258.72
+      276.992,
+      277.392
      ],
      "layers": [
       "M7",
@@ -21413,8 +21496,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      256.928,
-      257.36
+      275.632,
+      276.032
      ],
      "layers": [
       "M7",
@@ -21428,8 +21511,8 @@
      "width": 32,
      "stations": 2,
      "out_window_um": [
-      249.36,
-      255.968
+      268.064,
+      274.672
      ],
      "layers": [
       "M7",
@@ -21443,8 +21526,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      248.0,
-      248.4
+      266.704,
+      267.104
      ],
      "layers": [
       "M7",
@@ -21458,8 +21541,8 @@
      "width": 16,
      "stations": 2,
      "out_window_um": [
-      243.632,
-      247.04
+      262.336,
+      265.744
      ],
      "layers": [
       "M7",
@@ -21473,8 +21556,8 @@
      "width": 1,
      "stations": 1,
      "out_window_um": [
-      5.68,
-      6.08
+      21.136,
+      21.536
      ],
      "layers": [
       "M6",
@@ -21488,8 +21571,8 @@
      "width": 1,
      "stations": 1,
      "out_window_um": [
-      7.04,
-      7.44
+      22.496,
+      22.896
      ],
      "layers": [
       "M6",
@@ -21503,8 +21586,8 @@
      "width": 512,
      "stations": 2,
      "out_window_um": [
-      377.376,
-      484.128
+      381.856,
+      488.688
      ],
      "layers": [
       "M7",
@@ -21518,8 +21601,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      375.856,
-      376.416
+      380.496,
+      380.896
      ],
      "layers": [
       "M7",
@@ -21533,8 +21616,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      374.496,
-      374.896
+      379.136,
+      379.536
      ],
      "layers": [
       "M7",
@@ -21548,8 +21631,8 @@
      "width": 3,
      "stations": 2,
      "out_window_um": [
-      372.736,
-      373.536
+      377.376,
+      378.176
      ],
      "layers": [
       "M7",
@@ -21563,8 +21646,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      371.376,
-      371.776
+      375.968,
+      376.416
      ],
      "layers": [
       "M7",
@@ -21578,8 +21661,8 @@
      "width": 1,
      "stations": 1,
      "out_window_um": [
-      8.4,
-      8.8
+      23.856,
+      24.352
      ],
      "layers": [
       "M6",
@@ -21608,8 +21691,8 @@
      "width": 547,
      "stations": 2,
      "out_window_um": [
-      9.936,
-      124.352
+      25.52,
+      138.016
      ],
      "layers": [
       "M7",
@@ -21623,8 +21706,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      242.272,
-      242.672
+      260.976,
+      261.376
      ],
      "layers": [
       "M7",
@@ -21638,8 +21721,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      240.912,
-      241.312
+      254.688,
+      255.456
      ],
      "layers": [
       "M7",
@@ -21655,6 +21738,36 @@
      "out_window_um": [
       4.32,
       4.72
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "name": "fltv",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 17,
+     "stations": 2,
+     "out_window_um": [
+      256.416,
+      260.016
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "fltvc",
+     "in_face": "S",
+     "out_face": "W",
+     "width": 69,
+     "stations": 1,
+     "out_window_um": [
+      5.68,
+      20.176
      ],
      "layers": [
       "M6",
@@ -21736,8 +21849,8 @@
      "width": 512,
      "stations": 2,
      "out_window_um": [
-      263.536,
-      370.416
+      268.352,
+      375.008
      ],
      "layers": [
       "M7",
@@ -21751,8 +21864,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      262.176,
-      262.576
+      266.992,
+      267.392
      ],
      "layers": [
       "M7",
@@ -21766,8 +21879,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      260.816,
-      261.216
+      265.632,
+      266.032
      ],
      "layers": [
       "M7",
@@ -21781,8 +21894,8 @@
      "width": 32,
      "stations": 2,
      "out_window_um": [
-      253.248,
-      259.856
+      258.064,
+      264.672
      ],
      "layers": [
       "M7",
@@ -21796,8 +21909,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      251.888,
-      252.288
+      256.704,
+      257.104
      ],
      "layers": [
       "M7",
@@ -21811,8 +21924,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      250.528,
-      250.928
+      255.344,
+      255.744
      ],
      "layers": [
       "M7",
@@ -21826,8 +21939,8 @@
      "width": 32,
      "stations": 2,
      "out_window_um": [
-      242.96,
-      249.568
+      247.776,
+      254.384
      ],
      "layers": [
       "M7",
@@ -21841,8 +21954,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      241.6,
-      242.0
+      246.16,
+      246.816
      ],
      "layers": [
       "M7",
@@ -21856,8 +21969,8 @@
      "width": 16,
      "stations": 2,
      "out_window_um": [
-      237.232,
-      240.64
+      241.792,
+      245.2
      ],
      "layers": [
       "M7",
@@ -22066,8 +22179,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      235.872,
-      236.272
+      240.432,
+      240.832
      ],
      "layers": [
       "M7",
@@ -22083,6 +22196,21 @@
      "out_window_um": [
       234.512,
       234.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "fltv",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 17,
+     "stations": 2,
+     "out_window_um": [
+      235.872,
+      239.472
      ],
      "layers": [
       "M7",
@@ -22170,6 +22298,21 @@
      "out_window_um": [
       234.512,
       234.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "fltv",
+     "in_face": "N",
+     "out_face": "S",
+     "width": 17,
+     "stations": 1,
+     "out_window_um": [
+      235.872,
+      239.472
      ],
      "layers": [
       "M7",
@@ -22352,6 +22495,23 @@
       "M5"
      ],
      "order": "lsb_low"
+    },
+    {
+     "name": "fltv_o",
+     "dir": "out",
+     "width": 17,
+     "kind": "ctl",
+     "leaf": "u_pstn.fltv_o",
+     "face": "S",
+     "window_um": [
+      235.872,
+      239.472
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
     }
    ],
    "ft_slots": [],
@@ -22437,8 +22597,8 @@
      "leaf": "u_ucie_kv.tx_flit",
      "face": "N",
      "window_um": [
-      126.928,
-      248.864
+      130.048,
+      252.016
      ],
      "layers": [
       "M7",
@@ -22454,8 +22614,8 @@
      "leaf": "u_ucie_kv.tx_v",
      "face": "N",
      "window_um": [
-      251.184,
-      251.584
+      254.336,
+      255.392
      ],
      "layers": [
       "M7",
@@ -22471,8 +22631,8 @@
      "leaf": "u_ucie_kv.rx_flit",
      "face": "N",
      "window_um": [
-      4.32,
-      124.608
+      5.856,
+      127.728
      ],
      "layers": [
       "M7",
@@ -22488,8 +22648,8 @@
      "leaf": "u_ucie_kv.rx_v",
      "face": "N",
      "window_um": [
-      125.568,
-      125.968
+      128.688,
+      129.088
      ],
      "layers": [
       "M7",
@@ -22505,8 +22665,25 @@
      "leaf": "u_ucie_kv.tx_up",
      "face": "N",
      "window_um": [
-      249.824,
-      250.224
+      252.976,
+      253.376
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "phy_rst_i",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.phy_rst_i",
+     "face": "N",
+     "window_um": [
+      4.32,
+      4.896
      ],
      "layers": [
       "M7",
@@ -22522,6 +22699,12 @@
      "module": "ot_qkvd_ucie_x64_phy",
      "status": "reuse",
      "note": "hard IP used as-is (die-edge PHY)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "phy_ucie_kv_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
     }
    ],
    "hard": true,
@@ -22558,8 +22741,8 @@
      "leaf": "u_d2d_rom.fdi_tx_flit",
      "face": "S",
      "window_um": [
-      126.928,
-      248.864
+      130.048,
+      252.016
      ],
      "layers": [
       "M7",
@@ -22575,8 +22758,8 @@
      "leaf": "u_d2d_rom.fdi_tx_v",
      "face": "S",
      "window_um": [
-      251.184,
-      251.584
+      254.336,
+      255.392
      ],
      "layers": [
       "M7",
@@ -22813,8 +22996,8 @@
      "leaf": "u_sys_face.io_cmd_free",
      "face": "E",
      "window_um": [
-      5.68,
-      6.08
+      21.136,
+      21.536
      ],
      "layers": [
       "M6",
@@ -22830,8 +23013,8 @@
      "leaf": "u_sys_face.io_fault",
      "face": "E",
      "window_um": [
-      7.04,
-      7.44
+      22.496,
+      22.896
      ],
      "layers": [
       "M6",
@@ -22847,8 +23030,8 @@
      "leaf": "u_sys_face.io_shared_fault",
      "face": "E",
      "window_um": [
-      8.4,
-      8.8
+      23.856,
+      24.352
      ],
      "layers": [
       "M6",
@@ -22966,8 +23149,8 @@
      "leaf": "u_sys_face.native_fault",
      "face": "N",
      "window_um": [
-      598.64,
-      599.04
+      599.728,
+      600.128
      ],
      "layers": [
       "M7",
@@ -22983,8 +23166,8 @@
      "leaf": "u_sys_face.head_descriptor_generation",
      "face": "N",
      "window_um": [
-      557.472,
-      558.08
+      559.04,
+      559.648
      ],
      "layers": [
       "M7",
@@ -23000,8 +23183,8 @@
      "leaf": "u_sys_face.head_descriptor_tag",
      "face": "N",
      "window_um": [
-      559.04,
-      571.136
+      560.608,
+      572.672
      ],
      "layers": [
       "M7",
@@ -23017,8 +23200,8 @@
      "leaf": "u_sys_face.head_descriptor_v",
      "face": "N",
      "window_um": [
-      572.096,
-      572.672
+      573.632,
+      574.032
      ],
      "layers": [
       "M7",
@@ -23136,8 +23319,8 @@
      "leaf": "u_sys_face.complete_slot",
      "face": "N",
      "window_um": [
-      556.112,
-      556.512
+      557.68,
+      558.08
      ],
      "layers": [
       "M7",
@@ -23153,8 +23336,8 @@
      "leaf": "u_sys_face.host_epoch",
      "face": "N",
      "window_um": [
-      573.632,
-      577.04
+      574.992,
+      578.4
      ],
      "layers": [
       "M7",
@@ -23170,8 +23353,8 @@
      "leaf": "u_sys_face.host_epoch_valid",
      "face": "N",
      "window_um": [
-      578.0,
-      578.4
+      579.36,
+      579.76
      ],
      "layers": [
       "M7",
@@ -23187,8 +23370,8 @@
      "leaf": "u_sys_face.host_fused_capability",
      "face": "N",
      "window_um": [
-      579.36,
-      579.76
+      580.72,
+      581.12
      ],
      "layers": [
       "M7",
@@ -23204,8 +23387,8 @@
      "leaf": "u_sys_face.host_generation",
      "face": "N",
      "window_um": [
-      580.72,
-      581.328
+      582.08,
+      582.688
      ],
      "layers": [
       "M7",
@@ -23221,8 +23404,8 @@
      "leaf": "u_sys_face.host_tag",
      "face": "N",
      "window_um": [
-      582.288,
-      594.752
+      583.648,
+      595.84
      ],
      "layers": [
       "M7",
@@ -23238,8 +23421,8 @@
      "leaf": "u_sys_face.kv_word_index",
      "face": "N",
      "window_um": [
-      595.712,
-      596.32
+      596.8,
+      597.408
      ],
      "layers": [
       "M7",
@@ -23255,8 +23438,8 @@
      "leaf": "u_sys_face.kv_word_slot",
      "face": "N",
      "window_um": [
-      597.28,
-      597.68
+      598.368,
+      598.768
      ],
      "layers": [
       "M7",
@@ -23272,8 +23455,8 @@
      "leaf": "u_sys_face.q_slot",
      "face": "N",
      "window_um": [
-      600.0,
-      601.056
+      601.088,
+      601.488
      ],
      "layers": [
       "M7",
@@ -23289,8 +23472,8 @@
      "leaf": "u_sys_face.q_slot_beat",
      "face": "N",
      "window_um": [
-      602.016,
-      603.216
+      602.448,
+      603.648
      ],
      "layers": [
       "M7",
@@ -23306,8 +23489,8 @@
      "leaf": "u_sys_face.seq_dh",
      "face": "N",
      "window_um": [
-      633.408,
-      672.592
+      633.808,
+      673.008
      ],
      "layers": [
       "M7",
@@ -23323,8 +23506,8 @@
      "leaf": "u_sys_face.tt_fab",
      "face": "N",
      "window_um": [
-      694.096,
-      694.496
+      694.64,
+      695.04
      ],
      "layers": [
       "M7",
@@ -23340,8 +23523,8 @@
      "leaf": "u_sys_face.tt_kok",
      "face": "N",
      "window_um": [
-      695.456,
-      696.096
+      696.0,
+      696.4
      ],
      "layers": [
       "M7",
@@ -23357,8 +23540,8 @@
      "leaf": "u_sys_face.tt_kwd",
      "face": "N",
      "window_um": [
-      697.056,
-      697.456
+      697.36,
+      697.76
      ],
      "layers": [
       "M7",
@@ -23374,8 +23557,8 @@
      "leaf": "u_sys_face.tt_pw",
      "face": "N",
      "window_um": [
-      726.128,
-      741.984
+      726.4,
+      742.256
      ],
      "layers": [
       "M7",
@@ -23391,8 +23574,8 @@
      "leaf": "u_sys_face.visibility_slot",
      "face": "N",
      "window_um": [
-      742.944,
-      743.344
+      743.216,
+      743.616
      ],
      "layers": [
       "M7",
@@ -23408,8 +23591,8 @@
      "leaf": "u_sys_face.seq_descriptor_obs",
      "face": "N",
      "window_um": [
-      618.144,
-      632.448
+      618.56,
+      632.848
      ],
      "layers": [
       "M7",
@@ -23425,8 +23608,8 @@
      "leaf": "u_sys_face.seq_cfg_image_ready",
      "face": "N",
      "window_um": [
-      604.176,
-      604.576
+      604.608,
+      605.008
      ],
      "layers": [
       "M7",
@@ -23442,8 +23625,8 @@
      "leaf": "u_sys_face.seq_program_obs",
      "face": "N",
      "window_um": [
-      673.552,
-      689.408
+      673.968,
+      689.808
      ],
      "layers": [
       "M7",
@@ -23459,8 +23642,8 @@
      "leaf": "u_sys_face.tt_command_stage",
      "face": "N",
      "window_um": [
-      690.368,
-      691.776
+      690.768,
+      692.176
      ],
      "layers": [
       "M7",
@@ -23476,8 +23659,8 @@
      "leaf": "u_sys_face.tt_control_stores_ready",
      "face": "N",
      "window_um": [
-      692.736,
-      693.136
+      693.136,
+      693.68
      ],
      "layers": [
       "M7",
@@ -23493,8 +23676,8 @@
      "leaf": "u_sys_face.seq_dc",
      "face": "N",
      "window_um": [
-      605.536,
-      617.184
+      605.968,
+      617.6
      ],
      "layers": [
       "M7",
@@ -23544,8 +23727,8 @@
      "leaf": "u_sys_face.tt_layer_context_v",
      "face": "N",
      "window_um": [
-      698.416,
-      698.816
+      698.72,
+      699.12
      ],
      "layers": [
       "M7",
@@ -23561,8 +23744,8 @@
      "leaf": "u_sys_face.tt_native_pos",
      "face": "N",
      "window_um": [
-      699.776,
-      703.584
+      700.08,
+      703.888
      ],
      "layers": [
       "M7",
@@ -23578,8 +23761,8 @@
      "leaf": "u_sys_face.tt_native_tok",
      "face": "N",
      "window_um": [
-      704.544,
-      708.352
+      704.848,
+      708.656
      ],
      "layers": [
       "M7",
@@ -23595,8 +23778,8 @@
      "leaf": "u_sys_face.tt_program_obs",
      "face": "N",
      "window_um": [
-      709.312,
-      725.168
+      709.616,
+      725.44
      ],
      "layers": [
       "M7",
@@ -23612,8 +23795,8 @@
      "leaf": "u_d2d_rom.fdi_rx_flit",
      "face": "S",
      "window_um": [
-      4.32,
-      124.608
+      5.856,
+      127.728
      ],
      "layers": [
       "M7",
@@ -23629,8 +23812,8 @@
      "leaf": "u_d2d_rom.fdi_rx_v",
      "face": "S",
      "window_um": [
-      125.568,
-      125.968
+      128.688,
+      129.088
      ],
      "layers": [
       "M7",
@@ -23646,8 +23829,8 @@
      "leaf": "u_d2d_rom.fdi_tx_up",
      "face": "S",
      "window_um": [
-      249.824,
-      250.224
+      252.976,
+      253.376
      ],
      "layers": [
       "M7",
@@ -23680,8 +23863,8 @@
      "leaf": "u_sys_face.obs_fault_n59",
      "face": "N",
      "window_um": [
-      554.752,
-      555.152
+      556.32,
+      556.72
      ],
      "layers": [
       "M7",
@@ -23696,6 +23879,57 @@
      "kind": "ctl",
      "leaf": "u_sys_face.obs_fault_ctlm",
      "face": "N",
+     "window_um": [
+      4.32,
+      4.896
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "coll_fltv_i",
+     "dir": "in",
+     "width": 69,
+     "kind": "ctl",
+     "leaf": "u_sys_face.obs_fault",
+     "face": "E",
+     "window_um": [
+      5.68,
+      20.176
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "mu_flt_o",
+     "dir": "out",
+     "width": 2,
+     "kind": "ctl",
+     "leaf": "u_pstn.mu_flt_o",
+     "face": "N",
+     "window_um": [
+      554.752,
+      555.36
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "kv_phy_rst_o",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_pstn.kv_phy_rst_o",
+     "face": "S",
      "window_um": [
       4.32,
       4.896
@@ -23768,6 +24002,12 @@
      "module": "bump_fwd_lrst",
      "status": "reuse",
      "note": "small W-strip block, merged into the glue partition (one clock/reset region)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "glue_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
     }
    ],
    "note": "west strip: glue; est. std-cell fill 0.11 at util 0.6: 40% of M4-M7 to ft",
@@ -24151,8 +24391,8 @@
      "leaf": "u_native59.fault",
      "face": "S",
      "window_um": [
-      598.64,
-      599.04
+      599.728,
+      600.128
      ],
      "layers": [
       "M7",
@@ -24168,8 +24408,8 @@
      "leaf": "u_native59.head_descriptor_generation",
      "face": "S",
      "window_um": [
-      557.472,
-      558.08
+      559.04,
+      559.648
      ],
      "layers": [
       "M7",
@@ -24185,8 +24425,8 @@
      "leaf": "u_native59.head_descriptor_tag",
      "face": "S",
      "window_um": [
-      559.04,
-      571.136
+      560.608,
+      572.672
      ],
      "layers": [
       "M7",
@@ -24202,8 +24442,8 @@
      "leaf": "u_native59.head_descriptor_v",
      "face": "S",
      "window_um": [
-      572.096,
-      572.672
+      573.632,
+      574.032
      ],
      "layers": [
       "M7",
@@ -24219,8 +24459,8 @@
      "leaf": "u_native59.native_ret",
      "face": "N",
      "window_um": [
-      199.264,
-      219.152
+      200.72,
+      220.752
      ],
      "layers": [
       "M7",
@@ -24338,8 +24578,8 @@
      "leaf": "u_native59.complete_slot",
      "face": "S",
      "window_um": [
-      556.112,
-      556.512
+      557.68,
+      558.08
      ],
      "layers": [
       "M7",
@@ -24355,8 +24595,8 @@
      "leaf": "u_native59.host_epoch",
      "face": "S",
      "window_um": [
-      573.632,
-      577.04
+      574.992,
+      578.4
      ],
      "layers": [
       "M7",
@@ -24372,8 +24612,8 @@
      "leaf": "u_native59.host_epoch_valid",
      "face": "S",
      "window_um": [
-      578.0,
-      578.4
+      579.36,
+      579.76
      ],
      "layers": [
       "M7",
@@ -24389,8 +24629,8 @@
      "leaf": "u_native59.host_fused_capability",
      "face": "S",
      "window_um": [
-      579.36,
-      579.76
+      580.72,
+      581.12
      ],
      "layers": [
       "M7",
@@ -24406,8 +24646,8 @@
      "leaf": "u_native59.host_generation",
      "face": "S",
      "window_um": [
-      580.72,
-      581.328
+      582.08,
+      582.688
      ],
      "layers": [
       "M7",
@@ -24423,8 +24663,8 @@
      "leaf": "u_native59.host_tag",
      "face": "S",
      "window_um": [
-      582.288,
-      594.752
+      583.648,
+      595.84
      ],
      "layers": [
       "M7",
@@ -24440,8 +24680,8 @@
      "leaf": "u_native59.kv_word_index",
      "face": "S",
      "window_um": [
-      595.712,
-      596.32
+      596.8,
+      597.408
      ],
      "layers": [
       "M7",
@@ -24457,8 +24697,8 @@
      "leaf": "u_native59.kv_word_slot",
      "face": "S",
      "window_um": [
-      597.28,
-      597.68
+      598.368,
+      598.768
      ],
      "layers": [
       "M7",
@@ -24474,8 +24714,8 @@
      "leaf": "u_native59.q_slot",
      "face": "S",
      "window_um": [
-      600.0,
-      601.056
+      601.088,
+      601.488
      ],
      "layers": [
       "M7",
@@ -24491,8 +24731,8 @@
      "leaf": "u_native59.q_slot_beat",
      "face": "S",
      "window_um": [
-      602.016,
-      603.216
+      602.448,
+      603.648
      ],
      "layers": [
       "M7",
@@ -24508,8 +24748,8 @@
      "leaf": "u_native59.visibility_slot",
      "face": "S",
      "window_um": [
-      742.944,
-      743.344
+      743.216,
+      743.616
      ],
      "layers": [
       "M7",
@@ -24627,8 +24867,8 @@
      "leaf": "u_native59.native_cmd",
      "face": "N",
      "window_um": [
-      109.536,
-      188.768
+      111.104,
+      190.224
      ],
      "layers": [
       "M7",
@@ -24644,8 +24884,8 @@
      "leaf": "u_native59.native_position",
      "face": "N",
      "window_um": [
-      194.496,
-      198.304
+      195.952,
+      199.76
      ],
      "layers": [
       "M7",
@@ -24661,8 +24901,8 @@
      "leaf": "u_native59.native_token",
      "face": "N",
      "window_um": [
-      224.88,
-      228.688
+      226.48,
+      230.288
      ],
      "layers": [
       "M7",
@@ -24678,8 +24918,8 @@
      "leaf": "u_native59.fault",
      "face": "S",
      "window_um": [
-      554.752,
-      555.152
+      556.32,
+      556.72
      ],
      "layers": [
       "M7",
@@ -24726,8 +24966,8 @@
      "width": 187,
      "stations": 2,
      "out_window_um": [
-      246.016,
-      285.248
+      247.952,
+      287.12
      ],
      "layers": [
       "M7",
@@ -24741,8 +24981,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      286.208,
-      286.608
+      288.08,
+      288.48
      ],
      "layers": [
       "M7",
@@ -24756,8 +24996,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      287.568,
-      287.968
+      289.44,
+      290.016
      ],
      "layers": [
       "M7",
@@ -24771,8 +25011,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      288.928,
-      289.952
+      290.976,
+      291.376
      ],
      "layers": [
       "M7",
@@ -24786,8 +25026,8 @@
      "width": 75,
      "stations": 2,
      "out_window_um": [
-      290.912,
-      306.4
+      292.336,
+      308.176
      ],
      "layers": [
       "M7",
@@ -24801,8 +25041,8 @@
      "width": 69,
      "stations": 2,
      "out_window_um": [
-      618.144,
-      632.448
+      618.56,
+      632.848
      ],
      "layers": [
       "M7",
@@ -24816,8 +25056,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      604.176,
-      604.576
+      604.608,
+      605.008
      ],
      "layers": [
       "M7",
@@ -24831,8 +25071,8 @@
      "width": 76,
      "stations": 2,
      "out_window_um": [
-      673.552,
-      689.408
+      673.968,
+      689.808
      ],
      "layers": [
       "M7",
@@ -24846,8 +25086,8 @@
      "width": 6,
      "stations": 2,
      "out_window_um": [
-      690.368,
-      691.776
+      690.768,
+      692.176
      ],
      "layers": [
       "M7",
@@ -24861,8 +25101,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      692.736,
-      693.136
+      693.136,
+      693.68
      ],
      "layers": [
       "M7",
@@ -24876,8 +25116,8 @@
      "width": 56,
      "stations": 2,
      "out_window_um": [
-      605.536,
-      617.184
+      605.968,
+      617.6
      ],
      "layers": [
       "M7",
@@ -24921,8 +25161,8 @@
      "width": 1,
      "stations": 2,
      "out_window_um": [
-      698.416,
-      698.816
+      698.72,
+      699.12
      ],
      "layers": [
       "M7",
@@ -24936,8 +25176,8 @@
      "width": 18,
      "stations": 2,
      "out_window_um": [
-      699.776,
-      703.584
+      700.08,
+      703.888
      ],
      "layers": [
       "M7",
@@ -24951,8 +25191,8 @@
      "width": 18,
      "stations": 2,
      "out_window_um": [
-      704.544,
-      708.352
+      704.848,
+      708.656
      ],
      "layers": [
       "M7",
@@ -24966,8 +25206,8 @@
      "width": 76,
      "stations": 2,
      "out_window_um": [
-      709.312,
-      725.168
+      709.616,
+      725.44
      ],
      "layers": [
       "M7",
@@ -24983,6 +25223,21 @@
      "out_window_um": [
       4.32,
       4.896
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "name": "mufl",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 2,
+     "stations": 2,
+     "out_window_um": [
+      109.536,
+      110.144
      ],
      "layers": [
       "M7",
@@ -25113,8 +25368,8 @@
      "leaf": "u_tt_ctlm.native_ret",
      "face": "S",
      "window_um": [
-      199.264,
-      219.152
+      200.72,
+      220.752
      ],
      "layers": [
       "M7",
@@ -25130,8 +25385,8 @@
      "leaf": "u_tt_ctlm.dh",
      "face": "S",
      "window_um": [
-      246.016,
-      285.248
+      247.952,
+      287.12
      ],
      "layers": [
       "M7",
@@ -25147,8 +25402,8 @@
      "leaf": "u_tt_ctlm.fab",
      "face": "S",
      "window_um": [
-      286.208,
-      286.608
+      288.08,
+      288.48
      ],
      "layers": [
       "M7",
@@ -25164,8 +25419,8 @@
      "leaf": "u_tt_ctlm.kok",
      "face": "S",
      "window_um": [
-      287.568,
-      287.968
+      289.44,
+      290.016
      ],
      "layers": [
       "M7",
@@ -25181,8 +25436,8 @@
      "leaf": "u_tt_ctlm.kwd",
      "face": "S",
      "window_um": [
-      288.928,
-      289.952
+      290.976,
+      291.376
      ],
      "layers": [
       "M7",
@@ -25198,8 +25453,8 @@
      "leaf": "u_tt_ctlm.pw",
      "face": "S",
      "window_um": [
-      290.912,
-      306.4
+      292.336,
+      308.176
      ],
      "layers": [
       "M7",
@@ -25504,8 +25759,8 @@
      "leaf": "u_tt_ctlm.native_cmd",
      "face": "S",
      "window_um": [
-      109.536,
-      188.768
+      111.104,
+      190.224
      ],
      "layers": [
       "M7",
@@ -25521,8 +25776,8 @@
      "leaf": "u_tt_ctlm.native_pos",
      "face": "S",
      "window_um": [
-      189.728,
-      193.536
+      191.184,
+      194.992
      ],
      "layers": [
       "M7",
@@ -25538,8 +25793,8 @@
      "leaf": "u_tt_ctlm.native_pos",
      "face": "S",
      "window_um": [
-      194.496,
-      198.304
+      195.952,
+      199.76
      ],
      "layers": [
       "M7",
@@ -25555,8 +25810,8 @@
      "leaf": "u_tt_ctlm.native_tok",
      "face": "S",
      "window_um": [
-      220.112,
-      223.92
+      221.712,
+      225.52
      ],
      "layers": [
       "M7",
@@ -25572,8 +25827,8 @@
      "leaf": "u_tt_ctlm.native_tok",
      "face": "S",
      "window_um": [
-      224.88,
-      228.688
+      226.48,
+      230.288
      ],
      "layers": [
       "M7",
@@ -25589,8 +25844,8 @@
      "leaf": "u_tt_ctlm.program_obs",
      "face": "S",
      "window_um": [
-      229.648,
-      245.056
+      231.248,
+      246.992
      ],
      "layers": [
       "M7",
@@ -25631,6 +25886,23 @@
       "M5"
      ],
      "order": "lsb_low"
+    },
+    {
+     "name": "mu_flt_i",
+     "dir": "in",
+     "width": 2,
+     "kind": "ctl",
+     "leaf": "u_pstn.mu_flt_i",
+     "face": "S",
+     "window_um": [
+      109.536,
+      110.144
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "order": "lsb_low"
     }
    ],
    "ft_slots": [],
@@ -25645,6 +25917,12 @@
      ],
      "kit": "claude/qtile-r-1023 qfd_hp13_cpub39_rp_{main,alt}",
      "note": "HP13 ctlm re-pack: two regional clock roots per COORD ruling (rp5 CTS ck_hr FAIL)"
+    },
+    {
+     "inst": "u_pstn",
+     "module": "tt_ctlm_pstn",
+     "status": "new",
+     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
     }
    ],
    "note": "west strip: tt_ctlm",
@@ -78197,6 +78475,175 @@
    },
    "width": 1,
    "kind": "ctl"
+  },
+  {
+   "id": "coll_s__fltv__0",
+   "src": {
+    "part": "coll_s",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f0",
+    "bus": "fltv_i"
+   },
+   "width": 35,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_s__fltv__1",
+   "src": {
+    "part": "coll_f0",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f1",
+    "bus": "fltv_i"
+   },
+   "width": 35,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_s__fltv__2",
+   "src": {
+    "part": "coll_f1",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f2",
+    "bus": "fltv_i"
+   },
+   "width": 35,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_s__fltv__3",
+   "src": {
+    "part": "coll_f2",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "fltv_s_i"
+   },
+   "width": 35,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_n__fltv__0",
+   "src": {
+    "part": "coll_n",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f5",
+    "bus": "fltv_i"
+   },
+   "width": 17,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_n__fltv__1",
+   "src": {
+    "part": "coll_f5",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f4",
+    "bus": "fltv_i"
+   },
+   "width": 17,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_n__fltv__2",
+   "src": {
+    "part": "coll_f4",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f3",
+    "bus": "fltv_i"
+   },
+   "width": 17,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_n__fltv__3",
+   "src": {
+    "part": "coll_f3",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_core",
+    "bus": "fltv_n_i"
+   },
+   "width": 17,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_core__fltvc__0",
+   "src": {
+    "part": "coll_core",
+    "bus": "fltv_o"
+   },
+   "dst": {
+    "part": "coll_f3",
+    "bus": "fltvc_i"
+   },
+   "width": 69,
+   "kind": "ctl"
+  },
+  {
+   "id": "coll_core__fltvc__1",
+   "src": {
+    "part": "coll_f3",
+    "bus": "fltvc_o"
+   },
+   "dst": {
+    "part": "glue",
+    "bus": "coll_fltv_i"
+   },
+   "width": 69,
+   "kind": "ctl"
+  },
+  {
+   "id": "glue__mufl__0",
+   "src": {
+    "part": "glue",
+    "bus": "mu_flt_o"
+   },
+   "dst": {
+    "part": "native59",
+    "bus": "mufl_i"
+   },
+   "width": 2,
+   "kind": "ctl"
+  },
+  {
+   "id": "glue__mufl__1",
+   "src": {
+    "part": "native59",
+    "bus": "mufl_o"
+   },
+   "dst": {
+    "part": "tt_ctlm",
+    "bus": "mu_flt_i"
+   },
+   "width": 2,
+   "kind": "ctl"
+  },
+  {
+   "id": "glue__kvrst__0",
+   "src": {
+    "part": "glue",
+    "bus": "kv_phy_rst_o"
+   },
+   "dst": {
+    "part": "ucie_kv",
+    "bus": "phy_rst_i"
+   },
+   "width": 1,
+   "kind": "ctl"
   }
  ],
  "lanes": [
@@ -92573,6 +93020,44 @@
    "ports": [
     "tt_ctlm__fltt__0",
     "tt_ctlm__fltt__1"
+   ]
+  },
+  {
+   "id": "coll_s__fltv",
+   "ports": [
+    "coll_s__fltv__0",
+    "coll_s__fltv__1",
+    "coll_s__fltv__2",
+    "coll_s__fltv__3"
+   ]
+  },
+  {
+   "id": "coll_n__fltv",
+   "ports": [
+    "coll_n__fltv__0",
+    "coll_n__fltv__1",
+    "coll_n__fltv__2",
+    "coll_n__fltv__3"
+   ]
+  },
+  {
+   "id": "coll_core__fltvc",
+   "ports": [
+    "coll_core__fltvc__0",
+    "coll_core__fltvc__1"
+   ]
+  },
+  {
+   "id": "glue__mufl",
+   "ports": [
+    "glue__mufl__0",
+    "glue__mufl__1"
+   ]
+  },
+  {
+   "id": "glue__kvrst",
+   "ports": [
+    "glue__kvrst__0"
    ]
   }
  ],
@@ -109712,6 +110197,46 @@
     "faces": 2,
     "fixed": 0,
     "param": "LAT_TT_CTLM__FLTT"
+   },
+   "coll_s__fltv": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "param": "LAT_COLL_S__FLTV"
+   },
+   "coll_n__fltv": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "param": "LAT_COLL_N__FLTV"
+   },
+   "coll_core__fltvc": {
+    "cycles": 3,
+    "stations": 1,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "param": "LAT_COLL_CORE__FLTVC"
+   },
+   "glue__mufl": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "param": "LAT_GLUE__MUFL"
+   },
+   "glue__kvrst": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "param": "LAT_GLUE__KVRST"
    }
   }
  }
