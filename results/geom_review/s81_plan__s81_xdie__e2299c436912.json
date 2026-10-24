@@ -1,0 +1,17 @@
+{
+ "element": "s81_plan",
+ "kit": "physical/die_plan/s81@claude/s81-xdie-1024 cb472fd41f (v4.8 + reserve SerDes pair + in-band host)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "e2299c4369127f4bc6518b58db7c079c99d8c4b247d50a036e07646d975a6f9e",
+ "reasons": "[2026-10-24 08:50] [GEOM-REVIEW die-level batch 1] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05). Tools: G0/G0C = the branch's own tools/die_plan/check.py --completeness --png (re-run by me); review pack = tools/geom_review/plan_review.py (whole die with hard cores + seams coloured by bits/um, lane bit-density heat map, auto zooms on densest bundle / longest lane / largest bit*mm lane / densest seam / clock root / IO / most core-filled partition / thinnest partition; metrics: lane bit*mm ranking, hop vs reach, per-seam bits/um, bit-order twist per ft crossing (CCW chord test; only straight/U-turn crossings with overlapping in/out windows can cost wire), computed ft-station points inside hard cores, root->tap distances, aspect / slivers / coverage). The PNGs in 'images' were looked at by me; the rest of the auto-generated pack is in 'pack'. SEEN: Same geometry as v4.8 except: lk_WS2 in the NW corner, lk_EN3 in the SE corner (both former corner channels), lk_WS3 re-aspected into col 6 rows 0-1, lk_EN2 cols 14-15 row 19; s_0S re-sliced rows 2-11, s_7N rows 12-18. 400 partitions / 180 types / 842 lanes. Reserve lanes enter the existing slice station rows orthogonally, no crossings over frames. Wire 651 bit-m (+41). Twist / hops / core-station numbers identical to v4.8 (worst hop 735 um). MY REPRODUCTION OF G0C DOES NOT MATCH THE LANE CLAIM: check.py --completeness on this plan gives 108 errors, not 91: 91 hard_cores + 12 census (census map still names s_0S_x06/x010/x011/x15 and s_7N_x07/x17, which the re-slice renamed/removed) + 5 complete[cells] (no cell estimate for serdes__t11..t14 and slice_station__t7).",
+ "fixes": "(1) Regenerate the census map for the re-sliced s_0S / s_7N groups and add cell estimates for serdes__t11..t14 and slice_station__t7 (G0C must be 91 = v4.8 before merge, as claimed). (2) Corner SerDes (lk_WS2 NW, lk_EN3 SE): corner bump/ESD and package escape are an OWNER? item already; until answered the corner PHY placement is provisional. (3) All v4.8 conditions apply.",
+ "images": [
+  "results/geom_review/die_1024/img/s81_xdie/die_cores.png"
+ ],
+ "pack": "results/geom_review/die_1024/img/s81_xdie/",
+ "metrics": "results/geom_review/die_1024/img/s81_xdie/review.json",
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T08:50:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}

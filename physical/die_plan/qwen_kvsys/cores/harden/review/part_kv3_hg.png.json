@@ -1,0 +1,507 @@
+{
+ "head0_e0": {
+  "module": "kv3_head_eighth_e0",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1332,
+   "S": 0,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e2"
+   ],
+   "S": null,
+   "E": [
+    34.56,
+    "head0_e1"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1798,
+  "detour_pins": {
+   "N->head0_e2": 305
+  }
+ },
+ "head0_e1": {
+  "module": "kv3_head_eighth_e1",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 10,
+   "S": 0,
+   "E": 0,
+   "W": 534
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e3"
+   ],
+   "S": null,
+   "E": [
+    34.56,
+    "head1_e0"
+   ],
+   "W": [
+    34.56,
+    "head0_e0"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "N->head0_e3": 10
+  }
+ },
+ "head0_e2": {
+  "module": "kv3_head_eighth_e2",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 269,
+   "S": 619,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e4"
+   ],
+   "S": [
+    34.56,
+    "head0_e0"
+   ],
+   "E": [
+    34.56,
+    "head0_e3"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "N->head0_e4": 269
+  }
+ },
+ "head0_e3": {
+  "module": "kv3_head_eighth_e3",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 10,
+   "S": 0,
+   "E": 0,
+   "W": 534
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e5"
+   ],
+   "S": [
+    34.56,
+    "head0_e1"
+   ],
+   "E": [
+    34.56,
+    "head1_e2"
+   ],
+   "W": [
+    34.56,
+    "head0_e2"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "N->head0_e5": 10,
+   "W->head0_e2": 68
+  }
+ },
+ "head0_e4": {
+  "module": "kv3_head_eighth_e4",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 888,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e6"
+   ],
+   "S": [
+    34.56,
+    "head0_e2"
+   ],
+   "E": [
+    34.56,
+    "head0_e5"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "S->head0_e2": 337
+  }
+ },
+ "head0_e5": {
+  "module": "kv3_head_eighth_e5",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 78,
+   "E": 0,
+   "W": 466
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head0_e7"
+   ],
+   "S": [
+    34.56,
+    "head0_e3"
+   ],
+   "E": [
+    34.56,
+    "head1_e4"
+   ],
+   "W": [
+    34.56,
+    "head0_e4"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "S->head0_e3": 78
+  }
+ },
+ "head0_e6": {
+  "module": "kv3_head_eighth_e6",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 888,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "ectl"
+   ],
+   "S": [
+    34.56,
+    "head0_e4"
+   ],
+   "E": [
+    34.56,
+    "head0_e7"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "S->head0_e4": 337
+  }
+ },
+ "head0_e7": {
+  "module": "kv3_head_eighth_e7",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 78,
+   "E": 0,
+   "W": 466
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "ectl"
+   ],
+   "S": [
+    34.56,
+    "head0_e5"
+   ],
+   "E": [
+    34.56,
+    "head1_e6"
+   ],
+   "W": [
+    34.56,
+    "head0_e6"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "S->head0_e5": 78
+  }
+ },
+ "head1_e0": {
+  "module": "kv3_head_eighth_e0",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1332,
+   "S": 0,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e2"
+   ],
+   "S": null,
+   "E": [
+    34.56,
+    "head1_e1"
+   ],
+   "W": [
+    34.56,
+    "head0_e1"
+   ]
+  },
+  "pins_on_blocked_faces": 1798,
+  "detour_pins": {
+   "N->head1_e2": 305
+  }
+ },
+ "head1_e1": {
+  "module": "kv3_head_eighth_e1",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 10,
+   "S": 0,
+   "E": 0,
+   "W": 534
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e3"
+   ],
+   "S": null,
+   "E": null,
+   "W": [
+    34.56,
+    "head1_e0"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "N->head1_e3": 10
+  }
+ },
+ "head1_e2": {
+  "module": "kv3_head_eighth_e2",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 269,
+   "S": 619,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e4"
+   ],
+   "S": [
+    34.56,
+    "head1_e0"
+   ],
+   "E": [
+    34.56,
+    "head1_e3"
+   ],
+   "W": [
+    34.56,
+    "head0_e3"
+   ]
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "N->head1_e4": 269
+  }
+ },
+ "head1_e3": {
+  "module": "kv3_head_eighth_e3",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 10,
+   "S": 0,
+   "E": 0,
+   "W": 534
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e5"
+   ],
+   "S": [
+    34.56,
+    "head1_e1"
+   ],
+   "E": null,
+   "W": [
+    34.56,
+    "head1_e2"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "N->head1_e5": 10,
+   "W->head1_e2": 68
+  }
+ },
+ "head1_e4": {
+  "module": "kv3_head_eighth_e4",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 888,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e6"
+   ],
+   "S": [
+    34.56,
+    "head1_e2"
+   ],
+   "E": [
+    34.56,
+    "head1_e5"
+   ],
+   "W": [
+    34.56,
+    "head0_e5"
+   ]
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "S->head1_e2": 337
+  }
+ },
+ "head1_e5": {
+  "module": "kv3_head_eighth_e5",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 78,
+   "E": 0,
+   "W": 466
+  },
+  "nearest_on_face": {
+   "N": [
+    34.56,
+    "head1_e7"
+   ],
+   "S": [
+    34.56,
+    "head1_e3"
+   ],
+   "E": null,
+   "W": [
+    34.56,
+    "head1_e4"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "S->head1_e3": 78
+  }
+ },
+ "head1_e6": {
+  "module": "kv3_head_eighth_e6",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 888,
+   "E": 466,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "ectl"
+   ],
+   "S": [
+    34.56,
+    "head1_e4"
+   ],
+   "E": [
+    34.56,
+    "head1_e7"
+   ],
+   "W": [
+    34.56,
+    "head0_e7"
+   ]
+  },
+  "pins_on_blocked_faces": 1354,
+  "detour_pins": {
+   "S->head1_e4": 337
+  }
+ },
+ "head1_e7": {
+  "module": "kv3_head_eighth_e7",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 78,
+   "E": 0,
+   "W": 466
+  },
+  "nearest_on_face": {
+   "N": [
+    259.2,
+    "edge"
+   ],
+   "S": [
+    34.56,
+    "head1_e5"
+   ],
+   "E": null,
+   "W": [
+    34.56,
+    "head1_e6"
+   ]
+  },
+  "pins_on_blocked_faces": 544,
+  "detour_pins": {
+   "S->head1_e5": 78
+  }
+ },
+ "ectl": {
+  "module": "qkd_ectlk",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 0,
+   "S": 3625,
+   "E": 737,
+   "W": 1123
+  },
+  "nearest_on_face": {
+   "N": [
+    17.28,
+    "edge"
+   ],
+   "S": [
+    25.92,
+    "head1_e6"
+   ],
+   "E": null,
+   "W": null
+  },
+  "pins_on_blocked_faces": 3625,
+  "detour_pins": {
+   "S->head0_e6": 1064,
+   "S->head0_e7": 754
+  }
+ }
+}

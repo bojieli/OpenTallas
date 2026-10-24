@@ -1,0 +1,133 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 32 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0127] Reading DEF file: /work/fabric.def
+[INFO ODB-0128] Design: fabric
+[INFO ODB-0094] 		Created 100000 Insts
+[INFO ODB-0094] 		Created 200000 Insts
+[INFO ODB-0094] 		Created 300000 Insts
+[INFO ODB-0094] 		Created 400000 Insts
+[INFO ODB-0094] 		Created 500000 Insts
+[INFO ODB-0094] 		Created 600000 Insts
+[INFO ODB-0094] 		Created 700000 Insts
+[INFO ODB-0094] 		Created 800000 Insts
+[INFO ODB-0094] 		Created 900000 Insts
+[INFO ODB-0094] 		Created 1000000 Insts
+[INFO ODB-0094] 		Created 1100000 Insts
+[INFO ODB-0094] 		Created 1200000 Insts
+[INFO ODB-0094] 		Created 1300000 Insts
+[INFO ODB-0097] 		Created 100000 Nets
+[INFO ODB-0097] 		Created 200000 Nets
+[INFO ODB-0097] 		Created 300000 Nets
+[INFO ODB-0097] 		Created 400000 Nets
+[INFO ODB-0097] 		Created 500000 Nets
+[INFO ODB-0097] 		Created 600000 Nets
+[INFO ODB-0097] 		Created 700000 Nets
+[INFO ODB-0097] 		Created 800000 Nets
+[INFO ODB-0097] 		Created 900000 Nets
+[INFO ODB-0097] 		Created 1000000 Nets
+[INFO ODB-0097] 		Created 1100000 Nets
+[INFO ODB-0130]     Created 1 pins.
+[INFO ODB-0131]     Created 1360342 components and 6801710 component-terminals.
+[INFO ODB-0133]     Created 1155478 nets and 3671296 connections.
+[INFO ODB-0134] Finished DEF file: /work/fabric.def
+OT_T read 21 s
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.6400  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 12772
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0280] Skipping net clk with 1360343 terminals.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 2
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   383998835      191999031          50.00%
+M5         Vertical     383128365      191562965          50.00%
+M6         Horizontal   681141390      340568149          50.00%
+M7         Vertical     695632348      347814140          50.00%
+M8         Horizontal   511150414      511150414          0.00%
+M9         Vertical     511098382      511098382          0.00%
+---------------------------------------------------------------
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0197] Via related to pin nodes: 11228197
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 15871664
+[INFO GRT-0112] Final usage 3D: 116366259
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           191999031       13057106            6.80%             0 /  0 /  0
+M5           191562965       19994089           10.44%             0 /  0 /  0
+M6           340568149       14109466            4.14%             0 /  0 /  0
+M7           347814140       8950917            2.57%             0 /  0 /  0
+M8           511150414       9373461            1.83%             0 /  0 /  0
+M9           511098382       3266228            0.64%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        2094193081       68751267            3.28%             0 /  0 /  0
+[INFO GRT-0018] Total wirelength: 676252627 um
+[INFO GRT-0014] Routed nets: 1155477
+[INFO GRT-0303] Global routing runtime = 00:02:39
+OT_T grt 181 s
+OT_T guides 185 s
+OT_GRT_DONE
+OT_T rc 322 s
+OT_T sta_grt_SS_max 468 s
+OT_T sta_grt_TT_max 513 s
+OT_T sta_grt_FF_min 552 s
+OT_T sta_grt_SS_min 598 s
+OT_VIOL grt max 848622 min 1277
+Design area 396676 um^2 0% utilization.
+[ERROR DPL-0012] no rows found.
+Error: fabric.tcl, 64 DPL-0012
+Command exited with non-zero status 1
+	Command being timed: "openroad -threads 32 -no_init -exit /work/fabric.tcl"
+	User time (seconds): 1075.83
+	System time (seconds): 1608.24
+	Percent of CPU this job got: 381%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 11:42.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 23599584
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 20133579
+	Voluntary context switches: 27417025
+	Involuntary context switches: 9456
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4102320
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+EXIT 1
