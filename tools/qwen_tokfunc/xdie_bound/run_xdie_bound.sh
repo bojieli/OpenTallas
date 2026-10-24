@@ -26,6 +26,10 @@ GS='-GC_REAL=1 -GK_REAL=4 -GK_NTX=3 -GPOS_P=255 -DXQ_K_SFM'   # source compute m
 # name | expect | calendar flags | bench flags | mod   (bnd_* = bound compute master; src_* = source compute master qfd_d2d_static;
 # om_* = bound compute master with its STATUS observer extension masked = DIAGNOSTIC source mod, not die RTL)
 CONFIGS=(
+ "compat_pair|PASS|$LAW --stages $B|$G -GXB_K_OBS1_COMPAT=1"
+ "compat_pair_t8192|PASS|$LAW --stages $B|$G -GXB_K_OBS1_COMPAT=1 -GPOS_P=8191"
+ "compat_mut_result|FAIL|$LAW --stages $B|$G -GXB_K_OBS1_COMPAT=1 -GMUT=9"
+ "compat_mut_status|FAIL|$LAW --stages $B|$G -GXB_K_OBS1_COMPAT=1 -GMUT=8"
  # F6: the bound compute master's STATUS kind15 v1 observer extension (DATA[511:304]) vs the bound KV master's legacy
  # status RX (ot_qwen_d2d_status_rx_sf: d[511:156] must be 0) -> KV status fault at the first STATUS landing
  "bnd_pair|FAIL|$LAW --stages $B|$G"
