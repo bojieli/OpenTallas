@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "type": "dsdv_eng_rr_e__345.6x466.56",
+ "module": "dsdv_eng_rr_e",
+ "outline_um": [
+  345.6,
+  466.56
+ ],
+ "cores_json_sha256": "7a9649115485cdac11cca0270db590c0c597f4f5d0dd9d2e682c4d861d1f333f",
+ "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
+ "pins_sha256": "6b27b21ca5eabc4adad32926df87aeed6717f2a3304d547738095b476b4f1dbd",
+ "pins": 2698,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "518433d8f24b1cdddcf4b747c5147b97d214aa143ce4ff71c08c64a1c18a8649",
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "signal_max": "M5",
+ "macros": [
+  "ot_rom_4096x72_m8",
+  "ot_sram_1r1w_128x256_m1_r2c2",
+  "ot_sram_1r1w_512x128_m4_r2c2",
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "kit_hash": "e0df601db0ab1339"
+}

@@ -122,6 +122,11 @@ if LINK_R16:
 LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
 if LINK_ROPE_OVL:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
+# KV-P6-BOOT 10-23 (opt-in, default unset = unchanged): OT_KV_LINK_IMAGE=<path> binds a CANDIDATE pair image compiled by
+# d2d_cal_image_production.sh with the bound KV seam stages (D2D_K_STAGES); link_image_check stays fail-closed on it.
+# A candidate image is a PAIR change: the compute die sequencer must bind the same image before a release.
+if os.environ.get('OT_KV_LINK_IMAGE'):
+    LINK_IMAGE = os.environ['OT_KV_LINK_IMAGE']
 if not (ROOT / LINK_IMAGE).is_file():
     raise SystemExit(f'no committed selected pair image {LINK_IMAGE} '
                      f'(MU={int(LINK_MU)}, EMB_WINDOW={LINK_EMB_WIN!r}, '

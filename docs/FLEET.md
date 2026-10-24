@@ -1,160 +1,91 @@
 # OpenTallas compute fleet
 
-Measured live on 2026-10-08 at 01:38 PDT with read-only commands (`lscpu`, `free -g`, `lsblk`, `df -hT`,
-`/proc/mounts`, `ip -4 addr`, `docker images --digests`, `nvidia-smi`) over each host's ssh alias, plus the
-Cherry Servers API (`GET /v1/projects/294737/servers`) for plan, region and state. RAM is `free -g` (GiB).
-Disk sizes are as `df -h` / `lsblk` report them. Admission settings are copied from
-`tools/closure_loop/hosts.json` at this commit. This file holds no passwords, API keys or SSH key material.
+Measured live on 2026-10-24 at 06:35-06:50 PDT (lane FLEET-NEW3) with `lscpu`, `free -g`, `df -hT`, `lsblk`,
+`ip -4 addr`, `docker image inspect` over each host's ssh alias, and the tool versions through `ot-run` itself
+(so they are what an `ot-run` job sees). RAM is `free -g` (GiB). This file holds no passwords, API keys or SSH key
+material.
+
+The previous fleet (rtx-pro coordinator, ot-epyc1..9, ot-gold1/2, ot-pve1, ot-agidock128) is gone: the coordinator
+died 2026-10-23 23:45 PDT. Its description is in this file's git history (last at main 3e05af806b). epyc2, epyc3 and
+intel1/intel2 are the old ot-epyc9, ot-epyc7 and ot-gold1/ot-gold2 machines, reinstalled (see "Old scratch disks").
 
 ## Summary
 
-| Host (ssh alias) | Role | Provider / location | CPU | Cores / threads | RAM | GPU | State |
+| alias | hostname | CPU | threads | RAM | scratch free | AVX-512 | ot-run role |
 |---|---|---|---|---|---|---|---|
-| `localhost` | Coordinator, GPU inference host, ORFS-only loop host | On-premises workstation | Intel Core i9-13900KS | 24 (8P+16E) / 32 | 188 GiB | 1x RTX PRO 6000 Blackwell (96 GB) | up |
-| `ot-epyc3` | Die-top host; closure-loop host (first preference) | Cherry Servers, Stockholm SE (id 1023111, `known-grouse`) | AMD EPYC 9575F | 64 / 128 | 1,133 GiB | none | up |
-| `ot-epyc1tb` | Closure-loop host; Codex repos/checkpoints; NFS server for EPYC2 | Cherry Servers, Singapore (id 1019050, `teaching-mouse`) | AMD EPYC 9575F | 64 / 128 | 1,133 GiB | none | up |
-| `ot-epyc2` | Closure-loop host | Cherry Servers, Singapore (id 1020904, `climbing-locust`) | AMD EPYC 9575F | 64 / 128 | 1,133 GiB | none | up |
-| `ot-pve1` | Closure-loop host, ORFS/docker only | Proxmox VM behind jump host `bsql-host1.01.me` | not measured | 28 (hosts.json) | 235 GiB (hosts.json) | none | **unreachable** |
-| `ot-agidock128` | Closure-loop host (small RAM) | AGIdock KVM VM, public IP | AMD EPYC 7B13 | 64 vCPU / 64 | 125 GiB | none | up |
-| (none yet) EPYC4 | Planned closure-loop host | Cherry Servers, Tokyo JP (id 1025189, `regular-crane`) | AMD EPYC 9575F | 64 / 128 (plan) | 1,152 GB (plan) | none | **provisioning** |
+| `localhost` | tender-ray | 1x AMD EPYC 9754 (Zen 4c), 128C | 256 | 755 GiB | 2.8 TB (`/`, RAID1 2x 3.5 TB NVMe) | yes | `coord` |
+| `epyc2` | dear-crayfish | 2x AMD EPYC 7543 (Zen 3), 64C, 2 NUMA | 128 | 1,007 GiB | 3.2 TB (`/`, 3.5 TB NVMe) | no | `normal` |
+| `epyc3` | eternal-dove | 2x AMD EPYC 7443 (Zen 3), 48C, 2 NUMA | 96 | 1,007 GiB | 6.9 TB (`/`, RAID1 2x 7.3 TB NVMe) | no | `normal` |
+| `intel1` | key-cardinal | 2x Xeon Gold 6330 (Ice Lake), 56C, 2 NUMA | 112 | 1,007 GiB | ~340 GB (`/`, 468 GB NVMe) | yes | `smalldisk` |
+| `intel2` | tolerant-swine | 2x Xeon Gold 6330 (Ice Lake), 56C, 2 NUMA | 112 | 1,007 GiB | ~330 GB (`/`, 468 GB NVMe) | yes | `smalldisk` |
 
-**Totals, reachable hosts (localhost, EPYC1-3, AGIdock):** 280 cores / 480 threads, 3,712 GiB RAM, 1 GPU
-(RTX PRO 6000 Blackwell, 97,887 MiB), about 24.7 TB of usable filesystem (about 15.5 TB free at the probe).
-With PVE1 at its hosts.json figures: 308 cores, 3,947 GiB RAM. When EPYC4 comes up: plus 64 cores / 128 threads,
-1,152 GB RAM and about 8 TB raw NVMe.
+Totals: 704 threads, 4.7 TiB RAM, ~13.6 TB free scratch. All hosts run Ubuntu 26.04.1 LTS, kernel 7.0.0-38-generic,
+Docker 29.1.3, and share the private VLAN 10.188.153.0/24 (localhost .10, epyc2 .40, epyc3 .33, intel1 .2,
+intel2 .25). Public: localhost 84.32.71.203, epyc2 185.8.107.246, epyc3 185.8.106.109, intel1 185.8.107.41,
+intel2 185.8.106.226. Only localhost reaches GitHub; servers fetch from `hub` (= localhost:~/OpenTallas).
 
-Common toolchain on every Linux loop host except localhost and PVE1: `~/.local/opentallas-tools` holds
-verilator-5.050, yosys-0.68, opensta-be771a0 and cudd-3.0.0. The ORFS image `openroad/orfs:latest` =
-`openroad/orfs:asap7lock` has repo digest
-`sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29` on localhost, AGIdock, EPYC1, EPYC2 and
-EPYC3 (identical everywhere it was measured).
+intel1/intel2 free disk was falling while lanes started (397 -> 330 GB in 15 min): watch it; they are `smalldisk`
+so die-level jobs avoid them.
 
-## Per host
+## Toolchain parity (measured 2026-10-24 through `ot-run --hosts <h>`)
 
-### localhost (coordinator)
+Identical on all five hosts:
 
-- **Role:** the coordinator host where the agents run; the only GPU, used for all model inference (golden
-  generation, DSpark/acceptance runs; CPU hosts never run inference). It is also a closure-loop host for ORFS
-  stages only (`bench_offload`: its route/calibrate jobs run here, benches go to a fleet host).
-- **Hardware:** Intel Core i9-13900KS, 1 socket, 24 cores (8 P-cores with HT + 16 E-cores), 32 threads; 188 GiB RAM;
-  GPU NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 97,887 MiB, driver 595.91.07.
-- **Disks:** 3x HP SSD EX900 Plus 2 TB NVMe (1.9 TiB each) in md RAID5 (`/dev/md0`).
-  - `/` ext4 on `md0p1`: 3.7 T, 805 G free (78% used).
-  - `/var/lib/docker` xfs on a loop file (`/dev/loop19`): 500 G, 423 G free.
-- **Network:** `enp6s0` 155.103.252.95/24. No NFS mounts.
-- **OS:** Ubuntu 22.04.5 LTS, kernel 6.8.0-138-generic; Docker 28.5.2; docker root `/var/lib/docker`.
-- **ORFS images:** `openroad/orfs:latest` and `:asap7lock` at the fleet digest above; old local image kept as
-  `openroad/orfs:local-old-3985ce6d` (`sha256:d6b50de8...`). Local Verilator 4.038 / Yosys 0.9 differ from the
-  fleet, so the host has only the `orfs` cap.
-- **hosts.json:** `base /home/ubuntu/closure-loop-local`; caps `[orfs]`; `cores 32`, `max_loop_threads 96`
-  (the localhost thread guard), `max_job_threads 16`, `max_job_ram_gb 120`, `min_free_ram_gb 16`;
-  `min_free_disk_gb 150` on the base, `disk_roots {"/": 150}`; `bench_offload true`.
+- `verilator --version`: `Verilator 5.050 2026-07-01 rev v5.050`
+- `yosys -V`: `Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)`
+- `sta -version`: `3.1.0` (OpenSTA be771a0, `~/.local/opentallas-tools/bin/sta`)
+- `openroad/orfs:latest` = `openroad/orfs:asap7lock`, image id and repo digest
+  `sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29` (same as the old fleet)
 
-### ot-epyc3 (EPYC3)
+Tools live in `~/.local/opentallas-tools/{bin,verilator-5.050,yosys-0.68,opensta-be771a0,cudd-3.0.0}`; `ot-heavy`
+puts `bin`, `yosys-0.68/bin` and `verilator-5.050/bin` first on PATH for every job.
 
-- **Role:** die-top place-and-route host and first-preference closure-loop host.
-- **Provider:** Cherry Servers, Stockholm (Sweden), server 1023111 `known-grouse`, plan "AMD EPYC 9575F"
-  (1152 GB DDR5-6400, 2x NVMe 1 TB + 2x NVMe 3 TB, 10 Gbps NIC, 100 TB bandwidth), active since 2026-10-06.
-- **Hardware:** AMD EPYC 9575F, 1 socket, 64 cores / 128 threads, 1 NUMA node; 1,133 GiB RAM.
-- **Disks:** 2x Micron 894 G NVMe (md RAID, root) + 2x Solidigm 2.9 T NVMe.
-  - `/` ext4 on `md0`: 879 G, 816 G free.
-  - `/srv/opentallas-scratch` ext4 on `nvme2n1`: 2.9 T, 2.5 T free. `/srv/opentallas` is a symlink to
-    `/srv/opentallas-scratch/opentallas`.
-  - `/srv/opentallas-scratch2` ext4 on `nvme3n1`: 2.9 T, 2.0 T free; holds the docker root
-    (`/srv/opentallas-scratch2/docker`).
-- **Network:** `bond0` 84.32.49.237/26; private VLAN `bond0.1874` 10.200.213.40/24 (a different private network
-  from EPYC1/EPYC2, so no private link to them). No NFS mounts.
-- **OS:** Ubuntu 26.04.1 LTS, kernel 7.0.0-34-generic; Docker 29.1.3; clock in UTC (the others are PDT).
-- **hosts.json:** `base /srv/opentallas-scratch2/scratch/claude/closure-loop`; caps verilator, yosys, iverilog, orfs;
-  `cores 128`, `max_job_threads 128`, `ram_gb 1133`, `max_job_ram_gb 1076`; `min_free_disk_gb 200`,
-  `disk_roots {"/": 100, "/srv/opentallas-scratch": 200}`.
+## ot-run (how lanes launch heavy jobs)
 
-### ot-epyc1tb (EPYC1)
+Installed on localhost as `~/.local/bin/ot-run` (copy of `tools/fleet/ot-run`; re-install with
+`install -m755 tools/fleet/ot-run ~/.local/bin/ot-run` after a change merges). Hosts, in `HOSTS`: epyc2, epyc3,
+intel1, intel2, localhost.
 
-- **Role:** closure-loop host; also Codex's original server (`/srv/opentallas` holds its repos, checkpoints and
-  jobs); NFS server for EPYC2; hosts the shared memory guard `/srv/opentallas-scratch/admit.sh`.
-- **Provider:** Cherry Servers, Singapore, server 1019050 `teaching-mouse`, same plan as EPYC3 (20 TB bandwidth),
-  active since 2026-10-03.
-- **Hardware:** AMD EPYC 9575F, 1 socket, 64 cores / 128 threads; 1,133 GiB RAM.
-- **Disks:** 2x Micron 894 G NVMe (md RAID, root) + 2x Solidigm 2.9 T NVMe.
-  - `/` ext4 on `md0`: 879 G, 808 G free.
-  - `/srv/opentallas` ext4 on `nvme2n1`: 2.9 T, 1,006 G free (66% used); holds the docker root
-    (`/srv/opentallas/tools/docker`).
-  - `/srv/opentallas-scratch` ext4 on `nvme3n1`: 2.9 T, 1.9 T free.
-- **Network:** `bond0` 5.199.165.104/26; private VLAN `bond0.1667` **10.195.64.2/24** (EPYC1-EPYC2 private link).
-  Exports `/srv/opentallas-scratch` and `/srv/opentallas/scratch-overflow` over NFSv4 to EPYC2.
-- **OS:** Ubuntu 26.04.1 LTS, kernel 7.0.0-34-generic; Docker 29.1.3.
-- **hosts.json:** `base /srv/opentallas-scratch/claude/closure-loop`; caps verilator, yosys, iverilog, orfs;
-  `cores 128`, `max_job_threads 128`, `ram_gb 1133`, `max_job_ram_gb 1076`; `min_free_disk_gb 200`,
-  `disk_roots {"/": 100}`.
+    ot-run --status                                    # what each host admits now
+    ot-run --mem GB [--threads N] [--dir DIR] -- CMD   # placed on the best host that admits GB now
+    ot-run --mem GB --hosts epyc3 -- CMD               # pinned (no spill)
+    ot-run --mem GB --priority die --disk 200 --dir DIR -- CMD   # die-level job
+    ot-run --cancel <substring of your --dir/script>   # stop your own clients (never pkill -f)
 
-### ot-epyc2 (EPYC2)
+The command runs on the remote host in a systemd user scope with MemoryMax = --mem, stdin/stdout and the exit status
+are the command's; the last stderr line is `ot-run: RAN on <host> ...: exit N` or `NOT RUN` / `NOT COMPLETED`. ot-run
+syncs nothing: put inputs on the host first (`--dir` must exist there; only hosts that have it qualify). New lane run
+dirs go under `/srv/opentallas-scratch/claude/<lane>/` (`$OT_SCRATCH` in the job; `~/ot-scratch` links there).
 
-- **Role:** closure-loop host.
-- **Provider:** Cherry Servers, Singapore, server 1020904 `climbing-locust`, same plan (20 TB bandwidth), active
-  since 2026-10-05.
-- **Hardware:** AMD EPYC 9575F, 1 socket, 64 cores / 128 threads; 1,133 GiB RAM.
-- **Disks:** 2x Micron 894 G NVMe (md RAID, root) + 2x Solidigm 2.9 T NVMe.
-  - `/` ext4 on `md0`: 879 G, 817 G free. `/srv/opentallas` (including the docker root
-    `/srv/opentallas/tools/docker`) is on this root filesystem.
-  - `/srv/opentallas-data` ext4 on `nvme2n1`: 2.9 T, 2.9 T free (new loop runs since 2026-10-07 23:10).
-  - `/srv/opentallas-scratch2` ext4 on `nvme3n1`: 2.9 T, 1.2 T free (older running jobs).
-  - NFSv4 from EPYC1 over the private link: `10.195.64.2:/srv/opentallas-scratch` on `/mnt/epyc1-scratch`, and
-    `10.195.64.2:/srv/opentallas/scratch-overflow` on `/srv/opentallas/scratch-overflow`.
-- **Network:** `bond0` 5.199.165.105/26; private VLAN `bond0.1667` **10.195.64.42/24**; 10.195.64.2 answers ping.
-- **OS:** Ubuntu 26.04.1 LTS, kernel 7.0.0-34-generic; Docker 29.1.3.
-- **hosts.json:** `base /srv/opentallas-data/claude/closure-loop`; caps verilator, yosys, iverilog, orfs;
-  `cores 128`, `max_job_threads 128`, `ram_gb 1133`, `max_job_ram_gb 1076`; `min_free_disk_gb 200`,
-  `disk_roots {"/": 100, "/srv/opentallas-scratch2": 100}`.
+Roles: `normal` (epyc2, epyc3: die-level work), `smalldisk` (intel1/2: die jobs skip them while another host
+qualifies), `coord` (localhost: the coordinator, CPU shared with ~10 agent sessions; it gets a job only when no
+server admits it now, or when pinned with `--hosts localhost`, and never receives spills; its ot-heavy keeps 15 % of
+RAM free). `NO_AVX512` = epyc2, epyc3 (Zen 3): a lane holding `-march=native` builds never spills there.
 
-### ot-pve1 (PVE1)
+Per-host helpers (installed by `tools/fleet/install_fleet_host.sh`, idempotent; run on the host from a copy of
+tools/fleet, `--role coord` on localhost): `/usr/local/bin/{ot-heavy,ot-heavy-reconcile,ot-vl-jcap,ot-protect-die}`,
+`/usr/local/lib/ot-heavy/{ot-heavy-exit,bin/docker,vljcap/make}`, `ot-die-protection.service`, earlyoom (3 %/2 %),
+`/etc/ot-heavy.conf`, user linger, user cron `*/2 ot-heavy-reconcile`, scratch `/srv/opentallas-scratch/claude`.
+localhost also runs `~/.local/bin/ot-sizes-sync` from cron every 10 min (fleet size table). Verified 2026-10-24:
+`ot-run --selftest` PASS on all five hosts (exit status 7 returned, no-memory -> 75 NOT RUN, bad dir -> 96 NOT RUN).
 
-- **Role:** closure-loop host for ORFS/docker stages only (caps `[orfs]`).
-- **Provider / access:** a Proxmox-hosted VM at private address 10.77.1.10, reached through the jump host
-  `root@bsql-host1.01.me` (ssh `ProxyJump`).
-- **State at probe:** **unreachable.** The jump host accepted the connection, but forwarding to 10.77.1.10 failed
-  with "No route to host" on two attempts. CPU model, disks, OS and ORFS digest were therefore not measured;
-  the figures below come from hosts.json and the 2026-10-03 fleet note.
-- **Last known:** 28 cores, about 235 GiB RAM (hosts.json `ram_gb 235`).
-- **hosts.json:** `base /srv/opentallas-scratch/claude/closure-loop`; caps `[orfs]`; `cores 28`, `max_job_threads 28`,
-  `max_job_ram_gb 223`, `min_free_ram_gb 16`; `min_free_disk_gb 100`, `disk_roots {"/": 100}`.
+## Old scratch disks (not used; owner decision pending)
 
-### ot-agidock128 (AGIdock)
+The reinstall wiped the partition signatures of the old scratch NVMe disks but not their data; the ext4 backup
+superblocks are intact. FLEET-NEW3 mounted them read-only (`mount -o ro,noload,sb=131072 /dev/nvme0n1
+/mnt/old-nvme0`, not in fstab) and did NOT format them:
 
-- **Role:** closure-loop host with little RAM (last in preference order).
-- **Provider:** AGIdock KVM virtual machine (QEMU devices; guest hostname `vm-xry57mhfyn`), public IP. The
-  2026-10-03 fleet note places it on PVE1's physical host; it answered while PVE1 did not.
-- **Hardware:** AMD EPYC 7B13, 64 vCPUs (1 socket, 64 cores, 1 thread per core); 125 GiB RAM. Despite the alias,
-  it is not a 128-core machine.
-- **Disks:** one 1 T QEMU virtual disk; `/` ext4 on `sda1`: 993 G, 817 G free. Docker root `/var/lib/docker`.
-- **Network:** `eth0` 155.103.253.226/24. No NFS mounts.
-- **OS:** Ubuntu 26.04.1 LTS, kernel 7.0.0-28-generic; Docker 29.1.3. An older image is kept as
-  `openroad/orfs:asap7lock-agidock-old-826792fc`.
-- **hosts.json:** `base /srv/opentallas-scratch/claude/closure-loop`; caps verilator, yosys, iverilog, orfs;
-  `cores 64`, `max_job_threads 64`, `ram_gb 125`, `max_job_ram_gb 110`; `min_free_ram_gb 2` (the 2 GB margin),
-  `reserve_ram_gb 0`; `min_free_disk_gb 0` (disk floor removed 2026-10-07).
+- intel1 `nvme0n1` 3.5 TB (Samsung): old ot-gold1 `/srv/opentallas-scratch` (claude/ with 228 lane dirs, codex/, docker/).
+- intel2 `nvme0n1` 3.5 TB (Micron 7450): old ot-gold2 scratch (claude/ with 192 lane dirs).
+- epyc2 `nvme0n1` 894 GB (Micron 7450): old ot-epyc9 scratch; `claude/` returns I/O errors (needs fsck on a copy).
 
-### EPYC4 (provisioning, not contacted)
+They may hold 10-23 lane outputs. Once recovery is done (or declined), they can be reformatted as scratch; intel1/2
+would then lose the `smalldisk` role.
 
-- Cherry Servers server **1025189**, hostname `regular-crane`, region Tokyo (Japan), plan "AMD EPYC 9575F"
-  (1152 GB DDR5 ECC, 2x NVMe 1 TB + 2x NVMe 3 TB, 10 Gbps NIC, 20 TB bandwidth).
-- API state at the probe: `state provisioning`, `status deploying`. Public 109.109.165.197, private 10.200.192.18.
-- No ssh alias or hosts.json entry yet. The onboarding kit (onboarding script, hosts.json entry, smoke job) is
-  staged outside the repository and waits for the alias and access.
+## Closure-loop admission (tools/closure_loop/hosts.json)
 
-## Closure-loop admission rules (hosts.json)
-
-- **Preference order:** EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock, then localhost. A job's `hosts` list is a
-  preference; host choice scores free cores and free RAM.
-- **Remote hosts are admitted on memory only** (OWNER 2026-10-07 20:10): there is no CPU/load check, and `cap`
-  (round(1.1 x cores)) is informational. A job is admitted while measured MemAvailable minus the peaks of the
-  loop's own launches in the last 10 minutes is at least job peak + max(5% host RAM, 32 GB, `min_free_ram_gb`).
-  AGIdock's floor is 2 GB, PVE1's 16 GB.
-- **Localhost guard:** at most 96 loop threads in total (`max_loop_threads`), at most 16 threads per job,
-  MemAvailable at least 16 GB after the job's peak, jobs up to 120 GB.
-- **Disk floors:** admission refuses while the run root (`base`) is below `min_free_disk_gb` or any `disk_roots`
-  path is below its floor: EPYC1-3 200 GB on the base, 100 GB on `/` (EPYC3 also 200 GB on
-  `/srv/opentallas-scratch`, EPYC2 100 GB on `/srv/opentallas-scratch2`); PVE1 100 GB; localhost 150 GB;
-  AGIdock none.
-- **Caps:** a stage's tool needs (bench: verilator + iverilog + yosys; calibrate/route/signoff/summary: orfs) must
-  be a subset of the host's caps, so localhost and PVE1 take ORFS stages only.
+hosts.json lists the same five hosts (base `/srv/opentallas-scratch/claude/closure-loop`, caps verilator, yosys,
+iverilog, orfs; `max_job_ram_gb` 0.8 x RAM; disk floors 200 GB epyc2/3, 100 GB intel1/2, 300 GB localhost).
+localhost has `max_loop_threads 0` (the loop places nothing there until the owner opens it) and `bench_offload`.
+No `git_mirror` (servers cannot reach GitHub; sync falls back to the tar stream). Old hosts are in `retired_hosts`,
+so old specs that pin them fall back to admission.

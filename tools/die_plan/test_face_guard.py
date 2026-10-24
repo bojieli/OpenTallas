@@ -1,0 +1,85 @@
+"""face_guard (CP1-R10, COORD 10-24): every planned face register survives Yosys as its own flop.
+    python3 -m pytest -q tools/die_plan/test_face_guard.py"""
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import face_guard  # noqa: E402
+import gen_rtl  # noqa: E402
+
+NET_OK = r"""
+module top(clk, a, o);
+  input clk; input [1:0] a; output [1:0] o;
+  wire _0_; wire _1_; wire [1:0] q;
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[0]$_DFF_P_  (.CLK(clk), .D(a[0]), .QN(q[0]));
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[1]$_DFF_P_  (.CLK(clk), .D(a[1]), .QN(q[1]));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[0]$_DFF_P_  (.CLK(clk), .D(q[0]), .QN(_0_));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[1]$_DFF_P_  (.CLK(clk), .D(q[1]), .QN(_1_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));
+  INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));
+endmodule
+"""
+
+
+def test_handwritten_pass():
+    r = face_guard.guard(NET_OK, pins=[dict(bus="a", bit=0), dict(bus="a", bit=1), dict(bus="o", bit=0),
+                                       dict(bus="o", bit=1)])
+    assert r["verdict"] == "PASS" and r["ok"] == 4, r
+
+
+def test_handwritten_failure_classes():
+    merged = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "INVx3_ASAP7_75t_R _3_ (.A(_0_), .Y(o[1]));")
+    assert "shared" in face_guard.guard(merged)["fail_counts"]
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")
+    assert "dropped" in face_guard.guard(dropped)["fail_counts"]
+    const = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "assign o[1] = 1'b0;")
+    assert "const" in face_guard.guard(const)["fail_counts"]
+    feed = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "assign o[1] = a[1];")
+    assert "feedthrough" in face_guard.guard(feed)["fail_counts"]
+    comb = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));", "NAND2x1_ASAP7_75t_R _3_ (.A(_1_), .B(_0_), .Y(o[1]));")
+    assert face_guard.guard(comb)["verdict"] == "FAIL"
+    two = NET_OK.replace("INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));",
+                         "INVx3_ASAP7_75t_R _3_ (.A(_0_), .Y(o[1]));\n  INVx3_ASAP7_75t_R _4_ (.A(_1_), .Y(o[1]));")
+    assert face_guard.guard(two)["verdict"] == "FAIL"
+    r = face_guard.guard(NET_OK, pins=[dict(bus="b", bit=0)])
+    assert r["fail_counts"].get("missing_port") == 1
+
+
+TOP = """
+module top(input wire clk, input wire rst_n, input wire [1:0] a, input wire [1:0] unused_in,
+           output wire [1:0] o1, output wire [1:0] o2, output wire [1:0] o3, output wire [2:0] o4);
+  wire [1:0] x, aq; wire xe, ae;
+  ot_dp_st #(.W(2)) u_bin_a (.clk(clk), .rst_n(rst_n), .d(a), .ea(rst_n), .q(aq), .eq(ae));
+  ot_dp_st #(.W(2)) u_bout_o1 (.clk(clk), .rst_n(rst_n), .d(aq), .ea(rst_n), .q(o1), .eq());
+  ot_dp_st #(.W(2)) u_bout_o2 (.clk(clk), .rst_n(rst_n), .d(aq), .ea(rst_n), .q(o2), .eq());
+  ot_dp_st #(.W(2)) u_bout_o3 (.clk(clk), .rst_n(rst_n), .d(2'b01), .ea(rst_n), .q(o3), .eq());
+  ot_dp_st #(.W(2)) u_bin_u (.clk(clk), .rst_n(rst_n), .d(unused_in), .ea(rst_n), .q(x), .eq(xe));
+  ot_dp_ste #(.W(2)) u_bout_o4 (.clk(clk), .rst_n(rst_n), .d(aq), .ea(rst_n), .q(o4[1:0]), .eq(o4[2]));
+endmodule
+"""
+
+
+def _synth(cells):
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "c.v").write_text(cells + TOP)
+        subprocess.run(["yosys", "-q", "-p", f"read_verilog {d}/c.v; synth -flatten -top top; opt -purge; "
+                        f"write_verilog -noattr -noexpr {d}/n.v"], check=True, capture_output=True, timeout=300)
+        return (Path(d) / "n.v").read_text()
+
+
+@pytest.mark.skipif(not shutil.which("yosys"), reason="no yosys")
+def test_yosys_keep_attributes_prevent_merges():
+    """gen_rtl.CELLS (keep_hierarchy, keep): fan-out, constant-D and unused-q boundary flops all survive; without
+    the attributes Yosys merges / removes them and the guard FAILs."""
+    r = face_guard.guard(_synth(gen_rtl.CELLS), skip_re=r"^(clk|rst_n)$")
+    assert r["verdict"] == "PASS" and r["ok"] == 13, r
+    bare = gen_rtl.CELLS.replace("(* keep_hierarchy, keep *)\n", "").replace("(* keep_hierarchy *)\n", "")
+    r = face_guard.guard(_synth(bare), skip_re=r"^(clk|rst_n)$")
+    assert r["verdict"] == "FAIL", r
+    assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))

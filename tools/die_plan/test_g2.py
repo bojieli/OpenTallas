@@ -463,7 +463,9 @@ def test_reset_epoch_flops_not_merged():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
+            # one epoch flop per station (ot_dp_ste is itself kept since CP1-R10: count the async epoch flops in the
+            # hierarchy totals; older yosys stat printed the flattened ot_dp_ep count)
+            assert re.search(r"(ot_dp_ep|\$_DFF_PN0_)\s+2\b", r.stdout), r.stdout
 
 
 def test_empty_grid_taps_dropped_at_assembly():
@@ -517,3 +519,33 @@ def test_tap_port_family_env():
         prog = f"set ct_port {port}\n" + "".join(f"puts [regexp {pat} {n}]\n" for n in names)
         r = subprocess.run(["tclsh"], input=prog, capture_output=True, text=True)
         assert [int(x) for x in r.stdout.split()] == want, (port, r.stdout, r.stderr)
+
+
+def test_pair_drops_hard_cores():
+    """CP1-R10 (10-24): pair.py's proof leaf replaces every content, so hard_cores[] (S81 v4.7+ frame cores with LEF
+    views) are dropped too; kept, the kit would place macros the proof netlist does not instantiate."""
+    import copy
+    import pair
+    raw = copy.deepcopy(PAIR)
+    tn = raw["partitions"][0]["type"]
+    raw["partition_types"][tn]["hard_cores"] = [dict(inst="u_core", module="m", lef="x.lef", origin_um=[8.64, 8.64],
+                                                    outline_um=[100.0, 100.0])]
+    out, _ = pair.extract(raw, [p["name"] for p in raw["partitions"][:2]])
+    assert all("hard_cores" not in t for t in out["partition_types"].values())
+    assert "1 hard_cores dropped" in out["partition_types"][tn]["note"]
+    assert not schema.validate(out)
+
+
+def test_run_die_signoff_corners():
+    """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
+    import gen_phys
+    assert "for c in SS TT FF" in gen_phys.RUN_DIE
+
+
+def test_die_sta_reports_face_flop_spread():
+    """CP1-R10: die STA prints the R4 face-flop spread (rise-edge CK arrival over the u_bin_/u_bout_ pin registers)
+    per partition instance and over the die."""
+    import gen_phys
+    P = schema.Plan(PAIR)
+    t = gen_phys.sta_die_tcl(P)
+    assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")

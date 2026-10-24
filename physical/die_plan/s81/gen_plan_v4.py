@@ -65,6 +65,12 @@ FACE_MAX = 0.6 * 6.0               # pins/um averaged over a cell face (COORD: f
 EDGE = 6.0
 GAP = 2.0
 XW, RW = 1104, 70
+# v4.8 (S81-P9-R8EQ, BINDER4 b3r8 UNPLANNED 1,347 b): a slice's lep (LP partition) owns its SerDes rx/tx AND the MU /
+# host-plane buses to seqhost (mu_rt / mu_c / mu_rc, f_host / f_ks / f_lf, t_host / t_kd: u_lep ports in the bound top);
+# v4.7 put the latter on the hub C, so the plan lanes unit__*_C__seqhost carried nothing and 1,032 b crossed unplanned.
+LP_BUS_RE = r"((rx|tx)\d|mu_(rt|c|rc)|f_(host|ks|lf)|t_(host|kd))$"
+LP_BUS_RE_V47 = r"(rx|tx)\d$"
+BOUND_SUPP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "bound_supplement_v48.json")
 OPP = dict(N="S", S="N", E="W", W="E")
 STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
 # S81-P6 10-23 (COORD: census from the band RTL): frame-internal lane widths per master = the band-to-band bits of the
@@ -255,10 +261,23 @@ NONFRAME_HC = {
                         dict(inst="u_lf.u_rxsf", module="dsfd_su_t_rxsf", lef=_rt("s81su_rxsf_ref", "dsfd_su_t_rxsf"),
                              cells=82916, plan_core="vq_rx"),
                         dict(inst="u_lf.u_rxsb", module="dsfd_su_t_rxsb", lef=_rt("s81su_rxsb_ref", "dsfd_su_t_rxsb"),
-                             cells=99597, plan_core="vq_rx")],
-                 gaps=[dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve_a/ve_b",
-                            why="no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no "
-                                "final/ views; repo has stand-in views only); 460,279 cells is itself over the cap")]),
+                             cells=99597, plan_core="vq_rx"),
+                        # CORE-S81 10-23: ve r5 CLOSED view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021,
+                        # TT +42.12 / FF +12.74 / DRC 0; final LEF regenerated from provenance/raw with the run's own
+                        # abstract_pin_stub.py, sha 01b54bf1 = the record) imported to closed_import/ot_s81sl_ve
+                        dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve",
+                             lef=_ARCH % ("ot_s81sl_ve", "s81sl_ve_r5-f51f4ec42-linked-eco-1021", "ot_s81sl_ve",
+                                          "ot_s81sl_ve"))],
+                 gaps=[],
+                 # CORE-S81 10-23 leaf placement (the shelf packer cannot fit vp 734x864 + vn + ve): vp W column under
+                 # the N bus; E column top row vn + vq (both on the N bus, vq takes vn's y), ve under vn with vsw on
+                 # its E side, vs (the ve / vsw / rx / vp hub) centred under ve so ve's W (reduce) and E (add) faces
+                 # are equidistant from it, rxsf -> rxsb E of vs
+                 place={"u_lf.u_vp": (34.56, 319.68), "u_lf.u_vn": (786.24, 829.44), "u_lf.u_vq": (1157.76, 1054.08),
+                        "u_lf.u_ve": (786.24, 466.56), "u_lf.u_vsw": (1149.12, 587.52), "u_lf.u_vs": (872.64, 276.48),
+                        "u_lf.u_rxsf": (1062.72, 276.48), "u_lf.u_rxsb": (1218.24, 276.48)},
+                 # vp / vn / vq carry the N-face leaf bus: only the x mirror keeps them under it
+                 mirrors=((False, False), (True, False))),
     "svc": dict(cores=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
                             lef=_rt("dsdv_svc_sx_hrow", "dsdv_svc_sx_hrow"), plan_core="sx_hrow_ab")
                        for r in range(4) for b in range(2)],
@@ -343,6 +362,15 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
         return math.ceil(round(v / G, 6)) * G
     x0 = y0 = up(HC_EDGE_UM)
     x, y, row_h, out = x0, y0, 0.0, []
+    if spec.get("place"):
+        # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
+        # fit; the corner mirroring and the gap / edge legality below still apply
+        for c, (cw, ch) in items:
+            ox_, oy_ = spec["place"][c["inst"]]
+            out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[ox_, oy_], outline_um=[cw, ch],
+                            orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
+                            pins_file="inputs/core_pins/%s.json" % c["module"]))
+        items = []
     for c, (cw, ch) in items:
         if x + dx + cw > w - HC_EDGE_UM:
             x, y, row_h = x0, up(y + dy + row_h + HC_GAP_UM), 0.0
@@ -380,7 +408,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
                     return False
         return True
     best = None
-    for mx, my in ((False, False), (False, True), (True, False), (True, True)):
+    for mx, my in spec.get("mirrors", ((False, False), (False, True), (True, False), (True, True))):
         o = mirrored(mx, my)
         if not legal(o):
             continue
@@ -692,7 +720,7 @@ def x_row(fr):
     return 3 + 3 * fr
 
 
-def lanes_all(ab, census, parts, frames, serdes, slices):
+def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
     P = {p.name: p for p in parts}
     groups = frame_mapping(ab)
     lanes = []
@@ -781,7 +809,7 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
             return svc_part[b]
         if b in slices:
             sl = slices[b]
-            if sl["LP"] is not None and re.match(r"(rx|tx)\d$", bus or ""):
+            if sl["LP"] is not None and re.match(LP_BUS_RE_V47 if v47 else LP_BUS_RE, bus or ""):
                 return sl["LP"].name
             return sl["C"].name
         return b if b in P else None
@@ -816,6 +844,12 @@ def lanes_all(ab, census, parts, frames, serdes, slices):
     for (ps, pd, c), b in agg.items():
         kind = "ctl" if c == "ctl" else "data"
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), b, kind=kind, cls=c, role=c)
+    # ---- v4.8 (S81-P9-R8EQ): bound-top crossings the as-built census lacks (inputs/bound_supplement_v48.json, from the
+    #      BINDER4 b3r8 UNPLANNED list): svc_rs chain svc_2k -> svc_2k+1 and the slice C -> LP 1-b lep inputs ----
+    for e in ([] if v47 else json.load(open(BOUND_SUPP))["entries"]):
+        ps, pd, c = e["src"], e["dst"], e["cls"]
+        assert ps in P and pd in P, e
+        L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), e["bits"], cls=c, role=c)
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1108,6 +1142,30 @@ def route(grid, lanes, slices):
     return res
 
 
+def route_v48(grid, lanes47, lanes):
+    """v4.8 (S81-P9-R8EQ): route the v4.7 lane set first, exactly as v4.7 did (same order, same face loads), and keep
+    those routes for every v4.8 lane that is unchanged (id, width, endpoints); only the lanes v4.8 adds or re-ends
+    (lep buses C -> LP, bound supplement, the shrunk C lanes) are routed after, on top of the v4.7 loads (the removed
+    v4.7 lanes stay as load: conservative).  So no v4.7 lane changes its route or its cycles (no schedule churn)."""
+    key = {l["id"]: (l["width"], l["src"][0], l["dst"][0]) for l in lanes47}
+    res47 = route(grid, lanes47, {})
+    by47 = {l["id"]: l for l in lanes47}
+    res, todo = {}, []
+    for lk in lanes:
+        if key.get(lk["id"]) == (lk["width"], lk["src"][0], lk["dst"][0]):
+            o = by47[lk["id"]]
+            lk["src"], lk["dst"] = (o["src"][0], lk["src"][1]), (o["dst"][0], lk["dst"][1])
+            res[lk["id"]] = res47[lk["id"]]
+        else:
+            todo.append(lk)
+    res.update(route(grid, todo, {}))
+    ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
+    return res
+
+
+ROUTE_V48 = {}
+
+
 def bends(cells):
     dirs = []
     for a, b in zip(cells, cells[1:]):
@@ -1305,7 +1363,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 return a, b
         return None
     raw = {}
-    runs.sort(key=lambda r: (-len(r["ports"]), -r["width"], r["role"], r["lane"], r["line"]))
+    # v4.8: the runs of the lanes v4.8 adds / re-ends (route_v48 rerouted) are placed after every v4.7 run, so the
+    # v4.7 windows (and with them the ft station spacing and lane cycles) stay where v4.7 put them
+    new48 = set(ROUTE_V48.get("rerouted", ()))
+    runs.sort(key=lambda r: (r["lane"] in new48, -len(r["ports"]), -r["width"], r["role"], r["lane"], r["line"]))
     single = []
     for r in runs:
         keys = [pkey[p] for p in r["ports"]]
@@ -1663,7 +1724,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
     stats["cells_missing"] = sorted({v["basis"] for v in est.values() if "MISSING" in v["basis"]})
     json.dump(stats, open(out / "v4_stats.json", "w"), indent=1, default=str)
     json.dump(est, open(out / "cells_est.json", "w"), indent=1)
-    json.dump(dict(fmap, type_of=ptype), open(out / "instance_map.json", "w"), indent=0)
+    json.dump(dict(fmap, type_of=ptype, lp_bus_re=LP_BUS_RE), open(out / "instance_map.json", "w"), indent=0)
     return stats
 
 
@@ -1691,7 +1752,7 @@ def main():
                     chan_cells.add((c, r))
     miss = [(c, r) for c in range(NC) for r in range(NR) if (c, r) not in grid.owner and (c, r) not in chan_cells]
     assert not miss, miss
-    routes = route(grid, lanes, {})
+    routes = route_v48(grid, lanes_all(ab, census, parts, frames, serdes, slices, v47=True)[0], lanes)
     stats = emit(parts, lanes, routes, chans, fmap, Path(a.out))
     print(json.dumps({k: v for k, v in stats.items() if k != "instances_per_type"}, indent=1, default=str))
 

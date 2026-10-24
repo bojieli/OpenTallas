@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "type": "dsdv_eng_rr_h1__164.16x267.84",
+ "module": "dsdv_eng_rr_h1",
+ "outline_um": [
+  164.16,
+  267.84
+ ],
+ "cores_json_sha256": "7a9649115485cdac11cca0270db590c0c597f4f5d0dd9d2e682c4d861d1f333f",
+ "pins_file": "inputs/core_pins/dsdv_eng_rr_h1.json",
+ "pins_sha256": "03dbdbddf0a1c209d487fb2c6273bef4ffae49672a0e22e9d76e0b67a010fa4b",
+ "pins": 645,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [],
+ "recipe_sha256": "7ca8481055e1c5bd1452bb74c07d18faa7dec7fc39cd4028d0fd75a75effda37",
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "signal_max": "M5",
+ "macros": [],
+ "kit_hash": "7baaf64770997021"
+}
