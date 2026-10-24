@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_vs_lfp",
+ "module": "ot_s81sl_vs",
+ "outline_um": [
+  172.8,
+  172.8
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_vs",
+ "spec_sha256": "9ccfaace0a13dfab0677b0b1b0776f304c68a2873fb6df2190ab7aeda82493d3",
+ "pins_file": "inputs/core_pins/ot_s81sl_vs_lfp.json",
+ "pins_sha256": "894d1075fb2934a99286663781e1e51e1a66148c371da77bb457786d13246625",
+ "pins": 2859,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "d00bf2b50e0bd4be7d3c3562d890a66bb5c0cd10a4b0b3f02741454465f0d41c",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "db7cf6b12d",
+ "sdc_lint_sha256": "b5ee957c09da25089cc5255d6df75a0fb2830514daebe757f3460c5ceb87f588",
+ "face_guard_sha256": "14aaba591aac0ec0b58511ae5e3c3578816765d56279629f6460a1f41fb64537",
+ "macros": [],
+ "kit_hash": "365853f692a7f7d0"
+}

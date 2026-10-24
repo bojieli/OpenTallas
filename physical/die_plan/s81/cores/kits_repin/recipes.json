@@ -1,0 +1,43 @@
+{
+ "_doc": "S81-CORES kits_repin (10-24): ORFS kits for the re-pinned / re-floorplanned closed sub-leaf cores. Sources, params and macros are read from the ref_tile spec.json at generation time (the closed kit's own file list); only the outline and pins change (plan pin tables in inputs/core_pins). util = the closed kit's PLACE_DENSITY (spec route.pd / util). cts_args = the closed kit's CTS setting where it had one.",
+ "ot_s81sl_vs": {
+  "suffix": "lfp",
+  "ref_tile": "physical/ref_tile/s81sl_vs",
+  "outline_um": [172.8, 172.8],
+  "pins_file": "inputs/core_pins/ot_s81sl_vs_lfp.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vs_lfp.lef",
+  "closed_cells": 117971,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets",
+  "orfs_vars": {"SYNTH_HDL_FRONTEND": "slang"}
+ },
+ "ot_s81sl_vq": {
+  "suffix": "lfp",
+  "ref_tile": "physical/ref_tile/s81sl_vq",
+  "outline_um": [172.8, 129.6],
+  "pins_file": "inputs/core_pins/ot_s81sl_vq_lfp.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vq_lfp.lef",
+  "closed_cells": 46676,
+  "util": 0.49,
+  "includes": [],
+  "macro_inst_glob": "*u_xm*",
+  "macro_sites": {"ot_sram_1r1w_128x256_m1_r2c2": [55.296, 4.32, "R0"]},
+  "macro_site_note": "closed site [55.296, 2.16] sat inside this kit's 4.32 core margin; moved up 2.16 (= 45 M4 pitches: the macro M4 pins stay on 0.012 + k 0.048). The new faces (W y, E u/um, N leaf bus + clk/rst, S none) do not touch the macro (x 55.3..150.1, y 4.32..45.4): >= 22.7 um to E, 55.3 um to W, 84 um to N.",
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {"SYNTH_HDL_FRONTEND": "slang"}
+ },
+ "dsdv_svc_sx_hrow": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/dsdv_svc_sx_hrow",
+  "outline_um": [138.24, 164.16],
+  "pins_file": "inputs/core_pins/dsdv_svc_sx_hrow_c.json",
+  "stub_lef": "cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+  "closed_cells": 51397,
+  "util": 0.5,
+  "includes": ["rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles.svh", "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_group72.svh",
+               "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_mut_order.svh", "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_mut_order_group72.svh"],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size 30 -sink_clustering_max_diameter 60 -sink_clustering_levels 2 -distance_between_buffers 100 -clustering_unbalance_ratio 0.5",
+  "orfs_vars": {"SYNTH_HDL_FRONTEND": "slang"}
+ }
+}
