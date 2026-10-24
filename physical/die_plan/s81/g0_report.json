@@ -1,9 +1,10 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/scratch/s81-p9/v47c/die_plan.json",
+ "plan": "/home/ubuntu/scratch/s81-p9/v47d/die_plan.json",
  "verdict": "PASS",
+ "mode": "G0",
  "errors": 0,
- "warnings": 960,
+ "warnings": 1081,
  "summary": {
   "die": "s81",
   "partitions": 400,
@@ -24,7 +25,428 @@
    "hard_cores": 914,
    "core_pins": 369310,
    "core_pins_off_track": 0,
-   "types_no_cells": 168
+   "types_no_cells": 0,
+   "over_cap_no_cores": 110,
+   "cell_sources": [
+    "/home/ubuntu/scratch/s81-p9/v47d/cells_est.json"
+   ],
+   "no_cells": []
+  },
+  "core_faces": {
+   "groups": 0,
+   "groups_away": 0,
+   "pins": 0,
+   "pins_away": 0,
+   "types_away": 0,
+   "cores": 914,
+   "cores_unchecked": 914
+  },
+  "complete": {
+   "cells": 0,
+   "track_offset": 0,
+   "clock_method": 0,
+   "common_latency": 0,
+   "insertion_target": 0,
+   "reset_sync": 0,
+   "face_flop": 0,
+   "internal_station": 0
+  },
+  "g0c": {
+   "types": 168,
+   "clean": 58,
+   "die_level": {},
+   "g3_eligible": [
+    "bk_col__t1",
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1",
+    "dsdv_slice_lepe_mu_LP__t1",
+    "dsdv_slice_lepe_nh_mus_LP__t1",
+    "dsdv_slice_lepw_mu_LP__t1",
+    "dsdv_slice_lepw_mus_LP__t1",
+    "iqf__t1",
+    "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t4",
+    "ot_s81sl_kv_leaf__t5",
+    "phy__t1",
+    "seqhost__t1",
+    "serdes__t1",
+    "serdes__t2",
+    "serdes__t3",
+    "serdes__t4",
+    "serdes__t5",
+    "serdes__t6",
+    "slice_station__t1",
+    "slice_station__t10",
+    "slice_station__t11",
+    "slice_station__t12",
+    "slice_station__t13",
+    "slice_station__t14",
+    "slice_station__t15",
+    "slice_station__t16",
+    "slice_station__t17",
+    "slice_station__t18",
+    "slice_station__t19",
+    "slice_station__t2",
+    "slice_station__t20",
+    "slice_station__t21",
+    "slice_station__t22",
+    "slice_station__t23",
+    "slice_station__t24",
+    "slice_station__t25",
+    "slice_station__t26",
+    "slice_station__t27",
+    "slice_station__t3",
+    "slice_station__t4",
+    "slice_station__t5",
+    "slice_station__t6",
+    "slice_station__t7",
+    "slice_station__t8",
+    "slice_station__t9"
+   ],
+   "by_type": {
+    "svc_lo_dsdv_svc_rs_w__t1": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t1": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t1": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t2": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t2": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_pvso_entry__t1": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t3": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t3": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t4": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t4": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t5": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_pvso_entry__t2": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t6": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t5": {
+     "hard_cores": 1
+    },
+    "svc_lo_dsdv_svc_rs__t7": {
+     "hard_cores": 1
+    },
+    "svc_hi_dsdv_svc_rs__t6": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t2": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_lepw_mus_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t3": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t4": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t5": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t6": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t7": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_lepw_mu_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t8": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t9": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t10": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t11": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t12": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t13": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t14": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t15": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t16": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t17": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t2": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t18": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t19": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t20": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t21": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t22": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t3": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t23": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t24": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t25": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t26": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t27": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t4": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t28": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t29": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t30": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t31": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t32": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_iq_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t33": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t34": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t35": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_kv512_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t36": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t37": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t38": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c3x_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t39": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t40": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t41": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t42": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t5": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t43": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t44": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t45": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t46": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t47": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t6": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t48": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t49": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t50": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t51": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t52": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t7": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t53": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t54": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t55": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t56": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t57": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t58": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t8": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t59": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t60": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t61": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t62": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_c1x_C__t9": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t63": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t64": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t65": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t66": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t67": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_lepe_nh_mus_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t68": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t69": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t70": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t71": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t72": {
+     "hard_cores": 1
+    },
+    "dsdv_slice_lepe_mu_C__t1": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t73": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t74": {
+     "hard_cores": 1
+    },
+    "ot_s81sl_leaf__t75": {
+     "hard_cores": 1
+    },
+    "gunit__t1": {
+     "hard_cores": 1
+    },
+    "bk_sel__t1": {
+     "hard_cores": 1
+    },
+    "eng__t1": {
+     "hard_cores": 1
+    }
+   }
   },
   "geometry": {
    "partition_area_mm2": 768.2844266496062,
@@ -5107,7 +5529,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/scratch/s81-p9/v47c/g0/die_plan.png"
+  "png": "/home/ubuntu/scratch/s81-p9/v47d/g0/die_plan.png"
  },
  "findings": [
   {
@@ -5198,7 +5620,844 @@
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "168 types without a cell estimate (type.cells or contents[].cells): the > 400000-cell hard-core rule is unchecked for them"
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs_w__t1: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs_w__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t1: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t1: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t2: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t2: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_pvso_entry__t1: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t3: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t3",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t3: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t3",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t4: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t4",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t4: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t4",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t5: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t5",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_pvso_entry__t2: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_pvso_entry__t2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t6: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t6",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t5: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t5",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_lo_dsdv_svc_rs__t7: 12917494 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type svc_hi_dsdv_svc_rs__t6: 12750850 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t1: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t2: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_lepw_mus_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t3: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t3",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t4: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t4",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t5: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t5",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t6: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t6",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t7: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t7",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_lepw_mu_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t8: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t8",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t9: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t9",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t10: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t10",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t11: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t11",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t12: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t12",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t13: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t13",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t14: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t14",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t15: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t15",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t16: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t16",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t17: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t17",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t2: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t2",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t18: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t18",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t19: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t19",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t20: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t20",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t21: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t21",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t22: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t22",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t3: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t3",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t23: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t23",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t24: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t24",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t25: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t25",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t26: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t26",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t27: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t27",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t4: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t4",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t28: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t28",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t29: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t29",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t30: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t30",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t31: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t31",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t32: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t32",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_iq_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_iq_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t33: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t33",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t34: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t34",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t35: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t35",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_kv512_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_kv512_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t36: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t36",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t37: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t37",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t38: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t38",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c3x_C__t1: 733978 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c3x_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t39: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t39",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t40: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t40",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t41: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t41",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t42: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t42",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t5: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t5",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t43: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t43",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t44: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t44",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t45: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t45",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t46: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t46",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t47: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t47",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t6: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t6",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t48: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t48",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t49: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t49",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t50: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t50",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t51: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t51",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t52: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t52",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t7: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t7",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t53: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t53",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t54: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t54",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t55: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t55",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t56: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t56",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t57: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t57",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t58: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t58",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t8: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t8",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t59: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t59",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t60: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t60",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t61: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t61",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t62: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t62",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_c1x_C__t9: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_c1x_C__t9",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t63: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t63",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t64: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t64",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t65: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t65",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t66: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t66",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t67: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t67",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_lepe_nh_mus_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t68: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t68",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t69: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t69",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t70: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t70",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t71: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t71",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t72: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t72",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type dsdv_slice_lepe_mu_C__t1: 723371 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t73: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t73",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t74: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t74",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type ot_s81sl_leaf__t75: 2162983 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "ot_s81sl_leaf__t75",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type gunit__t1: 483967 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "gunit__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type bk_sel__t1: 808579 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "bk_sel__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "hard_cores",
+   "msg": "[G0C] type eng__t1: 428942 cells (by_part cells_est.json) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+   "type": "eng__t1",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h10_r0_p1__t1: 87/87 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h10_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h10_r1__t1: 77/77 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h10_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h10_r2__t1: 67/67 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h10_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p2__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r1__t1: 73/73 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r2__t1: 67/67 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r2__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p3__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p3__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h10_r0_p4__t1: 87/87 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h10_r0_p4__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p5__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p5__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p6__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p6__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p1__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p1__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type col_h9_r0_p4__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "col_h9_r0_p4__t1"
   },
   {
    "level": "WARN",
