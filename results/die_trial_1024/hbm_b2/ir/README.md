@@ -14,7 +14,7 @@ Tool: OpenROAD PDNSim (`analyze_power_grid`, openroad/orfs:asap7lock, OpenROAD 2
 | SerDes io, NW_io (u_lk_N0 SerDes + host UCIe) | 60.00 | 85.87 | **145.87** | 145.87 | FAIL | inside SerDes u_lk_N0: VDD (713, 6372), VSS (411, 6329) |
 | S-edge SerDes, NW_spb0 (u_lk_S0) | 61.96 | 140.95 | **202.91** | 146.61 | FAIL | inside u_lk_S0: VSS (5508, 21.6), at the die edge |
 | full die, exact grid (`full_exact`) | | | | | **NOT COMPLETED** | pdngen was still inserting 247,616 load macros after 4 h 10 min (RSS 4.6 GB, single thread); stopped |
-| full die, coarse grid x4 (`full_s4m`) | FULLDIE_VDD | FULLDIE_VSS | FULLDIE_SUM | FULLDIE_INT | FULLDIE_VERDICT | FULLDIE_AT |
+| full die, coarse grid x4 (`full_s4m`) | | | | | **NOT COMPLETED** (still running when this was written) | pdngen passed in 994 s. After that the run sat > 2 h in `check_power_grid VDD` (RSS 150-180 GB, 400 GB cap). A first try under a 120 GB cap (`full_s4`, epyc2) was killed by OOM after pdngen |
 
 \* interior = load tiles at least one per-rail bump pitch (63.64 um) from the die edge. The assumed checkerboard bump
 lattice puts VSS at k x 63.64 and VDD at 31.82 + k x 63.64. Its VSS row/column at x = 0 / y = 0 falls on the die edge
@@ -104,7 +104,7 @@ This is the ir_1012 tile-current method (`tools/hbm_die_ir_window.py`).
 | w_spb0 | intel2:.../ir/w_spb0 | 1,862 | 0:41 | 1.3 GB | 6 / 8 / 12 |
 | full_exact | epyc3:.../ir/full_exact | 247,616 | stopped at 4:10:37 in pdngen | 4.6 GB | NOT COMPLETED |
 | full_s4 (120 GB cap) | epyc2:.../ir/full_s4 | 15,476 | 32:20, killed (signal 9, OOM at the cap) | 125.6 GB | 848 / - / - |
-| full_s4m (400 GB cap) | epyc3:.../ir/full_s4m | 15,476 | FULLDIE_WALL | FULLDIE_RSS | FULLDIE_PHASES |
+| full_s4m (400 GB cap) | epyc3:.../ir/full_s4m (started 12:14 PDT) | 15,476 | > 2:10 when written, still running | 180 GB so far | 994 / - / - |
 
 - The pdngen time is superlinear in the number of load macros: 12k loads 5 min, 31k loads 40 min, 247k loads > 4 h
   unfinished.
@@ -123,10 +123,52 @@ python3 tools/die_trial/hbm_b2_render.py power|ir ...       # PNGs
 Files here:
 - `power_map.json`: per partition, IO regions, 436 hard cores, sources.
 - `cases/*.json`: result + runtime per case.
-- PNGs: `power_density.png`, `ir_windows_VDD.png`, `ir_serdes_io_VSS.png`, `ir_serdes_spb0_VSS.png`, FULLDIE_PNG.
+- PNGs: `power_density.png`, `ir_windows_VDD.png`, `ir_serdes_io_VSS.png`, `ir_serdes_spb0_VSS.png`.
 
-Big outputs stay on the hosts listed: ir_*.rpt, pdn.odb is not written, logs.
+Big outputs (ir_*.rpt, run.log, case.def) stay on the hosts listed; no pdn.odb is written. When full_s4m finishes, the lane owner records it with:
+`rsync -a epyc3:/srv/opentallas-scratch/claude/trial-hbm/ir/full_s4m/ DIR/ && python3 tools/die_trial/hbm_b2_ir.py record --out DIR && python3 tools/die_trial/hbm_b2_render.py ir --power power_map.json --case DIR --case <windows...> --net VDD --out ir_fulldie_VDD.png`.
+The full-die row then replaces NOT COMPLETED.
 
 ## Visual review: what looks wrong
 
-WHATSWRONG
+These come from reading `power_density.png`, `ir_windows_VDD.png` and the two SerDes zooms.
+
+1. **SerDes macros are the hot spots, by far.**
+   - All 5 SerDes are 600 x 600 um squares at 12.1 W/mm2, 5.6x the SM density.
+   - In both zooms the drop inside the SerDes has a checkerboard at the bump pitch: tiles next to a bump are about
+     40 mV, tiles between bumps 85-140 mV.
+   - So the drop is local spreading from each bump through the thin M8/M9 mesh, not a die-scale gradient. The plan grid
+     cannot carry 12 W/mm2.
+   - A SerDes needs its own supply / dense PG (about 5x the M8/M9 coverage, or M7+ local straps and bump-per-cell
+     power), or the 6.5 pJ/bit x 672 Gb/s figure must be put on a separate analog rail.
+   - It also does not match the plan: no SerDes has an own-supply rail declared.
+2. **Die-edge SerDes are worse.**
+   - The NW_spb0, NE_spb0 and vsN0 SerDes sit 8.64 um from the S die edge. Their VSS worst (141 mV) is on the edge
+     row, where the assumed bump lattice has no VSS row.
+   - The NW_io SerDes is 276 um in from the W edge, behind the UCIe, and violates io_edge_max 200. NE_io's SerDes is
+     342 um in, on the inner side (top F4).
+3. **The HBM PHY row is not a hot spot at the sourced estimate** (1.05 W/mm2 in the macro band, 0.42 in the rest of
+   PHY_N). In the PHY window the PHY band is dark, and the window worst (13.0 / 16.7 mV) sits in NW_sm1 at the W edge
+   of the window. But:
+   - (a) 0.8 pJ/bit is the lean I/O-only figure. The repo's logic-die HBM path figure is 10.19 pJ/bit incl. the
+     controller, and the controllers sit in the hub.
+   - (b) The bump-free PHY sensitivity gives a nonsensical 4.5 V: the plan grid has essentially no lateral reach, about
+     a bump cell.
+   - So the PHY band must keep PG bumps interleaved with its ~1900 signal bumps (5698 sites, 33% used by signals).
+     That has to be planned in the bump map, which the plan does not have yet.
+4. **The SMs are marginal.**
+   - 2.18 W/mm2 over 22.7 mm2 slots gives 12.5 mV VDD in the interior, and 31.7 mV interior rail sum (from the
+     VSS-edge side). It is 47 mV with the die-edge bump artefact.
+   - Any SM power above the estimate, or a real package/bump resistance, pushes it over 35 mV.
+   - The SM density is the largest open number: the cell-count cross-check is 11x lower.
+5. **The hub (0.94 W/mm2) and the spine / vsN corridors (0.42 W/mm2) are cool**: 12.7 mV, dark in the map.
+6. **Grid weak spots seen in the maps.**
+   - The die-edge rows and columns (one-sided bump support) show up as the bright first tile column in the SM window and
+     as the worst row in spb0.
+   - There is no weakness at partition abutments, because the die grid is continuous over them by construction.
+   - Partition-internal M5-M7 grids are not modelled, so a weak spot inside a partition would not show here.
+7. **Power-map oddities.**
+   - vsN0 ranks as the hottest partition by average density (2.5 W/mm2) only because a SerDes sits in a small spine
+     chunk.
+   - The two PHY-row corner blocks mca/mcb (4 x 8.65 mm2) are charged spine density for logic they do not have yet.
+     They are reserved for PLL / decap, which makes them an ideal place for decap and extra PG bumps.
