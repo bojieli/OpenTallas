@@ -83,7 +83,7 @@
   "q_hub": {
    "cores": 76,
    "soft": 47,
-   "fill": 0.591
+   "fill": 0.538
   },
   "NW_io": {
    "cores": 3,
@@ -273,57 +273,51 @@
  "unfit": [],
  "spill": {
   "q_hub.u_hc_Q": 2,
-  "q_hub.u_svg_Q3": 2,
-  "q_hub.u_cij_Q": 3,
+  "q_hub.u_svg_Q0": 1,
+  "q_hub.u_svg_Q1": 3,
+  "q_hub.u_svg_Q2": 1,
+  "q_hub.u_wbk_Q": 5,
+  "q_hub.u_cij_Q": 2,
   "q_hub.u_hb_vms_Q": 6,
-  "q_hub.u_cxij_Q_q": 3,
-  "q_hub.u_smw_Q": 1,
-  "q_hub.u_xl_Q_ctl": 1,
-  "q_hub.u_xq_Q_p0_eg": 4,
-  "q_hub.u_vmb_Q0": 11,
-  "q_hub.u_vmb_Q1": 11,
-  "q_hub.u_vmb_Q2": 7,
-  "q_hub.u_vmb_Q3": 7,
-  "q_hub.u_vmb_Q4": 9,
-  "q_hub.u_vmb_Q5": 4,
-  "q_hub.u_vmb_Q6": 4,
-  "q_hub.u_vmb_Q7": 2,
-  "q_hub.u_sfus_Q": 6,
-  "q_hub.u_hb_dbk_Q": 9,
-  "q_hub.u_hcollgi_Q": 4,
-  "q_hub.u_wbk_Q": 4,
-  "q_hub.u_hcollgl_Q": 2,
-  "q_hub.u_hb_idx__q_Q": 1,
-  "q_hub.u_ctl_Q_p00": 1,
-  "q_hub.u_ctl_Q_p01": 1,
-  "q_hub.u_ctl_Q_p03": 1,
+  "q_hub.u_xl_Q_ctl": 7,
+  "q_hub.u_xq_Q_p0_eg": 1,
+  "q_hub.u_xq_Q_p1_eg": 5,
+  "q_hub.u_vmb_Q0": 1,
+  "q_hub.u_vmb_Q2": 1,
+  "q_hub.u_vmb_Q3": 1,
+  "q_hub.u_vmb_Q4": 5,
+  "q_hub.u_xq_Q_p0_bd": 1,
+  "q_hub.u_hb_dbk_Q": 5,
+  "q_hub.u_hcollgi_Q": 1,
+  "q_hub.u_hcollgl_Q": 4,
+  "q_hub.u_hb_idx__q_Q": 5,
   "q_hub.u_ctl_Q_p04": 1,
-  "q_hub.u_ctl_Q_p05": 1,
-  "q_hub.u_ctl_Q_p06": 1,
-  "q_hub.u_ctl_Q_p08": 1,
-  "q_hub.u_ctl_Q_p09": 1,
   "q_hub.u_ctl_Q_p07": 1,
-  "q_hub.u_svg_Q2": 4,
-  "q_hub.u_vmks_Q0": 6,
-  "q_hub.u_vmks_Q1": 6,
+  "q_hub.u_ctl_Q_p09": 4,
   "q_hub.u_ctl_Q_p11": 1,
-  "q_hub.u_svg_Q0": 2,
-  "q_hub.u_svg_Q1": 2,
-  "q_hub.u_vmks_Q2": 5,
-  "q_hub.u_vmks_Q3": 10,
-  "q_hub.u_hb_idx__op_Q": 3,
-  "q_hub.u_vmdel_Q2": 1,
-  "q_hub.u_vmdel_Q3": 1,
-  "q_hub.u_vmdel_Q4": 1,
-  "q_hub.u_vmdel_Q5": 1,
+  "q_hub.u_ctl_Q_p12": 4,
+  "q_hub.u_ctl_Q_p15": 1,
+  "q_hub.u_vmks_Q0": 13,
+  "q_hub.u_vmks_Q1": 6,
+  "q_hub.u_cxij_Q_q": 4,
+  "q_hub.u_smw_Q": 8,
+  "q_hub.u_ctl_Q_p01": 4,
+  "q_hub.u_ctl_Q_p06": 1,
+  "q_hub.u_vmks_Q2": 7,
+  "q_hub.u_vmks_Q3": 4,
+  "q_hub.u_hb_idx__op_Q": 1,
+  "q_hub.u_vmdel_Q0": 6,
+  "q_hub.u_vmdel_Q1": 6,
+  "q_hub.u_vmdel_Q2": 6,
+  "q_hub.u_vmdel_Q3": 6,
+  "q_hub.u_vmdel_Q4": 7,
+  "q_hub.u_vmdel_Q5": 6,
   "q_hub.u_vmdel_Q6": 1,
-  "q_hub.u_vmdel_Q7": 7,
-  "q_hub.u_xl_Q_aqhi": 2,
-  "q_hub.u_xl_Q_aqlo": 2,
+  "q_hub.u_vmdel_Q7": 1,
+  "q_hub.u_xl_Q_aqlo": 1,
   "root.u_hc_eng_tail0_rest": 1,
   "root.u_hb_idx__ctl": 4,
-  "root.u_hb_argmax": 1,
-  "root.u_col_idx": 4
+  "root.u_col_idx": 1
  },
  "conn_ports": 2366,
  "blind_ports": 8772,
@@ -388,51 +382,44 @@
   "q_hub.u_hb_vms_Q": [
    403.272,
    403.92,
-   1002.24,
-   1537.92,
-   "port ccw_in: faces ['E', 'S', 'N', 'W'] full"
+   869.832,
+   1334.88,
+   20160
   ],
   "q_hub.u_vmks_Q0": [
    146.88,
    146.88,
-   548.64,
-   695.52,
-   "port c_k_wdata: faces ['N', 'W', 'E', 'S'] full"
+   354.24,
+   453.6,
+   7343
   ],
   "q_hub.u_vmks_Q1": [
    146.88,
    146.88,
-   548.64,
-   695.52,
-   "port c_k_wdata: faces ['N', 'W', 'E', 'S'] full"
+   354.24,
+   453.6,
+   7343
   ],
   "q_hub.u_vmks_Q2": [
    146.88,
    146.88,
-   548.64,
-   695.52,
-   "port c_k_wdata: faces ['N', 'W', 'E', 'S'] full"
+   410.4,
+   522.72,
+   "port c_k_wdata: faces ['E', 'S', 'N', 'W'] full"
   ],
   "q_hub.u_vmks_Q3": [
    146.88,
    146.88,
-   410.4,
-   522.72,
-   "port c_k_wdata: faces ['E', 'N', 'S', 'W'] full"
+   354.24,
+   453.6,
+   7343
   ],
-  "q_hub.u_hcollgl_Q": [
+  "q_hub.u_hcollgi_Q": [
    237.6,
    237.6,
    276.48,
    276.48,
-   "port vm_kq_lo: faces ['N', 'E', 'W', 'S'] full"
-  ],
-  "q_hub.u_hb_dbk_Q": [
-   239.976,
-   240.84,
-   276.48,
-   280.8,
-   "port wd: faces ['E', 'S', 'N', 'W'] full"
+   "port vm_rr_lo: faces ['N', 'W', 'E', 'S'] full"
   ]
  }
 }

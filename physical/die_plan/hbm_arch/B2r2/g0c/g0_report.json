@@ -4,7 +4,7 @@
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
- "warnings": 349,
+ "warnings": 348,
  "summary": {
   "die": "hbm_arch_B2",
   "partitions": 88,
@@ -34,11 +34,10 @@
    "groups": 2366,
    "groups_away": 0,
    "pins": 259069,
-   "pins_away": 3036,
+   "pins_away": 484,
    "types_away": 0,
    "cores": 436,
-   "cores_unchecked": 344,
-   "groups_side": 1
+   "cores_unchecked": 344
   },
   "complete": {
    "cells": 0,
@@ -3918,12 +3917,6 @@
    "check": "core_faces",
    "msg": "type q_b113: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
    "type": "q_b113"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type q_hub core u_vmks_Q3 port c_k_wdata: 1024 pins on face N/S face away from its partner(s) u_ctl_Q_p12, u_ctl_Q_p13, u_ctl_Q_p14 ...: mean cos -0.03, 636 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
-   "type": "q_hub"
   },
   {
    "level": "WARN",

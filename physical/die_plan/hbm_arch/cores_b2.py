@@ -257,6 +257,56 @@ def pack(items, W, H, fixed=()):
     return None
 
 
+def place_flow(items, W, H, attract, step=43.2):
+    """Data-flow placement (G1 review 10-24: the shelf packer ignored connectivity).  items [(key, w, h)];
+    attract {key: [(weight, (x, y) | key2)]}: fixed points (partition bus windows) or other items (their centre once
+    placed).  Items with connectivity go first, heaviest total bits first, then by area; each takes the legal lattice
+    position (HALO kept, inside the outline) whose centre is nearest the bit-weighted mean of its known partners.
+    Items with no known partner fill the remaining space nearest the centroid of their split siblings (same parent),
+    else bottom-left.  Returns {key: (x, y)} or None."""
+    import numpy as np
+    pos, cen = {}, {}
+    rects = []
+    def target(k):
+        tw = tx = ty = 0.0
+        for wgt, p in attract.get(k, ()):
+            if isinstance(p, str):
+                if p not in cen:
+                    continue
+                p = cen[p]
+            tw += wgt; tx += wgt * p[0]; ty += wgt * p[1]
+        return (tx / tw, ty / tw) if tw else None
+    tot = {k: sum(wg for wg, _ in attract.get(k, ())) for k, _, _ in items}
+    order = sorted(items, key=lambda it: (tot[it[0]] == 0, -it[1] * it[2] if tot[it[0]] == 0 else -tot[it[0]], -it[1] * it[2]))
+    for k, w, h in order:
+        ws, hs = snap(w), snap(h)
+        xs = np.arange(HALO, W - HALO - ws + 1e-6, step)
+        ys = np.arange(HALO, H - HALO - hs + 1e-6, step)
+        if not len(xs) or not len(ys):
+            return None
+        if xs[-1] < W - HALO - ws - 1e-6:
+            xs = np.append(xs, snap(W - HALO - ws) - (G if snap(W - HALO - ws) > W - HALO - ws + 1e-6 else 0))
+        if ys[-1] < H - HALO - hs - 1e-6:
+            ys = np.append(ys, snap(H - HALO - hs) - (G if snap(H - HALO - hs) > H - HALO - hs + 1e-6 else 0))
+        X, Y = np.meshgrid(xs, ys)
+        X, Y = X.ravel(), Y.ravel()
+        ok = np.ones(X.shape, bool)
+        for (rx, ry, rw, rh) in rects:
+            ok &= ~((X < rx + rw + HALO - 1e-6) & (rx < X + ws + HALO - 1e-6) & (Y < ry + rh + HALO - 1e-6) & (ry < Y + hs + HALO - 1e-6))
+        if not ok.any():
+            return None
+        t = target(k)
+        if t is None:
+            sib = [cen[q] for q in cen if q.rsplit('_', 1)[0] == k.rsplit('_', 1)[0]]
+            t = (sum(p[0] for p in sib) / len(sib), sum(p[1] for p in sib) / len(sib)) if sib else (0.0, 0.0)
+        d = np.abs(X + ws / 2 - t[0]) + np.abs(Y + hs / 2 - t[1])
+        d[~ok] = np.inf
+        i = int(np.argmin(d))
+        x, y = round(float(X[i]), 4), round(float(Y[i]), 4)
+        pos[k] = (x, y); cen[k] = (x + ws / 2, y + hs / 2); rects.append((x, y, ws, hs))
+    return pos
+
+
 def pack_columns(items, W, H):
     """fallback: column packing (fill y first)."""
     pos = {}
@@ -292,7 +342,14 @@ def census_conn(plan_dir):
             continue
         conn[fold(src)][sb].add(fold(dst))
         conn[fold(dst)][db].add(fold(src))
+        b = int(bits) if str(bits).isdigit() else 1
+        WCONN[fold(src)][fold(dst)] += b
+        WCONN[fold(dst)][fold(src)] += b
     return conn, parts_of
+
+
+WCONN = collections.defaultdict(collections.Counter)
+FLOW = [0, 0]                                           # types placed by place_flow / fell back to the shelf packer    # asbuilt -> partner asbuilt -> bits (placement attraction)
 
 
 # ------------------------------------------------------------------------------------------------- main
@@ -404,6 +461,17 @@ def main():
         if not items:
             t.pop('hard_cores', None)
             continue
+        # targets for connectivity
+        bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
+        if inst_nw:
+            for L in plan['lanes']:
+                p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
+                if p0['src']['part'] == inst_nw:
+                    bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
+                if p1['dst']['part'] == inst_nw:
+                    bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
+        by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
+        P_ = S.Plan(plan)
         orig_wh = {it[0]: (it[1], it[2]) for it in items}
         items0, force = items, {}
         for attempt in range(40):
@@ -422,7 +490,24 @@ def main():
                             iw, ih = nw, nh
                     sized.append((k, iw, ih, kind, pl))
                 items = sized
-                pos = pack([(k, iw, ih) for k, iw, ih, _, _ in items], w, h) or pack_columns([(k, iw, ih) for k, iw, ih, _, _ in items], w, h)
+                bt = CK._bus_targets(P_, tn)
+                attract = {}
+                for k, iw, ih, kind, pl in items:
+                    ci = pl.get('parent', k) if kind == 'core' else k
+                    ab = asb.get((tn, ci))
+                    lst = []
+                    for partner, bits in (WCONN.get(ab, {}).items() if ab and inst_nw else ()):
+                        if partner in by_asb and by_asb[partner] != ci:
+                            q = by_asb[partner]
+                            lst += [(bits, it[0]) for it in items if it[0] == q or (it[4].get('parent') == q)][:1]
+                            continue
+                        pps = set(parts_of(partner))
+                        bs = [b for b, others in bus_lanes.items() if pps & others and b in bt]
+                        lst += [(bits / len(bs), bt[b][1]) for b in bs]
+                    attract[k] = lst
+                pos = place_flow([(k, iw, ih) for k, iw, ih, _, _ in items], w, h, attract)
+                FLOW[0 if pos else 1] += 1
+                pos = pos or pack([(k, iw, ih) for k, iw, ih, _, _ in items], w, h) or pack_columns([(k, iw, ih) for k, iw, ih, _, _ in items], w, h)
                 if pos is None:
                     raise Unfit(tn)
                 geo = {k: (pos[k][0], pos[k][1], snap(iw) if kind == 'soft' else iw, snap(ih) if kind == 'soft' else ih)
@@ -435,17 +520,6 @@ def main():
                         x1 = max(g[0] + g[2] for g in mem); y1 = max(g[1] + g[3] for g in mem)
                         c['origin_um'] = [round(x0, 4), round(y0, 4)]
                         c['outline_um'] = [round(x1 - x0, 4), round(y1 - y0, 4)]
-                # targets for connectivity
-                bt = CK._bus_targets(S.Plan(plan), tn)
-                bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
-                if inst_nw:
-                    for L in plan['lanes']:
-                        p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
-                        if p0['src']['part'] == inst_nw:
-                            bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
-                        if p1['dst']['part'] == inst_nw:
-                            bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
-                by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
                 new_hc = []
                 tconn = {}
                 for k, iw, ih, kind, pl in items:
@@ -554,7 +628,7 @@ def main():
     rep['pins_files'] = len(pin_tables) + len(HALVES)
     json.dump(rep, open(os.path.join(out, 'cores_b2.json'), 'w'), indent=1)
     print(json.dumps({k: v for k, v in rep.items() if k not in ('types', 'soft')}, indent=0)[:3000])
-    print('soft leaves', len(rep['soft']))
+    print('soft leaves', len(rep['soft']), 'flow-placed attempts', FLOW)
 
 
 if __name__ == '__main__':
