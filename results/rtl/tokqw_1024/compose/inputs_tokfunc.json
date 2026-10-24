@@ -1,0 +1,214 @@
+{
+ "schema": "opentallas.toksim.qwen_rom.inputs.v1",
+ "release_source": "TOK-FUNC-QW RTL assembly main 8a5d1f3dab (stg/head/attnret/xhead readset == main 7d75427c59) + QC-TOK link 3e05af806 (tp8/xdie/ovl4u) + carried 92c2417f6 xt1/ctx4u/kv/chain (RTL-functional); composition engine 94cd97b7a",
+ "grades": "REL = measured in this run on the RTL assembly (RTL-functional); DIAG = measured on older RTL or a stand-in (NOT counted); NEWEST = record NEWEST term not re-run; PRICED = plan/analytic",
+ "price_of_record": {
+  "tok_s": 4810.9,
+  "cycles": 249431,
+  "source": "results/arch/token_path_1018/qwen_rom.json price_of_record (10-13 6,835-cycle production layer)"
+ },
+ "dv": {
+  "grade": "REL",
+  "ages": {
+   "slice": "results/token_pass/tokfunc_qw/stg/slice_ages.json",
+   "vec": "results/token_pass/tokfunc_qw/stg/vec_ages.json",
+   "stn": "results/token_pass/tokfunc_qw/stg/stn_ages.json"
+  },
+  "source": "TOKSIM-QW/STG claude/toksim-qw-stg-1019 21bd29268 results/token_pass/measured_qwen_1019/stg/record.json: gen3 221cf90b7 (31 build sources identical), tb_qfd_dv2 N12, Verilator 5.050, ages re-derived by the slice/vec/mat calibrations at the RELEASE slice kit params (SU_LT 1, MU_NU 4); 16/16 stages PASS (resid/qk/silu/qkv/gu/od L0+L1, lm, emb) on real P8191 operands, 8/8 mutants FAIL. Base params (MU_NU 1, SU_LT 0) reproduce the committed qlb ages exactly; rel adds +21 edges per vector family (SiLU +67, d2d rs +46).",
+  "replaces": "DIAG: qlb_c4/qlb_c4b ages on pre-gen3 slice RTL",
+  "base_ages": {
+   "slice": "results/token_pass/measured_qwen_1019/stg/base/slice_ages.json",
+   "vec": "results/token_pass/measured_qwen_1019/stg/base/vec_ages.json",
+   "stn": "results/token_pass/measured_qwen_1019/stg/base/stn_ages.json"
+  },
+  "base_note": "stg/base = committed qlb_c4/qlb_c4b ages reproduced on gen3 at MU_NU 1 / SU_LT 0 (the previous DIAG rows); composed only to list the per-stage REL-vs-DIAG delta rows (layer.dv_rel_rows)"
+ },
+ "tile": {
+  "grade": "REL",
+  "far": 61,
+  "source": "TOK-FUNC-QW XT1 landed_nominal_l8_g4 source 92c2417f6; measured near/far edges in stage result.json",
+  "ops": {
+   "qkv": {
+    "first_rs": 187,
+    "first_final": 243,
+    "last_final": 250
+   },
+   "o": {
+    "first_rs": 187,
+    "first_final": 195,
+    "last_final": 234
+   },
+   "gu": {
+    "first_rs": 187,
+    "first_final": 435,
+    "last_final": 442
+   },
+   "down": {
+    "first_rs": 187,
+    "first_final": 227,
+    "last_final": 330
+   }
+  }
+ },
+ "attention": {
+  "grade": "DIAG",
+  "round_trip_plan_cycles": 1872,
+  "source": "QW-TOKSCHED2 10-21: current-die compute<->KV D2D pair (QW-XDIE claude/qw-xdie-2150 486462c3f, results/rtl/xdie_qwen_1018/cur_r3: dv2f20g5r2b x d22bu r17, 35 layers bit-exact, mutants FAIL): roundtrip cmd issue -> r31 land 1842 = C2K cmd 32 + KV service 1779 + K2C r31 31; plan term = 1842 - 31 (r0..r31 landing spread) + 16 (plan done) = 1827. Replaces the dh2 pair 1840/1825 estimate rows. Window X / STATUS tail are a ledger die edge (sched/ledger.json). KV service 1779 = r17 static programme with PV pair streams + rz driven as outer-pin stimuli -> stays DIAG (full GEN9 QK+softmax+PV16 owed to TOK.QW.KV). Was: 1u compute<->KV D2D pair on dv2f18dh2 (claude/qw-tok-1019, results/rtl/qw_tok_1019/xdie_dh2/pair_img, 34/34 sources = qw-gen3): 35 layers bit-exact, mutants FAIL; roundtrip cmd issue -> r31 land 1840 = C2K 63 + KV service 1779 (KV side = kvs14c kvs_attn LAND=0 stand-in, not GEN9) + K2C; plan term = 1840 - 31 (r0..r31 landing spread) + 16 (plan done = first landed word + 16) = 1825. KV attention on GEN9 -> TOKSIM-QW/KV. TOKSIM-QW/KV: no full QK+softmax+PV16 attention measured on current KV RTL (GEN9 not built, KVJ-B2 unit not rebuildable) -> the 1779 KV service is the kvs14c stand-in => DIAG (D2D part C2K 63/K2C 62 REL)",
+  "split": {
+   "c2k": 55,
+   "c2k_grade": "REL",
+   "kv_service": 1782,
+   "kv_service_grade": "REL",
+   "k2c_grade": "REL",
+   "source": "QW-XDIE cur_r3 cur_pair (current dies): C2K cmd issue -> land 32 (Q31 33), KV service cmd land -> r31 issue 1779 (r17 programme, PV streams stimuli -> DIAG), K2C r31 issue -> land 31 minus spread 31 plus plan done 16 = 16 (REL); exposed D2D 64/layer (PHY9 72)"
+  }
+ },
+ "attn_return": {
+  "grade": "DIAG",
+  "source": "QW-ATTNRET measured 98-edge attention-return span (claude/qw-attnret-1019 1ef2c2df6, pre-gen3 slice RTL). The attn family has NO gen3 bench (dv_lower_vec_bench modes = resid/qk/silu only); its compiled span is re-lowered on the REL gen3 ages (composition gap line), measured span stays DIAG until an attn bench runs on gen3"
+ },
+ "allreduce": {
+  "grade": "REL",
+  "qtp8": {
+   "E": 297,
+   "ls_rec": 389,
+   "ls_bi": 389,
+   "source": "TOKSIM-QW/LINK claude/toksim-qw-link-1019 cb8eb6b9a: TP8 AR256 on qw-gen3 RTL (30/30 identical) with dv2f18dh2 GEN lanes, Verilator 5.050: E 286 / span 797 / first-in->first-out 541, LS 378; SerDes 339 modelled PHY"
+  },
+  "source": "TOKSIM-QW/LINK record results/token_pass/measured_qwen_1019/link/record.json (REL, 12/12 verdicts)"
+ },
+ "die_edges": {
+  "grade": "PRICED",
+  "cycles": 52,
+  "unfolded_cycles": 0,
+  "source": "superseded at compose time by sched.ledger (die_edges.edges below = TOKSIM-QW2 10-20 02:25 list, kept for reference)",
+  "variants": [
+   "plan",
+   "asbuilt"
+  ],
+  "edges": [
+   {
+    "label": "ctlm hr output landing +4 (qfd_tt_ctlm_dv lp D2/K1: every hr output +4) on each matvec go",
+    "cycles": 4,
+    "at": [
+     "pre_qkv",
+     "pre_o",
+     "pre_gu",
+     "pre_down"
+    ],
+    "source": "lanes/QW-CTLM3 (lp record: outputs +4, tl +2); QW-CTLM5 safe5 D4/K2 would be hr +6 / tl +3 (gates live, not PASS) -> +10/layer more if adopted"
+   },
+   {
+    "label": "ctlm tl table-load landing +2 (per-layer CROM/PROG table stream)",
+    "cycles": 2,
+    "at": [
+     "pre_qkv"
+    ],
+    "source": "lanes/QW-CTLM3 tl +2; charged once per layer (per-layer table stream is a dv_layer gap)"
+   },
+   {
+    "label": "die landing q3h broadcast (n1/E2, +3 per crossing)",
+    "cycles": 3,
+    "at": [
+     "pre_qkv",
+     "pre_gu"
+    ],
+    "source": "results/rtl/qw_gen3_1019/dv2f19g3r/landing_price.json (origin/claude/qw-gen3-1019): q3h_broadcast 2/layer x 3"
+   },
+   {
+    "label": "die landing rs reduction (n1/E2, +3 per crossing)",
+    "cycles": 3,
+    "at": [
+     "pre_qk",
+     "pre_silu"
+    ],
+    "source": "landing_price.json rs_reduction 2/layer x 3"
+   },
+   {
+    "label": "die landing dv chain slice<->slice hops (11 x +3, owed in-face, 7811217d7)",
+    "cycles": 33,
+    "at": [
+     "pre_r2"
+    ],
+    "source": "landing_price.json dv_chain_hops 11/layer x 3 (worst 45/layer total with q3h + rs); not inside the slice2 bound"
+   },
+   {
+    "label": "native59 hardened split service +5 (N59-4 landed parent: service calendar 5 edges later vs W5 dd face)",
+    "cycles": 5,
+    "at": [
+     "pre_attn"
+    ],
+    "source": "lanes/QW-GEN3 NOTICE QW-N59-4 22:20 (claude/qw-n59-4-1019 b3c92b7a6, lockstep PASS): +5 edges/layer on the attention path; supersedes the N59-3 safe4 +1 (embedding words only)"
+   },
+   {
+    "label": "slice2 landed-parent forwarded lanes + taps (accepted bound)",
+    "cycles": 536,
+    "cycles_plan": 327,
+    "at": [
+     "pre_r2"
+    ],
+    "source": "lanes/QW-SLICE5 NOTICE (claude/qw-slice5-1019 961b2dafd partition.json price: 10 hops x 8 serial passes x +3 + 87 taps = 327 plan) and lanes/QW-GEN3/QW-SLICE6: built-kit bound ~536 cyc/layer (THRU st/sc), ROOT/LEAD accepted 536 (8.3%) as the safe exact cost (LEAD3-QW 10-20 00:39). Per-port offsets owed by the qfd_dv_s5_lp record; aggregated on the serial chain before residual 2 (position-insensitive: every DV pass is on the one serial path)"
+   },
+   {
+    "label": "stream (qfd_dv_stream xw +3 is inside the gen3 REL ages; QW-STREAM2 xw +2 = -1/xw not adopted: mapped census FAIL 211/max69)",
+    "cycles": 0,
+    "at": [
+     "pre_r1"
+    ]
+   },
+   {
+    "label": "CALR (no price yet: QW-CALR producer/event stage1 open)",
+    "cycles": 0,
+    "at": [
+     "pre_qkv"
+    ]
+   }
+  ]
+ },
+ "head": {
+  "grade": "REL",
+  "cycles": 3135,
+  "source": "token_path_compiled head.lm_head 3,101 (ctlm head plan); function REL: STG lm (AMAX gather 26/26) + emb (4096/4096) PASS on gen3, amax_local / emb_late mutants FAIL; the benches give no head span -> cycles stay PRICED"
+ },
+ "embed_fetch": {
+  "grade": "PRICED",
+  "cycles": 272,
+  "source": "token_path embed 272 (KV-die embedding row fetch); the landing of the 256 words on the compute die is inside L0 cold (lowered)"
+ },
+ "multi_user": {
+  "users": 4,
+  "status": "REL",
+  "grade": "REL",
+  "frame_cycles": 4026800,
+  "tokens_per_frame": [
+   16,
+   15,
+   8,
+   7
+  ],
+  "cycles_per_token_by_user": [
+   251675,
+   268453,
+   503350,
+   575257
+  ],
+  "aggregate_cycles_per_token": 87539,
+  "aggregate_tok_s": 13713.6,
+  "per_user_tok_s": [
+   4770.0,
+   4471.8,
+   2385.0,
+   2086.9
+  ],
+  "source": "TOKSIM-QW/LINK: codec2 OVL 4-user D2D pair fullframe, real D2D ends + PHY model, 63,098 C->K + 57,783 K->C frames exact, one-playhead/collide/slot/user mutants FAIL; OVL hardware is NOT in qw-gen3 (newest = codex/sysface-ovl-1019); producers/consumers modelled -> link-schedule rate, not a full 4-user token run. MU ctx real link REL: slot->compute 18, period 249,600; TP8 4u window E 286 = 1u",
+  "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below.",
+  "schedule_scale": {
+   "ref_layer_period": 6842,
+   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the cycles the schedule ledger adds per chained layer -> frame x (6842 + sched_added_per_layer) / 6842, sched_added = chained - chained(no die edges, dv2f14bi lane ages, measured AR, measured ages) (no die edge is in the link-schedule frame)"
+  }
+ },
+ "sched": {
+  "ledger": "results/token_pass/measured_qwen_1019/sched/ledger.json",
+  "source": "QW-TOKSCHED 10-20 (TOK.QW.SCHED): one priced-edge ledger (die g5r2b + release successors) replaces die_edges.edges; lane ages from dv2f20g5r2b; SU8/VM8l age deltas and the COLL split AR price are absorbed by the lowering / compiler (variant asbuilt = g5r2b netlist only)"
+ }
+}
