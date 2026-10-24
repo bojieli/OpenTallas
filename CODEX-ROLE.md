@@ -17,7 +17,7 @@ bookkeeping, re-checking finished results or polishing records. Do the minimum t
 on to the next piece of real work.
 
 ## Guidelines you must follow (binding)
-- Read once at start: ~/OpenTallas/AGENTS.md, ~/coord/BRIEFING.md, ~/coord/lanes/TOPDOWN-PLAN.md,
+- Read once at start: ~/coord/CODEX-HANDOFF.md (full handoff: status narrative + every lane), ~/OpenTallas/AGENTS.md, ~/coord/BRIEFING.md, ~/coord/lanes/TOPDOWN-PLAN.md,
   ~/coord/RELEASE_TREE.md, the tail of ~/coord/HANDOFF.md, and the lane files in ~/coord/lanes/.
 - **Timing sign-off:** setup at TT, hold at FF, 60/25 ps uncertainty, pin-flop spread <= 80 ps, 833 ps clock.
   Never use SS. A block is closed only when tools/die_plan/signoff.py says SIGNED.
