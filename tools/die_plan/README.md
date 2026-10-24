@@ -132,6 +132,27 @@ G0C (COORD 10-23): the `hard_cores`, `core_faces` and `complete` findings are ER
 `check.py --completeness`; plain G0 reports them as WARN `[G0C] ...`. `summary.g0c` lists findings per partition type
 (`g3_eligible` = types with none and no die-level gap).
 
+Cross-die G0C rules (PLAN-TOOL5, COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e); `die_io.py`, `reach.py`, `xdie.py`; all
+ERROR only under `--completeness`, counts in `summary.xdie_counts`):
+- `die_io_plan` (a): every IO-class content (SerDes, UCIe, HBM PHY; catalog `die_io.CLASSES`, module regex -> off-die
+  signals + bump pitch, ASSUMED class counts) has a `die.io` window of its `iface` over it, within
+  `budgets.io_edge_max_um` (200) of a die edge, with `signals <= sites`; one window carries the host link (`host: true`
+  or `iface: host`). `python3 tools/die_plan/die_io.py plan PLAN --out PLANDIR/die_io.json` (or `--inplace`) proposes
+  them (footprint = the PHY content's outline, host = the link PHY nearest the host logic: CONFIRM). check.py reads
+  `PLANDIR/die_io.json` when the plan has no `die.io`.
+- `cut_lines` (b): bits per cut at every partition face line (abutted port bits + ft routes crossing it) against the
+  partition pin layers x `pin_track_max` + die layers x `cut_avail`. The 250-um sweep (`cuts`) never lands on a face,
+  so it never counted abutted neighbour links (most lanes on S81 / KV / HBM).
+- `reach` (c): one per-layer measured reach table for all dies (`reach.py`, source results/arch/die_reach_m89_1022.json:
+  M4-M7 452.5 measured -> 405 owner local plan, M8 1001.2, M9 1012.8, calibrated min over the 6 release relays). A
+  hop routes on `lane.route_layers`, else `layer_budget.ft_route_layers`, else M8/M9 when `die_use` has `ft_reserved`;
+  ERROR when hop > `budgets.reach_margin` (0.9) x the min reach of those layers. `die.reach_um` only WARNs.
+- `face_tracks` (d): per partition face, every 10-um window: pins / usable (PG-free) tracks of the face's allowed pin
+  layers (type `face_layers` incl. an M8 / M9 third layer, else M4..`partition_signal_max` in the face direction)
+  <= `pin_track_max` (0.6), all layers together and per layer.
+- `ft_budget` (e): per type, over-the-top ft bits (E-W slots on M8, N-S on M9, turning slots on both) + non-ft M8 / M9
+  face pins <= usable M8 / M9 tracks across the type x `type.ft_budget[L]` (default `layer_budget.cut_avail[L]`).
+
 R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
 WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
 

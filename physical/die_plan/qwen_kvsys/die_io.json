@@ -1,0 +1,598 @@
+[
+ {
+  "name": "io_phy_EN_0_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_0",
+  "rect_um": [
+   9953.28,
+   24485.76,
+   10817.28,
+   26006.4
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_1_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_1",
+  "rect_um": [
+   9953.28,
+   22965.12,
+   10817.28,
+   24485.76
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_2_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_2",
+  "rect_um": [
+   9953.28,
+   21444.48,
+   10817.28,
+   22965.12
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_3_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_3",
+  "rect_um": [
+   9953.28,
+   19923.84,
+   10817.28,
+   21444.48
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_4_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_4",
+  "rect_um": [
+   9953.28,
+   18403.2,
+   10817.28,
+   19923.84
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_5_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_5",
+  "rect_um": [
+   9953.28,
+   16882.56,
+   10817.28,
+   18403.2
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_6_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_6",
+  "rect_um": [
+   9953.28,
+   15361.92,
+   10817.28,
+   16882.56
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_EN_7_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_EN_7",
+  "rect_um": [
+   9953.28,
+   13841.28,
+   10817.28,
+   15361.92
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_0_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_0",
+  "rect_um": [
+   9953.28,
+   0.0,
+   10817.28,
+   1520.64
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_1_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_1",
+  "rect_um": [
+   9953.28,
+   1520.64,
+   10817.28,
+   3041.28
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_2_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_2",
+  "rect_um": [
+   9953.28,
+   3041.28,
+   10817.28,
+   4561.92
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_3_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_3",
+  "rect_um": [
+   9953.28,
+   4561.92,
+   10817.28,
+   6082.56
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_4_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_4",
+  "rect_um": [
+   9953.28,
+   6082.56,
+   10817.28,
+   7603.2
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_5_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_5",
+  "rect_um": [
+   9953.28,
+   7603.2,
+   10817.28,
+   9123.84
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_6_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_6",
+  "rect_um": [
+   9953.28,
+   9123.84,
+   10817.28,
+   10644.48
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_ES_7_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_ES_7",
+  "rect_um": [
+   9953.28,
+   10644.48,
+   10817.28,
+   12165.12
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_0_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_0",
+  "rect_um": [
+   0.0,
+   24485.76,
+   864.0,
+   26006.4
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_1_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_1",
+  "rect_um": [
+   0.0,
+   22965.12,
+   864.0,
+   24485.76
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_2_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_2",
+  "rect_um": [
+   0.0,
+   21444.48,
+   864.0,
+   22965.12
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_3_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_3",
+  "rect_um": [
+   0.0,
+   19923.84,
+   864.0,
+   21444.48
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_4_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_4",
+  "rect_um": [
+   0.0,
+   18403.2,
+   864.0,
+   19923.84
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_5_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_5",
+  "rect_um": [
+   0.0,
+   16882.56,
+   864.0,
+   18403.2
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_6_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_6",
+  "rect_um": [
+   0.0,
+   15361.92,
+   864.0,
+   16882.56
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WN_7_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WN_7",
+  "rect_um": [
+   0.0,
+   13841.28,
+   864.0,
+   15361.92
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_0_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_0",
+  "rect_um": [
+   0.0,
+   0.0,
+   864.0,
+   1520.64
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_1_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_1",
+  "rect_um": [
+   0.0,
+   1520.64,
+   864.0,
+   3041.28
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_2_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_2",
+  "rect_um": [
+   0.0,
+   3041.28,
+   864.0,
+   4561.92
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_3_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_3",
+  "rect_um": [
+   0.0,
+   4561.92,
+   864.0,
+   6082.56
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_4_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_4",
+  "rect_um": [
+   0.0,
+   6082.56,
+   864.0,
+   7603.2
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_5_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_5",
+  "rect_um": [
+   0.0,
+   7603.2,
+   864.0,
+   9123.84
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_6_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_6",
+  "rect_um": [
+   0.0,
+   9123.84,
+   864.0,
+   10644.48
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_phy_WS_7_phy",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "phy_WS_7",
+  "rect_um": [
+   0.0,
+   10644.48,
+   864.0,
+   12165.12
+  ],
+  "sites": 405,
+  "pitch_um": 55.0,
+  "signals": 237,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um",
+  "note": "die_io.py plan: phy"
+ },
+ {
+  "name": "io_sys_SE_serdes",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "sys_SE",
+  "rect_um": [
+   8916.48,
+   26006.4,
+   10817.28,
+   27043.2
+  ],
+  "sites": 72,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um",
+  "note": "die_io.py plan: serdes"
+ },
+ {
+  "name": "io_sys_SW_serdes",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "sys_SW",
+  "rect_um": [
+   0.0,
+   26006.4,
+   1900.8,
+   27043.2
+  ],
+  "sites": 72,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um",
+  "note": "die_io.py plan: serdes"
+ },
+ {
+  "name": "io_sys_c_ucie_rom",
+  "kind": "phy_macro",
+  "iface": "ucie",
+  "part": "sys_c",
+  "rect_um": [
+   4458.24,
+   26006.4,
+   6359.04,
+   27043.2
+  ],
+  "sites": 966,
+  "pitch_um": 45.0,
+  "signals": 144,
+  "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
+  "note": "die_io.py plan: ucie_rom; host link (BFS 10 port hop(s) from hub_Wi): CONFIRM",
+  "host": true
+ }
+]
