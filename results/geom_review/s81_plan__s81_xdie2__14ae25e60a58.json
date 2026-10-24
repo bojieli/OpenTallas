@@ -1,0 +1,15 @@
+{
+ "element": "s81_plan",
+ "kit": "physical/die_plan/s81@fe3d259091 (codex: reserve-PHY xdie candidate rebased on FT405)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "14ae25e60a58fc2e0494420044a949ce3c59892f8f57cec758742cac0020d4ba",
+ "reasons": "[2026-10-24 13:05] [GEOM-REVIEW die-level batch 2] Independent second review (GEOM-REVIEW, owner order 2026-10-24 08:05), batch 2 = Codex candidates produced 08:50-12:04. G0/G0C re-run by me with the candidate's own tools/die_plan/check.py --completeness; review pack tools/geom_review/plan_review.py (same metrics as batch 1, results/geom_review/die_1024/README.md). 'images' = PNGs I looked at; rest in 'pack'. SEEN: G0C FAIL 91 errors (180 types) = the main hard_cores set: the batch-1 regression (108 = +12 stale census s_0S/s_7N, +5 missing cells serdes__t11-14 / slice_station__t7) is FIXED. Geometry identical to the batch-1 s81_xdie picture (842 lanes, 651 bit-m, peak 3,085). But it is rebased on main FT405, NOT on the 26-slot ledger: 72 computed stations still inside ROM macros. No new image viewed (pack only; geometry unchanged from batch 1).",
+ "fixes": "(1) Rebase on the 26-slot bit-site ledger once that is canonical (else the 72 in-ROM stations return). (2) Same G0C 91 hard-core gate as v4.8.",
+ "images": [],
+ "pack": "results/geom_review/die_1024b2/img/s81_xdie2/",
+ "metrics": "results/geom_review/die_1024b2/img/s81_xdie2/review.json",
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T13:05:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (independent second review)"
+}
