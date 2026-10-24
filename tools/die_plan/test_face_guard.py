@@ -85,6 +85,21 @@ def test_yosys_keep_attributes_prevent_merges():
     assert {"dropped", "const"} <= set(r["fail_counts"]) and ({"shared", "merged", "feedthrough"} & set(r["fail_counts"]))
 
 
+def test_kit_keeps_face_registers_through_eliminate_dead_logic():
+    """CP1-R10 r10b: ORFS eliminate_dead_logic (synth_odb.tcl) deleted 120 unused-q face flops after Yosys kept them:
+    the kit sets dont_touch on the boundary cells around that step and guards the 1_synth.odb netlist too."""
+    import json
+    import gen_phys
+    import schema
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "src", d, [])
+        cfg = (kd / "config.mk").read_text()
+        assert "export PRE_SYNTH_TCL = /work/face_keep.tcl" in cfg and "export POST_SYNTH_TCL = /work/face_keep_release.tcl" in cfg
+        assert "set_dont_touch" in (kd / "face_keep.tcl").read_text()
+        assert "unset_dont_touch" in (kd / "face_keep_release.tcl").read_text()
+    assert "face_guard_odb.json" in gen_phys.RUN_KIT and "1_synth.odb" in gen_phys.RUN_KIT
+
 NET_FT1 = r"""
 module top(clk, ft0_i, ft0_o, ft1_i, ft1_o);
   input clk; input [1:0] ft0_i; output [1:0] ft0_o; input ft1_i; output ft1_o;

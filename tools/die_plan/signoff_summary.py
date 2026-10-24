@@ -6,7 +6,8 @@ NEEDS RE-RUN lists.
         --runs results/signoff_1024/runs --out results/signoff_1024/summary.json [--lanes-md DIR]
 
 A closed module whose routed DB is gone is NEEDS RE-RUN.  Its last record is still screened on paper against the
-uniform standard (recorded pin-flop spread at TT / FF <= 80 ps, recorded SS setup / FF hold >= 0, DRC 0): a paper
+uniform standard (owner 2026-10-24: recorded TT setup >= 0, FF hold >= 0, pin-flop spread at TT / FF <= 80 ps, DRC 0;
+the recorded SS slack is shown for information only): a paper
 FAIL means the block cannot be re-signed by re-running its STA alone, it needs a re-close.  Runs signed here that are
 not closed blocks of a plan (partition / in-flight runs) are listed under `other_runs`.
 """
@@ -29,21 +30,20 @@ def paper_screen(rec):
         v = rec.get(f"spread_{c}_ps")
         if v is not None and v > SPREAD_MAX:
             p.append(f"recorded {c.upper()} pin-flop spread {v:.1f} ps > 80")
-    if rec.get("cl_ss_ps") is not None and rec["cl_ss_ps"] < 0:
-        p.append(f"recorded SS setup {rec['cl_ss_ps']:+.2f} ps"
-                 + (f" (closed at {rec['cl_setup_corner'].upper()} setup {rec['cl_setup_ps']:+.2f})"
-                    if (rec.get("cl_setup_corner") or "ss").lower() != "ss" and rec.get("cl_setup_ps") is not None
-                    else ""))
-    elif rec.get("cl_status") and rec.get("cl_ss_ps") is None:
-        p.append("no recorded SS setup")
+    tt = rec.get("cl_tt_setup_ps")
+    if tt is not None and tt < 0:
+        p.append(f"recorded TT setup {tt:+.2f} ps")
+    elif rec.get("cl_status") and tt is None:
+        p.append(f"no recorded TT setup (closure setup corner {rec.get('cl_setup_corner')})")
     if rec.get("cl_ff_ps") is not None and rec["cl_ff_ps"] < 0:
         p.append(f"recorded FF hold {rec['cl_ff_ps']:+.2f} ps")
     if rec.get("cl_drc"):
         p.append(f"recorded DRC {rec['cl_drc']}")
     if rec.get("spread_tt_ps") is None and rec.get("spread_ff_ps") is None:
         p.append("no recorded pin-flop spread (insertion.json missing)")
-    return dict(verdict="FAIL" if any("spread" in x and ">" in x or "setup" in x or "hold" in x or "DRC" in x
-                                      for x in p) else ("INCOMPLETE" if p else "PASS"), problems=p)
+    fail = [x for x in p if (("spread" in x and ">" in x) or x.startswith(("recorded TT setup", "recorded FF hold",
+                                                                              "recorded DRC")))]
+    return dict(verdict="FAIL" if fail else ("INCOMPLETE" if p else "PASS"), problems=p)
 
 
 def run_row(sj):
@@ -53,9 +53,9 @@ def run_row(sj):
           for c in ("ss", "tt", "ff")}
     return dict(name=r["name"], verdict=r["verdict"], reasons=r["reasons"], host=r.get("host"),
                 base=r["inputs"]["base"], sdc_source=r["inputs"]["sdc_source"],
-                ss_setup_wns_ps=C["setup_ss"].get("wns_ps"), ss_setup_violators=C["setup_ss"].get("violators"),
+                tt_setup_wns_ps=C["setup_tt"].get("wns_ps"), tt_setup_violators=C["setup_tt"].get("violators"),
+                ss_setup_info_ps=(C.get("ss") or {}).get("setup_wns_ps"),
                 ff_hold_wns_ps=C["hold_ff"].get("wns_ps"), ff_hold_sdc_wns_ps=C["hold_ff"].get("sdc_wns_ps"),
-                tt_setup_wns_ps=C["tt"].get("setup_wns_ps"), tt_hold_wns_ps=C["tt"].get("hold_wns_ps"),
                 pinflop_spread_ps=pf, drv=(C.get("drv") or {}).get("by_corner"),
                 unconstrained=(C.get("unconstrained") or {}).get("counts"),
                 sdc_lint=C["sdc_lint"].get("verdict"), sdc_lint_errors=C["sdc_lint"].get("n_errors"),
@@ -82,8 +82,8 @@ def build(inv, runs_dir):
             row = dict(module=m, instances=v["dies"][die].get("instances"), types=v["dies"][die].get("types"),
                        kit=v.get("kit"), kit_in_repo=v.get("kit_in_repo"), recorded_db=v.get("recorded_db"),
                        db_status=v.get("db_status"),
-                       recorded=dict(ss_setup_ps=rec.get("cl_ss_ps"), setup_corner=rec.get("cl_setup_corner"),
-                                     setup_corner_ps=rec.get("cl_setup_ps"), ff_hold_ps=rec.get("cl_ff_ps"),
+                       recorded=dict(tt_setup_ps=rec.get("cl_tt_setup_ps"), ss_info_ps=rec.get("cl_ss_info_ps"),
+                                     setup_corner=rec.get("cl_setup_corner"), ff_hold_ps=rec.get("cl_ff_ps"),
                                      drc=rec.get("cl_drc"), spread_tt_ps=rec.get("spread_tt_ps"),
                                      spread_ff_ps=rec.get("spread_ff_ps"), ins_tt_ps=rec.get("ins_tt_ps"),
                                      closed_at=rec.get("cl_closed_at"), gate_verdict=rec.get("gate_verdict")),
@@ -119,19 +119,18 @@ def die_md(die, d):
     L = [f"### {die} ({d['plan']})", "",
          f"counts {d['counts']}; NEEDS RE-RUN whose last record already fails the standard on paper: "
          f"{d['needs_rerun_paper_fail']}; not-closed plan cores (not counted): {d['not_closed']}", "",
-         "| module | inst | status | rec SS setup (closure corner: setup) | rec FF hold | rec spread TT/FF | kit in repo | paper |",
-         "|---|---|---|---|---|---|---|---|"]
+         "| module | inst | status | rec TT setup | rec FF hold | rec spread TT/FF | kit in repo | paper | rec SS setup (info) |",
+         "|---|---|---|---|---|---|---|---|---|"]
     for r in d["modules"]:
         rc = r["recorded"]
 
         def f(x):
             return "-" if x is None else f"{x:g}"
-        sc = (rc.get("setup_corner") or "-").upper()
-        L.append(f"| {r['module']} | {r['instances']} | {r['status']} | {f(rc['ss_setup_ps'])} ({sc}: "
-                 f"{f(rc.get('setup_corner_ps'))}) | "
+        L.append(f"| {r['module']} | {r['instances']} | {r['status']} | {f(rc['tt_setup_ps'])} | "
                  f"{f(rc['ff_hold_ps'])} | {f(rc['spread_tt_ps'])}/{f(rc['spread_ff_ps'])} | "
                  f"{'yes' if r['kit_in_repo'] else 'NO'} | {r['paper']['verdict']}"
-                 f"{(': ' + '; '.join(r['paper']['problems'])) if r['paper']['problems'] else ''} |")
+                 f"{(': ' + '; '.join(r['paper']['problems'])) if r['paper']['problems'] else ''} | "
+                 f"{f(rc.get('ss_info_ps'))} |")
     return "\n".join(L) + "\n"
 
 
@@ -150,8 +149,8 @@ def main(argv=None):
     for k, v in s["dies"].items():
         print(f"{k:14s} {v['counts']} paper-fail {v['needs_rerun_paper_fail']}")
     for r in s["other_runs"]:
-        print(f"other {r['name']}: {r['verdict']} SS {r['ss_setup_wns_ps']} FF {r['ff_hold_wns_ps']} "
-              f"TT {r['tt_setup_wns_ps']}")
+        print(f"other {r['name']}: {r['verdict']} TT {r['tt_setup_wns_ps']} FF {r['ff_hold_wns_ps']} "
+              f"(SS info {r['ss_setup_info_ps']})")
     return 0
 
 

@@ -1,0 +1,16 @@
+{
+ "element": "kv3_pv_pair",
+ "kit": "KVG3-CORES core kit kv3_pv_pair (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW FAIL at plan placement (kv3_pv partition); tile PASS-COND",
+ "hash": "08148d609ca03b4a",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_pv_pair_placed.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_pv.png"
+ ],
+ "reasons": "Tile (3_place): 380x190 um, 8 SRAM 32x128 macros in a row along the S edge (no slivers, halos clear), logic above, all 1652 pins on the N face with face flops at the pins (p90 8.4 um), std fill 34% of free area (oversized), no hotspot. Partition: pin face of p0 (R0) faces p1 at 25.92 um and of p3 (MX) faces p2 at 25.92 um; 1030 of their 1652 pins (ts outputs to the join + inputs) do not connect to the facing core -> 1030 nets per instance (x4 groups x2) detour through a 25.92 um x 380 um gap then up the 104 um column channels to the join: channel overflow expected. The top 450 um of the partition is empty.",
+ "fixes": "Plan (KV-G3): spread the pairs vertically using the empty top (e.g. p1/j/p2 +75 um, p3 +150 um -> 100 um gaps), or put p0/p3 pins on the E/W faces (master pin change = new views). Core run kept as pathfinding.",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}

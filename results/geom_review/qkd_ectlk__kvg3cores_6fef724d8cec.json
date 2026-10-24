@@ -1,0 +1,16 @@
+{
+ "element": "qkd_ectlk",
+ "kit": "KVG3-CORES core kit qkd_ectlk (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW FAIL at plan placement (core itself not yet reviewed at 3_place: run still in global placement)",
+ "hash": "6fef724d8cec0b25",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hg.png",
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_hgi.png"
+ ],
+ "reasons": "Partition: ectl (881x216) sits 25.92 um above head0_e6/e7/head1_e6; 1818 of its 3625 S-face pins (1064 over head0_e6, 754 over head0_e7) do not connect to the core they face -> 1818 nets must run horizontally in a 25.92 um gap (~1200 M2+M4 tracks minus PDN followpins): over channel capacity, partition GRT overflow expected. Also 12 gap_out so[1..12] pins tied 0 (kv41 drift).",
+ "fixes": "Plan (KV-G3): widen the ectl/head gap to >= 60 um (needs head_eighth outline shrink or row compaction), or move the 1818 non-head ectl pins to its E/W faces / N face. Core run kept as pathfinding (views valid only if the pin file is unchanged).",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}

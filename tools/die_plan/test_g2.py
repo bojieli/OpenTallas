@@ -516,7 +516,7 @@ def test_pair_drops_hard_cores():
 
 
 def test_run_die_signoff_corners():
-    """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
+    """CP1-R10: the die STA runs at TT (setup sign-off), FF (hold sign-off) and SS (information only, AGENTS.md 10-24)."""
     import gen_phys
     assert "for c in SS TT FF" in gen_phys.RUN_DIE
 

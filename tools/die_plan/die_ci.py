@@ -30,7 +30,8 @@ NOT RUN (<reason>) / N/A (<reason>) / CARRIED (<from sha>):
             STAND-IN budgets (below).  NOT RUN when die_sta.py is not on this sha.  Margins: see MARGINS.
 
 MARGINS (owner item 2): what the open toolchain cannot sign off is added ON TOP of the AGENTS.md policy (1.2 GHz /
-833.333 ps, 60 ps setup / 25 ps hold uncertainty, setup at SS, hold at FF), never instead of it; die_ci refuses a
+833.333 ps, 60 ps setup / 25 ps hold uncertainty, setup at TT, hold at FF -- owner 2026-10-24: never gate on SS;
+SS setup is reported for information only), never instead of it; die_ci refuses a
 margins file that would relax anything (check_margins).  Each measured seam is reported twice:
   policy    die_sta.py exactly as DIE-STA runs it (the G4 view);
   margined  the same STA with set_timing_derate (OCV x IR late on cells, OCV early; OCV on nets) inside OpenSTA, minus
@@ -42,7 +43,7 @@ STAND-IN budgets (seams without measured views; never a PASS): the kit SDC contr
   setup  true slack >= kit_src + kit_dst - (T - I_max - O_max)     hold  true slack >= kit_src + kit_dst + (O_min - I_min)
 so a seam with I_max + O_max >= T (ft hop shares 0.92 T + 0.08 T) is contract-backed with slack I+O-T, hold with
 insertion_tol (min input delay -tol, min output delay 0).  A functional bus port (0.2 T + 0.2 T) is not contract-backed;
-its stand-in is the R2 face-flop estimate T - unc - neighbour skew - clk->q(SS, seam load) - wire - setup(SS).
+its stand-in is the R2 face-flop estimate T - unc - neighbour skew - clk->q(TT, seam load) - wire - setup(TT).
 Both then subtract the margins the kits cannot see (crosstalk + derate on the seam clocks and clk->q): a negative
 stand-in is the IO slack the two kits must leave.
 
@@ -94,7 +95,7 @@ G2_MEM_DIE = 64
 G2_MEM_PART = 32
 
 # AGENTS.md policy (never relaxed here; margins add on top)
-POLICY = dict(period_ps=833.333, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="SS", hold_corner="FF")
+POLICY = dict(period_ps=833.333, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
 
 
 def sh(cmd, cwd=None, log=None, env=None):
@@ -223,7 +224,7 @@ def gzip_read(p):
 
 DEFAULT_MARGINS = {
     "schema": "opentallas.die_ci.margins.v1",
-    "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at SS setup / FF hold, 60 ps setup / 25 ps hold "
+    "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold "
                    "uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
     "ocv": {
         "cell_late": 1.05, "cell_early": 0.95, "net_late": 1.03, "net_early": 0.97,
@@ -235,13 +236,14 @@ DEFAULT_MARGINS = {
                "each partition is derated -- the dominant term on a seam."
     },
     "ir": {
-        "mode": "stated", "vdd_ss_v": 0.63, "vdd_drop_frac": 0.05, "vt_v": 0.25, "alpha": 1.3,
+        "mode": "stated", "vdd_v": 0.70, "vdd_drop_frac": 0.05, "vt_v": 0.25, "alpha": 1.3,
         "why": "No die-level PDN database exists yet (die_plan pg.grid is a plan; no placed die ODB with power for "
                "OpenROAD PDNSim / analyze_power_grid), so PDNSim is NOT RUN and a stated budget is used: 5 % of the "
-               "SS supply (31.5 mV at 0.63 V, the total static + dynamic drop a sign-off PDN is designed to). Delay "
+               "TT supply of the setup sign-off corner (35 mV at 0.70 V, the total static + dynamic drop a sign-off "
+               "PDN is designed to). Delay "
                "sensitivity from the alpha-power law (Sakurai & Newton, IEEE JSSC 25(2), 1990), t ~ V / (V - Vt)^a: "
-               "d ln t / d ln V = 1 - a V / (V - Vt) = -1.155 at a = 1.3, Vt = 0.25 V (conservative ASAP7 RVT), so a "
-               "5 % drop is +5.8 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late "
+               "d ln t / d ln V = 1 - a V / (V - Vt) = -1.022 at a = 1.3, V = 0.70, Vt = 0.25 V (conservative ASAP7 "
+               "RVT), so a 5 % drop is +5.1 % cell delay, applied as an extra LATE cell derate on data and clock (setup: late "
                "launch + data; hold: late capture clock). When a PDNSim result exists (pdnsim: {worst_drop_mv}) it "
                "replaces vdd_drop_frac.",
         "pdnsim": None
@@ -259,6 +261,8 @@ DEFAULT_MARGINS = {
                "push. Clock-net coupling is not added (clock trees are inside the derated OCV term)."
     },
     "lib": {
+        "TT": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 100.77, "clk_q_min_ps": 96.27,
+               "r_eff_ps_per_ff": 4.103, "setup_ps": 9.99, "hold_ps": 12.47},
         "SS": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 152.25, "clk_q_min_ps": 144.82,
                "r_eff_ps_per_ff": 6.596, "setup_ps": 16.21, "hold_ps": 18.28},
         "FF": {"cell": "DFFHQNx1_ASAP7_75t_R", "clk_q_max_ps": 71.16, "clk_q_min_ps": 68.92,
@@ -296,7 +300,7 @@ def check_margins(m):
 
 def ir_factor(m):
     ir = m["ir"]
-    v, vt, a = ir["vdd_ss_v"], ir["vt_v"], ir["alpha"]
+    v, vt, a = ir.get("vdd_v", ir.get("vdd_ss_v")), ir["vt_v"], ir["alpha"]
     sens = a * v / (v - vt) - 1.0
     drop = ir["vdd_drop_frac"]
     if (ir.get("pdnsim") or {}).get("worst_drop_mv") is not None:
@@ -315,7 +319,7 @@ def xtalk_ps(m, pin_reg_p90_um=None):
     x = m["xtalk"]
     L = 2.0 * pin_reg_p90_um if pin_reg_p90_um else x["seam_len_um_default"]
     cc = x["cc_frac"] * x["c_per_um_ff"] * L
-    s = abs(x["mcf_setup"] - 1.0) * m["lib"]["SS"]["r_eff_ps_per_ff"] * cc
+    s = abs(x["mcf_setup"] - 1.0) * m["lib"][POLICY["setup_corner"]]["r_eff_ps_per_ff"] * cc
     h = abs(1.0 - x["mcf_hold"]) * m["lib"]["FF"]["r_eff_ps_per_ff"] * cc
     return dict(setup_ps=round(s, 2), hold_ps=round(h, 2), seam_len_um=L, cc_ff=round(cc, 3))
 
@@ -374,7 +378,7 @@ def standin(seam_cls, P, m, kb):
     O = kb["ft_in_share"] if seam_cls in ("ft", "ft_out") else kb["io"]
     I = (1.0 - kb["ft_in_share"]) if seam_cls in ("ft", "ft_in") else kb["io"]
     comp = (I + O - 1.0) * T
-    ss, ff = m["lib"]["SS"], m["lib"]["FF"]
+    ss, ff = m["lib"][POLICY["setup_corner"]], m["lib"]["FF"]      # setup corner TT (owner 10-24), hold FF
     pin_reg = float(P.budgets.get("pin_reg_p90_um", 30.0))
     L = 2 * pin_reg
     wire_ps = 0.5 * 0.0180365 * m["xtalk"]["c_per_um_ff"] * L * L   # Elmore, M4 R (kohm/um) x C (fF/um) -> ps
@@ -669,10 +673,11 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
         row = dict(seam=g)
         for tag in ("policy", "margined"):
             sg = r[tag]["seams"].get(g, {})
-            row[f"{tag}_setup_SS"] = sg.get("setup_SS")
+            row[f"{tag}_setup_TT"] = sg.get("setup_TT")
+            row[f"{tag}_setup_SS_info"] = sg.get("setup_SS")      # SS: information only, never gates
             row[f"{tag}_hold_FF"] = sg.get("hold_FF")
             row[f"{tag}_neg"] = sg.get("neg", 0)
-        row["final_setup_SS"] = None if row["margined_setup_SS"] is None else round(row["margined_setup_SS"] - xs, 3)
+        row["final_setup_TT"] = None if row["margined_setup_TT"] is None else round(row["margined_setup_TT"] - xs, 3)
         row["final_hold_FF"] = None if row["margined_hold_FF"] is None else round(row["margined_hold_FF"] - xh, 3)
         rows.append(row)
     res["seam_groups"] = rows
@@ -680,12 +685,13 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
     def worst(k):
         v = [x[k] for x in rows if x[k] is not None]
         return min(v) if v else None
-    res["worst"] = {k: worst(k) for k in ("policy_setup_SS", "policy_hold_FF", "final_setup_SS", "final_hold_FF")}
-    res["neg_groups"] = sum(1 for x in rows if (x["final_setup_SS"] is not None and x["final_setup_SS"] < 0) or
+    res["worst"] = {k: worst(k) for k in ("policy_setup_TT", "policy_hold_FF", "final_setup_TT", "final_hold_FF",
+                                          "policy_setup_SS_info")}
+    res["neg_groups"] = sum(1 for x in rows if (x["final_setup_TT"] is not None and x["final_setup_TT"] < 0) or
                             (x["final_hold_FF"] is not None and x["final_hold_FF"] < 0))
     ran = r["policy"].get("ran") and r["margined"].get("ran")
     if not ran:
-        res["status"] = "NOT RUN (signoff corners SS + FF did not both complete; see die_ci_sta.log)"
+        res["status"] = "NOT RUN (signoff corners TT setup + FF hold did not both complete; see die_ci_sta.log)"
     elif res["neg_groups"]:
         res["status"] = "FAIL"
     elif rest:
@@ -705,7 +711,6 @@ def cmd_sta_child(a):
     if ds.UNC_SETUP_PS < POLICY["unc_setup_ps"] or ds.UNC_HOLD_PS < POLICY["unc_hold_ps"] or \
             ds.PERIOD_PS > POLICY["period_ps"] + 1e-6:
         raise SystemExit("die_ci: die_sta.py constants relax the AGENTS.md policy")
-    ds.THREADS = int(a.threads)
     full = work / "die_top_full.v"
     ds.write_top(a.plan, full)
     sub, kept = filter_top(full.read_text(), set(a.modules.split(",")))
@@ -724,13 +729,15 @@ def cmd_sta_child(a):
             ds.sta_tcl = lambda *x, **k: inject_derate(orig(*x, **k), margins)
         else:
             ds.sta_tcl = orig
-        ns = argparse.Namespace(top=str(top), top_module=None, parts=str(work / "parts"), out=str(o), mode="ilm",
-                                corner=["SS", "FF"], period_ps=period, spine_branch=None, die_spef=None, libdir=None,
-                                lib=[], rebuild=False)
+        # through die_sta.py's own CLI (its defaults stay DIE-STA's); the derate patch is the module-level sta_tcl
+        argv = ["run", "--top", str(top), "--parts", str(work / "parts"), "--out", str(o), "--mode", "ilm",
+                "--corner", "TT", "--corner", "FF", "--corner", "SS", "--period-ps", f"{period:.3f}",
+                "--threads", str(a.threads)]
         t0 = time.time()
         try:
-            r = ds.cmd_run(ns)
-        except SystemExit as e:
+            ds.main(argv)
+            r = json.loads((o / "die_sta.json").read_text())
+        except (SystemExit, FileNotFoundError, ValueError) as e:
             out[tag] = dict(ran=False, error=str(e), seams={})
             continue
         seams = {}
@@ -740,7 +747,7 @@ def cmd_sta_child(a):
                     if s.get(dly):
                         seams.setdefault(g, {"neg": 0})[key] = s[dly]["worst"]
                         seams[g]["neg"] += s[dly]["neg"]
-        out[tag] = dict(ran=all(r["corners"].get(c, {}).get("exit") == 0 for c in ("SS", "FF")),
+        out[tag] = dict(ran=all(r["corners"].get(c, {}).get("exit") == 0 for c in ("TT", "FF")),
                         verdict=r.get("verdict"), seams=seams, seconds=round(time.time() - t0, 1),
                         corners={c: dict(exit=x.get("exit"), seconds=x.get("seconds"), rss_gb=x.get("peak_rss_gb"),
                                          wns_ps=x.get("wns_ps"), whs_ps=x.get("whs_ps"))
@@ -895,8 +902,8 @@ def die_md(d):
     row("latency", f"{fmt(lt.get('lanes'))} lanes; table {lt.get('record') or lt.get('reason')}")
     s = g.get("sta", {})
     w = s.get("worst") or {}
-    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam setup@SS "
-               f"{fmt(w.get('final_setup_SS'))} ps (policy {fmt(w.get('policy_setup_SS'))}), hold@FF "
+    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam setup@TT "
+               f"{fmt(w.get('final_setup_TT'))} ps (policy {fmt(w.get('policy_setup_TT'))}), hold@FF "
                f"{fmt(w.get('final_hold_FF'))} ps (policy {fmt(w.get('policy_hold_FF'))}); stand-in worst "
                f"{fmt(s.get('standin_worst_setup_ps'))} / {fmt(s.get('standin_worst_hold_ps'))} ps")
     if s.get("xtalk"):
@@ -906,10 +913,10 @@ def die_md(d):
                   f"{dr.get('cell_late')} (OCV x IR {dr.get('ir_factor')}) / early {dr.get('cell_early')}; IR "
                   f"{(s.get('ir') or {}).get('mode')} (PDNSim: {(s.get('ir') or {}).get('pdnsim')})."]
     if s.get("seam_groups"):
-        L += ["", "| seam group | setup@SS final (policy) | hold@FF final (policy) |", "|---|---|---|"]
-        for r in sorted(s["seam_groups"], key=lambda r: (r["final_setup_SS"] if r["final_setup_SS"] is not None else 1e9))[:10]:
-            L.append(f"| {r['seam']} | {fmt(r['final_setup_SS'])} ({fmt(r['policy_setup_SS'])}) | "
-                     f"{fmt(r['final_hold_FF'])} ({fmt(r['policy_hold_FF'])}) |")
+        L += ["", "| seam group | setup@TT final (policy) | hold@FF final (policy) | setup@SS info |", "|---|---|---|---|"]
+        for r in sorted(s["seam_groups"], key=lambda r: (r["final_setup_TT"] if r["final_setup_TT"] is not None else 1e9))[:10]:
+            L.append(f"| {r['seam']} | {fmt(r['final_setup_TT'])} ({fmt(r['policy_setup_TT'])}) | "
+                     f"{fmt(r['final_hold_FF'])} ({fmt(r['policy_hold_FF'])}) | {fmt(r.get('policy_setup_SS_info'))} |")
     dl = d.get("delta")
     L += [""]
     if dl:
@@ -934,7 +941,7 @@ def summary_md(run):
         w = (g.get("sta") or {}).get("worst") or {}
         L.append(f"| {n} | {d['verdict']} | {s('g0')} | {s('g0c')} ({fmt(g['g0c'].get('errors'))}) | {s('xdie')} "
                  f"({fmt(g['xdie'].get('errors'))}) | {s('g2')} | {s('census')} | {s('latency')} | {s('sta')} "
-                 f"({fmt(w.get('final_setup_SS'))} / {fmt(w.get('final_hold_FF'))}) |")
+                 f"({fmt(w.get('final_setup_TT'))} / {fmt(w.get('final_hold_FF'))}) |")
     for n in run.get("absent", []):
         L.append(f"| {n} | NOT PRESENT (plan not on this sha) | | | | | | | |")
     L += ["", "Per-die detail: `<die>.md` / `<die>.json`. Gates: G0 and G0C from one check.py --completeness run; xdie "

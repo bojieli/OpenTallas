@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.signoff.summary.v1",
- "inventory_generated": "2026-10-24T08:05:06-07:00",
- "main_commit": "1ed91ad4ca",
+ "inventory_generated": "2026-10-24T08:12:28-07:00",
+ "main_commit": "c7ce2ed69a",
  "dies": {
   "s81": {
    "plan": "physical/die_plan/s81/die_plan.json",
@@ -9,7 +9,7 @@
    "counts": {
     "NEEDS RE-RUN": 37
    },
-   "needs_rerun_paper_fail": 29,
+   "needs_rerun_paper_fail": 1,
    "not_closed": 0,
    "macros": 2,
    "modules": [
@@ -30,9 +30,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -295.16,
+      "tt_setup_ps": 17.77,
+      "ss_info_ps": -295.16,
       "setup_corner": "tt",
-      "setup_corner_ps": 17.77,
       "ff_hold_ps": 6.59,
       "drc": 0,
       "spread_tt_ps": 67.5,
@@ -42,10 +42,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -295.16 ps (closed at TT setup +17.77)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef",
@@ -70,9 +68,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -302.7,
+      "tt_setup_ps": 54.58,
+      "ss_info_ps": -302.7,
       "setup_corner": "tt",
-      "setup_corner_ps": 54.58,
       "ff_hold_ps": 8.99,
       "drc": 0,
       "spread_tt_ps": 51.6,
@@ -82,10 +80,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -302.70 ps (closed at TT setup +54.58)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/dsdv_bksel_c.lef",
@@ -110,9 +106,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -309.48,
+      "tt_setup_ps": 37.37,
+      "ss_info_ps": -309.48,
       "setup_corner": "tt",
-      "setup_corner_ps": 37.37,
       "ff_hold_ps": 5.16,
       "drc": 0,
       "spread_tt_ps": 65.9,
@@ -122,10 +118,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -309.48 ps (closed at TT setup +37.37)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef",
@@ -157,9 +151,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -187.47,
+      "tt_setup_ps": 38.55,
+      "ss_info_ps": -187.47,
       "setup_corner": "tt",
-      "setup_corner_ps": 38.55,
       "ff_hold_ps": 22.75,
       "drc": 0,
       "spread_tt_ps": 24.8,
@@ -169,10 +163,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -187.47 ps (closed at TT setup +38.55)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -198,9 +190,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -213.88,
+      "tt_setup_ps": 76.26,
+      "ss_info_ps": -213.88,
       "setup_corner": "tt",
-      "setup_corner_ps": 76.26,
       "ff_hold_ps": 19.93,
       "drc": 0,
       "spread_tt_ps": 21.9,
@@ -210,10 +202,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -213.88 ps (closed at TT setup +76.26)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -239,9 +229,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -52.16,
+      "tt_setup_ps": 198.78,
+      "ss_info_ps": -52.16,
       "setup_corner": "tt",
-      "setup_corner_ps": 198.78,
       "ff_hold_ps": 5.63,
       "drc": 0,
       "spread_tt_ps": 58.2,
@@ -251,10 +241,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -52.16 ps (closed at TT setup +198.78)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef",
@@ -279,9 +267,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -310.65,
+      "tt_setup_ps": 24.55,
+      "ss_info_ps": -310.65,
       "setup_corner": "tt",
-      "setup_corner_ps": 24.55,
       "ff_hold_ps": 24.06,
       "drc": 0,
       "spread_tt_ps": 12.5,
@@ -291,10 +279,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -310.65 ps (closed at TT setup +24.55)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef",
@@ -319,9 +305,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -263.71,
+      "tt_setup_ps": 59.31,
+      "ss_info_ps": -263.71,
       "setup_corner": "tt",
-      "setup_corner_ps": 59.31,
       "ff_hold_ps": 2.71,
       "drc": 0,
       "spread_tt_ps": 76.0,
@@ -331,10 +317,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -263.71 ps (closed at TT setup +59.31)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef",
@@ -359,9 +343,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -371.01,
+      "tt_setup_ps": 0.11,
+      "ss_info_ps": -371.01,
       "setup_corner": "tt",
-      "setup_corner_ps": 0.11,
       "ff_hold_ps": 16.71,
       "drc": 0,
       "spread_tt_ps": 36.2,
@@ -371,10 +355,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -371.01 ps (closed at TT setup +0.11)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c.lef",
@@ -399,9 +381,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -197.32,
+      "tt_setup_ps": 74.7,
+      "ss_info_ps": -197.32,
       "setup_corner": "tt",
-      "setup_corner_ps": 74.7,
       "ff_hold_ps": 4.99,
       "drc": 0,
       "spread_tt_ps": 48.9,
@@ -411,10 +393,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -197.32 ps (closed at TT setup +74.70)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
@@ -439,9 +419,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -195.47,
+      "tt_setup_ps": 133.72,
+      "ss_info_ps": -195.47,
       "setup_corner": "tt",
-      "setup_corner_ps": 133.72,
       "ff_hold_ps": 10.01,
       "drc": 0,
       "spread_tt_ps": 61.0,
@@ -451,10 +431,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -195.47 ps (closed at TT setup +133.72)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef",
@@ -479,9 +457,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -281.11,
+      "tt_setup_ps": 71.87,
+      "ss_info_ps": -281.11,
       "setup_corner": "tt",
-      "setup_corner_ps": 71.87,
       "ff_hold_ps": 5.94,
       "drc": 0,
       "spread_tt_ps": 52.8,
@@ -491,10 +469,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -281.11 ps (closed at TT setup +71.87)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef",
@@ -519,9 +495,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -162.6,
+      "tt_setup_ps": 144.14,
+      "ss_info_ps": -162.6,
       "setup_corner": "tt",
-      "setup_corner_ps": 144.14,
       "ff_hold_ps": 18.96,
       "drc": 0,
       "spread_tt_ps": 10.6,
@@ -531,10 +507,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -162.60 ps (closed at TT setup +144.14)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef",
@@ -559,9 +533,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -2935.05,
+      "tt_setup_ps": 20.6,
+      "ss_info_ps": -2935.05,
       "setup_corner": "tt",
-      "setup_corner_ps": 20.6,
       "ff_hold_ps": 20.07,
       "drc": 0,
       "spread_tt_ps": 101.9,
@@ -574,8 +548,7 @@
       "verdict": "FAIL",
       "problems": [
        "recorded TT pin-flop spread 101.9 ps > 80",
-       "recorded FF pin-flop spread 95.3 ps > 80",
-       "recorded SS setup -2935.05 ps (closed at TT setup +20.60)"
+       "recorded FF pin-flop spread 95.3 ps > 80"
       ]
      },
      "notes": [
@@ -602,9 +575,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -162.9,
+      "tt_setup_ps": 151.76,
+      "ss_info_ps": -162.9,
       "setup_corner": "tt",
-      "setup_corner_ps": 151.76,
       "ff_hold_ps": 22.01,
       "drc": 0,
       "spread_tt_ps": 11.4,
@@ -614,10 +587,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -162.90 ps (closed at TT setup +151.76)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef",
@@ -638,9 +609,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": null,
+      "tt_setup_ps": null,
+      "ss_info_ps": null,
       "setup_corner": null,
-      "setup_corner_ps": null,
       "ff_hold_ps": null,
       "drc": null,
       "spread_tt_ps": null,
@@ -688,9 +659,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -292.83,
+      "tt_setup_ps": 0.0,
+      "ss_info_ps": -292.83,
       "setup_corner": "tt",
-      "setup_corner_ps": 0.0,
       "ff_hold_ps": 18.2,
       "drc": 0,
       "spread_tt_ps": 9.9,
@@ -700,10 +671,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -292.83 ps (closed at TT setup +0.00)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots.lef",
@@ -737,9 +706,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -150.37,
+      "tt_setup_ps": 40.3,
+      "ss_info_ps": -150.37,
       "setup_corner": "tt",
-      "setup_corner_ps": 40.3,
       "ff_hold_ps": 11.34,
       "drc": 0,
       "spread_tt_ps": 61.3,
@@ -749,10 +718,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -150.37 ps (closed at TT setup +40.30)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4.lef",
@@ -778,9 +745,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -242.37,
+      "tt_setup_ps": 95.22,
+      "ss_info_ps": -242.37,
       "setup_corner": "tt",
-      "setup_corner_ps": 95.22,
       "ff_hold_ps": 23.29,
       "drc": 0,
       "spread_tt_ps": 12.8,
@@ -790,10 +757,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -242.37 ps (closed at TT setup +95.22)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd.lef",
@@ -829,9 +794,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -257.04,
+      "tt_setup_ps": 89.29,
+      "ss_info_ps": -257.04,
       "setup_corner": "tt",
-      "setup_corner_ps": 89.29,
       "ff_hold_ps": 18.49,
       "drc": 0,
       "spread_tt_ps": 13.1,
@@ -841,10 +806,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -257.04 ps (closed at TT setup +89.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd.lef",
@@ -880,9 +843,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -271.75,
+      "tt_setup_ps": 84.29,
+      "ss_info_ps": -271.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 84.29,
       "ff_hold_ps": 22.89,
       "drc": 0,
       "spread_tt_ps": 16.3,
@@ -892,10 +855,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -271.75 ps (closed at TT setup +84.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu.lef",
@@ -931,9 +892,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -249.0,
+      "tt_setup_ps": 100.18,
+      "ss_info_ps": -249.0,
       "setup_corner": "tt",
-      "setup_corner_ps": 100.18,
       "ff_hold_ps": 16.83,
       "drc": 0,
       "spread_tt_ps": 14.2,
@@ -943,10 +904,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -249.00 ps (closed at TT setup +100.18)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd.lef",
@@ -982,9 +941,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -259.48,
+      "tt_setup_ps": 90.08,
+      "ss_info_ps": -259.48,
       "setup_corner": "tt",
-      "setup_corner_ps": 90.08,
       "ff_hold_ps": 12.49,
       "drc": 0,
       "spread_tt_ps": 25.1,
@@ -994,10 +953,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -259.48 ps (closed at TT setup +90.08)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu.lef",
@@ -1033,9 +990,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 248.61,
+      "tt_setup_ps": 332.23,
+      "ss_info_ps": 248.61,
       "setup_corner": "tt",
-      "setup_corner_ps": 332.23,
       "ff_hold_ps": 1.58,
       "drc": 0,
       "spread_tt_ps": 2.8,
@@ -1082,9 +1039,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 69.7,
+      "tt_setup_ps": 214.61,
+      "ss_info_ps": 69.7,
       "setup_corner": "tt",
-      "setup_corner_ps": 214.61,
       "ff_hold_ps": 21.41,
       "drc": 0,
       "spread_tt_ps": 12.8,
@@ -1129,9 +1086,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 228.33,
+      "tt_setup_ps": 328.42,
+      "ss_info_ps": 228.33,
       "setup_corner": "tt",
-      "setup_corner_ps": 328.42,
       "ff_hold_ps": 30.99,
       "drc": 0,
       "spread_tt_ps": 1.2,
@@ -1178,9 +1135,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 119.66,
+      "tt_setup_ps": 321.2,
+      "ss_info_ps": 119.66,
       "setup_corner": "tt",
-      "setup_corner_ps": 321.2,
       "ff_hold_ps": 25.53,
       "drc": 0,
       "spread_tt_ps": 12.0,
@@ -1228,9 +1185,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -24.67,
+      "tt_setup_ps": 244.26,
+      "ss_info_ps": -24.67,
       "setup_corner": "tt",
-      "setup_corner_ps": 244.26,
       "ff_hold_ps": 23.88,
       "drc": 0,
       "spread_tt_ps": 14.4,
@@ -1240,10 +1197,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -24.67 ps (closed at TT setup +244.26)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp.lef",
@@ -1279,9 +1234,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 232.82,
+      "tt_setup_ps": 329.25,
+      "ss_info_ps": 232.82,
       "setup_corner": "tt",
-      "setup_corner_ps": 329.25,
       "ff_hold_ps": 24.82,
       "drc": 0,
       "spread_tt_ps": 14.5,
@@ -1330,9 +1285,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 255.69,
+      "tt_setup_ps": 344.2,
+      "ss_info_ps": 255.69,
       "setup_corner": "tt",
-      "setup_corner_ps": 344.2,
       "ff_hold_ps": 26.61,
       "drc": 0,
       "spread_tt_ps": 8.8,
@@ -1383,9 +1338,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -345.05,
+      "tt_setup_ps": 4.78,
+      "ss_info_ps": -345.05,
       "setup_corner": "tt",
-      "setup_corner_ps": 4.78,
       "ff_hold_ps": 11.46,
       "drc": 0,
       "spread_tt_ps": 57.8,
@@ -1395,10 +1350,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -345.05 ps (closed at TT setup +4.78)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
@@ -1438,9 +1391,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 185.74,
+      "tt_setup_ps": 326.69,
+      "ss_info_ps": 185.74,
       "setup_corner": "tt",
-      "setup_corner_ps": 326.69,
       "ff_hold_ps": 13.38,
       "drc": 0,
       "spread_tt_ps": 0.0,
@@ -1491,9 +1444,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -294.79,
+      "tt_setup_ps": 71.85,
+      "ss_info_ps": -294.79,
       "setup_corner": "tt",
-      "setup_corner_ps": 71.85,
       "ff_hold_ps": 16.24,
       "drc": 0,
       "spread_tt_ps": 10.1,
@@ -1503,10 +1456,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -294.79 ps (closed at TT setup +71.85)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
@@ -1545,9 +1496,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -238.75,
+      "tt_setup_ps": 40.44,
+      "ss_info_ps": -238.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 40.44,
       "ff_hold_ps": 9.45,
       "drc": 0,
       "spread_tt_ps": 69.1,
@@ -1557,10 +1508,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -238.75 ps (closed at TT setup +40.44)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef",
@@ -1586,9 +1535,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -304.84,
+      "tt_setup_ps": 9.5,
+      "ss_info_ps": -304.84,
       "setup_corner": "tt",
-      "setup_corner_ps": 9.5,
       "ff_hold_ps": 10.86,
       "drc": 0,
       "spread_tt_ps": 64.1,
@@ -1598,10 +1547,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -304.84 ps (closed at TT setup +9.50)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef",
@@ -1636,9 +1583,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -221.99,
+      "tt_setup_ps": 63.59,
+      "ss_info_ps": -221.99,
       "setup_corner": "tt",
-      "setup_corner_ps": 63.59,
       "ff_hold_ps": 6.24,
       "drc": 0,
       "spread_tt_ps": 44.4,
@@ -1648,10 +1595,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -221.99 ps (closed at TT setup +63.59)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col.lef",
@@ -1685,9 +1630,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -182.29,
+      "tt_setup_ps": 116.28,
+      "ss_info_ps": -182.29,
       "setup_corner": "tt",
-      "setup_corner_ps": 116.28,
       "ff_hold_ps": 12.25,
       "drc": 0,
       "spread_tt_ps": 50.2,
@@ -1697,10 +1642,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -182.29 ps (closed at TT setup +116.28)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81: plan points at view physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10.lef",
@@ -1717,7 +1660,7 @@
    "counts": {
     "NEEDS RE-RUN": 21
    },
-   "needs_rerun_paper_fail": 16,
+   "needs_rerun_paper_fail": 2,
    "not_closed": 7,
    "macros": 3,
    "modules": [
@@ -1741,9 +1684,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -309.97,
+      "tt_setup_ps": 47.82,
+      "ss_info_ps": -309.97,
       "setup_corner": "tt",
-      "setup_corner_ps": 47.82,
       "ff_hold_ps": 21.69,
       "drc": 0,
       "spread_tt_ps": 5.1,
@@ -1753,10 +1696,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -309.97 ps (closed at TT setup +47.82)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -1784,9 +1725,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -277.47,
+      "tt_setup_ps": 74.83,
+      "ss_info_ps": -277.47,
       "setup_corner": "tt",
-      "setup_corner_ps": 74.83,
       "ff_hold_ps": 18.55,
       "drc": 0,
       "spread_tt_ps": 10.8,
@@ -1796,10 +1737,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -277.47 ps (closed at TT setup +74.83)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -1827,9 +1766,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -309.07,
+      "tt_setup_ps": 55.5,
+      "ss_info_ps": -309.07,
       "setup_corner": "tt",
-      "setup_corner_ps": 55.5,
       "ff_hold_ps": 22.16,
       "drc": 0,
       "spread_tt_ps": 1.8,
@@ -1839,10 +1778,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -309.07 ps (closed at TT setup +55.50)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -1869,9 +1806,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -288.6,
+      "tt_setup_ps": 62.32,
+      "ss_info_ps": -288.6,
       "setup_corner": "tt",
-      "setup_corner_ps": 62.32,
       "ff_hold_ps": 23.38,
       "drc": 0,
       "spread_tt_ps": 15.4,
@@ -1881,10 +1818,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -288.60 ps (closed at TT setup +62.32)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -1913,9 +1848,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -362.04,
+      "tt_setup_ps": 10.97,
+      "ss_info_ps": -362.04,
       "setup_corner": "tt",
-      "setup_corner_ps": 10.97,
       "ff_hold_ps": 6.5,
       "drc": 0,
       "spread_tt_ps": 82.4,
@@ -1927,8 +1862,7 @@
      "paper": {
       "verdict": "FAIL",
       "problems": [
-       "recorded TT pin-flop spread 82.4 ps > 80",
-       "recorded SS setup -362.04 ps (closed at TT setup +10.97)"
+       "recorded TT pin-flop spread 82.4 ps > 80"
       ]
      },
      "notes": [
@@ -1956,9 +1890,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -221.45,
+      "tt_setup_ps": 74.64,
+      "ss_info_ps": -221.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 74.64,
       "ff_hold_ps": 18.08,
       "drc": 0,
       "spread_tt_ps": 60.4,
@@ -1968,10 +1902,8 @@
       "gate_verdict": "PASS"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -221.45 ps (closed at TT setup +74.64)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -1996,9 +1928,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -265.74,
+      "tt_setup_ps": 16.56,
+      "ss_info_ps": -265.74,
       "setup_corner": "tt",
-      "setup_corner_ps": 16.56,
       "ff_hold_ps": 1.18,
       "drc": 0,
       "spread_tt_ps": 70.8,
@@ -2008,10 +1940,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -265.74 ps (closed at TT setup +16.56)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -2039,9 +1969,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 178.48,
+      "tt_setup_ps": 298.94,
+      "ss_info_ps": 178.48,
       "setup_corner": "tt",
-      "setup_corner_ps": 298.94,
       "ff_hold_ps": 20.52,
       "drc": 0,
       "spread_tt_ps": 34.5,
@@ -2079,9 +2009,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -205.86,
+      "tt_setup_ps": 121.91,
+      "ss_info_ps": -205.86,
       "setup_corner": "tt",
-      "setup_corner_ps": 121.91,
       "ff_hold_ps": 7.42,
       "drc": 0,
       "spread_tt_ps": 33.4,
@@ -2091,10 +2021,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -205.86 ps (closed at TT setup +121.91)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -2124,9 +2052,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -278.04,
+      "tt_setup_ps": 29.92,
+      "ss_info_ps": -278.04,
       "setup_corner": "tt",
-      "setup_corner_ps": 29.92,
       "ff_hold_ps": 18.15,
       "drc": 0,
       "spread_tt_ps": 63.7,
@@ -2136,10 +2064,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -278.04 ps (closed at TT setup +29.92)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -2165,9 +2091,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -17.91,
+      "tt_setup_ps": 166.12,
+      "ss_info_ps": -17.91,
       "setup_corner": "tt",
-      "setup_corner_ps": 166.12,
       "ff_hold_ps": 19.36,
       "drc": 0,
       "spread_tt_ps": 30.3,
@@ -2177,10 +2103,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -17.91 ps (closed at TT setup +166.12)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -2207,9 +2131,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -263.4,
+      "tt_setup_ps": 62.87,
+      "ss_info_ps": -263.4,
       "setup_corner": "tt",
-      "setup_corner_ps": 62.87,
       "ff_hold_ps": 16.31,
       "drc": 0,
       "spread_tt_ps": 84.0,
@@ -2222,8 +2146,7 @@
       "verdict": "FAIL",
       "problems": [
        "recorded TT pin-flop spread 84.0 ps > 80",
-       "recorded FF pin-flop spread 80.2 ps > 80",
-       "recorded SS setup -263.40 ps (closed at TT setup +62.87)"
+       "recorded FF pin-flop spread 80.2 ps > 80"
       ]
      },
      "notes": [
@@ -2250,9 +2173,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -6.34,
+      "tt_setup_ps": 263.37,
+      "ss_info_ps": -6.34,
       "setup_corner": "tt",
-      "setup_corner_ps": 263.37,
       "ff_hold_ps": 1.41,
       "drc": 0,
       "spread_tt_ps": 42.7,
@@ -2262,10 +2185,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -6.34 ps (closed at TT setup +263.37)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -2291,9 +2212,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -64.37,
+      "tt_setup_ps": 132.79,
+      "ss_info_ps": -64.37,
       "setup_corner": "tt",
-      "setup_corner_ps": 132.79,
       "ff_hold_ps": 3.53,
       "drc": 0,
       "spread_tt_ps": 54.4,
@@ -2303,10 +2224,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -64.37 ps (closed at TT setup +132.79)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -2333,9 +2252,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 50.3,
+      "tt_setup_ps": 219.75,
+      "ss_info_ps": 50.3,
       "setup_corner": "tt",
-      "setup_corner_ps": 219.75,
       "ff_hold_ps": 8.19,
       "drc": 0,
       "spread_tt_ps": 35.0,
@@ -2373,9 +2292,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 43.88,
+      "tt_setup_ps": 202.15,
+      "ss_info_ps": 43.88,
       "setup_corner": "tt",
-      "setup_corner_ps": 202.15,
       "ff_hold_ps": 13.1,
       "drc": 0,
       "spread_tt_ps": 69.0,
@@ -2413,9 +2332,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -230.95,
+      "tt_setup_ps": 19.14,
+      "ss_info_ps": -230.95,
       "setup_corner": "tt",
-      "setup_corner_ps": 19.14,
       "ff_hold_ps": 14.46,
       "drc": 0,
       "spread_tt_ps": 38.5,
@@ -2425,10 +2344,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -230.95 ps (closed at TT setup +19.14)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -2454,9 +2371,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -276.71,
+      "tt_setup_ps": 18.64,
+      "ss_info_ps": -276.71,
       "setup_corner": "tt",
-      "setup_corner_ps": 18.64,
       "ff_hold_ps": 16.99,
       "drc": 0,
       "spread_tt_ps": 57.1,
@@ -2466,10 +2383,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -276.71 ps (closed at TT setup +18.64)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: plan note: closed slice leaf (reference; flattened unless macro)",
@@ -2497,9 +2412,9 @@
      "recorded_db": {},
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": null,
+      "tt_setup_ps": null,
+      "ss_info_ps": null,
       "setup_corner": null,
-      "setup_corner_ps": null,
       "ff_hold_ps": null,
       "drc": null,
       "spread_tt_ps": null,
@@ -2531,9 +2446,9 @@
      "recorded_db": {},
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": null,
+      "tt_setup_ps": null,
+      "ss_info_ps": null,
       "setup_corner": null,
-      "setup_corner_ps": null,
       "ff_hold_ps": null,
       "drc": null,
       "spread_tt_ps": null,
@@ -2571,9 +2486,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -176.98,
+      "tt_setup_ps": 27.85,
+      "ss_info_ps": -176.98,
       "setup_corner": "tt",
-      "setup_corner_ps": 27.85,
       "ff_hold_ps": 20.9,
       "drc": 0,
       "spread_tt_ps": 31.6,
@@ -2583,10 +2498,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -176.98 ps (closed at TT setup +27.85)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_compute: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -2603,7 +2516,7 @@
    "counts": {
     "NEEDS RE-RUN": 20
    },
-   "needs_rerun_paper_fail": 9,
+   "needs_rerun_paper_fail": 2,
    "not_closed": 30,
    "macros": 5,
    "modules": [
@@ -2640,9 +2553,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 211.89,
+      "tt_setup_ps": 316.98,
+      "ss_info_ps": 211.89,
       "setup_corner": "tt",
-      "setup_corner_ps": 316.98,
       "ff_hold_ps": 25.72,
       "drc": 0,
       "spread_tt_ps": 2.8,
@@ -2694,9 +2607,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 253.02,
+      "tt_setup_ps": 342.95,
+      "ss_info_ps": 253.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 342.95,
       "ff_hold_ps": 20.38,
       "drc": 0,
       "spread_tt_ps": 10.0,
@@ -2749,9 +2662,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 250.52,
+      "tt_setup_ps": 340.98,
+      "ss_info_ps": 250.52,
       "setup_corner": "tt",
-      "setup_corner_ps": 340.98,
       "ff_hold_ps": 28.23,
       "drc": 0,
       "spread_tt_ps": 1.9,
@@ -2803,9 +2716,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -88.42,
+      "tt_setup_ps": 198.95,
+      "ss_info_ps": -88.42,
       "setup_corner": "tt",
-      "setup_corner_ps": 198.95,
       "ff_hold_ps": 23.07,
       "drc": 0,
       "spread_tt_ps": 17.5,
@@ -2815,10 +2728,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -88.42 ps (closed at TT setup +198.95)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -2855,9 +2766,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -271.12,
+      "tt_setup_ps": 80.23,
+      "ss_info_ps": -271.12,
       "setup_corner": "tt",
-      "setup_corner_ps": 80.23,
       "ff_hold_ps": 23.23,
       "drc": 0,
       "spread_tt_ps": 50.2,
@@ -2867,10 +2778,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -271.12 ps (closed at TT setup +80.23)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: plan points at view physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef",
@@ -2908,9 +2817,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -273.24,
+      "tt_setup_ps": 46.74,
+      "ss_info_ps": -273.24,
       "setup_corner": "tt",
-      "setup_corner_ps": 46.74,
       "ff_hold_ps": 16.06,
       "drc": 0,
       "spread_tt_ps": 31.9,
@@ -2920,10 +2829,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -273.24 ps (closed at TT setup +46.74)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -2951,9 +2858,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 392.5,
+      "tt_setup_ps": 431.16,
+      "ss_info_ps": 392.5,
       "setup_corner": "tt",
-      "setup_corner_ps": 431.16,
       "ff_hold_ps": 27.12,
       "drc": 0,
       "spread_tt_ps": 0.0,
@@ -2989,9 +2896,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 19.05,
+      "tt_setup_ps": 92.08,
+      "ss_info_ps": 19.05,
       "setup_corner": "tt",
-      "setup_corner_ps": 92.08,
       "ff_hold_ps": 25.46,
       "drc": 0,
       "spread_tt_ps": 3.2,
@@ -3027,9 +2934,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -353.25,
+      "tt_setup_ps": 29.09,
+      "ss_info_ps": -353.25,
       "setup_corner": "tt",
-      "setup_corner_ps": 29.09,
       "ff_hold_ps": 6.37,
       "drc": 0,
       "spread_tt_ps": 42.3,
@@ -3039,10 +2946,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -353.25 ps (closed at TT setup +29.09)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -3087,9 +2992,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 307.59,
+      "tt_setup_ps": 379.81,
+      "ss_info_ps": 307.59,
       "setup_corner": "tt",
-      "setup_corner_ps": 379.81,
       "ff_hold_ps": 66.33,
       "drc": 0,
       "spread_tt_ps": 0.0,
@@ -3125,9 +3030,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -295.24,
+      "tt_setup_ps": 24.38,
+      "ss_info_ps": -295.24,
       "setup_corner": "tt",
-      "setup_corner_ps": 24.38,
       "ff_hold_ps": 8.88,
       "drc": 0,
       "spread_tt_ps": 121.8,
@@ -3140,8 +3045,7 @@
       "verdict": "FAIL",
       "problems": [
        "recorded TT pin-flop spread 121.8 ps > 80",
-       "recorded FF pin-flop spread 109.3 ps > 80",
-       "recorded SS setup -295.24 ps (closed at TT setup +24.38)"
+       "recorded FF pin-flop spread 109.3 ps > 80"
       ]
      },
      "notes": [
@@ -3167,9 +3071,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -369.4,
+      "tt_setup_ps": 27.3,
+      "ss_info_ps": -369.4,
       "setup_corner": "tt",
-      "setup_corner_ps": 27.3,
       "ff_hold_ps": 13.35,
       "drc": 0,
       "spread_tt_ps": 149.9,
@@ -3181,8 +3085,7 @@
      "paper": {
       "verdict": "FAIL",
       "problems": [
-       "recorded TT pin-flop spread 149.9 ps > 80",
-       "recorded SS setup -369.40 ps (closed at TT setup +27.30)"
+       "recorded TT pin-flop spread 149.9 ps > 80"
       ]
      },
      "notes": [
@@ -3209,9 +3112,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -219.78,
+      "tt_setup_ps": 40.47,
+      "ss_info_ps": -219.78,
       "setup_corner": "tt",
-      "setup_corner_ps": 40.47,
       "ff_hold_ps": 16.77,
       "drc": 0,
       "spread_tt_ps": 42.5,
@@ -3221,10 +3124,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -219.78 ps (closed at TT setup +40.47)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -3249,9 +3150,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 228.38,
+      "tt_setup_ps": 326.13,
+      "ss_info_ps": 228.38,
       "setup_corner": "tt",
-      "setup_corner_ps": 326.13,
       "ff_hold_ps": 21.55,
       "drc": 0,
       "spread_tt_ps": 35.5,
@@ -3299,9 +3200,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 108.93,
+      "tt_setup_ps": 334.8,
+      "ss_info_ps": 108.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 334.8,
       "ff_hold_ps": 27.45,
       "drc": 0,
       "spread_tt_ps": 5.6,
@@ -3337,9 +3238,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -99.68,
+      "tt_setup_ps": 189.52,
+      "ss_info_ps": -99.68,
       "setup_corner": "tt",
-      "setup_corner_ps": 189.52,
       "ff_hold_ps": 21.81,
       "drc": 0,
       "spread_tt_ps": 16.9,
@@ -3349,10 +3250,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -99.68 ps (closed at TT setup +189.52)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -3378,9 +3277,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 235.62,
+      "tt_setup_ps": 326.77,
+      "ss_info_ps": 235.62,
       "setup_corner": "tt",
-      "setup_corner_ps": 326.77,
       "ff_hold_ps": 18.06,
       "drc": 0,
       "spread_tt_ps": 14.4,
@@ -3417,9 +3316,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -103.57,
+      "tt_setup_ps": 155.4,
+      "ss_info_ps": -103.57,
       "setup_corner": "tt",
-      "setup_corner_ps": 155.4,
       "ff_hold_ps": 19.39,
       "drc": 0,
       "spread_tt_ps": 16.1,
@@ -3429,10 +3328,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -103.57 ps (closed at TT setup +155.40)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "qwen_kvsys: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -3473,9 +3370,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 269.98,
+      "tt_setup_ps": 354.91,
+      "ss_info_ps": 269.98,
       "setup_corner": "tt",
-      "setup_corner_ps": 354.91,
       "ff_hold_ps": 11.02,
       "drc": 0,
       "spread_tt_ps": 42.9,
@@ -3527,9 +3424,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 211.84,
+      "tt_setup_ps": 317.75,
+      "ss_info_ps": 211.84,
       "setup_corner": "tt",
-      "setup_corner_ps": 317.75,
       "ff_hold_ps": 11.84,
       "drc": 0,
       "spread_tt_ps": 0.6,
@@ -3556,7 +3453,7 @@
    "counts": {
     "NEEDS RE-RUN": 55
    },
-   "needs_rerun_paper_fail": 32,
+   "needs_rerun_paper_fail": 2,
    "not_closed": 189,
    "macros": 2,
    "modules": [
@@ -3579,9 +3476,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -14.52,
+      "tt_setup_ps": 217.23,
+      "ss_info_ps": -14.52,
       "setup_corner": "tt",
-      "setup_corner_ps": 217.23,
       "ff_hold_ps": 8.0,
       "drc": 0,
       "spread_tt_ps": 53.4,
@@ -3591,10 +3488,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -14.52 ps (closed at TT setup +217.23)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -3621,9 +3516,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -373.14,
+      "tt_setup_ps": 25.04,
+      "ss_info_ps": -373.14,
       "setup_corner": "tt",
-      "setup_corner_ps": 25.04,
       "ff_hold_ps": 12.63,
       "drc": 0,
       "spread_tt_ps": 25.3,
@@ -3633,10 +3528,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -373.14 ps (closed at TT setup +25.04)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -3663,9 +3556,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -266.26,
+      "tt_setup_ps": 17.45,
+      "ss_info_ps": -266.26,
       "setup_corner": "tt",
-      "setup_corner_ps": 17.45,
       "ff_hold_ps": 8.62,
       "drc": 0,
       "spread_tt_ps": 0.1,
@@ -3675,10 +3568,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -266.26 ps (closed at TT setup +17.45)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -3705,9 +3596,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 249.78,
+      "tt_setup_ps": 335.22,
+      "ss_info_ps": 249.78,
       "setup_corner": "tt",
-      "setup_corner_ps": 335.22,
       "ff_hold_ps": 21.14,
       "drc": 0,
       "spread_tt_ps": 19.5,
@@ -3744,9 +3635,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -261.08,
+      "tt_setup_ps": 84.29,
+      "ss_info_ps": -261.08,
       "setup_corner": "tt",
-      "setup_corner_ps": 84.29,
       "ff_hold_ps": 16.79,
       "drc": 0,
       "spread_tt_ps": 25.5,
@@ -3756,10 +3647,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -261.08 ps (closed at TT setup +84.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -3787,9 +3676,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 390.14,
+      "tt_setup_ps": 434.46,
+      "ss_info_ps": 390.14,
       "setup_corner": "tt",
-      "setup_corner_ps": 434.46,
       "ff_hold_ps": 29.75,
       "drc": 0,
       "spread_tt_ps": 0.8,
@@ -3826,9 +3715,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 387.26,
+      "tt_setup_ps": 432.71,
+      "ss_info_ps": 387.26,
       "setup_corner": "tt",
-      "setup_corner_ps": 432.71,
       "ff_hold_ps": 30.46,
       "drc": 0,
       "spread_tt_ps": 0.3,
@@ -3865,9 +3754,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 317.73,
+      "tt_setup_ps": 417.66,
+      "ss_info_ps": 317.73,
       "setup_corner": "tt",
-      "setup_corner_ps": 417.66,
       "ff_hold_ps": 20.52,
       "drc": 0,
       "spread_tt_ps": 10.1,
@@ -3904,9 +3793,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -379.24,
+      "tt_setup_ps": 2.05,
+      "ss_info_ps": -379.24,
       "setup_corner": "tt",
-      "setup_corner_ps": 2.05,
       "ff_hold_ps": 18.8,
       "drc": 0,
       "spread_tt_ps": 54.0,
@@ -3916,10 +3805,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -379.24 ps (closed at TT setup +2.05)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -3947,9 +3834,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 46.41,
+      "tt_setup_ps": 227.91,
+      "ss_info_ps": 46.41,
       "setup_corner": "tt",
-      "setup_corner_ps": 227.91,
       "ff_hold_ps": 22.75,
       "drc": 0,
       "spread_tt_ps": 14.8,
@@ -3987,9 +3874,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -382.5,
+      "tt_setup_ps": 12.0,
+      "ss_info_ps": -382.5,
       "setup_corner": "tt",
-      "setup_corner_ps": 12.0,
       "ff_hold_ps": 14.52,
       "drc": 0,
       "spread_tt_ps": 79.6,
@@ -3999,10 +3886,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -382.50 ps (closed at TT setup +12.00)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4029,9 +3914,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -275.36,
+      "tt_setup_ps": 23.17,
+      "ss_info_ps": -275.36,
       "setup_corner": "tt",
-      "setup_corner_ps": 23.17,
       "ff_hold_ps": 20.15,
       "drc": 0,
       "spread_tt_ps": 76.3,
@@ -4041,10 +3926,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -275.36 ps (closed at TT setup +23.17)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4071,9 +3954,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -336.2,
+      "tt_setup_ps": 23.35,
+      "ss_info_ps": -336.2,
       "setup_corner": "tt",
-      "setup_corner_ps": 23.35,
       "ff_hold_ps": 13.64,
       "drc": 0,
       "spread_tt_ps": 49.4,
@@ -4083,10 +3966,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -336.20 ps (closed at TT setup +23.35)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4113,9 +3994,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 253.9,
+      "tt_setup_ps": 362.14,
+      "ss_info_ps": 253.9,
       "setup_corner": "tt",
-      "setup_corner_ps": 362.14,
       "ff_hold_ps": 9.92,
       "drc": 0,
       "spread_tt_ps": 31.3,
@@ -4152,9 +4033,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -97.62,
+      "tt_setup_ps": 125.96,
+      "ss_info_ps": -97.62,
       "setup_corner": "tt",
-      "setup_corner_ps": 125.96,
       "ff_hold_ps": 24.03,
       "drc": 0,
       "spread_tt_ps": 6.1,
@@ -4164,10 +4045,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -97.62 ps (closed at TT setup +125.96)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4194,9 +4073,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -202.86,
+      "tt_setup_ps": 92.94,
+      "ss_info_ps": -202.86,
       "setup_corner": "tt",
-      "setup_corner_ps": 92.94,
       "ff_hold_ps": 26.15,
       "drc": 0,
       "spread_tt_ps": 28.1,
@@ -4206,10 +4085,8 @@
       "gate_verdict": "PASS"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -202.86 ps (closed at TT setup +92.94)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4238,9 +4115,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -303.09,
+      "tt_setup_ps": 50.96,
+      "ss_info_ps": -303.09,
       "setup_corner": "tt",
-      "setup_corner_ps": 50.96,
       "ff_hold_ps": 22.05,
       "drc": 0,
       "spread_tt_ps": 22.6,
@@ -4250,10 +4127,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -303.09 ps (closed at TT setup +50.96)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4279,9 +4154,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -297.99,
+      "tt_setup_ps": 40.72,
+      "ss_info_ps": -297.99,
       "setup_corner": "tt",
-      "setup_corner_ps": 40.72,
       "ff_hold_ps": 27.12,
       "drc": 0,
       "spread_tt_ps": 36.2,
@@ -4291,10 +4166,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -297.99 ps (closed at TT setup +40.72)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4321,9 +4194,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 289.75,
+      "tt_setup_ps": 409.15,
+      "ss_info_ps": 289.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 409.15,
       "ff_hold_ps": 28.92,
       "drc": 0,
       "spread_tt_ps": 9.4,
@@ -4361,9 +4234,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -44.75,
+      "tt_setup_ps": 7.34,
+      "ss_info_ps": -44.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 7.34,
       "ff_hold_ps": 30.52,
       "drc": 0,
       "spread_tt_ps": 11.9,
@@ -4373,10 +4246,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -44.75 ps (closed at TT setup +7.34)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4402,9 +4273,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 276.16,
+      "tt_setup_ps": 346.8,
+      "ss_info_ps": 276.16,
       "setup_corner": "tt",
-      "setup_corner_ps": 346.8,
       "ff_hold_ps": 21.53,
       "drc": 0,
       "spread_tt_ps": 13.1,
@@ -4444,9 +4315,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -41.45,
+      "tt_setup_ps": 88.64,
+      "ss_info_ps": -41.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 88.64,
       "ff_hold_ps": 29.09,
       "drc": 0,
       "spread_tt_ps": 56.7,
@@ -4456,10 +4327,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -41.45 ps (closed at TT setup +88.64)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4488,9 +4357,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 3.2,
+      "tt_setup_ps": 204.45,
+      "ss_info_ps": 3.2,
       "setup_corner": "tt",
-      "setup_corner_ps": 204.45,
       "ff_hold_ps": 29.5,
       "drc": 0,
       "spread_tt_ps": 17.1,
@@ -4526,9 +4395,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -92.39,
+      "tt_setup_ps": 67.13,
+      "ss_info_ps": -92.39,
       "setup_corner": "tt",
-      "setup_corner_ps": 67.13,
       "ff_hold_ps": 26.92,
       "drc": 0,
       "spread_tt_ps": 39.6,
@@ -4538,10 +4407,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -92.39 ps (closed at TT setup +67.13)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4568,9 +4435,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -158.57,
+      "tt_setup_ps": 88.31,
+      "ss_info_ps": -158.57,
       "setup_corner": "tt",
-      "setup_corner_ps": 88.31,
       "ff_hold_ps": 15.51,
       "drc": 0,
       "spread_tt_ps": 64.6,
@@ -4580,10 +4447,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -158.57 ps (closed at TT setup +88.31)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4609,9 +4474,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -157.02,
+      "tt_setup_ps": 28.42,
+      "ss_info_ps": -157.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 28.42,
       "ff_hold_ps": 27.54,
       "drc": 0,
       "spread_tt_ps": 26.3,
@@ -4621,10 +4486,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -157.02 ps (closed at TT setup +28.42)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4650,9 +4513,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -237.63,
+      "tt_setup_ps": 9.9,
+      "ss_info_ps": -237.63,
       "setup_corner": "tt",
-      "setup_corner_ps": 9.9,
       "ff_hold_ps": 27.04,
       "drc": 0,
       "spread_tt_ps": 43.5,
@@ -4662,10 +4525,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -237.63 ps (closed at TT setup +9.90)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -4691,9 +4552,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -291.7,
+      "tt_setup_ps": 4.27,
+      "ss_info_ps": -291.7,
       "setup_corner": "tt",
-      "setup_corner_ps": 4.27,
       "ff_hold_ps": 10.87,
       "drc": 0,
       "spread_tt_ps": 52.6,
@@ -4703,10 +4564,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -291.70 ps (closed at TT setup +4.27)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4733,9 +4592,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -80.61,
+      "tt_setup_ps": 175.55,
+      "ss_info_ps": -80.61,
       "setup_corner": "tt",
-      "setup_corner_ps": 175.55,
       "ff_hold_ps": 23.13,
       "drc": 0,
       "spread_tt_ps": 71.7,
@@ -4745,10 +4604,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -80.61 ps (closed at TT setup +175.55)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4776,9 +4633,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 328.42,
+      "tt_setup_ps": 391.8,
+      "ss_info_ps": 328.42,
       "setup_corner": "tt",
-      "setup_corner_ps": 391.8,
       "ff_hold_ps": 27.45,
       "drc": 0,
       "spread_tt_ps": 7.3,
@@ -4815,9 +4672,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 379.45,
+      "tt_setup_ps": 426.1,
+      "ss_info_ps": 379.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 426.1,
       "ff_hold_ps": 19.37,
       "drc": 0,
       "spread_tt_ps": 12.5,
@@ -4858,9 +4715,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -294.93,
+      "tt_setup_ps": 29.75,
+      "ss_info_ps": -294.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 29.75,
       "ff_hold_ps": 13.65,
       "drc": 0,
       "spread_tt_ps": 117.5,
@@ -4873,8 +4730,7 @@
       "verdict": "FAIL",
       "problems": [
        "recorded TT pin-flop spread 117.5 ps > 80",
-       "recorded FF pin-flop spread 117.7 ps > 80",
-       "recorded SS setup -294.93 ps (closed at TT setup +29.75)"
+       "recorded FF pin-flop spread 117.7 ps > 80"
       ]
      },
      "notes": [
@@ -4902,9 +4758,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 256.22,
+      "tt_setup_ps": 346.67,
+      "ss_info_ps": 256.22,
       "setup_corner": "tt",
-      "setup_corner_ps": 346.67,
       "ff_hold_ps": 7.33,
       "drc": 0,
       "spread_tt_ps": 2.4,
@@ -4941,9 +4797,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -229.87,
+      "tt_setup_ps": 85.47,
+      "ss_info_ps": -229.87,
       "setup_corner": "tt",
-      "setup_corner_ps": 85.47,
       "ff_hold_ps": 3.23,
       "drc": 0,
       "spread_tt_ps": 68.2,
@@ -4953,10 +4809,8 @@
       "gate_verdict": "PASS"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -229.87 ps (closed at TT setup +85.47)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -4983,9 +4837,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 378.02,
+      "tt_setup_ps": 425.86,
+      "ss_info_ps": 378.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 425.86,
       "ff_hold_ps": 28.95,
       "drc": 0,
       "spread_tt_ps": 4.9,
@@ -5022,9 +4876,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -282.54,
+      "tt_setup_ps": 65.07,
+      "ss_info_ps": -282.54,
       "setup_corner": "tt",
-      "setup_corner_ps": 65.07,
       "ff_hold_ps": 15.27,
       "drc": 0,
       "spread_tt_ps": 17.7,
@@ -5034,10 +4888,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -282.54 ps (closed at TT setup +65.07)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5067,9 +4919,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -337.75,
+      "tt_setup_ps": 11.98,
+      "ss_info_ps": -337.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 11.98,
       "ff_hold_ps": 16.83,
       "drc": 0,
       "spread_tt_ps": 69.9,
@@ -5079,10 +4931,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -337.75 ps (closed at TT setup +11.98)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5109,9 +4959,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 196.28,
+      "tt_setup_ps": 306.68,
+      "ss_info_ps": 196.28,
       "setup_corner": "tt",
-      "setup_corner_ps": 306.68,
       "ff_hold_ps": 28.65,
       "drc": 0,
       "spread_tt_ps": 3.0,
@@ -5151,9 +5001,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -150.72,
+      "tt_setup_ps": 134.13,
+      "ss_info_ps": -150.72,
       "setup_corner": "tt",
-      "setup_corner_ps": 134.13,
       "ff_hold_ps": 5.27,
       "drc": 0,
       "spread_tt_ps": 47.6,
@@ -5163,10 +5013,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -150.72 ps (closed at TT setup +134.13)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5196,9 +5044,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 52.19,
+      "tt_setup_ps": 253.01,
+      "ss_info_ps": 52.19,
       "setup_corner": "tt",
-      "setup_corner_ps": 253.01,
       "ff_hold_ps": 18.21,
       "drc": 0,
       "spread_tt_ps": 44.5,
@@ -5238,9 +5086,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -39.78,
+      "tt_setup_ps": 210.92,
+      "ss_info_ps": -39.78,
       "setup_corner": "tt",
-      "setup_corner_ps": 210.92,
       "ff_hold_ps": 8.29,
       "drc": 0,
       "spread_tt_ps": 58.8,
@@ -5250,10 +5098,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -39.78 ps (closed at TT setup +210.92)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -5279,9 +5125,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 240.08,
+      "tt_setup_ps": 329.97,
+      "ss_info_ps": 240.08,
       "setup_corner": "tt",
-      "setup_corner_ps": 329.97,
       "ff_hold_ps": 19.9,
       "drc": 0,
       "spread_tt_ps": 17.4,
@@ -5318,9 +5164,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 58.32,
+      "tt_setup_ps": 269.77,
+      "ss_info_ps": 58.32,
       "setup_corner": "tt",
-      "setup_corner_ps": 269.77,
       "ff_hold_ps": 12.01,
       "drc": 0,
       "spread_tt_ps": 28.6,
@@ -5357,9 +5203,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 54.89,
+      "tt_setup_ps": 287.66,
+      "ss_info_ps": 54.89,
       "setup_corner": "tt",
-      "setup_corner_ps": 287.66,
       "ff_hold_ps": 6.28,
       "drc": 0,
       "spread_tt_ps": 84.7,
@@ -5400,9 +5246,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 196.37,
+      "tt_setup_ps": 314.49,
+      "ss_info_ps": 196.37,
       "setup_corner": "tt",
-      "setup_corner_ps": 314.49,
       "ff_hold_ps": 23.98,
       "drc": 0,
       "spread_tt_ps": 37.4,
@@ -5438,9 +5284,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -305.88,
+      "tt_setup_ps": 50.84,
+      "ss_info_ps": -305.88,
       "setup_corner": "tt",
-      "setup_corner_ps": 50.84,
       "ff_hold_ps": 18.4,
       "drc": 0,
       "spread_tt_ps": null,
@@ -5450,9 +5296,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
+      "verdict": "INCOMPLETE",
       "problems": [
-       "recorded SS setup -305.88 ps (closed at TT setup +50.84)",
        "no recorded pin-flop spread (insertion.json missing)"
       ]
      },
@@ -5481,9 +5326,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 121.58,
+      "tt_setup_ps": 306.16,
+      "ss_info_ps": 121.58,
       "setup_corner": "tt",
-      "setup_corner_ps": 306.16,
       "ff_hold_ps": 5.09,
       "drc": 0,
       "spread_tt_ps": 53.6,
@@ -5521,9 +5366,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 306.56,
+      "tt_setup_ps": 378.05,
+      "ss_info_ps": 306.56,
       "setup_corner": "tt",
-      "setup_corner_ps": 378.05,
       "ff_hold_ps": 8.54,
       "drc": 0,
       "spread_tt_ps": 48.5,
@@ -5562,9 +5407,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -242.93,
+      "tt_setup_ps": 48.29,
+      "ss_info_ps": -242.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 48.29,
       "ff_hold_ps": 22.86,
       "drc": 0,
       "spread_tt_ps": 25.4,
@@ -5574,10 +5419,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -242.93 ps (closed at TT setup +48.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5604,9 +5447,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -176.82,
+      "tt_setup_ps": 115.25,
+      "ss_info_ps": -176.82,
       "setup_corner": "tt",
-      "setup_corner_ps": 115.25,
       "ff_hold_ps": 11.69,
       "drc": 0,
       "spread_tt_ps": null,
@@ -5616,9 +5459,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
+      "verdict": "INCOMPLETE",
       "problems": [
-       "recorded SS setup -176.82 ps (closed at TT setup +115.25)",
        "no recorded pin-flop spread (insertion.json missing)"
       ]
      },
@@ -5647,9 +5489,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -317.43,
+      "tt_setup_ps": 8.26,
+      "ss_info_ps": -317.43,
       "setup_corner": "tt",
-      "setup_corner_ps": 8.26,
       "ff_hold_ps": 5.9,
       "drc": 0,
       "spread_tt_ps": 79.8,
@@ -5659,10 +5501,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -317.43 ps (closed at TT setup +8.26)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5690,9 +5530,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -203.74,
+      "tt_setup_ps": 82.21,
+      "ss_info_ps": -203.74,
       "setup_corner": "tt",
-      "setup_corner_ps": 82.21,
       "ff_hold_ps": 12.05,
       "drc": 0,
       "spread_tt_ps": 32.9,
@@ -5702,10 +5542,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -203.74 ps (closed at TT setup +82.21)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -5732,9 +5570,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 49.67,
+      "tt_setup_ps": 229.17,
+      "ss_info_ps": 49.67,
       "setup_corner": "tt",
-      "setup_corner_ps": 229.17,
       "ff_hold_ps": 10.65,
       "drc": 0,
       "spread_tt_ps": 14.4,
@@ -5776,9 +5614,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 3.46,
+      "tt_setup_ps": 262.51,
+      "ss_info_ps": 3.46,
       "setup_corner": "tt",
-      "setup_corner_ps": 262.51,
       "ff_hold_ps": 27.37,
       "drc": 0,
       "spread_tt_ps": 15.0,
@@ -5815,9 +5653,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 131.02,
+      "tt_setup_ps": 344.22,
+      "ss_info_ps": 131.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 344.22,
       "ff_hold_ps": 29.09,
       "drc": 0,
       "spread_tt_ps": 2.6,
@@ -5843,50 +5681,75 @@
    "plan": "physical/die_plan/s81_head/die_plan.json",
    "extra": true,
    "counts": {
-    "NEEDS RE-RUN": 3
+    "NEEDS RE-RUN": 4
    },
-   "needs_rerun_paper_fail": 1,
+   "needs_rerun_paper_fail": 0,
    "not_closed": 1,
    "macros": 1,
    "modules": [
     {
-     "module": "ot_dsrom_head_elem",
-     "instances": 1320,
+     "module": "ot_s81hd_elemA_cv",
+     "instances": 1056,
      "types": [
       "hd_tile"
      ],
      "kit": null,
      "kit_in_repo": false,
-     "recorded_db": {
-      "host": "ot-pve1",
-      "path": "/srv/opentallas-scratch/claude/closure-loop/dshead-elemA-ss-f11f3cc47/cl/eco/pass2/orfs",
-      "job": "dshead-elemA-ss-f11f3cc47",
-      "verdict_record": "results/closure_loop/dshead-elemA-ss-f11f3cc47/verdict.json"
-     },
+     "recorded_db": {},
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 133.67,
+      "tt_setup_ps": null,
+      "ss_info_ps": null,
       "setup_corner": null,
-      "setup_corner_ps": 133.67,
-      "ff_hold_ps": 10.81,
-      "drc": 0,
+      "ff_hold_ps": null,
+      "drc": null,
       "spread_tt_ps": null,
       "spread_ff_ps": null,
       "ins_tt_ps": null,
-      "closed_at": "2026-10-07T20:34:57-07:00",
+      "closed_at": null,
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "INCOMPLETE",
+      "verdict": "NO RECORD",
       "problems": [
-       "no recorded pin-flop spread (insertion.json missing)"
+       "no closed record in the repo"
       ]
      },
      "notes": [
-      "s81_head: plan points at view physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef",
-      "MANIFEST: 2026-10-07T00:50:54-07:00 START ot-pve1 elemA dshead_elemA_ss_f11f3cc47 ins 586/373 HM 0.035 ",
-      "1 other view dir(s) of this module in repo: physical/dsrom_fh_safe/closed/elemB",
-      "recorded host ot-pve1 is old fleet (wiped)"
+      "s81_head: plan points at view physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef"
+     ],
+     "status": "NEEDS RE-RUN"
+    },
+    {
+     "module": "ot_s81hd_elemB_cv",
+     "instances": 264,
+     "types": [
+      "hd_tile"
+     ],
+     "kit": null,
+     "kit_in_repo": false,
+     "recorded_db": {},
+     "db_status": "LOST",
+     "recorded": {
+      "tt_setup_ps": null,
+      "ss_info_ps": null,
+      "setup_corner": null,
+      "ff_hold_ps": null,
+      "drc": null,
+      "spread_tt_ps": null,
+      "spread_ff_ps": null,
+      "ins_tt_ps": null,
+      "closed_at": null,
+      "gate_verdict": null
+     },
+     "paper": {
+      "verdict": "NO RECORD",
+      "problems": [
+       "no closed record in the repo"
+      ]
+     },
+     "notes": [
+      "s81_head: plan points at view physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv.lef"
      ],
      "status": "NEEDS RE-RUN"
     },
@@ -5908,9 +5771,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -70.45,
+      "tt_setup_ps": 19.69,
+      "ss_info_ps": -70.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 19.69,
       "ff_hold_ps": 40.87,
       "drc": 0,
       "spread_tt_ps": 78.0,
@@ -5920,10 +5783,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -70.45 ps (closed at TT setup +19.69)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "s81_head: reuse kit=physical/ref_tile/s81hd_spo_m geom_pass=None; plan note: CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; SS sensitivity -70.45: re-close at SS)",
@@ -5949,9 +5810,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 223.93,
+      "tt_setup_ps": 373.03,
+      "ss_info_ps": 223.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 373.03,
       "ff_hold_ps": 32.35,
       "drc": 0,
       "spread_tt_ps": 48.3,
@@ -5979,7 +5840,7 @@
    "counts": {
     "NEEDS RE-RUN": 51
    },
-   "needs_rerun_paper_fail": 31,
+   "needs_rerun_paper_fail": 2,
    "not_closed": 192,
    "macros": 2,
    "modules": [
@@ -6003,9 +5864,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -14.52,
+      "tt_setup_ps": 217.23,
+      "ss_info_ps": -14.52,
       "setup_corner": "tt",
-      "setup_corner_ps": 217.23,
       "ff_hold_ps": 8.0,
       "drc": 0,
       "spread_tt_ps": 53.4,
@@ -6015,10 +5876,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -14.52 ps (closed at TT setup +217.23)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6045,9 +5904,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -373.14,
+      "tt_setup_ps": 25.04,
+      "ss_info_ps": -373.14,
       "setup_corner": "tt",
-      "setup_corner_ps": 25.04,
       "ff_hold_ps": 12.63,
       "drc": 0,
       "spread_tt_ps": 25.3,
@@ -6057,10 +5916,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -373.14 ps (closed at TT setup +25.04)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6087,9 +5944,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -266.26,
+      "tt_setup_ps": 17.45,
+      "ss_info_ps": -266.26,
       "setup_corner": "tt",
-      "setup_corner_ps": 17.45,
       "ff_hold_ps": 8.62,
       "drc": 0,
       "spread_tt_ps": 0.1,
@@ -6099,10 +5956,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -266.26 ps (closed at TT setup +17.45)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6129,9 +5984,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 249.78,
+      "tt_setup_ps": 335.22,
+      "ss_info_ps": 249.78,
       "setup_corner": "tt",
-      "setup_corner_ps": 335.22,
       "ff_hold_ps": 21.14,
       "drc": 0,
       "spread_tt_ps": 19.5,
@@ -6168,9 +6023,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -261.08,
+      "tt_setup_ps": 84.29,
+      "ss_info_ps": -261.08,
       "setup_corner": "tt",
-      "setup_corner_ps": 84.29,
       "ff_hold_ps": 16.79,
       "drc": 0,
       "spread_tt_ps": 25.5,
@@ -6180,10 +6035,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -261.08 ps (closed at TT setup +84.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6210,9 +6063,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 387.26,
+      "tt_setup_ps": 432.71,
+      "ss_info_ps": 387.26,
       "setup_corner": "tt",
-      "setup_corner_ps": 432.71,
       "ff_hold_ps": 30.46,
       "drc": 0,
       "spread_tt_ps": 0.3,
@@ -6249,9 +6102,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 317.73,
+      "tt_setup_ps": 417.66,
+      "ss_info_ps": 317.73,
       "setup_corner": "tt",
-      "setup_corner_ps": 417.66,
       "ff_hold_ps": 20.52,
       "drc": 0,
       "spread_tt_ps": 10.1,
@@ -6288,9 +6141,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -379.24,
+      "tt_setup_ps": 2.05,
+      "ss_info_ps": -379.24,
       "setup_corner": "tt",
-      "setup_corner_ps": 2.05,
       "ff_hold_ps": 18.8,
       "drc": 0,
       "spread_tt_ps": 54.0,
@@ -6300,10 +6153,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -379.24 ps (closed at TT setup +2.05)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6330,9 +6181,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 46.41,
+      "tt_setup_ps": 227.91,
+      "ss_info_ps": 46.41,
       "setup_corner": "tt",
-      "setup_corner_ps": 227.91,
       "ff_hold_ps": 22.75,
       "drc": 0,
       "spread_tt_ps": 14.8,
@@ -6370,9 +6221,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -382.5,
+      "tt_setup_ps": 12.0,
+      "ss_info_ps": -382.5,
       "setup_corner": "tt",
-      "setup_corner_ps": 12.0,
       "ff_hold_ps": 14.52,
       "drc": 0,
       "spread_tt_ps": 79.6,
@@ -6382,10 +6233,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -382.50 ps (closed at TT setup +12.00)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6412,9 +6261,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -275.36,
+      "tt_setup_ps": 23.17,
+      "ss_info_ps": -275.36,
       "setup_corner": "tt",
-      "setup_corner_ps": 23.17,
       "ff_hold_ps": 20.15,
       "drc": 0,
       "spread_tt_ps": 76.3,
@@ -6424,10 +6273,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -275.36 ps (closed at TT setup +23.17)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6454,9 +6301,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -336.2,
+      "tt_setup_ps": 23.35,
+      "ss_info_ps": -336.2,
       "setup_corner": "tt",
-      "setup_corner_ps": 23.35,
       "ff_hold_ps": 13.64,
       "drc": 0,
       "spread_tt_ps": 49.4,
@@ -6466,10 +6313,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -336.20 ps (closed at TT setup +23.35)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6496,9 +6341,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -97.62,
+      "tt_setup_ps": 125.96,
+      "ss_info_ps": -97.62,
       "setup_corner": "tt",
-      "setup_corner_ps": 125.96,
       "ff_hold_ps": 24.03,
       "drc": 0,
       "spread_tt_ps": 6.1,
@@ -6508,10 +6353,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -97.62 ps (closed at TT setup +125.96)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -6538,9 +6381,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -202.86,
+      "tt_setup_ps": 92.94,
+      "ss_info_ps": -202.86,
       "setup_corner": "tt",
-      "setup_corner_ps": 92.94,
       "ff_hold_ps": 26.15,
       "drc": 0,
       "spread_tt_ps": 28.1,
@@ -6550,10 +6393,8 @@
       "gate_verdict": "PASS"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -202.86 ps (closed at TT setup +92.94)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6580,9 +6421,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -297.99,
+      "tt_setup_ps": 40.72,
+      "ss_info_ps": -297.99,
       "setup_corner": "tt",
-      "setup_corner_ps": 40.72,
       "ff_hold_ps": 27.12,
       "drc": 0,
       "spread_tt_ps": 36.2,
@@ -6592,10 +6433,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -297.99 ps (closed at TT setup +40.72)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6622,9 +6461,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 289.75,
+      "tt_setup_ps": 409.15,
+      "ss_info_ps": 289.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 409.15,
       "ff_hold_ps": 28.92,
       "drc": 0,
       "spread_tt_ps": 9.4,
@@ -6662,9 +6501,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -44.75,
+      "tt_setup_ps": 7.34,
+      "ss_info_ps": -44.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 7.34,
       "ff_hold_ps": 30.52,
       "drc": 0,
       "spread_tt_ps": 11.9,
@@ -6674,10 +6513,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -44.75 ps (closed at TT setup +7.34)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -6703,9 +6540,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 276.16,
+      "tt_setup_ps": 346.8,
+      "ss_info_ps": 276.16,
       "setup_corner": "tt",
-      "setup_corner_ps": 346.8,
       "ff_hold_ps": 21.53,
       "drc": 0,
       "spread_tt_ps": 13.1,
@@ -6745,9 +6582,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -41.45,
+      "tt_setup_ps": 88.64,
+      "ss_info_ps": -41.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 88.64,
       "ff_hold_ps": 29.09,
       "drc": 0,
       "spread_tt_ps": 56.7,
@@ -6757,10 +6594,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -41.45 ps (closed at TT setup +88.64)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -6786,9 +6621,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -92.39,
+      "tt_setup_ps": 67.13,
+      "ss_info_ps": -92.39,
       "setup_corner": "tt",
-      "setup_corner_ps": 67.13,
       "ff_hold_ps": 26.92,
       "drc": 0,
       "spread_tt_ps": 39.6,
@@ -6798,10 +6633,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -92.39 ps (closed at TT setup +67.13)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6828,9 +6661,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -157.02,
+      "tt_setup_ps": 28.42,
+      "ss_info_ps": -157.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 28.42,
       "ff_hold_ps": 27.54,
       "drc": 0,
       "spread_tt_ps": 26.3,
@@ -6840,10 +6673,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -157.02 ps (closed at TT setup +28.42)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -6869,9 +6700,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -237.63,
+      "tt_setup_ps": 9.9,
+      "ss_info_ps": -237.63,
       "setup_corner": "tt",
-      "setup_corner_ps": 9.9,
       "ff_hold_ps": 27.04,
       "drc": 0,
       "spread_tt_ps": 43.5,
@@ -6881,10 +6712,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -237.63 ps (closed at TT setup +9.90)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -6910,9 +6739,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -291.7,
+      "tt_setup_ps": 4.27,
+      "ss_info_ps": -291.7,
       "setup_corner": "tt",
-      "setup_corner_ps": 4.27,
       "ff_hold_ps": 10.87,
       "drc": 0,
       "spread_tt_ps": 52.6,
@@ -6922,10 +6751,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -291.70 ps (closed at TT setup +4.27)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6952,9 +6779,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -80.61,
+      "tt_setup_ps": 175.55,
+      "ss_info_ps": -80.61,
       "setup_corner": "tt",
-      "setup_corner_ps": 175.55,
       "ff_hold_ps": 23.13,
       "drc": 0,
       "spread_tt_ps": 71.7,
@@ -6964,10 +6791,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -80.61 ps (closed at TT setup +175.55)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -6994,9 +6819,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 328.42,
+      "tt_setup_ps": 391.8,
+      "ss_info_ps": 328.42,
       "setup_corner": "tt",
-      "setup_corner_ps": 391.8,
       "ff_hold_ps": 27.45,
       "drc": 0,
       "spread_tt_ps": 7.3,
@@ -7033,9 +6858,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 379.45,
+      "tt_setup_ps": 426.1,
+      "ss_info_ps": 379.45,
       "setup_corner": "tt",
-      "setup_corner_ps": 426.1,
       "ff_hold_ps": 19.37,
       "drc": 0,
       "spread_tt_ps": 12.5,
@@ -7072,9 +6897,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -294.93,
+      "tt_setup_ps": 29.75,
+      "ss_info_ps": -294.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 29.75,
       "ff_hold_ps": 13.65,
       "drc": 0,
       "spread_tt_ps": 117.5,
@@ -7087,8 +6912,7 @@
       "verdict": "FAIL",
       "problems": [
        "recorded TT pin-flop spread 117.5 ps > 80",
-       "recorded FF pin-flop spread 117.7 ps > 80",
-       "recorded SS setup -294.93 ps (closed at TT setup +29.75)"
+       "recorded FF pin-flop spread 117.7 ps > 80"
       ]
      },
      "notes": [
@@ -7116,9 +6940,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 256.22,
+      "tt_setup_ps": 346.67,
+      "ss_info_ps": 256.22,
       "setup_corner": "tt",
-      "setup_corner_ps": 346.67,
       "ff_hold_ps": 7.33,
       "drc": 0,
       "spread_tt_ps": 2.4,
@@ -7155,9 +6979,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -229.87,
+      "tt_setup_ps": 85.47,
+      "ss_info_ps": -229.87,
       "setup_corner": "tt",
-      "setup_corner_ps": 85.47,
       "ff_hold_ps": 3.23,
       "drc": 0,
       "spread_tt_ps": 68.2,
@@ -7167,10 +6991,8 @@
       "gate_verdict": "PASS"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -229.87 ps (closed at TT setup +85.47)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7197,9 +7019,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 378.02,
+      "tt_setup_ps": 425.86,
+      "ss_info_ps": 378.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 425.86,
       "ff_hold_ps": 28.95,
       "drc": 0,
       "spread_tt_ps": 4.9,
@@ -7236,9 +7058,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -282.54,
+      "tt_setup_ps": 65.07,
+      "ss_info_ps": -282.54,
       "setup_corner": "tt",
-      "setup_corner_ps": 65.07,
       "ff_hold_ps": 15.27,
       "drc": 0,
       "spread_tt_ps": 17.7,
@@ -7248,10 +7070,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -282.54 ps (closed at TT setup +65.07)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7278,9 +7098,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -337.75,
+      "tt_setup_ps": 11.98,
+      "ss_info_ps": -337.75,
       "setup_corner": "tt",
-      "setup_corner_ps": 11.98,
       "ff_hold_ps": 16.83,
       "drc": 0,
       "spread_tt_ps": 69.9,
@@ -7290,10 +7110,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -337.75 ps (closed at TT setup +11.98)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7320,9 +7138,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 196.28,
+      "tt_setup_ps": 306.68,
+      "ss_info_ps": 196.28,
       "setup_corner": "tt",
-      "setup_corner_ps": 306.68,
       "ff_hold_ps": 28.65,
       "drc": 0,
       "spread_tt_ps": 3.0,
@@ -7359,9 +7177,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -150.72,
+      "tt_setup_ps": 134.13,
+      "ss_info_ps": -150.72,
       "setup_corner": "tt",
-      "setup_corner_ps": 134.13,
       "ff_hold_ps": 5.27,
       "drc": 0,
       "spread_tt_ps": 47.6,
@@ -7371,10 +7189,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -150.72 ps (closed at TT setup +134.13)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7401,9 +7217,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 52.19,
+      "tt_setup_ps": 253.01,
+      "ss_info_ps": 52.19,
       "setup_corner": "tt",
-      "setup_corner_ps": 253.01,
       "ff_hold_ps": 18.21,
       "drc": 0,
       "spread_tt_ps": 44.5,
@@ -7440,9 +7256,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -39.78,
+      "tt_setup_ps": 210.92,
+      "ss_info_ps": -39.78,
       "setup_corner": "tt",
-      "setup_corner_ps": 210.92,
       "ff_hold_ps": 8.29,
       "drc": 0,
       "spread_tt_ps": 58.8,
@@ -7452,10 +7268,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -39.78 ps (closed at TT setup +210.92)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -7481,9 +7295,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 240.08,
+      "tt_setup_ps": 329.97,
+      "ss_info_ps": 240.08,
       "setup_corner": "tt",
-      "setup_corner_ps": 329.97,
       "ff_hold_ps": 19.9,
       "drc": 0,
       "spread_tt_ps": 17.4,
@@ -7520,9 +7334,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -265.85,
+      "tt_setup_ps": 42.22,
+      "ss_info_ps": -265.85,
       "setup_corner": "tt",
-      "setup_corner_ps": 42.22,
       "ff_hold_ps": 12.45,
       "drc": 0,
       "spread_tt_ps": 42.3,
@@ -7532,10 +7346,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -265.85 ps (closed at TT setup +42.22)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: repo holds a closed view / CLOSED closure_loop verdict for the module",
@@ -7560,9 +7372,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 58.32,
+      "tt_setup_ps": 269.77,
+      "ss_info_ps": 58.32,
       "setup_corner": "tt",
-      "setup_corner_ps": 269.77,
       "ff_hold_ps": 12.01,
       "drc": 0,
       "spread_tt_ps": 28.6,
@@ -7599,9 +7411,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 54.89,
+      "tt_setup_ps": 287.66,
+      "ss_info_ps": 54.89,
       "setup_corner": "tt",
-      "setup_corner_ps": 287.66,
       "ff_hold_ps": 6.28,
       "drc": 0,
       "spread_tt_ps": 84.7,
@@ -7642,9 +7454,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 196.37,
+      "tt_setup_ps": 314.49,
+      "ss_info_ps": 196.37,
       "setup_corner": "tt",
-      "setup_corner_ps": 314.49,
       "ff_hold_ps": 23.98,
       "drc": 0,
       "spread_tt_ps": 37.4,
@@ -7680,9 +7492,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -305.88,
+      "tt_setup_ps": 50.84,
+      "ss_info_ps": -305.88,
       "setup_corner": "tt",
-      "setup_corner_ps": 50.84,
       "ff_hold_ps": 18.4,
       "drc": 0,
       "spread_tt_ps": null,
@@ -7692,9 +7504,8 @@
       "gate_verdict": null
      },
      "paper": {
-      "verdict": "FAIL",
+      "verdict": "INCOMPLETE",
       "problems": [
-       "recorded SS setup -305.88 ps (closed at TT setup +50.84)",
        "no recorded pin-flop spread (insertion.json missing)"
       ]
      },
@@ -7726,9 +7537,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 121.58,
+      "tt_setup_ps": 306.16,
+      "ss_info_ps": 121.58,
       "setup_corner": "tt",
-      "setup_corner_ps": 306.16,
       "ff_hold_ps": 5.09,
       "drc": 0,
       "spread_tt_ps": 53.6,
@@ -7769,9 +7580,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 306.56,
+      "tt_setup_ps": 378.05,
+      "ss_info_ps": 306.56,
       "setup_corner": "tt",
-      "setup_corner_ps": 378.05,
       "ff_hold_ps": 8.54,
       "drc": 0,
       "spread_tt_ps": 48.5,
@@ -7809,9 +7620,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -242.93,
+      "tt_setup_ps": 48.29,
+      "ss_info_ps": -242.93,
       "setup_corner": "tt",
-      "setup_corner_ps": 48.29,
       "ff_hold_ps": 22.86,
       "drc": 0,
       "spread_tt_ps": 25.4,
@@ -7821,10 +7632,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -242.93 ps (closed at TT setup +48.29)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7851,9 +7660,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -176.82,
+      "tt_setup_ps": 115.25,
+      "ss_info_ps": -176.82,
       "setup_corner": "tt",
-      "setup_corner_ps": 115.25,
       "ff_hold_ps": 11.69,
       "drc": 0,
       "spread_tt_ps": null,
@@ -7863,9 +7672,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
+      "verdict": "INCOMPLETE",
       "problems": [
-       "recorded SS setup -176.82 ps (closed at TT setup +115.25)",
        "no recorded pin-flop spread (insertion.json missing)"
       ]
      },
@@ -7894,9 +7702,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -317.43,
+      "tt_setup_ps": 8.26,
+      "ss_info_ps": -317.43,
       "setup_corner": "tt",
-      "setup_corner_ps": 8.26,
       "ff_hold_ps": 5.9,
       "drc": 0,
       "spread_tt_ps": 79.8,
@@ -7906,10 +7714,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -317.43 ps (closed at TT setup +8.26)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm_b2r2: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7936,9 +7742,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": -203.74,
+      "tt_setup_ps": 82.21,
+      "ss_info_ps": -203.74,
       "setup_corner": "tt",
-      "setup_corner_ps": 82.21,
       "ff_hold_ps": 12.05,
       "drc": 0,
       "spread_tt_ps": 32.9,
@@ -7948,10 +7754,8 @@
       "gate_verdict": "WARN"
      },
      "paper": {
-      "verdict": "FAIL",
-      "problems": [
-       "recorded SS setup -203.74 ps (closed at TT setup +82.21)"
-      ]
+      "verdict": "PASS",
+      "problems": []
      },
      "notes": [
       "hbm: plan re-pins this hard core (plan-track / top-down pins); the closed view was hardened with its as-built pins, so the plan instance needs a re-harden to match",
@@ -7978,9 +7782,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 49.67,
+      "tt_setup_ps": 229.17,
+      "ss_info_ps": 49.67,
       "setup_corner": "tt",
-      "setup_corner_ps": 229.17,
       "ff_hold_ps": 10.65,
       "drc": 0,
       "spread_tt_ps": 14.4,
@@ -8019,9 +7823,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 3.46,
+      "tt_setup_ps": 262.51,
+      "ss_info_ps": 3.46,
       "setup_corner": "tt",
-      "setup_corner_ps": 262.51,
       "ff_hold_ps": 27.37,
       "drc": 0,
       "spread_tt_ps": 15.0,
@@ -8058,9 +7862,9 @@
      },
      "db_status": "LOST",
      "recorded": {
-      "ss_setup_ps": 131.02,
+      "tt_setup_ps": 344.22,
+      "ss_info_ps": 131.02,
       "setup_corner": "tt",
-      "setup_corner_ps": 344.22,
       "ff_hold_ps": 29.09,
       "drc": 0,
       "spread_tt_ps": 2.6,
@@ -8088,37 +7892,32 @@
    "name": "col_h10_r1__t1_cp1r10",
    "verdict": "NOT SIGNED",
    "reasons": [
-    "setup_ss: FAIL WNS -462.44 ps, 1153 endpoints",
+    "setup_tt: FAIL WNS -212.39 ps, 274 endpoints",
     "hold_ff: FAIL WNS -45.74 ps, 1495 endpoints",
-    "drv: FAIL SS slew 1791.0 cap 0.0, FF slew 1124.0 cap 0.0, TT slew 1278.0 cap 0.0",
+    "drv: FAIL TT slew 1278.0 cap 0.0, FF slew 1124.0 cap 0.0",
     "sdc_lint: FAIL 2 errors (first: hold: output frame_int_o0 min output delay 166.6 ps > 0 (sender hold check waived))",
     "face_guard: FAIL {'dropped': 120, 'feedthrough': 1, 'shared': 1}"
    ],
    "host": "eternal-dove",
    "base": "/srv/opentallas-scratch/cp1-r10/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base",
    "sdc_source": "kit",
-   "ss_setup_wns_ps": -462.44,
-   "ss_setup_violators": 1153.0,
+   "tt_setup_wns_ps": -212.39,
+   "tt_setup_violators": 274.0,
+   "ss_setup_info_ps": -462.44,
    "ff_hold_wns_ps": -45.74,
    "ff_hold_sdc_wns_ps": 0.6,
-   "tt_setup_wns_ps": -212.39,
-   "tt_hold_wns_ps": 18.02,
    "pinflop_spread_ps": {
     "ss": 72.31,
     "tt": 55.14,
     "ff": 47.31
    },
    "drv": {
-    "ss": {
-     "slew": 1791.0,
+    "tt": {
+     "slew": 1278.0,
      "cap": 0.0
     },
     "ff": {
      "slew": 1124.0,
-     "cap": 0.0
-    },
-    "tt": {
-     "slew": 1278.0,
      "cap": 0.0
     }
    },
@@ -8145,36 +7944,29 @@
    "name": "dsdv_eng_rr_h0",
    "verdict": "NOT SIGNED",
    "reasons": [
-    "setup_ss: FAIL WNS -396.55 ps, 5108 endpoints",
     "hold_ff: FAIL WNS -20.76 ps, 120 endpoints",
-    "drv: FAIL SS slew 34.0 cap 0.0",
     "sdc_lint: FAIL 2 errors (first: hold: input in_w min input delay 516.46 ps > -40 ps (seam-hold padding relaxed))",
     "face_guard: FAIL {'shared': 68}"
    ],
    "host": "key-cardinal",
    "base": "/srv/opentallas-scratch2/s81/recovered/core-s81-1023/eng/dsdv_eng_rr_h0__164.16x267.84/run/results/asap7/hc_dsdv_eng_rr_h0/base",
    "sdc_source": "kit",
-   "ss_setup_wns_ps": -396.55,
-   "ss_setup_violators": 5108.0,
+   "tt_setup_wns_ps": 8.05,
+   "tt_setup_violators": 0.0,
+   "ss_setup_info_ps": -396.55,
    "ff_hold_wns_ps": -20.76,
    "ff_hold_sdc_wns_ps": -6.27,
-   "tt_setup_wns_ps": 8.05,
-   "tt_hold_wns_ps": -65.18,
    "pinflop_spread_ps": {
     "ss": 55.7,
     "tt": 36.58,
     "ff": 29.16
    },
    "drv": {
-    "ss": {
-     "slew": 34.0,
-     "cap": 0.0
-    },
-    "ff": {
+    "tt": {
      "slew": 0.0,
      "cap": 0.0
     },
-    "tt": {
+    "ff": {
      "slew": 0.0,
      "cap": 0.0
     }
@@ -8200,36 +7992,29 @@
    "name": "dsdv_eng_rr_h1",
    "verdict": "NOT SIGNED",
    "reasons": [
-    "setup_ss: FAIL WNS -377.41 ps, 4968 endpoints",
     "hold_ff: FAIL WNS -32.70 ps, 166 endpoints",
-    "drv: FAIL SS slew 16.0 cap 0.0",
     "sdc_lint: FAIL 2 errors (first: hold: input in_w min input delay 516.46 ps > -40 ps (seam-hold padding relaxed))",
     "face_guard: FAIL {'shared': 68}"
    ],
    "host": "key-cardinal",
    "base": "/srv/opentallas-scratch2/s81/recovered/core-s81-1023/eng/dsdv_eng_rr_h1__164.16x267.84/run/results/asap7/hc_dsdv_eng_rr_h1/base",
    "sdc_source": "kit",
-   "ss_setup_wns_ps": -377.41,
-   "ss_setup_violators": 4968.0,
+   "tt_setup_wns_ps": 13.9,
+   "tt_setup_violators": 0.0,
+   "ss_setup_info_ps": -377.41,
    "ff_hold_wns_ps": -32.7,
    "ff_hold_sdc_wns_ps": -6.41,
-   "tt_setup_wns_ps": 13.9,
-   "tt_hold_wns_ps": -76.78,
    "pinflop_spread_ps": {
     "ss": 71.8,
     "tt": 54.9,
     "ff": 47.91
    },
    "drv": {
-    "ss": {
-     "slew": 16.0,
-     "cap": 0.0
-    },
-    "ff": {
+    "tt": {
      "slew": 0.0,
      "cap": 0.0
     },
-    "tt": {
+    "ff": {
      "slew": 0.0,
      "cap": 0.0
     }
@@ -8255,36 +8040,31 @@
    "name": "kv3_io_cor_v1",
    "verdict": "NOT SIGNED",
    "reasons": [
-    "setup_ss: FAIL WNS -417.24 ps, 4248 endpoints",
+    "setup_tt: FAIL WNS -132.68 ps, 2525 endpoints",
     "hold_ff: FAIL WNS -10.52 ps, 58 endpoints",
-    "drv: FAIL SS slew 6661.0 cap 0.0, FF slew 3364.0 cap 0.0, TT slew 4030.0 cap 0.0",
+    "drv: FAIL TT slew 4030.0 cap 0.0, FF slew 3364.0 cap 0.0",
     "sdc_lint: FAIL 51 errors (first: hold: input arst_n min input delay 0 ps > -40 ps (seam-hold padding relaxed))"
    ],
    "host": "tolerant-swine",
    "base": "/srv/opentallas-scratch2/kv-tok/recovered/kv-p7-1023-intel2/seam/kits9/kv3_io_cor_v1/run/results/asap7/dp_kv3_io_cor_v1/base",
    "sdc_source": "kit",
-   "ss_setup_wns_ps": -417.24,
-   "ss_setup_violators": 4248.0,
+   "tt_setup_wns_ps": -132.68,
+   "tt_setup_violators": 2525.0,
+   "ss_setup_info_ps": -417.24,
    "ff_hold_wns_ps": -10.52,
    "ff_hold_sdc_wns_ps": 5.83,
-   "tt_setup_wns_ps": -132.68,
-   "tt_hold_wns_ps": -68.8,
    "pinflop_spread_ps": {
     "ss": 55.84,
     "tt": 40.54,
     "ff": 33.65
    },
    "drv": {
-    "ss": {
-     "slew": 6661.0,
+    "tt": {
+     "slew": 4030.0,
      "cap": 0.0
     },
     "ff": {
      "slew": 3364.0,
-     "cap": 0.0
-    },
-    "tt": {
-     "slew": 4030.0,
      "cap": 0.0
     }
    },
@@ -8307,36 +8087,31 @@
    "name": "kv3_io_ft_v1",
    "verdict": "NOT SIGNED",
    "reasons": [
-    "setup_ss: FAIL WNS -346.22 ps, 851 endpoints",
+    "setup_tt: FAIL WNS -55.95 ps, 36 endpoints",
     "hold_ff: FAIL WNS -3.08 ps, 51 endpoints",
-    "drv: FAIL SS slew 1736.0 cap 0.0, FF slew 1364.0 cap 0.0, TT slew 1547.0 cap 0.0",
+    "drv: FAIL TT slew 1547.0 cap 0.0, FF slew 1364.0 cap 0.0",
     "sdc_lint: FAIL 9 errors (first: hold: input arst_n min input delay 0 ps > -40 ps (seam-hold padding relaxed))"
    ],
    "host": "tolerant-swine",
    "base": "/srv/opentallas-scratch2/kv-tok/recovered/kv-p6-1023-intel2/tap/kits9/kv3_io_ft_v1/run/results/asap7/dp_kv3_io_ft_v1/base",
    "sdc_source": "kit",
-   "ss_setup_wns_ps": -346.22,
-   "ss_setup_violators": 851.0,
+   "tt_setup_wns_ps": -55.95,
+   "tt_setup_violators": 36.0,
+   "ss_setup_info_ps": -346.22,
    "ff_hold_wns_ps": -3.08,
    "ff_hold_sdc_wns_ps": 8.56,
-   "tt_setup_wns_ps": -55.95,
-   "tt_hold_wns_ps": -61.95,
    "pinflop_spread_ps": {
     "ss": 42.15,
     "tt": 30.49,
     "ff": 24.16
    },
    "drv": {
-    "ss": {
-     "slew": 1736.0,
+    "tt": {
+     "slew": 1547.0,
      "cap": 0.0
     },
     "ff": {
      "slew": 1364.0,
-     "cap": 0.0
-    },
-    "tt": {
-     "slew": 1547.0,
      "cap": 0.0
     }
    },
@@ -8357,10 +8132,10 @@
   }
  ],
  "totals": {
-  "closed_modules": 137,
+  "closed_modules": 138,
   "signed": 0,
   "not_signed": 0,
-  "needs_rerun": 137,
+  "needs_rerun": 138,
   "other_runs": 5,
   "other_runs_signed": 0
  }

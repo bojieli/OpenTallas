@@ -1,0 +1,15 @@
+{
+ "element": "qkd_kvs_pc_h_head_p",
+ "kit": "KVG3-CORES core kit qkd_kvs_pc_h_head_p (plan v3.8s pins file, kv41 bound RTL, kv_core_rtl.py split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (partition neighbour OK; tile not yet reviewed at 3_place)",
+ "hash": "d159392a39190c68",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/part_kv3_pc.png"
+ ],
+ "reasons": "Partition kv3_pc: master placed once (kvpc0, R0): its N face (1063 pins) faces kvpc3 at 25.92 um; all of them connect to kvpc3 (0 detour). The lower 750 um of the partition is empty while the cores are packed in the upper half with 25.92 um vertical gaps. 2 clocks ck/hck co-timed at 833 ps (plan has no HBM period). No SRAM macro is reachable from the core top (ot_sram_1r1w_* black boxes in the type kit list are used by other leaves); one leaf instantiates ASAP7 cells directly (taken from liberty).",
+ "fixes": "Plan (KV-G3): move kvpc0/kvpc1 down >= 75 um (empty space below) so the kvpc1/kvpc2 and kvpc0/kvpc3 gaps are >= 100 um; no core pin change needed (views stay valid).",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T09:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py); cores are not ref_tile kits"
+}
