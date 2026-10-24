@@ -1,0 +1,200 @@
+{
+ "stage": "ovl4u",
+ "grade": "RTL-functional (source assembly)",
+ "src_commit": "3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a",
+ "verdict": "PASS",
+ "dut": "qfd_d2d_static_ovl_sf7 <-> qkd_d2d_static_ovl_sfm3 (assembly 3e05af806bfad6b9c1c1f3f0b8166f5d58723c8a); bench run_d2d_ovl_mu_rel.sh",
+ "golden": "every C->K and K->C frame of the 4-user F16 frame: written frame == bench golden of its port (producer word / kind-15 STATUS encoding / kind-5 KVN encoding), delivered in order bit-exact at the receiver end on the compiled port/kind/beat with rx_user == sender user; KV pins: every STATUS result and KVN word == the compute pins; per-user exchanges/tokens counted at the compute master pins = compiled counts (tb_d2d_ovl_mu_rel checks)",
+ "cycles": {
+  "H_frame": 4026800,
+  "frames_C2K": 63098,
+  "frames_K2C": 57783,
+  "aggregate_tok_s_bench": 13708.2,
+  "tokens_per_frame": {
+   "0": 16,
+   "1": 15,
+   "2": 8,
+   "3": 7
+  },
+  "exchanges_per_frame": {
+   "0": 576,
+   "1": 540,
+   "2": 288,
+   "3": 252
+  },
+  "cycles_per_token_per_user": {
+   "0": 251675.0,
+   "1": 268453.3,
+   "2": 503350.0,
+   "3": 575257.1
+  },
+  "tok_s_per_user_833ps": {
+   "0": 4768.1,
+   "1": 4470.1,
+   "2": 2384.0,
+   "3": 2086.0
+  },
+  "aggregate_cycles_per_token": 87539.1,
+  "aggregate_tok_s_833ps": 13708.2,
+  "codec": 2,
+  "codec1_H_frame": 4026800,
+  "codec1_aggregate_tok_s_833ps": 13708.2
+ },
+ "mutants": {
+  "codec1_asbuilt_one_playhead": "FAIL as required",
+  "codec1_mut_collide": "FAIL as required",
+  "codec1_mut_slot": "FAIL as required",
+  "codec1_mut_user": "FAIL as required",
+  "codec2_asbuilt_one_playhead": "FAIL as required",
+  "codec2_mut_collide": "FAIL as required",
+  "codec2_mut_slot": "FAIL as required",
+  "codec2_mut_user": "FAIL as required"
+ },
+ "stand_ins": [
+  "UCIe PHY = ot_qkvd_ucie_x64_phy_model (modelled off-chip leg; LAT = P_PHY - 2, the masters' FDI pin flops are real)",
+  "3-flop package bump of the forwarded epoch / link reset (modelled)",
+  "producers/consumers at the master pins are tb models (native CMD/Q, program witness, KVN x3, HOST record, attention RESULT/STATUS, embedding row; result_v pulses for the STATUS codec); the release masters (sf7 / sfm3), OVL sequencers, STATUS/KVN codecs, recovery, CRC and slot SRAM links are assembly RTL",
+  "macro view ot_sram_1r1w_64x137_m1_r2c2_p192 from 545cdd4bc (the closed sf7w kit's view; not in the assembly's asap7_memory_macros_v2)"
+ ],
+ "logs": [
+  "runs/codec1.out",
+  "runs/codec1/SUMMARY.txt",
+  "runs/codec2.out",
+  "runs/codec2/SUMMARY.txt",
+  "runs/codec1/pass/run.log",
+  "runs/codec1/asbuilt_one_playhead/run.log",
+  "runs/codec1/mut_collide/run.log",
+  "runs/codec1/mut_slot/run.log",
+  "runs/codec1/mut_user/run.log",
+  "runs/codec2/pass/run.log",
+  "runs/codec2/asbuilt_one_playhead/run.log",
+  "runs/codec2/mut_collide/run.log",
+  "runs/codec2/mut_slot/run.log",
+  "runs/codec2/mut_user/run.log",
+  "runs/codec1/source.sha256",
+  "runs/codec1/verilator.txt",
+  "runs/codec2/source.sha256",
+  "runs/codec2/verilator.txt",
+  "release_masters.txt"
+ ],
+ "runs": {
+  "codec1": {
+   "configs": {
+    "asbuilt_one_playhead": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_collide": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_slot": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_user": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "pass": {
+     "expect": "PASS",
+     "got": "PASS",
+     "ok": true
+    }
+   },
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2
+  },
+  "codec2": {
+   "configs": {
+    "asbuilt_one_playhead": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_collide": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_slot": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_user": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "pass": {
+     "expect": "PASS",
+     "got": "PASS",
+     "ok": true
+    }
+   },
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2
+  }
+ }
+}
