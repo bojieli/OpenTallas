@@ -12,9 +12,7 @@ module qfd_qc_sle_fe__sle_fe_v3 (
     input  wire [257:0] x_st_a_i,   // 257 data + epoch [257]: lane sl_E5_st_a__x_st_a_fe, 2 cycles: sl_E5_st_a nb_oc[1], nb_od[256] -> sl_E5_fe
     input  wire [256:0] x_st_b_i,   // 256 data + epoch [256]: lane sl_E5_st_b__x_st_b_fe, 16 cycles: sl_E5_st_b nb_od[256] -> sl_E5_fe
     input  wire [1088:0] x_stm_i,   // 1088 data + epoch [1088]: lane sl_E5_stm__x_stm_fe, 4 cycles: sl_E5_stm so_e[1088] -> sl_E5_fe
-    output wire [1:0] flt_o,   // 1 data + epoch [1]: lane sl_E5_fe__flt, 2 cycles: scd_q[1] -> sl_E5_sc
     output wire [514:0] l9_eo,   // 514 data + epoch [514]: lane sl_E5_fe__l9_eo_l9_wi, 10 cycles: l9_o[514] -> sl_E4_fw
-    output wire [47:0] x_sc_o,   // 47 data + epoch [47]: lane sl_E5_fe__x_fe_sc, 2 cycles: scd_q[47] -> sl_E5_sc
     input  wire [516:0] cws3_i,   // ft cws3 lane sl_E5_hc3__cws3: sl_E5_hc3 -> c_E5_bn_10
     output wire [516:0] cws3_o,   // ft cws3: 2 station(s)
     input  wire [514:0] rsf_i,   // ft rsf lane c_E5_bf_00__rsf: c_E5_bf_00 -> sl_E5_st_a
@@ -51,7 +49,6 @@ module qfd_qc_sle_fe__sle_fe_v3 (
     wire [452:0] w_core_hr_o;
     wire [513:0] w_core_l9_o;
     wire [47:0] w_core_sc_up_o;
-    wire [47:0] w_core_scd_q;
     wire [1087:0] w_core_st_up_o;
     wire [8:0] w_core_treq_o;
     wire [516:0] cws3_o_s0;
@@ -1928,54 +1925,6 @@ module qfd_qc_sle_fe__sle_fe_v3 (
     wire [0:0] pd3_x_st_a_i_256;
     wire [0:0] pd3_flt_st_a_i_0;
     wire [0:0] pd3_x_st_a_i_0;
-    wire ub_0;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[0] (see bind_report errors)
-    wire ub_1;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[1] (see bind_report errors)
-    wire ub_2;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[2] (see bind_report errors)
-    wire ub_3;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[3] (see bind_report errors)
-    wire ub_4;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[4] (see bind_report errors)
-    wire ub_5;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[5] (see bind_report errors)
-    wire ub_6;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[6] (see bind_report errors)
-    wire ub_7;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[7] (see bind_report errors)
-    wire ub_8;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[8] (see bind_report errors)
-    wire ub_9;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[9] (see bind_report errors)
-    wire ub_10;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[10] (see bind_report errors)
-    wire ub_11;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[11] (see bind_report errors)
-    wire ub_12;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[12] (see bind_report errors)
-    wire ub_13;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[13] (see bind_report errors)
-    wire ub_14;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[14] (see bind_report errors)
-    wire ub_15;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[15] (see bind_report errors)
-    wire ub_16;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[16] (see bind_report errors)
-    wire ub_17;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[17] (see bind_report errors)
-    wire ub_18;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[18] (see bind_report errors)
-    wire ub_19;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[19] (see bind_report errors)
-    wire ub_20;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[20] (see bind_report errors)
-    wire ub_21;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[21] (see bind_report errors)
-    wire ub_22;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[22] (see bind_report errors)
-    wire ub_23;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[23] (see bind_report errors)
-    wire ub_24;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[24] (see bind_report errors)
-    wire ub_25;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[25] (see bind_report errors)
-    wire ub_26;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[26] (see bind_report errors)
-    wire ub_27;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[27] (see bind_report errors)
-    wire ub_28;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[28] (see bind_report errors)
-    wire ub_29;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[29] (see bind_report errors)
-    wire ub_30;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[30] (see bind_report errors)
-    wire ub_31;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[31] (see bind_report errors)
-    wire ub_32;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[32] (see bind_report errors)
-    wire ub_33;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[33] (see bind_report errors)
-    wire ub_34;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[34] (see bind_report errors)
-    wire ub_35;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[35] (see bind_report errors)
-    wire ub_36;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[36] (see bind_report errors)
-    wire ub_37;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[37] (see bind_report errors)
-    wire ub_38;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[38] (see bind_report errors)
-    wire ub_39;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[39] (see bind_report errors)
-    wire ub_40;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[40] (see bind_report errors)
-    wire ub_41;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[41] (see bind_report errors)
-    wire ub_42;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[42] (see bind_report errors)
-    wire ub_43;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[43] (see bind_report errors)
-    wire ub_44;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[44] (see bind_report errors)
-    wire ub_45;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[45] (see bind_report errors)
-    wire ub_46;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[46] (see bind_report errors)
-    wire ub_47;  // UNBOUND tied: dvs_E5.u_core.u_sub.u_fup.sc_dn_i[47] (see bind_report errors)
     wire [0:0] pd5_x_fw_i_1607;
     wire [0:0] pd5_x_fw_i_1608;
     wire [0:0] pd5_x_fw_i_1609;
@@ -1993,9 +1942,7 @@ module qfd_qc_sle_fe__sle_fe_v3 (
     ot_dp_st #(.W(257)) u_bin_x_st_a_i (.clk(clk), .rst_n(rst_n), .d(x_st_a_i[256:0]), .ea(x_st_a_i[257]), .q(x_st_a_i_q), .eq(x_st_a_i_eq));
     ot_dp_st #(.W(256)) u_bin_x_st_b_i (.clk(clk), .rst_n(rst_n), .d(x_st_b_i[255:0]), .ea(x_st_b_i[256]), .q(x_st_b_i_q), .eq(x_st_b_i_eq));
     ot_dp_st #(.W(1088)) u_bin_x_stm_i (.clk(clk), .rst_n(rst_n), .d(x_stm_i[1087:0]), .ea(x_stm_i[1088]), .q(x_stm_i_q), .eq(x_stm_i_eq));
-    ot_dp_st #(.W(1)) u_bout_flt_o (.clk(clk), .rst_n(rst_n), .d(w_core_scd_q[0]), .ea(rst_n), .q(flt_o[0:0]), .eq(flt_o[1]));
     ot_dp_st #(.W(514)) u_bout_l9_eo (.clk(clk), .rst_n(rst_n), .d(w_core_l9_o[513:0]), .ea(rst_n), .q(l9_eo[513:0]), .eq(l9_eo[514]));
-    ot_dp_st #(.W(47)) u_bout_x_sc_o (.clk(clk), .rst_n(rst_n), .d(w_core_scd_q[47:1]), .ea(rst_n), .q(x_sc_o[46:0]), .eq(x_sc_o[47]));
     ot_dp_st #(.W(516)) u_ft_cws3_o_0 (.clk(clk), .rst_n(rst_n), .d(cws3_i[515:0]), .ea(cws3_i[516]), .q(cws3_o_s0[515:0]), .eq(cws3_o_s0[516]));
     ot_dp_st #(.W(516)) u_ft_cws3_o_1 (.clk(clk), .rst_n(rst_n), .d(cws3_o_s0[515:0]), .ea(cws3_o_s0[516]), .q(cws3_o[515:0]), .eq(cws3_o[516]));
     ot_dp_st #(.W(514)) u_ft_rsf_o_0 (.clk(clk), .rst_n(rst_n), .d(rsf_i[513:0]), .ea(rsf_i[514]), .q(rsf_o_s0[513:0]), .eq(rsf_o_s0[514]));
@@ -3900,10 +3847,8 @@ module qfd_qc_sle_fe__sle_fe_v3 (
         .l9_c({pd3_x_st_a_i_0[0], pd3_flt_st_a_i_0[0], x_st_b_i_q[255:0], pd3_x_st_a_i_256[0], pd3_x_st_a_i_255[0], pd3_x_st_a_i_254[0], pd3_x_st_a_i_253[0], pd3_x_st_a_i_252[0], pd3_x_st_a_i_251[0], pd3_x_st_a_i_250[0], pd3_x_st_a_i_249[0], pd3_x_st_a_i_248[0], pd3_x_st_a_i_247[0], pd3_x_st_a_i_246[0], pd3_x_st_a_i_245[0], pd3_x_st_a_i_244[0], pd3_x_st_a_i_243[0], pd3_x_st_a_i_242[0], pd3_x_st_a_i_241[0], pd3_x_st_a_i_240[0], pd3_x_st_a_i_239[0], pd3_x_st_a_i_238[0], pd3_x_st_a_i_237[0], pd3_x_st_a_i_236[0], pd3_x_st_a_i_235[0], pd3_x_st_a_i_234[0], pd3_x_st_a_i_233[0], pd3_x_st_a_i_232[0], pd3_x_st_a_i_231[0], pd3_x_st_a_i_230[0], pd3_x_st_a_i_229[0], pd3_x_st_a_i_228[0], pd3_x_st_a_i_227[0], pd3_x_st_a_i_226[0], pd3_x_st_a_i_225[0], pd3_x_st_a_i_224[0], pd3_x_st_a_i_223[0], pd3_x_st_a_i_222[0], pd3_x_st_a_i_221[0], pd3_x_st_a_i_220[0], pd3_x_st_a_i_219[0], pd3_x_st_a_i_218[0], pd3_x_st_a_i_217[0], pd3_x_st_a_i_216[0], pd3_x_st_a_i_215[0], pd3_x_st_a_i_214[0], pd3_x_st_a_i_213[0], pd3_x_st_a_i_212[0], pd3_x_st_a_i_211[0], pd3_x_st_a_i_210[0], pd3_x_st_a_i_209[0], pd3_x_st_a_i_208[0], pd3_x_st_a_i_207[0], pd3_x_st_a_i_206[0], pd3_x_st_a_i_205[0], pd3_x_st_a_i_204[0], pd3_x_st_a_i_203[0], pd3_x_st_a_i_202[0], pd3_x_st_a_i_201[0], pd3_x_st_a_i_200[0], pd3_x_st_a_i_199[0], pd3_x_st_a_i_198[0], pd3_x_st_a_i_197[0], pd3_x_st_a_i_196[0], pd3_x_st_a_i_195[0], pd3_x_st_a_i_194[0], pd3_x_st_a_i_193[0], pd3_x_st_a_i_192[0], pd3_x_st_a_i_191[0], pd3_x_st_a_i_190[0], pd3_x_st_a_i_189[0], pd3_x_st_a_i_188[0], pd3_x_st_a_i_187[0], pd3_x_st_a_i_186[0], pd3_x_st_a_i_185[0], pd3_x_st_a_i_184[0], pd3_x_st_a_i_183[0], pd3_x_st_a_i_182[0], pd3_x_st_a_i_181[0], pd3_x_st_a_i_180[0], pd3_x_st_a_i_179[0], pd3_x_st_a_i_178[0], pd3_x_st_a_i_177[0], pd3_x_st_a_i_176[0], pd3_x_st_a_i_175[0], pd3_x_st_a_i_174[0], pd3_x_st_a_i_173[0], pd3_x_st_a_i_172[0], pd3_x_st_a_i_171[0], pd3_x_st_a_i_170[0], pd3_x_st_a_i_169[0], pd3_x_st_a_i_168[0], pd3_x_st_a_i_167[0], pd3_x_st_a_i_166[0], pd3_x_st_a_i_165[0], pd3_x_st_a_i_164[0], pd3_x_st_a_i_163[0], pd3_x_st_a_i_162[0], pd3_x_st_a_i_161[0], pd3_x_st_a_i_160[0], pd3_x_st_a_i_159[0], pd3_x_st_a_i_158[0], pd3_x_st_a_i_157[0], pd3_x_st_a_i_156[0], pd3_x_st_a_i_155[0], pd3_x_st_a_i_154[0], pd3_x_st_a_i_153[0], pd3_x_st_a_i_152[0], pd3_x_st_a_i_151[0], pd3_x_st_a_i_150[0], pd3_x_st_a_i_149[0], pd3_x_st_a_i_148[0], pd3_x_st_a_i_147[0], pd3_x_st_a_i_146[0], pd3_x_st_a_i_145[0], pd3_x_st_a_i_144[0], pd3_x_st_a_i_143[0], pd3_x_st_a_i_142[0], pd3_x_st_a_i_141[0], pd3_x_st_a_i_140[0], pd3_x_st_a_i_139[0], pd3_x_st_a_i_138[0], pd3_x_st_a_i_137[0], pd3_x_st_a_i_136[0], pd3_x_st_a_i_135[0], pd3_x_st_a_i_134[0], pd3_x_st_a_i_133[0], pd3_x_st_a_i_132[0], pd3_x_st_a_i_131[0], pd3_x_st_a_i_130[0], pd3_x_st_a_i_129[0], pd3_x_st_a_i_128[0], pd3_x_st_a_i_127[0], pd3_x_st_a_i_126[0], pd3_x_st_a_i_125[0], pd3_x_st_a_i_124[0], pd3_x_st_a_i_123[0], pd3_x_st_a_i_122[0], pd3_x_st_a_i_121[0], pd3_x_st_a_i_120[0], pd3_x_st_a_i_119[0], pd3_x_st_a_i_118[0], pd3_x_st_a_i_117[0], pd3_x_st_a_i_116[0], pd3_x_st_a_i_115[0], pd3_x_st_a_i_114[0], pd3_x_st_a_i_113[0], pd3_x_st_a_i_112[0], pd3_x_st_a_i_111[0], pd3_x_st_a_i_110[0], pd3_x_st_a_i_109[0], pd3_x_st_a_i_108[0], pd3_x_st_a_i_107[0], pd3_x_st_a_i_106[0], pd3_x_st_a_i_105[0], pd3_x_st_a_i_104[0], pd3_x_st_a_i_103[0], pd3_x_st_a_i_102[0], pd3_x_st_a_i_101[0], pd3_x_st_a_i_100[0], pd3_x_st_a_i_99[0], pd3_x_st_a_i_98[0], pd3_x_st_a_i_97[0], pd3_x_st_a_i_96[0], pd3_x_st_a_i_95[0], pd3_x_st_a_i_94[0], pd3_x_st_a_i_93[0], pd3_x_st_a_i_92[0], pd3_x_st_a_i_91[0], pd3_x_st_a_i_90[0], pd3_x_st_a_i_89[0], pd3_x_st_a_i_88[0], pd3_x_st_a_i_87[0], pd3_x_st_a_i_86[0], pd3_x_st_a_i_85[0], pd3_x_st_a_i_84[0], pd3_x_st_a_i_83[0], pd3_x_st_a_i_82[0], pd3_x_st_a_i_81[0], pd3_x_st_a_i_80[0], pd3_x_st_a_i_79[0], pd3_x_st_a_i_78[0], pd3_x_st_a_i_77[0], pd3_x_st_a_i_76[0], pd3_x_st_a_i_75[0], pd3_x_st_a_i_74[0], pd3_x_st_a_i_73[0], pd3_x_st_a_i_72[0], pd3_x_st_a_i_71[0], pd3_x_st_a_i_70[0], pd3_x_st_a_i_69[0], pd3_x_st_a_i_68[0], pd3_x_st_a_i_67[0], pd3_x_st_a_i_66[0], pd3_x_st_a_i_65[0], pd3_x_st_a_i_64[0], pd3_x_st_a_i_63[0], pd3_x_st_a_i_62[0], pd3_x_st_a_i_61[0], pd3_x_st_a_i_60[0], pd3_x_st_a_i_59[0], pd3_x_st_a_i_58[0], pd3_x_st_a_i_57[0], pd3_x_st_a_i_56[0], pd3_x_st_a_i_55[0], pd3_x_st_a_i_54[0], pd3_x_st_a_i_53[0], pd3_x_st_a_i_52[0], pd3_x_st_a_i_51[0], pd3_x_st_a_i_50[0], pd3_x_st_a_i_49[0], pd3_x_st_a_i_48[0], pd3_x_st_a_i_47[0], pd3_x_st_a_i_46[0], pd3_x_st_a_i_45[0], pd3_x_st_a_i_44[0], pd3_x_st_a_i_43[0], pd3_x_st_a_i_42[0], pd3_x_st_a_i_41[0], pd3_x_st_a_i_40[0], pd3_x_st_a_i_39[0], pd3_x_st_a_i_38[0], pd3_x_st_a_i_37[0], pd3_x_st_a_i_36[0], pd3_x_st_a_i_35[0], pd3_x_st_a_i_34[0], pd3_x_st_a_i_33[0], pd3_x_st_a_i_32[0], pd3_x_st_a_i_31[0], pd3_x_st_a_i_30[0], pd3_x_st_a_i_29[0], pd3_x_st_a_i_28[0], pd3_x_st_a_i_27[0], pd3_x_st_a_i_26[0], pd3_x_st_a_i_25[0], pd3_x_st_a_i_24[0], pd3_x_st_a_i_23[0], pd3_x_st_a_i_22[0], pd3_x_st_a_i_21[0], pd3_x_st_a_i_20[0], pd3_x_st_a_i_19[0], pd3_x_st_a_i_18[0], pd3_x_st_a_i_17[0], pd3_x_st_a_i_16[0], pd3_x_st_a_i_15[0], pd3_x_st_a_i_14[0], pd3_x_st_a_i_13[0], pd3_x_st_a_i_12[0], pd3_x_st_a_i_11[0], pd3_x_st_a_i_10[0], pd3_x_st_a_i_9[0], pd3_x_st_a_i_8[0], pd3_x_st_a_i_7[0], pd3_x_st_a_i_6[0], pd3_x_st_a_i_5[0], pd3_x_st_a_i_4[0], pd3_x_st_a_i_3[0], pd3_x_st_a_i_2[0], pd3_x_st_a_i_1[0]}),
         .l9_o(w_core_l9_o),
         .rst_n(rst_n),
-        .sc_dn_i({ub_47, ub_46, ub_45, ub_44, ub_43, ub_42, ub_41, ub_40, ub_39, ub_38, ub_37, ub_36, ub_35, ub_34, ub_33, ub_32, ub_31, ub_30, ub_29, ub_28, ub_27, ub_26, ub_25, ub_24, ub_23, ub_22, ub_21, ub_20, ub_19, ub_18, ub_17, ub_16, ub_15, ub_14, ub_13, ub_12, ub_11, ub_10, ub_9, ub_8, ub_7, ub_6, ub_5, ub_4, ub_3, ub_2, ub_1, ub_0}),
         .sc_up_c(x_sc_i_q[47:0]),
         .sc_up_o(w_core_sc_up_o),
-        .scd_q(w_core_scd_q),
         .st_up_c(x_stm_i_q[1087:0]),
         .st_up_o(w_core_st_up_o),
         .treq_c({pd5_x_fw_i_1615[0], pd5_x_fw_i_1614[0], pd5_x_fw_i_1613[0], pd5_x_fw_i_1612[0], pd5_x_fw_i_1611[0], pd5_x_fw_i_1610[0], pd5_x_fw_i_1609[0], pd5_x_fw_i_1608[0], pd5_x_fw_i_1607[0]}),

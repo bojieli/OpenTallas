@@ -1,0 +1,1316 @@
+{
+ "schema": "opentallas.die_plan.kv_param_rules.v1",
+ "die": "qwen_kvsys",
+ "plan": "lat_v35 (kv35)",
+ "bind_dir": "kv38a",
+ "generator": "physical/die_plan/qwen_kvsys/bind/kv_param_regen_check.py",
+ "note": "KV parameter <-> lane rules for BINDER3 asbuilt.param_regen (KV-P5 decision 10-23 17:05: regenerate, do not pad krq). D(x) = bound depth (bind_latency bound_stages / bus_groups landing bound_stages); Delta = bound - as-built full-path stages. kind: type = partition-type RTL parameter (equal on every replica of the type), instance = per instance (strap or pads), boot = boot image / programme constant.",
+ "rules": [
+  {
+   "module": "qkd_ectl3_kiss_st",
+   "instances_regex": "kv3_hg(_v\\d)?_part(_v\\d)?\\.sv:u_ectl",
+   "kind": "type",
+   "buses": [
+    {
+     "name": "krq",
+     "src": "hg_<st>_<r>",
+     "dst": "pc_<st>_<r>",
+     "leaf_regex": "ectl_\\w+\\.req_"
+    },
+    {
+     "name": "krs",
+     "src": "pc_<st>_<r>",
+     "dst": "hg_<st>_<r>",
+     "leaf_regex": "slg_\\w+\\.krsp"
+    }
+   ],
+   "param": "RESPONSE_LAT",
+   "formula": "8 (landing seg) + D(krq) + D(krs), identical on all 32 frames (one per hg partition; children of qkd_ectl3_kiss_st take it as a parameter); a frame below the max pads its krq chain",
+   "asbuilt": [
+    80
+   ],
+   "regen_kv35": 12,
+   "per_instance": {
+    "hg_EN_0": 12,
+    "hg_EN_1": 12,
+    "hg_EN_2": 12,
+    "hg_EN_3": 12,
+    "hg_EN_4": 12,
+    "hg_EN_5": 12,
+    "hg_EN_6": 12,
+    "hg_EN_7": 12,
+    "hg_ES_0": 12,
+    "hg_ES_1": 12,
+    "hg_ES_2": 12,
+    "hg_ES_3": 12,
+    "hg_ES_4": 12,
+    "hg_ES_5": 12,
+    "hg_ES_6": 12,
+    "hg_ES_7": 12,
+    "hg_WN_0": 12,
+    "hg_WN_1": 12,
+    "hg_WN_2": 12,
+    "hg_WN_3": 12,
+    "hg_WN_4": 12,
+    "hg_WN_5": 12,
+    "hg_WN_6": 12,
+    "hg_WN_7": 12,
+    "hg_WS_0": 12,
+    "hg_WS_1": 12,
+    "hg_WS_2": 12,
+    "hg_WS_3": 12,
+    "hg_WS_4": 12,
+    "hg_WS_5": 12,
+    "hg_WS_6": 12,
+    "hg_WS_7": 12
+   },
+   "asbuilt_natural": [
+    80
+   ],
+   "pad_flops": 0,
+   "bound_ok": true,
+   "violations": [],
+   "note": "bound round trips [12] (uniform: no krq pads); as-built frames were padded to 80 (krq pad relays removed by the bind). RTL bound RESPONSE_LAT >= 1."
+  },
+  {
+   "module": "qkd_ectl3_kiss_st",
+   "instances_regex": "kv3_hg(_v\\d)?_part(_v\\d)?\\.sv:u_ectl",
+   "kind": "type",
+   "buses": [
+    {
+     "name": "krq",
+     "src": "hg_<st>_<r>",
+     "dst": "pc_<st>_<r>",
+     "leaf_regex": "ectl_\\w+\\.req_"
+    },
+    {
+     "name": "krs",
+     "src": "pc_<st>_<r>",
+     "dst": "hg_<st>_<r>",
+     "leaf_regex": "slg_\\w+\\.krsp"
+    }
+   ],
+   "param": "QK_ISSUE_AGE",
+   "formula": "max(34, RESPONSE_LAT + 11)  (static_qk_calendar write-before-read: write 7 + (seg + 2) + s < read age - 1 + s; 34 = attn calendar QK_CONSUME / bench ECTL A floor, kv_static_ages.derive)",
+   "asbuilt": [
+    91
+   ],
+   "regen_kv35": 34,
+   "bound_ok": true,
+   "violations": [],
+   "note": "ot_qkd_ectl_part STATIC_QK requires QK_ISSUE_AGE >= 2; kv_static_die uses RESPONSE_LAT + 11 (= 23, also legal); 34 keeps the compiled attention calendar D_QK floor. The compiler (kv_static_programme qk_age / calendar_d_qk) must be re-run with the same value."
+  },
+  {
+   "module": "qkd_ectl3_kiss_st",
+   "instances_regex": "kv3_hg(_v\\d)?_part(_v\\d)?\\.sv:u_ectl",
+   "kind": "type",
+   "buses": [
+    {
+     "name": "krq",
+     "src": "hg_<st>_<r>",
+     "dst": "pc_<st>_<r>",
+     "leaf_regex": "ectl_\\w+\\.req_"
+    },
+    {
+     "name": "krs",
+     "src": "pc_<st>_<r>",
+     "dst": "hg_<st>_<r>",
+     "leaf_regex": "slg_\\w+\\.krsp"
+    }
+   ],
+   "param": "ROW_RETURN_LAT (localparam RRL)",
+   "formula": "RESPONSE_LAT + 7 (derived inside qkd_ectl3_kiss_st; not a bound parameter)",
+   "asbuilt": [
+    87
+   ],
+   "regen_kv35": 19,
+   "bound_ok": true,
+   "violations": [],
+   "note": "follows RESPONSE_LAT automatically; listed so the compiler row_latency_for_calendar (= RL + 2) is regenerated."
+  },
+  {
+   "param": "RT (boot cfg_age)",
+   "module": "qkd_pv16_vport_b",
+   "instances_regex": "kv3_pv(_v\\d+)?_part(_v\\d)?\\.sv:u_vport_[EW]",
+   "kind": "boot",
+   "formula": "9 + max_g(D(vq_g) + D(rs_g)) per V port (both groups); boot image value (the RTL RT parameter is the upper bound 31)",
+   "buses": [
+    {
+     "name": "vq_g",
+     "src": "pv_<s>_<k>",
+     "dst": "pc_<st>_<g>",
+     "leaf_regex": "vport_\\w+\\.vq[01]_"
+    },
+    {
+     "name": "rs_g",
+     "src": "pc_<st>_<g>",
+     "dst": "pv_<s>_<k>",
+     "leaf_regex": "slg_\\w+\\.rsp"
+    }
+   ],
+   "asbuilt": {
+    "vport_EN_0": 19,
+    "vport_EN_1": 19,
+    "vport_EN_2": 19,
+    "vport_EN_3": 19,
+    "vport_ES_0": 19,
+    "vport_ES_1": 19,
+    "vport_ES_2": 19,
+    "vport_ES_3": 19,
+    "vport_WN_0": 18,
+    "vport_WN_1": 18,
+    "vport_WN_2": 18,
+    "vport_WN_3": 18,
+    "vport_WS_0": 18,
+    "vport_WS_1": 18,
+    "vport_WS_2": 18,
+    "vport_WS_3": 18
+   },
+   "asbuilt_param_bound": [
+    31
+   ],
+   "regen_kv35": {
+    "vport_EN_0": 30,
+    "vport_EN_1": 30,
+    "vport_EN_2": 31,
+    "vport_EN_3": 30,
+    "vport_ES_0": 30,
+    "vport_ES_1": 30,
+    "vport_ES_2": 31,
+    "vport_ES_3": 30,
+    "vport_WN_0": 30,
+    "vport_WN_1": 30,
+    "vport_WN_2": 30,
+    "vport_WN_3": 30,
+    "vport_WS_0": 30,
+    "vport_WS_1": 30,
+    "vport_WS_2": 30,
+    "vport_WS_3": 30
+   },
+   "bound_ok": true,
+   "violations": [],
+   "note": "per instance (boot register via kvs_ctl.dcfg age_vport); RT <= 31."
+  },
+  {
+   "param": "DQ (boot cfg_age)",
+   "module": "qkd_pv16_vport_b",
+   "instances_regex": "kv3_pv(_v\\d+)?_part(_v\\d)?\\.sv:u_vport_[EW]",
+   "kind": "boot",
+   "formula": "DQ_p = max_q(W_q + RT_q) - (W_p + RT_p)  (RL = 4 + W + DQ + RT equal on all 16 ports)",
+   "buses": [
+    {
+     "name": "vq_g",
+     "src": "pv_<s>_<k>",
+     "dst": "pc_<st>_<g>",
+     "leaf_regex": "vport_\\w+\\.vq[01]_"
+    },
+    {
+     "name": "rs_g",
+     "src": "pc_<st>_<g>",
+     "dst": "pv_<s>_<k>",
+     "leaf_regex": "slg_\\w+\\.rsp"
+    },
+    {
+     "name": "W (ctl req -> vport pr_t, full path incl. forwarded hops)",
+     "src": "hub_C",
+     "dst": "pv_<s>_<k>",
+     "leaf_regex": "pvw_\\d__u_ctl\\.req_t -> vport_*.pr_t (bus_groups landing)"
+    }
+   ],
+   "asbuilt_param_bound": [
+    15
+   ],
+   "asbuilt": {
+    "vport_EN_0": null,
+    "vport_EN_1": null,
+    "vport_EN_2": null,
+    "vport_EN_3": null,
+    "vport_ES_0": null,
+    "vport_ES_1": null,
+    "vport_ES_2": null,
+    "vport_ES_3": null,
+    "vport_WN_0": null,
+    "vport_WN_1": null,
+    "vport_WN_2": null,
+    "vport_WN_3": null,
+    "vport_WS_0": null,
+    "vport_WS_1": null,
+    "vport_WS_2": null,
+    "vport_WS_3": null
+   },
+   "W_bound": {
+    "vport_EN_0": 12,
+    "vport_EN_1": 7,
+    "vport_EN_2": 17,
+    "vport_EN_3": 2,
+    "vport_ES_0": 12,
+    "vport_ES_1": 7,
+    "vport_ES_2": 17,
+    "vport_ES_3": 2,
+    "vport_WN_0": 12,
+    "vport_WN_1": 7,
+    "vport_WN_2": 17,
+    "vport_WN_3": 2,
+    "vport_WS_0": 12,
+    "vport_WS_1": 7,
+    "vport_WS_2": 17,
+    "vport_WS_3": 2
+   },
+   "W_asbuilt": {
+    "vport_EN_0": 53,
+    "vport_EN_1": 42,
+    "vport_EN_2": 60,
+    "vport_EN_3": 44,
+    "vport_ES_0": 43,
+    "vport_ES_1": 51,
+    "vport_ES_2": 41,
+    "vport_ES_3": 59,
+    "vport_WN_0": 58,
+    "vport_WN_1": 48,
+    "vport_WN_2": 65,
+    "vport_WN_3": 44,
+    "vport_WS_0": 48,
+    "vport_WS_1": 57,
+    "vport_WS_2": 43,
+    "vport_WS_3": 64
+   },
+   "regen_kv35": {
+    "vport_EN_0": 6,
+    "vport_EN_1": 11,
+    "vport_EN_2": 0,
+    "vport_EN_3": 16,
+    "vport_ES_0": 6,
+    "vport_ES_1": 11,
+    "vport_ES_2": 0,
+    "vport_ES_3": 16,
+    "vport_WN_0": 6,
+    "vport_WN_1": 11,
+    "vport_WN_2": 1,
+    "vport_WN_3": 16,
+    "vport_WS_0": 6,
+    "vport_WS_1": 11,
+    "vport_WS_2": 1,
+    "vport_WS_3": 16
+   },
+   "pad_flops_if_dq_capped": 60,
+   "bound_ok": false,
+   "violations": [
+    "vport_EN_3: DQ 16 > 15",
+    "vport_ES_3: DQ 16 > 15",
+    "vport_WN_3: DQ 16 > 15",
+    "vport_WS_3: DQ 16 > 15"
+   ],
+   "note": "DQ <= 15 (RTL bound). A port with DQ > 15 needs (DQ - 15) pad stages on its W request lane (pr_t 14 b + pr_valid 1 b) or a plan lane change; as-built DQ values live in the old boot image (not in the bind dir)."
+  },
+  {
+   "param": "cfg_fia (boot; FIRST_INPUT_AGE = upper bound)",
+   "module": "ot_qwen_tp8_pv_wide_ctl_tbf",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_pv[NS]_u_ctl",
+   "kind": "boot",
+   "formula": "4 + W + DQ + RT + 1 = 4 + max_p(W_p + RT_p) + 1 (one value, both pair controls)",
+   "buses": [
+    {
+     "name": "vq_g",
+     "src": "pv_<s>_<k>",
+     "dst": "pc_<st>_<g>",
+     "leaf_regex": "vport_\\w+\\.vq[01]_"
+    },
+    {
+     "name": "rs_g",
+     "src": "pc_<st>_<g>",
+     "dst": "pv_<s>_<k>",
+     "leaf_regex": "slg_\\w+\\.rsp"
+    },
+    {
+     "name": "W (ctl req -> vport pr_t, full path incl. forwarded hops)",
+     "src": "hub_C",
+     "dst": "pv_<s>_<k>",
+     "leaf_regex": "pvw_\\d__u_ctl\\.req_t -> vport_*.pr_t (bus_groups landing)"
+    }
+   ],
+   "asbuilt_param_bound": [
+    127
+   ],
+   "asbuilt": null,
+   "regen_kv35": 53,
+   "bound_ok": true,
+   "violations": [],
+   "note": "boot-loaded cfg_fia[7:0]; 1 <= cfg_fia <= FIRST_INPUT_AGE (127) else a start faults. The parameter FIRST_INPUT_AGE 127 stays (bound); only the boot image value is regenerated."
+  },
+  {
+   "module": "ot_qwen_tp8_pv_wide_ctl_tbf",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_pv[NS]_u_ctl",
+   "kind": "type",
+   "buses": [
+    {
+     "name": "cmd trunk",
+     "src": "hub_C",
+     "dst": "pv_<N|S>_<r>",
+     "leaf_regex": "pvw_\\d__u_ctl\\.cmd -> pvw_*_s<c>_j.join_go"
+    },
+    {
+     "name": "column flags",
+     "src": "pv_<N|S>_<r>",
+     "dst": "hub_C",
+     "leaf_regex": "pvw_\\d__u_s<c>_j\\.(y_valid|fault)"
+    }
+   ],
+   "param": "TRUNK_D",
+   "formula": "TRUNK_D_asb + max_s(Delta cmd_s)  (after cmd pads to the max Delta)",
+   "asbuilt": 54,
+   "regen_kv35": 43,
+   "per_column": {
+    "S": {
+     "0": {
+      "part": "pv_S_0",
+      "dcmd": -40,
+      "dflag": -35,
+      "tot_asb": 114,
+      "tot_bound": 39
+     },
+     "1": {
+      "part": "pv_S_1",
+      "dcmd": -36,
+      "dflag": -44,
+      "tot_asb": 114,
+      "tot_bound": 34
+     },
+     "2": {
+      "part": "pv_S_2",
+      "dcmd": -32,
+      "dflag": -53,
+      "tot_asb": 114,
+      "tot_bound": 29
+     },
+     "3": {
+      "part": "pv_S_3",
+      "dcmd": -28,
+      "dflag": -62,
+      "tot_asb": 114,
+      "tot_bound": 24
+     },
+     "4": {
+      "part": "pv_S_4",
+      "dcmd": -24,
+      "dflag": -71,
+      "tot_asb": 114,
+      "tot_bound": 19
+     },
+     "5": {
+      "part": "pv_S_5",
+      "dcmd": -20,
+      "dflag": -80,
+      "tot_asb": 114,
+      "tot_bound": 14
+     },
+     "6": {
+      "part": "pv_S_6",
+      "dcmd": -16,
+      "dflag": -89,
+      "tot_asb": 114,
+      "tot_bound": 9
+     },
+     "7": {
+      "part": "pv_S_7",
+      "dcmd": -12,
+      "dflag": -98,
+      "tot_asb": 114,
+      "tot_bound": 4
+     },
+     "8": {
+      "part": "pv_S_0",
+      "dcmd": -39,
+      "dflag": -35,
+      "tot_asb": 113,
+      "tot_bound": 39
+     },
+     "9": {
+      "part": "pv_S_1",
+      "dcmd": -35,
+      "dflag": -44,
+      "tot_asb": 113,
+      "tot_bound": 34
+     },
+     "10": {
+      "part": "pv_S_2",
+      "dcmd": -31,
+      "dflag": -53,
+      "tot_asb": 113,
+      "tot_bound": 29
+     },
+     "11": {
+      "part": "pv_S_3",
+      "dcmd": -27,
+      "dflag": -62,
+      "tot_asb": 113,
+      "tot_bound": 24
+     },
+     "12": {
+      "part": "pv_S_4",
+      "dcmd": -23,
+      "dflag": -71,
+      "tot_asb": 113,
+      "tot_bound": 19
+     },
+     "13": {
+      "part": "pv_S_5",
+      "dcmd": -19,
+      "dflag": -80,
+      "tot_asb": 113,
+      "tot_bound": 14
+     },
+     "14": {
+      "part": "pv_S_6",
+      "dcmd": -15,
+      "dflag": -89,
+      "tot_asb": 113,
+      "tot_bound": 9
+     },
+     "15": {
+      "part": "pv_S_7",
+      "dcmd": -11,
+      "dflag": -98,
+      "tot_asb": 113,
+      "tot_bound": 4
+     },
+     "16": {
+      "part": "pv_S_0",
+      "dcmd": -40,
+      "dflag": -35,
+      "tot_asb": 114,
+      "tot_bound": 39
+     },
+     "17": {
+      "part": "pv_S_1",
+      "dcmd": -36,
+      "dflag": -44,
+      "tot_asb": 114,
+      "tot_bound": 34
+     },
+     "18": {
+      "part": "pv_S_2",
+      "dcmd": -32,
+      "dflag": -53,
+      "tot_asb": 114,
+      "tot_bound": 29
+     },
+     "19": {
+      "part": "pv_S_3",
+      "dcmd": -28,
+      "dflag": -62,
+      "tot_asb": 114,
+      "tot_bound": 24
+     },
+     "20": {
+      "part": "pv_S_4",
+      "dcmd": -24,
+      "dflag": -71,
+      "tot_asb": 114,
+      "tot_bound": 19
+     },
+     "21": {
+      "part": "pv_S_5",
+      "dcmd": -20,
+      "dflag": -80,
+      "tot_asb": 114,
+      "tot_bound": 14
+     },
+     "22": {
+      "part": "pv_S_6",
+      "dcmd": -16,
+      "dflag": -89,
+      "tot_asb": 114,
+      "tot_bound": 9
+     },
+     "23": {
+      "part": "pv_S_7",
+      "dcmd": -12,
+      "dflag": -98,
+      "tot_asb": 114,
+      "tot_bound": 4
+     },
+     "24": {
+      "part": "pv_S_0",
+      "dcmd": -39,
+      "dflag": -35,
+      "tot_asb": 113,
+      "tot_bound": 39
+     },
+     "25": {
+      "part": "pv_S_1",
+      "dcmd": -35,
+      "dflag": -44,
+      "tot_asb": 113,
+      "tot_bound": 34
+     },
+     "26": {
+      "part": "pv_S_2",
+      "dcmd": -31,
+      "dflag": -53,
+      "tot_asb": 113,
+      "tot_bound": 29
+     },
+     "27": {
+      "part": "pv_S_3",
+      "dcmd": -27,
+      "dflag": -62,
+      "tot_asb": 113,
+      "tot_bound": 24
+     },
+     "28": {
+      "part": "pv_S_4",
+      "dcmd": -23,
+      "dflag": -71,
+      "tot_asb": 113,
+      "tot_bound": 19
+     },
+     "29": {
+      "part": "pv_S_5",
+      "dcmd": -19,
+      "dflag": -80,
+      "tot_asb": 113,
+      "tot_bound": 14
+     },
+     "30": {
+      "part": "pv_S_6",
+      "dcmd": -15,
+      "dflag": -89,
+      "tot_asb": 113,
+      "tot_bound": 9
+     },
+     "31": {
+      "part": "pv_S_7",
+      "dcmd": -11,
+      "dflag": -98,
+      "tot_asb": 113,
+      "tot_bound": 4
+     }
+    },
+    "N": {
+     "0": {
+      "part": "pv_N_0",
+      "dcmd": -39,
+      "dflag": -35,
+      "tot_asb": 113,
+      "tot_bound": 39
+     },
+     "1": {
+      "part": "pv_N_1",
+      "dcmd": -35,
+      "dflag": -44,
+      "tot_asb": 113,
+      "tot_bound": 34
+     },
+     "2": {
+      "part": "pv_N_2",
+      "dcmd": -31,
+      "dflag": -53,
+      "tot_asb": 113,
+      "tot_bound": 29
+     },
+     "3": {
+      "part": "pv_N_3",
+      "dcmd": -27,
+      "dflag": -62,
+      "tot_asb": 113,
+      "tot_bound": 24
+     },
+     "4": {
+      "part": "pv_N_4",
+      "dcmd": -23,
+      "dflag": -71,
+      "tot_asb": 113,
+      "tot_bound": 19
+     },
+     "5": {
+      "part": "pv_N_5",
+      "dcmd": -19,
+      "dflag": -80,
+      "tot_asb": 113,
+      "tot_bound": 14
+     },
+     "6": {
+      "part": "pv_N_6",
+      "dcmd": -15,
+      "dflag": -89,
+      "tot_asb": 113,
+      "tot_bound": 9
+     },
+     "7": {
+      "part": "pv_N_7",
+      "dcmd": -11,
+      "dflag": -98,
+      "tot_asb": 113,
+      "tot_bound": 4
+     },
+     "8": {
+      "part": "pv_N_0",
+      "dcmd": -38,
+      "dflag": -35,
+      "tot_asb": 112,
+      "tot_bound": 39
+     },
+     "9": {
+      "part": "pv_N_1",
+      "dcmd": -34,
+      "dflag": -44,
+      "tot_asb": 112,
+      "tot_bound": 34
+     },
+     "10": {
+      "part": "pv_N_2",
+      "dcmd": -30,
+      "dflag": -53,
+      "tot_asb": 112,
+      "tot_bound": 29
+     },
+     "11": {
+      "part": "pv_N_3",
+      "dcmd": -26,
+      "dflag": -62,
+      "tot_asb": 112,
+      "tot_bound": 24
+     },
+     "12": {
+      "part": "pv_N_4",
+      "dcmd": -22,
+      "dflag": -71,
+      "tot_asb": 112,
+      "tot_bound": 19
+     },
+     "13": {
+      "part": "pv_N_5",
+      "dcmd": -18,
+      "dflag": -80,
+      "tot_asb": 112,
+      "tot_bound": 14
+     },
+     "14": {
+      "part": "pv_N_6",
+      "dcmd": -14,
+      "dflag": -89,
+      "tot_asb": 112,
+      "tot_bound": 9
+     },
+     "15": {
+      "part": "pv_N_7",
+      "dcmd": -10,
+      "dflag": -98,
+      "tot_asb": 112,
+      "tot_bound": 4
+     },
+     "16": {
+      "part": "pv_N_0",
+      "dcmd": -39,
+      "dflag": -35,
+      "tot_asb": 113,
+      "tot_bound": 39
+     },
+     "17": {
+      "part": "pv_N_1",
+      "dcmd": -35,
+      "dflag": -44,
+      "tot_asb": 113,
+      "tot_bound": 34
+     },
+     "18": {
+      "part": "pv_N_2",
+      "dcmd": -31,
+      "dflag": -53,
+      "tot_asb": 113,
+      "tot_bound": 29
+     },
+     "19": {
+      "part": "pv_N_3",
+      "dcmd": -27,
+      "dflag": -62,
+      "tot_asb": 113,
+      "tot_bound": 24
+     },
+     "20": {
+      "part": "pv_N_4",
+      "dcmd": -23,
+      "dflag": -71,
+      "tot_asb": 113,
+      "tot_bound": 19
+     },
+     "21": {
+      "part": "pv_N_5",
+      "dcmd": -19,
+      "dflag": -80,
+      "tot_asb": 113,
+      "tot_bound": 14
+     },
+     "22": {
+      "part": "pv_N_6",
+      "dcmd": -15,
+      "dflag": -89,
+      "tot_asb": 113,
+      "tot_bound": 9
+     },
+     "23": {
+      "part": "pv_N_7",
+      "dcmd": -11,
+      "dflag": -98,
+      "tot_asb": 113,
+      "tot_bound": 4
+     },
+     "24": {
+      "part": "pv_N_0",
+      "dcmd": -38,
+      "dflag": -35,
+      "tot_asb": 112,
+      "tot_bound": 39
+     },
+     "25": {
+      "part": "pv_N_1",
+      "dcmd": -34,
+      "dflag": -44,
+      "tot_asb": 112,
+      "tot_bound": 34
+     },
+     "26": {
+      "part": "pv_N_2",
+      "dcmd": -30,
+      "dflag": -53,
+      "tot_asb": 112,
+      "tot_bound": 29
+     },
+     "27": {
+      "part": "pv_N_3",
+      "dcmd": -26,
+      "dflag": -62,
+      "tot_asb": 112,
+      "tot_bound": 24
+     },
+     "28": {
+      "part": "pv_N_4",
+      "dcmd": -22,
+      "dflag": -71,
+      "tot_asb": 112,
+      "tot_bound": 19
+     },
+     "29": {
+      "part": "pv_N_5",
+      "dcmd": -18,
+      "dflag": -80,
+      "tot_asb": 112,
+      "tot_bound": 14
+     },
+     "30": {
+      "part": "pv_N_6",
+      "dcmd": -14,
+      "dflag": -89,
+      "tot_asb": 112,
+      "tot_bound": 9
+     },
+     "31": {
+      "part": "pv_N_7",
+      "dcmd": -10,
+      "dflag": -98,
+      "tot_asb": 112,
+      "tot_bound": 4
+     }
+    }
+   },
+   "pad_flops": 30624,
+   "bound_ok": false,
+   "violations": [
+    "pvN/pvS ctl need different TRUNK_D/FLAG_D {'S': {'TRUNK_D': 43, 'FLAG_D': 23}, 'N': {'TRUNK_D': 44, 'FLAG_D': 23}} (one partition type: straps or split)"
+   ],
+   "note": "pv_trunk_gen invariant: every column s sees the command D_s after the ctl pin and its flags return R_s later with D_s + R_s ONE constant (= TRUNK_D + FLAG_D + const); column outputs sit at A_s = out_age + D_s - D_0 (pvw frame localparams) and V chunks must arrive D_g - 6 after the header. The bound lanes change D_s by different amounts (per column Delta in per_column) -> NOT absorbable by TRUNK_D/FLAG_D alone: pad every column command join to the largest Delta (keeps A_s and the V/command meeting), then pad each flag return to the largest D+R. Pads: cmd 30624 flops, flags 4096 flops (both pair sides). Alternative: re-plan the lanes so Delta(cmd) is uniform and flag depths R_s = const - D_s (the v35 flag lanes 23..2 run the WRONG way: near columns need the LONGER flag lanes)."
+  },
+  {
+   "module": "ot_qwen_tp8_pv_wide_ctl_tbf",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_pv[NS]_u_ctl",
+   "kind": "type",
+   "buses": [
+    {
+     "name": "cmd trunk",
+     "src": "hub_C",
+     "dst": "pv_<N|S>_<r>",
+     "leaf_regex": "pvw_\\d__u_ctl\\.cmd -> pvw_*_s<c>_j.join_go"
+    },
+    {
+     "name": "column flags",
+     "src": "pv_<N|S>_<r>",
+     "dst": "hub_C",
+     "leaf_regex": "pvw_\\d__u_s<c>_j\\.(y_valid|fault)"
+    }
+   ],
+   "param": "FLAG_D",
+   "formula": "max_s(D_s + R_s)_bound(after pads) - TRUNK_D - (D+R - TRUNK_D - FLAG_D)_asb",
+   "asbuilt": 58,
+   "regen_kv35": 23,
+   "pad_flops": 4096,
+   "bound_ok": false,
+   "violations": [
+    "pvN/pvS ctl need different TRUNK_D/FLAG_D {'S': {'TRUNK_D': 43, 'FLAG_D': 23}, 'N': {'TRUNK_D': 44, 'FLAG_D': 23}} (one partition type: straps or split)"
+   ],
+   "note": "COL_CHK = COL_LAT + TRUNK_D + FLAG_D; see TRUNK_D note."
+  },
+  {
+   "module": "qkd_ahub_static_dw",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_ahub",
+   "kind": "type",
+   "param": "AP_OFS[stack]",
+   "formula": "AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs) -> AP_OFS_asb_s + Delta D(ap_s) + Delta L_s; L_s = stack start lag = the seq core -> fan aq path (f_aqm_w/e); D(ks_ahs) is intra hub_C (u_d51_kvs_attn_ahs) = unchanged",
+   "buses": [
+    {
+     "name": "ap_s",
+     "src": "hub_Wo|hub_Eo",
+     "dst": "hub_C",
+     "leaf_regex": "astk_<st>__u_strip_u_strip_u_ctl\\.ap"
+    },
+    {
+     "name": "f_aqm (L_s)",
+     "src": "hub_C",
+     "dst": "hub_Wo|hub_Eo",
+     "leaf_regex": "seq__u_core\\.f_aqm_[we]"
+    }
+   ],
+   "asbuilt": {
+    "WS": -36,
+    "WN": -36,
+    "ES": -34,
+    "EN": -35
+   },
+   "regen_kv35": {
+    "WS": -47,
+    "WN": -47,
+    "ES": -47,
+    "EN": -46
+   },
+   "regen_hex": "{16'hffd2, 16'hffd1, 16'hffd1, 16'hffd1}",
+   "bound_ok": true,
+   "violations": [],
+   "note": "16-bit two's complement per stack (stack order WS WN ES EN = AP_OFS[15:0]..[63:48]); one hub instance -> no replica constraint. kv_static_params AHUB_OFS_BOUND must compare against this table, and the hub kit qkd_ahub_sdw is re-synthesised at it (G3)."
+  },
+  {
+   "module": "qkd_ahub_static_dw",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_ahub",
+   "kind": "type",
+   "param": "FR_OFS",
+   "formula": "D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1; every term is intra hub_C",
+   "buses": [],
+   "asbuilt": -7,
+   "regen_kv35": -7,
+   "bound_ok": true,
+   "violations": [],
+   "note": "kvs_attn, ahub, pvfin, pv ctl all sit in hub_C: no lane on any FR_OFS path -> unchanged."
+  },
+  {
+   "param": "am_lag_edges[stack] (compiler EXP_START)",
+   "module": "kv_static_programme (compiler) / astk cal EXP base",
+   "instances_regex": "boot image (acal word)",
+   "kind": "boot",
+   "formula": "L_h + D(am_s) - L_s -> asb + Delta D(am_s) - Delta L_s",
+   "buses": [
+    {
+     "name": "am_s",
+     "src": "hub_C",
+     "dst": "hub_Wo|hub_Eo",
+     "leaf_regex": "ahub\\.am<k>"
+    }
+   ],
+   "asbuilt": null,
+   "regen_kv35_delta": {
+    "WS": -9,
+    "WN": -37,
+    "ES": -8,
+    "EN": -9
+   },
+   "regen_kv35": null,
+   "bound_ok": true,
+   "violations": [],
+   "note": "programme constant: the compiler EXP_START must cover the new lag (Delta per stack listed); re-run ahub_ages with the bound relay table."
+  },
+  {
+   "param": "row start (o_kg broadcast) per-row skew",
+   "module": "kvs_hroot_<st> o_kg -> ectl frames (qkd_ectl3_kiss_st kg)",
+   "instances_regex": "hg_<st>_<r>:u_ectl",
+   "kind": "instance",
+   "formula": "Delta_r = bound - asbuilt full-path depth hroot.o_kg -> ectl_<st>_<f>.kgo per row; one broadcast source and type-parameter frames -> the as-built relative row timing is kept only if every row gets the same Delta",
+   "buses": [
+    {
+     "name": "kg",
+     "src": "hroot_<st>|hg_<st>_<r>",
+     "dst": "hg_<st>_<r>",
+     "leaf_regex": "o_kg"
+    }
+   ],
+   "asbuilt": null,
+   "regen_kv35": null,
+   "delta_per_row": {
+    "EN": {
+     "hg_EN_0": -21,
+     "hg_EN_1": -16,
+     "hg_EN_2": -20,
+     "hg_EN_3": -14,
+     "hg_EN_4": -9,
+     "hg_EN_5": -4,
+     "hg_EN_6": -19,
+     "hg_EN_7": -14
+    },
+    "ES": {
+     "hg_ES_0": -18,
+     "hg_ES_1": -13,
+     "hg_ES_2": -15,
+     "hg_ES_3": -10,
+     "hg_ES_4": -5,
+     "hg_ES_5": 0,
+     "hg_ES_6": -16,
+     "hg_ES_7": -11
+    },
+    "WN": {
+     "hg_WN_0": -21,
+     "hg_WN_1": -16,
+     "hg_WN_2": -18,
+     "hg_WN_3": -13,
+     "hg_WN_4": -7,
+     "hg_WN_5": -2,
+     "hg_WN_6": -19,
+     "hg_WN_7": -14
+    },
+    "WS": {
+     "hg_WS_0": -18,
+     "hg_WS_1": -12,
+     "hg_WS_2": -14,
+     "hg_WS_3": -9,
+     "hg_WS_4": -5,
+     "hg_WS_5": 1,
+     "hg_WS_6": -16,
+     "hg_WS_7": -11
+    }
+   },
+   "spread_edges": {
+    "EN": 17,
+    "ES": 18,
+    "WN": 19,
+    "WS": 19
+   },
+   "pad_flops": 8257,
+   "bound_ok": false,
+   "violations": [
+    "kg row Delta spread {'EN': 17, 'ES': 18, 'WN': 19, 'WS': 19} edges: no parameter absorbs it"
+   ],
+   "note": "NOT absorbable by a parameter (o_kg is ONE source word per stack, ECTL ages are type params, partition types are shared across rows): pad each row kg landing to the stack max Delta = 8257 flops (23 b kg x sum of row deficits), OR prove the row start skew is free (the e-read chain/astk calendar would then need the per-row starts recompiled; no such per-row boot register exists)."
+  },
+  {
+   "param": "ectl -> hgi (e/t words) per-row skew",
+   "module": "ectl_<st>_<f> e/t -> hst heads (hgi)",
+   "instances_regex": "hgi_<st>_<r>",
+   "kind": "instance",
+   "formula": "Delta_r of ectl.e*/t* -> hst.e_a/ti_a; uniform Delta is absorbed by the head start",
+   "buses": [
+    {
+     "name": "e/t",
+     "src": "hg_<st>_<r>",
+     "dst": "hgi_<st>_<r>",
+     "leaf_regex": "ectl_\\w+\\.(e\\d|t\\d|kf)"
+    }
+   ],
+   "asbuilt": 0,
+   "regen_kv35": null,
+   "delta_per_row": {
+    "EN": {
+     "hgi_EN_0": 2,
+     "hgi_EN_1": 2,
+     "hgi_EN_2": 2,
+     "hgi_EN_3": 2,
+     "hgi_EN_4": 2,
+     "hgi_EN_5": 2,
+     "hgi_EN_6": 2,
+     "hgi_EN_7": 2
+    },
+    "ES": {
+     "hgi_ES_0": 2,
+     "hgi_ES_1": 2,
+     "hgi_ES_2": 2,
+     "hgi_ES_3": 2,
+     "hgi_ES_4": 2,
+     "hgi_ES_5": 2,
+     "hgi_ES_6": 2,
+     "hgi_ES_7": 2
+    },
+    "WN": {
+     "hgi_WN_0": 2,
+     "hgi_WN_1": 2,
+     "hgi_WN_2": 2,
+     "hgi_WN_3": 2,
+     "hgi_WN_4": 2,
+     "hgi_WN_5": 2,
+     "hgi_WN_6": 2,
+     "hgi_WN_7": 2
+    },
+    "WS": {
+     "hgi_WS_0": 2,
+     "hgi_WS_1": 2,
+     "hgi_WS_2": 2,
+     "hgi_WS_3": 2,
+     "hgi_WS_4": 2,
+     "hgi_WS_5": 2,
+     "hgi_WS_6": 2,
+     "hgi_WS_7": 2
+    }
+   },
+   "spread_edges": {
+    "EN": 0,
+    "ES": 0,
+    "WN": 0,
+    "WS": 0
+   },
+   "pad_flops": 0,
+   "bound_ok": true,
+   "violations": [],
+   "note": "as-built 0-stage (abutted) -> bound 2 on every frame: uniform +2, no pads; the head and K paths shift together (compiler D_QK +2)."
+  },
+  {
+   "param": "down[s] / ret (kvs_ctl o_hroot / hroot o_ctl)",
+   "module": "kv_static_programme (emb_fill, writer_die) + kvjc3_pc_chain writer ages",
+   "instances_regex": "boot image (kvs_ctl programme)",
+   "kind": "boot",
+   "formula": "die relays of kvs_ctl.o_hroot_s -> hroot.i_ctl (+ hroot chain) per stack; hroot.o_ctl -> kvs_ctl",
+   "buses": [
+    {
+     "name": "o_hroot",
+     "src": "hub_C",
+     "dst": "hroot_<st>",
+     "leaf_regex": "kvs_ctl\\.o_hroot_<st>"
+    },
+    {
+     "name": "hroot_ctl",
+     "src": "hroot_<st>",
+     "dst": "hub_C",
+     "leaf_regex": "kvs_hroot_<st>\\.o_ctl"
+    }
+   ],
+   "asbuilt": {
+    "WS": [
+     77,
+     62
+    ],
+    "WN": [
+     21,
+     13
+    ],
+    "ES": [
+     70,
+     71
+    ],
+    "EN": [
+     13,
+     19
+    ]
+   },
+   "regen_kv35": {
+    "WS": [
+     7,
+     8
+    ],
+    "WN": [
+     8,
+     8
+    ],
+    "ES": [
+     8,
+     8
+    ],
+    "EN": [
+     9,
+     8
+    ]
+   },
+   "bound_ok": true,
+   "violations": [],
+   "note": "programme constants (per-stack lists in the compiler) -> regenerate the kvs_ctl boot programme; all paths got shorter (emb fill margin grows); no RTL parameter."
+  },
+  {
+   "param": "d2d ages (sys_c <-> hub_C): programme_start, d2d_to_attention_rx, d2d_to_writer, attention tx",
+   "module": "kv_static_programme link ages / d2d link calendar (boot__link_cfg TX/RX images)",
+   "instances_regex": "boot image (kvs_ctl -> d2d link_cfg)",
+   "kind": "boot",
+   "formula": "bound depth of d2d_kv.* / dcal.tok_start -> {kvs_ctl, kvs_attn, seq__u_core}; attn__tx -> d2d_kv",
+   "buses": [
+    {
+     "name": "rx",
+     "src": "sys_c",
+     "dst": "hub_C",
+     "leaf_regex": "d2d_kv\\.(rx_payload|kvn_word|att_rx|engine_result)"
+    },
+    {
+     "name": "tx",
+     "src": "hub_C",
+     "dst": "sys_c",
+     "leaf_regex": "kvs_attn\\.attn__tx"
+    }
+   ],
+   "asbuilt": {
+    "kvs_attn": [
+     [
+      9,
+      32
+     ],
+     [
+      11,
+      34
+     ]
+    ],
+    "kvs_ctl": [
+     [
+      3,
+      32
+     ],
+     [
+      4,
+      32
+     ],
+     [
+      6,
+      34
+     ]
+    ],
+    "seq__u_core": [
+     [
+      7,
+      32
+     ],
+     [
+      14,
+      39
+     ]
+    ],
+    "tx": [
+     [
+      9,
+      9
+     ],
+     [
+      9,
+      9
+     ]
+    ]
+   },
+   "regen_kv35": {
+    "kvs_attn": [
+     32,
+     34
+    ],
+    "kvs_ctl": [
+     32,
+     34
+    ],
+    "seq__u_core": [
+     32,
+     39
+    ],
+    "tx": [
+     31,
+     31
+    ]
+   },
+   "bound_ok": true,
+   "violations": [],
+   "note": "as-built the three sinks saw the d2d words at DIFFERENT depths (kvs_ctl 4-6, kvs_attn 9-11, seq core 7-14); bound they are all 32 (tx 31): the writer (kvs_ctl) no longer leads the seq core by 8 edges on KVN words -> re-check the writer write-before-read (kv_static_programme writer_die) after the programme regen. +0.24 %/token accepted (KV-P5 17:05)."
+  },
+  {
+   "param": "KVN_A0",
+   "module": "qkd_seq_core_static_s",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_seq_u_core",
+   "kind": "type",
+   "formula": "KVN_A0_asb + Delta D(d2d kvn_word_valid -> seq core) - Delta D(d2d att_rx -> kvs_attn)  (age counter a starts at the attention programme request, which kvs_attn issues off the att_rx stream)",
+   "buses": [
+    {
+     "name": "kvn",
+     "src": "sys_c",
+     "dst": "hub_C",
+     "leaf_regex": "d2d_kv\\.kvn_word_(valid|tag)"
+    },
+    {
+     "name": "att_rx",
+     "src": "sys_c",
+     "dst": "hub_C",
+     "leaf_regex": "d2d_kv\\.att_rx_v"
+    }
+   ],
+   "asbuilt": 32,
+   "regen_kv35": 34,
+   "bound_ok": true,
+   "violations": [],
+   "note": "kvn 14->39, att_rx 11->34 (kvs_ctl kvn 6->34). ANCHOR ASSUMPTION: prg_req_v follows att_rx at a fixed in-hub_C age; if the attention programme is started by dcal.tok_start instead, use Delta(tok_start -> kvs_ctl) (+29). Confirm in the token bench (seq fault f_kvn) before G3."
+  },
+  {
+   "param": "PV_LEAD / F_DLY / STATUS_DELAY / FR_OFS-side ages",
+   "module": "qkd_kvs_attn_fl (hub_C)",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_kvs_attn",
+   "kind": "type",
+   "formula": "PV_LEAD = D(ks_pvst); F_DLY = 1 + D(ks_pvfst) - PV_LEAD + D(ks_pvfin): all intra hub_C (u_d38/u_d45/u_d46 kept stages)",
+   "buses": [],
+   "asbuilt": "kit values",
+   "regen_kv35": "unchanged",
+   "bound_ok": true,
+   "violations": [],
+   "note": "kvs_attn, pv ctl, pvfin in one partition -> no lane; STATUS_DELAY 213 is the KV-HEALTH status kit value, not a crossing."
+  },
+  {
+   "param": "RH a/b stream alignment (pvw result trunk -> RH)",
+   "module": "qkd_pv_rs_hd_f (hub_C u_pv[NS]_u_RH_r0)",
+   "instances_regex": "kv3_hub_C_part\\.sv:u_pv[NS]_u_RH_r0",
+   "kind": "instance",
+   "formula": "Delta(T1Q*_45.b -> RH.b*) - Delta(T0Q*_45.b -> RH.a*) must be 0 (no age parameter on the RH)",
+   "buses": [
+    {
+     "name": "T*Q*_45.b",
+     "src": "pv_<N|S>_7",
+     "dst": "hub_C",
+     "leaf_regex": "pvw_\\d__u_T\\dQ\\d_45_r0\\.b"
+    }
+   ],
+   "asbuilt": {
+    "a": 2,
+    "b": 4
+   },
+   "regen_kv35": {
+    "a": 2,
+    "b": 2
+   },
+   "pad_flops": 2064,
+   "bound_ok": false,
+   "violations": [
+    "b streams arrive 2 edges early vs a (as-built offset lost)"
+   ],
+   "note": "R8 landing group (bus_groups aligned_by_lanes=false): BINDER3 landing pads (2 stages x 258 b x b0,b1 x 2 sides) restore it; no parameter.  The deeper T*Q* b chain hops (as-built [2, 3..9]) are the same R8 class."
+  },
+  {
+   "param": "ot_dp_efault AGE (plan efault cells)",
+   "module": "ot_dp_efault",
+   "instances_regex": "kv3_*:u_u_efault",
+   "kind": "instance",
+   "formula": "generated by tools/die_plan/bind.py from the BOUND lane depths",
+   "buses": [],
+   "asbuilt": "n/a",
+   "regen_kv35": "already bound",
+   "bound_ok": true,
+   "violations": [],
+   "note": "bind-generated (plan cells), not as-built: not stale."
+  },
+  {
+   "param": "qkd_pv_fin_s SKEW / dcal EP_SKEW",
+   "module": "qkd_pv_fin_s / qkd_d2d_cal_seq_pin_bc4",
+   "instances_regex": "hub_C:u_pvfin, sys_c:u_dcal",
+   "kind": "type",
+   "formula": "internal (P0/P1 from the two RH in hub_C; EP_SKEW fixed 3 by RTL $error)",
+   "buses": [],
+   "asbuilt": {
+    "SKEW": [
+     "1"
+    ],
+    "EP_SKEW": 3
+   },
+   "regen_kv35": "unchanged",
+   "bound_ok": true,
+   "violations": [],
+   "note": "P0_AGE / P1_AGE themselves are cal words (compiler): shift with the trunk regen (TRUNK_D rule)."
+  }
+ ]
+}

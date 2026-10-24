@@ -6,9 +6,7 @@
 module qfd_qc_sle_sc_v2 (
     input  wire clk,
     input  wire arst_n,
-    input  wire [1:0] flt_fe_i,   // 1 data + epoch [1]: lane sl_E5_fe__flt, 2 cycles: sl_E5_fe scd_q[1] -> sl_E5_sc
     input  wire [160:0] x_ctl_i,   // 160 data + epoch [160]: lane sl_E5_ctl__x_ctl_sc, 4 cycles: sl_E5_ctl am_idx[24], am_u[2], am_v[1] ... -> sl_E5_sc
-    input  wire [47:0] x_fe_i,   // 47 data + epoch [47]: lane sl_E5_fe__x_fe_sc, 2 cycles: sl_E5_fe scd_q[47] -> sl_E5_sc
     input  wire [48:0] x_fw_i,   // 48 data + epoch [48]: lane sl_E5_fw__x_fw_sc, 10 cycles: sl_E5_fw scu_q[48] -> sl_E5_sc
     input  wire [57:0] x_su_c_i,   // 57 data + epoch [57]: lane sl_E5_su_c__x_su_c_sc, 2 cycles: sl_E5_su_c red_addr[24], red_data[32], red_we[1] -> sl_E5_sc
     input  wire [38:0] x_su_l0_i,   // 38 data + epoch [38]: lane sl_E5_su_l0__x_su_l0_sc, 4 cycles: sl_E5_su_l0 vm_waddr[2], vm_wdata[32], vm_we[4] -> sl_E5_sc
@@ -31,12 +29,8 @@ module qfd_qc_sle_sc_v2 (
     input  wire [456:0] x_su_l1_ctl_i,   // ft x_su_l1_ctl lane sl_E5_su_l1__x_su_l1_ctl: sl_E5_su_l1 -> sl_E5_ctl
     output wire [456:0] x_su_l1_ctl_o   // ft x_su_l1_ctl: 2 station(s)
 );
-    wire [0:0] flt_fe_i_q;
-    wire flt_fe_i_eq;
     wire [159:0] x_ctl_i_q;
     wire x_ctl_i_eq;
-    wire [46:0] x_fe_i_q;
-    wire x_fe_i_eq;
     wire [47:0] x_fw_i_q;
     wire x_fw_i_eq;
     wire [56:0] x_su_c_i_q;
@@ -164,9 +158,7 @@ module qfd_qc_sle_sc_v2 (
     wire [0:0] pd4_x_su_l0_i_1;
     wire rst_n;
     ot_reset_sync #(.ASYNC_STAGES(2)) u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));
-    ot_dp_st #(.W(1)) u_bin_flt_fe_i (.clk(clk), .rst_n(rst_n), .d(flt_fe_i[0:0]), .ea(flt_fe_i[1]), .q(flt_fe_i_q), .eq(flt_fe_i_eq));
     ot_dp_st #(.W(160)) u_bin_x_ctl_i (.clk(clk), .rst_n(rst_n), .d(x_ctl_i[159:0]), .ea(x_ctl_i[160]), .q(x_ctl_i_q), .eq(x_ctl_i_eq));
-    ot_dp_st #(.W(47)) u_bin_x_fe_i (.clk(clk), .rst_n(rst_n), .d(x_fe_i[46:0]), .ea(x_fe_i[47]), .q(x_fe_i_q), .eq(x_fe_i_eq));
     ot_dp_st #(.W(48)) u_bin_x_fw_i (.clk(clk), .rst_n(rst_n), .d(x_fw_i[47:0]), .ea(x_fw_i[48]), .q(x_fw_i_q), .eq(x_fw_i_eq));
     ot_dp_st #(.W(57)) u_bin_x_su_c_i (.clk(clk), .rst_n(rst_n), .d(x_su_c_i[56:0]), .ea(x_su_c_i[57]), .q(x_su_c_i_q), .eq(x_su_c_i_eq));
     ot_dp_st #(.W(38)) u_bin_x_su_l0_i (.clk(clk), .rst_n(rst_n), .d(x_su_l0_i[37:0]), .ea(x_su_l0_i[38]), .q(x_su_l0_i_q), .eq(x_su_l0_i_eq));
@@ -287,14 +279,13 @@ module qfd_qc_sle_sc_v2 (
     ot_dp_dly #(.W(1), .D(4)) u_pd4_x_su_l0_i_0 (.clk(clk), .d(x_su_l0_i_q[0]), .q(pd4_x_su_l0_i_0));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(4)) u_pd4_x_su_l0_i_1 (.clk(clk), .d(x_su_l0_i_q[1]), .q(pd4_x_su_l0_i_1));  // landing pad: as-built relative timing
     // as-built dvs_E5.u_core.u_sub.u_sc
-    qfd_dv_s5_sc2_leaf u_core (
+    qfd_dv_s5_sc2_leaf_dn0 u_core (
         .am_idx(x_ctl_i_q[23:0]),
         .am_u(x_ctl_i_q[25:24]),
         .am_v(x_ctl_i_q[26]),
         .am_val(x_ctl_i_q[58:27]),
         .busy(w_core_busy),
         .ck(clk),
-        .dn_i({x_fe_i_q[46:0], flt_fe_i_q[0]}),
         .dn_o(w_core_dn_o),
         .fault(w_core_fault),
         .red_addr({pd6_x_su_c_i_23[0], pd6_x_su_c_i_22[0], pd6_x_su_c_i_21[0], pd6_x_su_c_i_20[0], pd6_x_su_c_i_19[0], pd6_x_su_c_i_18[0], pd6_x_su_c_i_17[0], pd6_x_su_c_i_16[0], pd6_x_su_c_i_15[0], pd6_x_su_c_i_14[0], pd6_x_su_c_i_13[0], pd6_x_su_c_i_12[0], pd6_x_su_c_i_11[0], pd6_x_su_c_i_10[0], pd6_x_su_c_i_9[0], pd6_x_su_c_i_8[0], pd6_x_su_c_i_7[0], pd6_x_su_c_i_6[0], pd6_x_su_c_i_5[0], pd6_x_su_c_i_4[0], pd6_x_su_c_i_3[0], pd6_x_su_c_i_2[0], pd6_x_su_c_i_1[0], pd6_x_su_c_i_0[0]}),

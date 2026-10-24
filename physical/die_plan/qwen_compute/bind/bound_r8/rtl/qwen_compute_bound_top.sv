@@ -1028,6 +1028,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_E0_fe_rv_wo_sl_E1_fw;  // lane sl_E0_fe__rv_wo_rv_ei
     wire [48:0] x_sl_E0_fe_sc_wo_sl_E1_fw;  // lane sl_E0_fe__sc_wo_sc_ei
     wire [1088:0] x_sl_E0_fe_st_wo_sl_E1_fw;  // lane sl_E0_fe__st_wo_st_ei
+    wire [9:0] x_sl_E0_fe_treq_wo_sl_E1_fw;  // lane sl_E0_fe__treq_wo_treq_ei
     wire [1105:0] x_sl_E0_fe_x_fw_o_sl_E0_sc;  // lane sl_E0_fe__x_fe_fw
     wire [1105:0] x_sl_E0_sc_x_fe_fw_o_sl_E0_stm;  // lane sl_E0_fe__x_fe_fw
     wire [1105:0] x_sl_E0_stm_x_fe_fw_o_sl_E0_fw;  // lane sl_E0_fe__x_fe_fw
@@ -1229,6 +1230,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_E1_fe_rv_wo_sl_E2_fw;  // lane sl_E1_fe__rv_wo_rv_ei
     wire [48:0] x_sl_E1_fe_sc_wo_sl_E2_fw;  // lane sl_E1_fe__sc_wo_sc_ei
     wire [1088:0] x_sl_E1_fe_st_wo_sl_E2_fw;  // lane sl_E1_fe__st_wo_st_ei
+    wire [9:0] x_sl_E1_fe_treq_wo_sl_E2_fw;  // lane sl_E1_fe__treq_wo_treq_ei
     wire [1105:0] x_sl_E1_fe_x_fw_o_sl_E1_sc;  // lane sl_E1_fe__x_fe_fw
     wire [1105:0] x_sl_E1_sc_x_fe_fw_o_sl_E1_stm;  // lane sl_E1_fe__x_fe_fw
     wire [1105:0] x_sl_E1_stm_x_fe_fw_o_sl_E1_fw;  // lane sl_E1_fe__x_fe_fw
@@ -1414,6 +1416,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_E2_fe_rv_wo_sl_E3_fw;  // lane sl_E2_fe__rv_wo_rv_ei
     wire [48:0] x_sl_E2_fe_sc_wo_sl_E3_fw;  // lane sl_E2_fe__sc_wo_sc_ei
     wire [1088:0] x_sl_E2_fe_st_wo_sl_E3_fw;  // lane sl_E2_fe__st_wo_st_ei
+    wire [9:0] x_sl_E2_fe_treq_wo_sl_E3_fw;  // lane sl_E2_fe__treq_wo_treq_ei
     wire [1105:0] x_sl_E2_fe_x_fw_o_sl_E2_sc;  // lane sl_E2_fe__x_fe_fw
     wire [1105:0] x_sl_E2_sc_x_fe_fw_o_sl_E2_stm;  // lane sl_E2_fe__x_fe_fw
     wire [1105:0] x_sl_E2_stm_x_fe_fw_o_sl_E2_fw;  // lane sl_E2_fe__x_fe_fw
@@ -1615,6 +1618,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_E3_fe_rv_wo_sl_E4_fw;  // lane sl_E3_fe__rv_wo_rv_ei
     wire [48:0] x_sl_E3_fe_sc_wo_sl_E4_fw;  // lane sl_E3_fe__sc_wo_sc_ei
     wire [1088:0] x_sl_E3_fe_st_wo_sl_E4_fw;  // lane sl_E3_fe__st_wo_st_ei
+    wire [9:0] x_sl_E3_fe_treq_wo_sl_E4_fw;  // lane sl_E3_fe__treq_wo_treq_ei
     wire [1105:0] x_sl_E3_fe_x_fw_o_sl_E3_sc;  // lane sl_E3_fe__x_fe_fw
     wire [1105:0] x_sl_E3_sc_x_fe_fw_o_sl_E3_stm;  // lane sl_E3_fe__x_fe_fw
     wire [1105:0] x_sl_E3_stm_x_fe_fw_o_sl_E3_fw;  // lane sl_E3_fe__x_fe_fw
@@ -1800,6 +1804,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_E4_fe_rv_wo_sl_E5_fw;  // lane sl_E4_fe__rv_wo_rv_ei
     wire [48:0] x_sl_E4_fe_sc_wo_sl_E5_fw;  // lane sl_E4_fe__sc_wo_sc_ei
     wire [1088:0] x_sl_E4_fe_st_wo_sl_E5_fw;  // lane sl_E4_fe__st_wo_st_ei
+    wire [9:0] x_sl_E4_fe_treq_wo_sl_E5_fw;  // lane sl_E4_fe__treq_wo_treq_ei
     wire [1105:0] x_sl_E4_fe_x_fw_o_sl_E4_sc;  // lane sl_E4_fe__x_fe_fw
     wire [1105:0] x_sl_E4_sc_x_fe_fw_o_sl_E4_stm;  // lane sl_E4_fe__x_fe_fw
     wire [1105:0] x_sl_E4_stm_x_fe_fw_o_sl_E4_fw;  // lane sl_E4_fe__x_fe_fw
@@ -1983,7 +1988,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1655:0] x_sl_E5_tap_x_ctl_su_c_o_sl_E5_sc;  // lane sl_E5_ctl__x_ctl_su_c
     wire [1655:0] x_sl_E5_sc_x_ctl_su_c_o_sl_E5_su_c;  // lane sl_E5_ctl__x_ctl_su_c
     wire [4:0] x_sl_E5_ctl_x_tap_o_sl_E5_tap;  // lane sl_E5_ctl__x_ctl_tap
-    wire [1:0] x_sl_E5_fe_flt_o_sl_E5_sc;  // lane sl_E5_fe__flt
     wire [514:0] x_sl_E5_fe_l9_eo_sl_E5_sc;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E5_sc_l9_eo_l9_wi_o_sl_E5_stm;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E5_stm_l9_eo_l9_wi_o_sl_E5_fw;  // lane sl_E5_fe__l9_eo_l9_wi
@@ -1991,7 +1995,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [514:0] x_sl_E4_fe_l9_eo_l9_wi_o_sl_E4_sc;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E4_sc_l9_eo_l9_wi_o_sl_E4_stm;  // lane sl_E5_fe__l9_eo_l9_wi
     wire [514:0] x_sl_E4_stm_l9_eo_l9_wi_o_sl_E4_fw;  // lane sl_E5_fe__l9_eo_l9_wi
-    wire [47:0] x_sl_E5_fe_x_sc_o_sl_E5_sc;  // lane sl_E5_fe__x_fe_sc
     wire [10:0] x_sl_E5_fw_ag_eo_sl_E4_fe;  // lane sl_E5_fw__ag_eo_ag_wi
     wire [512:0] x_sl_E5_fw_ard_eo_sl_E4_fe;  // lane sl_E5_fw__ard_eo_ard_wi
     wire [1:0] x_sl_E5_fw_arl_eo_sl_E4_fe;  // lane sl_E5_fw__arl_eo_arl_wi
@@ -2171,6 +2174,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W0_fe_rv_eo_sl_E0_fw;  // lane sl_W0_fe__rv_eo_rv_ei
     wire [48:0] x_sl_W0_fe_sc_eo_sl_E0_fw;  // lane sl_W0_fe__sc_eo_sc_ei
     wire [1088:0] x_sl_W0_fe_st_eo_sl_E0_fw;  // lane sl_W0_fe__st_eo_st_ei
+    wire [9:0] x_sl_W0_fe_treq_eo_sl_E0_fw;  // lane sl_W0_fe__treq_eo_treq_ei
     wire [1105:0] x_sl_W0_fe_x_fw_o_sl_W0_sc;  // lane sl_W0_fe__x_fe_fw
     wire [1105:0] x_sl_W0_sc_x_fe_fw_o_sl_W0_stm;  // lane sl_W0_fe__x_fe_fw
     wire [1105:0] x_sl_W0_stm_x_fe_fw_o_sl_W0_fw;  // lane sl_W0_fe__x_fe_fw
@@ -2366,6 +2370,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W1_fe_rv_eo_sl_W0_fw;  // lane sl_W1_fe__rv_eo_rv_wi
     wire [48:0] x_sl_W1_fe_sc_eo_sl_W0_fw;  // lane sl_W1_fe__sc_eo_sc_wi
     wire [1088:0] x_sl_W1_fe_st_eo_sl_W0_fw;  // lane sl_W1_fe__st_eo_st_wi
+    wire [9:0] x_sl_W1_fe_treq_eo_sl_W0_fw;  // lane sl_W1_fe__treq_eo_treq_wi
     wire [1105:0] x_sl_W1_fe_x_fw_o_sl_W1_sc;  // lane sl_W1_fe__x_fe_fw
     wire [1105:0] x_sl_W1_sc_x_fe_fw_o_sl_W1_stm;  // lane sl_W1_fe__x_fe_fw
     wire [1105:0] x_sl_W1_stm_x_fe_fw_o_sl_W1_fw;  // lane sl_W1_fe__x_fe_fw
@@ -2551,6 +2556,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W2_fe_rv_eo_sl_W1_fw;  // lane sl_W2_fe__rv_eo_rv_wi
     wire [48:0] x_sl_W2_fe_sc_eo_sl_W1_fw;  // lane sl_W2_fe__sc_eo_sc_wi
     wire [1088:0] x_sl_W2_fe_st_eo_sl_W1_fw;  // lane sl_W2_fe__st_eo_st_wi
+    wire [9:0] x_sl_W2_fe_treq_eo_sl_W1_fw;  // lane sl_W2_fe__treq_eo_treq_wi
     wire [1105:0] x_sl_W2_fe_x_fw_o_sl_W2_sc;  // lane sl_W2_fe__x_fe_fw
     wire [1105:0] x_sl_W2_sc_x_fe_fw_o_sl_W2_stm;  // lane sl_W2_fe__x_fe_fw
     wire [1105:0] x_sl_W2_stm_x_fe_fw_o_sl_W2_fw;  // lane sl_W2_fe__x_fe_fw
@@ -2746,6 +2752,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W3_fe_rv_eo_sl_W2_fw;  // lane sl_W3_fe__rv_eo_rv_wi
     wire [48:0] x_sl_W3_fe_sc_eo_sl_W2_fw;  // lane sl_W3_fe__sc_eo_sc_wi
     wire [1088:0] x_sl_W3_fe_st_eo_sl_W2_fw;  // lane sl_W3_fe__st_eo_st_wi
+    wire [9:0] x_sl_W3_fe_treq_eo_sl_W2_fw;  // lane sl_W3_fe__treq_eo_treq_wi
     wire [1105:0] x_sl_W3_fe_x_fw_o_sl_W3_sc;  // lane sl_W3_fe__x_fe_fw
     wire [1105:0] x_sl_W3_sc_x_fe_fw_o_sl_W3_stm;  // lane sl_W3_fe__x_fe_fw
     wire [1105:0] x_sl_W3_stm_x_fe_fw_o_sl_W3_fw;  // lane sl_W3_fe__x_fe_fw
@@ -2931,6 +2938,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W4_fe_rv_eo_sl_W3_fw;  // lane sl_W4_fe__rv_eo_rv_wi
     wire [48:0] x_sl_W4_fe_sc_eo_sl_W3_fw;  // lane sl_W4_fe__sc_eo_sc_wi
     wire [1088:0] x_sl_W4_fe_st_eo_sl_W3_fw;  // lane sl_W4_fe__st_eo_st_wi
+    wire [9:0] x_sl_W4_fe_treq_eo_sl_W3_fw;  // lane sl_W4_fe__treq_eo_treq_wi
     wire [1105:0] x_sl_W4_fe_x_fw_o_sl_W4_sc;  // lane sl_W4_fe__x_fe_fw
     wire [1105:0] x_sl_W4_sc_x_fe_fw_o_sl_W4_stm;  // lane sl_W4_fe__x_fe_fw
     wire [1105:0] x_sl_W4_stm_x_fe_fw_o_sl_W4_fw;  // lane sl_W4_fe__x_fe_fw
@@ -3126,6 +3134,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1:0] x_sl_W5_fe_rv_eo_sl_W4_fw;  // lane sl_W5_fe__rv_eo_rv_wi
     wire [48:0] x_sl_W5_fe_sc_eo_sl_W4_fw;  // lane sl_W5_fe__sc_eo_sc_wi
     wire [1088:0] x_sl_W5_fe_st_eo_sl_W4_fw;  // lane sl_W5_fe__st_eo_st_wi
+    wire [9:0] x_sl_W5_fe_treq_eo_sl_W4_fw;  // lane sl_W5_fe__treq_eo_treq_wi
     wire [1105:0] x_sl_W5_fe_x_fw_o_sl_W5_sc;  // lane sl_W5_fe__x_fe_fw
     wire [1105:0] x_sl_W5_sc_x_fe_fw_o_sl_W5_stm;  // lane sl_W5_fe__x_fe_fw
     wire [1105:0] x_sl_W5_stm_x_fe_fw_o_sl_W5_fw;  // lane sl_W5_fe__x_fe_fw
@@ -3170,11 +3179,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [1616:0] x_sl_W5_fw_x_fe_o_sl_W5_stm;  // lane sl_W5_fw__x_fw_fe
     wire [1616:0] x_sl_W5_stm_x_fw_fe_o_sl_W5_sc;  // lane sl_W5_fw__x_fw_fe
     wire [1616:0] x_sl_W5_sc_x_fw_fe_o_sl_W5_fe;  // lane sl_W5_fw__x_fw_fe
-    wire [48:0] x_sl_W5_fw_x_sc_o_sl_W5_su_l1;  // lane sl_W5_fw__x_fw_sc
-    wire [48:0] x_sl_W5_su_l1_x_fw_sc_o_sl_W5_su_c;  // lane sl_W5_fw__x_fw_sc
-    wire [48:0] x_sl_W5_su_c_x_fw_sc_o_sl_W5_su_l0;  // lane sl_W5_fw__x_fw_sc
-    wire [48:0] x_sl_W5_su_l0_x_fw_sc_o_sl_W5_fe;  // lane sl_W5_fw__x_fw_sc
-    wire [48:0] x_sl_W5_fe_x_fw_sc_o_sl_W5_sc;  // lane sl_W5_fw__x_fw_sc
     wire [1097:0] x_sl_W5_fw_x_stm_o_sl_W5_stm;  // lane sl_W5_fw__x_fw_stm
     wire [453:0] x_sl_W5_fw_x_tap_o_sl_W5_su_l1;  // lane sl_W5_fw__x_fw_tap
     wire [453:0] x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c;  // lane sl_W5_fw__x_fw_tap
@@ -3343,6 +3347,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
     wire [18:0] x_native59_native_tok_tt_native_tok_o_glue;  // lane tt_ctlm__native_tok_tt_native_tok
     wire [76:0] x_tt_ctlm_program_obs_native59;  // lane tt_ctlm__program_obs_tt_program_obs
     wire [76:0] x_native59_program_obs_tt_program_obs_o_glue;  // lane tt_ctlm__program_obs_tt_program_obs
+    wire [9:0] x_tt_ctlm_table_req_coll_f4;  // lane tt_ctlm__table_req_treq_wi
+    wire [9:0] x_coll_f4_table_req_treq_wi_o_sl_W5_fw;  // lane tt_ctlm__table_req_treq_wi
     wire [1088:0] x_tt_ctlm_tl_coll_f4;  // lane tt_ctlm__tl_st_wi
     wire [1088:0] x_coll_f4_tl_st_wi_o_sl_W5_fw;  // lane tt_ctlm__tl_st_wi
     wire [583:0] x_ucie_kv_rx_flit_glue;  // lane ucie_kv__rx_flit_fdi_rx_flit
@@ -5808,6 +5814,8 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .out_valid_rv_wi_o(x_coll_f4_out_valid_rv_wi_o_sl_W5_fw),
         .ss_wo_ss5_i(x_sl_W5_fw_ss_wo_coll_f4),
         .ss_wo_ss5_o(x_coll_f4_ss_wo_ss5_o_tt_ctlm),
+        .table_req_treq_wi_i(x_tt_ctlm_table_req_coll_f4),
+        .table_req_treq_wi_o(x_coll_f4_table_req_treq_wi_o_sl_W5_fw),
         .tl_st_wi_i(x_tt_ctlm_tl_coll_f4),
         .tl_st_wi_o(x_coll_f4_tl_st_wi_o_sl_W5_fw)
     );
@@ -6128,6 +6136,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_E0_fe_sc_wo_sl_E1_fw),
         .st_wi(x_sl_E1_fw_st_eo_sl_E0_fe),
         .st_wo(x_sl_E0_fe_st_wo_sl_E1_fw),
+        .treq_wo(x_sl_E0_fe_treq_wo_sl_E1_fw),
         .x_fw_i(x_sl_E0_sc_x_fw_fe_o_sl_E0_fe),
         .x_fw_o(x_sl_E0_fe_x_fw_o_sl_E0_sc),
         .x_fw_sc_i(x_sl_E0_su_l0_x_fw_sc_o_sl_E0_fe),
@@ -6178,6 +6187,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E0_fw_sc_eo_sl_W0_fe),
         .st_ei(x_sl_W0_fe_st_eo_sl_E0_fw),
         .st_eo(x_sl_E0_fw_st_eo_sl_W0_fe),
+        .treq_ei(x_sl_W0_fe_treq_eo_sl_E0_fw),
         .x_ctl_i(x_sl_E0_st_b_x_ctl_fw_o_sl_E0_fw),
         .x_ctl_o(x_sl_E0_fw_x_ctl_o_sl_E0_st_b),
         .x_ctl_stm_i(x_sl_E0_st_b_x_ctl_stm_o_sl_E0_fw),
@@ -6596,6 +6606,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_E1_fe_sc_wo_sl_E2_fw),
         .st_wi(x_sl_E2_fw_st_eo_sl_E1_fe),
         .st_wo(x_sl_E1_fe_st_wo_sl_E2_fw),
+        .treq_wo(x_sl_E1_fe_treq_wo_sl_E2_fw),
         .x_fw_i(x_sl_E1_sc_x_fw_fe_o_sl_E1_fe),
         .x_fw_o(x_sl_E1_fe_x_fw_o_sl_E1_sc),
         .x_fw_sc_i(x_sl_E1_su_l0_x_fw_sc_o_sl_E1_fe),
@@ -6645,6 +6656,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E1_fw_sc_eo_sl_E0_fe),
         .st_ei(x_sl_E0_fe_st_wo_sl_E1_fw),
         .st_eo(x_sl_E1_fw_st_eo_sl_E0_fe),
+        .treq_ei(x_sl_E0_fe_treq_wo_sl_E1_fw),
         .x_ctl_i(x_sl_E1_st_b_x_ctl_fw_o_sl_E1_fw),
         .x_ctl_o(x_sl_E1_fw_x_ctl_o_sl_E1_st_b),
         .x_ctl_stm_i(x_sl_E1_st_b_x_ctl_stm_o_sl_E1_fw),
@@ -7052,6 +7064,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_E2_fe_sc_wo_sl_E3_fw),
         .st_wi(x_sl_E3_fw_st_eo_sl_E2_fe),
         .st_wo(x_sl_E2_fe_st_wo_sl_E3_fw),
+        .treq_wo(x_sl_E2_fe_treq_wo_sl_E3_fw),
         .x_fw_i(x_sl_E2_sc_x_fw_fe_o_sl_E2_fe),
         .x_fw_o(x_sl_E2_fe_x_fw_o_sl_E2_sc),
         .x_fw_sc_i(x_sl_E2_su_l0_x_fw_sc_o_sl_E2_fe),
@@ -7102,6 +7115,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E2_fw_sc_eo_sl_E1_fe),
         .st_ei(x_sl_E1_fe_st_wo_sl_E2_fw),
         .st_eo(x_sl_E2_fw_st_eo_sl_E1_fe),
+        .treq_ei(x_sl_E1_fe_treq_wo_sl_E2_fw),
         .x_ctl_i(x_sl_E2_st_b_x_ctl_fw_o_sl_E2_fw),
         .x_ctl_o(x_sl_E2_fw_x_ctl_o_sl_E2_st_b),
         .x_ctl_stm_i(x_sl_E2_st_b_x_ctl_stm_o_sl_E2_fw),
@@ -7520,6 +7534,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_E3_fe_sc_wo_sl_E4_fw),
         .st_wi(x_sl_E4_fw_st_eo_sl_E3_fe),
         .st_wo(x_sl_E3_fe_st_wo_sl_E4_fw),
+        .treq_wo(x_sl_E3_fe_treq_wo_sl_E4_fw),
         .x_fw_i(x_sl_E3_sc_x_fw_fe_o_sl_E3_fe),
         .x_fw_o(x_sl_E3_fe_x_fw_o_sl_E3_sc),
         .x_fw_sc_i(x_sl_E3_su_l0_x_fw_sc_o_sl_E3_fe),
@@ -7569,6 +7584,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E3_fw_sc_eo_sl_E2_fe),
         .st_ei(x_sl_E2_fe_st_wo_sl_E3_fw),
         .st_eo(x_sl_E3_fw_st_eo_sl_E2_fe),
+        .treq_ei(x_sl_E2_fe_treq_wo_sl_E3_fw),
         .x_ctl_i(x_sl_E3_st_b_x_ctl_fw_o_sl_E3_fw),
         .x_ctl_o(x_sl_E3_fw_x_ctl_o_sl_E3_st_b),
         .x_ctl_stm_i(x_sl_E3_st_b_x_ctl_stm_o_sl_E3_fw),
@@ -7976,6 +7992,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_E4_fe_sc_wo_sl_E5_fw),
         .st_wi(x_sl_E5_fw_st_eo_sl_E4_fe),
         .st_wo(x_sl_E4_fe_st_wo_sl_E5_fw),
+        .treq_wo(x_sl_E4_fe_treq_wo_sl_E5_fw),
         .x_fw_i(x_sl_E4_sc_x_fw_fe_o_sl_E4_fe),
         .x_fw_o(x_sl_E4_fe_x_fw_o_sl_E4_sc),
         .x_fw_sc_i(x_sl_E4_su_l0_x_fw_sc_o_sl_E4_fe),
@@ -8026,6 +8043,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E4_fw_sc_eo_sl_E3_fe),
         .st_ei(x_sl_E3_fe_st_wo_sl_E4_fw),
         .st_eo(x_sl_E4_fw_st_eo_sl_E3_fe),
+        .treq_ei(x_sl_E3_fe_treq_wo_sl_E4_fw),
         .x_ctl_i(x_sl_E4_st_b_x_ctl_fw_o_sl_E4_fw),
         .x_ctl_o(x_sl_E4_fw_x_ctl_o_sl_E4_st_b),
         .x_ctl_stm_i(x_sl_E4_st_b_x_ctl_stm_o_sl_E4_fw),
@@ -8417,7 +8435,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .arst_n(rst_n),
         .cws3_i(x_sl_E5_st_a_cws3_o_sl_E5_fe),
         .cws3_o(x_sl_E5_fe_cws3_o_sl_E5_su_l0),
-        .flt_o(x_sl_E5_fe_flt_o_sl_E5_sc),
         .flt_st_a_i(x_sl_E5_st_a_flt_o_sl_E5_fe),
         .l9_eo(x_sl_E5_fe_l9_eo_sl_E5_sc),
         .rsf_i(x_sl_E5_su_l0_rsf_o_sl_E5_fe),
@@ -8430,7 +8447,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fw_tap_i(x_sl_E5_su_l0_x_fw_tap_o_sl_E5_fe),
         .x_fw_tap_o(x_sl_E5_fe_x_fw_tap_o_sl_E5_st_a),
         .x_sc_i(x_sl_E5_sc_x_fe_o_sl_E5_fe),
-        .x_sc_o(x_sl_E5_fe_x_sc_o_sl_E5_sc),
         .x_st_a_i(x_sl_E5_st_a_x_fe_o_sl_E5_fe),
         .x_st_b_i(x_sl_E5_su_l0_x_st_b_fe_o_sl_E5_fe),
         .x_stm_ctl_i(x_sl_E5_su_l0_x_stm_ctl_o_sl_E5_fe),
@@ -8471,6 +8487,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_E5_fw_sc_eo_sl_E4_fe),
         .st_ei(x_sl_E4_fe_st_wo_sl_E5_fw),
         .st_eo(x_sl_E5_fw_st_eo_sl_E4_fe),
+        .treq_ei(x_sl_E4_fe_treq_wo_sl_E5_fw),
         .x_ctl_i(x_sl_E5_st_b_x_ctl_fw_o_sl_E5_fw),
         .x_ctl_o(x_sl_E5_fw_x_ctl_o_sl_E5_st_b),
         .x_ctl_stm_i(x_sl_E5_st_b_x_ctl_stm_o_sl_E5_fw),
@@ -8582,14 +8599,12 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .arst_n(rst_n),
         .cws2_i(x_sl_E5_tap_cws2_o_sl_E5_sc),
         .cws2_o(x_sl_E5_sc_cws2_o_sl_E5_su_c),
-        .flt_fe_i(x_sl_E5_fe_flt_o_sl_E5_sc),
         .l9_eo_l9_wi_i(x_sl_E5_fe_l9_eo_sl_E5_sc),
         .l9_eo_l9_wi_o(x_sl_E5_sc_l9_eo_l9_wi_o_sl_E5_stm),
         .x_ctl_i(x_sl_E5_stm_x_ctl_sc_o_sl_E5_sc),
         .x_ctl_o(x_sl_E5_sc_x_ctl_o_sl_E5_tap),
         .x_ctl_su_c_i(x_sl_E5_tap_x_ctl_su_c_o_sl_E5_sc),
         .x_ctl_su_c_o(x_sl_E5_sc_x_ctl_su_c_o_sl_E5_su_c),
-        .x_fe_i(x_sl_E5_fe_x_sc_o_sl_E5_sc),
         .x_fe_o(x_sl_E5_sc_x_fe_o_sl_E5_fe),
         .x_fw_fe_i(x_sl_E5_stm_x_fw_fe_o_sl_E5_sc),
         .x_fw_fe_o(x_sl_E5_sc_x_fw_fe_o_sl_E5_fe),
@@ -8868,6 +8883,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W0_fe_sc_eo_sl_E0_fw),
         .st_ei(x_sl_E0_fw_st_eo_sl_W0_fe),
         .st_eo(x_sl_W0_fe_st_eo_sl_E0_fw),
+        .treq_eo(x_sl_W0_fe_treq_eo_sl_E0_fw),
         .x_fw_i(x_sl_W0_sc_x_fw_fe_o_sl_W0_fe),
         .x_fw_o(x_sl_W0_fe_x_fw_o_sl_W0_sc),
         .x_fw_sc_i(x_sl_W0_su_l0_x_fw_sc_o_sl_W0_fe),
@@ -8918,6 +8934,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_W0_fw_sc_wo_sl_W1_fe),
         .st_wi(x_sl_W1_fe_st_eo_sl_W0_fw),
         .st_wo(x_sl_W0_fw_st_wo_sl_W1_fe),
+        .treq_wi(x_sl_W1_fe_treq_eo_sl_W0_fw),
         .x_ctl_i(x_sl_W0_st_b_x_ctl_fw_o_sl_W0_fw),
         .x_ctl_o(x_sl_W0_fw_x_ctl_o_sl_W0_st_b),
         .x_ctl_stm_i(x_sl_W0_st_b_x_ctl_stm_o_sl_W0_fw),
@@ -9332,6 +9349,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W1_fe_sc_eo_sl_W0_fw),
         .st_ei(x_sl_W0_fw_st_wo_sl_W1_fe),
         .st_eo(x_sl_W1_fe_st_eo_sl_W0_fw),
+        .treq_eo(x_sl_W1_fe_treq_eo_sl_W0_fw),
         .x_fw_i(x_sl_W1_sc_x_fw_fe_o_sl_W1_fe),
         .x_fw_o(x_sl_W1_fe_x_fw_o_sl_W1_sc),
         .x_fw_sc_i(x_sl_W1_su_l0_x_fw_sc_o_sl_W1_fe),
@@ -9379,6 +9397,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_W1_fw_sc_wo_sl_W2_fe),
         .st_wi(x_sl_W2_fe_st_eo_sl_W1_fw),
         .st_wo(x_sl_W1_fw_st_wo_sl_W2_fe),
+        .treq_wi(x_sl_W2_fe_treq_eo_sl_W1_fw),
         .x_ctl_i(x_sl_W1_st_b_x_ctl_fw_o_sl_W1_fw),
         .x_ctl_o(x_sl_W1_fw_x_ctl_o_sl_W1_st_b),
         .x_ctl_stm_i(x_sl_W1_st_b_x_ctl_stm_o_sl_W1_fw),
@@ -9780,6 +9799,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W2_fe_sc_eo_sl_W1_fw),
         .st_ei(x_sl_W1_fw_st_wo_sl_W2_fe),
         .st_eo(x_sl_W2_fe_st_eo_sl_W1_fw),
+        .treq_eo(x_sl_W2_fe_treq_eo_sl_W1_fw),
         .x_fw_i(x_sl_W2_sc_x_fw_fe_o_sl_W2_fe),
         .x_fw_o(x_sl_W2_fe_x_fw_o_sl_W2_sc),
         .x_fw_sc_i(x_sl_W2_su_l0_x_fw_sc_o_sl_W2_fe),
@@ -9830,6 +9850,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_W2_fw_sc_wo_sl_W3_fe),
         .st_wi(x_sl_W3_fe_st_eo_sl_W2_fw),
         .st_wo(x_sl_W2_fw_st_wo_sl_W3_fe),
+        .treq_wi(x_sl_W3_fe_treq_eo_sl_W2_fw),
         .x_ctl_i(x_sl_W2_st_b_x_ctl_fw_o_sl_W2_fw),
         .x_ctl_o(x_sl_W2_fw_x_ctl_o_sl_W2_st_b),
         .x_ctl_stm_i(x_sl_W2_st_b_x_ctl_stm_o_sl_W2_fw),
@@ -10244,6 +10265,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W3_fe_sc_eo_sl_W2_fw),
         .st_ei(x_sl_W2_fw_st_wo_sl_W3_fe),
         .st_eo(x_sl_W3_fe_st_eo_sl_W2_fw),
+        .treq_eo(x_sl_W3_fe_treq_eo_sl_W2_fw),
         .x_fw_i(x_sl_W3_sc_x_fw_fe_o_sl_W3_fe),
         .x_fw_o(x_sl_W3_fe_x_fw_o_sl_W3_sc),
         .x_fw_sc_i(x_sl_W3_su_l0_x_fw_sc_o_sl_W3_fe),
@@ -10291,6 +10313,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_W3_fw_sc_wo_sl_W4_fe),
         .st_wi(x_sl_W4_fe_st_eo_sl_W3_fw),
         .st_wo(x_sl_W3_fw_st_wo_sl_W4_fe),
+        .treq_wi(x_sl_W4_fe_treq_eo_sl_W3_fw),
         .x_ctl_i(x_sl_W3_st_b_x_ctl_fw_o_sl_W3_fw),
         .x_ctl_o(x_sl_W3_fw_x_ctl_o_sl_W3_st_b),
         .x_ctl_stm_i(x_sl_W3_st_b_x_ctl_stm_o_sl_W3_fw),
@@ -10692,6 +10715,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W4_fe_sc_eo_sl_W3_fw),
         .st_ei(x_sl_W3_fw_st_wo_sl_W4_fe),
         .st_eo(x_sl_W4_fe_st_eo_sl_W3_fw),
+        .treq_eo(x_sl_W4_fe_treq_eo_sl_W3_fw),
         .x_fw_i(x_sl_W4_sc_x_fw_fe_o_sl_W4_fe),
         .x_fw_o(x_sl_W4_fe_x_fw_o_sl_W4_sc),
         .x_fw_sc_i(x_sl_W4_su_l0_x_fw_sc_o_sl_W4_fe),
@@ -10742,6 +10766,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_wo(x_sl_W4_fw_sc_wo_sl_W5_fe),
         .st_wi(x_sl_W5_fe_st_eo_sl_W4_fw),
         .st_wo(x_sl_W4_fw_st_wo_sl_W5_fe),
+        .treq_wi(x_sl_W5_fe_treq_eo_sl_W4_fw),
         .x_ctl_i(x_sl_W4_st_b_x_ctl_fw_o_sl_W4_fw),
         .x_ctl_o(x_sl_W4_fw_x_ctl_o_sl_W4_st_b),
         .x_ctl_stm_i(x_sl_W4_st_b_x_ctl_stm_o_sl_W4_fw),
@@ -11089,7 +11114,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_ctl_i(x_sl_W4_sc_x_su_l1_ctl_o_sl_W4_tap),
         .x_su_l1_ctl_o(x_sl_W4_tap_x_su_l1_ctl_o_sl_W4_ctl)
     );
-    qfd_qc_sle_ctl_v1 sl_W5_ctl (
+    qfd_qc_sle_ctl_v3 sl_W5_ctl (
         .clk(clk_core),
         .arst_n(rst_n),
         .b_tw_data_i(x_sl_W5_stm_b_tw_data_ctl_o_sl_W5_ctl),
@@ -11124,7 +11149,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_i(x_sl_W5_tap_x_su_l1_ctl_o_sl_W5_ctl),
         .x_tap_o(x_sl_W5_ctl_x_tap_o_sl_W5_tap)
     );
-    qfd_qc_slw_fe__slw_fe_v2 sl_W5_fe (
+    qfd_qc_slw_fe_v1 sl_W5_fe (
         .clk(clk_core),
         .arst_n(rst_n),
         .ag_ei(x_sl_W4_fw_ag_wo_sl_W5_fe),
@@ -11156,10 +11181,9 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .sc_eo(x_sl_W5_fe_sc_eo_sl_W4_fw),
         .st_ei(x_sl_W4_fw_st_wo_sl_W5_fe),
         .st_eo(x_sl_W5_fe_st_eo_sl_W4_fw),
+        .treq_eo(x_sl_W5_fe_treq_eo_sl_W4_fw),
         .x_fw_i(x_sl_W5_sc_x_fw_fe_o_sl_W5_fe),
         .x_fw_o(x_sl_W5_fe_x_fw_o_sl_W5_sc),
-        .x_fw_sc_i(x_sl_W5_su_l0_x_fw_sc_o_sl_W5_fe),
-        .x_fw_sc_o(x_sl_W5_fe_x_fw_sc_o_sl_W5_sc),
         .x_fw_tap_i(x_sl_W5_su_l0_x_fw_tap_o_sl_W5_fe),
         .x_fw_tap_o(x_sl_W5_fe_x_fw_tap_o_sl_W5_st_a),
         .x_sc_i(x_sl_W5_sc_x_fe_o_sl_W5_fe),
@@ -11204,6 +11228,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rv_wi(x_coll_f4_out_valid_rv_wi_o_sl_W5_fw),
         .ss_wo(x_sl_W5_fw_ss_wo_coll_f4),
         .st_wi(x_coll_f4_tl_st_wi_o_sl_W5_fw),
+        .treq_wi(x_coll_f4_table_req_treq_wi_o_sl_W5_fw),
         .x_ctl_i(x_sl_W5_st_b_x_ctl_fw_o_sl_W5_fw),
         .x_ctl_o(x_sl_W5_fw_x_ctl_o_sl_W5_st_b),
         .x_ctl_stm_i(x_sl_W5_st_b_x_ctl_stm_o_sl_W5_fw),
@@ -11211,7 +11236,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_i(x_sl_W5_stm_x_fe_fw_o_sl_W5_fw),
         .x_fe_o(x_sl_W5_fw_x_fe_o_sl_W5_stm),
         .x_sc_i(x_sl_W5_su_l1_x_sc_fw_o_sl_W5_fw),
-        .x_sc_o(x_sl_W5_fw_x_sc_o_sl_W5_su_l1),
         .x_stm_i(x_sl_W5_stm_x_fw_o_sl_W5_fw),
         .x_stm_o(x_sl_W5_fw_x_stm_o_sl_W5_stm),
         .x_su_c_ctl_i(x_sl_W5_su_l1_x_su_c_ctl_o_sl_W5_fw),
@@ -11311,7 +11335,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_tap_i(x_sl_W5_hc2_x_tap_hc3_o_sl_W5_hc3),
         .x_tap_o(x_sl_W5_hc3_x_tap_o_sl_W5_hc2)
     );
-    qfd_qc_slw_sc_v1 sl_W5_sc (
+    qfd_qc_slw_sc_v2 sl_W5_sc (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws2_i(x_sl_W5_tap_cws2_o_sl_W5_sc),
@@ -11329,7 +11353,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_fe_stm_o(x_sl_W5_sc_x_fe_stm_o_sl_W5_stm),
         .x_fw_fe_i(x_sl_W5_stm_x_fw_fe_o_sl_W5_sc),
         .x_fw_fe_o(x_sl_W5_sc_x_fw_fe_o_sl_W5_fe),
-        .x_fw_i(x_sl_W5_fe_x_fw_sc_o_sl_W5_sc),
         .x_fw_o(x_sl_W5_sc_x_fw_o_sl_W5_su_c),
         .x_st_b_fe_i(x_sl_W5_tap_x_st_b_fe_o_sl_W5_sc),
         .x_st_b_fe_o(x_sl_W5_sc_x_st_b_fe_o_sl_W5_su_c),
@@ -11409,7 +11432,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_i(x_sl_W5_su_c_x_su_l1_stm_o_sl_W5_stm),
         .x_tap_o(x_sl_W5_stm_x_tap_o_sl_W5_ctl)
     );
-    qfd_qc_slw_su_c_v1 sl_W5_su_c (
+    qfd_qc_slw_su_c_v2 sl_W5_su_c (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws1_i(x_sl_W5_stm_cws1_o_sl_W5_su_c),
@@ -11424,8 +11447,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rsn_o(x_sl_W5_su_c_rsn_o_sl_W5_su_l0),
         .x_ctl_i(x_sl_W5_sc_x_ctl_su_c_o_sl_W5_su_c),
         .x_ctl_o(x_sl_W5_su_c_x_ctl_o_sl_W5_su_l1),
-        .x_fw_sc_i(x_sl_W5_su_l1_x_fw_sc_o_sl_W5_su_c),
-        .x_fw_sc_o(x_sl_W5_su_c_x_fw_sc_o_sl_W5_su_l0),
         .x_fw_tap_i(x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c),
         .x_fw_tap_o(x_sl_W5_su_c_x_fw_tap_o_sl_W5_su_l0),
         .x_sc_fw_i(x_sl_W5_sc_x_fw_o_sl_W5_su_c),
@@ -11450,7 +11471,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_l1_stm_i(x_sl_W5_su_l1_x_stm_o_sl_W5_su_c),
         .x_su_l1_stm_o(x_sl_W5_su_c_x_su_l1_stm_o_sl_W5_stm)
     );
-    qfd_qc_slw_su_l0 sl_W5_su_l0 (
+    qfd_qc_slw_su_l0_v1 sl_W5_su_l0 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws3_i(x_sl_W5_fe_cws3_o_sl_W5_su_l0),
@@ -11461,8 +11482,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rsn_i(x_sl_W5_su_c_rsn_o_sl_W5_su_l0),
         .rsn_o(x_sl_W5_su_l0_rsn_o_sl_W5_fe),
         .x_ctl_o(x_sl_W5_su_l0_x_ctl_o_sl_W5_fe),
-        .x_fw_sc_i(x_sl_W5_su_c_x_fw_sc_o_sl_W5_su_l0),
-        .x_fw_sc_o(x_sl_W5_su_l0_x_fw_sc_o_sl_W5_fe),
         .x_fw_tap_i(x_sl_W5_su_c_x_fw_tap_o_sl_W5_su_l0),
         .x_fw_tap_o(x_sl_W5_su_l0_x_fw_tap_o_sl_W5_fe),
         .x_sc_o(x_sl_W5_su_l0_x_sc_o_sl_W5_fe),
@@ -11476,7 +11495,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .x_su_c_i(x_sl_W5_su_c_x_su_l0_o_sl_W5_su_l0),
         .x_su_c_o(x_sl_W5_su_l0_x_su_c_o_sl_W5_su_c)
     );
-    qfd_qc_slw_su_l1_v1 sl_W5_su_l1 (
+    qfd_qc_slw_su_l1_v2 sl_W5_su_l1 (
         .clk(clk_core),
         .arst_n(rst_n),
         .cws0_i(x_sl_W5_fw_cws0_o_sl_W5_su_l1),
@@ -11487,8 +11506,6 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .rsn_i(x_c_W5_bn_00_y_o00_sl_W5_su_l1),
         .rsn_o(x_sl_W5_su_l1_rsn_o_sl_W5_su_c),
         .x_ctl_o(x_sl_W5_su_l1_x_ctl_o_sl_W5_su_c),
-        .x_fw_sc_i(x_sl_W5_fw_x_sc_o_sl_W5_su_l1),
-        .x_fw_sc_o(x_sl_W5_su_l1_x_fw_sc_o_sl_W5_su_c),
         .x_fw_tap_i(x_sl_W5_fw_x_tap_o_sl_W5_su_l1),
         .x_fw_tap_o(x_sl_W5_su_l1_x_fw_tap_o_sl_W5_su_c),
         .x_sc_fw_i(x_sl_W5_su_c_x_sc_fw_o_sl_W5_su_l1),
@@ -11575,6 +11592,7 @@ module qwen_compute_bound_top (rst_n, clk_coll, clk_coll_blk, clk_core, clk_d2d,
         .program_obs(x_tt_ctlm_program_obs_native59),
         .pw(x_native59_tt_pw_pw_o_tt_ctlm),
         .ss5(x_coll_f4_ss_wo_ss5_o_tt_ctlm),
+        .table_req(x_tt_ctlm_table_req_coll_f4),
         .tl(x_tt_ctlm_tl_coll_f4)
     );
     ot_qkvd_ucie_x64_phy_part ucie_kv (

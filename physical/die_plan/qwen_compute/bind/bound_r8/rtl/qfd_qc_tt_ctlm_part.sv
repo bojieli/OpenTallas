@@ -41,6 +41,7 @@ module qfd_qc_tt_ctlm_part (
     output wire [18:0] native_tok__to_glue__sys_face__tt_native_tok,   // 18 data + epoch [18]: lane tt_ctlm__native_tok_tt_native_tok, 4 cycles: native_tok[18] -> glue
     output wire [18:0] native_tok__to_native59__native_token,   // 18 data + epoch [18]: lane tt_ctlm__native_tok_native_token, 2 cycles: native_tok[18] -> native59
     output wire [76:0] program_obs,   // 76 data + epoch [76]: lane tt_ctlm__program_obs_tt_program_obs, 4 cycles: program_obs[76] -> glue
+    output wire [9:0] table_req,   // 9 data + epoch [9]: lane tt_ctlm__table_req_treq_wi, 4 cycles: table_req[9] -> sl_W5_fw
     output wire [1088:0] tl   // 1088 data + epoch [1088]: lane tt_ctlm__tl_st_wi, 4 cycles: tl[1088] -> sl_W5_fw
 );
     wire [9:0] ag5_q;
@@ -84,6 +85,7 @@ module qfd_qc_tt_ctlm_part (
     wire [17:0] w_core_native_tok;
     wire [75:0] w_core_program_obs;
     wire [1087:0] w_core_tl;
+    wire [8:0] w_core_table_req;
     wire [0:0] pd5_ctx_x_0;
     wire [0:0] pd5_ctx_x_1;
     wire [0:0] pd5_ctx_x_2;
@@ -516,6 +518,7 @@ module qfd_qc_tt_ctlm_part (
     ot_dp_st #(.W(18)) u_bout_native_tok__to_glue__sys_face__tt_native_tok (.clk(clk), .rst_n(rst_n), .d(w_core_native_tok[17:0]), .ea(rst_n), .q(native_tok__to_glue__sys_face__tt_native_tok[17:0]), .eq(native_tok__to_glue__sys_face__tt_native_tok[18]));
     ot_dp_st #(.W(18)) u_bout_native_tok__to_native59__native_token (.clk(clk), .rst_n(rst_n), .d(w_core_native_tok[17:0]), .ea(rst_n), .q(native_tok__to_native59__native_token[17:0]), .eq(native_tok__to_native59__native_token[18]));
     ot_dp_st #(.W(76)) u_bout_program_obs (.clk(clk), .rst_n(rst_n), .d(w_core_program_obs[75:0]), .ea(rst_n), .q(program_obs[75:0]), .eq(program_obs[76]));
+    ot_dp_st #(.W(9)) u_bout_table_req (.clk(clk), .rst_n(rst_n), .d(w_core_table_req[8:0]), .ea(rst_n), .q(table_req[8:0]), .eq(table_req[9]));
     ot_dp_st #(.W(1088)) u_bout_tl (.clk(clk), .rst_n(rst_n), .d(w_core_tl[1087:0]), .ea(rst_n), .q(tl[1087:0]), .eq(tl[1088]));
     ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_0 (.clk(clk), .d(ctx_x_q[0]), .q(pd5_ctx_x_0));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(5)) u_pd5_ctx_x_1 (.clk(clk), .d(ctx_x_q[1]), .q(pd5_ctx_x_1));  // landing pad: as-built relative timing
@@ -946,6 +949,7 @@ module qfd_qc_tt_ctlm_part (
         .pw({pd4_pw_74[0], pd4_pw_73[0], pd4_pw_72[0], pd4_pw_71[0], pd4_pw_70[0], pd4_pw_69[0], pd4_pw_68[0], pd4_pw_67[0], pd4_pw_66[0], pd4_pw_65[0], pd4_pw_64[0], pd4_pw_63[0], pd4_pw_62[0], pd4_pw_61[0], pd4_pw_60[0], pd4_pw_59[0], pd4_pw_58[0], pd4_pw_57[0], pd4_pw_56[0], pd4_pw_55[0], pd4_pw_54[0], pd4_pw_53[0], pd4_pw_52[0], pd4_pw_51[0], pd4_pw_50[0], pd4_pw_49[0], pd4_pw_48[0], pd4_pw_47[0], pd4_pw_46[0], pd4_pw_45[0], pd4_pw_44[0], pd4_pw_43[0], pd4_pw_42[0], pd4_pw_41[0], pd4_pw_40[0], pd4_pw_39[0], pd4_pw_38[0], pd4_pw_37[0], pd4_pw_36[0], pd4_pw_35[0], pd4_pw_34[0], pd4_pw_33[0], pd4_pw_32[0], pd4_pw_31[0], pd4_pw_30[0], pd4_pw_29[0], pd4_pw_28[0], pd4_pw_27[0], pd4_pw_26[0], pd4_pw_25[0], pd4_pw_24[0], pd4_pw_23[0], pd4_pw_22[0], pd4_pw_21[0], pd4_pw_20[0], pd4_pw_19[0], pd4_pw_18[0], pd4_pw_17[0], pd4_pw_16[0], pd4_pw_15[0], pd4_pw_14[0], pd4_pw_13[0], pd4_pw_12[0], pd4_pw_11[0], pd4_pw_10[0], pd4_pw_9[0], pd4_pw_8[0], pd4_pw_7[0], pd4_pw_6[0], pd4_pw_5[0], pd4_pw_4[0], pd4_pw_3[0], pd4_pw_2[0], pd4_pw_1[0], pd4_pw_0[0]}),
         .rst_n(rst_n),
         .ss5(ss5_q[106:0]),
+        .table_req(w_core_table_req),
         .tl(w_core_tl)
     );
 endmodule

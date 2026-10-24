@@ -12381,7 +12381,7 @@
    "planned_width": 1,
    "param": "LAT_COLL_CORE__SHARED_FAULT_IO_SHARED_FAULT",
    "leaves": [
-    "io_collective.u_io.$or$ot_qfd_collective_static_io.sv:170$29920.Y[1]"
+    "io_collective.u_io.$or$ot_qfd_collective_static_io.sv:170$30101.Y[1]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -14371,6 +14371,27 @@
    "param": "LAT_SL_E0_FE__ST_WO_ST_EI",
    "leaves": [
     "dvs_E0.u_core.u_sub.u_fup.st_up_o[1088]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
+   "lane": "sl_E0_fe__treq_wo_treq_ei",
+   "src": "sl_E0_fe",
+   "dst": "sl_E1_fw",
+   "bus_out": "treq_wo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_E0_FE__TREQ_WO_TREQ_EI",
+   "leaves": [
+    "dvs_E0.u_core.u_sub.u_fup.treq_o[9]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -16797,6 +16818,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_E1_fe__treq_wo_treq_ei",
+   "src": "sl_E1_fe",
+   "dst": "sl_E2_fw",
+   "bus_out": "treq_wo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_E1_FE__TREQ_WO_TREQ_EI",
+   "leaves": [
+    "dvs_E1.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_E1_fe__x_fe_fw",
    "src": "sl_E1_fe",
    "dst": "sl_E1_fw",
@@ -19130,6 +19172,27 @@
    "param": "LAT_SL_E2_FE__ST_WO_ST_EI",
    "leaves": [
     "dvs_E2.u_core.u_sub.u_fup.st_up_o[1088]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
+   "lane": "sl_E2_fe__treq_wo_treq_ei",
+   "src": "sl_E2_fe",
+   "dst": "sl_E3_fw",
+   "bus_out": "treq_wo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_E2_FE__TREQ_WO_TREQ_EI",
+   "leaves": [
+    "dvs_E2.u_core.u_sub.u_fup.treq_o[9]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -21556,6 +21619,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_E3_fe__treq_wo_treq_ei",
+   "src": "sl_E3_fe",
+   "dst": "sl_E4_fw",
+   "bus_out": "treq_wo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_E3_FE__TREQ_WO_TREQ_EI",
+   "leaves": [
+    "dvs_E3.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_E3_fe__x_fe_fw",
    "src": "sl_E3_fe",
    "dst": "sl_E3_fw",
@@ -23900,6 +23984,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_E4_fe__treq_wo_treq_ei",
+   "src": "sl_E4_fe",
+   "dst": "sl_E5_fw",
+   "bus_out": "treq_wo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_E4_FE__TREQ_WO_TREQ_EI",
+   "leaves": [
+    "dvs_E4.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_E4_fe__x_fe_fw",
    "src": "sl_E4_fe",
    "dst": "sl_E4_fw",
@@ -26061,27 +26166,6 @@
    "delta": 2
   },
   {
-   "lane": "sl_E5_fe__flt",
-   "src": "sl_E5_fe",
-   "dst": "sl_E5_sc",
-   "bus_out": "flt_o",
-   "bus_in": "flt_fe_i",
-   "width": 1,
-   "planned_width": 1,
-   "param": "LAT_SL_E5_FE__FLT",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fup.scd_q[1]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
-  },
-  {
    "lane": "sl_E5_fe__l9_eo_l9_wi",
    "src": "sl_E5_fe",
    "dst": "sl_E4_fw",
@@ -26101,27 +26185,6 @@
    "bound_stages": 10,
    "plan_cycles": 10,
    "delta": 8
-  },
-  {
-   "lane": "sl_E5_fe__x_fe_sc",
-   "src": "sl_E5_fe",
-   "dst": "sl_E5_sc",
-   "bus_out": "x_sc_o",
-   "bus_in": "x_fe_i",
-   "width": 47,
-   "planned_width": 48,
-   "param": "LAT_SL_E5_FE__X_FE_SC",
-   "leaves": [
-    "dvs_E5.u_core.u_sub.u_fup.scd_q[47]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 2,
-   "plan_cycles": 2,
-   "delta": 2
   },
   {
    "lane": "sl_E5_fw__ag_eo_ag_wi",
@@ -28393,6 +28456,27 @@
    "param": "LAT_SL_W0_FE__ST_EO_ST_EI",
    "leaves": [
     "dvs_W0.u_core.u_sub.u_fup.st_up_o[1088]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
+   "lane": "sl_W0_fe__treq_eo_treq_ei",
+   "src": "sl_W0_fe",
+   "dst": "sl_E0_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_ei",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W0_FE__TREQ_EO_TREQ_EI",
+   "leaves": [
+    "dvs_W0.u_core.u_sub.u_fup.treq_o[9]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -30820,6 +30904,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_W1_fe__treq_eo_treq_wi",
+   "src": "sl_W1_fe",
+   "dst": "sl_W0_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W1_FE__TREQ_EO_TREQ_WI",
+   "leaves": [
+    "dvs_W1.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_W1_fe__x_fe_fw",
    "src": "sl_W1_fe",
    "dst": "sl_W1_fw",
@@ -33153,6 +33258,27 @@
    "param": "LAT_SL_W2_FE__ST_EO_ST_WI",
    "leaves": [
     "dvs_W2.u_core.u_sub.u_fup.st_up_o[1088]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
+   "lane": "sl_W2_fe__treq_eo_treq_wi",
+   "src": "sl_W2_fe",
+   "dst": "sl_W1_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W2_FE__TREQ_EO_TREQ_WI",
+   "leaves": [
+    "dvs_W2.u_core.u_sub.u_fup.treq_o[9]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -35580,6 +35706,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_W3_fe__treq_eo_treq_wi",
+   "src": "sl_W3_fe",
+   "dst": "sl_W2_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W3_FE__TREQ_EO_TREQ_WI",
+   "leaves": [
+    "dvs_W3.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_W3_fe__x_fe_fw",
    "src": "sl_W3_fe",
    "dst": "sl_W3_fw",
@@ -37913,6 +38060,27 @@
    "param": "LAT_SL_W4_FE__ST_EO_ST_WI",
    "leaves": [
     "dvs_W4.u_core.u_sub.u_fup.st_up_o[1088]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
+   "lane": "sl_W4_fe__treq_eo_treq_wi",
+   "src": "sl_W4_fe",
+   "dst": "sl_W3_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W4_FE__TREQ_EO_TREQ_WI",
+   "leaves": [
+    "dvs_W4.u_core.u_sub.u_fup.treq_o[9]"
    ],
    "forwarded": 0,
    "asbuilt_stages": [
@@ -40340,6 +40508,27 @@
    "delta": 0
   },
   {
+   "lane": "sl_W5_fe__treq_eo_treq_wi",
+   "src": "sl_W5_fe",
+   "dst": "sl_W4_fw",
+   "bus_out": "treq_eo",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_SL_W5_FE__TREQ_EO_TREQ_WI",
+   "leaves": [
+    "dvs_W5.u_core.u_sub.u_fup.treq_o[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    2,
+    2
+   ],
+   "bound_stages": 2,
+   "plan_cycles": 2,
+   "delta": 0
+  },
+  {
    "lane": "sl_W5_fe__x_fe_fw",
    "src": "sl_W5_fe",
    "dst": "sl_W5_fw",
@@ -40702,27 +40891,6 @@
    "bound_stages": 6,
    "plan_cycles": 6,
    "delta": 6
-  },
-  {
-   "lane": "sl_W5_fw__x_fw_sc",
-   "src": "sl_W5_fw",
-   "dst": "sl_W5_sc",
-   "bus_out": "x_sc_o",
-   "bus_in": "x_fw_i",
-   "width": 48,
-   "planned_width": 48,
-   "param": "LAT_SL_W5_FW__X_FW_SC",
-   "leaves": [
-    "dvs_W5.u_core.u_sub.u_fdn.scu_q[48]"
-   ],
-   "forwarded": 0,
-   "asbuilt_stages": [
-    0,
-    0
-   ],
-   "bound_stages": 10,
-   "plan_cycles": 10,
-   "delta": 10
   },
   {
    "lane": "sl_W5_fw__x_fw_stm",
@@ -42786,6 +42954,27 @@
    "bound_stages": 4,
    "plan_cycles": 4,
    "delta": 0
+  },
+  {
+   "lane": "tt_ctlm__table_req_treq_wi",
+   "src": "tt_ctlm",
+   "dst": "sl_W5_fw",
+   "bus_out": "table_req",
+   "bus_in": "treq_wi",
+   "width": 9,
+   "planned_width": 9,
+   "param": "LAT_TT_CTLM__TABLE_REQ_TREQ_WI",
+   "leaves": [
+    "tt_ctlm.table_req[9]"
+   ],
+   "forwarded": 0,
+   "asbuilt_stages": [
+    27,
+    27
+   ],
+   "bound_stages": 4,
+   "plan_cycles": 4,
+   "delta": -23
   },
   {
    "lane": "tt_ctlm__tl_st_wi",
@@ -51898,6 +52087,15 @@
     4
    ],
    "bits": 453,
+   "r8": true
+  },
+  "dvs_W5.u_core.u_sub.u_fdn.treq_i": {
+   "src_part": "tt_ctlm",
+   "pads": [
+    4,
+    4
+   ],
+   "bits": 9,
    "r8": true
   },
   "dvs_W5.u_core.u_sub.u_fup.chr_c": {

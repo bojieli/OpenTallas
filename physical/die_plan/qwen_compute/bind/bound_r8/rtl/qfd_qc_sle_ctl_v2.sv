@@ -58,7 +58,7 @@ module qfd_qc_sle_ctl_v2 (
     wire x_su_l0_i_eq;
     wire [455:0] x_su_l1_i_q;
     wire x_su_l1_i_eq;
-    wire [0:0] w_or_qfd_dv_s8_ce_sv_2337_29918_Y;
+    wire [0:0] w_or_qfd_dv_s8_ce_sv_2448_30098_Y;
     wire [9:0] w_u_ctl_ag_own;
     wire [23:0] w_u_ctl_am_idx;
     wire [1:0] w_u_ctl_am_u;
@@ -4530,7 +4530,7 @@ module qfd_qc_sle_ctl_v2 (
     ot_dp_dly #(.W(1), .D(5)) u_pd5_x_stm_i_26 (.clk(clk), .d(x_stm_i_q[26]), .q(pd5_x_stm_i_26));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(5)) u_pd5_x_stm_i_27 (.clk(clk), .d(x_stm_i_q[27]), .q(pd5_x_stm_i_27));  // landing pad: as-built relative timing
     ot_dp_dly #(.W(1), .D(5)) u_pd5_x_stm_i_28 (.clk(clk), .d(x_stm_i_q[28]), .q(pd5_x_stm_i_28));  // landing pad: as-built relative timing
-    assign w_or_qfd_dv_s8_ce_sv_2337_29918_Y = x_fw_i_q[1154] | w_u_rp_fault[0];  // /home/ubuntu/scratch/binder2-1023/qcsrc_a9dea8962/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv:2337.80-2337.97
+    assign w_or_qfd_dv_s8_ce_sv_2448_30098_Y = x_fw_i_q[1154] | w_u_rp_fault[0];  // /home/ubuntu/scratch/binder3-1023/qcsrc2/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv:2448.80-2448.97
     // as-built dvs_E5.u_core.u_sub.u_ctl
     qfd_dv_s5_ctl_repair4_leaf u_u_ctl (
         .ag_own(w_u_ctl_ag_own),
@@ -4548,7 +4548,7 @@ module qfd_qc_sle_ctl_v2 (
         .kv_we({x_su_l1_i_q[398], x_su_l1_i_q[284], x_su_l1_i_q[170], x_su_l1_i_q[56], x_su_l0_i_q[398], x_su_l0_i_q[284], x_su_l0_i_q[170], x_su_l0_i_q[56]}),
         .l9o_v(x_st_a_i_q[1]),
         .own_ch(w_u_ctl_own_ch),
-        .pc_bad(w_or_qfd_dv_s8_ce_sv_2337_29918_Y[0]),
+        .pc_bad(w_or_qfd_dv_s8_ce_sv_2448_30098_Y[0]),
         .r_d({x_st_b_i_q[255:0], x_st_a_i_q[267:76], x_st_a_i_q[65:2]}),
         .r_idx(x_st_a_i_q[73:66]),
         .r_last(x_st_a_i_q[74]),

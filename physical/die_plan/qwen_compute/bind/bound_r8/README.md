@@ -1,22 +1,20 @@
-Qwen compute die bound by tools/die_plan/bind.py with land_align=r8 (BINDER3 10-23, rebind qc11; COORD 16:58 R8 SOURCE OF TRUTH)
-plan: QC-P5 claude/qc-p5-1023 @c0152774b physical/die_plan/qwen_compute/die_plan.json (= plan 9d96cdb52) +
-r8/qwen_compute_r8_landing.json (874,976 pad flops, made by PLAN-TOOL3 r8.py from BINDER2 bus_groups b1e14ae54).
-as-built: r56 qfd_die + QC-P4 chain-end leaves @a9dea8962 (bind.f paths relative to that tree + this directory).
-Recipe ../asbuilt_r8.json (= ../asbuilt.json with land_align r8):
-  python3 tools/die_plan/bind.py bind PLAN --asbuilt physical/die_plan/qwen_compute/bind/asbuilt_r8.json --out OUT  (+ verify, portbind)
-Landing pads: every r8 table member realised as ot_dp_dly after the sink partition's in boundary flop; stale 0 /
-uncovered 0 (every crossing bit is in the table with the same source, as-built and bound depth). EXCEPTION: the 35
-collective SerDes / core<->face members named by asbuilt.land_align_exclude get NO pad -- their timing is the
-regenerated collective calendar (param_regen.json: LS 389, face PHY 351/343/351, R 7/8/8, PEER_R 8/8/7, as qc10); the
-table pads 11 of them by 1..5, which would break coll_regen's one-depth-per-leg rule (bind_report lanes.landing_alignment
-.r8_excluded).  r8_g0_check.json = r8.py check on this bind's bus groups: PASS except those 3 collective groups + 1
-replica (sx0_valid coll_n 7 / coll_s 8).
-r8_heads_check.json (../xt1_heads_check.py): u_tap.hw / u_tap.cid land at 6 on hc0..hc3 in all 12 slices (96/96);
-head -> column go n_d all 2, s_d all 8.
-verify_report.json: FAIL only on the 204 as-built TIED QC-P4 chain-end inputs (dvs fdn treq_i 108, sc_dn/sc_up 96),
-left undriven, never tied; all other leaf-input bits identical to as-built.  port_bind_strict: PASS (74 masters / 388).
-Verilator 5.050 lint (lint_split, 110G cap; the earlier 'lint 2' was OOM kill -9, not RTL): 0 errors.  Bind 870,392 pad
-flops (table 874,976 minus the excluded collective members).
-G3 kit RTL: bind.py kit-rtl PLAN --out <bind out> --type T [--instance I] -> <plan module>.sv wrapper + kit_rtl.f
-(gen.py phys --kit-rtl T=kit_rtl.f).  QC types carry per-instance strap PARAMETERS (tile_id, sidx): one kit per strap
-set (--instance) until the straps become pins; e.g. cbx_q10 / c_E0_bf_10 lints 0 errors (39 files).
+Qwen compute die bound by tools/die_plan/bind.py, land_align=r8 + QC-P5-TIE (BINDER3 10-23, rebind qc12)
+plan: claude/qc-p5-tie-1023 @e3f313354 physical/die_plan/qwen_compute/die_plan.json (= QC-P5 9d96cdb52/c0152774b + 12 treq
+lanes twinned with cmd) + plan_rewires_treq.json (class treq: 12 template-less edges, bits identity, stages from the
+'beside' cmd edge).  R8 table: QC-P5 @c0152774b r8/qwen_compute_r8_landing.json + ../qc_treq_pads.json (land_r8_extra:
+each treq hop lands with its cmd twin; made by ../treq_pads.py on this bind).
+as-built: r56 qfd_die + QC-P4 chain ends @a9dea8962 + QC-P5-TIE @0cd1eebf3: dvs_(E1|E3|W1|W3) -> qfd_dv_s8_ce_l9h,
+dvs_W5 -> qfd_dv_s8_ce_w5 (no sc_up_i), dvs_E5 -> qfd_dv_s8_ce_e5 (no sc_dn_i) (k79 sc2 dn0/up0 netlists).
+bind.f paths are relative to that source tree + this directory.  Recipe ../asbuilt_tie.json:
+  python3 tools/die_plan/bind.py elab|bind|verify|portbind PLAN --asbuilt physical/die_plan/qwen_compute/bind/asbuilt_tie.json --out OUT
+Results: proof unbound 0 / TIED 0 / UNDRIVEN 0 (the 204 known bits are gone: treq 108 rewired, sc_dn/sc_up 96 removed by
+the chain-end RTL).  verify_report.json PASS (2,723,870 matched, 0 mismatched), Verilator 5.050 lint 0 errors.
+port_bind_strict PASS (80 masters / 388 instances).  R8: stale 0, uncovered 0, 870,428 pad flops, max pad 15; 6 Yosys
+fault-OR cells renumbered by the re-elab matched by canonical name; 3 table members on the removed sc_dn_i/sc_up_i
+(pad 0) recorded as gone_pad0.  35 collective members land_align_exclude (coll_regen calendar, param_regen.json: LS 389).
+r8_heads_check.json: tap.hw / tap.cid land 6 on hc0..hc3 in all 12 slices (96/96); n_d 2, s_d 8.
+treq_vs_cmd.json (compiler latency term): every treq hop lands with its cmd twin (tt_ctlm -> W5 8/8, slice hops 2/2,
+offset 0); the 1 edge/slice earlier arrival (W5 0 .. E5 11) is the leaf-internal fdn->fup treq vs cmd difference.
+G3 kit RTL: bind.py kit-rtl PLAN --out <bind out> --type T [--instance I] -> wrapper + kit_rtl.f (gen.py phys
+--kit-rtl T=kit_rtl.f).  QC types carry per-instance strap PARAMETERS (tile_id, sidx): one kit per strap set
+(--instance) until straps become pins.
