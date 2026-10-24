@@ -854,19 +854,19 @@
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "taps_per_core": {
-   "nk": 32,
-   "nl": 31
+   "nk": 38,
+   "nl": 37
   },
   "drops_per_quad": {
-   "cbf_q00": 128,
-   "cbf_q00_s2": 128,
-   "cbf_q01": 128,
-   "cbf_q01_s2": 128,
-   "cbf_q11": 128,
-   "cbn_q00": 128,
-   "cbn_q01": 128,
-   "cbn_q11": 128,
-   "cbx_q10": 127
+   "cbf_q00": 152,
+   "cbf_q00_s2": 152,
+   "cbf_q01": 152,
+   "cbf_q01_s2": 152,
+   "cbf_q11": 152,
+   "cbn_q00": 152,
+   "cbn_q01": 152,
+   "cbn_q11": 152,
+   "cbx_q10": 151
   }
  },
  "leaf_params": {

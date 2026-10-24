@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "mode": "G0",
  "errors": 0,
@@ -21,15 +21,15 @@
   "lanes": 2015,
   "bits": 1355334,
   "taps_cores": {
-   "taps": 170,
+   "taps": 1501,
    "hard_cores": 68,
    "core_pins": 114118,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json",
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json"
+    "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/plan_notes.json",
+    "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -126,10 +126,10 @@
    }
   },
   "geometry": {
-   "partition_area_mm2": 769.781449727999,
+   "partition_area_mm2": 769.7814497280002,
    "channel_area_mm2": 17.768844288,
-   "uncovered_mm2": 9.424984455108643e-13,
-   "fill": 0.9774378291481662,
+   "uncovered_mm2": 0.0,
+   "fill": 0.9774378291481677,
    "planned_channels": []
   },
   "worst_faces": [
@@ -4475,8 +4475,8 @@
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
   },
   "seams": {
    "nets": {
@@ -7035,7 +7035,7 @@
     "off_shore": 0,
     "over_sites": 0
    },
-   "source": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_io.json"
+   "source": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -8316,7 +8316,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.png"
+  "png": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {

@@ -21,7 +21,8 @@ def declare(P, path, die_clock):
         raise ValueError(f"a0_core_taps: budget {ins}+/-{tol} ps, neighbour {nb} contradicts the die clock {die_clock}")
     per_quad = {}
     for tn, t in sorted(P.types.items()):
-        hcs = t.get("hard_cores", [])
+        hcs = [hc for hc in t.get("hard_cores", [])
+               if hc.get("module", "").startswith(("qfd_tile_nk_a0c", "qfd_tile_nl_a0c"))]
         if not hcs:
             continue
         old = {f"{hc['inst']}.ck" for hc in hcs}
