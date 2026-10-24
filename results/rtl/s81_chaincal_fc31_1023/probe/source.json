@@ -1,0 +1,54 @@
+{
+ "original_sha256": "64d4be888d3fefb3f35e0144be3555fd75d7b1587c0af7321013d0331cf33e25",
+ "corrected_sha256": "35ba1ef7023140d0dbb02e4b0ffd7ebabe70f9e0f859073b3b24c72d0a026212",
+ "land_plan_sha256": "d5761499d2671752a5bd74a5a733167cd6c9eb6a7478141534cdf770b8b21725",
+ "actual_source_sha256": {
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+  "rtl/dsrom_sys/s81_dv/land/ot_s81_land.sv": "a8e2fd363c543e69e1fda36c6bd4658f285c51bf7ffec447d231ecc3e2e27e75"
+ },
+ "reset_stations": 2535,
+ "frames": [
+  "u_f_0L02",
+  "u_f_0L03",
+  "u_f_0R12",
+  "u_f_0R13",
+  "u_f_1L12",
+  "u_f_1L13",
+  "u_f_2L12",
+  "u_f_2L13",
+  "u_f_2R02",
+  "u_f_2R03",
+  "u_f_3L02",
+  "u_f_3L03",
+  "u_f_4R02",
+  "u_f_4R03",
+  "u_f_5R12",
+  "u_f_5R13",
+  "u_f_6R12",
+  "u_f_6R13",
+  "u_f_7R02",
+  "u_f_7R03"
+ ],
+ "delays": {
+  "u_f_0L03": 7,
+  "u_f_0R13": 5,
+  "u_f_1L13": 1,
+  "u_f_2L13": 7,
+  "u_f_2R03": 7,
+  "u_f_3L03": 7,
+  "u_f_4R03": 7,
+  "u_f_5R13": 5,
+  "u_f_6R13": 6,
+  "u_f_7R03": 7
+ },
+ "mutants": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "scope": "real reset cone + lane clock parity + land-plan flights (dv_slice_cut rule) + real W1 landings with die lk; common-phase roots; no datapath or physical skew claim"
+}
