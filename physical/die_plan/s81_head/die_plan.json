@@ -436,7 +436,7 @@
      "in_face": "W",
      "out_face": "S",
      "width": 565,
-     "stations": 2,
+     "stations": 4,
      "in_window_um": [
       699.84,
       999.872
@@ -1453,7 +1453,7 @@
      "in_face": "N",
      "out_face": "E",
      "width": 514,
-     "stations": 6,
+     "stations": 7,
      "in_window_um": [
       160.0,
       366.0
@@ -1468,7 +1468,7 @@
      "in_face": "E",
      "out_face": "N",
      "width": 512,
-     "stations": 5,
+     "stations": 6,
      "in_window_um": [
       342.0,
       547.2
@@ -1611,7 +1611,7 @@
      "in_face": "N",
      "out_face": "E",
      "width": 514,
-     "stations": 4,
+     "stations": 6,
      "in_window_um": [
       160.0,
       366.0
@@ -1626,7 +1626,7 @@
      "in_face": "E",
      "out_face": "N",
      "width": 512,
-     "stations": 3,
+     "stations": 4,
      "in_window_um": [
       862.0,
       1067.2
@@ -1789,7 +1789,7 @@
      "in_face": "E",
      "out_face": "W",
      "width": 64,
-     "stations": 4,
+     "stations": 5,
      "in_window_um": [
       422.0,
       448.0
@@ -1883,7 +1883,7 @@
      "in_face": "W",
      "out_face": "E",
      "width": 64,
-     "stations": 4,
+     "stations": 5,
      "in_window_um": [
       760.88,
       786.88
@@ -2576,7 +2576,7 @@
      "in_face": "N",
      "out_face": "W",
      "width": 514,
-     "stations": 4,
+     "stations": 5,
      "in_window_um": [
       1076.88,
       1282.88
@@ -2591,7 +2591,7 @@
      "in_face": "W",
      "out_face": "N",
      "width": 512,
-     "stations": 4,
+     "stations": 5,
      "in_window_um": [
       521.1912,
       635.1912
@@ -2741,7 +2741,7 @@
      "in_face": "W",
      "out_face": "N",
      "width": 64,
-     "stations": 2,
+     "stations": 3,
      "in_window_um": [
       778.88,
       804.88
@@ -2756,7 +2756,7 @@
      "in_face": "N",
      "out_face": "W",
      "width": 64,
-     "stations": 2,
+     "stations": 3,
      "in_window_um": [
       501.862,
       518.112
@@ -2771,7 +2771,7 @@
      "in_face": "E",
      "out_face": "N",
      "width": 64,
-     "stations": 3,
+     "stations": 4,
      "in_window_um": [
       760.88,
       786.88
@@ -2786,7 +2786,7 @@
      "in_face": "N",
      "out_face": "E",
      "width": 64,
-     "stations": 3,
+     "stations": 4,
      "in_window_um": [
       550.362,
       566.628
@@ -16812,12 +16812,12 @@
     "param": "LAT_CHE0_O9"
    },
    "chE0_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE0_T"
    },
@@ -17042,12 +17042,12 @@
     "param": "LAT_CHW0_O9"
    },
    "chW0_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW0_T"
    },
@@ -17272,12 +17272,12 @@
     "param": "LAT_CHE1_O9"
    },
    "chE1_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE1_T"
    },
@@ -17502,12 +17502,12 @@
     "param": "LAT_CHW1_O9"
    },
    "chW1_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW1_T"
    },
@@ -17732,12 +17732,12 @@
     "param": "LAT_CHE2_O9"
    },
    "chE2_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE2_T"
    },
@@ -17962,12 +17962,12 @@
     "param": "LAT_CHW2_O9"
    },
    "chW2_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW2_T"
    },
@@ -18192,12 +18192,12 @@
     "param": "LAT_CHE3_O9"
    },
    "chE3_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE3_T"
    },
@@ -18422,12 +18422,12 @@
     "param": "LAT_CHW3_O9"
    },
    "chW3_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW3_T"
    },
@@ -18652,12 +18652,12 @@
     "param": "LAT_CHE4_O9"
    },
    "chE4_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE4_T"
    },
@@ -18882,12 +18882,12 @@
     "param": "LAT_CHW4_O9"
    },
    "chW4_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW4_T"
    },
@@ -19112,12 +19112,12 @@
     "param": "LAT_CHE5_O9"
    },
    "chE5_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHE5_T"
    },
@@ -19342,12 +19342,12 @@
     "param": "LAT_CHW5_O9"
    },
    "chW5_t": {
-    "cycles": 5,
-    "stations": 3,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 5,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_CHW5_T"
    },
@@ -19602,42 +19602,42 @@
     "param": "LAT_HD_HOST_RX"
    },
    "m0S_tx": {
-    "cycles": 48,
-    "stations": 46,
+    "cycles": 49,
+    "stations": 47,
     "boundary": 2,
     "faces": 10,
     "fixed": 0,
-    "natural": 48,
+    "natural": 49,
     "pad": 0,
     "param": "LAT_HD_M0S_TX"
    },
    "m0S_rx": {
-    "cycles": 48,
-    "stations": 46,
+    "cycles": 51,
+    "stations": 49,
     "boundary": 2,
     "faces": 10,
     "fixed": 0,
-    "natural": 48,
+    "natural": 51,
     "pad": 0,
     "param": "LAT_HD_M0S_RX"
    },
    "m7S_tx": {
-    "cycles": 45,
-    "stations": 43,
+    "cycles": 46,
+    "stations": 44,
     "boundary": 2,
     "faces": 9,
     "fixed": 0,
-    "natural": 45,
+    "natural": 46,
     "pad": 0,
     "param": "LAT_HD_M7S_TX"
    },
    "m7S_rx": {
-    "cycles": 45,
-    "stations": 43,
+    "cycles": 47,
+    "stations": 45,
     "boundary": 2,
     "faces": 9,
     "fixed": 0,
-    "natural": 45,
+    "natural": 47,
     "pad": 0,
     "param": "LAT_HD_M7S_RX"
    },
@@ -19652,12 +19652,12 @@
     "param": "LAT_HD_M7N_TX"
    },
    "m7N_rx": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 2,
     "fixed": 0,
-    "natural": 6,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_HD_M7N_RX"
    },
@@ -19732,6 +19732,16 @@
     "param": "LAT_COLL_WN0_D"
    },
    "coll_WN1_u": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0,
+    "param": "LAT_COLL_WN1_U"
+   },
+   "coll_WN1_d": {
     "cycles": 10,
     "stations": 8,
     "boundary": 2,
@@ -19739,19 +19749,19 @@
     "fixed": 0,
     "natural": 10,
     "pad": 0,
-    "param": "LAT_COLL_WN1_U"
-   },
-   "coll_WN1_d": {
-    "cycles": 9,
-    "stations": 7,
-    "boundary": 2,
-    "faces": 3,
-    "fixed": 0,
-    "natural": 9,
-    "pad": 0,
     "param": "LAT_COLL_WN1_D"
    },
    "coll_WN2_u": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0,
+    "param": "LAT_COLL_WN2_U"
+   },
+   "coll_WN2_d": {
     "cycles": 20,
     "stations": 18,
     "boundary": 2,
@@ -19759,35 +19769,25 @@
     "fixed": 0,
     "natural": 20,
     "pad": 0,
-    "param": "LAT_COLL_WN2_U"
-   },
-   "coll_WN2_d": {
-    "cycles": 19,
-    "stations": 17,
-    "boundary": 2,
-    "faces": 5,
-    "fixed": 0,
-    "natural": 19,
-    "pad": 0,
     "param": "LAT_COLL_WN2_D"
    },
    "coll_WN3_u": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 2,
     "fixed": 0,
-    "natural": 6,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_COLL_WN3_U"
    },
    "coll_WN3_d": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 7,
+    "stations": 5,
     "boundary": 2,
     "faces": 2,
     "fixed": 0,
-    "natural": 6,
+    "natural": 7,
     "pad": 0,
     "param": "LAT_COLL_WN3_D"
    },
@@ -19812,22 +19812,22 @@
     "param": "LAT_COLL_EN0_D"
    },
    "coll_EN1_u": {
+    "cycles": 13,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 13,
+    "pad": 0,
+    "param": "LAT_COLL_EN1_U"
+   },
+   "coll_EN1_d": {
     "cycles": 12,
     "stations": 10,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
     "natural": 12,
-    "pad": 0,
-    "param": "LAT_COLL_EN1_U"
-   },
-   "coll_EN1_d": {
-    "cycles": 11,
-    "stations": 9,
-    "boundary": 2,
-    "faces": 3,
-    "fixed": 0,
-    "natural": 11,
     "pad": 0,
     "param": "LAT_COLL_EN1_D"
    },
@@ -19852,22 +19852,22 @@
     "param": "LAT_COLL_WS0_D"
    },
    "coll_WS1_u": {
+    "cycles": 13,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 13,
+    "pad": 0,
+    "param": "LAT_COLL_WS1_U"
+   },
+   "coll_WS1_d": {
     "cycles": 12,
     "stations": 10,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
     "natural": 12,
-    "pad": 0,
-    "param": "LAT_COLL_WS1_U"
-   },
-   "coll_WS1_d": {
-    "cycles": 11,
-    "stations": 9,
-    "boundary": 2,
-    "faces": 3,
-    "fixed": 0,
-    "natural": 11,
     "pad": 0,
     "param": "LAT_COLL_WS1_D"
    },
@@ -19892,22 +19892,22 @@
     "param": "LAT_COLL_ES0_D"
    },
    "coll_ES1_u": {
+    "cycles": 13,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 13,
+    "pad": 0,
+    "param": "LAT_COLL_ES1_U"
+   },
+   "coll_ES1_d": {
     "cycles": 12,
     "stations": 10,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
     "natural": 12,
-    "pad": 0,
-    "param": "LAT_COLL_ES1_U"
-   },
-   "coll_ES1_d": {
-    "cycles": 11,
-    "stations": 9,
-    "boundary": 2,
-    "faces": 3,
-    "fixed": 0,
-    "natural": 11,
     "pad": 0,
     "param": "LAT_COLL_ES1_D"
    },
