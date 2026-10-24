@@ -37,7 +37,8 @@
   "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
   "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
   "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
-  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner"
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a); re-evaluated from the same STA sessions"
  },
  "tool_commit": null,
  "corners": {
@@ -501,11 +502,11 @@
   "antenna_source": "5_2_route.json"
  },
  "checks": {
-  "setup_ss": {
+  "setup_tt": {
    "verdict": "FAIL",
-   "wns_ps": -417.24,
-   "tns_ps": -533356.51,
-   "violators": 4248.0
+   "wns_ps": -132.68,
+   "tns_ps": -19313.0,
+   "violators": 2525.0
   },
   "hold_ff": {
    "verdict": "FAIL",
@@ -515,40 +516,33 @@
    "sdc_wns_ps": 5.83,
    "overlay": "applied vclk in_min -40 out_min 0"
   },
-  "tt": {
+  "ss": {
    "verdict": "REPORT",
-   "setup_wns_ps": -132.68,
-   "hold_wns_ps": -68.8,
-   "hold_sdc_wns_ps": -28.8,
-   "label": "TT: pathfinding only"
+   "setup_wns_ps": -417.24,
+   "hold_wns_ps": -167.24,
+   "slew_viol": 6661.0,
+   "cap_viol": 0.0,
+   "label": "SS: information only, never gates (AGENTS.md 2026-10-24)"
   },
   "drv": {
    "verdict": "FAIL",
    "by_corner": {
-    "ss": {
-     "slew": 6661.0,
+    "tt": {
+     "slew": 4030.0,
      "cap": 0.0
     },
     "ff": {
      "slew": 3364.0,
-     "cap": 0.0
-    },
-    "tt": {
-     "slew": 4030.0,
      "cap": 0.0
     }
    },
    "failing": {
-    "ss": {
-     "slew": 6661.0,
+    "tt": {
+     "slew": 4030.0,
      "cap": 0.0
     },
     "ff": {
      "slew": 3364.0,
-     "cap": 0.0
-    },
-    "tt": {
-     "slew": 4030.0,
      "cap": 0.0
     }
    }
@@ -557,9 +551,8 @@
    "verdict": "PASS",
    "limit": 64,
    "violators": {
-    "ss": 0.0,
-    "ff": 0.0,
-    "tt": 0.0
+    "tt": 0.0,
+    "ff": 0.0
    },
    "max_fanout": 41.0,
    "worst_net": "clknet_leaf_14_clk_t2"
@@ -578,20 +571,20 @@
    "verdict": "PASS",
    "spread_max_ps": 80.0,
    "by_corner": {
-    "ss": {
+    "tt": {
      "pinflops": {
       "n": 6106,
-      "min": 326.28,
-      "mean": 347.24,
-      "max": 382.12,
-      "spread": 55.84
+      "min": 232.19,
+      "mean": 247.29,
+      "max": 272.73,
+      "spread": 40.54
      },
      "all": {
       "n": 7176,
-      "min": 326.28,
-      "mean": 347.29,
-      "max": 382.12,
-      "spread": 55.84
+      "min": 232.19,
+      "mean": 247.39,
+      "max": 272.73,
+      "spread": 40.54
      },
      "ck_errors": 0.0
     },
@@ -612,20 +605,20 @@
      },
      "ck_errors": 0.0
     },
-    "tt": {
+    "ss": {
      "pinflops": {
       "n": 6106,
-      "min": 232.19,
-      "mean": 247.29,
-      "max": 272.73,
-      "spread": 40.54
+      "min": 326.28,
+      "mean": 347.24,
+      "max": 382.12,
+      "spread": 55.84
      },
      "all": {
       "n": 7176,
-      "min": 232.19,
-      "mean": 247.39,
-      "max": 272.73,
-      "spread": 40.54
+      "min": 326.28,
+      "mean": 347.29,
+      "max": 382.12,
+      "spread": 55.84
      },
      "ck_errors": 0.0
     }
@@ -704,9 +697,9 @@
   }
  },
  "reasons": [
-  "setup_ss: FAIL WNS -417.24 ps, 4248 endpoints",
+  "setup_tt: FAIL WNS -132.68 ps, 2525 endpoints",
   "hold_ff: FAIL WNS -10.52 ps, 58 endpoints",
-  "drv: FAIL SS slew 6661.0 cap 0.0, FF slew 3364.0 cap 0.0, TT slew 4030.0 cap 0.0",
+  "drv: FAIL TT slew 4030.0 cap 0.0, FF slew 3364.0 cap 0.0",
   "sdc_lint: FAIL 51 errors (first: hold: input arst_n min input delay 0 ps > -40 ps (seam-hold padding relaxed))"
  ],
  "verdict": "NOT SIGNED"
