@@ -36,6 +36,8 @@ def main():
     ap.add_argument("--host", required=True)
     ap.add_argument("--results", default=str(Path(__file__).with_name("results.json")))
     ap.add_argument("--note", default="")
+    ap.add_argument("--signoff", default="signoff", help="signoff.py --out dir, relative to the kit")
+    ap.add_argument("--author", default="claude kits_repin")
     a = ap.parse_args()
     K = Path(a.kit).resolve()
     fz = json.loads((K / "freeze.json").read_text())
@@ -45,8 +47,11 @@ def main():
     REP = one(str(K / "run/reports/asap7/*/base"))
     row = dict(kit=fz["kit"], module=fz["module"], kit_hash=fz["kit_hash"], host=a.host, run_dir=str(K),
                outline_um=fz["outline_um"], pins=fz["pins"], recorded=time.strftime("%Y-%m-%d %H:%M %Z"),
-               gates_built_in=fz.get("gates"), corner_note="TT = pathfinding (AGENTS.md); sign-off = SS setup / FF hold",
-               functional="RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+               gates_built_in=fz.get("gates"), corner_note="AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+               functional=("kit-local rtl_patch (duplicate sticky fault flop): lockstep vs unmodified module PASS + mutant "
+                           "caught (results/lockstep_*.json)" if rec.get("rtl_patch") else
+                           "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed"),
+               author=a.author,
                note=a.note)
     g = {}
     s = rd(K / "sdc_lint.log")
@@ -111,21 +116,35 @@ def main():
     tt, ff, ss = sta["tt"], sta["ff"], sta["ss"]
     if isinstance(tt, dict):
         v["cts_tt"] = "PASS" if tt["ck_max_ps"] <= INS_MAX and tt["ck_spread_ps"] <= SPREAD_MAX else "FAIL"
-        v["tt_setup (pathfinding)"] = "PASS" if tt["setup_wns_ps"] >= 0 else "FAIL"
+        v["tt_setup"] = "PASS" if tt["setup_wns_ps"] >= 0 else "FAIL"
     else:
-        v["cts_tt"] = v["tt_setup (pathfinding)"] = "NOT RUN"
+        v["cts_tt"] = v["tt_setup"] = "NOT RUN"
     v["ff_hold"] = ("PASS" if ff["hold_wns_ps"] >= 0 else "FAIL") if isinstance(ff, dict) else "NOT RUN"
-    v["ss_setup (sign-off)"] = ("PASS" if ss["setup_wns_ps"] >= 0 else "FAIL") if isinstance(ss, dict) else "NOT RUN"
-    phys = [k for k in v if k not in ("ss_setup (sign-off)", "face_guard", "sdc_lint")]
+    v["ss_setup (info)"] = ("PASS" if ss["setup_wns_ps"] >= 0 else "FAIL") if isinstance(ss, dict) else "NOT RUN"
+    phys = [k for k in v if k not in ("ss_setup (info)", "face_guard", "sdc_lint")]
     if any(v[k] == "FAIL" for k in phys):
         pv = "FAIL (" + ", ".join(k for k in phys if v[k] == "FAIL") + ")"
     elif any(v[k] == "NOT RUN" for k in phys):
         pv = "INCOMPLETE (" + ", ".join(k for k in phys if v[k] == "NOT RUN") + " NOT RUN)"
     else:
-        pv = "PASS (TT pathfinding + FF hold)" + ("; SS setup PASS" if v["ss_setup (sign-off)"] == "PASS"
-                                                else "; SS setup " + v["ss_setup (sign-off)"])
+        pv = "PASS (TT setup + FF hold)" + ("; SS setup PASS" if v["ss_setup (info)"] == "PASS"
+                                                else "; SS setup " + v["ss_setup (info)"])
     fails = [k for k in ("sdc_lint", "face_guard") if v[k] != "PASS"]
     verdict = (f"FAIL ({', '.join(k + ' ' + v[k] for k in fails)}); physical: {pv}" if fails else pv)
+    # signoff.py (main f942bf2f72) is authoritative: a core is closed only when its verdict is SIGNED
+    sj = K / a.signoff / "signoff.json"
+    if sj.exists():
+        so = json.loads(sj.read_text())
+        sv = so.get("verdict") or so.get("status")
+        g["signoff"] = dict(dir=str(sj.parent), verdict=sv,
+                            reasons=so.get("reasons"),
+                            setup_tt=(so.get("checks") or {}).get("setup_tt"), hold_ff=(so.get("checks") or {}).get("hold_ff"),
+                            summary=(rd(K / "signoff.log") or "").splitlines()[:1] if (K / "signoff.log").exists() else None)
+    else:
+        g["signoff"] = "NOT RUN"
+        sv = "NOT RUN"
+    v["signoff"] = sv
+    verdict = ("SIGNED (closed)" if sv == "SIGNED" else f"NOT CLOSED: signoff {sv}; " + verdict)
     row["physical_verdict"] = pv
     row.update(gates=g, gate_verdicts=v, verdict=verdict)
     P = Path(a.results)

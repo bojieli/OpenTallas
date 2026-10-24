@@ -10,7 +10,7 @@ set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup 30.000
 set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup 30.0000
 set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold 12.5000
 set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold 12.5000
-set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(clk)$}]
+set non_clk_in [all_inputs -no_clocks]
 set_input_delay -max 166.6000 -clock vclk $non_clk_in
 set_output_delay -max 166.6000 -clock vclk [all_outputs]
 # reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)

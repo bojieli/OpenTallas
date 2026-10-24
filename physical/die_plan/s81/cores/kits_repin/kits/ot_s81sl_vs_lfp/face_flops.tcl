@@ -209,6 +209,7 @@ proc ff_point_at {pts t} {
   }
   return [lrange $pts end-1 end]
 }
+if {[file exists /work/ft_bit_sites.tcl]} { source /work/ft_bit_sites.tcl }
 set ff_gocc {}
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
@@ -260,7 +261,24 @@ foreach bt [$ff_blk getBTerms] {
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }
-    set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+    if {[info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot]} {
+      if {![regexp {\[([0-9]+)\]$} $nm -> ff_bit]} { error "FT bit index missing: $nm" }
+      set key "$slot,$j,$ff_bit"
+      if {![dict exists $ff_bit_sites $key]} { error "explicit FT site missing: $key" }
+      lassign [dict get $ff_bit_sites $key] xx yy
+      lassign [dict get $ff_bit_site_cells $slot] fw fh
+      set cx [expr {round($xx*$ff_dbu)}]; set cy [expr {round($yy*$ff_dbu)}]
+      if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} { error "explicit FT site is not on a row/site: $key $xx $yy" }
+      set fm [$f getMaster]
+      if {[$fm getWidth] > $fw*$ff_dbu+1 || [$fm getHeight] > $fh*$ff_dbu+1} { error "FT cell exceeds allocated footprint: [$f getName]" }
+      if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$fm getWidth] > $ff_x1 || $cy+[$fm getHeight] > $ff_y1} { error "explicit FT site outside core: $key" }
+      $f setOrient [dict get $ff_orient $cy]
+      $f setLocation $cx $cy
+      $f setPlacementStatus FIRM
+      set got [list $cx $cy]
+    } else {
+      set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+    }
     if {$got eq ""} { incr ff_st_miss; continue }
     puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
     incr ff_st
@@ -268,6 +286,8 @@ foreach bt [$ff_blk getBTerms] {
 }
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
+# KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
+if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
 # per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
 if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }

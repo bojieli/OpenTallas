@@ -117,6 +117,9 @@
    },
    "sim_extra": []
   },
-  "keep_pin_regs": true
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "clock_balance_note": "r2/r10 signoff: TT pin-flop insertion 199.7 < 250-40 (clock FAIL) and FF output hold -46.6 (vclk 250 fixed); r6 needed 9826 hold buffers. Lift the tree to 250 before the first repair.",
+  "max_buffer_percent": 100
  }
 }

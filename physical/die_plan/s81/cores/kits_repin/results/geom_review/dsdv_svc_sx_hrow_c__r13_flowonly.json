@@ -1,0 +1,4 @@
+{"kit": "dsdv_svc_sx_hrow_c", "kit_hash": "5259efa4293bac3d", "date": "2026-10-24T12:20-07:00",
+ "verdict": "PASS (geometry unchanged)",
+ "basis": "outline 138.24x164.16, pins.json, io.tcl, pdn.tcl identical to reviewed kit (geom_review dsdv_svc_sx_hrow_c__e1e6a4f1481809c6, PASS; CODEX 09:05 re-read hrow_r2placed image, PASS-COND). r13 changes are flow-only: CTS clock balance to plan insertion 250+-40 before first repair (tap_balance.tcl, port ck), hold buffer budget 100% (CODEX r8 area check 47.5% < 55%), post-GRT slew margin 40 + FF hold repair, CTS args = closed kit's. Kit-local fault duplicate-flop patch (lockstep PASS, mutant caught) unchanged.",
+ "checks": {"pin_alignment": "unchanged", "density": "util 0.5 target, ~28-30% placed", "macros": "none", "clock_pin": "ck N centre", "pdn_vs_pins": "unchanged"}}
