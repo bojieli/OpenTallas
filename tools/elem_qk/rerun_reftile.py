@@ -7,7 +7,7 @@ record, then tools/die_plan/signoff.py (main) at the owner sign-off corners (TT 
     (copy the dir to the host, then)  ot-run --mem M --threads T --hosts H --dir RUN -- bash RUN/run.sh
 
 prep reads physical/ref_tile/<KIT>/job.json AT <COMMIT> (the spec that closed; `COMMIT` placeholders -> the sha),
-pins <COMMIT> and this checkout's HEAD under refs/elemqk/ (the host fetches them from the hub and git-archives
+the host git-archives <COMMIT> and this checkout's HEAD from its own clone (fetching origin when missing):
 source.paths + extra_paths / tools/die_plan itself), and writes run.sh: untar, route cmd (placeholders substituted, cwd SRC), ok
 check, signoff.py run --corners tt,ff on routes/<LABEL>/work/orfs with the kit's signoff.sdc.  Benches are not re-run
 (the CLOSED record's benches passed on the same commit; nothing in the source changes).
