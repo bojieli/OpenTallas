@@ -340,7 +340,21 @@ def test_per_tap_reset_synchronisers():
         v = (Path(d) / f"{mod}.sv").read_text()
         assert all(f"ot_dp_rsync_s2 u_rsync_t{i} " in v for i in range(n)) and "u_rst_sync" not in v
         rs = re.findall(r"ot_dp_ste? #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
-        assert rs and set(rs) == {f"rst_n_t{i}" for i in range(min(n, len(rs)))}   # round-robin over the tap syncs
+        assert rs and set(rs) <= {f"rst_n_t{i}" for i in range(n)}
+        # S81-P9: each boundary flop takes the synchroniser of the tap nearest its pins
+        import gen_phys
+        taps = schema.tap_grid(P, "fa")
+        pins = {}
+        for bn, _b, _l, x, y, _f in gen_phys.type_pins(P, "fa"):
+            pins.setdefault(bn, []).append((x, y))
+        for kind, bn, r in re.findall(r"ot_dp_ste? #\(\.W\(\d+\)\) u_(bin|bout)_(\w+?) \(\.clk\(clk\), \.rst_n\((\w+)\)", v):
+            key = next((k for k in pins if gen_rtl.sv_id(k) == bn), None)
+            if key is None:
+                continue
+            x = sum(p[0] for p in pins[key]) / len(pins[key])
+            y = sum(p[1] for p in pins[key]) / len(pins[key])
+            i = min(range(n), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))
+            assert r == f"rst_n_t{i}", (bn, r, i)
         cells = Path(d) / "ot_dp_cells.sv"
         if shutil.which("yosys"):
             top = Path(d) / "t.sv"

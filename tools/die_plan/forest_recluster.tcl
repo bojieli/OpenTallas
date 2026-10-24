@@ -184,6 +184,95 @@ proc fr_split {pts B cap} {
   return [concat [fr_split [lrange $s 0 [expr {$n1 - 1}]] $b1 $cap] [fr_split [lrange $s $n1 end] [expr {$B - $b1}] $cap]]
 }
 
+# weighted L1 minimax: pts = {x y R}; the point that minimises max(d - R) (|dx|+|dy| = max(|du|,|dv|), u=x+y, v=x-y)
+proc fr_minimax {pts} {
+  set lu -1e18; set hu 1e18; set lv -1e18; set hv 1e18
+  foreach p $pts {
+    lassign $p x y R
+    set u [expr {$x + $y}]; set v [expr {$x - $y}]
+    set lu [expr {max($lu, $u - $R)}]; set hu [expr {min($hu, $u + $R)}]
+    set lv [expr {max($lv, $v - $R)}]; set hv [expr {min($hv, $v + $R)}]
+  }
+  set u [expr {($lu + $hu) / 2.0}]; set v [expr {($lv + $hv) / 2.0}]
+  return [list [expr {int(($u + $v) / 2)}] [expr {int(($u - $v) / 2)}]]
+}
+
+# ---- 1-bit reset pipelines (ot_pl_pad chains of the landing reset: u_lpr_root, u_lpr_ft<k>, u_frl_rst; S81-P9 10-23)
+# GPL clumps their g_reg.r[k] stages, so a 1-6 stage chain still made one mm-long hop (h10_r0_p1: lpr_root ->
+# frame_int_o0 1,680 um).  Each chain (stage k fed by stage k-1, checked) goes on the line from its head's source to the
+# L1 minimax point of its tail's loads, stage j of n at j/(n+1); a chain that needs more stages (ceil(L / plan) - 1 > n) or whose
+# loads spread beyond one hop is reported (OT_RESET_CHAIN NEED), the stages are added in RTL.
+set fr_cre [expr {[info exists ::env(OT_RSTCHAIN_RE)] ? $::env(OT_RSTCHAIN_RE) : {^(.*[.]u_(?:lpr_root|lpr_ft[0-9]*|frl_rst))[.]g_reg[.]r\[([0-9]+)\]}}]
+set fr_ch {}
+foreach i [$fr_blk getInsts] {
+  if {![fr_is_ff $i]} continue
+  if {![regexp $fr_cre [string map {\\ {}} [$i getName]] -> cpfx k]} continue
+  dict set fr_ch $cpfx $k $i
+}
+set fr_cn 0; set fr_cneed 0; set fr_cb 0; set fr_ca 0
+proc fr_xy_of {it} {
+  set i [$it getInst]
+  if {[[$i getMaster] isBlock]} { set b [$it getBBox]; return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
+  return [fr_ctr $i]
+}
+proc fr_loads {net depth} {
+  set r {}
+  if {$net eq "NULL" || $net eq ""} { return $r }
+  foreach bt [$net getBTerms] { set b [$bt getBBox]; lappend r [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
+  foreach it [$net getITerms] {
+    if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+    set i [$it getInst]
+    if {$depth < 8 && ([fr_is_buf $i] || [fr_is_inv $i])} {
+      set o [fr_out $i]
+      if {$o ne ""} { set r [concat $r [fr_loads [$o getNet] [expr {$depth + 1}]]] }
+      continue
+    }
+    lappend r [fr_xy_of $it]
+  }
+  return $r
+}
+dict for {cpfx stg} $fr_ch {
+  set ks [lsort -integer [dict keys $stg]]
+  set L {}; foreach k $ks { lappend L [dict get $stg $k] }
+  set ok [expr {[lindex $ks 0] == 0 && [lindex $ks end] == [llength $ks] - 1}]
+  for {set j 1} {$ok && $j < [llength $L]} {incr j} {
+    set s [fr_src [[fr_pin [lindex $L $j] D] getNet]]
+    if {[lindex $s 0] ne [lindex $L [expr {$j - 1}]]} { set ok 0 }
+  }
+  set s [fr_src [[fr_pin [lindex $L 0] D] getNet]]
+  if {!$ok || $s eq {}} { puts "OT_RESET_CHAIN SKIP $cpfx (not a simple chain)"; continue }
+  if {[lindex $s 0] eq "PORT"} { set b [[$fr_blk findBTerm [lindex $s 1]] getBBox]; set sxy [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] } else { set sxy [fr_ctr [lindex $s 0]] }
+  set lds [fr_loads [[fr_out [lindex $L end]] getNet] 0]
+  if {![llength $lds]} { puts "OT_RESET_CHAIN SKIP $cpfx (no loads)"; continue }
+  # before
+  set hb 0; set prev $sxy
+  foreach f $L { set hb [expr {max($hb, [fr_md $prev [fr_ctr $f]])}]; set prev [fr_ctr $f] }
+  foreach q $lds { set hb [expr {max($hb, [fr_md $prev $q])}] }
+  set mm {}; foreach q $lds { lappend mm [list {*}$q 0] }
+  set T [fr_minimax $mm]
+  set rs 0; foreach q $lds { set rs [expr {max($rs, [fr_md $T $q])}] }
+  set n [llength $L]
+  set j 0
+  foreach f $L {
+    incr j
+    fr_put $f [expr {int([lindex $sxy 0] + ([lindex $T 0] - [lindex $sxy 0]) * $j / ($n + 1.0))}] [expr {int([lindex $sxy 1] + ([lindex $T 1] - [lindex $sxy 1]) * $j / ($n + 1.0))}]
+  }
+  set ha 0; set prev $sxy
+  foreach f $L { set ha [expr {max($ha, [fr_md $prev [fr_ctr $f]])}]; set prev [fr_ctr $f] }
+  foreach q $lds { set ha [expr {max($ha, [fr_md $prev $q])}] }
+  set need [expr {int(ceil([fr_md $sxy $T] / double($fr_plan))) - 1}]
+  set u [expr {double($fr_dbu)}]
+  set msg ""
+  if {$ha > $fr_hop} {
+    incr fr_cneed
+    set msg " NEED [expr {max($need, $n)}] stages (has $n; source->tail-load centre [format %.0f [expr {[fr_md $sxy $T] / $u}]] um)[expr {$rs > $fr_plan ? " + loads spread [format %.0f [expr {$rs / $u}]] um from their centre: split the fan-out" : ""}]"
+  }
+  puts "OT_RESET_CHAIN $cpfx: $n stages, [llength $lds] loads, max hop [format %.0f [expr {$hb / $u}]] -> [format %.0f [expr {$ha / $u}]] um$msg"
+  set fr_cb [expr {max($fr_cb, $hb)}]; set fr_ca [expr {max($fr_ca, $ha)}]
+  incr fr_cn
+}
+puts "OT_RESET_CHAIN $fr_cn chains placed on their source->load lines ($fr_cneed still over [expr {$fr_hop / double($fr_dbu)}] um); max hop [format %.0f [expr {$fr_cb / double($fr_dbu)}]] -> [format %.0f [expr {$fr_ca / double($fr_dbu)}]] um"
+
 # ---- forests by name
 set fr_f {}
 foreach i [$fr_blk getInsts] {
@@ -273,9 +362,17 @@ dict for {pfx lst} $fr_f {
   set grp [fr_split $pts [llength $brL] $fr_cap]
   set gc {}
   foreach g $grp { lappend gc [expr {[llength $g] ? [fr_bbc $g] : ""}] }
+  # hub = weighted L1 minimax point: a branch whose leaves span r may sit up to (plan - r) from its group centre, so
+  # the hub must lie within 2*plan - r of that centre (rotated-box intersection; its centre when empty)
   set hub_pts {}
-  foreach c $gc { if {$c ne ""} { lappend hub_pts [concat x $c] } }
-  set hub [fr_bbc $hub_pts]
+  set gi 0
+  foreach g $grp {
+    set c [lindex $gc $gi]; incr gi
+    if {$c eq ""} continue
+    set r 0; foreach p $g { set r [expr {max($r, [fr_md $c [lrange $p 1 2]])}] }
+    lappend hub_pts [list [lindex $c 0] [lindex $c 1] [expr {max(0.0, 2.0 * $fr_plan - $r)}]]
+  }
+  set hub [fr_minimax $hub_pts]
   # pull a branch toward the hub when the hub is beyond one hop (keeps its leaves within reach if they allow it)
   set bxy {}
   set gi 0

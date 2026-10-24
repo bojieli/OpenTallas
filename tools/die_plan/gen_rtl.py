@@ -193,8 +193,11 @@ def wrapper(P, tn, epochs, rtl_root=None):
     taps = S.tap_grid(P, tn)
     if len(taps) > 1:
         # one local synchroniser per tap region (u_rsync_t<i>, rst_n_t<i>); rst_n = tap 0 (leaves).  Boundary flops and
-        # ft stations take the region syncs round-robin here; the kit (reset_taps.tcl, pre-GPL) re-points every FIRM
-        # placed one to the synchroniser of its nearest tap and places each synchroniser FIRM at its tap.
+        # ft stations take the synchroniser of the tap NEAREST their planned site (S81-P9 10-23: the bus's pin centroid;
+        # ft station j of k at j/k between the slot's in and out pins).  Round-robin left the face taps without a
+        # synchroniser (Yosys drops the unloaded ones), so reset_taps.tcl had to fall back to a farther tap (S81 r0:
+        # u_rsync_t3 -> ft1_s0.eq 753-803 um).  The kit (reset_taps.tcl, pre-GPL) still re-points every FIRM placed one
+        # to its nearest tap's synchroniser and places each synchroniser FIRM at its tap.
         if ns not in (2, 3):
             raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
         for i in range(len(taps)):
@@ -202,8 +205,25 @@ def wrapper(P, tn, epochs, rtl_root=None):
                         f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
         body.append("    wire rst_n = rst_n_t0;")
         rr = [0]
+        try:
+            import gen_phys
+            cen = {}
+            for bn, _b, _l, x, y, _f in gen_phys.type_pins(P, tn):
+                a = cen.setdefault(bn, [0.0, 0.0, 0])
+                a[0] += x
+                a[1] += y
+                a[2] += 1
+            cen = {k: (v[0] / v[2], v[1] / v[2]) for k, v in cen.items()}
+        except Exception:      # a plan without pin geometry: round-robin (reset_taps.tcl re-points)
+            cen = {}
 
-        def rsel():
+        def rsel(key=None, key2=None, f=0.0):
+            if key in cen:
+                x, y = cen[key]
+                if key2 in cen:
+                    x, y = x + (cen[key2][0] - x) * f, y + (cen[key2][1] - y) * f
+                i = min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))
+                return f"rst_n_t{i}"
             r = f"rst_n_t{rr[0] % len(taps)}"
             rr[0] += 1
             return r
@@ -211,7 +231,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({ns})) u_rst_sync "
                     f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
 
-        def rsel():
+        def rsel(key=None, key2=None, f=0.0):
             return "rst_n"
     def st(ea):
         # an epoch flop that loads a reset net is kept (ot_dp_ste), else opt_merge folds all of them into one
@@ -227,14 +247,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
         pad = pads.get((tn, b["name"]), 0)   # R8 latency-group pad stages (Plan.bus_pads)
         if b["dir"] == "in":
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
-            r = rsel()
+            r = rsel(b["name"])
             ea = f"{n}[{W}]" if b["ep"] else r
             body.append(f"    {st(ea)} #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({n}[{W - 1}:0]), "
                         f".ea({ea}), .q({n}_q), .eq({n}_eq));")
             q, eq = f"{n}_q", f"{n}_eq"
             for j in range(pad):
                 decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n}_pad{j} (.clk(clk), .rst_n({rsel()}), .d({q}), .ea({eq}), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n}_pad{j} (.clk(clk), .rst_n({rsel(b['name'])}), .d({q}), .ea({eq}), "
                             f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
                 q, eq = f"{n}_p{j}_q", f"{n}_p{j}_eq"
             sig[f"bus:{b['name']}"] = q
@@ -244,7 +264,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             eq = f"{n}[{W}]" if b["ep"] else f"{n}_eo"
             if not b["ep"]:
                 decl.append(f"    wire {n}_eo;  // epoch of a die-IO / non-lane output: not carried off the partition")
-            r = rsel()
+            r = rsel(b["name"])
             d, ea = f"{n}_d", r
             for j in range(pad):
                 decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
@@ -258,7 +278,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
         n, W, k = sv_id(s["name"]), s["width"], int(s.get("stations", 1))
         ep_i = epochs.get((tn, s["name"] + "_i"), True)
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
-        r = rsel()
+        r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
         for j in range(k):
             last = j == k - 1
@@ -269,7 +289,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             else:
                 q, eq = f"{n}_s{j}_q", f"{n}_s{j}_eq"
                 decl.append(f"    wire [{W - 1}:0] {q};\n    wire {eq};")
-            body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel()}), .d({d}), .ea({ea}), "
+            body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel(s['name'] + '_i', s['name'] + '_o', j / k)}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
             d, ea = q, eq
     for nt in t.get("nets", []):

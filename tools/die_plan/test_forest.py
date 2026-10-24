@@ -34,6 +34,15 @@ def _netlist():
     for n in range(NLEAF):
         v.append(f"  {FF} \\{f}.g_leaf[{n}].u_ff/value_reg  (.CLK(clk), .D(bo{n // 32}), .QN(lq{n}));")
         v.append(f"  {FF} ld{n} (.CLK(clk), .D(lq{n}), .QN());")
+    # reset pipelines: u_c.u_lpr_root (3 stages, src -> load 1.3 mm), u_c.u_frl_rst (1 stage, 1.3 mm: 2 x 650 um),
+    # u_c.u_lpr_ft0 (1 stage, 1.85 mm: NEED 2)
+    for c, n in (("lpr_root", 3), ("frl_rst", 1), ("lpr_ft0", 1)):
+        d = "src_q"
+        for k in range(n):
+            v.append(f"  wire {c}{k};")
+            v.append(f"  {FF} \\u_c.u_{c}.g_reg.r[{k}]$_DFF_P_  (.CLK(clk), .D({d}), .QN({c}{k}));")
+            d = f"{c}{k}"
+        v.append(f"  {FF} cl_{c} (.CLK(clk), .D({d}), .QN());")
     v.append("  assign y = lq0;\nendmodule\n")
     return "\n".join(v)
 
@@ -51,11 +60,13 @@ set u [[ord::get_db_tech] getDbUnitsPerMicron]
 set clumps {{200 200} {1300 1000} {1300 200}}
 foreach i [$blk getInsts] {
   set n [string map {\\ {}} [$i getName]]
-  if {[regexp {^ld([0-9]+)$} $n -> k] || [regexp {g_leaf\[([0-9]+)\]} $n -> k]} {
+  if {[regexp {^cl_} $n]} {
+    $i setLocation [expr {1400 * $u}] [expr {($n eq "cl_lpr_ft0" ? 1150 : 600) * $u}]; $i setPlacementStatus FIRM
+  } elseif {[regexp {^ld([0-9]+)$} $n -> k] || [regexp {g_leaf\[([0-9]+)\]} $n -> k]} {
     lassign [lindex $clumps [expr {$k % 3}]] x y
     $i setLocation [expr {int(($x + ($k % 7) * 9 + ([string match ld* $n] ? 0 : 20)) * $u)}] [expr {int(($y + ($k % 5) * 10.8) * $u)}]
     $i setPlacementStatus [expr {[string match ld* $n] ? "FIRM" : "PLACED"}]
-  } elseif {$n eq "src"} {
+  } elseif {$n eq "src" || [string match "u_c.*" $n]} {
     $i setLocation [expr {100 * $u}] [expr {600 * $u}]; $i setPlacementStatus PLACED
   } else {
     $i setLocation [expr {750 * $u}] [expr {600 * $u}]; $i setPlacementStatus PLACED
@@ -115,5 +126,9 @@ def test_forest_recluster():
         moved = [ln for ln in log.splitlines() if ln and not ln.startswith("#")]
         assert len(moved) == NLEAF and sum(1 for ln in moved if ln.split("\t")[2] != ln.split("\t")[3]) > 0
         # before: the RTL assignment l -> branch[l/32] had a leaf > 1 mm from its branch
+        m = re.search(r"OT_RESET_CHAIN u_c.u_lpr_root: 3 stages, 1 loads, max hop (\d+) -> (\d+) um\n", out)
+        assert m and int(m.group(1)) > 1000 and int(m.group(2)) <= 750, out[-3000:]
+        assert re.search(r"OT_RESET_CHAIN u_c.u_frl_rst: 1 stages, 1 loads, max hop \d+ -> \d+ um\n", out)   # 650 + 650
+        assert re.search(r"OT_RESET_CHAIN u_c.u_lpr_ft0: 1 stages, 1 loads, max hop \d+ -> \d+ um NEED 2 stages", out)
         m = re.search(r"branch->leaf max (\d+) -> (\d+) um", out)
         assert int(m.group(1)) > 750 >= int(m.group(2)), m.group(0)
