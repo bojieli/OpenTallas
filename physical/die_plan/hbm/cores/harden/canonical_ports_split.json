@@ -792,6 +792,758 @@
     }
    }
   },
+  "hc_hcp_sys1": {
+   "elab_bits": [
+    171,
+    73
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hbm_hc_root_static/ot_hbm_hc_root_hcp_sys1_core.sv",
+   "master": "ot_hbm_hc_root_static",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "core_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "core_rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "core_calendar_pop",
+     "input",
+     1,
+     0
+    ],
+    [
+     "core_cmd_valid",
+     "input",
+     1,
+     0
+    ],
+    [
+     "core_cmd_npos",
+     "input",
+     4,
+     0
+    ],
+    [
+     "core_cmd_eps",
+     "input",
+     32,
+     0
+    ],
+    [
+     "core_cmd_wbase",
+     "input",
+     2,
+     0
+    ],
+    [
+     "core_sys_sum",
+     "input",
+     128,
+     0
+    ],
+    [
+     "core_sys_fault",
+     "input",
+     1,
+     0
+    ],
+    [
+     "core_o_valid",
+     "output",
+     1,
+     0
+    ],
+    [
+     "core_o_pos",
+     "output",
+     3,
+     0
+    ],
+    [
+     "core_o_idx",
+     "output",
+     5,
+     0
+    ],
+    [
+     "core_o_data",
+     "output",
+     32,
+     0
+    ],
+    [
+     "core_fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "core_sd_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "core_sd_ss",
+     "output",
+     1,
+     0
+    ],
+    [
+     "core_sd_nv",
+     "output",
+     9,
+     0
+    ],
+    [
+     "core_sd_wa",
+     "output",
+     10,
+     0
+    ],
+    [
+     "core_sd_xa",
+     "output",
+     10,
+     0
+    ]
+   ],
+   "top": "ot_hbm_hc_root_hcp_sys1_core",
+   "type_ids": {
+    "ot_hbm_hc_root_static__hcp_sys1__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      171,
+      73
+     ],
+     "cut_pins": {
+      "clk": {
+       "core_clk": 1
+      },
+      "u_core_calendar_pop": {
+       "core_calendar_pop": 1
+      },
+      "u_core_cmd_eps": {
+       "core_cmd_eps": 32
+      },
+      "u_core_cmd_npos": {
+       "core_cmd_npos": 4
+      },
+      "u_core_cmd_valid": {
+       "core_cmd_valid": 1
+      },
+      "u_core_cmd_wbase": {
+       "core_cmd_wbase": 2
+      },
+      "u_core_fault": {
+       "core_fault": 1
+      },
+      "u_core_o_data": {
+       "core_o_data": 32
+      },
+      "u_core_o_idx": {
+       "core_o_idx": 5
+      },
+      "u_core_o_pos": {
+       "core_o_pos": 3
+      },
+      "u_core_o_valid": {
+       "core_o_valid": 1
+      },
+      "u_core_rst_n": {
+       "core_rst_n": 1
+      },
+      "u_core_sd_nv": {
+       "core_sd_nv": 9
+      },
+      "u_core_sd_ss": {
+       "core_sd_ss": 1
+      },
+      "u_core_sd_v": {
+       "core_sd_v": 1
+      },
+      "u_core_sd_wa": {
+       "core_sd_wa": 10
+      },
+      "u_core_sd_xa": {
+       "core_sd_xa": 10
+      },
+      "u_core_sys_fault": {
+       "core_sys_fault": 1
+      },
+      "u_core_sys_sum": {
+       "core_sys_sum": 128
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
+  "hc_sk_steady": {
+   "elab_bits": [
+    517,
+    519
+   ],
+   "file": "rtl/hdc/v41/ot_hdc_sinkhorn_s.sv",
+   "master": "ot_hbm_hc_root_static",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "in_valid",
+     "input",
+     1,
+     0
+    ],
+    [
+     "in_ready",
+     "output",
+     1,
+     0
+    ],
+    [
+     "load",
+     "output",
+     1,
+     0
+    ],
+    [
+     "pa",
+     "output",
+     1,
+     0
+    ],
+    [
+     "pb",
+     "output",
+     1,
+     0
+    ],
+    [
+     "b_q",
+     "input",
+     512,
+     0
+    ],
+    [
+     "bbad_q",
+     "input",
+     1,
+     0
+    ],
+    [
+     "abad_q",
+     "input",
+     1,
+     0
+    ],
+    [
+     "out_valid",
+     "output",
+     1,
+     0
+    ],
+    [
+     "y",
+     "output",
+     512,
+     0
+    ],
+    [
+     "fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "busy",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hdc_sk_steady",
+   "type_ids": {
+    "ot_hbm_hc_root_static__tail0_sk_steady__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      517,
+      519
+     ],
+     "cut_pins": {
+      "abad_q": {
+       "abad_q": 1
+      },
+      "b_q": {
+       "b_q": 512
+      },
+      "bbad_q": {
+       "bbad_q": 1
+      },
+      "busy": {
+       "busy": 1
+      },
+      "clk": {
+       "clk": 1
+      },
+      "fault": {
+       "fault": 1
+      },
+      "in_ready": {
+       "in_ready": 1
+      },
+      "in_valid": {
+       "in_valid": 1
+      },
+      "load": {
+       "load": 1
+      },
+      "out_valid": {
+       "out_valid": 1
+      },
+      "pa": {
+       "pa": 1
+      },
+      "pb": {
+       "pb": 1
+      },
+      "rst_n": {
+       "rst_n": 1
+      },
+      "y": {
+       "y": 512
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    },
+    "ot_hbm_hc_root_static__tail1_sk_steady__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      517,
+      519
+     ],
+     "cut_pins": {
+      "abad_q": {
+       "abad_q": 1
+      },
+      "b_q": {
+       "b_q": 512
+      },
+      "bbad_q": {
+       "bbad_q": 1
+      },
+      "busy": {
+       "busy": 1
+      },
+      "clk": {
+       "clk": 1
+      },
+      "fault": {
+       "fault": 1
+      },
+      "in_ready": {
+       "in_ready": 1
+      },
+      "in_valid": {
+       "in_valid": 1
+      },
+      "load": {
+       "load": 1
+      },
+      "out_valid": {
+       "out_valid": 1
+      },
+      "pa": {
+       "pa": 1
+      },
+      "pb": {
+       "pb": 1
+      },
+      "rst_n": {
+       "rst_n": 1
+      },
+      "y": {
+       "y": 512
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
+  "hc_sk_step0": {
+   "elab_bits": [
+    516,
+    514
+   ],
+   "file": "rtl/hdc/v41/ot_hdc_sinkhorn_s.sv",
+   "master": "ot_hbm_hc_root_static",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "load",
+     "input",
+     1,
+     0
+    ],
+    [
+     "in_e",
+     "input",
+     512,
+     0
+    ],
+    [
+     "pa",
+     "input",
+     1,
+     0
+    ],
+    [
+     "pb",
+     "input",
+     1,
+     0
+    ],
+    [
+     "b_q",
+     "output",
+     512,
+     0
+    ],
+    [
+     "bbad_q",
+     "output",
+     1,
+     0
+    ],
+    [
+     "abad_q",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hdc_sk_step0",
+   "type_ids": {
+    "ot_hbm_hc_root_static__tail0_sk_step0__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      516,
+      514
+     ],
+     "cut_pins": {
+      "abad_q": {
+       "abad_q": 1
+      },
+      "b_q": {
+       "b_q": 512
+      },
+      "bbad_q": {
+       "bbad_q": 1
+      },
+      "clk": {
+       "clk": 1
+      },
+      "in_e": {
+       "in_e": 512
+      },
+      "load": {
+       "load": 1
+      },
+      "pa": {
+       "pa": 1
+      },
+      "pb": {
+       "pb": 1
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    },
+    "ot_hbm_hc_root_static__tail1_sk_step0__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      516,
+      514
+     ],
+     "cut_pins": {
+      "abad_q": {
+       "abad_q": 1
+      },
+      "b_q": {
+       "b_q": 512
+      },
+      "bbad_q": {
+       "bbad_q": 1
+      },
+      "clk": {
+       "clk": 1
+      },
+      "in_e": {
+       "in_e": 512
+      },
+      "load": {
+       "load": 1
+      },
+      "pa": {
+       "pa": 1
+      },
+      "pb": {
+       "pb": 1
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
+  "hc_tail_rest": {
+   "elab_bits": [
+    2150,
+    1284
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hbm_hc_root_static/ot_hbm_hc_tail_rest_core.sv",
+   "master": "ot_hbm_hc_root_static",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "launch",
+     "input",
+     1,
+     0
+    ],
+    [
+     "mixes",
+     "input",
+     768,
+     0
+    ],
+    [
+     "bases",
+     "input",
+     768,
+     0
+    ],
+    [
+     "scales",
+     "input",
+     96,
+     0
+    ],
+    [
+     "result_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "result",
+     "output",
+     768,
+     0
+    ],
+    [
+     "fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sk_clk",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sk_in_valid",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sk_in_e",
+     "output",
+     512,
+     0
+    ],
+    [
+     "sk_in_ready",
+     "input",
+     1,
+     0
+    ],
+    [
+     "sk_out_valid",
+     "input",
+     1,
+     0
+    ],
+    [
+     "sk_fault",
+     "input",
+     1,
+     0
+    ],
+    [
+     "sk_y",
+     "input",
+     512,
+     0
+    ]
+   ],
+   "top": "ot_hbm_hc_tail_rest_core",
+   "type_ids": {
+    "ot_hbm_hc_root_static__tail0_rest__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      2150,
+      1284
+     ],
+     "cut_pins": {
+      "clk": {
+       "clk": 1
+      },
+      "glue": {
+       "launch": 1
+      },
+      "glue_1": {
+       "fault": 1,
+       "result": 768,
+       "result_v": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_clk": {
+       "sk_clk": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_fault": {
+       "sk_fault": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_in_e": {
+       "sk_in_e": 512
+      },
+      "x_g_tail_0_u_t_u_tail_sink_in_ready": {
+       "sk_in_ready": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_in_valid": {
+       "sk_in_valid": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_out_valid": {
+       "sk_out_valid": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_rst_n": {
+       "rst_n": 1
+      },
+      "x_g_tail_0_u_t_u_tail_sink_y": {
+       "sk_y": 512
+      },
+      "x_g_tail_1_u_t_bases": {
+       "bases": 768
+      },
+      "x_g_tail_1_u_t_mixes": {
+       "mixes": 768
+      },
+      "x_g_tail_1_u_t_scales": {
+       "scales": 96
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    },
+    "ot_hbm_hc_root_static__tail1_rest__155.52x172.8": {
+     "check": "PASS",
+     "cut_bits": [
+      2150,
+      1284
+     ],
+     "cut_pins": {
+      "clk": {
+       "clk": 1
+      },
+      "glue": {
+       "launch": 1
+      },
+      "glue_1": {
+       "fault": 1,
+       "result": 768,
+       "result_v": 1
+      },
+      "x_g_tail_0_u_t_bases": {
+       "bases": 768
+      },
+      "x_g_tail_0_u_t_mixes": {
+       "mixes": 768
+      },
+      "x_g_tail_0_u_t_rst_n": {
+       "rst_n": 1
+      },
+      "x_g_tail_0_u_t_scales": {
+       "scales": 96
+      },
+      "x_g_tail_1_u_t_u_tail_sink_clk": {
+       "sk_clk": 1
+      },
+      "x_g_tail_1_u_t_u_tail_sink_fault": {
+       "sk_fault": 1
+      },
+      "x_g_tail_1_u_t_u_tail_sink_in_e": {
+       "sk_in_e": 512
+      },
+      "x_g_tail_1_u_t_u_tail_sink_in_ready": {
+       "sk_in_ready": 1
+      },
+      "x_g_tail_1_u_t_u_tail_sink_in_valid": {
+       "sk_in_valid": 1
+      },
+      "x_g_tail_1_u_t_u_tail_sink_out_valid": {
+       "sk_out_valid": 1
+      },
+      "x_g_tail_1_u_t_u_tail_sink_y": {
+       "sk_y": 512
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
   "pgslice_side_rest": {
    "elab_bits": [
     76,

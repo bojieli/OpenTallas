@@ -19,7 +19,7 @@ import os
 for kv in [x for x in os.environ.get('PARAMS', '').split(',') if x]:
     k, v = kv.split('=')
     L.append(f"chparam -set {k} {v} {top}")
-L += [f"hierarchy -check -top {top}", f"cd {top}", "delete p:* c:*", "cd ..", f"select {top}",
+L += [f"hierarchy -check -top {top}", "rename -top elab_top", "cd elab_top", "delete p:* c:*", "cd ..", "select elab_top",
       f"write_verilog -selected -noexpr /out/{os.environ.get('NAME', top)}.ports.v"]
 open(sys.argv[2], 'w').write("\n".join(L) + "\n")
 PY
