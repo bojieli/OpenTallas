@@ -25,7 +25,7 @@ from pathlib import Path
 
 MAX_CHAIN = 3
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
-SKIP_RE = r"^(clk(_t[0-9]+)?|arst_n)$"
+SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n)$"
 
 
 def is_ff(master):

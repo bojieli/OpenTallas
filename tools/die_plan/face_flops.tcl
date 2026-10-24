@@ -19,7 +19,7 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
-set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}
+set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n)$}
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
 if {[file exists /work/ft_stations.txt]} {
