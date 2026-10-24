@@ -893,5 +893,33 @@
   "sl_W5_su_l0__x_su_l0_su_c_p1",
   "sl_W5_su_l1__x_su_l1_su_c_p1"
  ],
- "next": "R8 regeneration and bind/exact schedule integration before adoption"
+ "next": "R8 regeneration and bind/exact schedule integration before adoption",
+ "probe_bind": {
+  "errors": 0,
+  "unbound": 0,
+  "crossings": 1933,
+  "crossing_bits": 792661,
+  "types": 75
+ },
+ "canonical_r8": {
+  "replica": "all",
+  "bus": "part",
+  "replica_links": 597,
+  "pad_flops": 433915,
+  "max_pad": 8,
+  "old_pad_flops": 248396,
+  "target_pad_flops": 150000,
+  "verdict": "OVER_TARGET_NOT_ADOPTED"
+ },
+ "noncanonical_leaf_probe": "93658flops result excluded: different replica/bus grouping, not comparable or adopted",
+ "canonical_bound": {
+  "types": 78,
+  "partitions": 377,
+  "crossings": 1933,
+  "bits": 792661,
+  "errors": 0,
+  "unbound": 0,
+  "tied": 0,
+  "multiply_bound": 0
+ }
 }
