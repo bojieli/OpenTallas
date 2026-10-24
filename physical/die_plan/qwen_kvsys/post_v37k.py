@@ -13,7 +13,11 @@ import sys
 p = json.load(open(sys.argv[1]))
 common = float(sys.argv[2]) if len(sys.argv) > 2 else float(p['clock'].get('insertion_ps', 250))
 p['clock']['insertion_ps'] = common
+p['clock']['common_latency_ps'] = common          # G0C die-level key (plan-tool4)
 old = {}
+for n, t in p['partition_types'].items():           # G0C: new top-down cores are built on the plan tracks
+    for hc in t.get('hard_cores', []):
+        hc.setdefault('track_offset_um', [0.0, 0.0])
 for n, t in p['partition_types'].items():
     c = t.setdefault('clock', {})
     old[n] = c.get('insertion_ps')
