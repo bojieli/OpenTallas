@@ -157,6 +157,9 @@ SCHEMA = {
                 "properties": {
                     "module": _name,                 # generated wrapper module name
                     "outline_um": _wh,
+                    # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
+                    # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
+                    "cells": {"type": "integer", "minimum": 0},
                     "hard": {"type": "boolean"},     # hard IP (PHY, closed macro used as-is): no generated wrapper
                     "kit": {"type": "string"},
                     "note": {"type": "string"},
@@ -227,6 +230,7 @@ SCHEMA = {
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
+                                       "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},

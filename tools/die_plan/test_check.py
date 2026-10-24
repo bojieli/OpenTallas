@@ -411,3 +411,26 @@ def test_latency_groups_pad_to_slowest():
     c = copy.deepcopy(EX)
     c["latency_groups"] = [dict(name="bad", lanes=["x", "cfg12"])]
     assert schema.Plan(c).bus_pads()[1]
+
+
+def test_core_ks_rules(monkeypatch):
+    """COORD 10-23 CORE-KS: (a) a type over 400k cells needs hard_cores[], a core without pins is an ERROR;
+    (b) M2/M3 core pins are not checked in a mirrored instance's die frame (platform cell-access tracks)."""
+    def core(o, pins):
+        def m(p):
+            p["partitions"][0]["orient"] = o
+            p["partition_types"]["src"]["hard_cores"] = [dict(
+                inst="u_core", origin_um=[8.64, 8.64], outline_um=[21.6, 21.6], track_offset_um=[0.012, 0.012],
+                pins=pins)]
+        return m
+    m3 = [dict(name="m3p", layer="M3", xy=[0.033, 5.0])]
+    assert errs(core("R0", m3), "hard_cores") == []
+    assert errs(core("MY", m3), "hard_cores") == []
+    monkeypatch.setattr(check, "MIRROR_SKIP", ())
+    assert any("pin m3p M3" in m for m in errs(core("MY", m3), "hard_cores"))
+    monkeypatch.undo()
+    assert any("no pins listed" in m for m in errs(core("R0", []), "hard_cores"))
+    big = lambda n: lambda p: p["partition_types"]["src"].__setitem__("cells", n)  # noqa: E731
+    assert any("no hard_cores" in m for m in errs(big(450_000), "hard_cores"))
+    assert errs(big(350_000), "hard_cores") == []
+    assert errs(lambda p: (big(450_000)(p), core("R0", m3)(p)), "hard_cores") == []

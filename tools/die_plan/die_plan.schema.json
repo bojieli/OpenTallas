@@ -346,6 +346,10 @@
       "minItems": 2,
       "maxItems": 2
      },
+     "cells": {
+      "type": "integer",
+      "minimum": 0
+     },
      "hard": {
       "type": "boolean"
      },
@@ -802,6 +806,10 @@
         "obs_max": {
          "type": "string",
          "pattern": "^M[1-9]$"
+        },
+        "cells": {
+         "type": "integer",
+         "minimum": 0
         },
         "bind": {
          "type": "object",
