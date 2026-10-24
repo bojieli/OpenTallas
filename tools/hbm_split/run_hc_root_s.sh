@@ -7,6 +7,9 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd); cd "$root"
 out=$(realpath -m "${1:?OUT}"); smut=${2:-0}; tx=${3:-7}; mkdir -p "$out"
+# HBM-P6-CMP 10-23: TAIL_EXTRA "LS" = take the compiler default (tools/hbm_static/leaf_split_latency.py hc_tail_result:
+# 7 with OT_HBM_LEAF_SPLIT=1) instead of an explicit value: the gate gets no --tail-extra.
+if [ "$tx" = LS ]; then txa=(); else txa=(--tail-extra "$tx"); fi
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x "$vl" ] || vl=verilator
 H=rtl/hbm_accel/generic/peers/static_hc
 sed -e 's/    ot_hbm_hc_root_static #(.MUT(MUTP),/    ot_hbm_hc_root_static_s #(.SMUT(`HC_SMUT), .MUT(MUTP),/' -e 's/^module tb_hbm_hc_eng4_static;/module tb_hbm_hc_eng4_static;  \/\/ HBM-P5-RTLB: root = ot_hbm_hc_root_static_s/' \
@@ -23,7 +26,7 @@ src=("$out/tb_hbm_hc_eng4_static_s.sv" $H/ot_hbm_hc_root_static_s.sv $H/ot_hbm_h
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
 cpr=${HC_CPR:-1}; raw0=$((165 + 11 * cpr))
 sha256sum "${src[@]}" "$0" tools/rtl_hbm_hc_eng_static_gate.py > "$out/sources.sha256"
-python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 --tail-extra $tx > "$out/vectors.log"
+python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 "${txa[@]}" > "$out/vectors.log"
 "$vl" --binary --timing --hierarchical -j "${HC_BUILD_JOBS:-16}" -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   ${HC_VL_EXTRA:-} --top-module tb_hbm_hc_eng4_static +define+MUT=0 +define+HC_SMUT=$smut +define+HC_CPR=$cpr +define+OT_FP_DATA_NORST -Mdir "$out/obj" -o Vring \
   rtl/test/tb_hbm_hc_eng4_static_hier.vlt "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log"; exit 3; }
