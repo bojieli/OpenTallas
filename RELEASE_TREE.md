@@ -21,6 +21,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] S81.G0.V48 Plan v4.8 (r8eq) on main · ROOT-MERGE · RUNNING · s81-p9-r8eq-1023 unmerged
 - [ ] S81.G1 Plan review · S81 · WAITS · COND: needs G2 on exact plan → S81.G2
 - [ ] S81.G2 Routing probe v4.8 · S81 · PASS · 31 probes overflow 0 (unmerged branch evidence)
+- [ ] S81.G0C Completeness 76/168 types clean (92: 75 ot_s81sl_leaf, 14 svc_*_rs, 2 svc_hi_pvso_entry, 1 eng; >400k cells, no hard_cores) · S81 · FAIL · check.py --completeness on main 3e05af806b, 10-24 06:40
 - [ ] S81.G3 Frame partitions with R3 internal stations · S81 · RUNNING · 6/7 frame kits FAILED review (paths to 2.2 mm)
   - [ ] S81.G3.CORES Hard cores ve / eng / svc · S81 · RUNNING · svc hcore TT WNS -25.29 ps (ld_grp we decode)
 - [ ] S81.G4 Abutted die · S81 · WAITS · waits → S81.G3, SEAM.METHOD
@@ -28,6 +29,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## DIE qwen_compute · Qwen compute
 - [x] QC.G0 Plan check · QC-P6 · PASS · d33d3c4e4 G0 PASS, G0C 52/56
+- [ ] QC.G0C Completeness 52/56 (sle_st_a/b, slw_st_a/b ft_budget M9 over) · QC-A0 · FAIL · 10-24 06:40
 - [ ] QC.G1 Plan review · COORD · WAITS · COND
 - [x] QC.G2 Routing probe · Codex · PASS · probe run by Codex 10-23
 - [ ] QC.G3 Partitions · QC-A0 · RUNNING · collective part routes clean; A0 cores FAIL clock (v2..v6 tap methods)
@@ -43,6 +45,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## DIE qwen_kvsys · Qwen KV
 - [x] KV.G0 Plan check v3.8h · KV-P7 · PASS · 0a0966d6f
+- [ ] KV.G0C Completeness 48/49 (kv3_hub_Wi: 22 hard cores without pins) · KV-G3 · FAIL · 10-24 06:40
 - [ ] KV.G0.V38S Plan v3.8s FIRM astk stations on main · ROOT-MERGE · RUNNING · kv-p8-hub-1023 unmerged
 - [ ] KV.G1 Plan review · ROOT-MERGE · PASS · GEOM-REVIEW8 v3.8s PASS (geom-review8-1023 unmerged)
 - [ ] KV.G2 Routing probe · KV-G3 · TODO
@@ -53,6 +56,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## DIE hbm · HBM d4g
 - [x] HBM.G0.FB Fallback plan P7 record · HBM-P7 · DONE · 22911ecdb
+- [ ] HBM.G0C Fallback plan completeness 34/60 (110 core_faces, 10 die_io_plan, 1 ft_budget) · HBM-ARCH · FAIL · superseded by B2 when it lands
 - [ ] HBM.G0 HBM-ARCH B2 plan G0 + G0C · HBM-ARCH · RUNNING · hbm-arch-1023 WIP (H-tree clock, 5 SerDes)
 - [ ] HBM.G1 Plan review · HBM-ARCH · WAITS · waits → HBM.G0
 - [ ] HBM.G2 Routing probe · HBM-ARCH · WAITS · old plan: hc2/hc7 congested, VM|SU2 face overloaded
