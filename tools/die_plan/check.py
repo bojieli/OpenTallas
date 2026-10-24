@@ -20,6 +20,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  r8          COORD R8 bus-coherent latency on BINDER2's as-built bus groups (--groups bus_groups.json, else
+              PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
+              as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
+              table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -743,8 +747,40 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
+def check_r8(P, R, plan_dir=None, groups=None, landing=None):
+    """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
+    import r8
+    pd = Path(plan_dir) if plan_dir else None
+    if groups is None and pd is not None:
+        groups = next((q for q in (pd / "bus_groups.json", pd / "r8" / "bus_groups.json", pd / "bind" / "bus_groups.json")
+                       if q.exists()), None)
+    if groups is None:
+        if pd is None:
+            return dict(checked=False)
+        R.warn("r8", "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)")
+        return dict(checked=False)
+    bg = json.loads(Path(groups).read_text())
+    if landing is None and pd is not None:
+        hits = sorted(pd.glob(f"*/{P.name}_r8_landing.json")) + sorted(pd.glob(f"{P.name}_r8_landing.json"))
+        landing = hits[0] if hits else None
+    lmap = None
+    if landing is not None:
+        lmap, ljs = r8.load_landing(landing)
+        if ljs.get("bus_groups_digest") != r8.bg_digest(bg):
+            R.err("r8", f"R8 landing table {landing} was made from other bus groups (digest {ljs.get('bus_groups_digest')}"
+                  f" != {r8.bg_digest(bg)}): regenerate with gen.py latency --groups")
+        mode = dict(replica=ljs.get("replica", "all"), bus=ljs.get("bus", "part"))
+    else:
+        mode = dict(replica="all", bus="part")
+    msgs, st = r8.check(bg, P.raw, lmap, **mode)
+    for sev, m in msgs:
+        (R.err if sev == "ERROR" else R.warn)("r8", m)
+    st.update(checked=True, groups_file=str(groups), landing_file=str(landing) if landing else None)
+    return st
+
+
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None, plan_dir=None):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -763,6 +799,7 @@ def run(raw, png=None, plan_dir=None):
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
+    summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
@@ -782,11 +819,14 @@ def main(argv=None):
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--strict", action="store_true", help="WARN counts as failure")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
+    ap.add_argument("--landing", help="R8: <die>_r8_landing.json (default PLANDIR/*/<die>_r8_landing.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent)
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
+                  groups=a.groups, landing=a.landing)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
