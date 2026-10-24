@@ -74,6 +74,8 @@ def main(argv):
         if b is None:
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
         W = b["width"]
+        if re.search(rf"\bu_ist_{re.escape(n)}_\d+\b", txt):
+            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (run on a fresh kit-rtl copy)")
         pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
         have = len(pads)
         need = len(regs) - have
