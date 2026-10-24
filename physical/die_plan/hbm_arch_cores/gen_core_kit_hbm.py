@@ -455,7 +455,7 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
-    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py"):
+    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py"):
         shutil.copyfile(HERE / f, kd / f)
     shutil.copyfile(HARDEN / "pin_audit_core.py", kd / "pin_audit_core.py")
     m = CORE_MARGIN_UM
