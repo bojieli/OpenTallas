@@ -405,12 +405,12 @@ module tb_rep_hub_Wi;
         endcase
     endtask
     initial begin : replay
-        string f; integer fd, idx, n = 0; longint tps, until = 0; bit [8191:0] v; realtime now;
+        string f; integer fd, idx, n = 0; longint tps, t_until = 0; bit [8191:0] v; realtime now;
         if (!$value$plusargs("REP=%s", f)) $fatal(1, "+REP=<record> required");
-        void'($value$plusargs("UNTIL=%d", until));
+        void'($value$plusargs("UNTIL=%d", t_until));
         fd = $fopen(f, "r"); if (fd == 0) $fatal(1, "cannot open %s", f);
         while ($fscanf(fd, "%d %d %h", tps, idx, v) == 3) begin
-            if (until > 0 && tps > until) break;
+            if (t_until > 0 && tps > t_until) break;
             now = tps / 1000.0 + 0.001;
             if (now > $realtime) #(now - $realtime);
             apply(idx, v); n++;
