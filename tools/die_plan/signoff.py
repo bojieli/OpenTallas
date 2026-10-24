@@ -566,13 +566,17 @@ def run_face_guard(disc, clock_ports=()):
     skip_re = r"^(clk(_t[0-9]+|_c[0-9]+)?|" + "|".join(re.escape(x) for x in skip) + r")$"
     if pins is not None:                      # the clock / reset pins are not face registers
         pins = [x for x in pins if not re.match(skip_re, str(x.get("bus")))]
+    ft_file = Path(disc["kit"]) / "ft_stations.txt" if disc.get("kit") else (
+        Path(disc["pins"]).with_name("ft_stations.txt") if disc.get("pins") else None)
     try:
-        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re)
+        ft1 = face_guard.read_ft1(ft_file) if ft_file and ft_file.is_file() else set()
+        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
                 fail_counts=r.get("fail_counts"), fails={k: v[:5] for k, v in (r.get("fails") or {}).items()},
-                netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context)
+                netlist=disc["synth"], pins=disc.get("pins"), boundary_context=context,
+                one_station_ft_slots=sorted(ft1))
 
 
 # ---- verdict -------------------------------------------------------------------------------------------------------

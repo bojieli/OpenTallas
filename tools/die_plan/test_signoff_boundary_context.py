@@ -47,3 +47,16 @@ def test_data_exemption_and_role_mutants_rejected(tmp_path):
     ctx['reset_ports'].append('a')  # a is typed as real input data, not reset.
     p.write_text(json.dumps(ctx))
     assert signoff.run_face_guard(disc)['fail_counts'] == {'context': 1}
+
+
+def test_uniform_guard_honors_exact_one_station_contract(tmp_path):
+    from test_face_guard import NET_FT1
+    (tmp_path / 'synth.v').write_text(NET_FT1)
+    disc = dict(kit=str(tmp_path), synth=str(tmp_path / 'synth.v'))
+    assert signoff.run_face_guard(disc)['verdict'] == 'FAIL'
+    table = tmp_path / 'ft_stations.txt'
+    table.write_text('ft0 1 S W\nft1 1 S W\n')
+    r = signoff.run_face_guard(disc)
+    assert r['verdict'] == 'PASS' and r['one_station_ft_slots'] == ['ft0', 'ft1'], r
+    table.write_text('ft0 1 S W\nft1 2 S W\n')
+    assert signoff.run_face_guard(disc)['fail_counts'] == {'merged': 2}
