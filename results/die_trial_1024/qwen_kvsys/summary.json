@@ -1,0 +1,107 @@
+{
+ "schema": "opentallas.die_trial_summary.v1",
+ "die": "qwen_kvsys",
+ "lane": "TRIAL-QK",
+ "date": "2026-10-24",
+ "plan": "physical/die_plan/qwen_kvsys/die_plan.json v3.8u sha256 269a391d",
+ "policy": "TT setup / FF hold, 833.333 ps, 60/25 ps; SS informational",
+ "status": "ABSTRACT_TRIAL_NOT_SIGNOFF",
+ "numbers": {
+  "clock_insertion_ps": {
+   "TT": [
+    5381,
+    5593
+   ],
+   "FF": [
+    4535,
+    4728
+   ],
+   "SS": [
+    6663,
+    6898
+   ]
+  },
+  "clock_buffers": 12430,
+  "clock_grt_overflow": 0,
+  "seam_skew_nominal_max_ps": {
+   "TT": 42.3,
+   "FF": 37.7
+  },
+  "seam_pairs": 1311,
+  "seam_over80_nominal": 0,
+  "seam_skew_ocv5_max_ps": {
+   "TT": 543.7,
+   "FF": 458.2
+  },
+  "seam_over80_ocv5": {
+   "TT": 387,
+   "FF": 356
+  },
+  "codex_padding_probe": {
+   "buffers": 11970,
+   "spread_ps": {
+    "TT": 42.9,
+    "FF": 58.1
+   }
+  },
+  "grt": {
+   "overflow_total": 3349,
+   "by_layer": {
+    "M4": 722,
+    "M5": 1463,
+    "M6": 170,
+    "M7": 407,
+    "M8": 395,
+    "M9": 192
+   },
+   "max_layer_usage_pct": 7.59,
+   "congested_gcells": {
+    "hub_Eo": 26,
+    "hub_Wo": 24
+   },
+   "gcells_over_100": 20,
+   "max_gcell_pct": 146.9,
+   "seconds": 8240,
+   "rss_gb": 10.2
+  },
+  "hop_setup_TT": {
+   "ocv5_neg": {
+    "ft": 1313,
+    "abut": 6215
+   },
+   "nominal_neg": 0,
+   "worst_ps": -169.1,
+   "worst": "hub_Eo ft25 s1->s2 931 um"
+  },
+  "hop_hold_FF": {
+   "ocv5_neg": {
+    "ft": 86161,
+    "abut": 410212
+   },
+   "nominal_budget_neg": 0
+  },
+  "ilm_io_E5_E6_die_tree": {
+   "setup_TT_ps": 20.8,
+   "hold_FF_ps": 232.0,
+   "neg": 0,
+   "ffspread_ps": {
+    "TT": 46.1,
+    "FF": 47.8
+   }
+  },
+  "ir": "NOT RUN: own 128 GB run EXIT 137; Codex kv_ir_retry256 (256 GB) adopted, analysis running"
+ },
+ "visual_review": [
+  "floorplan_lanes: hub row (y 12.2-13.8 mm) is the crossroads; N half carries two ~12 mm vertical ft corridors (hgi columns x~3.6/7.4 mm) to the io row at the N edge; S half has none -> all off-die traffic exits N",
+  "congestion: corridors 10-20 % above the 68 % reserved baseline; only >100 % gcells are two points hub_Wo x2.53 / hub_Eo x8.27 mm, y13.06-13.12 mm = 1118-bit ft2/ft30 station hops through one ~10 um gcell column (393/151)",
+  "clock_tree: insertion grows with |y-13.5 mm| (fishbone trunk feeding 16 ribs) -> 212 ps global skew; root split (x5.41, y13.52 mm) cuts through hub_C/Ei/Eo/Wo, so hub taps share only the root -> full 5.3 ns non-common path, 528 ps at 5 % OCV",
+  "sta_negative: with OCV hold fails on every ft chain (clock-model driven); only inter-partition setup failure is hub_Ei->hgi_EN_7 (700 um)"
+ ],
+ "g4_breaks": [
+  "CLOCK: 5.4 ns die tree; any % derate on non-common paths exceeds the 80 ps seam rule (5 %: 528 ps at the hub row). Fix: move root split off the hub row, shorten insertion / mesh or multi-root top level, OWNER decision on OCV number",
+  "ROUTE: hub_Eo ft30 / hub_Wo ft2 1118-bit stations need >= ~30 um pin spread (2.6x local overflow); rest of die routes at <= 7.6 % layer usage",
+  "TIMING: intra-hub station hops up to 1085 um are the first setup failures under any OCV",
+  "SEAMS: closed io_E5|io_E6 pair PASS at TT/FF with die-tree offsets (+20.8/+232 ps)",
+  "IR: unknown (NOT RUN)"
+ ]
+}

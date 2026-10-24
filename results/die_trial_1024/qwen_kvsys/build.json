@@ -1,0 +1,44 @@
+{
+ "plan": "/home/ubuntu/wt/trial-qk/physical/die_plan/qwen_kvsys/die_plan.json",
+ "die": "qwen_kvsys",
+ "outline_um": [
+  10817.28,
+  27043.2
+ ],
+ "parts": 160,
+ "types": 49,
+ "abstract_pins": 974232,
+ "data": {
+  "nets": 940574,
+  "kinds": {
+   "ft": 240831,
+   "abut": 699743
+  },
+  "io_pins": 0
+ },
+ "pg_obstructions": 8762,
+ "clock": {
+  "nrib": 16,
+  "nx": 16,
+  "ny": 8,
+  "leaves": 4096,
+  "rep_um": 250.0,
+  "leaf_pitch_um": 400.0,
+  "centre": [
+   5408.64,
+   13521.6
+  ],
+  "root_pin": [
+   5406.44,
+   13003.2
+  ],
+  "cells": {
+   "BUFx16f_ASAP7_75t_R": 12430,
+   "DFFHQNx2_ASAP7_75t_R": 2370
+  },
+  "taps": 2370,
+  "htree_wire_um": 1590140.3,
+  "local_wire_um": 386556.9
+ },
+ "plan_sha256": "269a391d6d566e05970ca4f91e1dce1aa1a37687c992ab92a1c7cf821b21b2e5"
+}

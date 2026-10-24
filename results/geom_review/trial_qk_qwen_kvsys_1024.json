@@ -1,0 +1,37 @@
+{
+ "lane": "TRIAL-QK",
+ "die": "qwen_kvsys",
+ "verdict": "REVIEWED_FINDINGS",
+ "images": [
+  "results/die_trial_1024/qwen_kvsys/floorplan_lanes.png",
+  "results/die_trial_1024/qwen_kvsys/congestion.png",
+  "results/die_trial_1024/qwen_kvsys/clock_tree.png",
+  "results/die_trial_1024/qwen_kvsys/sta_negative.png"
+ ],
+ "findings": [
+  "floorplan_lanes: hub row (y 12.2-13.8 mm) is the crossroads; N half carries two ~12 mm vertical ft corridors (hgi columns x~3.6/7.4 mm) to the io row at the N edge; S half has none -> all off-die traffic exits N",
+  "congestion: corridors 10-20 % above the 68 % reserved baseline; only >100 % gcells are two points hub_Wo x2.53 / hub_Eo x8.27 mm, y13.06-13.12 mm = 1118-bit ft2/ft30 station hops through one ~10 um gcell column (393/151)",
+  "clock_tree: insertion grows with |y-13.5 mm| (fishbone trunk feeding 16 ribs) -> 212 ps global skew; root split (x5.41, y13.52 mm) cuts through hub_C/Ei/Eo/Wo, so hub taps share only the root -> full 5.3 ns non-common path, 528 ps at 5 % OCV",
+  "sta_negative: with OCV hold fails on every ft chain (clock-model driven); only inter-partition setup failure is hub_Ei->hgi_EN_7 (700 um)"
+ ],
+ "g4_breaks": [
+  "CLOCK: 5.4 ns die tree; any % derate on non-common paths exceeds the 80 ps seam rule (5 %: 528 ps at the hub row). Fix: move root split off the hub row, shorten insertion / mesh or multi-root top level, OWNER decision on OCV number",
+  "ROUTE: hub_Eo ft30 / hub_Wo ft2 1118-bit stations need >= ~30 um pin spread (2.6x local overflow); rest of die routes at <= 7.6 % layer usage",
+  "TIMING: intra-hub station hops up to 1085 um are the first setup failures under any OCV",
+  "SEAMS: closed io_E5|io_E6 pair PASS at TT/FF with die-tree offsets (+20.8/+232 ps)",
+  "IR: unknown (NOT RUN)"
+ ],
+ "owners": {
+  "KV_G3": [
+   "hub ft30/ft2 1118-bit station spread",
+   "root split through hub row",
+   "hub_Ei->hgi_EN_7 700 um hop"
+  ],
+  "DIE_STA": [
+   "ILM e5|e6 with die-tree offsets TT +20.8 / FF +232"
+  ],
+  "HBM_ARCH": [
+   "B2 H-tree fishbone trunk -> skew grows with distance along trunk"
+  ]
+ }
+}

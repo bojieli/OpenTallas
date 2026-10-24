@@ -1070,11 +1070,13 @@ def overflow_by_part(P, rpt):
     by_part, by_layer = defaultdict(int), defaultdict(int)
     rects = [(n, P.rect(n)) for n in P.parts]
     n = 0
-    for m in re.finditer(r"\(\s*([-\d.]+),\s*([-\d.]+)\s*\)\s*-\s*\(\s*([-\d.]+),\s*([-\d.]+)\s*\)[^\n]*?(M\d)", txt):
-        x = (float(m.group(1)) + float(m.group(3))) / 2
-        y = (float(m.group(2)) + float(m.group(4))) / 2
+    # this GRT build writes "violation type: <Horizontal|Vertical> congestion ... bbox = (..) - (..) on Layer -"
+    for m in re.finditer(r"violation type: (\w+)[^\n]*\n(?:[^\n]*\n)*?\s*bbox = \(\s*([-\d.]+),\s*([-\d.]+)\s*\)\s*-\s*"
+                         r"\(\s*([-\d.]+),\s*([-\d.]+)\s*\) on Layer (\S+)", txt):
+        x = (float(m.group(2)) + float(m.group(4))) / 2
+        y = (float(m.group(3)) + float(m.group(5))) / 2
         n += 1
-        by_layer[m.group(5)] += 1
+        by_layer[m.group(6) if m.group(6) != "-" else m.group(1)] += 1
         for nm, (a, b, c, d) in rects:
             if a <= x < c and b <= y < d:
                 by_part[nm] += 1
@@ -1147,7 +1149,7 @@ def cmd_ir(a):
     # the load: power tiles (2 x 2 coarse PG pitches) over every partition, each a small macro with its own M7 VDD /
     # VSS stripe pair (the partition M7 PG, coarsened), current = the partition's power density x tile area
     # (PSM attaches an instance's current at one point: one macro per partition would be a point load).
-    tile = 2 * 8.64 * K
+    tile = a.tile_pitches * 8.64 * K
     NLV = 64
     dens = {n: pw[n] / ((lambda r: (r[2] - r[0]) * (r[3] - r[1]))(P.rect(n))) for n in P.parts}   # W / um2
     dmax = max(dens.values())
@@ -1215,7 +1217,7 @@ def cmd_ir(a):
     (out / "pdn.tcl").write_text("\n".join(pdn) + "\n")
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}"] + [f"read_lef /work/lef/{x}" for x in lefs] + \
           ["read_liberty /work/trial_ir.lib", "read_def /work/ir.def", "source /work/make_tracks.tcl",
-           "set t0 [clock seconds]", "source /work/pdn.tcl", "pdngen", "puts \"OT_T_PDN [expr {[clock seconds]-$t0}]\"",
+           "set t0 [clock seconds]", "source /work/pdn.tcl", "pdngen", "puts \"OT_T_PDN [expr {[clock seconds]-$t0}]\"", "write_db /work/ir_pdn.odb",
            "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n -error_file /work/pg_$n.rpt} e]} "
            "{ puts \"OT_PG_CHECK_FAIL $n $e\" } else { puts \"OT_PG_CHECK_OK $n\" } }",
            f"source {PLAT}/setRC.tcl",
@@ -1245,7 +1247,7 @@ def cmd_ir(a):
     write_run(out, "ir", "/usr/bin/time -v openroad -threads $CPUS -exit /work/ir.tcl > /work/ir.log 2>&1; "
               "RC=\\$?; echo EXIT \\$RC >> /work/ir.log;", 128, 16)
     (out / "ir_power.json").write_text(json.dumps(dict(basis=basis, parts={n: round(v, 4) for n, v in pw.items()},
-                                                       coarsen=IR_K, vdd_v=VDD_V, bump_um=a.bump_um,
+                                                       coarsen=IR_K, tile_um=tile, ntiles=len(tiles), vdd_v=VDD_V, bump_um=a.bump_um,
                                                        bumps=nb, bump_pattern="VDD/VSS checkerboard"), indent=1) + "\n")
     print(json.dumps(basis))
 
@@ -1372,11 +1374,28 @@ def cmd_render(a):
         ix = np.clip((rows[:, 0] / g).astype(int), 0, nx - 1)
         iy = np.clip((rows[:, 1] / g).astype(int), 0, ny - 1)
         img[iy, ix] = rows[:, 4]
+        # every gcell carries the reserved (PG / adjustment) baseline: show the excess over the median, max-pooled
+        # over k x k gcells so isolated hot gcells stay visible at die scale; partitions as outlines only
+        k = 5
+        base = np.nanmedian(img)
+        ny2, nx2 = ny // k, nx // k
+        pool = np.nanmax(img[:ny2 * k, :nx2 * k].reshape(ny2, k, nx2, k), axis=(1, 3)) - base
+        pool = np.ma.masked_less(pool, 2.0)
         plt, fig, ax = _fig(P)
-        im = ax.imshow(img, origin="lower", extent=(0, nx * g, 0, ny * g), cmap="inferno",
-                       vmin=np.nanpercentile(img, 5), vmax=max(100, np.nanmax(img)))
-        _base(P, ax, label=False)
-        fig.colorbar(im, ax=ax, fraction=0.03, label="GRT gcell usage % (all layers, incl. reserved capacity)")
+        ax.set_facecolor("#f4f4f4")
+        im = ax.imshow(pool, origin="lower", extent=(0, nx2 * k * g, 0, ny2 * k * g), cmap="inferno_r",
+                       vmin=0, vmax=max(30.0, 100.0 - base, float(pool.max())), interpolation="nearest", zorder=2)
+        for n in P.parts:
+            x0, y0, x1, y1 = P.rect(n)
+            ax.add_patch(plt.Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=0.3, ec="#3060a0", zorder=3))
+        ax.set_xlim(0, P.W); ax.set_ylim(0, P.H)
+        hot = np.argwhere(img > 100.0)
+        if len(hot):
+            ax.scatter((hot[:, 1] + 0.5) * g, (hot[:, 0] + 0.5) * g, s=6, c="cyan", marker="x", zorder=4,
+                       label=f"{len(hot)} gcells > 100 %")
+            ax.legend(loc="upper right", fontsize=7)
+        fig.colorbar(im, ax=ax, fraction=0.03,
+                     label=f"GRT usage above the median gcell ({base:.0f} % = reserved baseline), max over {k * g:.0f} um")
         ax.set_title(f"{P.name}: die GRT congestion (G0 capacity model: M4-M7 at 25 %, M8/M9 at cut_avail)", fontsize=9)
         fig.savefig(out / "congestion.png", dpi=a.dpi, bbox_inches="tight")
         plt.close(fig)
@@ -1451,6 +1470,8 @@ def main(argv=None):
     i.add_argument("--out", required=True)
     i.add_argument("--w-mm2", type=float)
     i.add_argument("--bump-um", type=float, default=150.0)
+    i.add_argument("--tile-pitches", type=int, default=2,
+                   help="power tile = N coarse PG pitches (8.64 um x IR_K); larger -> fewer pdngen instance grids")
     v = sub.add_parser("render")
     v.add_argument("dir")
     v.add_argument("--out")
