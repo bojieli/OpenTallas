@@ -1,0 +1,6 @@
+{
+  "verdict": "HOLD FOR IMPLEMENTATION CONTRACT; NO NEW PHY P&R AUTHORIZED",
+  "reviewer": "CODEX",
+  "picture": "/srv/opentallas-scratch/claude/codex-s81-xdie/review/die_cores.png",
+  "findings": "Viewed full actual geometry: 400parts/180types,790.62mm2,98.07%partition+1.93%channels,rectangularcoverage. ReservePHY windows fitshoreline with103.68umoutersealring; WS3 is1442.88x2453.76 column, othernewPHY2885.76x1226.88. Existingframe types/hardcores/earlyclocktaps all exactlyequal main (74earlytaps retained), macro-free405reach retained. Existingcornerbump/ESDkeepout cells are reused: explicitphysicalESD/bump implementation stillowed. G0C91 unchangedknownhardcoreerrors, noextra census/typecells errors; rack2932circuitsPASS0errors4unusedreservewarnings. Source selectedframeclockviews nowfailclosed instead of silently dropping taps in sparseclone. Actual pair-B endpoint RTL at s_7N/s_0S is stillmissing, so candidate is heldoffmainplan."
+}
