@@ -41,15 +41,6 @@ def census(d, caps):
     T = P["partition_types"]
     inst = collections.Counter(p["type"] for p in P["partitions"])
     rs = [rect(p, T[p["type"]]) for p in P["partitions"]]
-    seam = 0.0
-    xs = sorted(range(len(rs)), key=lambda i: rs[i][0])
-    for ii, i in enumerate(xs):
-        for j in xs[ii + 1:]:
-            if rs[j][0] > rs[i][2] + 0.1:
-                break
-            seam += shared(rs[i], rs[j])
-    for i in range(len(rs)):        # y-adjacent pairs not caught by the x sweep (same x span)
-        pass
     seam2 = 0.0
     for i in range(len(rs)):
         for j in range(i + 1, len(rs)):
@@ -70,19 +61,18 @@ def census(d, caps):
         q = lambda f: vals[min(len(vals) - 1, int(f * len(vals)))]
         out["type_cells_quantiles"] = {"min": vals[0], "p50": q(0.5), "p90": q(0.9), "max": vals[-1]}
     for C in caps:
-        units = runs = 0
-        kept_core_perim = 0.0
+        units, mods, kept = len(P["partitions"]), set(), 0.0
         for t, n in inst.items():
             c = est.get(t, (0,))[0] or 0
-            k = 1 if c <= C else math.ceil(c / C)
-            units += k * n
-            runs += 1 if c <= C else 1 + len({x.get("module") for x in T[t].get("hard_cores", [])}) or k
-            if c > C:
-                kept_core_perim += sum(2 * sum(x["outline_um"]) for x in T[t].get("hard_cores", [])
-                                       if x.get("outline_um")) * n
-        out["caps"][str(C)] = {"flatten_units": units, "flatten_unique_runs_approx": runs,
-                               "regions_lower_bound": math.ceil(tot / C) if tot else None,
-                               "core_perimeter_kept_um": round(kept_core_perim)}
+            hc = T[t].get("hard_cores", [])
+            if c > C and hc:       # stays cored: its cores are still separate runs
+                units += len(hc) * n
+                mods |= {x.get("module", x.get("inst")) for x in hc}
+                kept += sum(2 * sum(x["outline_um"]) for x in hc if x.get("outline_um")) * n
+        out["caps"][str(C)] = {"flatten_units": units, "flatten_unique_runs": len(T) + len(mods),
+                               "flatten_core_perimeter_um": round(kept),
+                               "flatten_boundary_um": round(seam2 + kept),
+                               "merge_regions_lower_bound": math.ceil(tot / C) if tot else None}
     return out
 
 
