@@ -453,6 +453,7 @@ def rel(path, root):
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
+        self.plan_dir = Path(plan_dir)
         self.ab = plan["asbuilt"]
         self.base = base or str(E.REPO)
         self.errors, self.warns = [], []
@@ -933,7 +934,11 @@ class Binder:
         # pass 1a: the pair's own lanes whose plan name / leaf matches the source pin (bits reserved for their bus)
         pend = []
         for (sp, dp), groups in sorted(self.cross.items()):
-            items = sorted(groups.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1]))
+            # asbuilt.pack_by_rel (KV-P5 15:59 type-split ask): order a pair's source pins by their PARTITION-RELATIVE
+            # leaf name, so replicas of one type pack the same pins onto the same lanes (full paths sort differently
+            # per quadrant / instance and split the type by width packing)
+            items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+                           if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
             if not use_lanes:
                 direct += [(sp, dp, sci, spn, sorted(bits)) for (sci, spn), bits in items]
                 continue
@@ -1153,7 +1158,8 @@ class Binder:
                       for L in self.out_bus[p])
         ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
         ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
-        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft, clocks=tuple(sorted(self.clk_dom[p])))
+        sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
+                   clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         return sig, inst_vals
 
     def align_landings(self):
@@ -1165,6 +1171,8 @@ class Binder:
         leaf parameters are re-derived from the bound lanes by param_regen instead)."""
         self.pad_stats = dict(groups=0, padded_groups=0, padded_bits=0, pad_flops=0, max_pad=0)
         self.land_pads = {}
+        if self.ab.get("land_align") == "r8":
+            return self.align_r8()
         if self.ab.get("land_align") != "cell":
             return
         grp = defaultdict(list)
@@ -1197,6 +1205,103 @@ class Binder:
                 k = (d[6], L["iname"], j, d[7])
                 if k not in seen:
                     seen.add(k)
+                    st["pad_flops"] += d[7]
+
+    def align_r8(self):
+        """asbuilt.land_align = "r8" (COORD 10-23 16:58 R8 SOURCE OF TRUTH): the landing pads are NOT computed here but
+        read from PLAN-TOOL3's r8 landing table (tools/die_plan/r8.py; asbuilt.land_r8, default
+        PLANDIR/r8/<die>_r8_landing.json): every member (sink leaf.port[bits] <- source pin @ as-built stages) gets its
+        `pad` as reset-less ot_dp_dly stages after the sink partition's in boundary flop, so plan, bound top and compiler
+        share one table (landed = bound + pad).  Every member must match this bind (same sink bits, source pin, as-built
+        stages, bound depth): a mismatch = R8_STALE (the table was made on another bind / plan), a crossing bit the table
+        does not list (other than reset spines / reset bits, r8.is_async) = R8_UNCOVERED; both are errors.
+        asbuilt.land_align_exclude still names ports whose timing a param_regen hook carries: those get NO pad; each
+        such member whose table pad is non-zero is listed in pad_stats.r8_excluded (the table should exempt them)."""
+        import r8 as R8
+        die = self.plan["die"]["name"]
+        f = self.ab.get("land_r8")
+        if f:
+            f = Path(f) if Path(f).is_absolute() else Path(self.base) / f
+        else:
+            f = self.plan_dir / "r8" / f"{die}_r8_landing.json"
+        js = json.loads(Path(f).read_text())
+        if js.get("die") != die:
+            self.errors.append(f"R8_TABLE {f}: die {js.get('die')} != plan die {die}")
+            return
+        R8.EXEMPT[:] = [re.compile(x) for x in js.get("exempt", [])]    # pins the table left outside R8 (r8.py --exempt)
+        excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
+        cidx = self.cell_index()
+        st = self.pad_stats
+        st.update(mode="r8", table=str(f), table_sha=hashlib.sha256(Path(f).read_bytes()).hexdigest()[:16],
+                  table_summary=js.get("summary", {}), members=0, stale=0, uncovered=0, excluded_bits=0,
+                  r8_excluded=[], async_bits=0, table_exempt=js.get("exempt", []), table_bus=js.get("bus"),
+                  table_replica=js.get("replica"))
+        want = {}
+        for m in js["members"]:
+            st["members"] += 1
+            ci = cidx.get(m["sink"])
+            bits = [i for a, b in m["sink_bits"] for i in range(a, b + 1)]
+            if ci is None or m["sink_port"] not in self.F.cells[ci].ports:
+                st["stale"] += 1
+                if st["stale"] <= 30:
+                    self.errors.append(f"R8_STALE {m['id']}: no such sink leaf/port in this bind")
+                continue
+            for i in bits:
+                want[(ci, m["sink_port"], i)] = m
+        seen = set()
+        for (ci, pn, i), d in list(self.sinks.items()):
+            if d[0] != "x":
+                continue
+            m = want.get((ci, pn, i))
+            path = self.F.cells[ci].path
+            if m is None:
+                src = f"{self.F.cells[d[2]].path}.{d[3]}"
+                L = self.bitpos[(d[1], d[6], d[2], d[3], d[4])][0]
+                lane = L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED")
+                if R8.is_async(dict(lane=lane, sink_port=pn, source=src)):
+                    st["async_bits"] += 1
+                    continue
+                st["uncovered"] += 1
+                if st["uncovered"] <= 30:
+                    self.errors.append(f"R8_UNCOVERED {path}.{pn}[{i}] <- {src}[{d[4]}]: crossing bit not in the r8 table")
+                continue
+            seen.add((ci, pn, i))
+            b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
+            src = f"{self.F.cells[d[2]].path}.{d[3]}"
+            if src != m["source"] or d[5] != m["asbuilt"] or b0 != m["bound"]:
+                st["stale"] += 1
+                if st["stale"] <= 30:
+                    self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
+                                       f"{m['source']} as-built {m['asbuilt']} bound {m['bound']}")
+                continue
+            pad = m["pad"]
+            if any(x.fullmatch(f"{path}.{pn}") for x in excl):
+                st["excluded_bits"] += 1
+                if pad and (not st["r8_excluded"] or st["r8_excluded"][-1]["id"] != m["id"]):
+                    st["r8_excluded"].append(dict(id=m["id"], table_pad=pad, applied=0))
+                continue
+            if pad:
+                self.sinks[(ci, pn, i)] = d + (pad,)
+                st["padded_bits"] += 1
+                st["max_pad"] = max(st["max_pad"], pad)
+                lp = self.land_pads.setdefault(f"{path}.{pn}", dict(src_part=d[1], pads=[pad, pad], bits=0, r8=True))
+                lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
+                lp["bits"] += 1
+        miss = [k for k in want if k not in seen]
+        for k in miss:
+            m = want[k]
+            st["stale"] += 1
+            if st["stale"] <= 30:
+                self.errors.append(f"R8_STALE {m['id']} bit {k[2]}: bit is not a crossing in this bind")
+        st["groups"] = len({m["id"] for m in js["members"]})
+        st["padded_groups"] = len({m["id"] for m in js["members"] if m["pad"]})
+        seen_f = set()
+        for (ci, pn, i), d in self.sinks.items():
+            if d[0] == "x" and len(d) > 7:
+                L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+                k = (d[6], L["iname"], j, d[7])
+                if k not in seen_f:
+                    seen_f.add(k)
                     st["pad_flops"] += d[7]
 
     def depth(self, path, port):
@@ -1325,7 +1430,34 @@ class Binder:
             return ("strap",)
         if k in ("or", "and"):
             return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+        if k == "clk":
+            return ("clk", self.cport(p, d[1]))
         return d
+
+    def clk_role(self, p, d):
+        """asbuilt.clock_roles [[regex, replacement], ...] (KV-P5 15:59 type-split ask): the partition-local name of die
+        clock domain d, e.g. clk_hbm_(WS|WN|ES|EN) -> clk_hbm, so per-quadrant copies of one type bind one module (the
+        top connects each instance's role port to its own die clock).  A role shared by two domains of one partition
+        keeps the domain names."""
+        if not hasattr(self, "_roles"):
+            self._roles = {}
+        if p not in self._roles:
+            rules = [(re.compile(a), b) for a, b in self.ab.get("clock_roles", [])]
+
+            def role(x):
+                for rx, b in rules:
+                    if rx.fullmatch(x):
+                        return rx.sub(b, x)
+                return x
+            m = {x: role(x) for x in self.clk_dom[p]}
+            if len(set(m.values())) != len(m):
+                m = {x: x for x in m}
+            self._roles[p] = m
+        return self._roles[p].get(d, d)
+
+    def cport(self, p, d):
+        """the partition module's clock port that carries die clock domain d"""
+        return "clk" if d == self.default_domain(p) else f"clk_{sv_id(self.clk_role(p, d))}"
 
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
@@ -1483,9 +1615,9 @@ class Binder:
         self.io_used[tn] = sorted(io)
         for n in sorted(io):
             ports.append(f"    input  wire [{len(F.top_ports[n][1]) - 1}:0] io_{sv_id(n)}   // die IO {n}")
-        doms = sorted(self.clk_dom[p] - {self.default_domain(p)})
+        doms = sorted(self.clk_dom[p] - {self.default_domain(p)}, key=lambda d: self.cport(p, d))
         for d in doms:
-            ports.append(f"    input  wire clk_{sv_id(d)}")
+            ports.append(f"    input  wire {self.cport(p, d)}")
         decl, body = [], []
         body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                     f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
@@ -1590,7 +1722,7 @@ class Binder:
                     return f"{pads[key]}[0]"
                 return f"{L['iname']}_q[{j}]"
             if k == "clk":
-                return "clk" if d[1] == self.default_domain(p) else f"clk_{sv_id(d[1])}"
+                return self.cport(p, d[1])
             if k == "rst":
                 if d[1] == "low":
                     return "rst_n"
@@ -1700,8 +1832,8 @@ class Binder:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
-            for d in sorted(self.clk_dom[p] - {dd}):
-                cs.append(f"        .clk_{sv_id(d)}(clk_{sv_id(d)})")
+            for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
+                cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
                 cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
             for port, w in sorted(conn[p]):
