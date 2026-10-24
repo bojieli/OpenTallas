@@ -337,7 +337,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       544.32
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       544.32
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       881.28
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       881.28
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -2202,7 +2271,98 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r1.u_e10e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       1002.24
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e10w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       1002.24
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e5e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       8.64
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e5w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       8.64
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e6.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       328.32
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e7.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       328.32
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e8.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       682.5600000000001
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e9.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       682.5600000000001
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -3830,7 +3990,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r2.u_e11.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       267.84000000000003
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e12.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       267.84000000000003
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e13.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       656.64
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e14.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       656.64
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e15e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       993.6
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e15w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       993.6
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -5405,7 +5634,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -7050,7 +7348,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r1.u_e5.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       120.96
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e6.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       120.96
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e7.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       509.76
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e8e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       855.36
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e8w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       855.36
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r1.u_e9.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       509.76
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -8598,7 +8965,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r2.u_e10.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       120.96
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e11.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       120.96
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e12.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       509.76
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e13e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       855.36
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e13w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       855.36
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r2.u_e14.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       509.76
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -10137,7 +10573,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -11838,7 +12343,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       544.32
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       544.32
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       881.28
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       881.28
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -13740,7 +14314,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -15385,7 +16028,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -17166,7 +17878,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
@@ -18868,7 +19649,76 @@
      725.76,
      613.44
     ],
-    "layer": "M9"
+    "layer": "M9",
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_r0.u_e0.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e1.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       207.36
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e2.clk",
+      "kind": "core",
+      "xy": [
+       298.62,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e3.clk",
+      "kind": "core",
+      "xy": [
+       860.2199999999999,
+       596.16
+      ],
+      "insertion_ps": 552.30737,
+      "budget_owner": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4e.u_view.clk",
+      "kind": "core",
+      "xy": [
+       916.2840000000001,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     },
+     {
+      "name": "u_r0.u_e4w.u_view.clk",
+      "kind": "core",
+      "xy": [
+       268.284,
+       941.76
+      ],
+      "insertion_ps": 644.89056,
+      "budget_owner": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+     }
+    ]
    },
    "reset": {
     "sync_stages": 2
