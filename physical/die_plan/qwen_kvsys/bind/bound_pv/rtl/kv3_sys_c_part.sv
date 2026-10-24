@@ -465,7 +465,7 @@ module kv3_sys_c_part (
         .rs(i_host_die_rst_n_q[0])
     );
     // as-built d2d_kv
-    qkd_d2d_static_sfm #(.FEG(1), .NL(2), .NTX(3), .SAFE_RC(1), .SRAMV(2), .TXDP(50529302)) u_d2d_kv (
+    qkd_d2d_static_sfm #(.FEG(1), .NL(2), .NTX(3), .SAFE_RC(1), .SRAMV(2), .TXDP(32'h03030443)) u_d2d_kv (
         .abort_drained(w_d2d_kv_abort_drained),
         .att_rx_beat(w_d2d_kv_att_rx_beat),
         .att_rx_kind(w_d2d_kv_att_rx_kind),

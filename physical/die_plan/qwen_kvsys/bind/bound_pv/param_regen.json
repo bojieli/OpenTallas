@@ -8,6 +8,12 @@
    "bound": "64'hffd2ffd1ffd1ffd1"
   },
   {
+   "inst": "d2d_kv",
+   "param": "TXDP",
+   "asbuilt": "50529302",
+   "bound": "32'h03030443"
+  },
+  {
    "inst": "ectl_EN_0",
    "param": "RESPONSE_LAT",
    "asbuilt": "80",
@@ -436,11 +442,13 @@
    ],
    "FR_OFS": -7,
    "KVN_A0": 34,
+   "D2D_TXDP_K": "32'h03030443",
    "TRUNK_D": 43,
    "FLAG_D": 0
   },
   "cells": {
    "ahub": 1,
+   "d2d": 1,
    "ectl": 32,
    "pv_ctl": 2,
    "seq": 1
