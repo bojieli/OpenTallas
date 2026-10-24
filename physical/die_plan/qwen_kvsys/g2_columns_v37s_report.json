@@ -164,5 +164,62 @@
    "worst_segment": "0.2592 vertical@6500:hub_Ei"
   },
   "after": "unchanged"
- }
+ },
+ "ft_probes_after": {
+  "kv3_hgi_v4": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 4.98,
+    "M3": 11.53,
+    "M4": 0.95,
+    "M5": 3.31,
+    "M6": 0.06,
+    "M7": 3.28
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 5595735.0
+  },
+  "kv3_hgi_v5": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 7.68,
+    "M3": 12.31,
+    "M4": 1.46,
+    "M5": 2.63,
+    "M6": 0.07,
+    "M7": 2.46
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 6304512.0
+  },
+  "kv3_pv_v12": {
+   "exit": "EXIT 0",
+   "total_overflow": 0,
+   "layer_use_pct": {
+    "M1": 0.0,
+    "M2": 2.07,
+    "M3": 0.29,
+    "M4": 0.56,
+    "M5": 0.17,
+    "M6": 0.6,
+    "M7": 0.24
+   },
+   "pin_access_no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "wirelength_um": 1254667.0
+  }
+ },
+ "ft_probes_note": "tools/die_plan/g2.py part --adjust 0.5, localhost docker --memory 32g, openroad/orfs:asap7lock; the 3 types that gain the L2045 slot (E corridor rows 1-7, pv_N_7 bottom band); W types only lose a slot"
 }
