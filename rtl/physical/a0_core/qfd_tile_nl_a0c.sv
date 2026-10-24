@@ -58,6 +58,18 @@ module qfd_tile_nl_a0c #(
     input  wire          ck_t30,
 `ifdef OT_A0_CK_TAPS32
     input  wire          ck_t31,
+`ifdef OT_A0_CK_TAPS37
+    // QC-A0 10-24 A0 v7: R4 grid (2 x 3 at 400 um) + the v6 sink taps as additions (gen_a0c7_taps.py; NL 37 taps,
+    // NK 38 with OT_A0_CK_TAPS38).  No RTL loads.
+    input  wire          ck_t32,
+    input  wire          ck_t33,
+    input  wire          ck_t34,
+    input  wire          ck_t35,
+    input  wire          ck_t36,
+`ifdef OT_A0_CK_TAPS38
+    input  wire          ck_t37,
+`endif
+`endif
 `endif
 `endif
 `endif

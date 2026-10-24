@@ -2402,6 +2402,22 @@ def kit_inline_imports(fl, kd):
     return out, rec
 
 
+def bindf_prefer(out, base):
+    """QC-A0 10-24: the RTL files the bind itself listed (OUT/bind.f, relative to the source tree) win every module-name
+    ambiguity in the kit closure.  A later tree that adds a second definition of a bound module (the A0 snapshot dirs
+    rtl/physical/a0_rc1[45]_selected_2000/ sort before rtl/physical/qfd_tile_*) must not silently swap the bound
+    module for another RTL in the G3 kit."""
+    f = Path(out) / "bind.f"
+    if not f.is_file():
+        return []
+    res = []
+    for ln in f.read_text().split():
+        p = Path(ln) if Path(ln).is_absolute() else Path(base) / ln
+        if p.is_file():
+            res.append(str(p))
+    return res
+
+
 def kit_dedupe(tn, fl):
     """one file per basename (gen_phys flattens rtl/): identical copies are dropped, different contents are an error."""
     out, by = [], {}
@@ -2534,7 +2550,7 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
-        rep.get("extra_lib", [])
+        rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})

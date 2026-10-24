@@ -9,6 +9,9 @@
 # SPEF) -> OT_TAP_RC line.
 uplevel #0 {
 set tb_blk [ord::get_db_block]
+# QC-A0 10-24: tap port family OT_TAP_PORT (default clk) and its SDC clock OT_TAP_CLOCK (default the port name)
+set tb_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
+set tb_clock [expr {[info exists ::env(OT_TAP_CLOCK)] ? $::env(OT_TAP_CLOCK) : $tb_port}]
 set tb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGET_PS) : 250.0}]
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
@@ -49,11 +52,11 @@ proc tb_measure {{est 1}} {
   global tb_blk
   if {$est} { estimate_parasitics -placement }
   set_propagated_clock [all_clocks]
-  set half [expr {[get_property [get_clocks clk] period] / 2.0}]
+  set half [expr {[get_property [get_clocks $::tb_clock] period] / 2.0}]
   set res {}
   foreach bt [$tb_blk getBTerms] {
     set n [$bt getName]
-    if {![regexp {^clk(_t[0-9]+)?$} $n]} continue
+    if {![regexp "^${::tb_port}(_t\[0-9\]+)?\$" $n]} continue
     set net [$bt getNet]
     if {$net eq "NULL"} continue
     set s 0.0; set k 0; set mx 0.0; set mn 1e9
@@ -143,7 +146,7 @@ dict for {n v} $m {
 set tb_empty {}
 foreach bt [$tb_blk getBTerms] {
   set n [$bt getName]
-  if {[regexp {^clk(_t[0-9]+)?$} $n] && ![dict exists $m $n]} { lappend tb_empty $n }
+  if {[regexp "^${::tb_port}(_t\[0-9\]+)?\$" $n] && ![dict exists $m $n]} { lappend tb_empty $n }
 }
 puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0f $lo]..[format %.0f $hi] ps (spread [format %.0f [expr {$hi - $lo}]], target [format %.0f $tgt]); empty taps [llength $tb_empty] $tb_empty"
 if {[llength $fail]} {

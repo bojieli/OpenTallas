@@ -496,3 +496,24 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
         dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
+
+
+def test_tap_port_family_env():
+    """QC-A0 10-24: clock_taps.tcl / tap_balance.tcl match the tap port family OT_TAP_PORT (default clk; A0 hard cores
+    ck / ck_t<i>) and tap_balance measures on clock OT_TAP_CLOCK, so hard-core kits source the tools unchanged.  The
+    port regexp is checked in tclsh on the real script text (default clk family unchanged)."""
+    import re
+    import shutil
+    import subprocess
+    ct = (HERE / "clock_taps.tcl").read_text()
+    tb = (HERE / "tap_balance.tcl").read_text()
+    assert "OT_TAP_PORT" in ct and "findBTerm $ct_port" in ct and "findBTerm clk" not in ct
+    assert "OT_TAP_PORT" in tb and "OT_TAP_CLOCK" in tb and "get_clocks clk]" not in tb
+    pat = re.search(r'regexp ("\^\$\{ct_port\}[^"]*")', ct).group(1)
+    if not shutil.which("tclsh"):
+        return
+    for port, names, want in (("clk", ["clk", "clk_t3", "ck", "clk_x", "ck_t1"], [1, 1, 0, 0, 0]),
+                              ("ck", ["ck", "ck_t37", "clk", "ck_tx", "ck_t"], [1, 1, 0, 0, 0])):
+        prog = f"set ct_port {port}\n" + "".join(f"puts [regexp {pat} {n}]\n" for n in names)
+        r = subprocess.run(["tclsh"], input=prog, capture_output=True, text=True)
+        assert [int(x) for x in r.stdout.split()] == want, (port, r.stdout, r.stderr)
