@@ -3233,7 +3233,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane0__388.8x345.6\"]; straps {'map_lane_j': '0000'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane10__388.8x345.6": {
   "defines": [],
@@ -3271,7 +3272,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane10__388.8x345.6\"]; straps {'map_lane_j': '1010'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane11__388.8x345.6": {
   "defines": [],
@@ -3309,7 +3311,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane11__388.8x345.6\"]; straps {'map_lane_j': '1011'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane12__388.8x345.6": {
   "defines": [],
@@ -3347,7 +3350,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane12__388.8x345.6\"]; straps {'map_lane_j': '1100'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane13__388.8x345.6": {
   "defines": [],
@@ -3385,7 +3389,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane13__388.8x345.6\"]; straps {'map_lane_j': '1101'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane14__388.8x345.6": {
   "defines": [],
@@ -3423,7 +3428,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane14__388.8x345.6\"]; straps {'map_lane_j': '1110'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane15__388.8x345.6": {
   "defines": [],
@@ -3461,7 +3467,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane15__388.8x345.6\"]; straps {'map_lane_j': '1111'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane1__388.8x345.6": {
   "defines": [],
@@ -3499,7 +3506,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane1__388.8x345.6\"]; straps {'map_lane_j': '0001'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane2__388.8x345.6": {
   "defines": [],
@@ -3537,7 +3545,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane2__388.8x345.6\"]; straps {'map_lane_j': '0010'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane3__388.8x345.6": {
   "defines": [],
@@ -3575,7 +3584,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane3__388.8x345.6\"]; straps {'map_lane_j': '0011'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane4__388.8x345.6": {
   "defines": [],
@@ -3613,7 +3623,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane4__388.8x345.6\"]; straps {'map_lane_j': '0100'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane5__388.8x345.6": {
   "defines": [],
@@ -3651,7 +3662,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane5__388.8x345.6\"]; straps {'map_lane_j': '0101'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane6__388.8x345.6": {
   "defines": [],
@@ -3689,7 +3701,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane6__388.8x345.6\"]; straps {'map_lane_j': '0110'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane7__388.8x345.6": {
   "defines": [],
@@ -3727,7 +3740,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane7__388.8x345.6\"]; straps {'map_lane_j': '0111'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane8__388.8x345.6": {
   "defines": [],
@@ -3765,7 +3779,8 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane8__388.8x345.6\"]; straps {'map_lane_j': '1000'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  },
  "ot_hgi_sfu_core_split3__lane9__388.8x345.6": {
   "defines": [],
@@ -3803,6 +3818,7 @@
   "params": {},
   "port_map_note": "canonical ports = ot_hgi_sfu_split3_lane_core ports; cut pin -> canonical map in canonical_ports_split.json types.sfu_lane.type_ids[\"ot_hgi_sfu_core_split3__lane9__388.8x345.6\"]; straps {'map_lane_j': '1001'} tied at the parent",
   "source": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)",
-  "top": "ot_hgi_sfu_split3_lane_core"
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "synth_memory_max_bits": 16384
  }
 }
