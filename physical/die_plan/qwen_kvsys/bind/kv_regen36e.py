@@ -19,6 +19,10 @@ from pathlib import Path
 RULES = Path(__file__).with_name("kv_param_rules_bound_v36.json")
 PV = Path(__file__).with_name("kv_pv_entry_r8_v36.json")  # KV-P6-V37 @0ec5c902d entry-pad table (converted)
 COORD_PIN = dict(QK_ISSUE_AGE=34, KVN_A0=34)                # COORD 20:38: must equal the rule values
+# KV d2d pair image TXDP (COORD 21:5x, CAL-AUTO rtl check): regen_constants.py kv_seam on the kv40 landed seam
+# (XDIE_SEAM_K 34,34,32,32,32,31,31 -> [KS_TXS + 2 + SK_TXP, 2+host, 1, 1] + PINREG_EXT = [67,4,3,3]); bind_post.py
+# re-derives it from every bind and FAILS on a mismatch, so a seam move cannot go unnoticed.
+D2D_TXDP_K = "32'h03030443"
 LANDING_SEG = 8
 
 
@@ -66,12 +70,15 @@ def regen(ctx):
         elif pv and re.search(r"ot_qwen_tp8_pv_wide_ctl_tbf", c.module):
             params[c.path] = dict(TRUNK_D=pv["TRUNK_D"], FLAG_D=pv["FLAG_D"])
             n["pv_ctl"] += 1
+        elif re.search(r"qkd_d2d_static", c.module):
+            params[c.path] = dict(TXDP=D2D_TXDP_K)
+            n["d2d"] += 1
         elif re.search(r"qkd_seq_core_static_s", c.module):
             params[c.path] = dict(KVN_A0=kvn)
             n["seq"] += 1
     if rts != {rl}:
         raise ValueError(f"KV rule table {RULES.name} stale: measured K round trips {sorted(rts)} != RESPONSE_LAT {rl}")
-    if not (n["ectl"] and n["ahub"] == 1 and n["seq"] == 1):
+    if not (n["ectl"] and n["ahub"] == 1 and n["seq"] == 1 and n["d2d"] == 1):
         raise ValueError(f"KV regen: cells found {dict(n)} (expect ECTL frames, 1 AHUB, 1 seq core)")
     blk = [dict(param=r["param"], module=r["module"], violations=r.get("violations"), pads=r.get("pads"))
            for r in R.values() if r.get("violations") and not (pv and r["param"] in ("TRUNK_D", "FLAG_D"))]
@@ -79,7 +86,7 @@ def regen(ctx):
         blk = [b for b in blk if not b["param"].startswith("DQ")]   # entry table: DQ <= 15 + W request pads
     boot = {r["param"]: r["regen_kv35"] for r in R.values() if r["kind"] == "boot"}
     rec = dict(rules=RULES.name, rules_source="KV-P5 kv_param_regen_check.py @29d54b0e2 on the v3.6 R8 pass-a bind",
-               applied=dict(RESPONSE_LAT=rl, QK_ISSUE_AGE=qk, AP_OFS_WS_WN_ES_EN=ap, FR_OFS=fr, KVN_A0=kvn), cells=dict(n),
+               applied=dict(RESPONSE_LAT=rl, QK_ISSUE_AGE=qk, AP_OFS_WS_WN_ES_EN=ap, FR_OFS=fr, KVN_A0=kvn, D2D_TXDP_K=D2D_TXDP_K), cells=dict(n),
                measured_RT=sorted(rts), open_blockers=blk, boot_programme=boot)
     if pv:
         rec["applied"].update(TRUNK_D=pv["TRUNK_D"], FLAG_D=pv["FLAG_D"])
