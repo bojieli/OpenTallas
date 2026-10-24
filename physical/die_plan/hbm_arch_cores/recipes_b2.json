@@ -26,7 +26,9 @@
   "asbuilt_inst": "hb_idx__q_NW",
   "macro_dirs": {
    "ot_sram_1r1w_32x128_m1": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
-  }
+  },
+  "synth_memory_max_bits": 7168,
+  "synth_memory_note": "RECIPES2 measured yosys inventory (proc; flatten; memory -nomap): core.quant.g_xrf.u_x.mem 7 x 1024 = 7168 b (largest), core.weights 32 x 16 = 512 b; bound = largest actual table, no truncation"
  },
  "ot_hbm_idx_vm_query_static_n12": {
   "top": "ot_hbm_idx_vm_query_static_n12",

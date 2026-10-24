@@ -440,6 +440,20 @@ def main():
     if output_helper:
         srcs.append(f"/work/rtl/{output_helper.name}")
         local.append(str(output_helper))
+    if not a.wrapper and top == module and not canon:
+        # RECIPES2: a SIGNED top port is written by yosys as 'output signed [..]', which OpenSTA's verilog reader refuses
+        # (STA-0171 at 1_synth): rename the RTL top in the kit copy to <top>__core and take the generated pass-through
+        # wrapper (plain wires, bit-identical); the kit top keeps the plan name and pins.
+        for p_ in local:
+            if not p_.endswith((".sv", ".v")):
+                continue
+            t_ = Path(p_).read_text()
+            m_ = re.search(r"(?ms)^\s*module\s+" + re.escape(top) + r"\b(.*?)\);", t_)
+            if m_ and re.search(r"\b(input|output|inout)\b[^;,()]*\bsigned\b", m_.group(1)):
+                t_ = re.sub(r"(?m)^(\s*module\s+)" + re.escape(top) + r"\b", lambda q: q[1] + top + "__core", t_, count=1)
+                Path(p_).write_text(t_)
+                top = top + "__core"
+                break
     wrap_rep = None
     if a.wrapper:
         shutil.copyfile(a.wrapper, kd / "rtl" / f"{module}__wrap.sv")
