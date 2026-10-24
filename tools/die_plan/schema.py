@@ -206,6 +206,11 @@ SCHEMA = {
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
+                        # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
+                        # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
+                        # plan records only (unchanged kits).
+                        "core_taps": {"enum": ["early"]},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -320,7 +325,13 @@ SCHEMA = {
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
-                "topology": {"enum": ["htree", "fishbone", "mesh"]}}}}},
+                "topology": {"enum": ["htree", "fishbone", "mesh"]},
+                # CP2 branch model (spine.py, pair plans): the FULL die's root / outline and each partition's origin
+                # in that die; branch latency = H-tree path length x branch_ps_per_mm (default 60), recursion down to
+                # regions <= branch_leaf_um (default budgets.tap_pitch_um)
+                "die_root_um": _xy, "die_outline_um": _xy,
+                "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
+                "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
@@ -763,6 +774,25 @@ def tap_grid(P, tn):
             x, y = tap_clear(t, x, y, [(a, b) for _, a, b in out])
             out.append((f"clk_t{len(out)}", x, y))
     return out
+
+
+def core_taps(P, tn):
+    """CP2: the type's EARLY core taps [(port, x, y, tap)] (type frame, unsnapped): clock.taps[] kind 'core' when
+    clock.core_taps == 'early', ports clk_c<k> in taps[] order.  A tap names its core (`<inst>`, every clock pin) or one
+    clock pin (`<inst>.<pin>`); tap['insertion_ps'] = the core's internal clock latency.  Otherwise []."""
+    ck = P.types[tn].get("clock", {}) or {}
+    if ck.get("core_taps") != "early":
+        return []
+    out = []
+    for tp in ck.get("taps", []) or []:
+        if tp.get("kind") == "core":
+            out.append((f"clk_c{len(out)}", float(tp["xy"][0]), float(tp["xy"][1]), tp))
+    return out
+
+
+def core_tap_early_ps(P, tp):
+    """how early the spine delivers a core tap: max(0, insertion_ps - the die common latency)."""
+    return max(0.0, float(tp.get("insertion_ps", 0.0)) - float(P.clock["insertion_ps"]))
 
 
 def _grid_taps(P, tn):
