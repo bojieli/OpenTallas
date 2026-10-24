@@ -1,10 +1,10 @@
 {
  "variant": "B",
  "partitions": 388,
- "types": 54,
- "types_merged": 148,
- "ports": 3300,
- "lanes": 2005,
+ "types": 56,
+ "types_merged": 146,
+ "ports": 3703,
+ "lanes": 2142,
  "die_um": [
   31216.32,
   25228.8
@@ -13,7 +13,7 @@
  "content_status_per_instance": {
   "reuse": 1717,
   "rework": 906,
-  "new": 378
+  "new": 381
  },
  "max_cells_type": [
   782764,
@@ -301,7 +301,7 @@
   },
   "sle_sc": {
    "cells": 40000,
-   "instances": 12,
+   "instances": 6,
    "outline_um": [
     613.44,
     1080.0
@@ -328,7 +328,7 @@
   },
   "sle_stm": {
    "cells": 270598,
-   "instances": 12,
+   "instances": 6,
    "outline_um": [
     613.44,
     1080.0
@@ -452,6 +452,15 @@
    ],
    "macros": 0
   },
+  "slw_sc": {
+   "cells": 40000,
+   "instances": 6,
+   "outline_um": [
+    613.44,
+    1080.0
+   ],
+   "macros": 0
+  },
   "slw_st_a": {
    "cells": 141126,
    "instances": 6,
@@ -466,6 +475,15 @@
    "instances": 6,
    "outline_um": [
     622.08,
+    1080.0
+   ],
+   "macros": 0
+  },
+  "slw_stm": {
+   "cells": 270598,
+   "instances": 6,
+   "outline_um": [
+    613.44,
     1080.0
    ],
    "macros": 0
@@ -516,24 +534,31 @@
   "bc22": 24768,
   "bc30": 24768,
   "bc32": 24768,
-  "t00": 24672,
-  "t30": 24672,
-  "t01": 24672,
-  "t31": 24672,
-  "t02": 24672,
-  "t32": 24672,
-  "t03": 24672,
-  "t33": 24672,
-  "l1a": 24672,
-  "l1b": 24672,
-  "l1c": 24672,
-  "l1d": 24672,
-  "l1e": 24672,
-  "l1f": 24672,
-  "l1g": 24672,
-  "l1h": 24672,
-  "l2a": 24672,
-  "l2c": 24672,
+  "a01": 24672,
+  "a02": 24672,
+  "a03": 24672,
+  "a10": 24672,
+  "a11": 24672,
+  "a12": 24672,
+  "a13": 24672,
+  "a20": 24672,
+  "a21": 24672,
+  "a23": 24672,
+  "a31": 24672,
+  "a32": 24672,
+  "a33": 24672,
+  "b01": 24672,
+  "b02": 24672,
+  "b03": 24672,
+  "b10": 24672,
+  "b11": 24672,
+  "b13": 24672,
+  "b20": 24672,
+  "b21": 24672,
+  "b23": 24672,
+  "b31": 24672,
+  "b32": 24672,
+  "b33": 24672,
   "crec_tx_p": 549,
   "crec_rx_p": 547,
   "crec_tx_r": 517,
@@ -3307,6 +3332,35 @@
     "max_nearest_tap_um": 0.0,
     "glue_taps_over_290ps": []
    },
+   "slw_sc": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
    "slw_st_a": {
     "root_um": [
      311.04,
@@ -3353,6 +3407,35 @@
        0.0,
        0.0,
        622.08,
+       1080.0
+      ],
+      "reach_um": 855.4,
+      "insertion_ps": 270,
+      "insertion_tol_ps": 40,
+      "from_root_um": 0.0
+     }
+    ],
+    "max_from_root_um": 0.0,
+    "max_nearest_tap_um": 0.0,
+    "glue_taps_over_290ps": []
+   },
+   "slw_stm": {
+    "root_um": [
+     311.04,
+     535.68
+    ],
+    "taps": [
+     {
+      "name": "glue",
+      "kind": "glue",
+      "xy": [
+       311.04,
+       535.68
+      ],
+      "region_um": [
+       0.0,
+       0.0,
+       613.44,
        1080.0
       ],
       "reach_um": 855.4,

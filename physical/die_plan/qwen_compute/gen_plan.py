@@ -48,7 +48,8 @@ _LAYERS = {L["name"]: L for L in _S.ASAP7_LAYERS}
 G = 8.64                             # die lattice: PLAN-TOOL G0 needs a multiple of every M2-M9 pitch (2.16 is not a multiple of 0.064)
 G8 = 8.64
 REACH = 1000.0
-ST_LEN = 900.0                       # one station per <= 900 um of slot route
+ST_LEN = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
+                                     # hop must stay within the measured M5-M7 repeated reach 600-750 um)
 DENS = 4.2                           # pins / um per port window (budget 6 incl. track rounding)
 GAP = 0.96
 EDGE = 4.32
@@ -291,7 +292,7 @@ def cb_type(P, variant, kind, u):
     for c, r in cells:
         sfx = "" if variant == "A" else f"{c}{r}"
         ox, oy = a0_origin(c, r, "t")
-        nl = (c == 3 and r == 3)
+        nl = (c, r) == NL_CELL
         x = round(sum(CW[:c]) - ux + ox, 4)
         orient = "R0"
         if variant == "B" and c % 2 == 1:
@@ -343,6 +344,22 @@ def cb_part(variant, cname, c, r):
     return f"{cname}_{u[0]}{u[1]}"
 
 
+# As-built CB16 reduction tree (qfd_c_b16_dv_fabric, traced through its stations/landings by QC-P3 10-23 for
+# BINDER2's R7 finding: the old hand-written l1a..l3b map left 3 x 514 b per cluster UNPLANNED): every tile input
+# (dst (c, r), port) <- source tile (c, r) output.  u_t_<c>_<r>; u_t_3_0 is the NL tile (no n_a/n_b).
+CB_TREE = [((0, 0), "n_a", (2, 2), "n_y"), ((0, 1), "n_a", (0, 1), "t_out"), ((0, 2), "n_a", (0, 2), "t_out"),
+           ((0, 3), "n_a", (0, 3), "t_out"), ((1, 0), "n_a", (0, 0), "t_out"), ((1, 1), "n_a", (1, 0), "n_y"),
+           ((1, 2), "n_a", (1, 3), "n_y"), ((1, 3), "n_a", (0, 2), "n_y"), ((2, 0), "n_a", (2, 0), "t_out"),
+           ((2, 1), "n_a", (2, 0), "n_y"), ((2, 2), "n_a", (1, 1), "n_y"), ((2, 3), "n_a", (3, 2), "n_y"),
+           ((3, 1), "n_a", (2, 1), "t_out"), ((3, 2), "n_a", (2, 2), "t_out"), ((3, 3), "n_a", (2, 3), "t_out"),
+           ((0, 0), "n_b", (1, 2), "n_y"), ((0, 1), "n_b", (1, 1), "t_out"), ((0, 2), "n_b", (1, 2), "t_out"),
+           ((0, 3), "n_b", (1, 3), "t_out"), ((1, 0), "n_b", (1, 0), "t_out"), ((1, 1), "n_b", (0, 1), "n_y"),
+           ((1, 2), "n_b", (2, 3), "n_y"), ((1, 3), "n_b", (0, 3), "n_y"), ((2, 0), "n_b", (3, 0), "t_out"),
+           ((2, 1), "n_b", (3, 1), "n_y"), ((2, 2), "n_b", (2, 1), "n_y"), ((2, 3), "n_b", (3, 3), "n_y"),
+           ((3, 1), "n_b", (3, 1), "t_out"), ((3, 2), "n_b", (3, 2), "t_out"), ((3, 3), "n_b", (3, 3), "t_out")]
+NL_CELL = (3, 0)
+
+
 def cb_links(P, variant, geo):
     for cl in geo["clusters"]:
         n = cl["name"]
@@ -354,23 +371,15 @@ def cb_links(P, variant, geo):
                        f"bc_i{sfx(c, r + 1)}", BW, src_leaf=f"u_xstn{sfx(c, r)}.a_d",
                        dst_leaf=f"u_xstn{sfx(c, r + 1)}.b_d")
         T = []
-        for r in range(4):
-            T.append((f"t0{r}", [(0, r), (1, r)], "t_o", "na_i", "t_out", "n_a"))
-            T.append((f"t3{r}", [(3, r), (2, r)], "t_o", "na_i", "t_out", "n_a"))
-        T += [("l1a", [(1, 1), (0, 1)], "y_o", "na_i", "n_y", "n_a"),
-              ("l1b", [(1, 0), (1, 1), (0, 1)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l1c", [(2, 1), (3, 1)], "y_o", "na_i", "n_y", "n_a"),
-              ("l1d", [(2, 0), (2, 1), (3, 1)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l1e", [(1, 2), (0, 2)], "y_o", "na_i", "n_y", "n_a"),
-              ("l1f", [(1, 3), (1, 2), (0, 2)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l1g", [(2, 2), (3, 2)], "y_o", "na_i", "n_y", "n_a"),
-              ("l1h", [(2, 3), (2, 2), (3, 2)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l2a", [(3, 1), (3, 0)], "y_o", "na_i", "n_y", "n_a"),
-              ("l2b", [(0, 1), (0, 0), (1, 0), (2, 0), (3, 0)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l2c", [(0, 2), (0, 3)], "y_o", "na_i", "n_y", "n_a"),
-              ("l2d", [(3, 2), (3, 3), (2, 3), (1, 3), (0, 3)], "y_o", "nb_i", "n_y", "n_b"),
-              ("l3a", [(3, 0), (2, 0), (1, 0), (0, 0)], "y_o", "na_i", "n_y", "n_a"),
-              ("l3b", [(0, 3), (0, 2), (0, 1), (0, 0)], "y_o", "nb_i", "n_y", "n_b")]
+        for (dc, dr), dport, (sc, sr), sport in CB_TREE:
+            sq, dq = unit_of(variant, sc, sr), unit_of(variant, dc, dr)
+            path = [(sc, sr), (dc, dr)]
+            if variant == "B" and sq[0] != dq[0] and sq[1] != dq[1]:
+                # diagonal quad pair: forward through the quad beside both (q11->q00 via q01, q00->q11 via q10)
+                path = [(sc, sr), (2 * dq[0], 2 * sq[1]), (dc, dr)]
+            role = f"{'a' if dport == 'n_a' else 'b'}{dc}{dr}"
+            T.append((role, path, "y_o" if sport == "n_y" else "t_o", "na_i" if dport == "n_a" else "nb_i",
+                      sport, dport))
         for role, path, sb, db, sl, dl in T:
             s, d = path[0], path[-1]
             P.link(role, [p(*q) for q in path], f"{sb}{sfx(*s)}", f"{db}{sfx(*d)}", RSW,
@@ -465,12 +474,24 @@ BCAST = {  # broadcast nets of the slice record -> plan forwarding trees (regist
 }
 
 
-def slice_internal_links(P, geo, record, su_split):
+def directed_slice_landings(record, su_directed):
+    """Split the former r_su group using exact s8 child-pin source directions.
+
+    The old L0|L1=504 was shared gb/gv/reset input overlap, not a driven lane.
+    Preserve every external landing bit; count actual internal SU directions.
+    """
+    rows = [r for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
+    rows += [dict(src_region=r["src"], dst_region=r["dst"], net=r["net"], width=r["bits"])
+             for r in su_directed["external"]]
+    return rows
+
+
+def slice_internal_links(P, geo, record, su_split, su_directed):
     for k in range(NCOL):
         agg = collections.Counter()
         trees = collections.Counter()
-        for ld in record["landings"]:
-            s, d = REGION_OF[ld["src_region"]], REGION_OF[ld["dst_region"]]
+        for ld in directed_slice_landings(record, su_directed):
+            s, d = (REGION_OF.get(ld[x], ld[x]) for x in ("src_region", "dst_region"))
             if ld["net"] in ("cs0", "cs1", "cs2", "cs3"):
                 continue                    # cs_c -> u_fs -> cw_s_c: replaced by the plan lane hc_c -> S face
             if s == d:
@@ -480,12 +501,12 @@ def slice_internal_links(P, geo, record, su_split):
                 trees[bk] = max(trees[bk], ld["width"])
                 continue
             agg[(s, d)] += ld["width"]
+        for row in su_directed["internal"]:
+            agg[(row["src"], row["dst"])] += row["bits"]
         flows = [(f"b_{bk[1]}_{a}_{b}", a, b, w, f"b_{bk[1]}_{b}_o", f"b_{bk[1]}_i", f"u_pstn.{bk[1]}_fwd",
                   f"u_{b}.{bk[1]}") for bk, w in trees.items() for a, b in BCAST[bk]]
         flows += [(f"x_{a}_{b}", a, b, w, f"x_{b}_o", f"x_{a}_i", f"u_{a}.x_{b}", f"u_{b}.x_{a}")
                   for (a, b), w in agg.items()]
-        flows += [(f"x_su_c_{g}", "su_c", g, su_split[f"core|L{g[-1]}"], f"x_{g}_o", "x_su_c_i",
-                   f"u_suvm.lane_{g}", "u_lanes.core") for g in ("su_l0", "su_l1")]
         paths = negotiate(P, geo, k, [(sl(geo, k, f[1]), sl(geo, k, f[2]), f[3]) for f in flows])
         for f, pth in zip(flows, paths):
             P.link(f[0], pth, f[4], f[5], f[3], src_leaf=f[6], dst_leaf=f[7])
@@ -779,6 +800,7 @@ def census_links(P, geo, census, fp_pins, face_map):
     face_reg = {"w": {"W": "fw", "E": "fe"}, "e": {"W": "fe", "E": "fw"}}
     brect = {b["inst"]: (b["x"], b["y"], b["w"], b["h"]) for b in census["blocks"]}
     l9_flip = collections.Counter()
+    kit_part = {}
 
     def part_of(inst, bus, pt=None, other=None):
         if inst in col_of:
@@ -795,6 +817,10 @@ def census_links(P, geo, census, fp_pins, face_map):
             fk = fp_pins[side].get(face_map[side].get(bus, bus))
             if fk in face_reg[side] and face_reg[side][fk] != {"W": "fw", "E": "fe"}[f]:
                 l9_flip[(inst, bus)] += 1
+                # R7 (BINDER2 10-23): the core port lives in the KIT face partition (u_fup in fe), so the lane starts
+                # / ends there and crosses its own slice to the physical face; landing on fw alone left 3 x 513 b
+                # UNPLANNED (fe->fw).
+                kit_part[(inst, bus)] = (k, sl(geo, k, face_reg[side][fk]))
             return sl(geo, k, {"W": "fw", "E": "fe"}[f])
         if inst in GLUE_INSTS:
             return "glue"
@@ -840,6 +866,16 @@ def census_links(P, geo, census, fp_pins, face_map):
             else f"{i}__{b}"  # noqa: E731
         sb, db = loc(s, g["src"], g["src_bus"]), loc(d, g["dst"], g["dst_bus"])
         path = ws_path(P, s, d)
+        if (g["src"], g["src_bus"]) in kit_part:
+            k, kp = kit_part[(g["src"], g["src_bus"])]
+            if kp != s:
+                path = route(P, kp, s, geo, k, g["bits"]) + path[1:]
+                s = kp
+        if (g["dst"], g["dst_bus"]) in kit_part:
+            k, kp = kit_part[(g["dst"], g["dst_bus"])]
+            if kp != d:
+                path = path[:-1] + route(P, d, kp, geo, k, g["bits"])
+                d = kp
         role = re.sub(r"[^A-Za-z0-9]", "_", f"{g['src_bus']}_{g['dst_bus']}")
         kind = "clock" if g["src_bus"] == "lclk" else (g["kind"] if g["kind"] in ("data", "ctl") else "ctl")
         P.link(role, path, sb, db, g["bits"], kind=kind,
@@ -1039,6 +1075,21 @@ def fault_links(P, variant, geo):
            src_leaf="u_native59.fault", dst_leaf="u_sys_face.obs_fault_n59")
     P.link("fltt", ["tt_ctlm", "native59", "glue"], "flt_o", "ctlm_flt_i", 1, kind="ctl",
            src_leaf="u_tt_ctlm.cf", dst_leaf="u_sys_face.obs_fault_ctlm")
+    # QC-P4 10-23 (BINDER2 per-bit UNPLANNED list on 16437c592, 85 b): the as-built carries the coll face fault
+    # VECTORS bit by bit (fault_cause/cdc_fault/epoch_abort/fault_code -> sys_face.obs_fault; side-face cdc/abort/
+    # rx_valid -> coll_core reduce-ORs and sr*_valid) where the 1-b flt lanes above carry only the OR, plus the two
+    # MU fault bits glue -> tt_ctlm and the KV PHY reset glue -> ucie_kv.  Planned as static ctl lanes at the as-built
+    # widths: S chain 9 (to coll_core) + 26 (forwarded to glue), N chain 4 + 13, coll_core -> glue 30 + 26 + 13.
+    P.link("fltv", ["coll_s", "coll_f0", "coll_f1", "coll_f2", "coll_core"], "fltv_o", "fltv_s_i", 35, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("fltv", ["coll_n", "coll_f5", "coll_f4", "coll_f3", "coll_core"], "fltv_o", "fltv_n_i", 17, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("fltvc", ws_path(P, "coll_core", "glue"), "fltv_o", "coll_fltv_i", 69, kind="ctl",
+           src_leaf="u_io.g_face.u_face.fault_cause", dst_leaf="u_sys_face.obs_fault")
+    P.link("mufl", ws_path(P, "glue", "tt_ctlm"), "mu_flt_o", "mu_flt_i", 2, kind="ctl",
+           src_leaf="mu_ctxrx.mu_fault", dst_leaf="core.mu_fault")
+    P.link("kvrst", ["glue", "ucie_kv"], "kv_phy_rst_o", "phy_rst_i", 1, kind="ctl",
+           src_leaf="d2d_rom.phy_rst_n", dst_leaf="core.rst_n")
 
 
 # ====================================================================== ports / slots / windows
@@ -1082,6 +1133,106 @@ def quad_segments(P, ll, f, flip, ref_lo, ref_hi, prs):
     return [(bounds[j], groups[j]) for j in range(2) if groups[j]]
 
 
+# QC-P3 10-23 (GEOM-REVIEW4 coll_ftc FAIL): the single-instance coll feedthrough segments (no logic) get their W/S
+# windows re-laid at the partner window of the same slot (straight slots run straight, turns sit at the corner), and
+# their E faces ordered S-turns low / W-bound by neighbour / N-turns high.  Processed top-down (f5, f4, f3) so each
+# segment's N face (the upper segment's re-laid S face) is the anchor.  E/W faces of these segments use M6+M4.
+FT_COLL = ("coll_f5", "coll_f4", "coll_f3")
+
+
+def _lay_targeted(P, a, b, prs, targets, slack=1.06):
+    """lay the windows of face pair (a, b) in ascending target order, each as close to its target as the rest
+    allows (greedy legaliser, same qlen/GAP/EDGE/density ladder as the default packing).  R0 frames only."""
+    f, lo, hi = shared_face(P, a, b)
+    ll = a if P.parts[a]["orient"] == "R0" else b
+    assert P.parts[a]["orient"] == "R0" and P.parts[b]["orient"] == "R0", (a, b)
+    x0, y0, x1, y1 = P.rect(ll)
+    fl = f if ll == a else OPP[f]
+    slo = max(y0 if fl in "EW" else x0, lo) + EDGE
+    shi = min(y1 if fl in "EW" else x1, hi) - EDGE
+    order = sorted(prs, key=lambda pr: targets[pr["id"]])
+    for fm in [5.0, 5.5, 5.8, None]:
+        lens = [qlen(pr["width"] + 1, PIN_MAX, pr["layers"], max(slo, targets[pr["id"]][0]), False, fmax=fm)
+                for pr in order]
+        need = slack * sum(lens) + GAP * (len(lens) - 1)
+        if need > shi - slo + 1e-6:
+            continue
+        cur, wins, ok = slo, [], True
+        for i, pr in enumerate(order):
+            rest = slack * sum(lens[i + 1:]) + GAP * (len(lens) - 1 - i)   # slack: L grows near PG bands
+            st = min(max(cur, targets[pr["id"]][0] - lens[i] / 2), shi - lens[i] - rest)
+            L = qlen(pr["width"] + 1, PIN_MAX, pr["layers"], st, False, fmax=fm)
+            if st + L > shi - (sum(lens[i + 1:]) + GAP * (len(lens) - 1 - i)) + 1e-6:
+                ok = False
+                break
+            wins.append((pr, [round(st, 4), round(st + L, 4)]))
+            cur = st + L + GAP
+        if ok:
+            for pr, w in wins:
+                pr["window_um"] = w
+                pr.pop("order", None)
+            return True
+    if slack > 1.0:
+        return _lay_targeted(P, a, b, prs, targets, 1.0)
+    if any(t[0] > -1e8 for t in targets.values()):
+        # positions do not fit (PG-band / track quantisation at the targets): keep the target ORDER, pack densely
+        print(f"align_coll_ft: face {a}/{b}: targeted fit failed, packing in target order", file=sys.stderr)
+        return _lay_targeted(P, a, b, prs, {pr["id"]: (-1e9 + i, 0) for i, pr in enumerate(order)})
+    raise SystemExit(f"align_coll_ft: face {a}/{b} cannot fit the windows in target order")
+
+
+def align_coll_ft(P, facepairs, lanes, ports):
+    pmap = {pr["id"]: pr for pr in ports}
+    partner = {}
+    for ln in lanes:
+        ids = ln["ports"]
+        for i in range(len(ids) - 1):
+            partner[(ids[i], pmap[ids[i]]["dst"]["part"])] = ids[i + 1]
+            partner[(ids[i + 1], pmap[ids[i + 1]]["src"]["part"])] = ids[i]
+
+    def face_of(pr, x):           # the face of partition x that port pr crosses
+        return pr["face"] if pr["src"]["part"] == x else OPP[pr["face"]]
+
+    def point(pr, x):             # die point of port pr's window centre on partition x's face
+        X0, Y0, X1, Y1 = P.rect(x)
+        c = sum(pr["window_um"]) / 2
+        return {"E": (X1, c), "W": (X0, c), "N": (c, Y1), "S": (c, Y0)}[face_of(pr, x)]
+
+    for x in FT_COLL:
+        pairs = {k: v for k, v in facepairs.items() if x in k}
+        X0, Y0, X1, Y1 = P.rect(x)
+        # E face anchor: re-order (low -> high) S turns, W-bound by W-neighbour height, N turns
+        for k, prs in pairs.items():
+            if face_of(prs[0], x) != "E":
+                continue
+            def ekey(pr):
+                q = pmap[partner[(pr["id"], x)]]
+                pf = face_of(q, x)
+                if pf == "S":
+                    return (0, 0.0, pr["id"])
+                if pf == "W":
+                    o = q["dst"]["part"] if q["src"]["part"] == x else q["src"]["part"]
+                    return (1, P.rect(o)[1], pr["id"])
+                return (2, 0.0, pr["id"])
+            tg = {}
+            for i, pr in enumerate(sorted(prs, key=ekey)):
+                tg[pr["id"]] = (-1e9 + i, 0)          # pack low -> high in this order
+            _lay_targeted(P, *k, prs, tg)
+        # W and S faces follow their partner windows (projected on the face axis)
+        for k, prs in pairs.items():
+            fx = face_of(prs[0], x)
+            if fx not in "WS":
+                continue
+            tg = {}
+            for pr in prs:
+                q = pmap[partner[(pr["id"], x)]]
+                px, py = point(q, x)
+                t = py if fx == "W" else px
+                d = (px - X0) if fx == "W" else (py - Y0)     # partner's distance from this face (nest turns)
+                tg[pr["id"]] = (t, -d)
+            _lay_targeted(P, *k, prs, tg)
+
+
 def materialize(P):
     ports, lanes = [], []
     facepairs = collections.defaultdict(list)
@@ -1101,7 +1252,8 @@ def materialize(P):
             pid = f"{lid}__{i}"
             pr = {"id": pid, "src": {"part": a, "bus": sb}, "dst": {"part": b, "bus": db}, "width": w,
                   "kind": lk["kind"], "face": f,
-                  "layers": (["M6"] if (a in COLL_PARTS or b in COLL_PARTS) else ["M6", "M4"]) if f in "EW"
+                  "layers": (["M6"] if ((a in COLL_PARTS or b in COLL_PARTS) and not (a in FT_COLL or b in FT_COLL))
+                             else ["M6", "M4"]) if f in "EW"
                   else ["M7", "M5"]}
             ports.append(pr)
             facepairs[(a, b) if a < b else (b, a)].append(pr)
@@ -1171,6 +1323,7 @@ def materialize(P):
                 raise SystemExit(f"face {a}/{b} ({f}) segment {slo:.1f}-{shi:.1f} overfull: " +
                                  ", ".join(f"{pr['id']}:{pr['width']}" for pr in sp))
         del ref_lo, ref_hi
+    align_coll_ft(P, facepairs, lanes, ports)
     pmap = {pr["id"]: pr for pr in ports}
     for ln in lanes:
         for a, b in zip(ln["ports"], ln["ports"][1:]):
@@ -1383,6 +1536,47 @@ def declare_clock_taps(P, notes):
         P.types[tn]["clock"]["taps"] = [{k: v for k, v in tap.items() if k in fields} for tap in entry["taps"]]
 
 
+# A0 hard cores (QC-A0 kits qfd_tile_n{k,l}_a0ck): built on PLATFORM tracks (ROM/node/LSL children cannot move to the
+# plan phases), every boundary pin M4 at y = 0.012 mod 0.048.  COORD 10-23 08:36: the core is placed at the 8.64
+# lattice origin + track_offset (0, +0.012) so its pins land on the plan M4 tracks (offset 0.024); MY (east cores)
+# keeps y; partition MX is checked by G0 in every die frame (partition heights are multiples of 0.048).
+A0_TRACK_OFFSET = [0.0, 0.012]
+A0_PINS = {"nk": "cores/a0_nk_pins.json", "nl": "cores/a0_nl_pins.json"}
+# measured core insertion at the boundary pin flops (QC-P3 10-23, a0ck gates post-CTS, placement RC; median/spread):
+# NK @5a8a5c4b3 TT 924 (918..934) FF 742; NL @2019019b1 TT 1047 (1039..1077) FF 839.  The NL quads' NK taps need
+# +123 ps TT / +97 ps FF branch delay (or the NL branch shortened) to hold quad core-to-core skew <= 80 ps.
+A0_INSERTION_PS = {"nk": 924, "nl": 1047}
+
+
+def declare_a0_hard_cores(P):
+    for tn, t in sorted(P.types.items()):
+        cores = [c for c in t["contents"] if c["module"].startswith("qfd_tile_n")]
+        if not cores:
+            continue
+        kinds = set()
+        hcs = []
+        for c in cores:
+            v = "nl" if c["module"].startswith("qfd_tile_nl") else "nk"
+            kinds.add(v)
+            o = "MY" if "orient MY" in c.get("note", "") else "R0"
+            hcs.append(dict(inst=c["inst"], module=f"qfd_tile_{v}_a0c", origin_um=c["origin_um"],
+                            outline_um=c["outline_um"], orient=o, track_offset_um=A0_TRACK_OFFSET,
+                            pins_file=A0_PINS[v],
+                            note=f"A0 {v.upper()} core (kit qfd_tile_{v}_a0ck), platform-track build: placed at "
+                                 f"origin + (0, 0.012)"))
+            for tp in t["clock"].get("taps", []):
+                if tp["name"] == f"{c['inst']}.ck":
+                    tp["insertion_ps"] = A0_INSERTION_PS[v]
+                    tp["budget_owner"] = (f"measured qfd_tile_{v}_a0ck post-CTS TT boundary pin flops "
+                                          f"(QC-P3 10-23; final after GRT/STA)")
+        t["hard_cores"] = hcs
+        if len(kinds) > 1:
+            for tp in t["clock"].get("taps", []):
+                if tp.get("kind") == "core" and tp.get("insertion_ps") == A0_INSERTION_PS["nk"]:
+                    tp["note"] = ("mixed NK/NL quad: this NK tap branch needs +123 ps TT / +97 ps FF vs the NL tap "
+                                  "(measured core insertion) so quad core-to-core skew stays <= 80 ps")
+
+
 def neighbours(P):
     """abutting partitions per partition (G1 star flag > 6) and the linked subset."""
     names = list(P.parts)
@@ -1413,7 +1607,7 @@ def _tsv(path, rows):
             fh.write("\t".join(str(r[k]) for k in ("src", "src_bus", "dst", "dst_bus", "kind", "bits")) + "\n")
 
 
-def write_census(P, geo, census, record, outdir):
+def write_census(P, geo, census, record, outdir, su_directed):
     """three census sources for tools/die_plan/census_cov.py:
     [0] the as-built die census (inputs/qc_census.json.gz, every row) with three edits only: rows touching the
         as-built fault OR network (flt_*) -> kind 'fault' (replaced by the plan 1-bit OR tree, exempted with reason),
@@ -1422,8 +1616,8 @@ def write_census(P, geo, census, record, outdir):
         quads).  Slices, CB16 clusters and io_collective are GROUPS (one census block -> several partitions).
     [1] slice regions (inputs/s8_lp_record.json landings, the 210 region crossings), one copy per slice: covers the
         traffic inside the slice groups.  cs0-3 (cs -> u_fs -> cw_s forwarder) are the plan cw lanes, checked in [0];
-        broadcast nets (BCAST) are counted per tree hop.  r_su stays one group (su_c + su_l0 + su_l1): the record does
-        not split the SU block.
+        broadcast nets (BCAST) are counted per tree hop. The former r_su is split by source-bound child-pin
+        directions in inputs/su_directed.json; actual internal SU rows are a finer census, not a hidden group.
     [2] io_collective internals (rtl/physical/ot_qfd_collective_static_io.sv): face <-> core records, R face <-> share
         frames, face <-> PHY flits, core <-> slice / sys_face: covers the traffic inside the coll group."""
     cdir = Path(outdir) / "census"
@@ -1472,7 +1666,7 @@ def write_census(P, geo, census, record, outdir):
     # [1] slice regions
     rows1, parts1, groups1 = [], {}, {}
     for k, nm in enumerate(cname):
-        for ld in record["landings"]:
+        for ld in directed_slice_landings(record, su_directed):
             if ld["net"] in ("cs0", "cs1", "cs2", "cs3"):
                 continue
             s_, d_ = ld["src_region"], ld["dst_region"]
@@ -1489,8 +1683,13 @@ def write_census(P, geo, census, record, outdir):
                 for x in (a, b):
                     parts1[f"{nm}/tree_{x}"] = sl(geo, k, x)
         for rg, reg in REGION_OF.items():
-            parts1[f"{nm}/{rg}"] = f"su_{nm}" if rg == "r_su" else sl(geo, k, reg)
-        groups1[f"su_{nm}"] = [sl(geo, k, x) for x in ("su_c", "su_l0", "su_l1")]
+            if rg != "r_su":
+                parts1[f"{nm}/{rg}"] = sl(geo, k, reg)
+        for reg in ("su_c", "su_l0", "su_l1"):
+            parts1[f"{nm}/{reg}"] = sl(geo, k, reg)
+        for row in su_directed["internal"]:
+            rows1.append(dict(src=f"{nm}/{row['src']}", src_bus=row["net"],
+                              dst=f"{nm}/{row['dst']}", dst_bus=row["net"], kind="data", bits=row["bits"]))
     _tsv(cdir / "slice_rows.tsv.gz", rows1)
     json.dump({"note": "QC-FIX slice-region census map (gen_plan.py write_census [1])", "parts": parts1,
                "groups": groups1}, open(cdir / "slice_map.json", "w"), indent=1)
@@ -1526,12 +1725,29 @@ def write_census(P, geo, census, record, outdir):
                        "rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
                "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}},
               open(cdir / "coll_map.json", "w"), indent=1)
+    # [3] CB16 cluster internals (R7, 10-23): the as-built reduction tree CB_TREE (traced from qfd_c_b16_dv_fabric)
+    # per cluster (the bc relay chain u_dn<c>_rly* is BINDER2-clean and not re-traced here); parts = the tile cell's CB unit, so the 4-quad cl_* groups of [0] are
+    # covered bit-for-bit (BINDER2 found 73,968 b of tree crossings the coarse group hid).
+    rows3, parts3 = [], {}
+    for cl in geo["clusters"]:
+        n = cl["name"]
+        for c in range(4):
+            for r in range(4):
+                parts3[f"{n}.t{c}{r}"] = cb_part(VARIANT, n, c, r)
+        for (dc, dr), dport, (sc, sr), sport in CB_TREE:
+            rows3.append(dict(src=f"{n}.t{sc}{sr}", src_bus=sport, dst=f"{n}.t{dc}{dr}", dst_bus=dport, kind="data",
+                              bits=RSW))
+    _tsv(cdir / "cb_rows.tsv.gz", rows3)
+    json.dump({"note": "QC-P3 R7 CB16 cluster-internal census map (gen_plan.py write_census [3]; CB_TREE)",
+               "parts": parts3, "groups": {}}, open(cdir / "cb_map.json", "w"), indent=1)
     return [{"rows": "census/die_rows.tsv.gz", "map": "census/die_map.json",
              "note": "as-built die census (FT-TOOL, r50 die; inputs/qc_census.json.gz), kind relabels only"},
             {"rows": "census/slice_rows.tsv.gz", "map": "census/slice_map.json",
              "note": "slice landed-region census (inputs/s8_lp_record.json) x 12 slices"},
             {"rows": "census/coll_rows.tsv.gz", "map": "census/coll_map.json",
-             "note": "io_collective internals from the RTL (face cores, share, UCIe, PHY flits)"}]
+             "note": "io_collective internals from the RTL (face cores, share, UCIe, PHY flits)"},
+            {"rows": "census/cb_rows.tsv.gz", "map": "census/cb_map.json",
+             "note": "CB16 cluster internals: as-built reduction tree (qfd_c_b16_dv_fabric trace)"}]
 
 
 # ====================================================================== main
@@ -1555,6 +1771,7 @@ def main():
     fp_pins = {s: {b: f for f, bs in fp[s]["pins"].items() for b in bs} for s in "we"}
     record = json.loads(Path(a.slice_record).read_text())
     su_split = json.loads(Path(a.su_split).read_text())["su_split_bits"]
+    su_directed = json.loads(Path(a.su_split).with_name("su_directed.json").read_text())
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}
     P = Plan()
     P.cov = collections.defaultdict(list)
@@ -1571,7 +1788,7 @@ def main():
     clone_s2_types(P)
     cb_links(P, a.variant, geo)
     slice_cluster_links(P, a.variant, geo)
-    slice_internal_links(P, geo, record, su_split)
+    slice_internal_links(P, geo, record, su_split, su_directed)
     face_map = json.loads(Path(a.slice_face_map).read_text())
     dropped = census_links(P, geo, census, fp_pins, face_map)
     P.coll_rows = coll_internal_links(P)
@@ -1591,9 +1808,10 @@ def main():
               "reason": f"west strip above serdes S3: IO content (16.07 mm tall) is shorter than the compute "
                         f"column ({H / 1000:.2f} mm); strip width = serdes PHY depth. Bump/decap field; spare for the "
                         f"KV-die UCIe second port if the TP8 pair needs it"}]
-    census_decl = write_census(P, geo, census, record, Path(a.out).parent)
+    census_decl = write_census(P, geo, census, record, Path(a.out).parent, su_directed)
     taps = clock_taps(P)
     declare_clock_taps(P, taps)
+    declare_a0_hard_cores(P)
     nbrs = neighbours(P)
     plan = {
         "schema": "opentallas.die_plan.v1",

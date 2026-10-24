@@ -44,7 +44,8 @@ def test_die_probe_files():
         assert tcl.count("create_obstruction") > 2 * 7          # partitions on M1-M7 + PG stripes
         assert "set_routing_layers -signal M8-M9" in tcl
         meta = json.loads((out / "probe.json").read_text())
-        assert meta["taps"] == 2 and meta["pg_stripes"] > 100
+        grid = sum(len(schema.tap_grid(P, p["type"])) for p in P.parts.values())     # R4 tap grid per partition
+        assert meta["taps"] == grid and grid > 2 and meta["pg_stripes"] > 100
 
 
 def test_part_probe_files_and_worst():
@@ -56,10 +57,13 @@ def test_part_probe_files_and_worst():
         out = g2.part_probe(P, "fa", d)
         meta = json.loads((out / "probe.json").read_text())
         # boundary flops for din (64), x_o (277), r_i (71) + one station per bit of fz (65)
-        assert meta["flops"] == 64 + 277 + 71 + 65 + 2          # + clk / arst_n tap buffers
+        import gen_phys
+        nt = len(gen_phys.tap_pins(P, "fa"))                    # R4 clock tap grid + the reset tap
+        assert nt == len(schema.tap_grid(P, "fa")) + 1 and nt > 2
+        assert meta["flops"] == 64 + 277 + 71 + 65 + nt          # + one tap buffer per clock / reset tap
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
-        assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + 2   # fz_i from die IO: no epoch
+        assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + nt  # fz_i from die IO: no epoch
 
 
 def test_assembly_die_flow():
@@ -165,7 +169,31 @@ def test_kit_overrides_platform_tracks():
     P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     with tempfile.TemporaryDirectory() as d:
         kd = gen_phys.write_type_kit(P, "src", d, [])
-        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in (kd / "config.mk").read_text()
+        cfg = (kd / "config.mk").read_text()
+        assert "override export MAKE_TRACKS = /work/make_tracks.tcl" in cfg
+        # CP1 10-23: pin registers FIRM at their faces through GPL, released before DPL
+        assert "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl" in cfg
+        assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
+        assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
+        # COORD 10-23: tap trees balanced to the plan insertion after CTS
+        assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
+        assert "export OT_TAP_WINDOW_PS = 40" in cfg and "export CORNER = TC" in cfg
+        assert (kd / "tap_balance.tcl").is_file()
+
+
+def test_die_sta_flat_in_opensta_etm_with_tech():
+    """CP1 10-23: openroad link_design needs a technology (ORD-2010) and flattens the hierarchy, so read_spef -path
+    <instance> finds nothing (STA-0276).  FLAT runs in standalone OpenSTA without LEF; ETM reads tech + abstracts."""
+    import gen_phys
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "views").mkdir()
+        gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
+        kd = Path(d) / "die"
+        sta = (kd / "sta_die.tcl").read_text()
+        etm = sta.split('if {$MODE == "etm"} {', 1)[1].split("}", 1)[0]
+        assert "asap7_tech_1x" in etm and sta.count("read_lef") == sta.count("read_lef", sta.index('if {$MODE == "etm"}'))
+        assert "read_spef -path" in sta
+        assert "T='sta -no_splash'" in (kd / "run_die.sh").read_text()
 
 
 def test_spread_mirror_equivariant_on_ties():
@@ -213,7 +241,8 @@ def test_die_probe_declared_taps_share_spine_and_transform_once(tmp_path):
     out = g2.die_probe(schema.Plan(raw), tmp_path/'extra')
     tcl = (out/'probe.tcl').read_text()
     meta = json.loads((out/'probe.json').read_text())
-    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2 and meta['taps'] == 4
+    assert meta['partition_root_taps'] == 2 and meta['declared_clock_taps'] == 2
+    assert meta['taps'] == meta['grid_taps'] + 2
     assert tcl.count('odb::dbNet_create') == 2  # same virtual clock/reset spines, no new regional clock net
     assert 'clk_tap_pfa__declared_0' in tcl and 'clk_tap_pfa' in tcl and 'rst_tap_pfa' in tcl
     tap = meta['declared_taps'][0]
@@ -233,3 +262,62 @@ def test_die_probe_empty_declared_taps_preserves_outputs(tmp_path):
     empty = g2.die_probe(schema.Plan(raw), tmp_path/'empty')
     for name in ('probe.v', 'probe.tcl', 'probe.json', 'run.sh'):
         assert (original/name).read_bytes() == (empty/name).read_bytes()
+
+
+def test_kit_places_content_macros(tmp_path):
+    """COORD 10-23: partition kits place SRAM / ROM / hard cores at their plan sites (lef views)."""
+    import copy
+    import gen_phys
+    import pytest
+    raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
+    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    t = raw["partition_types"]["src"]
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+                                             origin_um=[17.28, 25.92], orient="MX"))
+    t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
+                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+    P = schema.Plan(raw)
+    kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    mp = (kd / "macro_place.tcl").read_text()
+    assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
+    assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
+    cfg = (kd / "config.mk").read_text()
+    assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["contents"][-1]["origin_um"]
+    with pytest.raises(ValueError):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
+
+
+def test_sdc_units_match_liberty():
+    """KV-P3b 10-23 12:17: the ASAP7 libs are in ps; an SDC written in ns gave every plan kit a 0.833-ps clock.  Read
+    the platform lib time / cap units and check the kit, assembly and die-STA SDCs against them."""
+    import gzip
+    import re
+    import subprocess
+    import gen_phys
+    import pytest
+    lib = "results/rtl/s81_ph_20261006/gather/root_selective_model_20261007/libs/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz"
+    try:
+        raw_lib = subprocess.run(["git", "-C", str(HERE), "show", f"HEAD:{lib}"], capture_output=True, check=True).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pytest.skip("platform liberty not in the repo history")
+    head = gzip.decompress(raw_lib)[:20000].decode()
+    tu = re.search(r'time_unit\s*:\s*"1(ps|ns)"', head).group(1)
+    cu = re.search(r"capacitive_load_unit\s*\(\s*1\s*,\s*(fF|pF|ff|pf)\s*\)", head).group(1).lower()
+    assert (tu, cu) == ("ps", "ff") and gen_phys.LIB_TIME_UNIT_PS == 1.0 and gen_phys.LIB_CAP_UNIT_FF == 1.0
+    P = schema.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
+    per = float(P.die["period_ps"])
+    sdc = gen_phys.sdc(P, "src", [])
+    m = re.search(r"create_clock -name clk -period ([0-9.]+)", sdc)
+    assert abs(float(m.group(1)) - per) < 1e-3, sdc
+    assert f"set_clock_uncertainty {gen_phys.UNC_SETUP_PS:.4f} -setup" in sdc
+    assert abs(float(re.search(r"set_clock_latency -source ([0-9.]+)", sdc).group(1)) - P.clock["insertion_ps"]) < 1e-3
+    assert "set_load 2 [all_outputs]" in sdc
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "views").mkdir()
+        gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
+        Q = schema.Plan(PAIR)
+        for f in ("constraint.sdc", "sta_die.tcl"):
+            t = (Path(d) / "die" / f).read_text()
+            assert abs(float(re.search(r"-period ([0-9.]+)", t).group(1)) - float(Q.die["period_ps"])) < 1e-3, f

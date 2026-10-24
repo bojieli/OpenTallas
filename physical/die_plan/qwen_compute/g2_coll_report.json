@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.die_plan.g2.v1",
  "plan": "physical/die_plan/qwen_compute/die_plan.json",
- "source_commit": "74588724a",
- "plan_sha256": "4e044f8619b14c4fb28891796af6332130878abc9824fd5a693da3b3c9bbc713",
+ "source_commit": "fb27cfd5d",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
  "verdict": "PASS",
- "scope": "G2 virtual clock/PG/FT probes only; core/tap integration, CP1 and G3 remain open",
+ "scope": "fresh declared-tap virtual die probe plus eight byte-identical reused FT probes; declared budgets are estimates, not insertion/STA; real core/binding/CP1/G3 conditions remain open",
  "probes": {
   "part_coll_core": {
    "layers": {
@@ -61,7 +61,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_coll_s": {
    "layers": {
@@ -118,7 +119,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_coll_ftm": {
    "layers": {
@@ -175,7 +177,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   }
  }
 }

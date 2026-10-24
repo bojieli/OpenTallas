@@ -1,0 +1,11 @@
+{
+ "element": "qfd_qc_coll_ftc_part",
+ "kit": "scratch/qc-p4/g3e/coll_ftc (plan claude/qc-p4-1023@23b70e2f5 + tool bf48d82a6)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "647c34b211a4e100",
+ "reasons": "[10-23 12:59] [GEOM-REVIEW5] [G3 re-REQ] Supersedes my 11:57 record 52120850cf9d599b. coll_ftc_kit.png viewed; ft_stations.txt, budget.json, constraint.sdc and pins.json read; kit hash recomputed by me (cat-sorted) = 647c34b211a4e100, matches. FIXED: (a) SDC in ps (period 833, unc 60/25, IO 166.6, ft in 624.75 / out 208.25). (b) The 10 E->S turn slots (ard/art/arl/arm/arv/cc*/flte) now run as L routes: a horizontal leg at y ~490-515 from the E face, then a vertical leg to the S windows at x ~235-265, with s1 at the corner. The diagonal is gone. The S->E out_* slots are L routes with s1 at x ~380/y ~400. (c) 4 taps (2x2, R4) for 786x1037. Slot span (my ftspan): worst 1,066 um with 2 stations (hop 533 um), out_data_rd_wi 716 um with 1 station; every hop is <= 750 (R3). Straight W->E/E->W slots are horizontal Z routes, and crec tx/rx are straight N<->S at x 62/177. The E->S s1 stations (about 600 b) cluster in a 45x30-um staircase at (235-280, 490-520), next to the glue/clock root at (389,518). That is a local flop cluster, small in area, but it shares the y~518 row with the crec s1 stations. Still plan render only, not placed.",
+ "fixes": "GRT-only probe allowed (launched). For the full PASS: (1) the placed render plus a per-slot flop histogram (s0 at the in face, s1 at L/2 or the L corner; no stacking), with local std density at (235-280, 490-520) <= 0.6; (2) reset epoch fan-out <= 32 per copy (PLAN-TOOL2); (3) GRT overflow 0 at the E->S corner staircase and on the y~490-520 horizontal bundle. The timing numbers from this kit are valid (ps SDC), and the 52120850 kit's are not.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T12:59:01-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}

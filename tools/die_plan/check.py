@@ -20,6 +20,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  r8          COORD R8 bus-coherent latency on BINDER2's as-built bus groups (--groups bus_groups.json, else
+              PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
+              as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
+              table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -341,10 +345,14 @@ def check_faces(P, R, face_pins):
 
 
 # ---------------------------------------------------------------------------------------------- lane routes
-def zroute(a, b, face_in):
-    """rectilinear route from a to b inside a partition entered on face_in: Z through the midpoint."""
+def zroute(a, b, face_in, face_out=None):
+    """rectilinear route from a to b inside a partition entered on face_in: an L for a turning slot (out face
+    perpendicular to the in face: along the in face's normal, then along the out face's normal), else a Z through the
+    midpoint (straight-through slot with a jog)."""
     if abs(a[0] - b[0]) < EPS or abs(a[1] - b[1]) < EPS:
         return [a, b]
+    if face_out and (face_in in "EW") != (face_out in "EW"):
+        return [a, (b[0], a[1]), b] if face_in in "EW" else [a, (a[0], b[1]), b]
     if face_in in "EW":
         xm = (a[0] + b[0]) / 2.0
         return [a, (xm, a[1]), (xm, b[1]), b]
@@ -376,7 +384,8 @@ def lane_geometry(P, lid):
         pa, pb = P.port_point(a), P.port_point(b)
         s = P.slot(part, slot) or {}
         fin = P.die_face(part, s.get("in_face", "W"))
-        seg = zroute(pa, pb, fin)
+        fout = P.die_face(part, s.get("out_face", "E"))
+        seg = zroute(pa, pb, fin, fout)
         L = plen(seg)
         k = int(s.get("stations", 1))
         if s.get("regs_um"):
@@ -401,6 +410,19 @@ def check_hops(P, R, geo):
             i = hops.index(h)
             R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
+    # COORD 10-23 R3: ft stations at most budgets.ft_station_max_um (750) apart inside every crossed partition
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    seen = set()
+    for lid, (pts, regs, xs) in geo.items():
+        for x in xs:
+            key = (P.parts[x["part"]]["type"], x["slot"])
+            if key in seen:
+                continue
+            seen.add(key)
+            sp = x["len_um"] / max(1, x["stations"])
+            if sp > smax + EPS:
+                R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
+                      f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
     worst.sort(reverse=True)
     return [dict(lane=l, hop_um=round(h, 1), reach_um=r) for _, l, h, r in worst[:10]]
 
@@ -507,6 +529,16 @@ def check_latency(P, R):
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
+    # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
+    # binder / compiler read), and pads realisable per type
+    for name, kind, lids in P.latency_groups():
+        got = {l: tab.get(l, {}).get("cycles") for l in lids if l in P.lanes}
+        if len(set(got.values())) > 1:
+            R.err("latency", f"{kind} group {name}: unequal delays {got} (regenerate: gen.py latency --inplace pads "
+                  "every member to the slowest)")
+    _, bad = P.bus_pads()
+    for m in bad:
+        R.err("latency", m)
     return {lid: P.lane_latency(lid)["cycles"] for lid in P.lanes}
 
 
@@ -618,6 +650,46 @@ def check_taps_cores(P, R, plan_dir=None):
 
 
 # ------------------------------------------------------------------------------------------------------ types
+def check_die_io(P, R):
+    """COORD 10-23 (S81-P5): every off-die port lands in a declared pad / bump window over its host partition."""
+    io = P.die.get("io")
+    die_ports = {pid: pr for pid, pr in P.ports.items() if DIE_PART in (pr["src"]["part"], pr["dst"]["part"])}
+    if not io:
+        if die_ports:
+            R.warn("die_io", f"{len(die_ports)} die IO ports ({sum(int(p['width']) for p in die_ports.values())} b) "
+                   "and no die.io pad / bump windows: off-die pads (SerDes PMA, HBM PHY memory side, host) unplanned")
+        return dict(windows=0, ports=len(die_ports))
+    seen = {}
+    for w in io:
+        x0, y0, x1, y1 = w["rect_um"]
+        if not (0 <= x0 < x1 <= P.W + EPS and 0 <= y0 < y1 <= P.H + EPS):
+            R.err("die_io", f"io window {w['name']}: rect {w['rect_um']} outside the die")
+        if w["part"] not in P.parts:
+            R.err("die_io", f"io window {w['name']}: unknown host partition {w['part']}")
+            continue
+        px0, py0, px1, py1 = P.rect(w["part"])
+        if x0 < px0 - EPS or y0 < py0 - EPS or x1 > px1 + EPS or y1 > py1 + EPS:
+            R.err("die_io", f"io window {w['name']}: not inside its host partition {w['part']}")
+        bits = 0
+        for pid in w["ports"]:
+            pr = P.ports.get(pid)
+            if pr is None or pid not in die_ports:
+                R.err("die_io", f"io window {w['name']}: {pid} is not a die IO port")
+                continue
+            if pid in seen:
+                R.err("die_io", f"die IO port {pid} in two windows ({seen[pid]}, {w['name']})")
+            seen[pid] = w["name"]
+            end = pr["dst"]["part"] if pr["src"]["part"] == DIE_PART else pr["src"]["part"]
+            if end != w["part"]:
+                R.err("die_io", f"io window {w['name']}: port {pid} ends in {end}, not the host {w['part']}")
+            bits += S.port_pins_count(pr)
+        if bits > w["sites"]:
+            R.err("die_io", f"io window {w['name']}: {bits} signal bits > {w['sites']} sites")
+    for pid in sorted(set(die_ports) - set(seen)):
+        R.err("die_io", f"die IO port {pid} ({die_ports[pid]['width']} b) has no pad / bump window (die.io)")
+    return dict(windows=len(io), ports=len(die_ports), placed=len(seen))
+
+
 def check_seams(P, R):
     """Seam-net invariant (COORD 10-23, OpenROAD abutment semantics): every inter-partition port bit is ONE 2-pin net,
     boundary flop to boundary flop -- one out bus (src boundary flop or ft station) to one in bus (dst boundary flop or
@@ -675,8 +747,40 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
+def check_r8(P, R, plan_dir=None, groups=None, landing=None):
+    """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
+    import r8
+    pd = Path(plan_dir) if plan_dir else None
+    if groups is None and pd is not None:
+        groups = next((q for q in (pd / "bus_groups.json", pd / "r8" / "bus_groups.json", pd / "bind" / "bus_groups.json")
+                       if q.exists()), None)
+    if groups is None:
+        if pd is None:
+            return dict(checked=False)
+        R.warn("r8", "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)")
+        return dict(checked=False)
+    bg = json.loads(Path(groups).read_text())
+    if landing is None and pd is not None:
+        hits = sorted(pd.glob(f"*/{P.name}_r8_landing.json")) + sorted(pd.glob(f"{P.name}_r8_landing.json"))
+        landing = hits[0] if hits else None
+    lmap = None
+    if landing is not None:
+        lmap, ljs = r8.load_landing(landing)
+        if ljs.get("bus_groups_digest") != r8.bg_digest(bg):
+            R.err("r8", f"R8 landing table {landing} was made from other bus groups (digest {ljs.get('bus_groups_digest')}"
+                  f" != {r8.bg_digest(bg)}): regenerate with gen.py latency --groups")
+        mode = dict(replica=ljs.get("replica", "all"), bus=ljs.get("bus", "part"))
+    else:
+        mode = dict(replica="all", bus="part")
+    msgs, st = r8.check(bg, P.raw, lmap, **mode)
+    for sev, m in msgs:
+        (R.err if sev == "ERROR" else R.warn)("r8", m)
+    st.update(checked=True, groups_file=str(groups), landing_file=str(landing) if landing else None)
+    return st
+
+
 # ------------------------------------------------------------------------------------------------------- run
-def run(raw, png=None, plan_dir=None):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None):
     R = Report()
     errs = S.validate(raw)
     for e in errs:
@@ -695,8 +799,10 @@ def run(raw, png=None, plan_dir=None):
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
+    summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
     summ["seams"] = check_seams(P, R)
+    summ["die_io"] = check_die_io(P, R)
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if png:
@@ -713,11 +819,14 @@ def main(argv=None):
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--strict", action="store_true", help="WARN counts as failure")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
+    ap.add_argument("--landing", help="R8: <die>_r8_landing.json (default PLANDIR/*/<die>_r8_landing.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent)
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
+                  groups=a.groups, landing=a.landing)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)

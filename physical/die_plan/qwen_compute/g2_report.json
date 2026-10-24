@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.die_plan.g2.v1",
  "plan": "physical/die_plan/qwen_compute/die_plan.json",
- "source_commit": "74588724a",
- "plan_sha256": "4e044f8619b14c4fb28891796af6332130878abc9824fd5a693da3b3c9bbc713",
+ "source_commit": "fb27cfd5d",
+ "plan_sha256": "1e9aacf60e7e3869bd3ec67e223429a536240e554bb66e539eb8f4f5feaed447",
  "verdict": "PASS",
- "scope": "G2 virtual clock/PG/FT probes only; core/tap integration, CP1 and G3 remain open",
+ "scope": "fresh declared-tap virtual die probe plus eight byte-identical reused FT probes; declared budgets are estimates, not insertion/STA; real core/binding/CP1/G3 conditions remain open",
  "probes": {
   "die": {
    "layers": {
@@ -52,28 +52,28 @@
     },
     "M8": {
      "resource": 911059500,
-     "demand": 72728,
+     "demand": 56118,
      "usage_pct": 0.01,
      "overflow": 0
     },
     "M9": {
      "resource": 911201220,
-     "demand": 7211,
-     "usage_pct": 0.0,
+     "demand": 59199,
+     "usage_pct": 0.01,
      "overflow": 0
     }
    },
    "total_overflow": 0,
-   "wirelength_um": 775094.0,
+   "wirelength_um": 1134105.0,
    "errors": [],
    "pin_access_warnings": 0,
    "pin_access_no_ap": {},
    "pin_access_done": false,
    "reach": {
     "clk": {
-     "max_um": 26304.5,
-     "p90_um": 19841.8,
-     "taps": 388
+     "max_um": 27349.9,
+     "p90_um": 21543.8,
+     "taps": 2329
     },
     "rst": {
      "max_um": 26313.2,
@@ -81,7 +81,8 @@
      "taps": 388
     }
    },
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_sle_sc": {
    "layers": {
@@ -138,7 +139,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_sle_stm": {
    "layers": {
@@ -195,7 +197,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_slw_su_l0": {
    "layers": {
@@ -252,7 +255,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_sle_tap": {
    "layers": {
@@ -309,7 +313,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   },
   "part_coll_ftc": {
    "layers": {
@@ -366,7 +371,8 @@
    },
    "pin_access_done": true,
    "reach": {},
-   "done": true
+   "done": true,
+   "exit": "EXIT 0"
   }
  }
 }

@@ -34,6 +34,7 @@ import numpy as np
 TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
 from hbm_layer_vehicle import coll_images as CI  # noqa: E402
+from hbm_layer_vehicle import coll_transport  # noqa: E402
 from hbm_layer_vehicle import hc_images as HI  # noqa: E402
 
 GAP = 256
@@ -50,7 +51,7 @@ def sectors(evs):
     return s
 
 
-def components(meta, z, recs, tim, vm_rt, R=2, t_start=40, *, connected_boundary=None, checkpoint=None):
+def components(meta, z, recs, tim, vm_rt, R=2, t_start=40, *, connected_boundary=None, checkpoint=None, transport=None):
     """[(i, op, kind, builder(base) -> generator dict, n_sectors)] for the layer's emitted component records."""
     out = []
     pri_hc = HI.priced_hc(meta, recs)
@@ -82,14 +83,14 @@ def components(meta, z, recs, tim, vm_rt, R=2, t_start=40, *, connected_boundary
                 continue
             i = int(pr[0]["i"])
             O = np.asarray(z[x["outputs"]["O"]["array"]], np.uint32)
-            probe = CI.gather_record(O, i, R=R, t_start=t_start, vm_rt=vm_rt)
+            probe = CI.gather_record(O, i, R=R, t_start=t_start, vm_rt=vm_rt, transport=transport)
             if probe["status"] != "emitted":
                 continue
             out.append(dict(i=i, op=op, kind="grm" if op.endswith("MCAST") else "coll", tag=x["tag"],
                             nsec=4 * probe["stride"],
                             priced_cycles=round(pr[0]["end"] - pr[0]["start"], 2),
                             build=lambda b, O=O, i=i: CI.gather_record(O, i, R=R, t_start=t_start, dst_idx=b,
-                                                                       vm_rt=vm_rt)))
+                                                                       vm_rt=vm_rt, transport=transport)))
     return sorted(out, key=lambda c: c["i"])
 
 
@@ -115,12 +116,14 @@ def main():
     ap.add_argument("--name", required=True)
     ap.add_argument("--sector-base", type=lambda s: int(s, 0), default=None,
                     help="first sector for components (default: above every SU sector, 64-aligned)")
+    ap.add_argument("--coll-transport", type=Path, help="coll_transport.py profile: die lane timing for COLL gathers (TOKg)")
     a = ap.parse_args()
     su = json.loads(a.su.read_text())
     sman = json.loads(a.su_manifest.read_text())
     meta, z, recs = CI.load_fixture_records(a.fixtures)
     tim = HI.timing_from_contract(a.contract, a.l12)
     vm_rt = CI.vm_rt_from_contract(a.contract)
+    transport = coll_transport.load(a.coll_transport) if a.coll_transport else None
     bnd = json.loads(a.boundary.read_text())
     ins = {e["name"] for e in bnd["inputs"]}
     outs = {e["name"] for e in bnd["outputs"]}
@@ -134,7 +137,7 @@ def main():
     su_C = [e for e in sev if e["k"] == "C"]
     used_su = sectors(sev)
     base0 = a.sector_base if a.sector_base is not None else ((max(used_su) // 64) + 1) * 64
-    comps = components(meta, z, recs, tim, vm_rt, connected_boundary=bnd if a.connected_hc else None, checkpoint=a.checkpoint)
+    comps = components(meta, z, recs, tim, vm_rt, connected_boundary=bnd if a.connected_hc else None, checkpoint=a.checkpoint, transport=transport)
     # ---- absolute timeline (sequential CP placement, priced order); sector-independent
     phase0 = su.get("su_owner_calendar", {}).get("end_reservation_stream", 0) + GAP if a.shared_calendar else 0
     t = phase0
@@ -228,7 +231,7 @@ def main():
                    priced_layer_cycles=su.get("priced_layer_cycles"), merged_part=k, su_checks=p["su_checks"],
                    standalone_component=p["standalone"], components=[c["i"] for c in p["comps"]],
                    shared_vm_calendar=dict(policy="finite SU owner0 epoch followed by disjoint HC/COLL CP epochs" if a.shared_calendar else "legacy overlapping diagnostics; no shared calendar proof", static=True, production_qualified=False, su_epoch=su.get("su_owner_calendar"), payload_first_stream=phase0, data_connection="independent relocated fixture probes; no produced-to-consumed connection"),
-                   timing=dict(hc={kk: v for kk, v in tim.items() if kk != "hc_params"}, coll_vm_rt=vm_rt),
+                   timing=dict(hc={kk: v for kk, v in tim.items() if kk != "hc_params"}, coll_vm_rt=vm_rt, coll_transport=None if transport is None else dict(launch_edges=transport["launch_edges"], ingress_edges=transport["ingress_edges"])),
                    assumptions=["SU part = layer_images replay as emitted (serial domain, absolute cycles)",
                                 "components: sequential CP placement in priced order, GAP %d edges; VM sectors relocated "
                                 "above the SU sectors" % GAP] + ([] if p["su_checks"] else

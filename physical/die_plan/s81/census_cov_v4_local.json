@@ -65,9 +65,15 @@
  "retopo_x_via_xo_bits": 52992,
  "retopo_pairs": 48,
  "split_internal_lane_bits": {
-  "f": 217224,
+  "f": 212700,
   "slice_split": 110032
  },
  "census_rows": 1364,
- "group_pairs": 301
+ "group_pairs": 301,
+ "frame_band": {
+  "source": "/home/ubuntu/wt/s81-p6-1023/physical/die_plan/s81/inputs/frame_band_census.json",
+  "frames": 72,
+  "dropped": [],
+  "dropped_bits": 0
+ }
 }

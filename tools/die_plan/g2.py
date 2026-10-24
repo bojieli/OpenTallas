@@ -114,6 +114,8 @@ def die_probe(P, out, mem=64):
     for n, p in sorted(P.parts.items()):
         ck, rs = gen_phys.tap_points(P, P.parts[n]["type"])
         taps["clk"].append((n, P.to_die(n, ck)))
+        for tnm, tx, ty in gen_phys.clock_pins(P, P.parts[n]["type"])[1:]:     # R4 grid taps beyond tap 0
+            taps["clk"].append((f"{n}__{tnm}", P.to_die(n, (tx, ty))))
         taps["rst"].append((n, P.to_die(n, rs)))
         for i, tap in enumerate(P.ptype(n).get("clock", {}).get("taps", [])):
             # xy is already in the type frame (including any core orientation). Apply only the partition transform.
@@ -183,7 +185,7 @@ def die_probe(P, out, mem=64):
     meta = dict(kind="g2-die", die=P.name, taps=len(taps["clk"]), pg_stripes=nst, channels=len(chans),
                 route_layers=die_l, root_um=root)
     if declared:
-        meta.update(partition_root_taps=len(P.parts), declared_clock_taps=len(declared), declared_taps=declared,
+        meta.update(partition_root_taps=len(P.parts), grid_taps=sum(len(S.tap_grid(P, p['type'])) for p in P.parts.values()), declared_clock_taps=len(declared), declared_taps=declared,
                     clock_scope="virtual connectivity/PG/reach only; declared insertion budgets are estimates, "
                                 "not measured regional clock-tree, STA or insertion qualification")
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
@@ -253,10 +255,11 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         d = "input" if (bus in buses and buses[bus]["dir"] == "in") or bus.endswith("_i") and bus[:-2] in slots \
             else "output"
         ports.append(f"  {d} [{width[bus] - 1}:0] {bus}")
-    ports.append("  input clk")
-    ports.append("  input arst_n")
-    # clock / reset entry: the interior tap pin (die spine drop) feeds a pre-placed tap buffer = partition tree root
-    for nm, (x, y) in zip(("clk", "arst_n"), gen_phys.tap_points(P, tn)):
+    tp = gen_phys.tap_pins(P, tn)
+    for nm, _, _ in tp:
+        ports.append(f"  input {nm}")
+    # clock / reset entry: each interior tap pin (die spine drop; R4 tap grid) feeds a pre-placed tap buffer = tree root
+    for nm, x, y in tp:
         cells.append(f"  {TAPBUF} tap_{nm} (.A({nm}), .Y(tapq_{nm}));")
         nets.append(f"tapq_{nm}")
         place.append((f"tap_{nm}", x + 1.0, y))
@@ -283,7 +286,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             x, y, f = pi.get(bit) or po[bit]
             xo, yo, fo = po.get(bit) or pi[bit]
             a, b = inset(x, y, f), inset(xo, yo, fo)
-            seg = check.zroute(a, b, f)
+            seg = check.zroute(a, b, f, fo)
             L = check.plen(seg)
             prev = f"{sn}_i[{bit}]" if bit in pi else f"nd_st_{sn}_{bit}"
             if bit not in pi:
