@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_col_h10_r1__t1",
+ "kit": "claude/s81-p9-1023@4944e4a82:physical/die_plan/s81 (plan v4.7a sha 779e4774) kit ot-epyc9:/srv/opentallas-scratch/claude/s81-p9-g3c/col_h10_r1__t1 (kits49: RTL 4f10921ce + tool 4944e4a82 TOOL2 forest)",
+ "verdict": "PASS",
+ "hash": "b09a5f13c290a10e",
+ "reasons": "[10-23 22:33] [GEOM-REVIEW8] [S81 G3 re-kit kits49, S81-P9 22:32 REQ] Kit hash recomputed by me on ot-epyc9 (C-sorted cat, the GR5/6 scheme). I dumped 3_place.odb myself (docker, 24 GB cap) and rendered it: /home/ubuntu/scratch/geom-review8-1023/k49_col_h10_r1__t1/r7.png. The author's render was also viewed. Lattice frame 1442.88x1226.88 as kits48: 77 macros, 80,178 non-tap cells (1.5% of free), 15,775 FF, buf/inv 51,588 (64%) = GPL repeaters 28,774 / synth 15,387 / repair 3,875 / port 3,148. Macros are on the 8.64 lattice, logic in the row channels, no hot bins. 0 of the 10 interior clock/reset ports sit on a macro. Pins only on the plan N/S frame windows. Reg-reg (author probe): F>F 670, F>M 670, M>F 571, M>M 736 um, 0 data/reset pairs > 750. The one long async net is raw arst_n -> per-tap synchroniser RESETN (792 um). That is the asynchronous assert of the first sync stage, not a timed reg-reg path; its owner is die reset distribution (S81-P9-TOOL open item). Accepted for the tile.",
+ "fixes": "Route gate ALLOWED (ot-run). Judge at CTS/route: GRT overflow 0, TT setup >= 0 / FF hold >= 0, and R4 face-flop spread <= 80 TT+FF with the mean within 80 of 250. Keep the arst_n net buffered (slew); the die reset distribution owner settles its delivery.",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-23T22:33:22-07:00",
+ "rule": "OWNER 2026-10-23 independent visual geometry review before P&R of a failing element"
+}
