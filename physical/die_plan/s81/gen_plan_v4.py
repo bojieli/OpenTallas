@@ -127,6 +127,47 @@ def FRAME_SOURCES(contents):
          "rtl/dsrom_sys/s81_dv/frame_lp/plan/%s_plan_kit.sv" % contents[0]["module"].split(".")[0]]
 
 
+CORE_TRACK_OFFSET = [0.108, 0.012]
+CORE_PINS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "core_pins")
+CORE_OFFSET_LOG = {}
+
+
+def core_track_offset(e):
+    """S81-P9 10-23 (COORD 19:36): sub-lattice track offset of one frame core, ORIENT-AWARE.  CORE-KS's [0.108, 0.012]
+    puts R0 cores on the kit tracks; a mirrored core (MY flips x, MX flips y) lands its pins at outline - x, which
+    is on track only for an offset that matches the outline residue.  Pick, per core, the (dx, dy) on the 0.012-um
+    sub-grid (< one base lattice) with the fewest off-track M2-M7 pins in the type frame (die-frame M2/M3 of mirrored
+    partitions are skipped by G0 like M1); ties keep CORE_TRACK_OFFSET.  Shapes are LEF pin centres (CORE-KS table)."""
+    import sys as _s
+    _s.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools", "die_plan"))
+    import schema as _S
+    L = {x["name"]: x for x in _S.ASAP7_LAYERS}
+    f = os.path.join(CORE_PINS_DIR, e["module"] + ".json")
+    if not os.path.exists(f):
+        return CORE_TRACK_OFFSET
+    js = json.load(open(f)); pins = js.get("pins", js) if isinstance(js, dict) else js
+    w, h = e["size_um"]; o = e["orient"]; ox, oy = e["origin_um"]
+
+    def pt(x, y):
+        return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+    def off(c, l):
+        k = (c - l["offset_um"]) / l["pitch_um"]
+        return abs(k - round(k)) > 1e-4
+    V = [(pt(q["x"], q["y"])[0], L[q["layer"]]) for q in pins if q["layer"] in L and q["layer"] != "M1" and L[q["layer"]]["dir"] == "V"]
+    H = [(pt(q["x"], q["y"])[1], L[q["layer"]]) for q in pins if q["layer"] in L and q["layer"] != "M1" and L[q["layer"]]["dir"] == "H"]
+    cand = [round(0.012 * k, 3) for k in range(0, 24)]
+
+    def best(P, c0, base):
+        sc = {d: sum(off(base + d + c, l) for c, l in P) for d in cand}
+        m = min(sc.values())
+        return (c0 if sc[c0] == m else min(d for d in cand if sc[d] == m)), m
+    dx, bx = best(V, CORE_TRACK_OFFSET[0], ox)
+    dy, by = best(H, CORE_TRACK_OFFSET[1], oy)
+    CORE_OFFSET_LOG[(e["inst"], e["module"], o)] = (dx, dy, bx, by)
+    return [dx, dy]
+
+
 def frame_hard_cores(contents, buses):
     """band macros / hardened children of a frame type at their plan sites (lattice origins, frame_band_macros.json)"""
     if len(contents) != 1 or not re.match(r"col_h(9|10)_l4_lp\.r\d$", contents[0]["module"]):
@@ -136,7 +177,10 @@ def frame_hard_cores(contents, buses):
     nx = b == "r0" and "xo_o0" not in {x["name"] for x in buses}
     # the chain-end variant col_<M>_l4_lp_r0_nx is r0 without the x-forward stations u_xo<j> (no xo bus)
     return [dict(inst=e["inst"], module=e["module"], lef=e["lef"], **({"lib": e["lib"]} if e["lib"] else {}),
-                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"]) for e in mac
+                 origin_um=e["origin_um"], outline_um=e["size_um"], orient=e["orient"],
+                 # S81-P9 10-23 (COORD 19:36, CORE-KS): core signal pins sit on the M4/M5 0.012 sub-grid (kit tracks
+                 # 0.024): shift every frame core by the sub-lattice track offset + list its pins for the G0 track check
+                 track_offset_um=core_track_offset(e), pins_file=f"inputs/core_pins/{e['module']}.json") for e in mac
             if not re.match(r"u_r0\.u_xo\d+$", e["inst"])]   # v4.6: u_xo -> soft u_y_xo<j>_0/_1 chain (S81-P9-RTL)
 
 
