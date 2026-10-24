@@ -1,0 +1,128 @@
+`timescale 1ns/1ps
+// TOKj-KV 10-23: KV DIE-SLICE VEHICLE on the BOUND KV die top (qwen_kvsys_bound_top, tools/die_plan/bind.py output).
+// The DUT is the whole bound top byte-for-byte (all 160 partitions, every landed lane / pad / R8 delay as bound).  Only
+// the off-die boundaries are bench models (owner 10-14):
+//   HBM PHY slices  qkd_hbm3e_phy_pc4      -> KV-P7 bench model (qkd_hbm3e_phy_pc4_bench.sv, RL 23, preload)
+//   host SerDes     ot_qfd_serdes_112g_x6_phy x2 -> kvs_link_phy_models.sv; the far end = the HOST BOARD PORT, built from the
+//                   real host link adapter + CDC RTL (qkd_host_board_port_fixture: qfd_link_adp512_split + qkd_host_phy_cdc5)
+//   UCIe d2d PHY    ot_qkvd_ucie_x64_phy   -> kvs_link_phy_models.sv; far end = the compute-die driver (phase TOKEN)
+// Clocks: the top clock inputs at the as-built PLL periods (qkd_hbm3e PLL analog model: core 1.2 GHz, hbm 0.977, host
+// 1.0, ingest 0.6, phy 0.959); pad_refclk 100 MHz.  The die's own analog PLL model (hub_C u_pll) produces pll_locked.
+// Phase BOOT (+PHASE=boot): replay the boot bundle (+FRAMES=<hex, one 528-b class-8 frame per line>) through the host
+// board port with its credits (the die's host path is real RTL end to end); watch the host root's boot_image_* and the
+// kvs_ctl dispatcher; PASS = every image of +EXPECT=<file: "target digest" per line, bundle order> reported ready with the
+// expected target/digest/epoch, no boot fault, kvs_ctl setup_ready.  Mutant +MUT_FRAME=<n> flips data bit 19 of frame n
+// (one program word) -> the image digest must mismatch -> FAIL required.
+module tb_kvslice;
+    // ------------------------------------------------------------------ clocks / reset
+    reg ck_core = 0, ck_hbm = 0, ck_host = 0, ck_ing = 0, ck_phy = 0, ck_ref = 0;
+    always #0.416667 ck_core = ~ck_core;
+    always #0.512    ck_hbm  = ~ck_hbm;
+    always #0.500    ck_host = ~ck_host;
+    always #0.833334 ck_ing  = ~ck_ing;
+    always #0.521500 ck_phy  = ~ck_phy;
+    always #5.0      ck_ref  = ~ck_ref;
+    reg por_n = 0, rst_n = 0;
+    reg [2:0] die_id = 3'd1;
+    // ------------------------------------------------------------------ link far ends (read by the PHY models)
+    wire         h2d_v;
+    wire [1042:0] h2d_flit;
+    reg          c2k_v = 0;
+    reg  [582:0] c2k_flit = '0;
+    qwen_kvsys_bound_top dut (
+        .rst_n(rst_n), .clk_clk_fwd(ck_core), .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm),
+        .clk_clk_hbm_WS(ck_hbm), .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
+    // die host TX (two halves) -> host board port RX
+    wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
+    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
+    reg  [1042:0] d2h_q [0:3]; reg d2h_vq [0:3];
+    always @(posedge ck_phy) begin
+        d2h_q[0] <= d2h_flit; d2h_vq[0] <= d2h_v;
+        for (int i = 1; i < 4; i++) begin d2h_q[i] <= d2h_q[i-1]; d2h_vq[i] <= d2h_vq[i-1]; end
+    end
+    reg host_up = 0;
+    reg  hc_tx_v = 0; reg [527:0] hc_tx_d = '0; wire hc_tx_cr;
+    wire hc_rx_v; wire [527:0] hc_rx_d; reg hc_rx_cr = 0;
+    wire [5:0] host_faults;
+    qkd_host_board_port_fixture u_host (
+        .ck_phy({8{ck_phy}}), .ck_pad(ck_phy), .ck_rx_core(ck_host), .ck_tx_core(ck_host), .rst_n(por_n), .phy_up(host_up),
+        .phy_rx_v(d2h_vq[3]), .phy_rx_flit(d2h_q[3]), .phy_tx_v(h2d_v), .phy_tx_flit(h2d_flit),
+        .core_tx_v(hc_tx_v), .core_tx_d(hc_tx_d), .core_tx_cr(hc_tx_cr),
+        .core_rx_v(hc_rx_v), .core_rx_d(hc_rx_d), .core_rx_cr(hc_rx_cr), .faults(host_faults));
+    // ------------------------------------------------------------------ observation taps (ports of RTL instances only)
+    wire       b_ready  = dut.hub_Wi.w_host_boot_image_ready[0];
+    wire       b_fault  = dut.hub_Wi.w_host_boot_image_fault[0];
+    wire [3:0] b_target = dut.hub_Wi.w_host_boot_image_target;
+    wire [15:0] b_epoch = dut.hub_Wi.w_host_boot_image_epoch;
+    wire [63:0] b_dig   = dut.hub_Wi.w_host_boot_image_digest;
+    wire       setup    = dut.hub_C.w_kvs_ctl_boot_setup_ready;
+    wire       cf_fault = dut.hub_C.w_kvs_ctl_cf_root_fault;
+    wire       locked   = dut.hub_C.w_pll_locked;
+    // ------------------------------------------------------------------ stimulus
+    reg [527:0] frames [0:16383];
+    integer nfr = 0, mut_frame = -1, cyc_host = 0, sent = 0, credits = 4, rx_words = 0;
+    integer n_ready = 0, n_exp = 0, errors = 0, ready_cyc [0:31], cyc_core = 0, t_setup = -1, t_bfault = -1, t_last = 0;
+    reg [3:0] exp_t [0:31]; reg [63:0] exp_d [0:31];
+    string fpath, epath, phase;
+    integer maxcyc = 4000000, epoch_exp = -1;
+    always @(posedge ck_core) cyc_core <= cyc_core + 1;
+    always @(posedge ck_host) begin
+        cyc_host <= cyc_host + 1;
+        hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
+        if (hc_rx_v) rx_words <= rx_words + 1;
+    end
+    // credit-based host sender (IBUF 4 of the host CDC write face)
+    always @(posedge ck_host) if (host_up) begin
+        automatic integer c = credits + (hc_tx_cr ? 1 : 0);
+        hc_tx_v <= 1'b0;
+        if (sent < nfr && c > 0) begin
+            hc_tx_v <= 1'b1; hc_tx_d <= frames[sent] ^ ((sent == mut_frame) ? (528'd1 << 19) : 528'd0);
+            sent <= sent + 1; c = c - 1;
+        end
+        credits <= c;
+    end
+    reg b_ready_q = 0;
+    always @(posedge ck_core) begin
+        b_ready_q <= b_ready;
+        if (b_ready && !b_ready_q) begin
+            $display("BOOT_IMAGE cyc %0d target %0d epoch %0d digest %016h fault %0d", cyc_core, b_target, b_epoch, b_dig, b_fault);
+            if (n_ready < n_exp && (b_target != exp_t[n_ready] || b_dig != exp_d[n_ready] || (epoch_exp >= 0 && b_epoch != 16'(epoch_exp)))) begin
+                errors = errors + 1;
+                $display("BOOT_MISMATCH image %0d want target %0d digest %016h", n_ready, exp_t[n_ready], exp_d[n_ready]);
+            end
+            if (n_ready < 32) ready_cyc[n_ready] = cyc_core;
+            n_ready = n_ready + 1; t_last = cyc_core;
+        end
+        if (b_fault && t_bfault < 0) begin t_bfault = cyc_core; $display("BOOT_FAULT cyc %0d target %0d", cyc_core, b_target); end
+        if (setup && t_setup < 0) begin t_setup = cyc_core; $display("SETUP_READY cyc %0d", cyc_core); end
+    end
+    initial begin
+        integer fd, t; reg [63:0] d;
+        if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
+        if (!$value$plusargs("FRAMES=%s", fpath)) $fatal(1, "+FRAMES required");
+        if (!$value$plusargs("MUT_FRAME=%d", mut_frame)) mut_frame = -1;
+        if (!$value$plusargs("MAXCYC=%d", maxcyc)) maxcyc = 4000000;
+        if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
+        fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
+        while (!$feof(fd) && $fscanf(fd, "%h\n", frames[nfr]) == 1) nfr = nfr + 1;
+        $fclose(fd);
+        if ($value$plusargs("EXPECT=%s", epath)) begin
+            fd = $fopen(epath, "r");
+            while ($fscanf(fd, "%d %h\n", t, d) == 2) begin exp_t[n_exp] = 4'(t); exp_d[n_exp] = d; n_exp = n_exp + 1; end
+            $fclose(fd);
+        end
+        $display("KVSLICE_CFG phase %s frames %0d expect %0d mut_frame %0d top %m", phase, nfr, n_exp, mut_frame);
+        repeat (20) @(posedge ck_ref); por_n = 1;
+        repeat (4) @(posedge ck_ref); rst_n = 1;
+        repeat (64) @(posedge ck_host); host_up = 1;
+        while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + 200000)) && t_bfault < 0)
+            @(posedge ck_core);
+        repeat (2000) @(posedge ck_core);
+        $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",
+            (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault) ? "PASS" : "FAIL",
+            sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, rx_words,
+            t_last, cyc_core);
+        $finish;
+    end
+endmodule
