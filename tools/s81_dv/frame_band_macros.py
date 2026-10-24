@@ -49,8 +49,9 @@ def view_files(view):
     n = view.split('/')[-1]
     lef = f'{view}/{n}.lef'
     lib = f'{view}/{n}_tt.lib'
-    if view.endswith('ot_rom_4096x72_m8'):
-        lib = None
+    # ROM clk->q and address capacitance are required for timing and fanout repair.
+    # The selected macro ships the same TT/FF naming convention as the hard cores.
+    git_text(lib)
     txt = git_text(lef)
     m = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', txt)
     return lef, lib, (float(m.group(1)), float(m.group(2)))

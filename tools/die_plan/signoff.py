@@ -308,7 +308,9 @@ dict for {i p} $so_regs {
   set a ""
   if {$so_cf} { catch {set a [ot_cf_wire $p [lindex $cl 0]]} }
   if {$a eq ""} {
-    catch {set a [sta::time_sta_ui [get_property $p arrival_max_rise]]}
+    # get_property returns display units already (PropertyValue timeUnit);
+    # converting again multiplies ASAP7 ps arrivals by 1e12.
+    catch {set a [get_property $p arrival_max_rise]}
   }
   if {$a eq "" || ![string is double -strict $a]} { incr so_ck_err; continue }
   puts "SO_CK [expr {[dict exists $so_bnd $i] ? 1 : 0}] [format %.2f $a] [get_full_name [lindex $cl 0]]"
