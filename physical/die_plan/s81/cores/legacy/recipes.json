@@ -1,0 +1,99 @@
+{
+ "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24.",
+ "dsdv_gunit_l0": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l0"
+ },
+ "dsdv_gunit_l0r": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l0r"
+ },
+ "dsdv_gunit_l1": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l1"
+ },
+ "dsdv_gunit_l1c": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l1c"
+ },
+ "dsdv_gunit_l2": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l2"
+ },
+ "dsdv_gunit_l3": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l3"
+ },
+ "dsdv_gunit_l4": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l4"
+ },
+ "dsdv_gunit_l4r": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l4r"
+ },
+ "dsdv_gunit_l5f": {
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l5f"
+ },
+ "dsdv_bk_g": {
+  "ref_tile": "physical/ref_tile/s81dvbk_g2"
+ },
+ "dsdv_bksel_c": {
+  "ref_tile": "physical/ref_tile/s81dvbk_selc2"
+ },
+ "dsdv_bksel_q": {
+  "ref_tile": "physical/ref_tile/s81dvbk_sq_hk2l"
+ },
+ "ot_s81dv_xfin": {
+  "ref_tile": "physical/ref_tile/s81dv_xfin"
+ },
+ "ot_s81sl_capc5r": {
+  "ref_tile": "physical/ref_tile/s81sl_capc5r"
+ },
+ "ot_s81sl_eg": {
+  "ref_tile": "physical/ref_tile/s81sl_eg"
+ },
+ "ot_s81sl_xrt1": {
+  "ref_tile": "physical/ref_tile/s81sl_xrt1"
+ },
+ "ot_s81sl_xrt3": {
+  "ref_tile": "physical/ref_tile/s81sl_xrt3_b"
+ },
+ "dsfd_node_LLd": {
+  "ref_tile": "physical/ref_tile/s81net_node_lld"
+ },
+ "dsfd_node_LLfd": {
+  "ref_tile": "physical/ref_tile/s81net_node_llfd"
+ },
+ "dsfd_node_LLfu": {
+  "ref_tile": "physical/ref_tile/s81net_node_llfu"
+ },
+ "dsfd_node_NNfd": {
+  "ref_tile": "physical/ref_tile/s81net_node_nnfd"
+ },
+ "dsfd_node_NNfu": {
+  "ref_tile": "physical/ref_tile/s81net_node_nnfu"
+ },
+ "dsfd_rstg": {
+  "ref_tile": "physical/ref_tile/s81net_rstg"
+ },
+ "dsfd_cfifo_crs4": {
+  "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4"
+ },
+ "dsfd_qbank_N": {
+  "ref_tile": "physical/ref_tile/s81fill2_qbank_n"
+ },
+ "dsfd_qbank_S": {
+  "ref_tile": "physical/ref_tile/s81fill2_qbank_s"
+ },
+ "ot_s81_cfg7_seq": {
+  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_pr"
+ },
+ "ot_s81_cfg7_seq_bfp": {
+  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr"
+ },
+ "ot_s81_sstn_base566": {
+  "ref_tile": "physical/ref_tile/s81_sstn_base566"
+ },
+ "ot_s81_sstn_payload536": {
+  "ref_tile": "physical/ref_tile/s81_sstn_payload536"
+ },
+ "dsdv_gunit_l5_n32": {
+  "plan_module": "dsdv_gunit_l5",
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l5_n32",
+  "spec_git": "1766568f01:physical/ref_tile/dsdv_gunit_l5_n32/spec.json",
+  "suffix": "n32"
+ }
+}
