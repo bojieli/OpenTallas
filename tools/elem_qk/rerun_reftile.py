@@ -50,10 +50,8 @@ def prep(kit, name, commit, out):
         ["physical"] if "physical" in have else []) + [f"physical/ref_tile/{r}" for r in refs
         if subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", f"{sha}:physical/ref_tile/{r}"],
                           capture_output=True).returncode == 0]
-    # the host fetches the source from the hub itself (no 1.4 GB tar over ssh): pin it under refs/elemqk/
-    git("update-ref", f"refs/elemqk/{sha}", sha)
+    # the host git-archives the source from its own clone (fetching origin if the commit is missing)
     main = git("rev-parse", "HEAD").decode().strip()
-    git("update-ref", f"refs/elemqk/{main}", main)
     label = re.sub(r"[^A-Za-z0-9_]", "_", name)
     st = spec["stages"]["route"]
     th = st.get("threads", spec.get("threads", 8))
@@ -70,8 +68,8 @@ RUN=$(cd "$(dirname "$0")" && pwd); export RUN
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 mkdir -p $RUN/src $RUN/cl $RUN/so_tools $RUN/routes
 G=$HOME/OpenTallas
-git -C $G fetch -q origin refs/elemqk/{sha}:refs/elemqk/{sha} refs/elemqk/{main}:refs/elemqk/{main} || exit 3
-[ -f $RUN/src/.untarred ] || {{ git -C $G archive {sha} {' '.join(have)} | tar -x -C $RUN/src && touch $RUN/src/.untarred; }} || exit 3
+for c in {sha} {main}; do git -C $G cat-file -e $c^{{commit}} 2>/dev/null || git -C $G fetch -q origin || exit 3; done
+[ -f $RUN/src/.untarred ] || {{ git -C $G archive {sha} {' '.join(shlex.quote(h) for h in have)} | tar -x -C $RUN/src && touch $RUN/src/.untarred; }} || exit 3
 git -C $G archive {main} tools/die_plan | tar -x -C $RUN/so_tools || exit 3
 cd $RUN/src
 export CL_PHASE=route CL_LABEL_SUFFIX= CL_STOP_AFTER=
