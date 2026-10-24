@@ -42,6 +42,7 @@ $R/rtl/qwen_split/qfd_kvn_static_transport.sv
 $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
 $R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
 +incdir+$IMGD
++incdir+$H
 $H/tb_kvslice.sv
 EOF
 cat $O/hostside.f $O/files.f $O/incdirs.f >> $O/vl.f

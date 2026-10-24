@@ -16,7 +16,7 @@ import sys
 src, dst, H, R, IMGD = sys.argv[1:]
 extra = [f'{H}/kvs_compute_end.sv', f'{R}/rtl/qwen_split/qfd_kvn_static_transport.sv',
          f'{R}/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv', f'{R}/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv',
-         f'+incdir+{IMGD}']
+         f'+incdir+{IMGD}', f'+incdir+{H}']
 out = []
 for l in open(src).read().splitlines():
     if l.endswith('/kv_dieslice/tb_kvslice.sv'):
