@@ -82,7 +82,24 @@ The tool was run on the original cap30 bind (64d4be888, the same input as fc30).
 - **`probe/`:** real-cell edge-exact vehicle from `frame_chain_reset_probe.py`, covering the 10 changed frames, their 10 upstream frames and 80 lanes with flights:
   - PASS at tt and at ff;
   - mutants `+MUT=k` (the reset k stations short; k = 4 is exactly fc30 on the 9 calendar-v2 frames, k = delay is the uncorrected die): k = 1, 2, 3, 4, 5, 7 are all CAUGHT as a real landing epoch fault at tt and ff.
-- **`cut_3S_ctl/patch_cut.py`:** carries the die delta (station lines copied byte-exact from the fc31 die) into the fc30 cut_3S_ctl. It produces slice_top a240fb53. The MON3S idle rerun result is recorded below once it lands.
+- **`cut_3S_ctl/patch_cut.py`:** carries the die delta (station lines copied byte-exact from the fc31 die) into the fc30 cut_3S_ctl. It produces slice_top a240fb53. The MON3S idle rerun result is recorded below.
+
+## fc31 cut_3S_ctl idle rerun (recorded by S81-P10, 2026-10-24)
+
+Binary: S81-P9-FC `out_monfc31/obj` (verilated from K_monfc31: slice_top a240fb53 + the fc30 cut tb with MON3S/MONFC
+monitor lines only added, tb sha 359ee4b7), recovered to intel2:~/ot-scratch/s81/recovered/s81-p9-fc-1023.
+
+| run | cycles | fault_cycles | first_fault | u_s_3S fault3S / f_* events |
+|---|---|---|---|---|
+| fc30 cut_3S_ctl idle (STW-S81d-TOK, die 3b4b975d) | 2000 | 1844 | 155 | block_fault[4] sticky from 155 |
+| fc31 idle 400 (S81-P9-FC 10-24 00:24, out_monfc31/idle) | 400 | 0 | -1 | none |
+| fc31 idle 600 + trace (S81-P10, intel2:/srv/opentallas-scratch2/claude/s81/entry_fc31/idle) | 600 | 0 | -1 | none |
+
+The u_f_3L03 lane status fault is gone on fc31 (the bench's own "FAIL zero checks" is the idle-run convention: nothing
+is compared). Native entry replay on this binary (S81-P10, held-payload f_ks model a1f22086cc, KS 2297 probe-confirmed):
+jobs 15/16/17/20/21/22 PASS (fault_cycles 0, line W/E bit-exact, check PASS), mutant corrupt:hf_7N_l0:33 CAUGHT,
+PASS_CUT_COMPONENT -- intel2:/srv/opentallas-scratch2/claude/s81/entry_fc31/out (+ out_probe; legacy-pulse control
+pulse15 reproduces the fc30 eks_7N TORN miss with fault_cycles 0). Same verdict on the plain fc31 build: main 0e75647078.
 
 ## Not fixed: EARLY_WARN (report only)
 
