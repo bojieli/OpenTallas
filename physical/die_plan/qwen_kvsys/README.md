@@ -135,3 +135,13 @@ regenerated in place: a pure superset, 22 pins_file + 22 notes + 5 orients; no l
   Ports whose partners are only the native_qm / fence glue (cdc_hi 659, cdc_ci 812, cdc_ch 584 bits) have no positioned
   partner and face the type centre.
 - G0 PASS 0 err / 1788 warn (v3.8s 0 / 1811); G0C PASS 0 err (v3.8s FAIL 22), 49/49 types clean (g0_summary_v38u.json).
+
+## v3.8v (KV-G3, 10-24) -- hub_Ei fault-OR plan cells FIRM + internal stations (plan-cell R3-INTERNAL)
+`run_v38v.sh die_plan(v3.8u).json OUT` = `post_v38v.py` + `gen.py latency --groups r8/bus_groups.json` + G0/G0C
+(against the unchanged r8/ table). The hub_Ei G3 4_cts STA found TT -679 ps on hp_fault_1052 (qkd_hp_or2): plan cells
+had no site and their legs had no stations. v3.8v puts the four OR cells FIRM at the W face beside o_hp_fault_N_q,
+adds 3 FIRM stations on i_dcal_flt (N->W, hop 556 um) and 2 on i_hp_fault_N_q (E->W, hop 504 um): lanes L357 +3 and
+L758 +2 cycles (fault age). G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38v.json). Kits realise them with
+`tools/die_plan/kit_istations.py PLAN TYPE KIT_RTL_DIR` (after kit_rsync.py): stations in the bound RTL + istations.tcl
+(FIRM sites, sourced by face_flops.tcl). The kv41 bind does not carry these 5 stages yet (re-bind on v3.8v).
+Review renders: g3/review/die_v38v.png, g3/review/hubEi_plan_v38v.png (g3/render_type_plan.py).

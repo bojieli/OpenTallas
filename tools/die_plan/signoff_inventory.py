@@ -217,7 +217,8 @@ class RepoIndex:
             v = self.by_job[db['job']]
             db['host'] = v['host']
             db['verdict_record'] = v['record']
-            rec.update({'cl_status': v['status'], 'cl_ss_ps': true_ss(v), 'cl_setup_corner': v.get('setup_corner'),
+            rec.update({'cl_status': v['status'], 'cl_tt_setup_ps': tt_setup(v), 'cl_ss_info_ps': ss_info(v),
+                        'cl_setup_corner': v.get('setup_corner'),
                         'cl_setup_ps': v['ss_ps'], 'cl_ff_ps': v['ff_ps'], 'cl_drc': v['drc'],
                         'cl_closed_at': v['closed_at']})
         # routed DB committed next to the view / in the kit?
@@ -231,11 +232,19 @@ class RepoIndex:
         return info
 
 
-def true_ss(v):
-    """the verdict's SS setup slack: metrics.ss_ps is the setup-corner value (TT when setup_corner is tt/tc, owner
-    rule 2026-10-08); the SS-library slack is then metrics.ss_sensitivity_ps."""
-    sc = (v.get('setup_corner') or 'ss').lower()
-    return v.get('ss_sensitivity_ps') if sc in ('tt', 'tc', 'typ') else v.get('ss_ps')
+def _is_tt(v):
+    return (v.get('setup_corner') or 'ss').lower() in ('tt', 'tc', 'typ')
+
+
+def tt_setup(v):
+    """the verdict's TT setup slack (the sign-off value, AGENTS.md 2026-10-24): closure_loop metrics.ss_ps is a
+    historical key holding the SETUP-CORNER slack, which is TT when setup_corner is tt/tc (option B, 2026-10-07)."""
+    return v.get('ss_ps') if _is_tt(v) else None
+
+
+def ss_info(v):
+    """the SS-library setup slack, information only: metrics.ss_sensitivity_ps of a TT-corner verdict, else ss_ps."""
+    return v.get('ss_sensitivity_ps') if _is_tt(v) else v.get('ss_ps')
 
 
 def repo_db_complete(files):
@@ -518,7 +527,8 @@ def main():
         if vs:
             last = vs[-1]
             rec.setdefault('cl_status', last['status'])
-            rec.setdefault('cl_ss_ps', true_ss(last))
+            rec.setdefault('cl_tt_setup_ps', tt_setup(last))
+            rec.setdefault('cl_ss_info_ps', ss_info(last))
             rec.setdefault('cl_setup_corner', last.get('setup_corner'))
             rec.setdefault('cl_setup_ps', last['ss_ps'])
             rec.setdefault('cl_ff_ps', last['ff_ps'])

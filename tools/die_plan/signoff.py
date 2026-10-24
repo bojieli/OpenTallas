@@ -9,22 +9,28 @@ data only, with the same checks for everyone.
                    [--corners ss,ff,tt] [--image IMG] [--insertion-target PS] [--record gate_result.json]
     signoff.py verdict DIR/signoff.json           # re-evaluate a record (exit 0 SIGNED, 1 NOT SIGNED)
 
-INPUTS: the routed ODB (<base>/6_final.odb) and its SPEF (<base>/6_final.spef; when absent the parasitics are
+INPUTS: the routed ODB (<base>/6_final.odb, else <base>/5_route.odb of a GOAL=route kit) and its SPEF
+(<base>/6_final.spef with 6_final.odb; when absent the parasitics are
 re-extracted with OpenRCX: extract_parasitics -ext_model_file asap7 rcx_patterns.rules, recorded as 'rcx').  The
 golden SDC is the kit's constraint.sdc (KIT = parent of the ORFS run dir) unless --sdc; else <base>/6_final.sdc.
 Macro / hard-child liberty files come from the kit config.mk ADDITIONAL_LIBS (/work = KIT), per corner (_ss/_ff/_tt).
 
 ENGINE: OpenSTA as built into OpenROAD in the pinned ORFS image (openroad/orfs:latest = :asap7lock), one process per
-corner (MCMM = 3 corners x 1 functional mode, run in parallel), ASAP7 NLDM RVT+LVT+SLVT liberty of that corner.
+corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functional mode, run in parallel), ASAP7 NLDM
+RVT+LVT+SLVT liberty of that corner.
+
+CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
+TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, pin-flop spread <= 80 ps.  SS never gates; with
+--corners ...,ss it is reported for information only.
 
 CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
-  setup_ss      SS setup WNS >= 0 (AGENTS.md: a headline clock closes setup at SS)                       blocking
+  setup_tt      TT setup WNS >= 0 with the SDC's 60 ps setup uncertainty (AGENTS.md 2026-10-24)        blocking
   hold_ff       FF hold WNS >= 0 under the STANDARD boundary-hold overlay                                  blocking
                 (set_output_delay -min 0 and set_input_delay -min -insertion_tol (40 ps) on every data port vs the
                 IO virtual clock: the 4b7b2b3e64 kit standard; the raw-SDC hold is reported as hold_ff_sdc)
-  tt            TT setup / hold reported (pathfinding only, labelled TT)                                   report
+  ss            SS setup / hold, only with --corners ...,ss: information, never a reason                 report
   uncertainty   the SDC carries 60 ps setup / 25 ps hold (sdc_lint 'uncertainty'), period = 833 ps     (in sdc_lint)
-  drv           max transition and max capacitance violations = 0 at SS, FF and TT (liberty limits)        blocking
+  drv           max transition and max capacitance violations = 0 at TT and FF (liberty limits; SS info)  blocking
   fanout        nets with fanout > FANOUT_MAX (64; ASAP7 liberty has no max_fanout)                        WARN only
   unconstrained check_setup -unconstrained_endpoints = 0, no unclocked registers, no loops                blocking
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
@@ -71,23 +77,32 @@ INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
 SPREAD_MAX_PS = 80.0
 FANOUT_MAX = 64
 SPREAD_CORNERS = ("tt", "ff")
-CORNERS = ("ss", "ff", "tt")
-BLOCKING = ("setup_ss", "hold_ff", "drv", "unconstrained", "clock", "sdc_lint", "face_guard", "drc", "antenna")
+CORNERS = ("tt", "ff")                 # the sign-off corners; "ss" may be added for information
+ALL_CORNERS = ("tt", "ff", "ss")
+BLOCKING = ("setup_tt", "hold_ff", "drv", "unconstrained", "clock", "sdc_lint", "face_guard", "drc", "antenna")
 
 
 # ---- discovery ----------------------------------------------------------------------------------------------------
+ROUTED_DBS = ("6_final.odb", "5_route.odb")
+
+
+def routed_db(base):
+    """the routed ODB of a results base: 6_final.odb, else 5_route.odb (kits run with GOAL=route), else None"""
+    return next((n for n in ROUTED_DBS if (Path(base) / n).is_file()), None)
+
+
 def find_base(run_dir):
-    """<run>/results/asap7/<design>/base (exactly one) or run_dir itself if it holds 6_final.odb."""
+    """<run>/results/asap7/<design>/base (exactly one) or run_dir itself if it holds a routed ODB."""
     rd = Path(run_dir)
-    if (rd / "6_final.odb").is_file():
+    if routed_db(rd):
         return rd
     for pat in ("results/asap7/*/base", "run/results/asap7/*/base", "work/orfs/results/asap7/*/base"):
-        hits = sorted(p for p in rd.glob(pat) if (p / "6_final.odb").is_file())
+        hits = sorted(p for p in rd.glob(pat) if routed_db(p))
         if len(hits) == 1:
             return hits[0]
         if len(hits) > 1:
             raise SystemExit(f"signoff: several routed bases under {rd}: {hits}")
-    raise SystemExit(f"signoff: no results/asap7/*/base/6_final.odb under {rd}")
+    raise SystemExit(f"signoff: no results/asap7/*/base/{{6_final,5_route}}.odb under {rd}")
 
 
 def orfs_root(base):
@@ -109,9 +124,9 @@ def discover(base, kit=None, sdc=None, record=None):
                 break
     kit = Path(kit).resolve() if kit else None
     d = dict(base=str(base), orfs=str(root) if root else None, design=design, kit=str(kit) if kit else None,
-             odb=str(base / "6_final.odb"), spef=None, sdc=None, sdc_source=None, synth=None, final_v=None,
+             odb=str(base / (routed_db(base) or "6_final.odb")), spef=None, sdc=None, sdc_source=None, synth=None, final_v=None,
              metrics={}, drc_rpt=None, pins=None, sdc_lint_ctx=None, record=str(record) if record else None)
-    if (base / "6_final.spef").is_file():
+    if (base / "6_final.spef").is_file() and Path(d["odb"]).name == "6_final.odb":
         d["spef"] = str(base / "6_final.spef")
     if sdc:
         d["sdc"], d["sdc_source"] = str(Path(sdc).resolve()), "arg"
@@ -177,8 +192,10 @@ def macro_libs(kit, corner):
 
 # ---- the OpenSTA session (one corner) -----------------------------------------------------------------------------
 def _clock_family_tcl():
-    p = REPO / "physical/common_flow/clock_family.tcl"
-    return p.read_text() if p.is_file() else ""
+    for p in (REPO / "physical/common_flow/clock_family.tcl", HERE / "clock_family.tcl"):   # repo, or a kit copy
+        if p.is_file():
+            return p.read_text()
+    return ""
 
 
 SESSION_TCL = r"""
@@ -187,7 +204,7 @@ proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }
 foreach l [glob @PLAT@/lib/NLDM/*_RVT_@C@_*] { read_liberty $l }
 foreach l [glob -nocomplain @PLAT@/lib/NLDM/*_LVT_@C@_* @PLAT@/lib/NLDM/*_SLVT_@C@_*] { if {![string match *FAKE* $l]} { read_liberty $l } }
 @MACRO_LIBS@
-read_db /base/6_final.odb
+read_db /base/@ODB@
 @PARASITICS@
 read_sdc /sdc/golden.sdc
 set_propagated_clock [all_clocks]
@@ -302,14 +319,14 @@ exit
 """
 
 
-def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX):
+def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb"):
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
         par, src = (f"source {PLAT}/setRC.tcl\nextract_parasitics -ext_model_file {PLAT}/rcx_patterns.rules\n"
                     "write_spef /out/rcx.spef\nread_spef /out/rcx.spef"), "rcx"
     t = SESSION_TCL
-    for k, v in (("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
+    for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl())):
@@ -428,7 +445,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
     for i, lp in enumerate(mlibs):
         mounts.append((f"ml{i}", str(Path(lp).parent)))
         ml_ctr.append(f"/ml{i}/{Path(lp).name}")
-    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"]))
+    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -529,13 +546,13 @@ def evaluate(rec, insertion_target=None):
     def put(name, verdict, **kw):
         ch[name] = dict(verdict=verdict, **kw)
 
-    # setup SS
-    if ok_corner("ss") and C["ss"].get("sdc_wns_max") is not None:
-        w = C["ss"]["sdc_wns_max"]
-        put("setup_ss", "PASS" if w >= 0 else "FAIL", wns_ps=w, tns_ps=C["ss"].get("sdc_tns_max"),
-            violators=C["ss"].get("sdc_nviol_max"))
+    # setup TT (the sign-off corner, AGENTS.md 2026-10-24)
+    if ok_corner("tt") and C["tt"].get("sdc_wns_max") is not None:
+        w = C["tt"]["sdc_wns_max"]
+        put("setup_tt", "PASS" if w >= 0 else "FAIL", wns_ps=w, tns_ps=C["tt"].get("sdc_tns_max"),
+            violators=C["tt"].get("sdc_nviol_max"))
     else:
-        put("setup_ss", "NOT RUN")
+        put("setup_tt", "NOT RUN")
     # hold FF (standard overlay)
     if ok_corner("ff") and C["ff"].get("std_wns_min") is not None:
         w = C["ff"]["std_wns_min"]
@@ -547,12 +564,11 @@ def evaluate(rec, insertion_target=None):
             sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov)
     else:
         put("hold_ff", "NOT RUN")
-    if ok_corner("tt"):
-        put("tt", "REPORT", setup_wns_ps=C["tt"].get("sdc_wns_max"), hold_wns_ps=C["tt"].get("std_wns_min"),
-            hold_sdc_wns_ps=C["tt"].get("sdc_wns_min"), label="TT: pathfinding only")
-    else:
-        put("tt", "NOT RUN")
-    # DRV
+    if ok_corner("ss"):
+        put("ss", "REPORT", setup_wns_ps=C["ss"].get("sdc_wns_max"), hold_wns_ps=C["ss"].get("std_wns_min"),
+            slew_viol=C["ss"].get("slew_viol"), cap_viol=C["ss"].get("cap_viol"),
+            label="SS: information only, never gates (AGENTS.md 2026-10-24)")
+    # DRV at the sign-off corners
     done = [c for c in CORNERS if ok_corner(c)]
     if len(done) == len(CORNERS):
         bad = {c: dict(slew=C[c].get("slew_viol"), cap=C[c].get("cap_viol")) for c in done
@@ -563,7 +579,7 @@ def evaluate(rec, insertion_target=None):
         fo = {c: C[c].get("fanout_viol") for c in done}
         put("fanout", "WARN" if any((v or 0) > 0 for v in fo.values()) else "PASS", limit=FANOUT_MAX,
             violators=fo, max_fanout=C[done[0]].get("fanout_max"), worst_net=C[done[0]].get("fanout_worst_net"))
-        cs = C["ss"]["check_setup"]
+        cs = C["tt"]["check_setup"]
         bad = {k: v for k, v in cs.items() if v and k in ("unconstrained", "unclocked", "loops")}
         put("unconstrained", "FAIL" if bad else "PASS", counts=cs)
     else:
@@ -573,7 +589,7 @@ def evaluate(rec, insertion_target=None):
     # clock
     if all(ok_corner(c) for c in SPREAD_CORNERS):
         sp, why = {}, []
-        for c in done:
+        for c in [x for x in ALL_CORNERS if ok_corner(x)]:
             pf = C[c].get("insertion_pinflops")
             sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"))
         for c in SPREAD_CORNERS:
@@ -594,7 +610,7 @@ def evaluate(rec, insertion_target=None):
     else:
         put("clock", "NOT RUN")
     # macro liberty coverage (part of setup/hold validity)
-    mm = {c: C[c].get("macro_missing") for c in done if C[c].get("macro_missing")}
+    mm = {c: C[c].get("macro_missing") for c in done if C[c].get("macro_missing")}     # sign-off corners only
     if mm:
         put("macro_libs", "FAIL", missing=mm)
     for k in ("sdc_lint", "face_guard"):
@@ -616,7 +632,7 @@ def evaluate(rec, insertion_target=None):
 
 
 def _detail(k, c):
-    if k in ("setup_ss", "hold_ff") and c.get("wns_ps") is not None:
+    if k in ("setup_tt", "hold_ff") and c.get("wns_ps") is not None:
         return f" WNS {c['wns_ps']:+.2f} ps, {int(c.get('violators') or 0)} endpoints"
     if k == "drv" and c.get("failing"):
         return " " + ", ".join(f"{x.upper()} slew {v['slew']} cap {v['cap']}" for x, v in c["failing"].items())
@@ -647,8 +663,8 @@ def summary_line(rec):
     for c in ("tt", "ff"):
         x = ((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pinflops") or {})
         pf[c] = x.get("spread")
-    return (f"{rec.get('name')}: {rec.get('verdict')} | SS setup {g('setup_ss', 'wns_ps')} | FF hold "
-            f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | TT setup {g('tt', 'setup_wns_ps')} | "
+    return (f"{rec.get('name')}: {rec.get('verdict')} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
+            f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
             f"spread TT/FF {pf['tt']}/{pf['ff']} | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
             f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}")
 
@@ -660,6 +676,8 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     out = Path(a.out).resolve()
+    if a.insertion_target is None and disc.get("sdc_lint_ctx"):     # die-plan kit: the plan common latency
+        a.insertion_target = float(json.loads(Path(disc["sdc_lint_ctx"]).read_text())["insertion_ps"])
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
     rec = dict(schema=SCHEMA, name=a.name or disc["design"] or base.name, generated=datetime.datetime.now()
@@ -671,7 +689,9 @@ def cmd_run(a):
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
-                           libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner"),
+                           libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+                           corner_rule="setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only "
+                                       "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
     with cf.ThreadPoolExecutor(len(corners)) as ex:
         futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry) for c in corners}

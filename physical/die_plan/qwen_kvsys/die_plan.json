@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.8t (KV-P7-HUB 10-23, COORD 21:26 R4 grid): clock.tap_pitch_um 400 on hub_Ei/Eo/Wo/Wi | v3.8h (KV-P7-HUB 10-23): 4 astk hard cores on hub_Eo/Wo (post_v38h.py, as-built synth outline, top-down pins) | v3.8s (KV-P8-HUB 10-23): FIRM internal_stations on the hub_Eo/Wo astk legs (post_v38s.py), lane fixed_cycles += stations",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json | v3.8t (KV-P7-HUB 10-23, COORD 21:26 R4 grid): clock.tap_pitch_um 400 on hub_Ei/Eo/Wo/Wi | v3.8h (KV-P7-HUB 10-23): 4 astk hard cores on hub_Eo/Wo (post_v38h.py, as-built synth outline, top-down pins) | v3.8s (KV-P8-HUB 10-23): FIRM internal_stations on the hub_Eo/Wo astk legs (post_v38s.py), lane fixed_cycles += stations | v3.8v (KV-G3 10-24): hub_Ei fault-OR cells FIRM + internal stations L357 +3, L758 +2",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -19296,25 +19296,113 @@
      "inst": "hp_fault_1052",
      "module": "qkd_hp_or2",
      "status": "reuse",
-     "note": "fault or"
+     "note": "fault or | v3.8v FIRM site (KV-G3 R3-INTERNAL plan cell)",
+     "origin_um": [
+      17.28,
+      432.0
+     ],
+     "outline_um": [
+      4.32,
+      4.32
+     ]
     },
     {
      "inst": "hp_fault_1087",
      "module": "qkd_hp_or2",
      "status": "reuse",
-     "note": "fault or"
+     "note": "fault or | v3.8v FIRM site (KV-G3 R3-INTERNAL plan cell)",
+     "origin_um": [
+      17.28,
+      440.64
+     ],
+     "outline_um": [
+      4.32,
+      4.32
+     ]
     },
     {
      "inst": "hp_fault_1132",
      "module": "qkd_hp_or2",
      "status": "reuse",
-     "note": "fault or"
+     "note": "fault or | v3.8v FIRM site (KV-G3 R3-INTERNAL plan cell)",
+     "origin_um": [
+      17.28,
+      449.28
+     ],
+     "outline_um": [
+      4.32,
+      4.32
+     ]
     },
     {
      "inst": "hp_fault_1182",
      "module": "qkd_hp_or2",
      "status": "reuse",
-     "note": "fault or"
+     "note": "fault or | v3.8v FIRM site (KV-G3 R3-INTERNAL plan cell)",
+     "origin_um": [
+      17.28,
+      457.92
+     ],
+     "outline_um": [
+      4.32,
+      4.32
+     ]
+    }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:i_dcal_flt",
+     "from_um": [
+      1004.088,
+      1676.064
+     ],
+     "to_um": [
+      21.6,
+      432.0
+     ],
+     "regs_um": [
+      [
+       1004.088,
+       1119.426
+      ],
+      [
+       1004.088,
+       562.788
+      ],
+      [
+       578.238,
+       432.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "face:N",
+     "capture": "hp_fault_1052.a",
+     "note": "KV-G3 v3.8v R3-INTERNAL FIRM (plan cell): path 2227 um, 3 stations, hop 557 <= 675"
+    },
+    {
+     "conn": "bus:i_hp_fault_N_q",
+     "from_um": [
+      1278.624,
+      184.152
+     ],
+     "to_um": [
+      21.6,
+      440.64
+     ],
+     "regs_um": [
+      [
+       774.12,
+       184.152
+      ],
+      [
+       269.616,
+       184.152
+      ]
+     ],
+     "bits": 1,
+     "launch": "face:E",
+     "capture": "hp_fault_1087.b",
+     "note": "KV-G3 v3.8v R3-INTERNAL FIRM (plan cell): path 1514 um, 2 stations, hop 505 <= 675"
     }
    ]
   },
@@ -144348,7 +144436,8 @@
     "L357_8",
     "L357_9"
    ],
-   "note": "p2p dcal.flt"
+   "note": "p2p dcal.flt | +3 FIRM hub_Ei internal stations (KV-G3 v3.8v, plan-cell R3-INTERNAL)",
+   "fixed_cycles": 3
   },
   {
    "id": "L358",
@@ -147420,7 +147509,8 @@
    "ports": [
     "L758_0"
    ],
-   "note": "p2p hp_fault_3.q"
+   "note": "p2p hp_fault_3.q | +2 FIRM hub_Ei internal stations (KV-G3 v3.8v, plan-cell R3-INTERNAL)",
+   "fixed_cycles": 2
   },
   {
    "id": "L759",
@@ -163713,12 +163803,12 @@
     "param": "LAT_L356"
    },
    "L357": {
-    "cycles": 28,
+    "cycles": 31,
     "stations": 26,
     "boundary": 2,
     "faces": 10,
-    "fixed": 0,
-    "natural": 28,
+    "fixed": 3,
+    "natural": 31,
     "pad": 0,
     "param": "LAT_L357"
    },
@@ -167723,12 +167813,12 @@
     "param": "LAT_L757"
    },
    "L758": {
-    "cycles": 2,
+    "cycles": 4,
     "stations": 0,
     "boundary": 2,
     "faces": 1,
-    "fixed": 0,
-    "natural": 2,
+    "fixed": 2,
+    "natural": 4,
     "pad": 0,
     "param": "LAT_L758"
    },
