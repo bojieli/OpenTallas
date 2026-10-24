@@ -42,6 +42,16 @@ module tb_pcpart;
         if (ev != ev_q && ev != 0) $display("PCB cyc %0d slice_es %b merge_hq %b merge_es %b po0_col %b her_credit %b her_rd %b her_fault %b merge_fault %b",
                                             cyc, ev[7], ev[6], ev[5], ev[4], ev[3], ev[2], ev[1], ev[0]);
     end
+    // controller face (u_path = qkd_static_kv_pc_path_nc): es into the controller, calendar reservations (hbm clock)
+    wire c_es = dut.u_kvpc0.u_pc.u_pce.u_path.es[0];
+    wire c_rsc = dut.u_kvpc0.u_pc.u_pce.u_path.reserved_static_col, c_rwc = dut.u_kvpc0.u_pc.u_pce.u_path.reserved_write_col,
+         c_rrd = dut.u_kvpc0.u_pc.u_pce.u_path.reserved_rd, c_go = dut.u_kvpc0.u_pc.u_pce.u_path.cal_go,
+         c_seal = dut.u_kvpc0.u_pc.u_pce.u_path.cal_seal;
+    integer n_ces = 0, n_rsc = 0, n_rwc = 0, n_rrd = 0, n_go = 0;
+    always @(posedge clk) if (c_es) begin n_ces <= n_ces + 1; $display("PCB cyc %0d controller es[0] (static word in)", cyc); end
+    always @(posedge hck) begin n_rsc <= n_rsc + c_rsc; n_rwc <= n_rwc + c_rwc; n_rrd <= n_rrd + c_rrd; n_go <= n_go + c_go; end
+    final $display("PCB CAL controller_es %0d reserved_static_col %0d reserved_write_col %0d reserved_rd %0d cal_go %0d cal_seal %b",
+                   n_ces, n_rsc, n_rwc, n_rrd, n_go, c_seal);
     reg [32:0] sd_q = 0;
     always @(posedge clk) begin sd_q <= sdo; if (sdo != sd_q) $display("PCB cyc %0d sdo %b soo %b sfo %b", cyc, sdo[3:0], soo[3:0], sfo[3:0]); end
     integer maxc = 25000;
