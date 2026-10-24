@@ -2,7 +2,8 @@
 # TOK-DS 10-24: native split-layer control replay (job0 + job1, prepare_split_control.py programmes) on the fc31 cut_3S_ctl
 # rebuilt with the opt-in BK addressed-drain sink (Codex candidate codex/s81-integrate-1024 51ae2e4cef: dsdv_bk_g/ot_dsdv_vstop
 # BK_DRAIN_SINK=1, kit epyc3 codex-s81/bk_drain_layer/kit).  Same tools as main (dv_cut_replay/run_entry_replay =
-# the c3 tools that gave L0 PASS 49f7915d5a).  Never builds.  Usage: bk_layers.sh <worktree> <out root> LAYER [KS]
+# the c3 tools that gave L0 PASS 49f7915d5a).  Never builds.  Usage: [BK_SINK=5b] bk_layers.sh <worktree> <out root> LAYER [KS]
+# BK_SINK = uid list for dv_cut_replay --bk-drain-sink (the cut has one dsdv_bk_g, .uid 8h5B).
 set -u
 T=$(realpath $1); O=$(realpath -m $2); Y=$3; KS=${4:-3093}
 B=/srv/opentallas-scratch/claude/codex-s81; C=$HOME/s81p10/fc31; K=$B/bk_drain_layer/kit; OBJ=$B/bk_drain_layer/out/obj
@@ -19,5 +20,5 @@ grep -q "fault_cycles=0 " $I/run.log || { echo "BK $Y idle faults: $(grep -h '^D
 rm -rf $O/$Y
 cd $T && python3 tools/s81_dv/tokfunc/run_entry_replay.py --src $T --die-v $C/tree_fc31/results/arch/s81_dv_1016/bind9/die.v.gz \
   --cut $C/cuts/cut_3S_ctl --kit $K --obj $OBJ --idle-run $I --progs $P --fixture-meta $F --ks-user 0 --out $O/$Y \
-  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS > $O/$Y.log 2>&1
+  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS ${BK_SINK:+--bk-drain-sink $BK_SINK} > $O/$Y.log 2>  --par 3 --jobs 0 1 --mutant 1:corrupt:hf_7N_l0:33 --ks $KS > $O/$Y.log 2>&11
 echo "BK $Y rc $? $(grep ENTRY_REPLAY $O/$Y.log | tail -1)"
