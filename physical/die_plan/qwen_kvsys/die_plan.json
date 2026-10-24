@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned)",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN)",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -258,7 +258,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -1689,7 +1689,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -3068,7 +3068,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -4296,7 +4296,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -5426,7 +5426,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -6563,7 +6563,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -7868,7 +7868,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -9145,7 +9145,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -10429,7 +10429,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -11748,7 +11748,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -13039,7 +13039,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -14337,7 +14337,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -15646,7 +15646,7 @@
      414.72
     ],
     "layer": "M9",
-    "insertion_ps": 410.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -17485,7 +17485,7 @@
      838.08
     ],
     "layer": "M9",
-    "insertion_ps": 500.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -18293,7 +18293,7 @@
      838.08
     ],
     "layer": "M9",
-    "insertion_ps": 440.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -18926,7 +18926,7 @@
      838.08
     ],
     "layer": "M9",
-    "insertion_ps": 440.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -19913,7 +19913,7 @@
      838.08
     ],
     "layer": "M9",
-    "insertion_ps": 440.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -20860,7 +20860,7 @@
      838.08
     ],
     "layer": "M9",
-    "insertion_ps": 440.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -21253,7 +21253,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 370.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -21457,7 +21457,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 370.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -21514,7 +21514,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 370.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -21571,7 +21571,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 370.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -21846,7 +21846,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 400.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -22467,7 +22467,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 400.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -23072,7 +23072,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 400.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -23665,7 +23665,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 400.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -24314,7 +24314,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -25328,7 +25328,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -26378,7 +26378,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -27506,7 +27506,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -28668,7 +28668,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -29908,7 +29908,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -31182,7 +31182,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -32528,7 +32528,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -33395,7 +33395,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -34409,7 +34409,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -35565,7 +35565,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -36833,7 +36833,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -38207,7 +38207,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 480.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -38857,7 +38857,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 430.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -38917,7 +38917,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 430.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -39226,7 +39226,7 @@
      518.4000000000001
     ],
     "layer": "M9",
-    "insertion_ps": 430.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -39543,7 +39543,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -40964,7 +40964,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -42385,7 +42385,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -43806,7 +43806,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -45227,7 +45227,7 @@
      760.32
     ],
     "layer": "M9",
-    "insertion_ps": 420.0,
+    "insertion_ps": 250.0,
     "insertion_tol_ps": 40.0
    },
    "reset": {
@@ -156864,7 +156864,7 @@
    "part": "@die",
    "bus": "clk_core"
   },
-  "insertion_ps": 250,
+  "insertion_ps": 250.0,
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "face_xing": "budgeted",

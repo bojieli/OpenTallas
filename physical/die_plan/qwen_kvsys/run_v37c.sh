@@ -7,3 +7,4 @@ IN=${1:?v3.6 die_plan.json}; O=${2:?output directory}; mkdir -p "$O"
 python3 "$D/post_v37c.py" "$IN" > "$O/die_plan.json"
 cp -r "$D/cores" "$D/census" "$O/"   # pins_file / census paths are plan-relative
 python3 "${OT_DIE_PLAN_TOOLS:-$R/tools/die_plan}/check.py" "$O/die_plan.json" --png --out "$O/g0"
+python3 "$D/post_v37k.py" "$O/die_plan.json" > "$O/die_plan_k.json" && mv "$O/die_plan_k.json" "$O/die_plan.json" && python3 "${OT_DIE_PLAN_TOOLS:-$R/tools/die_plan}/check.py" "$O/die_plan.json" --png --out "$O/g0k"   # COORD 19:55 common clock latency
