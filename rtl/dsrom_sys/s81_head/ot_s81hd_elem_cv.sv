@@ -41,9 +41,14 @@ module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
     output wire fault
 );
     wire nc_hv; wire [31:0] nc_hd; wire [16:0] nc_hr;
+    wire m_ov, m_lv, m_done, m_fault; wire [31:0] m_od, m_ld, m_bits, m_key; wire [16:0] m_row;
+    // one dedicated output register stage on EVERY output (+1 cycle; the rebuilt elemB macro, ot_s81hd_elemB_rb.sv)
+    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_n),
+        .d({m_ov, m_od, m_lv, m_ld, m_done, m_row, m_bits, m_key, m_fault}),
+        .q({o_v, o_d, l_v, l_d, done, best_row, best_bits, best_key, fault}));
     ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(9'h1ff), .SPLIT9(1), .INSTANCE(INSTANCE), .IOREG(1),
                     .SAFE(1)) u_m (
-        .clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(o_v), .o_d(o_d), .l_v(l_v),
-        .l_d(l_d), .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr), .done(done), .best_row(best_row),
-        .best_bits(best_bits), .best_key(best_key), .fault(fault));
+        .clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
+        .l_d(m_ld), .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr), .done(m_done), .best_row(m_row),
+        .best_bits(m_bits), .best_key(m_key), .fault(m_fault));
 endmodule

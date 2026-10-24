@@ -36,7 +36,7 @@ fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8430 || echo 8429; })}  # CV 1: +1 = the rebuilt elemA output register stage (ot_s81hd_oreg, 10-24)
+EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8431 || echo 8429; })}  # CV 1: +2 = the rebuilt elemB then elemA output register stages (ot_s81hd_oreg, 10-24)
   # 8,429 at 0x1ff / SPLIT9 1 (10-24)   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
