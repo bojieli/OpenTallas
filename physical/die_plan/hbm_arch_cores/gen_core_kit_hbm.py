@@ -456,7 +456,8 @@ def main():
     (kd / "make_tracks.tcl").write_text(make_tracks(plan_path))
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (TOOL / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
+    ff, nskip = re.subn(r"(?m)^set ff_skip_re .*?$", lambda _: "set ff_skip_re {" + skip + "}", ff)
+    assert nskip == 1, "expected exactly one face_flops clock/reset skip declaration"
     assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip anchor changed"
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
