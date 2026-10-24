@@ -219,6 +219,10 @@ _C_GAPS = [dict(inst="u_c.u_xg", module="ot_s81sl_xg", cells=174928, plan_core="
                 why="stand-in view only (physical/ref_tile/s81dv_slice_lp_k8a|b/standin_views/ot_s81sl_xg, 648x561.6): "
                     "no closed view")]
 _GU = "physical/ref_tile/dsdv_gunit_%s/views/dsdv_gunit_%s/dsdv_gunit_%s.lef"
+# S81-CORES: the GEOM-REVIEW8-passed hcore grid (CORE-S81-SVC cores_svc.json placement, 8 x 8, pitch 172.8 x 276.48)
+_SVC_HC = [dict(inst="u_rsv.u_att.u_eng.g_t[%d].g_ts.u_t.u_hc.g_h[%d].u_c" % (i // 16, i % 16),
+                origin_um=(round(34.56 + 172.8 * (i % 8), 4), [34.56, 311.04, 587.52, 864.0, 1321.92, 1598.4, 1874.88, 2151.36][i // 8]))
+           for i in range(64)]
 NONFRAME_HC = {
     "C:xrt1": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt1", plan_core="xg_xr", cells=67849,
                                            lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS),
@@ -247,53 +251,140 @@ NONFRAME_HC = {
                                       "dsdv_idx_tx_n32"))],
                    gaps=[dict(inst="u_bk_sel.u_vm", module="dsdv_idx_vmux", cells=3547, plan_core="bkg_tx_vmux",
                               why="views are of dsdv_idx_vmux_n32, a different module; flattened (small)")]),
-    "leaf": dict(cores=[dict(inst="u_lf.u_vp", module="ot_s81sl_vp", cells=36056 + 16 * 50540, plan_core="vp_abc",
-                             lef=_ARCH_SRC % ("ot_s81sl_vp", "s81sl_vp9_fb-s81sl_vp9_fb1-7d8e05c33", "ot_s81sl_vp",
-                                          "ot_s81sl_vp")),
-                        dict(inst="u_lf.u_vn", module="ot_s81sl_vn", lef=_rt("s81sl_vn", "ot_s81sl_vn"), cells=375145,
+    # S81-CORES 10-24 (GEOM-REVIEW8 21:04 leaf FAIL re-plan): vp is NOT one hard core any more.  Its closed view
+    # (closed_archive s81sl_vp9_fb, 734.4 x 864, 2,413 pins) is lost with the old coordinator host, and its pin faces
+    # (vn link on vp E, vs link on vp W, both full height) cannot face both partners in the 1442.88 x 1226.88 leaf.  vp
+    # is flattened into the leaf exactly as its own cluster kit builds it (OT_S81SL_VP_HARD, RTL unchanged): its 16
+    # closed pin-registered hc_post lanes (s81sl_hcpl ot_dsrom_su_hcpost_lane_pr) and its 2 leaf-store SRAM macros are
+    # leaf hard cores, its 36,056-cell own logic (pin flops, sequencer) is leaf soft glue.  vs and vq are re-pinned
+    # (cores/leaf/repin.py: same module / ports, pins moved to the faces that face their partners; stub LEFs until the
+    # re-pinned views close); vn, ve (r5 closed), vsw, rxsf, rxsb are the closed views unchanged.  Placement (type frame,
+    # bus-side variant; the S-bus types take the y mirror, cores mirrored with it):
+    #   left half (x <= 712.8): hc lanes 2 x 8 W column, vn on the E edge of the half (vn W -> lanes / store), store SRAMs
+    #   under vn's centre; right half (x >= 730.08): vq beside vn's y port (vn E -> vq W), vs E of vq, vsw E of vs
+    #   (level), ve centred over vs (ve W / E faces both drop to vs N), rxsf / rxsb stacked under vs.
+    #   No core covers the die-centre column x 712.8..730.08 (every E-W ft slot's 2-station midpoint) nor needs more
+    #   than 122 um escape at the N-S slots' midline y 613.44: 0 ft stations added in every leaf type.
+    "leaf": dict(cores=[dict(inst="u_lf.u_vp.g_ln[%d].u_l" % i, module="ot_dsrom_su_hcpost_lane_pr", cells=50540,
+                             plan_core="vp_hcpl",
+                             lef=_rt("s81sl_hcpl", "ot_dsrom_su_hcpost_lane_pr")) for i in range(16)] +
+                       [dict(inst="u_lf.u_vp.u_b%d" % i, module="ot_sram_1r1w_512x128_m4_r2c2", cells=0,
+                             plan_core="vp_store",
+                             lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/"
+                                 "ot_sram_1r1w_512x128_m4_r2c2.lef") for i in range(2)] +
+                       [dict(inst="u_lf.u_vn", module="ot_s81sl_vn", lef=_rt("s81sl_vn", "ot_s81sl_vn"), cells=375145,
                              plan_core="vn"),
-                        dict(inst="u_lf.u_vs", module="ot_s81sl_vs", lef=_rt("s81sl_vs", "ot_s81sl_vs"), cells=117971,
-                             plan_core="vs_vsw"),
+                        dict(inst="u_lf.u_vs", module="ot_s81sl_vs", cells=117971, plan_core="vs_vsw",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_lfp.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_vs_lfp.json"),
                         dict(inst="u_lf.u_vsw", module="ot_s81sl_vsw", lef=_rt("s81sl_vsw", "ot_s81sl_vsw"),
                              cells=120703, plan_core="vs_vsw"),
-                        dict(inst="u_lf.u_vq", module="ot_s81sl_vq", lef=_rt("s81sl_vq", "ot_s81sl_vq"), cells=46676,
-                             plan_core="vq_rx"),
+                        dict(inst="u_lf.u_vq", module="ot_s81sl_vq", cells=46676, plan_core="vq_rx",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_lfp.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_vq_lfp.json"),
                         dict(inst="u_lf.u_rxsf", module="dsfd_su_t_rxsf", lef=_rt("s81su_rxsf_ref", "dsfd_su_t_rxsf"),
                              cells=82916, plan_core="vq_rx"),
                         dict(inst="u_lf.u_rxsb", module="dsfd_su_t_rxsb", lef=_rt("s81su_rxsb_ref", "dsfd_su_t_rxsb"),
                              cells=99597, plan_core="vq_rx"),
                         # CORE-S81 10-23: ve r5 CLOSED view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021,
-                        # TT +42.12 / FF +12.74 / DRC 0; final LEF regenerated from provenance/raw with the run's own
-                        # abstract_pin_stub.py, sha 01b54bf1 = the record) imported to closed_import/ot_s81sl_ve
+                        # TT +42.12 / FF +12.74 / DRC 0; LEF regenerated from provenance/raw, sha 01b54bf1 = the record)
                         dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve",
                              lef=_ARCH % ("ot_s81sl_ve", "s81sl_ve_r5-f51f4ec42-linked-eco-1021", "ot_s81sl_ve",
                                           "ot_s81sl_ve"))],
                  gaps=[],
-                 # CORE-S81 10-23 leaf placement (the shelf packer cannot fit vp 734x864 + vn + ve): vp W column under
-                 # the N bus; E column top row vn + vq (both on the N bus, vq takes vn's y), ve under vn with vsw on
-                 # its E side, vs (the ve / vsw / rx / vp hub) centred under ve so ve's W (reduce) and E (add) faces
-                 # are equidistant from it, rxsf -> rxsb E of vs
-                 place={"u_lf.u_vp": (34.56, 319.68), "u_lf.u_vn": (786.24, 829.44), "u_lf.u_vq": (1157.76, 1054.08),
-                        "u_lf.u_ve": (786.24, 466.56), "u_lf.u_vsw": (1149.12, 587.52), "u_lf.u_vs": (872.64, 276.48),
-                        "u_lf.u_rxsf": (1062.72, 276.48), "u_lf.u_rxsb": (1218.24, 276.48)},
-                 # vp / vn / vq carry the N-face leaf bus: only the x mirror keeps them under it
-                 mirrors=((False, False), (True, False))),
-    "svc": dict(cores=[dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
-                            lef=_rt("dsdv_svc_sx_hrow", "dsdv_svc_sx_hrow"), plan_core="sx_hrow_ab")
+                 # vp's own logic (36,056) + leaf glue stay soft: residual = total - hard
+                 place=dict([("u_lf.u_vp.g_ln[%d].u_l" % i, (34.56 if i < 8 else 172.8, 129.6 + 129.6 * (i % 8)))
+                             for i in range(16)] +
+                            [("u_lf.u_vp.u_b0", (432.0, 587.52)), ("u_lf.u_vp.u_b1", (432.0, 535.68)),
+                             ("u_lf.u_vn", (345.6, 639.36)), ("u_lf.u_vq", (734.4, 613.44)),
+                             ("u_lf.u_vs", (924.48, 587.52)), ("u_lf.u_vsw", (1175.04, 561.6)),
+                             ("u_lf.u_ve", (812.16, 803.52)), ("u_lf.u_rxsf", (941.76, 432.0)),
+                             ("u_lf.u_rxsb", (941.76, 276.48))]),
+                 # the leaf bus face picks the variant: N bus = as placed, S bus = y mirror (every core MX'd with it)
+                 mirrors=((False, False), (False, True)), mirror_by_bus=True),
+    # S81-CORES 10-24: the attention engine as 64 ot_s81c_attn_hcore (CORE-S81-SVC: one head + its own hgrp_s HG1 PCOLP1
+    # front end, every pin registered; tb_s81c_hgrp lockstep vs hgrp_s HG4 PASS every output every cycle, mutants caught;
+    # GEOM-REVIEW8 PASS of this 8 x 8 grid, cores/svc/cores_svc.json; route gate record: TT -25.29 ps, re-close by the S81
+    # lane WPRE 89c161bd5) + the 8 score-exchange half rows dsdv_svc_sx_hrow re-floorplanned 216x216 -> 138.24 x 164.16
+    # (cores/leaf/repin.py, faces kept) into the centre band the grid leaves (y 1140.48..1308.12): the exchange's hop
+    # geometry wants its leaf cluster at the slice centre (dsdv_svc_sx: 4 segments <= 335 um, NR = 1, zero added cycles).
+    # Replaced soft cells: 64 hdp_s 183,981 + 16 hgrp_s local 30,272 + 8 hrow 51,397 = 12,670,312.
+    "svc": dict(cores=[dict(inst=c_["inst"], module="ot_s81c_attn_hcore", cells=202789, plan_core="attn_hcore",
+                            lef="physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
+                            pins_file="inputs/core_pins/ot_s81c_attn_hcore.json") for c_ in _SVC_HC] +
+                      [dict(inst="u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), module="dsdv_svc_sx_hrow", cells=51397,
+                            lef="physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef", plan_core="sx_hrow_ab",
+                            pins_file="inputs/core_pins/dsdv_svc_sx_hrow_c.json")
                        for r in range(4) for b in range(2)],
-                gaps=[dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>", module="ot_hdc_v41x_attn_tile_s:hdp_s",
-                           cells=64 * 183981, plan_core="attn_t*_g*_h* (x64)",
-                           why="no physical view of the attention head datapath hdp_s (183,981 cells x 64)"),
-                      dict(inst="u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>", module="ot_hdc_v41x_attn_tile_s:hgrp_s",
-                           cells=16 * 30272, plan_core="attn_t*_g* (x16)",
-                           why="no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"),
-                      dict(inst="u_rsv (SE/SM/P.V)", module="se_sm_pv", cells=18044 + 2 * 1247, plan_core="se_sm_pv",
-                           why="no view (flattened, small)")]),
-    "eng": dict(cores=[], gaps=[dict(inst="u_eng", module="dsdv_eng_rr", cells=418942, plan_core="eng_rr_a/eng_rr_b",
-                                     why="no closed view of dsdv_eng_rr (no LEF in ref_tile / s81_die_views / "
-                                         "closed_archive); 418,942 cells as one module is itself over the cap")]),
+                gaps=[],
+                replaces=64 * 183981 + 16 * 30272 + 8 * 51397,
+                place=dict([(c_["inst"], tuple(c_["origin_um"])) for c_ in _SVC_HC] +
+                           [("u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b), (round(51.84 + 172.8 * (2 * r + b), 4), 1140.48))
+                            for r in range(4) for b in range(2)]),
+                mirrors=((False, False),)),
+    # S81-CORES 10-24: dsdv_eng_rr -> 3 hard cores E/H0/H1 (CORE-S81-ENG dsdv_eng_rr_split.sv, lockstep vs the monolith
+    # PASS, 0 cycles added; GEOM-REVIEW8 E/H0/H1 PASS); origins = cores/eng/cores_eng.json placement
+    "eng": dict(cores=[dict(inst="u_eng.u_e", module="dsdv_eng_rr_e", cells=96256, plan_core="eng_rr_e",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef"),
+                       dict(inst="u_eng.u_h0", module="dsdv_eng_rr_h0", cells=175659, plan_core="eng_rr_h0",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef"),
+                       dict(inst="u_eng.u_h1", module="dsdv_eng_rr_h1", cells=176214, plan_core="eng_rr_h1",
+                            lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h1.lef")],
+                gaps=[],
+                # the split replaces the whole monolith: its soft residual is the type glue only
+                replaces=418942,
+                place={"u_eng.u_e": (1028.16, 717.12), "u_eng.u_h0": (1028.16, 432.0), "u_eng.u_h1": (1209.6, 432.0)},
+                mirrors=((False, False),)),
 }
 HC_REPORT = {}
+# S81-CORES 10-24: core connectivity for the G0C core-face rule (core_conns.json sidecar, written next to die_plan.json):
+# {key: {core inst: {core port: ["bus:<type bus>" | "core:<inst>"]}}}.  Ports whose partner is soft glue (the leaf's hc
+# lanes and store SRAMs talk only to vp's own pin flops / sequencer) are not listed (unchecked by design).
+_LF = "u_lf."
+_HC = ["core:u_lf.u_vp.g_ln[%d].u_l" % i for i in range(16)]
+_ST = ["core:u_lf.u_vp.u_b0", "core:u_lf.u_vp.u_b1"]
+_DN, _UP = "bus:leafdn_i0", "bus:leafup_o0"
+
+
+def _cc(**kw):
+    return {p: list(v) for ps, v in kw.items() for p in ps.split(",")}
+
+
+CORE_CONNS = {
+    "leaf": {
+        _LF + "u_vn": dict(_cc(**{"hw_v,hw_j,hw_hf,hw_d,hq_v,hq_d,hr_v,hr_j,hr_hf": _HC}), **_cc(**{
+            "wl_v,wl_i,wl_d": _ST, "n_go,n_pre": _ST + [_DN], "rb_v,rb_d": [_DN], "p_v,p_d": [_UP],
+            "y_v,y_i,y": ["core:u_lf.u_vq"]})),
+        _LF + "u_vq": _cc(**{"y_v,y_i,y": ["core:u_lf.u_vn"], "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vs"],
+                             "xf_v,xf_s,xf,fault": [_UP], "k,sid,m_v,m_q,m_b,m_i": [_DN]}),
+        _LF + "u_vs": _cc(**{"s_v,s_d,g_v,g_c,g_d": [_DN], "e_v,e_c,e_d,fault": [_UP],
+                             "x_rv,x_ra,x_qv,x_qd,x_wv,x_wa,x_wm,x_wd": _ST,
+                             "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vq"],
+                             "ve_rv,ve_rc,ve_rh,ve_rk,ve_rw,ve_pv,ve_pc,ve_phh,ve_pkk,ve_pdd,ve_av,ve_ac,ve_ah,ve_aval,"
+                             "ve_ag,ve_ov,ve_oc,ve_oy,ve_fi": ["core:u_lf.u_ve"],
+                             "sw_v,sw_d,sw_w,sw_lim,sw_vi,sw_ri,sw_fi": ["core:u_lf.u_vsw"],
+                             "ra_v,ra_x": ["core:u_lf.u_rxsf"], "ra_vi,ra_ri,ra_fi": ["core:u_lf.u_rxsb"]}),
+        _LF + "u_ve": _cc(**{"r_v,r_c,r_h,r_k,r_w,p_v,p_c,p_hh,p_kk,p_dd,a_v,a_c,a_h,a_val,a_g,o_v,o_c,o_y,fault":
+                             ["core:u_lf.u_vs"]}),
+        _LF + "u_vsw": _cc(**{"i_v,i_d,i_w,i_lim,o_v,o_d,o_f": ["core:u_lf.u_vs"]}),
+        _LF + "u_rxsf": _cc(**{"i_v,i_x": ["core:u_lf.u_vs"], "o_v,o_u,o_u2,o_mx,o_f": ["core:u_lf.u_rxsb"]}),
+        _LF + "u_rxsb": _cc(**{"i_v,i_u,i_u2,i_mx,i_f": ["core:u_lf.u_rxsf"], "o_v,o_r,o_f": ["core:u_lf.u_vs"]}),
+    },
+    # svc: the exchange half rows' face lanes run (via the dsfd_dvrly relay stations) to the svc face of the same name;
+    # l_i / rt_o / t_o meet the attention engine glue (soft) and stay unchecked; the hcores' partners are the engine's
+    # soft staging (unchecked, GEOM-REVIEW8 PASS on the grid)
+    "svc": {"u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b): {
+        "%s_%s" % (io, f.lower()): ["face:%s" % f] for io in ("gi", "go", "si", "so") for f in "NESW"}
+        for r in range(4) for b in range(2)},
+    "eng": {
+        "u_eng.u_e": _cc(pci=["bus:unit_i0"], rco=["bus:unit_o0"], f_ks=["bus:unit_i1"], vi_s=["bus:xtier_i0"],
+                         vo_s=["bus:xtier_o0"], vo_n=["bus:xtier_o1"], vi_n=["bus:xtier_i1"],
+                         **{"hx_w,hx_res": ["core:u_eng.u_h0", "core:u_eng.u_h1"]}),
+        "u_eng.u_h0": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
+        "u_eng.u_h1": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
+    },
+}
+CORE_CONNS_OUT = {}
 
 
 def nonframe_hc_key(p):
@@ -328,7 +419,7 @@ def _lef_size(lef):
 _LEF_SIZE = {}
 
 
-def nonframe_hard_cores(p, w, h, tn, ftsl=()):
+def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
     """hard_cores[] of one non-frame type (S81-P9-HC): packed shelf placement (first cut for GEOM review): cores sorted by
     height, rows bottom-up, origins on the 8.64 lattice, >= HC_GAP_UM between facing core boxes (after the track
     offset), HC_EDGE_UM keep-off from the outline, orient R0, track_offset CORE_TRACK_OFFSET, CORE-KS pins_file."""
@@ -339,7 +430,9 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     cores, glue, basis = cells_core_plan(p)
     total = sum(c for _, c in cores) + glue
     hard = sum(c["cells"] or 0 for c in spec["cores"])
-    resid = total - hard
+    # S81-CORES: a split / re-hardened core set can carry more cells than the soft cells it replaces (pin registers):
+    # the residual soft cells are total - the replaced soft cells (spec "replaces"), else total - hard
+    resid = total - spec.get("replaces", hard)
     if total <= HC_CELLS_MAX:
         return []
     rep = dict(key=k, cells=total, hard_cells=hard, residual_soft_cells=resid, basis=basis,
@@ -353,6 +446,10 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     dx, dy = CORE_TRACK_OFFSET
     items = []
     for c in spec["cores"]:
+        if c.get("outline"):
+            # S81-CORES: the core outline is given where the LEF is not in the tree (or the core is placed from a plan
+            # pin table only); the pins_file carries the pins
+            _LEF_SIZE[c["lef"]] = list(c["outline"])
         if c["lef"] not in _LEF_SIZE:
             _LEF_SIZE[c["lef"]] = _lef_size(c["lef"])
         items.append((c, _LEF_SIZE[c["lef"]]))
@@ -366,10 +463,11 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
         # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
         # fit; the corner mirroring and the gap / edge legality below still apply
         for c, (cw, ch) in items:
-            ox_, oy_ = spec["place"][c["inst"]]
+            pl_ = spec["place"][c["inst"]]
+            ox_, oy_ = pl_[0], pl_[1]
             out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[ox_, oy_], outline_um=[cw, ch],
-                            orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
-                            pins_file="inputs/core_pins/%s.json" % c["module"]))
+                            orient=pl_[2] if len(pl_) > 2 else "R0", track_offset_um=list(CORE_TRACK_OFFSET),
+                            pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
         items = []
     for c, (cw, ch) in items:
         if x + dx + cw > w - HC_EDGE_UM:
@@ -393,7 +491,22 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
                 x_ = math.floor(round((w - (x_ + dx + cw) - dx) / G, 6)) * G
             if my:
                 y_ = math.floor(round((h - (y_ + dy + ch) - dy) / G, 6)) * G
-            o.append(dict(c, origin_um=[round(x_, 4), round(y_, 4)]))
+            oc = c.get("orient", "R0")
+            if spec.get("place"):
+                # S81-CORES: explicit placements carry orients; a mirrored block mirrors its cores too (faces keep
+                # facing their partners).  The shelf packer keeps R0 (unchanged output).
+                fx, fy = oc in ("MY", "R180"), oc in ("MX", "R180")
+                fx, fy = fx != bool(mx), fy != bool(my)
+                oc = {(False, False): "R0", (True, False): "MY", (False, True): "MX", (True, True): "R180"}[(fx, fy)]
+            to = list(c["track_offset_um"])
+            if oc in ("MX", "R180"):
+                # y-mirrored core: its H-layer (M4 / M6) pins keep the plan tracks when the sub-lattice y shift absorbs
+                # the outline height: R0 pins sit at y = 0.012 (mod 0.048) after the [., 0.012] offset, so the mirrored
+                # pin y' = dy + ch - 0.012 must be 0.024 (mod 0.048) (the core frame M6 tracks follow the same rule)
+                to[1] = round((0.036 - ch) % 0.048, 4)
+            if oc in ("MY", "R180") and spec.get("place"):
+                raise SystemExit("S81-CORES: x-mirrored explicit cores need a V-layer track shift (not implemented)")
+            o.append(dict(c, origin_um=[round(x_, 4), round(y_, 4)], orient=oc, track_offset_um=to))
         return o
 
     def legal(o):
@@ -408,7 +521,13 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
                     return False
         return True
     best = None
-    for mx, my in spec.get("mirrors", ((False, False), (False, True), (True, False), (True, True))):
+    variants = spec.get("mirrors", ((False, False), (False, True), (True, False), (True, True)))
+    if spec.get("mirror_by_bus"):
+        # S81-CORES: the cores' bus-side ports face N as placed; a type whose buses sit on its S face takes the y mirror
+        bf = {b.get("face") for b in buses if b.get("face") in ("N", "S")}
+        if len(bf) == 1:
+            variants = [v for v in variants if v[1] == (bf == {"S"})]
+    for mx, my in variants:
         o = mirrored(mx, my)
         if not legal(o):
             continue
@@ -420,6 +539,8 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=()):
     if best is None:
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
     rep["emitted"] = True
+    if k in CORE_CONNS:
+        CORE_CONNS_OUT[tn] = CORE_CONNS[k]
     rep["corner"] = "%s%s" % ("E" if best[2][0] else "W", "N" if best[2][1] else "S")
     rep["ft_stations_added"] = best[0]
     return best[1]
@@ -1576,7 +1697,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         for s_ in ftsl:
             if s_["layers"] is None:
                 s_.pop("layers")
-        hc_ = frame_hard_cores(rep.contents, buses) + nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl)   # S81-P9-HC
+        hc_ = frame_hard_cores(rep.contents, buses) + nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl, buses)   # S81-P9-HC
         for s_ in ftsl:
             k0 = s_["stations"]
             s_["stations"] = ft_stations_macro(s_, hc_, rep.w, rep.h)
@@ -1664,6 +1785,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
+    if CORE_CONNS_OUT:
+        json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "
                         "with no closed view)" % HC_CELLS_MAX, types=HC_REPORT),
               open(out / "hard_core_gaps.json", "w"), indent=1)
