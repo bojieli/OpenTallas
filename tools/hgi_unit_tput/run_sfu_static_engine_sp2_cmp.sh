@@ -3,8 +3,12 @@
 # Same sources / lock-step tb as run_sfu_static_engine_sp2.sh, but the op horizon comes from the COMPILER instead of the
 # tb hold: image = sfu_vector_calendar.compile_vector(leaf_split=LS) (LS 1 -> drain horizon + leaf_split_latency
 # sfu_op_horizon = 505 rows; LS 0 -> 502 rows) and the tb holds XH 0 extra rows.
-#   POS  LS=1: SP2_LOCKSTEP PASS (the compiler's +3 is sufficient)
-#   NEG  LS=0: must FAIL (the pinned horizon is short by the 3 edges the twin needs)
+#   LS=1: SP2_LOCKSTEP PASS with write_edges 448/448 inside the op's programme window (the compiler's +3 covers
+#         every output-group write of the twin).
+#   LS=0: the twin's last 3 output-group writes fall after the op's 502-row window (write_edges 445): the drain
+#         check still passes ONLY because this tb holds the last control row forever (no next op), so LS=0 is a
+#         window measurement, not a failing negative; the real negative (lane tags short) is the RDX1 mutant of
+#         run_sfu_static_engine_sp2.sh.
 # OUT=dir LS=0|1 [SFU_FROZEN_DIR=dir] tools/hgi_unit_tput/run_sfu_static_engine_sp2_cmp.sh
 set -euo pipefail
 mkdir -p "$OUT"; LS=${LS:?LS 0|1}

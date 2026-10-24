@@ -48,7 +48,7 @@ SHIFTS = {
     # TKM TP192 -> ot_hgi_coll_tkm_static_p #(PIPE 1)
     "tkm_done": (2, "TKM: finish/done/stat_cycles and every write +2 edges a TOPK_MERGE (same words/order)",
                  "ot_hgi_coll_tkm_static_p PIPE 1 (claude/hbm-p5-rtla-1023 e03ce0eb5): TKM_LOCKSTEP shift 2 PASS "
-                 "rank128_zeros + syn_sel (syn_cand pending), PIPE0 identity, mutant MUTP1 FAIL"),
+                 "rank128_zeros + syn_sel + syn_cand, PIPE0 identity, mutant MUTP1 FAIL"),
 }
 
 

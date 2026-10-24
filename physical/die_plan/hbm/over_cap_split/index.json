@@ -15,7 +15,7 @@
   },
   "ot_hgi_coll_tkm_m_tp192": {
    "file": "ot_hgi_coll_tkm_m_tp192.split.json",
-   "status": "BENCH-PARTIAL",
+   "status": "DONE",
    "plan_types": [
     "c0"
    ],
@@ -143,6 +143,7 @@
   }
  },
  "history": [
-  "HBM-P5-RTLB 10-23 @8f38f3246: pgslice pv0/pv8, hc_root, coll_q2 twins + benches (see each split.json rtl)"
+  "HBM-P5-RTLB 10-23 @8f38f3246: pgslice pv0/pv8, hc_root, coll_q2 twins + benches (see each split.json rtl)",
+  "HBM-P6-CMP 10-23: tkm DONE (syn_cand pinned 34801 / twin 34803, lock-step +2 PASS; run_tkm_e03ce0eb5)"
  ]
 }

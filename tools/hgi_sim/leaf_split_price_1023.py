@@ -26,6 +26,7 @@ from pathlib import Path
 from hgi_sim import plan_study_price_1017 as PS
 from hgi_sim import d4g_quadrant_1017 as Q
 from hgi_sim import ds_mtp_verify as V
+from hgi_sim import ds_die_split as S
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hbm_static"))
 import leaf_split_latency as LS  # noqa: E402
@@ -70,6 +71,29 @@ def cost_fn(scale=None):
 
 
 V.cost_fn = cost_fn
+
+# Qwen3-8B AR (ds_die_split._qwen_job) builds its own record cost on timing.cost and calls T.schedule directly: wrap the
+# cost_fn that job hands to T.schedule (one job at a time a pool worker, restored after).
+_QJ = S._qwen_job
+
+
+def _qwen_job(job):
+    orig = S.T.schedule
+
+    def sched(recs, *args, cost_fn=None, **kw):
+        def cf(r, dyn, L):
+            c, g, how = cost_fn(r, dyn, L)
+            a, why = added(r)
+            return c + a, g, how
+        return orig(recs, *args, cost_fn=cf, **kw)
+    S.T.schedule = sched
+    try:
+        return _QJ(job)
+    finally:
+        S.T.schedule = orig
+
+
+S._qwen_job = _qwen_job
 
 if __name__ == "__main__":
     print(f"LEAF_SPLIT enabled={LS.enabled()} table={ {k: v[0] for k, v in LS.SHIFTS.items()} }", file=sys.stderr)
