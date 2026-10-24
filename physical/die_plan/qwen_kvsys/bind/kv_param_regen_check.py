@@ -381,7 +381,57 @@ def r_unchanged(B):
                  note='P0_AGE / P1_AGE themselves are cal words (compiler): shift with the trunk regen (TRUNK_D rule).')]
 
 
-RULES = (r_ectl, r_vport, r_pv_trunk, r_ahub, r_rows, r_prog, r_unchanged)
+
+PV_PADS = None      # --pv-pads kv_pv_pads_<plan>.json (kv_pv_pads.py): landed = bound + pad on the listed members
+
+
+def r_pv_vdh(B):
+    """KV-P6-PV 10-23: pv_trunk_gen V / cmd / header meeting (qkd_pvw_die_t: V chunk DELTA[g] after header, COL_D[s])."""
+    pads = {}
+    if PV_PADS:
+        pads = {m['id']: m['pad'] for m in json.load(open(PV_PADS))['members'] if not m['id'].startswith('INNER:')}
+
+    def dl(x, m):
+        k = f"{x['sink']}.{m['sink_port']}[{','.join(f'{a}:{b}' for a, b in m['sink_bits'])}]<-{m['source']}@{m['asbuilt_stages']}"
+        return m['bound_stages'] + pads.get(k, 0) - m['asbuilt_stages']
+    res, viol = {}, []
+    for side, pvw in (('S', 'pvw_0'), ('N', 'pvw_1')):
+        ctl = pvw + '__u_ctl'
+        C, V, H = {}, collections.defaultdict(set), {}
+        for x in B.landing:
+            for m in x['members']:
+                src = m['source'].rsplit('.', 1)[0]
+                if m['source'] == ctl + '.cmd' and re.match(pvw + r'__u_s\d+_b\d+$', x['sink']):
+                    C.setdefault(x['sink'], set()).add(dl(x, m))
+                elif src.startswith('vport_') and 'out_v_' in m['source'] and re.match(pvw + r'__u_s\d+_b\d+$', x['sink']):
+                    V[(x['sink'], src)].add(dl(x, m))
+                elif src.startswith('vport_') and x['sink'] == ctl:
+                    H.setdefault(src, set()).add(dl(x, m))
+        sh = collections.Counter()
+        for (leaf, vp), dv in V.items():
+            if leaf in C and vp in H:
+                for a in dv:
+                    for c in C[leaf]:
+                        for h in H[vp]:
+                            sh[a - c - h] += 1
+        res[side] = dict(sorted(sh.items()))
+        if len(sh) > 1:
+            viol.append(f'{side}: V-D-H shift not one value over (vport, slice): {len(sh)} values {min(sh)}..{max(sh)}')
+    return [dict(param='PV V/cmd/header meeting (COL_D / DELTA invariant)',
+                 module='qkd_pvw_die_t frame (pv_<S|N>_* slices, hub_C u_pv[NS]_u_ctl)',
+                 instances_regex=r'pvw_\d__u_s\d+_b\d+', kind='instance',
+                 formula='for every vport k and slice s: d(V k->s) - d(cmd->s) - d(header k->ctl) = ONE constant per pair side '
+                         '(d = landed - as-built); as built -2/-1 (S), -1/0 (N) by column parity',
+                 buses=[dict(name='V', src='pv_<side>_<n>', dst='pv_<side>_<m>', leaf_regex=r'vport_\w+\.out_v_(lo|hi) -> pvw_*_s<c>_b<i>.pv2'),
+                        dict(name='cmd', src='hub_C', dst='pv_<side>_<m>', leaf_regex=r'pvw_\d__u_ctl\.cmd -> pvw_*_s<c>_b<i>.bc'),
+                        dict(name='header', src='pv_<side>_<n>', dst='hub_C', leaf_regex=r'vport_\w+\.out_(t|valid|epoch) -> pvw_*_u_ctl.in_*')],
+                 asbuilt=None, regen_kv35=res, pv_pads=PV_PADS, bound_ok=not viol, violations=viol,
+                 note='crossing members only (bus_groups); intra-partition V (binder ot_dp_dly) is checked by kv_pv_pads_selfcheck.py. '
+                      'Fix for the first proof: kv_pv_pads.py table (KV-P6 option (c)); TRUNK_D/FLAG_D then come from that table '
+                      '(summary TRUNK_D/FLAG_D), NOT from the TRUNK_D/FLAG_D rules above (those pad cmd to the as-built Delta and '
+                      'leave V misaligned).')]
+
+RULES = (r_ectl, r_vport, r_pv_trunk, r_ahub, r_rows, r_prog, r_unchanged, r_pv_vdh)
 
 
 def main():
@@ -389,7 +439,10 @@ def main():
     ap.add_argument('bind_dir')
     ap.add_argument('--write-rules', type=Path)
     ap.add_argument('--json', type=Path)
+    ap.add_argument('--pv-pads', help='kv_pv_pads.py table: evaluate the PV meeting rule on bound + pads')
     a = ap.parse_args()
+    global PV_PADS
+    PV_PADS = a.pv_pads
     B = Bind(a.bind_dir)
     rules = [r for f in RULES for r in f(B)]
     bad = 0
