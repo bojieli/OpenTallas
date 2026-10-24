@@ -111,8 +111,14 @@ def r3_band(text, master, k, hard, rsreg, log):
             tw = f'{rn[:-2]}_{bq[2:]}_0'
             w = int(re.search(r'_(\d+)_[A-Z]+$', mod).group(1))
             wn = f'{tw[2:]}_o'
-            L[n] += (f'\n    wire [{w - 1}:0] {wn};   // (g) far-qbank twin of {rn} (R3-INTERNAL, latency-neutral)'
-                     f'\n    {mod} {tw} (.i({c["i"]}), .o({wn}), .ck({c["ck"]}), .rs({c["rs"]}));')
+            # S81-P9 10-23: the twin and its original have identical D/ck/rs, so Yosys opt_merge folded the twin back
+            # (col_h10_r1__t1 kit synth: 0 u_y_xa_5_bs7_0 cells); BOTH become the kept relay ot_s81_rly_k (keep on the
+            # flop processes; a kept cell next to an unkept identical one is still merged, so the original is kept too)
+            kp = f'ot_s81_rly_k #(.W({w}), .RSREG({rsreg[mod]}), .ID'
+            L[n] = L[n].replace(f'{mod} {rn} (', f'{kp}(0)) {rn} (', 1)
+            assert kp in L[n], rn
+            L[n] += (f'\n    wire [{w - 1}:0] {wn};   // (g) far-qbank twin of {rn} (R3-INTERNAL, latency-neutral, kept: no merge)'
+                     f'\n    {kp}({int(bq[4:])})) {tw} (.i({c["i"]}), .o({wn}), .ck({c["ck"]}), .rs({c["rs"]}));')
             L[qn] = L[qn].replace(f'.{pin}({c["o"]})', f'.{pin}({wn})', 1)
             log.append(f'r{k} (g) {tw} -> {bq}.{pin} ({w} b)')
     text = '\n'.join(L)
