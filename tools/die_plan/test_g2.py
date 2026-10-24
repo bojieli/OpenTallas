@@ -463,7 +463,9 @@ def test_reset_epoch_flops_not_merged():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
+            # one epoch flop per station (ot_dp_ste is itself kept since CP1-R10: count the async epoch flops in the
+            # hierarchy totals; older yosys stat printed the flattened ot_dp_ep count)
+            assert re.search(r"(ot_dp_ep|\$_DFF_PN0_)\s+2\b", r.stdout), r.stdout
 
 
 def test_empty_grid_taps_dropped_at_assembly():
