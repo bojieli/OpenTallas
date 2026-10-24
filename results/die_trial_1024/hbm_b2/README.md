@@ -23,11 +23,11 @@ The "four clusters / one per stack" picture is the old r25gq monolithic die (4 P
 
 | step | result | verdict |
 |---|---|---|
-| (1) die top: abstracts, keep-outs, PDN, IO | see `top/`: die IO windows and real-view census; die assembly run by the IR sub-run | see top/ + ir/ READMEs |
+| (1) die top: abstracts, keep-outs, PDN, IO | 88/88 mock-LEF partitions placed exactly (0 overlap, 0 outside the die); die PDN M8/M9 + 6.2M M7-M8 vias per net; check_power_grid PASS on VDD and VSS; die-net GRT overflow 394, all from taps under the PHY_N / UCIe keep-outs; DRT not run. Tool bug: gen.py writes origins with %g, which rounds every origin >= 10 mm, so 23 macros were refused (see top/README.md) | PASS with findings |
 | (2) H-tree clock built in OpenROAD | 2045 taps; insertion SS/TT/FF 5.81 / 4.72 / 3.98 ns mean; seam skew without OCV 54.5 / 45.1 / 38.5 ps (68 / 56 / 48 % of 80); **with +/-5 % OCV after CPPR 594 / 483 / 407 ps** | **FAIL** (R4 seam <= 80 holds only without OCV) |
 | (3) die global route of all lane hops | **0 overflow** on M4-M9 at every own-logic derate tried (M4-M7 keep 50 / 25 / 10 / 3 %) vs **1,374,522** on the old monolithic die. Local hot windows exceed the plan's M8/M9 ft budget of 0.6 | **PASS** (route) / **WARN** (ft budget) |
 | (4a) die fabric STA, budget mode (flop -> flop per hop, GRT RC, ideal common clock) | unbuffered: TT -1045 ps, 2.85M slew violations. Window repair_design: SS -95.7 / TT +83.8 ps at +87 % cell area. Codex BUF12 every <= 200 um: TT +358.7 / FF +74.5 ps (40-path vehicle). Hold FF -2.07 ps on 1277 abutted hops **at zero skew** | **FAIL** as planned (needs repeaters + seam hold pads) |
-| (4b) IR (PDNSim, estimated power) | see `ir/` | see ir/README.md |
+| (4b) IR (PDNSim, estimated power 642.7 W = 1.39 W/mm2) | rail sum on exact-grid windows: hub 12.7 / PHY_N+corridor 29.6 PASS; SM 47.0 (31.7 interior); **SerDes io 146 / spb0 203 mV** vs 35 mV; full exact die NOT COMPLETED (pdngen > 4 h); coarse full die running | **FAIL** (SerDes at 12.1 W/mm2; SM edge) |
 
 ## (3) Die global route: the 0.55 / 1.70x question
 
@@ -146,7 +146,8 @@ What looks wrong:
 5. **Clock tree shape.**
    - A uniform leaf grid ignores tap density: leaves are wasted on the SMs and the mc corners, and the hub / band gets 1.3-mm local nets.
    - The trunk runs along the seam column, so the seam pairs share the trunk. But the trunk splits mid-row, so vertical neighbours (su | hub, sm | su) diverge high in the tree. That is where OCV hurts.
-6. **Empty corners.** mca/mcb (2 x 2 x 8.7 mm2) carry only clock leaves and the PHY escape. That is wasted area, as the spec already notes.
+6. **IR (`ir/ir_windows_VDD.png`).** The SerDes macros are the hot spots, not the HBM PHY. Each is 600 x 600 um at 12.1 W/mm2 on the plan's 5.6 %-coverage M8/M9 grid, giving 146-203 mV; they need a dense local grid / dedicated bumps. The PHY_N window passes only because bumps sit over the PHY; with a signal-only PHY bump field, the 8.6 mm wide band cannot be fed laterally. The SM die-edge VSS (47 mV) comes from the one-sided bump lattice at the edge.
+7. **Empty corners.** mca/mcb (2 x 2 x 8.7 mm2) carry only clock leaves and the PHY escape. That is wasted area, as the spec already notes.
 
 ## What would break at G4 today (numbers)
 
@@ -159,7 +160,8 @@ What looks wrong:
    - Needed: a lower-insertion distribution (a mesh or spine-grid at the band, or partition-local PLL/DLL taps) or seam-tolerant capture (forwarded_landing) on the 46 high-divergence pairs.
 3. **Ft repeaters.** 499k hops > 700 um need about 2-3 repeaters each: about 1-3M repeaters (Codex B2l: 3.04M buffers). They must sit in the crossed partitions' M8/M9 ft corridors, which are already at 0.73-0.86 raw in the hot windows. TT closes with BUF12 @ 200 um; SS does not with average RC.
 4. **M8/M9 ft budget.** The hot windows (hc-ring row and central window, spt PHY corridors, hub west face) are over the plan's 0.6 cut_avail. The partitions there have < 30 % of M8/M9 for their own straps and clock.
-5. **Not a problem:** global congestion (0 overflow at every derate, 677-688 m WL, 24-27 GB, minutes to 2 h on one host). The old 1.37M-overflow class is solved by B2's partitioning.
+5. **IR.** The SerDes macros are at 146-203 mV against the 35 mV budget, and the SM edge at 47 mV. The die grid needs local densification and a real bump map.
+6. **Not a problem:** global congestion (0 overflow at every derate, 677-688 m WL, 24-27 GB, minutes to 2 h on one host). The old 1.37M-overflow class is solved by B2's partitioning.
 
 ## Open / not run
 
