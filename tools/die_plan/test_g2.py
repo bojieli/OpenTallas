@@ -369,33 +369,55 @@ def test_per_tap_reset_synchronisers():
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
 
-def test_sink_anchored_taps_carry_sinks():
-    """KV-P6 10-23 (GEOM-REVIEW6 17:09: 11 of 20 grid taps empty): clock.tap_mode 'sinks' puts every tap at FIRM-planned
-    sinks (face registers, ft stations) within clock.tap_radius_um and <= clock.tap_max_sinks; no empty tap; the RTL
-    ports, kit pins, cap and budget follow the same list."""
+def test_grid_is_default_and_sink_taps_only_add():
+    """CP1 r8 RULING (COORD 10-23 21:26): the R4 tap GRID (<= 400 um, covering all sinks) is the default on every die;
+    clock.tap_mode 'grid+sinks' / 'sinks' (KV-P6) only ADDS sink-anchored taps after the grid taps, never replaces
+    them (CP1 r8: sink taps alone put 4.5-5.7k interior sinks on one tap, face-flop spread 133 ps)."""
     import copy
+    import math
     import gen_phys
     import taps
-    raw = copy.deepcopy(PAIR)
-    ck = raw["partition_types"]["fa"].setdefault("clock", {})
-    ck.update(tap_mode="sinks", tap_radius_um=120.0, tap_max_sinks=40)
-    P = schema.Plan(raw)
-    sinks = taps.planned_sinks(P, "fa")
-    tl = taps.sink_taps(P, "fa")
-    assert sinks and tl and tl[0][0] == "clk"
-    assert sum(t[3] for t in tl) == len(sinks) and all(t[3] > 0 for t in tl)            # no empty tap
-    assert all(t[4] <= 120.0 and t[3] <= 40 for t in tl) or len(tl) >= len(sinks)
-    assert [n for n, _, _ in schema.tap_grid(P, "fa")] == [t[0] for t in tl]
-    w, h = raw["partition_types"]["fa"]["outline_um"]
-    assert all(0 < x < w and 0 < y < h for _, x, y in schema.tap_grid(P, "fa"))
-    assert schema.tap_pitch(P, "fa") == 240.0
-    with tempfile.TemporaryDirectory() as d:
-        gen_phys.write_type_kit(P, "fa", d, [])
-        cfg = (Path(d) / "fa" / "config.mk").read_text()
-        assert "OT_TAP_MAX_SINKS = 40" in cfg
-        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())
-        assert bud["clock"]["tap_mode"] == "sinks" and len(bud["clock"]["taps"]) == len(tl)
-        assert all(t["planned_sinks"] > 0 for t in bud["clock"]["taps"])
+    P0 = schema.Plan(copy.deepcopy(PAIR))
+    w, h = PAIR["partition_types"]["fa"]["outline_um"]
+    assert P0.budgets["tap_pitch_um"] == 400.0 and schema.tap_pitch(P0, "fa") == 400.0
+    grid = schema.tap_grid(P0, "fa")
+    assert len(grid) == math.ceil(w / 400.0) * math.ceil(h / 400.0) and grid[0][0] == "clk"
+    for mode in ("grid+sinks", "sinks"):
+        raw = copy.deepcopy(PAIR)
+        raw["partition_types"]["fa"].setdefault("clock", {}).update(tap_mode=mode, tap_radius_um=120.0,
+                                                                     tap_max_sinks=40)
+        P = schema.Plan(raw)
+        tl = schema.tap_grid(P, "fa")
+        st = taps.sink_taps(P, "fa")
+        assert st and all(t[3] > 0 for t in st)                                 # sink taps carry planned sinks
+        assert tl[:len(grid)] == grid                                           # the grid stays, unchanged
+        assert len(tl) > len(grid) and len(tl) <= len(grid) + len(st)           # sink taps are additions
+        assert [n for n, _, _ in tl] == ["clk"] + [f"clk_t{i}" for i in range(1, len(tl))]
+        assert all(0 < x < w and 0 < y < h for _, x, y in tl)
+        assert schema.tap_pitch(P, "fa") == 400.0                               # grid pitch, not 2 x radius
+        with tempfile.TemporaryDirectory() as d:
+            gen_phys.write_type_kit(P, "fa", d, [])
+            cfg = (Path(d) / "fa" / "config.mk").read_text()
+            assert "OT_TAP_MAX_SINKS = 40" in cfg and "OT_TAP_PITCH_UM = 400" in cfg
+            bud = json.loads((Path(d) / "fa" / "budget.json").read_text())["clock"]
+            assert bud["grid_taps"] == len(grid) and len(bud["taps"]) == len(tl)
+            assert [t["kind"] for t in bud["taps"]] == ["grid"] * len(grid) + ["sinks"] * (len(tl) - len(grid))
+    with tempfile.TemporaryDirectory() as d:                                    # default kit: grid only, cap 3000
+        gen_phys.write_type_kit(P0, "fa", d, [])
+        assert "OT_TAP_MAX_SINKS = 3000" in (Path(d) / "fa" / "config.mk").read_text()
+        bud = json.loads((Path(d) / "fa" / "budget.json").read_text())["clock"]
+        assert bud["tap_mode"] == "grid" and len(bud["taps"]) == len(grid) and bud["sink_taps"] == []
+
+
+def test_seam_hold_padding_min_input_delay():
+    """CP1 r9 seam-hold padding: every kit input gets min input delay -clock.insertion_tol_ps vs vclk (the neighbour's
+    face flop may launch at the fast end of the insertion window, no clk-to-q / wire credit), so the kit hold-pads
+    seam inputs (r8: 0 ps padded nothing, seam hold -50 TT)."""
+    import gen_phys
+    P = schema.Plan(PAIR)
+    sdc = gen_phys.sdc(P, "fa", gen_phys.type_pins(P, "fa"))
+    tol = P.clock["insertion_tol_ps"]
+    assert tol > 0 and f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in" in sdc
 
 
 def test_tap_balance_to_plan_insertion_and_seam_uncertainty_once():

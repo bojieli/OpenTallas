@@ -188,9 +188,16 @@ def t_lib(ps):
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
-# min input delay (hold) of every partition input vs vclk (= budgeted insertion): neighbour launch at ins - tol
-# (-40 ps) + min clk-to-q + abutted wire (~+40 ps) -> 0 ps
-HOLD_IN_MIN_PS = 0.0
+# min input delay (hold) of every partition input vs vclk (= budgeted insertion).  CP1 r8 (10-23 21:22): with 0 ps
+# (neighbour launch at ins - tol, credited back by clk-to-q + abutted wire) the kits padded nothing and the seam hold
+# failed -50 TT / -48 FF.  Seam-hold padding (CP1 r9): the neighbour's face flop may launch at the fast end of the
+# insertion window with NO clk-to-q / wire credit -> min input delay = -clock.insertion_tol_ps, so the receiving kit
+# pads every seam input for the whole window.
+
+
+def hold_in_min_ps(P):
+    """seam-hold padding: the kit's min input delay vs vclk (ps)."""
+    return -float(P.clock["insertion_tol_ps"])
 
 
 # COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
@@ -199,9 +206,8 @@ UNC_SPLIT = 0.5
 
 
 def _tap_cap(t):
-    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks for sink-anchored taps, else 3000 (COORD 10-23)."""
-    ck = t.get("clock", {})
-    return int(ck.get("tap_max_sinks", 1500)) if ck.get("tap_mode") == "sinks" else 3000
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps)."""
+    return int(t.get("clock", {}).get("tap_max_sinks", 3000))
 
 
 def sdc(P, tn, pins):
@@ -238,8 +244,8 @@ def sdc(P, tn, pins):
                 f"set_output_delay {FT_HOP_IN_SHARE * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
-    # short clk-to-q + abutted wire, i.e. ~at the budgeted insertion: min input delay HOLD_IN_MIN_PS on every input
-    out += (f"set_input_delay -min {t_lib(HOLD_IN_MIN_PS):.4f} -clock vclk $non_clk_in\n")
+    # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
+    out += (f"set_input_delay -min {t_lib(hold_in_min_ps(P)):.4f} -clock vclk $non_clk_in\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -393,10 +399,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
                signal_max=top,
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
                           insertion_tol_ps=P.clock["insertion_tol_ps"],
-                          # one clock port per tap (snapped; sink-anchored taps carry their planned sinks)
+                          # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
                           tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
-                          taps=(T.report(P, tn)["taps"] if t.get("clock", {}).get("tap_mode") == "sinks" else
-                                [dict(name=n, xy=[x, y]) for n, x, y in S.tap_grid(P, tn)]),
+                          tap_pitch_um=S.tap_pitch(P, tn), grid_taps=len(S._grid_taps(P, tn)),
+                          taps=[dict(name=n, xy=[x, y],
+                                     kind="grid" if i < len(S._grid_taps(P, tn)) else "sinks")
+                                for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
+                          sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
                           uncertainty_split=UNC_SPLIT),
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
