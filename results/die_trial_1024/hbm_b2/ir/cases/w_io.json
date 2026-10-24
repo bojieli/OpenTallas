@@ -1,0 +1,99 @@
+{
+ "interior_rail_sum_mv": 145.868,
+ "interior_note": "tiles >= one per-rail bump pitch (63.64 um) from the die edge: the checkerboard bump lattice (VSS at k x 63.64, VDD at 31.82 + k x 63.64) loses its die-edge VSS row/column (x = 0 / y = 0), so edge tiles see one-sided bump support (edge artefact of the assumed bump map)",
+ "manifest": {
+  "schema": "opentallas.die_trial.ir_case.v1",
+  "plan": "physical/die_plan/hbm_arch/B2r2/die_plan.json",
+  "power": "results/die_trial_1024/hbm_b2/ir/power_map.json",
+  "power_total_w": 642.71,
+  "inner_um": [
+   0.0,
+   6048.0,
+   950.4,
+   10195.2
+  ],
+  "solved_um": [
+   0.0,
+   5918.400000000001,
+   1080.0,
+   10324.800000000001
+  ],
+  "guard_um": 127.27922061357854,
+  "tile_um": 43.2,
+  "loads": 2550,
+  "load_w": 7.9937,
+  "grid": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "scale": 1.0,
+   "per_net_coverage": 0.05555555555555555,
+   "plan_exact": true
+  },
+  "partition_pg": "mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads",
+  "bumps": {
+   "array_um": 45.0,
+   "per_net_pitch_um": 63.63961030678927,
+   "size_um": 20.0,
+   "n": {
+    "VDD": 1173,
+    "VSS": 1104
+   },
+   "removed_in": []
+  },
+  "voltage_v": 0.7,
+  "budget_mv": 35.0
+ },
+ "pdn_pass": true,
+ "pg_connected": {
+  "VDD": true,
+  "VSS": true
+ },
+ "done": true,
+ "rails": {
+  "VDD": {
+   "nodes": 2112,
+   "worst_mv": 59.999,
+   "worst_at_um": [
+    712.61,
+    6372.0
+   ],
+   "worst_inst": "T_16_10",
+   "interior_worst_mv": 59.999,
+   "interior_worst_at_um": [
+    712.61,
+    6372.0
+   ]
+  },
+  "VSS": {
+   "nodes": 2112,
+   "worst_mv": 85.869,
+   "worst_at_um": [
+    410.59,
+    6328.8
+   ],
+   "worst_inst": "T_9_9",
+   "interior_worst_mv": 85.869,
+   "interior_worst_at_um": [
+    410.59,
+    6328.8
+   ]
+  }
+ },
+ "rail_sum_mv": 145.868,
+ "verdict": "FAIL",
+ "budget_mv": 35.0,
+ "runtime": {
+  "elapsed": "0:56.13",
+  "peak_rss_gb": 1.71,
+  "phases": [
+   "OT_PDN PASS 10 s",
+   "OT_IR net=VDD PASS 13 s",
+   "OT_IR net=VSS PASS 14 s"
+  ]
+ }
+}
