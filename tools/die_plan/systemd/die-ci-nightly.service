@@ -3,5 +3,5 @@ Description=OpenTallas DIE-CI: nightly full whole-die run (G2 on every die)
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -lc '$HOME/OpenTallas/tools/die_plan/die_ci_cron.sh nightly'
+ExecStart=/bin/bash -lc '%h/OpenTallas/tools/die_plan/die_ci_cron.sh nightly'
 Nice=5
