@@ -27,7 +27,7 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "52c904560f",
+ "repo_rev": "fa182ae8dc",
  "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [
@@ -38,5 +38,5 @@
   "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) carries the sticky state; the port flop fault takes the SAME next state (fault_q | events) from fault_q, so its Q drives only the port (face_guard). Same reset, same edge: fault == fault_q every cycle; 0 added cycles; ports unchanged.",
   "sha256": "2d0b645098a9fb325a8059f05fb5b5f2982b0a57eda65891eae03d261c33adfd"
  },
- "kit_hash": "9ee943715731d64c"
+ "kit_hash": "58805ce99a88be93"
 }
