@@ -196,7 +196,9 @@ def center_sequencers(lst):
                 rom['origin_um'] = [round(x, 4), y]
                 x += 51.84
         elif seq['inst'] == 'u_r0.u_s0' and seq['origin_um'] == [552.96, 146.88]:
-            seq['origin_um'] = [345.6, 120.96]
+            # S81 g3k3 review 10-24: 345.6 put u_s0.st -> u_t0.c0 (2 b, station at x 1140) at 905 um > 750; 535.68 keeps
+            # it ~715 um and the 7-ROM address fan-out at <= ~485 um (was 528 at 552.96, 295 at 345.6)
+            seq['origin_um'] = [535.68, 120.96]
         else:
             continue
         errors = check(lst, 'center sequencers') + gap_check(lst, 'center sequencers')
