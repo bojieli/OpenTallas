@@ -5,7 +5,7 @@ Every kit is identical except N and the outline: outline area = N x the closed l
 std-cell density), square, snapped up to the 2.16-um lattice; routing M2-M7 (partition layers, die M8/M9 above);
 PG = the closed tile's M1/M2 rails + M5 stripes; route SDC 770 ps / 60 / 25 ps, sign-off 833.333 ps (the lane8 kit's
 clock.sdc / signoff.sdc and hooks, unchanged).  NC = threads given to OpenROAD (NUM_CORES).
-usage: gen_kits.py N [N ...] [--nc 48]"""
+usage: gen_kits.py N [N ...] [--nc 48] [--suffix _t16]"""
 import argparse, math, pathlib, shutil
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -28,9 +28,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("n", type=int, nargs="+")
     ap.add_argument("--nc", type=int, default=48)
+    ap.add_argument("--suffix", default="", help="kit name suffix (e.g. _t16 for a thread-count variant)")
     a = ap.parse_args()
     for n in a.n:
-        name = f"pc_rep_n{n}"
+        name = f"pc_rep_n{n}{a.suffix}"
         kit = HERE.parent / "kits" / name
         kit.mkdir(parents=True, exist_ok=True)
         for f in ("clock.sdc", "signoff.sdc", "pre_cts.tcl", "pre_grt.tcl", "post_drt.tcl", "pdn.tcl"):
