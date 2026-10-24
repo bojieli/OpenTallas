@@ -17,6 +17,8 @@ Mutants rejected. Evidence xdie/r256, xdie/ar, ar_main, ar_main_leafsplit (ar_in
 Replays are component_probe (COLL/SU/HC records only; SM/ATT/DMA/IDX/FUSED format_open) -> even a PASS would not be a
 native layer qualification.
 - rec2_kq (COLL) PASS 287/287; DS L14_x4 PASS 3822/3822 (prior TOKi, same binary).
+- Leaf-split (P7) r18h5_ld_split slice, rebuilt on epyc2 (split/): rec2_kq PASS 287/287 (663 stream edges),
+  ls_ds_l14_x4 PASS 3822/3822 (1546 stream edges); corrected_rec2 (non-leaf-split-emitted replay) FAIL 72/287 as expected.
 - DS L0 FAIL 667/4745 (_x1 672/1785, _x2 5/3831); L2 FAIL 1305/3234 (_x1 38/4217, _x2 5/4062); L14_x3 FAIL 5/5847.
 - Class map (priced_layers 1018): every COLL record PASS; every SU.VOP record FAIL (dest never written);
   every HC_MIX record FAIL (hc_SW hcq_fault).
