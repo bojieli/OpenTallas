@@ -1931,7 +1931,7 @@ def declare_su_hard_cores(P, outdir, su_directed):
     pdir = Path(outdir) / "cores" / "su"
     pdir.mkdir(parents=True, exist_ok=True)
     for tn, t in sorted(P.types.items()):
-        m = re.match(r"^sl([we])_(su_l[01]|su_c)$", tn)
+        m = re.match(r"^sl([we])_(su_l[01]|su_c)(?:_v[0-9]+)?$", tn)
         if not m:
             continue
         side, reg = m.groups()
