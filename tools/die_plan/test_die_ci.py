@@ -94,7 +94,7 @@ def test_ir_pdnsim_replaces_stated_drop():
     m = json.loads(json.dumps(C.DEFAULT_MARGINS))
     f0, sens, drop = C.ir_factor(m)
     assert drop == 0.05 and f0 == pytest.approx(1 + 0.05 * sens, abs=1e-4)
-    m["ir"]["pdnsim"] = dict(worst_drop_mv=12.6)
+    m["ir"]["pdnsim"] = dict(worst_drop_mv=14.0)
     f1, _, drop1 = C.ir_factor(m)
     assert drop1 == pytest.approx(0.02) and f1 < f0
 
@@ -246,3 +246,13 @@ def test_overall_verdicts():
     assert C.overall({"a": {"status": "PASS"}, "b": {"status": "NOT RUN (x)"}}) == "INCOMPLETE"
     assert C.overall({"a": {"status": "PARTIAL (x)"}}) == "INCOMPLETE"
     assert C.overall({"a": {"status": "FAIL"}, "b": {"status": "NOT RUN"}}) == "FAIL"
+
+
+def test_policy_corners_tt_setup_ff_hold():
+    """owner 2026-10-24: setup at TT, hold at FF; SS is information only and never gates."""
+    assert C.POLICY["setup_corner"] == "TT" and C.POLICY["hold_corner"] == "FF"
+    m = C.load_margins(HERE / "die_ci_margins.json")
+    assert C.xtalk_ps(m, 30.0)["setup_ps"] == pytest.approx(
+        abs(m["xtalk"]["mcf_setup"] - 1) * m["lib"]["TT"]["r_eff_ps_per_ff"] * m["xtalk"]["cc_frac"] * m["xtalk"]["c_per_um_ff"] * 60, abs=0.01)
+    src = (HERE / "die_ci.py").read_text()
+    assert '"--corner", "TT", "--corner", "FF"' in src and 'for c in ("TT", "FF")' in src
