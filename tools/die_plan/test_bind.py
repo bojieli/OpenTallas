@@ -486,3 +486,27 @@ def test_clock_roles(tmp_path):
     top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
     assert ".clk(clk_clk_q_B)" in top and ".clk(clk_clk_q_A)" in top
     assert verify(out)["verdict"] == "PASS"
+
+
+def test_kit_rtl(tmp_path):
+    """bind.py kit-rtl (COORD 18:04 G3 kit RTL): the bound partition module inside a wrapper with the plan type's module
+    name and exact plan pins + a filelist; instances whose straps differ need --instance; gen.py phys --kit-rtl takes it"""
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    P = json.loads(plan.read_text())
+    tn = "bt_ta" if "bt_ta" in P["partition_types"] else sorted(P["partition_types"])[0]
+    t = P["partition_types"][tn]
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", tn]) != 0       # two instances, IDs differ
+    top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+    inst = re.findall(r"^\s*\w+ #\(.*?\) (\w+) \(", top, re.M)[0]
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", tn, "--instance", inst, "--kit", str(kd)]) == 0
+    fl = (kd / "kit_rtl.f").read_text().split()
+    assert Path(fl[0]).name == f"{t['module']}.sv" and all(Path(f).is_file() for f in fl)
+    w = (kd / f"{t['module']}.sv").read_text()
+    assert re.search(rf"^module {t['module']} \(", w, re.M) and " u_bound (" in w
+    for b in t.get("buses", []):
+        assert re.search(rf"\b{b['name']}\b", w), b["name"]
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    assert man["plan_module"] == t["module"] and man["params"]

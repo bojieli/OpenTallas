@@ -1228,7 +1228,9 @@ class Binder:
         if js.get("die") != die:
             self.errors.append(f"R8_TABLE {f}: die {js.get('die')} != plan die {die}")
             return
-        R8.EXEMPT[:] = [re.compile(x) for x in js.get("exempt", [])]    # pins the table left outside R8 (r8.py --exempt)
+        # pins the table left outside R8: r8.py --exempt (recorded in the table) + asbuilt.land_r8_exempt (a die's own
+        # bus-group prep, e.g. KV r8_fault_exempt.py); used only to excuse crossing bits the table does not list
+        R8.EXEMPT[:] = [re.compile(x) for x in js.get("exempt", []) + self.ab.get("land_r8_exempt", [])]
         excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         cidx = self.cell_index()
         st = self.pad_stats
@@ -2157,6 +2159,145 @@ def cmd_portbind(a):
     return r.returncode
 
 
+def cmd_kit_rtl(a):
+    """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
+    The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
+    flops, landing pads, regenerated parameters) inside a port-only plan wrapper named like the plan type module, with
+    the plan's exact pins (gen_rtl.wrapper order: clk, R4 tap pins, arst_n, buses [width + epoch], ft slots _i/_o).
+    A bound port is matched to the plan bus of the same name; a bound port narrower than the plan bus uses the low data
+    bits + the plan epoch bit; spare plan input bits are unread, spare plan OUTPUT bits are driven 0 and listed (no
+    input is ever tied).  Bound-only pins (die IO io_*, reset spines ri_*, extra clock roles clk_*) stay wrapper pins.
+    Writes DIR/<plan module>.sv, DIR/kit_rtl.f (absolute paths: wrapper, bound module, bind_cells, the leaf sources the
+    bound module reaches) and DIR/kit_rtl.json; gen.py phys --kit-rtl T=DIR/kit_rtl.f consumes the filelist."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import gen_rtl
+    import schema as SC
+    raw = load_plan(a.plan)
+    try:
+        P = SC.Plan(raw)                       # full G0 plan: epochs + R4 tap pins as gen_rtl.wrapper emits them
+    except KeyError:
+        P = None                               # a bind-only plan (no floorplan): data/ctl buses carry an epoch, no taps
+    out = Path(a.out)
+    tn = a.type
+    if tn not in raw["partition_types"]:
+        raise BindError(f"kit-rtl: no partition type {tn} in the plan")
+    t = raw["partition_types"][tn]
+    rep = json.loads((out / "bind_report.json").read_text())
+    key = a.variant or tn
+    variants = sorted(k for k in rep["types"] if k == tn or k.startswith(tn + "__"))
+    if key not in rep["types"]:
+        raise BindError(f"kit-rtl: bound type {key} not in {out}/bind_report.json (variants: {variants})")
+    bmod = rep["types"][key]["module"]
+    bfile = out / "rtl" / f"{bmod}.sv"
+    btxt = bfile.read_text()
+    bports = [(m.group(1), int(m.group(2)) + 1 if m.group(2) else 1, m.group(3)) for m in
+              re.finditer(r"^\s*(input|output)\s+wire\s+(?:\[(\d+):0\]\s+)?(\w+)", btxt, re.M)]
+    bmap = {n: (d, w) for d, w, n in bports}
+    eps = gen_rtl.bus_epochs(P) if P else {}
+    plan = []                                  # (dir, name, width incl epoch, data width, epoch?)
+    for b in t.get("buses", []):
+        ep = eps.get((tn, b["name"]), b.get("kind", "data") in ("data", "ctl"))
+        plan.append(("input" if b["dir"] == "in" else "output", gen_rtl.sv_id(b["name"]), b["width"] + int(ep), b["width"], ep))
+    for sl in t.get("ft_slots", []):
+        for sfx, d in (("_i", "input"), ("_o", "output")):
+            ep = eps.get((tn, sl["name"] + sfx), True)
+            plan.append((d, gen_rtl.sv_id(sl["name"] + sfx), sl["width"] + int(ep), sl["width"], ep))
+    taps = [n for n, _x, _y in SC.tap_grid(P, tn)[1:]] if P else []
+    ports = [("input  wire clk", "clock entry: spine tap 0")] + \
+        [(f"input  wire {n}", "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)") for n in taps]
+    ports.append(("input  wire arst_n", "die reset"))
+    conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
+    seen = {"clk", "arst_n"}
+    for d, n, W, Wd, ep in plan:
+        ports.append((f"{d:6} wire [{W - 1}:0] {n}", f"plan bus: {Wd} data" + (f" + epoch [{Wd}]" if ep else "")))
+        if n not in bmap:
+            missing.append(n)
+            if d == "output":
+                body.append(f"    assign {n} = {W}'d0;  // plan bus with no bound bit (spare lane)")
+                spare.append(dict(port=n, bits=W))
+            continue
+        seen.add(n)
+        bd, bw = bmap[n]
+        if (bd == "input") != (d == "input"):
+            raise BindError(f"kit-rtl {tn}: {n} is {bd} in {bmod} but {d} in the plan")
+        bwd = bw - 1 if ep else bw              # bound data width (bound ports carry the epoch at the top bit)
+        if bwd > Wd:
+            raise BindError(f"kit-rtl {tn}: bound {n} carries {bwd} data bits > plan width {Wd}")
+        if bwd < Wd:
+            narrow.append(dict(port=n, plan=Wd, bound=bwd))
+        if d == "input":
+            sig = f"{{{n}[{W - 1}], {n}[{bwd - 1}:0]}}" if ep and bwd else (f"{n}[{W - 1}]" if ep else f"{n}[{bwd - 1}:0]")
+            conns.append(f".{n}({sig})")
+        else:
+            w = f"b_{n}"
+            body.append(f"    wire [{bw - 1}:0] {w};")
+            if ep:
+                body.append(f"    assign {n}[{W - 1}] = {w}[{bw - 1}];" + (f"\n    assign {n}[{bwd - 1}:0] = {w}[{bwd - 1}:0];" if bwd else ""))
+            else:
+                body.append(f"    assign {n}[{bwd - 1}:0] = {w}[{bwd - 1}:0];")
+            if bwd < Wd:
+                body.append(f"    assign {n}[{Wd - 1}:{bwd}] = {Wd - bwd}'d0;  // spare plan bits (bound carries {bwd})")
+                spare.append(dict(port=n, bits=Wd - bwd))
+            conns.append(f".{n}({w})")
+    extra = []
+    for d, w, n in bports:
+        if n in seen:
+            continue
+        extra.append(dict(port=n, dir=d, width=w))
+        ports.append((f"{d:6} wire [{w - 1}:0] {n}", "bound-only pin (die IO / reset spine / clock role): not a plan bus"))
+        conns.append(f".{n}({n})")
+    # per-instance parameters (straps) of the bound module, as the bound top passes them: one hardened kit = one value set
+    top = (out / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv").read_text()
+    pinst = {m.group(2): (m.group(1) or "").strip() for m in
+             re.finditer(rf"^\s*{re.escape(bmod)}\s*(#\(.*?\))?\s*(\w+)\s*\(", top, re.M)}
+    if a.instance:
+        if a.instance not in pinst:
+            raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
+        pset = pinst[a.instance]
+    elif len(set(pinst.values())) > 1:
+        raise BindError(f"kit-rtl {tn}: instances of {bmod} carry different parameters {sorted(set(pinst.values()))[:3]}: "
+                        "pass --instance (one kit per value set)")
+    else:
+        pset = next(iter(pinst.values()), "")
+    mod = t["module"]
+    kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
+    kd.mkdir(parents=True, exist_ok=True)
+    if bmod == mod:          # bound module and plan module share a name: the kit carries the bound module renamed
+        nb = bmod + "_bound"
+        (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
+        bfile, bmod = kd / f"{nb}.sv", nb
+    txt = (f"// GENERATED by tools/die_plan/bind.py kit-rtl: G3 kit RTL of plan type {tn} = bound module {bmod}\n"
+           f"// ({out.name}) inside a port-only plan wrapper.  Do not edit.\n`timescale 1ns/1ps\n`default_nettype none\n"
+           f"module {mod} (\n" + "\n".join(f"    {d}{',' if i < len(ports) - 1 else ' '}  // {c}" for i, (d, c) in
+                                             enumerate(ports)) + "\n);\n" + "\n".join(body) + "\n" +
+           f"    {bmod} {pset + ' ' if pset else ''}u_bound (\n        " + ",\n        ".join(conns) + "\n    );\nendmodule\n`default_nettype wire\n")
+    (kd / f"{mod}.sv").write_text(txt)
+    # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
+    ab0 = raw["asbuilt"]
+    base = plan_base(a.plan, raw)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
+        rep.get("extra_lib", [])
+    leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
+                   set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
+    cl, cl_missing = E.closure(leafm, idx, prefer)
+    if cl_missing:
+        raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
+    files = [Path(f).resolve() for f in cl]
+    rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
+    fl = [kd / f"{mod}.sv", bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] + [f for f in files if f.name != "bind_cells.sv"]
+    (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
+    man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
+               plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl])
+    (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
+    print(json.dumps(dict(kit=str(kd), module=mod, bound=bmod, variants=len(variants), files=len(fl),
+                          spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
+                          bound_only=[x["port"] for x in extra])))
+    return 0
+
+
 def lane_pad(L):
     """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
@@ -2192,6 +2333,14 @@ def _plan_expect(B, p, a):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
+    k = sub.add_parser("kit-rtl", help="G3 kit RTL: bound partition module inside the plan wrapper + filelist")
+    k.add_argument("plan")
+    k.add_argument("--out", required=True, help="the bind output directory")
+    k.add_argument("--type", required=True)
+    k.add_argument("--variant", help="a bound type variant (T__vN) when the type split")
+    k.add_argument("--kit", help="output directory (default OUT/kit_rtl/TYPE)")
+    k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
+    k.add_argument("--asbuilt")
     for n in ("elab", "bind", "verify", "all", "portbind"):
         s = sub.add_parser(n)
         s.add_argument("plan")
@@ -2202,6 +2351,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     _AB_OVERRIDE["path"] = a.asbuilt
     try:
+        if a.cmd == "kit-rtl":
+            return cmd_kit_rtl(a)
         if a.cmd == "elab":
             return cmd_elab(a)
         if a.cmd == "bind":
