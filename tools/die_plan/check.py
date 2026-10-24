@@ -549,9 +549,7 @@ def check_clock_reset(P, R):
         if t.get("hard"):
             continue
         ck = t.get("clock")
-        if not ck or "tap_um" not in ck:
-            R.err("clock", f"type {tn}: no clock tap (one root per partition)", type=tn)
-        else:
+        if ck and "tap_um" in ck:
             w, h = t["outline_um"]
             x, y = ck["tap_um"]
             if not (0 <= x <= w and 0 <= y <= h):
@@ -561,8 +559,6 @@ def check_clock_reset(P, R):
             far = max(abs(x - a) + abs(y - b) for a in (0, w) for b in (0, h))
             if far > 2 * P.reach:
                 R.warn("clock", f"type {tn}: farthest boundary point {far:.0f} um from the tap (> 2 hops)", type=tn)
-        if "reset" not in t:
-            R.err("reset", f"type {tn}: no reset synchronizer entry (one per partition)", type=tn)
         insts = {c["inst"] for c in t.get("contents", [])}
         for b in t.get("buses", []):
             lf = b.get("leaf")
@@ -687,7 +683,8 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             out["core_pins_off_track"] += bad
             if bad > 5:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: {bad} pins off the plan tracks", type=tn)
-    if out["types_no_cells"]:
+    out["no_cells"] = no_cells
+    if False and out["types_no_cells"]:
         R.warn("hard_cores", f"{out['types_no_cells']} types without a cell estimate (type.cells, contents[].cells or "
                f"a cells.py evidence file): the > {CORE_CELLS_MAX}-cell hard-core rule is unchecked for them: "
                f"{', '.join(no_cells[:30])}{' ...' if len(no_cells) > 30 else ''}")
@@ -881,6 +878,142 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
     return out
 
 
+# ------------------------------------------------------------------------------------- plan completeness
+COMPLETE_FIELDS = ("cells", "track_offset", "clock_method", "common_latency", "insertion_target", "reset_sync",
+                   "face_flop", "internal_station")
+
+
+def _box_dist(pt, box):
+    """Manhattan distance from a point to a box (x0, y0, x1, y1); 0 inside."""
+    x, y = pt
+    return max(box[0] - x, 0, x - box[2]) + max(box[1] - y, 0, y - box[3])
+
+
+def _hops_ok(a, regs, b, smax):
+    pts = [tuple(a)] + [tuple(r) for r in regs] + [tuple(b)]
+    return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])) <= smax + EPS
+
+
+def check_completeness(P, R, no_cells=(), max_msgs=5):
+    """PLAN COMPLETENESS (COORD 10-23 ~20:00): G0 is a completeness check; a missing field is an ERROR.
+    Per partition type (hard IP types: cells / clock / reset / face flops not required):
+      cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
+      track_offset     every hard_cores[] entry declares track_offset_um (pins on tracks / > 400k: hard_cores check)
+      clock_method     type.clock with tap_um, taps[] or tap_mode
+      insertion_target a type clock.insertion_ps equal to the die common latency (one die-wide target, R4 b)
+      reset_sync       type.reset (one async-assert / sync-deassert synchronizer)
+      face_flop        every type bus is carried by a planned port with face geometry (face + window + layers), so
+                       the R2 face flop is FIRM at its pin (the schema pass already refuses unbound buses and ports
+                       without geometry; this re-counts them for the completeness table)
+      internal_station every estimated internal reg-reg connection > ft_station_max_um (face window -> leaf / core
+                       box, core <-> core net) has internal_stations[] whose hops are all <= the limit (R3-INTERNAL)
+    Die: clock.common_latency_ps (R4 owner rule)."""
+    miss = {f: 0 for f in COMPLETE_FIELDS}
+    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    n_msg = defaultdict(int)
+
+    def bad(field, tn, msg):
+        miss[field] += 1
+        n_msg[field] += 1
+        if n_msg[field] <= max_msgs * 4:
+            R.err("complete", f"[{field}] " + (f"type {tn}: " if tn else "") + msg, type=tn, field=field)
+    raw_ck = P.raw.get("clock", {})
+    common = raw_ck.get("common_latency_ps")
+    if common is None:
+        bad("common_latency", None, "die clock.common_latency_ps missing (R4: one die-wide common latency target "
+            "every partition balances its face-flop insertion to; vclk latency of the IO SDC)")
+    no_cells = set(no_cells)
+    ends = defaultdict(set)              # type -> buses used by a port
+    for pr in P.ports.values():
+        for side in ("src", "dst"):
+            e = pr[side]
+            if e["part"] != DIE_PART and e["part"] in P.parts:
+                ends[P.parts[e["part"]]["type"]].add((e["bus"], pr["id"], "face" in pr and "window_um" in pr
+                                                      and "layers" in pr))
+    for tn, t in P.types.items():
+        hard = bool(t.get("hard"))
+        if tn in no_cells and not hard:
+            bad("cells", tn, "no cell estimate (type.cells, contents[].cells or a cells.py evidence file)")
+        for hc in t.get("hard_cores", []):
+            if "track_offset_um" not in hc:
+                bad("track_offset", tn, f"hard core {hc['inst']}: no track_offset_um (state [0, 0] if on the plan "
+                    "tracks)")
+        if hard:
+            continue
+        ck = t.get("clock") or {}
+        if not ({"tap_um", "taps", "tap_mode"} & set(ck)):
+            bad("clock_method", tn, "no clock method (clock.tap_um, clock.taps[] or clock.tap_mode)")
+        if common is not None and "insertion_ps" in ck and abs(float(ck["insertion_ps"]) - float(common)) > EPS:
+            bad("insertion_target", tn, f"clock.insertion_ps {ck['insertion_ps']:g} != die common latency "
+                f"{float(common):g} (R4: one die-wide target)")
+        if "reset" not in t:
+            bad("reset_sync", tn, "no reset synchronizer entry (one per partition)")
+        used = {bus for bus, _pid, _ok in ends.get(tn, ())}
+        nf = [pid for bus, pid, ok in ends.get(tn, ()) if not ok] + \
+             [b["name"] for b in t.get("buses", []) if b["name"] not in used]
+        if nf:
+            bad("face_flop", tn, f"{len(nf)} bus(es) with no planned port / face geometry, e.g. {nf[0]}: the R2 "
+                "face flop has no FIRM pin site")
+        # internal reg-reg length estimate (lower bound: point to box / box to box, Manhattan)
+        boxes = {}
+        for hc in t.get("hard_cores", []):
+            dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+            x0, y0 = hc["origin_um"][0] + dx, hc["origin_um"][1] + dy
+            boxes[hc["inst"]] = (x0, y0, x0 + hc["outline_um"][0], y0 + hc["outline_um"][1])
+        for c in t.get("contents", []):
+            if c["inst"] not in boxes and "origin_um" in c and "outline_um" in c:
+                x0, y0 = c["origin_um"]
+                boxes[c["inst"]] = (x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1])
+        if not boxes:
+            continue
+        ist = t.get("internal_stations", [])
+        for e in ist:
+            if not _hops_ok(e["from_um"], e["regs_um"], e["to_um"], smax):
+                bad("internal_station", tn, f"internal_stations {e.get('conn', e['from_um'])}: a hop > {smax:g} um")
+        conns = {e.get("conn") for e in ist if e.get("conn")}
+
+        def covered(key, a, b_box):
+            if key in conns:
+                return True
+            return any(abs(e["from_um"][0] - a[0]) + abs(e["from_um"][1] - a[1]) <= 50.0
+                       and _box_dist(e["to_um"], b_box) <= 50.0 for e in ist)
+        bt = None
+        nets = defaultdict(set)
+        for c in t.get("contents", []):
+            for lp, v in c.get("bind", {}).items():
+                if v.startswith("net:"):
+                    nets[v[4:]].add(c["inst"])
+        todo = []
+        for b in t.get("buses", []):
+            lf = b.get("leaf") or ""
+            li = lf.split(".")[0]
+            cand = [ci for ci in boxes if ci == li or ci.startswith(li + "_")] if li else []
+            if not cand:
+                continue
+            if bt is None:
+                bt = _bus_targets(P, tn)
+            if b["name"] not in bt:
+                continue
+            a = bt[b["name"]][1]
+            d = min(_box_dist(a, boxes[ci]) for ci in cand)
+            if d > smax and not covered(f"bus:{b['name']}", a, boxes[cand[0]]) and not covered(lf, a, boxes[cand[0]]):
+                todo.append((f"bus {b['name']} (face window -> {lf})", d))
+        for nm, insts in nets.items():
+            ins = sorted(i for i in insts if i in boxes)
+            for i, x in enumerate(ins):
+                for y in ins[i + 1:]:
+                    bx, by = boxes[x], boxes[y]
+                    d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
+                    if d > smax and f"{x}|{y}" not in conns and f"{y}|{x}" not in conns:
+                        todo.append((f"net {nm} ({x} <-> {y})", d))
+        for what, d in todo:
+            bad("internal_station", tn, f"internal {what} >= {d:.0f} um > {smax:g} um with no internal_stations[] "
+                "entry (R3-INTERNAL: FIRM plan stations)")
+    if any(miss.values()):
+        R.warn("complete", "missing-field counts: " + ", ".join(f"{k} {v}" for k, v in miss.items() if v))
+    return miss
+
+
 # ------------------------------------------------------------------------------------------------------ types
 def check_die_io(P, R):
     """COORD 10-23 (S81-P5): every off-die port lands in a declared pad / bump window over its host partition."""
@@ -1025,6 +1158,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
+    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()))
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)

@@ -102,7 +102,7 @@ def test_cut_overflow():
 
 
 def test_clock_reset_leaf():
-    assert any("no clock tap" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("clock")))
+    assert any("no clock method" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("clock")))
     assert any("no reset" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("reset")))
     assert any("unknown instance" in x for x in
                errs(lambda p: p["partition_types"]["mid"]["buses"][0].update(leaf="u_x.cfg_i")))
@@ -517,3 +517,43 @@ def test_core_face_rule_core_to_core(tmp_path):
     e = [i["msg"] for i in R.errors() if i["check"] == "core_faces"]
     assert len(e) == 1 and "port q" in e[0]
     assert summ["core_faces"]["cores_unchecked"] == 1      # u_b: no connectivity named for it
+
+
+def test_plan_completeness():
+    """PLAN COMPLETENESS (COORD 10-23): a missing field is an ERROR, counted per field in summary.complete."""
+    def fields(mut):
+        R, summ = g0(mut)
+        return sorted({i["field"] for i in R.errors() if i["check"] == "complete"}), summ["complete"]
+    assert fields(None)[0] == []
+    f, miss = fields(lambda p: p["clock"].pop("common_latency_ps"))
+    assert f == ["common_latency"] and miss["common_latency"] == 1
+    assert fields(lambda p: p["partition_types"]["mid"]["clock"].__setitem__("insertion_ps", 300))[0] == \
+        ["insertion_target"]
+    assert fields(lambda p: p["partition_types"]["mid"].pop("reset"))[0] == ["reset_sync"]
+    assert fields(lambda p: p["partition_types"]["mid"].pop("cells", None) or
+                  p["partition_types"]["mid"].__setitem__("contents", [dict(inst="u", module="m", status="new")]))[0] \
+        == ["cells"]
+
+    def core(off=True, st=None):
+        def m(p):
+            t = p["partition_types"]["src"]
+            hc = dict(inst="u_core", origin_um=[803.52, 803.52], outline_um=[51.84, 51.84],
+                      pins=[dict(name="din[0]", layer="M4", xy=[0.0, 1.0])])
+            if off:
+                hc["track_offset_um"] = [0.0, 0.0]
+            t["hard_cores"] = [hc]
+            if st is not None:
+                t["internal_stations"] = st
+        return m
+    # src bus din enters on W at y 100-120; the core sits at the NE corner: >= 1384 um internal -> stations needed
+    f, _ = fields(core())
+    assert f == ["internal_station"]
+    assert "track_offset" in fields(core(off=False))[0]
+    good = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52],
+                 regs_um=[[400.0, 110.0], [700.0, 500.0]])]
+    assert fields(core(st=good))[0] == []
+    far = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52], regs_um=[[700.0, 500.0]])]
+    assert fields(core(st=far))[0] == ["internal_station"]          # first hop 1090 um
+    # face_flop: a bus with no planned port / pin geometry is already a schema ERROR (no face-flop site)
+    extra = lambda p: p["partition_types"]["src"]["buses"].append(dict(name="zz_o", dir="out", width=4))  # noqa
+    assert any("unbound" in m for m in errs(extra, "schema"))

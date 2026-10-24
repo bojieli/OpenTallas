@@ -856,6 +856,63 @@
        }
       }
      },
+     "internal_stations": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "from_um",
+        "to_um",
+        "regs_um"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "conn": {
+         "type": "string"
+        },
+        "from_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "to_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "regs_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        },
+        "bits": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "launch": {
+         "type": "string"
+        },
+        "capture": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "channels": {
       "type": "array",
       "items": {
@@ -1227,6 +1284,10 @@
      "minimum": 0
     },
     "neighbour_skew_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
     },
