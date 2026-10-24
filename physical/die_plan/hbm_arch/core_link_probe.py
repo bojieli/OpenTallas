@@ -20,7 +20,7 @@ def main():
   pins=json.loads((z.plan.parent/c['pins_file']).read_text());pins=pins.get('pins',pins) if isinstance(pins,dict) else pins
   by=collections.defaultdict(list)
   for pin in pins:
-   if isinstance(pin,dict): nm=pin['name'];x,y=pin['xy_um']
+   if isinstance(pin,dict): nm=pin['name'];x,y=pin['x'],pin['y']
    else:nm,_,x,y=pin
    by[re.sub(r'\[.*','',nm)].append((c['origin_um'][0]+x,c['origin_um'][1]+y))
   for port,targets in conns.get(name,{}).items():
