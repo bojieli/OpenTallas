@@ -39,3 +39,30 @@ Branch claude/tok-hbm-1024 (worktree localhost ~/wt/tok-hbm, epyc2 ~/wt/tok-hbm)
   binds XRD=XRU=0 (only QDRLY 2, QCHX 11); hc_images assumes launch -> hleaf 2 flops -> target pin (~3 edges).
 - Price P7 + leaf-split (hgi_sim.leaf_split_price_1023 on price_p7/stages_g675): DS AR 636,381 cyc = 1885.7 tok/s,
   MTP 3205.3; Qwen 1,272,951 cyc = 942.7 tok/s.
+- HC root cause (strong): tools/hbm_die_v16/d4g_layers/l3_vm_hc_coll.py:13 says "XRD = XRU = 0: the relay layer that puts
+  stations on the root <-> hub links must set them to its stage counts (RAW0 = 165 + XRD + XRU)"; r18h5 die.v relays
+  those links 8-10 edges each way (unequal per quarter: d_v SW 9 / SE 8 / NW 10 / NE 9; qps_v 9/10/8/9) and still binds
+  hc_eng #(QDRLY 2, QCHX 11) with XRD = XRU = 0  -> HC root mis-timed on every HC_MIX record. Fix owner: HBM die
+  generator (relay layer: equal-depth root<->quarter groups + XRD/XRU bind) = HBM-ARCH.
+- 08:30 diag results (DS L0 rec31 attn.res_copy, 640 checks): control FAIL 640 (reproduces TOKi); checks +64 FAIL 640;
+  we/bank +26 (config pairing fixed) FAIL 640 with checks +0/+64 -> dest never written. pgp_SW runs serial 4301-4438
+  (start drive 4240 + 55 lane + 6) and fr_SW fault fires during it -> writes refused (likely VM calendar grant window /
+  vmstat: SU executes ~55 edges after its scheduled grant). Next diag running: all su_prog drives ADVANCED by 50/55/60
+  (we/bank by A-26) so pgp executes on the scheduled edge (diag/su31_adv{50,55,60}).
+
+## CODEX notes
+- 2026-10-24 08:54 PDT CODEX results: ar_main cross-die AR-step report now DS PASS + Qwen PASS (both done rc0). Advance50/55/60 diagnostics still live at record 6/cycle911; long DS/Qwen runs still live. Qwen L0 rec17 mismatches show full-float observed versus expected BF16-truncated values, distinct from missing writes; inspect emitter precision contract next.
+
+- 2026-10-24 10:20 PDT CODEX: Advance50/55/60 allfinished FAIL640/1046 (406commitOK). Root config pairing repair cannot fix downstream skew: pgpSW→SUcontrol19cycles, vmr/vmw/tree14/9/13/7 for slices0/1/2/3, i.e5/10/6/12cycle misalignment. Source l23 explicitly requires same relaydepth. Extended prog_transport inventory in own TOKbranch; evidence epyc2:/srv/opentallas-scratch/claude/tok-hbm/prog_transport_downstream.json. HC XRD/XRU and calendar offsets remain known independent blockers. No native token pass claimed.
+
+- 2026-10-24 11:00 PDT CODEX: 6d46b1f539 pushed. Globalfixedprogrammebundle target61serial, rootconfig55;288-leg RTLmiterPASSmutantCAUGHT,1,210,724padFF and113serial/151stream rootadvance pricedperprogramme. Actualleafsplitcut97legs339070FF miterPASS; realVerilatorbuild epyc2scratch2/codex-hbm/prog_r8_leafslice, afterBUILD_PASS autoSU31diagnostic through run_diag.sh (guarded; shiftall6rootports-113/checkrec31+4leafsplit). Fulltoken/calendar/VMroundtrips/HCXRDremainopen.
+
+## RESUMED 2026-10-24 12:14 (Claude, after 08:50-12:04 usage limit)
+- Branch claude/tok-hbm-1024 fast-forwarded to codex/tok-hbm-1024 @157ac8a65b (linear on my e420d5afb2; pushed).
+- Adopted (NOT relaunched): epyc2 scratch2 codex-hbm/prog_r8_leafslice (padded-programme leaf-split build -> guarded SU31
+  diag by Codex watcher); intel1 scratch2 codex-hbm/hc_r8_unit/gate (native HC XRD=XRU=10 exact gate + wrong-DING2 mutant).
+- My jobs still live: epyc2 ld/{t_qw_l0_r0,r5,t_ds_l14,_x1,_x2} (5 h+, ~40 GB each, 34k cyc), intel2 ld/t_qw_chain_r0/r5.
+  Partial Qwen L0 r0: rec6 32 + rec10 16 got_zero, rec17 1024 + rec23 127 got = vm_pre row (dest unwritten / input
+  passthrough; consistent with SU programme-skew class).
+- diag su31_adv50/55/60 all FAIL 640/1046 (as Codex logged).
+- Leaf-split (unpadded) r18h5_ld_split binary BUILD_RC=0 09:40; launched split/{rec2_kq,corrected_rec2,ls_ds_l14_x4} on it.

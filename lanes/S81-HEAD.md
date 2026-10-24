@@ -32,12 +32,119 @@ S81 layer-die plan. Host share intel2 32 thr: not used (all work is seconds-scal
   is ot_dsrom_head_elem CUT 0x1ff, S81 tile RTL uses ot_s81hd_elem CUT 0x17b (status rework: equivalence or re-close).
 - spine-node internal stations declared but not G0C-checked (no content boxes); tile core_faces unchecked (WARN).
 - Not run: G1 GEOM review, G2 probes, any P&R.
+## 10-24 continuation (branch claude/s81-head-1024 @990f0c548c)
+- OWNER 2026-10-24 applied: head dies 12 -> 4 (one TP4 group), NO HBM on head dies. s81_stage_map_input.json head
+  {dies 4, hbm_stacks_per_die 0, grade spec}; tools/release_rack_design.py rerun + release_rack_figures.py:
+  S81 1,160 dies / 1,156 HBM3E / 2,936 circuits (tp_mesh 1,740, head_hop 4, host 4) / 73 trays (last tray 8 dies) /
+  3 racks; D 936 cables (906 DAC + 30 AEC, 8 host), 157 kW IT / 188 kW wall; S 8,802 AEC, 152 chips, 517 kW.
+  docs/RELEASE_RACK.md updated (sections 1, 2.1, 2.4, 2.6, 4, 6), census regenerated (untriaged 4,353, both
+  annotations synced). make check-figures: evidence grades / prose figures / coverage PASS; check-headline-bundle
+  FAILS on 31 NEW stale-pins in results/rtl/hdc_* (rtl/hdc sources changed on main; none of my files) = pre-existing.
+  Head die power still the 10-06 C1 ledger 92.34 W (MODEL; not re-derived).
+- Draft fan-out SerDes evidence (owner lean "MTP draft rides copy-B, no draft SerDes"):
+  * TOK-DS composition (~/wt/tok-ds-compose tools/s81_dv/tokfunc/compose_tok_ds.py @75d8ff675, not on main):
+    transform_offchip() prices off-chip only for tp_mesh / stage_hop / head_hop (head.hop); draft.head carries
+    only "head die wire +34" (UNMAPPED_TAIL), no link class.
+  * token DAG results/arch/token_path_20261009/ds_rom_mtp.json: mtp.2.ffn.hc_post -> draft.head0 -> draft.markov0 ->
+    ... -> draft.head4 -> draft.markov4 -> draft.fixed: every edge link None (the 5 draft head steps run on the head
+    die back to back, no fan-out crossing). The draft blocks (mtp.*) themselves are "not built: no die" (DSpark
+    placement stated, not bound) -> WHERE the draft blocks live (copy-B or else) is not in the composition.
+  * MU calendar results/arch/mu_s81_1018/calendar_mtp.json offchip.saving.mtp.by_class = stage_hop 127 / tp_mesh 275 /
+    head_hop 1 crossings a step; no draft class; head appears once ("Stage 58: head die").
+  => The composition of record uses NO head-die draft fan-out link. Plan keeps 12 SerDes (no draft SerDes).
+- G1: own visual review recorded results/geom_review/s81_head_plan__s81_head__3f5150797f1e.json (PASS-CONDITIONAL,
+  SELF review, kit physical/die_plan/s81_head@cc7b6206fc; also in the takeover verdict dir). Notes: MY-symmetric,
+  no G0 marks, 4 corner voids ~5.7 mm2 + 11 dark tiles = levers; clock root -> farthest tap ~17 mm.
+  (Plan changed after the review only in hd_tile contents/module/cores binding, no geometry.)
+- G2 on intel2 (/srv/opentallas-scratch2/claude/s81-head/g2, docker --memory = --memory-swap): die probe PASS
+  (overflow 0, M8 0.01% / M9 0.02%, clk reach max 16,998 um p90 13,159 over 2,540 taps, rst max 16,087);
+  partitions worst-5 (hd_turn_a/b, hd_st_n3/n4/k5) PASS overflow 0 / no-AP 0; + hd_tile / hd_spn / hd_spn_end PASS.
+  Reports physical/die_plan/s81_head/g2_report.json, g2_part_report.json, g2_part2_report.json.
+  RISK: 17 mm root -> tap is a die clock-tree design job (H-tree / grid), not a probe failure.
+- CUT 0x1ff vs 0x17b: NOT cycle-equivalent (SK 11 vs 8: +54 cycles a position), so instead of re-closing the elements
+  the tile is REBASED on the closed views' point: ot_s81hd_tile / ot_s81hd_bundle defaults CUT 0x1ff, SPLIT9 1.
+  Proofs: tools/s81_head/hd_elem_eq.sh = ot_s81hd_elem (census copy) vs closed RTL ot_dsrom_head_elem@f11f3cc47,
+  cycle lockstep on every common output, protocol (finite x, fault-free argmax) + 2 stress + 1 Inf/NaN stress:
+  EQ_BENCH_PASS A 4/4, B 4/4. ROM images re-skewed SK 8 -> 11 (tools/s81_head/hd_reskew_images.py, round-trip
+  byte-exact). Mini array (spo -> 2 tiles -> spr, released head.weight) at 0x1ff/1: 4/4 exact, 8,429 cycles
+  (was 8,375); CV=1 (closed-view models) 4/4; 6 mutants caught; 0x17b point still 4/4.
+  Logs results/rtl/s81_head_tile_1024_closedcut/. Model: bundle 8,413 cyc, head 9,110 cyc a position (calendar
+  window 10,357: -1,247 margin).
+- G3 hd_tile kit: plan type module ot_s81hd_tile_p; elements = renamed closed views ot_s81hd_elem{A,B}_cv
+  (physical/die_plan/s81_head/cores/views, tools/s81_head/hd_cv_views.py names-only, --check PASS) at
+  u_core.u_b.g_cv.u_eA0..3 / g_cvb.u_eB; straps row0/ten = ot_s81hd_strap (18 kept TIEHI/TIELO, mask-variant class
+  like the ROM code; kit built at ROW0 0 / TEN 1). Kit via gen.py phys (main 4b7b2b3e64 gates): sdc_lint PASS,
+  synth PASS, face_guard PASS 1,132/1,132. ROUTE RUNNING: ot-run --hosts intel2 unit oth-ubuntu-514688-1792853423,
+  dir /srv/opentallas-scratch2/claude/s81-head/g3/hd_tile (run_route.log). r1 died at synth (strap generate-if) ->
+  kept at ../g3_fail_strap_r1.
 ## Next
-G1 review of die_plan.png; G2 probes (worst types: hd_turn_*, hd_spn) on intel2; tile G3 kit on CLOSED elements.
+hd_tile G3 route verdict (+ abstract, pin audit) -> record; then G4 needs the other 15 types (see ELEM-S81 reply).
 ## OWNER?
+(1-2 DECIDED OWNER 2026-10-24: 4 head dies, no HBM; applied. 3: evidence above, owner to confirm.)
 1. Head-die count: rack has 12 (3 TP4 groups, 10-06 record); model: 1 group (4 dies) carries saturated AR + MTP and
    single-user MTP positions never overlap (>= 23,239 cycles apart). 12 -> 4 saves 8 dies + 8 host links.
 2. HBM on head dies: rack says 4 stacks/die (48); this die needs none (ROM-resident head). Plan has none.
 3. Draft fan-out SerDes (SPEC v1: 5): rack wires none (placeholders); plan has none. Confirm MTP draft rides copy-B.
 4. 11 dark tile slots (ten=0) kept for a regular chain; alternative shorter last chain, same outline.
 5. Copy-A/B 6th pair on 64 layer dies (EN2/3, WS2/3) missing from the layer-die plan (S81 lane).
+
+## From ELEM-S81 (2026-10-24, lane ~/coord/lanes/ELEM-S81.md)
+COORD: ELEM-S81 closes the S81 + head-die types nobody runs. You own hd_tile. Do you plan G3 kits for the other head
+types (hd_turn_a/b, hd_st_*, hd_spn/_end, hd_serdes, hd_mesh, hd_ctl, hd_host, hd_lep0N)? If not, I take them once
+their RTL exists (ot_s81hd_ctl / mesh_ep / host_ep: is there RTL?). Reply here.
+
+## 08:20 review before route (owner order 08:05) -> hd_tile floorplan REVISED (branch @fa3ada974c)
+- r2 hd_tile route (started 07:47) reviewed from its own 3_3 global placement (dumped from the ODB):
+  results/geom_review/s81_head_img/hd_tile_r2_global_place_FAIL.png => FAIL: elemB W face + 566-bit bus-i window in one
+  8.64-um sliver; A S-face x pins (130 each) on the tile S edge; ~20k skew-line flops packed in the 27.9-um column while
+  a 345 x 345 region stayed empty. Route CANCELLED (ot-run --cancel + docker stop of my container), kept at
+  intel2 /srv/opentallas-scratch2/claude/s81-head/g3_fail_review_r2.
+- r3: tile 708.48 x 1036.8 (+17.28 from the spine column 1,762 -> 1,382; die outline unchanged); A cores MX / R180 /
+  R0 / MY at x 17.28 / 371.52, y 8.64 / 380.16: all A S faces on a 53.85-um centre row channel, E faces on a 36.57-um
+  centre column, W faces on 17.28 / 19.29 strips; elemB centred in the top band (W / E regions 216 / 215 um for face
+  flops, BST, skew, merge). Picture results/geom_review/s81_head_img/hd_tile_r3_floorplan.png. Die render re-read.
+  Record results/geom_review/s81_head_hd_tile__s81_head__99c092a95cfa.json (PASS-CONDITIONAL, SELF).
+- Running now (intel2): G2 re-run on r3 geometry (/srv/opentallas-scratch2/claude/s81-head/g2r3: die + 8 types) and
+  G3 hd_tile r3 route (ot-run unit oth-ubuntu-706037-1792854766, dir .../g3/hd_tile). GEOM-REVIEW: second review welcome
+  on the two PNGs above.
+
+### Reply to ELEM-S81 (S81-HEAD 2026-10-24 07:55)
+I run hd_tile G3 only. Please take the other 15 head types. RTL state: hd_spn/hd_spn_end leaves ot_s81hd_spo / spr
+exist + CLOSED (rtl/dsrom_sys/s81_head); hd_turn_*/hd_st_* are ft-only frames (no leaf, gen.py rtl wrapper);
+hd_serdes = ot_pdie_serdes (reuse); hd_lep0N = dsdv_slice_lepw_mu.LP (reuse). NO RTL on main for ot_s81hd_ctl,
+ot_s81hd_mesh_ep, ot_s81hd_host_ep (new / rework); ot_s81hd_ctl(_glue) exists only on the unmerged H10/H11 branch
+(commit b0dd078e0e 'S81 HEAD ctl glue R3', 4339e679fd, 0f16024219). Note: hd_mesh / hd_ctl / hd_host have type module == content module
+in the plan (wrapper name collision, as hd_tile had); rename the type module (hd_tile -> ot_s81hd_tile_p) before
+gen.py rtl. Plan generator physical/die_plan/s81_head/gen_plan.py; edit via me or tell me and I change it.
+
+### From ELEM-S81 (08:35): taking the 15 head types
+- ft-only types kitted (gen.py phys, sdc_lint PASS) and placing for review on epyc3: hd_turn_a/b, hd_st_turn/str/n3/n4/m/k5.
+- BLOCKED on the plan (your gen_plan.py): hd_spn / hd_spn_end have no `sources` for ot_s81hd_spo / ot_s81hd_spr (kit RTL
+  instantiates u_spo/u_spr with no definition) -- please add sources (or make spo/spr hard_cores with their closed LEF);
+  hd_mesh / hd_ctl / hd_host: type module == content module + no RTL (as you said); hd_serdes (ot_pdie_serdes) and
+  hd_lep0N (dsdv_slice_lepw_mu.LP) need sources/bind like the layer die. I re-close the spo/spr hard-core kits
+  (signoff NEEDS RE-RUN) in my hc batch D.
+
+## GEOM-REVIEW findings (2026-10-24 08:55 PDT, independent die-level review, batch 1)
+- S81 head plan 6b6620d0 (@fa3ada974c; cc7b6206 geometry identical): PASS-CONDITIONAL (record s81_head_plan__s81_head2__6b6620d0e030.json) - independent review, supersedes the self review for G1. Clean: symmetry, no slivers, hops <= 0.31 reach, tile macros 10-15 um channels with the tap in a channel, all 18 bit reversals are corner crossings (free as L-routes). Lever: the 345-um station/spine partitions force 3-4x the stations reach needs (m0S 48 cyc / 16.3 mm, host 38 cyc / 12.4 mm, coll_WN2 20 cyc / 6.5 mm) - wider station partitions would cut tens of cycles on the mesh/host lanes. hd_tile: the revised floorplan after your failed r2 must be rendered + recorded before route; GEOM-REVIEW tile review of hd_tile running.
+
+## CODEX notes
+CODEX took over: hd_tile synth infrastructure fix in /srv/opentallas-scratch2/claude/codex-s81/head_g3r5 on intel2 (same reviewed r3 geometry). g3r4 FAIL at synth_odb: missing face_keep.tcl (kit generator hook-copy omission). Added both main face_keep hooks to fresh kit copy; r3 floorplan image visually reviewed: centre channels align A input pins, B centred, macro halos clear; PASS-COND carried, monitor clock balance. New route via ot-run 64GB/16 threads.
+
+09:50 PDT CODEX: r3+G2 authorbranch integrated,TT macro libs insteadSS+5earlycore clockdrops,main9f180d5e4a;newr7routeintel2.../codex-s81/head_tt_g3r7. Ownr5FAILCTSmax18243holdbuffers(-352ps),preserved.
+
+10:29 PDT CODEX: Head reach405 fix merged747cdc9dfb:13FTslots/29lanes,max+3cycles,die model+6(9114). CanonicalSDC/nativeMM/earlyclock c2hd_tile FAILCTS18200holdbuffers,flat-377.977ps. c3diagnosticCTS(skiprepair) capturesFFadjacentline24->40 launch232/capture604/data41=>-369ps. Root fixes tap_balance false T/2wrapping;own160umgrid variant generates35taps tosplit13,342sink coarsegridcluster. Intel2.../codex-s81/head_tt_g3r8_c3_diag preserved, noSIGNED.
+
+
+CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinaccess: four elemA_cv clkM5pins DRT0073. RealLEFclockRECT293.568,317.588..293.592,317.672 overlaps ownOBS through317.648, only24nmexposed; adjacentM6OBS. NeedsourceODBlegalclockpin/stub/phase repair, no syntheticpin enlargement. All160gridtimingattempts retained, noSIGNED.
+
+## RESUMED 2026-10-24 12:16 PDT (Claude, after the 08:50-12:04 limit)
+- Adopted: (1) Codex head abstract PSM c2 (intel2 .../codex-s81/trial_head_psm_c2, container dtrial-psm-1648419, VDD/VSS connectivity PASS, IR analysis still running): left running, I collect its result. (2) The hd_tile pin-access blocker (tap160c7 GRT DRT-0073 on the four elemA_cv clk pins, 24-nm sliver of the closed view's M5 clk stub; source ODB lost). (3) Codex's partial elemA rebuild builder (localhost scratch headA_native_rebuild_c1, never ran past sdc_lint): replaced by tools/s81_head/hd_elemA_rebuild.py on my branch.
+- My branch claude/s81-head-1024 = main 24b2da3433 (all my earlier commits were already on main via Codex 27fe25b8b2).
+- elemA rebuild: same source f11f3cc47 / params (LV8 PAD0 JOIN1 ROWS32 IOREG1 SAFE1 CUT511 SPLIT9 1), 458 signal pins pinned to the closed-view rects, clk = 0.192 square M5 at the same centre column. Template = signed kits_repin core (VQ r12): kit SDC, TT setup / FF hold, sdc_lint, face_guard, signoff.py.
+  - c1 (intel2 scratch2 .../s81-head/elemA_rb/elemA_rb_c1): FAIL sdc_lint: the closed build's ROM 2-cycle multicycle is a forbidden exception. Kept.
+  - c2: no multicycle (rd -> capture timed at 1 cycle, stricter; ROM clk->q 590 ps TT). Running synth + floorplan only; floorplan review before any route.
+
+## GEOM-REVIEW findings (2026-10-24 13:40 PDT, tile batch 2, main da5213b0b3)
+- hd_tile tap160c7 (4_cts, GRT fail): FAIL. Pin defect confirmed visually: elemA_cv M5 clock pin is 84 nm tall, 60 nm of it under the macro's own M5 OBS and an M6 OBS under the via, leaving a 24x24 nm opening, on all 4 elemA instances. Fix: regenerate the elemA_cv LEF/abstract (the native rebuild path), then rerun GRT/DRT only. Separately: u_eA0/best_key 14-level logic path TT -627 ps needs an RTL pipeline register before route. 8 taps carry no sinks. CTS (tap means 238-264 ps) and face flops (p90 6.7 um) are fine. STOP resubmitting this kit until the LEF and the best_key path are fixed.
+  Images localhost:/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/hd_tile_tap160c7/{review,clkpin_obs_zoom,codex_tap_review}.png; record results/geom_review/hd_tile__head_tap160_c7_ff__1681610bdc9a.json

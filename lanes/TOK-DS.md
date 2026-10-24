@@ -1,12 +1,17 @@
 # TOK-DS lane (claude/tok-ds-1024, worktree localhost:~/wt/tok-ds; hosts epyc3 + idle via ot-run)
 Goal: DeepSeek ROM (S81) token-pass gate: single-die layer runs on current RTL, per-stage cycles, composed 1-user token latency.
 ## Current step
+RESUMED 12:12 (Claude, after 08:50-12:04 limit). ADOPTED from Codex: epyc3:/srv/opentallas-scratch/claude/codex-s81/bk_drain_layer (BK addressed-drain sink ON kit copy of fc31 cut_3S_ctl, L2 job1 6652-cyc replay after build; ot-run unit oth-ubuntu-3673875, verilator pid 3673920, 96GB/16thr) -- collecting, NOT relaunching. TOK-DS owns this job now (S81 lane: please don't duplicate). Codex evidence consumed: entry native 6/6 PASS (main 0e75647078), L0 split-layer control both jobs PASS + mutant CAUGHT (main 49f7915d5a); L2/L14/L20 job1 FAIL = BK drain / slice CTL namespace collision.
+My own pre-limit results: fc31 data cuts 0S/0N L0/L2/L14/L20 replays: 0 faults, 0 output checks (compiler encodes none) = PARTIAL smoke, FAIL by harness rule (zero checks); epyc3 tok-ds/fc31/run_data.
 0. 07:06 RESUMED by new agent after coordinator restart. epyc3 jobs alive and being collected: builds 0S/0N/7 (verilator pids 85168/85169/85171), compile L0/L2/L14/L20 (pids 86250-86253). Old components sub-agent died at staging (epyc2 ~/wt/tok-ds-comp, nothing run); relaunched as sub-agents COMP + COMPOSE on own branches.
 1. fc31 layer vehicles (die fc31 35ba1ef7 = latest GEN die: cap30 + 59 chained-frame reset stations; plan-v4.8 die not assembled yet -> NOT RUNNABLE on v4.8):
    cuts 0S/0N/7/3S_ctl patched with fc31 delta (3S_ctl = a240fb53 = monfc31 binary, reused); 0S/0N/7 split builds + idle 400 on epyc3.
 2. compile L0/L2/L14/L20 programmes on tree_fc31 (main compiler, checkpoint fixtures 171/204/217/203 files sha-verified vs committed manifests).
 3. sub-agents: (a) composition with plan v4.8 latency table (compose_tok_ds.py), (b) component benches on main RTL (owner fold, dense xs cap, KV VP, rstop).
 ## Findings
+- 07:50 fc31 cut_3S_ctl LAYER replays (L0/L2/L14/L20) reproduce the fc30 signature: SCHEDULE_MISMATCH from cycle 294 on o__w_xrW_2S_l0_lnd (port 2248) / o__w_xrE_4S_l0_lnd (2244): column-4 CTL line beats never leave (got 0). Cause = harness: run_layers.py gen passes no --idle-run/--host-boot/--ks and the layer programmes have no prog/host_boot.memh, so u_seqhost never starts the job on the HOST cut. The HOST/control part of a layer is exactly the native entry replay (jobs 15/16/17/20/21/22 = replay_jobK progs) that lane S81 is triaging -> 3S_ctl per-layer verdict BLOCKED on S81 entry PASS_CUT_COMPONENT (also needed by dv_cut_replay check as OT_S81_XRT_RUNTIME_PROOF). CTL-shift mutants stopped (control is meaningless against a failing baseline).
+- monfc31 3S_ctl binary is a MON build: ~2 cyc/s under load (11.6k-cycle layer = ~1.5 h); S81 is building a plain fc31 3S_ctl at epyc3 ~/s81p10/fc31/cuts.
+- data cuts 0S/0N/7: compiler encodes 0 output checks on them (fc30 too: NX/XQ exchanges 'not compiled', G-COMPILER-ROWS) -> best possible verdict PARTIAL (inputs driven, fault census only), never an exactness pass.
 - Old-fleet scratch SURVIVES read-only at /mnt/old-nvme0/claude/ on intel1/intel2: stw-s81d-tok/fc30 (cuts+kits, cut_3S_ctl sim binary on intel1, cut_0N on intel2),
   stw-s81c-cap30/gen-main (cap30 GEN bind/plan/land), intel2 s81-p9-fc-1023/fc31 (fc31 die). S81 lane believes these are LOST.
 ## Run dirs
@@ -14,13 +19,35 @@ Goal: DeepSeek ROM (S81) token-pass gate: single-die layer runs on current RTL, 
 - epyc3:/srv/opentallas-scratch/claude/tok-ds/fc31 (cuts/out_cut_{0S,0N,7} builds pids 85109/85110/85111; compile pid 85681)
 - epyc3 inputs: /srv/opentallas-scratch/claude/{stw-s81d-tok (ep5 layers+fc30), s81-p9-fc-1023 (fc31 + monfc31 build), stw-s81c-cap30}
 ## Results
+- MERGED main 2c4e32da32: components on main (results/token_pass/tokds_comp_1024): owner fold PASS 20/20/20, dense XS cap PASS (GO 453, last capture 825), KV VP PASS (done 1028/1133), rstop PASS (egress 7..23); all mutants CAUGHT; cycles = 10-21 record. Composition (results/token_pass/tokds_compose_1024, plan v4.8 lat table): 1u AR 1,495,133 cyc = 802.6 tok/s, MTP 2,564.0 tok/s; measured-current 29.9% / old 49.8% / priced 13.8% / PHY 6.5%; MU AR 50u 40,130 agg, MTP 6u 15,384 (10u fails same-user check). Model only, no token pass.
 - 10-24 fc31 compile (main compiler, tree_fc31): L0 65 ops (23 LOWERED/38 PARTIAL/4 GAP, 131 rows), L2 83 (18/47/18), L14 92 (18/54/20), L20 84 (18/49/17).
 - fc31 cut_3S_ctl idle 400 (monfc31 build, run before the host loss, log recovered): fault_cycles=0 (fc30: fault from cycle 155). Status fault fixed in idle.
 - fc30 layer runs (10-23, recovered): all 16 cut replays FAIL: data cuts 0S/0N/7 have 0 check lines (nothing compared); 3S_ctl faulted from 155 (203 mismatches); check refused by XRT guard (since fixed 8ec7bc8bc).
 ## OWNER?
+- (TOK-DS/COMPOSE) Latency table of record: chose lat/s81_latency.json (digest = die_plan.json v4.8) over r8/ (v4.6 bind). v4.8 R8 landed-bundle pads (r8eq_v48_checks: 76,485 pad flops, 13 bundles over margin kept) are NOT folded into any latency table (pad 0, groups []); owner/S81-P9 to confirm whether lane cycles must include them (would add up to ~13 cycles on x/xo/xring/sid lanes).
 
 ## components (sub-agent)
 - 2026-10-24 07:03 started: staging ~/wt/tok-ds-comp on epyc2+intel1 (claude/tok-ds-1024 = 8a5d1f3dab). Inputs found: dense vectors intel1:/mnt/old-nvme0/claude/codex-tok-s81-layers/dense_driver/vec_B_kv_landed_current; KV baseline intel2:/mnt/old-nvme0/claude/codex-s81-kv-vp-1021/baseline (its source pins differ on main: ot_reset_sync, ot_s81sl_kv_bank, ot_s81sl_kv_leaf).
+- 07:40 owner fold PASS (RB 20/20/20 = 10-21; MUT2 CAUGHT), rstop PASS (egress 7..23 = 10-21; xooff/xoall/xonoflag/tiercol CAUGHT) on epyc2:/srv/opentallas-scratch/claude/tok-ds/comp. KV VP gate building intel2 (same dir); dense XS cap epyc3 (same dir; vectors regenerated on tree_fc31 + fix/L0). Findings: NBA guard not installed on new fleet (scanned explicitly); main xrt 0ec7a8db not in xr_timing.XRT_MODEL; run_dense_xs_cap.sh inventory lacked ot_pl_land_reset_forest.sv.
+- 07:45 KV VP PASS (main kv_bank/kv_leaf/reset_sync; R3 vectors; mutant CAUGHT; ages 266..285, elapsed 1028/1133 = R3) intel2:/srv/opentallas-scratch/claude/tok-ds/comp/kv_vp. Dense: attempts 1-3 failed (xrt unqualified in compiler; bench inventory MODMISSING x2, fixed in tool), attempt 4 building.
+- 07:53 DONE claude/tok-ds-comp-1024 @3a272239b9 (pushed, not merged): dense XS cap PASS too (fc31 tree regen; cfg390/GO453/ret726..752/CAP825, shift 322 = 10-21; input-corruption CAUGHT). 4/4 PASS, receipts results/token_pass/tokds_comp_1024/*.json (compose-readable, no op binding). Open for owner/other lanes: xr_timing.XRT_MODEL lacks main xrt 0ec7a8db; fleet NBA guard not installed.
 
 ## compose (sub-agent)
 - 2026-10-24 07:15 started: worktree localhost:~/wt/tok-ds-compose (claude/tok-ds-compose-1024 from claude/tok-ds-1024 978d80201). Latency table of record = physical/die_plan/s81/lat/s81_latency.json (plan_digest b4ac6d49d5198cd0 == digest of current die_plan.json v4.8, 834 lanes); r8/ = BINDER4 v4.6 as-built bind table (digest b8e46d33, 820 lanes, 13 lanes +1..2) + R8 landing pads on v4.7b bus groups -> not of record.
+- 2026-10-24 07:22 DONE claude/tok-ds-compose-1024 @75d8ff675 (pushed, not merged): tools/s81_dv/tokfunc/compose_tok_ds.py (--selftest PASS 14/14 incl. parity with toksim cycles.json, --check SAME) + results/token_pass/tokds_compose_1024/{compose_1u.json,calendar_mu.json,README.md}.
+  1u AR 1,353,373 cyc = 886.7 tok/s (DAG) / 1,495,133 = 802.6 on 241-stage map; MTP 1,758,080/step = 2,838.8 (DAG) / 2,564.0 (map). AR measured-current 29.9 % / old 49.8 % / priced 13.8 % (plan lanes 2.9) / PHY 6.5 %; MTP 26.2/55.1/12.0/6.7.
+  MU (calendar tool on same node cycles, REL241 G4): AR 50 x 802.6 = 40,130 (46u 36,920); MTP pipeline 6 x 2,564 = 15,384; 10u MTP NOT qualified (same-user FAULT).
+  Re-run once layer cycles arrive: python3 tools/s81_dv/tokfunc/compose_tok_ds.py --layer-cycles <F.json> --components results/token_pass/tokds_comp_1024 (schema in README; only verdict PASS / mutant CAUGHT admitted).
+
+## CODEX notes
+
+08:59 PDT: fc31 plain cut ready (idle2000 faults0). Native entry replay running epyc3:/srv/opentallas-scratch/claude/codex-s81/entry_held_fc31, latest lane tools include held-f_ks model fix a1f22086cc (src30 recovered tools stale). Same sim, no build; --par8 after KS phase probe. Old-tool replay in entry_fc31 diagnostic, initial probe faults0 but205 mismatches; keep failure.
+
+09:24 PDT CODEX: entry native HOST component6/6PASS atKS2297,calendar-length mutantbit33CAUGHT; mergedmain0e75647078 with held-payload KS producer model. Ignore-bit13 prioraggregateFAIL kept+diagnosed unused0x11CSR padding. Full-layerprograms still lackboot/functional lowering; no fulltokenclaim.
+
+09:50 PDT CODEX: Layerbootdiagnosis corrected: all4layerprograms have2native jobs underprog/job0/host_boot.memh andjob1; top-levelmissingcausedsingle-jobharnessomission. Newprepare_split_control.py extracts exact PWbytes/decodedrows/native-localtemplates; L0job0(128rows122CTLevents575hostwords)+job1(7rows5CTLevents29words) control replaysrunningepyc3.../codex-s81/layer_L0_control_fc31,KS3089(nativephase0),sameexistingbinary. Fullarithmetic/compilergapsremain.
+
+10:29 PDT CODEX: Native split-layer control adapter+L0evidence merged49f7915d5a. L0bothjobs strictsource-selectedPASS,0traceerrors,bit33calendar-length mutantCAUGHT221errors. Missingexpectations nowderived fromactualCSR14bootbytes/nativeGUNIT+SVCcommands;CTLlineorderedbyissuerow,broadcastdedup. Driveninputsbyte-identical,existingRTLtraces; noarithmetic/fulltokenclaim. L2/L14/L20independentjob1FAIL122faultcycles atpostKITlastCTL,u_s_4Sblock_fault[6],seqhostnormal; hypothesismissingpersistentstate. Joinednativejob0+reload+job1 probesrunningepyc3.../codex-s81/layer_L*_joined_c3,clients2032160/61/62,8GB1thread; originalFAILkept.
+
+
+CODEX 2026-10-24 11:24 PDT: Proven native BK drain/slice CTL namespace collision: actualL2job1 payload0xa515b acceptedBKUID5b/op1, then forwarded intoSID8 target10 and raises slice blockfault. Own opt-in vstop addressed-drain sink candidate focused actualRTL PASS (acceptedonce/forwarded0/noXRfault); unaddressed0xa515a mutant forwarded and nativeXRfaultCAUGHT. DuplicateN/Sdrains remainvisible+vinfault. Canonicalheld: oldBKwrapcontract/bench explicitly expectsforwarding (lines9/43/167), downstreamobserver review pending. ActualL2job1 fullcut candidate rebuild live epyc3 bk_drain_layer,96GB16thr, originalpinnedmodeluntouched.

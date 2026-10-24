@@ -303,7 +303,7 @@ CODEX 2026-10-24 11:24 PDT: Station405c1 first11uniformgates NOTSIGNED: setupinp
 - Meanwhile: variant A (0.08, in-contract fixes: SLEW_MARGIN for the RCX/setRC slew gap, FF-only hold repair, current tap_balance)
   and variant B (0.16, labelled CANDIDATE, not a closure until ruled) run in parallel. Needs COORD/owner + S81 (frames) decision.
 
-## COORD RULING 2026-10-24 13:55 PDT: ft seam split 0.16 T receiver share APPROVED (die-wide, S81)
+## COORD RULING 2026-10-24 12:37 PDT: ft seam split 0.16 T receiver share APPROVED (die-wide, S81)
 - clock.ft_hop_in_share = 0.16 for S81: ft input delay max 0.84 T, output delay max 0.16 T. Period, uncertainty and hold
   overlay unchanged. This re-divides an internal interface budget; the clock is NOT relaxed.
 - Conditions: (1) frames and stations switch TOGETHER (S81 owns the plan field + frame SDCs); (2) sender reg2out slack

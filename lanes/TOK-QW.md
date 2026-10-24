@@ -4,6 +4,15 @@ Scope: Qwen ROM token-pass gate: compute-die layer runs (stg/head/attnret), comp
 Not mine: xt1/tp8/xdie-link/ovl4u (QC-TOK), KV-die token tests (KV-TOK).
 
 ## Current step
+RESUMED 12:12 PDT (after 08:50-12:04 limit). Adopted from Codex: nothing live for TOK-QW except my own s8exp compile
+(intel1 s8exp/die/build/obj_n12, g++ still compiling, left alone). codex/tok-qw-1024 @0a55cb9ec4 = parked F5/F7 bench
+corrections already isolated on main (b1e16de8f0 F5 p192 name, 60c21cd01d F6 OBS1_COMPAT rx, 83e1cfdf48 F7 ROM pair) -> no merge
+needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top still needs OBS1_COMPAT=1 adoption).
+- xhead: 1st calibrate FAIL-no-edge (go_lag -2..6 all PASS, xpf edge 4). Relaunched 12:13 stage_xhead.sh --reuse
+  (cached obj_xh, OT_XH_GO_MIN=-8; 10-23 edge was -3) -> per-consumer sweep -> 4 cases + 10 mutants. RUNNING.
+- attnret: stage_attnret.sh on stg rel/pos obj_n12 + vec_ages, RUNNING 12:14.
+- NOTE: intel1 ~/ot-scratch = /srv/opentallas-scratch is on intel1's ROOT fs (109 GB of mine there). New jobs go to
+  /srv/opentallas-scratch2/claude/tok-qw; will move r1024 when s8exp/xhead finish.
 06:58 PDT recovered old-fleet inputs before the 07:03 wipe -> intel1:~/ot-scratch/tok-qw/recovered (66 GB):
   fx_in (TP4 P8191 36-layer ISA gold + img_p1 + oracle.json, 32 GB), tokd-qw-main-1023 (head fx, link fx, xt1 in),
   tokqwm-1023 (10-23 record run), tokqw4-1022/stg3/fx, tokfunc-qw-1021 (non-build), codex qw-head-main-a970-1023,
@@ -23,6 +32,8 @@ Not mine: xt1/tp8/xdie-link/ovl4u (QC-TOK), KV-die token tests (KV-TOK).
 - s8exp : tb_qfd_dv2 FACE 3 = BOUND die slice row (s8 flat / ce_w5 / ce_l9h / ce_e5 per position) lint/build -- RUNNING
 - xdie_bound: sub-lane (fork), see its section
 ## Results
+- stg PASS on main 8a5d1f3da (slice2 chain, SU_LT 0, RUNROOT r1024/stg): 527/527 cases expected outcomes met, delivery
+  timing qualified, 0 unknown; fixtures+builds 4119 s. Source assembly only (predecessor slice, not bound s8).
 - head PASS (RTL-functional, die-selected leaf, main 8a5d1f3da): img0 123/123, imgh 131/131, bmut3 FAIL as required;
   LM-head stage start->END 3,135 = compiled 3,135 (plan price 3,101, +34). 10-23 FAIL cause: the behavioural h16y family is
   not on main + generic LP lockstep (abandoned LP, not the die parent). stage_head.sh --leaf added.
@@ -32,3 +43,29 @@ Not mine: xt1/tp8/xdie-link/ovl4u (QC-TOK), KV-die token tests (KV-TOK).
 - kv/chain: KV r17 vehicle readset 53/53 non-bench files byte-identical 92c2417f6 -> main (record.sv identical too); the
   10-23 r17 child archives (explicit packet) were lost with ep5/ep9 -> carried, not re-run.
 ## OWNER?
+- Bound top adoption of OBS1_COMPAT=1 on the KV status RX (F6 fix on main 60c21cd01d is opt-in, default 0) and the regenerated
+  F7 ROM pair (83e1cfdf48) as the release images: needed before a bound compute<->KV token run can PASS by default.
+- F1: compute glue d2d_rom TXDP params still unbound in bound_r8 (trap) -- bind D2D_TXDP_C/K from regen constants.
+- KV r17 explicit-packet child archives lost with ep5/ep9: approve regenerating the ROOT-approved sha table (b0cc8cdca) or
+  keep carrying the 10-23 kv/chain verdicts (readset 53/53 unchanged).
+
+## xdie_bound (sub-lane)
+2026-10-24 07:30 PDT TOK-QW/xdie_bound: compute->KV D2D co-sim on BOUND link ends, branch claude/tok-qw-xdie-1024 @2dca1cc835 (not merged).
+- Run intel1 ~/ot-scratch/tok-qw/xdie_bound/run2 (ot-run unit oth-ubuntu-194042-1792851975, done 07:29); results
+  results/rtl/tok_qw_xdie_bound_1024/README.md; tools tools/qwen_tokfunc/xdie_bound/run_all.sh. 23/23 configs as expected.
+- Literal carve: KV bound_pv sys_c elaborates; compute bound_r8 glue does NOT (F1 d2d_rom TXDP trap, F5 missing p192 macro).
+- Co-sim (bound master modules + bound params + seam 2,2,2,3,2,2/34,34,32,32,32,31,31, TXDP C 0a010308 / K 03030443):
+  bound compute master x bound KV master FAIL = F6: compute obs1 STATUS v1 extension rejected by KV legacy status RX
+  (ot_qwen_d2d_status_rx_sf); with the extension masked (diagnostic) PASS 35 layers bit-exact; source compute master PASS.
+  C2K cmd 55, K2C r31 53, roundtrip cmd->r31 1887, kv_service 1779, exposed d2d 108/layer, status 49, period 7056.
+  Mutants caught: TXDP_K 66/68, TXDP_C 9, seam KS_RXV/SK_TXP/CS_TXS +1, result bit, status done, PHY bit, run late.
+- Audit: F7 both dies' compiled-in calendar images stale vs regen (KV dcal mu image period 249,600; compute ovl rope
+  293,376; regen 258,048) and mutually inconsistent. Owner action: bind TXDP on d2d_rom, KV obs1 status RX (or drop the
+  extension), regenerate both images, fix p192 macro name.
+
+## CODEX notes
+- Collected completed source stg result: PASS 527/527, ISA 1,032,336/1,032,336, delivery_timing_qualified=true. Head PASS 123/123 + 131/131, bmut3 caught, control span 3135 cycles (+34 vs price). Bound s8exp lint blocked by duplicate SRAM definitions (sram_models_nofatal.sv vs another supplied definition); next remove duplicate harness inventory and continue bound vehicle. Source result does not establish bound-s8 pass. XDIE F6 status-v1 rejection and F7 stale calendar require fixes.
+
+- CORRECTION to initial CODEX provisional finding: s8exp duplicate SRAM messages are MODDUP warnings, no %Error. s8exp/die/build calibration is still building (make/verilator live), not failed; do not restart.
+
+- CODEX took over receiver F6 on codex/tok-qw-1024 and isolated integration codex/qwen-status-integration-1024. MERGED main60c21cd01d (d6724513c9): OBS1_COMPAT default0 propagated through KV wrappers, existing v1 validator accepts valid extension with reserved[303:156] stillzero. Microgate530 checks PASS(default legacy lockstep400cycles,16validv1 cases,8malformed caught). Bound-master exchange T256/T8192 each35layers exact, every landing on compiled edge; RESULT/STATUS mutants caught. Roundtrip1887cyc,KVservice1779,period7056,0 addedcycles. Actual boundtop still needs optin after physical timing; source support is ready. F1/F5/F7 still separate.

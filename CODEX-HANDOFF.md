@@ -1,6 +1,6 @@
-# Codex handoff document (generated 2026-10-24 08:29 PDT)
+# Codex handoff document (generated 2026-10-24 08:50 PDT)
 
-Claude hit its usage limit (resets 3pm); expected back at 2026-10-24 08:29 PDT.
+Claude hit its usage limit (resets 11am); expected back at 2026-10-24 11:02 PDT.
 
 Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
 
@@ -139,6 +139,10 @@ Servers fetch from hub = localhost. Toolchain is `~/.local/opentallas-tools/bin`
 
 ### main
 ```
+30fe617bcb 2026-10-24 08:30:44 -0700 Merge claude/kv-g3-1024 @9cb5dc50e (FIX: restore CP1-R10 face_keep copy in gen_phys lost by 0ce45ab03c, test_face_guard PAS
+9cb5dc50e2 2026-10-24 08:30:40 -0700 gen_phys: restore CP1-R10 face_keep.tcl/face_keep_release.tcl copy into kits (hunk lost in main merge 0ce45ab03c; kits refe
+2ea935b913 2026-10-24 08:29:57 -0700 Merge origin/main (CP1-R10 face_keep) into claude/kv-g3-1024
+8e6fa41cca 2026-10-24 08:29:16 -0700 KV plan v3.8w: pv/pc core spreads (KVG3-CORES review, gaps 25.92->103.68 um), ft stations declared off hard cores (g3/ft_ch
 a2c726e597 2026-10-24 08:24:32 -0700 Merge claude/die-ci-1024 (DIE-CI: TT setup / FF hold gating, SS info; test_die_ci 19/19; 0 deletions)
 f1964316b9 2026-10-24 08:24:26 -0700 Merge claude/geom-review-1024 @549466e688 (GEOM-REVIEW batch 1 die-level + QC/KV/HBM tile records; plan_review.py; 0 deleti
 7473a8f052 2026-10-24 08:24:24 -0700 DIE-CI: die STA gates at TT setup / FF hold (owner 10-24, AGENTS.md c7ce2ed69a); SS setup info only; margins additive on TT
@@ -147,15 +151,11 @@ f1964316b9 2026-10-24 08:24:26 -0700 Merge claude/geom-review-1024 @549466e688 (
 0ce45ab03c 2026-10-24 08:22:32 -0700 Merge claude/cp1-r10-1024 @7735347365 (CP1-R10: face registers survive ORFS eliminate_dead_logic (face_keep dont_touch hook
 7735347365 2026-10-24 08:22:27 -0700 CP1-R10 geom review (owner order 08:05): r10b FAIL (face regs deleted by ORFS eliminate_dead_logic, fixed 42b2101fd; seam f
 f942bf2f72 2026-10-24 08:22:08 -0700 Merge claude/signoff2-1024 @70c11a4b18 (SIGNOFF TT rule: signoff.py TT setup/FF hold blocking, SS info; paper re-derived 12
-70c11a4b18 2026-10-24 08:22:04 -0700 SIGNOFF: TT corner rule (owner 2026-10-24): signoff.py blocks on TT setup / FF hold / DRV at TT+FF, SS information only (de
-69d7983884 2026-10-24 08:20:53 -0700 Merge origin/main into claude/cp1-r10-1024 (test_face_guard: kept both sides' tests)
-42b2101fd9 2026-10-24 08:19:54 -0700 die_plan kits: face registers survive ORFS eliminate_dead_logic (dont_touch around synth_odb) + face_guard on 1_synth.odb; 
-fd219eafe7 2026-10-24 08:14:54 -0700 Merge claude/kv-g3-1024 @9ba0d89cf (KV plan v3.8v: hub_Ei fault-OR cells FIRM + internal stations L357 +3 / L758 +2, G0 PAS
 ```
 
 ### Fleet
 ```
-ot-run status: epyc2 admits 34 GB (avail 472, reserve 0, fresh 371.7, peak 2.3) load 94/128 waiters 6:212 GB run 70 root 7% scratch 573 GB | epyc3 admits -4 GB (avail 544, reserve 0, fresh 426.7, peak 56.7) load 226/96 waiters 18:376 GB run 80 root 10% | intel1 admits 249 GB (avail 693, reserve 0, fresh 270.3, peak 108.7) load 153/112 run 29 root 27% scratch 2959 GB | intel2 admits 206 GB (avail 637, reserve 0, fresh 336.4, peak 30.2) load 217/112 run 42 root 16% scratch 2643 GB | localhost admits -3 GB (avail 136, reserve 0, fresh 38.5, peak 36.4) load 100/256 waiters 16:744 GB run 28 root 62% | next 16-thread 32 GB job -> intel1
+ot-run status: epyc2 admits 482 GB (avail 567, reserve 0, fresh 0, peak 20.3) load 96/128 run 46 root 9% scratch 499 GB | epyc3 admits 523 GB (avail 634, reserve 0, fresh 0, peak 46.4) load 225/96 run 65 root 11% | intel1 admits 470 GB (avail 671, reserve 0, fresh 0, peak 136.6) load 84/112 run 20 root 29% scratch 2915 GB | intel2 admits 470 GB (avail 543, reserve 0, fresh 0, peak 7.6) load 147/112 run 34 root 16% scratch 2633 GB | localhost admits 610 GB (avail 675, reserve 0, fresh 0, peak 0.8) load 12/256 run 3 root 64% | next 16-thread 32 GB job -> localhost
 ```
 
 ### Open release-tree items (~/coord/RELEASE_TREE.md)
@@ -647,7 +647,7 @@ Goal: DeepSeek ROM (S81) token-pass gate: single-die layer runs on current RTL, 
 - (TOK-DS/COMPOSE) Latency table of record: chose lat/s81_latency.json (digest = die_plan.json v4.8) over r8/ (v4.6 bind). v4.8 R8 landed-bundle pads (r8eq_v48_checks: 76,485 pad flops, 13 bundles over margin kept) are NOT folded into any latency table (pad 0, groups []); owner/S81-P9 to confirm whether lane cycles must include them (would add up to ~13 cycles on x/xo/xring/sid lanes).
 
 
-#### TOK-HBM (lane file updated 10-24 08:10)
+#### TOK-HBM (lane file updated 10-24 08:31)
 Branch claude/tok-hbm-1024 (worktree localhost ~/wt/tok-hbm, epyc2 ~/wt/tok-hbm). Host: epyc2 (64 thr share).
 ## Findings (step 1: locate tooling + latest results)
 
@@ -718,7 +718,6 @@ die STA (intel2). Visual review (owner 08:05) renders: render/{floorplan_ft,cloc
 
 ### Last 60 milestones (~/coord/HANDOFF.md)
 ```
-2026-10-24 07:22 PDT TOK-DS/COMPOSE: compose_tok_ds.py on plan v4.8 lanes @75d8ff675 (claude/tok-ds-compose-1024, not merged): AR 886.7 tok/s DAG / 802.6 on 241 map (29.9% measured-current), MTP 2,838.8 / 2,564.0 (26.2%); MU AR 50x802.6=40,130, MTP 6x2,564=15,384 (10u MTP not qualified); selftest PA
 2026-10-24 07:23 PDT TOK-DS/COMP: main-RTL component benches: owner fold PASS (RB 20/20/20 cyc, MUT2 CAUGHT 4 mism; needed owner_fold_bench fix for vs_bench ${S81_VS_EXTRA_SOURCES}), rstop PASS (inject->s0N egress 7..23, 4 mutants CAUGHT) = 10-21 record; KV VP building intel2, dense XS cap building 
 2026-10-24 07:27 PDT DIE-STA: die_sta.py (ilm/flat/etm) on claude/die-sta-1024; KV pair e5e6 ilm==flat 0.000 ps SS/FF/TT; OpenSTA ETM hold optimistic (clk->out max only, +73 ps) -> ILM is the abstract; KV seam SS setup -100.8 ps (FYI KV)
 2026-10-24 07:28 PDT ROOT-MERGE: resumed; qc-p6-a0v6 HOLD (main+a0v6 QC regen G0 FAIL 404 clock errs on SU types; main alone G0 PASS byte-identical), half merge aborted, ~/wt/root-merge clean; WARN QC-A0 a34546df17 die_plan.json != gen_plan; now polling COORD-REVIEW-QUEUE for MERGE REQUESTs
@@ -777,6 +776,7 @@ die STA (intel2). Visual review (owner 08:05) renders: render/{floorplan_ft,cloc
 2026-10-24 08:26 PDT ELEM-S81: 34 slice_station + 8 head ft-station kits reviewed (geom_review on claude/elem-s81-1024 325c24668d), routing; 33 SIGNOFF NEEDS-RE-RUN S81 hard cores (30 w/ kits + head spo/spr) in 4 sub-agent batches -> ref_route + signoff.py tt,ff; 6 cores have no kit in repo (NOT RUN
 2026-10-24 08:27 PDT CP1-R10: MERGED 0ce45ab03c: face registers now survive ORFS eliminate_dead_logic (it deleted unused-q face flops AFTER Yosys: CP1 r10b 120+16) via face_keep PRE/POST_SYNTH dont_touch hooks + face_guard also on 1_synth.odb (regenerate kits). CP1 r10b review FAIL (results/geom_rev
 2026-10-24 08:27 PDT COORD: ALL KIT LANES: main 0ce45ab03c fixes ORFS eliminate_dead_logic deleting face registers after Yosys (face_keep dont_touch hooks; face_guard also checks 1_synth.odb). Merge main and regenerate kits before NEW P&R submissions. Kits already routing may finish, but their face 
-2026-10-24 08:28 PDT GEOM-REVIEW: S81 frames: all 12 col_* G3 kits (S81 7 + ELEM-S81 5) FAIL -> stop routes: ROM ot_rom_4096x72_m8 hard_cores have no lib (434 entries, untimed + unbuffered addr fan-out), elem_q/bf_col 552/645-ps internal latency on plain grid taps, sequencers at the row end (TT WNS
+2026-10-24 08:28 PDT GEOM-REVIEW: S81 frames: all 12 col_* G3 kits (S81 7 + ELEM-S81 5) FAIL -> stop routes: ROM ot_rom_4096x72_m8 hard_cores have no lib (434 entries, untimed + unbuffered addr fan-out), elem_q/bf_col 552/645-ps internal latency on plain grid taps, sequencers at the row end (TT WNS 
+2026-10-24 08:29 PDT COORD: ALL KIT LANES: GEOM-REVIEW found the S81 frame kits carry NO liberty for the ROM hard cores (ot_rom_4096x72_m8), so ROM paths are untimed and address fan-out is unbuffered. Check that YOUR kits pass a .lib for every macro / hard core (signoff.py should flag unclocked/unco
 ```
 

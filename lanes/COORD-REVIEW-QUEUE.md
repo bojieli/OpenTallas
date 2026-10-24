@@ -37,7 +37,7 @@ tests need docker yosys). Without docker, 23 bind tests fail on the environment,
 | claude/tokj-s81-split-1023 | 563949239 | MERGE | 58d519afe0 | Build-script change. The old path is kept behind OT_DV_BINARY=1. |
 | claude/cp2-tool-1023 | e825c9c69 | MERGE | df641549db | CP2 tool work plus test_cp2.py. die_plan pytest 126 pass, G0 4/4 unchanged. |
 | claude/kv-p7-hubtool-1023 | d2cc287a7 | NO-OP (content already in main) | - | Its tree equals 3773fcc91, which is in main, so a merge would add no content. |
-| claude/qc-p6-a0v6-1023 | 21cf43d19 | see QC section below | | |
+| claude/qc-p6-a0v6-1023 | 21cf43d19 | HOLD (carried by QC-A0) | - | See QC section below. Regenerating main's QC plan with the a0v6 gen_plan hook gives G0 FAIL. |
 | claude/qc-p6-ftc-1023 | 3a1e9ffa2 | HOLD | - | Pre-ruling (19:17) coll_ftc on tap_mode 'sinks' only. Main's QC plan was later rebuilt by qc-p6-r8/qc-p6-g0c (22:59), and CP1 r8 RULING 21:26 makes grid taps the default (sinks only as additions). A textual merge would mix two generations of a generated die_plan.json. Its tools/die_plan part (kv-p6-tap) is already in main. The GR8 PASS record for coll_ftc g3h is merged. The QC lane must port the coll_ftc tap and station change onto main's gen_plan.py and regenerate. |
 | claude/hbm-arch-1023, tokj-kvslice-1023, kv-p7-v38-1023, core-hbm-1023 | - | NOT TOUCHED | - | WIP / stopped, per the plan. |
 
@@ -57,3 +57,19 @@ tests need docker yosys). Without docker, 23 bind tests fail on the environment,
 
 ## Unpushed lanes recovered from old scratch
 Skipped: coordinator cancelled the request (old scratch wiped by owner order 07:03 PDT) before the list was made.
+
+## QC section (ROOT-MERGE resumed 2026-10-24 07:20 PDT after the coordinator restart)
+- The killed agent left ~/wt/root-merge mid-merge of qc-p6-a0v6. Its die_plan.json was rewritten at 07:03:22, the minute it was killed, so that run may not have finished. I re-ran `physical/die_plan/qwen_compute/run.sh` cleanly in two trees:
+  - origin/main 8a5d1f3dab alone: die_plan.json comes out byte-identical to the committed file. G0 PASS, 0 errors, 88 warnings, G0C 52/56.
+  - main merged with a0v6 (gen_plan.py +3 lines that call a0_core_taps.declare): G0 FAIL, 404 errors, all check=clock, "clock tap ... outside the outline". By type: sle_su_c 82, slw_su_c 82, and 60 each for sle_su_l0, sle_su_l1, slw_su_l0, slw_su_l1. Report: ~/coord/evidence/root-merge/qc-a0v6-on-main_g0_report.json
+- Decision: HOLD. I aborted the merge (`git merge --abort`); ~/wt/root-merge is clean at df641549db. a0v6 declares its taps against the pre-g0c QC plan (19:28). Main's plan was rebuilt later (qc-p6-g0c 22:59, SU split into hard cores, grid taps by default).
+- The kits and tools (physical/ref_tile/qfd_tile_n*_a0c*, tools/qwen_romleaf/*) are new files only and conflict with nothing. They travel with lane QC-A0 (claude/qc-a0-1024, merge a34546df17), which owns the A0 re-kit.
+- WARNING for QC-A0: a34546df17 took the a0v6 gen_plan.py hook and the plan_notes a0_core_taps hunk, but kept main's die_plan.json without regenerating it. The committed plan therefore does not match its generator, and regenerating it gives G0 FAIL as shown above. Before asking to merge: fix the a0_core_taps declaration for the current plan geometry, or drop the hook, then run run.sh and get G0 PASS.
+- Merge requests: lanes append `MERGE REQUEST: <branch> @sha <claim>` below. ROOT-MERGE checks this queue every ~10 min.
+
+## Merge requests
+
+- 07:58 PDT: no merge requests in 30 min of polling. ROOT-MERGE stopped; relaunch the lane to review new requests.
+
+## CODEX notes
+- CODEX root integrated shared fixes d311adaf53,44c10ec34d,34a5e602dc,acfb8a36e7,8232aca585; plain merge and HEAD==origin/main checks passed. Remaining plan/core work owned by grouped agents; no queue item orphaned.
