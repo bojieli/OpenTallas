@@ -257,6 +257,143 @@ def pack(items, W, H, fixed=()):
     return None
 
 
+def place_flow(items, W, H, attract, obst=(), band=HALO, chan=HALO, parent=None, step=None, passes=3):
+    """Data-flow placement (GEOM-REVIEW 10-24).  items [(key, w, h)]; attract {key: [(weight, target)]}, target = a fixed
+    point (bus window), another item key (its centre once placed) or ('cont', inst) (centroid of that content's
+    placed items).  Every candidate lies on the 8.64 lattice, >= band from the partition faces (face-flop band), >= chan
+    from other items (channels) and off obst rects (station corridors, tap keep-out).  Greedy by link weight (cost =
+    weighted Manhattan distance to the partners), then `passes` rip-up-and-replace sweeps with all others fixed.
+    Items with no known partner sit by their split siblings (parent), else by the cores they are dealt with."""
+    import numpy as np
+    parent = parent or {}
+    dims = {k: (snap(w), snap(h)) for k, w, h in items}
+    if step is None:
+        step = max(G, snap(max(W, H) / 120))
+    pos, cen = {}, {}
+
+    def tpoints(k):
+        out = []
+        for wgt, p in attract.get(k, ()):
+            if isinstance(p, tuple) and len(p) == 2 and p[0] == 'cont':
+                mem = [cen[q] for q in cen if parent.get(q) == p[1]]
+                if not mem:
+                    continue
+                p = (sum(m[0] for m in mem) / len(mem), sum(m[1] for m in mem) / len(mem))
+            elif isinstance(p, str):
+                if p not in cen:
+                    continue
+                p = cen[p]
+            out.append((wgt, p))
+        if not out:
+            sib = [cen[q] for q in cen if q != k and parent.get(q, q) == parent.get(k, k)]
+            if sib:
+                out = [(1.0, s_) for s_ in sib]
+        return out
+
+    def place(k):
+        ws, hs = dims[k]
+        xs = np.arange(band, W - band - ws + 1e-6, step)
+        ys = np.arange(band, H - band - hs + 1e-6, step)
+        if not len(xs) or not len(ys):
+            return False
+        xs = np.unique(np.append(xs, math.floor((W - band - ws) / G + 1e-9) * G))
+        ys = np.unique(np.append(ys, math.floor((H - band - hs) / G + 1e-9) * G))
+        xs = np.ceil(xs / G - 1e-9) * G; ys = np.ceil(ys / G - 1e-9) * G
+        xs = xs[(xs >= band - 1e-6) & (xs + ws <= W - band + 1e-6)]; ys = ys[(ys >= band - 1e-6) & (ys + hs <= H - band + 1e-6)]
+        X, Y = np.meshgrid(xs, ys); X, Y = X.ravel(), Y.ravel()
+        ok = np.ones(X.shape, bool)
+        for q, (rx, ry) in pos.items():
+            if q == k:
+                continue
+            rw, rh = dims[q]
+            ok &= ~((X < rx + rw + chan - 1e-6) & (rx < X + ws + chan - 1e-6) & (Y < ry + rh + chan - 1e-6) & (ry < Y + hs + chan - 1e-6))
+        for (rx, ry, rw, rh) in obst:
+            ok &= ~((X < rx + rw - 1e-6) & (rx < X + ws - 1e-6) & (Y < ry + rh - 1e-6) & (ry < Y + hs - 1e-6))
+        if not ok.any():
+            return False
+        tp = tpoints(k)
+        if tp:
+            cost = sum(wg * (np.abs(X + ws / 2 - p[0]) + np.abs(Y + hs / 2 - p[1])) for wg, p in tp)
+        else:
+            cost = Y * W + X
+        cost = np.where(ok, cost, np.inf)
+        i = int(np.argmin(cost))
+        pos[k] = (round(float(X[i]), 4), round(float(Y[i]), 4))
+        cen[k] = (pos[k][0] + ws / 2, pos[k][1] + hs / 2)
+        return True
+
+    tot = {k: sum(wg for wg, _ in attract.get(k, ())) for k, _, _ in items}
+    order = sorted(dims, key=lambda k: (tot[k] == 0, -tot[k], -dims[k][0] * dims[k][1]))
+    # big items first among the connected ones so the small ones fill around them
+    order = sorted(order, key=lambda k: (tot[k] == 0, -(dims[k][0] * dims[k][1]) ** 0.5 * (1 + tot[k]) ** 0.25))
+    for k in order:
+        if not place(k):
+            return None
+    for _ in range(passes):
+        for k in order:
+            old = pos.pop(k); cen.pop(k)
+            if not place(k):
+                pos[k] = old; cen[k] = (old[0] + dims[k][0] / 2, old[1] + dims[k][1] / 2)
+    return pos
+
+
+def free_point(p, boxes, W, H, m=4.32):
+    """Nearest free rectangle boundary; a radial 8.64 grid can miss an entire narrow channel."""
+    x,y=min(max(p[0],m),W-m),min(max(p[1],m),H-m)
+    valid=lambda q: m-1e-6 <= q[0] <= W-m+1e-6 and m-1e-6 <= q[1] <= H-m+1e-6 and not any(
+        bx-m+1e-6 < q[0] < bx+bw+m-1e-6 and by-m+1e-6 < q[1] < by+bh+m-1e-6
+        for bx,by,bw,bh in boxes)
+    if valid((x,y)):return (x,y)
+    xs=sorted({m,W-m,*[v for bx,by,bw,bh in boxes for v in (bx-m,bx+bw+m)]})
+    ys=sorted({m,H-m,*[v for bx,by,bw,bh in boxes for v in (by-m,by+bh+m)]})
+    choices=[(xx,y) for xx in xs]+[(x,yy) for yy in ys]
+    free=[q for q in choices if valid(q)]
+    if not free:free=[(xx,yy) for xx in xs for yy in ys if valid((xx,yy))]
+    if not free:raise ValueError(f'no macro-free station at {p} in {W}x{H}')
+    return min(free,key=lambda q:abs(q[0]-p[0])+abs(q[1]-p[1]))
+
+
+class RelayRouter:
+    """Shortest-hop relay chains on free macro edges; moving a relay must never silently lengthen a hop."""
+    def __init__(self, boxes, W, H, limit=750.0, margin=4.32):
+        import numpy as np
+        self.limit = limit
+        pts = set()
+        def add(x,y):
+            if margin <= x <= W-margin and margin <= y <= H-margin and not any(
+                bx-margin+1e-6 < x < bx+bw+margin-1e-6 and by-margin+1e-6 < y < by+bh+margin-1e-6
+                for bx,by,bw,bh in boxes):
+                pts.add((round(x,4),round(y,4)))
+        def edge(a,b):
+            n=max(1,math.ceil((abs(a[0]-b[0])+abs(a[1]-b[1]))/(limit/3)))
+            for j in range(n+1):
+                add(a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n)
+        for x,y,w,h in boxes + [(margin*2,margin*2,W-margin*4,H-margin*4)]:
+            x0,y0,x1,y1=max(margin,x-margin),max(margin,y-margin),min(W-margin,x+w+margin),min(H-margin,y+h+margin)
+            for a,b in [((x0,y0),(x1,y0)),((x0,y1),(x1,y1)),((x0,y0),(x0,y1)),((x1,y0),(x1,y1))]:edge(a,b)
+        self.points=sorted(pts)
+        self.xy=np.asarray(self.points)
+        self.near=lambda p: np.flatnonzero(np.abs(self.xy-p).sum(axis=1)<limit-1e-5).tolist()
+        self.neighbors=[self.near(p) for p in self.points]
+
+    def __call__(self,a,b):
+        distance=lambda p,q:abs(p[0]-q[0])+abs(p[1]-q[1])
+        if distance(a,b) <= self.limit+1e-6:return []
+        starts=self.near(a)
+        ends=set(self.near(b))
+        q=collections.deque(starts);previous={i:None for i in starts}
+        found=None
+        while q:
+            i=q.popleft()
+            if i in ends:found=i;break
+            for j in self.neighbors[i]:
+                if j not in previous:previous[j]=i;q.append(j)
+        if found is None:raise ValueError(f'no free relay corridor {a}->{b}; candidates {len(self.points)}')
+        path=[]
+        while found is not None:path.append(self.points[found]);found=previous[found]
+        return list(reversed(path))
+
+
 def pack_columns(items, W, H):
     """fallback: column packing (fill y first)."""
     pos = {}
@@ -292,7 +429,22 @@ def census_conn(plan_dir):
             continue
         conn[fold(src)][sb].add(fold(dst))
         conn[fold(dst)][db].add(fold(src))
+        b = int(bits) if str(bits).isdigit() else 1
+        WCONN[fold(src)][fold(dst)] += b
+        WCONN[fold(dst)][fold(src)] += b
     return conn, parts_of
+
+
+WCONN = collections.defaultdict(collections.Counter)
+CLKRST = re.compile(r'^(clk|ck_\w|rst_n|.*_rst_n|.*rst_rst_n)$')
+DROP_PORTS = {}            # module -> ports removed from the pin table (RTL delta), none at present
+FACE_BAND = 34.56          # macro-free band along the partition faces: face flops / pin registers (GEOM-REVIEW 10-24)
+CHAN = 17.28               # min channel between hard cores (stations, repeaters, clock buffers)
+CORRIDOR_BITS = 1000       # ft slots this wide keep a straight core-free station corridor
+CORRIDOR_W = 34.56
+TAP_KEEP = 34.56           # core-free box at the partition clock / reset tap
+HOP = 750.0                # owner R3: relay stations at most every 750 um
+FLOW = [0, 0]                                           # types placed by place_flow / fell back to the shelf packer    # asbuilt -> partner asbuilt -> bits (placement attraction)
 
 
 # ------------------------------------------------------------------------------------------------- main
@@ -308,6 +460,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('plan')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--ft-corridor-types', default='*', help='comma-separated types reserving straight heavy FT bands; other types use macro-free relay channels')
     a = ap.parse_args()
     src_dir = os.path.dirname(os.path.abspath(a.plan))
     out = os.path.abspath(a.out)
@@ -350,12 +503,13 @@ def main():
         items = []        # (key, w, h, kind, payload)
         if t.get('hard') and any(c['module'] == SM_MOD for c in old.values()):
             new = []
+            col_gap = next((c['rect_um'][2] for c in t.get('channels',[]) if c.get('reason','').startswith('SM column broadcast')),0.0)
             for col in range(8):
                 for row in range(2):
                     for hn, y0 in (('hnx_rp3lp3h_s', 0.0), ('hnx_rp3lp3h_n', 1036.8)):
                         hw, hh = HALVES[hn]
                         new.append(dict(inst=f'u_sm_t{row}{col}_{hn[-1]}', module=hn,
-                                        origin_um=[round(col * 630.72, 4), round(row * 2246.4 + y0, 4)],
+                                        origin_um=[round(col * (630.72+col_gap), 4), round(row * (h - 2246.4) + y0, 4)],   # B2c: row 1 above the SM channel
                                         outline_um=[hw, hh], track_offset_um=[0.0, 0.0],
                                         pins_file=f'cores/{hn}.json',
                                         note='HNX-SM4P hardened half (kit pins exact, physical/hbm_next/sm4)'))
@@ -387,6 +541,10 @@ def main():
                     if pm not in D4:
                         raise SystemExit(f'{tn} {ci}: piece {pm} has no d4g pins')
                     (pw, ph), pf = D4[pm]
+                    if pm == 'ot_hgi_sfu_core_split3__opstore_b':
+                        # Measured synthesis: 48 SRAMs x 172.824 x 41.064 um (340646 um2).
+                        # Four columns/twelve rows with 8.64-um channels plus logic/clock bands.
+                        pw, ph = 760.32, 691.2
                     if master.endswith('pgslice_lg__pv8') and (pw, ph) == (587.52, 933.12):
                         pw, ph = ALT_PV8
                     items.append((f'{ci}_{pc["core_label"]}', pw, ph, 'core', dict(module=pm, src=pf, cells=pc['cells'],
@@ -404,7 +562,83 @@ def main():
         if not items:
             t.pop('hard_cores', None)
             continue
+        # ---------------------------------------------------------------- connectivity (before placement; GEOM-REVIEW
+        # 10-24: placement, pin faces and stations all come from one link table)
+        bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
+        if inst_nw:
+            for L in plan['lanes']:
+                p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
+                if p0['src']['part'] == inst_nw:
+                    bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
+                if p1['dst']['part'] == inst_nw:
+                    bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
+        by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
+        P_ = S.Plan(plan)
+        bt = CK._bus_targets(P_, tn)
         orig_wh = {it[0]: (it[1], it[2]) for it in items}
+        ports_of, links = {}, {}           # key -> {port: [(name, face0)]}; key -> {port: [(kind, name)]}
+        kids = collections.defaultdict(list)
+        for k, iw, ih, kind, pl in items:
+            if kind == 'core':
+                kids[pl['parent']].append(k)
+        for k, iw, ih, kind, pl in items:
+            if kind != 'core':
+                continue
+            src_pins = [p for p in read_pins(pl['src']) if base(p[0]) not in DROP_PORTS.get(pl['module'], ())]
+            ow, oh = D4[pl['module']][0]
+            ports = collections.OrderedDict()
+            for nm, ln, px, py in src_pins:
+                ports.setdefault(base(nm), []).append((nm, face_of(px, py, ow, oh)))
+            ports_of[k] = ports
+        for k, iw, ih, kind, pl in items:
+            if kind != 'core':
+                continue
+            ports = ports_of[k]
+            ab = asb.get((tn, pl['parent']))
+            sibs = [q for q in kids[pl['parent']] if q != k]
+            lk = {}
+            for port in ports:
+                if CLKRST.match(port):
+                    continue
+                tg = set()
+                if ab and inst_nw and port in conn.get(ab, {}):     # a master port: census partners
+                    for partner in conn[ab][port]:
+                        pps = parts_of(partner)
+                        if inst_nw in pps and partner in by_asb and by_asb[partner] != pl['parent']:
+                            q = by_asb[partner]
+                            tg |= {('core', x) for x in kids.get(q, ())} if kids.get(q) else {('leaf', q)}
+                        else:
+                            tg |= {('bus', bb) for bb, others in bus_lanes.items() if set(pps) & others and bb in bt}
+                if not tg and sibs:                                  # a piece-internal net: the sibling piece port
+                    for q in sibs:
+                        for qp in ports_of.get(q, ()):
+                            if qp != port and len(min(qp, port, key=len)) >= 3 and (
+                                    qp.endswith('_' + port) or port.endswith('_' + qp)) or (qp == port and not CLKRST.match(qp)):
+                                tg.add(('core', q))
+                if tg:
+                    lk[port] = sorted(tg)
+            links[k] = lk
+        # heavy ft slots: keep a straight station channel free of cores (GEOM-REVIEW root finding)
+        obst, slot_routes = [], {}
+        if inst_nw:
+            ox, oy = P0.parts[inst_nw]['origin_um']
+            for L in plan['lanes']:
+                for part, slot, pa_, pb_ in P_.lane_crossings(L['id']):
+                    if part != inst_nw or not slot:
+                        continue
+                    sl = P_.slot(part, slot)
+                    A = P_.port_point(pa_); B = P_.port_point(pb_)
+                    seg = CK.zroute(A, B, P_.die_face(part, sl['in_face']), P_.die_face(part, sl['out_face']))
+                    seg = [(x - ox, y - oy) for x, y in seg]
+                    slot_routes[slot] = seg
+                    if sl.get('width', 0) >= CORRIDOR_BITS and (a.ft_corridor_types == '*' or tn in a.ft_corridor_types.split(',')):
+                        for (x1, y1), (x2, y2) in zip(seg, seg[1:]):
+                            hw = CORRIDOR_W / 2
+                            obst.append((min(x1, x2) - hw, min(y1, y2) - hw, abs(x2 - x1) + 2 * hw, abs(y2 - y1) + 2 * hw))
+        has_core = any(it[3] == 'core' for it in items)
+        tapc = (w / 2, h / 2)
+        if has_core:
+            obst.append((tapc[0] - TAP_KEEP / 2, tapc[1] - TAP_KEEP / 2, TAP_KEEP, TAP_KEEP))
         items0, force = items, {}
         for attempt in range(40):
             items = items0
@@ -413,7 +647,7 @@ def main():
                 sized = []
                 for k, iw, ih, kind, pl in items:
                     if kind == 'core':
-                        npin = len(read_pins(pl['src']))
+                        npin = sum(len(v) for v in ports_of[k].values())
                         if k in force:
                             iw, ih = force[k]
                         elif sum(face_cap(f, iw, ih) for f in 'NSEW') < npin:
@@ -422,67 +656,74 @@ def main():
                             iw, ih = nw, nh
                     sized.append((k, iw, ih, kind, pl))
                 items = sized
-                pos = pack([(k, iw, ih) for k, iw, ih, _, _ in items], w, h) or pack_columns([(k, iw, ih) for k, iw, ih, _, _ in items], w, h)
+                attract = collections.defaultdict(list)
+                for k, iw, ih, kind, pl in items:
+                    for port, tg in links.get(k, {}).items():
+                        wgt = len(ports_of[k][port]) / len(tg)
+                        for kd, nm in tg:
+                            if kd == 'bus':
+                                attract[k].append((wgt, bt[nm][1]))
+                            elif kd == 'core':
+                                attract[k].append((wgt, nm)); attract[nm].append((wgt, k))
+                            else:
+                                attract[k].append((wgt, ('cont', nm)))
+                    if kind == 'soft':      # soft glue: as-built census partners (bit weighted)
+                        ab = asb.get((tn, k))
+                        for partner, bits in (WCONN.get(ab, {}).items() if ab and inst_nw else ()):
+                            if partner in by_asb and by_asb[partner] != k:
+                                attract[k].append((bits, ('cont', by_asb[partner])))
+                            else:
+                                pps = set(parts_of(partner))
+                                bs = [bb for bb, others in bus_lanes.items() if pps & others and bb in bt]
+                                attract[k] += [(bits / len(bs), bt[bb][1]) for bb in bs]
+                kparent = {it[0]: (it[4].get('parent', it[0]) if it[3] == 'core' else it[0]) for it in items}
+                spec = [(k, iw, ih) for k, iw, ih, _, _ in items]
+                pos = None
+                for band, chan in ((FACE_BAND, CHAN), (FACE_BAND / 2, CHAN), (HALO, HALO)):
+                    if not has_core:
+                        break
+                    pos = place_flow(spec, w, h, attract, obst=obst, band=band, chan=chan, parent=kparent)
+                    if pos:
+                        rep.setdefault('bands', {})[tn] = [band, chan]
+                        break
+                FLOW[0 if pos else 1] += 1
+                pos = pos or pack(spec, w, h) or pack_columns(spec, w, h)
                 if pos is None:
                     raise Unfit(tn)
                 geo = {k: (pos[k][0], pos[k][1], snap(iw) if kind == 'soft' else iw, snap(ih) if kind == 'soft' else ih)
                        for k, iw, ih, kind, _ in items}
-                # contents: origin / outline (split master = bbox of its pieces)
                 for ci, c in cont.items():
-                    mem = [g for k, g in geo.items() if k == ci or k.startswith(ci + '_') and any(it[0] == k and it[4].get('parent') == ci for it in items)]
+                    mem = [geo[k] for k in geo if kparent.get(k) == ci]
                     if mem:
                         x0 = min(g[0] for g in mem); y0 = min(g[1] for g in mem)
                         x1 = max(g[0] + g[2] for g in mem); y1 = max(g[1] + g[3] for g in mem)
                         c['origin_um'] = [round(x0, 4), round(y0, 4)]
                         c['outline_um'] = [round(x1 - x0, 4), round(y1 - y0, 4)]
-                # targets for connectivity
-                bt = CK._bus_targets(S.Plan(plan), tn)
-                bus_lanes = collections.defaultdict(set)     # bus -> partner partitions
-                if inst_nw:
-                    for L in plan['lanes']:
-                        p0 = P0.ports[L['ports'][0]]; p1 = P0.ports[L['ports'][-1]]
-                        if p0['src']['part'] == inst_nw:
-                            bus_lanes[p0['src']['bus']].add(p1['dst']['part'])
-                        if p1['dst']['part'] == inst_nw:
-                            bus_lanes[p1['dst']['bus']].add(p0['src']['part'])
-                by_asb = {asb[(tn, ci)]: ci for ci in cont if (tn, ci) in asb}
+                cen = {k: (g[0] + g[2] / 2, g[1] + g[3] / 2) for k, g in geo.items()}
                 new_hc = []
                 tconn = {}
+                placed_pins = {}
                 for k, iw, ih, kind, pl in items:
                     if kind == 'soft':
                         soft_l.append(f'{tn}.{k}')
                         continue
                     x0, y0 = geo[k][0], geo[k][1]
                     cx, cy = x0 + iw / 2, y0 + ih / 2
-                    src_pins = read_pins(pl['src'])
-                    ow, oh = D4[pl['module']][0]
-                    ports = collections.OrderedDict()
-                    for nm, ln, px, py in src_pins:
-                        ports.setdefault(base(nm), []).append((nm, face_of(px, py, ow, oh)))
-                    ab = asb.get((tn, pl['parent'])) if k == pl['parent'] else None
                     groups = []
                     pconn = {}
-                    for port, lst in ports.items():
+                    for port, lst in ports_of[k].items():
                         names = [x[0] for x in lst]
                         f0 = collections.Counter(x[1] for x in lst).most_common(1)[0][0]
-                        tg = []
-                        if ab and port in conn.get(ab, {}) and inst_nw:
-                            for partner in conn[ab][port]:
-                                pps = parts_of(partner)
-                                if inst_nw in pps and partner in by_asb and by_asb[partner] != k:
-                                    tg.append(('leaf', by_asb[partner]))
-                                else:
-                                    for b, others in bus_lanes.items():
-                                        if set(pps) & others and b in bt:
-                                            tg.append(('bus', b))
+                        tg = links[k].get(port, [])
                         pts = []
-                        for kd, nm in sorted(set(tg)):
+                        for kd, nm in tg:
                             if kd == 'bus':
                                 pts.append(bt[nm][1])
-                            else:
+                            elif kd == 'core':
+                                pts.append(cen[nm])
+                            elif 'origin_um' in cont[nm]:
                                 c2 = cont[nm]
-                                if 'origin_um' in c2:
-                                    pts.append((c2['origin_um'][0] + c2['outline_um'][0] / 2, c2['origin_um'][1] + c2['outline_um'][1] / 2))
+                                pts.append((c2['origin_um'][0] + c2['outline_um'][0] / 2, c2['origin_um'][1] + c2['outline_um'][1] / 2))
                         dirs = []
                         for tx, ty in pts:
                             d = math.hypot(tx - cx, ty - cy)
@@ -491,7 +732,7 @@ def main():
                         if dirs:
                             pull = {f: max(NORM[f][0] * ux + NORM[f][1] * uy for ux, uy in dirs) for f in 'NSEW'}
                             f = max(pull, key=pull.get)
-                            pconn[port] = [f'{kd}:{nm}' for kd, nm in sorted(set(tg))]
+                            pconn[port] = [f'{kd}:{nm}' for kd, nm in tg]
                             cnt['conn'] += 1
                         else:
                             pull = {f0: 0.01}
@@ -506,16 +747,19 @@ def main():
                         force[k] = (nw, nh)
                         rep['grown'][f'{tn}.{k}'] = [orig_wh[k][0], orig_wh[k][1], nw, nh, str(e)[:60]]
                         raise Retry(k)
-                    spills = [p for p, f, *_ in [(g[0], g[2]) for g in groups] if gf[p] != f]
+                    spills = [g[0] for g in groups if gf[g[0]] != g[2]]
                     if spills:
                         rep['spill'][f'{tn}.{k}'] = len(spills)
+                    placed_pins[k] = pins
                     key = f"{pl['module']}__{cw:g}x{ch:g}__{tn}_{k}" if pconn else f"{pl['module']}__{cw:g}x{ch:g}"
                     pf = f'cores/{key}.json'
                     if pf not in pin_tables:
                         pending[pf] = pins
+                    dropped = DROP_PORTS.get(pl['module'])
                     new_hc.append(dict(inst=k, module=pl['module'], origin_um=[x0, y0], outline_um=[cw, ch],
                                        track_offset_um=[0.0, 0.0], pins_file=pf,
-                                       note=pl['note'] + (f"; {pl['cells']} cells" if pl.get('cells') else '')))
+                                       note=pl['note'] + (f"; {pl['cells']} cells" if pl.get('cells') else '')
+                                       + (f'; ports {dropped} removed (see DROP_PORTS)' if dropped else '')))
                     if pconn:
                         tconn[k] = pconn
                     cnt['cores'] += 1
@@ -524,8 +768,88 @@ def main():
                     t.pop('hard_cores')
                 if tconn:
                     core_conns[tn] = tconn
+                # ---------------------------------------------------------------- stations, taps, ft regs (R3-INTERNAL)
+                boxes = [(g[0], g[1], g[2], g[3]) for k, g in geo.items() if any(it[0] == k and it[3] == 'core' for it in items)]
+                free = lambda p: free_point(p, boxes, w, h)
+                ist, lstat = [], []
+                relay_route = RelayRouter(boxes, w, h, HOP)
+                for k, pins in placed_pins.items():
+                    byp = collections.defaultdict(list)
+                    for nm, ln, px, py in pins:
+                        byp[base(nm)].append((geo[k][0] + px, geo[k][1] + py))
+                    for port, tg in links[k].items():
+                        if port not in byp:
+                            continue
+                        pp = byp[port]
+                        A = (sum(p[0] for p in pp) / len(pp), sum(p[1] for p in pp) / len(pp))
+                        bits = len(pp)                 # every target gets the whole port (broadcast / unknown split)
+                        for kd, nm in tg:
+                            if kd == 'bus':
+                                B = bt[nm][1]
+                            elif kd == 'core':
+                                g2_ = geo[nm]
+                                B = (min(max(A[0], g2_[0]), g2_[0] + g2_[2]), min(max(A[1], g2_[1]), g2_[1] + g2_[3]))
+                            else:
+                                continue
+                            d = abs(A[0] - B[0]) + abs(A[1] - B[1])
+                            lstat.append((bits, d, kd))
+                            if d <= HOP:
+                                continue
+                            n = math.ceil(d / HOP) - 1
+                            route = [A, (B[0], A[1]), B]
+                            regs = relay_route(A, B)
+                            launch, capture = f'{k}.{port}', nm
+                            aa, bb = A, B
+                            if kd == 'bus':
+                                near_core = free(A)
+                                regs = relay_route(B, near_core) + [near_core]
+                                aa, bb = B, A
+                                launch, capture = f'face bus {nm}', f'{k}.{port}'
+                            n = len(regs)
+                            ist.append(dict(conn=(f'bus:{nm}' if kd == 'bus' else f'{k}.{port}|{nm}'),
+                                            from_um=[round(aa[0], 3), round(aa[1], 3)], to_um=[round(bb[0], 3), round(bb[1], 3)],
+                                            regs_um=[[round(x, 3), round(y, 3)] for x, y in regs], bits=bits,
+                                            launch=launch, capture=capture,
+                                            note=f'HBM-ARCH cores_b2 R3-INTERNAL: {d:.0f} um core link, {n} station(s) '
+                                                 f'(data + epoch), hops <= {HOP:g} um; +{n} cycle(s) on this link'))
+                if ist:
+                    t['internal_stations'] = ist
+                else:
+                    t.pop('internal_stations', None)
+                if has_core:
+                    tp = free(tapc)
+                    t['clock']['tap_um'] = [round(tp[0], 3), round(tp[1], 3)]
+                    t['reset']['tap_um'] = [round(tp[0], 3), round(tp[1], 3)]
+                    for sl in t.get('ft_slots', []):
+                        seg = slot_routes.get(sl['name'])
+                        if not seg:
+                            continue
+                        corridor_clear = not any(
+                            min(a[0], b[0]) < x + cw + 4.32 and x - 4.32 < max(a[0], b[0])
+                            and min(a[1], b[1]) < y + ch + 4.32 and y - 4.32 < max(a[1], b[1])
+                            for a, b in zip(seg, seg[1:]) for x, y, cw, ch in boxes)
+                        if sl.get('width', 0) >= CORRIDOR_BITS and corridor_clear:
+                            # These routes have an explicitly reserved macro-free band. Keep
+                            # stations in that band instead of shortest-path detours through
+                            # unrelated narrow channels (which waste the wide FT corridor).
+                            length = CK.plen(seg)
+                            count = max(1, math.ceil(length / 700.0) - 1)
+                            regs = [free(seg[0])] + [free(CK.point_at(seg, length * i / (count + 1)))
+                                    for i in range(1, count + 1)] + [free(seg[-1])]
+                        else:
+                            first = free(seg[0])
+                            regs = [first] + relay_route(first, seg[-1])
+                        sl['stations'] = len(regs)
+                        sl['regs_um'] = [[round(v, 3) for v in p] for p in regs]
+                lb = sum(b_ for b_, _, _ in lstat) or 1
                 rep['types'][tn] = dict(cores=len(new_hc), soft=sum(1 for it in items if it[3] == 'soft'),
-                                        fill=round(sum(g[2] * g[3] for g in geo.values()) / (w * h), 3))
+                                        fill=round(sum(g[2] * g[3] for g in geo.values()) / (w * h), 3),
+                                        link_bits=lb, link_bits_gt1mm=round(sum(b_ for b_, d, _ in lstat if d > 1000) / lb, 3),
+                                        core_link_bits=sum(b_ for b_, _, kd in lstat if kd == 'core'),
+                                        core_link_gt1mm=round(sum(b_ for b_, d, kd in lstat if kd == 'core' and d > 1000) / max(1, sum(b_ for b_, _, kd in lstat if kd == 'core')), 3),
+                                        core_link_gt2mm=round(sum(b_ for b_, d, kd in lstat if kd == 'core' and d > 2000) / max(1, sum(b_ for b_, _, kd in lstat if kd == 'core')), 3),
+                                        link_bit_mm=round(sum(b_ * d for b_, d, _ in lstat) / 1000, 1),
+                                        stations=len(ist), station_cycles_bitw=round(sum(e['bits'] * len(e['regs_um']) for e in ist) / lb, 3))
                 break
             except Retry:
                 continue
@@ -549,12 +873,15 @@ def main():
             t['note'] = ('LOWER BOUND: 32 hnx_rp3lp3h halves x 30k um2 std cells / 0.116 um2 per cell (hard '
                                'children excluded); type over 400k -> built from the 32 half kits as hard cores')
     plan['note'] = plan.get('note', '') + '; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins'
+    final_plan = S.Plan(plan)
+    for lane in plan['lanes']:
+        plan['latency']['lanes'][lane['id']] = final_plan.lane_latency(lane['id'])
     json.dump(plan, open(os.path.join(out, 'die_plan.json'), 'w'), indent=0)
     json.dump(core_conns, open(os.path.join(out, 'core_conns.json'), 'w'), indent=0)
     rep['pins_files'] = len(pin_tables) + len(HALVES)
     json.dump(rep, open(os.path.join(out, 'cores_b2.json'), 'w'), indent=1)
     print(json.dumps({k: v for k, v in rep.items() if k not in ('types', 'soft')}, indent=0)[:3000])
-    print('soft leaves', len(rep['soft']))
+    print('soft leaves', len(rep['soft']), 'flow-placed attempts', FLOW)
 
 
 if __name__ == '__main__':

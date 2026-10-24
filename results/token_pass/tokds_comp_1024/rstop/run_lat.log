@@ -1,0 +1,10 @@
+RSTOP_LAT pass=1 n=80 min=7 max=23 per_slice_max=9,7,11,9,13,11,15,13,17,15,19,17,21,19,23,21
+RSTOP_XO R1 egress 80 (bad 0) gather min 80 other_out 0
+RSTOP_LAT pass=0 n=0 min=1073741824 max=-1 per_slice_max=-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+RSTOP_XO R2 egress 0 gather min 80 other_out 0
+PASS rstop_xo 138 checks
+- /srv/opentallas-scratch/claude/tok-ds/comp/rstop/tb_rstop_lat.sv:225: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 8.696 s; speed 759.854 ns/s
+- Verilator: cpu 8.696 s on 1 threads; allocated 11 MB
+rc 0

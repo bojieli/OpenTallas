@@ -60,6 +60,18 @@ VAR = {
     # budget allows; NE = MY mirror of NW (one master per tile partition); SerDes S1 on the S edge (vsN0)
     'B2': dict(smw=584, smh=520, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210, spuhub=True,
                mirror=True, l3=True, label='B2: P=3 SM, 8 SM / 2 mirrored quad tiles, 1 HBM3E stack'),
+    # B2c (HBM-ARCH G1 self-review 10-24): B2 + a 17.28-um std-cell channel across each SM between its two half-tile rows
+    # (32 hnx_rp3lp3h halves tile the SM slot with zero gap, so the clock tap drivers, the halves' reset landings --
+    # rst_n sits on the row-seam faces -- and spare repeaters had no sites).  smh 520 -> 522 lattice.
+    'B2c': dict(smw=584, smh=522, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
+                spuhub=True, mirror=True, l3=True, sm_channel=2,
+                label='B2c: P=3 SM, 8 SM / 2 mirrored quad tiles, 1 HBM3E stack, SM driver channel'),
+    'B2j': dict(smw=668, smh=522, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
+                spuhub=True, mirror=True, l3=True, sm_channel=2, sm_col_channel=12,
+                label='B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels'),
+    'B2k': dict(smw=668, smh=522, suh=228, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210,
+                spuhub=True, mirror=True, l3=True, sm_channel=2, sm_col_channel=12,
+                label='B2k: B2j plus taller SU bands for unobstructed wide feedthrough corridors'),
 }
 SIDE = 96          # side column width
 SUH = 180          # SU band height (4 lane-group partitions per SM)
@@ -88,6 +100,7 @@ def build(var):
     inter-tile corridors; the ROOT sits at the die centre in the seam row."""
     V = VAR[var]
     smw, smh, nq = V['smw'], V['smh'], V['nq']
+    SUH = V.get('suh', globals()['SUH'])
     PHYH = V.get('phyh', PHYH0)
     BANDH = V.get('bandh', BANDH0)
     HUBW = V.get('hubw', HUBW0)
@@ -742,6 +755,16 @@ def plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, outdir):
                             **({'tap_pitch_um': float(max(w, h))} if p['kind'] in ('phy', 'sm') else {})),  # hard macro: one clock pin, own tree
                  reset=dict(tap_um=[round(w / 2, 3), round(h / 2, 3)], sync_stages=2),
                  contents=cont, cells=max(cells, 1000))
+        if p['kind'] == 'sm' and T['V'].get('sm_channel'):
+            chh = T['V']['sm_channel'] * G
+            t['channels'] = [dict(rect_um=[0.0, round((h - chh) / 2, 4), w, round(chh, 4)],
+                                  reason='SM driver channel between the two half-tile rows: clock tap drivers (tap at its '
+                                         'centre), the halves rst_n landings / reset sync, spare repeaters')]
+        if p['kind'] == 'sm' and T['V'].get('sm_col_channel'):
+            gap = T['V']['sm_col_channel'] * G
+            for col in range(1,8):
+                t.setdefault('channels', []).append(dict(rect_um=[round(col*630.72+(col-1)*gap,4),0.0,gap,h],
+                    reason='SM column broadcast channel: 2069 bits into both halves, M4/M6 at 0.048um pitch and 60% usable tracks; no new pipeline stage'))
         if p['kind'] == 'phy':
             fit.pop(n, None)
         if p['kind'] not in ('phy',) and hcs:

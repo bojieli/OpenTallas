@@ -13,22 +13,30 @@
 set -u
 O=$(realpath -m "${1:?outdir}"); SC=${2:?scen}; M=${3:-none}; mkdir -p "$O"
 IMG=$(realpath results/rtl/s81_head_tile_1021/img)
+# 10-24: CUT (decimal, default 511 = 0x1ff) / SPLIT9 (default 1) env select the element pipeline (default = the closed
+# element views, SK 11; CUT=379 SPLIT9=0 = the 10-21 0x17b point, SK 8); SK != 8 re-skews the images into OUTDIR/img_skN.
+CUT=${CUT:-511}; S9=${SPLIT9:-1}; SKV=$(python3 -c "print(1+bin($CUT).count('1')+$S9)")
+if [ $SKV != 8 ]; then
+  [ -f $O/img_sk$SKV/hb_1.viamap.hex ] || python3 tools/s81_head/hd_reskew_images.py $IMG $O/img_sk$SKV --from 8 --to $SKV > $O/reskew.log || exit 4
+  IMG=$O/img_sk$SKV
+fi
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 $V --version
 SRCS="rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_dsrom_bmul3.sv rtl/hdc/ot_hdc_delay.sv
  physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
- rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv
+ rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv
  rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv"
 D=""; [ "$M" != none ] && D="+define+OT_S81HD_MUT_$M"
-OBJ=$O/obj_$M
+CV=${CV:-0}   # 10-24: CV=1 = elements as the closed-view macro models (ot_s81hd_bundle CV)
+OBJ=$O/obj_${M}_${CUT}_${S9}_cv$CV
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
-  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GCV=$CV -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }
 fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-8375}   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
+EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || echo 8429)}  # 8,429 at 0x1ff / SPLIT9 1 (10-24)   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
   ln -sf $IMG/xa.hex $W/xa.hex; ln -sf $IMG/xb.hex $W/xb.hex; link $W t0 $a; link $W t1 $b
@@ -47,5 +55,5 @@ for s in $( [ "$SC" = ALL ] && echo "A B C D" || echo $SC ); do
   *) echo "unknown scenario $s"; exit 2 ;;
   esac
 done
-[ $ok = $n ] && { echo "BENCH_PASS s81hd_mini SCEN=$SC MUT=$M ($ok/$n)"; exit 0; }
-echo "BENCH_FAIL s81hd_mini SCEN=$SC MUT=$M ($ok/$n)"; exit 1
+[ $ok = $n ] && { echo "BENCH_PASS s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV ($ok/$n)"; exit 0; }
+echo "BENCH_FAIL s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV ($ok/$n)"; exit 1

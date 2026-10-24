@@ -232,4 +232,3 @@ Hardening lessons for the redesign kits: pins on the 0.024 lattice; skip M5 PG t
   - q_su01 (SU near half): WL 14.4 m; M3 10.3%.
   - q_su30: WL 15.7 m; M2 21.4%.
   - q_hub (80,085 pins / flops): **0 overflow** on every layer (M2-M9 at <= 0.06%); pin access 160,298 pins with 0 lacking an access point. Total wirelength 570 mm. The probe peaked at 132 GB and ran 41 min of DRT pin access, so the hub kit is pin-heavy. Its kit needs a >= 160 GB admission (or the R8 bus groups to halve the boundary flops).
-
