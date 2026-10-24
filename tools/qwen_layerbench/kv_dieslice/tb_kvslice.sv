@@ -130,6 +130,13 @@ module tb_kvslice;
         end
     end
     integer post = 0;
+    // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
+    integer hb = 20000;
+    initial void'($value$plusargs("HB=%d", hb));
+    always @(posedge ck_core) if (hb > 0 && cyc_core % hb == 0) begin
+        $display("HB cyc %0d t %0t frames_sent %0d images_ready %0d setup %0d", cyc_core, $time, sent, n_ready, t_setup >= 0);
+        $fflush;
+    end
     initial begin
         integer fd, t; reg [63:0] d;
         if (!$value$plusargs("PHASE=%s", phase)) phase = "boot";
