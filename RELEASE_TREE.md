@@ -103,7 +103,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [ ] ELEM.ALL Close current-plan partition types / hard cores without a SIGNED view (NOT the obsolete 10-21 element list) · ELEM-S81 / ELEM-QK / ELEM-HBM · RUNNING
 - [ ] FLOW.DISK ot-run scratch-only placement + root guard · FLEET-DISK · RUNNING
 - [ ] FLOW.CI Whole-die prototype CI per plan (G0/G0C/xdie/G2/die STA + SI/IR margins) · DIE-CI · RUNNING
-- [ ] FLOW.SIGNOFF Uniform MCMM re-signoff of every closed block · SIGNOFF · RUNNING
+- [ ] FLOW.SIGNOFF Uniform MCMM re-signoff · SIGNOFF · RUNNING · signoff.py 0f5176689d: 137 plan-closed modules, 0 routed DBs survive (all NEEDS RE-RUN); 88 fail on paper (TT-accepted, SS negative or spread>80); 5 surviving runs NOT SIGNED
 - [ ] FLOW.TRIAL.S81 Trial die run S81 layer + head · TRIAL-S81 · RUNNING
 - [ ] FLOW.TRIAL.QK Trial die run Qwen compute + KV · TRIAL-QK · RUNNING
 - [ ] FLOW.TRIAL.HBM Trial die run HBM B2 (verify cut 0.55) · TRIAL-HBM · RUNNING
