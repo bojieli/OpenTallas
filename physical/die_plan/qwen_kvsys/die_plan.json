@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
+ "note": "Qwen KV/system die plan v3.2 (KV-P3 10-23) = v3.1 + generated-die blockers as plan objects: 128 PV T-chain qkd_rlyi_258s relays as pv contents (chain + select lanes), counted ID lanes (pc chain 31 b, astk chain 5 b, quadrant stack 2 b from hub_Wo/hub_Eo), strap-free leaf variants (params / chain-head forms), plan landing checks ot_dp_efault + per-column fault chains (hub OR tree re-derived), non-core clock regions + reset root in clocks_v32.json (PLAN-TOOL schema REQ). Qwen KV/system die plan v3.1 (KV-P2 10-23) = v3 (16 x 1520.64-um rows, W/E = MY, N half = MX about the centre band; hg outer/inner; 5 hub partitions, PLL + spine root in hub_C) with the IO row cut to 1036.8 um and one tap per IO partition: sys_SW (SerDes x6 half W) | io_W2 | io_W3 (W corridor head) | sys_c (UCIe + d2d) | io_E5 | io_E6 | sys_SE (SerDes x6 half E, MY): the mirrored SerDes fills the former empty N-W corner. FDI census fix (host/d2d FDI bundles at real width). Clock insertion budget per type = 140 ps + 0.2 ps/um x half-perimeter (min 250). As-built rtl6 (e33504a6f) connectivity. | v3.5 (KV-P5 10-23): R8 source-side replica groups r8_px_tok, r8_px_tep, r8_boot_go | v3.6 (KV-P5 10-23): kv3_hg_v1 split by row r1-r5 (R8) | v3.7-cores (KV-P6-CORES 10-23): hard_cores[] for every L1 core (post_v37c.py; 580 entries over the types; reuse-closed pv_join / kvs_ctl with LEF + pins + track_offset, the rest planned) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7 (KV-P6 10-23): one common die clock latency 250 ps for all types (COORD 19:55: hard = face-flop spread <= 80 ps TT+FF + seam skew to it <= 80; insertion/sink/tap checks WARN) | v3.7s (KV-P6-SPINE 10-23): L2045 (522 b): 36 -> 36 stages; dropped slots ['kv3_hgi_v6.ft25', 'kv3_hgi_v7.ft21', 'kv3_hgi_v8.ft21', 'kv3_io_cor.ft8', 'kv3_sys_c.ft0'] (north W corridor 65% -> 57% of the IO-row<->hub bits) | v3.7p (KV-P6-PINS 10-23): top-down pins_file on 505 planned hard cores (111 mirrored to face their partners; {nm} moved: kvs_pc serpentine, pv join mid-column) + core_conns.json",
  "die": {
   "name": "qwen_kvsys",
   "label": "Qwen3-8B KV/system die",
@@ -8355,6 +8355,13 @@
      "out_face": "E",
      "width": 1056,
      "stations": 3
+    },
+    {
+     "name": "ft28",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 522,
+     "stations": 3
     }
    ],
    "clock": {
@@ -9711,6 +9718,13 @@
      "in_face": "W",
      "out_face": "E",
      "width": 1056,
+     "stations": 3
+    },
+    {
+     "name": "ft24",
+     "in_face": "S",
+     "out_face": "N",
+     "width": 522,
      "stations": 3
     }
    ],
@@ -11076,6 +11090,13 @@
      "out_face": "E",
      "width": 1056,
      "stations": 3
+    },
+    {
+     "name": "ft25",
+     "in_face": "S",
+     "out_face": "E",
+     "width": 522,
+     "stations": 4
     }
    ],
    "clock": {
@@ -12439,13 +12460,6 @@
      "in_face": "S",
      "out_face": "N",
      "width": 6,
-     "stations": 3
-    },
-    {
-     "name": "ft25",
-     "in_face": "S",
-     "out_face": "N",
-     "width": 522,
      "stations": 3
     },
     {
@@ -13813,13 +13827,6 @@
      "stations": 3
     },
     {
-     "name": "ft21",
-     "in_face": "S",
-     "out_face": "N",
-     "width": 522,
-     "stations": 3
-    },
-    {
      "name": "ft22",
      "in_face": "S",
      "out_face": "N",
@@ -15184,13 +15191,6 @@
      "stations": 3
     },
     {
-     "name": "ft21",
-     "in_face": "S",
-     "out_face": "N",
-     "width": 522,
-     "stations": 3
-    },
-    {
      "name": "ft22",
      "in_face": "S",
      "out_face": "N",
@@ -15224,6 +15224,13 @@
      "out_face": "E",
      "width": 1056,
      "stations": 3
+    },
+    {
+     "name": "ft27",
+     "in_face": "E",
+     "out_face": "N",
+     "width": 522,
+     "stations": 2
     }
    ],
    "clock": {
@@ -22231,13 +22238,6 @@
      "stations": 2
     },
     {
-     "name": "ft8",
-     "in_face": "E",
-     "out_face": "S",
-     "width": 522,
-     "stations": 2
-    },
-    {
      "name": "ft9",
      "in_face": "E",
      "out_face": "S",
@@ -22507,9 +22507,9 @@
     {
      "name": "ft23",
      "in_face": "W",
-     "out_face": "E",
+     "out_face": "S",
      "width": 522,
-     "stations": 3
+     "stations": 1
     },
     {
      "name": "ft24",
@@ -40307,6 +40307,13 @@
      "out_face": "N",
      "width": 1,
      "stations": 3
+    },
+    {
+     "name": "ft57",
+     "in_face": "E",
+     "out_face": "W",
+     "width": 522,
+     "stations": 4
     }
    ],
    "clock": {
@@ -41393,13 +41400,6 @@
     }
    ],
    "ft_slots": [
-    {
-     "name": "ft0",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 522,
-     "stations": 3
-    },
     {
      "name": "ft1",
      "in_face": "W",
@@ -125418,259 +125418,6 @@
    "order": "lsb_low"
   },
   {
-   "id": "L2045_2",
-   "src": {
-    "part": "io_E5",
-    "bus": "ft23_o"
-   },
-   "dst": {
-    "part": "sys_c",
-    "bus": "ft0_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "W",
-   "layers": [
-    "M4",
-    "M6"
-   ],
-   "window_um": [
-    26533.44,
-    26635.488
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_3",
-   "src": {
-    "part": "sys_c",
-    "bus": "ft0_o"
-   },
-   "dst": {
-    "part": "io_W3",
-    "bus": "ft8_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "W",
-   "layers": [
-    "M4",
-    "M6"
-   ],
-   "window_um": [
-    26505.192,
-    26606.304
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_4",
-   "src": {
-    "part": "io_W3",
-    "bus": "ft8_o"
-   },
-   "dst": {
-    "part": "hgi_WN_0",
-    "bus": "ft25_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_5",
-   "src": {
-    "part": "hgi_WN_0",
-    "bus": "ft25_o"
-   },
-   "dst": {
-    "part": "hgi_WN_1",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_6",
-   "src": {
-    "part": "hgi_WN_1",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_2",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_7",
-   "src": {
-    "part": "hgi_WN_2",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_3",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_8",
-   "src": {
-    "part": "hgi_WN_3",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_4",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_9",
-   "src": {
-    "part": "hgi_WN_4",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_5",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_10",
-   "src": {
-    "part": "hgi_WN_5",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_6",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_11",
-   "src": {
-    "part": "hgi_WN_6",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hgi_WN_7",
-    "bus": "ft21_i"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
-   "id": "L2045_12",
-   "src": {
-    "part": "hgi_WN_7",
-    "bus": "ft21_o"
-   },
-   "dst": {
-    "part": "hub_Wi",
-    "bus": "i_serdes_E_rx_flit"
-   },
-   "width": 522,
-   "kind": "data",
-   "face": "S",
-   "layers": [
-    "M5",
-    "M7"
-   ],
-   "window_um": [
-    3778.152,
-    3879.24
-   ],
-   "order": "lsb_low"
-  },
-  {
    "id": "L2046_0",
    "src": {
     "part": "sys_SE",
@@ -141031,6 +140778,259 @@
    "window_um": [
     11069.352,
     11072.808
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_2",
+   "src": {
+    "part": "io_E5",
+    "bus": "ft23_o"
+   },
+   "dst": {
+    "part": "hgi_EN_0",
+    "bus": "ft28_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_3",
+   "src": {
+    "part": "hgi_EN_0",
+    "bus": "ft28_o"
+   },
+   "dst": {
+    "part": "hgi_EN_1",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_4",
+   "src": {
+    "part": "hgi_EN_1",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_2",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_5",
+   "src": {
+    "part": "hgi_EN_2",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_3",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_6",
+   "src": {
+    "part": "hgi_EN_3",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_4",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_7",
+   "src": {
+    "part": "hgi_EN_4",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_5",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_8",
+   "src": {
+    "part": "hgi_EN_5",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_6",
+    "bus": "ft24_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_9",
+   "src": {
+    "part": "hgi_EN_6",
+    "bus": "ft24_o"
+   },
+   "dst": {
+    "part": "hgi_EN_7",
+    "bus": "ft25_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    7119.36,
+    7206.36
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_10",
+   "src": {
+    "part": "hgi_EN_7",
+    "bus": "ft25_o"
+   },
+   "dst": {
+    "part": "pv_N_7",
+    "bus": "ft57_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "W",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "window_um": [
+    13875.84,
+    13962.84
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_11",
+   "src": {
+    "part": "pv_N_7",
+    "bus": "ft57_o"
+   },
+   "dst": {
+    "part": "hgi_WN_7",
+    "bus": "ft27_i"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "W",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "window_um": [
+    13875.84,
+    13962.84
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "L2045_12",
+   "src": {
+    "part": "hgi_WN_7",
+    "bus": "ft27_o"
+   },
+   "dst": {
+    "part": "hub_Wi",
+    "bus": "i_serdes_E_rx_flit"
+   },
+   "width": 522,
+   "kind": "data",
+   "face": "S",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "window_um": [
+    4328.64,
+    4415.64
    ],
    "order": "lsb_low"
   }
@@ -156581,7 +156581,7 @@
     "L2045_11",
     "L2045_12"
    ],
-   "note": "p2p serdes_E.rx_flit"
+   "note": "p2p serdes_E.rx_flit | v3.7s: re-routed io_E5->hgi_EN_0->hgi_EN_1->hgi_EN_2->hgi_EN_3->hgi_EN_4->hgi_EN_5->hgi_EN_6->hgi_EN_7->pv_N_7->hgi_WN_7->hub_Wi"
   },
   {
    "id": "L2046",
