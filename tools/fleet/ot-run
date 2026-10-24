@@ -204,7 +204,7 @@ def scratch_disk(row, d, out):
             extra["dir_onroot"] = f[1] == "1"
     # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
     disk_roots = {r: v for r, v in roots.items() if r not in onroot}
-    if disk_roots and onroot:
+    if disk_roots and (onroot or "rootfs_pct" in extra):     # v13 probe: every root off the root fs = scratch disk
         extra.update(scratch_disk=max(disk_roots, key=disk_roots.get), scratch_disk_gb=max(disk_roots.values()))
         roots = disk_roots
     row = dict(row, **extra)

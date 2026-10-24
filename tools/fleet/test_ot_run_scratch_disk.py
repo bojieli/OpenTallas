@@ -56,6 +56,13 @@ class ProbeRows(unittest.TestCase):
             self.assertIn('ROOT FS', m.host_refusal(row))
         self.assertEqual(m.host_refusal(m.scratch_disk({'disk_gb': 100}, None, MD0.replace('OT_ROOTFS 6', 'OT_ROOTFS 85'))), '')
 
+    def test_flipped_claude_symlink_still_counts_as_scratch_disk(self):
+        out = ('OT_SCRATCH_FREE /srv/opentallas-scratch 30 0\nOT_SCRATCH_FREE /srv/opentallas-scratch2 30 0\n'
+               'OT_ROOTFS 26 330\nOT_DIR_ONROOT 0\n')
+        row = m.scratch_disk({'disk_gb': 30}, '/srv/opentallas-scratch/claude/lane/run', out)
+        self.assertEqual(row.get('scratch_disk_gb'), 30)
+        self.assertIn('floor', m.host_refusal(row))
+
     def test_md0_host_keeps_root_scratch(self):
         row = m.scratch_disk({'disk_gb': 6500}, '/srv/opentallas-scratch/claude/lane/run', MD0)
         self.assertNotIn('scratch_disk', row)
