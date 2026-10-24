@@ -145,3 +145,13 @@ L758 +2 cycles (fault age). G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summar
 `tools/die_plan/kit_istations.py PLAN TYPE KIT_RTL_DIR` (after kit_rsync.py): stations in the bound RTL + istations.tcl
 (FIRM sites, sourced by face_flops.tcl). The kv41 bind does not carry these 5 stages yet (re-bind on v3.8v).
 Review renders: g3/review/die_v38v.png, g3/review/hubEi_plan_v38v.png (g3/render_type_plan.py).
+
+## v3.8w (KV-G3, 10-24) -- core spreads (KVG3-CORES review) + ft stations off hard cores (GEOM-REVIEW batch 1)
+`run_v38w.sh die_plan(v3.8v).json OUT` = `post_v38w.py` (kv3_pv*: p1 +77.76, join/p2 +155.52, p3 +233.28 um; kv3_pc*:
+kvpc0/1 -77.76 um; pin gaps 25.92 -> 103.68 um; core views unchanged) + `g3/ft_channel_regs.py --add-stations` (every ft
+station whose interpolated point fell in a hard core (+8.64 um) moves to the nearest core-free point on its route / a
+ring, declared as regs_um; 1001 of 1441 interior station points were in cores, 1033 moved; 31 slots in pv/pv_v2/v4/v6/v8
+and hub_Wi got +1 station (41 lanes +1 cycle) because their route has no core-free fit within 750 um; 8 slots (hub_C
+ft15-17/28/+1, hub_Wi ft5/22/23) still have none: they need a channel route) + gen.py latency + G0/G0C:
+G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38w.json, g3/ft_channel_regs_v38w.json).
+The ft WIRES still cross the macro fields on a straight zroute: they need M8/M9 over the cores or channel routes (OWNER? 1).

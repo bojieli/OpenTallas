@@ -496,6 +496,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
+    for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
+        shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
     shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
