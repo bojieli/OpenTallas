@@ -876,8 +876,9 @@ def cmd_run(a):
                spine="branch" if a.spine_branch else ("routed" if a.die_spef else "ideal"), instances=inst_mods,
                parts={m: str(parts[m]) for m in mod_files or parts}, abstracts=abstracts, corners={},
                seam_groups=len(groups), seam_bits=len(seams))
-    spine = load_spine(a.spine_branch, set(inst_mods))
     for corner in a.corner:
+        # '{c}' in --spine-branch: one spine file per corner (die_trial.py writes spine_<corner>.json)
+        spine = load_spine(a.spine_branch.replace("{c}", corner) if a.spine_branch else None, set(inst_mods))
         libs = corner_libs(corner, a.libdir, a.lib)
         etm_libs = None
         if a.mode == "etm":
@@ -1118,7 +1119,7 @@ def main(argv=None):
     r.add_argument("--mode", choices=("ilm", "flat", "etm"), default="ilm")
     r.add_argument("--corner", action="append", choices=("SS", "FF", "TT"))
     r.add_argument("--period-ps", type=float, default=PERIOD_PS)
-    r.add_argument("--spine-branch", help="spine_branch.json (gen.py assembly): branch clock model")
+    r.add_argument("--spine-branch", help="spine_branch.json (gen.py assembly): branch clock model; '{c}' = corner (die_trial spine_{c}.json)")
     r.add_argument("--die-spef", help="routed die SPEF (spine + channel seams)")
     r.add_argument("--libdir")
     r.add_argument("--lib", action="append", default=[])

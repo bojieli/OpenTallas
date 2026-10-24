@@ -323,7 +323,10 @@ Validation (KV pair e5e6, routed kv3_io_cor_v1 | kv3_io_ft_v1, 4 seam groups, TT
 0.000 ps on every seam slack and face-flop spread, ilm 2x faster than flat.  (That pair: TT setup +93.7 ps, FF hold
 +231.0 ps, spread TT 24.8 / FF 20.1 ps: PASS.)
 
-Flat capacity (OpenSTA be771a0, `replica` of kv3_io_cor_v1 = 143k instances incl. fill, 43k nets, 60 MB SPEF; 16
-threads): memory is linear at ~2.4 KB per instance (~0.33 MB per 143k-instance partition + SPEF); time is dominated
-by the serial SPEF reader (~6.5 s per 60 MB copy) plus the full timing update.  See DIE-STA lane record for the
-measured points and the full-die extrapolation.
+Flat capacity (OpenSTA be771a0, `replica` of routed kv3_io_cor_v1, 16 threads; results/die_sta/capacity/SUMMARY.json):
+linear from N=8 to N=512 (73.4M instances, 172.8 GB, 5817 s; ~2.4 KB per instance).  Split: 2.4 KB per logic cell,
+0.9 KB per tapcell (no timing: strip), 3.9 KB per net of parasitics (1.1 KB with `--reduce` = read_spef -reduce, seam
+slacks unchanged to 0.000 ps on KV e5e6).  The serial SPEF reader dominates time (~7 MB/s; -reduce halves it again).
+Full die (400 x 400k logic cells): ~970 GB with full parasitics = NOT feasible on a 1 TB host; ~540 GB with
+`--reduce` = feasible, ~19 h per corner (one process per corner, TT and FF on two hosts).  The continuous G4 check is
+`ilm` (seam-exact); flat `--reduce` is the signoff run.

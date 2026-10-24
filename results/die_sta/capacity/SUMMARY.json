@@ -1,0 +1,76 @@
+{
+ "tool": "OpenSTA be771a0 (fleet sta 3.1.0), die_sta.py replica of kv3_io_cor_v1 (routed, 60 MB SPEF), 16 threads",
+ "measured": [
+  {
+   "n": 2,
+   "instances": 286576,
+   "rss_gb": 0.78,
+   "seconds": 20.0,
+   "spef_s": 13.671,
+   "kb_per_inst": 2.854
+  },
+  {
+   "n": 8,
+   "instances": 1146304,
+   "rss_gb": 2.81,
+   "seconds": 79.3,
+   "spef_s": 54.889,
+   "kb_per_inst": 2.57
+  },
+  {
+   "n": 32,
+   "instances": 4585216,
+   "rss_gb": 10.89,
+   "seconds": 312.9,
+   "spef_s": 213.79,
+   "kb_per_inst": 2.49
+  },
+  {
+   "n": 128,
+   "instances": 18340864,
+   "rss_gb": 43.28,
+   "seconds": 1276.0,
+   "spef_s": 896.593,
+   "kb_per_inst": 2.474
+  },
+  {
+   "n": 512,
+   "instances": 73363456,
+   "rss_gb": 172.82,
+   "seconds": 5816.7,
+   "spef_s": 4368.197,
+   "kb_per_inst": 2.47
+  }
+ ],
+ "linearity": "RSS/instance 2.36-2.45 KB from N=8 to N=512 (73.4M instances, 172.8 GB): linear",
+ "per_copy": {
+  "logic_cells": 40421,
+  "tapcells": 102866,
+  "nets": 43270,
+  "rsegs": 416854,
+  "ccs": 424474,
+  "spef_mb": 59.3
+ },
+ "decomposition_N32": {
+  "logic_kb_per_cell": 2.41,
+  "tapcell_kb": 0.86,
+  "parasitic_kb_per_net": 3.95,
+  "parasitic_kb_per_net_reduce": 1.11,
+  "note": "tapcells have no timing (strip them from the STA netlist); parasitics measured on long io/ft nets (~10 R + 10 Cc per net): conservative for logic nets"
+ },
+ "spef_read_mb_per_s": 7.0,
+ "timing_update_us_per_instance": 16.96,
+ "full_die_extrapolation": {
+  "assumption": "400 partitions x 400k logic cells, ~1 net per cell, kv-io net density, tapcells stripped, one corner per process",
+  "graph_gb": 367,
+  "parasitics_gb": 602,
+  "parasitics_reduce_gb": 170,
+  "total_gb": 969,
+  "total_reduce_gb": 537,
+  "spef_text_gb": 214,
+  "spef_read_h": 8.8,
+  "spef_read_reduce_h": 18.4,
+  "timing_update_h": 0.8
+ },
+ "verdict": "flat full-die signoff: NOT feasible on a 1 TB host with full parasitics (~969 GB); FEASIBLE with read_spef -reduce (~537 GB, measured 0.000 ps seam delta vs full on KV e5e6) at ~19 h per corner (serial SPEF reader dominates), TT and FF as two processes on two hosts. Continuous die checks use ilm (== flat on seams)."
+}
