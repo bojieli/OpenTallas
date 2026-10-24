@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.json",
- "verdict": "PASS",
+ "plan": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/die_plan.json",
+ "verdict": "FAIL",
  "mode": "G0",
- "errors": 0,
+ "errors": 1,
  "warnings": 88,
  "summary": {
   "die": "qwen_compute",
@@ -19,17 +19,17 @@
   },
   "ports": 3002,
   "lanes": 2015,
-  "bits": 1355334,
+  "bits": 1355343,
   "taps_cores": {
-   "taps": 170,
+   "taps": 1501,
    "hard_cores": 68,
    "core_pins": 114118,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json",
-    "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/plan_notes.json"
+    "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/plan_notes.json",
+    "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -126,10 +126,10 @@
    }
   },
   "geometry": {
-   "partition_area_mm2": 769.781449727999,
+   "partition_area_mm2": 769.7814497280002,
    "channel_area_mm2": 17.768844288,
-   "uncovered_mm2": 9.424984455108643e-13,
-   "fill": 0.9774378291481662,
+   "uncovered_mm2": 0.0,
+   "fill": 0.9774378291481677,
    "planned_channels": []
   },
   "worst_faces": [
@@ -186,6 +186,21 @@
   ],
   "worst_hops": [
    {
+    "lane": "coll_s__serdes_tx_tx_flit_2",
+    "hop_um": 807.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "io_serdes_2__tx_up_serdes_up",
+    "hop_um": 781.2,
+    "reach_um": 1000.0
+   },
+   {
+    "lane": "coll_s__serdes_tx_valid_tx_v_2",
+    "hop_um": 780.8,
+    "reach_um": 1000.0
+   },
+   {
     "lane": "sl_E5_su_c__x_su_c_ctl",
     "hop_um": 736.7,
     "reach_um": 1000.0
@@ -217,21 +232,6 @@
    },
    {
     "lane": "sl_W2_su_c__x_su_c_ctl",
-    "hop_um": 736.7,
-    "reach_um": 1000.0
-   },
-   {
-    "lane": "sl_W1_su_c__x_su_c_ctl",
-    "hop_um": 736.7,
-    "reach_um": 1000.0
-   },
-   {
-    "lane": "sl_W0_su_c__x_su_c_ctl",
-    "hop_um": 736.7,
-    "reach_um": 1000.0
-   },
-   {
-    "lane": "sl_E4_su_c__x_su_c_ctl",
     "hop_um": 736.7,
     "reach_um": 1000.0
    }
@@ -1671,123 +1671,123 @@
     },
     {
      "at_um": 5500,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 678020,
      "ratio": 0.0124,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f0",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 5750,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 678020,
      "ratio": 0.0124,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f0",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 6000,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 678020,
      "ratio": 0.0124,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f0",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 6250,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 678020,
      "ratio": 0.0124,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f0",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 6500,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 678020,
      "ratio": 0.0124,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f1",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 6750,
-     "bits": 14564,
+     "bits": 14565,
      "tracks": 678020,
      "ratio": 0.0215,
      "m89_only_ratio": 0.0373,
      "worst_part": "coll_f1",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 7000,
-     "bits": 14564,
+     "bits": 14565,
      "tracks": 678020,
      "ratio": 0.0215,
      "m89_only_ratio": 0.0373,
      "worst_part": "coll_f1",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 7250,
-     "bits": 14564,
+     "bits": 14565,
      "tracks": 678020,
      "ratio": 0.0215,
      "m89_only_ratio": 0.0373,
      "worst_part": "coll_f1",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 7500,
-     "bits": 14564,
+     "bits": 14565,
      "tracks": 678020,
      "ratio": 0.0215,
      "m89_only_ratio": 0.0373,
      "worst_part": "coll_f2",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 7750,
-     "bits": 14564,
+     "bits": 14565,
      "tracks": 685108,
      "ratio": 0.0213,
      "m89_only_ratio": 0.0373,
      "worst_part": "coll_f2",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 8000,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 685108,
      "ratio": 0.0123,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f2",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 8250,
-     "bits": 8396,
+     "bits": 8397,
      "tracks": 685108,
      "ratio": 0.0123,
      "m89_only_ratio": 0.0215,
      "worst_part": "coll_f2",
-     "worst_part_ratio": 0.1283,
-     "worst_part_bits": 2228
+     "worst_part_ratio": 0.1284,
+     "worst_part_bits": 2229
     },
     {
      "at_um": 8500,
@@ -4475,12 +4475,12 @@
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
   },
   "seams": {
    "nets": {
-    "abutted": 1358336,
+    "abutted": 1358345,
     "channel": 0
    },
    "pairs": {
@@ -6949,7 +6949,7 @@
      "channel": 0
     },
     "coll_core|coll_f3": {
-     "abutted": 2327,
+     "abutted": 2328,
      "channel": 0
     },
     "coll_f4|native59": {
@@ -6957,7 +6957,7 @@
      "channel": 0
     },
     "coll_f3|glue": {
-     "abutted": 78,
+     "abutted": 79,
      "channel": 0
     },
     "coll_n|io_serdes": {
@@ -6977,7 +6977,7 @@
      "channel": 0
     },
     "coll_core|coll_ucie": {
-     "abutted": 2340,
+     "abutted": 2343,
      "channel": 0
     },
     "native59|tt_ctlm": {
@@ -6985,19 +6985,19 @@
      "channel": 0
     },
     "coll_core|coll_f2": {
-     "abutted": 2234,
+     "abutted": 2235,
      "channel": 0
     },
     "coll_f1|coll_f2": {
-     "abutted": 2234,
+     "abutted": 2235,
      "channel": 0
     },
     "coll_f0|coll_f1": {
-     "abutted": 2234,
+     "abutted": 2235,
      "channel": 0
     },
     "coll_f0|coll_s": {
-     "abutted": 2234,
+     "abutted": 2235,
      "channel": 0
     },
     "coll_f4|coll_f5": {
@@ -7033,16 +7033,17 @@
     ],
     "uncovered": 0,
     "off_shore": 0,
-    "over_sites": 0
+    "over_sites": 0,
+    "host_mode": "dedicated"
    },
-   "source": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_io.json"
+   "source": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
     {
      "at_um": 777.6,
-     "bits": 5277,
-     "abutted_bits": 5277,
+     "bits": 5281,
+     "abutted_bits": 5281,
      "route_bits": 0,
      "tracks": 741096,
      "ratio": 0.0071
@@ -7467,48 +7468,48 @@
     },
     {
      "at_um": 5451.84,
-     "bits": 8402,
-     "abutted_bits": 2234,
+     "bits": 8403,
+     "abutted_bits": 2235,
      "route_bits": 6168,
      "tracks": 916979,
      "ratio": 0.0092
     },
     {
      "at_um": 6445.44,
-     "bits": 8402,
-     "abutted_bits": 2234,
+     "bits": 8403,
+     "abutted_bits": 2235,
      "route_bits": 6168,
      "tracks": 916979,
      "ratio": 0.0092
     },
     {
      "at_um": 7439.04,
-     "bits": 14570,
-     "abutted_bits": 2234,
+     "bits": 14571,
+     "abutted_bits": 2235,
      "route_bits": 12336,
      "tracks": 916979,
      "ratio": 0.0159
     },
     {
      "at_um": 7603.2,
-     "bits": 14564,
+     "bits": 14565,
      "abutted_bits": 0,
-     "route_bits": 14564,
+     "route_bits": 14565,
      "tracks": 916979,
      "ratio": 0.0159
     },
     {
      "at_um": 7845.12,
-     "bits": 57968,
+     "bits": 57969,
      "abutted_bits": 55740,
-     "route_bits": 2228,
+     "route_bits": 2229,
      "tracks": 916979,
      "ratio": 0.0632
     },
     {
      "at_um": 8432.64,
-     "bits": 8402,
-     "abutted_bits": 2234,
+     "bits": 8403,
+     "abutted_bits": 2235,
      "route_bits": 6168,
      "tracks": 916979,
      "ratio": 0.0092
@@ -7523,8 +7524,8 @@
     },
     {
      "at_um": 10022.4,
-     "bits": 9671,
-     "abutted_bits": 3503,
+     "bits": 9672,
+     "abutted_bits": 3504,
      "route_bits": 6168,
      "tracks": 916979,
      "ratio": 0.0105
@@ -7757,6 +7758,24 @@
    },
    "worst": [
     {
+     "lane": "coll_s__serdes_tx_tx_flit_2",
+     "hop_um": 807.2,
+     "reach_um": 1001.2,
+     "frac": 0.806
+    },
+    {
+     "lane": "io_serdes_2__tx_up_serdes_up",
+     "hop_um": 781.2,
+     "reach_um": 1001.2,
+     "frac": 0.78
+    },
+    {
+     "lane": "coll_s__serdes_tx_valid_tx_v_2",
+     "hop_um": 780.8,
+     "reach_um": 1001.2,
+     "frac": 0.78
+    },
+    {
      "lane": "sl_E5_su_c__x_su_c_ctl",
      "hop_um": 736.7,
      "reach_um": 1001.2,
@@ -7797,24 +7816,6 @@
      "hop_um": 736.7,
      "reach_um": 1001.2,
      "frac": 0.736
-    },
-    {
-     "lane": "sl_W1_su_c__x_su_c_ctl",
-     "hop_um": 736.7,
-     "reach_um": 1001.2,
-     "frac": 0.736
-    },
-    {
-     "lane": "sl_W0_su_c__x_su_c_ctl",
-     "hop_um": 736.7,
-     "reach_um": 1001.2,
-     "frac": 0.736
-    },
-    {
-     "lane": "sl_E4_su_c__x_su_c_ctl",
-     "hop_um": 736.7,
-     "reach_um": 1001.2,
-     "frac": 0.736
     }
    ]
   },
@@ -7824,7 +7825,7 @@
     {
      "part": "coll_ucie",
      "face": "E",
-     "ratio": 0.411,
+     "ratio": 0.393,
      "on": "M6",
      "allowed": [
       "M4",
@@ -7834,7 +7835,7 @@
     {
      "part": "coll_core",
      "face": "W",
-     "ratio": 0.411,
+     "ratio": 0.393,
      "on": "M6",
      "allowed": [
       "M4",
@@ -8316,7 +8317,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/home/ubuntu/wt/qc-p6-g0c-1023/physical/die_plan/qwen_compute/die_plan.png"
+  "png": "die_plan.png"
  },
  "findings": [
   {
@@ -8440,6 +8441,11 @@
    "check": "geometry",
    "msg": "type cbx_q10 slot a22: crossing ~1922 um > 1 station(s) x reach 1000 (see hops)",
    "type": "cbx_q10"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 landing table /home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json was made from other bus groups (digest e56a2f6f7e7e9337 != c56f7e7abff4cabb): regenerate with gen.py latency --groups"
   },
   {
    "level": "WARN",
