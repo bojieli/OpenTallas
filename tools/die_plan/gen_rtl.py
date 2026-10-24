@@ -18,7 +18,7 @@ Per non-hard partition type, DIR/<module>.sv:
   - leaf instances bound by NAME: bus.leaf "inst.port" and contents[].bind {port: clk | rst_n | rst | net:N | bus:B |
     epoch:B}.  Nothing is tied: a constant is never generated.  With --rtl-root the leaf modules' ANSI headers are
     parsed from the type's `sources` and every leaf port must be bound exactly (unbound or unknown ports are errors).
-DIR/ot_dp_cells.sv: ot_dp_st.  DIR/<die>_top.sv: the die top (3d netlist): every partition instance, one wire per port,
+DIR/ot_dp_cells.sv: ot_dp_st (ot_dp_ste with a kept ot_dp_ep epoch flop where ea is a reset net).  DIR/<die>_top.sv: the die top (3d netlist): every partition instance, one wire per port,
 die IO as top ports, clk / rst_n fanned to every partition's clock entry / reset input (die spine nets).
 """
 import re
@@ -46,6 +46,26 @@ module ot_dp_st #(parameter integer W = 1) (
     always @(posedge clk) q <= d;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) eq <= 1'b0; else eq <= ea;
+endmodule
+// ot_dp_ste: ot_dp_st whose epoch flop loads a RESET net (ea = rst_n: an out bus / a non-lane input).  S81-P9 10-23:
+// every such eq has the same D, clock and reset, so Yosys opt_merge folded them into ONE flop that drove the epoch
+// pins of several faces (S81 r0 frames: u_bout_xo_o0.eq -> ret_o0[70] 2.27 mm, unregistered at its face).  The
+// epoch flop sits in a kept module (ot_dp_ep), so each station keeps its own, placed at its own face.
+(* keep_hierarchy *)
+module ot_dp_ep (input wire clk, input wire rst_n, input wire ea, output reg eq);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) eq <= 1'b0; else eq <= ea;
+endmodule
+module ot_dp_ste #(parameter integer W = 1) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    input  wire         ea,
+    output reg  [W-1:0] q,
+    output wire         eq
+);
+    always @(posedge clk) q <= d;
+    ot_dp_ep u_ep (.clk(clk), .rst_n(rst_n), .ea(ea), .eq(eq));
 endmodule
 // ot_dp_rsync_s<N>: one LOCAL reset synchroniser per clock tap region (KV-P5 10-23, COORD R4: the release of a tap
 // region's flops is timed from a synchroniser on the SAME tap, not across the tap-to-tap skew).  keep_hierarchy: the
@@ -193,6 +213,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
 
         def rsel():
             return "rst_n"
+    def st(ea):
+        # an epoch flop that loads a reset net is kept (ot_dp_ste), else opt_merge folds all of them into one
+        return "ot_dp_ste" if re.fullmatch(r"rst_n(_t\d+)?", ea) else "ot_dp_st"
+
     sig = {}          # bind keyword -> expression
     need_rst = False
     pads, bad = P.bus_pads()
@@ -205,7 +229,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             r = rsel()
             ea = f"{n}[{W}]" if b["ep"] else r
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({n}[{W - 1}:0]), "
+            body.append(f"    {st(ea)} #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({r}), .d({n}[{W - 1}:0]), "
                         f".ea({ea}), .q({n}_q), .eq({n}_eq));")
             q, eq = f"{n}_q", f"{n}_eq"
             for j in range(pad):
@@ -224,10 +248,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
             d, ea = f"{n}_d", r
             for j in range(pad):
                 decl.append(f"    wire [{W - 1}:0] {n}_p{j}_q;\n    wire {n}_p{j}_eq;  // R8 latency-group pad")
-                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
+                body.append(f"    {st(ea)} #(.W({W})) u_bout_{n}_pad{j} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                             f".q({n}_p{j}_q), .eq({n}_p{j}_eq));")
                 d, ea = f"{n}_p{j}_q", f"{n}_p{j}_eq"
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
+            body.append(f"    {st(ea)} #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({r}), .d({d}), .ea({ea}), "
                         f".q({n}[{W - 1}:0]), .eq({eq}));")
             sig[f"bus:{b['name']}"] = f"{n}_d"
     for s in slots:
@@ -245,7 +269,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             else:
                 q, eq = f"{n}_s{j}_q", f"{n}_s{j}_eq"
                 decl.append(f"    wire [{W - 1}:0] {q};\n    wire {eq};")
-            body.append(f"    ot_dp_st #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel()}), .d({d}), .ea({ea}), "
+            body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel()}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
             d, ea = q, eq
     for nt in t.get("nets", []):

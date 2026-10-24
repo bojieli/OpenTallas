@@ -339,7 +339,7 @@ def test_per_tap_reset_synchronisers():
         mod = P.types["fa"]["module"]
         v = (Path(d) / f"{mod}.sv").read_text()
         assert all(f"ot_dp_rsync_s2 u_rsync_t{i} " in v for i in range(n)) and "u_rst_sync" not in v
-        rs = re.findall(r"ot_dp_st #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
+        rs = re.findall(r"ot_dp_ste? #\(\.W\(\d+\)\) \w+ \(\.clk\(clk\), \.rst_n\((\w+)\)", v)
         assert rs and set(rs) == {f"rst_n_t{i}" for i in range(min(n, len(rs)))}   # round-robin over the tap syncs
         cells = Path(d) / "ot_dp_cells.sv"
         if shutil.which("yosys"):
@@ -353,3 +353,36 @@ def test_per_tap_reset_synchronisers():
             assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
+
+
+def test_reset_epoch_flops_not_merged():
+    """S81-P9 10-23: every station whose epoch flop loads a reset net (out buses, non-lane inputs) is an ot_dp_ste with a
+    kept ot_dp_ep, so Yosys opt_merge cannot fold the epoch flops of several faces into one (S81 r0: one eq flop drove
+    ret_o0[70] 2.27 mm away); lane-epoch stations stay plain ot_dp_st."""
+    import copy
+    import re
+    import shutil
+    import subprocess
+    import gen_rtl
+    P = schema.Plan(PAIR)
+    with tempfile.TemporaryDirectory() as d:
+        gen_rtl.write_rtl(copy.deepcopy(PAIR), d)
+        for tn, t in P.types.items():
+            if t.get("hard"):
+                continue
+            p = Path(d) / f"{t['module']}.sv"
+            if not p.is_file():
+                continue
+            for cell, ea in re.findall(r"(ot_dp_ste?) #\(\.W\(\d+\)\) \w+ \(.*?\.ea\(([^)]*)\)", p.read_text()):
+                assert (cell == "ot_dp_ste") == bool(re.fullmatch(r"rst_n(_t\d+)?", ea)), (tn, cell, ea)
+        cells = Path(d) / "ot_dp_cells.sv"
+        if shutil.which("yosys"):
+            top = Path(d) / "t.sv"
+            top.write_text("module t(input wire clk, input wire r, input wire [1:0] d, output wire [1:0] q, output wire e0, "
+                           "output wire e1);\n"
+                           "  ot_dp_ste #(.W(1)) a(.clk(clk), .rst_n(r), .d(d[0]), .ea(r), .q(q[0]), .eq(e0));\n"
+                           "  ot_dp_ste #(.W(1)) b(.clk(clk), .rst_n(r), .d(d[1]), .ea(r), .q(q[1]), .eq(e1));\nendmodule\n")
+            r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
+                               capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+            assert re.search(r"ot_dp_ep\s+2", r.stdout), r.stdout       # one epoch flop per station
