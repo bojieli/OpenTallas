@@ -30,7 +30,7 @@ What `build` writes (DIR):
 
 Timing model of the die STA (report): a hop's setup / hold slack = the calibrated register-to-register slack of a
 repeated wire of the hop's GRT-routed length (calib: DFFHQNx1 -> BUFx12f every 250 um on M8/M9 -> DFFHQNx1, GRT +
-estimate_parasitics, OpenSTA SS / FF, T 833.333 ps, uncertainty 60 / 25 ps; the REACH-M89 GRT-validated method) plus
+estimate_parasitics, OpenSTA TT setup / FF hold (SS informational), T 833.333 ps, uncertainty 60 / 25 ps; the REACH-M89 GRT-validated method) plus
 the die clock skew between the capture and launch partitions' taps (clock tree STA, same corner), minus OCV on the
 non-common clock path (CPPR via the tree).  Partition-internal insertion is the common latency (250 ps) on both ends
 (budget abstract); the +/- insertion_tol window is reported as the extra margin a seam needs.
@@ -136,7 +136,7 @@ def type_view(P, tn):
 def lef_text(P, tn, rows):
     t = P.types[tn]
     w, h = t["outline_um"]
-    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {t['module']}", "  CLASS BLOCK ;",
+    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {macro_name(tn)}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  SIZE {w:.4f} BY {h:.4f} ;"]
     for nm, d, ln, r in rows:
         L += [f"  PIN {nm}", f"    DIRECTION {d} ;", "    USE SIGNAL ;", "    PORT", f"      LAYER {ln} ;",
@@ -150,8 +150,13 @@ def lef_text(P, tn, rows):
         top = int(c.get("obs_max", "M5")[1:])
         for i in range(4, top + 1):
             L += [f"    LAYER M{i} ;", f"      RECT {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f} ;"]
-    L += ["  END", f"END {t['module']}", "END LIBRARY", ""]
+    L += ["  END", f"END {macro_name(tn)}", "END LIBRARY", ""]
     return "\n".join(L)
+
+
+def macro_name(tn):
+    """abstract master per partition TYPE (QC types share modules with different pin tables, e.g. cbf_q00 variants)."""
+    return "tq_" + sid(tn)
 
 
 # --------------------------------------------------------------------------------------------------- data nets
@@ -248,7 +253,7 @@ def write_data(P, views, out):
          f"UNITS DISTANCE MICRONS {DBU} ;", f"DIEAREA ( 0 0 ) ( {dbu(P.W)} {dbu(P.H)} ) ;",
          f"COMPONENTS {len(P.parts)} ;"]
     for n, p in sorted(P.parts.items()):
-        m = P.types[p["type"]]["module"]
+        m = macro_name(p["type"])
         D.append(f"- {sid(n)} {m} + FIXED ( {dbu(p['origin_um'][0])} {dbu(p['origin_um'][1])} ) "
                  f"{ORIENT[p.get('orient', 'R0')]} ;")
     D.append("END COMPONENTS")
@@ -394,8 +399,10 @@ def build_clock(P, out, leaf_um=None):
     ntap = sum(len(gen_phys.clock_pins(P, p["type"])) for p in P.parts.values())
     # leaf cell ~ one tap-grid cell: ~ as many leaf drivers as partition taps (power-of-two H-tree counts, rounded down)
     pitch = leaf_um or max(float(P.budgets.get("tap_pitch_um", 400.0)), math.sqrt(W * H / max(1, ntap)))
-    nx = max(1, pow2_at_least(W / 2 / pitch) // 2)
-    nband = max(1, pow2_at_least(H / pitch) // 2)
+    # leaf cell <= the tap pitch (power-of-two counts rounded UP): every tap within ~half a pitch of its leaf driver,
+    # so the leaf -> tap legs (not balanced by delay padding here) stay short and nearly equal
+    nx = pow2_at_least(W / 2 / pitch)
+    nband = pow2_at_least(H / pitch)
     nrib = min(16, nband)
     ny = max(1, nband // nrib)
     segs, leaves = htree_geom(W, H, nrib, nx, ny)
@@ -594,7 +601,8 @@ IMAGE=${OT_ORFS_IMAGE:-%(image)s}
 DK=docker; docker info >/dev/null 2>&1 || DK="sudo docker"
 echo "image $IMAGE $($DK image inspect --format '{{.Id}}' $IMAGE)" > $D/image_%(what)s.txt
 $DK run --rm --name trialqk-%(what)s-$$ --cpus=$CPUS --memory=${MEM}g --memory-swap=${MEM}g -v $D:/work -w /work \
-  -e HUID=$(id -u) -e HGID=$(id -g) $IMAGE bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; %(body)s chown -R \$HUID:\$HGID /work"
+  -e HUID=$(id -u) -e HGID=$(id -g) $IMAGE bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; RC=0; %(body)s chown -R \$HUID:\$HGID /work; exit \$RC"
+rc=$?; echo "run_%(what)s exit $rc" >> $D/image_%(what)s.txt; exit $rc
 """
 
 
@@ -622,6 +630,14 @@ def cmd_build(a):
     raw = S.load(a.plan)
     P = S.Plan(raw)
     out = Path(a.out)
+    if a.clock_only:
+        tree = build_clock(P, out)
+        info = json.loads((out / "build.json").read_text())
+        info["clock"] = dict(tree["params"], cells=tree["cells"], taps=len(tree["taps"]), htree_wire_um=tree["wire_um"],
+                             local_wire_um=tree["local_um"])
+        (out / "build.json").write_text(json.dumps(info, indent=1) + "\n")
+        print(json.dumps(info["clock"]))
+        return
     (out / "abstracts").mkdir(parents=True, exist_ok=True)
     views, lefs = {}, []
     npins = 0
@@ -630,7 +646,7 @@ def cmd_build(a):
             continue
         rows, st, xy = type_view(P, tn)
         views[tn] = dict(stations=st, xy=xy)
-        f = f"{t['module']}.lef"
+        f = f"{macro_name(tn)}.lef"
         (out / "abstracts" / f).write_text(lef_text(P, tn, rows))
         lefs.append(f)
         npins += len(rows)
@@ -645,13 +661,13 @@ def cmd_build(a):
     for mode in ("g0", "ott"):
         (out / f"route_{mode}.tcl").write_text(route_tcl(P, lefs, mode))
         write_run(out, f"route_{mode}", f"gunzip -kf /work/data.def.gz; /usr/bin/time -v openroad -threads $CPUS -exit "
-                  f"/work/route_{mode}.tcl > /work/route_{mode}.log 2>&1; echo EXIT \\$? >> /work/route_{mode}.log;",
+                  f"/work/route_{mode}.tcl > /work/route_{mode}.log 2>&1; RC=\\$?; echo EXIT \\$RC >> /work/route_{mode}.log;",
                   a.mem, a.cpus)
     (out / "clock.tcl").write_text(clock_tcl(P))
     (out / "sta_clock.tcl").write_text(sta_clock_tcl(P))
     write_run(out, "clock", "/usr/bin/time -v openroad -threads $CPUS -exit /work/clock.tcl > /work/clock.log 2>&1; "
-              "echo EXIT \\$? >> /work/clock.log; for c in TT FF SS; do CORNER=\\$c OUT=/work/clock_arr_\\$c.txt "
-              "sta -no_splash -exit /work/sta_clock.tcl > /work/sta_clock_\\$c.log 2>&1; done;", 64, 8)
+              "RC=\\$?; echo EXIT \\$RC >> /work/clock.log; for c in TT FF SS; do CORNER=\\$c OUT=/work/clock_arr_\\$c.txt "
+              "sta -no_splash -exit /work/sta_clock.tcl > /work/sta_clock_\\$c.log 2>&1 || RC=1; done;", 64, 8)
     import hashlib
     info["plan_sha256"] = hashlib.sha256(Path(a.plan).read_bytes()).hexdigest()
     (out / "build.json").write_text(json.dumps(info, indent=1) + "\n")
@@ -725,14 +741,15 @@ puts OT_DONE
     (out / "sta_calib.tcl").write_text(sta)
     P = S.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (out / "make_tracks.tcl").write_text(die_tracks_tcl(P))
-    write_run(out, "calib", "openroad -exit /work/calib.tcl > /work/calib.log 2>&1; for c in TT FF SS; do "
+    write_run(out, "calib", "openroad -exit /work/calib.tcl > /work/calib.log 2>&1 || RC=1; for c in TT FF SS; do "
               "CORNER=\\$c OUT=/work/calib_\\$c.txt sta -no_splash -exit /work/sta_calib.tcl > /work/sta_calib_\\$c.log "
-              "2>&1; done;", 16, 4)
+              "2>&1 || RC=1; done;", 16, 4)
     print(out)
 
 
 
 # --------------------------------------------------------------------------------------------------- report
+SETUP_C, HOLD_C = "TT", "FF"   # release policy: TT setup / FF hold (60 / 25 ps); SS is informational only, never gates
 OCV = 0.05          # flat clock OCV derate on the non-common (post-CPPR) tree path, TT / FF / SS (ASSUMED, stated)
 CAL_MARGIN = 0.76 / 0.6315   # REACH-M89 calibration of the repeated-wire delay (planning-constant margin)
 END_RE = re.compile(r"^(c_(M\d)_(\d+))/D \S+\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)")
@@ -922,21 +939,23 @@ def cmd_report(a):
                 cv = d.get(cm, min(d[ti], d[tj])) if cm else 0.0
                 ocv = OCV * ((d[ti] - cv) + (d[tj] - cv))
                 sk[c] = (d[tj] - d[ti], ocv)
-        if "SS" not in sk or "FF" not in sk:
+        if SETUP_C not in sk or HOLD_C not in sk:
             stats[kind]["no_clock"] += 1
             continue
-        s_setup = hop_setup(cal, "SS", Lh) + sk["SS"][0] - sk["SS"][1]
-        s_setup_cal = hop_setup(cal, "SS", Lh, True) + sk["SS"][0] - sk["SS"][1]
-        s_hold = hop_hold(cal, "FF", Lh) - sk["FF"][0] - sk["FF"][1]
+        s_setup = hop_setup(cal, SETUP_C, Lh) + sk[SETUP_C][0] - sk[SETUP_C][1]
+        s_setup_cal = hop_setup(cal, SETUP_C, Lh, True) + sk[SETUP_C][0] - sk[SETUP_C][1]
+        s_hold = hop_hold(cal, HOLD_C, Lh) - sk[HOLD_C][0] - sk[HOLD_C][1]
         # kit contract: every seam input is hold-padded for a neighbour launching insertion_tol early with no
         # clk->q / wire credit (gen_phys.hold_in_min_ps) -> die skew + OCV must stay inside that window
-        s_hold_b = res["insertion_tol_ps"] - sk["FF"][0] - sk["FF"][1]
+        s_hold_b = res["insertion_tol_ps"] - sk[HOLD_C][0] - sk[HOLD_C][1]
         st = stats[kind]
         st["hops"] += 1
         st["setup_neg"] += s_setup < 0
         st["setup_cal_neg"] += s_setup_cal < 0
         st["hold_neg"] += s_hold < 0
         st["hold_budget_neg"] += s_hold_b < 0
+        st["setup_nom_neg"] += s_setup + sk[SETUP_C][1] < 0             # nominal: no clock OCV
+        st["hold_budget_nom_neg"] += s_hold_b + sk[HOLD_C][1] < 0
         st["setup_lt_tol"] += s_setup < 2 * res["insertion_tol_ps"]
         st["hold_lt_tol"] += s_hold < 2 * res["insertion_tol_ps"]
         hist_len[int(Lh // 250) * 250] += 1
@@ -961,7 +980,7 @@ def cmd_report(a):
         e["hold_budget"] = min(e.get("hold_budget", 1e9), round(s_hold_b, 1))
         e["max_len_um"] = max(e.get("max_len_um", 0), round(Lh, 1))
     res["sta"] = dict(model="calibrated repeated-hop table (calib) + die clock tree skew with CPPR, OCV "
-                            f"{OCV:.0%} non-common; SS setup / FF hold; setup_cal = wire delay x {CAL_MARGIN:.3f} (REACH-M89)",
+                            f"{OCV:.0%} non-common; {SETUP_C} setup / {HOLD_C} hold (SS informational only); setup_cal = wire delay x {CAL_MARGIN:.3f} (REACH-M89)",
                       stats={k: dict(v) for k, v in stats.items()},
                       worst={f"{k[0]}.{k[1]}": dict(slack_ps=round(v[0], 1), net=v[1], launch=f"{v[2]}/{v[3]}",
                                                    capture=f"{v[4]}/{v[5]}", len_um=v[6], grt_len_um=v[7],
@@ -980,7 +999,7 @@ def cmd_report(a):
     res["seams_worst_hold"] = [dict(src=g[0], dst=g[1], **e) for g, e in sorted(seam.items(), key=lambda kv: kv[1]["hold"])[:20]]
     neg_rows.sort()
     with gzip.open(B / "hops_negative.tsv.gz", "wt") as f:
-        f.write("setup_SS\thold_FF\tkind\tnet\tlaunch_part\tlaunch_pin\tcapture_part\tcapture_pin\tlen_um\n")
+        f.write(f"setup_{SETUP_C}\thold_{HOLD_C}\tkind\tnet\tlaunch_part\tlaunch_pin\tcapture_part\tcapture_pin\tlen_um\n")
         for r in neg_rows:
             f.write("\t".join(map(str, r)) + "\n")
     # ---------------- G2 comparison
@@ -1224,7 +1243,7 @@ def cmd_ir(a):
         (out / f"bumps_{net}.vsrc").write_text("\n".join(rows) + "\n")
     (out / "make_tracks.tcl").write_text(die_tracks_tcl(P))
     write_run(out, "ir", "/usr/bin/time -v openroad -threads $CPUS -exit /work/ir.tcl > /work/ir.log 2>&1; "
-              "echo EXIT \\$? >> /work/ir.log;", 128, 16)
+              "RC=\\$?; echo EXIT \\$RC >> /work/ir.log;", 128, 16)
     (out / "ir_power.json").write_text(json.dumps(dict(basis=basis, parts={n: round(v, 4) for n, v in pw.items()},
                                                        coarsen=IR_K, vdd_v=VDD_V, bump_um=a.bump_um,
                                                        bumps=nb, bump_pattern="VDD/VSS checkerboard"), indent=1) + "\n")
@@ -1275,7 +1294,7 @@ def _fig(P, w=14):
 
 
 def cmd_render(a):
-    """die review images: floorplan + ft lane bundles + die IO; clock tree (SS arrival); congestion; IR; hop slack."""
+    """die review images: floorplan + ft lane bundles + die IO; clock tree (TT arrival); congestion; IR; hop slack."""
     B = Path(a.dir)
     info = json.loads((B / "build.json").read_text())
     P = S.Plan(S.load(info["plan"]))
@@ -1320,7 +1339,7 @@ def cmd_render(a):
     fig.savefig(out / "floorplan_lanes.png", dpi=a.dpi, bbox_inches="tight")
     plt.close(fig)
     made.append("floorplan_lanes.png")
-    # 2. clock tree coloured by SS arrival at the segment's child node + taps
+    # 2. clock tree coloured by --corner (TT) arrival at the segment's child node + taps
     tree = json.loads((B / "clock_tree.json").read_text())
     arr = load_arrivals(B)
     d = arr.get(a.corner, {})
@@ -1398,8 +1417,8 @@ def cmd_render(a):
             a0, a1 = P.rect(lp), P.rect(cp)
             ax.plot([(a0[0] + a0[2]) / 2, (a1[0] + a1[2]) / 2], [(a0[1] + a0[3]) / 2, (a1[1] + a1[3]) / 2],
                     color="r" if k == "S" else "b", lw=0.5 + 3 * math.log10(1 + n) / 4, alpha=0.7)
-        ax.plot([], [], color="r", label="setup SS < 0 (partition pair)")
-        ax.plot([], [], color="b", label="hold FF < 0")
+        ax.plot([], [], color="r", label=f"setup {SETUP_C} < 0 (partition pair)")
+        ax.plot([], [], color="b", label=f"hold {HOLD_C} < 0")
         ax.legend(loc="upper right", fontsize=7)
         ax.set_title(f"{P.name}: partition pairs with negative die-STA hops (line width ~ log count)", fontsize=9)
         fig.savefig(out / "sta_negative.png", dpi=a.dpi, bbox_inches="tight")
@@ -1417,6 +1436,7 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--mem", type=int, default=256)
     b.add_argument("--cpus", type=int, default=16)
+    b.add_argument("--clock-only", action="store_true", help="rebuild only the die clock tree (clock.def / json)")
     c = sub.add_parser("calib")
     c.add_argument("--out", required=True)
     r = sub.add_parser("report")
@@ -1434,7 +1454,7 @@ def main(argv=None):
     v = sub.add_parser("render")
     v.add_argument("dir")
     v.add_argument("--out")
-    v.add_argument("--corner", default="SS")
+    v.add_argument("--corner", default="TT")
     v.add_argument("--dpi", type=int, default=110)
     a = ap.parse_args(argv)
     if a.cmd == "render":

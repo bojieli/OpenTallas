@@ -18,7 +18,7 @@ def test_build_tiny(tmp_path):
     ft = [r.split("\t") for r in rows if r.split("\t")[1] == "ft"]
     # every ft hop has exactly one launch register and >= 1 capture register
     assert ft and all(r[4] and ";" not in r[4] and r[5] for r in ft)
-    lef = next((tmp_path / "abstracts").glob("tiny_mid_part.lef")).read_text()
+    lef = next((tmp_path / "abstracts").glob("tq_*mid*.lef")).read_text()
     assert "fx_s0_d[0]" in lef and "fx_s0_q[0]" in lef
 
 
