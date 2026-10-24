@@ -70,8 +70,14 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     end
     wire [327:0] po [0:3];
     assign po[0] = po0; assign po[1] = po1; assign po[2] = po2; assign po[3] = po3;
+    reg [3:0] po_seen = 0;
     always @(posedge clk) begin
         edge_n <= edge_n + 1;
+        for (int k = 0; k < 4; k++) if (!po_seen[k] && po[k] != 328'd0) begin
+            po_seen[k] <= 1'b1;
+            if (hlog > 0) $display("HBM_PO_FIRST %s pc %0d edge %0d row_v %0d op %0d col_v %0d we %0d", part, k, edge_n, po[k][0],
+                                   po[k][3:1], po[k][28], po[k][29]);
+        end
         for (int k = 0; k < 4; k++) begin
             if (po[k][0] && po[k][3:1] == 3'd1) openrow[k][po[k][8:4]] = po[k][27:9];
             if (po[k][28]) begin : col

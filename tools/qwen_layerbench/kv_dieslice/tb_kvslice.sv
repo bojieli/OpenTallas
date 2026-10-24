@@ -131,14 +131,14 @@ module tb_kvslice;
     end
     integer post = 0;
     // boot-path observation (hub_Wi HOST outputs at the top lanes): reset / boot_go levels to hub_C, boot_pr words
-    wire [3:0] bo_sig = {dut.x_hub_Wi_o_host_host_rst_n_d1_hub_Wo[0], dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0],
+    wire [4:0] bo_sig = {dut.x_hub_Wi_o_host_boot_go_d1_hgi_WN_7[0], dut.x_hub_Wi_o_host_host_rst_n_d1_hub_Wo[0], dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0],
                          dut.x_hub_Wi_o_host_die_rst_n_hub_C[0], dut.x_hub_Wi_o_host_boot_go_hub_C[0]};
-    reg [3:0] bo_q = 0; reg [142:0] bpr_q = 0; integer bpr_n = 0;
+    reg [4:0] bo_q = 0; reg [142:0] bpr_q = 0; integer bpr_n = 0;
     always @(posedge ck_core) begin
         bo_q <= bo_sig; bpr_q <= dut.x_hub_Wi_o_host_boot_pr_hub_C[142:0];
         if (dut.x_hub_Wi_o_host_boot_pr_hub_C[142:0] != bpr_q) bpr_n <= bpr_n + 1;
-        if (bo_sig != bo_q) $display("BOOTOBS cyc %0d host_rst_n %b hbm_rst_n %b die_rst_n %b boot_go %b", cyc_core,
-                                     bo_sig[3], bo_sig[2], bo_sig[1], bo_sig[0]);
+        if (bo_sig != bo_q) $display("BOOTOBS cyc %0d boot_go_d1_hgi_WN_7 %b host_rst_n %b hbm_rst_n %b die_rst_n %b boot_go %b", cyc_core,
+                                     bo_sig[4], bo_sig[3], bo_sig[2], bo_sig[1], bo_sig[0]);
     end
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
