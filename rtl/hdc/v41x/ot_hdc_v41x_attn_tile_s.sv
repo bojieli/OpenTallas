@@ -27,8 +27,12 @@ module ot_hdc_v41x_attn_hgrp_s #(
     parameter integer FPL = 3,
     parameter integer FML = 3,
     parameter integer F12 = 0,         // 1: the f12 FP32 adds (LAT 4 / 5) in the chunk chains and trees
-    parameter integer PCOLP = 0        // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
+    parameter integer PCOLP = 0,       // 1: each head's p-mode columns arrive pre-selected on ld_wp (tile wiring),
                                        //    replacing the gsel AND-OR over the H/HG groups (same bits, same cycle)
+    parameter integer WPRE = 0         // 1 (S81-P10, opt-in): the write predicates (ld_grp == slot group, ld_grp + 1 ==
+                                       //    slot group, ld_grp == hh) are decoded from the ld_* pins and captured in
+                                       //    the head's R0 (kept) registers, so the R0 -> DFFE-enable path is one AND-OR
+                                       //    (svc hcore TT -25 ps on r_ld_grp -> compare -> we).  Same values, same edges.
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -178,16 +182,49 @@ module ot_hdc_v41x_attn_hgrp_s #(
             end
             wire [TD-1:0]    we;
             wire [TD*16-1:0] wd;
+            // the write predicates per slot group q = gk / R (q = 0 .. TD/R-1) and the normal-mode head match:
+            // WPRE = 0: decoded from the R0 registers (r_ld_grp) in the write cycle;
+            // WPRE = 1: the same expressions on the ld_* pins, captured by this head's kept R0 register (u_rpd), i.e.
+            //           R0(f(ld_grp, ld_w2v)) == f(R0(ld_grp), R0(ld_w2v)) for every write cycle.  hh is the static
+            //           head index (registered from the static gid every edge), so R0(ld_grp == hh) equals
+            //           (r_ld_grp == hh) on every edge after the first; a write needs r_ld_v, which is 0 from reset
+            //           release until the first load arrives.
+            localparam integer NQ = TD / R;
+            wire [NQ-1:0] q_lo, q_hi;
+            wire          q_hh;
+            if (WPRE != 0) begin : g_wpre
+                wire [NQ-1:0] d_lo, d_hi;
+`ifdef OT_S81C_WPRE_MUT
+                // bench negative control: the predicates captured one edge late (from the R0 registers)
+                wire [7:0] m_grp = r_ld_grp;
+                wire       m_w2v = r_ld_w2v;
+`else
+                wire [7:0] m_grp = ld_grp;
+                wire       m_w2v = ld_w2v;
+`endif
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign d_lo[gk] = (m_grp == gk);
+                    assign d_hi[gk] = m_w2v && ((m_grp + 8'd1) == gk);
+                end
+                ot_hdc_v41x_kreg #(.W(2 * NQ + 1), .R(0)) u_rpd (.clk(clk), .rst_n(rst_n),
+                    .d({d_hi, d_lo, m_grp == hh}), .q({q_hi, q_lo, q_hh}));
+            end else begin : g_wdec
+                for (gk = 0; gk < NQ; gk = gk + 1) begin : g_q
+                    assign q_lo[gk] = (r_ld_grp == gk);
+                    assign q_hi[gk] = r_ld_w2v && ((r_ld_grp + 8'd1) == gk);
+                end
+                assign q_hh = (r_ld_grp == hh);
+            end
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
                 if (PWORDS == 1) begin : g_w1
                     assign wd[gk*16 +: 16] = r_ld_mode ? pcol[(gk % R) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
-                    assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == hh));
+                    assign we[gk] = r_ld_v && (r_ld_mode ? q_lo[gk / R] : q_hh);
                 end else begin : g_w2
-                    wire lo = (r_ld_grp == (gk / R));
-                    wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
+                    wire lo = q_lo[gk / R];
+                    wire hi = q_hi[gk / R];
                     assign wd[gk*16 +: 16] = !r_ld_mode ? r_ld_w[gk * 16 +: 16] :
                                              hi ? pcol2[(gk % R) * 16 +: 16] : pcol[(gk % R) * 16 +: 16];
-                    assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : (r_ld_grp == hh));
+                    assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : q_hh);
                 end
             end
             // DQX: the write (enables, data, bank) one cycle later, as the reads (the operand path's D2 stage)

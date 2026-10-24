@@ -381,9 +381,11 @@ def plan_seams(P):
     return out
 
 
-def kit_budget(gen_phys):
-    """the kit SDC budget fractions of gen_phys.sdc (IO / ft hop share), the hold padding rule."""
-    return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(gen_phys.FT_HOP_IN_SHARE),
+def kit_budget(gen_phys, P=None):
+    """the kit SDC budget fractions of gen_phys.sdc (IO / ft hop share: the plan's clock.ft_hop_in_share when P is
+    given), the hold padding rule."""
+    sh = gen_phys.ft_hop_in_share(P) if P is not None else gen_phys.FT_HOP_IN_SHARE
+    return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(sh),
                 hold_out_min_ps=float(gen_phys.HOLD_OUT_MIN_PS))
 
 
@@ -673,7 +675,7 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
     gen_phys = _import(repo, "gen_phys")
     raw = json.loads(Path(plan).read_text())
     P = S.Plan(raw)
-    kb = kit_budget(gen_phys)
+    kb = kit_budget(gen_phys, P)
     seams = plan_seams(P)
     have = {}
     missing_views = {}
