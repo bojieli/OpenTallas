@@ -67,10 +67,34 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## INFRA · fleet and coordination
 - [x] INFRA.FLEET New fleet provisioned (toolchain + ORFS image on 5 hosts) · COORD · DONE · 2026-10-24
-- [ ] INFRA.OTRUN ot-run / hosts.json / FLEET.md retargeted · FLEET-NEW3 · RUNNING
+
 - [ ] INFRA.MERGE 10-23 review queue merged · ROOT-MERGE · RUNNING · lanes/COORD-REVIEW-QUEUE.md
 - [ ] INFRA.WATCH auto_owner watchers redeployed against this tree · COORD · TODO
 
 ## WAITS · who
 ### Waiting on the owner
 - nothing yet
+
+## TOKEN · token-pass gate per design (carried over from the 10-21 tree, ~/coord/RELEASE_TREE_1021.html)
+- [ ] TOK.DS DeepSeek ROM (S81 array) single-user token · TOK-DS · RUNNING
+  - [ ] TOK.DS.LAYER Single-die layer runs on current S81 RTL · TOK-DS · RUNNING · waits S81 entry-replay triage
+  - [ ] TOK.DS.RATE Composed rate from measured stages · TOK-DS · TODO
+  - [ ] S81.HEAD Head die (LM head/argmax/MTP) top-down plan · S81-HEAD · RUNNING · no 72-frame head die exists
+  - [ ] S81.LINK5 5th lane pair, S81.HOST in-band host · S81-HEAD · TODO
+  - [ ] MU.TOK S81 multi-user token pass · TOK-DS · WAITS · after TOK.DS
+- [ ] TOK.QW Qwen ROM single-user + four-user · TOK-QW · RUNNING
+  - [ ] TOK.QW.LAYER Compute-die layer runs (stg3 numeric PASS, normalized FAIL; stg4 to collect) · TOK-QW · RUNNING
+  - [x] TOK.QW.KV 1u/4u KV attention · STEWARD-TOK-QW · PASS · 10-21
+  - [ ] TOK.QW.XDIE Compute to KV D2D co-sim · TOK-QW · TODO
+  - [ ] MU.TOK.QW Qwen four-user token pass · TOK-QW · WAITS
+- [ ] TOK.HDS HBM-DeepSeek single-user token · TOK-HBM · RUNNING
+  - [ ] TOK.HDS.VEH Shared d4g layer bench DS + Qwen · TOK-HBM · RUNNING
+  - [ ] TOK.HDS.XDIE Cross-die collectives co-sim · TOK-HBM · TODO
+- [ ] TOK.HQ HBM-Qwen d4g single-user (L0 + chain; SM RD_LAT fix 045b6666c) · TOK-HBM · RUNNING
+- [ ] TOK.FREEZE Final evidence run at RTL freeze · COORD · WAITS
+- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS
+
+## INFRA · added 10-24
+- [x] INFRA.OTRUN ot-run live on 5 hosts · FLEET-NEW3 · DONE · 8a5d1f3dab
+- [ ] INFRA.OLDSCR Old-fleet scratch on intel1/intel2 /mnt/old-nvme0 (read-only): recover 10-23 outputs, then decide reformat · OWNER · OWNER · 3.5 TB each
+- [ ] S81.G0C.CORES Hard cores for the 92 G0C-failing S81 types · S81-CORES · RUNNING

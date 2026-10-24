@@ -1,0 +1,726 @@
+
+OpenTallas Release Tree
+OpenTallas · ASAP7 · 833 ps (1.2 GHz) · shared Claude + Codex hand-off
+Release dependency tree
+Source: claude-takeover-20261007/RELEASE_TREE.md (edited 2026-10-21 19:34) · rendered 2026-10-21 19:35 PT · element table 2026-10-21 19:35
+Release needs two independent sets of gates: the four die gates for every die, and the token-pass gate for every design. Each task appears once. Only open work is shown: finished tasks move to RELEASE_TREE_DONE.md (counted in "tasks done"). Each die also lists every element of its current revision, generated from the live element table. Counts retain saved element receipts; source, PG and constraint holds in this tree still block adoption.
+Release tasks: LIVE 157 / STALE 40 / DEAD 0
+open 208 · waits on a live task 11 · blocked on the owner 0 · needs a fresh agent 40 · watch 2026-10-21 19:35 · liveness from processes, run dirs, closure jobs, lanes and HANDOFF, never from the status text (TASKS_STALE.json, tools/release_task_watch.py, element-owner-watch.timer every 30 min)
+DEAD / STALE tasks (40) STALE H.GRT tree RUNNING · 36.5 h HBMb/CHAIN no evidence for 36.5h
+STALE H.GRT.IR tree NOT RUN · never HBMb/CHAIN no evidence found
+STALE H.IDS tree RUNNING · never HBMb/CHAIN no evidence found
+STALE H.RST tree RUNNING · 36.5 h HBMb/CHAIN no evidence for 36.5h
+STALE H.RST.RRL tree WAITS · never HBMb/CHAIN no evidence found
+STALE H.STA.BANKLAT.DIE tree RUNNING · never HBMb/CHAIN no evidence found
+STALE H.STA.BLK.1 tree TODO · 51.8 h HBMb/HC no evidence for 51.8h
+STALE H.STA.BLK.1.1 tree NOT RUN · 40.5 h HBMb/HC no evidence for 40.5h
+STALE H.STA.BLK.14.6 tree TODO · never HBMb/SMH7 no evidence found
+STALE H.STA.BLK.15.2 tree TODO · 48.0 h HBMb/IDXSU no evidence for 48.0h
+STALE H.STA.BLK.16.5 tree RUNNING · 53.9 h HBMb/COLL no evidence for 53.9h
+STALE H.STA.BLK.16.7 tree TODO · 13.8 h HBMb/IDXSU no evidence for 13.8h
+STALE H.STA.BLK.17.2 tree TODO · 14.0 h HBMb/HC no evidence for 14.0h
+STALE H.STA.BLK.17.3 tree TODO · never HBMb/HC no evidence found
+STALE H.STA.BLK.3 tree TODO · never HBMb/COLL-GQ no evidence found
+STALE H.STA.BLK.4b tree RUNNING · 53.9 h HBMb/HC no evidence for 53.9h
+STALE H.STA.BLK.4c tree TODO · never HBMb/HC no evidence found
+STALE H.STA.BLK.5 tree RUNNING · never HBMb/IDXSU no evidence found
+STALE H.STA.BLK.BW tree TODO · 49.9 h HBMb/CHAIN no evidence for 49.9h
+STALE H.STA.WIRE tree RUNNING · never HBMb/CHAIN no evidence found
+STALE H.STA.WIRE.8 tree RUNNING · 51.8 h HBMb/CHAIN no evidence for 51.8h
+STALE INF.PGRR tree WAITS · 4.3 h GAP-SKQ no evidence for 4.3h
+STALE MU.D2D.OVL.1 tree RUNNING · 4.0 h TOK-FUNC2-QW no evidence for 4.0h
+STALE MU.TOK tree TODO · 6.4 h STEWARD-TOK-S81 no evidence for 6.4h
+STALE MU.TOK.DS3 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.BENCH.1 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.BENCH.1.1 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.BENCH.4.2 tree RUNNING · 13.2 h STEWARD-TOK-S81 no evidence for 13.2h
+STALE TOK.DS.LAYER.1 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.LAYER.2 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.LAYER.4 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.DS.LAYER.6 tree TODO · never STEWARD-TOK-S81 no evidence found
+STALE TOK.QW.BENCH.1.EMB tree TODO · never STEWARD-TOK-QW no evidence found
+STALE TOK.QW.KV tree PASS · 4.2 h STEWARD-TOK-QW no evidence for 4.2h
+STALE TOK.QW.LAYER tree RUNNING · never STEWARD-TOK-QW no evidence found
+STALE TOK.QW.LAYER.1 tree RUNNING · 40.0 h STEWARD-TOK-QW no evidence for 40.0h
+STALE TOK.QW.LAYER.2 tree TODO · 12.3 h STEWARD-TOK-QW no evidence for 12.3h
+STALE TOK.QW.LAYER.3 tree TODO · never STEWARD-TOK-QW no evidence found
+STALE TOK.QW.LAYER.3.SEG tree PASS · 2.5 h CODEX-QK-1021 no evidence for 2.5h
+STALE TOK.QW.LAYER.4 tree TODO · 19.2 h STEWARD-TOK-QW no evidence for 19.2h
+Element owners: ACTIVE 30 / STALE 25 / UNOWNED 6
+open 61 · needs a family agent 31 · automatic actions this run 0 · watch 2026-10-21T19:35:08 · source UNOWNED.json (tools/element_owner_watch.py, element-owner-watch.timer every 30 min)
+UNOWNED / STALE elements (31) UNOWNED dsdv_slice_lepe_nh 12.5 h · s81 S81-COLLECT needs a family agent
+UNOWNED col_h9_MX 10.3 h · s81 LEAD-S81 needs a family agent
+UNOWNED qkd_host_root_admission 10.2 h · qwen_kvsys SAFE-QK needs a family agent
+UNOWNED qfd_c_b16_dv 9.7 h · qwen_compute epyc6-deadline-1021 needs a family agent
+UNOWNED qfd_native59_dv_service 9.7 h · qwen_compute epyc6-deadline-1021 needs a family agent
+UNOWNED qkd_pv_fin_s 9.7 h · qwen_kvsys epyc6-deadline-1021 needs a family agent
+STALE hfd_hgi_vms_static_NE_glue 98 min · hbm HBM-ELEM13 needs a family agent
+STALE hfd_hgi_vms_static_SE_glue 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_accel_smh_attn 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_hc_bankq0_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_hc_bankq_ft_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_hc_bankq_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_hc_root_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_idx_score_quarter_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_idx_selector_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_idx_topk_link_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_idx_vm_share2_static 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_sm_pv_merge 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_su_programme_pslice_c5 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_su_static_cxport_ij 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_su_static_pgslice_lg 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_svc_sm_group_id 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hbm_svc_wb_kport_q 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hfd_coll_q2_hard_v8g 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hfd_coll_q3_hard_v8x 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hgi_coll_kq_share2 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hgi_coll_tkm_m_tp192 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hgi_coll_tkm_tile_e86 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hgi_sfu_core_split3 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_hgi_sfu_programme_store_r10 98 min · hbm HBM-ELEM13 needs a family agent
+STALE ot_pdie_ucie 98 min · s81, hbm HBM-ELEM13 needs a family agent
+DONE finished RUNNING agent or fleet job working WAITS blocked by a child task / to do NEW started today COORD waiting on the coordinator or owner
+Die gates
+Die Strict bind Die GRT overflow 0 Die STA TT/FF, real views Die clock check TT+FF Recorded closures First die pass (est.)
+S81 DeepSeek ROM rev 72-frame MU current release PASS G9 bindfix 48 masters/30090 inst 0 err (die 00715e1a); NEXT: G9e GEN rebind (geometric clock roots + closed frame views when CLOSED) RUNNING G9d MAIN (orient 675c6815b + dieflow 791368d99) / FB (7826f86e6) ep5 PIDs 434735/434736 in die_repeaters (spread on_obstacle 3.9k vs G9c 3.35M); waiter on stage change; NEXT: GRT overflow+class tables, fail -> structural MAIN+FB at once NOT RUN waits G9d GRT (run_all chains sta.sh); NEXT: die_sta_classify.py on TT setup/FF hold, fail -> structural fix MAIN+FB TODO DESIGN · ck_frame 50-57 mm = unplaced-port artifact (real <=4.35 mm); real defect = 16 logical ck_cl* roots span 20.7x23.9 mm (reset stations); NEXT: geometric region roots + landed crossings in GEN (sub STW-S81-DIE-CLK, branch claude/s81-g9e-clk-1021) -> G9e 135/156 not bindable 4 · open 17
+Qwen compute rev r10bfp emitted; validation FAIL, no live Q chain FAIL r11bfp 79 opens -> role contract v2 (d3bf4db80) leaves 7 functional; real sinks only on codex/q-headprep-1021. NEXT: SQ-QB2-HP headprep GEN r12hpa (strict PASS target) + r12qb FALLBACK queued gold1 RUNNING DIAG r11bfp ep5 (CORE=0) past relay gate 18:52, real case/PDN (NOT A DIE RESULT). NEXT: SQ-QBIND2 GRT overflow RUNNING DIAG r11bfp ep5 chain -> STA tt/ff after GRT. relay-check FAIL root cause = exporter (fix 39abf83c2, PASS offline). NEXT: SQ-QBIND2 TT/FF WNS RUNNING DIAG r11bfp ep5 CORE=0 die clock in chain. NEXT: SQ-QBIND2 CLK spread 29/34 not bindable 0 · open 5
+Qwen KV/system rev sqk2@0ae42aa9c PREP (RoPE source successor pending) RUNNING sqk2x5 bind v2 PASS 69 masters; dsg7f FAIL open-tail role pins (no prep) -> dsg8f ep9 (sfm3) + dsg8e ep5 (sfm2) on 61c2ac9f0. NEXT: SQ-KBIND report STRICT BIND/TILE_VIEWS/RELAY counts RUNNING linear stamp PDN (1 pdngen grid per master/orient + stamped stacks; fixture = exact subset of pdngen, PG PASS) chains ep5 sqkd2m MAIN dense / sqkd2l FB local from sqk2c432 bind-PASS case, GRT cap 420g; sqk2x5 pdngen ETA 09:00 10-22. NEXT: SQ-KDIE2 PDN verdict -> GRT overflow WAITS after K.GRT on sqkd2m/sqkd2l. NEXT: SQ-KDIE2 STA TT/FF numbers RUNNING DIECLK r2 x5 (a2e818f5c) TT trim iter3 c432: spread TT 39.7-54.0 / FF 43.9-60.2 ps all regions, insertion 13.7-20.3 ns. NEXT: SQ-KDIE2 read final TT/FF + boundary match 49/59 not bindable 3 · open 7
+HBM accelerator rev r16q (P + slot-binding repair) full chain RUNNING r17 2f46c1018 = r16q + CLOSED cx ij_q + per-QID dl_s (r16q had QID2 view on all 16); strict L25 REFUSED on RTL drift · NEXT: r17 S5 bind; renewed L25 review; r18 qdq r4s after token OK RL 7->54 RUNNING r17 RESUME_S4 PID 1004672 (S4 32/1012/24, cxij pair blocks su channel), r17b 1115468 (su+150) / r17c 1115471 (pairs to column gap) GEN, r16q 458091 S6 · NEXT: r17b/c hops gate -> S11 GRT RUNNING r17 (release cand.) + r16q (diag) chains · NEXT: TT/FF + worst paths at S11 RUNNING r16q GEN clock_check emitted per case · NEXT: S11 neighbour_skew_gate TT+FF (chain_r16q) 87/121 not bindable 0 · open 34
+Token-pass gate
+Separate from the die gates: it runs on each design's current RTL now, and only its final evidence run (TOK.FREEZE) waits for RTL freeze.
+Design Single-die layer runs Inter-die co-sims Graded today
+DeepSeek ROM (S81 array) TODO Single-die layer runs on selected72-frame RTL
+none map bound 483869b91 (241st/964 dies); calendar → MU.S81.CAL
+Qwen ROM RUNNING Compute-die layer runs
+PASS Measure 1u/4u KV attention
+TODO Compute to KV D2D co-sim
+PARTIAL · run_tok_func_qw.sh @claude/tok-func3-qw-1021 032ad24b9: all stages PASS except stg; composed 1u 279,731 cyc = 4,291.6 tok/s, 4u 11,750.6 (price HELD); NEXT: collect stg4 (--stage-dir stg=stg4) -> qualified compose
+HBM-DeepSeek RUNNING Shared d4g layer bench DS + Qwen
+TODO Cross-die collectives co-sim
+waiter pid 803623 tok_func_hbm.sh --reuse @93879d7ee waits conn_p40 binary (EP7 VLT) -> frozen a356 + HC-row fix (24 DS) + Qwen safe 4 · NEXT: per-layer verdicts+cycles -> SM/ATT/DMA lowerings -> chain -> token
+HBM-Qwen TODO L0 + chain
+none Qwen safe-calendar 4 sets queued on conn_p40 binary (waiter 803623); SM qkv/o/gu/down sub-slice FAIL = die xl_SW_ctl RD_LAT bug (fix 045b6666c) · NEXT: SM rerun on smsl_pad/rl8 rebuilds -> L0 PASS -> chain -> token
+Dependency trees
+S81 DeepSeek ROM
+rev 72-frame MU current release GRT RUNNING tasks done 41/81 · elements closed 135/156 est. S81.BIND Strict bind, MU die PASS STW-S81-DIE G9 bindfix 48 masters/30090 inst 0 err (die 00715e1a); NEXT: G9e GEN rebind (geometric clock roots + closed frame views when CLOSED)
+S81.LINK5 5th lane pair: 10 SerDes, 5 circuits TODO STW-S81-COLLA-LEPAB GATING · r4l spine-clock r4a MAIN/r4b FB --cts gates live (a516fe9b1, agidock) + waiter; NEXT: PASS->submit->CLOSED, then STEWARD-S81 decides die successor bind
+S81.HOST host on head dies only; in-band stage circuits WAITS STW-S81-COLLB hbc master e8941e00c ready (bench 6/6, native max30); die GEN needs s0N->seqhost link + job_active/starter_armed/return srcs
+S81.HEAD 72/dv head die (LM head/argmax/MTP) TODO STW-S81-HEAD RUNNING H10 · H4 cause ctl-glue funnel; H10 MAIN gold1 PID 3968518 / FB ep7 PID 2970220 past BIND, in dv_rvcase (GEN->GRT->STA->CLK next, waiters set); tile R5 exp3 census top_q fixed, benches rerun ep7; NEXT: classify H10 terminals
+S81.BIND.SM.1 svc_rs(+SO target) yosys area + kit; xg/xr3 re-kit RUNNING STW-S81-COLLB svc_att LP bound pipeline lpb_r0/r1 (684542/3) + att_a/b (687396/7) ep7; census PASS -> attw kits; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.BIND.2.P 72-frame actual floorplan and relay assembly TODO STW-S81-DIE SUPERSEDED BY G9d · ctrl ck_o native export e217a58d6 fixed GEN; G9d GEN PASS 18:33 (die_repeaters); NEXT: G9e bind table (closed child_views + clk regions)
+S81.GRT Die GRT overflow 0 RUNNING STW-S81-DIE G9d MAIN (orient 675c6815b + dieflow 791368d99) / FB (7826f86e6) ep5 PIDs 434735/434736 in die_repeaters (spread on_obstacle 3.9k vs G9c 3.35M); waiter on stage change; NEXT: GRT overflow+class tables, fail -> structural MAIN+FB at once
+S81.STA Die STA TT/FF on real views NOT RUN STW-S81-DIE waits G9d GRT (run_all chains sta.sh); NEXT: die_sta_classify.py on TT setup/FF hold, fail -> structural fix MAIN+FB
+S81.STA.PAR Landed parents RUNNING STEWARD-S81 roll-up; children owned by STW-S81-COLLA/COLLB/TOPK; NEXT: parents gunit/seq_host_mux/bk_sel_vmtx/slice harden -> drop die stand-ins
+S81.STA.PAR.1 Slice parent (k8c-f cap5r_lp) harden WAITS STW-S81-COLLA kits 6ff783251 (claude/s81-slicep-k8c-1021); closed vq vn vsw rxsf/b eg capc5r vs_n32f (slot->216); open: vp8 / ve ECO / xgr / xfin fix / xrt1+xrt3 gates 0d8f6b18d (MAIN+FB live); NEXT: all CLOSED -> re-kit real views + gate k8c+k8e MAIN / k8d+k8f FB
+S81.STA.PAR.2 Service roots svc_rs RUNNING STW-S81-COLLB svc_att LP bound pipeline lpb_r0/r1 (684542/3) + att_a/b (687396/7) ep7; census PASS -> attw kits; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.2.1 attn_hgrp_s81 kit gate+route RUNNING STW-S81-COLLB hgrp8 b95add56c daemon RUNNING + hgrp8r regate submit 383656; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.2.2 attw G4 landed parent RUNNING STW-S81-COLLB svc_att LP bound pipeline lpb_r0/r1 (684542/3) + att_a/b (687396/7) ep7; census PASS -> attw kits; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.3 gunit parent TODO STW-S81-COLLA GATE · L1f c gate 1951989 gold2 GRT 8.5 h, L1f d daemon RUNNING gold2; lp/lp_b diag gates 691964/66 (stand-in L1f), waiter_l1f 477177 re-kits on L1f CLOSED; NEXT: collect L1f, real-view parent gates
+S81.STA.PAR.4 Sequencer dsdv_seq_host_mux TODO STW-S81-COLLB SOURCE CANDIDATE · 14:40 distinct mux_h 9c7a001d6 complete-profile actual-child lint PASS; restored 2FT rung miter 4797x1567bits/0 mismatch +missing-rung4613 caught, 3 resetepochs (HOST/jobs idle). G8 APIPE8/NEV8 no CLOSED view; explicit HWIN16/LOCAL_RECORD1 codec/calendar/native/physical and new slot OPEN, no alias. Full HOST_EN1 preserved; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.4.1 sh_lk (HOST) + seq_host_c_hard RUNNING STW-S81-COLLB seq_host_h gate2 676595 + hw gate1 387408 (chain 676596); first CLOSED binds; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.5 TOPK collector/selector TODO STW-S81-TOPK GATING · f FAIL GRT-0183 (pins 99% of faces; clock 48/43 OK), e GRT0 but clock 92.8>80; MAIN h 388.8x475.2 central SRAM block ep5 PID 940950 (waiter), FB g 388.8x432 agidock128; 73beat/796cyc +156 vs 640 owed to calendar; NEXT: collect h/g/e, submit first PASS/WARN, then selpan parent
+S81.STA.TOPK.TX u_tx dsdv_idx_tx_n32 (10 SRAM) TODO STW-S81-TOPK-TX GATING · R4 MAIN GPL diverged (RUDY over SRAMs), FB b GRT0 fill31%; --cts MAIN c 596x540 + FB d 626x562 gold1, GPL routability off; NEXT: waiters submit first PASS/WARN
+S81.STA.TOPK.FIFO FQ/OFQ SRAM storage DONE CODEX-S81-1021 CLOSED · exact hk2l f9753ee14 TT37.37/FF5.16DRC0 recordef82; parent integration separate
+S81.STA.PAR.6 dsfd_ctrl_rg3 (16 inst) TODO STW-S81-COLLB CLOSED RECORD / G9 NATIVE ETM HOLD · 16:44 FB22595/bbc9 TT67.84/FF7.64/DRC0, source configured16/phase/body proof retained. Actual G9GEN rejects legacy ck_o self-clock ETM, requires real native clk:ck_o export; exact installedpass1 input/tool/image/signoff packet f872 ready, original views unchanged. SRAM_FIFO/P192/NATIVE32 resetrelease+1localedge/bootcalendar owed. MAIN29f EP5 GRT live880holditers/slack−35.581; originalMAIN3RESETN−13.28FAIL preserved. No parentclock/physicalclaim; NEXT: collect live jobs -> submit_exact/BIND (COLLB)
+S81.STA.PAR.ETW dsdv_eng_tap_w + dsdv_eng_tap TODO STW-S81-COLLB GATE · leaves CLOSED; parent eng_rr fix 1bf6aa28c native PASS32 + bench PASS; --cts gates a 1077300 / b 1077847; NEXT: waiter submits PASS/WARN, CLOSED → bind with tap views
+S81.STA.PAR.ETW.LKP lookup leaf dsfd_engram_lkp_ra640 TODO STW-S81-COLLB GATE · k/l/m CTS FAIL (clusters unbuffered, TT spread 95-153); leaf-clock fix 2dee22619 ra640n/o gates 924872/924873; NEXT: waiter 933992 submits PASS, first CLOSED binds u_lkp
+S81.STA.PAR.IQF dsdv_idx_qf DONE CODEX-S81-1021 CLOSED · exact MAINf7c53/source d20 selected TT59.20/FF13.56DRC0; FB8c0c/source617 TT31.81/FF21.96DRC0 separatekit. G9MAINorigin8321.04,100.032 all2579pins/legalcorridorPASS source-only; parent405/clock/STA owed
+S81.STA.PG Native terminal power binding TODO STW-S81-DIE WAITS GRT · NEXT: PG strap audit on G9d/G9e after GRT
+S81.STA.LEAF Remaining leaves TODO STW-S81-COLLA GATES · xgr/xgr_b, vp8 r8cal, lepmuh r7/r8, lepmua r8m, VE ECO, XFIN fix live (see children); NEXT: collect each terminal, submit_exact PASS/WARN
+S81.STA.LEAF.5 Slice gather sub-leaf xgt_xo -> successor ot_s81sl_xgr/xgr2 TODO STW-S81-COLLA GATE · --cts gates s81sl_xgr/_b src 0397b9edc gold2 PIDs 525088/525090 (yosys, 55 min), waiter 532339 submits 1st PASS/WARN; NEXT: collect, FAIL -> classify + next relay/fence
+S81.STA.OWN Remaining tile closure and integration RUNNING STEWARD-S81 roll-up; 18 die stand-in masters/126 inst in G9d; NEXT: children close -> G9e/G9f swaps
+S81.STA.OWN.1 Frames h9/h10 TODO STW-S81-COLLA GATE · h9 fs1x PID 463296 + autosubmit 463353; h10 fs1x MAIN/fs1y FB (relays under u_cf, 9f6b8434e) PIDs 916490/916491 + waiters gwait2; fs1w/fs1e stopped+deleted; NEXT: PASS/WARN -> submit, CLOSED -> BIND (h10 = slot change 1782/1610 wide)
+S81.STA.OWN.2 Slice parents slice/lepw/lepe/lepe_nh DONE STW-S81-LAND SUPERSEDED · G9c die.v binds ot_s81sl_slice (unhardened cluster, view null) + 4 unhardened mu72 tops; lepw/lepe/lepe_nh masters not instantiated; NEXT: none (L0/L1 landing in mu72 tops = STW-S81-LAND)
+S81.STA.OWN.3 Slice leaves lep/ve/vp/xfin (lep_nh PARKED next-release) TODO STW-S81-COLLA GATES · vp8 r8cal / VE ECO / lepmu r7-r8 live, XFIN native fix (sub XFIN); NEXT: collect children
+S81.STA.OWN.3.1 VE r5 lost ECO continuation TODO STW-S81-COLLA DAEMON ECO · linked s81sl_ve_r5-f51f4ec42-linked-eco-1021 ECO ep9 (pre TT+82.85/FF-15.07), waiter 383279; NEXT: CLOSED -> BIND u_ve to STEWARD-S81; else classify hold class
+S81.STA.OWN.3.2 vp r8 (r7 superseded) TODO STW-S81-COLLA GATE · r8 FAIL only platform-RC clock read 125/112.6; RC-cal measurement fix on main f02b312f0; regates fc5765a09 s81sl_vp8/_fb PIDs 404738/404739 ep7 GPL; NEXT: PASS/WARN -> submit_exact both
+S81.STA.OWN.3.3 Close XFIN SRAM and VS TODO STW-S81-COLLA-XFIN RTL-FIX · VS CLOSED main 53fde; XFIN R33 native FAIL 976/max132 (word select/enable fanout); NEXT: byte-granular kept copies -> benches -> census 32/0/0 -> gate MAIN+FB
+S81.STA.OWN.7 SerDes column parent ot_pdie_serdes_col RUNNING STW-S81-OWN7 lp8a/lp8b benches live; NEXT: gate MAIN lp8a + FB lp8b
+S81.STA.OWN.11 dsdv_slice_lepe_nh parent kit DONE STW-S81-LAND SUPERSEDED · die s_7S = unhardened ot_s81sl_slice_lepe_nh_mu_72 (G9c die.v); lr kits model unbound parent, 6 lr scratch deleted; NEXT: none
+S81.STA.OWN.12 MU end-slice children lep_mu_a/_h/_ab TODO STW-S81-COLLA GATE · h r7m/r7f ep9 245262/3 (waiter 260622) + r8m 239088; a r8m Codex agidock 3481759 GRT hold -27.98; ab -> LINK5 sub; NEXT: 1st PASS/WARN -> submit_exact, CLOSED -> STEWARD-S81
+S81.STA.OWN.12b MU COLL CRED8 guarded W/E leaves DONE CODEX-S81-1021 CLOSED · W89182 TT9.95/FF6.81DRC0 and E7db TT0.25/FF2.81DRC0 exactsource published; G9localnestedbindings beneathunhardenedparents/globalphaseholds. CRED12fourroutes distinctlive/no alias; parentreach/clock/STA owed
+S81.STA.OWN.12c MU72 end tops lep<->lane landing (L0/L1 regions, CRED12) TODO STW-S81-LAND SOURCE · RTL+audit+bench PASS @82add93fc, BIND NOTICE posted; lepa/h CRED12 kits routed COLLA; NEXT: r4l successor bench (local) -> merge, die GEN picks
+S81.STA.THIN Thin lane x_f_4L10_l1 on real views TODO STW-S81-DIE WAITS GRT · NEXT: real-view thin-lane STA on G9d after GRT
+S81.STA.LKTO Link lane tiles: ACK timeout700 TODO STW-S81-COLLA HOLD · CRED8 W+E CLOSED (die binds CRED8); CRED12 E_g d99d57391 + W_h a595e6dab both CLOSED (record merges conflict 4 files; E resolved cc8c78b10, not on main); NEXT: die picks CRED12 -> resolve W merge like E + ff main, BIND
+S81.STA.LKTO.2 COLL safe geometry/source TODO STW-S81-COLLA CRED8 VIEWS PUBLISHED / CRED12 E CLOSED · CRED12 record cc8c78b10 held; NEXT: fast-forward main when STW-S81-LAND lnland (CRED12) binds in G9e
+S81.STA.MU Multi-user hardware in p4l TODO STW-S81-COLLB GATE · c21q/r NEEDS_RTL; successor hwin c22q/c22r native fix 770cd41bb (per-copy accept, benches PASS) --cts gates live 961864/962199; NEXT: waiter submits PASS/WARN → bind in mux_h
+MU.BAL.SX svc_sx cross-die top-k + MTP slots WAITS STW-S81-COLLB NEXT: MU.BAL.SX.3 gate collect
+MU.BAL.SX.3 Index reader/scorer on p4l TODO STW-S81-COLLB GATE · rg3/rg3b GPL diverged (stopped/terminal); r/br/nqr/nqbr a7379fa7d (routability-off) re-gated 18:28 (infra fix) PIDs 727376/727574/727801/728010; NEXT: waiters submit PASS/WARN, first CLOSED binds
+MU.S81.BUF Per-user bases, tag, second buffer TODO STW-S81-COLLA-LEPAB GATING · lepab r4a/r4b spine-clock gates live + waiter; CRED12 W routes live (LKTO); NEXT: gate verdict -> submit/structural fix
+S81.CLK Die regional clocks and resets TODO STW-S81-DIE DESIGN · ck_frame 50-57 mm = unplaced-port artifact (real <=4.35 mm); real defect = 16 logical ck_cl* roots span 20.7x23.9 mm (reset stations); NEXT: geometric region roots + landed crossings in GEN (sub STW-S81-DIE-CLK, branch claude/s81-g9e-clk-1021) -> G9e
+Elements (generated, never hand-edited) closed 135/156 open, no live job 2 · not started 1 · closed, not die-bindable 4 · in flight 14 · superseded hidden 29 The element table reads p4l (S81-DIE6 bind6: first strict die bind PASS, 7,489 instances) , but this die section names rev 72-frame MU current release . Point results/fleet_viz/die_sources.json at the current revision.
+source: p4l (S81-DIE6 bind6: first strict die bind PASS, 7,489 instances) element table summary: closed 139 / 156 ✓ matches
+Slices, clusters and stations 13/21 closed open, no live job ot_s81sl_lep master s81sl_lep-fx3l-913e7f391 TT -44.8 / FF -7.6 S81-DIE6 needs redesign (no live job)
+open, no live job ot_s81sl_vp leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_vp-s81sl_vp-c318a2024 TT -102.5 / FF -7.8 S81-DIE6 needs redesign (no live job)
+not started dsdv_slice_lepe_nh master S81-DIE6 not started (open)
+closed, not die-bindable ot_s81sl_cap leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_capc-s81sl_capc-d8836674d TT +198.7 / FF +18.2 S81-DIE6 native no insertion.json (R unproven)
+in flight ot_s81sl_slice master S81-DIE6 parent open, leaves under way
+in flight ot_s81sl_slice_lepe master S81-DIE6 parent open, leaves under way
+in flight ot_s81sl_slice_lepw master S81-DIE6 parent open, leaves under way
+in flight ot_s81sl_ve master s81sl_ve_r5-f51f4ec42-linked-eco-1021 TT +82.8 / FF -15.1 S81-DIE6 failed, re-running
+closed, die-bindable ot_s81sl_cap_ed leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_cap_ed-s81sl_cap_ed-08889f37d TT +237.9 / FF +30.1 S81-DIE6
+closed, die-bindable ot_s81sl_cap_ld leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_cap_ld-s81sl_cap_ld-636f4c670 TT +249.2 / FF +24.9 S81-DIE6
+closed, die-bindable ot_s81sl_cap_p1 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_capc_p1_die_slew-s81capc_die_slew-267b35821 TT +313.0 / FF +21.9 S81-DIE6
+closed, die-bindable ot_s81sl_cap_rt leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_cap_rt-s81sl_cap_rt-c302169ce TT +53.9 / FF +18.6 S81-DIE6
+closed, die-bindable ot_s81sl_cap_tr leaf of ot_s81sl_slice s81sl_cap_tr-s81sl_cap_tr-0ecc0c258 TT +83.6 / FF +22.8 S81-DIE6
+closed, die-bindable ot_s81sl_capc2 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_capc2-s81capc2-1f4c80cf6 TT +259.1 / FF +25.5 S81-DIE6
+closed, die-bindable ot_s81sl_eg master s81sl_eg-v1-fbb651e33 TT +71.8 / FF +16.2 S81-DIE6
+closed, die-bindable ot_s81sl_vn leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_vn-s81sl_vn-b384d72cb TT +100.2 / FF +8.1 S81-DIE6
+closed, die-bindable ot_s81sl_vq leaf of ot_s81sl_slice s81sl_vq-n3-8eea202c0 TT +90.5 / FF +20.4 S81-DIE6
+closed, die-bindable ot_s81sl_vs master s81sl_vs_n32f-n32f-71ac7943d TT +13.0 / FF +12.3 S81-DIE6
+closed, die-bindable ot_s81sl_vsw leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_vsw-s81sl_vsw-e516a9bda TT +90.7 / FF +15.7 S81-DIE6
+closed, die-bindable ot_s81sl_xr1 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_xr1f-s81sl_xr1f-2cd515293 TT +26.9 / FF +7.1 S81-DIE6
+closed, die-bindable ot_s81sl_xr3 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81sl_xr3-s81sl_xr3-e656ad73c TT +13.7 / FF +7.4 S81-DIE6
+Collector, selector, column FIFO 5/10 closed closed, not die-bindable dsdv_bk_col master s81dvbk_colv-pl1-d863824bf TT +10.5 / FF +24.3 S81-DIE6 native TT pin-flop spread 105.9 > 80; spread 105.9 > 80
+in flight col_h10 master S81-DIE6 parent open, leaves under way
+in flight col_h9 master S81-DIE6 parent open, leaves under way
+in flight col_h9_MX master S81-DIE6 parent open, leaves under way
+in flight dsdv_bk_sel master S81-DIE6 parent open, leaves under way
+closed, die-bindable dsdv_bk_g leaf (RTL hierarchy) of dsdv_bk_col, dsdv_bk_sel s81dvbk_g2-g2km2-1b13d46c2 TT +17.8 / FF +6.6 S81-DIE6
+closed, die-bindable dsdv_bkcol_l leaf (RTL hierarchy) of dsdv_bk_col s81dvbk_cl-l1-cc118de88 TT +201.9 / FF +6.7 S81-DIE6
+closed, die-bindable dsdv_bkcol_m leaf of dsfd_bk_collector s81dvbk_cm-m1-8c2850345 TT +40.3 / FF +3.6 S81-DIE6
+closed, die-bindable dsdv_bksel_c leaf (RTL hierarchy) of dsdv_bk_sel s81dvbk_selc2-c2-368403ff4 TT +54.6 / FF +9.0 S81-DIE6
+closed, die-bindable dsdv_bksel_q leaf (RTL hierarchy) of dsdv_bk_sel s81dvbk_sq_hk2l-hk2l-f9753ee14 TT +37.4 / FF +5.2 S81-DIE6
+Die links: PHY, D2D, SerDes, UCIe 3/6 closed closed, not die-bindable dsdv_sh_lk leaf (RTL hierarchy) of dsdv_seq_host dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d TT +33.2 / FF +17.4 S81-DIE6 native TT pin-flop spread 85.4 > 80; spread 85.4 > 80
+in flight ot_pdie_serdes master S81-DIE6 parent open, leaves under way
+in flight ot_pdie_ucie master S81-DIE6 parent open, leaves under way
+closed, die-bindable ot_s81_sstn_base566 leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_sstn_base566-split1-9cb51937c TT +329.2 / FF +24.8 S81-DIE6
+closed, die-bindable ot_s81_sstn_payload536 leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_sstn_payload536-split1-9cb51937c TT +344.2 / FF +26.6 S81-DIE6
+closed, die-bindable ot_s81dv_xfin leaf of ot_s81sl_slice s81dv_xfin-x5-06cb91161 TT +4.8 / FF +11.5 S81-DIE6
+Host, sequencer, services and control 6/9 closed in flight dsdv_seq_host master S81-DIE6 parent open, leaves under way
+in flight dsdv_svc_rs master S81-DIE6 parent open, leaves under way
+in flight dsdv_svc_rs_entry master S81-DIE6 parent open, leaves under way
+closed, die-bindable dsdv_sh_sq leaf (RTL hierarchy) of dsdv_seq_host dsdv_sh_sq-dsdv_sh_sq-baa6e2280 TT +16.4 / FF +14.2 S81-DIE6
+closed, die-bindable dsdv_sh_vc leaf of dsdv_seq_host dsdv_sh_vc-nf3bt-ce989b78c TT +71.6 / FF +7.9 S81-DIE6
+closed, die-bindable dsdv_svc_sx_hrow leaf of dsdv_svc_rs dsdv_svc_sx_hrow-dsdv_svc_sx_hrow-c5a8d5b10 TT +46.0 / FF +5.1 S81-DIE6
+closed, die-bindable dsfd_ctrl_rg2 master s81ctrl_rg2_n32s-n32s-f1f7c42d9 TT +206.0 / FF +5.2 S81-DIE6
+closed, die-bindable ot_s81_cfg7_seq leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81coll_cfg7_seq_pr-pr3-f8e89fc72 TT +321.2 / FF +25.5 S81-DIE6
+closed, die-bindable ot_s81_pq_calendar_reader leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81_pq_reader75-rstrelay-r3-182180c59 TT +137.7 / FF +29.1 S81-DIE6
+Collective links 0/1 closed closed, not die-bindable dsfd_coll_lane_w leaf (RTL hierarchy) of ot_s81sl_slice_lepe, ot_s81sl_slice_lepw dscoll_lane_w_cxea-cxea3-a011f9e61 TT +24.3 / FF +17.4 S81-DIE6 native TT pin-flop spread 114.6 > 80; FF pin-flop spread 106.0 > 80; spread 114.6 > 80
+gunit 9/10 closed in flight dsdv_gunit master S81-DIE6 parent open, leaves under way
+closed, die-bindable dsdv_gunit_l0 leaf of dsdv_gunit dsdv_gunit_l0-g3-30d12242b TT +198.8 / FF +5.6 S81-DIE6
+closed, die-bindable dsdv_gunit_l0r leaf of dsdv_gunit dsdv_gunit_l0r-g3-30d12242b TT +24.6 / FF +24.1 S81-DIE6
+closed, die-bindable dsdv_gunit_l1 leaf of dsdv_gunit dsdv_gunit_l1-gl1-ecad968d3 TT +59.3 / FF +2.7 S81-DIE6
+closed, die-bindable dsdv_gunit_l1c leaf of dsdv_gunit dsdv_gunit_l1c-gl1-ecad968d3 TT +0.1 / FF +16.7 S81-DIE6
+closed, die-bindable dsdv_gunit_l2 leaf of dsdv_gunit dsdv_gunit_l2-n3-4ad138b2f TT +74.7 / FF +5.0 S81-DIE6
+closed, die-bindable dsdv_gunit_l3 leaf of dsdv_gunit dsdv_gunit_l3-n3-4970bda9a TT +133.7 / FF +10.0 S81-DIE6
+closed, die-bindable dsdv_gunit_l4r leaf of dsdv_gunit dsdv_gunit_l4r-g3-0d82e340b TT +144.1 / FF +19.0 S81-DIE6
+closed, die-bindable dsdv_gunit_l5 master dsdv_gunit_l5_n32-n32-1766568f0 TT +49.9 / FF +13.8 S81-DIE6
+closed, die-bindable dsdv_gunit_l5f leaf of dsdv_gunit dsdv_gunit_l5f-g3-0d82e340b TT +151.8 / FF +22.0 S81-DIE6
+BF16 lanes 3/3 closed ALL CLOSED closed, die-bindable dsfd_bf_front_roots leaf of col_h9 s81bf_front_five_roots_nlock_h03-ref-392d7efcb TT +0.0 / FF +18.2 S81-DIE6
+closed, die-bindable ot_s81_cfg7_seq_bf leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81fill2_cfg7_seq_bf_l1-g1-61d2351bf TT +71.3 / FF +19.6 S81-DIE6
+closed, die-bindable ot_s81_cfg7_seq_bfp leaf of col_h9 s81coll_cfg7_seq_bfp_emptyfix-emptyfix-40f3a9cb7 TT +241.5 / FF +22.9 S81-DIE6
+Clock and reset 1/1 closed ALL CLOSED closed, die-bindable dsfd_rstg leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_rstg-n2-61a4164c1 TT +328.4 / FF +31.0 S81-DIE6
+DS ROM stream-unit arithmetic 1/1 closed ALL CLOSED closed, die-bindable ot_dsrom_su_hcpost_lane_pr master s81sl_hcpl-s81sl_hcpl-31155b373 TT +118.2 / FF +18.7 S81-DIE6
+Engram 6/6 closed ALL CLOSED closed, die-bindable ot_s81_engram_add8 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81engm_add8-v21-bf044b7f6 TT +84.1 / FF +17.5 S81-DIE6
+closed, die-bindable ot_s81_engram_chunk8 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81engm_chunk8-v21-bf044b7f6 TT +87.0 / FF +18.2 S81-DIE6
+closed, die-bindable ot_s81_engram_mul4 leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81engm_mul4-boundary810-0852-2e57a7a75 TT +129.1 / FF +10.6 S81-DIE6
+closed, die-bindable ot_s81_engram_norm leaf (RTL hierarchy) of ot_s81sl_eg, ot_s81sl_slice, ot_s81sl_slice_lepe s81engm_norm-v21-bf044b7f6 TT +110.1 / FF +20.3 S81-DIE6
+closed, die-bindable ot_s81_engram_sigmoid leaf (RTL hierarchy) of ot_s81sl_eg, ot_s81sl_slice, ot_s81sl_slice_lepe s81engm_sigmoid-v21-bf044b7f6 TT +76.1 / FF +23.4 S81-DIE6
+closed, die-bindable ot_s81_engram_signed_sqrt leaf (RTL hierarchy) of ot_s81sl_eg, ot_s81sl_slice, ot_s81sl_slice_lepe s81engm_signed_sqrt-v21-16a883417 TT +103.1 / FF +24.8 S81-DIE6
+KP4 decoder 4/4 closed ALL CLOSED closed, die-bindable ot_s81_kp4_dchn master s81lk_kp4_dchn-col-07c70c35d TT +11.5 / FF +25.0 S81-DIE6
+closed, die-bindable ot_s81_kp4_ddly master s81lk_kp4_ddly-col-e7e375bce TT +270.9 / FF +9.0 S81-DIE6
+closed, die-bindable ot_s81_kp4_dout master s81lk_kp4_dout-col-f43086fd3 TT +192.8 / FF +5.9 S81-DIE6
+closed, die-bindable ot_s81_kp4_dsyn master s81lk_kp4_dsyn-t2-e3dea7351 TT +10.4 / FF +3.0 S81-DIE6
+Matrix engine (SM) 2/2 closed ALL CLOSED closed, die-bindable dsfd_su_t_smhq leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_smhq-s81su_smhq-6f96077bb TT +96.3 / FF +7.7 S81-DIE6
+closed, die-bindable dsfd_su_t_smhr leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_smhr-s81su_smhr-4b9efb055 TT +254.9 / FF +15.8 S81-DIE6
+Other 1/1 closed ALL CLOSED closed, die-bindable ot_s81ph_native_sel_hist_bank leaf (RTL hierarchy) of dsdv_bk_sel s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c TT +239.7 / FF +23.1 S81-DIE6
+ROM field, nodes and quantise 5/5 closed ALL CLOSED closed, die-bindable dsfd_node_LLd leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_node_lld-ab1-13d5be1a9 TT +95.2 / FF +23.3 S81-DIE6
+closed, die-bindable dsfd_node_LLfd leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_node_llfd-ab1-13d5be1a9 TT +89.3 / FF +18.5 S81-DIE6
+closed, die-bindable dsfd_node_LLfu leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_node_llfu-ab1-13d5be1a9 TT +84.3 / FF +22.9 S81-DIE6
+closed, die-bindable dsfd_node_NNfd leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_node_nnfd-n6-13d6772ae TT +100.2 / FF +16.8 S81-DIE6
+closed, die-bindable dsfd_node_NNfu leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81net_node_nnfu-n6-13d6772ae TT +90.1 / FF +12.5 S81-DIE6
+Relays, landings and forwarded lanes 65/65 closed ALL CLOSED closed, die-bindable dsdv_gunit_l4 leaf of dsdv_gunit dsdv_gunit_l4-nf3-14b48ae73 TT +71.9 / FF +5.9 S81-DIE6
+closed, die-bindable dsdv_mu_land leaf (RTL hierarchy) of ot_s81sl_slice_lepe, ot_s81sl_slice_lepw dsdv_mu_land-dsdv_mu_land-263e13fc3 TT +68.2 / FF +24.0 S81-DIE6
+closed, die-bindable dsfd_dvland_276 master s81dv_land_276-po2-df5c2d585 TT +69.0 / FF +27.1 S81-DIE6
+closed, die-bindable dsfd_dvland_562 master s81dv_land_562-po2-df5c2d585 TT +64.6 / FF +24.3 S81-DIE6
+closed, die-bindable dsfd_dvland_682 master s81dv_land_682-l1-1da4d6aae TT +67.2 / FF +25.7 S81-DIE6
+closed, die-bindable dsfd_dvland_70 master s81dv_land_70-po2-df5c2d585 TT +78.3 / FF +29.3 S81-DIE6
+closed, die-bindable dsfd_dvland_pvrd master s81dv_land_pvrd-p4-c93cc5ab7 TT +56.9 / FF +23.2 S81-DIE6
+closed, die-bindable dsfd_dvrly_276_EW master s81dv_rly_276_ew-dv4c-33a9d31b4 TT +407.5 / FF +28.6 S81-DIE6
+closed, die-bindable dsfd_dvrly_276_NS master s81dv_rly_276_ns-dv4c-33a9d31b4 TT +383.9 / FF +28.9 S81-DIE6
+closed, die-bindable dsfd_dvrly_276_SN master s81dv_rly_276_sn-dv4c-33a9d31b4 TT +378.1 / FF +24.3 S81-DIE6
+closed, die-bindable dsfd_dvrly_276_WE master s81dv_rly_276_we-dv4c-33a9d31b4 TT +409.6 / FF +24.6 S81-DIE6
+closed, die-bindable dsfd_dvrly_512_EW master s81dv_rly_512_ew-w1-c5a69dc05 TT +410.1 / FF +28.4 S81-DIE6
+closed, die-bindable dsfd_dvrly_512_WE master s81dv_rly_512_we-w1-c5a69dc05 TT +366.1 / FF +22.0 S81-DIE6
+closed, die-bindable dsfd_dvrly_562_EW master s81dv_rly_562_ew-w1-c5a69dc05 TT +326.7 / FF +27.0 S81-DIE6
+closed, die-bindable dsfd_dvrly_562_SN master s81dv_rly_562_sn-w2-6e188c155 TT +370.4 / FF +26.1 S81-DIE6
+closed, die-bindable dsfd_dvrly_562_WE master s81dv_rly_562_we-w1-c5a69dc05 TT +333.3 / FF +20.8 S81-DIE6
+closed, die-bindable dsfd_dvrly_682_EW master s81dv_rly_682_ew-w1-c5a69dc05 TT +276.7 / FF +20.8 S81-DIE6
+closed, die-bindable dsfd_dvrly_682_NS master s81dv_rly_682_ns-w2-6e188c155 TT +390.8 / FF +28.0 S81-DIE6
+closed, die-bindable dsfd_dvrly_682_WE master s81dv_rly_682_we-w1-c5a69dc05 TT +278.1 / FF +25.9 S81-DIE6
+closed, die-bindable dsfd_dvrly_70_NS master s81dv_rly_70_ns-w1-1e6f9a9d6 TT +409.3 / FF +29.5 S81-DIE6
+closed, die-bindable dsfd_dvrly_70_SN master s81dv_rly_70_sn-w1-1e6f9a9d6 TT +409.2 / FF +29.2 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_276_EW master s81dv_rlyh_276_ew-h1-41e90080d TT +405.1 / FF +26.2 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_276_NS master s81dv_rlyh_276_ns-h1-41e90080d TT +384.9 / FF +33.1 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_276_SN master s81dv_rlyh_276_sn-h1-41e90080d TT +383.1 / FF +29.4 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_276_WE master s81dv_rlyh_276_we-h1-41e90080d TT +412.0 / FF +26.0 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_512_EW master s81dv_rlyh_512_ew-h1-41e90080d TT +409.4 / FF +25.0 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_512_WE master s81dv_rlyh_512_we-h1-41e90080d TT +403.2 / FF +22.5 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_562_EW master s81dv_rlyh_562_ew-h1-41e90080d TT +363.2 / FF +26.5 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_562_SN master s81dv_rlyh_562_sn-h1-41e90080d TT +365.5 / FF +32.1 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_562_WE master s81dv_rlyh_562_we-h1-41e90080d TT +327.9 / FF +26.5 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_682_EW master s81dv_rlyh_682_ew-h1-41e90080d TT +340.2 / FF +27.3 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_682_NS master s81dv_rlyh_682_ns-h1-41e90080d TT +399.5 / FF +28.2 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_682_WE master s81dv_rlyh_682_we-h1-41e90080d TT +283.3 / FF +23.7 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_70_NS master s81dv_rlyh_70_ns-h1-41e90080d TT +406.9 / FF +29.2 S81-DIE6
+closed, die-bindable dsfd_dvrlyh_70_SN master s81dv_rlyh_70_sn-h1-41e90080d TT +409.6 / FF +29.5 S81-DIE6
+closed, die-bindable dsfd_rly_15_EN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_15_en-v3-faf093855 TT +312.1 / FF +9.7 S81-DIE6
+closed, die-bindable dsfd_rly_15_NS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_15_ns-g18-8a9388ce8 TT +347.8 / FF +31.4 S81-DIE6
+closed, die-bindable dsfd_rly_15_SN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_15_sn-v3-faf093855 TT +308.5 / FF +9.6 S81-DIE6
+closed, die-bindable dsfd_rly_1_EW leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_1_ew-v3-faf093855 TT +325.4 / FF +10.8 S81-DIE6
+closed, die-bindable dsfd_rly_1_WN master s81_rly_1_wn-g18-8a9388ce8 TT +360.6 / FF +28.0 S81-DIE6
+closed, die-bindable dsfd_rly_266_EW leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_266_ew-r4n-a2f724583 TT +382.5 / FF +27.0 S81-DIE6
+closed, die-bindable dsfd_rly_283_EW leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_283_ew-r4-1480fbbb1 TT +320.9 / FF +27.6 S81-DIE6
+closed, die-bindable dsfd_rly_2_ES leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_es-v3-faf093855 TT +323.0 / FF +10.3 S81-DIE6
+closed, die-bindable dsfd_rly_2_NE leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_ne-v3-faf093855 TT +325.5 / FF +10.3 S81-DIE6
+closed, die-bindable dsfd_rly_2_NS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_ns-v3-faf093855 TT +324.0 / FF +10.2 S81-DIE6
+closed, die-bindable dsfd_rly_2_NW leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_nw-v3-faf093855 TT +322.1 / FF +10.2 S81-DIE6
+closed, die-bindable dsfd_rly_2_WE leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_we-v3-faf093855 TT +325.1 / FF +9.8 S81-DIE6
+closed, die-bindable dsfd_rly_2_WS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_2_ws-v3-faf093855 TT +324.2 / FF +10.2 S81-DIE6
+closed, die-bindable dsfd_rly_38_WN leaf of col_h9 s81_rly_38_wn-x1-e3cbf17fa TT +410.6 / FF +26.7 S81-DIE6
+closed, die-bindable dsfd_rly_536_SN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_536_sn-rs1s56-e95957137 TT +326.0 / FF +20.9 S81-DIE6
+closed, die-bindable dsfd_rly_536_SW leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_536_sw-rs1s56-e95957137 TT +304.8 / FF +19.4 S81-DIE6
+closed, die-bindable dsfd_rly_54_WN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_54_wn-g18-8a9388ce8 TT +339.7 / FF +29.3 S81-DIE6
+closed, die-bindable dsfd_rly_63_ES leaf (RTL hierarchy) of col_h9, col_h9_MX s81_rly_63_es-v2-88e22fcbf TT +300.8 / FF +18.0 S81-DIE6
+closed, die-bindable dsfd_rly_63_NE leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_ne-v2-88e22fcbf TT +304.8 / FF +11.0 S81-DIE6
+closed, die-bindable dsfd_rly_63_NS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_ns-v2-88e22fcbf TT +300.0 / FF +17.1 S81-DIE6
+closed, die-bindable dsfd_rly_63_SE leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_se-r4-1480fbbb1 TT +336.1 / FF +9.9 S81-DIE6
+closed, die-bindable dsfd_rly_63_SN leaf (RTL hierarchy) of col_h10 s81_rly_63_sn-g18-8a9388ce8 TT +334.5 / FF +29.7 S81-DIE6
+closed, die-bindable dsfd_rly_63_WE leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_we-r4-1480fbbb1 TT +335.7 / FF +13.1 S81-DIE6
+closed, die-bindable dsfd_rly_63_WN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_wn-r4-1480fbbb1 TT +333.2 / FF +14.3 S81-DIE6
+closed, die-bindable dsfd_rly_63_WS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_63_ws-r4-1480fbbb1 TT +337.0 / FF +12.9 S81-DIE6
+closed, die-bindable dsfd_rly_66_ES leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_66_es-r4-1480fbbb1 TT +339.8 / FF +30.1 S81-DIE6
+closed, die-bindable dsfd_rly_66_EW leaf (RTL hierarchy) of col_h10 s81_rly_66_ew-r4n-32f8e7df7 TT +410.4 / FF +29.8 S81-DIE6
+closed, die-bindable dsfd_rly_66_NE leaf (RTL hierarchy) of col_h9, col_h9_MX s81_rly_66_ne-g18-8a9388ce8 TT +340.6 / FF +29.4 S81-DIE6
+closed, die-bindable dsfd_rly_66_NS leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_66_ns-v2-88e22fcbf TT +301.5 / FF +14.4 S81-DIE6
+closed, die-bindable dsfd_rly_66_SN leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81_rly_66_sn-v2-88e22fcbf TT +300.2 / FF +17.6 S81-DIE6
+S81 BF16 pair 1/1 closed ALL CLOSED closed, die-bindable ot_v41_bf_col leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX bfh_compact199_col_pinreg_prepabs_1019 TT +63.6 / FF +6.2 S81-DIE6
+S81 die control and transport 1/1 closed ALL CLOSED closed, die-bindable ot_v41_rom_elem_q_qxpq_w10 leaf of col_h9 dsrom-qelem-qs5f-cpr-tc-hm25-cl-ffacf68cd TT +116.3 / FF +12.2 S81-DIE6
+Stream unit (SU) 7/7 closed ALL CLOSED closed, die-bindable dsfd_su_t_rxsb leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81su_rxsb_ref-g1-5c2ce71d8 TT +69.8 / FF +19.7 S81-DIE6
+closed, die-bindable dsfd_su_t_rxsf leaf (RTL hierarchy) of ot_s81sl_slice, ot_s81sl_slice_lepe, ot_s81sl_slice_lepw s81su_rxsf_ref-observable-0854-09489ff41 TT +70.2 / FF +18.6 S81-DIE6
+closed, die-bindable dsfd_su_t_smc leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_smc_ref-v1-47c31b637 TT +86.0 / FF +24.7 S81-DIE6
+closed, die-bindable dsfd_su_t_smd leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_smd_u65_ref-v1-6494b8a37 TT +93.5 / FF +23.4 S81-DIE6
+closed, die-bindable dsfd_su_t_sml leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_sml_tail133_current_ref-native133-d69bc3f38 TT +115.3 / FF +18.7 S81-DIE6
+closed, die-bindable dsfd_su_t_smr leaf (RTL hierarchy) of dsdv_svc_rs, dsdv_svc_rs_entry s81su_smr_ref-v1-47c31b637 TT +93.4 / FF +1.0 S81-DIE6
+closed, die-bindable ot_s81_su_smq leaf of dsdv_svc_rs s81su_smq-s81su_smq-342decba7 TT +147.6 / FF +8.1 S81-DIE6
+Vector memory, HBM controller, banks 2/2 closed ALL CLOSED closed, die-bindable dsfd_qbank_N leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81fill2_qbank_n-g1-7b1c80004 TT +332.2 / FF +1.6 S81-DIE6
+closed, die-bindable dsfd_qbank_S leaf (RTL hierarchy) of col_h10, col_h9, col_h9_MX s81fill2_qbank_s_t-nr1-a0a4982dd TT +334.1 / FF +23.9 S81-DIE6
+Qwen compute
+rev r10bfp emitted; validation FAIL, no live Q chain BIND FAIL tasks done 38/70 · elements closed 29/34 est. Q.MU Qwen MU release die (1+4 users) FAIL SQ-QBIND2 on r10bfp/af: all four GEN chains terminal; captured r10bfp saved-case physical DIAG prerequisite live, original GENrc1 retained; no release die pass NEXT: SQ-QBIND2 r12 die chain
+Q.MU.FWD GEN safe forwarded-class frames RUNNING QW2-DIEFIX class GENs FAIL tree pad q3h_col_47_1; structural-fix GEN (QW-C3-DIE)
+Q.MU.L1K KV seam source binding TODO SQ-QBIND2 NOTRUN · on r6b:595/R16 source; coherent HEAD GEN actual ages pending NEXT: SQ-QBIND2 r12 die chain
+Q.BIND Release source/view binding FAIL SQ-QBIND2 r11bfp 79 opens -> role contract v2 (d3bf4db80) leaves 7 functional; real sinks only on codex/q-headprep-1021. NEXT: SQ-QB2-HP headprep GEN r12hpa (strict PASS target) + r12qb FALLBACK queued gold1
+Q.BIND.1 Repair 190 open master-port outputs (r6b binder) FAIL SQ-QBIND2 79 -> 7 via netlist-proven per-instance roles (TIE/FAR/REP2/REPL/FACE/L9/TERM/HEADDN/BUMP/DOMAIN); functional 7 owed (fault root, cf, emb_pos/user, completed, ctx_user, res_user). NEXT: SQ-QB2-HP headprep route
+Q.GRT Release die routing RUNNING SQ-QBIND2 DIAG r11bfp ep5 (CORE=0) past relay gate 18:52, real case/PDN (NOT A DIE RESULT). NEXT: SQ-QBIND2 GRT overflow
+Q.STA Die STA TT/FF on real views RUNNING SQ-QBIND2 DIAG r11bfp ep5 chain -> STA tt/ff after GRT. relay-check FAIL root cause = exporter (fix 39abf83c2, PASS offline). NEXT: SQ-QBIND2 TT/FF WNS
+Q.STA.GEN Next GEN (MU die) g5 TODO SQ-QBIND2 PASS(diag) · r11bfp GEN rc0 17:57 (1777 relays, max 377.6 um, over_reach 0, 2 late fault edges open), HIER PASS 136; SG129.6 r11af reset-pad blocked (structural). NEXT: SQ-QBIND2 r12 die chain
+Q.STA.GEN.1 Landings for 18 native59↔D2D/system buses FAIL SQ-QBIND2 scalar guard mainc196; r10GENrc1 retained. NEXT PHYsource/strictbind
+Q.STA.GEN.2 Early clock tap d2d_rom / sys_face TODO SQ-QBIND2 NOTRUN · on r10bfp: early taps unqualified; corrected profiles bind20 masters/28548 instances. DIAG3308001 exit9 before apply/GRT; no measured clock pass. NEXT: SQ-QBIND2 r12 die chain
+Q.STA.GEN.7 Reset release into foreign clocks TODO SQ-QBIND2 NOTRUN · on r10bfp: actual reset projection18PASS/0mismatch; DIAG3308001 clock-contract stop before apply/GRT. No foreign-clock release qualification. NEXT: SQ-QBIND2 r12 die chain
+Q.STA.GEN.10 Slice receiver face landing WAITS SQ-QBIND2 QCLK owed-0 check in r4 phase3 NEXT: SQ-QBIND2 r12 die chain
+Q.STA.CB16 CB16 cluster parent (landed, 48 inst) RUNNING SQ-COLLECT2 rgxe FF spread FAIL; stage-matched ring rgxg (ep9)/rgxh (ep5) gates in CTS. NEXT: collect ck (ckcf.py), PNG review, submit
+Q.STA.CB16.1 Full 16-region landed CB16 parent kit RUNNING SQ-COLLECT2 kits rgxg/rgxh 9cee141be; GRT overflow at A0 stand-in faces open (needs real A0). NEXT: gate verdicts
+Q.STA.N59 native59_dv_service RUNNING SQ-COLLECT2 svc4 NOT bindable (headprep_obs1 uses svc_obs1 + qbank 558f); qbank13a/b + qbank14 --cts gates in CTS/GRT; parent must adopt qbank1x params (die owner). NEXT: collect gates, submit PASS/WARN
+Q.STA.LAND600.3 landh0 enable before ICG WAITS SQ-QBIND die adoption in class GEN r4m/r4f (gold1) → Q.STA.GEN NEXT: SQ-QBIND die chain/bind
+Q.STA.SLICE Slice2 hierarchical cluster RUNNING SQ-SLICE3 census fix 16280a556 (kept rp_w/ARF/TAP copies, shared station ctrl rings) w13c/w13cb recensus+lp bench live gold2; gate kits HOLD station_tail1. NEXT: census verdict -> gate w13/w13b
+Q.STA.SLICE.1 qfd_dv_s8_station_tail1 (slice2 kits HOLD on it) RUNNING SQ-TAIL1 census root cause = const b[15:0] into kept copies; bf16 mul specialisation 103b505c6 census PASS max32; gates p7a/p7b --cts live. NEXT: PASS/WARN -> PNG -> submit_exact
+Q.STA.SLICE.2 slice2 VM8 leaf group parent RUNNING SQ-COLLECT2 P4 census FAIL (rq 120 loads) fixed: n32 writers @78260fcf3 bench PASS, census PASS max32 both, gates vm8r/vm8rb CTS live ep9. NEXT: collect gate -> PNG -> submit
+Q.STA.SLICE.3 Bind stream + tload tiles into slice2 TODO SQ-SLICE3 NOTRUN · stream_t3c/tload_ns4 hard in w13 kits. NEXT: w13 census -> gate a/b
+Q.STA.SLICE.4 slice2_e E master parent (mirror e13 of w13) TODO SQ-SLICE3 NOTRUN · same source as w13 (claude/qe3-slice2b-1021), kit names e13/e13b ready. NEXT: w13 census PASS + station_tail1 CLOSED -> e13/e13b kits+gates
+Q.STA.A0 A0 ROM-leaf tiles NK/NL RUNNING QW-A0-13 NK rc12 live post-CTS; rc13/rc13b x4 gates live 9873bd831
+Q.STA.TTC TT control: head + landed ctlm_dv RUNNING SQ-TTC5 on H16ZA493: exactCLOSED view/source/params bound HP13 recipe3e13199b0 (23hashes/49ports), publisher queued. CTLM/freshRRloc/parenthardview/GEN ages remain open; no timing transfer. NEXT: owner collects live sub verdicts
+Q.STA.TTC.3 Die adoption of ctlm_dv RUNNING SQ-TTC5 H16ZA head swap lockstep-proven (bench10 11/11, b16 ep6); kits safe16a/b (864x820.8/950.4x820.8, claude/sq-ttc5-safe16-1021) gates live. NEXT: safe16 verdict -> submit_exact -> publish view -> SQ-QBIND2 die bind + GEN ages (+1 start, TLOAD 12)
+Q.STA.TTC.4 CTLM RTL successor lp9f (CALREG15) RUNNING SQ-TTC5 safe15a/b (spine+child_insertion) gates live ep5; safe14b TritonCTS evidence: post-CTS WNS -506 (was -897). NEXT: gate_safe15{a,b}.json -> PNG review -> submit_exact best
+Q.STA.MU Multi-user hardware, compute die TODO SQ-QBIND2 NOTRUN · on coherent73a774: NU4 source-only14masters/18joins ready, fixedHP13 selector482 refuses legacyparams/unknownHRage. Newparentviews/cd8/RRloc/S8wholeface/actualGENages open; no source/view alias. NEXT: SQ-QBIND2 r12 die chain
+Q.SAFE Qwen safe-design structural fixes RUNNING STEWARD-QK component repair: q8a/b bothGRT183FAIL, source/geometry packets collecting. Prefix1d68INVALID retained/423resubmitted; S8c510 sourcecuts ready waits exactnewchild. H16ZA CLOSED exactHP13bind3e ready; whole die unqualified. NEXT: owner collects live sub verdicts
+Q.SAFE.COLL Collective core split C + 4 Q leaves TODO SQ-COLLECT2 ROUTING · q9a+q9b gates WARN (spread 37/34, GRT 0, PNG ok) -> routes qfd_coll_split_q9{a,b}-304e340b0 QUEUED. NEXT: route CLOSED -> CLOSED-FOR-GEN SQ-QBIND2
+Q.SAFE.COLL.1 Collective split parent bind C+Q WAITS QE3-COLL parent bind after split closes. NEXT: close q8 then bind 2x2+C
+Q.SAFE.COLLIO COLL IO production parent: 5 faces + parent view RUNNING QW2-COLL g: S1/S0 FAIL codec0 spread 85-102, P/R past CTS live; h gates (tighter codec0 fence) live
+Q.SAFE.HEAD Native ML5 lane head TODO STEWARD-QK SOURCE · controls5cd31ebb8 then safe2rb d2dddf4d6; canonicalclosure09c3abe6d recovered, binding pending NEXT: owner collects live sub verdicts
+Q.CLK Die regional clock closure RUNNING SQ-QBIND2 DIAG r11bfp ep5 CORE=0 die clock in chain. NEXT: SQ-QBIND2 CLK spread
+Elements (generated, never hand-edited) closed 29/34 open, no live job 1 · kit prepared, no route job 2 · in flight 2 · superseded hidden 12 The element table reads dv2f14bn (Q-DIE11b: GEN rc0, strict port-bind PASS 180 masters / 3,053 inst) , but this die section names rev r10bfp emitted; validation FAIL, no live Q chain . Point results/fleet_viz/die_sources.json at the current revision.
+source: dv2f14bn (Q-DIE11b: GEN rc0, strict port-bind PASS 180 masters / 3,053 inst) element table summary: closed 29 / 34 ✓ matches
+Slices, clusters and stations 2/5 closed kit prepared, no route job qfd_c_b16_dv master Q-DIE11b kit prepared, no route job
+kit prepared, no route job qfd_dv_slice2_w master Q-DIE11b kit prepared, no route job
+in flight qfd_dv_slice2_e master Q-DIE11b parent open, leaves under way
+closed, die-bindable qfd_c_xstn leaf (RTL hierarchy) of qfd_c_b16_dv qfd_c_xstn-s0-ebe9b9a72 TT +338.3 / FF +25.6 Q-DIE11b
+closed, die-bindable qfd_c_xstnw leaf (RTL hierarchy) of qfd_c_b16_dv qfd_c_xstnw-s0-ebe9b9a72 TT +349.5 / FF +24.0 Q-DIE11b
+Host, sequencer, services and control 3/5 closed open, no live job qfd_native59_dv_service master qfd_native59_dv_service-n1-e4ecec634 Q-DIE11b needs redesign (no live job)
+in flight qfd_tt_ctlm_dv master Q-DIE11b parent open, leaves under way
+closed, die-bindable ot_qfd_tt_ctlm_static_hr leaf (RTL hierarchy) of qfd_tt_ctlm_dv qfd_tt_head_static_h16c-h16c-ae6b0c59a TT +64.6 / FF +9.7 Q-DIE11b
+closed, die-bindable qfd_sys_face master qfd_sys_face-rs3-5aa256c9f TT +54.7 / FF +6.6 Q-DIE11b
+closed, die-bindable qfd_sys_face_mu_dhuser leaf (RTL hierarchy) of qfd_tt_ctlm_dv qfd_sys_face_mu_dhuser-k3-46980a0f6 TT +172.8 / FF +29.6 Q-DIE11b
+Clock and reset 4/4 closed ALL CLOSED closed, die-bindable qfd_rst_rep master qfd_rst_rep-a1-cddafbdcc TT +298.0 / FF +32.6 Q-DIE11b
+closed, die-bindable qfd_rst_rep_p8 master qfd_rst_rep_p8-a1-cddafbdcc TT +295.6 / FF +33.4 Q-DIE11b
+closed, die-bindable qfd_rstseq master qfd_rstseq-r1-feceba3b2 TT +344.9 / FF +30.3 Q-DIE11b
+closed, die-bindable qfd_rstsync master qfd_rstsync-r1-feceba3b2 TT +350.3 / FF +30.3 Q-DIE11b
+Die links: PHY, D2D, SerDes, UCIe 2/2 closed ALL CLOSED closed, die-bindable qfd_d2d_static master qfd_d2d_static_r9j-r9j-7f431abe6 TT +50.3 / FF +8.9 Q-DIE11b
+closed, die-bindable qfd_ucie_six_five leaf (RTL hierarchy) of qfd_collective_static_io_production qfd_ucie_gearbox_r16-r16-e28478e98 TT +13.3 / FF +24.6 Q-DIE11b
+Embedding 1/1 closed ALL CLOSED closed, die-bindable qfd_embedding_word_provider master qfd_embedding_word_provider-rr1-ebd3f200b TT +104.7 / FF +14.7 Q-DIE11b
+Relays, landings and forwarded lanes 14/14 closed ALL CLOSED closed, die-bindable qfd_landh0_1_EW_65x30 master qfwd_landh0_1_ew_65x30-e1-5a20260cc TT +234.9 / FF +27.5 Q-DIE11b
+closed, die-bindable qfd_landh0_1_NE_65x30 master qfwd_landh0_1_ne_65x30-e1-965cc6dcd TT +223.6 / FF +27.1 Q-DIE11b
+closed, die-bindable qfd_landh0_1_NS_65x30 master qfwd_landh0_1_ns_65x30-e1-965cc6dcd TT +231.3 / FF +30.1 Q-DIE11b
+closed, die-bindable qfd_landh_1_EN_65x30 master qfwd_landh_1_en_65x30-c1-779e8477e TT +230.7 / FF +30.8 Q-DIE11b
+closed, die-bindable qfd_landh_1_EW_65x30 master qfwd_landh_1_ew_65x30-f2-9ddc1acf2 TT +229.3 / FF +27.0 Q-DIE11b
+closed, die-bindable qfd_landh_1_NE_65x30 master qfwd_landh_1_ne_65x30-c1-07cc6c281 TT +229.5 / FF +27.7 Q-DIE11b
+closed, die-bindable qfd_landh_1_NS_65x30 master qfwd_landh_1_ns_65x30-c1-996b12250 TT +232.8 / FF +29.5 Q-DIE11b
+closed, die-bindable qfd_rlyh0_1_EN_65x30 master qfwd_rlyh0_1_en_65x30-f1-fc2236d82 TT +353.0 / FF +30.6 Q-DIE11b
+closed, die-bindable qfd_rlyh0_1_EW_65x30 master qfwd_rlyh0_1_ew_65x30-f1-fc2236d82 TT +353.6 / FF +28.4 Q-DIE11b
+closed, die-bindable qfd_rlyh0_1_NS_65x30 master qfwd_rlyh0_1_ns_65x30-f1-fc2236d82 TT +367.7 / FF +33.4 Q-DIE11b
+closed, die-bindable qfd_rlyh0_1_SW_65x30 master qfwd_rlyh0_1_sw_65x30-f1-fc2236d82 TT +361.6 / FF +31.2 Q-DIE11b
+closed, die-bindable qfd_rlyh_1_EW_65x30 master qfwd_rlyh_1_ew_65x30-c1-349d106e9 TT +351.9 / FF +33.4 Q-DIE11b
+closed, die-bindable qfd_rlyh_1_NE_65x30 master qfwd_rlyh_1_ne_65x30-c1-58a471feb TT +365.2 / FF +31.5 Q-DIE11b
+closed, die-bindable qfd_rlyh_1_SN_65x30 master qfwd_rlyh_1_sn_65x30-f1-93960f2c9 TT +368.8 / FF +32.6 Q-DIE11b
+SFU 3/3 closed ALL CLOSED closed, die-bindable ot_hdc_sfu_exp_t leaf (RTL hierarchy) of qfd_dv_slice2_e, qfd_dv_slice2_w qfd_su_sfu_exp-sp1-943c39997 TT +47.8 / FF +21.7 Q-DIE11b
+closed, die-bindable ot_hdc_sfu_rcp_t leaf (RTL hierarchy) of qfd_dv_slice2_e, qfd_dv_slice2_w qfd_su_sfu_rcp-sp1-943c39997 TT +74.8 / FF +18.6 Q-DIE11b
+closed, die-bindable ot_hdc_sfu_rsq_t leaf (RTL hierarchy) of qfd_dv_slice2_e, qfd_dv_slice2_w qfd_su_sfu_rsq-sp1-943c39997 TT +55.5 / FF +22.2 Q-DIE11b
+Qwen KV/system
+rev sqk2@0ae42aa9c PREP (RoPE source successor pending) BIND RUNNING tasks done 31/57 · elements closed 49/59 est. K.BIND Strict bind, MU die RUNNING SQ-KBIND sqk2x5 bind v2 PASS 69 masters; dsg7f FAIL open-tail role pins (no prep) -> dsg8f ep9 (sfm3) + dsg8e ep5 (sfm2) on 61c2ac9f0. NEXT: SQ-KBIND report STRICT BIND/TILE_VIEWS/RELAY counts
+K.GRT Die GRT overflow 0 RUNNING SQ-KDIE2 linear stamp PDN (1 pdngen grid per master/orient + stamped stacks; fixture = exact subset of pdngen, PG PASS) chains ep5 sqkd2m MAIN dense / sqkd2l FB local from sqk2c432 bind-PASS case, GRT cap 420g; sqk2x5 pdngen ETA 09:00 10-22. NEXT: SQ-KDIE2 PDN verdict -> GRT overflow
+K.STA Die STA TT/FF on real views WAITS SQ-KDIE2 after K.GRT on sqkd2m/sqkd2l. NEXT: SQ-KDIE2 STA TT/FF numbers
+K.STA.EMB Embedding73 RoPE physical TODO SQ-KATTN2 GATING · rope73_ovl MAIN + ovlb FALLBACK gating agidock (913b6ae2c, census max32 PASS, bench+5 mutants PASS, join__rope_sweep dead port removed) NEXT: verdicts -> submit_exact both; bind needs ROPE_OVL K chain
+K.STA.HROOT Stack root safe clock TODO QE3-HROOT HOLD-OWNER · f102 -810.5 retained; six-slot SPIPE6 + fail-closed IKEY guard source/model claude/qe3-hroot-sixslot-1021@d106596d6, PREBUILD_PACKET review requested (DECISIONS); ASR raw6/dieboot OPEN · NEXT: owner approve -> bounded P1-P8, then ONE map
+K.STA.RST Reset release + loaded phase WAITS SQ-COLLECT2 sqk2c108..c432 at DIECLK dieclk_r2 (SQ-KDIE chain), only pre-STA rst_window_hops.json; HOLD273. NEXT: read ep5 kvs14r-0ae42aa9c-sqk2c432/rst_window.json after STA; en/rs>405um or 64-load en FAIL -> ELEM-KRST2 re-tap.
+K.STA.RETIRE Health plane + STATUS 1998 retirement WAITS SQ-KDIE2 on selectedF c652 captured health replay PASS unit1853164/8GB: actual CLOSED per-kind pipes,298sources/85transports/0far/0missing, DMAX113 STATUS1913<=1998. READYc907328f9; all298 per-leaf ages, wholebind/STA/loadedreset pending. Diagnostic sqk2x5 preserved. NEXT: SQ-KDIE2 die chain/bind
+K.STA.RETIRE.PCF PC fault export pc__hfx TODO SQ-PCH2 GATING · closes with K.STA.PC. NEXT: SQ-PCH2 submit PC_H sr13a when gate PASS
+K.STA.RETIRE.LAYER Per-layer retirement STATUS 1998 image WAITS SQ-KDIE2 ages from health_plane.json + die STA of sqk2 chains (/home/ubuntu/ot-scratch/claude/qwen-kvsys/kvs14r-0ae42aa9c-sqk2c432 ep5); no new campaign NEXT: SQ-KDIE2 die chain/bind
+K.STA.ATTN Attention timing rv5/rv6 TODO SQ-KATTN2 GATING · captured998 strict bind (61c2ac9f0 tools) FAIL only S6C leftovers (emb px_tok/tep open, est/o_dn 692 b unread); attn view bound PASS. Fix 37226bc89 -> die chains dsg9f/dsg9e (ep9/ep5) NEXT: strict bind PASS -> window/pinfacts -> GRT/STA attn paths
+K.STA.AHUB Attention hub structural closure TODO SQ-KATTN2 GATING · same die chains dsg9f/dsg9e (37226bc89); AHUB_POST ages retained NEXT: strict bind PASS -> window/native pin facts -> STA on ahub
+K.STA.HOST Host guard/order/native PG RUNNING SQ-COLLECT2 p32i/n34a daemon routes route.a1 ep9 (since 13:24/14:00); p33/p34 peer + n35 prompt successors with QE3-HROOT-PEER2/-PROMPT · NEXT: collect p32i/n34a verdicts
+K.STA.PC PC storage + health path TODO SQ-PCH2 GATING · PD-AUDIT frame 388.8x356.4: PC sr13a/sr13b + PC_H sr13a gates @7524f75f0 (sr12g/f, sr10e = evidence/review only). NEXT: SQ-PCH2 collect sr13 gates -> review/submit; die re-plans PC slots
+K.STA.D2D.1 Safe KV storage and validation transport RUNNING SQ-KDIE2 sfm2 native FAIL72roots>32; successor r7w_sfm3 576a842c8 CLOSED TT85.41/FF17.62 DRC0 (view main 19b856756, TXDP/NTX = die, d2ds_view_select BIND) selected: OT_KV_D2DS_KIT=qkd_d2d_static_r7w_sfm3 in 3ce0dd8c6. NEXT: QK3-KGEN dsg7 binds it -> die K.STA
+K.STA.LINKCFG RoPE pair image and DCAL WAITS SQ-KATTN2 ROPE_OVL K chain dsgR1 @9ebe66931 (claude/sq-kattn-rope-1021) queued on memory ep5/ep9 NEXT: GEN ages raw552/ovl_user4/emb_slot/hbm_return -> image
+K.STA.CAL Static schedule admits tile cycle deltas WAITS SQ-KATTN2 edge law f7a3 5 unknowns null NEXT: fill from dsgR1 GEN (kv_descriptor_to_header_edges)
+K.STA.CTL Safe control storage and copy graph TODO SQ-COLLECT2 GATING · c32e/f native census FAIL (u_bobs.v2 161, dq2 36) -> kept-copy successors c32g MAIN/c32h FALLBACK e5c1a2e7a gating (claude/qr-ctl-1021). NEXT: verdict -> PNG -> submit_exact both
+K.STA.PVFIN PV final join SRAM safe32 successor RUNNING SQ-COLLECT2 r16w submit_exact --regate (PID 227054) gate in GRT agidock; auto-submit on PASS/WARN. NEXT: route id -> collect -> CLOSED-FOR-GEN
+K.STA.MU Bind multi-user KV hardware WAITS QE3-HROOT NEXT: peer/prompt/ingest leaves CLOSED -> p11 bind
+MU.QW.KVATT Qualify Qwen four-user KV service TODO TOK-FUNC2-QW PARTIAL · unit1443002 TERMINAL componentPASS: 8positive/7required-mutantFAIL/32kREFUSED/calPASS, receipt7dd2a21f4; historicalGEN9/period2025 only. No live job4b. Selected73 source/GEN/transport ages and full-token qualification OPEN; price HELD.
+K.CLK Die regional clocks and resets RUNNING SQ-KDIE2 DIECLK r2 x5 (a2e818f5c) TT trim iter3 c432: spread TT 39.7-54.0 / FF 43.9-60.2 ps all regions, insertion 13.7-20.3 ns. NEXT: SQ-KDIE2 read final TT/FF + boundary match
+K.RST Final reset source/distribution/calendar TODO SQ-COLLECT2 SOURCE · c6520b2ee (c83 PLL trunk fix, stations047d OFF, HOLD273). NEXT: DONE when sqk2c432 rst_window.json passes; else ELEM-KRST2 re-tap.
+K.STA.HOST.ADM host_root_admission leaves then parent RUNNING QE3-HROOT p32i/n34a routes live ep9; p32j/n34b FAIL macro->reg; successors p33a/b n35a/b building · NEXT: leaf CLOSED -> p11 (codex 9a18 plan)
+K.STA.HOST.ADM.INGEST ingest_qm SRAM-FIFO successor TODO SQ-COLLECT2 HOLD-OWNER · s3a/b clock FAIL, e4b FAIL, e4a gate GRT agidock (PID 3260910); engine successor = SPIPE6 (review), shell = ASR (owner) · NEXT: collect e4a; owner decisions
+K.STA.HOST.ADM.PROMPT MU4 prompt RUNNING SQ-COLLECT2 n35a/b gates ep7 (ps4 registered SRAM reads, mu4p4_n32) PIDs 451071/451072; n34a route live · NEXT: gate verdicts -> PNG -> submit both
+K.STA.HOST.ADM.PEER peer leaf TODO SQ-COLLECT2 GATING · c7b2fc3ea (codec RX stage +1, reg head) gates p34a/p34b live epyc5 (PIDs 678768/678769) · NEXT: PNG review -> submit_exact both; collect p32i
+Elements (generated, never hand-edited) closed 49/59 open, no live job 5 · closed, not die-bindable 3 · in flight 2 · superseded hidden 18 The element table reads kvj-g2 m1 / kvs14b (KV-CASE2: 0 over-reach; strict bind v2 diagnostic) , but this die section names rev sqk2@0ae42aa9c PREP (RoPE source successor pending) . Point results/fleet_viz/die_sources.json at the current revision.
+source: kvj-g2 m1 / kvs14b (KV-CASE2: 0 over-reach; strict bind v2 diagnostic) element table summary: closed 52 / 59 ✓ matches
+Vector memory, HBM controller, banks 4/9 closed open, no live job qkd_kvs_grp master qkd_kvs_grp_k1-k1-5561116d2 KV-PLAN4 needs redesign (no live job)
+open, no live job qkd_kvs_grp_h master qkd_kvs_grp_h_k1-k1-5561116d2 KV-PLAN4 needs redesign (no live job)
+open, no live job qkd_kvs_pc master qkd_kvs_pc_rl1-rl1-7ab38290e KV-PLAN4 needs redesign (no live job)
+open, no live job qkd_kvs_pc_h master qkd_kvs_pc_h_sr10b-sr10b-0f0fcb709 TT -50.4 / FF -8.8 KV-PLAN4 needs redesign (no live job)
+closed, not die-bindable qkd_kvs_ctl master qkd_kvs_ctl_mu2-mu2-9105d74ed TT +24.4 / FF +8.9 KV-PLAN4 native TT pin-flop spread 121.8 > 80; FF pin-flop spread 109.3 > 80; spread 121.8 > 80
+closed, die-bindable qkd_kv_front_cal leaf (RTL hierarchy) of qkd_kvs_grp, qkd_kvs_grp_h qkd_kv_front_cal-f1-6dc9fe5b2 TT +197.0 / FF +29.0 KV-PLAN4
+closed, die-bindable qkd_kv_native_programme leaf (RTL hierarchy) of qkd_kvs_ctl qkd_kv_native_programme-p2-237e132bf TT +113.7 / FF +27.4 KV-PLAN4
+closed, die-bindable qkd_kvs_hroot master qkd_kvs_hroot_k1-k1-da14c0bdf TT +40.5 / FF +16.8 KV-PLAN4
+closed, die-bindable qkd_static_kv_pc_es_merge leaf (RTL hierarchy) of qkd_kvs_pc, qkd_kvs_pc_h qkd_static_kv_pc_es_merge-r1-4751caff6 TT +384.4 / FF +4.3 KV-PLAN4
+Attention 17/20 closed open, no live job qkd_pv_fin_s master qkd_pv_fin_s-g1-7834bbc26 KV-PLAN4 needs redesign (no live job)
+closed, not die-bindable qkd_ahub_static_dw master qkd_ahub_sdw-a7-c6c412b4c TT +8.5 / FF +8.8 KV-PLAN4 native TT pin-flop spread 88.9 > 80; spread 88.9 > 80
+in flight qkd_pvw_die_t master KV-PLAN4 parent open, leaves under way
+closed, die-bindable ot_qkh_head_frontq_native master qkh_r4_frontq_1014-r4m4-b625e5909 TT +277.7 / FF +9.9 KV-PLAN4
+closed, die-bindable ot_qkh_head_nb_native master qkh_r3_nb_1014-r3-a14551041 TT +335.8 / FF +30.6 KV-PLAN4
+closed, die-bindable ot_qkh_head_score4_native master qkh_r4_score4_1014-r4-bd7e7285a TT +317.0 / FF +25.7 KV-PLAN4
+closed, die-bindable ot_qkh_head_stin_native master qkh_r3_stin_1014-r3-a14551041 TT +338.6 / FF +25.2 KV-PLAN4
+closed, die-bindable ot_qkh_head_stk_native master qkh_r3_stk_1014-r3-a14551041 TT +341.0 / FF +28.2 KV-PLAN4
+closed, die-bindable ot_qkh_recip_leaf leaf (RTL hierarchy) of qkd_ahub_static_dw qkh_recip_ref-np1-922bf01f4 TT +196.6 / FF +18.3 KV-PLAN4
+closed, die-bindable ot_qwen_tp8_pv_join_t leaf (RTL hierarchy) of qkd_pvw_die_t qkd_pv_join_sfe_r6-r6-86876065a TT +57.7 / FF +14.8 KV-PLAN4
+closed, die-bindable ot_qwen_tp8_pv_slice_t leaf (RTL hierarchy) of qkd_pvw_die_t qkd_pv_slice_rstpin_r5-r5rr-fa546b7f3 TT +80.0 / FF +9.3 KV-PLAN4
+closed, die-bindable ot_qwen_tp8_pv_wide_ctl leaf (RTL hierarchy) of qkd_pvw_die_t qkd_pv_ctl_t_d54f58a96-d54f58a96-287098501 TT +73.7 / FF +23.0 KV-PLAN4
+closed, die-bindable qkd_astk_ctl_tp8 leaf (RTL hierarchy) of qkd_astk_strip_s qkd_astk_ctl_tp8-tp1-0a9705ab5 TT +80.8 / FF +10.9 KV-PLAN4
+closed, die-bindable qkd_astk_zn leaf (RTL hierarchy) of qkd_astk_strip_s qkd_astk_zn-np1-0a9705ab5 TT +186.4 / FF +21.0 KV-PLAN4
+closed, die-bindable qkd_kvs_attn master qkd_kvs_attn-g3-477f1e3ba TT +22.8 / FF +12.1 KV-PLAN4
+closed, die-bindable qkd_pv16_vport master qkd_pv16_vport_r6-r6-130b067eb TT +311.3 / FF +24.4 KV-PLAN4
+closed, die-bindable qkd_pv_rs_hd_f leaf (RTL hierarchy) of qkd_pvw_die_t qkd_pv_rs_hd_f-f2-0473e5d89 TT +326.1 / FF +21.6 KV-PLAN4
+closed, die-bindable qkh_head_gather_stage master qkh_head_gather_stage-n4r1-8801fc345 TT +354.9 / FF +11.0 KV-PLAN4
+closed, die-bindable qkh_head_sstage master qkh_head_sstage-hs1-46c33f002 TT +317.8 / FF +11.8 KV-PLAN4
+closed, die-bindable qkh_head_tstage leaf (RTL hierarchy) of qkh_head_gather_stage qkh_head_tstage-hs3-385db199f TT +332.9 / FF +18.9 KV-PLAN4
+Die links: PHY, D2D, SerDes, UCIe 1/2 closed closed, not die-bindable qkd_d2d_static master qkd_d2d_static_r7v-r7v-1b609a25c TT +13.6 / FF +7.7 KV-PLAN4 native TT pin-flop spread 84.0 > 80; spread 84.0 > 80
+closed, die-bindable qkd_d2d_cal_seq_pin master qkd_d2d_cal_seq_pin_ep3-ep3-r1-fbc4a2e0d TT +172.2 / FF +27.9 KV-PLAN4
+Host, sequencer, services and control 8/9 closed in flight qkd_host_root_admission master KV-PLAN4 parent open, leaves under way
+closed, die-bindable qkd_ctrl_kc master qkd_ctrl_kc-ks2-fe58324a6 TT +92.1 / FF +25.5 KV-PLAN4
+closed, die-bindable qkd_ctrl_pc_ecc_child leaf (RTL hierarchy) of qkd_kvs_pc, qkd_kvs_pc_h qkd_ctrl_pc_ecc_s2-s2-940c3267a TT +327.6 / FF +20.1 KV-PLAN4
+closed, die-bindable qkd_ctrl_pc_obs_child leaf (RTL hierarchy) of qkd_kvs_pc, qkd_kvs_pc_h qkd_ctrl_pc_obs_s7c-s7c-41cf54199 TT +216.8 / FF +6.7 KV-PLAN4
+closed, die-bindable qkd_host_rx_class_admission leaf (RTL hierarchy) of qkd_host_root_admission qkd_hr_core_rx-b1-161e15878 TT +138.8 / FF +17.4 KV-PLAN4
+closed, die-bindable qkd_host_rx_pad5 leaf (RTL hierarchy) of qkd_host_root_admission qkd_hr_phy_pad-b1-0705b4562 TT +69.7 / FF +19.9 KV-PLAN4
+closed, die-bindable qkd_seq_core_static leaf (RTL hierarchy) of qkd_seq_static qkd_seq_core_st_r2-r2-e5c8218a5 TT +195.9 / FF +22.8 KV-PLAN4
+closed, die-bindable qkd_seq_fan leaf (RTL hierarchy) of qkd_seq_static qkd_seq_fan-kc6-38dc967cd TT +325.3 / FF +22.1 KV-PLAN4
+closed, die-bindable qkd_seq_xs_tp8 leaf (RTL hierarchy) of qkd_seq_static qkd_seq_xs_tp8-tp1-11f7d4997 TT +161.7 / FF +20.8 KV-PLAN4
+Clock and reset 1/1 closed ALL CLOSED closed, die-bindable qkd_rst_region master qkd_rst_region-ec1-5fe4533d3 TT +277.0 / FF +30.0 KV-PLAN4
+Embedding 4/4 closed ALL CLOSED closed, die-bindable qkd_embedding_row_tx leaf (RTL hierarchy) of qkd_kvs_emb qkd_embedding_row_tx-r2-b97c79344 TT +216.4 / FF +2.2 KV-PLAN4
+closed, die-bindable qkd_embedding_static_return_hop leaf (RTL hierarchy) of qkd_kvs_pc qkd_embedding_static_return_hop_r1-r1-1e165e6ae TT +324.4 / FF +15.9 KV-PLAN4
+closed, die-bindable qkd_embgw_boot master qkd_embgw_boot-b1-f070f7fee TT +62.0 / FF +5.6 KV-PLAN4
+closed, die-bindable qkd_kvs_emb master qkd_kvs_emb_z3a-z3a-82a5dba1f TT +70.7 / FF +11.7 KV-PLAN4
+Issue control (ECTL) 4/4 closed ALL CLOSED closed, die-bindable qkd_ectl_a_tp8_direct leaf (RTL hierarchy) of qkd_ectl3_kiss_s qkd_ectl_a_tp8_direct-dr1-7de44a889 TT +16.3 / FF +13.6 KV-PLAN4
+closed, die-bindable qkd_ectl_b_tp8_direct leaf (RTL hierarchy) of qkd_ectl3_kiss_s qkd_ectl_b_tp8_direct_rt80-rt80-31faa305d TT +128.6 / FF +9.5 KV-PLAN4
+closed, die-bindable qkd_ectl_c_tp8_direct leaf (RTL hierarchy) of qkd_ectl3_kiss_s qkd_ectl_c_tp8_direct_h13-h13-046dfbe85 TT +204.1 / FF +10.5 KV-PLAN4
+closed, die-bindable qkd_static_ectla_kiss leaf (RTL hierarchy) of qkd_ectl3_kiss_s qkd_static_ectla_k4-rt80-2a3a97cb2 TT +159.8 / FF +15.3 KV-PLAN4
+Qwen near-HBM attention 3/3 closed ALL CLOSED closed, die-bindable ot_nhb_zh leaf (RTL hierarchy) of qkd_ahub_static_dw ot_nhb_zh_m5-m5-e5e8e058b TT +137.3 / FF +2.0 KV-PLAN4
+closed, die-bindable ot_qkh_ktree master ot_qkh_ktree_m5-m5-e5e8e058b TT +206.0 / FF +1.2 KV-PLAN4
+closed, die-bindable ot_qkh_lane8 master qkh_lane8_ref_c-q13d-35050e0a4 TT +83.2 / FF +23.5 KV-PLAN4
+Relays, landings and forwarded lanes 6/6 closed ALL CLOSED closed, die-bindable qkd_kv_landing_cal leaf (RTL hierarchy) of qkd_kvs_grp, qkd_kvs_grp_h qkd_kv_landing_cal-c1-addf100a4 TT +158.8 / FF +28.7 KV-PLAN4
+closed, die-bindable qkd_rlyi_258s leaf (RTL hierarchy) of qkd_pvw_die_t qkd_rlyi_258s-n1-64609be8b TT +334.8 / FF +27.4 KV-PLAN4
+closed, die-bindable qkd_rlys_1 master qkd_rlys_1-v1-6da52734e TT +339.6 / FF +35.5 KV-PLAN4
+closed, die-bindable qkd_rlys_296 master qkd_rlys_296-po1-493d9c4a2 TT +343.7 / FF +27.1 KV-PLAN4
+closed, die-bindable qkd_rlys_36 master qkd_rlys_36-po1-c3c9de24c TT +345.8 / FF +28.6 KV-PLAN4
+closed, die-bindable qkd_rlys_528 master qkd_rlys_528-v2-15c66bd8b TT +338.3 / FF +28.9 KV-PLAN4
+Slices, clusters and stations 1/1 closed ALL CLOSED closed, die-bindable qkd_hslice master qkd_hslice_dn-es2-3ba5662d3 TT +147.8 / FF +16.6 KV-PLAN4
+HBM accelerator
+rev r16q (P + slot-binding repair) full chain BIND RUNNING tasks done 56/111 · elements closed 87/121 est. H.BIND Strict selected source/view bind RUNNING HBM-DIE17 r17 2f46c1018 = r16q + CLOSED cx ij_q + per-QID dl_s (r16q had QID2 view on all 16); strict L25 REFUSED on RTL drift · NEXT: r17 S5 bind; renewed L25 review; r18 qdq r4s after token OK RL 7->54
+H.BIND.E4 Compose structural release die RUNNING HBM-DIE17 P dc3f MODEL_A FAIL (svg slot ignored; hb_coll took 1080 slot body) -> r16q fixed · NEXT: r16q GEN A 78/78 homes
+H.GRT Die GRT overflow0 RUNNING HBMb/CHAIN r17 RESUME_S4 PID 1004672 (S4 32/1012/24, cxij pair blocks su channel), r17b 1115468 (su+150) / r17c 1115471 (pairs to column gap) GEN, r16q 458091 S6 · NEXT: r17b/c hops gate -> S11 GRT
+H.GRT.IR Die IR drop, owner M8 plan NOT RUN HBMb/CHAIN S11i armed in r16q/r17/r17b/r17c chains · NEXT: IR at first S11
+H.STA Die STA TT/FF on real views RUNNING HBMb/CHAIN r17 (release cand.) + r16q (diag) chains · NEXT: TT/FF + worst paths at S11
+H.STA.BLK Selected-source block prerequisites RUNNING STEWARD-HBM NEXT: leaf owners below; CLOSED views -> r17 GEN
+H.STA.BLK.BW PC controller = CLOSED h9c fallback TODO HBMb/CHAIN BOUND · h9c 1aa2ec44b x64 PCs · NEXT: S11 STA names it or not
+H.STA.BLK.1 HC root and centre slot TODO HBMb/HC GATE · tail k4/k4b (SDIV17, f19fcd9b5) gating ep9 (floorplan WL-model WNS -466, wait CTS verdict) · NEXT: first PASS -> submit, root xr4
+H.STA.BLK.1.1 HC 6144-b mix store → SRAM successor NOT RUN HBMb/HC SRAM RTL in root SAFE 1 · NEXT: root xr4 kit after tail k4 PASS
+H.STA.BLK.3 Collective issue / act-load control TODO HBMb/COLL-GQ GATING · k12q/k12r census FAIL (S2 mx4 MSB 38; src row 33); R13 af89757f5 gates k13q (MAIN)/k13r (FB) + benches ep5 live; k9r route ep7 · NEXT: census PASS -> PASS/WARN -> submit_exact both
+H.STA.BLK.4b SFU core native fanout RUNNING HBMb/HC k10a/k10b regates (PIDs 771812/771815) · NEXT: CTS verdict -> PNG + submit_exact
+H.STA.BLK.4c SFU programme store TODO HBMb/HC ECO · r14 hold ECO a2 ep9 (TT +166.8/FF -35.1) · NEXT: CLOSED -> BIND NOTICE
+H.STA.BLK.5 Write-back port kq8 RUNNING HBMb/IDXSU e0 GEN = CDC-lint FIFO-loop scaling (~10 h); fix 51d918df1 GEN ep9 live + Codex GEN kept · NEXT: GEN rc0 -> native -> gate MAIN+FB
+H.STA.BLK.6 Top-k tile e86 TODO HBMb/COLL GATE · v6 kept-leaf (5a3da0575) gates MAIN e86v6/FB e86v6b live 812154/5 (IDX-E86) + PD-AUDIT v4b regate+submit_exact on main tools 1159645 · NEXT: first PASS/WARN submitted, first CLOSED binds
+H.STA.BLK.7 VM glue ×3 hub store (NE/SE static_glue <- e_t, nw_t, sw_t) RUNNING STEWARD-HBM/SVGSMH closes with 16.1 · NEXT: collect g7s routes, BIND NOTICE HBM-DIE17
+H.STA.BLK.9 Landed parents tp192 / SM / slice TODO STEWARD-HBM/SVGSMH PREP · SM part = 14.6 parent; tp192 = 9.2 · NEXT: closes with 14.6
+H.STA.BLK.9.1 SM frame widen for safe x-store RUNNING STEWARD-HBM/SVGSMH 691.2 frame kept in r6 · NEXT: closes with 14.6 parent
+H.STA.BLK.9.2 tp192 parent (old-src lockstep) TODO HBMb/COLL QUEUED · 576G resume_top4: gold2 waiter 12737 + orchestrator scratch/hbmb-coll/tp192_orch.sh (epyc5/epyc9 staged) launches on first admitting host · NEXT: LP_LOCKSTEP verdict
+H.STA.BLK.13 cxport ij_s + ij_q TODO START-NONFAIL/HBM-KIT (ij_s) GATE · ij_q 5a6486280 x4 bound; ij_s die-param kits d17q0..3 m/f (claude/snf-ijs-d17-1021) 8 CTS gates live · NEXT: PASS/WARN -> submit_exact x4 -> BIND NOTICE DIE17/R18
+H.STA.BLK.14 SM attention cluster smh_attn ×16 TODO STEWARD-HBM/SVGSMH GATE · parent kits wait for a closed half pair · NEXT: gen+gate parent MAIN/FB when r6 halves close
+H.STA.BLK.14.1 Native views of 5 children RUNNING STEWARD-HBM/SVGSMH XS bay/PVM s4a/tct/gu CLOSED · NEXT: halves 14.6
+H.STA.BLK.14.3 PVM SAFE + smh_attn parent TODO STEWARD-HBM/SVGSMH DECIDED · keep closed s4a; r10b unbound · NEXT: drop line at 14.6 bind
+H.STA.BLK.14.6 smh_attn internal half clocks TODO HBMb/SMH7 REDESIGN · r6 s_m CTS FAIL (spread 225-450); r7 face roots MAIN / W-E split FB on claude/hbm-smh-r7-1021; r6 gates still collected · NEXT: r7 SAFE -> benches -> gates
+H.STA.BLK.15 Open HBM elements without an owner RUNNING STEWARD-HBM all children owned by STEWARD-HBM subs · NEXT: close 15.2..15.8
+H.STA.BLK.15.2 idx_score_quarter col8 TODO HBMb/IDXSU ROUTING · zt0r-zt3r daemon route ep7/ep9 · NEXT: CLOSED -> BIND zt0r-3r (swap interim r0/r2/r3)
+H.STA.BLK.15.3 pgslice_lg parent + tap runtime TODO STEWARD-HBM/SUSP SOFT · die selects scoped pgslice PIN_REG0 g_plain x16 (pretree_s hard, bound) · NEXT: close via die GRT/STA; harden only if STA names su_<q><g>
+H.STA.BLK.15.3.4 pgrg pair d4p/d4h (PG982) TODO STEWARD-HBM/SUSP NOT-NEEDED · die contract pre_relay_colm has 0 pgrg refs (soft pgslice PIN_REG0 g_plain); 4 gates clock FAIL kept as evidence · NEXT: none unless die STA names su_<q><g>
+H.STA.BLK.15.3.2 PGSTREAM source and native closure WAITS STEWARD-HBM/SUSP SAFE3 CLOSED e5753f593, region parent not selected by die · NEXT: bind only with a hardened 15.3 parent
+H.STA.BLK.15.3.3 KIND1/KIND2 heavy lane leaves TODO STEWARD-HBM/SUSP OBSOLETE-FOR-DIE · die PIN_REG0 g_plain, no KIND1/2 hard binding (Codex 15:19) · NEXT: none unless die STA names lanes
+H.STA.BLK.15.6 coll_q3/n1s0 landed parents ROWS256 TODO HBMb/COLL-LP ROUTING · fj3_r256 CLOSED (rec 312f6e2f3); fj1_r256/fj1_r256b/fj3_r256b routes running; issuer m256v8 on main · NEXT: q3_lp_ars256 MAIN+FB gates; n1s0 after fj1 CLOSED
+H.STA.BLK.15.8 idx_vm_share2 + coll_kq_share2 TODO STEWARD-HBM/IDX BIND · l30 binds 5 share2_r + 16 KQ leaves (r16) · NEXT: DIE17 r16 S11 STA + l12 lat_rows PASS closes
+H.STA.BLK.16 needs_agent HBM elements RUNNING STEWARD-HBM children owned by STEWARD-HBM subs · NEXT: close 16.1..16.7
+H.STA.BLK.16.1 VM glue g7 ×3 TODO STEWARD-HBM/SVGSMH ROUTING · 17:11 e route.a2 gold1, sw route.a2 ep9, nw hold_eco.a2 ep5 (TT+58.5/FF-60.5) · NEXT: collect, BIND NOTICE HBM-DIE17 (g7 RTL merge)
+H.STA.BLK.16.2 HIDX link r5x/r5y TODO STEWARD-HBM/IDX ROUTING · daemon r5x/r5y-596d3557d RUNNING route.a2 ep7 · NEXT: collect verdict; CLOSED -> DIE17 BIND
+H.STA.BLK.16.3 su qcore + pslice_c5 RUNNING HBMb/IDXSU qcore r16a DRT ep7; pslice lp14a/b clock FAIL L c1-c3 (167-226 ps) -> lp15 by IDXSU-PS15 · NEXT: lp15 MAIN+FB gates
+H.STA.BLK.16.5 kshare / gq_issue / act-load control RUNNING HBMb/COLL see BLK.3 (gq) + 16.5k (kshare) · NEXT: bind first CLOSED
+H.STA.BLK.16.5k vm_kshare_splitstrap tile TODO STEWARD-HBM/COLL-KS (watch HBMb/COLL) GATING · r4c e005e21dc gates MAIN r4/FB h55_r4 1065724/5 (--mem 32; r4a/r4b OOM 137) · NEXT: verdict; OOM -> HBMb/COLL regates --mem 96
+H.STA.BLK.16.6 SU pre-tree DIE BIND (su_pt x16, qcore PRETREE, tree_cmd) TODO STEWARD-HBM/SUSP BOUND · in r16 (L23/L23Q) · NEXT: qcore r16a CLOSED -> r17 bind; close at S11
+H.STA.BLK.16.7 IDX selector landed cluster TODO HBMb/IDXSU GATE · c13b GRT (clock WARN <=36.5), c14a/b CTS · NEXT: first PASS -> submit, BIND s3_q via l32
+H.STA.BLK.17 HC ring bank tiles TODO HBMb/HC GATE · E2 rw15is/isb + B0/CB rw10is/isb live · NEXT: collect, PASS -> submit
+H.STA.BLK.17.1 HC ring + homes + INT8 + banklat die FAIL STEWARD-HBM/HC NEXT: re-judge with closed E2/B0/CB island-spine views; phase40 k31 proof owned TOK
+H.STA.BLK.17.3 HC E2 + B0 banks TODO HBMb/HC GATE · E2 rw14is/isb FAIL d0 93/94 (platform-RC rule); rw15is/isb (rule on cal spine RC, 50e8cc7f8) live · NEXT: collect, PASS -> submit
+H.STA.BLK.17.2 HC quarter hub TODO HBMb/HC GATE · c7s/c7sb diagnostic only (legacy23) ep5 · NEXT: P40 gate MAIN+FB after root calendar review
+H.STA.BLK.19 SVG hard view + DBK cplw bind TODO STEWARD-HBM/SVGSMH GATING · rel8e/f killed 18:3x (25.8k per-bit OT_GF exc); OT_GF bus-grouped tool a7a0b9f6a, kits regen (fleet lint); DBK w1 CLOSED, die still _cp · NEXT: regate MAIN+FB, submit on PASS; DIE17 binds cplw
+H.STA.BLK.SAFE HBM safe-design redesign per tile RUNNING STEWARD-HBM 8 subs SAFE-review every non-closing tile · NEXT: E2/B0 rw10, smh r5, gq pipe
+H.STA.BANKLAT VM bank latency per client + LAT class RUNNING HBMb/CHAIN l12 reprice 650a2c327 in r16q/r17/b/c S8b (r16q-S5 test L12_OK, priced STEWARD-TOK 19:35) · NEXT: S8b verdicts
+H.STA.BANKLAT.IDX IDX/rootctl latencies TODO STEWARD-HBM/IDX BIND · g2e CLOSED, l29 binds at S8b · NEXT: DIE17 r16 S8b resolves 65/36/30 RSTL1 vs l12 rows
+H.STA.BANKLAT.DIE Die binds budgets, LAT strict PASS RUNNING HBMb/CHAIN same chains, S8 bind2 LAT strict · NEXT: judge S8 (xl ctlx ref-7 = r18)
+H.STA.BANKLAT.EARLY VM reads issued early + consumer double buffers NOT RUN STEWARD-HBM/COLL needs gq (VM_RT 74) CLOSED · NEXT: gq CLOSED -> bind VM_RT 74 via DIE17
+H.STA.WIRE Functional die wiring RUNNING HBMb/CHAIN r16q S5/S5X FUNCTIONAL_BIND PASS 1284; r17 l7 split fix e2f7106ca · NEXT: S8 functional bind r17
+H.STA.WIRE.8 hc_eng XRD/XRU landed latency RUNNING HBMb/CHAIN NEXT: S8 functional bind (r16q/r17)
+H.CLK Die regional clock closure RUNNING HBMb/CHAIN r16q GEN clock_check emitted per case · NEXT: S11 neighbour_skew_gate TT+FF (chain_r16q)
+H.RST Die regional reset RUNNING HBMb/CHAIN RST_FORM=rfc, 32 CLOSED rfc/rrfc via l27 in all chains · NEXT: S8r + S10 reach
+H.RST.RRL Hard views hbfd_rrl_c* (12.96x6.48) WAITS HBMb/CHAIN 14 CLOSED, fallback only · NEXT: only if rfc forest fails at S8
+H.IDS native router IDs RUNNING HBMb/CHAIN soft glue in r16q/r17 · NEXT: S10 reach + S11 STA
+Elements (generated, never hand-edited) closed 87/121 open, no live job 13 · not started 2 · kit prepared, no route job 5 · in flight 14 · superseded hidden 44 The element table reads GEN2 d4g (strict die port-bind PASS: 97 masters / 1,198 instances, d4g_gen2/pb0) , but this die section names rev r16q (P + slot-binding repair) full chain . Point results/fleet_viz/die_sources.json at the current revision.
+source: GEN2 d4g (strict die port-bind PASS: 97 masters / 1,198 instances, d4g_gen2/pb0) element table summary: closed 87 / 121 ✓ matches
+Vector memory, HBM controller, banks 11/24 closed open, no live job ot_hbm_hc_bankq0_static master hbm_hcq_bank_b0_1017-ring1-47247cc08 H-D4G cancelled only
+open, no live job ot_hbm_hc_bankq_ft_static master hbm_hcq_bank_e2_1017-ring1-47247cc08 H-D4G cancelled only
+open, no live job ot_hbm_hc_bankq_static master hbm_hcq_bank_e0_1017-ring1-47247cc08 H-D4G needs redesign (no live job)
+open, no live job ot_hbm_hc_qhub_static master hbm_hcq_hub_c1p-c1p-9a9e8c85b H-D4G needs redesign (no live job)
+open, no live job ot_hbm_hc_root_static master hbm_hc_root_d4g_xr-r1-88f1fa301 H-D4G needs redesign (no live job)
+open, no live job ot_hbm_svc_vm_kshare_splitstrap master hdie_svc_vm_kshare-svcsmall-vmks-fe1a7da9c H-D4G flow failure (no live job)
+open, no live job ot_hbm_svc_wb_kport_q master hbm_wbk_ql_1019-ql1-6c8ab57d1 H-D4G cancelled only
+open, no live job ot_hgi_dma_back_static_vp4_banks_cp master hv16_dbk_cpl-q1-65c2387ab TT -32.4 / FF +19.7 H-D4G needs redesign (no live job)
+not started hfd_hgi_vms_static_NE_glue master H-D4G not started (open)
+not started hfd_hgi_vms_static_SE_glue master H-D4G not started (open)
+in flight hfd_hgi_vms_glue_nw_t master hfd_hgi_vms_glue_nw_g7s-g7s-1d4bda411 TT +58.5 / FF -60.5 H-D4G failed, re-running
+in flight hfd_hgi_vms_glue_sw_t master hfd_hgi_vms_glue_sw_g7s-g7s-b70fe9898 H-D4G failed, re-running
+in flight ot_hgi_qdq_host_split master H-D4G parent open, leaves under way
+closed, die-bindable hfd_hgi_vm_calendar leaf (RTL hierarchy) of hfd_hgi_vm_calendar_f20 hv15_vm_cal_x-xcap0030-cce3264d2 TT +45.9 / FF +24.2 H-D4G
+closed, die-bindable hfd_hgi_vm_calendar_f20 master hv16_vm_cal_f20_ww-ww0900-ad9c630eb TT +25.0 / FF +12.6 H-D4G
+closed, die-bindable hfd_vms_bank_native_q0_faces master vm_native_q0_faces_g313c-mclkC-1ad8c4984 TT +17.4 / FF +8.6 H-D4G
+closed, die-bindable hfd_vms_wq2_merge master hfd_vms_wq2_merge-m1-8500666e1 TT +335.2 / FF +21.1 H-D4G
+closed, die-bindable ot_hbm_pc_refresh_cfg master hbm_refcfg_q_1018-q2-212589b09 TT +126.0 / FF +24.0 H-D4G
+closed, die-bindable ot_hbm_svc_wbw_copy master hdie_svc_wbw_copy-hbmasvc-wbwc-9a071ce97 TT +425.9 / FF +28.9 H-D4G
+closed, die-bindable ot_hgi_dma_back_static_vp4_controller leaf (RTL hierarchy) of ot_hgi_dma_back_static_vp4_banks_cp hv16_dbk_vp4_ctl_rt80-rt80-e135ae216 TT +65.7 / FF +20.3 H-D4G
+closed, die-bindable ot_hgi_qdq_transport_rslice leaf (RTL hierarchy) of ot_hgi_qdq_host_split hgi_qdq_tsplit_rslice_r2-rslicer2-COMMIT-45a49c75f TT +275.3 / FF +0.3 H-D4G
+closed, die-bindable ot_hgi_qdq_transport_wslice leaf (RTL hierarchy) of ot_hgi_qdq_host_split hgi_qdq_tsplit_wslice-hgiqdqtsplitwslice-01dba637f TT +314.5 / FF +24.0 H-D4G
+closed, die-bindable ot_hgi_qw_daq leaf (RTL hierarchy) of ot_hgi_qdq_host_split qw_daq_ref-b1-c6996f244 TT +167.3 / FF +1.6 H-D4G
+closed, die-bindable ot_vms_status4_static master hv15_vm_status4_margin1-takeover-67e4e876b TT +344.2 / FF +29.1 H-D4G
+Collectives and argmax 12/18 closed open, no live job ot_hgi_coll_gq_issue master hcoll_gq_issue_k9q_1020-k9q-dccd7469a TT -98.2 / FF -27.7 H-D4G needs redesign (no live job)
+open, no live job ot_hgi_coll_tkm_tile_e86 leaf (RTL hierarchy) of ot_hgi_coll_tkm_m_tp192 hcoll_v7_tkm_tile_e86v4b-v4brl-39d901240 TT -166.8 / FF +9.8 H-D4G needs redesign (no live job)
+in flight ot_hfd_coll_q2_hard_v8g master H-D4G parent open, leaves under way
+in flight ot_hfd_coll_q3_hard_v8x master H-D4G parent open, leaves under way
+in flight ot_hgi_coll_kq_share2 master H-D4G parent open, leaves under way
+in flight ot_hgi_coll_tkm_m_tp192 master H-D4G parent open, leaves under way
+closed, die-bindable ot_hbm_static_cfg_collar master hdie_col_idx_r1-r3-7d0e74d25 TT +51.0 / FF +22.1 H-D4G
+closed, die-bindable ot_hbm_xp_aq_tree13_fmt master hxp_aq13_fmt-f2-e2cd204c3 TT +65.1 / FF +15.3 H-D4G
+closed, die-bindable ot_hgi_coll_fj_q2 leaf (RTL hierarchy) of ot_hfd_coll_q2_hard_v8g, ot_hfd_coll_q3_hard_v8x hcoll_v5_fj2-c1045-ca353debb TT +12.2 / FF +24.4 H-D4G
+closed, die-bindable ot_hgi_coll_inj_copy master hcoll_injcopy-ic1-cc77f11e3 TT +306.7 / FF +28.6 H-D4G
+closed, die-bindable ot_hgi_coll_inj_idx_join_rg master hcoll_inj_idx_join_rg_1017-rg1-7a8776ef2 TT +134.1 / FF +5.3 H-D4G
+closed, die-bindable ot_hgi_coll_kq_share2_leaf leaf (RTL hierarchy) of ot_hgi_coll_kq_share2 hcoll_kqs_leaf_1018-k1-7ff7a9f0d TT +253.0 / FF +18.2 H-D4G
+closed, die-bindable ot_hgi_coll_qslots_capture_pin_v2 leaf (RTL hierarchy) of ot_hfd_coll_q2_hard_v8g, ot_hfd_coll_q3_hard_v8x hcoll_v5_qcap-qs1045-607c15b25 TT +338.5 / FF +25.3 H-D4G
+closed, die-bindable ot_hgi_coll_ring_ag_ctl leaf (RTL hierarchy) of ot_hfd_coll_q2_hard_v8g, ot_hfd_coll_q3_hard_v8x hcoll_ring_ag_ctl_1017-rc1-2d4d79dd8 TT +34.7 / FF +16.9 H-D4G
+closed, die-bindable ot_hgi_coll_ring_b_stop master hcoll_ring_b_stop_1018-r1-912978cd9 TT +210.9 / FF +8.3 H-D4G
+closed, die-bindable ot_hgi_coll_static_vmwrite_roots_v6_physical leaf (RTL hierarchy) of ot_hfd_coll_q2_hard_v8g, ot_hfd_coll_q3_hard_v8x hcoll_vmwrite_static_v6_roots_fsw-fsw0600-d6d487656 TT +8.6 / FF +17.4 H-D4G
+closed, die-bindable ot_hgi_coll_uop_slice96 leaf (RTL hierarchy) of ot_hfd_coll_q2_hard_v8g, ot_hfd_coll_q3_hard_v8x hcoll_upipe96-u96-084ca25c6 TT +342.1 / FF +29.3 H-D4G
+closed, die-bindable ot_hgi_dma_back_cp_collar leaf (RTL hierarchy) of ot_hgi_dma_back_static_vp4_banks_cp hv16_dbk_collar-c1-b51306fbc TT +74.0 / FF +6.0 H-D4G
+Index (IDX) 6/10 closed open, no live job ot_hbm_idx_selector_static master hidx_sel_g4p-g4p-90b8aed47 H-D4G needs redesign (no live job)
+kit prepared, no route job ot_hbm_idx_topk_link_static master H-D4G kit prepared, no route job
+in flight ot_hbm_idx_score_quarter_static master H-D4G parent open, leaves under way
+in flight ot_hbm_idx_vm_share2_static master H-D4G parent open, leaves under way
+closed, die-bindable hidx_meta_w25_d123_r0 leaf (RTL hierarchy) of ot_hbm_idx_score_quarter_static hidx_meta_static_1015c-meta3-bed3d6968 TT +172.2 / FF +29.5 H-D4G
+closed, die-bindable ot_hbm_idx_qctl_static master hidx_qctl_d4g-q1-34f2331d3 TT +227.9 / FF +22.8 H-D4G
+closed, die-bindable ot_hbm_idx_query_static master hidx_q_r4-r4-05854d3ef TT +12.0 / FF +14.5 H-D4G
+closed, die-bindable ot_hbm_idx_vm_query_static_n12 master hidx_op_n12_g2c_1019-pg1b-f7377a019 TT +16.8 / FF +11.8 H-D4G
+closed, die-bindable ot_hbm_idx_vm_share2_leaf_r leaf (RTL hierarchy) of ot_hbm_idx_vm_share2_static hidx_share2r_leaf_1018-r3-16615707a TT +302.6 / FF +19.3 H-D4G
+closed, die-bindable ot_hbm_idx_xq_node_static master hidx_xq_node_w594-x1-8835479e1 TT +340.9 / FF +17.8 H-D4G
+Stream unit (SU) 14/18 closed kit prepared, no route job ot_hbm_su_static_cxport_ij master H-D4G kit prepared, no route job
+kit prepared, no route job ot_hbm_su_static_qcore master H-D4G kit prepared, no route job
+in flight ot_hbm_su_programme_pslice_c5 master H-D4G parent open, leaves under way
+in flight ot_hbm_su_static_pgslice_lg master H-D4G parent open, leaves under way
+closed, die-bindable ot_hbm_su_bridge_release_s master hbm_su_bridge_release_1018-r2-1ed83738e TT +7.3 / FF +30.5 H-D4G
+closed, die-bindable ot_hbm_su_programme_pghead leaf (RTL hierarchy) of ot_hbm_su_programme_pslice_c5 hbm_su_pghead_r5-r5-6035ab683 TT +360.0 / FF +14.5 H-D4G
+closed, die-bindable ot_hbm_su_programme_root_h5 master hbm_su_pgroot_r5-r5-13f81d25a TT +346.8 / FF +21.5 H-D4G
+closed, die-bindable ot_hbm_su_red_pretree_s leaf (RTL hierarchy) of ot_hbm_su_static_pgslice_lg hbm_su_pretree_s_1018-p3-1dad69123 TT +93.2 / FF +18.7 H-D4G
+closed, die-bindable ot_hbm_su_reduce_static leaf (RTL hierarchy) of ot_hbm_su_static_qcore hbm_su_static_reduce_1015-r4-896d4f4ab TT +155.0 / FF +22.2 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_dl_q leaf (RTL hierarchy) of ot_hbm_su_static_cxport_dl hbm_su_cx_dlq_1018-x1-68deb77b7 TT +88.6 / FF +29.1 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_dl_s leaf (RTL hierarchy) of ot_hbm_su_static_cxport_dl hbm_su_cx_dls_1018-x1-434efd622 TT +204.4 / FF +29.5 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_ij_q leaf (RTL hierarchy) of ot_hbm_su_static_cxport_ij hbm_su_cx_ijq_1019t-t1-5a6486280 TT +67.1 / FF +26.9 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_ij_s leaf (RTL hierarchy) of ot_hbm_su_static_cxport_ij hbm_su_cx_ijs_1018-n1-2682c59ac TT +88.3 / FF +15.5 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_rc_q leaf (RTL hierarchy) of ot_hbm_su_static_cxport_rc hbm_su_cx_rcq_1018-x1-1bfbf1c90 TT +28.4 / FF +27.5 H-D4G
+closed, die-bindable ot_hbm_su_static_cxport_rc_s leaf (RTL hierarchy) of ot_hbm_su_static_cxport_rc hbm_su_cx_rcs_1018-x1-7c296a9ce TT +9.9 / FF +27.0 H-D4G
+closed, die-bindable ot_hbm_su_static_pg_lg_tap leaf (RTL hierarchy) of ot_hbm_su_static_pgslice_lg hbm_su_pg_lgtap_rt18_1019-b1-72af5d8b1 TT +168.8 / FF +23.3 H-D4G
+closed, die-bindable ot_hbm_su_stree_leaf master hbm_su_stree_leaf_1017-t1-81eb10546 TT +391.8 / FF +27.4 H-D4G
+closed, die-bindable ot_hbm_su_stree_root master hbm_su_stree_root_1017-t1-81eb10546 TT +426.1 / FF +19.4 H-D4G
+Attention 0/2 closed open, no live job ot_hbm_sm_pv_merge leaf (RTL hierarchy) of ot_hbm_accel_smh_attn smh_pvm_ref_r4-r3-f63e66b4c TT -125.4 / FF -17.6 H-D4G needs redesign (no live job)
+in flight ot_hbm_accel_smh_attn master H-D4G parent open, leaves under way
+Die links: PHY, D2D, SerDes, UCIe 0/2 closed in flight ot_pdie_serdes master S81-DIE6 parent open, leaves under way
+in flight ot_pdie_ucie master S81-DIE6 parent open, leaves under way
+SFU 5/7 closed open, no live job ot_hgi_sfu_core_split3 master hbm_sfucore_k9y-y1-d285e0902 H-D4G needs redesign (no live job)
+kit prepared, no route job ot_hgi_sfu_programme_store_r10 master H-D4G kit prepared, no route job
+closed, die-bindable ot_hbm_su_static_sfustore_hw master hbm_su_sfustore_hw_1018-r3-9767724e6 TT +175.6 / FF +23.1 H-D4G
+closed, die-bindable ot_hgi_sfu_lg_pair_leaf leaf (RTL hierarchy) of ot_hgi_sfu_lg_pair_tap_leaf, ot_hgi_sfu_lg_pair_tap_leaf_term hbm_sfu_lg_pair_leaf_2330-r1-f86d487d1 TT +316.3 / FF +26.4 H-D4G
+closed, die-bindable ot_hgi_sfu_lg_pair_tap_leaf master hbm_sfu_lg_pair_tap_leaf_rt24_1019-b1-72af5d8b1 TT +327.4 / FF +18.0 H-D4G
+closed, die-bindable ot_hgi_sfu_lg_pair_tap_leaf_term master hbm_hc_lg_pair_tap_leaf_term_rt32_1019-b1-72af5d8b1 TT +367.6 / FF +15.7 H-D4G
+closed, die-bindable ot_hgi_sfu_store_stripe_leaf_r10 leaf (RTL hierarchy) of ot_hgi_sfu_programme_store_r10 hbm_sfu_store_stripe_r10_1017-r10n2-83f046320 TT +120.0 / FF +13.7 H-D4G
+Matrix engine (SM) 7/8 closed kit prepared, no route job ot_hbm_svc_sm_group_id master H-D4G kit prepared, no route job
+closed, die-bindable ot_hbm_accel_smh_tcl_gu leaf (RTL hierarchy) of ot_hbm_accel_smh_attn smh_tcl_gu_ref-gu1-216dbd2f1 TT +194.5 / FF +18.3 H-D4G
+closed, die-bindable ot_hbm_sm_vm_wr_q_t_lanes4 master hsm_smvm_wrq_t4_r1-q5-ea1739b51 TT +92.9 / FF +26.1 H-D4G
+closed, die-bindable ot_hbm_svc_sm_xcal master hsm_xcal_t224_r2-r2-38e71c4dc TT +143.4 / FF +5.5 H-D4G
+closed, die-bindable ot_hgi_sm_xload_cl2_bdring master hgi_sm_xl2_bdring-cl2f-9c846fd17 TT +48.3 / FF +22.9 H-D4G
+closed, die-bindable ot_hgi_sm_xload_cl2_bfqg master hgi_sm_xl2_bfqg-local1r-a327f9402 TT +115.2 / FF +11.7 H-D4G
+closed, die-bindable ot_hgi_sm_xload_cl2_ctlx master hgi_sm_xl2_ctlx-n3c3-fb25a2f1f TT +46.8 / FF +2.3 H-D4G
+closed, die-bindable ot_hgi_sm_xload_xq_pegress master hgi_sm_xq_pegress-x6-7103335e0 TT +82.2 / FF +12.1 H-D4G
+Clock and reset 3/3 closed ALL CLOSED closed, die-bindable hfd_ckgen master hbm_ckgen_cl-cl1-c3fc50d5c TT +15.0 / FF +175.9 H-D4G
+closed, die-bindable hfd_ckgen_rel leaf (RTL hierarchy) of hfd_ckgen hbm_ckgen_rel-r2-4c5a2f113 TT +349.8 / FF +29.8 H-D4G
+closed, die-bindable hfd_ckgen_rel4 leaf (RTL hierarchy) of hfd_ckgen hbm_ckgen_rel4-one1-089f3f97c TT +238.4 / FF +29.9 H-D4G
+Host, sequencer, services and control 15/15 closed ALL CLOSED closed, die-bindable hfd_ep_static master hep_static_w5f_1016-w5f-00f041029 TT +217.2 / FF +8.0 H-D4G
+closed, die-bindable ot_hbm_fault_leaf master hdie_fault_leaf_n7_s20_r1-hfl-n7_s20-12e0fbbd1 TT +432.6 / FF +29.6 H-D4G
+closed, die-bindable ot_hbm_fault_leaf_n8_s0 master hdie_fault_leaf_w_n8_s0-hflw-n8s0-3e59abf7b TT +432.7 / FF +30.5 H-D4G
+closed, die-bindable ot_hbm_host_cfg_leaf2 leaf (RTL hierarchy) of ot_hbm_host_cfg_leaf_ne2, ot_hbm_host_cfg_leaf_nw, ot_hbm_host_cfg_leaf_se2 hdie_host_cfg_leaf_r1-r1-5828f1128 TT +421.3 / FF +22.9 H-D4G
+closed, die-bindable ot_hbm_host_cfg_leaf_ne2 master hdie_host_cfg_leaf_ne_r2-r2-2b7b8dcf2 TT +410.9 / FF +26.2 H-D4G
+closed, die-bindable ot_hbm_host_cfg_leaf_nw master hdie_host_cfg_leaf_nw_r1-r1-1c5f19b5e TT +417.7 / FF +20.5 H-D4G
+closed, die-bindable ot_hbm_host_cfg_leaf_se2 master hdie_host_cfg_leaf_se_r2-r2-2b7b8dcf2 TT +414.8 / FF +24.2 H-D4G
+closed, die-bindable ot_hbm_host_cfg_leaf_sw master hdie_host_cfg_leaf_sw_r1-r1-43607eeb2 TT +413.2 / FF +19.6 H-D4G
+closed, die-bindable ot_hbm_host_static_ingress master hbm_host_static_ingress_pin2_ref-pin2-4e16b003e TT +181.4 / FF +23.9 H-D4G
+closed, die-bindable ot_hbm_status_join leaf (RTL hierarchy) of ot_hbm_status_join_fa hdie_host_status_r2-r2-1807890a7 TT +418.7 / FF +27.2 H-D4G
+closed, die-bindable ot_hbm_status_join_fa master hdie_host_status_fa_r4-r4-44fbfb092 TT +411.5 / FF +29.0 H-D4G
+closed, die-bindable ot_hbm_svc_pc_ctrl_leaf_cfg_h9b master hdie_pc_ctrl_cfg_h9c-h9c-cts-155-1aa2ec44b TT +4.0 / FF +26.8 H-D4G
+closed, die-bindable ot_hbm_svc_stack_fault master hdie_svc_stack_fault-hkb-sf-5f7d151bc TT +346.7 / FF +7.3 H-D4G
+closed, die-bindable ot_hbm_svc_vmdel_lane_n master hv18_vmdel_lane2-q2-f966c98c9 TT +85.5 / FF +3.2 H-D4G
+closed, die-bindable ot_static_cmd_target master hdie_cp_svg_r1-r2-81ed65565 TT +222.5 / FF +28.8 H-D4G
+Matrix engine (SM) pieces 2/2 closed ALL CLOSED closed, die-bindable ot_hbm_accel_smh_bdc leaf (RTL hierarchy) of ot_hbm_accel_smh_attn smh_bdc_ref_p50-r1-9214bae8b TT +226.1 / FF +3.6 H-D4G
+closed, die-bindable ot_hbm_accel_smh_tct leaf (RTL hierarchy) of ot_hbm_accel_smh_attn smh_tct_ref_p50-r1-9214bae8b TT +217.7 / FF +18.9 H-D4G
+ROM field, nodes and quantise 1/1 closed ALL CLOSED closed, die-bindable ot_hbm_host_cp_rxs master hdie_host_cprxs_r1-r1-4ec71b108 TT +2.0 / FF +18.8 H-D4G
+Relays, landings and forwarded lanes 11/11 closed ALL CLOSED closed, die-bindable hbfd_rly_48_EW master hbfd_rly_48_ew-v1-212c3439c TT +302.6 / FF +32.9 H-D4G
+closed, die-bindable hbfd_rly_48_NS master hbfd_rly_48_ns-v1-212c3439c TT +301.9 / FF +27.6 H-D4G
+closed, die-bindable hbfd_rly_48_SN master hbfd_rly_48_sn-v1-2d0c1a8ac TT +302.7 / FF +34.2 H-D4G
+closed, die-bindable hbfd_rly_48_WE master hbfd_rly_48_we-v1-2d0c1a8ac TT +304.0 / FF +38.6 H-D4G
+closed, die-bindable hbfd_rly_624_EW master hbfd_rly_624_ew-nl2-22a84f859 TT +332.5 / FF +11.7 H-D4G
+closed, die-bindable hbfd_rly_624_NS master hbfd_rly_624_ns-nl2-22a84f859 TT +338.6 / FF +8.2 H-D4G
+closed, die-bindable hbfd_rly_624_SN master hbfd_rly_624_sn-nl2-22a84f859 TT +329.9 / FF +10.8 H-D4G
+closed, die-bindable hbfd_rly_624_WE master hbfd_rly_624_we-nl2-22a84f859 TT +343.2 / FF +10.7 H-D4G
+closed, die-bindable ot_hbm_host_landing256 leaf (RTL hierarchy) of ot_hbm_host_cp_rxs hdie_host_landing_r1-r1-dcfed59ab TT +301.8 / FF +21.7 H-D4G
+closed, die-bindable ot_hgi_coll_gq_land master hcoll_gq_land_1018-n1-537e21701 TT +12.0 / FF +16.8 H-D4G
+closed, die-bindable ot_hgi_dma_back_landing_bank leaf (RTL hierarchy) of ot_hgi_dma_back_static_vp4_banks_cp hv15_dbk_bank-geo1-bda78a0ad TT +331.5 / FF +21.6 H-D4G
+Required functional token delivery on the selected dies
+tasks done 49/103 TOK.REC Decode rate of record, single + multi-user, all designs TODO ROOT8 PARTIAL · no full token on release dies; status_1020_0840.md (main fe9eea56e)
+TOK.DS DeepSeek pinned ROM chain, 72-fr DENSE2 map WAITS LEAD-S81 map bound 483869b91 (241st/964 dies); calendar → MU.S81.CAL
+TOK.DS.RATE Compiled rate and actual admission TODO STEWARD-TOKb FIXED(MODEL) · 8020b90f3 re-verified SAME: G4 AR 50x952.8=47,642, MTP 6x2,963.4=17,780 (was 10x), same-user PASS, N+1/inject FAULT; MTP binder = copy-B 48k wave (head die dup no help); HBM qdq54/HC+1 off S81 (HBM next 1,331.6->1,325.7, 052f71f2c) · NEXT: owner ack + merge; RATE.1 (sub TOKb-RATE1)
+TOK.DS.RATE.1 Full-stage ROM / producer-consumer admission WAITS STEWARD-TOK corrected 241 pipeline calendar 8020b90f3 ready; WN phase2 component PASS 6,315,337 cyc; NEXT: re-emit same-user link schedule from pipeline_graph (calendar_rel241_G4_mtp.json) into mu_hop_plan + WN replay, after token_1user
+TOK.DS.RATE.RTAG BF label queue P231->P130 WAITS STEWARD-TOK corrected241 pipeline schedule 8020b90f3; NEXT: RTAG BF re-closure on it → TOK.DS.RATE
+TOK.DS.LAYER Single-die layer runs on selected72-frame RTL TODO STEWARD-TOK-S81 PARTIAL · ladder tokfunc3_s81_1021/ladder.json @336860e02: entry PARTIAL, per-layer PARTIAL, chained/token BLOCKED. NEXT: entry_r1 (waiter 758225), G9 sim kit (sub G9SIM)
+TOK.DS.LAYER.1 L0 dense attention TODO STEWARD-TOK-S81 PARTIAL · B 46PARTIAL/9GAP 111 rows END10770 (receipt s81_dense_native_1021/out_r1); RD fold + entry norm PASS. NEXT: entry_r1; KV leaf runtime on G9 sim kit (sub G9SIM); normalize-SO HW+prog (G-NORMALIZE-SO) owner STW-S81-RTLGAP: SAFE review + RTL
+TOK.DS.LAYER.2 L2 sparse attention + indexer TODO STEWARD-TOK-S81 PARTIAL · native compile G29-31/P52-54; NEXT: IDX lowering (CODEX-TOK) + su_kv compressor HW (G-L2-L20-HW) owner STW-S81-RTLGAP: RTL+bench
+TOK.DS.LAYER.3 L14 Engram layer TODO STEWARD-TOK-S81 PARTIAL · RETURN640/II704 functional PASS, native ra640a/b FAIL; L14 compile G33/P59; NEXT: production row transport (TOK.DS.BENCH.4.5 STEWARD-TOK-ENG) + eng.knorm su_kv (G-L2-L20-HW, owner STW-S81-RTLGAP)
+TOK.DS.LAYER.4 L20 compressed layer class TODO STEWARD-TOK-S81 PARTIAL · native compile G28-29/P55-56; NEXT: su_kv compressor norm/qdq/pool in die (G-L2-L20-HW) owner STW-S81-RTLGAP: RTL+bench+bind
+TOK.DS.LAYER.5 LM head TODO S81-RTLGAP2 PARTIAL · 80/80 golden head beats + mutant (component); whole H4 dv_die TB >150 GB; NEXT: per-tile hierarchical head TB (G-HEAD-DIE-TB) sub RTLGAP2-HEADTB live
+TOK.DS.LAYER.6 MTP draft layer TODO STEWARD-TOK-S81 PARTIAL · RL4/D10 WAVE PASS 2,558,056 cyc/61 tok (component); NEXT: full draft programme binding after token_1user
+TOK.DS.LAYER.MU Multi-user calendar + per-user benches TODO STEWARD-TOK-S81 PARTIAL · WN phase2 3840/3840 6,315,337 cyc (component); calendar = calendar_rel241_G4_mtp.json @8020b90f3. NEXT: token_1user; HOST ctx loader dsdv_hostb_stage_hbc bench 6/6 PASS ctx@33 hdr@126 (claude/steward-tok-s81-hostctx-1021@bc0059139), die bind → STEWARD-S81
+TOK.DS.BENCH Layer bench cut from the 72-frame GEN netlist WAITS TOK-DS-1021 → TOK.DS.BENCH.1 , → TOK.DS.BENCH.4
+TOK.DS.BENCH.1 DV layer-programme compiler TODO STEWARD-TOK-S81 PARTIAL · Codex batch2 saved claude/steward-tok-s81-codexbatch2-1021 @e5b8b7294; A 1 op/6 rows END809, B 46P/9GAP. NEXT: integrate batch2, then CAP/wkv rows
+TOK.DS.BENCH.1.1 Family lowerings to complete layer TODO STEWARD-TOK-S81 PARTIAL · wq_a CAP emits 0 KV moves; wkv 320..447 CAP feed, CAP commit/leases, normalized-SO open. NEXT: wkv CAP lowering after G9 sim kit
+TOK.DS.BENCH.4 Die-netlist RTL gaps blocking layers (design work) RUNNING STW-S81-RTLGAP 6 gaps designed; G-NORMALIZE-SO + G-L2-L20-HW being designed; NEXT: BIND notices -> G9e
+TOK.DS.BENCH.4.1 Head producer: bind POST/fold/pre1008/gain/G8/NX/XB in die WAITS STEWARD-TOK egress+prog rtlgap-head@589110357 PASS; NEXT (STEWARD-TOK): bind when S81.HEAD H10 GEN/GRT/STA closes (STW-S81-HEAD live), then NORM16
+TOK.DS.BENCH.4.2 FFN result transport XR/rstop safe redesign + import RUNNING STEWARD-TOK-S81 HOST cut 3142195 stuck on 3.25 GB TB TU (TB get() inlining) → TB fix 9a2a7891b; routes gold2 A(-O0 reuse) + B(fixed TB rebuild) live; NEXT: first binary → entry_r1
+TOK.DS.BENCH.4.3 MTP draft body/seed ownership + transport RTL WAITS STEWARD-TOK no new die RTL (hop+xo egress); NEXT (STEWARD-TOK): circuit pick at S81.HEAD H10 bind (STW-S81-HEAD)
+TOK.DS.BENCH.4.4 L2 index reader/helper transport into die TODO CODEX-TOK-1021 PARTIAL · current L2/IDX programme and actual row transport not qualified; candidate VP/KV mechanism is separate source-scoped proof; die binding owed
+TOK.DS.BENCH.4.5 L14 Engram row-read integration in die TODO STEWARD-TOK-ENG GATING · R6 native PASS32/fullproof 04a176; zero-wire fails (HEAD rr->rco -84, XQ scale->AQ -77) fixed structurally a8b1002b9+1bf6aa28c (rco +2 regs, bf_dq reg, carry-select); bench 3 cases+6 mutants PASS, LAT identical to R6 (RETURN_AGE 640, II704 unchanged); NEXT: MAIN/FB gates dsdv_eng_rr_a/b @1bf6 live epyc5 (waiter submits), native_r3 COLLB
+MU.S81.CAL 72-frame multi-user calendar TODO STEWARD-TOK FIXED(MODEL) · causal 6-position pipeline 8020b90f3: MTP binds on pipeline wave (copy-B R013/R085/R121 ~45-48k/position, R091 hold 258,843) -> 6 users; NEXT: owner decision on splitting those 3 stages (~11 MTP users), RTL programme emission
+MU.S81.L20 Duplicate 8 index-attention groups (+88 dies, idxrd2) WAITS STW-S81-COLLB roll-up of .RTL/.KIT; NEXT: kit gate collect
+MU.S81.L20.RTL L20 split die RTL: u_idx B1-B6 + QF 513→2x276 serializer TODO S81-ELEM LIVE · source 7bd692ad2 (9 pos + m1..6 PASS e076c8f91); NEXT: bind with L20.KIT CLOSED view
+MU.S81.L20.KIT reader kit gate (dsdv_idx_rg3) TODO STW-S81-COLLB GATE · = MU.BAL.SX.3 successor kits s81dv_idxrg3r/br (rg3 RTL 7bd692ad2) live; NEXT: first CLOSED → bind L20.RTL
+MU.TOK S81 multi-user token pass TODO STEWARD-TOK-S81 PARTIAL · WN phase0+phase2 PASS 6,315,337 cyc (component). NEXT: token 1 user (L0 gaps), then AR50/MTP10 on calendar_rel241_G4_mtp
+MU.TOK.DS3 lep tag + second landing + A/B select TODO STEWARD-TOK-S81 PARTIAL · component proof only, no whole-token claim. NEXT: rerun on G9 sim kit with token_1user
+TOK.QW Qwen ROM single-user + four-user TODO STEWARD-TOK-QW PARTIAL · run_tok_func_qw.sh @claude/tok-func3-qw-1021 032ad24b9: all stages PASS except stg; composed 1u 279,731 cyc = 4,291.6 tok/s, 4u 11,750.6 (price HELD); NEXT: collect stg4 (--stage-dir stg=stg4) -> qualified compose
+TOK.QW.LAYER Compute-die layer runs RUNNING STEWARD-TOK-QW stg3 527/527 numeric PASS, normalized FAIL (pos MAT cal + VM ages UNKNOWN); stg4 (VM-write probe + cal prearm) building gold1 unit 3860252 since 17:45; NEXT: stg4 PASS
+TOK.QW.LAYER.1 Native TP8 layer composition RUNNING STEWARD-TOK-QW 36 layers x 7 families rel+pos bit-exact (ISA 1032336/1032336); spans resid 1085 qk 1015 silu 902 qkv/gu 407 od 1555; NEXT: stg4 delivery ages
+TOK.QW.LAYER.2 Chained 36 layers TODO STEWARD-TOK-QW PASS(chain) · real token P8191 through KV attention RTL L0..L35 36/36 bit-exact (1,782 retire / 1,997 status each), 288/288 hand-off edges, xdie 35-layer D2D 7,056/layer; NEXT: TP8 36-layer token golden (KV PV256 vs TP4 PV512 ~330/512 words differ)
+TOK.QW.LAYER.3 LM head TODO STEWARD-TOK-QW PARTIAL · head span 3,135 PASS; stg3 lm PASS (redstn2 tail fix) on bench data; NEXT: lm on the real token (fixture from P8191 head_die0_xnorm/logits)
+TOK.QW.LAYER.3.SEG LM-head SEG_CAL port + h16c head leaf re-harden PASS CODEX-QK-1021 on H16ZA493: CLOSED+9.47/+17.98 DRC0 published1c71a4aa1; exactHP13 source/view/params verified23hashes/49ports in3e13199b0. Recipe publication pending; parent RRloc/GENages remain separate.
+TOK.QW.LAYER.4 Die gaps blocking every layer TODO STEWARD-TOK-QW FIXED(src) · kit ARF=0 RP=0 failed od/lm arf + qk roperx; claude/steward-tok-qw-1021 8edb729dc merges qw-layergap + kits/die_params ARF1 RP1 (READY); stg4 pos = rel+ARF1/RP1; NEXT: merge, STEWARD-QK re-closes slice2_e/wh, GEN binds
+TOK.QW.KV Measure 1u/4u KV attention PASS STEWARD-TOK-QW job1443002 component PASS 7dd2a21f4 + chain real token 36 layers u1 + 9x u4 (period 2,025) PASS on the same binary; NEXT: die-netlist rerun at KV closure
+TOK.QW.BENCH Layer bench from GEN netlists WAITS STEWARD-TOK-QW RTL-functional ladder done to chained (chain PASS); NEXT: --die-netlist rerun when compute/KV GEN close
+TOK.QW.BENCH.1 Layer-programme compiler RUNNING STEWARD-TOK-QW cfg load PASS 9a614eaca (OPSEG_FAULT 1: no opseg image); sub QW-OPSEG building OPSEG leaf image from real calr10 + G-C3 probe; NEXT: probe OPSEG_FAULT 0
+TOK.QW.BENCH.1.ABI Global/root/head boundary joins WAITS STEWARD-TOK-QW native KV/phase/firstuse in g5r3 NU4 source → Q.MU
+TOK.QW.BENCH.1.EMB Actual embedding fetch/consume join TODO STEWARD-TOK-QW PARTIAL · emb PASS (stg3, bench data); L0 x_in == x_preload embedding row (chain hand-off exact); NEXT: emb RTL run on the real token row (embedding_row.json)
+TOK.QW.XDIE Compute to KV D2D co-sim TODO CODEX-TOK-1021 PARTIAL · XT1 source-carve near187/far248 PASS with negatives; selected slice1/1 actual age and coherent73 descriptor path unbound; mapped replay owed
+MU.TOK.QW Qwen four-user token pass TODO STEWARD-TOK-QW PARTIAL · ovl4u release masters PASS (H 4,026,800), ctx4u PASS, KV u4 real data 9 runs PASS; composed 4u 11,750.6 HELD; NEXT: stg4 then qualified 4u compose
+MU.D2D.OVL Overlapping D2D segments + 2-context native59 PASS TOK-FUNC2-QW release masters qfd_d2d_static_ovl_sf7<->qkd_d2d_static_ovl_sfm3, no overlay: H 4,026,800, 16/15/8/7 tok, 13,708.2 tok/s; a9c2f01db (SRAM model 64x137 staged from 545cdd4bc)
+MU.D2D.OVL.1 GEN binds OVL tiles: sys_face ovl, qfd/qkd d2d ovl, n59 MCTX RUNNING TOK-FUNC2-QW ovl4u PASS on release masters ovl_sf7<->ovl_sfm3 (a9c2f01db): H 4,026,800, 13,708.2 tok/s, 63,098/57,783 frames bit-exact; NEXT: GEN binds OVL tiles (QW2-NEXTGEN), rerun --die-netlist
+TOK.HDS HBM-DeepSeek single-user token RUNNING STEWARD-TOK-HBM waiter pid 803623 tok_func_hbm.sh --reuse @93879d7ee waits conn_p40 binary (EP7 VLT) -> frozen a356 + HC-row fix (24 DS) + Qwen safe 4 · NEXT: per-layer verdicts+cycles -> SM/ATT/DMA lowerings -> chain -> token
+TOK.HDS.VEH Shared d4g layer bench DS + Qwen RUNNING STEWARD-TOK-HBM conn_p40 559inst EP7 unit 1446663 top verilation; conn_idx 563inst gold1 unit 2784934 (auto-runs 22 sets) · NEXT: binary -> 28 sets (24 DS a356 + 4 Qwen safe) bit-exact
+TOK.HDS.VEH.1 L0 L2 L14 + unit benches TODO TOK-FUNC3-HBM PARTIAL · ATT 7PASS, IDX 5PASS, SMB 66/66; HC p40 k31 FAIL 4/12 rec30 (NOTICE); SMSL SM 7 sets FAIL (L0 94/95 @44701): dram-model fix 5dc620497 + die xl RD_LAT off-by-one (fix ccc083b32, NOTICE) · NEXT: smsl_rd8 rebuild gold1 -> rerun SM sets; die rebind xl RD_LAT; HC owner fix
+TOK.HDS.VEH.2 d4g record to per-unit image compiler TODO STEWARD-TOK-HBM PARTIAL · main 162f3cfc8 (SU2+CX+SM): L0 41/91, L2 ~45/101, L14 ~50/164 · NEXT: RoPE (pgslice.sv:303), route.top6 SW-only, gsc ports, ATT.PV pstore, DMA.LOAD, HC_POST/PRE/QDQ
+TOK.HDS.VEH.4 Quadrant SW cutter + bench RUNNING STEWARD-TOK-HBM conn_p40 EP7 + conn_idx gold1 builds (MEM400) · NEXT: build PASS -> replays
+TOK.HDS.XDIE Cross-die collectives co-sim TODO STEWARD-TOK-HBM PARTIAL · ROWS256 AG144/RS144 PASS 760/872 (r15 binds ROWS256 successor) · NEXT: production programme in token chain
+TOK.HQ HBM-Qwen d4g single-user RUNNING STEWARD-TOK-HBM Qwen safe-calendar 4 sets queued on conn_p40 binary (waiter 803623); SM qkv/o/gu/down sub-slice FAIL = die xl_SW_ctl RD_LAT bug (fix 045b6666c) · NEXT: SM rerun on smsl_pad/rl8 rebuilds -> L0 PASS -> chain -> token
+TOK.HQ.LAYER L0 + chain TODO STEWARD-TOK-HBM PARTIAL · QMV L0/chain standalone PASS; L0 6/34, chain 11/65 emitted · NEXT: safe-calendar replays on conn_p40, r5 SM operands capture
+TOK.FREEZE Final evidence run at RTL freeze WAITS CODEX-TOK-1021 all three rerunnable source commands exist; fulltoken INCOMPLETE and selected closed source/GEN/mapped-netlist replay owed; checklist results/token_pass/freeze_checklist_1019.md
+MU.CURVE Latency-throughput curve vs A100 80GB WAITS CODEX-TOK-1021 no measured release fulltoken SU/MU points; component and source-scoped MODEL rates do not qualify curve; → TOK.FREEZE
+Tools and infrastructure
+tasks done 44/45 INF.PGRR KV cdc_pc/cdc_host pg_binding re-close WAITS GAP-SKQ on legacy PG2 only: receipt1a0513 PASS2352/4250 PGterminals; pve1 outputODB exactSHA9ae09b14/b94a8554 verified. Receipts absent current5f43; no currentmerge/bind proof or livejob. Captured5dd F die/expand have0 cdc_host/pc instances/leaves; futureexactPG2-selection applicability, not currentF PGclosure. CODEX-K-DIE watch.
+Who is waiting on whom
+Waiting on the coordinator
+Tile reviews: A0 NK/NL (→ Q.STA.A0 ), S81 xr1f PNG (→ S81.STA.LEAF ), HBM e86/v74 (→ H.STA.BLK.6 , .16.4).
+Landed parents: HBM SM/slice (→ H.STA.BLK.9 ), S81 frames (→ S81.STA.OWN.1 ), lane tiles (→ S81.STA.LKTO.2 ).
+Decisions: Qwen MU B1 (→ Q.STA.MU ).
+KV seam: codec2 TXDP_K 0x03030416 approved from ATTN_LAND1 registered source; .15 evidence historical only (→ K.STA.LINKCFG ).
+Waiting on the owner
+Nothing.
+Longest chains
+HBM: closed blocks → expanded r14 relay plan → strict bind → die route/timing.
+S81: actual72-frame assembly + closed parents → GEN/bind → die route/timing.
+Qwen: closed cluster/slice/link parents → GEN0030 → die route/timing. KV: actual response/reset stations + one shared programme → die route/timing.
+Edit rules (Claude and Codex) 1. This tree shows only PENDING work. Keep it short: one line per open task, nothing else.
+2. Line format: - [ ] ID task · owner · STATUS · note , nested two spaces per level (a child blocks its parent). STATUS is one of RUNNING · WAITS · TODO · NEW · COORD (waits on the coordinator) · OWNER (waits on the owner) · FAIL · PASS · NOT RUN (die gate lines only).
+3. Short lines: task ≤ ~10 words. Note = ONE current-state phrase ≤ ~80 chars: the blocker or next step plus the live job/run name (task-watch reads it). Use → ID instead of repeating another line.
+4. Edit in place: replace the status and note; NEVER append history, timestamp chains or previous states. History goes in your lane file and the HANDOFF line, not here.
+5. Finished = removed: in the same edit that finishes or drops an item, cut its line from this file and append it (ticked - [x] , with result job/commit) to RELEASE_TREE_DONE.md under the same section header. A parent whose children are all done collapses to one line (or is removed when done). Only the four die gate lines stay here when they PASS.
+6. IDs are stable: never renumber or reuse; a new task gets a new ID under its parent (e.g. S81.STA.PAR.7 ).
+7. No duplicates: each task once. Token work lives only under TOKEN; its only die dependency is TOK.FREEZE.
+8. Elements are NOT hand-edited here: the per-die element list is generated from /api/elements ( results/fleet_viz/die_sources.json ).
+9. Die sections: ## DIE <key> · <title> · rev <revision> · est. <estimate> (key s81 | qwen_compute | qwen_kvsys | hbm), each with exactly four gate lines <P>.BIND , <P>.GRT , <P>.STA , <P>.CLK .
+10. Who edits: the active coordinator on every decision/milestone; a lane agent only its own lines. After editing, run the renderer and check /release.
+11. Die gate lines ( <P>.BIND/.GRT/.STA/.CLK , coordinator 10-19): STATUS is PASS or FAIL, or NOT RUN, and the note starts on <named die build>: (e.g. FAIL · on dv2f18dh2: overflow 7089 ). Never LIVE/RUNNING as a check result; a running job goes in the note ( <build> GRT job running, no result yet ).
+Release = the existing four die gates per die plus required single/multi-user token delivery. S81 uses the owner-approved72-frame direction; array size is capacity-derived. Qwen remains1+4users; HBM single-user. No full die closure claimed.
+Generated by claude-takeover-20261007/tools/release_tree_render.py from RELEASE_TREE.md and fleet-viz /api/elements (die revisions from results/fleet_viz/die_sources.json). Edit the .md, never this page. Element states: closed + die-bindable is crossed out; superseded elements are hidden.

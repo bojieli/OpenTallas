@@ -44,3 +44,26 @@ fleet), ~/OpenTallas/tools/die_plan/README.md (G0-G5 flow, rules R2-R8, clock ru
 - Be honest: a gate that did not run is NOT RUN; a failure is recorded as FAIL with evidence. No relaxed clocks.
 - If you hit a decision that needs the owner (scope, contract change, rule change), stop that item, write it under
   "OWNER?" in your lane file, and continue with other work in your lane.
+
+## Fleet utilization (owner, 2026-10-24): keep all 5 hosts saturated
+Three design targets move in parallel: DeepSeek ROM (S81 array), Qwen ROM (compute + KV dies), HBM accelerator (d4g die,
+DeepSeek + Qwen). Each needs BOTH the die gates (G0-G5) and the token-pass gate (single-die layer runs + inter-die
+co-sims, see old tree section "Token-pass gate" in ~/coord/old_tree.txt).
+- Go WIDE: when you have N independent kits / gates / benches, launch them all at once across your hosts (subject to
+  RAM: check `free -g`; leave 10% headroom), not one at a time. Idle threads on your hosts are a failure.
+- Host shares (threads you may fill; borrow any host whose load is < 50% of its threads, give back when the owner needs it):
+  localhost 256: S81 64, HBM-ARCH 48, S81-CORES 64, others light (agents themselves run here)
+  epyc2 128: KV-TOK 64, TOK-HBM 64
+  epyc3 96: CP1-R10 32, TOK-DS 64
+  intel1 112: QC-TOK 48, TOK-QW 64
+  intel2 112: KV-G3 48, QC-A0 32, S81-HEAD 32
+- Use ot-run once FLEET-NEW3 announces it in HANDOFF.md; it balances across hosts automatically.
+- Timestamps in HANDOFF.md are PDT (`TZ=America/Los_Angeles date '+%F %H:%M'`).
+
+## Old-fleet scratch (read-only, do NOT format or write)
+intel1 = old ot-gold1, intel2 = old ot-gold2, epyc3 = old ot-epyc7, epyc2 = old ot-epyc9 (reinstalled). Their old
+scratch disks are mounted READ-ONLY at /mnt/old-nvme0 on intel1 (228 lane dirs under claude/) and intel2 (192).
+Before re-running something from 10-23, look there for its run dir (e.g. intel1: qc-p6-xt1, kv-p7-1023, tokj-1023,
+core-s81-1023, hbm-p5-rtla/rtlb-1023; intel2: kv-p8-seam-1023, kv-p8-hub-1023, s81-p9-fc-1023, clk-std-1023,
+core-s81-1023, tokj-1023). Completed outputs there (logs, reports, built binaries) can be recovered as evidence if
+their source sha is recorded; say so in the commit ("recovered from old ot-gold1 scratch").
