@@ -1,0 +1,60 @@
+XDIE2_L d=0 edge=10800 ph=0 gc=116
+XDIE2_L d=1 edge=10800 ph=0 gc=116
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_WR d=0 rel=28
+XDIE2_WR d=0 rel=29
+XDIE2_WR d=1 rel=28
+XDIE2_WR d=1 rel=29
+XDIE2_RD d=0 rel=37
+XDIE2_RD d=0 rel=38
+XDIE2_RD d=1 rel=37
+XDIE2_RD d=1 rel=38
+XDIE2_TXEP d=0 rel=54 ph=4 gc=126
+XDIE2_TXEP d=0 rel=55 ph=0 gc=127
+XDIE2_TXEP d=1 rel=54 ph=4 gc=126
+XDIE2_TXEP d=1 rel=55 ph=0 gc=127
+XDIE2_LAND d=1 rel=470
+XDIE2_LAND d=1 rel=471
+XDIE2_LAND d=0 rel=476
+XDIE2_LAND d=0 rel=477
+XDIE2_RDY d=1 bank=0 rel=475
+XDIE2_RDY d=0 bank=0 rel=481
+XDIE2_REL d=1 rel=483 bank=0 ready=01
+XDIE2_SLOT d=1 rel=484 bank=0 idx=0
+XDIE2_REL d=0 rel=489 bank=0 ready=01
+XDIE2_SLOT d=0 rel=490 bank=0 idx=0
+XDIE2_SLOT d=1 rel=494 bank=0 idx=1
+XDIE2_DONE d=1 cal rel=495
+XDIE2_SLOT d=0 rel=500 bank=0 idx=1
+XDIE2_DONE d=0 cal rel=501
+XDIE2_EX d=1 rel=500 pin=1
+XDIE2_RXPIN d=1 rel=500
+XDIE2_EX d=0 rel=506 pin=1
+XDIE2_RXPIN d=0 rel=506
+XDIE2_RXV d=1 rel=503 frame=0
+XDIE2_RXV d=0 rel=509 frame=0
+XDIE2_EX d=1 rel=510 pin=1
+XDIE2_RXPIN d=1 rel=510
+XDIE2_EX d=0 rel=516 pin=1
+XDIE2_RXPIN d=0 rel=516
+XDIE2_RXV d=1 rel=513 frame=1
+XDIE2_RXV d=0 rel=519 frame=1
+XDIE2_ERR d=1 AR payload mismatch (golden-order fold) meta 1ff0100a5/1ff0100a5
+XDIE2_ERR d=1 lane 3 got c22e82fd golden c22e82fc
+XDIE2_ERR d=1 lane 4 got be031447 golden be031448
+XDIE2_ERR d=1 lane 8 got c2afb42e golden c2afb42d
+XDIE2_ERR d=1 lane 10 got c33d307d golden c33d307e
+XDIE2_ERR d=1 lane 11 got 40a1e18d golden 40a1e18c
+XDIE2_ERR d=1 lane 12 got 3d037b38 golden 3d037b3a
+XDIE2_PUB d=1 rel=532
+XDIE2_DONE d=1 coll rel=533
+XDIE2_PUB d=0 rel=538
+XDIE2_DONE d=0 coll rel=539
+XDIE2_AR d0 launch->publication 538 cycles | d1 532 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=519 | d1 first_wr=28 last_rx=513
+XDIE2 SWD=333 pub=1/1 ok=1/0 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 FAIL
+- /srv/opentallas-scratch/claude/tok-hbm/xdie/ar_main_ls_direct/coll_ds/tb_xdie_hbm_coll_s.sv:339: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 4.025 s; speed 2.775 us/s
+- Verilator: cpu 4.023 s on 1 threads; allocated 16 MB

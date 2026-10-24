@@ -79,7 +79,7 @@ STEP_F="$X/tb_xdie_hbm_step.sv
 F256="$P/ot_hgi_coll_static_issuer_v7.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v"
 # extra files of the AR-step vehicle (run_xdie_hbm_coll.sh)
-BENCH_ONLY="$X/tb_xdie_hbm_step.sv $X/tb_xdie_hbm_coll.sv $X/run_xdie_hbm_coll.sh $X/tok_func_xdie_cases.sh tools/xdie_hbm_step_compile.py tools/xdie_hbm_coll_compile.py tools/tok_func_hbm_xdie_report.py"
+BENCH_ONLY="$X/tb_xdie_hbm_step.sv $X/tb_xdie_hbm_coll.sv $X/run_xdie_hbm_coll.sh $X/tok_func_xdie_cases.sh tools/xdie_hbm_step_compile.py tools/xdie_hbm_coll_compile.py tools/tok_func_hbm_xdie_report.py tools/hbm_static/leaf_split_latency.py"
 COLL_SPEC=results/arch/landed_parent_1018/collq/spec_n1s0_ars.json
 
 blob() { $G rev-parse -q --verify "$1:$2" 2>/dev/null; }

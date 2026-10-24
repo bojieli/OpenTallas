@@ -1,0 +1,67 @@
+XDIE2_L d=0 edge=10800 ph=0 gc=116
+XDIE2_L d=1 edge=10800 ph=0 gc=116
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_WR d=0 rel=28
+XDIE2_WR d=0 rel=29
+XDIE2_WR d=1 rel=28
+XDIE2_WR d=1 rel=29
+XDIE2_RD d=0 rel=37
+XDIE2_RD d=0 rel=38
+XDIE2_RD d=1 rel=37
+XDIE2_RD d=1 rel=38
+XDIE2_TXEP d=0 rel=54 ph=4 gc=126
+XDIE2_TXEP d=0 rel=55 ph=0 gc=127
+XDIE2_TXEP d=1 rel=54 ph=4 gc=126
+XDIE2_TXEP d=1 rel=55 ph=0 gc=127
+XDIE2_REL d=1 rel=443 bank=0 ready=00
+XDIE2_SCHED_FAIL d=1 block bank0 NOT READY at its static release rel=443
+XDIE2_SLOT d=1 rel=444 bank=0 idx=0
+XDIE2_SLOT d=1 rel=445 bank=0 idx=1
+XDIE2_DONE d=1 cal rel=446
+XDIE2_FAULT d=1 rel=446 coll=0 cause=0000 gq=0/0 cp=0 cal=0 ep=1 epcause=040 link=000 abort=0
+XDIE2_EX d=1 rel=460 pin=0
+XDIE2_EX d=1 rel=461 pin=0
+XDIE2_LAND d=1 rel=470
+XDIE2_LAND d=1 rel=471
+XDIE2_LAND d=0 rel=476
+XDIE2_LAND d=0 rel=477
+XDIE2_RDY d=0 bank=0 rel=481
+XDIE2_REL d=0 rel=489 bank=0 ready=01
+XDIE2_SLOT d=0 rel=490 bank=0 idx=0
+XDIE2_SLOT d=0 rel=500 bank=0 idx=1
+XDIE2_DONE d=0 cal rel=501
+XDIE2_EX d=0 rel=506 pin=1
+XDIE2_RXPIN d=0 rel=506
+XDIE2_ERR d=1 AR payload mismatch (golden-order fold) meta 1ff0100a5/1ff0100a5
+XDIE2_ERR d=1 lane 0 got 40000a02 golden c130282f
+XDIE2_ERR d=1 lane 1 got bf5bcef6 golden 4319aa11
+XDIE2_ERR d=1 lane 2 got 3e465664 golden 442aef96
+XDIE2_ERR d=1 lane 3 got c22e32e2 golden c22e82fc
+XDIE2_ERR d=1 lane 4 got bee45254 golden be031448
+XDIE2_ERR d=1 lane 5 got 40603e10 golden 418dc579
+XDIE2_ERR d=1 lane 6 got c14a025b golden c2be5b7c
+XDIE2_ERR d=1 lane 7 got 442cb092 golden 442cae24
+XDIE2_ERR d=1 lane 8 got c2afa828 golden c2afb42d
+XDIE2_ERR d=1 lane 9 got 41137e72 golden c4660990
+XDIE2_ERR d=1 lane 10 got c33cec6c golden c33d307e
+XDIE2_ERR d=1 lane 11 got 410bc284 golden 40a1e18c
+XDIE2_ERR d=1 lane 12 got 3d459f32 golden 3d037b3a
+XDIE2_ERR d=1 lane 13 got 42a11af0 golden 42aa0282
+XDIE2_ERR d=1 lane 14 got 43f1b724 golden 43f2d4b4
+XDIE2_ERR d=1 lane 15 got c2aa0f3d golden c2aae722
+XDIE2_PUB d=1 rel=503
+XDIE2_DONE d=1 coll rel=504
+XDIE2_RXV d=0 rel=509 frame=0
+XDIE2_EX d=0 rel=516 pin=1
+XDIE2_RXPIN d=0 rel=516
+XDIE2_RXV d=0 rel=519 frame=1
+XDIE2_PUB d=0 rel=538
+XDIE2_DONE d=0 coll rel=539
+XDIE2_AR d0 launch->publication 538 cycles | d1 503 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=519 | d1 first_wr=28 last_rx=-1
+XDIE2 SWD=333 pub=1/1 ok=1/0 rx=2/0 faults=0/2154 sched_fail=0/1 rx_bad=0/0 done=11/11 FAIL
+- /srv/opentallas-scratch/claude/tok-hbm/xdie/ar_main_ls_direct/coll_ds/tb_xdie_hbm_coll_s.sv:339: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 3.911 s; speed 2.856 us/s
+- Verilator: cpu 3.910 s on 1 threads; allocated 16 MB
