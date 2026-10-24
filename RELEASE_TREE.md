@@ -18,9 +18,9 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## DIE s81 · S81 (DeepSeek-V4.1 ROM layer die)
 - [x] S81.G0 Plan check v4.7b · S81-P9 · PASS · ab90f2ade G0 PASS, G0C 76/168
-- [ ] S81.G0.V48 Plan v4.8 (r8eq) on main · ROOT-MERGE · RUNNING · s81-p9-r8eq-1023 unmerged
+- [x] S81.G0.V48 Plan v4.8 (r8eq) on main · ROOT-MERGE · DONE · df641549db, G0 0 err
 - [ ] S81.G1 Plan review · S81 · WAITS · COND: needs G2 on exact plan → S81.G2
-- [ ] S81.G2 Routing probe v4.8 · S81 · PASS · 31 probes overflow 0 (unmerged branch evidence)
+- [x] S81.G2 Routing probe v4.8 · S81-P9 · PASS · 31 probes overflow 0, on main df641549db
 - [ ] S81.G0C Completeness 76/168 types clean (92: 75 ot_s81sl_leaf, 14 svc_*_rs, 2 svc_hi_pvso_entry, 1 eng; >400k cells, no hard_cores) · S81 · FAIL · check.py --completeness on main 3e05af806b, 10-24 06:40
 - [ ] S81.G3 Frame partitions with R3 internal stations · S81 · RUNNING · 6/7 frame kits FAILED review (paths to 2.2 mm)
   - [ ] S81.G3.CORES Hard cores ve / eng / svc · S81 · RUNNING · svc hcore TT WNS -25.29 ps (ld_grp we decode)
