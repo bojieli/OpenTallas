@@ -15,7 +15,7 @@
 # TWIN = the frame RTL under test (default the vgcs twin; the plan contents bench twin: frame_band_plan.py --bench-top).
 # SEAM_REF (always on): tools/s81_dv/frame_seam_ref.py adds the vgch reference twin and compares every seam output every
 # edge from SEAM_T0 (default 0) -- the ret calendar alone missed the x-seam mutants (x lands with slack before go).
-# Env: MUTS (default: base + all), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run
+# Env: MUTS (default: base + all), LK (lane strap, default 2; LDLY passes to frame_bench.sh), J (build jobs), PAR (parallel builds, default 1), BFVEC (BF phase vector dir: also run, and check its return calendar with xs_place.py check, fixtures BF_FIXTURES,
 # the BF framed traffic on each build -- required to exercise the 536-b x2 payload seams).  Exit 0 = base PASS and every mutant FAIL.
 set -u
 O=$1; M=${2:-h9}; MASTER=col_$M; mkdir -p $O
@@ -49,7 +49,7 @@ PY
   # seam observer (SEAM_REF): the vgch reference twin on the same traffic, every seam output compared every edge
   python3 tools/s81_dv/frame_seam_ref.py --master $MASTER --dut $lpsv --ref rtl/dsrom_sys/s81_dv/frame_lp/vgch/${MASTER}_l4_lp_rf3r.sv \
     --out-ref $od/ref_twin.sv --out-svh $od/seam_ref.svh --t0 ${SEAM_T0:-0} > $od/seam_ref.log 2>&1 || { echo "$mu: SEAM_REF_FAILED"; return 3; }
-  FRAME_LP=1 SET=plan FRAME_LP_SV=$lpsv SEAM_SV=$seam LK=2 VFLAGS="-DSEAM_REF +incdir+$od $od/ref_twin.sv" \
+  FRAME_LP=1 SET=plan FRAME_LP_SV=$lpsv SEAM_SV=$seam LK=${LK:-2} VFLAGS="-DSEAM_REF +incdir+$od $od/ref_twin.sv" \
     bash tools/s81_dv/frame_bench.sh $od $MASTER $lmut > $od/frame_bench.log 2>&1
   local line; line=$(grep -m1 '^FRAME_SET' $od/frame_bench.log)
   local chk; chk=$(grep -h -m2 -E 'PLAN_MISMATCH|MISMATCH|FAULT|COVERAGE|BAD_' $od/check_plan.log 2>/dev/null | head -2 | cut -c1-200 | tr '\n' ' ')
@@ -59,10 +59,13 @@ PY
   # toggles (SEAM_ACT).  Same build; caught = seam mismatches or a frame FAULT (the BF programme check faults on a late word)
   local bf=""
   if [ -n "${BFVEC:-}" ] && [ -x $od/obj/Vtb_s81dv_frame ]; then
-    $od/obj/Vtb_s81dv_frame $(sed "s#+OT_ROM_DIR=[^ ]*#+OT_ROM_DIR=$(realpath $BFVEC)#" $BFVEC/ARGS) > $od/run_bf.log 2>&1
+    rm -rf $od/bfvec; cp -r $BFVEC $od/bfvec
+    $od/obj/Vtb_s81dv_frame $(sed "s#+OT_ROM_DIR=[^ ]*#+OT_ROM_DIR=$(realpath $od/bfvec)#" $BFVEC/ARGS) > $od/run_bf.log 2>&1
     local bsm bft bact; bsm=$(grep -c 'SEAM_MISMATCH' $od/run_bf.log); bft=$(grep -m1 '^END' $od/run_bf.log | sed -E 's/.* fault=([0-9]+).*/\1/')
     bact=$(grep -E 'SEAM_ACT' $od/run_bf.log | awk '$4 > 0' | wc -l)
-    bf="bf_seam_mismatch_lines=$bsm bf_fault=${bft:-NA} bf_active_seams=$bact"
+    # S81-P8 10-23: the BF return calendar check (xs_place.py check: every ret word = the compiler's (edge, tag, value))
+    local bck; python3 tools/s81_dv/layer_prog/xs_place.py check --dir $od/bfvec --log $od/run_bf.log ${BF_FIXTURES:+--fixtures $BF_FIXTURES} > $od/check_bf.log 2>&1 && bck=PASS || bck=FAIL
+    bf="bf_seam_mismatch_lines=$bsm bf_fault=${bft:-NA} bf_active_seams=$bact bf_calendar=$bck"
   fi
   echo "SEAM_BENCH $M $mu: ${line:-NO_RESULT $(tail -n 2 $od/frame_bench.log | tr '\n' ' ')} ${chk} ${bf}"
 }
@@ -76,7 +79,7 @@ rc=0
 for mu in $MUTS; do
   r=$(cat $O/$mu.res); echo "$r"
   if [ $mu = base ]; then echo "$r" | grep -q 'pass=1 fail=0 seam_mismatch_lines=0' || rc=1
-    [ -z "${BFVEC:-}" ] || echo "$r" | grep -q 'bf_seam_mismatch_lines=0 bf_fault=0' || rc=1
+    [ -z "${BFVEC:-}" ] || echo "$r" | grep -q 'bf_seam_mismatch_lines=0 bf_fault=0 bf_active_seams=[0-9]* bf_calendar=PASS' || rc=1
   else echo "$r" | grep -qE 'fail=1|bf_seam_mismatch_lines=[1-9]|bf_fault=[1-9]' || rc=1; fi
 done
 echo "SEAM_BENCH_EXIT $M $rc"; exit $rc

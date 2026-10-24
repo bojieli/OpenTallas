@@ -89,6 +89,11 @@ def io_tcl(P, tn, pins):
     return "\n".join(lines) + "\n"
 
 
+# soft relay instances placed by relay_mid.tcl: the kept ot_s81_rly relays of the S81 frame bands (u_r<k>.u_y_<lane>);
+# a plan may override it with budgets.relay_mid_re (first capture = the relay group)
+RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
+
+
 def _snap_tap(P, x, y):
     """snap an interior tap pin: across the pin to the top layer's tracks, along it to the layer below's (the pin
     centre must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255)."""
@@ -116,6 +121,8 @@ def tap_points(P, tn):
     rs = list(t.get("reset", {}).get("tap_um", ck))
     if any(abs(rs[0] - a) < 1.0 and abs(rs[1] - b) < 1.0 for a, b in cks):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
+        if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
+            rs = list(S.tap_clear(t, rs[0], rs[1], cks, clear=4.32))
     return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
 
 
@@ -358,6 +365,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
            # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
            "export CORNER = TC",
+           *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
@@ -365,6 +373,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
+        shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
     for s_ in t.get("ft_slots", []):

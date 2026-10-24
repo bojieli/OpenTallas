@@ -727,8 +727,44 @@ def tap_grid(P, tn):
     for j in range(ny):
         for i in range(nx):
             k = len(out)
-            out.append(("clk" if k == 0 else f"clk_t{k}", (i + 0.5) * w / nx, (j + 0.5) * h / ny))
+            x, y = tap_clear(t, (i + 0.5) * w / nx, (j + 0.5) * h / ny, [(a, b) for _, a, b in out])
+            out.append(("clk" if k == 0 else f"clk_t{k}", x, y))
     return out
+
+
+TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step off every hard core / macro of the type
+TAP_STEP_UM = 2.16
+
+
+def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM):
+    """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
+    macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
+    tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
+    inside the outline by `clear`, and >= `clear` from the taps already placed.  Types without hard cores, or whose
+    tap is already in a channel, are unchanged."""
+    w, h = t["outline_um"]
+    boxes = []
+    for c in t.get("hard_cores", []) or []:
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+
+    def free(px, py):
+        if not (clear <= px <= w - clear and clear <= py <= h - clear):
+            return False
+        if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
+            return False
+        return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
+    if not boxes or free(x, y):
+        return x, y
+    for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
+        d = r * TAP_STEP_UM
+        ring = [(x + i * TAP_STEP_UM, y + s * d) for i in range(-r, r + 1) for s in (-1, 1)] + \
+               [(x + s * d, y + i * TAP_STEP_UM) for i in range(-r + 1, r) for s in (-1, 1)]
+        ok = [p for p in ring if free(*p)]
+        if ok:
+            px, py = min(ok, key=lambda p: ((p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+            return round(px, 4), round(py, 4)
+    return x, y
 
 
 def has_epoch(port):

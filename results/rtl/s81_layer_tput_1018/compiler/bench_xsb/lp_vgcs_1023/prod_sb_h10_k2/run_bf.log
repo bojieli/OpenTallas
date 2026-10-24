@@ -1,0 +1,44 @@
+RET 407 178ede9e600004609
+RET 410 1732c9f8000000609
+RET 417 178a154980000c609
+RET 418 079ec863400014609
+RET 420 07753750800008609
+RET 426 07a279e2400010609
+END edges=1089 ret_words=6 xo_checked=1087 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:133: Verilog $finish
+SEAM_ACT lpl_0 toggles 33
+SEAM_ACT lpl_1 toggles 32
+SEAM_ACT lpl_2 toggles 24
+SEAM_ACT lpl_3 toggles 24
+SEAM_ACT lpl_4 toggles 0
+SEAM_ACT lpl_5 toggles 0
+SEAM_ACT lpl_6 toggles 0
+SEAM_ACT lpl_7 toggles 0
+SEAM_ACT lpl_8 toggles 0
+SEAM_ACT lpl_9 toggles 0
+SEAM_ACT lpl_10 toggles 0
+SEAM_ACT lpl_11 toggles 692
+SEAM_ACT lpl_12 toggles 0
+SEAM_ACT lpl_13 toggles 2
+SEAM_ACT lpl_14 toggles 4
+SEAM_ACT lpl_15 toggles 33
+SEAM_ACT lpl_16 toggles 32
+SEAM_ACT lpl_17 toggles 34
+SEAM_ACT lpl_18 toggles 4
+SEAM_ACT lpl_19 toggles 4
+SEAM_ACT lpl_20 toggles 26
+SEAM_ACT lpl_21 toggles 0
+SEAM_ACT lpl_22 toggles 0
+SEAM_ACT lpl_23 toggles 0
+SEAM_ACT lpl_24 toggles 65
+SEAM_ACT lpl_25 toggles 2
+SEAM_ACT lpl_26 toggles 710
+SEAM_ACT lpl_27 toggles 24
+SEAM_ACT lpl_28 toggles 24
+SEAM_ACT lpl_29 toggles 0
+SEAM_ACT lpl_30 toggles 0
+SEAM_ACT lpl_31 toggles 2
+SEAM_ACT lpl_32 toggles 34
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 24.449 s; speed 44.767 ns/s
+- Verilator: cpu 24.446 s on 1 threads; allocated 96 MB
