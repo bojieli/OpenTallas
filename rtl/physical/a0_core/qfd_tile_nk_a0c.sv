@@ -47,6 +47,19 @@ module qfd_tile_nk_a0c #(
     input  wire          ck_t21,
     input  wire          ck_t22,
     input  wire          ck_t23,
+`ifdef OT_A0_CK_TAPS31
+    // QC-P6-A0 10-23 A0 v6: sink-anchored taps (gen_a0c6_taps.py; NL 31 taps, NK 32 with OT_A0_CK_TAPS32).  No RTL loads.
+    input  wire          ck_t24,
+    input  wire          ck_t25,
+    input  wire          ck_t26,
+    input  wire          ck_t27,
+    input  wire          ck_t28,
+    input  wire          ck_t29,
+    input  wire          ck_t30,
+`ifdef OT_A0_CK_TAPS32
+    input  wire          ck_t31,
+`endif
+`endif
 `endif
 `endif
     input  wire          rst_n,
