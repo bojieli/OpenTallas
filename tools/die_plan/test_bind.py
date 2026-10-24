@@ -539,3 +539,21 @@ def test_param_regen_declared_default_and_unknown(tmp_path):
     hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'NOT_A_PARAMETER': 3}})\n")
     assert bind.main(["bind", str(pp), "--out", str(out), "--strict"]) != 0
     assert any("NOT_A_PARAMETER: not a parameter" in e for e in report(out)["errors"])
+
+
+def test_param_regen_variant_own_default(tmp_path):
+    """A new variant control is legal; its predecessor-only parameter remains illegal."""
+    src=tmp_path/'src';shutil.copytree(EX,src)
+    leaf=src/'leaves.sv';text=leaf.read_text();start=text.index('module lf_sink (');end=text.index('endmodule',start)+9
+    variant=text[start:end].replace('module lf_sink (','module lf_sink_bo1 #(parameter integer ORDER = 0) (').replace('q <= {flt, d0 ^ d1};','q <= {flt, d0 ^ d1} + ORDER;')
+    leaf.write_text(text.replace('module lf_sink (','module lf_sink #(parameter integer OLD_ONLY = 0) (')+'\n'+variant+'\n')
+    hook=tmp_path/'regen.py';hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'ORDER': 1}})\n")
+    p=json.loads((EX/'die_plan_lanes.json').read_text());p['asbuilt']['base']=str(src)
+    p['asbuilt']['substitute_inst']=[dict(inst='snk',module='lf_sink_bo1')];p['asbuilt']['param_regen']=dict(file=str(hook))
+    pp=tmp_path/'plan.json';pp.write_text(json.dumps(p));out=tmp_path/'out'
+    assert run(pp,out,'elab','bind')==0
+    assert json.loads((out/'param_regen.json').read_text())['changed']==[dict(inst='snk',param='ORDER',asbuilt='0',bound=1)]
+    assert '.ORDER(1)' in ''.join(f.read_text() for f in (out/'rtl').glob('*.sv'))
+    hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'OLD_ONLY': 1}})\n")
+    assert bind.main(['bind',str(pp),'--out',str(out),'--strict'])!=0
+    assert any('OLD_ONLY: not a parameter' in e for e in report(out)['errors'])
