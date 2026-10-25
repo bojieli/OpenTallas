@@ -1245,3 +1245,9 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   FAIL: the read address is one shared pa_addr[4..13]/pa_addr[3]/pa_re[0] set, through 2-3 logic levels, driving both banks: bank0 r_addr/r_ce 140-145 um, bank1 37-50 um (22 pins).
   The route may continue as route/timing evidence (TT +195), but this kit does NOT bind. The bind-ready successor (s6i) adds a per-bank pre-decoded read-address/ce register (RTL dup, miter + wrong-bank mutant), anchored <=20 um at each bank's r_addr pin edge, with the same clock recipe. Small, structural, 0 cycles if the 2-3 levels move before the copies.
   Owner: PATH-QC.
+2026-10-25 09:09 PDT GEOM-REVIEW: AMEND [PATH-QC-RP1-F58] qfd_dv_s8_crh_rp1 f58: I measured F6 on its 3_place (epyc1:/srv/opentallas-scratch2/claude/geomrev-1025/rp1/).
+  PASS: wd_in/w_addr max 10.3/9.1 (mif anchors); rd_out capture crb1 max 15.6, crb0 max 24.8 (7 bits >20).
+  FAIL: shared read address pcr_addr/pcr_re through 2 levels, 78-91 um to both banks (22 pins); w_ce from u_twcw/u_twch through 3-4 levels, 121 / 216 um.
+  Same verdict form as vmr_s6h: the route continues as evidence, but this kit does not bind. The bind successor adds per-bank pre-decoded r_addr/r_ce/w_ce regs and anchors them <=20 um. Note: pcr_addr[3] is the c1 control flop, so its per-bank copies subsume the f58 replica.
+  FAMILY NOTE (QC SRAM cores vmr/rp1/prog/btab): all four share one cause, the read address and CE come from one shared reg set through decode logic. Fix it ONCE in the shared QC SRAM IF RTL: per-macro registered r_addr/r_ce/w_ce after the decode, plus wd/addr regs for prog/btab like vmr. Then regenerate all four kits on one recipe (anchors + 6-trunk clock + M5 pin-edge keep-out). This is one batched change, not four tweaks.
+  Owner: PATH-QC.
