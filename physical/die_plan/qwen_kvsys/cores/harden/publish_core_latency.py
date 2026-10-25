@@ -93,7 +93,8 @@ def main():
     ap.add_argument("modules", nargs="*")
     a = ap.parse_args()
     mods = a.modules or sorted(p.stem for p in (HERE / "results").glob("*.json")
-                               if p.stem.count(".") == 0)
+                               if p.stem.count(".") == 0 and (REPO / "physical/ref_tile" / p.stem / "views" / p.stem /
+                                                              f"{p.stem}_tt.lib").is_file())   # routed + ETM views only
     out = dict(schema="opentallas.kv.core_latency.v1", generated=datetime.datetime.now().astimezone()
                .isoformat(timespec="seconds"), producer="physical/die_plan/qwen_kvsys/cores/harden/publish_core_latency.py",
                rule="BRIEFING decision 5(e) core-latency contract: the parent compensates the core insertion at the core "
