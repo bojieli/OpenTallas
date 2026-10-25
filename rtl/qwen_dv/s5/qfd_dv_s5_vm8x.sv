@@ -434,7 +434,15 @@ endmodule
 
 // ===================================================================================================== BTAB leaf
 // (fallback partition leaf; also half of qfd_dv_s8x_su).  Table writes of kind 2 only.
-module qfd_dv_s8x_btab (
+// MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 on btab_s6): MIF=0 = the vm8 leaf (one shared register set drives all
+// 4 SRAMs through 2-4 decode levels, 66-302 um).  MIF=1 = per-SRAM macro-interface registers: every SRAM gets its own
+// read-address / read-enable / write-address / write-enable / write-data landing register, the bank decode is done
+// BEFORE these registers, so each one drives its macro pin directly (anchored <= 20 um, physical/common_flow/
+// macro_pin_flops.tcl).  The read gets the landing stage (+1 cycle), and the write path keeps the same extra cycle
+// (u_twp* becomes the shared relay stage in front of the per-SRAM landings) so that MIF=1 is exactly MIF=0 delayed by one
+// cycle on bs_q (bs_q(t+1) = bs_q_MIF0(t); write/read ordering unchanged); fault is unchanged (0 cycles).
+// PRICE vs MIF=0: BTAB read +1, table write +1.  The parent must schedule the +1 (static schedule).
+module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire            bs_re,
@@ -460,14 +468,32 @@ module qfd_dv_s8x_btab (
     qfd_dv_s8x_kff #(.W(1), .ID(7102)) u_twpw (.ck(ck), .d(ptw_w), .q(twp_w));
     wire [8:0] bs_word = pbs_addr[8:0];
     wire [4*256-1:0] bt_rd;
+    wire [1:0] cap_bank;   // bank of the read the SRAMs latch this edge
+    generate if (MIF == 0) begin : g_cb0
+        assign cap_bank = bs_word[1:0];
+    end else begin : g_cb1
+        qfd_dv_s8x_kff #(.W(2), .ID(7149)) u_rbk (.ck(ck), .d(bs_word[1:0]), .q(cap_bank));
+    end endgenerate
     generate for (bk = 0; bk < 4; bk = bk + 1) begin : g_btb
-        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ck), .r_ce_in(pbs_re && bs_word[1:0] == bk[1:0]), .r_addr_in(bs_word[8:2]),
-            .rd_out(bt_rd[bk*256 +: 256]), .w_ce_in(twp_w), .w_addr_in(twp_a[8:2]),
-            .wd_in(twp_d[256*bk +: 256]), .w_mask_in({256{1'b1}}),
-            .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        wire m_rce, m_we; wire [8:2] m_ra, m_wa; wire [255:0] m_wd;
+        if (MIF == 0) begin : g_d
+            assign m_rce = pbs_re && bs_word[1:0] == bk[1:0]; assign m_ra = bs_word[8:2];
+            assign m_we = twp_w; assign m_wa = twp_a; assign m_wd = twp_d[256*bk +: 256];
+        end else begin : g_r
+            // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
+            qfd_dv_s8x_kff #(.W(1), .ID(7150 + bk)) u_rce (.ck(ck), .d(pbs_re && bs_word[1:0] == bk[1:0]), .q(m_rce));
+            qfd_dv_s8x_kff #(.W(7), .ID(7160 + bk)) u_ra (.ck(ck), .d(bs_word[8:2]), .q(m_ra));
+            qfd_dv_s8x_kff #(.W(1), .ID(7170 + bk)) u_we (.ck(ck), .d(twp_w), .q(m_we));
+            qfd_dv_s8x_kff #(.W(7), .ID(7180 + bk)) u_wa (.ck(ck), .d(twp_a), .q(m_wa));
+            qfd_dv_s8x_kff #(.W(256), .ID(7190 + bk)) u_wd (.ck(ck), .d(twp_d[256*bk +: 256]), .q(m_wd));
+        end
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(ck), .r_ce_in(m_rce), .r_addr_in(m_ra),
+            .rd_out(bt_rd[bk*256 +: 256]), .w_ce_in(m_we), .w_addr_in(m_wa),
+            .wd_in(m_wd), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     reg [1:0] s1b_bank; reg [1023:0] btcap;
-    always @(posedge ck) begin s1b_bank <= bs_word[1:0]; btcap <= bt_rd; end
+    always @(posedge ck) begin s1b_bank <= cap_bank; btcap <= bt_rd; end
     wire [3:0] bdec = 4'd1 << s1b_bank;
     wire [255:0] bs_n;
     generate for (gk = 0; gk < 16; gk = gk + 1) begin : g_bsel
@@ -487,7 +513,10 @@ endmodule
 // ===================================================================================================== PROG leaf
 // (fallback partition leaf; also half of qfd_dv_s8x_su).  Table writes of kind 3 only; data bank 0 = tw_data[456:0],
 // bank 1 = tw_data[968:512] (the only table bits PROG stores).
-module qfd_dv_s8x_prog (
+// MIF (PATH-QC-SRAMIF 2026-10-25, GEOM-REVIEW F6 on prog_s6): as qfd_dv_s8x_btab.  MIF=1 = per-SRAM read-address /
+// read-enable / write-address / write-enable / write-data landing registers with the bank decode in front; MIF=1 is
+// exactly MIF=0 delayed by one cycle on p_q (read +1, table write +1, write/read ordering unchanged).
+module qfd_dv_s8x_prog #(parameter integer MIF = 0) (
     input  wire            ck,
     input  wire            p_re,
     input  wire [8:0]      p_idx,
@@ -512,18 +541,43 @@ module qfd_dv_s8x_prog (
     wire [456:0] twd [0:1];
     assign twd[0] = twp_d0; assign twd[1] = twp_d1;
     wire [4*256-1:0] p_rd;
+    wire cap_bank;   // bank of the read the SRAMs latch this edge
+    generate if (MIF == 0) begin : g_cb0
+        assign cap_bank = pp_idx[0];
+    end else begin : g_cb1
+        qfd_dv_s8x_kff #(.W(1), .ID(7249)) u_rbk (.ck(ck), .d(pp_idx[0]), .q(cap_bank));
+    end endgenerate
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_prog
-        ot_sram_1r1w_256x256_m2_r2c2 u_lo (.clk(ck), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
-            .rd_out(p_rd[(2*bk)*256 +: 256]), .w_ce_in(twp_w), .w_addr_in(twp_a),
-            .wd_in(twd[bk][255:0]), .w_mask_in({256{1'b1}}),
+        wire lo_rce, hi_rce, lo_we, hi_we; wire [7:0] lo_ra, hi_ra, lo_wa, hi_wa; wire [255:0] lo_wd; wire [200:0] hi_wd;
+        if (MIF == 0) begin : g_d
+            assign lo_rce = pp_re && pp_idx[0] == bk[0]; assign hi_rce = lo_rce;
+            assign lo_ra = pp_idx[8:1]; assign hi_ra = pp_idx[8:1];
+            assign lo_we = twp_w; assign hi_we = twp_w; assign lo_wa = twp_a; assign hi_wa = twp_a;
+            assign lo_wd = twd[bk][255:0]; assign hi_wd = twd[bk][456:256];
+        end else begin : g_r
+            // per-SRAM landing registers (distinct IDs: distinct kept modules, never merged), decode in front
+            qfd_dv_s8x_kff #(.W(1), .ID(7250 + 2*bk)) u_lo_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(lo_rce));
+            qfd_dv_s8x_kff #(.W(1), .ID(7251 + 2*bk)) u_hi_rce (.ck(ck), .d(pp_re && pp_idx[0] == bk[0]), .q(hi_rce));
+            qfd_dv_s8x_kff #(.W(8), .ID(7260 + 2*bk)) u_lo_ra (.ck(ck), .d(pp_idx[8:1]), .q(lo_ra));
+            qfd_dv_s8x_kff #(.W(8), .ID(7261 + 2*bk)) u_hi_ra (.ck(ck), .d(pp_idx[8:1]), .q(hi_ra));
+            qfd_dv_s8x_kff #(.W(1), .ID(7270 + 2*bk)) u_lo_we (.ck(ck), .d(twp_w), .q(lo_we));
+            qfd_dv_s8x_kff #(.W(1), .ID(7271 + 2*bk)) u_hi_we (.ck(ck), .d(twp_w), .q(hi_we));
+            qfd_dv_s8x_kff #(.W(8), .ID(7280 + 2*bk)) u_lo_wa (.ck(ck), .d(twp_a), .q(lo_wa));
+            qfd_dv_s8x_kff #(.W(8), .ID(7281 + 2*bk)) u_hi_wa (.ck(ck), .d(twp_a), .q(hi_wa));
+            qfd_dv_s8x_kff #(.W(256), .ID(7290 + 2*bk)) u_lo_wd (.ck(ck), .d(twd[bk][255:0]), .q(lo_wd));
+            qfd_dv_s8x_kff #(.W(201), .ID(7291 + 2*bk)) u_hi_wd (.ck(ck), .d(twd[bk][456:256]), .q(hi_wd));
+        end
+        ot_sram_1r1w_256x256_m2_r2c2 u_lo (.clk(ck), .r_ce_in(lo_rce), .r_addr_in(lo_ra),
+            .rd_out(p_rd[(2*bk)*256 +: 256]), .w_ce_in(lo_we), .w_addr_in(lo_wa),
+            .wd_in(lo_wd), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        ot_sram_1r1w_256x256_m2_r2c2 u_hi (.clk(ck), .r_ce_in(pp_re && pp_idx[0] == bk[0]), .r_addr_in(pp_idx[8:1]),
-            .rd_out(p_rd[(2*bk+1)*256 +: 256]), .w_ce_in(twp_w), .w_addr_in(twp_a),
-            .wd_in({55'd0, twd[bk][456:256]}), .w_mask_in({256{1'b1}}),
+        ot_sram_1r1w_256x256_m2_r2c2 u_hi (.clk(ck), .r_ce_in(hi_rce), .r_addr_in(hi_ra),
+            .rd_out(p_rd[(2*bk+1)*256 +: 256]), .w_ce_in(hi_we), .w_addr_in(hi_wa),
+            .wd_in({55'd0, hi_wd}), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     wire [3:0] p1_bank;
-    qfd_dv_s8x_kff #(.W(4), .ID(5100)) u_p1 (.ck(ck), .d({4{pp_idx[0]}}), .q(p1_bank));
+    qfd_dv_s8x_kff #(.W(4), .ID(5100)) u_p1 (.ck(ck), .d({4{cap_bank}}), .q(p1_bank));
     reg [1023:0] pcap;
     always @(posedge ck) pcap <= p_rd;
     wire [511:0] pw2;

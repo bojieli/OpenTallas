@@ -1,0 +1,8 @@
+PATH-QC-SRAMIF miter (2026-10-25): tb.sv drives ORIG (main qfd_dv_s8x_btab/prog renamed ORIG_*, i.e. the vm8 leaf before
+this change) and NEW qfd_dv_s8x_btab/prog #(.MIF(1)) in lockstep with identical random inputs (reads, table writes of all
+kinds, out-of-range addresses, reset), behavioural SRAM models (physical/asap7_memory_macros/*/*.v).
+Checks every cycle after warm-up: new.q(t+1) == orig.q(t) (bs_q, p_q), fault(t) equal.  Mutants (sed on a copy):
+  mut_bt: btab per-SRAM read-enable decoded for bank bk^1 (wrong-bank read)      -> must mismatch
+  mut_pg: prog u_hi read-enable decoded for the other bank (wrong-bank read)    -> must mismatch
+  mut_bw: btab per-SRAM write-data landing takes bank bk^1's slice (wrong bank) -> must mismatch
+Simulator: Verilator 5.032 (verilator/verilator:v5.032, --binary --timing).
