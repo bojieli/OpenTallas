@@ -1,0 +1,157 @@
+{
+ "scope": "Every DFF D endpoint plus every driven physical BPin, combinational BUF/INV aliases traced back to FF Q/QN or input BPin; actual postDPL FFcenters/exact plannedBPinpoints; constants excluded",
+ "count": 11956,
+ "max_um": 380.1329999999999,
+ "status": "PARTIAL_SKELETON_REGISTERED_LEDGER_NOT_FULL_BOUND_PROOF",
+ "unknown_count": 1571,
+ "unknown_classes": {
+  "intentional_functional_core_nd_stub": 1569,
+  "reset_start_alias_unresolved": 2
+ },
+ "over405_count": 0,
+ "worst_pairs": [
+  {
+   "src": "FF:pr_reset_u_rrl_33",
+   "dst": "FF:pr_reset_u_rrl_34",
+   "src_um": [
+    574.884,
+    1144.935
+   ],
+   "dst_um": [
+    479.871,
+    859.815
+   ],
+   "endpoint_L1_um": 380.1329999999999,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_run_u_rrl_5",
+   "dst": "FF:pr_run_u_rrl_9",
+   "src_um": [
+    467.127,
+    837.945
+   ],
+   "dst_um": [
+    203.499,
+    721.575
+   ],
+   "endpoint_L1_um": 379.99800000000005,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_reset_u_rrl_12",
+   "dst": "FF:pr_reset_u_rrl_13",
+   "src_um": [
+    574.884,
+    1049.625
+   ],
+   "dst_um": [
+    479.844,
+    764.775
+   ],
+   "endpoint_L1_um": 379.89000000000004,
+   "buffer_count": 3
+  },
+  {
+   "src": "FF:pr_run_u_rrl_33",
+   "dst": "FF:pr_run_u_rrl_34",
+   "src_um": [
+    574.884,
+    1144.395
+   ],
+   "dst_um": [
+    479.871,
+    859.545
+   ],
+   "endpoint_L1_um": 379.86300000000006,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_reset_u_rrl_33",
+   "dst": "FF:pr_reset_u_rrl_36",
+   "src_um": [
+    574.884,
+    1144.935
+   ],
+   "dst_um": [
+    298.458,
+    1041.525
+   ],
+   "endpoint_L1_um": 379.83599999999984,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_run_u_rrl_33",
+   "dst": "FF:pr_run_u_rrl_36",
+   "src_um": [
+    574.884,
+    1144.395
+   ],
+   "dst_um": [
+    298.458,
+    1041.255
+   ],
+   "endpoint_L1_um": 379.56599999999986,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_reset_u_rrl_12",
+   "dst": "FF:pr_reset_u_rrl_17",
+   "src_um": [
+    574.884,
+    1049.625
+   ],
+   "dst_um": [
+    203.472,
+    1041.525
+   ],
+   "endpoint_L1_um": 379.51199999999994,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_run_u_rrl_12",
+   "dst": "FF:pr_run_u_rrl_13",
+   "src_um": [
+    574.884,
+    1049.355
+   ],
+   "dst_um": [
+    479.844,
+    765.045
+   ],
+   "endpoint_L1_um": 379.3500000000001,
+   "buffer_count": 3
+  },
+  {
+   "src": "FF:pr_reset_u_rrl_5",
+   "dst": "FF:pr_reset_u_rrl_9",
+   "src_um": [
+    467.127,
+    837.405
+   ],
+   "dst_um": [
+    203.499,
+    721.845
+   ],
+   "endpoint_L1_um": 379.188,
+   "buffer_count": 2
+  },
+  {
+   "src": "FF:pr_run_u_rrl_12",
+   "dst": "FF:pr_run_u_rrl_17",
+   "src_um": [
+    574.884,
+    1049.355
+   ],
+   "dst_um": [
+    203.472,
+    1041.795
+   ],
+   "endpoint_L1_um": 378.972,
+   "buffer_count": 2
+  }
+ ],
+ "full_ledger_path": "/srv/opentallas-scratch2/claude/codex-qc-plan-1309/registered_hops.json",
+ "full_ledger_sha256": "165db986f5d9abea9ab9117926f25d5bc70cb02c6414257e1781f306ae5831a4",
+ "gate": "GRT HELD pending registered endpoint scope decision or preserved anchor variant"
+}
