@@ -1,0 +1,1662 @@
+{
+ "24": {
+  "me_stop_cycle": 5965,
+  "last_end": 5968,
+  "digest": "6fa546d167acc20b",
+  "plan": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "at": 32,
+    "done": 122
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "at": 47,
+    "done": 306
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "at": 99,
+    "done": 147
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 306,
+    "done": 355
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 332,
+    "done": 386
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 363,
+    "done": 411
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 388,
+    "done": 442
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 419,
+    "done": 469
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 446,
+    "done": 494
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 471,
+    "done": 521
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 498,
+    "done": 546
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "at": 554,
+    "done": 2230
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "at": 2238,
+    "done": 2605
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "at": 2613,
+    "done": 2613
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "at": 2614,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "at": 3726,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "at": 3729,
+    "done": 3819
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "at": 3796,
+    "done": 3886
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "at": 3894,
+    "done": 4451
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 3920,
+    "done": 3968
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4451,
+    "done": 4530
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4507,
+    "done": 4570
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "at": 4578,
+    "done": 4821
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "at": 4829,
+    "done": 4829
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "at": 4830,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "at": 5800,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5803,
+    "done": 5893
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5870,
+    "done": 5960
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "at": 5968,
+    "done": 5968
+   }
+  ],
+  "shift_vs_24": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 0
+   }
+  ]
+ },
+ "25": {
+  "me_stop_cycle": 5967,
+  "last_end": 5970,
+  "digest": "495a9fd9c3a377cd",
+  "plan": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "at": 32,
+    "done": 123
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "at": 47,
+    "done": 306
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "at": 100,
+    "done": 149
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 306,
+    "done": 356
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 333,
+    "done": 388
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 365,
+    "done": 414
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 391,
+    "done": 446
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 423,
+    "done": 474
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 451,
+    "done": 500
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 477,
+    "done": 528
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 505,
+    "done": 554
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "at": 562,
+    "done": 2230
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "at": 2238,
+    "done": 2605
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "at": 2613,
+    "done": 2613
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "at": 2614,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "at": 3726,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "at": 3729,
+    "done": 3820
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "at": 3797,
+    "done": 3888
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "at": 3896,
+    "done": 4451
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 3922,
+    "done": 3971
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4451,
+    "done": 4531
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4508,
+    "done": 4572
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "at": 4580,
+    "done": 4821
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "at": 4829,
+    "done": 4829
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "at": 4830,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "at": 5800,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5803,
+    "done": 5894
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5871,
+    "done": 5962
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "at": 5970,
+    "done": 5970
+   }
+  ],
+  "shift_vs_24": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "d_at": 0,
+    "d_done": 1
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "d_at": 1,
+    "d_done": 2
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 1
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 1,
+    "d_done": 2
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 2,
+    "d_done": 3
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 3,
+    "d_done": 4
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 4,
+    "d_done": 5
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 5,
+    "d_done": 6
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 6,
+    "d_done": 7
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 7,
+    "d_done": 8
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "d_at": 8,
+    "d_done": 0
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "d_at": 0,
+    "d_done": 1
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "d_at": 1,
+    "d_done": 2
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "d_at": 2,
+    "d_done": 0
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 2,
+    "d_done": 3
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 1
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 1,
+    "d_done": 2
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "d_at": 2,
+    "d_done": 0
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 1
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 1,
+    "d_done": 2
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "d_at": 2,
+    "d_done": 2
+   }
+  ]
+ },
+ "26": {
+  "me_stop_cycle": 5969,
+  "last_end": 5972,
+  "digest": "247238d263ca5983",
+  "plan": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "at": 32,
+    "done": 124
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "at": 47,
+    "done": 306
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "at": 101,
+    "done": 151
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 306,
+    "done": 357
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 334,
+    "done": 390
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 367,
+    "done": 417
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 394,
+    "done": 450
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 427,
+    "done": 479
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 456,
+    "done": 506
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 483,
+    "done": 535
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 512,
+    "done": 562
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "at": 570,
+    "done": 2230
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "at": 2238,
+    "done": 2605
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "at": 2613,
+    "done": 2613
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "at": 2614,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "at": 3726,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "at": 3729,
+    "done": 3821
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "at": 3798,
+    "done": 3890
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "at": 3898,
+    "done": 4451
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 3924,
+    "done": 3974
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4451,
+    "done": 4532
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4509,
+    "done": 4574
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "at": 4582,
+    "done": 4821
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "at": 4829,
+    "done": 4829
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "at": 4830,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "at": 5800,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5803,
+    "done": 5895
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5872,
+    "done": 5964
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "at": 5972,
+    "done": 5972
+   }
+  ],
+  "shift_vs_24": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "d_at": 0,
+    "d_done": 2
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "d_at": 2,
+    "d_done": 4
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 2
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 2,
+    "d_done": 4
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 4,
+    "d_done": 6
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 6,
+    "d_done": 8
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 8,
+    "d_done": 10
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 10,
+    "d_done": 12
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 12,
+    "d_done": 14
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 14,
+    "d_done": 16
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "d_at": 16,
+    "d_done": 0
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "d_at": 0,
+    "d_done": 2
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "d_at": 2,
+    "d_done": 4
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "d_at": 4,
+    "d_done": 0
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 4,
+    "d_done": 6
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 2
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 2,
+    "d_done": 4
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "d_at": 4,
+    "d_done": 0
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 2
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 2,
+    "d_done": 4
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "d_at": 4,
+    "d_done": 4
+   }
+  ]
+ },
+ "27": {
+  "me_stop_cycle": 5971,
+  "last_end": 5974,
+  "digest": "072917d49fa4bf41",
+  "plan": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "at": 32,
+    "done": 125
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "at": 47,
+    "done": 306
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "at": 102,
+    "done": 153
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 306,
+    "done": 358
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 335,
+    "done": 392
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 369,
+    "done": 420
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 397,
+    "done": 454
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 431,
+    "done": 484
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 461,
+    "done": 512
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 489,
+    "done": 542
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "at": 519,
+    "done": 570
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "at": 578,
+    "done": 2230
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "at": 2238,
+    "done": 2605
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "at": 2613,
+    "done": 2613
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "at": 2614,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "at": 3726,
+    "done": 3726
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "at": 3729,
+    "done": 3822
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "at": 3799,
+    "done": 3892
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "at": 3900,
+    "done": 4451
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 3926,
+    "done": 3977
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4451,
+    "done": 4533
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "at": 4510,
+    "done": 4576
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "at": 4584,
+    "done": 4821
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "at": 4829,
+    "done": 4829
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "at": 4830,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "at": 5800,
+    "done": 5800
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5803,
+    "done": 5896
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "at": 5873,
+    "done": 5966
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "at": 5974,
+    "done": 5974
+   }
+  ],
+  "shift_vs_24": [
+   {
+    "pc": 0,
+    "kind": "SU",
+    "window": "rmsnorm1",
+    "d_at": 0,
+    "d_done": 3
+   },
+   {
+    "pc": 1,
+    "kind": "ME",
+    "window": "qkv",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 2,
+    "kind": "SU",
+    "window": "qkv",
+    "d_at": 3,
+    "d_done": 6
+   },
+   {
+    "pc": 3,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 0,
+    "d_done": 3
+   },
+   {
+    "pc": 4,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 3,
+    "d_done": 6
+   },
+   {
+    "pc": 5,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 6,
+    "d_done": 9
+   },
+   {
+    "pc": 6,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 9,
+    "d_done": 12
+   },
+   {
+    "pc": 7,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 12,
+    "d_done": 15
+   },
+   {
+    "pc": 8,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 15,
+    "d_done": 18
+   },
+   {
+    "pc": 9,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 18,
+    "d_done": 21
+   },
+   {
+    "pc": 10,
+    "kind": "SU",
+    "window": "qknorm_rope",
+    "d_at": 21,
+    "d_done": 24
+   },
+   {
+    "pc": 11,
+    "kind": "NATIVE",
+    "window": "attn_kv",
+    "d_at": 24,
+    "d_done": 0
+   },
+   {
+    "pc": 12,
+    "kind": "ME",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 13,
+    "kind": "END",
+    "window": "o_proj",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SEG",
+    "window": "allreduce1",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 14,
+    "kind": "SU",
+    "window": "attn_tail",
+    "d_at": 0,
+    "d_done": 3
+   },
+   {
+    "pc": 15,
+    "kind": "SU",
+    "window": "rmsnorm2",
+    "d_at": 3,
+    "d_done": 6
+   },
+   {
+    "pc": 16,
+    "kind": "ME",
+    "window": "gate_up",
+    "d_at": 6,
+    "d_done": 0
+   },
+   {
+    "pc": 17,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 6,
+    "d_done": 9
+   },
+   {
+    "pc": 18,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 0,
+    "d_done": 3
+   },
+   {
+    "pc": 19,
+    "kind": "SU",
+    "window": "gate_up",
+    "d_at": 3,
+    "d_done": 6
+   },
+   {
+    "pc": 20,
+    "kind": "ME",
+    "window": "down",
+    "d_at": 6,
+    "d_done": 0
+   },
+   {
+    "pc": 21,
+    "kind": "END",
+    "window": "down",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": null,
+    "kind": "XC",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SEG",
+    "window": "allreduce2",
+    "d_at": 0,
+    "d_done": 0
+   },
+   {
+    "pc": 22,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 0,
+    "d_done": 3
+   },
+   {
+    "pc": 23,
+    "kind": "SU",
+    "window": "residual",
+    "d_at": 3,
+    "d_done": 6
+   },
+   {
+    "pc": 24,
+    "kind": "END",
+    "window": "residual",
+    "d_at": 6,
+    "d_done": 6
+   }
+  ]
+ }
+}

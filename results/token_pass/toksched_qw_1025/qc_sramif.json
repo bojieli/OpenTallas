@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.toksched.qwen_qc_sramif.v1",
+ "date": "2026-10-25",
+ "change": "sl_W5_su_c binds qfd_dv_s8x_btab/prog/vmr #(.MIF(1)) (main 32620f9399) and qfd_dv_s8_crh_rp1 #(.MIF(1)) (claude/path-qc-rp1-f59-1025@03d3f1de18): q(t+1) = q_MIF0(t) on bs_q / p_q / vmr q / crh q; table + VM writes +1 with read/write order unchanged",
+ "per_su_op": {
+  "prog_issue_word": 1,
+  "operand_read": 1,
+  "write_to_read_order": 0,
+  "total": 2,
+  "why": "qfd_dv_slice: su_go = c_su delayed D=2 = PROG read latency, the SU issue word si = p_q feeds the lanes; with MIF=1 D must be 3 (+1), then the lanes' operand reads (VM replicas A/B/C, CROM, BTAB SU port) all answer +1 together (+1, in parallel). The VM write lands +1 but so does every read of it (same leaf), so a dependent read can issue at the same edge (0)."
+ },
+ "schedule": {
+  "tool": "tools/qwen_layerbench/ctlm_image.py",
+  "constant": "PROG_CONSTANTS SU_LAT=24 (priced slice SU pipeline, command at W5 pin -> op last write); MIF=1 => 26",
+  "su_ops_per_layer": 17,
+  "su_ops_serial_on_critical_path_per_layer": {
+   "qknorm_rope": 8,
+   "attn_tail/rmsnorm2": 2,
+   "gate_up SwiGLU (pc18,19)": 2,
+   "residual": 2
+  },
+  "serial_total": 14,
+  "hidden": "pc0 rmsnorm1 (qkv ME chases it, ME window 259 >> SU 90), pc2 and pc17 (overlapped by the qkv / gate_up ME ops)",
+  "seals": "every SU_LAT in 24..27 compiles with all ctlm/cmd_cal/XPF seals PASS (su_lat_sweep.json)",
+  "plan_note": "the stage plan fixes ME / native / XC windows from the token path, so its own stop moves only +2 per SU_LAT unit (the final residual pair); the dependent-op start shifts (native attn +16, gate_up +4, down +4, END +4 at SU_LAT 26) are the real serial cost once windows are not padded"
+ },
+ "price": {
+  "cycles_per_layer": 28,
+  "layers": 36,
+  "cycles_per_token": 1008,
+  "lm_head_final_norm": "not charged (+2..4, <0.002 %)",
+  "base_cycles": 249431,
+  "after_cycles": 250439,
+  "tok_s_before": 4810.95,
+  "tok_s_after": 4791.59,
+  "loss_pct": 0.402,
+  "sensitivity_operand_only_plus1": {
+   "cycles_per_token": 504,
+   "loss_pct": 0.202
+  }
+ }
+}

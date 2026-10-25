@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_kvsys",
- "plan_digest": "52292db02b4984a2",
+ "plan_digest": "f940fd46a60fb376",
  "period_ps": 833,
  "lanes": {
   "L0": {
@@ -43082,15 +43082,15 @@
    "width": 1
   },
   "L663": {
-   "cycles": 34,
-   "stations": 32,
+   "cycles": 42,
+   "stations": 40,
    "boundary": 2,
    "faces": 9,
    "fixed": 0,
-   "natural": 34,
+   "natural": 42,
    "pad": 0,
    "param": "LAT_L663",
-   "base": 34,
+   "base": 42,
    "r8_pad": 0,
    "src": {
     "part": "hub_Wi",

@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.toksched.qwen_kv_l663.v1",
+ "date": "2026-10-25",
+ "lane": {
+  "id": "L663",
+  "src": "hub_Wi.o_host_fdi",
+  "dst": "io_W3.i_host_fdi",
+  "width": 1044,
+  "carries": "host SerDes TX FDI flits (hub_Wi host root -> io_W3 host SerDes, KV die -> host)"
+ },
+ "values": {
+  "main_die_plan_latency_lanes": 42,
+  "main_lat_v39pd_before_this_branch": 34,
+  "main_lat_v39pd_after_regen": 42,
+  "main_committed_bind_latency_bound_r8_pv_binder2": 26,
+  "v39r_die_plan": 35,
+  "v39r_lat_v39r": 35,
+  "f7ch": 35
+ },
+ "token_path": {
+  "on_critical_path": false,
+  "cycles_per_token": 0,
+  "reason": "The AR token loop is on-package: argmax on QC -> d2d -> KV embgw HBM fetch -> layers; attention input/output cross the UCIe d2d (sys_c), not the host SerDes. results/arch/token_path_20261009/qwen_rom.json has no host node. L663 is die->host TX (token/response delivery): it adds latency to the host-visible output of a token, never to the next token.",
+  "if_host_paced_upper_bound": {
+   "main_cycles_per_token": 8,
+   "main_loss_pct": 0.0032,
+   "v39r_cycles_per_token": 1,
+   "v39r_loss_pct": 0.0004
+  }
+ },
+ "v39r_pv_unblock": {
+  "lanes": 56,
+  "y_valid_lanes": 14,
+  "ctl_req_lanes": 2,
+  "y_valid_max_f7ch": 48,
+  "y_valid_max_v39r": 49,
+  "ctl_req_valid_f7ch": 17,
+  "ctl_req_valid_v39r": 18,
+  "others": "fault (sticky status) and dcfg age_vport (boot config) lanes: off the token path",
+  "per_layer_upper_bound_cycles": 2,
+  "per_token_upper_bound_cycles": 72,
+  "loss_pct_upper_bound": 0.0289,
+  "basis": "y_valid max (PV result valid into hub_C) +1 and pv7->pv5 ctl_req_valid +1, both charged serial on the PV pass once a layer; MODELLED, not from the KV static calendar"
+ },
+ "v39r_vs_main_not_priced": {
+  "lanes": 839,
+  "note": "v3.9r (f7ch station counts) moves 839 lanes vs main lat_v39pd, incl. attention-step lanes: sys_c->hub_C d2d att_tx +2, hub_C->sys_c attn tx +4, pv->hub_C y_valid up to +16, pv vport chains +3..+6 a hop, hg astk/hroot/acal chains +3..+5 a hop. Its per-layer attention cost needs the KV static calendar re-run on lat_v39r (KV-TOK rebind of the vehicle from v3.9r); not priced here."
+ }
+}

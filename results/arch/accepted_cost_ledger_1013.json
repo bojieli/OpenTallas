@@ -265,6 +265,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "QC.SU_SRAMIF su_c MIF=1 (btab/prog/vmr + crh rp1 per-SRAM IF regs: SU issue word +1, SU operand reads +1; SU_LAT 24 -> 26 per SU op)",
+   "group": "QC.SU_SRAMIF",
+   "measured": 26.0,
+   "price": 24.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0833,
+   "e2e_loss_pct": 0.402,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 250439.0,
+     "added_cycles": 1008.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1008.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.402
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/toksched_qw_1025/qc_sramif.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-25",
+   "status": "proposed",
+   "note": "TOK-SCHED 2026-10-25 (MODELLED upper bound until the per-layer die run): MIF=1 on sl_W5_su_c (main 32620f9399 btab/prog/vmr, path-qc-rp1-f59 03d3f1de18 crh) = +1 PROG issue word (slice su_go D 2->3) + 1 SU operand read (VM A/B/C, CROM, BTAB in parallel) = +2 per SU op; writes +1 with read/write order unchanged = 0. ctlm_image static plan: 14 of 20 SU ops a layer serial on the critical path (qknorm_rope 8 -> native attn start +16; attn_tail+rmsnorm2 -> gate_up +4; SwiGLU pc18/19 -> down +4; residual pair -> END +4); rmsnorm1/pc2/pc17 hidden under ME. 28 cycles a layer charged on each L*.residual node (chain DAG, slack 0: placement exact) = 1008/token. LM-head final norm (+2..4) not charged. Consumers: slice su_go delay and ctlm_image PROG_CONSTANTS SU_LAT 24 -> 26 when the parent binds .MIF(1). Operand-only (+1/op) sensitivity 504/token 0.202 %."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "SU.COPY_PINREG",
    "group": "SU.COPY_PINREG",
    "measured": 9.0,
@@ -3169,11 +3202,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 7.121,
-   "accepted_plus_proposed_pct": 8.186,
+   "proposed_pct": 7.523,
+   "accepted_plus_proposed_pct": 8.588,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 12,
+   "proposed_rows": 13,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false,
