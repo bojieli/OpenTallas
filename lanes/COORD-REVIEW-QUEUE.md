@@ -584,3 +584,8 @@ PATH lanes: FF sign-off now FAILs ff_ref_missing for HBM/KV cores without insert
 [COORD 2026-10-25 09:23 PDT] HOURLY GEOM spot-check, 2 verdicts after viewing the renders; both AGREE.
 - PATH-QC-PROG-S6 FAIL (corrected from PASS-COND): post-GRT FF hold -63.6 over 1017 endpoints, at the S-face pin-register clusters (SW/SE). The FF arrival map shows the bottom pin regs early vs the SRAM IF regs. A structural fix is needed, not hold padding.
 - PATH-S81 head B elemB_if2c PASS-COND: 1692 hold buffers / 26k FF (6.5%), concentrated at the W/E pin faces. That is the input-hold contract (IO-HOLD), not the core. Route OK; adopt the seam_hold contract on the head die once pair skew is <=20.
+[COORD 2026-10-25 09:24 PDT] RULING on the QC '+32.4 mm2 SU rows 1339.2' question (PATH-QC OWNER?): APPROVED as a technical call, so it no longer goes to the owner.
+- The die goes from 787 mm2 (31216x25229 um) to ~820 mm2, inside the owner-approved Qwen 841 mm2 envelope (10-14) and the owner's "area not strict" rule (10-09).
+- Measured benefit: die GRT overflow 1.66M -> 0 on M4-M7 (regen7b it5).
+- PATH-QC-PLAN2 posts ONE READY on main c45a6e2c11 that includes delta-qc and this growth. Kits for the types it changes wait for that READY.
+Also: rtbal stays on the S81-CORES branch; S81-CORES (now KITS-SPARE / PATH-S81) posts ONE READY for split_clock + rtbal, with the +1 cycle vsw RTL change posted separately.
