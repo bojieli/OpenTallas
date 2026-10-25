@@ -17,6 +17,8 @@ liberty files before synthesis):
   relaxation every period = the plan period, no -waveform; max delays >= the declared IO budgets; and no exception
              command at all (set_false_path, set_multicycle_path, set_max_delay, set_min_delay, set_disable_timing,
              set_clock_groups, set_case_analysis, ... : any command outside the generator's vocabulary is an error).
+             Sole exception (OWNER 10-25 option B): set_false_path -from [get_ports {...}] on declared ID straps
+             (lint(straps=...) / sdc_lint.json "straps" / kit straps.json, strap_* inputs) -- required on every declared strap, refused on any other port.
 """
 import argparse
 import gzip
@@ -189,12 +191,25 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None):
+         io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
+         hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
-    {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
+    {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
+    hold_in_min_ps / hold_out_min_ps / seam_hold_ps: the plan's opt-in seam hold contract (gen_phys.seam_hold);
+    absent = legacy (min input <= -insertion_tol, min output <= 0).  -> [errors]"""
     err = []
     u = time_unit_ps
+    in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
+    out_lim = 0.0 if hold_out_min_ps is None else float(hold_out_min_ps)
+    if out_lim > EPS:
+        err.append(f"hold: contract min output delay {out_lim:g} ps > 0 (sender hold check waived)")
+    if hold_in_min_ps is not None or hold_out_min_ps is not None:
+        import gen_phys
+        if seam_hold_ps is None or abs((-out_lim - in_lim) - float(seam_hold_ps)) > EPS \
+                or float(seam_hold_ps) < gen_phys.SEAM_HOLD_MIN_PS - EPS:
+            err.append(f"hold: seam hold contract sender {-out_lim:g} + receiver {-in_lim:g} ps != seam "
+                       f"{seam_hold_ps} ps or below {gen_phys.SEAM_HOLD_MIN_PS:g} ps")
     # FLOW 10-25 (ruling 9.7 / 5e): the SDC vclk carries the TT-bound insertion; the FF-bound one (FF-only flow steps,
     # vclk_corner.tcl) must be a positive insertion not above TT
     if insertion_ff_ps is not None and not (0 < float(insertion_ff_ps) <= float(insertion_ps) + EPS):
@@ -209,10 +224,32 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
     refs = []
+    # OWNER 10-25 option B: declared ID straps (strap_* inputs) are quasi-static: exactly one exception is allowed,
+    # set_false_path -from [get_ports {<declared straps>}] (no case analysis), and every declared strap must have it
+    strap_l = list(straps or [])
+    for x in strap_l:
+        if not isinstance(x, str) or not re.match(r"^strap_[A-Za-z0-9_]+$", x):
+            err.append(f"straps: '{x}' must be named strap_<id> (OWNER 10-25 option B rule 1)")
+        elif x not in ctx.inputs:
+            err.append(f"straps: '{x}' is not an input port")
+    if len(set(strap_l)) != len(strap_l):
+        err.append("straps: duplicate names")
+    strap_fp = set()
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if c == "set_false_path" and strap_l:
+                if len(w) != 3 or w[1] != "-from":
+                    err.append(f"straps: only 'set_false_path -from [get_ports {{strap_*}}]' is allowed (fail-closed): {cmd}")
+                    continue
+                k, ps = _eval_obj(ctx, w[2])
+                bad = [x for x in ps if x not in strap_l]
+                if k != "ports" or bad:
+                    err.append(f"straps: set_false_path -from on non-strap object(s) {bad or k} (fail-closed): {cmd}")
+                    continue
+                strap_fp.update(ps)
+                continue
             if c not in ALLOWED:
                 err.append(f"forbidden / unknown SDC command (fail-closed): {cmd}")
                 continue
@@ -343,6 +380,9 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         except (SdcLintError, IndexError) as e:
             err.append(f"parse (fail-closed): {e} [{cmd}]")
     # ---- checks
+    for x in strap_l:
+        if x not in strap_fp:
+            err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
     for ck in refs:
         if ck not in ctx.clocks:
             err.append(f"clocks: -clock {ck} is not defined")
@@ -372,15 +412,16 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         for m in ("max", "min"):
             if m not in idly[p]:
                 err.append(f"ports: input {p} has no {m} input delay")
-        if "min" in idly[p] and idly[p]["min"][1] > -insertion_tol_ps + EPS:
-            err.append(f"hold: input {p} min input delay {idly[p]['min'][1]:g} ps > -{insertion_tol_ps:g} ps "
+        if "min" in idly[p] and idly[p]["min"][1] > in_lim + EPS:
+            err.append(f"hold: input {p} min input delay {idly[p]['min'][1]:g} ps > {in_lim:g} ps "
                        "(seam-hold padding relaxed)")
     for p in ctx.outputs:
         for m in ("max", "min"):
             if m not in odly[p]:
                 err.append(f"ports: output {p} has no {m} output delay")
-        if "min" in odly[p] and odly[p]["min"][1] > EPS:
-            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > 0 (sender hold check waived)")
+        if "min" in odly[p] and odly[p]["min"][1] > out_lim + EPS:
+            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim:g} ps "
+                       "(sender hold check waived)")
     for p, fl in (io_floor_ps or {}).items():
         tab = idly if p in ctx.inputs else odly
         if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - EPS:
@@ -445,7 +486,16 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge)
+                port_period_mult=edge, **_seam_ctx(P))
+
+
+def _seam_ctx(P):
+    """opt-in seam hold contract fields of the lint context (none for the legacy contract: byte-identical json)."""
+    import gen_phys
+    if not P.clock.get("seam_hold"):
+        return {}
+    sh = gen_phys.seam_hold(P)
+    return dict(hold_in_min_ps=sh["in_min_ps"], hold_out_min_ps=sh["out_min_ps"], seam_hold_ps=sh["seam_ps"])
 
 
 def lint_kit_files(kitdir, liberties=()):
@@ -462,6 +512,9 @@ def lint_kit_files(kitdir, liberties=()):
         lu = v if lu is None else lu
     if liberties and lu is None:
         err.append("units: no liberty time_unit found")
+    if not ctx.get("straps") and (kd / "straps.json").is_file():
+        d = json.loads((kd / "straps.json").read_text())   # OWNER 10-25 option B: the kit's declared ID straps
+        ctx["straps"] = list(d.get("straps", []) if isinstance(d, dict) else d)
     return err + lint((kd / "constraint.sdc").read_text(), liberty_unit_ps=lu, **ctx)
 
 

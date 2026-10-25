@@ -336,7 +336,14 @@ SCHEMA = {
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
-                        "depth": {"type": "integer", "minimum": 1}}},
+                        "depth": {"type": "integer", "minimum": 1},
+                        # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
+                        # released by reset AND run; "bootstrap" = raw delivered wavefront reset (boot/program/PHY
+                        # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
+                        # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
+                        "start_role": {"enum": ["bootstrap", "mission"]},
+                        "core_start_roles": {"type": "object",
+                                             "additionalProperties": {"enum": ["bootstrap", "mission"]}}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
@@ -351,6 +358,7 @@ SCHEMA = {
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
+                                       #   | "start" (bootstrap types: the local registered START tap, active high)
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
                                        "params": {"type": "object",
                                                   "additionalProperties": {"type": ["integer", "string"]}}}}},
@@ -429,6 +437,11 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
+            # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
+            # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
+            "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
+                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
@@ -463,6 +476,10 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
+            # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
+            # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
+            "start_port": _name,
             "part_depth": {"type": "integer", "minimum": 1},
             "regions": {"type": "array", "items": {
                 "type": "object", "required": ["name"], "additionalProperties": False,

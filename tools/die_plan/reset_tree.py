@@ -531,8 +531,21 @@ def for_type(P, tn, reach=None):
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
                  type=tn, start=start_broadcast(P))
+        role, core_roles = start_roles(P, tn)
         if T["start"]:
             T["start_in"] = list(start_in_pin(P, tn))
+            known = {c["inst"] for c in T.get("core_resets", [])}
+            bad = sorted(set(core_roles) - known)
+            if bad:
+                raise ResetError(f"type {tn}: reset.core_start_roles names {bad}, not hard-core reset targets {sorted(known)}")
+            nck = T.get("n_clock_taps", len(T["taps"]))
+            T["start_role"] = role
+            T["tap_roles"] = {i: role for i in range(nck)}
+            for c in T.get("core_resets", []):
+                T["tap_roles"][c["tap"]] = core_roles.get(c["inst"], role)
+            # BOOTSTRAP types publish ONE registered local START tap (start_t<leaf tap>, = what a MISSION tap would be:
+            # registered reset AND run at the same site/depth) for the contents' explicit mission-admission input
+            T["start_tap"] = leaf_tap(P, tn) if role == "bootstrap" else None
         return T
     if pipelined(P):
         K = part_depth(P)
@@ -950,6 +963,35 @@ def _start_sites(P, tn):
     return cache[key]
 
 
+START_ROLES = ("bootstrap", "mission")
+
+
+def start_roles(P, tn):
+    """(type role, {hard-core inst: role}) of a START-broadcast plan (reset fix 10-25, KV/QC bootstrap deadlock).
+    Declared explicitly in the plan type's reset block, never inferred from names:
+      reset.start_role "mission" (default): every consumer tap = registered (reset AND run) -- control state waits for
+        START (decision 13c as before);
+      reset.start_role "bootstrap": consumer taps = the registered RAW delivered wavefront reset (same depth, same
+        published release offset, measured from rst_n), so boot / program-load / PHY calibration runs BEFORE the one
+        global START; the type also publishes ONE registered local START tap start_t<leaf> (reset AND run, i.e. the
+        exact release a MISSION tap would have) which the contents' declared mission-admission input must use.
+      reset.core_start_roles {inst: role}: per hard-core reset target override.
+    No second START, no timer, no raw die-reset bypass (the bootstrap reset is still the delivered wavefront relay),
+    and private core reset stages are untouched (core targets keep their equal-depth relay)."""
+    r = P.types[tn].get("reset", {})
+    role = r.get("start_role", "mission")
+    cores = dict(r.get("core_start_roles", {}))
+    for v in [role] + list(cores.values()):
+        if v not in START_ROLES:
+            raise ResetError(f"type {tn}: start role {v!r} not in {START_ROLES}")
+    if ("start_role" in r or cores) and not start_broadcast(P):
+        raise ResetError(f"type {tn}: reset.start_role / core_start_roles need a wavefront plan with "
+                         "reset.start = broadcast")
+    if ("start_role" in r or cores) and P.types[tn].get("hard"):
+        raise ResetError(f"type {tn}: hard partitions carry no generated reset tree (no start role)")
+    return role, cores
+
+
 def start_in_pin(P, tn):
     """the START IN pin (start_i) of a soft type of a start-broadcast plan (type frame), beside arst_n."""
     return tuple(_start_sites(P, tn)[0])
@@ -1057,6 +1099,9 @@ def wf_plan(P):
                          for o in out_pins(P, tn)], depth_K=T["depth"], entry=T["entry"],
                          entry_stages=entry_stages(T), release_after_pin=release_clocks(T), relays=len(T["relays"]),
                          max_hop_um=T["max_hop_um"], core_resets=T.get("core_resets", []))
+        if T.get("start_role"):
+            types[tn].update(start_role=T["start_role"], start_tap=T["start_tap"],
+                             core_start_roles={c["inst"]: T["tap_roles"][c["tap"]] for c in T.get("core_resets", [])})
     kids = {}
     for p, pr in sol["parent"].items():
         if pr is not None:
@@ -1103,6 +1148,11 @@ def wf_plan(P):
                             outs=[[o[0], round(o[1], 4), round(o[2], 4)] for o in start_out_pins(P, tn)])
                    for tn in types},
             hard_parts_raw_reset=hard_parts,
+            bootstrap_types=sorted(tn for tn, ty in types.items() if ty.get("start_role") == "bootstrap"),
+            roles_note="start_role mission: taps release at max(release[p], S + release[p]); start_role bootstrap: "
+                       "taps (and core resets with role bootstrap) release at release[p] (raw delivered wavefront, "
+                       "boot runs before START), the local START tap start_t<start_tap> at S + release[p] gates the "
+                       "contents' declared mission admission.  One START, no timer, no die-reset bypass.",
             note="OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / "
                  "rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, "
                  "boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the "
@@ -1180,13 +1230,23 @@ def start_relays(T):
     def run(n):
         return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
     used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
+    roles = T.get("tap_roles", {})
     out = []
     for r in T["relays"]:
         m = _TAPQ.match(r["q"])
         base = dict(xy=r["xy"], kind=r["kind"], depth=r["depth"], dlab=r["d"], tap=r.get("tap"))
         srl = r["name"].replace("u_rrl", "u_srl", 1)
         if m and int(m.group(1)) not in outs:
-            out.append(dict(base, name=r["name"], d=raw(r["d"]), run=run(r["d"]), q=r["q"], role="gated"))
+            i = int(m.group(1))
+            if roles.get(i, "mission") == "bootstrap":
+                # BOOTSTRAP consumer: the registered raw delivered reset (same flop count => same release offset)
+                out.append(dict(base, name=r["name"], d=raw(r["d"]), q=r["q"], role="boot"))
+            else:
+                out.append(dict(base, name=r["name"], d=raw(r["d"]), run=run(r["d"]), q=r["q"], role="gated"))
+            if T.get("start_tap") == i:
+                # the type's ONE local START tap: registered (reset AND run) beside the leaf tap relay
+                out.append(dict(base, name=r["name"] + "_g", d=raw(r["d"]), run=run(r["d"]), q=f"start_t{i}",
+                                role="gated"))
             if raw(r["q"]) in used:
                 out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
                 out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
@@ -1250,7 +1310,15 @@ def _rtl_lines_start(T, ind, src, start_src):
                    "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
     nck = T.get("n_clock_taps", len(taps))
     outs = set(range(nck, nck + len(T.get("outs", []))))
-    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated)
+    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated / boot)
+    if T.get("start_role"):
+        out.append(f"{ind}// START role {T['start_role']}" + (
+            f": consumer taps = registered RAW wavefront reset (boot before START); start_t{T['start_tap']} = the "
+            "local registered START tap (reset AND run) for the declared mission-admission input"
+            if T["start_role"] == "bootstrap" else ": consumer taps = registered (reset AND run)") +
+            ("; core overrides " + ", ".join(f"t{k}:{v}" for k, v in sorted(T["tap_roles"].items())
+                                             if v != T["start_role"]) if any(v != T["start_role"] for v in
+                                                                              T["tap_roles"].values()) else ""))
     declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
     for r in start_relays(T):
         if r["q"] not in declared:
