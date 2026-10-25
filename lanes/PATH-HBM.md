@@ -7,7 +7,7 @@ routed + signed off (TT setup / FF hold) + bound in the die + token test exercis
 ## Items (2026-10-25 08:09 PDT)  state legend: OPEN / WIP / PASS(gate) / SIGNED
 | # | item | state |
 |---|------|-------|
-| P1 | NW_hub (q_hub) TKM ingress source cores (u_hb_coll_Q_body/reduce/ring_ag etc. driving tkx_*) | OPEN: owner core(s) to be named, sign-off state unknown |
+| P1 | NW_hub (q_hub) TKM ingress source cores (u_hb_coll_Q_body/reduce/ring_ag etc. driving tkx_*) | BLOCKED: plan_direct3 NW_hub uses q2 ot_hfd_coll_q2_hard_v8g (SOLO=0: tkx_* driven 0, tkx_w*/busy/done/fault tied 0; split cores have NO tkx pins). Needs NW-only q3 type ot_hfd_coll_q3_hard_v8x (make_wiring.py W-EP, 'plan change owed'), its split (q2 already 465k) + kits. UNOWNED |
 | P2 | L74 NW_hub->root direct 2341 b, 2 cycles (plan_direct3 ecfb97d718) | PASS(cut 0.5968) analytic only; no G0/G0C on full plan, not on main |
 | P3 | L12 CTL / L13 DATA root->NW_hub direct 2 cycles each | PASS(cut) analytic only, same plan |
 | P4 | TKM root core u_tkm_SW_root (319.68x345.6, 3575 pins) | kit d944a428 synth+bench PASS; pins must change (P6); no P&R |
@@ -32,3 +32,6 @@ then idx_score_quarter (36). The TKM path does NOT pass through an SM core, so P
 produces the scores feeding hb_coll_NW): it covers the most replicated master on the die, and it is the natural upstream of the TKM
 stream (SM matvec -> coll -> TKM -> return). Common TKM tile (x32, strap ID) covers the next replication class inside root.
 2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-HBM: HBM B2n die-top GRT (plan f710e18c = main) still LIVE epyc1 dtrial-grt-3616206 (iter 2/50 at 07:42) -> no overflow yet; hops 0 over 405; clk_run30 pair skew 135.6/135.4 FAIL (seam 43.9 ok, insertion 18.8ns) (CLOCK/HBM); die STA ideal TT+FF live intel2 die-proto-hbm/sta. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md
+
+2026-10-25 08:14 PDT PATH-HBM: endpoint audit: (a) P1 BLOCKED (above): L74 2341 b = exactly tkx_* (2180 flit + 161 cfg/start/slot/valid); return = 569 w_* + busy/done/fault (572 b) inside L12/L13 3143 b, L12-vs-L13 bit split not yet specified. (b) Inside both partitions the plan relay chains for L74/L12/L13 end at the wrong cores (q_hub: u_pgp_Q/u_hcollgi_Q/u_hc_Q; root: u_col_idx/u_hb_idx__*/u_hb_argmax/u_hc_eng_*); none reaches u_hb_coll_Q_* or u_tkm_SW_root. (c) root partition: 0 internal stations on the TKM tile chain buses (only 907 tile_clk 'data' stations from the 7ff bug).
+OWNER?/COORD: who owns the NW-only q3 hub type + split (HBM-PLAN/B2o delta + HBM-CORES)? Without it the path cannot be complete.
