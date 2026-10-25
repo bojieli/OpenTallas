@@ -30,3 +30,6 @@ localhost:~/scratch/type-dedup/dd_s81/{die_plan.json,dedup_provenance.json} (the
 
 ## CODEX notes 2026-10-25 02:43 PDT
 Tool DONE on main; current plans use lane-owned type policies. Old strap/FT population proposals cannot bypass R7 or bound-netlist equivalence; no new dedup stream opened.
+
+## CODEX PARKED 2026-10-25 03:35 PDT
+Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.

@@ -149,3 +149,6 @@ Earlier forms of xrt (lines 270/383/395/419/532/551) and kv_bank (236-240) exist
 Standalone approved checker fc4d5fa9c supplied to KV cores and CLOCK/CP1 runner integration. Whole-runner adoption waits source-local S81 benign-select waivers; csa31 real fix already merged. Old redo paths absent and PIDs gone; no live job duplicated.
 
 2026-10-25 02:54 PDT CODEX source waivers ready codex/selrange-waivers-1025@3fb680539 basedbatchf19254160:4files9 source-local comments, eachselect+constantguard+triage section3 reference; comment-stripped tokenexactnessPASS. Source/runtime semantics unchanged. Sentroot+commonrunner owner.
+
+## CODEX PARKED 2026-10-25 03:35 PDT
+Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.

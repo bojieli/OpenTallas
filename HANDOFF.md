@@ -413,3 +413,8 @@ CODEX: 2026-10-25 03:28 PDT TOK-DS reprice READY codex/tok-ds-price-1025@b1f00a2
 2026-10-25 03:33 PDT CODEX: S81exactFT94typesPASS; QCcorrectedCBN/FTCprototypeCLEAN; MMFFreferencehelper0fa24094d inHBMactualrepairtrial; releasepagecurrentwithbranch/mainseparation(rendererf29777445).
 2026-10-25 03:34 PDT GEOM-REVIEW: split cores x4 PASS-COND, xdie3 PHY zone PASS-COND, LEAFPLAN2 FAIL; READY claude/geom-review-1024@cdb65ccf70.
 2026-10-25 03:34 PDT CODEX: HBMnative PARKED onClaude reset; codex/hbm-native-1025 gatedec0314a7d +WIPboot/layout; logicalbind/resetoverlayPASS, physicalHC128/TDMcalendar/finalbootremain; detailedCODEX-LOGhandoff.
+2026-10-25 03:35 PDT CODEX: KV group parked at70babcf38; PVcentroidG2FAIL421216ov, perbitPVgeometryPASS59slots/355.263um; HGI GRT +2allocatorjobs preserved; actual49->74type materializer ready; native833/token/core repairs in childhandoffs.
+2026-10-25 03:35 PDT CODEX: QC token sublane parked on reset; methxt1 PASS, MAT+stream mechanisms PASS, CROM head exact miter PASS; combined57e2d3bb6. Heavy CROM-row/MAT112/wavefrontxt1 jobs preserved, future watcher stopped. Details CODEX-LOG.
+CODEX: 2026-10-25 03:35 PDT CLOCK/RESEThelperparked: sourcefixes+actualSTAFAILfaceguard recorded;2stageWIPca905aaf8 testsPASS, noP&R/modelclaim; handoffCODEX-LOG.
+
+2026-10-25 03:35 PDT CODEX: GEOM/PROTO/toolchain safely parked for Claude; detailed source SHAs/live jobs/results/open failures in CODEX-LOG Handoff section. LEC child notified.

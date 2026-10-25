@@ -168,3 +168,6 @@ when endpoints-under-margin >> real violators.
 
 ## CODEX notes 2026-10-25 02:43 PDT
 Historical census DONE; operational recipe findings retained (hold margin0..5; early preflight stop; postCTS trueFF structural stop). CLOCK/CP1 implementing common runner stop gates; no duplicate census.
+
+## CODEX PARKED 2026-10-25 03:35 PDT
+Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.

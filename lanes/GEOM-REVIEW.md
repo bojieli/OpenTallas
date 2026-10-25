@@ -217,3 +217,6 @@ CODEX took over independent review on codex/geom-review-only-1025@fda531177 (rev
 - Tool: pin->register probe epyc1:/srv/opentallas-scratch2/claude/geom-review-p2r4.tcl (docker orfs, ODB=..., OUT=...; buffer/hold-buffer chains to depth 16); outputs .../geom-review/p2r/*_4.txt. Local copies rtx-pro /srv/opentallas-scratch/claude/geom-review/r1025/.
 - Next: LEAFPLAN3 re-render (t6/t50/t1/t8: max hop, crossings, station bits, cut); xdie3 fold diff (zones unchanged); split-core sign-off hold/IO budget follow-up; earlier expected re-reviews (KV ectlk split, HBM idle cores, hd_tile fenced, B2m floorplan, PROTO re-sweeps; QC coll_ftc per CODEX 02:54).
 - OWNER?: S81 real 6x112G PHY size (still open).
+
+## CODEX PARKED 2026-10-25 03:35 PDT
+Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER? recorded under Handoff to Claude 2026-10-25 03:35 PDT — GEOM/PROTO/toolchain in CODEX-LOG.md. Prototype strict SU channel job live; point SU done/uncollected. No main merges by this agent.
