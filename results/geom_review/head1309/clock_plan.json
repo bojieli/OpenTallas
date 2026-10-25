@@ -1,0 +1,14 @@
+{
+ "kit": "/srv/opentallas-scratch2/claude/codex-head1309/elemB_if2e",
+ "images": [
+  "elemB_if2c_cts_hold.png",
+  "elemB_if2_romif.png"
+ ],
+ "verdict": "PASS-COND CLOCK REBUILD PROTOTYPE ONLY",
+ "findings": [
+  "Viewed actual inherited data/ROM placement. Macro halos/side channels clear, all538ROMinterfacepoints retained; no source/pin/macro/data-placement changes.",
+  "ConfirmedRCXfailure: macro0clock62-78ps earlierthanIF and shortshift-chainpairs95psskew. Newclocktopologyexplicitlybalancesmacro/registertreelevels, clustersmacroleaveswithin40um, avoidsROMobstacles, reusesmain guarded same-clock zero-logic stageleafaffinity.",
+  "CTSonly. BeforeGRT actualclocktopology and IF table must be rendered/reviewed. GRTwithrealguides and calibratedRC supplies insertion/relatedpair/FFhold gates, neverplacementestimate. No DRT route or bind approved; no holdrepair/padding on failednetlist."
+ ],
+ "rtl_cycles_added": 0
+}
