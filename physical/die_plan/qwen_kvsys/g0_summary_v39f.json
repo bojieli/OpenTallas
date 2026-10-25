@@ -1,0 +1,22 @@
+{
+ "plan": "v3.9f f1 (epyc1:/srv/opentallas-scratch2/claude/kv-plan3f-1025/f1)",
+ "verdict": "FAIL",
+ "errors": 326,
+ "warnings": 1354,
+ "classes": {
+  "ERROR faces": 326,
+  "WARN core_faces": 26,
+  "WARN geometry": 8,
+  "WARN pg_domain": 2,
+  "WARN schema": 1317,
+  "WARN types": 1
+ },
+ "v39e_classes": {
+  "ERROR faces": 326,
+  "WARN core_faces": 32,
+  "WARN geometry": 8,
+  "WARN pg_domain": 2,
+  "WARN schema": 1735,
+  "WARN types": 2
+ }
+}
