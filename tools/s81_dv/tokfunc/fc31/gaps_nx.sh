@@ -9,7 +9,7 @@
 # Usage: gaps_nx.sh <worktree> <out dir> LAYER [STEPS]   STEPS default "compile base mut_in mut_ex"
 set -u
 T=$(realpath $1); O=$(realpath -m $2); Y=$3; STEPS=${4:-compile base mut_in mut_ex}
-S=/srv/opentallas-scratch/claude; W=$S/tok-ds/fc31; C=$W/cuts; CUT=cut_0S
+S=/srv/opentallas-scratch/claude; W=$S/tok-ds/fc31; C=${CUTS:-$W/cuts}; CUT=cut_0S   # CUTS: a reclock_cut.py cut set
 export OT_S81_SELECTED_DEFINES=DSFD_PQ_STATIC_X2,S81CTRL_SRAM_FIFO,S81CTRL_SRAM_P192,S81CTRL_NATIVE32,OT_COLL_NATIVE32,OT_COLL_NATIVE32_OFF,OT_S81ENG_TAP_N32R2,OT_S81SL_KV_TRANSPORT,OT_SVC_ALLQ,SU_SMU_T,SVCQ_ENG_FG3
 export OT_S81_SELECTED_SOURCE_ROOT=$S/stw-s81d-tok/layers/root30 OT_SVC_ALLQ=1
 export OT_XS_FRAME_SCHEDULE_DIR=$W/layers_fc31/frame_schedules
