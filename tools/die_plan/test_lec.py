@@ -681,3 +681,22 @@ def test_structural_cross_side_alias_and_wrong_enable(tmp_path):
         assert n == (0 if mutant else 1)
         m,_ = L.build(with_compare=True,with_hyp=True)
         assert ('differs' in _sim_prove(m).values()) == mutant
+
+
+def test_keeper_accepts_only_proved_constant_alias_chain(tmp_path):
+    g,gm = _seq(tmp_path,'keep_gold',['d'],['a','b','c','live'],
+                lambda m,x: {'a':1,'b':x['a'],'c':x['b'],'live':x['d']})
+    t,tm = _seq(tmp_path,'keep_gate',['d'],['live'],lambda m,x: {'live':x['d']})
+    L = lec.Lec(g,gm,t,tm)
+    keep = tmp_path/'chain.keep'
+    keep.write_text(chr(10).join(['lec_top/u_dut.a','lec_top/u_dut.b','lec_top/u_dut.c'])+chr(10))
+    L.hyp[('gold','ff:u_dut.a')]=('const',1)
+    L.hyp[('gold','ff:u_dut.b')]=('eq','gold','ff:u_dut.a',0)
+    L.hyp[('gold','ff:u_dut.c')]=('eq','gold','ff:u_dut.b',0)
+    m,_=L.build(with_compare=True,with_hyp=True)
+    assert set(_sim_prove(m).values())=={'proved'}
+    assert lec.kept_registers(L,keep)[1:] == ([],['ff:u_dut.a','ff:u_dut.b','ff:u_dut.c'])
+    L.hyp[('gold','ff:u_dut.a')]=('eq','gold','ff:u_dut.live',0)
+    assert len(lec.kept_registers(L,keep)[1]) == 3
+    L.hyp[('gold','ff:u_dut.a')]=('eq','gold','ff:u_dut.c',0)
+    assert len(lec.kept_registers(L,keep)[1]) == 3

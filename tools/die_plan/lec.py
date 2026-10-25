@@ -1508,6 +1508,25 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+def proved_state_constant(L, side, key, seen=None):
+    """Resolve an accepted induction relation to a constant, or fail closed."""
+    seen = set() if seen is None else seen
+    node = (side, key)
+    if node in seen:
+        return None
+    seen.add(node)
+    h = L.hyp.get(node, L.hyp.get(("both", key)))
+    if not h:
+        return None
+    if h[0] == "const":
+        return int(h[1])
+    if h[0] == "eq":
+        c = proved_state_constant(L, h[1], h[2], seen)
+        return None if c is None else c ^ int(h[3])
+    return None
+
+
 def kept_registers(L, keep_file):
     """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
     a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
@@ -1548,8 +1567,7 @@ def kept_registers(L, keep_file):
         m = IDX.match(k)
         if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
             continue                 # an array the two frontends lay out differently: counted per array
-        h = L.hyp.get(("gold", k))
-        if h and h[0] == "const":
+        if proved_state_constant(L, "gold", k) is not None:
             const.append(k)
             continue
         missing.append(k)
