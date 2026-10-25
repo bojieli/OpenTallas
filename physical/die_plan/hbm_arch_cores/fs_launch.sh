@@ -13,6 +13,10 @@ for m in $(python3 -c "import json;print(' '.join(json.load(open('$KD/freeze.jso
   f=$(ls "$REPO"/physical/asap7_memory_macros*/"$m"/"$m".v 2>/dev/null | head -1); [ -n "$f" ] && cp "$f" "$KD/macros/"
 done
 H=$(~/.local/bin/ot-run --mem "$MEM" --threads "$THR" --dir "$ROOT" --pick 2>/dev/null | tail -1)
+# FS_AVOID=host: re-pick when ot-run picks a host whose admission is broken (epyc1 user bus lost 10-25 01:37)
+if [ -n "${FS_AVOID:-}" ] && [ "$H" = "$FS_AVOID" ]; then
+  H=$(~/.local/bin/ot-run --mem "$MEM" --threads "$THR" --dir "$ROOT" --pick 2>&1 | grep -o "^ot-run: [a-z0-9]* *admits" | awk '{print $2}' | grep -vx "$FS_AVOID" | head -1)
+fi
 [ -z "$H" ] && { echo "NOT RUN $N: no host admits $MEM GB"; exit 2; }
 if [ "$H" = localhost ]; then rsync -a --delete "$KD/" "$ROOT/$N/"
 else rsync -a --delete "$KD/" "$H:$ROOT/$N/"; fi

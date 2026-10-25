@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.hbm_arch.face_shell_bench.v1",
+ "kit": "/srv/opentallas-scratch2/claude/hbm-face/runs_bench/ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a.20261025013625.539123",
+ "view": "ot_hbm_hc_bankq_static__lanes6_7_bank@345a3ba2271a",
+ "module": "ot_hbm_hc_bankq_static__lanes6_7_bank",
+ "simulator": "verilator 5.050 (2-state, x-initial fast)",
+ "cycles": 30000,
+ "seed": 1,
+ "reference": "Z o core o Z (inputs and outputs delayed one clock in the TB; reset undelayed)",
+ "shell": {
+  "mismatches": 0,
+  "first_cycle": -1
+ },
+ "shell_first_mismatches": [],
+ "reset_polarity_args": [],
+ "shell_checked_both_reset_polarities": true,
+ "dropped_in_bits": 0,
+ "dropped_driven_random_at_reference": true,
+ "out_bits": 5970,
+ "out_bits_toggled": 5970,
+ "mutants": [
+  {
+   "kind": "in_bypass",
+   "bus": "xv",
+   "bit": 0,
+   "mismatches": 112301,
+   "first_cycle": 16,
+   "caught": true
+  },
+  {
+   "kind": "in_bypass",
+   "bus": "xb_v",
+   "bit": 0,
+   "mismatches": 193406,
+   "first_cycle": 69,
+   "caught": true
+  },
+  {
+   "kind": "in_bypass",
+   "bus": "xb_d",
+   "bit": 9,
+   "mismatches": 53534,
+   "first_cycle": 121,
+   "caught": true
+  },
+  {
+   "kind": "out_bypass",
+   "bus": "sum_out",
+   "bit": 2047,
+   "mismatches": 5289,
+   "first_cycle": 12,
+   "caught": true
+  },
+  {
+   "kind": "out_delay2",
+   "bus": "sum_out",
+   "bit": 0,
+   "mismatches": 18025,
+   "first_cycle": 5,
+   "caught": true
+  }
+ ],
+ "mutant_first_mismatches": [
+  "MISMATCH m4 sum_out cyc 5 dut 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002c7ed146c5d23937c6c21556a3c886428e206d32b3df54646071a6bab00d18ab7269f70a28c8de1879d9cd96ccc6bd334a2dfddce03974d990bb9e3167202700cde754cefec9f7303de16f50ed841ce0f9432a0e401315b09d9a13718b3dbf4f5bf818ef5920c9f600ff1f582771dae151c6c97de388342ae3a6effaad5c1182988219cda556b11a13048ea01ef0753c721df17c918e01379922f903fda7d4d99f7cb894e2c8b111368e86507682bd288cf4bde5397002b3c11b131ec91cd926 exp 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000499b0ae6a3e556245fee8ff17466c7874c0d90784d97db800675d4412466f11c5593ac9bee123c24c4692319a60dc724872c2f2f26245812883774b636e8c45516dbb0c09a0b97b5bc271106cc39177c066a316d4d981096d8b1a1c128047f7f58828fafa0f293e76282a4c81541c0358b570ff25fc871fd4a8812ba6e080f1e680acc7ce21d432b31518e7c4b439980d0e77bd848d06aea8253cd923f2db5043661a4c1c6754147c70e1d20fa8588754ea89f32275c3a5327ac7e61466d0e0b",
+  "MISMATCH m3 sum_out cyc 12 dut 8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000094149496bb9fe6e659ad615775313ce0bdc49ea412b7b466d1f10a0924b931ce3799a01e2ec0540aecf3d133c43b310c0fb501ee447c31abb445398838a50fc37937f6203079b3efc4c02eb82cd2ca1f1ade4a5c39a4a982717ca813eb4fb28d061e2f5862c08515c6a6bd2297dcb34c9a159077ac81d1d9bd8d5a50cd06ceb2008b408e1d251d431fb0df7377bed781eb392f60f75e22b2704024f57933e27553a528b85232b8f96e9711668c6d3f86a8ab1d1a786fc10e7e79b91dd5884431 exp 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000094149496bb9fe6e659ad615775313ce0bdc49ea412b7b466d1f10a0924b931ce3799a01e2ec0540aecf3d133c43b310c0fb501ee447c31abb445398838a50fc37937f6203079b3efc4c02eb82cd2ca1f1ade4a5c39a4a982717ca813eb4fb28d061e2f5862c08515c6a6bd2297dcb34c9a159077ac81d1d9bd8d5a50cd06ceb2008b408e1d251d431fb0df7377bed781eb392f60f75e22b2704024f57933e27553a528b85232b8f96e9711668c6d3f86a8ab1d1a786fc10e7e79b91dd5884431",
+  "MISMATCH m0 wfault cyc 16 dut 1 exp 0",
+  "MISMATCH m1 x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_x_i cyc 69 dut 857955111c8a87a5071979a8a9116121 exp cae1e02cb12c5ff4ed8f2f213b4653cf",
+  "MISMATCH m2 x_u_c_u_b_u_st_g_lg_g_grp_5_u_lg_w_i cyc 121 dut c8be187717808bc6016e91141326d9a45e7ddd1664e55703bb322f82c14e52df exp c8be187717808bc6016e91141326d9a45e7ddd1664e55703bb322f82c14e50df"
+ ],
+ "verdict": "PASS",
+ "kit_hash": "8c7facb819c02e43"
+}

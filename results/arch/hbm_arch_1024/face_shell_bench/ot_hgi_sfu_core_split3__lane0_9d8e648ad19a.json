@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.hbm_arch.face_shell_bench.v1",
+ "kit": "/srv/opentallas-scratch2/claude/hbm-face/runs_bench/ot_hgi_sfu_core_split3__lane0_9d8e648ad19a.20261025013629.545081",
+ "view": "ot_hgi_sfu_core_split3__lane0@9d8e648ad19a",
+ "module": "ot_hgi_sfu_core_split3__lane0",
+ "simulator": "verilator 5.050 (2-state, x-initial fast)",
+ "cycles": 30000,
+ "seed": 1,
+ "reference": "Z o core o Z (inputs and outputs delayed one clock in the TB; reset undelayed)",
+ "shell": {
+  "mismatches": 0,
+  "first_cycle": -1
+ },
+ "shell_first_mismatches": [],
+ "reset_polarity_args": [],
+ "shell_checked_both_reset_polarities": true,
+ "dropped_in_bits": 490,
+ "dropped_driven_random_at_reference": true,
+ "out_bits": 282,
+ "out_bits_toggled": 266,
+ "mutants": [
+  {
+   "kind": "in_bypass",
+   "bus": "g_lane_0_g_mono_u_map_i_pass",
+   "bit": 9,
+   "mismatches": 1063,
+   "first_cycle": 32,
+   "caught": true
+  },
+  {
+   "kind": "out_bypass",
+   "bus": "g_lane_0_u_sfu_rd_addr",
+   "bit": 95,
+   "mismatches": 5326,
+   "first_cycle": 6,
+   "caught": true
+  },
+  {
+   "kind": "out_delay2",
+   "bus": "g_lane_0_u_sfu_rd_addr",
+   "bit": 0,
+   "mismatches": 16972,
+   "first_cycle": 7,
+   "caught": true
+  }
+ ],
+ "mutant_first_mismatches": [
+  "MISMATCH m1 g_lane_0_u_sfu_rd_addr cyc 6 dut 800000000000000000000000 exp 000000000000000000000000",
+  "MISMATCH m2 g_lane_0_u_sfu_rd_addr cyc 7 dut 000000000000000000000000 exp 9a135bb772ae933459b772af",
+  "MISMATCH m0 g_lane_0_u_sfu_ro_x cyc 32 dut 8941dc2d exp 8941dc6d"
+ ],
+ "verdict": "PASS",
+ "kit_hash": "c6266ac50bc07aa0"
+}
