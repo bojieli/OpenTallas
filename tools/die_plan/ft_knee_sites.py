@@ -21,9 +21,9 @@ from gen_phys import type_pins
 from tools.die_trial.legal_sites import RowAllocator
 
 
-def spine(a, b, in_face, out_face):
+def spine(a, b, in_face, out_face, keep_degenerate=False):
     a, b = np.asarray(a, float), np.asarray(b, float)
-    if np.min(np.abs(a - b)) < 1e-6:
+    if not keep_degenerate and np.min(np.abs(a - b)) < 1e-6:
         return [a, b]
     if (in_face in 'EW') != (out_face in 'EW'):
         knee = np.array([b[0], a[1]]) if in_face in 'EW' else np.array([a[0], b[1]])
@@ -68,7 +68,7 @@ def targets_arclength(polyline, depth, pitch=403.):
 def _allocate_candidate(allocator, a, b, in_face, out_face, depth, reach, radius, end_anchor, tfun=targets):
     common_spine = spine(a.mean(axis=0), end_anchor, in_face, out_face)
     path = tfun(common_spine, depth)
-    bits = [spine(x,y,in_face,out_face) for x,y in zip(a,b)]
+    bits = [spine(x,y,in_face,out_face,keep_degenerate=True) for x,y in zip(a,b)]
     if len(common_spine)==2:bits=[[x,y] for x,y in zip(a,b)]
     def requested(target):
         choices=[]

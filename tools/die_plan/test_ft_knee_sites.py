@@ -26,3 +26,18 @@ def main():
  assert case(a,b,'W','E',4)>=5
  print('PASS3: straight depth preserved; mandatory L and Z knees; actual paired bits<=403um; exact rowlegal sites')
 if __name__=='__main__':main()
+
+
+def test_some_aligned_bits_keep_the_common_segment_topology():
+    # One bit is straight, one needs a Z. Both must use the common station bands.
+    import numpy as np
+    from tools.die_plan.ft_knee_sites import allocate_bank_chain
+    from tools.die_trial.legal_sites import RowAllocator
+    a = np.array([[10., 1256.], [20., 1256.]])
+    b = np.array([[10., 4.32], [30., 4.32]])
+    alloc = RowAllocator((4.32,4.32,100.,1260.),cell_size=(1.404,.27),
+                         column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
+    path,banks,stats,hops = allocate_bank_chain(alloc,a,b,"N","S",4)
+    assert len(banks) >= 3
+    assert all(bank.shape == a.shape for bank in banks)
+    assert max(hops) <= 403.
