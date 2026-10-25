@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_svc_sm_xcal_rel_t",
+ "view": "ot_hbm_svc_sm_xcal_rel_t@9ee64da70704",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_sm_xcal_rel_t_9ee64da70704, B2r2 pins 9ee64da70704, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "10e8f6e118e883b5",
+ "reasons": "PASS-COND: 210x211 um dominated by 2x1024x256 + 2x128x256 SRAMs (explicit rows, >= 4 um channels), flops in W/E/N/S strips beside the macros, pins W+S; I ~520 ps from the tree wrapping the macro block (contract compensates). previous placement (same outline/pins/macros) [209.952, 210.6] um, 10642 cells, 2637 flops, 4 macros, fill 0.286 of free, bins>0.8 0 (max 0.32), pin->reg p90 7.2 um; CTS I mean 519 / max 677 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_sm_xcal_rel_t_9ee64da70704/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

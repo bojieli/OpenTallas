@@ -5,7 +5,13 @@
 "bus": "part",
 "exempt": [],
 "bus_groups_die": "qwen_compute",
-"bus_groups_digest": "e56a2f6f7e7e9337",
+"landed": {
+"rx": [],
+"window": 4,
+"stage_cycles": 0.5,
+"over_margin": "keep"
+},
+"bus_groups_digest": "f4f98b2b102ed56f",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 7720,
@@ -19,7 +25,9 @@
 "max_depth_after": 18,
 "max_offset_before": 12,
 "max_offset_after": 12,
-"binder_landed_max": 18
+"binder_landed_max": 18,
+"landed_bundles": 0,
+"landed_over_margin": 0
 },
 "members": [
 {
@@ -144268,7 +144276,7 @@
 "bound": 2,
 "pad": 0,
 "landed": 2,
-"lane": "UNPLANNED"
+"lane": "coll_ucie__fltu"
 },
 {
 "id": "io_collective.u_io.g_face[0].u_face.phy_up[0:0]<-io_ucie.tx_up@0",
@@ -144287,7 +144295,7 @@
 "bound": 2,
 "pad": 0,
 "landed": 2,
-"lane": "UNPLANNED"
+"lane": "coll_ucie__fltu"
 },
 {
 "id": "io_collective.u_io.g_face[1].u_face.phy_rx[0:0]<-io_collective.u_io.u_shared.rx_frames@0",
@@ -144344,7 +144352,7 @@
 "bound": 2,
 "pad": 0,
 "landed": 2,
-"lane": "UNPLANNED"
+"lane": "coll_ucie__fltu"
 },
 {
 "id": "io_collective.u_io.g_face[1].u_face.phy_up[0:0]<-io_ucie.tx_up@0",
@@ -144363,7 +144371,7 @@
 "bound": 2,
 "pad": 0,
 "landed": 2,
-"lane": "UNPLANNED"
+"lane": "coll_ucie__fltu"
 },
 {
 "id": "io_collective.u_io.g_face[2].u_face.peer_slot[0:0]<-io_collective.u_io.u_collective.sx0_peer_slot@0",

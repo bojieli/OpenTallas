@@ -1,0 +1,66 @@
+{
+ "release": "pipelined",
+ "sync_stages": 2,
+ "part_depth_K": 23,
+ "relay_um": 405.0,
+ "regions": [
+  {
+   "region": "die",
+   "root_um": [
+    14057.28,
+    9177.8
+   ],
+   "root_host": "root",
+   "members": 88,
+   "die_depth_E": 52,
+   "die_relays": 2754,
+   "die_tree_relays": 1141,
+   "die_pad_relays": 1613,
+   "max_hop_um": 380.0,
+   "release_clocks": 78,
+   "boot_cycles_added_vs_one_sync": 76,
+   "host_partitions": 88,
+   "unhosted": 0,
+   "max_relays_in_one_partition": 322,
+   "busiest_hosts": [
+    [
+     322,
+     "root"
+    ],
+    [
+     179,
+     "NW_hub"
+    ],
+    [
+     179,
+     "NE_hub"
+    ],
+    [
+     132,
+     "NE_b011"
+    ],
+    [
+     113,
+     "NW_b011"
+    ]
+   ],
+   "types_with_nonuniform_hosting": 14,
+   "nonuniform_types": [
+    "q_b010",
+    "q_b011",
+    "q_b012",
+    "q_b013",
+    "q_b100",
+    "q_b101",
+    "q_b102",
+    "q_b103",
+    "q_b110",
+    "q_b111",
+    "q_b112",
+    "q_b113",
+    "q_sm3",
+    "q_su31"
+   ]
+  }
+ ]
+}

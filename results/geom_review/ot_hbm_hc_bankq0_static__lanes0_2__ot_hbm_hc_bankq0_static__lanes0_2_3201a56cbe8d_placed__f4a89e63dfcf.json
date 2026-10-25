@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_hc_bankq0_static__lanes0_2",
+ "view": "ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d, B2r2 pins 3201a56cbe8d, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "FAIL",
+ "hash": "f4a89e63dfcf3a8a",
+ "reasons": "placed-stage (TT kit f4a89e63dfcf3a8a, placement reused): cells 118399, flops 23949, macros 0, fill of free 0.276, buf/inv 0.11, bins>0.8 0 (max bin 0.52), face flops 1949 with pin->reg p50/p90/max 6.7/8.7/16.0 um. CTS-only probe (tap_balance, CTS repair skipped): mean insertion 356 ps, longest tree 373 ps vs plan 250 +- 40.",
+ "fixes": "Clock insertion beyond the 250+-40 core contract: needs an early core tap in the plan (HBM-ARCH, OWNER? core clock contract) or a smaller/re-floorplanned core; not routed.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/kits_b2l/ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:09-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

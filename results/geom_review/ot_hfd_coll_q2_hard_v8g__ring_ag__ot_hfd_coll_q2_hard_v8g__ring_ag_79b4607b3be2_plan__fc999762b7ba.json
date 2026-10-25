@@ -1,0 +1,17 @@
+{
+ "element": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+ "view": "ot_hfd_coll_q2_hard_v8g__ring_ag@79b4607b3be2",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2, B2r2 pins 79b4607b3be2, plan 24990bd5dd78)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "fc999762b7ba75ad",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 233.28x233.28 um, 2244 pins, faces E:1121,N:843,S:17,W:263; worst 0.211 pins/track per layer (<=0.6 OK), pins on lattice. Context q_hub/u_hb_coll_Q_ring_ag: 42/45 buses with partners; 0 of 2225 connected bits leave a face pointing away from the nearest partner; 2225 bits > 365 um to the nearest partner (plan stations). Macros: none. Fill/density/face-flop distance/clock judged at the placed stage.",
+ "fixes": "Place only; route + signoff after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T20:03:43-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

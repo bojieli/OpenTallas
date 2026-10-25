@@ -44,15 +44,43 @@ def rects_power(pm):
     return out
 
 
+def domain_case(a, plan, pm):
+    """--domain NAME (OWNER decision 7, HBM B2m): solve one separate PHY supply die.pg.domains[NAME] alone: its own
+    straps (domain grid), its own bump rows (bumps.rect_um only; no core bumps), and ONLY the SerDes macro load(s) of
+    its io windows (the PHY current no longer flows in the core grid).  Load density = the power map's serdes class."""
+    d = next(x for x in plan["die"]["pg"]["domains"] if x["name"] == a.domain)
+    dens = next(r["w_per_mm2"] for r in pm["regions"] if r["kind"] == "serdes")
+    regs = []
+    for n in d["io"]:
+        w = next(x for x in plan["die"]["io"] if x["name"] == n)
+        pn = w["part"]
+        org = next(p["origin_um"] for p in plan["partitions"] if p["name"] == pn)
+        t = plan["partition_types"][next(p["type"] for p in plan["partitions"] if p["name"] == pn)]
+        for c in t.get("hard_cores", []):
+            if c["module"] == "ot_pdie_serdes":
+                cx, cy = org[0] + c["origin_um"][0], org[1] + c["origin_um"][1]
+                r = (cx, cy, cx + c["outline_um"][0], cy + c["outline_um"][1])
+                if r[0] < w["rect_um"][2] and r[2] > w["rect_um"][0] and r[1] < w["rect_um"][3] and r[3] > w["rect_um"][1]:
+                    regs.append((r[0], r[1], r[2], r[3], dens / 1e6))
+    assert regs, d
+    return d, regs
+
+
 def generate(a):
     pm = json.loads(Path(a.power).read_text())
     plan = json.loads(Path(a.plan).read_text())
     DW, DH = plan["die"]["outline_um"]
     g = plan["die"]["pg"]["grid"]
+    dom = None
+    if a.domain:
+        dom, dregs = domain_case(a, plan, pm)
+        g = dom["grid"]
+        a.window = list(dom["rect_um"])
+        a.bumps_only = list(dom["bumps"]["rect_um"])
     assert [x["layer"] for x in g] == ["M8", "M9"], g
     wid, pitch, off = g[0]["width_um"] * a.scale, g[0]["pitch_um"] * a.scale, g[0]["offset_um"] * a.scale
     x0, y0, x1, y1 = a.window or (0.0, 0.0, DW, DH)
-    guard = 0 if not a.window else 2 * VP
+    guard = 0 if (not a.window or dom) else 2 * VP
     T = a.tile
     bx = max(0.0, math.floor((x0 - guard) / T) * T)
     by = max(0.0, math.floor((y0 - guard) / T) * T)
@@ -61,7 +89,7 @@ def generate(a):
     nx, ny = math.ceil(w / T - 1e-6), math.ceil(h / T - 1e-6)
     # tile loads (die-phase tiles; the last row/column may be partial at the die edge)
     loads = {}
-    for rx0, ry0, rx1, ry1, d in rects_power(pm):
+    for rx0, ry0, rx1, ry1, d in (dregs if dom else rects_power(pm)):
         if rx1 <= bx or ry1 <= by or rx0 >= ex or ry0 >= ey:
             continue
         for j in range(max(0, int((ry0 - by) // T)), min(ny, int((ry1 - by) // T) + 1)):
@@ -111,8 +139,10 @@ def generate(a):
             ix = math.ceil((bx - ph) / VP)
             while ph + ix * VP <= ex:
                 xx = ph + ix * VP
+                bo = getattr(a, "bumps_only", None)
                 if bx + 1 <= xx <= ex - 1 and by + 1 <= yy <= ey - 1 and \
-                        not any(r[0] <= xx <= r[2] and r[1] <= yy <= r[3] for r in nob):
+                        not any(r[0] <= xx <= r[2] and r[1] <= yy <= r[3] for r in nob) and \
+                        (bo is None or (bo[0] <= xx <= bo[2] and bo[1] <= yy <= bo[3])):
                     rows.append(f'{xx - bx:.4f}, {yy - by:.4f}, {BUMP:g}, {VDD if net == "VDD" else 0}\n')
                 ix += 1
             jy += 1
@@ -164,7 +194,9 @@ puts OT_DONE
                          per_net_coverage=wid / pitch, plan_exact=a.scale == 1),
                partition_pg='mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads',
                bumps=dict(array_um=ARRAY, per_net_pitch_um=VP, size_um=BUMP, n=nb, removed_in=nob),
-               voltage_v=VDD, budget_mv=BUDGET_MV)
+               voltage_v=VDD, budget_mv=BUDGET_MV, die_um=[DW, DH],
+               domain=(dict(name=dom['name'], nets=dom['nets'], bumps_rect_um=dom['bumps']['rect_um'],
+                            load_rects=[list(r[:4]) for r in dregs], w_per_mm2=dregs[0][4] * 1e6) if dom else None))
     (out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps(man))
 
@@ -229,6 +261,7 @@ if __name__ == '__main__':
     p.add_argument('--tile', type=float, default=43.2)
     p.add_argument('--scale', type=float, default=1.0)
     p.add_argument('--no-bumps', type=float, nargs='*', default=[])
+    p.add_argument('--domain', help='solve one die.pg.domains entry alone (separate PHY supply)')
     p.add_argument('--out', required=True)
     a = p.parse_args()
     (generate if a.mode == 'generate' else record)(a)
