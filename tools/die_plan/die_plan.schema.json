@@ -1223,6 +1223,38 @@
         },
         "note": {
          "type": "string"
+        },
+        "bump_ports": {
+         "type": "array",
+         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>__<pin> (tools/die_plan/bind.py bump_pins)",
+         "items": {
+          "type": "object",
+          "required": [
+           "pin",
+           "dir",
+           "width"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "pin": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "dir": {
+            "enum": [
+             "input",
+             "output"
+            ]
+           },
+           "width": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
         }
        }
       }
@@ -1497,6 +1529,38 @@
            "integer",
            "string"
           ]
+         }
+        },
+        "bump_ports": {
+         "type": "array",
+         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>__<pin> (tools/die_plan/bind.py bump_pins)",
+         "items": {
+          "type": "object",
+          "required": [
+           "pin",
+           "dir",
+           "width"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "pin": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "dir": {
+            "enum": [
+             "input",
+             "output"
+            ]
+           },
+           "width": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "note": {
+            "type": "string"
+           }
+          }
          }
         }
        }
