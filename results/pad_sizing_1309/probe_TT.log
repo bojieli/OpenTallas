@@ -1,0 +1,3976 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+PROBE_CORNER TT
+PAD ot_prp_d1 BUFx2_ASAP7_75t_R NET ot_prp_n1
+LOAD ot_prp_d1 u_ft_t_s0/q\[142\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[141\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[140\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[139\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[138\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[137\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[136\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[135\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[134\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[133\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[132\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[131\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[130\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[129\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[128\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[127\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[126\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[125\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[124\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[123\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[122\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[121\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[120\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d1 u_ft_t_s0/q\[119\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n1
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 2.26-2.26
+ Total capacitance: 10.70-13.65
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d1/Y output (BUFx2_ASAP7_75t_R) (5, 424)
+
+Load pins
+ u_ft_t_s0/q[119]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 418)
+ u_ft_t_s0/q[120]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 419)
+ u_ft_t_s0/q[121]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 419)
+ u_ft_t_s0/q[122]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 420)
+ u_ft_t_s0/q[123]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 420)
+ u_ft_t_s0/q[124]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 421)
+ u_ft_t_s0/q[125]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 421)
+ u_ft_t_s0/q[126]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 422)
+ u_ft_t_s0/q[127]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 422)
+ u_ft_t_s0/q[128]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 422)
+ u_ft_t_s0/q[129]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 423)
+ u_ft_t_s0/q[130]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 423)
+ u_ft_t_s0/q[131]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 424)
+ u_ft_t_s0/q[132]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 424)
+ u_ft_t_s0/q[133]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 425)
+ u_ft_t_s0/q[134]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 426)
+ u_ft_t_s0/q[135]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 426)
+ u_ft_t_s0/q[136]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 427)
+ u_ft_t_s0/q[137]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 428)
+ u_ft_t_s0/q[138]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 428)
+ u_ft_t_s0/q[139]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 429)
+ u_ft_t_s0/q[140]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 429)
+ u_ft_t_s0/q[141]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 429)
+ u_ft_t_s0/q[142]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 430)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.81 Rpi=0.17 C1=11.84, Ceff=13.12
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.84
+|       total_output_net_capacitance = 13.12
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 43.00
+PVT scale factor = 1.00
+Delay = 43.00
+
+------- input_net_transition = 9.84
+|       total_output_net_capacitance = 13.12
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 60.72
+PVT scale factor = 1.00
+Slew = 60.72
+Driver waveform slew = 67.03
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.81 Rpi=0.17 C1=11.85, Ceff=12.97
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.07
+|       total_output_net_capacitance = 12.97
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 40.57
+PVT scale factor = 1.00
+Delay = 40.57
+
+------- input_net_transition = 10.07
+|       total_output_net_capacitance = 12.97
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 47.26
+PVT scale factor = 1.00
+Slew = 47.26
+Driver waveform slew = 53.87
+
+.............................................
+
+ENDPAD ot_prp_d1
+PAD ot_prp_d2 BUFx2_ASAP7_75t_R NET ot_prp_n2
+LOAD ot_prp_d2 u_ft_t_s0/q\[168\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[167\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[166\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[165\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[164\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[163\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[162\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[161\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[160\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[159\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[158\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[157\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[156\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[155\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[154\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[153\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[152\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[151\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[150\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[149\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[148\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[147\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[146\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[145\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[144\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d2 u_ft_t_s0/q\[143\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n2
+ Pin capacitance: 9.15-12.34
+ Wire capacitance: 2.15-2.15
+ Total capacitance: 11.30-14.50
+ Number of drivers: 1
+ Number of loads: 26
+ Number of pins: 27
+
+Driver pins
+ ot_prp_d2/Y output (BUFx2_ASAP7_75t_R) (5, 437)
+
+Load pins
+ u_ft_t_s0/q[143]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 431)
+ u_ft_t_s0/q[144]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 431)
+ u_ft_t_s0/q[145]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 432)
+ u_ft_t_s0/q[146]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 432)
+ u_ft_t_s0/q[147]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 433)
+ u_ft_t_s0/q[148]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 434)
+ u_ft_t_s0/q[149]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 434)
+ u_ft_t_s0/q[150]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 435)
+ u_ft_t_s0/q[151]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 435)
+ u_ft_t_s0/q[152]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 435)
+ u_ft_t_s0/q[153]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 435)
+ u_ft_t_s0/q[154]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 436)
+ u_ft_t_s0/q[155]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 436)
+ u_ft_t_s0/q[156]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 437)
+ u_ft_t_s0/q[157]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 438)
+ u_ft_t_s0/q[158]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 438)
+ u_ft_t_s0/q[159]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 439)
+ u_ft_t_s0/q[160]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 439)
+ u_ft_t_s0/q[161]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 440)
+ u_ft_t_s0/q[162]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 440)
+ u_ft_t_s0/q[163]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 441)
+ u_ft_t_s0/q[164]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 441)
+ u_ft_t_s0/q[165]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 442)
+ u_ft_t_s0/q[166]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 442)
+ u_ft_t_s0/q[167]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 443)
+ u_ft_t_s0/q[168]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 443)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.81 Rpi=0.15 C1=13.68, Ceff=13.92
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.56
+|       total_output_net_capacitance = 13.92
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 44.14
+PVT scale factor = 1.00
+Delay = 44.14
+
+------- input_net_transition = 8.56
+|       total_output_net_capacitance = 13.92
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 64.21
+PVT scale factor = 1.00
+Slew = 64.21
+Driver waveform slew = 71.02
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.81 Rpi=0.15 C1=13.69, Ceff=13.75
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.82
+|       total_output_net_capacitance = 13.75
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 41.41
+PVT scale factor = 1.00
+Delay = 41.41
+
+------- input_net_transition = 8.82
+|       total_output_net_capacitance = 13.75
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 49.86
+PVT scale factor = 1.00
+Slew = 49.86
+Driver waveform slew = 56.97
+
+.............................................
+
+ENDPAD ot_prp_d2
+PAD ot_prp_d3 BUFx2_ASAP7_75t_R NET ot_prp_n3
+LOAD ot_prp_d3 u_ft_t_s0/q\[193\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[191\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[190\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[189\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[188\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[187\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[186\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[185\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[184\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[183\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[182\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[181\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[180\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[179\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[178\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[177\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[176\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[175\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[174\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[173\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[172\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[171\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[170\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d3 u_ft_t_s0/q\[169\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n3
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 2.42-2.42
+ Total capacitance: 10.87-13.82
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d3/Y output (BUFx2_ASAP7_75t_R) (5, 451)
+
+Load pins
+ u_ft_t_s0/q[169]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 444)
+ u_ft_t_s0/q[170]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 445)
+ u_ft_t_s0/q[171]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 445)
+ u_ft_t_s0/q[172]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 446)
+ u_ft_t_s0/q[173]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 446)
+ u_ft_t_s0/q[174]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 447)
+ u_ft_t_s0/q[175]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 447)
+ u_ft_t_s0/q[176]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 448)
+ u_ft_t_s0/q[177]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 448)
+ u_ft_t_s0/q[178]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 449)
+ u_ft_t_s0/q[179]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 449)
+ u_ft_t_s0/q[180]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 450)
+ u_ft_t_s0/q[181]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 450)
+ u_ft_t_s0/q[182]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 451)
+ u_ft_t_s0/q[183]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 452)
+ u_ft_t_s0/q[184]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 452)
+ u_ft_t_s0/q[185]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 452)
+ u_ft_t_s0/q[186]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 453)
+ u_ft_t_s0/q[187]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 454)
+ u_ft_t_s0/q[188]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 454)
+ u_ft_t_s0/q[189]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 455)
+ u_ft_t_s0/q[190]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 456)
+ u_ft_t_s0/q[191]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 456)
+ u_ft_t_s0/q[193]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 457)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=2.06 Rpi=0.16 C1=11.75, Ceff=13.33
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.30
+|       total_output_net_capacitance = 13.33
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 43.23
+PVT scale factor = 1.00
+Delay = 43.23
+
+------- input_net_transition = 9.30
+|       total_output_net_capacitance = 13.33
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 61.64
+PVT scale factor = 1.00
+Slew = 61.64
+Driver waveform slew = 67.67
+
+.............................................
+
+A v -> Y v
+Pi model C2=2.06 Rpi=0.16 C1=11.75, Ceff=13.19
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.44
+|       total_output_net_capacitance = 13.19
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 40.72
+PVT scale factor = 1.00
+Delay = 40.72
+
+------- input_net_transition = 9.44
+|       total_output_net_capacitance = 13.19
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 48.01
+PVT scale factor = 1.00
+Slew = 48.01
+Driver waveform slew = 54.33
+
+.............................................
+
+ENDPAD ot_prp_d3
+PAD ot_prp_d4 BUFx2_ASAP7_75t_R NET ot_prp_n4
+LOAD ot_prp_d4 u_ft_t_s0/q\[217\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[216\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[215\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[214\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[213\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[212\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[211\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[210\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[209\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[208\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[207\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[206\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[205\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[204\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[203\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[202\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[201\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[200\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[199\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[198\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[197\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[196\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[195\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[194\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d4 u_ft_t_s0/q\[192\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n4
+ Pin capacitance: 8.79-11.87
+ Wire capacitance: 2.39-2.39
+ Total capacitance: 11.18-14.26
+ Number of drivers: 1
+ Number of loads: 25
+ Number of pins: 26
+
+Driver pins
+ ot_prp_d4/Y output (BUFx2_ASAP7_75t_R) (5, 464)
+
+Load pins
+ u_ft_t_s0/q[192]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 457)
+ u_ft_t_s0/q[194]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 458)
+ u_ft_t_s0/q[195]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 458)
+ u_ft_t_s0/q[196]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 459)
+ u_ft_t_s0/q[197]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 459)
+ u_ft_t_s0/q[198]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 459)
+ u_ft_t_s0/q[199]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 460)
+ u_ft_t_s0/q[200]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 461)
+ u_ft_t_s0/q[201]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 461)
+ u_ft_t_s0/q[202]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 462)
+ u_ft_t_s0/q[203]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 462)
+ u_ft_t_s0/q[204]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 462)
+ u_ft_t_s0/q[205]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 463)
+ u_ft_t_s0/q[206]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 464)
+ u_ft_t_s0/q[207]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 464)
+ u_ft_t_s0/q[208]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 465)
+ u_ft_t_s0/q[209]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 465)
+ u_ft_t_s0/q[210]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 466)
+ u_ft_t_s0/q[211]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 466)
+ u_ft_t_s0/q[212]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 467)
+ u_ft_t_s0/q[213]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 467)
+ u_ft_t_s0/q[214]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 468)
+ u_ft_t_s0/q[215]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 469)
+ u_ft_t_s0/q[216]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 469)
+ u_ft_t_s0/q[217]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 469)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=2.03 Rpi=0.13 C1=12.22, Ceff=13.85
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.23
+|       total_output_net_capacitance = 13.85
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 44.24
+PVT scale factor = 1.00
+Delay = 44.24
+
+------- input_net_transition = 9.23
+|       total_output_net_capacitance = 13.85
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 63.92
+PVT scale factor = 1.00
+Slew = 63.92
+Driver waveform slew = 69.47
+
+.............................................
+
+A v -> Y v
+Pi model C2=2.03 Rpi=0.13 C1=12.23, Ceff=13.74
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.45
+|       total_output_net_capacitance = 13.74
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 41.61
+PVT scale factor = 1.00
+Delay = 41.61
+
+------- input_net_transition = 9.45
+|       total_output_net_capacitance = 13.74
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 49.82
+PVT scale factor = 1.00
+Slew = 49.82
+Driver waveform slew = 55.67
+
+.............................................
+
+ENDPAD ot_prp_d4
+PAD ot_prp_d5 BUFx2_ASAP7_75t_R NET ot_prp_n5
+LOAD ot_prp_d5 u_ft_t_s0/q\[243\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[242\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[241\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[240\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[239\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[238\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[237\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[236\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[235\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[234\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[233\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[232\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[231\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[230\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[229\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[228\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[227\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[226\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[225\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[224\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[223\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[222\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[221\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[220\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[219\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d5 u_ft_t_s0/q\[218\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n5
+ Pin capacitance: 9.15-12.34
+ Wire capacitance: 2.49-2.49
+ Total capacitance: 11.63-14.83
+ Number of drivers: 1
+ Number of loads: 26
+ Number of pins: 27
+
+Driver pins
+ ot_prp_d5/Y output (BUFx2_ASAP7_75t_R) (5, 477)
+
+Load pins
+ u_ft_t_s0/q[218]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 470)
+ u_ft_t_s0/q[219]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 471)
+ u_ft_t_s0/q[220]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 472)
+ u_ft_t_s0/q[221]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 472)
+ u_ft_t_s0/q[222]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 473)
+ u_ft_t_s0/q[223]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 473)
+ u_ft_t_s0/q[224]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 474)
+ u_ft_t_s0/q[225]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 474)
+ u_ft_t_s0/q[226]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 475)
+ u_ft_t_s0/q[227]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 475)
+ u_ft_t_s0/q[228]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 475)
+ u_ft_t_s0/q[229]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 476)
+ u_ft_t_s0/q[230]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 476)
+ u_ft_t_s0/q[231]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 477)
+ u_ft_t_s0/q[232]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 478)
+ u_ft_t_s0/q[233]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 479)
+ u_ft_t_s0/q[234]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 479)
+ u_ft_t_s0/q[235]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 479)
+ u_ft_t_s0/q[236]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 480)
+ u_ft_t_s0/q[237]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 480)
+ u_ft_t_s0/q[238]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 480)
+ u_ft_t_s0/q[239]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 481)
+ u_ft_t_s0/q[240]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 482)
+ u_ft_t_s0/q[241]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 482)
+ u_ft_t_s0/q[242]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 483)
+ u_ft_t_s0/q[243]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 484)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.14 Rpi=0.14 C1=13.68, Ceff=14.28
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.06
+|       total_output_net_capacitance = 14.28
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 45.02
+PVT scale factor = 1.00
+Delay = 45.02
+
+------- input_net_transition = 9.06
+|       total_output_net_capacitance = 14.28
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 65.76
+PVT scale factor = 1.00
+Slew = 65.76
+Driver waveform slew = 72.50
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.14 Rpi=0.14 C1=13.69, Ceff=14.11
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.34
+|       total_output_net_capacitance = 14.11
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.19
+PVT scale factor = 1.00
+Delay = 42.19
+
+------- input_net_transition = 9.34
+|       total_output_net_capacitance = 14.11
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 51.07
+PVT scale factor = 1.00
+Slew = 51.07
+Driver waveform slew = 58.11
+
+.............................................
+
+ENDPAD ot_prp_d5
+PAD ot_prp_d6 BUFx2_ASAP7_75t_R NET ot_prp_n6
+LOAD ot_prp_d6 u_ft_t_s0/q\[269\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[268\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[267\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[266\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[265\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[264\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[263\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[262\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[261\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[260\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[259\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[258\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[257\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[256\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[255\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[254\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[253\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[252\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[251\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[250\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[249\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[248\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[247\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[246\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[245\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d6 u_ft_t_s0/q\[244\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n6
+ Pin capacitance: 9.15-12.34
+ Wire capacitance: 2.43-2.43
+ Total capacitance: 11.57-14.77
+ Number of drivers: 1
+ Number of loads: 26
+ Number of pins: 27
+
+Driver pins
+ ot_prp_d6/Y output (BUFx2_ASAP7_75t_R) (5, 491)
+
+Load pins
+ u_ft_t_s0/q[244]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 484)
+ u_ft_t_s0/q[245]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 485)
+ u_ft_t_s0/q[246]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 485)
+ u_ft_t_s0/q[247]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 486)
+ u_ft_t_s0/q[248]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 486)
+ u_ft_t_s0/q[249]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 487)
+ u_ft_t_s0/q[250]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 487)
+ u_ft_t_s0/q[251]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 488)
+ u_ft_t_s0/q[252]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 489)
+ u_ft_t_s0/q[253]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 489)
+ u_ft_t_s0/q[254]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 490)
+ u_ft_t_s0/q[255]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 491)
+ u_ft_t_s0/q[256]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 491)
+ u_ft_t_s0/q[257]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 490)
+ u_ft_t_s0/q[258]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 491)
+ u_ft_t_s0/q[259]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 492)
+ u_ft_t_s0/q[260]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 492)
+ u_ft_t_s0/q[261]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 493)
+ u_ft_t_s0/q[262]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 493)
+ u_ft_t_s0/q[263]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 494)
+ u_ft_t_s0/q[264]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 494)
+ u_ft_t_s0/q[265]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 495)
+ u_ft_t_s0/q[266]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 496)
+ u_ft_t_s0/q[267]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 496)
+ u_ft_t_s0/q[268]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 497)
+ u_ft_t_s0/q[269]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 497)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.64 Rpi=0.14 C1=13.12, Ceff=14.29
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.14
+|       total_output_net_capacitance = 14.29
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 45.07
+PVT scale factor = 1.00
+Delay = 45.07
+
+------- input_net_transition = 9.14
+|       total_output_net_capacitance = 14.29
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 65.81
+PVT scale factor = 1.00
+Slew = 65.81
+Driver waveform slew = 72.05
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.64 Rpi=0.14 C1=13.13, Ceff=14.15
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.43
+|       total_output_net_capacitance = 14.15
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.28
+PVT scale factor = 1.00
+Delay = 42.28
+
+------- input_net_transition = 9.43
+|       total_output_net_capacitance = 14.15
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 51.19
+PVT scale factor = 1.00
+Slew = 51.19
+Driver waveform slew = 57.75
+
+.............................................
+
+ENDPAD ot_prp_d6
+PAD ot_prp_d7 BUFx2_ASAP7_75t_R NET ot_prp_n7
+LOAD ot_prp_d7 u_ft_t_s0/q\[292\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[291\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[290\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[289\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[288\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[287\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[286\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[285\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[284\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[283\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[282\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[281\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[280\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[279\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[278\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[277\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[276\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[275\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[274\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[273\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[272\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[271\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d7 u_ft_t_s0/q\[270\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n7
+ Pin capacitance: 8.09-10.92
+ Wire capacitance: 2.15-2.15
+ Total capacitance: 10.24-13.07
+ Number of drivers: 1
+ Number of loads: 23
+ Number of pins: 24
+
+Driver pins
+ ot_prp_d7/Y output (BUFx2_ASAP7_75t_R) (6, 503)
+
+Load pins
+ u_ft_t_s0/q[270]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 498)
+ u_ft_t_s0/q[271]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 498)
+ u_ft_t_s0/q[272]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 499)
+ u_ft_t_s0/q[273]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 500)
+ u_ft_t_s0/q[274]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 500)
+ u_ft_t_s0/q[275]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 500)
+ u_ft_t_s0/q[276]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 501)
+ u_ft_t_s0/q[277]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 502)
+ u_ft_t_s0/q[278]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 502)
+ u_ft_t_s0/q[279]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 502)
+ u_ft_t_s0/q[280]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 503)
+ u_ft_t_s0/q[281]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 504)
+ u_ft_t_s0/q[282]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 504)
+ u_ft_t_s0/q[283]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 504)
+ u_ft_t_s0/q[284]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 505)
+ u_ft_t_s0/q[285]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 505)
+ u_ft_t_s0/q[286]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 506)
+ u_ft_t_s0/q[287]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 506)
+ u_ft_t_s0/q[288]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 507)
+ u_ft_t_s0/q[289]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 508)
+ u_ft_t_s0/q[290]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 508)
+ u_ft_t_s0/q[291]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 509)
+ u_ft_t_s0/q[292]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 509)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.85 Rpi=0.18 C1=12.21, Ceff=12.43
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.63
+|       total_output_net_capacitance = 12.43
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 41.57
+PVT scale factor = 1.00
+Delay = 41.57
+
+------- input_net_transition = 9.63
+|       total_output_net_capacitance = 12.43
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 57.72
+PVT scale factor = 1.00
+Slew = 57.72
+Driver waveform slew = 64.52
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.85 Rpi=0.18 C1=12.22, Ceff=12.25
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.81
+|       total_output_net_capacitance = 12.25
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 39.30
+PVT scale factor = 1.00
+Delay = 39.30
+
+------- input_net_transition = 9.81
+|       total_output_net_capacitance = 12.25
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 44.87
+PVT scale factor = 1.00
+Slew = 44.87
+Driver waveform slew = 51.97
+
+.............................................
+
+ENDPAD ot_prp_d7
+PAD ot_prp_d8 BUFx2_ASAP7_75t_R NET ot_prp_n8
+LOAD ot_prp_d8 u_ft_t_s0/q\[316\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[315\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[314\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[313\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[312\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[311\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[310\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[309\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[308\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[307\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[306\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[305\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[304\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[303\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[302\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[301\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[300\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[299\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[298\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[297\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[296\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[295\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[294\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d8 u_ft_t_s0/q\[293\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n8
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 2.25-2.25
+ Total capacitance: 10.70-13.65
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d8/Y output (BUFx2_ASAP7_75t_R) (6, 517)
+
+Load pins
+ u_ft_t_s0/q[293]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 510)
+ u_ft_t_s0/q[294]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 510)
+ u_ft_t_s0/q[295]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 511)
+ u_ft_t_s0/q[296]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 512)
+ u_ft_t_s0/q[297]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 513)
+ u_ft_t_s0/q[298]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 513)
+ u_ft_t_s0/q[299]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 513)
+ u_ft_t_s0/q[300]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 515)
+ u_ft_t_s0/q[301]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 514)
+ u_ft_t_s0/q[302]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 515)
+ u_ft_t_s0/q[303]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 515)
+ u_ft_t_s0/q[304]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 516)
+ u_ft_t_s0/q[305]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 517)
+ u_ft_t_s0/q[306]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 517)
+ u_ft_t_s0/q[307]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 517)
+ u_ft_t_s0/q[308]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 518)
+ u_ft_t_s0/q[309]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 518)
+ u_ft_t_s0/q[310]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 519)
+ u_ft_t_s0/q[311]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 519)
+ u_ft_t_s0/q[312]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 520)
+ u_ft_t_s0/q[313]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 520)
+ u_ft_t_s0/q[314]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 521)
+ u_ft_t_s0/q[315]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 521)
+ u_ft_t_s0/q[316]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 522)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.52 Rpi=0.16 C1=12.12, Ceff=13.14
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.49
+|       total_output_net_capacitance = 13.14
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 42.91
+PVT scale factor = 1.00
+Delay = 42.91
+
+------- input_net_transition = 9.49
+|       total_output_net_capacitance = 13.14
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 60.79
+PVT scale factor = 1.00
+Slew = 60.79
+Driver waveform slew = 66.95
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.52 Rpi=0.16 C1=12.13, Ceff=12.99
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.68
+|       total_output_net_capacitance = 12.99
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 40.47
+PVT scale factor = 1.00
+Delay = 40.47
+
+------- input_net_transition = 9.68
+|       total_output_net_capacitance = 12.99
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 47.34
+PVT scale factor = 1.00
+Slew = 47.34
+Driver waveform slew = 53.79
+
+.............................................
+
+ENDPAD ot_prp_d8
+PAD ot_prp_d9 BUFx2_ASAP7_75t_R NET ot_prp_n9
+LOAD ot_prp_d9 u_ft_t_s0/q\[342\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[341\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[340\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[339\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[338\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[337\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[336\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[335\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[334\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[333\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[332\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[331\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[330\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[329\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[328\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[327\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[326\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[325\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[324\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[323\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[322\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[321\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[320\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[319\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[318\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d9 u_ft_t_s0/q\[317\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n9
+ Pin capacitance: 9.15-12.34
+ Wire capacitance: 2.50-2.50
+ Total capacitance: 11.65-14.85
+ Number of drivers: 1
+ Number of loads: 26
+ Number of pins: 27
+
+Driver pins
+ ot_prp_d9/Y output (BUFx2_ASAP7_75t_R) (5, 529)
+
+Load pins
+ u_ft_t_s0/q[317]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 522)
+ u_ft_t_s0/q[318]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 523)
+ u_ft_t_s0/q[319]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 524)
+ u_ft_t_s0/q[320]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 524)
+ u_ft_t_s0/q[321]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 524)
+ u_ft_t_s0/q[322]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 525)
+ u_ft_t_s0/q[323]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 526)
+ u_ft_t_s0/q[324]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 527)
+ u_ft_t_s0/q[325]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 526)
+ u_ft_t_s0/q[326]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 527)
+ u_ft_t_s0/q[327]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 528)
+ u_ft_t_s0/q[328]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 529)
+ u_ft_t_s0/q[329]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 529)
+ u_ft_t_s0/q[330]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 530)
+ u_ft_t_s0/q[331]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 531)
+ u_ft_t_s0/q[332]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 531)
+ u_ft_t_s0/q[333]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 532)
+ u_ft_t_s0/q[334]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 533)
+ u_ft_t_s0/q[335]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 531)
+ u_ft_t_s0/q[336]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 534)
+ u_ft_t_s0/q[337]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 533)
+ u_ft_t_s0/q[338]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 534)
+ u_ft_t_s0/q[339]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 534)
+ u_ft_t_s0/q[340]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 536)
+ u_ft_t_s0/q[341]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 535)
+ u_ft_t_s0/q[342]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 536)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.83 Rpi=0.14 C1=13.01, Ceff=14.36
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.80
+|       total_output_net_capacitance = 14.36
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 45.09
+PVT scale factor = 1.00
+Delay = 45.09
+
+------- input_net_transition = 8.80
+|       total_output_net_capacitance = 14.36
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 66.13
+PVT scale factor = 1.00
+Slew = 66.13
+Driver waveform slew = 72.40
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.83 Rpi=0.14 C1=13.02, Ceff=14.22
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.04
+|       total_output_net_capacitance = 14.22
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.26
+PVT scale factor = 1.00
+Delay = 42.26
+
+------- input_net_transition = 9.04
+|       total_output_net_capacitance = 14.22
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 51.43
+PVT scale factor = 1.00
+Slew = 51.43
+Driver waveform slew = 58.03
+
+.............................................
+
+ENDPAD ot_prp_d9
+PAD ot_prp_d10 BUFx2_ASAP7_75t_R NET ot_prp_n10
+LOAD ot_prp_d10 u_ft_t_s0/q\[368\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[367\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[366\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[365\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[364\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[363\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[362\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[361\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[360\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[359\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[358\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[357\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[356\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[355\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[354\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[353\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[352\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[351\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[350\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[349\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[348\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[347\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[346\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[345\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[344\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d10 u_ft_t_s0/q\[343\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n10
+ Pin capacitance: 9.15-12.34
+ Wire capacitance: 2.61-2.61
+ Total capacitance: 11.76-14.96
+ Number of drivers: 1
+ Number of loads: 26
+ Number of pins: 27
+
+Driver pins
+ ot_prp_d10/Y output (BUFx2_ASAP7_75t_R) (5, 543)
+
+Load pins
+ u_ft_t_s0/q[343]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 537)
+ u_ft_t_s0/q[344]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 537)
+ u_ft_t_s0/q[345]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 537)
+ u_ft_t_s0/q[346]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 538)
+ u_ft_t_s0/q[347]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 538)
+ u_ft_t_s0/q[348]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 539)
+ u_ft_t_s0/q[349]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 539)
+ u_ft_t_s0/q[350]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 540)
+ u_ft_t_s0/q[351]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 540)
+ u_ft_t_s0/q[352]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 541)
+ u_ft_t_s0/q[353]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 542)
+ u_ft_t_s0/q[354]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 543)
+ u_ft_t_s0/q[355]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 542)
+ u_ft_t_s0/q[356]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 544)
+ u_ft_t_s0/q[357]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 544)
+ u_ft_t_s0/q[358]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 545)
+ u_ft_t_s0/q[359]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 545)
+ u_ft_t_s0/q[360]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 546)
+ u_ft_t_s0/q[361]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 546)
+ u_ft_t_s0/q[362]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 547)
+ u_ft_t_s0/q[363]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 548)
+ u_ft_t_s0/q[364]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 548)
+ u_ft_t_s0/q[365]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 547)
+ u_ft_t_s0/q[366]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 549)
+ u_ft_t_s0/q[367]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 549)
+ u_ft_t_s0/q[368]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 550)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.46 Rpi=0.17 C1=13.49, Ceff=14.32
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.61
+|       total_output_net_capacitance = 14.32
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 44.95
+PVT scale factor = 1.00
+Delay = 44.95
+
+------- input_net_transition = 8.61
+|       total_output_net_capacitance = 14.32
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 65.96
+PVT scale factor = 1.00
+Slew = 65.96
+Driver waveform slew = 73.30
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.46 Rpi=0.17 C1=13.50, Ceff=14.13
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.86
+|       total_output_net_capacitance = 14.13
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.05
+PVT scale factor = 1.00
+Delay = 42.05
+
+------- input_net_transition = 8.86
+|       total_output_net_capacitance = 14.13
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 51.13
+PVT scale factor = 1.00
+Slew = 51.13
+Driver waveform slew = 58.77
+
+.............................................
+
+ENDPAD ot_prp_d10
+PAD ot_prp_d11 BUFx2_ASAP7_75t_R NET ot_prp_n11
+LOAD ot_prp_d11 u_ft_t_s0/q\[393\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[392\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[391\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[390\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[389\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[388\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[387\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[386\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[385\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[384\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[383\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[382\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[381\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[380\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[379\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[378\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[377\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[376\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[375\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[374\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[373\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[372\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[371\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[370\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d11 u_ft_t_s0/q\[369\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n11
+ Pin capacitance: 8.79-11.87
+ Wire capacitance: 2.62-2.62
+ Total capacitance: 11.41-14.49
+ Number of drivers: 1
+ Number of loads: 25
+ Number of pins: 26
+
+Driver pins
+ ot_prp_d11/Y output (BUFx2_ASAP7_75t_R) (5, 556)
+
+Load pins
+ u_ft_t_s0/q[369]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 551)
+ u_ft_t_s0/q[370]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 550)
+ u_ft_t_s0/q[371]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 551)
+ u_ft_t_s0/q[372]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 552)
+ u_ft_t_s0/q[373]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 552)
+ u_ft_t_s0/q[374]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 553)
+ u_ft_t_s0/q[375]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 553)
+ u_ft_t_s0/q[376]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 554)
+ u_ft_t_s0/q[377]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 554)
+ u_ft_t_s0/q[378]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 555)
+ u_ft_t_s0/q[379]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 556)
+ u_ft_t_s0/q[380]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 556)
+ u_ft_t_s0/q[381]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 557)
+ u_ft_t_s0/q[382]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 557)
+ u_ft_t_s0/q[383]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 558)
+ u_ft_t_s0/q[384]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 558)
+ u_ft_t_s0/q[385]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 558)
+ u_ft_t_s0/q[386]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 560)
+ u_ft_t_s0/q[387]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 559)
+ u_ft_t_s0/q[388]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 560)
+ u_ft_t_s0/q[389]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 560)
+ u_ft_t_s0/q[390]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 561)
+ u_ft_t_s0/q[391]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 561)
+ u_ft_t_s0/q[392]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 562)
+ u_ft_t_s0/q[393]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 563)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.64 Rpi=0.16 C1=12.84, Ceff=13.93
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.75
+|       total_output_net_capacitance = 13.93
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 44.22
+PVT scale factor = 1.00
+Delay = 44.22
+
+------- input_net_transition = 8.75
+|       total_output_net_capacitance = 13.93
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 64.24
+PVT scale factor = 1.00
+Slew = 64.24
+Driver waveform slew = 70.93
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.64 Rpi=0.16 C1=12.84, Ceff=13.76
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.00
+|       total_output_net_capacitance = 13.76
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 41.50
+PVT scale factor = 1.00
+Delay = 41.50
+
+------- input_net_transition = 9.00
+|       total_output_net_capacitance = 13.76
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 49.91
+PVT scale factor = 1.00
+Slew = 49.91
+Driver waveform slew = 56.88
+
+.............................................
+
+ENDPAD ot_prp_d11
+PAD ot_prp_d12 BUFx2_ASAP7_75t_R NET ot_prp_n12
+LOAD ot_prp_d12 u_ft_t_s0/q\[417\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[416\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[415\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[414\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[413\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[412\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[411\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[410\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[409\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[408\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[407\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[406\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[405\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[404\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[403\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[402\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[401\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[400\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[399\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[398\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[397\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[396\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[395\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d12 u_ft_t_s0/q\[394\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n12
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 2.29-2.29
+ Total capacitance: 10.74-13.69
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d12/Y output (BUFx2_ASAP7_75t_R) (5, 569)
+
+Load pins
+ u_ft_t_s0/q[394]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 564)
+ u_ft_t_s0/q[395]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 564)
+ u_ft_t_s0/q[396]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 564)
+ u_ft_t_s0/q[397]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 565)
+ u_ft_t_s0/q[398]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 566)
+ u_ft_t_s0/q[399]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 566)
+ u_ft_t_s0/q[400]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 566)
+ u_ft_t_s0/q[401]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 567)
+ u_ft_t_s0/q[402]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 568)
+ u_ft_t_s0/q[403]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 568)
+ u_ft_t_s0/q[404]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 568)
+ u_ft_t_s0/q[405]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 569)
+ u_ft_t_s0/q[406]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 570)
+ u_ft_t_s0/q[407]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 570)
+ u_ft_t_s0/q[408]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 572)
+ u_ft_t_s0/q[409]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 571)
+ u_ft_t_s0/q[410]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 571)
+ u_ft_t_s0/q[411]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 572)
+ u_ft_t_s0/q[412]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 573)
+ u_ft_t_s0/q[413]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 574)
+ u_ft_t_s0/q[414]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 574)
+ u_ft_t_s0/q[415]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 574)
+ u_ft_t_s0/q[416]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 575)
+ u_ft_t_s0/q[417]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 576)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=2.15 Rpi=0.18 C1=11.53, Ceff=13.15
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.97
+|       total_output_net_capacitance = 13.15
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 42.75
+PVT scale factor = 1.00
+Delay = 42.75
+
+------- input_net_transition = 8.97
+|       total_output_net_capacitance = 13.15
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 60.84
+PVT scale factor = 1.00
+Slew = 60.84
+Driver waveform slew = 67.20
+
+.............................................
+
+A v -> Y v
+Pi model C2=2.15 Rpi=0.18 C1=11.54, Ceff=12.99
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.16
+|       total_output_net_capacitance = 12.99
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 40.29
+PVT scale factor = 1.00
+Delay = 40.29
+
+------- input_net_transition = 9.16
+|       total_output_net_capacitance = 12.99
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 47.33
+PVT scale factor = 1.00
+Slew = 47.33
+Driver waveform slew = 53.96
+
+.............................................
+
+ENDPAD ot_prp_d12
+PAD ot_prp_d13 BUFx2_ASAP7_75t_R NET ot_prp_n13
+LOAD ot_prp_d13 u_ft_t_s0/q\[442\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[441\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[440\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[439\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[438\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[437\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[436\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[435\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[434\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[433\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[432\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[431\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[430\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[429\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[428\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[427\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[426\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[425\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[424\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[423\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[422\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[421\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[420\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[419\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d13 u_ft_t_s0/q\[418\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n13
+ Pin capacitance: 8.79-11.87
+ Wire capacitance: 2.74-2.74
+ Total capacitance: 11.53-14.61
+ Number of drivers: 1
+ Number of loads: 25
+ Number of pins: 26
+
+Driver pins
+ ot_prp_d13/Y output (BUFx2_ASAP7_75t_R) (6, 582)
+
+Load pins
+ u_ft_t_s0/q[418]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 576)
+ u_ft_t_s0/q[419]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 576)
+ u_ft_t_s0/q[420]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 577)
+ u_ft_t_s0/q[421]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 577)
+ u_ft_t_s0/q[422]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 578)
+ u_ft_t_s0/q[423]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 578)
+ u_ft_t_s0/q[424]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 579)
+ u_ft_t_s0/q[425]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 580)
+ u_ft_t_s0/q[426]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 580)
+ u_ft_t_s0/q[427]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 581)
+ u_ft_t_s0/q[428]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 581)
+ u_ft_t_s0/q[429]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 582)
+ u_ft_t_s0/q[430]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 582)
+ u_ft_t_s0/q[431]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 584)
+ u_ft_t_s0/q[432]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 583)
+ u_ft_t_s0/q[433]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 584)
+ u_ft_t_s0/q[434]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 585)
+ u_ft_t_s0/q[435]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 585)
+ u_ft_t_s0/q[436]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 586)
+ u_ft_t_s0/q[437]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 587)
+ u_ft_t_s0/q[438]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 587)
+ u_ft_t_s0/q[439]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 587)
+ u_ft_t_s0/q[440]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 588)
+ u_ft_t_s0/q[441]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 588)
+ u_ft_t_s0/q[442]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 589)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.64 Rpi=0.13 C1=12.96, Ceff=14.17
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.02
+|       total_output_net_capacitance = 14.17
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 44.79
+PVT scale factor = 1.00
+Delay = 44.79
+
+------- input_net_transition = 9.02
+|       total_output_net_capacitance = 14.17
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 65.30
+PVT scale factor = 1.00
+Slew = 65.30
+Driver waveform slew = 71.20
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.64 Rpi=0.13 C1=12.96, Ceff=14.04
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.28
+|       total_output_net_capacitance = 14.04
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.05
+PVT scale factor = 1.00
+Delay = 42.05
+
+------- input_net_transition = 9.28
+|       total_output_net_capacitance = 14.04
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 50.84
+PVT scale factor = 1.00
+Slew = 50.84
+Driver waveform slew = 57.05
+
+.............................................
+
+ENDPAD ot_prp_d13
+PAD ot_prp_d14 BUFx2_ASAP7_75t_R NET ot_prp_n14
+LOAD ot_prp_d14 u_ft_t_s0/q\[467\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[466\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[465\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[464\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[463\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[462\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[461\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[460\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[459\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[458\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[457\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[456\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[455\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[454\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[453\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[452\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[451\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[450\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[449\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[448\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[447\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[446\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[445\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[444\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d14 u_ft_t_s0/q\[443\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n14
+ Pin capacitance: 8.79-11.87
+ Wire capacitance: 2.42-2.42
+ Total capacitance: 11.22-14.29
+ Number of drivers: 1
+ Number of loads: 25
+ Number of pins: 26
+
+Driver pins
+ ot_prp_d14/Y output (BUFx2_ASAP7_75t_R) (6, 597)
+
+Load pins
+ u_ft_t_s0/q[443]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 590)
+ u_ft_t_s0/q[444]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (6, 590)
+ u_ft_t_s0/q[445]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 591)
+ u_ft_t_s0/q[446]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 592)
+ u_ft_t_s0/q[447]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 591)
+ u_ft_t_s0/q[448]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 592)
+ u_ft_t_s0/q[449]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 593)
+ u_ft_t_s0/q[450]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 594)
+ u_ft_t_s0/q[451]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 593)
+ u_ft_t_s0/q[452]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 594)
+ u_ft_t_s0/q[453]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 595)
+ u_ft_t_s0/q[454]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 595)
+ u_ft_t_s0/q[455]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 595)
+ u_ft_t_s0/q[456]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 597)
+ u_ft_t_s0/q[457]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 597)
+ u_ft_t_s0/q[458]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 598)
+ u_ft_t_s0/q[459]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 598)
+ u_ft_t_s0/q[460]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 598)
+ u_ft_t_s0/q[461]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 599)
+ u_ft_t_s0/q[462]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 600)
+ u_ft_t_s0/q[463]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 600)
+ u_ft_t_s0/q[464]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 601)
+ u_ft_t_s0/q[465]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 601)
+ u_ft_t_s0/q[466]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 602)
+ u_ft_t_s0/q[467]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (5, 602)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.57 Rpi=0.15 C1=13.72, Ceff=13.70
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.28
+|       total_output_net_capacitance = 13.70
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 43.95
+PVT scale factor = 1.00
+Delay = 43.95
+
+------- input_net_transition = 9.28
+|       total_output_net_capacitance = 13.70
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 63.23
+PVT scale factor = 1.00
+Slew = 63.23
+Driver waveform slew = 70.13
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.57 Rpi=0.15 C1=13.73, Ceff=13.52
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.60
+|       total_output_net_capacitance = 13.52
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 41.30
+PVT scale factor = 1.00
+Delay = 41.30
+
+------- input_net_transition = 9.60
+|       total_output_net_capacitance = 13.52
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 49.09
+PVT scale factor = 1.00
+Slew = 49.09
+Driver waveform slew = 56.30
+
+.............................................
+
+ENDPAD ot_prp_d14
+PAD ot_prp_d15 BUFx2_ASAP7_75t_R NET ot_prp_n15
+LOAD ot_prp_d15 u_ft_t_s2/q\[99\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[98\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[97\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[96\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[117\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[116\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[115\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[114\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[113\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[112\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[111\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[110\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[109\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[108\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[107\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[106\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[105\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[104\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[103\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[102\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[101\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d15 u_ft_t_s2/q\[100\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n15
+ Pin capacitance: 7.74-10.44
+ Wire capacitance: 1.46-1.46
+ Total capacitance: 9.20-11.90
+ Number of drivers: 1
+ Number of loads: 22
+ Number of pins: 23
+
+Driver pins
+ ot_prp_d15/Y output (BUFx2_ASAP7_75t_R) (35, 149)
+
+Load pins
+ u_ft_t_s2/q[100]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 147)
+ u_ft_t_s2/q[101]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 147)
+ u_ft_t_s2/q[102]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (33, 148)
+ u_ft_t_s2/q[103]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 148)
+ u_ft_t_s2/q[104]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 148)
+ u_ft_t_s2/q[105]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (34, 148)
+ u_ft_t_s2/q[106]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 149)
+ u_ft_t_s2/q[107]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 149)
+ u_ft_t_s2/q[108]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 149)
+ u_ft_t_s2/q[109]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 149)
+ u_ft_t_s2/q[110]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 150)
+ u_ft_t_s2/q[111]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (35, 150)
+ u_ft_t_s2/q[112]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 150)
+ u_ft_t_s2/q[113]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 151)
+ u_ft_t_s2/q[114]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 151)
+ u_ft_t_s2/q[115]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 151)
+ u_ft_t_s2/q[116]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 151)
+ u_ft_t_s2/q[117]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (37, 152)
+ u_ft_t_s2/q[96]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 146)
+ u_ft_t_s2/q[97]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 146)
+ u_ft_t_s2/q[98]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 147)
+ u_ft_t_s2/q[99]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (32, 146)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.78 Rpi=0.10 C1=11.11, Ceff=11.59
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 11.78
+|       total_output_net_capacitance = 11.59
+|        11.52     23.04
+v      --------------------
+10.00 | 39.89     62.72
+20.00 | 43.04     65.92
+Table value = 40.58
+PVT scale factor = 1.00
+Delay = 40.58
+
+------- input_net_transition = 11.78
+|       total_output_net_capacitance = 11.59
+|        11.52     23.04
+v      --------------------
+10.00 | 53.74     103.99
+20.00 | 53.77     104.00
+Table value = 54.03
+PVT scale factor = 1.00
+Slew = 54.03
+Driver waveform slew = 58.42
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.79 Rpi=0.10 C1=11.12, Ceff=11.50
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.30
+|       total_output_net_capacitance = 11.50
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 38.97
+PVT scale factor = 1.00
+Delay = 38.97
+
+------- input_net_transition = 12.30
+|       total_output_net_capacitance = 11.50
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 42.38
+PVT scale factor = 1.00
+Slew = 42.38
+Driver waveform slew = 46.96
+
+.............................................
+
+ENDPAD ot_prp_d15
+PAD ot_prp_d16 BUFx2_ASAP7_75t_R NET ot_prp_n16
+LOAD ot_prp_d16 u_ft_t_s2/q\[145\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[141\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[140\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[139\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[138\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[137\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[136\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[135\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[134\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[133\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[132\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[131\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[130\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[129\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[128\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[127\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[126\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[125\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[124\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[123\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[122\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[121\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[120\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[119\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d16 u_ft_t_s2/q\[118\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n16
+ Pin capacitance: 8.79-11.87
+ Wire capacitance: 1.97-1.97
+ Total capacitance: 10.77-13.84
+ Number of drivers: 1
+ Number of loads: 25
+ Number of pins: 26
+
+Driver pins
+ ot_prp_d16/Y output (BUFx2_ASAP7_75t_R) (41, 155)
+
+Load pins
+ u_ft_t_s2/q[118]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 152)
+ u_ft_t_s2/q[119]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 152)
+ u_ft_t_s2/q[120]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 153)
+ u_ft_t_s2/q[121]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (38, 153)
+ u_ft_t_s2/q[122]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 153)
+ u_ft_t_s2/q[123]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 153)
+ u_ft_t_s2/q[124]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 154)
+ u_ft_t_s2/q[125]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (39, 153)
+ u_ft_t_s2/q[126]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 154)
+ u_ft_t_s2/q[127]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 154)
+ u_ft_t_s2/q[128]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 155)
+ u_ft_t_s2/q[129]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 155)
+ u_ft_t_s2/q[130]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 155)
+ u_ft_t_s2/q[131]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 156)
+ u_ft_t_s2/q[132]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 156)
+ u_ft_t_s2/q[133]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (41, 156)
+ u_ft_t_s2/q[134]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 157)
+ u_ft_t_s2/q[135]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 156)
+ u_ft_t_s2/q[136]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 157)
+ u_ft_t_s2/q[137]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 156)
+ u_ft_t_s2/q[138]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 158)
+ u_ft_t_s2/q[139]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 157)
+ u_ft_t_s2/q[140]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 158)
+ u_ft_t_s2/q[141]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (43, 158)
+ u_ft_t_s2/q[145]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (45, 159)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.14 Rpi=0.13 C1=12.70, Ceff=13.38
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.41
+|       total_output_net_capacitance = 13.38
+|        11.52     23.04
+v      --------------------
+10.00 | 39.89     62.72
+20.00 | 43.04     65.92
+Table value = 43.70
+PVT scale factor = 1.00
+Delay = 43.70
+
+------- input_net_transition = 10.41
+|       total_output_net_capacitance = 13.38
+|        11.52     23.04
+v      --------------------
+10.00 | 53.74     103.99
+20.00 | 53.77     104.00
+Table value = 61.85
+PVT scale factor = 1.00
+Slew = 61.85
+Driver waveform slew = 67.71
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.14 Rpi=0.13 C1=12.70, Ceff=13.25
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.88
+|       total_output_net_capacitance = 13.25
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 41.32
+PVT scale factor = 1.00
+Delay = 41.32
+
+------- input_net_transition = 10.88
+|       total_output_net_capacitance = 13.25
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 48.20
+PVT scale factor = 1.00
+Slew = 48.20
+Driver waveform slew = 54.35
+
+.............................................
+
+ENDPAD ot_prp_d16
+PAD ot_prp_d17 BUFx2_ASAP7_75t_R NET ot_prp_n17
+LOAD ot_prp_d17 u_ft_t_s2/q\[163\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[161\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[160\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[159\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[157\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[156\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[155\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[154\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[153\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[152\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[151\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[150\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[149\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[148\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[147\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[146\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[144\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[143\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d17 u_ft_t_s2/q\[142\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n17
+ Pin capacitance: 6.68-9.02
+ Wire capacitance: 1.52
+ Total capacitance: 8.20-10.54
+ Number of drivers: 1
+ Number of loads: 19
+ Number of pins: 20
+
+Driver pins
+ ot_prp_d17/Y output (BUFx2_ASAP7_75t_R) (48, 161)
+
+Load pins
+ u_ft_t_s2/q[142]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (45, 158)
+ u_ft_t_s2/q[143]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (45, 159)
+ u_ft_t_s2/q[144]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (45, 159)
+ u_ft_t_s2/q[146]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (46, 160)
+ u_ft_t_s2/q[147]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (45, 159)
+ u_ft_t_s2/q[148]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 160)
+ u_ft_t_s2/q[149]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 161)
+ u_ft_t_s2/q[150]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 161)
+ u_ft_t_s2/q[151]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 161)
+ u_ft_t_s2/q[152]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 162)
+ u_ft_t_s2/q[153]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (47, 161)
+ u_ft_t_s2/q[154]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 162)
+ u_ft_t_s2/q[155]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (48, 162)
+ u_ft_t_s2/q[156]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 162)
+ u_ft_t_s2/q[157]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 162)
+ u_ft_t_s2/q[159]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 163)
+ u_ft_t_s2/q[160]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 163)
+ u_ft_t_s2/q[161]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (49, 164)
+ u_ft_t_s2/q[163]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 164)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.74 Rpi=0.08 C1=9.79, Ceff=10.31
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 11.43
+|       total_output_net_capacitance = 10.31
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 37.93
+PVT scale factor = 1.00
+Delay = 37.93
+
+------- input_net_transition = 11.43
+|       total_output_net_capacitance = 10.31
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 48.54
+PVT scale factor = 1.00
+Slew = 48.54
+Driver waveform slew = 52.02
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.74 Rpi=0.08 C1=9.79, Ceff=10.25
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 11.59
+|       total_output_net_capacitance = 10.25
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 36.61
+PVT scale factor = 1.00
+Delay = 36.61
+
+------- input_net_transition = 11.59
+|       total_output_net_capacitance = 10.25
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 38.31
+PVT scale factor = 1.00
+Slew = 38.31
+Driver waveform slew = 42.16
+
+.............................................
+
+ENDPAD ot_prp_d17
+PAD ot_prp_d18 BUFx2_ASAP7_75t_R NET ot_prp_n18
+LOAD ot_prp_d18 u_ft_t_s2/q\[95\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[94\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[93\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[92\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[91\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[90\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[162\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d18 u_ft_t_s2/q\[158\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n18
+ Pin capacitance: 2.81-3.80
+ Wire capacitance: 4.18
+ Total capacitance: 6.99-7.98
+ Number of drivers: 1
+ Number of loads: 8
+ Number of pins: 9
+
+Driver pins
+ ot_prp_d18/Y output (BUFx2_ASAP7_75t_R) (35, 151)
+
+Load pins
+ u_ft_t_s2/q[158]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 163)
+ u_ft_t_s2/q[162]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (50, 164)
+ u_ft_t_s2/q[90]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (30, 144)
+ u_ft_t_s2/q[91]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (30, 145)
+ u_ft_t_s2/q[92]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (30, 145)
+ u_ft_t_s2/q[93]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (30, 145)
+ u_ft_t_s2/q[94]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (31, 146)
+ u_ft_t_s2/q[95]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (31, 145)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.41 Rpi=0.17 C1=7.56, Ceff=7.63
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 14.39
+|       total_output_net_capacitance = 7.63
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 33.50
+PVT scale factor = 1.00
+Delay = 33.50
+
+------- input_net_transition = 14.39
+|       total_output_net_capacitance = 7.63
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 36.98
+PVT scale factor = 1.00
+Slew = 36.98
+Driver waveform slew = 40.69
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.41 Rpi=0.17 C1=7.56, Ceff=7.54
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 14.47
+|       total_output_net_capacitance = 7.54
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 33.07
+PVT scale factor = 1.00
+Delay = 33.07
+
+------- input_net_transition = 14.47
+|       total_output_net_capacitance = 7.54
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 29.47
+PVT scale factor = 1.00
+Slew = 29.47
+Driver waveform slew = 33.43
+
+.............................................
+
+ENDPAD ot_prp_d18
+PAD ot_prp_d19 BUFx2_ASAP7_75t_R NET ot_prp_n19
+LOAD ot_prp_d19 u_ft_t_s2/q\[186\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[185\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[184\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[183\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[182\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[181\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[180\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[179\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[178\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[177\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[176\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[175\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[174\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[173\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[172\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[171\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[170\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[169\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[168\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[167\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[166\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[165\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d19 u_ft_t_s2/q\[164\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n19
+ Pin capacitance: 8.09-10.92
+ Wire capacitance: 1.99-1.99
+ Total capacitance: 10.08-12.91
+ Number of drivers: 1
+ Number of loads: 23
+ Number of pins: 24
+
+Driver pins
+ ot_prp_d19/Y output (BUFx2_ASAP7_75t_R) (55, 167)
+
+Load pins
+ u_ft_t_s2/q[164]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 165)
+ u_ft_t_s2/q[165]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 165)
+ u_ft_t_s2/q[166]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 166)
+ u_ft_t_s2/q[167]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 165)
+ u_ft_t_s2/q[168]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 166)
+ u_ft_t_s2/q[169]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (52, 165)
+ u_ft_t_s2/q[170]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (53, 166)
+ u_ft_t_s2/q[171]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 166)
+ u_ft_t_s2/q[172]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 167)
+ u_ft_t_s2/q[173]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 165)
+ u_ft_t_s2/q[174]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 168)
+ u_ft_t_s2/q[175]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 169)
+ u_ft_t_s2/q[176]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 168)
+ u_ft_t_s2/q[177]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (54, 169)
+ u_ft_t_s2/q[178]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 169)
+ u_ft_t_s2/q[179]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 168)
+ u_ft_t_s2/q[180]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 169)
+ u_ft_t_s2/q[181]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 169)
+ u_ft_t_s2/q[182]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 170)
+ u_ft_t_s2/q[183]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 169)
+ u_ft_t_s2/q[184]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 171)
+ u_ft_t_s2/q[185]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (56, 170)
+ u_ft_t_s2/q[186]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 171)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.51 Rpi=0.16 C1=11.39, Ceff=12.44
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.91
+|       total_output_net_capacitance = 12.44
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 41.67
+PVT scale factor = 1.00
+Delay = 41.67
+
+------- input_net_transition = 9.91
+|       total_output_net_capacitance = 12.44
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 57.73
+PVT scale factor = 1.00
+Slew = 57.73
+Driver waveform slew = 63.45
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.51 Rpi=0.16 C1=11.40, Ceff=12.30
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.09
+|       total_output_net_capacitance = 12.30
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 39.48
+PVT scale factor = 1.00
+Delay = 39.48
+
+------- input_net_transition = 10.09
+|       total_output_net_capacitance = 12.30
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 45.05
+PVT scale factor = 1.00
+Slew = 45.05
+Driver waveform slew = 51.03
+
+.............................................
+
+ENDPAD ot_prp_d19
+PAD ot_prp_d20 BUFx2_ASAP7_75t_R NET ot_prp_n20
+LOAD ot_prp_d20 u_ft_t_s2/q\[207\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[206\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[205\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[204\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[203\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[202\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[201\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[200\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[199\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[198\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[197\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[196\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[195\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[194\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[193\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[192\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[191\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[190\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[189\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[188\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d20 u_ft_t_s2/q\[187\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n20
+ Pin capacitance: 7.39-9.97
+ Wire capacitance: 1.51-1.51
+ Total capacitance: 8.90-11.48
+ Number of drivers: 1
+ Number of loads: 21
+ Number of pins: 22
+
+Driver pins
+ ot_prp_d20/Y output (BUFx2_ASAP7_75t_R) (61, 174)
+
+Load pins
+ u_ft_t_s2/q[187]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 171)
+ u_ft_t_s2/q[188]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 171)
+ u_ft_t_s2/q[189]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 171)
+ u_ft_t_s2/q[190]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (59, 172)
+ u_ft_t_s2/q[191]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 172)
+ u_ft_t_s2/q[192]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (59, 172)
+ u_ft_t_s2/q[193]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (58, 172)
+ u_ft_t_s2/q[194]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 173)
+ u_ft_t_s2/q[195]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 172)
+ u_ft_t_s2/q[196]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 173)
+ u_ft_t_s2/q[197]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 173)
+ u_ft_t_s2/q[198]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 174)
+ u_ft_t_s2/q[199]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (61, 174)
+ u_ft_t_s2/q[200]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 175)
+ u_ft_t_s2/q[201]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (62, 174)
+ u_ft_t_s2/q[202]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 175)
+ u_ft_t_s2/q[203]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 175)
+ u_ft_t_s2/q[204]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 176)
+ u_ft_t_s2/q[205]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 175)
+ u_ft_t_s2/q[206]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 176)
+ u_ft_t_s2/q[207]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (63, 176)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.25 Rpi=0.10 C1=10.23, Ceff=11.21
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.90
+|       total_output_net_capacitance = 11.21
+|        5.76     11.52
+v      --------------------
+5.00 | 26.54     38.12
+10.00 | 28.38     39.89
+Table value = 39.23
+PVT scale factor = 1.00
+Delay = 39.23
+
+------- input_net_transition = 9.90
+|       total_output_net_capacitance = 11.21
+|        5.76     11.52
+v      --------------------
+5.00 | 28.89     53.74
+10.00 | 28.90     53.74
+Table value = 52.39
+PVT scale factor = 1.00
+Slew = 52.39
+Driver waveform slew = 56.36
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.25 Rpi=0.10 C1=10.24, Ceff=11.13
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.96
+|       total_output_net_capacitance = 11.13
+|        5.76     11.52
+v      --------------------
+5.00 | 26.78     36.46
+10.00 | 28.49     38.17
+Table value = 37.50
+PVT scale factor = 1.00
+Delay = 37.50
+
+------- input_net_transition = 9.96
+|       total_output_net_capacitance = 11.13
+|        5.76     11.52
+v      --------------------
+5.00 | 23.62     42.45
+10.00 | 23.62     42.44
+Table value = 41.18
+PVT scale factor = 1.00
+Slew = 41.18
+Driver waveform slew = 45.33
+
+.............................................
+
+ENDPAD ot_prp_d20
+PAD ot_prp_d21 BUFx2_ASAP7_75t_R NET ot_prp_n21
+LOAD ot_prp_d21 u_ft_t_s2/q\[259\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[258\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[257\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[256\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[255\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[254\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[253\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[252\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[251\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[250\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[249\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[248\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[247\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[246\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[245\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[244\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[243\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[242\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[241\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[240\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[239\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[238\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[209\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d21 u_ft_t_s2/q\[208\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n21
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 3.51-3.51
+ Total capacitance: 11.95-14.90
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d21/Y output (BUFx2_ASAP7_75t_R) (75, 187)
+
+Load pins
+ u_ft_t_s2/q[208]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 176)
+ u_ft_t_s2/q[209]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 177)
+ u_ft_t_s2/q[238]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 185)
+ u_ft_t_s2/q[239]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 185)
+ u_ft_t_s2/q[240]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 186)
+ u_ft_t_s2/q[241]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 186)
+ u_ft_t_s2/q[242]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 186)
+ u_ft_t_s2/q[243]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (74, 186)
+ u_ft_t_s2/q[244]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 186)
+ u_ft_t_s2/q[245]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 187)
+ u_ft_t_s2/q[246]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 187)
+ u_ft_t_s2/q[247]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 186)
+ u_ft_t_s2/q[248]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 188)
+ u_ft_t_s2/q[249]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 188)
+ u_ft_t_s2/q[250]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 189)
+ u_ft_t_s2/q[251]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (76, 188)
+ u_ft_t_s2/q[252]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 189)
+ u_ft_t_s2/q[253]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (77, 189)
+ u_ft_t_s2/q[254]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 189)
+ u_ft_t_s2/q[255]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 189)
+ u_ft_t_s2/q[256]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 190)
+ u_ft_t_s2/q[257]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 190)
+ u_ft_t_s2/q[258]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 190)
+ u_ft_t_s2/q[259]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (78, 190)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.73 Rpi=0.11 C1=13.17, Ceff=14.50
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.38
+|       total_output_net_capacitance = 14.50
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 45.23
+PVT scale factor = 1.00
+Delay = 45.23
+
+------- input_net_transition = 8.38
+|       total_output_net_capacitance = 14.50
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 66.74
+PVT scale factor = 1.00
+Slew = 66.74
+Driver waveform slew = 72.45
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.73 Rpi=0.11 C1=13.17, Ceff=14.39
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 8.66
+|       total_output_net_capacitance = 14.39
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 42.40
+PVT scale factor = 1.00
+Delay = 42.40
+
+------- input_net_transition = 8.66
+|       total_output_net_capacitance = 14.39
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 51.98
+PVT scale factor = 1.00
+Slew = 51.98
+Driver waveform slew = 57.99
+
+.............................................
+
+ENDPAD ot_prp_d21
+PAD ot_prp_d22 BUFx2_ASAP7_75t_R NET ot_prp_n22
+LOAD ot_prp_d22 u_ft_t_s2/q\[215\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d22 u_ft_t_s2/q\[214\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d22 u_ft_t_s2/q\[213\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d22 u_ft_t_s2/q\[212\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d22 u_ft_t_s2/q\[211\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d22 u_ft_t_s2/q\[210\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n22
+ Pin capacitance: 2.11-2.85
+ Wire capacitance: 0.19-0.19
+ Total capacitance: 2.30-3.04
+ Number of drivers: 1
+ Number of loads: 6
+ Number of pins: 7
+
+Driver pins
+ ot_prp_d22/Y output (BUFx2_ASAP7_75t_R) (65, 178)
+
+Load pins
+ u_ft_t_s2/q[210]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 177)
+ u_ft_t_s2/q[211]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 177)
+ u_ft_t_s2/q[212]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 178)
+ u_ft_t_s2/q[213]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 178)
+ u_ft_t_s2/q[214]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 178)
+ u_ft_t_s2/q[215]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (65, 178)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.19 Rpi=0.05 C1=2.85, Ceff=3.01
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 13.21
+|       total_output_net_capacitance = 3.01
+|        2.88     5.76
+v      --------------------
+10.00 | 22.22     28.38
+20.00 | 25.51     31.54
+Table value = 23.55
+PVT scale factor = 1.00
+Delay = 23.55
+
+------- input_net_transition = 13.21
+|       total_output_net_capacitance = 3.01
+|        2.88     5.76
+v      --------------------
+10.00 | 16.70     28.90
+20.00 | 16.81     28.97
+Table value = 17.27
+PVT scale factor = 1.00
+Slew = 17.27
+Driver waveform slew = 17.65
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.19 Rpi=0.05 C1=2.85, Ceff=3.00
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.83
+|       total_output_net_capacitance = 3.00
+|        2.88     5.76
+v      --------------------
+10.00 | 23.22     28.49
+20.00 | 26.82     32.02
+Table value = 24.46
+PVT scale factor = 1.00
+Delay = 24.46
+
+------- input_net_transition = 12.83
+|       total_output_net_capacitance = 3.00
+|        2.88     5.76
+v      --------------------
+10.00 | 14.33     23.62
+20.00 | 14.46     23.75
+Table value = 14.76
+PVT scale factor = 1.00
+Slew = 14.76
+Driver waveform slew = 15.13
+
+.............................................
+
+ENDPAD ot_prp_d22
+PAD ot_prp_d23 BUFx2_ASAP7_75t_R NET ot_prp_n23
+LOAD ot_prp_d23 u_ft_t_s2/q\[237\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[236\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[235\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[234\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[233\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[232\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[231\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[230\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[229\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[228\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[227\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[226\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[225\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[224\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[223\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[222\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[221\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[220\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[219\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[218\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[217\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d23 u_ft_t_s2/q\[216\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n23
+ Pin capacitance: 7.74-10.44
+ Wire capacitance: 1.53-1.53
+ Total capacitance: 9.27-11.98
+ Number of drivers: 1
+ Number of loads: 22
+ Number of pins: 23
+
+Driver pins
+ ot_prp_d23/Y output (BUFx2_ASAP7_75t_R) (70, 183)
+
+Load pins
+ u_ft_t_s2/q[216]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 179)
+ u_ft_t_s2/q[217]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 179)
+ u_ft_t_s2/q[218]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 179)
+ u_ft_t_s2/q[219]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 179)
+ u_ft_t_s2/q[220]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 180)
+ u_ft_t_s2/q[221]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (67, 180)
+ u_ft_t_s2/q[222]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 180)
+ u_ft_t_s2/q[223]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 180)
+ u_ft_t_s2/q[224]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 181)
+ u_ft_t_s2/q[225]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 181)
+ u_ft_t_s2/q[226]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 182)
+ u_ft_t_s2/q[227]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 181)
+ u_ft_t_s2/q[228]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 182)
+ u_ft_t_s2/q[229]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (69, 182)
+ u_ft_t_s2/q[230]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 182)
+ u_ft_t_s2/q[231]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 182)
+ u_ft_t_s2/q[232]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 183)
+ u_ft_t_s2/q[233]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 183)
+ u_ft_t_s2/q[234]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 184)
+ u_ft_t_s2/q[235]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 184)
+ u_ft_t_s2/q[236]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (72, 185)
+ u_ft_t_s2/q[237]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (71, 184)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.85 Rpi=0.12 C1=11.12, Ceff=11.61
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.77
+|       total_output_net_capacitance = 11.61
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 39.98
+PVT scale factor = 1.00
+Delay = 39.98
+
+------- input_net_transition = 9.77
+|       total_output_net_capacitance = 11.61
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 54.12
+PVT scale factor = 1.00
+Slew = 54.12
+Driver waveform slew = 58.89
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.85 Rpi=0.12 C1=11.13, Ceff=11.51
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.88
+|       total_output_net_capacitance = 11.51
+|        5.76     11.52
+v      --------------------
+5.00 | 26.78     36.46
+10.00 | 28.49     38.17
+Table value = 38.10
+PVT scale factor = 1.00
+Delay = 38.10
+
+------- input_net_transition = 9.88
+|       total_output_net_capacitance = 11.51
+|        5.76     11.52
+v      --------------------
+5.00 | 23.62     42.45
+10.00 | 23.62     42.44
+Table value = 42.40
+PVT scale factor = 1.00
+Slew = 42.40
+Driver waveform slew = 47.37
+
+.............................................
+
+ENDPAD ot_prp_d23
+PAD ot_prp_d24 BUFx2_ASAP7_75t_R NET ot_prp_n24
+LOAD ot_prp_d24 u_ft_t_s2/q\[273\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[272\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[271\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[270\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[269\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[268\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[267\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[266\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[265\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[264\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[263\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[262\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[261\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d24 u_ft_t_s2/q\[260\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n24
+ Pin capacitance: 4.92-6.65
+ Wire capacitance: 0.94-0.94
+ Total capacitance: 5.86-7.58
+ Number of drivers: 1
+ Number of loads: 14
+ Number of pins: 15
+
+Driver pins
+ ot_prp_d24/Y output (BUFx2_ASAP7_75t_R) (81, 193)
+
+Load pins
+ u_ft_t_s2/q[260]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 191)
+ u_ft_t_s2/q[261]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 190)
+ u_ft_t_s2/q[262]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 191)
+ u_ft_t_s2/q[263]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 191)
+ u_ft_t_s2/q[264]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 192)
+ u_ft_t_s2/q[265]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 192)
+ u_ft_t_s2/q[266]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 193)
+ u_ft_t_s2/q[267]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (80, 192)
+ u_ft_t_s2/q[268]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (82, 193)
+ u_ft_t_s2/q[269]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (82, 193)
+ u_ft_t_s2/q[270]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (82, 194)
+ u_ft_t_s2/q[271]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (82, 193)
+ u_ft_t_s2/q[272]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (83, 195)
+ u_ft_t_s2/q[273]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (82, 194)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.66 Rpi=0.08 C1=6.92, Ceff=7.44
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 17.90
+|       total_output_net_capacitance = 7.44
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 34.23
+PVT scale factor = 1.00
+Delay = 34.23
+
+------- input_net_transition = 17.90
+|       total_output_net_capacitance = 7.44
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 36.19
+PVT scale factor = 1.00
+Slew = 36.19
+Driver waveform slew = 38.18
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.66 Rpi=0.08 C1=6.93, Ceff=7.40
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 16.90
+|       total_output_net_capacitance = 7.40
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 33.69
+PVT scale factor = 1.00
+Delay = 33.69
+
+------- input_net_transition = 16.90
+|       total_output_net_capacitance = 7.40
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 29.04
+PVT scale factor = 1.00
+Slew = 29.04
+Driver waveform slew = 31.44
+
+.............................................
+
+ENDPAD ot_prp_d24
+PAD ot_prp_d25 BUFx2_ASAP7_75t_R NET ot_prp_n25
+LOAD ot_prp_d25 u_ft_t_s2/q\[305\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[298\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[287\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[285\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[284\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[283\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[282\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[281\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[280\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[279\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[278\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[277\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[276\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[275\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d25 u_ft_t_s2/q\[274\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n25
+ Pin capacitance: 5.28-7.12
+ Wire capacitance: 2.07-2.07
+ Total capacitance: 7.34-9.19
+ Number of drivers: 1
+ Number of loads: 15
+ Number of pins: 16
+
+Driver pins
+ ot_prp_d25/Y output (BUFx2_ASAP7_75t_R) (86, 197)
+
+Load pins
+ u_ft_t_s2/q[274]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 195)
+ u_ft_t_s2/q[275]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 195)
+ u_ft_t_s2/q[276]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 195)
+ u_ft_t_s2/q[277]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 195)
+ u_ft_t_s2/q[278]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (85, 196)
+ u_ft_t_s2/q[279]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 196)
+ u_ft_t_s2/q[280]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (85, 197)
+ u_ft_t_s2/q[281]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (84, 196)
+ u_ft_t_s2/q[282]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (86, 197)
+ u_ft_t_s2/q[283]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (86, 197)
+ u_ft_t_s2/q[284]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (86, 197)
+ u_ft_t_s2/q[285]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (86, 198)
+ u_ft_t_s2/q[287]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (86, 198)
+ u_ft_t_s2/q[298]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 202)
+ u_ft_t_s2/q[305]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 203)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.89 Rpi=0.10 C1=8.29, Ceff=8.98
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.67
+|       total_output_net_capacitance = 8.98
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 35.02
+PVT scale factor = 1.00
+Delay = 35.02
+
+------- input_net_transition = 10.67
+|       total_output_net_capacitance = 8.98
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 42.78
+PVT scale factor = 1.00
+Slew = 42.78
+Driver waveform slew = 45.81
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.89 Rpi=0.10 C1=8.30, Ceff=8.92
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.57
+|       total_output_net_capacitance = 8.92
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 34.01
+PVT scale factor = 1.00
+Delay = 34.01
+
+------- input_net_transition = 10.57
+|       total_output_net_capacitance = 8.92
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 33.96
+PVT scale factor = 1.00
+Slew = 33.96
+Driver waveform slew = 37.25
+
+.............................................
+
+ENDPAD ot_prp_d25
+PAD ot_prp_d26 BUFx2_ASAP7_75t_R NET ot_prp_n26
+LOAD ot_prp_d26 u_ft_t_s2/q\[311\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[310\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[309\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[308\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[307\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[306\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[304\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[303\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[302\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[301\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[300\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[299\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[297\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[296\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[295\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[294\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[293\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[292\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[291\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[290\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[289\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[288\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d26 u_ft_t_s2/q\[286\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n26
+ Pin capacitance: 8.09-10.92
+ Wire capacitance: 2.10-2.10
+ Total capacitance: 10.19-13.02
+ Number of drivers: 1
+ Number of loads: 23
+ Number of pins: 24
+
+Driver pins
+ ot_prp_d26/Y output (BUFx2_ASAP7_75t_R) (90, 202)
+
+Load pins
+ u_ft_t_s2/q[286]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (87, 198)
+ u_ft_t_s2/q[288]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (87, 198)
+ u_ft_t_s2/q[289]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (87, 199)
+ u_ft_t_s2/q[290]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 199)
+ u_ft_t_s2/q[291]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 199)
+ u_ft_t_s2/q[292]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 200)
+ u_ft_t_s2/q[293]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 199)
+ u_ft_t_s2/q[294]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 200)
+ u_ft_t_s2/q[295]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (89, 200)
+ u_ft_t_s2/q[296]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 200)
+ u_ft_t_s2/q[297]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (90, 201)
+ u_ft_t_s2/q[299]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (90, 201)
+ u_ft_t_s2/q[300]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 202)
+ u_ft_t_s2/q[301]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 201)
+ u_ft_t_s2/q[302]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 202)
+ u_ft_t_s2/q[303]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (91, 202)
+ u_ft_t_s2/q[304]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 203)
+ u_ft_t_s2/q[306]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 203)
+ u_ft_t_s2/q[307]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (92, 203)
+ u_ft_t_s2/q[308]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 204)
+ u_ft_t_s2/q[309]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 204)
+ u_ft_t_s2/q[310]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 205)
+ u_ft_t_s2/q[311]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (93, 205)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=2.04 Rpi=0.15 C1=10.97, Ceff=12.59
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.53
+|       total_output_net_capacitance = 12.59
+|        11.52     23.04
+v      --------------------
+5.00 | 38.12     60.97
+10.00 | 39.89     62.72
+Table value = 41.85
+PVT scale factor = 1.00
+Delay = 41.85
+
+------- input_net_transition = 9.53
+|       total_output_net_capacitance = 12.59
+|        11.52     23.04
+v      --------------------
+5.00 | 53.74     103.99
+10.00 | 53.74     103.99
+Table value = 58.42
+PVT scale factor = 1.00
+Slew = 58.42
+Driver waveform slew = 63.81
+
+.............................................
+
+A v -> Y v
+Pi model C2=2.04 Rpi=0.15 C1=10.98, Ceff=12.48
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 9.73
+|       total_output_net_capacitance = 12.48
+|        11.52     23.04
+v      --------------------
+5.00 | 36.46     55.29
+10.00 | 38.17     57.04
+Table value = 39.64
+PVT scale factor = 1.00
+Delay = 39.64
+
+------- input_net_transition = 9.73
+|       total_output_net_capacitance = 12.48
+|        11.52     23.04
+v      --------------------
+5.00 | 42.45     80.75
+10.00 | 42.44     80.75
+Table value = 45.62
+PVT scale factor = 1.00
+Slew = 45.62
+Driver waveform slew = 51.26
+
+.............................................
+
+ENDPAD ot_prp_d26
+PAD ot_prp_d27 BUFx2_ASAP7_75t_R NET ot_prp_n27
+LOAD ot_prp_d27 u_ft_t_s2/q\[333\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[332\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[331\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[330\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[329\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[328\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[327\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[326\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[325\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[324\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[323\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[322\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[321\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[320\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[319\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[318\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[317\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[316\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[315\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[314\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[313\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d27 u_ft_t_s2/q\[312\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n27
+ Pin capacitance: 7.74-10.44
+ Wire capacitance: 1.27
+ Total capacitance: 9.01-11.72
+ Number of drivers: 1
+ Number of loads: 22
+ Number of pins: 23
+
+Driver pins
+ ot_prp_d27/Y output (BUFx2_ASAP7_75t_R) (97, 208)
+
+Load pins
+ u_ft_t_s2/q[312]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 205)
+ u_ft_t_s2/q[313]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 205)
+ u_ft_t_s2/q[314]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 206)
+ u_ft_t_s2/q[315]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 206)
+ u_ft_t_s2/q[316]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 206)
+ u_ft_t_s2/q[317]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 206)
+ u_ft_t_s2/q[318]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 207)
+ u_ft_t_s2/q[319]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (95, 207)
+ u_ft_t_s2/q[320]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (97, 207)
+ u_ft_t_s2/q[321]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (97, 207)
+ u_ft_t_s2/q[322]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (97, 208)
+ u_ft_t_s2/q[323]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (97, 208)
+ u_ft_t_s2/q[324]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (98, 209)
+ u_ft_t_s2/q[325]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (97, 209)
+ u_ft_t_s2/q[326]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 209)
+ u_ft_t_s2/q[327]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 209)
+ u_ft_t_s2/q[328]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 210)
+ u_ft_t_s2/q[329]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 209)
+ u_ft_t_s2/q[330]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 210)
+ u_ft_t_s2/q[331]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 210)
+ u_ft_t_s2/q[332]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 211)
+ u_ft_t_s2/q[333]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (99, 210)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.91 Rpi=0.11 C1=10.80, Ceff=11.39
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.20
+|       total_output_net_capacitance = 11.39
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 39.68
+PVT scale factor = 1.00
+Delay = 39.68
+
+------- input_net_transition = 10.20
+|       total_output_net_capacitance = 11.39
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 53.16
+PVT scale factor = 1.00
+Slew = 53.16
+Driver waveform slew = 57.57
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.91 Rpi=0.11 C1=10.81, Ceff=11.30
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.45
+|       total_output_net_capacitance = 11.30
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 37.96
+PVT scale factor = 1.00
+Delay = 37.96
+
+------- input_net_transition = 10.45
+|       total_output_net_capacitance = 11.30
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 41.72
+PVT scale factor = 1.00
+Slew = 41.72
+Driver waveform slew = 46.32
+
+.............................................
+
+ENDPAD ot_prp_d27
+PAD ot_prp_d28 BUFx2_ASAP7_75t_R NET ot_prp_n28
+LOAD ot_prp_d28 u_ft_t_s2/q\[347\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[346\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[345\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[341\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[340\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[339\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[338\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[337\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[336\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[335\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d28 u_ft_t_s2/q\[334\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n28
+ Pin capacitance: 3.87-5.22
+ Wire capacitance: 0.97-0.97
+ Total capacitance: 4.83-6.19
+ Number of drivers: 1
+ Number of loads: 11
+ Number of pins: 12
+
+Driver pins
+ ot_prp_d28/Y output (BUFx2_ASAP7_75t_R) (102, 214)
+
+Load pins
+ u_ft_t_s2/q[334]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 212)
+ u_ft_t_s2/q[335]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 211)
+ u_ft_t_s2/q[336]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 212)
+ u_ft_t_s2/q[337]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 211)
+ u_ft_t_s2/q[338]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 212)
+ u_ft_t_s2/q[339]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 212)
+ u_ft_t_s2/q[340]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 213)
+ u_ft_t_s2/q[341]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (102, 213)
+ u_ft_t_s2/q[345]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 215)
+ u_ft_t_s2/q[346]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 215)
+ u_ft_t_s2/q[347]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 216)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.58 Rpi=0.13 C1=5.61, Ceff=6.02
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.83
+|       total_output_net_capacitance = 6.02
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 29.79
+PVT scale factor = 1.00
+Delay = 29.79
+
+------- input_net_transition = 12.83
+|       total_output_net_capacitance = 6.02
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 30.02
+PVT scale factor = 1.00
+Slew = 30.02
+Driver waveform slew = 31.84
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.58 Rpi=0.13 C1=5.61, Ceff=5.97
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.77
+|       total_output_net_capacitance = 5.97
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 29.83
+PVT scale factor = 1.00
+Delay = 29.83
+
+------- input_net_transition = 12.77
+|       total_output_net_capacitance = 5.97
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 24.35
+PVT scale factor = 1.00
+Slew = 24.35
+Driver waveform slew = 26.45
+
+.............................................
+
+ENDPAD ot_prp_d28
+PAD ot_prp_d29 BUFx2_ASAP7_75t_R NET ot_prp_n29
+LOAD ot_prp_d29 u_ft_t_s2/q\[355\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[354\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[353\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[352\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[351\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[350\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[349\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[348\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[344\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[343\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d29 u_ft_t_s2/q\[342\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n29
+ Pin capacitance: 3.87-5.22
+ Wire capacitance: 0.97-0.97
+ Total capacitance: 4.84-6.20
+ Number of drivers: 1
+ Number of loads: 11
+ Number of pins: 12
+
+Driver pins
+ ot_prp_d29/Y output (BUFx2_ASAP7_75t_R) (106, 215)
+
+Load pins
+ u_ft_t_s2/q[342]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 213)
+ u_ft_t_s2/q[343]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 213)
+ u_ft_t_s2/q[344]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (104, 214)
+ u_ft_t_s2/q[348]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 215)
+ u_ft_t_s2/q[349]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 215)
+ u_ft_t_s2/q[350]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 216)
+ u_ft_t_s2/q[351]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 215)
+ u_ft_t_s2/q[352]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 216)
+ u_ft_t_s2/q[353]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 216)
+ u_ft_t_s2/q[354]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (106, 217)
+ u_ft_t_s2/q[355]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (107, 217)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.36 Rpi=0.06 C1=5.83, Ceff=6.11
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.97
+|       total_output_net_capacitance = 6.11
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 30.01
+PVT scale factor = 1.00
+Delay = 30.01
+
+------- input_net_transition = 12.97
+|       total_output_net_capacitance = 6.11
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 30.42
+PVT scale factor = 1.00
+Slew = 30.42
+Driver waveform slew = 31.83
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.36 Rpi=0.06 C1=5.83, Ceff=6.09
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.93
+|       total_output_net_capacitance = 6.09
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 30.08
+PVT scale factor = 1.00
+Delay = 30.08
+
+------- input_net_transition = 12.93
+|       total_output_net_capacitance = 6.09
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 24.73
+PVT scale factor = 1.00
+Slew = 24.73
+Driver waveform slew = 26.23
+
+.............................................
+
+ENDPAD ot_prp_d29
+PAD ot_prp_d30 BUFx2_ASAP7_75t_R NET ot_prp_n30
+LOAD ot_prp_d30 u_ft_t_s2/q\[381\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[377\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[376\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[375\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[374\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[373\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[372\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[371\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[370\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[369\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[368\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[367\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[366\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[365\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[364\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[363\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[362\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[361\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[360\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[359\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[358\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[357\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d30 u_ft_t_s2/q\[356\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n30
+ Pin capacitance: 8.09-10.92
+ Wire capacitance: 1.80-1.80
+ Total capacitance: 9.89-12.72
+ Number of drivers: 1
+ Number of loads: 23
+ Number of pins: 24
+
+Driver pins
+ ot_prp_d30/Y output (BUFx2_ASAP7_75t_R) (110, 220)
+
+Load pins
+ u_ft_t_s2/q[356]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 217)
+ u_ft_t_s2/q[357]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 218)
+ u_ft_t_s2/q[358]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 217)
+ u_ft_t_s2/q[359]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (107, 218)
+ u_ft_t_s2/q[360]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 219)
+ u_ft_t_s2/q[361]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 218)
+ u_ft_t_s2/q[362]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (108, 219)
+ u_ft_t_s2/q[363]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (109, 219)
+ u_ft_t_s2/q[364]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 219)
+ u_ft_t_s2/q[365]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 219)
+ u_ft_t_s2/q[366]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 221)
+ u_ft_t_s2/q[367]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 220)
+ u_ft_t_s2/q[368]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 220)
+ u_ft_t_s2/q[369]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (110, 220)
+ u_ft_t_s2/q[370]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (111, 221)
+ u_ft_t_s2/q[371]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (111, 221)
+ u_ft_t_s2/q[372]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (112, 222)
+ u_ft_t_s2/q[373]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (112, 221)
+ u_ft_t_s2/q[374]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (112, 222)
+ u_ft_t_s2/q[375]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (112, 222)
+ u_ft_t_s2/q[376]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (113, 223)
+ u_ft_t_s2/q[377]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (113, 222)
+ u_ft_t_s2/q[381]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (114, 224)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.23 Rpi=0.11 C1=11.49, Ceff=12.37
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.28
+|       total_output_net_capacitance = 12.37
+|        11.52     23.04
+v      --------------------
+10.00 | 39.89     62.72
+20.00 | 43.04     65.92
+Table value = 41.65
+PVT scale factor = 1.00
+Delay = 41.65
+
+------- input_net_transition = 10.28
+|       total_output_net_capacitance = 12.37
+|        11.52     23.04
+v      --------------------
+10.00 | 53.74     103.99
+20.00 | 53.77     104.00
+Table value = 57.43
+PVT scale factor = 1.00
+Slew = 57.43
+Driver waveform slew = 62.28
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.23 Rpi=0.11 C1=11.49, Ceff=12.27
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.64
+|       total_output_net_capacitance = 12.27
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 39.63
+PVT scale factor = 1.00
+Delay = 39.63
+
+------- input_net_transition = 10.64
+|       total_output_net_capacitance = 12.27
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 44.93
+PVT scale factor = 1.00
+Slew = 44.93
+Driver waveform slew = 50.01
+
+.............................................
+
+ENDPAD ot_prp_d30
+PAD ot_prp_d31 BUFx2_ASAP7_75t_R NET ot_prp_n31
+LOAD ot_prp_d31 u_ft_t_s2/q\[405\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[403\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[402\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[399\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[398\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[397\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[396\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[395\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[394\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[393\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[392\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[391\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[390\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[389\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[388\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[387\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[386\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[385\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[384\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[383\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[382\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[380\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[379\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d31 u_ft_t_s2/q\[378\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n31
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 2.00-2.00
+ Total capacitance: 10.44-13.39
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d31/Y output (BUFx2_ASAP7_75t_R) (117, 227)
+
+Load pins
+ u_ft_t_s2/q[378]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 224)
+ u_ft_t_s2/q[379]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 223)
+ u_ft_t_s2/q[380]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 223)
+ u_ft_t_s2/q[382]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 224)
+ u_ft_t_s2/q[383]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 224)
+ u_ft_t_s2/q[384]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 225)
+ u_ft_t_s2/q[385]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (115, 225)
+ u_ft_t_s2/q[386]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 225)
+ u_ft_t_s2/q[387]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 225)
+ u_ft_t_s2/q[388]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 226)
+ u_ft_t_s2/q[389]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 226)
+ u_ft_t_s2/q[390]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 227)
+ u_ft_t_s2/q[391]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 226)
+ u_ft_t_s2/q[392]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 227)
+ u_ft_t_s2/q[393]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (117, 227)
+ u_ft_t_s2/q[394]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 228)
+ u_ft_t_s2/q[395]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 227)
+ u_ft_t_s2/q[396]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 228)
+ u_ft_t_s2/q[397]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 228)
+ u_ft_t_s2/q[398]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 229)
+ u_ft_t_s2/q[399]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (119, 229)
+ u_ft_t_s2/q[402]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 230)
+ u_ft_t_s2/q[403]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 230)
+ u_ft_t_s2/q[405]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 230)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.94 Rpi=0.12 C1=12.45, Ceff=12.97
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.02
+|       total_output_net_capacitance = 12.97
+|        11.52     23.04
+v      --------------------
+10.00 | 39.89     62.72
+20.00 | 43.04     65.92
+Table value = 42.77
+PVT scale factor = 1.00
+Delay = 42.77
+
+------- input_net_transition = 10.02
+|       total_output_net_capacitance = 12.97
+|        11.52     23.04
+v      --------------------
+10.00 | 53.74     103.99
+20.00 | 53.77     104.00
+Table value = 60.07
+PVT scale factor = 1.00
+Slew = 60.07
+Driver waveform slew = 65.54
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.94 Rpi=0.12 C1=12.46, Ceff=12.85
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 10.44
+|       total_output_net_capacitance = 12.85
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 40.51
+PVT scale factor = 1.00
+Delay = 40.51
+
+------- input_net_transition = 10.44
+|       total_output_net_capacitance = 12.85
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 46.88
+PVT scale factor = 1.00
+Slew = 46.88
+Driver waveform slew = 52.62
+
+.............................................
+
+ENDPAD ot_prp_d31
+PAD ot_prp_d32 BUFx2_ASAP7_75t_R NET ot_prp_n32
+LOAD ot_prp_d32 u_ft_t_s2/q\[423\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[422\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[421\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[420\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[419\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[418\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[417\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[415\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[414\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[413\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[412\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[411\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[410\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[409\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[408\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[407\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[406\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[404\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[401\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d32 u_ft_t_s2/q\[400\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n32
+ Pin capacitance: 7.04-9.49
+ Wire capacitance: 1.72-1.72
+ Total capacitance: 8.75-11.21
+ Number of drivers: 1
+ Number of loads: 20
+ Number of pins: 21
+
+Driver pins
+ ot_prp_d32/Y output (BUFx2_ASAP7_75t_R) (124, 233)
+
+Load pins
+ u_ft_t_s2/q[400]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 229)
+ u_ft_t_s2/q[401]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 229)
+ u_ft_t_s2/q[404]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 230)
+ u_ft_t_s2/q[406]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 231)
+ u_ft_t_s2/q[407]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (121, 231)
+ u_ft_t_s2/q[408]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 231)
+ u_ft_t_s2/q[409]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 232)
+ u_ft_t_s2/q[410]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 232)
+ u_ft_t_s2/q[411]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 232)
+ u_ft_t_s2/q[412]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 232)
+ u_ft_t_s2/q[413]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 233)
+ u_ft_t_s2/q[414]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 233)
+ u_ft_t_s2/q[415]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (123, 233)
+ u_ft_t_s2/q[417]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 234)
+ u_ft_t_s2/q[418]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 234)
+ u_ft_t_s2/q[419]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 234)
+ u_ft_t_s2/q[420]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 235)
+ u_ft_t_s2/q[421]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 234)
+ u_ft_t_s2/q[422]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (126, 236)
+ u_ft_t_s2/q[423]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (125, 235)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.52 Rpi=0.15 C1=10.69, Ceff=10.77
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 11.86
+|       total_output_net_capacitance = 10.77
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 38.97
+PVT scale factor = 1.00
+Delay = 38.97
+
+------- input_net_transition = 11.86
+|       total_output_net_capacitance = 10.77
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 50.51
+PVT scale factor = 1.00
+Slew = 50.51
+Driver waveform slew = 55.59
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.52 Rpi=0.15 C1=10.70, Ceff=10.65
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.33
+|       total_output_net_capacitance = 10.65
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 37.55
+PVT scale factor = 1.00
+Delay = 37.55
+
+------- input_net_transition = 12.33
+|       total_output_net_capacitance = 10.65
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 39.61
+PVT scale factor = 1.00
+Slew = 39.61
+Driver waveform slew = 44.99
+
+.............................................
+
+ENDPAD ot_prp_d32
+PAD ot_prp_d33 BUFx2_ASAP7_75t_R NET ot_prp_n33
+LOAD ot_prp_d33 u_ft_t_s2/q\[441\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[440\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[439\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[438\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[437\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[436\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[435\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[434\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[433\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[432\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[431\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[430\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[429\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[428\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[427\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[426\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[425\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[424\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d33 u_ft_t_s2/q\[416\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n33
+ Pin capacitance: 6.68-9.02
+ Wire capacitance: 1.78
+ Total capacitance: 8.46-10.80
+ Number of drivers: 1
+ Number of loads: 19
+ Number of pins: 20
+
+Driver pins
+ ot_prp_d33/Y output (BUFx2_ASAP7_75t_R) (129, 238)
+
+Load pins
+ u_ft_t_s2/q[416]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (126, 233)
+ u_ft_t_s2/q[424]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 236)
+ u_ft_t_s2/q[425]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 236)
+ u_ft_t_s2/q[426]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 236)
+ u_ft_t_s2/q[427]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 236)
+ u_ft_t_s2/q[428]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 237)
+ u_ft_t_s2/q[429]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (128, 237)
+ u_ft_t_s2/q[430]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 238)
+ u_ft_t_s2/q[431]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 237)
+ u_ft_t_s2/q[432]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 238)
+ u_ft_t_s2/q[433]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 237)
+ u_ft_t_s2/q[434]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 239)
+ u_ft_t_s2/q[435]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 238)
+ u_ft_t_s2/q[436]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 239)
+ u_ft_t_s2/q[437]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (130, 239)
+ u_ft_t_s2/q[438]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (132, 240)
+ u_ft_t_s2/q[439]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (132, 239)
+ u_ft_t_s2/q[440]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (132, 240)
+ u_ft_t_s2/q[441]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (132, 240)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.13 Rpi=0.11 C1=9.67, Ceff=10.52
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.35
+|       total_output_net_capacitance = 10.52
+|        5.76     11.52
+v      --------------------
+10.00 | 28.38     39.89
+20.00 | 31.54     43.04
+Table value = 38.63
+PVT scale factor = 1.00
+Delay = 38.63
+
+------- input_net_transition = 12.35
+|       total_output_net_capacitance = 10.52
+|        5.76     11.52
+v      --------------------
+10.00 | 28.90     53.74
+20.00 | 28.97     53.77
+Table value = 49.42
+PVT scale factor = 1.00
+Slew = 49.42
+Driver waveform slew = 53.33
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.13 Rpi=0.11 C1=9.67, Ceff=10.44
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.80
+|       total_output_net_capacitance = 10.44
+|        5.76     11.52
+v      --------------------
+10.00 | 28.49     38.17
+20.00 | 32.02     41.80
+Table value = 37.37
+PVT scale factor = 1.00
+Delay = 37.37
+
+------- input_net_transition = 12.80
+|       total_output_net_capacitance = 10.44
+|        5.76     11.52
+v      --------------------
+10.00 | 23.62     42.44
+20.00 | 23.75     42.48
+Table value = 38.93
+PVT scale factor = 1.00
+Slew = 38.93
+Driver waveform slew = 43.19
+
+.............................................
+
+ENDPAD ot_prp_d33
+PAD ot_prp_d34 BUFx2_ASAP7_75t_R NET ot_prp_n34
+LOAD ot_prp_d34 u_ft_t_s2/q\[81\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[80\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[79\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[78\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[77\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[76\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[75\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[74\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[73\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[72\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[71\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[70\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[69\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[68\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[67\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[66\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[65\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[64\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[61\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[60\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[59\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[58\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[56\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d34 u_ft_t_s2/q\[54\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n34
+ Pin capacitance: 8.44-11.39
+ Wire capacitance: 1.84-1.84
+ Total capacitance: 10.29-13.24
+ Number of drivers: 1
+ Number of loads: 24
+ Number of pins: 25
+
+Driver pins
+ ot_prp_d34/Y output (BUFx2_ASAP7_75t_R) (24, 138)
+
+Load pins
+ u_ft_t_s2/q[54]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (20, 135)
+ u_ft_t_s2/q[56]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (20, 135)
+ u_ft_t_s2/q[58]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (20, 135)
+ u_ft_t_s2/q[59]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (20, 136)
+ u_ft_t_s2/q[60]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (22, 136)
+ u_ft_t_s2/q[61]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (22, 136)
+ u_ft_t_s2/q[64]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (22, 137)
+ u_ft_t_s2/q[65]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (22, 137)
+ u_ft_t_s2/q[66]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 138)
+ u_ft_t_s2/q[67]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 138)
+ u_ft_t_s2/q[68]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 138)
+ u_ft_t_s2/q[69]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 138)
+ u_ft_t_s2/q[70]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 139)
+ u_ft_t_s2/q[71]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 139)
+ u_ft_t_s2/q[72]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 139)
+ u_ft_t_s2/q[73]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (24, 139)
+ u_ft_t_s2/q[74]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 140)
+ u_ft_t_s2/q[75]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 140)
+ u_ft_t_s2/q[76]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 141)
+ u_ft_t_s2/q[77]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 140)
+ u_ft_t_s2/q[78]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 141)
+ u_ft_t_s2/q[79]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 141)
+ u_ft_t_s2/q[80]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 142)
+ u_ft_t_s2/q[81]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (26, 142)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=1.28 Rpi=0.11 C1=11.95, Ceff=12.89
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 11.98
+|       total_output_net_capacitance = 12.89
+|        11.52     23.04
+v      --------------------
+10.00 | 39.89     62.72
+20.00 | 43.04     65.92
+Table value = 43.23
+PVT scale factor = 1.00
+Delay = 43.23
+
+------- input_net_transition = 11.98
+|       total_output_net_capacitance = 12.89
+|        11.52     23.04
+v      --------------------
+10.00 | 53.74     103.99
+20.00 | 53.77     104.00
+Table value = 59.73
+PVT scale factor = 1.00
+Slew = 59.73
+Driver waveform slew = 64.26
+
+.............................................
+
+A v -> Y v
+Pi model C2=1.28 Rpi=0.11 C1=11.96, Ceff=12.78
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 12.60
+|       total_output_net_capacitance = 12.78
+|        11.52     23.04
+v      --------------------
+10.00 | 38.17     57.04
+20.00 | 41.80     60.66
+Table value = 41.17
+PVT scale factor = 1.00
+Delay = 41.17
+
+------- input_net_transition = 12.60
+|       total_output_net_capacitance = 12.78
+|        11.52     23.04
+v      --------------------
+10.00 | 42.44     80.75
+20.00 | 42.48     80.75
+Table value = 46.64
+PVT scale factor = 1.00
+Slew = 46.64
+Driver waveform slew = 51.87
+
+.............................................
+
+ENDPAD ot_prp_d34
+PAD ot_prp_d35 BUFx2_ASAP7_75t_R NET ot_prp_n35
+LOAD ot_prp_d35 u_ft_t_s2/q\[89\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[88\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[87\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[86\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[85\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[84\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[83\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+LOAD ot_prp_d35 u_ft_t_s2/q\[82\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R CLK
+Net ot_prp_n35
+ Pin capacitance: 2.81-3.80
+ Wire capacitance: 0.37-0.37
+ Total capacitance: 3.19-4.17
+ Number of drivers: 1
+ Number of loads: 8
+ Number of pins: 9
+
+Driver pins
+ ot_prp_d35/Y output (BUFx2_ASAP7_75t_R) (28, 143)
+
+Load pins
+ u_ft_t_s2/q[82]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 142)
+ u_ft_t_s2/q[83]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 142)
+ u_ft_t_s2/q[84]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 143)
+ u_ft_t_s2/q[85]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 142)
+ u_ft_t_s2/q[86]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 143)
+ u_ft_t_s2/q[87]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 143)
+ u_ft_t_s2/q[88]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 144)
+ u_ft_t_s2/q[89]$_DFF_P_/CLK input (DFFHQNx1_ASAP7_75t_R) 0.35-0.47 (28, 144)
+
+Library: asap7sc7p5t_28_R_1x_220121a
+Cell: BUFx2_ASAP7_75t_R
+Arc sense: positive_unate
+Arc type: combinational
+A ^ -> Y ^
+Pi model C2=0.17 Rpi=0.05 C1=4.00, Ceff=4.12
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 15.04
+|       total_output_net_capacitance = 4.12
+|        2.88     5.76
+v      --------------------
+10.00 | 22.22     28.38
+20.00 | 25.51     31.54
+Table value = 26.51
+PVT scale factor = 1.00
+Delay = 26.51
+
+------- input_net_transition = 15.04
+|       total_output_net_capacitance = 4.12
+|        2.88     5.76
+v      --------------------
+10.00 | 16.70     28.90
+20.00 | 16.81     28.97
+Table value = 22.02
+PVT scale factor = 1.00
+Slew = 22.02
+Driver waveform slew = 22.87
+
+.............................................
+
+A v -> Y v
+Pi model C2=0.17 Rpi=0.05 C1=4.00, Ceff=4.12
+P = 1.00 V = 0.70 T = 25.00
+------- input_net_transition = 15.20
+|       total_output_net_capacitance = 4.12
+|        2.88     5.76
+v      --------------------
+10.00 | 23.22     28.49
+20.00 | 26.82     32.02
+Table value = 27.34
+PVT scale factor = 1.00
+Delay = 27.34
+
+------- input_net_transition = 15.20
+|       total_output_net_capacitance = 4.12
+|        2.88     5.76
+v      --------------------
+10.00 | 14.33     23.62
+20.00 | 14.46     23.75
+Table value = 18.39
+PVT scale factor = 1.00
+Slew = 18.39
+Driver waveform slew = 19.28
+
+.............................................
+
+ENDPAD ot_prp_d35
