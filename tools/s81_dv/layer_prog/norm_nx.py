@@ -28,9 +28,10 @@ qualified target-5 cadence), not as calendar rows: the layer calendar / host boo
 them on the cut's line input lanes like every other CTL beat (dv_cut_replay: payload186 events).
 
 Edge: NX_AFTER_LAST_NORMR = edges from the last NORMR CTL event (the compiler's event cycle) to the slice's ro_e / vo
-output register taking the flit.  MEASURED on the fc31 RTL (not a model): run_data L0 cut_0S (epyc3 tok-ds/fc31,
-zero-data replay of the same calendar, t0 100): the flit landed on w_tvN_s_0S_lnd at bench 466 (lane age 4) and on
-w_xrE_0S_l0_lnd at 477 (lane age 15) -> both = output edge 362 = NORMR k4 event 226 + 136.  The data-independent latency
+output register taking the flit.  MEASURED on the fc31 RTL (not a model) with every slice region clocked (reclocked
+cut_0S, gaps/zero_reclock: the existing zero-data L0 replay, t0 100): the flit landed on w_tvN_s_0S_lnd at bench 468
+(lane age 4) and on w_xrE_0S_l0_lnd at 479 (lane age 15) -> output edge 364 = NORMR k4 event 226 + 138.  (The first
+calibration, 136, came from the frozen-clock fc31 bench: leaves 0, 1, 3, 4 and the lep K region never clocked.)  The data-independent latency
 is a pipeline constant (go_to_partial_normr 115 + leaf relay + xfin collector / xstop + rstop flops).
 """
 import json
@@ -42,7 +43,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[3]
 
-NX_AFTER_LAST_NORMR = 136
+NX_AFTER_LAST_NORMR = 138     # measured on the RECLOCKED cut_0S (zero-data L0 run, gaps/zero_reclock); 136 was the frozen-clock bench
 NS, NVL, K_NX = 16, 5, 3
 HE, HW = NS // 2, NS - 1 - NS // 2
 ENTRY_CADENCE = 2          # target-5 CTL beats two edges apart (entry_boot.py: the qualified source cadence)
@@ -194,7 +195,8 @@ def emit(die, prog, smoke, fixtures, ctl_cycles):
 # Every stop's flit words are 'out' events: a cut holding the stop is CHECKED on them, a cut holding the receiver is
 # DRIVEN with them (dv_cut_replay), so a cut sees real arrivals of the other slices' partials (fixture inputs through
 # the reference model) and its own xfin forwards / injects as checked arithmetic words.
-NX_FWD = {('line', 'line'): 4, ('v', 'line'): 4, ('line', 'v'): 4}
+# measured (reclocked cut_0S, r3all base: every forward of the 13 driven flits left 6 edges after it landed, values exact)
+NX_FWD = {('line', 'line'): 6, ('v', 'line'): 6, ('line', 'v'): 6}
 
 
 def _port_class(p):
