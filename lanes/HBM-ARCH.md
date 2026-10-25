@@ -241,3 +241,10 @@ Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-
 - 2026-10-24 19:58 PDT HBM: clock OCV (INFO per decision 3): symmetric H-tree top cuts run through the root/vsN column (x=W/2) and the hub rows (y=H/2): 27 partitions split in the top 2 levels; at a 5% derate 45 seams / 45 partitions > 80 ps. Partition-aware zero-skew alternative (B2m/clock_zst_info.json) splits fewer partitions but needs 224 mm padding and is worse on seams (89). Nominal pair skew of a symmetric tree ~0 by construction; measured skew = CLOCK lane (die_clock.py). If OCV must close: M8/M9 mesh at the tap-driver level.
 - 2026-10-24 19:58 PDT HBM: reset_tree.py dropped from my branch (lane RESET unifies; my die-level draft at claude/hbm-arch-1024@c411a12b86). B2m reset waits for RESET's planner.
 OWNER? (HBM, non-blocking): (a) SerDes macro 600x600 for 6x112G is 5-7x denser than published; OK to grow it to ~2.4 mm2 per macro in B2m (NW_io/spb0/vsN0 geometry changes)? (b) clock OCV at the top cuts is INFO only under decision 3; mesh not planned unless you want it.
+- 2026-10-24 20:15 PDT HBM-BIND: IN-BAND HOST RTL done @828fc818d: ep_N0 -> hfd_ep_static_vc2 (slot {vc,frame,v} 614 b, still 4 slots/5 beats;
+  COLL VC0 keeps the calendar, +1 TX edge; host VC1 4-deep elastic queue on free take slots, >=10-edge lane spacing for the far
+  host_cp_rxs one-frame pingpong; RX vc demux), host_ep -> hfd_ep_host_vc; host_N dropped. Bench over 2 real ot_pdie_serdes
+  (300 ppm, bit errors): PASS 768/768 COLL + 48/48 host each way; mutants 9/9 FAIL. Port-bind: no new FAIL.
+  Compiler obligation (new): on N0 the COLL calendar leaves free take slots >= host rate (<=1 frame/16 edges), e.g. 1 per 16 beats
+  (7.8% of N0 slots) or host windows between COLL phases. The N0 peer must run the same vc2 lane format.
+  Also: fr_NW/fr_NE N15 (all retry lanes), tkm_SW.stat_cycles -> obs_C N125.
