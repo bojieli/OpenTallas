@@ -17,9 +17,11 @@ Rules (group = legs that must land on one edge relative to each other; FAIL if a
   SU_BANK  per slice: RT_b = BANK + PIN + lane(su.lg_rq -> vmb_<q><b>.rq0) + lane(vmb.rr0 -> su.lg_rr) equal over
            the slice's two banks and READ_RETURN == 10 + RT - 6 (write: wq0 / wq_done0, WRITE_RETURN == 7 + RT - 3)
            (d4g_bank_latency.py rules EQUAL + PARAM, pin 1 = hfd_vms_bank_native_q0_faces)
-  SU_CAL   rel_b = lane(calendar_<q> -> vmb_<q><b>.rslot) - lane(calendar_<q> -> su_<q><g>.lg_read) - lane(rq_b)
-           equal over every bank of the quarter (the calendar word that grants bank b and selects slice g is one
-           edge of one programme; unequal rel_b shifts each bank's grant against the slice's request)
+  SU_CAL   INFO (not a gate rule since 2026-10-24 evening): rel_b = lane(calendar_<q> -> vmb_<q><b>.rslot)
+           - lane(calendar_<q> -> su_<q><g>.lg_read) - lane(rq_b).  Every layer replay installs the SU calendar as
+           cx_layer_1021.epoch_calendar = ONE constant row (all banks owner 0, all taps local) looped over the epoch,
+           so rel_b cannot mis-time a grant inside the epoch; a multi-row calendar absorbs per-bank rel_b through
+           native_su_calendar.compile_calendar(request_lane_edges_by_bank=...).  Reported for that compiler.
   python3 tools/hbm_layer_vehicle/transport_gate.py --die-v die.v --out gate.json
 Source-functional lane timing only (K/N model), never a physical-clock qualification.
 """
@@ -142,8 +144,9 @@ def gate(die_v):
         if bank:
             res.append(rule(f"SU_BANK_{q}", all(v["ok"] for v in bank.values()), slices=bank))
         if cal:
-            res.append(rule(f"SU_CAL_{q}", len(set(cal.values())) == 1, rel=cal, lg_read=lg))
-    fails = [r["rule"] for r in res if r["status"] != "PASS"]
+            res.append(dict(rule=f"SU_CAL_{q}", status="INFO", equal=len(set(cal.values())) == 1, rel=cal,
+                            lg_read=lg, compile_request_lane_offset={b: max(cal.values()) - v for b, v in cal.items()}))
+    fails = [r["rule"] for r in res if r["status"] == "FAIL"]
     return dict(schema=SCHEMA, die_v=str(die_v), verdict="PASS" if not fails else "FAIL", failing=fails, rules=res,
                 scope="source-functional lane timing (K/N model, K from die.v landing ties); bind rules only")
 
