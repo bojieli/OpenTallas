@@ -38,6 +38,9 @@ sys.path.insert(0, str(HERE.parent / 'hbm_die_v16'))
 import b2_top as T  # noqa: E402
 import d4g_bank_latency as BL  # noqa: E402
 
+# params that are compiler-visible budgets (the die pads its lanes up to them): kept when the lanes fit
+BUDGET = {(m, 'RR_RT'): 'd4g_bank_latency.DMA_RR_RT_BUDGET (compiler dma_min_drain_lag)'
+          for m in ('ot_hgi_dma_back_static_vp4_banks_cp', 'ot_hgi_dma_back_static_vp4_banks')}
 PRM = re.compile(r"\.(\w+)\(([^()]*)\)")
 
 
@@ -159,6 +162,9 @@ def main():
             continue
         der.append(dict(inst=r['client'], param=r['param'], have=r.get('have'), want=r['want'], status=r['status'],
                         rule='d4g_bank_latency', bad=r['bad'][:3]))
+        if (r['master'], r['param']) in BUDGET and r.get('have') is not None and r['have'] >= r['want']:
+            der[-1]['kept'] = f'compiler budget {BUDGET[(r["master"], r["param"])]}: die pads the lanes up to it'
+            continue
         if r.get('have') != r['want']:
             params[r['client']][r['param']] = r['want']
     # scalar share / client rows report `rt` (not want) when PASS/FAIL on the param: recompute want for those

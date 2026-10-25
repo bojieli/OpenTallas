@@ -31,7 +31,15 @@ bash rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh "$OUT/st" "$OUT/status
 bash rtl/hbm_accel/generic/adapters/static_su/top/run_stree_nq.sh "$OUT/stree" $BASE > "$OUT/stree.log" 2>&1 & J+=($!)
 bash rtl/hbm_accel/generic/adapters/static_su/programme/run_pgroot_nq.sh "$OUT/pg" $BASE > "$OUT/pg.log" 2>&1 & J+=($!)
 bash rtl/hbm_accel/generic/adapters/static_su/top/run_qcore_w2.sh "$OUT/qcw2" > "$OUT/qcw2.log" 2>&1 & J+=($!)
-# ---- (IDX / argmax and HC root gates are appended here when their RTL lands; see EXTRA_GATES)
+# ---- 6 IDX / ARGMAX root straps (SID / NQ / NL) vs the as-built r18h5 sources (d34578d6f) + argmax wide-ACK counter
+bash rtl/test/hbm_idx_static/mk_idx_b2_refs.sh "$OUT/idxrefs" > "$OUT/idxrefs.log" 2>&1
+bash rtl/test/hbm_idx_static/run_idx_rootctl_nq.sh "$OUT/idx_rootctl" "$OUT/idxrefs" > "$OUT/idx_rootctl.log" 2>&1 & J+=($!)
+bash rtl/test/hbm_idx_static/run_idx_selector_nl.sh "$OUT/idx_sel" "$OUT/idxrefs" > "$OUT/idx_sel.log" 2>&1 & J+=($!)
+bash rtl/test/hbm_idx_static/run_idx_link_nl.sh "$OUT/idx_link" "$OUT/idxrefs" > "$OUT/idx_link.log" 2>&1 & J+=($!)
+bash rtl/test/hbm_netlist_v16/run_argmax_r2_sid.sh "$OUT/am_sid" "$OUT/idxrefs" > "$OUT/am_sid.log" 2>&1 & J+=($!)
+bash rtl/test/hbm_netlist_v16/run_argmax_r2_ack.sh "$OUT/am_ack" > "$OUT/am_ack.log" 2>&1 & J+=($!)
+bash rtl/test/hbm_netlist_v16/run_argmax_r2.sh "$OUT/am_r2" > "$OUT/am_r2.log" 2>&1 & J+=($!)
+# ---- (HC root gate is appended here when its RTL lands; see EXTRA_GATES)
 for g in ${EXTRA_GATES:-}; do bash $g "$OUT/$(basename $g .sh)" $BASE > "$OUT/$(basename $g .sh).log" 2>&1 & J+=($!); done
 for j in "${J[@]}"; do wait $j; done
 v=PASS; grep -q "^TB_HFD_EP_STATIC_VC2 MUT=0 .* PASS$" "$OUT/vc2/run_m0.log" 2>/dev/null || v=FAIL
@@ -42,17 +50,23 @@ grep -q "VMS_STATUS_NQ_GATE PASS" "$OUT/status.log" && res "3 vm_status4 NQ" PAS
 grep -q "STREE_NQ_GATE PASS" "$OUT/stree.log" && res "4a SU stree NLEG" PASS || res "4a SU stree NLEG" FAIL
 grep -q "SU_PGROOT_NQ_GATE PASS" "$OUT/pg.log" && res "4b SU programme PARTS" PASS || res "4b SU programme PARTS" FAIL
 grep -q "QCORE_W2_GATE PASS" "$OUT/qcw2.log" && res "4c SU core 2-writer" PASS || res "4c SU core 2-writer" FAIL
+grep -q "IDX_ROOTCTL_NQ_GATE PASS" "$OUT/idx_rootctl.log" && res "6a IDX rootctl SID/NQ/NL" PASS || res "6a IDX rootctl SID/NQ/NL" FAIL
+grep -q "IDX_SELECTOR_NL_GATE PASS" "$OUT/idx_sel.log" && res "6b IDX selector NL" PASS || res "6b IDX selector NL" FAIL
+grep -q "IDX_LINK_NL_GATE PASS" "$OUT/idx_link.log" && res "6c IDX top-k link NL" PASS || res "6c IDX top-k link NL" FAIL
+grep -q "ARGMAX_R2_SID_GATE PASS" "$OUT/am_sid.log" && res "6d ARGMAX SID" PASS || res "6d ARGMAX SID" FAIL
+grep -q "ARGMAX_R2_ACK_GATE PASS" "$OUT/am_ack.log" && res "6e ARGMAX wide ACK (CNTW)" PASS || res "6e ARGMAX wide ACK (CNTW)" FAIL
+grep -q "ARGMAX_R2_BENCH PASS" "$OUT/am_r2.log" && res "6f ARGMAX r2 functional (default)" PASS || res "6f ARGMAX r2 functional (default)" FAIL
 for g in ${EXTRA_GATES:-}; do b=$(basename $g .sh); grep -q "GATE PASS" "$OUT/$b.log" && res "x $b" PASS || res "x $b" FAIL; done
 # ---- 5 B2 die top + port bind
 T="$OUT/top"; mkdir -p "$T/ovl"
 git diff --name-only $BASE HEAD -- rtl | grep -Ev '/(tb_|run_)' | while read f; do [ -f "$f" ] && mkdir -p "$T/ovl/$(dirname $f)" && cp "$f" "$T/ovl/$f"; done
 X=""; for f in $(find "$T/ovl" -name '*.sv' -o -name '*.v' | sort); do X="$X --rtl-file $f --prefer $f"; done
 while read rel; do if [ -f "$T/ovl/$rel" ]; then echo "$T/ovl/$rel"; else echo "$BUNDLE/$rel"; fi; done < "$BUNDLE/files.f" > "$T/files_abs.f"
-python3 tools/hbm_b2/make_wiring.py --die physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz \
-  --asbuilt physical/die_plan/hbm/bind/asbuilt.json --out "$T/wiring.json" > "$T/mw.log" 2>&1 || { cat "$T/mw.log"; fail=1; }
-cmp -s <(python3 -c "import json,sys;print(json.dumps(json.load(open(sys.argv[1])),sort_keys=True))" "$T/wiring.json") \
-       <(python3 -c "import json,sys;print(json.dumps(json.load(open(sys.argv[1])),sort_keys=True))" results/arch/hbm_arch_1024/b2_bind_wiring.json) \
-  && res "5a wiring delta reproduces the committed b2_bind_wiring.json" PASS || res "5a wiring delta reproduces the committed b2_bind_wiring.json" FAIL
+bash tools/hbm_b2/regen_b2.sh "$T/regen" > "$T/regen.log" 2>&1 || { tail -5 "$T/regen.log"; fail=1; }
+cp "$T/regen/wiring.json" "$T/wiring.json" 2>/dev/null
+J1(){ python3 -c "import json,sys;print(json.dumps(json.load(open(sys.argv[1])),sort_keys=True))" "$1"; }
+cmp -s <(J1 "$T/wiring.json") <(J1 results/arch/hbm_arch_1024/b2_bind_wiring.json) && cmp -s <(J1 "$T/regen/b2_delays.json") <(J1 results/arch/hbm_arch_1024/b2_delays.json) \
+  && res "5a wiring delta + delays (table-driven from the plan lanes) reproduce the committed JSONs" PASS || res "5a wiring delta + delays (table-driven from the plan lanes) reproduce the committed JSONs" FAIL
 python3 tools/hbm_b2/b2_top.py --die physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz --asbuilt physical/die_plan/hbm/bind/asbuilt.json \
   --delta "$T/wiring.json" --out "$T/outw" > "$T/b2.log" 2>&1 && res "5b b2_top (no CUT_UNRESOLVED / UNDRIVEN)" PASS || res "5b b2_top (no CUT_UNRESOLVED / UNDRIVEN)" FAIL
 python3 tools/die_port_bind.py "$T/outw/die_b2.v" --top hbm_b2_die --rtl-root "$BUNDLE/rtl" --rtl-root "$BUNDLE/physical" \

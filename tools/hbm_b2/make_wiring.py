@@ -417,13 +417,8 @@ def main():
     # TOPK / ARGMAX cq/cr stay on hb_vms_NW (R-VM, the NW2 ring master): SID 3 requests reach the NE sector over the ring.
     dl = json.loads(Path(a.delays).read_text()).get('params', {}) if a.delays else {}
     def prm(inst, base):
-        """param string: as-built params with the B2-derived delay params (b2_delays.json) substituted."""
+        """as-built params + the strap params (delay params: the D-DELAY pass below)."""
         p = die.insts[inst]['params']
-        for k, v in dl.get(inst, {}).items():
-            if re.search(r'\.' + k + r'\(', p):
-                p = re.sub(r'\.' + k + r'\(\d+\)', f'.{k}({v})', p)
-            else:
-                p = (p + ', ' if p else '') + f'.{k}({v})'
         return (p + ', ' + base) if base else p
     assert src_list(die, 'hb_idx__ctl', 'index_rq') == [['hb_idx__op_SW', 'vm_rq', 0, 135]]
     assert src_list(die, 'hb_idx__op_SW', 'vm_rr')[0][:2] == ['hb_idx__ctl', 'index_rr']
@@ -441,7 +436,6 @@ def main():
         qfault=[one('hb_idx__qctl_NW', 'fault'), one('hb_idx__qctl_NE', 'fault')],
         selected_v=[one('hb_idx__selector', 'selected_v', 1)])
     rebuild.setdefault('hb_idx__op_NE', {})['vm_rr'] = [one('hb_idx__ctl', 'index_rr', 2056)]
-    remaster['hb_idx__op_NE'] = dict(master=die.insts['hb_idx__op_NE']['master'], params=prm('hb_idx__op_NE', ''))
     for b in range(8):
         sw = src_list(die, f'vmb_SW{b}', 'rq4')
         assert len(sw) == 1 and sw[0][:2] == ['hb_idx__ctl', 'vm_rq'], sw
@@ -455,10 +449,6 @@ def main():
     remaster['hb_idx__link'] = dict(master='ot_hbm_idx_topk_link_static', params='.NL(1)')
     rebuild.setdefault('hb_idx__link', {})['selected_line'] = [one('hb_idx__selector', 'selected_line', 592)]
     remaster['hb_argmax'] = dict(master='ot_hbm_argmax_static_sw_vm_r2', params=prm('hb_argmax', ".SID(2'd3)"))
-    if 'hb_idx__nwsh' in dl:
-        remaster['hb_idx__nwsh'] = dict(master=die.insts['hb_idx__nwsh']['master'], params=prm('hb_idx__nwsh', ''))
-    if 'hb_idx__op_NW' in dl:
-        remaster['hb_idx__op_NW'] = dict(master=die.insts['hb_idx__op_NW']['master'], params=prm('hb_idx__op_NW', ''))
     drop_inst += ['hb_idx__xq_S', 'hb_idx__xqr']
     items.append(dict(id='R-IDX', kind='rtl+wiring', status='done (straps 8d607ca2e; delays from b2_delays.json)' if dl
                       else 'done (straps 8d607ca2e); delay params as built (placeholders)',
@@ -483,6 +473,28 @@ def main():
                 else:
                     dst[inst] = v
         items += r.get('items', [])
+
+    # ---- B2 transport delays (table-driven: tools/hbm_b2/b2_delays.py over the plan's latency table) on every instance
+    nd = 0
+    for inst, ps in sorted(dl.items()):
+        if inst not in die.insts:
+            continue
+        r = remaster.get(inst, dict(master=die.insts[inst]['master'], params=die.insts[inst]['params']))
+        p = r['params']
+        for k, v in ps.items():
+            if isinstance(v, list):
+                continue
+            if re.search(r'\.' + k + r'\(', p):
+                p = re.sub(r'\.' + k + r'\([^()]*\)', f'.{k}({v})', p)
+            else:
+                p = (p + ', ' if p else '') + f'.{k}({v})'
+            nd += 1
+        remaster[inst] = dict(master=r['master'], params=p)
+    if dl:
+        items.append(dict(id='D-DELAY', kind='param', status=f'done ({nd} params from b2_delays.json)',
+                          what='every VM bank client / share round-trip param (d4g bank-latency rules), SEL_LAT and the '
+                               'root hub echo (CR_RT / ACK) re-derived from the plan lane latency table; regenerate with '
+                               'tools/hbm_b2/b2_delays.py when the plan changes'))
 
     out = dict(schema='opentallas.hbm_b2.bind_wiring.v1',
                rule='HBM-BIND 10-24: machine-readable B2 (8-SM, NW+NE) native-bind delta over the r18h5 as-built die '
