@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.entry_engram_check.v1",
+ "verdict": "FAIL",
+ "checks": {
+  "rows": {
+   "words": 6144,
+   "mismatches": 1
+  },
+  "wkv": {
+   "words": 25600,
+   "mismatches": 17460
+  },
+  "gates": {
+   "words": 4,
+   "mismatches": 4
+  },
+  "h": {
+   "words": 20480,
+   "mismatches": 4940
+  },
+  "attn_hc_pre": {
+   "words": 5120,
+   "mismatches": 1039
+  }
+ },
+ "inputs": "inputs_L14_mut",
+ "fixture": "/srv/opentallas-scratch2/claude/tok-ds/stw-s81d-tok/layers/fix/L14",
+ "source": "genuine checkpoint codes/scales/full wkv + fixture H/pre/q/k weights"
+}

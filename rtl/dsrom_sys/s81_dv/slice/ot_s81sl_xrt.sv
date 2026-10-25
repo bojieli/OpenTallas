@@ -71,6 +71,11 @@
 //    Same edges as the 241f7b963 cut (component receipt: CTL pin -> c_v 5, lo -> V out 5, V in -> sw 6, local CI -> sw 3).
 //    Faults: two RD sources in one cycle (E / W / B / V / local), the pair / local config checks above.
 // ---------------------------------------------------------------------------------------------------------------------
+// Optional compiler/plan-selected shared LUT, sixteen unsigned 8-bit delays.
+// One value is used in every master; sid selects its static release offset.
+`ifndef OT_S81SL_QREL_DELAYS
+`define OT_S81SL_QREL_DELAYS 128'd0
+`endif
 `ifdef OT_S81SL_XRT_NO_DSK
 `define OT_S81SL_XRT_PDSK_DEF 15'd0
 `else
@@ -81,7 +86,55 @@
 `else
 `define OT_S81SL_XR_FOREG_DEF 0
 `endif
+// Static, plan-known rstd release. DELAYS packs sixteen unsigned edge delays,
+// sid k in [8*k +:8]. Default zero elaborates to wires (no new state/cycle).
+// The existing sid strap selects the same shared LUT in every hardened master.
+// No ready/backpressure: a second rstd during a hold or a changed sid faults.
+module ot_s81sl_rstd_release #(parameter [127:0] DELAYS=128'd0) (
+    input wire clk, rst_n, input wire [3:0] sid,
+    input wire i_v, input wire [31:0] i_d,
+    output wire o_v, output wire [31:0] o_d, output wire fault
+);
+    generate if (DELAYS==128'd0) begin : g_wire
+        assign o_v=i_v; assign o_d=i_d; assign fault=1'b0;
+    end else begin : g_hold
+        wire [7:0] planned=DELAYS[8*sid +:8];
+`ifdef OT_S81SL_QREL_MUT_RELEASE
+        wire [7:0] delay=planned+((sid==4'd2)?8'd1:8'd0);
+`else
+        wire [7:0] delay=planned;
+`endif
+        reg busy, v, bad; reg [7:0] left;
+        reg [31:0] data; reg [3:0] held_sid;
+        // Control reset is synchronous on the delivered region reset. Data
+        // and the held sid have no reset and are observed only when valid.
+        always @(posedge clk) begin
+            if (!rst_n) begin busy<=1'b0;v<=1'b0;bad<=1'b0;left<=8'd0; end
+            else begin
+                v<=1'b0;
+                if (busy) begin
+                    if (sid!=held_sid) bad<=1'b1;
+                    if (left==8'd1) begin v<=1'b1;busy<=1'b0; end
+                    else left<=left-8'd1;
+                end
+                if (i_v) begin
+                    if (busy) bad<=1'b1;
+                    else if (delay!=8'd0) begin
+                        data<=i_d;held_sid<=sid;
+                        if (delay==8'd1) v<=1'b1;
+                        else begin busy<=1'b1;left<=delay-8'd1; end
+                    end
+                end
+            end
+        end
+        assign o_v=(delay==8'd0)?i_v:v;
+        assign o_d=(delay==8'd0)?i_d:data;
+        assign fault=bad;
+    end endgenerate
+endmodule
+
 module ot_s81sl_xrt #(
+    parameter [127:0] QDELAYS = 128'd0, // opt-in static per-sid rstd hold; see ot_s81sl_rstd_release
     parameter [14:0] PDSK = 15'd0,
     parameter integer HB = 0,
     parameter integer FOREG = 0,          // XR6 fallback: dedicated fault output flop (+1 more fault-visibility cycle)
@@ -240,6 +293,10 @@ module ot_s81sl_xrt #(
             assign p_v_s[dk] = sv[DD-1]; assign p_d_s[32 * dk +: 32] = sd[32 * (DD - 1) +: 32];
         end
     end endgenerate
+    wire qrel_v,qrel_fault; wire [31:0] qrel_d;
+    ot_s81sl_rstd_release #(.DELAYS(QDELAYS)) u_qrel (
+        .clk(clk),.rst_n(rs_c),.sid(sid),.i_v(x_rbv),.i_d(x_rbd),
+        .o_v(qrel_v),.o_d(qrel_d),.fault(qrel_fault));
     // ---------------------------------------------------------------- input flops
     reg ev, wv, vv; reg [W-1:0] eb, wb, bb; reg [V-1:0] vb; reg [4:0] lov, pv; reg [5*256-1:0] lod; reg [5*32-1:0] pd;
     reg rbv; reg [31:0] rbd; reg [3:0] sid_c;
@@ -250,7 +307,7 @@ module ot_s81sl_xrt #(
     always @(posedge clk) begin ec_c <= e_c_i; ed_c <= e_d_i; egc_c <= eg_c; egd_c <= eg_d; end
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev <= 1'b0; wv <= 1'b0; vv <= 1'b0; lov <= 5'd0; pv <= 5'd0; rbv <= 1'b0; end
-        else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v_i; pv <= p_v_s; rbv <= x_rbv; end
+        else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v_i; pv <= p_v_s; rbv <= qrel_v; end
     // XR5 (S81-SAFE-FIX 10-19, checklist item 3): kept copies of the lo_v input flop for each leaf's lo_d gate (lov[k]
     // drove 256 AND gates); same D, same edge -> function and cycles unchanged.  XR7: one per 16 bits (was 32: 37 pins),
     // reset-free (data gate only).  evd_c / pvd_c: kept copies of the e_v / p_v input flops, one per 8 bits of the eqd /
@@ -263,7 +320,7 @@ module ot_s81sl_xrt #(
     end
     always @(posedge clk) begin
         eb <= {28'd0, dl_e, 1'b0}; wb <= {28'd0, dl_w, 1'b0}; vb <= {dl_vb, 1'b0};
-        bb <= (HB != 0) ? {28'd0, bi[W-59:7], 30'd0, bi[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= x_rbd;
+        bb <= (HB != 0) ? {28'd0, bi[W-59:7], 30'd0, bi[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= qrel_d;
         sid_c <= sid;
     end
     wire bv = (HB != 0) && bb[0];
@@ -826,7 +883,7 @@ module ot_s81sl_xrt #(
         else begin
             fa <= f1 | ucol;
             fb <= ((|pv) && pv != 5'b11111) | ((|pv) && prun) | ebad | ((|ev_c) && (erun || prun || (|pv))) |
-                  ((|pv) && erun);
+                  ((|pv) && erun) | qrel_fault;
             fc <= (vct && (pk_go || sc_rel)) | (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) | f_bw |
                   so_f | (so_go && (vct || pk_go || sc_rel))      // S81-SMWIRE / BIND mu4 terms (send/inject region)
                   | (pair_v && (vct || sc_rel || so_go || s_mask != sk_ohx))   // RG-FFN transport
@@ -859,7 +916,7 @@ endmodule
 // S81-KITS-RTLC 10-24 (OWNER DECISION 8): ring ports narrowed to the bits that are read / not constant (dl_e / dl_w
 // [1075:1], dl_vb [275:1], ci_b [1075:0], x_si [6:0], C3 bi packed {B[1075:37], B[6:0]}); FACE_LAND = 1 by default.
 module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
-    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF) (
+    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
     input  wire dl_vv, input wire [275:1] dl_vb, output wire [2:0] ci_dir, output wire [1075:0] ci_b,
@@ -873,7 +930,7 @@ module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
     wire [512:0] bo_unused;
-    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG), .PDSK(PDSK), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1046{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
@@ -882,7 +939,7 @@ module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
 endmodule
 
 module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
-    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF) (
+    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF, parameter [127:0] QDELAYS=`OT_S81SL_QREL_DELAYS) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
     input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
     input  wire dl_vv, input wire [275:1] dl_vb, output wire [2:0] ci_dir, output wire [1075:0] ci_b,
@@ -896,7 +953,7 @@ module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, paramet
     output wire [6:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
-    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG), .PDSK(PDSK), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG), .PDSK(PDSK), .QDELAYS(QDELAYS), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),

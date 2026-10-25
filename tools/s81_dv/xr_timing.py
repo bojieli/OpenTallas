@@ -17,7 +17,10 @@ QUALIFIED = {"cc31c2d1607af9e0ac41357d3afaf19e6665b4f94ce4911e2dcaf078ec1167c3":
 XRT_PATH = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv'
 # Source model only: the necessary selected-XRT HOST/control cut is still
 # running. This is not an entry in QUALIFIED and cannot pass check_run_source.
-XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64': 7}
+XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64': 7,
+             # TOK-DS NORM-DESKEW 10-25: cfc3feb9 + the static per-leaf partial deskew (PDSK, claude/s81-norm-deskew-1025);
+             # the change is on the leaf-partial path only, V-CTL injection is unchanged (7 edges)
+             'ec43bbd4be16faa8428c107e7db613f21f0b760ed79711da31f068879c7d6282': 7}
 
 
 def source_contract(tree, fallback, instances=None):

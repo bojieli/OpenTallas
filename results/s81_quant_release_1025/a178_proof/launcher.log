@@ -1,0 +1,54 @@
+ot-run: localhost      admits    16 GB (avail 419, reserve 0, fresh 337, peak 1.7, headroom 0, waiters 5/160 GB) load 78/256 running 32 disk 201 GB 
+ot-run: -> localhost (will queue: admits 16 GB < 8 GB)
+ot-heavy: admitted on tender-ray as oth-ubuntu-1729594-1792928257 after 1 s
+base 0
+eq0q0 0
+eq0q1 0
+eq1q0 0
+eq1q1 0
+mutant 0
+QREL legal sid16 words48 received48 cycles2644 err0
+QREL final err0
+PASS QREL
+- tb_s81sl_rstd_release.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.011 s; speed 265.790 us/s
+- Verilator: cpu 0.011 s on 1 threads; allocated 7 MB
+LANDEQ hb=0 land=0 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19753 xs_cycles=16833 ci_cycles=2470 err=0
+PASS
+- tb_s81sl_xrt_qrel_eq.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 3.628 s; speed 5.514 us/s
+- Verilator: cpu 3.628 s on 1 threads; allocated 7 MB
+LANDEQ hb=0 land=0 seed=1 cycles=20000 lo=5438 p=1582 e=1553 fault_cycles=19749 xs_cycles=16878 ci_cycles=2257 err=0
+PASS
+- tb_s81sl_xrt_qrel_eq.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 3.721 s; speed 5.376 us/s
+- Verilator: cpu 3.721 s on 1 threads; allocated 7 MB
+LANDEQ hb=1 land=0 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19756 xs_cycles=16833 ci_cycles=2470 err=0
+PASS
+- tb_s81sl_xrt_qrel_eq.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 5.188 s; speed 3.856 us/s
+- Verilator: cpu 5.188 s on 1 threads; allocated 8 MB
+LANDEQ hb=1 land=0 seed=1 cycles=20000 lo=5438 p=1582 e=1553 fault_cycles=19775 xs_cycles=16878 ci_cycles=2257 err=0
+PASS
+- tb_s81sl_xrt_qrel_eq.sv:119: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 4.902 s; speed 4.081 us/s
+- Verilator: cpu 4.902 s on 1 threads; allocated 8 MB
+QREL mismatch cycle396 sid2 valid0/1 data98b4113a/98b4218c
+QREL mismatch cycle397 sid2 valid1/0 data98b4218c/00000000
+QREL mismatch cycle400 sid2 valid0/1 data98b4218c/98b42198
+QREL mismatch cycle401 sid2 valid1/0 data98b42198/00000000
+QREL mismatch cycle404 sid2 valid0/1 data98b42198/98b42184
+QREL legal sid16 words48 received48 cycles2644 err6
+QREL final err6
+FAIL QREL
+- tb_s81sl_rstd_release.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.013 s; speed 230.666 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB
+QUALIFIED
+ot-run: RAN on localhost (unit oth-ubuntu-1729594-1792928257): exit 0
