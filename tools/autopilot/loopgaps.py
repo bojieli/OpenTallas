@@ -17,6 +17,9 @@ Gaps:
                              after 30 min
   (6) HOST-IDLE              a fleet host admitting > 100 GB at load < 60 % of its cores while the autopilot queue has
                              nothing waiting
+  (7) UNOWNED-ITEM           (ownership.py) a release-plan partition type / hard core, not SIGNED, with no live job and
+                             no lane activity for > 60 min, grouped per die + owner lane; the OWNERSHIP summary
+                             ('#' lines) heads the file and the full table is autopilot/OWNERS.tsv
 """
 import re
 import time
@@ -41,16 +44,23 @@ def parse_ts(line, default=None):
 
 
 def tag_of(s):
-    """'S81/KITS 02:07 + 02:16' / 'S81/H4 2026-10-25 00:51 PDT' / 'PROTO hbm_b2m' -> canonical first token"""
+    """Keep the full review identity, including batch/variant words; remove only dates/times."""
     s = TS.sub("", s)
     s = HHMM.sub("", s)
-    return s.replace("PDT", "").replace("PST", "").strip().split(" ")[0].strip(" ,;") if s.strip() else ""
+    s = re.sub(r"\b(?:PDT|PST)\b", "", s)
+    return re.sub(r"\s+", " ", s).strip(" ,;+ ")
 
 
 def geom_events(text):
-    """-> (reqs, replies): reqs [(t, tag, line)], replies [(t, tag, verdict|None, line)] in file order"""
+    """Parse complete review entries, including their indented kit/verdict lists."""
     reqs, reps, last_t = [], [], None
+    entries = []
     for line in text.splitlines():
+        if line[:1].isspace() and entries and parse_ts(line) is None:
+            entries[-1] += " " + line.strip()
+        else:
+            entries.append(line)
+    for line in entries:
         t = parse_ts(line, None)
         if t is not None:
             last_t = t
@@ -113,7 +123,7 @@ def _answers(tag, req_line, rtag, rep_line):
     a kit token of the REQ"""
     if rtag == tag:
         return True
-    fam = lambda x: re.split(r"[-/]", x)[0]
+    fam = lambda x: re.split(r"[-/\s]", x)[0]
     if fam(rtag) != fam(tag):
         return False
     toks = {w for w in re.findall(r"[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+", req_line) if len(w) >= 6}
@@ -233,9 +243,9 @@ def gaps_hosts(status_text, queue_waiting, now):
     return out
 
 
-def render(gaps, now):
+def render(gaps, now, head=()):
     lines = [f"# LOOP-GAPS -- autopilot tick {time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(now))} "
-             f"(read-only; oldest first; age = since the event)"]
+             f"(read-only; oldest first; age = since the event)"] + list(head)
     for t, msg in sorted(gaps, key=lambda g: g[0]):
         age = max(0, now - t) / 60
         lines.append(f"{age / 60:6.1f} h  {msg}" if age >= 120 else f"{age:6.0f} m  {msg}")

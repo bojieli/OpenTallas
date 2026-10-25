@@ -54,6 +54,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loopgaps as LG  # noqa: E402
+import ownership as OWN  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -62,6 +63,10 @@ COORD = Path(os.environ.get("AP_COORD", str(HOME / "coord")))
 QUEUE_REF = os.environ.get("AP_QUEUE_REF", "origin/coord/state:autopilot/queue.tsv")
 QUEUE_FILE = os.environ.get("AP_QUEUE_FILE")          # tests / manual: a local queue file instead of the git ref
 COORD_FILES = os.environ.get("AP_COORD_FILES")        # tests / manual: a dir holding lanes/*.md instead of the git ref
+REPO = Path(os.environ.get("AP_REPO", str(HOME / "OpenTallas")))   # hub checkout: origin/main read with git show only
+REPO_FILES = os.environ.get("AP_REPO_FILES")          # tests / manual: a dir mirroring origin/main paths
+RELEASE_CACHE = Path(os.environ.get("AP_RELEASE_CACHE",
+                                    str(HOME / ".local/state/fleet-viz/release_tree_plan_cache.json")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 IMAGE = os.environ.get("AP_IMAGE", "openroad/orfs:asap7lock")
 ARCHIVE_ROOT = "/srv/opentallas-scratch2/claude/autopilot/closed"
@@ -550,6 +555,29 @@ def launch_unit(unit, logfile, argv):
 
 
 # ------------------------------------------------------------------------------------------------ actions
+def process_uses_kit(argv, path):
+    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
+    path = path.rstrip("/")
+    if re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
+        return True
+    try:
+        words = shlex.split(argv)
+    except ValueError:
+        return True  # malformed live client: retain data until it can be identified
+    if not any(w.rsplit("/", 1)[-1] == "ot-run" for w in words):
+        return False
+    for i, word in enumerate(words):
+        candidate = None
+        if word in ("--dir", "--stage") and i + 1 < len(words):
+            candidate = words[i + 1]
+        elif word.startswith(("--dir=", "--stage=")):
+            candidate = word.split("=", 1)[1]
+        if candidate and candidate.startswith("/srv/opentallas-scratch") and "/claude/" in candidate:
+            if path.startswith(candidate.rstrip("/") + "/"):
+                return True
+    return False
+
+
 def hub_procs(path):
     """processes on the hub (ot-run clients, local docker run / run_kit.sh) whose command line names the kit dir
     -> [(pid, elapsed_s)]; ot-run clients always run here, also when the job itself spilled to another host"""
@@ -559,7 +587,7 @@ def hub_procs(path):
     res = []
     for line in out.splitlines():
         f = line.split(None, 2)
-        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and pat.search(f[2]) and "autopilot" not in f[2] \
+        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and process_uses_kit(f[2], path) and "autopilot" not in f[2] \
                 and not f[2].startswith(("ssh ", "python3 -I -")):
             res.append((int(f[0]), int(f[1])))
     return res
@@ -589,11 +617,11 @@ def poll_adopted(st, j):
     c = probe_job(j)
     if c is None:
         return
-    if not c.get("signoff"):
-        p = rpy(j["host"], PROBE_KIT, {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
-        la = p.get("log_age_s")
-        if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
-            return
+    p = rpy(j.get("probe") or j["host"], PROBE_KIT,
+            {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+    la = p.get("log_age_s")
+    if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
+        return
     j.setdefault("client_done_at", time.time())
     finish(st, j, c, {"adopted": True})
 
@@ -893,7 +921,8 @@ def record_failure(st, j):
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
     # owner rule: failed job data deleted at once (logs, reports, signoff records and the review bundle stay)
-    d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
+    d = ({"errors": ["live hub client owns kit or its staging ancestor"]} if hub_procs(j["path"]) else
+         rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800))
     if d.get("error") or d.get("errors"):
         log(f"DELETE {j['id']} on {host}: {d.get('error') or d.get('errors')}; retry next tick")
         j["delete_pending"] = True
@@ -909,6 +938,8 @@ def retry_pending(st):
             archive(st, j)
         elif str(j.get("status", "")).startswith("DONE-") and j.get("delete_pending"):
             host = ssh_host(j.get("probe") or j["host"])
+            if hub_procs(j["path"]):
+                continue
             d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
             if not (d.get("error") or d.get("errors")):
                 j["delete_pending"] = False
@@ -959,7 +990,8 @@ def read_tsv_rows(name):
         f = dict(zip(head, line.split("\t")))
         if f.get("id"):
             out.append({"t": LG.parse_ts(f.get("time", "")), "id": f["id"], "type": f.get("type", ""),
-                        "lane": f.get("lane", ""), "file": name})
+                        "lane": f.get("lane", ""), "file": name, "die": f.get("die", ""), "cls": f.get("class", ""),
+                        "review_dir": f.get("review_dir", "")})
     return out
 
 
@@ -988,13 +1020,97 @@ def write_loop_gaps(st, rows, geom_text):
         gaps += LG.gaps_hosts(out, len(waiting), now)
     else:
         gaps.append((now, f"OT-RUN-STATUS unavailable (rc {rc}); host idleness not checked"))
-    text = LG.render(gaps, now)
+    head = []
+    try:                                               # OWNERSHIP table (owner 2026-10-25); never stops the gap report
+        orows, ogaps, head = OWN.build(ownership_inputs(st, geom_text, trows), now)
+        gaps += ogaps
+        write_file("OWNERS.tsv", OWN.to_tsv(orows, now))
+    except Exception as e:
+        log(f"OWNERS failed: {type(e).__name__}: {e}")
+        head = [f"# OWNERSHIP unavailable this tick: {type(e).__name__}: {str(e)[:200]}"]
+    text = LG.render(gaps, now, head)
     if DRY:
         print(text, end="")
         return
     tmp = AP_DIR / f".LOOP-GAPS.txt.{os.getpid()}"
     tmp.write_text(text)
     os.replace(tmp, AP_DIR / "LOOP-GAPS.txt")
+
+
+def write_file(name, text):
+    if DRY:
+        print(f"[dry] {name}: {len(text.splitlines())} lines")
+        return
+    tmp = AP_DIR / f".{name}.{os.getpid()}"
+    tmp.write_text(text)
+    os.replace(tmp, AP_DIR / name)
+
+
+def read_repo(rel):
+    """a file of origin/main on the hub checkout (read-only: git show); '' if missing"""
+    if REPO_FILES:
+        try:
+            return (Path(REPO_FILES) / rel).read_text(errors="replace")
+        except OSError:
+            return ""
+    rc, out, _ = sh(["git", "-C", str(REPO), "show", f"origin/main:{rel}"], timeout=60)
+    return out if rc == 0 else ""
+
+
+def list_tree(rel, coord=False):
+    """file names under a dir of origin/main (or of origin/coord/state when coord)"""
+    base = COORD_FILES if coord else REPO_FILES
+    if base:
+        d = Path(base) / rel
+        return sorted(p.name for p in d.iterdir() if p.is_file()) if d.is_dir() else []
+    git = COORD if coord else REPO
+    ref = "origin/coord/state" if coord else "origin/main"
+    rc, out, _ = sh(["git", "-C", str(git), "ls-tree", "--name-only", f"{ref}:{rel}"], timeout=60)
+    return out.split() if rc == 0 else []
+
+
+def _json(text):
+    try:
+        return json.loads(text) if text.strip() else None
+    except ValueError:
+        return None
+
+
+def hub_otrun_clients():
+    """live ot-run clients on the hub (every ot-run client runs here) -> [(pid, elapsed_s, args)]"""
+    rc, out, _ = sh(["ps", "-eo", "pid=,etimes=,args="], timeout=60)
+    res = []
+    for line in out.splitlines():
+        f = line.split(None, 2)
+        if len(f) == 3 and f[0].isdigit() and re.search(r"(^|/)ot-run --mem ", f[2]) and "--status" not in f[2]:
+            res.append((int(f[0]), int(f[1]) if f[1].isdigit() else 0, f[2]))
+    return res
+
+
+def ownership_inputs(st, geom_text, trows):
+    if not REPO_FILES:
+        sh(["git", "-C", str(REPO), "fetch", "-q", "origin", "main"], timeout=180)
+    plans, proto = {}, {}
+    gnames = list_tree("results/proto_1025/geom")
+    rnames = list_tree("results/proto_1025/g2")
+    for die, pdir, pname in OWN.DIES:
+        plans[die] = _json(read_repo(f"physical/die_plan/{pdir}/die_plan.json"))
+        proto[die] = {
+            "geom": {n: _json(read_repo(f"results/proto_1025/geom/{n}")) for n in gnames
+                     if n.endswith(".json") and n.startswith(pname)},
+            "g2": {n: _json(read_repo(f"results/proto_1025/g2/{n}")) for n in rnames
+                   if n.endswith(".json") and n.startswith("res_" + pname)}}
+    try:
+        cache = json.loads(RELEASE_CACHE.read_text())
+    except (OSError, ValueError):
+        cache = None
+    lane_texts = {}
+    for n in list_tree("lanes", coord=True):
+        if n.endswith(".md"):
+            lane_texts[n[:-3]] = read_coord(f"lanes/{n}")
+    lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
+    return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
+                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients())
 
 
 def status(args):
