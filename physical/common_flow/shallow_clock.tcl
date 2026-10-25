@@ -379,7 +379,8 @@ proc ::ot_dtsh::measure_sinks {path} {
   if {![info exists sink_pins]} {
     set sink_pins [dict create]
     dict for {name info} $taps {
-      set net [$blk findNet [dict get $info output]]
+      # taps[output] is the tap's local clock net object (setup: lindex $t 3)
+      set net [dict get $info output]
       set pins {}
       foreach pn [tap_sinks $net] { set p [get_pins -quiet $pn]; if {$p ne ""} { lappend pins $p } }
       if {![llength $pins]} { error "OT_DTSH tap $name has no measurable sinks" }
