@@ -385,6 +385,23 @@ def core_latency_files(P, tn, kd, root=None):
     return dict(rows=rows, taps=taps)
 
 
+def clock_phase_tcl(P, tn, before_cts=False):
+    """Estimate only LOCAL clock trees while they are ideal; clear before CTS.
+
+    Port-specific network latencies persist in OpenSTA propagated-clock timing,
+    so they must not be placed in the golden SDC or survive into CTS. Dedicated
+    early core taps already include their signed internal tree and are excluded.
+    """
+    ports = " ".join(n for n, _x, _y in clock_pins(P, tn))
+    if before_cts:
+        return ("# Clear only the pre-CTS LOCAL network estimate; preserve early core source latencies.\n"
+                f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
+                "source /work/clock_taps.tcl\n")
+    return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
+            "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
+            f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n")
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None):
     t = P.types[tn]
@@ -459,6 +476,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True))
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -521,7 +540,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
-           "export PRE_CTS_TCL = /work/clock_taps.tcl",
+           "export PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl",
+           "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
