@@ -1,0 +1,101 @@
+{
+  "schema": "opentallas.hbm.selected_tkm.endpoint_graph.v1",
+  "status": "BLOCKED_UNRESOLVED_PHYSICAL_ENDPOINT_GRAPH",
+  "source_module": "ot_hbm_tkm_path_ft21",
+  "logical_fieldmap": "fieldmap_ft21.json",
+  "nodes": [
+    {
+      "id": "q3_W_actual_producer",
+      "physical": "accepted q3 NW W-side draft only; current R1 still generic q_hub",
+      "clock": "external actual q3 taps required, not a port of this assembly"
+    },
+    {
+      "id": "raw_TKM_equalization",
+      "physical": "unadopted raw2341 draft, per-field24/26 stages",
+      "contract": "pad shorter metadata/valid2 to26; payload/control common cohort before TX"
+    },
+    {
+      "id": "L74_TX",
+      "physical": "UNASSIGNED actual site/tap",
+      "clock_port": "nw_clk",
+      "input": "full raw3749+SIDE33 aligned at TX; selected TKM is word[19+:2341]"
+    },
+    {
+      "id": "L74_beat_channel",
+      "physical": "candidate lane2341 wires, explicit serializer beat not rawdraft2341",
+      "stages": 2
+    },
+    {
+      "id": "L74_RX",
+      "physical": "UNASSIGNED actual site/tap",
+      "clock_port": "clk"
+    },
+    {
+      "id": "root_intra_route",
+      "physical": "MISSING selected u_tkm_SW_root field entries in current R1; cannot borrow index3/4/5 stages"
+    },
+    {
+      "id": "TKM_root_face",
+      "physical": "actual cb21 root1input/1outputface; already included in face258",
+      "clock_ports": [
+        "clk",
+        "buffer_clk"
+      ]
+    },
+    {
+      "id": "root_return_intra_route",
+      "physical": "UNRESOLVED current root return mapping"
+    },
+    {
+      "id": "coherent_return_transport",
+      "implementation": "ot_hbm_tkm_return",
+      "physical": "production L12 control4 and L13 data568 both2; rawdraft all572 onL13 disagrees"
+    },
+    {
+      "id": "q3_W_return_equalization",
+      "physical": "unadopted returndraft status24 vsw_v/data26; pad status2 to26"
+    }
+  ],
+  "known_component_model": {
+    "forward": 5,
+    "split": 2,
+    "actual_faces": 258,
+    "return": 2,
+    "total": 267,
+    "includes_raw_W_hub_and_unresolved_root_intra": false
+  },
+  "unadopted_draft_sensitivity": {
+    "source": "/srv/opentallas-scratch2/claude/path-hbm/plan_delta/q_hub_nw/plan_nw/die_plan.json",
+    "source_sha256": "3044f0bc3fc628cdd80aa7b5f3e2fbd1446cfcd5b1499ffb2420be729fe9df74",
+    "forward_raw_equalized": 26,
+    "return_raw_equalized": 26,
+    "roundtrip_extra": 52,
+    "critical_roundtrip_extra_not_per_word": true,
+    "raw_bit_permutation_to_current_fieldmap": "UNPROVEN",
+    "TX_and_RX_sites": "UNASSIGNED",
+    "cannot_claim_bound_physical_path": true
+  },
+  "II_contract": {
+    "producer_stream": 8,
+    "two_beat_frame": 2,
+    "long_pipeline_stages_do_not_by_themselves_change_II": true,
+    "new_source_arrivals_require_static_calendar_retiming": true
+  },
+  "ARG_source_contract": {
+    "compiler": "tools/hbm_coll_static/argmax_rows.py --arg-pr-source",
+    "publication_extra": 1,
+    "II": 32,
+    "lifetime_extra": 1,
+    "programme_rows_extra": 2,
+    "64rowprofile": "fails closed66>64",
+    "mode": "ARG alternative to TKM, do not add blind1 to eachTKM operation",
+    "native_caller_adoption": "PENDING"
+  },
+  "closure_required": [
+    "actual q3 split output slice to full native fieldmap permutation",
+    "explicit serializer TX/RX placement and clock tap roles",
+    "equalized raw preTX fields and coherent physical return packing",
+    "selected TKM root intra-field stations and wavefronts",
+    "native caller applies static calendar and delivered reset, physical signed views match"
+  ]
+}

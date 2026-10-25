@@ -1,0 +1,27 @@
+{
+  "status": "CONDITIONAL_COST_LEDGER_NOT_ADOPTED_OR_E2E_MEASUREMENT",
+  "owner_rule": "COORD2026-10-25 12:07 q3W accepted; revisit E-relay if workload e2e rate loss >2percent",
+  "formula": "extra_cycles = critical_sequential_roundtrips*(26+26); streamed words retain II8, do not multiply52 by eachword",
+  "rate_loss": "extra/(baseline_token_cycles+extra)",
+  "2percent_threshold": "baseline_token_cycles <49*extra implies rate loss >2percent; one52edge episode threshold2548",
+  "examples": [
+    {
+      "case": "syn_sel_component_model",
+      "baseline_cycles_estimate": 25468,
+      "raw_draft_extra": 52,
+      "with_draft_cycles_estimate": 25520,
+      "rate_loss_pct_conditional": 0.20376175548589343,
+      "scope": "operation sensitivity only, not workload e2e or adopted route"
+    },
+    {
+      "case": "rank128_zeros_component_probe",
+      "baseline_cycles_estimate": 895,
+      "raw_draft_extra": 52,
+      "with_draft_cycles_estimate": 947,
+      "rate_loss_pct_conditional": 5.4910242872228086,
+      "scope": "operation sensitivity only, not workload e2e or adopted route"
+    }
+  ],
+  "missing": "actual serializer endpoint graph, root intra legs, raw mapping, and workload critical-path roundtrip count; cannot discharge owner2percent condition",
+  "ARG": "sourcecapture+1 separately priced per dependent ARG publication, II32 retained; compiler receipt2999de1eaa"
+}

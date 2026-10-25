@@ -14,7 +14,7 @@
   "clock_ports": [
     {
       "port": "nw_clk",
-      "role": "actual NW producer / L74 TX tap"
+      "role": "L74 TX endpoint tap; actual NW producer is external and needs its own retained core tap"
     },
     {
       "port": "clk",
@@ -80,5 +80,6 @@
     "build_variant": "selected default directstrap; TKM_LEGACY_TIMED_ID_VIEW / runner STATIC_IDS=0 replays old registered API",
     "gate": "common ID5/17 each161710/161710 equivalencePASS, terminal31 159960/159960 PASS afterone legacy warmup; wrongID17 exact1bindingpoint failure"
   },
-  "path_fieldmap": "tools/hbm_b2/tkm_l74/model_ft21.json"
+  "path_fieldmap": "tools/hbm_b2/tkm_l74/model_ft21.json",
+  "physical_endpoint_graph": "endpoint_graph_ft21.json"
 }
