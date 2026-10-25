@@ -361,6 +361,13 @@ foreach dly {max min} {
   set m [dict get $so_pm $dly]
   so PAIR_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {list $k [dict get $m $k]}]]
 }
+set so_sc [dict get $so_pm census]
+set so_sc_row {}
+foreach k {done status registers clocked missing_clock missing_arrival internal_pairs_any data_pins} {
+  if {[dict exists $so_sc $k]} { lappend so_sc_row $k [dict get $so_sc $k] }
+}
+so PAIR_CENSUS {*}$so_sc_row
+if {[dict exists $so_sc problems]} { so PAIR_CENSUS_PROBLEMS [dict get $so_sc problems] }
 so PAIR_METHOD [dict get $so_pm method]
 so PAIR_SECONDS [expr {[clock seconds] - $so_t0}]
 unset so_pm
@@ -425,7 +432,9 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
-                 ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
+                 ("@PAIR_SKEW@", ((HERE / "single_stage_census.tcl").read_text()
+                                  if (HERE / "single_stage_census.tcl").is_file() else "") + "\n" +
+                                  (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
@@ -554,10 +563,33 @@ def pair_skew_result(kv):
                            p99_raw_ps=_f(d.get("p99_raw")), searched=_f(d.get("searched")),
                            nopath=_f(d.get("nopath")), verify_ps=_f(d.get("verify")))
     cnt = {k: _f(v) for k, v in _kvlist(kv.get("PAIR_COUNTS")).items()}
-    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
+    raw_census = _kvlist(kv.get("PAIR_CENSUS"))
+    census = {k: (v if k == "status" else _f(v)) for k, v in raw_census.items()}
+    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, census=census, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
                 measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
                             "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
                 tsv="pair_skew.tsv")
+
+
+def no_internal_sequential_paths(ps):
+    """Vacuous pair gate only with a separate exhaustive structural/clock census.
+
+    No metric is fabricated: both worst_abs_ps values remain null. Boundary
+    setup/hold, unconstrained and clock-arrival gates still apply independently.
+    """
+    sc = ps.get("census") or {}
+    fields = ("registers", "clocked", "data_pins", "missing_clock", "missing_arrival", "internal_pairs_any")
+    if any(not isinstance(sc.get(k), (int, float)) or not math.isfinite(sc[k]) or
+           sc[k] < 0 or not float(sc[k]).is_integer() for k in fields):
+        return False
+    n = sc.get("registers")
+    if not (sc.get("done") == 1 and sc.get("status") == "PASS" and n and n > 0 and
+            sc.get("clocked") == n and sc.get("data_pins", 0) > 0 and
+            all(sc.get(k) == 0 for k in ("missing_clock", "missing_arrival", "internal_pairs_any"))):
+        return False
+    checks = ps.get("checks") or {}
+    return all(checks.get(k, {}).get("n") == 0 and checks[k].get("worst_abs_ps") is None
+               and not checks[k].get("bounded") and checks[k].get("nopath") == 0 for k in ("max", "min"))
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc"):
@@ -778,9 +810,13 @@ def evaluate(rec, insertion_target=None):
                 if na > 0:
                     why.append(f"{c.upper()}: {int(na)} registers without a unique propagated clock arrival are "
                                f"missing from the related pair skew")
+                vacuous = no_internal_sequential_paths(ps)
+                ps["applicability"] = "no_internal_sequential_paths" if vacuous else "internal_sequential_paths"
                 for k, value in checks.items():
                     n, worst = value.get("n"), value.get("worst_abs_ps")
                     side = "setup" if k == "max" else "hold"
+                    if vacuous:
+                        continue
                     if not n or worst is None or not math.isfinite(worst):
                         why.append(f"{c.upper()} {side}: no finite related pair measurement")
                     elif worst > PAIR_SKEW_MAX_PS:

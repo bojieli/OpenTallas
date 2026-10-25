@@ -36,6 +36,8 @@
 # env (standalone): OT_PS_OUT (TSV path), CORNER (label), OT_PS_CREDIT_MAX (default 5000).
 # TSV: H <key> <value> ; P <max|min> <launch> <capture> <skew_ps> <crpr_ps> <raw_damage_ps>
 
+set ::ot_ps_census_file [file join [file dirname [info script]] single_stage_census.tcl]
+
 proc ot_ps_ps {s} { return [expr {$s * 1e12}] }
 
 proc ot_ps_zero_unc {} {
@@ -193,6 +195,20 @@ proc ot_ps_measure {{credit_max 5000}} {
   lassign [ot_ps_related $::ot_ps_R] P np nx nd
   set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R] no_clock_arrival \
              $::ot_ps_noarr method $::ot_ps_method]
+  set census [dict create done 0 status NOT_APPLICABLE]
+  if {$np == 0} {
+    if {![llength [info commands ot_ss_census]] && [file isfile $::ot_ps_census_file]} {
+      catch {source $::ot_ps_census_file}
+    }
+    if {[llength [info commands ot_ss_census]]} {
+      if {[catch {set census [ot_ss_census]} err]} {
+        set census [dict create done 0 status FAIL problems [list $err]]
+      }
+    } else {
+      set census [dict create done 0 status NOT_RUN problems {independent structural census unavailable}]
+    }
+  }
+  dict set out census $census
   foreach dly {max min} {
     set idx [expr {$dly eq "max" ? 3 : 4}]
     set raw {}
@@ -230,6 +246,7 @@ proc ot_ps_write {M fn corner} {
   puts $fh "H\tcorner\t$corner"
   foreach k {regs no_clock_arrival method data_pins pairs inter_clock} { puts $fh "H\t$k\t[dict get $M $k]" }
   puts $fh "H\tcrpr\t[sta::crpr_enabled] [sta::crpr_mode]"
+  dict for {k v} [dict get $M census] { puts $fh "H\tcensus_$k\t$v" }
   foreach dly {max min} {
     set m [dict get $M $dly]
     foreach k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {

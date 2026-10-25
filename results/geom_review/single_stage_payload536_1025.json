@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "results/geom_review/single_stage_payload536_1025.png",
+ "findings": [
+  "Viewed source placed-core review: 86.4x25.92um macro-free rectangle, short abutting S-input/N-output dataflow and uniform W-edge clock entry.",
+  "536 flop sinks form one horizontal band; signal pin density7/um vs24.3cap; no macro wall, no slivers.",
+  "Read-only extracted signoff only. Existing routed DRC0; positive boundary timing claimed only after actual updated signoff collection."
+ ]
+}
