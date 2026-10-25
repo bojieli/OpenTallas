@@ -106,6 +106,7 @@ def allocate_cohort(allocator,target,previous,following,n,radius,obs,W,H):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('out');ap.add_argument('--types',nargs='+',required=True)
+    ap.add_argument('--global-targets',action='store_true',help='search all core-free channel grid targets, allowing another row gap')
     args=ap.parse_args();raw=json.load(open(args.plan));P=S.Plan(raw);ledger=[]
     for tn in args.types:
         t=raw['partition_types'][tn];W,H=t['outline_um']
@@ -117,10 +118,25 @@ def main():
         for slot in sorted(t['ft_slots'],key=lambda s:-s['width']):
             name=slot['name'];n=slot['width']+1;k=slot['stations']
             a=np.array([pins[(name+'_i',i)] for i in range(n)]);b=np.array([pins[(name+'_o',i)] for i in range(n)])
-            centre=[tuple(v) for v in slot.get('regs_um',[])]+[tuple(b.mean(axis=0))]
+            if k==1 and float(np.abs(a-b).sum(axis=1).max())<=403.:
+                row=dict(type=tn,slot=name,stations=[1,1],actual_max_hop_um=float(np.abs(a-b).sum(axis=1).max()),keepout_crossing_bits=0)
+                ledger.append(row);print(json.dumps(row),flush=True);continue
+            centre=[tuple(v) for v in slot.get('regs_um',[])]
+            if not centre:
+                path=C.zroute(tuple(a.mean(axis=0)),tuple(b.mean(axis=0)),slot.get('in_face','W'),slot.get('out_face','E'))
+                centre=[C.point_at(path,C.plen(path)*j/k) for j in range(k)]
+            centre+=[tuple(b.mean(axis=0))]
             if centre:centre[0]=tuple(a.mean(axis=0))
             if len(centre)<2:raise ValueError(f'{tn}/{name}: channel centroids required')
-            targets=targets_on_path(centre,obs);radius=50.;budget=403.;used=set(allocator.used);denied=set()
+            targets=targets_on_path(centre,obs)
+            if args.global_targets:
+                am,bm=a.mean(axis=0),b.mean(axis=0)
+                xs=np.unique(np.r_[np.arange(0,W+1e-6,8.64),am[0],bm[0]])
+                ys=np.unique(np.r_[np.arange(0,H+1e-6,8.64),am[1],bm[1]])
+                xx,yy=np.meshgrid(xs,ys);targets=np.column_stack((xx.ravel(),yy.ravel()));ok=np.ones(len(targets),bool)
+                for x0,y0,x1,y1 in obs:ok &= ~((targets[:,0]>x0)&(targets[:,0]<x1)&(targets[:,1]>y0)&(targets[:,1]<y1))
+                targets=targets[ok]
+            radius=50.;budget=403.;used=set(allocator.used);denied=set()
             print(f'ALLOCATE {tn}/{name} bits{n} targets{len(targets)}',flush=True)
             while True:
                 allocator.used=set(used);free=targets[[i not in denied for i in range(len(targets))]]
