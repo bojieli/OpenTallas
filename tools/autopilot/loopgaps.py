@@ -123,7 +123,7 @@ def _answers(tag, req_line, rtag, rep_line):
     a kit token of the REQ"""
     if rtag == tag:
         return True
-    fam = lambda x: re.split(r"[-/]", x)[0]
+    fam = lambda x: re.split(r"[-/\s]", x)[0]
     if fam(rtag) != fam(tag):
         return False
     toks = {w for w in re.findall(r"[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+", req_line) if len(w) >= 6}
