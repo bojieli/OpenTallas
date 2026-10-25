@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.die_trial_summary.v1",
+ "die": "qwen_compute",
+ "lane": "TRIAL-QK",
+ "date": "2026-10-24",
+ "plan": "physical/die_plan/qwen_compute/die_plan.json v3.8s sha256 0028ad53 (superseded by the QC capacity plan, owner decision 1; this trial is the old plan)",
+ "policy": "gate = hop STA TT setup / FF hold, 833.333 ps, 60/25 ps uncertainty, receiving kit seam-input hold padding per contract (insertion_tol 40 ps), nominal padded die tree + related launch/capture pair skew with CPPR <= 80 ps at TT and FF (owner 2026-10-24 decisions 3 + 5); INFO: OCV 5 %, insertion_tol window vs skew, bare flop-wire-flop hold, max-min tap spread; SS informational",
+ "status": "ABSTRACT_TRIAL_NOT_SIGNOFF",
+ "verdict": "FAIL (FF hold: 21,549 hops, worst -13.4 ps; GRT overflow 4659 in one left-edge cluster)",
+ "numbers": {
+  "clock_tree": "padded H-tree (qwen_compute_clkpad): 6684 taps, 77,035 BUFx16f, clock GRT overflow 0",
+  "clock_insertion_ps": {"TT": [8327.1, 8378.7], "FF": [7031.6, 7103.4], "SS": [10252.4, 10342.5]},
+  "pair_skew_cppr_ps": {"pairs": 2446, "TT_max": 34.0, "TT_p99": 28.7, "FF_max": 51.7, "FF_p99": 46.4, "over_80": 0},
+  "info_spread_max_min_ps": {"TT": 51.6, "FF": 71.7, "SS": 90.1},
+  "info_pair_skew_ocv5_max_ps": {"TT": 854.2, "FF": 724.2},
+  "grt": {
+   "overflow_total": 4659,
+   "by_layer": {"M4": 980, "M5": 2086, "M6": 227, "M7": 565, "M8": 456, "M9": 345},
+   "max_H_V": [375, 299],
+   "usage_pct": {"M4": 5.57, "M5": 11.12, "M6": 3.43, "M7": 4.54, "M8": 0.75, "M9": 0.95},
+   "overflow_gcells": {"total": 134, "horizontal": 47, "vertical": 87, "by_part": {"coll_f4": 76, "coll_f3": 39, "tt_ctlm": 7, "sl_W5_fw": 6, "native59": 3, "coll_core": 3}},
+   "hotspot": "all 134 overflowing gcells in one cluster at the die left edge x 600-1600 um, y 10,000-12,300 um: the coll_f3 / coll_f4 / coll_core / native59 / tt_ctlm column where the system column feeds the west slice rows (next to the ucie_kv window); rest of the die 0",
+   "nets": 1419789, "wirelength_um": 645513283, "seconds": 14787,
+   "wl_heatmap": "NOT COLLECTED: report_wire_length over 1.42M nets still running >7 h after GRT (intel1 trialqk-route_g0-1445030); hop lengths use Manhattan (abut 0-1 um, ft station-to-station)"
+  },
+  "hop_setup_TT_nominal": {"neg": 0, "worst_ps": 378.8},
+  "hop_hold_FF_gate": {
+   "neg": 21549, "abut": 21384, "ft": 165, "worst_ps": -13.4,
+   "worst": "c_W2_tn_00/bc_o01[0] -> c_W2_tn_01/bc_i02[0] abut, FF capture-launch skew +51.7 ps",
+   "where": "30 partition pairs: vertical tn_x0 -> tn_x1 and bn_x0 -> bn_x1 seams of the cluster tiles (top y~17.3k, bottom y~7.8k um) + sl_E4_su_c -> sl_E4_su_l0 (207 hops, -3.5); failing pairs carry FF capture-launch skew up to 51.7 ps (worst pair TT 34 / FF 51.7 / SS 4): the padded branches balance at TT but do not track at FF"
+  },
+  "info": {
+   "hold_window_insertion_tol_neg": 27474,
+   "bare_hold_neg": 534110,
+   "ocv5": {"setup_neg": 308091, "hold_gate_neg": 590747}
+  },
+  "ir": "NOT COLLECTED: intel1 qwen_compute_ir_t4 (138 um tiles, 512 GB) PDN done 1549 s; VSS/VDD grids connected; analyze_power_grid VDD running since ~12:4x (221 GB RSS at 19:39); report_power total 234 W"
+ },
+ "images": ["floorplan_lanes.png", "clock_tree.png (TT)", "clock_tree_FF.png", "congestion_overflow.png", "sta_negative.png"],
+ "review": "Images read 2026-10-24 19:45. congestion_overflow: overflow confined to the left system column next to the slice rows (coll_f3/f4); slice rows, cluster tiles and M8/M9 spine regions clean. sta_negative: no setup pairs; hold pairs are short vertical seams inside the top and bottom tile clusters (29 tn/bn tile pairs) + one sl_E4 horizontal pair. clock_tree_FF: the per-leaf colour pattern alternates at the rib boundaries; the failing vertical neighbours straddle two ribs (decision 5(f) seam neighbours on the same spine branch is violated there).",
+ "next": "fix candidates: (a) put vertically abutting tn/bn tiles on the same rib/leaf branch (decision 5(f)) or (b) corner-tracking padding (same cell + wire mix on both branches) so the FF pair skew <= ~38 ps; (c) relieve the coll_f3/f4 column (widen or split the system-column fan-in to the west slice rows). Apply on the QC capacity plan trial, not this superseded plan."
+}

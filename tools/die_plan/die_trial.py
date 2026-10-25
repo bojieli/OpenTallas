@@ -33,7 +33,9 @@ repeated wire of the hop's GRT-routed length (calib: DFFHQNx1 -> BUFx12f every 2
 estimate_parasitics, OpenSTA TT setup / FF hold (SS informational), T 833.333 ps, uncertainty 60 / 25 ps; the REACH-M89 GRT-validated method) plus
 the die clock skew between the capture and launch partitions' taps (clock tree STA, same corner), minus OCV on the
 non-common clock path (CPPR via the tree).  Partition-internal insertion is the common latency (250 ps) on both ends
-(budget abstract); the +/- insertion_tol window is reported as the extra margin a seam needs.
+(budget abstract).  FF hold gate (owner 2026-10-24 decision 5) = that hop hold + the receiving kit's contracted
+seam-input hold padding (insertion_tol) - die skew; the bare insertion_tol window vs skew is an INFO column.  Clock
+gate = related launch/capture tap pair skew (CPPR) <= 80 ps at TT and FF; max-min tap spread is INFO.
 """
 import argparse
 import gzip
@@ -945,28 +947,36 @@ def cmd_report(a):
         s_setup = hop_setup(cal, SETUP_C, Lh) + sk[SETUP_C][0] - sk[SETUP_C][1]
         s_setup_cal = hop_setup(cal, SETUP_C, Lh, True) + sk[SETUP_C][0] - sk[SETUP_C][1]
         s_hold = hop_hold(cal, HOLD_C, Lh) - sk[HOLD_C][0] - sk[HOLD_C][1]
-        # kit contract: every seam input is hold-padded for a neighbour launching insertion_tol early with no
-        # clk->q / wire credit (gen_phys.hold_in_min_ps) -> die skew + OCV must stay inside that window
+        # INFO: kit insertion window (gen_phys.hold_in_min_ps = -insertion_tol, no clk->q / wire credit) vs die skew
         s_hold_b = res["insertion_tol_ps"] - sk[HOLD_C][0] - sk[HOLD_C][1]
+        # GATE (owner 2026-10-24 decision 5: FF hold STA with the real trees decides, insertion_tol is guidance):
+        # FF hold slack of the hop = calibrated flop -> repeated wire -> flop FF hold (clk->q + wire - t_hold - 25 ps
+        # uncertainty) + the receiving kit's contracted seam-input hold padding (kits close FF hold with a min input
+        # delay of -insertion_tol, gen_phys.hold_in_min_ps) - the die tree's capture-minus-launch tap skew
+        s_hold_g = hop_hold(cal, HOLD_C, Lh) + res["insertion_tol_ps"] - sk[HOLD_C][0] - sk[HOLD_C][1]
         st = stats[kind]
         st["hops"] += 1
         st["setup_neg"] += s_setup < 0
         st["setup_cal_neg"] += s_setup_cal < 0
         st["hold_neg"] += s_hold < 0
         st["hold_budget_neg"] += s_hold_b < 0
+        st["hold_gate_neg"] += s_hold_g < 0
+        st["hold_gate_nom_neg"] += s_hold_g + sk[HOLD_C][1] < 0
         st["setup_nom_neg"] += s_setup + sk[SETUP_C][1] < 0             # nominal: no clock OCV
         st["hold_budget_nom_neg"] += s_hold_b + sk[HOLD_C][1] < 0
         st["hold_nom_neg"] += s_hold + sk[HOLD_C][1] < 0
         st["setup_lt_tol"] += s_setup < 2 * res["insertion_tol_ps"]
         st["hold_lt_tol"] += s_hold < 2 * res["insertion_tol_ps"]
         hist_len[int(Lh // 250) * 250] += 1
-        for key, val in (("setup", s_setup), ("setup_cal", s_setup_cal), ("hold", s_hold), ("hold_budget", s_hold_b)):
+        for key, val in (("setup", s_setup), ("setup_cal", s_setup_cal), ("hold", s_hold), ("hold_budget", s_hold_b),
+                         ("setup_nom", s_setup + sk[SETUP_C][1]), ("hold_gate_nom", s_hold_g + sk[HOLD_C][1])):
             k2 = (kind, key)
             if k2 not in worst or val < worst[k2][0]:
                 worst[k2] = (val, nm, L0["part"], L0["pin"], C0["part"], C0["pin"], round(Lh, 1), round(Lr, 1),
                              {c: [round(v[0], 1), round(v[1], 1)] for c, v in sk.items()})
-        if s_setup < 0 or s_hold < 0:
-            neg_rows.append((round(s_setup, 1), round(s_hold, 1), kind, nm, L0["part"], L0["pin"], C0["part"],
+        g_setup, g_hold = s_setup + sk[SETUP_C][1], s_hold_g + sk[HOLD_C][1]      # gate values (nominal clock)
+        if g_setup < 0 or g_hold < 0:
+            neg_rows.append((round(g_setup, 1), round(g_hold, 1), kind, nm, L0["part"], L0["pin"], C0["part"],
                              C0["pin"], round(Lh, 1)))
         pk = (L0["part"], L0["tap"], C0["part"], C0["tap"])
         if L0["part"] != C0["part"] and pk not in pair_skew:
@@ -979,6 +989,8 @@ def cmd_report(a):
         e["setup_cal"] = min(e.get("setup_cal", 1e9), round(s_setup_cal, 1))
         e["hold"] = min(e.get("hold", 1e9), round(s_hold, 1))
         e["hold_budget"] = min(e.get("hold_budget", 1e9), round(s_hold_b, 1))
+        e["hold_gate_nom"] = min(e.get("hold_gate_nom", 1e9), round(s_hold_g + sk[HOLD_C][1], 1))
+        e["setup_nom"] = min(e.get("setup_nom", 1e9), round(s_setup + sk[SETUP_C][1], 1))
         e["max_len_um"] = max(e.get("max_len_um", 0), round(Lh, 1))
     res["sta"] = dict(model="calibrated repeated-hop table (calib) + die clock tree skew with CPPR, OCV "
                             f"{OCV:.0%} non-common; {SETUP_C} setup / {HOLD_C} hold (SS informational only); setup_cal = wire delay x {CAL_MARGIN:.3f} (REACH-M89)",
@@ -988,39 +1000,45 @@ def cmd_report(a):
                                                    skew_ocv_ps=v[8]) for k, v in worst.items()},
                       hop_len_hist_250um=dict(sorted(hist_len.items())),
                       calib_reach_um={c: {ln: reach_of(rows) for ln, rows in cal[c].items()} for c in cal})
-    # OWNER 2026-10-24 (BRIEFING decision 3): gate = TT setup / FF hold with 60 / 25 ps uncertainty and seam spread
-    # <= 80 ps on the NOMINAL clock; margined slack (OCV / xtalk / IR) is an INFO column only.
+    # OWNER 2026-10-24 decisions 3 + 5: gate = hop STA TT setup / FF hold with 60 / 25 ps uncertainty on the die
+    # tree (nominal arrivals; CPPR via the common tree node) + related launch/capture pair skew (CPPR) <= 80 ps at TT
+    # and FF.  INFO only: margined slack (OCV / xtalk / IR), the kit insertion_tol hold window, the bare (unpadded)
+    # flop-wire-flop hold and the global max-min tap spread.
     tot = lambda key: sum(v.get(key, 0) for v in stats.values())
-    res["gate"] = dict(rule="TT setup / FF hold, 60/25 ps, seam spread <= 80 ps, nominal clock (OCV INFO only)",
-                       # hold: kit contract (gen_phys hold_in_min_ps) pads every seam input for a neighbour launching
-                       # insertion_tol early with no clk->q / wire credit -> the gate is that window vs the die skew;
-                       # the bare flop-wire-flop FF hold (no input padding, ~-2 ps at 0 um) is INFO
-                       setup_neg=tot("setup_nom_neg"), hold_neg=tot("hold_budget_nom_neg"),
+    res["gate"] = dict(rule="hop STA TT setup / FF hold (60/25 ps, kit seam hold padding per contract) on the die "
+                            "tree + related launch/capture pair skew with CPPR <= 80 ps at TT and FF; OCV, "
+                            "insertion_tol window, bare hold and max-min spread are INFO",
+                       setup_neg=tot("setup_nom_neg"), hold_neg=tot("hold_gate_nom_neg"),
+                       info_hold_window_neg=tot("hold_budget_nom_neg"),
                        info_bare_hold_neg=tot("hold_nom_neg"),
-                       info_ocv=dict(ocv=OCV, setup_neg=tot("setup_neg"), hold_neg=tot("hold_budget_neg"),
-                                     bare_hold_neg=tot("hold_neg")))
+                       info_ocv=dict(ocv=OCV, setup_neg=tot("setup_neg"), hold_neg=tot("hold_gate_neg"),
+                                     hold_window_neg=tot("hold_budget_neg"), bare_hold_neg=tot("hold_neg")))
     sk_vals = defaultdict(list)
     for v in pair_skew.values():
         for c, x in v.items():
             sk_vals[c].append(x)
+    # pair_skew: one entry per related (launch partition tap, capture partition tap) pair of a seam; "<C>_nom" is the
+    # nominal |capture - launch| arrival (CPPR exact: the common tree path cancels), "<C>" adds the OCV INFO term
     res["seam_skew"] = {c: dict(pairs=len(v), max_ps=max(v), p99_ps=sorted(v)[int(0.99 * (len(v) - 1))],
                                 over_80=sum(x > res["seam_skew_rule_ps"] for x in v)) for c, v in sk_vals.items() if v}
-    for c in (SETUP_C, HOLD_C):
-        k = res["seam_skew"].get(c + "_nom")
+    res["pair_skew"] = {c: res["seam_skew"][c + "_nom"] for c in ("TT", "FF", "SS") if c + "_nom" in res["seam_skew"]}
+    for c in ("TT", "FF"):
+        k = res["pair_skew"].get(c)
         if k:
-            res["gate"][f"seam_over_80_{c}"] = k["over_80"]
-            res["gate"][f"seam_max_{c}_ps"] = k["max_ps"]
+            res["gate"][f"pair_skew_over_80_{c}"] = k["over_80"]
+            res["gate"][f"pair_skew_max_{c}_ps"] = k["max_ps"]
+    res["gate"]["info_spread_ps"] = {c: v["global_skew_ps"] for c, v in ck["corners"].items()}
     g = res["gate"]
-    g["verdict"] = "PASS" if not (g["setup_neg"] or g["hold_neg"] or any(v for k, v in g.items() if k.startswith("seam_over_80"))) \
-        else "FAIL"
+    g["verdict"] = "PASS" if not (g["setup_neg"] or g["hold_neg"] or
+                                  any(v for k, v in g.items() if k.startswith("pair_skew_over_80"))) else "FAIL"
     g["note"] = "budget/abstract trial: hop = calibrated repeated wire, partitions at 250 ps common latency; not signoff"
-    wp = sorted(pair_skew.items(), key=lambda kv: -kv[1].get("TT", 0))[:20]
+    wp = sorted(pair_skew.items(), key=lambda kv: -max(kv[1].get("TT_nom", 0), kv[1].get("FF_nom", 0)))[:20]
     res["seam_skew_worst"] = [dict(launch=f"{k[0]}/{k[1]}", capture=f"{k[2]}/{k[3]}", **v) for k, v in wp]
     res["seams_worst"] = [dict(src=g[0], dst=g[1], **e) for g, e in sorted(seam.items(), key=lambda kv: kv[1]["setup"])[:40]]
-    res["seams_worst_hold"] = [dict(src=g[0], dst=g[1], **e) for g, e in sorted(seam.items(), key=lambda kv: kv[1]["hold"])[:20]]
+    res["seams_worst_hold"] = [dict(src=g[0], dst=g[1], **e) for g, e in sorted(seam.items(), key=lambda kv: kv[1]["hold_gate_nom"])[:20]]
     neg_rows.sort()
     with gzip.open(B / "hops_negative.tsv.gz", "wt") as f:
-        f.write(f"setup_{SETUP_C}\thold_{HOLD_C}\tkind\tnet\tlaunch_part\tlaunch_pin\tcapture_part\tcapture_pin\tlen_um\n")
+        f.write(f"setup_{SETUP_C}_nom\thold_{HOLD_C}_gate_nom\tkind\tnet\tlaunch_part\tlaunch_pin\tcapture_part\tcapture_pin\tlen_um\n")
         for r in neg_rows:
             f.write("\t".join(map(str, r)) + "\n")
     # ---------------- G2 comparison
@@ -1450,6 +1468,29 @@ def cmd_render(a):
         fig.savefig(out / "congestion.png", dpi=a.dpi, bbox_inches="tight")
         plt.close(fig)
         made.append("congestion.png")
+    # 3b. no heatmap (WL / heatmap dump not finished): overflowing gcells from the GRT congestion report
+    rpt = B / "grt_g0_congestion.rpt"
+    if not hm.is_file() and rpt.is_file():
+        pts = []
+        txt = rpt.read_text(errors="replace")
+        for m in re.finditer(r"violation type: (\w+)[^\n]*\n(?:[^\n]*\n)*?\s*comment: [^\n]*congestion:(\d+)\s*\n"
+                             r"\s*bbox = \(\s*([-\d.]+),\s*([-\d.]+)\s*\)\s*-\s*\(\s*([-\d.]+),\s*([-\d.]+)", txt):
+            pts.append(((float(m.group(3)) + float(m.group(5))) / 2, (float(m.group(4)) + float(m.group(6))) / 2,
+                        m.group(1), int(m.group(2))))
+        if pts:
+            plt, fig, ax = _fig(P)
+            _base(P, ax, label=False)
+            for kind, col in (("Horizontal", "#d62728"), ("Vertical", "#1f77b4")):
+                q = [p for p in pts if p[2] == kind]
+                if q:
+                    ax.scatter([p[0] for p in q], [p[1] for p in q], s=[2 + 0.4 * p[3] for p in q], c=col, alpha=0.6,
+                               marker="s", zorder=4, label=f"{kind} overflow gcells: {len(q)} (sum {sum(p[3] for p in q)})")
+            ax.legend(loc="upper right", fontsize=7)
+            ax.set_title(f"{P.name}: die GRT overflowing gcells from the congestion report (marker ~ overflow tracks)",
+                         fontsize=9)
+            fig.savefig(out / "congestion_overflow.png", dpi=a.dpi, bbox_inches="tight")
+            plt.close(fig)
+            made.append("congestion_overflow.png")
     # 4. IR map
     irc = (Path(a.ir_dir) if a.ir_dir else B.parent / (B.name + "_ir")) / "psm_VDD.csv"
     if irc.is_file():
@@ -1499,7 +1540,7 @@ def cmd_render(a):
             ax.plot([(a0[0] + a0[2]) / 2, (a1[0] + a1[2]) / 2], [(a0[1] + a0[3]) / 2, (a1[1] + a1[3]) / 2],
                     color="r" if k == "S" else "b", lw=0.5 + 3 * math.log10(1 + n) / 4, alpha=0.7)
         ax.plot([], [], color="r", label=f"setup {SETUP_C} < 0 (partition pair)")
-        ax.plot([], [], color="b", label=f"hold {HOLD_C} < 0")
+        ax.plot([], [], color="b", label=f"hold {HOLD_C} < 0 (gate: kit seam padding, nominal tree)")
         ax.legend(loc="upper right", fontsize=7)
         ax.set_title(f"{P.name}: partition pairs with negative die-STA hops (line width ~ log count)", fontsize=9)
         fig.savefig(out / "sta_negative.png", dpi=a.dpi, bbox_inches="tight")
