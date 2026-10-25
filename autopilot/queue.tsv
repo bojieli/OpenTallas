@@ -241,3 +241,4 @@ cp1	col_h10_r1__t1	intel2:/srv/opentallas-scratch2/claude/clock-reset/cp1/wf1025
 s81	ot_s81sl_vs	epyc3:/srv/opentallas-scratch2/claude/s81-cores3-nk/kits_r/ot_s81sl_vs_lfp	claude/s81-cores3-nk-1025@e5fa0f1895	REQ	S81-CORES3/NK vs	32	140000	S81-CORES	finish		16
 qwen_kvsys	kv3_io_ft	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m0/kv3_io_ft	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV			8	adopt
 qwen_kvsys	kv3_io_ft_v1	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m0/kv3_io_ft_v1	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV			8	adopt
+qwen_kvsys	kv3_io_ft	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m5/kv3_io_ft	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV			8	adopt
