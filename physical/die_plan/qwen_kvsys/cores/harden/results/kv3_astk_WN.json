@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_astk_WN",
+ "kit": "kv3_astk_WN__190.08x181.44",
+ "kit_hash": "837007c28c490e73",
+ "run": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_WN__190.08x181.44",
+ "outline_um": [
+  190.08,
+  181.44
+ ],
+ "pins": 1692,
+ "plan_pins": 1690,
+ "added_pins": 2,
+ "clocks": [
+  "ck"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 282200,
+ "std_util": 0.53423,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 1692/1692",
+ "sta": {
+  "tt": null,
+  "ff": null,
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "setup_tt: FAIL WNS -80.61 ps, 27 endpoints",
+   "hold_ff: FAIL WNS -24.90 ps, 924 endpoints",
+   "drv: FAIL TT slew 2438.0 cap 0.0, FF slew 2179.0 cap 0.0",
+   "sdc_lint: FAIL 17 errors (first: parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(ck)(\\[[0-9]+\\])?$}]])",
+   "face_guard: FAIL {'shared': 16, 'feedthrough': 60, 'unregistered': 1}"
+  ],
+  "checks": {
+   "setup_tt": "FAIL",
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "INCOMPLETE (views / corner STA missing)",
+ "views_status": "abstract_only (not SIGNED)"
+}

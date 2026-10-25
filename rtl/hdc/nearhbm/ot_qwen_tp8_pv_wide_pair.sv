@@ -110,12 +110,22 @@ module ot_qwen_tp8_pv_slice_t #(parameter integer RESET_PIN=0)(
   .leaf_c({3'd0,leaf_c}),.reduce_issue(red_issue),.reduce_capture(red_capture),.reduce_last(red_last),
   .reduce_dst({4'd0,red_dst}),.tree_sum(tsum),.leaf(raw),.commit(cv),.commit_c(cc),.fault(sf));
  reg[10:0] fc;reg[6:0] tc;
+ // KV-CORES-PAR 10-24 (COORD ruling 22:43 (2), 0 cycles): the sticky fault state (fault_s, feeds its own next state) and
+ // the port register (fault) are two flops loaded with the same next value every edge, so the fault pin is driven by a
+ // flop whose only load is the pin (face_guard "shared": the old single flop also fed the sticky OR).  The port flop
+ // takes the reset synchronously (local_rst_n is itself the registered rst_q): a different cell from the async-clear
+ // fault_s, so yosys opt_merge cannot fold the two back into one (keep on a reg does not stop that: the kept wire
+ // survives flatten as an alias net with its own buffer load off the pin).  Out of reset both equal fault_n every
+ // edge; on reset entry the pin clears one edge after fault_s.
+ reg fault_s;
+ wire fault_n=fault_s||sf||(cv!=(fc[10]||tc[6]));
  always @(posedge clk or negedge local_rst_n)
-  if(!local_rst_n)begin fc<=0;tc<=0;fault<=0;end
+  if(!local_rst_n)begin fc<=0;tc<=0;fault_s<=0;end
   else begin
    fc<={fc[9:0],take};tc<={tc[5:0],red_issue};
-   if(sf||(cv!=(fc[10]||tc[6])))fault<=1;
+   fault_s<=fault_n;
   end
+ always @(posedge clk)fault<=local_rst_n&&fault_n;
  always @(posedge clk)ts<=tsum;
 endmodule
 

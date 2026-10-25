@@ -43,7 +43,11 @@ RESET_RE = re.compile(r'^dsfd_rly_1_')
 # RTLGAP-G9 (10-22): ck_r<k> = the H9/H10 frame region roots (col_h9_l4_lp ck_r0/ck_r1/ck_r2).  Without it ck_r1/ck_r2
 # (which reach no other clock pin) were classed die_input and the bench held them at 0: two of the three frame regions
 # never clocked on every G9 cut.
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK)$')
+# TOK-DS-GAPS (10-24): ck_<REGION> = the MU72 / c1x / c3x slice region clocks (ck_K, ck_ML, ck_L0..L4, ck_CAP_CE/CW/RN/RS/RT;
+# ck_S / ck_N<k> were caught only because a relay also takes them on `ck`).  Without it the fc31 cuts (0S, 0N, 7, 3S_ctl)
+# held 10-22 slice region clocks at 0: leaves 0, 1, 3, 4, the lep K / ML regions and the CAP regions never clocked, and
+# every replay of those cuts was fault-free by construction there (found by the cut_0S NX flit data check: zero partials).
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK|ck_[A-Z][A-Z0-9_]*)$')
 
 
 FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its

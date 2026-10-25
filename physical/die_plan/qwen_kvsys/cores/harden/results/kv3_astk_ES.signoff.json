@@ -1,0 +1,501 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "hc_kv3_astk_ES__190_08x181_44",
+ "generated": "2026-10-24T19:42:44-07:00",
+ "host": "tolerant-swine",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base",
+  "orfs": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run",
+  "design": "hc_kv3_astk_ES__190_08x181_44",
+  "kit": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44",
+  "odb": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/logs/asap7/hc_kv3_astk_ES__190_08x181_44/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/logs/asap7/hc_kv3_astk_ES__190_08x181_44/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/logs/asap7/hc_kv3_astk_ES__190_08x181_44/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/reports/asap7/hc_kv3_astk_ES__190_08x181_44/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/sdc_lint.json",
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "kv3_astk_ES",
+   "cells": 281087.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "g_phys_fault_u_fault__b",
+    "rst_n",
+    "u_strip_u_strip_g_zn_0_u_zn__zi",
+    "u_strip_u_strip_u_ctl__am",
+    "u_strip_u_strip_u_ctl__aq",
+    "u_strip_u_strip_u_ctl__cal",
+    "u_strip_u_strip_u_ctl__xi"
+   ],
+   "outputs": [
+    "g_phys_fault_u_fault__q",
+    "u_strip_u_strip_g_zn_0_u_zn__tc",
+    "u_strip_u_strip_g_zn_1_u_zn__tc",
+    "u_strip_u_strip_g_zn_2_u_zn__tc",
+    "u_strip_u_strip_g_zn_3_u_zn__tc",
+    "u_strip_u_strip_u_ctl__ap",
+    "u_strip_u_strip_u_ctl__qo"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -34.14,
+   "sdc_wns_min": 5.68,
+   "sdc_tns_max": -91.22,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 9.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -34.14,
+   "std_wns_min": 5.68,
+   "std_tns_max": -91.22,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 9.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 1621.0,
+   "cap_viol": 0.0,
+   "fanout_max": 183.0,
+   "fanout_worst_net": "net11839",
+   "fanout_viol": 149.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 24607,
+    "min": 231.99,
+    "mean": 244.34,
+    "max": 261.79,
+    "spread": 29.8
+   },
+   "insertion_pinflops": {
+    "n": 1679,
+    "min": 235.85,
+    "mean": 248.96,
+    "max": 259.73,
+    "spread": 23.88
+   },
+   "ocv5_wns_max": -90.86,
+   "ocv5_wns_min": -9.94,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "kv3_astk_ES",
+   "cells": 281087.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "g_phys_fault_u_fault__b",
+    "rst_n",
+    "u_strip_u_strip_g_zn_0_u_zn__zi",
+    "u_strip_u_strip_u_ctl__am",
+    "u_strip_u_strip_u_ctl__aq",
+    "u_strip_u_strip_u_ctl__cal",
+    "u_strip_u_strip_u_ctl__xi"
+   ],
+   "outputs": [
+    "g_phys_fault_u_fault__q",
+    "u_strip_u_strip_g_zn_0_u_zn__tc",
+    "u_strip_u_strip_g_zn_1_u_zn__tc",
+    "u_strip_u_strip_g_zn_2_u_zn__tc",
+    "u_strip_u_strip_g_zn_3_u_zn__tc",
+    "u_strip_u_strip_u_ctl__ap",
+    "u_strip_u_strip_u_ctl__qo"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 139.13,
+   "sdc_wns_min": -24.02,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -10137.2,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 920.0,
+   "std_wns_max": 139.13,
+   "std_wns_min": -24.02,
+   "std_tns_max": 0.0,
+   "std_tns_min": -10137.2,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 920.0,
+   "slew_viol": 1502.0,
+   "cap_viol": 0.0,
+   "fanout_max": 183.0,
+   "fanout_worst_net": "net11839",
+   "fanout_viol": 149.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 24607,
+    "min": 184.72,
+    "mean": 197.39,
+    "max": 214.27,
+    "spread": 29.55
+   },
+   "insertion_pinflops": {
+    "n": 1679,
+    "min": 189.16,
+    "mean": 202.08,
+    "max": 212.71,
+    "spread": 23.55
+   },
+   "ocv5_wns_max": 93.57,
+   "ocv5_wns_min": -35.94,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "kit sdc_lint.json",
+  "errors": [
+   "parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(ck)(\\[[0-9]+\\])?$}]]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -max 166.6000 -clock vclk $non_clk_in]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -min -40.0000 -clock vclk $non_clk_in]",
+   "parse (fail-closed): undefined variable $non_clk_in [set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in]",
+   "ports: input u_strip_u_strip_u_ctl__aq has no max input delay",
+   "ports: input u_strip_u_strip_u_ctl__aq has no min input delay",
+   "ports: input u_strip_u_strip_u_ctl__cal has no max input delay",
+   "ports: input u_strip_u_strip_u_ctl__cal has no min input delay",
+   "ports: input u_strip_u_strip_g_zn_0_u_zn__zi has no max input delay",
+   "ports: input u_strip_u_strip_g_zn_0_u_zn__zi has no min input delay",
+   "ports: input g_phys_fault_u_fault__b has no max input delay",
+   "ports: input g_phys_fault_u_fault__b has no min input delay",
+   "ports: input u_strip_u_strip_u_ctl__xi has no max input delay",
+   "ports: input u_strip_u_strip_u_ctl__xi has no min input delay",
+   "ports: input u_strip_u_strip_u_ctl__am has no max input delay",
+   "ports: input u_strip_u_strip_u_ctl__am has no min input delay",
+   "ports: input rst_n has no min input delay"
+  ],
+  "n_errors": 17,
+  "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "kv3_astk_ES",
+  "checked": 1690,
+  "ok": 1613,
+  "fail_counts": {
+   "shared": 16,
+   "feedthrough": 60,
+   "unregistered": 1
+  },
+  "fails": {
+   "shared": [
+    "u_strip_u_strip_g_zn_0_u_zn__tc[14]: net u_strip_u_strip_g_zn_0_u_zn__tc[14] has 5 loads besides the port chain",
+    "u_strip_u_strip_g_zn_0_u_zn__tc[13]: net u_strip_u_strip_g_zn_0_u_zn__tc[13] has 5 loads besides the port chain",
+    "u_strip_u_strip_g_zn_0_u_zn__tc[12]: net u_strip_u_strip_g_zn_0_u_zn__tc[12] has 5 loads besides the port chain",
+    "u_strip_u_strip_g_zn_0_u_zn__tc[11]: net u_strip_u_strip_g_zn_0_u_zn__tc[11] has 5 loads besides the port chain",
+    "u_strip_u_strip_g_zn_0_u_zn__tc[10]: net u_strip_u_strip_g_zn_0_u_zn__tc[10] has 5 loads besides the port chain"
+   ],
+   "feedthrough": [
+    "u_strip_u_strip_g_zn_1_u_zn__tc[14]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[14]",
+    "u_strip_u_strip_g_zn_1_u_zn__tc[13]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[13]",
+    "u_strip_u_strip_g_zn_1_u_zn__tc[12]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[12]",
+    "u_strip_u_strip_g_zn_1_u_zn__tc[11]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[11]",
+    "u_strip_u_strip_g_zn_1_u_zn__tc[10]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[10]"
+   ],
+   "unregistered": [
+    "g_phys_fault_u_fault__b[0]: loads NAND2x1_ASAP7_75t_R _187605_"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/pins.json",
+  "boundary_context": {
+   "manifest": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/core.json",
+   "controls": [
+    "ck",
+    "rst_n"
+   ]
+  },
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "FAIL",
+   "wns_ps": -34.14,
+   "tns_ps": -91.22,
+   "violators": 9.0
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -24.02,
+   "tns_ps": -10137.2,
+   "violators": 920.0,
+   "sdc_wns_ps": -24.02,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 1621.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1502.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 1621.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1502.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "WARN",
+   "limit": 64,
+   "violators": {
+    "tt": 149.0,
+    "ff": 149.0
+   },
+   "max_fanout": 183.0,
+   "worst_net": "net11839"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 1679,
+      "min": 235.85,
+      "mean": 248.96,
+      "max": 259.73,
+      "spread": 23.88
+     },
+     "all": {
+      "n": 24607,
+      "min": 231.99,
+      "mean": 244.34,
+      "max": 261.79,
+      "spread": 29.8
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1679,
+      "min": 189.16,
+      "mean": 202.08,
+      "max": 212.71,
+      "spread": 23.55
+     },
+     "all": {
+      "n": 24607,
+      "min": 184.72,
+      "mean": 197.39,
+      "max": 214.27,
+      "spread": 29.55
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null,
+   "core_latency_contract": "hard_core_latency"
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "kit sdc_lint.json",
+   "errors": [
+    "parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(ck)(\\[[0-9]+\\])?$}]]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -max 166.6000 -clock vclk $non_clk_in]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_input_delay -min -40.0000 -clock vclk $non_clk_in]",
+    "parse (fail-closed): undefined variable $non_clk_in [set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in]",
+    "ports: input u_strip_u_strip_u_ctl__aq has no max input delay",
+    "ports: input u_strip_u_strip_u_ctl__aq has no min input delay",
+    "ports: input u_strip_u_strip_u_ctl__cal has no max input delay",
+    "ports: input u_strip_u_strip_u_ctl__cal has no min input delay",
+    "ports: input u_strip_u_strip_g_zn_0_u_zn__zi has no max input delay",
+    "ports: input u_strip_u_strip_g_zn_0_u_zn__zi has no min input delay",
+    "ports: input g_phys_fault_u_fault__b has no max input delay",
+    "ports: input g_phys_fault_u_fault__b has no min input delay",
+    "ports: input u_strip_u_strip_u_ctl__xi has no max input delay",
+    "ports: input u_strip_u_strip_u_ctl__xi has no min input delay",
+    "ports: input u_strip_u_strip_u_ctl__am has no max input delay",
+    "ports: input u_strip_u_strip_u_ctl__am has no min input delay",
+    "ports: input rst_n has no min input delay"
+   ],
+   "n_errors": 17,
+   "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "kv3_astk_ES",
+   "checked": 1690,
+   "ok": 1613,
+   "fail_counts": {
+    "shared": 16,
+    "feedthrough": 60,
+    "unregistered": 1
+   },
+   "fails": {
+    "shared": [
+     "u_strip_u_strip_g_zn_0_u_zn__tc[14]: net u_strip_u_strip_g_zn_0_u_zn__tc[14] has 5 loads besides the port chain",
+     "u_strip_u_strip_g_zn_0_u_zn__tc[13]: net u_strip_u_strip_g_zn_0_u_zn__tc[13] has 5 loads besides the port chain",
+     "u_strip_u_strip_g_zn_0_u_zn__tc[12]: net u_strip_u_strip_g_zn_0_u_zn__tc[12] has 5 loads besides the port chain",
+     "u_strip_u_strip_g_zn_0_u_zn__tc[11]: net u_strip_u_strip_g_zn_0_u_zn__tc[11] has 5 loads besides the port chain",
+     "u_strip_u_strip_g_zn_0_u_zn__tc[10]: net u_strip_u_strip_g_zn_0_u_zn__tc[10] has 5 loads besides the port chain"
+    ],
+    "feedthrough": [
+     "u_strip_u_strip_g_zn_1_u_zn__tc[14]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[14]",
+     "u_strip_u_strip_g_zn_1_u_zn__tc[13]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[13]",
+     "u_strip_u_strip_g_zn_1_u_zn__tc[12]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[12]",
+     "u_strip_u_strip_g_zn_1_u_zn__tc[11]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[11]",
+     "u_strip_u_strip_g_zn_1_u_zn__tc[10]: buffered from port u_strip_u_strip_g_zn_0_u_zn__tc[10]"
+    ],
+    "unregistered": [
+     "g_phys_fault_u_fault__b[0]: loads NAND2x1_ASAP7_75t_R _187605_"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/run/results/asap7/hc_kv3_astk_ES__190_08x181_44/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/pins.json",
+   "boundary_context": {
+    "manifest": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits/kv3_astk_ES__190.08x181.44/core.json",
+    "controls": [
+     "ck",
+     "rst_n"
+    ]
+   },
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "setup_tt: FAIL WNS -34.14 ps, 9 endpoints",
+  "hold_ff: FAIL WNS -24.02 ps, 920 endpoints",
+  "drv: FAIL TT slew 1621.0 cap 0.0, FF slew 1502.0 cap 0.0",
+  "sdc_lint: FAIL 17 errors (first: parse (fail-closed): regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks [set non_clk_in [lsearch -inline -all -not -regexp [all_inputs] {^(ck)(\\[[0-9]+\\])?$}]])",
+  "face_guard: FAIL {'shared': 16, 'feedthrough': 60, 'unregistered': 1}"
+ ],
+ "verdict": "NOT SIGNED",
+ "core_latency": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "ruling": "COORD 10-24",
+   "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+   "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path"
+  },
+  "measured": {
+   "tt": {
+    "n": 1679,
+    "min": 235.85,
+    "mean": 248.96,
+    "max": 259.73,
+    "spread": 23.88
+   },
+   "ff": {
+    "n": 1679,
+    "min": 189.16,
+    "mean": 202.08,
+    "max": 212.71,
+    "spread": 23.55
+   }
+  }
+ }
+}

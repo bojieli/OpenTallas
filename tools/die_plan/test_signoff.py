@@ -318,6 +318,25 @@ def test_corner_scoped_generic_lib_name(tmp_path):
     assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "ff/core.lib")], [])
 
 
+def test_hard_core_latency_contract(tmp_path):
+    """COORD 10-24: a hard-core kit (typed core.json clock_contract) publishes its insertion; others keep the target."""
+    import json as _j
+    import signoff as _S
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    assert _S.hard_core_latency_contract(dict(kit=str(kit))) is None
+    (kit / "boundary_guard_context.json").write_text(_j.dumps(dict(
+        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=["ck"],
+        unused_clock_ports=[], reset_ports=[], data_pin_exemptions=[])))
+    (kit / "core.json").write_text(_j.dumps(dict(boundary_role={"ck": "clk"})))
+    assert _S.hard_core_latency_contract(dict(kit=str(kit))) is None
+    (kit / "core.json").write_text(_j.dumps(dict(boundary_role={"ck": "clk"}, clock_contract=dict(
+        kind="hard_core_latency", parent="tap_balance early tap"))))
+    assert _S.hard_core_latency_contract(dict(kit=str(kit)))["kind"] == "hard_core_latency"
+    (kit / "core.json").write_text(_j.dumps(dict(clock_contract=dict(kind="anything_else"))))
+    assert _S.hard_core_latency_contract(dict(kit=str(kit))) is None
+
+
 def test_summary_line_shows_pair_skew_and_spread_info():
     line = signoff.summary_line(signoff.evaluate(record(pair_setup=41.0, pair_hold=22.0)))
     assert "pair skew TT/FF 41.0/41.0" in line and "spread info" in line
