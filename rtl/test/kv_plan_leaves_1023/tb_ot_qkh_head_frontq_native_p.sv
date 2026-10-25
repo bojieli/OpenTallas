@@ -5,6 +5,7 @@
 module tb_ot_qkh_head_frontq_native_p #(parameter integer TMUT = 0, parameter integer V0 = 0, parameter integer MV0 = 0);
     localparam integer Q_FP32 = 1;
     localparam integer MUT = 0;
+    localparam integer PORT_REGS = 0;
     reg clk = 0;
     always #5 clk = ~clk;
     reg rstv = 0;
@@ -21,8 +22,8 @@ module tb_ot_qkh_head_frontq_native_p #(parameter integer TMUT = 0, parameter in
     wire [232:0] r_f_t2, d_f_t2;
     wire [232:0] r_f_t3, d_f_t3;
     wire  r_pack_fault, d_pack_fault;
-    ot_qkh_head_frontq_native #(.Q_FP32(Q_FP32), .MUT(MUT)) u_ref (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(TMUT ? MV0 : V0), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .f_t0(r_f_t0), .f_t1(r_f_t1), .f_t2(r_f_t2), .f_t3(r_f_t3), .pack_fault(r_pack_fault));
-    ot_qkh_head_frontq_native_p #(.Q_FP32(Q_FP32), .MUT(MUT), .HID(V0)) u_dut (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .f_t0(d_f_t0), .f_t1(d_f_t1), .f_t2(d_f_t2), .f_t3(d_f_t3), .pack_fault(d_pack_fault));
+    ot_qkh_head_frontq_native #(.Q_FP32(Q_FP32), .MUT(MUT), .PORT_REGS(PORT_REGS)) u_ref (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(TMUT ? MV0 : V0), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .f_t0(r_f_t0), .f_t1(r_f_t1), .f_t2(r_f_t2), .f_t3(r_f_t3), .pack_fault(r_pack_fault));
+    ot_qkh_head_frontq_native_p #(.Q_FP32(Q_FP32), .MUT(MUT), .PORT_REGS(PORT_REGS), .HID(V0)) u_dut (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .f_t0(d_f_t0), .f_t1(d_f_t1), .f_t2(d_f_t2), .f_t3(d_f_t3), .pack_fault(d_pack_fault));
     integer cyc, errs, w;
     task automatic drive;
         begin

@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import shutil
 import subprocess
 import sys
@@ -70,6 +72,51 @@ def build_tree(repo, rev, tree):
         shutil.rmtree(tree)
     tree.mkdir(parents=True)
     sh(f"git -C {repo} archive {rev} {' '.join(BASE_PATHS)} | tar -x -C {tree}")
+
+
+S8_SC_BLOCK = """CMD_HOP = 2
+SC_HOP_BY_SLICE = {'slice2': 2, 's8': 4}   # TOK-QK/S8B 10-25 (= main tools/qwen_layerbench/dv_lower.py)
+SLICE_RTL = 's8' if os.environ.get('DV2_S8DIE', '0') == '1' else 'slice2'
+SC_HOP = SC_HOP_BY_SLICE[SLICE_RTL]
+ST_HOP_BY_SLICE = {'slice2': 2, 's8': 4}   # x stream pass hop (qfd_dv_stream_tile DP 2)
+ST_HOP = ST_HOP_BY_SLICE[SLICE_RTL]
+"""
+# engine-tree sites that hard-code the slice2 hops (BASE_REV); each is rewritten to the dv_lower constant
+S8_SITES = [('tools/qwen_layerbench/dv_lower_vec.py', '2 * (N - 1 - s)', 'D.ST_HOP * (N - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_vec.py', '2 * max(s, N - 1 - s)', 'D.ST_HOP * max(s, N - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_xhead.py', 'e5 - 2 * (n - 1 - s)', 'e5 - D.ST_HOP * (n - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_xhead.py', 'e_s + 2 * abs(m - s)', 'e_s + D.ST_HOP * abs(m - s)'),
+            ('tools/qwen_layerbench/dv_layer.py', "['ssq_psum_out'][-1] + 2 * (N - 1) + 61", "['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61"),
+            ('tools/qwen_layerbench/dv_lower_mat.py', "['ssq_psum_out'][-1] + 2 * (N - 1) + 61", "['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61")]
+
+
+def s8die_tree(tree):
+    """TOK-QK/S8B 10-25 --s8die: the stg ages were measured on the BOUND s8 slice row (tb_qfd_dv2 FACE 3), so
+    (1) the engine's dv_lower takes the s8 scalar hop (SC_HOP 4 under DV2_S8DIE=1, the same rule as main's dv_lower) and
+    (2) the ledger's PRICED SU8/VM8 successor age delta (dv_age_deltas, owed 'until the DV families are re-measured on
+    the slice with su8 / vm8l bound') is dropped: the s8 ages ARE that re-measurement (REL replaces PRICED)."""
+    p = tree / 'tools/qwen_layerbench/dv_lower.py'
+    src = p.read_text()
+    src2, n = re.subn(r'^CMD_HOP, SC_HOP = 2, 2[^\n]*\n', S8_SC_BLOCK, src, flags=re.M)
+    if n != 1 or 'import os' not in src2:
+        src2 = src2.replace('import math\n', 'import math\nimport os\n', 1)
+    if n != 1:
+        raise SystemExit('s8die: engine dv_lower SC_HOP line not found')
+    p.write_text(src2)
+    sites = {}
+    for rel, a, b in S8_SITES:
+        q = tree / rel
+        if q.exists() and a in q.read_text():
+            t = q.read_text(); sites[f'{rel}: {a}'] = t.count(a); q.write_text(t.replace(a, b))
+    lp = tree / REC / 'sched/ledger.json'
+    lg = json.loads(lp.read_text())
+    dropped = lg.pop('dv_age_deltas', None)
+    lg['dv_age_deltas_dropped'] = dict(reason='TOK-QK/S8B --s8die: REL s8 ages replace the PRICED SU8/VM8 delta', was=dropped)
+    lp.write_text(json.dumps(lg, indent=1))
+    os.environ['DV2_S8DIE'] = '1'
+    return dict(engine_sc_hop=4, engine_st_hop=4, rewritten_sites=sites, dropped_dv_age_deltas=dict(per_su_command=(dropped or {}).get('per_su_command'),
+                                                            vm_write_extra=(dropped or {}).get('vm_write_extra'),
+                                                            keys=(dropped or {}).get('keys')))
 
 
 def run_compose(tree, inputs_rel, out_json):
@@ -320,6 +367,8 @@ def main():
     ap.add_argument('--asm', default='?')
     ap.add_argument('--grade', default='RTL-functional (source assembly)')
     ap.add_argument('--base-only', action='store_true', help='reproduce the record (expect 272,641 / 4,403.2 / 11,750.6)')
+    ap.add_argument('--s8die', action='store_true', help='stg ages from the bound s8 slice row (stg_die): engine SC_HOP 4, '
+                    'ledger PRICED SU8/VM8 dv_age_deltas dropped (see s8die_tree)')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     tree = a.out / 'compose_tree'
@@ -330,6 +379,8 @@ def main():
                   rate_convention='composer uses rounded 833 ps period (1.200480192 GHz)',
                   model_of_record=dict(u1_tok_s=4403.2, u4_tok_s=11750.6, cycles=272641), base_reproduced=base)
     if not a.base_only:
+        if a.s8die:
+            report['s8die'] = s8die_tree(tree)
         res = load_results(a.results)
         inp = json.loads((tree / REC / 'inputs.json').read_text())
         applied, problems = apply(inp, res, tree, a.results, a.grade)

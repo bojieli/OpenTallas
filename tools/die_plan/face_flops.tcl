@@ -19,7 +19,7 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
-set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n)$}
+set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
 if {[file exists /work/ft_stations.txt]} {
@@ -287,6 +287,8 @@ close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
+# OWNER RESET RULE 10-24: FIRM reset entry stage + synchronous relay tree (tools/die_plan/reset_tree.py, kit_rsync)
+if {[file exists /work/reset_tree.tcl]} { source /work/reset_tree.tcl }
 # per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
 if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }

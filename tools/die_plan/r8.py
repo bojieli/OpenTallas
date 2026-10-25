@@ -30,6 +30,20 @@ tap->hc2->hc1->hc0 needs hc2 +4, hc1 +2, hc0 +0 on the same lanes).
         file's `landed` when given (the planned pads), else bus_groups `landed_stages` (what the bound top has).
 
 --replica all (default) equalises every broadcast at one as-built depth; `type` only sinks of one partition type.
+
+LANDED BUNDLES (COORD rule 10-23, S81-P9-R8EQ; all dies): an as-built bundle whose lanes land in ONE forwarded-clock
+landing ring with ONE K strap (ot_s81_land / dsfd_dvland_* / the frame dsfd_cfifo_crs4 lanes) has ONE as-built depth:
+the ring reads the word of forwarded edge m - R0 - K + G, so the per-lane relay flight (half-cycle HC1 stations,
+counted as stages by the binder) is absorbed inside the landing window and the lanes are word-aligned at the ring
+output.  R8 therefore pads such a bundle to one group depth, not per lane (per-lane pads would re-create a lane tear).
+The rule holds only while the per-lane as-built skew stays under the landing window margin: (max - min stages) x
+--landed-stage-cycles <= --landed-window - 1 cycles; a bundle over the margin keeps its per-lane depths (pads) and is an
+R8 check ERROR (the as-built bundle could not land coherently: re-plan or rule).  A member is in a landed bundle when
+its bus group member has `landed_bundle: true` (binder) or its plan lane id matches --landed RX.  Members are bundled
+per landing group (sink leaf, source partition).
+
+    --landed RX (repeatable)  --landed-window D (ring depth, default 4)  --landed-stage-cycles C (default 0.5 = HC1)
+    --landed-over-margin keep|collapse (default keep = ERROR + per-lane pads; collapse = WARN, one depth: a ruling)
 """
 import argparse
 import hashlib
@@ -53,7 +67,7 @@ def nbits(rs):
 def mkey(g, m):
     """stable member id: sink leaf . port [bits] <- source [bits]"""
     sb = ",".join(f"{a}:{b}" for a, b in m["sink_bits"])
-    return f"{g['sink']}.{m['sink_port']}[{sb}]<-{m['source']}@{m['asbuilt_stages']}"
+    return f"{g['sink']}.{m['sink_port']}[{sb}]<-{m['source']}@{m.get('asbuilt_lane_stages', m['asbuilt_stages'])}"
 
 
 class UF:
@@ -70,6 +84,35 @@ class UF:
         a, b = self.find(a), self.find(b)
         if a != b:
             self.p[max(a, b)] = min(a, b)
+
+
+LANDED = dict(rx=[], window=4, stage_cycles=0.5, over="keep")
+
+
+def landed_bundles(bg, rx=None, window=None, stage_cycles=None):
+    """LANDED BUNDLES rule (module doc): returns (bus_groups copy with each in-margin landed bundle's members at ONE
+    as-built depth = the bundle maximum, original per-lane depth kept as `asbuilt_lane_stages`, list of findings
+    [dict(sink, src_part, skew_stages, skew_cycles, margin, ok)])."""
+    rx = LANDED["rx"] if rx is None else [re.compile(x) if isinstance(x, str) else x for x in rx]
+    window = LANDED["window"] if window is None else window
+    stage_cycles = LANDED["stage_cycles"] if stage_cycles is None else stage_cycles
+    out = json.loads(json.dumps(bg))
+    found = []
+    for g in out.get("landing", []):
+        ms = [m for m in g["members"] if not is_async(m) and (
+            m.get("landed_bundle") or (m.get("lane") and any(x.search(m["lane"]) for x in rx)))]
+        if len(ms) < 2:
+            continue
+        lo, hi = min(m["asbuilt_stages"] for m in ms), max(m["asbuilt_stages"] for m in ms)
+        skew = (hi - lo) * stage_cycles
+        ok = skew <= window - 1
+        found.append(dict(sink=g["sink"], src_part=g["src_part"], members=len(ms), skew_stages=hi - lo,
+                          skew_cycles=skew, margin=window - 1, ok=ok, collapsed=ok or LANDED["over"] == "collapse"))
+        if (ok or LANDED["over"] == "collapse") and hi != lo:
+            for m in ms:
+                m["asbuilt_lane_stages"] = m["asbuilt_stages"]
+                m["asbuilt_stages"] = hi
+    return out, found
 
 
 RESET_RX = re.compile(r"(?i)(^|_)[a-z]?(rst|reset|por)(_?n|_b)?$|(^|_)[a-z]?(rst|reset)_n_")
@@ -153,7 +196,8 @@ def _depth(m, landing):
 
 
 def solve(bg, raw, replica="all", bus="part"):
-    """pads so every class lands at one offset (the class maximum)."""
+    """pads so every class lands at one offset (the class maximum); landed bundles first get one as-built depth."""
+    bg = landed_bundles(bg)[0]
     N, uf, used = classes(bg, raw, replica, bus)
     off = [m["bound_stages"] - m["asbuilt_stages"] for _, _, m in N]
     cmax = defaultdict(lambda: -10 ** 9)
@@ -166,6 +210,7 @@ def solve(bg, raw, replica="all", bus="part"):
         mem.append(dict(id=mkey(g, m), sink=g["sink"], sink_part=g["sink_part"], src_part=g["src_part"],
                         sink_port=m["sink_port"], sink_bits=m["sink_bits"], source=m["source"],
                         asbuilt=m["asbuilt_stages"], bound=m["bound_stages"], pad=pad,
+                        **({"asbuilt_lane": m["asbuilt_lane_stages"]} if "asbuilt_lane_stages" in m else {}),
                         landed=m["bound_stages"] + pad, cls=uf.find(i), lane=m.get("lane")))
     return mem, used
 
@@ -205,6 +250,7 @@ def type_norm(raw):
 
 def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
     """G0 R8: [(severity, message)] + stats.  landing = {member id: landed depth} or None (use landed_stages)."""
+    bg, landed_found = landed_bundles(bg)
     N, uf, used = classes(bg, raw, replica, bus)
     msgs = []
 
@@ -270,7 +316,16 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
                 msgs.append(("ERROR", f"R8 type {t}: instances need different landing pads at {len(conf)} sites "
                              f"(e.g. {k[0]}.{k[1]} <- {k[3]}: pads {v}); a type is hardened once: split the type or "
                              "re-plan the cut so the replicas see equal lane depth"))
+    nl = len(landed_found)
+    over = [f for f in landed_found if not f["ok"]]
+    for f in over[:limit]:
+        msgs.append(("WARN" if f["collapsed"] else "ERROR", f"R8 landed bundle {f['sink']} <- {f['src_part']}: as-built per-lane skew "
+                     f"{f['skew_stages']} stages = {f['skew_cycles']} cycles > landing window margin {f['margin']} "
+                     + ("(collapsed by --landed-over-margin collapse: the as-built bundle could not land coherently, "
+                        "the plan delivers it word-aligned)" if f["collapsed"] else
+                        "(kept per-lane; the as-built bundle cannot land coherently: re-plan or rule)")))
     stats = dict(groups=len(buses), groups_unequal=bad_g, inversions=inv,
+                 landed_bundles=nl, landed_over_margin=len(over),
                  replica_sets=len(bg.get("replica", [])), replica_unequal=bad_r, types_conflicting=bad_t,
                  replica_mode=replica, bus_mode=bus, async_skipped=sum(
                      1 for g in bg["landing"] for m in g["members"] if is_async(m)), depth_source="landing file" if landing is not None else "bus_groups landed_stages")
@@ -293,15 +348,64 @@ def load_landing(path):
     return {m["id"]: m["landed"] for m in js["members"]}, js
 
 
+def rebase(bg, bind_lat, plan_tab):
+    """bus groups bound on an older plan -> the plan being priced: each member's bound depth moves by its lane's cycle
+    change (plan_tab[lane].cycles - the bind's plan_cycles for that lane, bind_latency.json `buses`).  As-built depths
+    are the netlist's and do not move.  Returns (bus groups copy, stats); members whose lane is in neither table keep
+    their bound depth (counted)."""
+    was = {b["lane"]: b["plan_cycles"] for b in bind_lat.get("buses", []) if b.get("lane") is not None}
+    out = json.loads(json.dumps(bg))
+    st = dict(members=0, moved=0, kept_no_lane=0, max_shift=0, min_shift=0)
+    for g in out.get("landing", []):
+        for m in g["members"]:
+            st["members"] += 1
+            ln = m.get("lane")
+            if ln not in was or ln not in plan_tab:
+                st["kept_no_lane"] += 1
+                continue
+            d = plan_tab[ln]["cycles"] - was[ln]
+            m["bound_stages"] += d
+            st["moved"] += bool(d)
+            st["max_shift"], st["min_shift"] = max(st["max_shift"], d), min(st["min_shift"], d)
+    return out, st
+
+
+def lane_fold(members, lanes):
+    """R8 landing pads folded per plan lane: {lane: dict(r8_pad, r8_pad_min, r8_members, r8_padded)}.  A lane's word is
+    usable when its LAST member lands, so the lane's pad = the largest member pad on it (members of one lane share its
+    bound depth: landed = lane cycles + pad).  Lanes not in `lanes` (UNPLANNED bind paths) come back as `other`."""
+    out, other = {}, {}
+    for m in members:
+        ln = m.get("lane")
+        if ln is None:
+            continue
+        d = (out if ln in lanes else other).setdefault(ln, dict(r8_pad=0, r8_pad_min=None, r8_members=0, r8_padded=0))
+        d["r8_pad"] = max(d["r8_pad"], m["pad"])
+        d["r8_pad_min"] = m["pad"] if d["r8_pad_min"] is None else min(d["r8_pad_min"], m["pad"])
+        d["r8_members"] += 1
+        d["r8_padded"] += bool(m["pad"])
+    return out, other
+
+
+def configure(exempt=(), landed=(), window=4, stage_cycles=0.5, over="keep"):
+    """set the module options (the CLI flags of `pads` / `check`)"""
+    EXEMPT[:] = [re.compile(x) for x in exempt]
+    LANDED.update(rx=[re.compile(x) for x in landed], window=window, stage_cycles=stage_cycles, over=over)
+
+
 def write_pads(raw, bg, out_dir, replica="all", bus="part"):
     mem, used = solve(bg, raw, replica, bus)
     sm = summary(bg, mem, used)
+    lf = landed_bundles(bg)[1]
+    sm.update(landed_bundles=len(lf), landed_over_margin=sum(1 for f in lf if not f["ok"]))
     die = raw["die"]["name"]
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     for m in mem:
         m.pop("cls")
     js = dict(schema=SCHEMA, die=die, replica=replica, bus=bus, exempt=[x.pattern for x in EXEMPT], bus_groups_die=bg.get("die"),
+              landed=dict(rx=[x.pattern for x in LANDED["rx"]], window=LANDED["window"],
+                          stage_cycles=LANDED["stage_cycles"], over_margin=LANDED["over"]),
               bus_groups_digest=bg_digest(bg),
               note="R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink "
                    "partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set "
@@ -323,13 +427,20 @@ def main(argv=None):
         a.add_argument("--bus", choices=("part", "leaf"), default="part")
         a.add_argument("--exempt", action="append", default=[],
                        help="regex on the source pin / sink port name: members outside R8 (sticky fault flags)")
+        a.add_argument("--landed", action="append", default=[],
+                       help="regex on the member's plan lane id: lanes of a forwarded-clock landed bundle (one K)")
+        a.add_argument("--landed-window", type=int, default=4, help="landing ring depth D (window D cycles)")
+        a.add_argument("--landed-stage-cycles", type=float, default=0.5,
+                       help="cycles per as-built relay stage of a landed lane (HC1 half-cycle stations: 0.5)")
+        a.add_argument("--landed-over-margin", choices=("keep", "collapse"), default="keep",
+                       help="a landed bundle over the window margin: keep per-lane depths (ERROR) or collapse (WARN)")
         if n == "pads":
             a.add_argument("--out")
         else:
             a.add_argument("--landing")
             a.add_argument("--json")
     a = ap.parse_args(argv)
-    EXEMPT[:] = [re.compile(x) for x in a.exempt]
+    configure(a.exempt, a.landed, a.landed_window, a.landed_stage_cycles, a.landed_over_margin)
     raw = S.load(a.plan)
     bg = json.loads(Path(a.bus_groups).read_text())
     if a.cmd == "pads":

@@ -1,0 +1,18 @@
+{
+ "element": "ot_s81_cfg7_seq_c",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r4/ot_s81_cfg7_seq_c (gen claude/elem-s81-cores-1024 @dc52d4a06f; author records claude/s81-kits-geom-1024r @a854c5530)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "7ecfca00b60f4db6e966526b398cfb239518967200e40356d21dfa13e034c241",
+ "reasons": "[2026-10-24 19:39] [GEOM-REVIEW, independent second review of S81/KITS stage-1 place] Looked at the author image and my own layout_review render of 3_place.odb (/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/ot_s81_cfg7_seq_c/rev/review.png). 17.28x51.84 um, 2.0k cells / 568 flops, pin-limited: W 356-363 pins on M4 at 7.0-7.5/um (72% of cap 10.42), N 52-59, E 17, S rst_n. 431/432 pins registered, pin->reg p90 5.1 / max 8.9 um. My render (rev/review.png) shows the W pin-register column as a full-height RED band 2-4 um from the W edge (local density >= 0.8 the whole height) next to a 7/um M4 pin column, while the E third is nearly empty: the one real routability risk is the W edge (pins + 356 face flops + their fanout all in a ~5-um strip).",
+ "fixes": "1. Route to GRT first (cheap core): require 0 GRT overflow in the W-edge gcells before DRT. 2. If W-edge overflow > 0: spread the face flops over 2-3 columns (pin->reg up to ~10 um is fine) and/or split the W pins over M4+M6, or widen the core to ~21.6 um using the empty E third - do not just raise layer adjustments. 3. Usual sign-off (TT/FF, pair skew <= 80).",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/ot_s81_cfg7_seq_c/rev/review.png",
+  "results/geom_review/s81_kits_1024r/img/ot_s81_cfg7_seq_c.png (author, a854c5530)"
+ ],
+ "stage": "3_place",
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:39:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "hash_method": "kit_hash_fs over the kit dir excluding run/ and *.log"
+}

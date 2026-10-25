@@ -1,0 +1,9183 @@
+{
+ "schema": "opentallas.kv405.post_v39.v1",
+ "reach_um": 405.0,
+ "die_old": {
+  "reach_um": 1200.0,
+  "die_use": [
+   "clock_spine",
+   "pg",
+   "ft_reserved",
+   "reset"
+  ],
+  "cut_avail": {
+   "M8": 0.6,
+   "M9": 0.6
+  }
+ },
+ "reset": {
+  "old": "counted",
+  "new": "wavefront"
+ },
+ "ahub_r2": {
+  "old": {
+   "origin_um": [
+    86.4,
+    1045.44
+   ],
+   "outline_um": [
+    734.4,
+    540.0
+   ]
+  },
+  "new": {
+   "origin_um": [
+    216.0,
+    1045.44
+   ],
+   "outline_um": [
+    604.8,
+    440.64
+   ]
+  }
+ },
+ "slots": [
+  {
+   "type": "kv3_hg",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg",
+   "slot": "ft1",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1797.0,
+   "worst_bit_um": 1797.12
+  },
+  {
+   "type": "kv3_hg",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v2",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v2",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v2",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v2",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1439.3,
+   "worst_bit_um": 1439.296
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1439.3,
+   "worst_bit_um": 1439.616
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft2",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1801.2,
+   "worst_bit_um": 1801.216
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1439.3,
+   "worst_bit_um": 1439.936
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.224
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.032
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1604.48
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.4,
+   "worst_bit_um": 1604.864
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1605.184
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.224
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.032
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1604.48
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.4,
+   "worst_bit_um": 1604.864
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft23",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1605.184
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft25",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2246.4,
+   "worst_bit_um": 2247.104
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.224
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.352
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1603.648
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.7,
+   "worst_bit_um": 1604.032
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.6,
+   "worst_bit_um": 1604.288
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1604.48
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.4,
+   "worst_bit_um": 1604.864
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft25",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1604.5,
+   "worst_bit_um": 1605.184
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft0",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1035.9,
+   "worst_bit_um": 1036.928
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft1",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1034.6,
+   "worst_bit_um": 1034.592
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft2",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1034.1,
+   "worst_bit_um": 1034.752
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft3",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1036.4,
+   "worst_bit_um": 1036.416
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft4",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1189.9,
+   "worst_bit_um": 1190.08
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft5",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1189.8,
+   "worst_bit_um": 1190.112
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft6",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.1,
+   "worst_bit_um": 1037.44
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft7",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.1,
+   "worst_bit_um": 1037.44
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft8",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.1,
+   "worst_bit_um": 1037.136
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft9",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.2,
+   "worst_bit_um": 1037.44
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft10",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.2,
+   "worst_bit_um": 1037.568
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft11",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.2,
+   "worst_bit_um": 1037.568
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft12",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1037.2,
+   "worst_bit_um": 1037.568
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft13",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1095.5,
+   "worst_bit_um": 1095.504
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft0",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.184
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft1",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.184
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft2",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2028.672
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft3",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.184
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft4",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.184
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft5",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.376
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft6",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.248
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft7",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.504
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft8",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.7,
+   "worst_bit_um": 2029.248
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft9",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2027.4,
+   "worst_bit_um": 2027.456
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft10",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2026.2,
+   "worst_bit_um": 2027.136
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft11",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2026.2,
+   "worst_bit_um": 2027.136
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft12",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2026.2,
+   "worst_bit_um": 2027.136
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft13",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2026.2,
+   "worst_bit_um": 2026.624
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft14",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2180.7,
+   "worst_bit_um": 2181.568
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft15",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2210.1,
+   "worst_bit_um": 2210.752
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft16",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2149.0,
+   "worst_bit_um": 2149.568
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft17",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2149.0,
+   "worst_bit_um": 2149.568
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft18",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2116.8,
+   "worst_bit_um": 2117.888
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft19",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2099.6,
+   "worst_bit_um": 2099.568
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft20",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2046.2,
+   "worst_bit_um": 2046.912
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft21",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2046.2,
+   "worst_bit_um": 2046.912
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft22",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2030.4,
+   "worst_bit_um": 2030.4
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft23",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2028.1,
+   "worst_bit_um": 2028.16
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft24",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2025.7,
+   "worst_bit_um": 2025.696
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft25",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2025.9,
+   "worst_bit_um": 2025.936
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft26",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2151.4,
+   "worst_bit_um": 2151.36
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft27",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2151.4,
+   "worst_bit_um": 2151.36
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft28",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2149.0,
+   "worst_bit_um": 2149.568
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft29",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 2149.0,
+   "worst_bit_um": 2149.568
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.5,
+   "worst_bit_um": 1280.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.5,
+   "worst_bit_um": 1281.152
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.5,
+   "worst_bit_um": 1280.512
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.5,
+   "worst_bit_um": 1281.152
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.3,
+   "worst_bit_um": 1554.24
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1555.2
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.5,
+   "worst_bit_um": 1555.536
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.4,
+   "worst_bit_um": 1555.456
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.4,
+   "worst_bit_um": 1555.392
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1557.1,
+   "worst_bit_um": 1557.072
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1559.808
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.896
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1559.808
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.896
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft24",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.7,
+   "worst_bit_um": 1712.256
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft25",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.7,
+   "worst_bit_um": 1712.384
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft26",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.7,
+   "worst_bit_um": 1712.64
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft27",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.7,
+   "worst_bit_um": 1712.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft28",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.2,
+   "worst_bit_um": 1711.2
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft29",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.7,
+   "worst_bit_um": 1710.672
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft30",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.6,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft31",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.6,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft32",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1712.8,
+   "worst_bit_um": 1712.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft33",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1712.8,
+   "worst_bit_um": 1712.832
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft34",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2363.1,
+   "worst_bit_um": 2363.136
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft35",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2403.1,
+   "worst_bit_um": 2437.488
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft36",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2540.7,
+   "worst_bit_um": 2641.584
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft37",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2646.1,
+   "worst_bit_um": 2648.64
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft38",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2756.7,
+   "worst_bit_um": 2862.624
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft39",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2876.8,
+   "worst_bit_um": 2888.544
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft40",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2891.5,
+   "worst_bit_um": 2892.096
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft41",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2895.5,
+   "worst_bit_um": 2895.552
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft42",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2900.5,
+   "worst_bit_um": 2901.84
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft43",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2906.5,
+   "worst_bit_um": 2908.096
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft44",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft45",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft46",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1556.288
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft47",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1555.2
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft48",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.0,
+   "worst_bit_um": 1556.288
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft49",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.0,
+   "worst_bit_um": 1555.2
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft50",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1555.152
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft51",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.3,
+   "worst_bit_um": 1555.344
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft52",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1555.2
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft53",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft54",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1559.8,
+   "worst_bit_um": 1560.576
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft55",
+   "stations": [
+    3,
+    6
+   ],
+   "route_um": 1986.4,
+   "worst_bit_um": 2092.416
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft56",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1877.5,
+   "worst_bit_um": 1877.52
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft57",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1668.7,
+   "worst_bit_um": 1669.312
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft58",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1821.5,
+   "worst_bit_um": 1823.328
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft59",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1810.4,
+   "worst_bit_um": 1817.024
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft60",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1800.8,
+   "worst_bit_um": 1800.864
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft61",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1796.3,
+   "worst_bit_um": 1796.352
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft62",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1779.8,
+   "worst_bit_um": 1792.272
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft63",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1700.5,
+   "worst_bit_um": 1701.824
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft64",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1701.4,
+   "worst_bit_um": 1702.016
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft65",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1327.5,
+   "worst_bit_um": 1327.488
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft66",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1321.1,
+   "worst_bit_um": 1321.104
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft67",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1315.7,
+   "worst_bit_um": 1315.68
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft68",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.8,
+   "worst_bit_um": 1712.0
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft69",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.8,
+   "worst_bit_um": 1712.0
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft70",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.6,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft71",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.6,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft72",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.6,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft73",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.7,
+   "worst_bit_um": 1710.72
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft74",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1710.7,
+   "worst_bit_um": 1710.672
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft75",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1711.7,
+   "worst_bit_um": 1711.744
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1328.2,
+   "worst_bit_um": 1328.192
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1438.912
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft4",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft5",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft6",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.616
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft7",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1438.848
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft9",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1800.1,
+   "worst_bit_um": 1800.576
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft10",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1800.1,
+   "worst_bit_um": 1800.96
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft12",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1914.6,
+   "worst_bit_um": 1914.624
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft13",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.6,
+   "worst_bit_um": 1387.584
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft15",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1676.7,
+   "worst_bit_um": 1734.4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft16",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1764.9,
+   "worst_bit_um": 1793.152
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft18",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2607.2,
+   "worst_bit_um": 2613.744
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft19",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2622.8,
+   "worst_bit_um": 2629.296
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft20",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2638.3,
+   "worst_bit_um": 2644.992
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft21",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2653.9,
+   "worst_bit_um": 2660.4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft22",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2663.4,
+   "worst_bit_um": 2663.424
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft23",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2673.0,
+   "worst_bit_um": 2679.616
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft24",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2688.5,
+   "worst_bit_um": 2695.056
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft25",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2893.2,
+   "worst_bit_um": 2893.184
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft26",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2708.6,
+   "worst_bit_um": 2708.544
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft27",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1135.5,
+   "worst_bit_um": 1135.488
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft28",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1329.4,
+   "worst_bit_um": 1330.048
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft29",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2770.7,
+   "worst_bit_um": 2826.56
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft30",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2256.8,
+   "worst_bit_um": 2472.72
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft31",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1721.8,
+   "worst_bit_um": 1722.944
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1434.4,
+   "worst_bit_um": 1435.264
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1434.4,
+   "worst_bit_um": 1435.264
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft4",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1434.4,
+   "worst_bit_um": 1434.432
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft5",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1455.2,
+   "worst_bit_um": 1455.808
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft6",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1455.2,
+   "worst_bit_um": 1455.808
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1462.5,
+   "worst_bit_um": 1463.04
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1462.5,
+   "worst_bit_um": 1463.04
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1462.5,
+   "worst_bit_um": 1462.976
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1463.4,
+   "worst_bit_um": 1464.448
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1467.8,
+   "worst_bit_um": 1467.792
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1487.1,
+   "worst_bit_um": 1487.104
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft13",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft14",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft15",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft16",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft17",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.5,
+   "worst_bit_um": 1280.512
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft18",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1339.2,
+   "worst_bit_um": 1339.2
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft19",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1338.6,
+   "worst_bit_um": 1338.624
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft20",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1339.0,
+   "worst_bit_um": 1339.008
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft21",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1339.4,
+   "worst_bit_um": 1339.456
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft22",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1432.3,
+   "worst_bit_um": 1432.272
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft23",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1432.1,
+   "worst_bit_um": 1432.128
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1578.7,
+   "worst_bit_um": 1579.2
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1519.9,
+   "worst_bit_um": 1520.576
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft26",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1462.4,
+   "worst_bit_um": 1462.416
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft27",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1462.2,
+   "worst_bit_um": 1462.176
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft28",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1462.5,
+   "worst_bit_um": 1463.04
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1462.5,
+   "worst_bit_um": 1463.04
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1487.4,
+   "worst_bit_um": 1487.424
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1487.9,
+   "worst_bit_um": 1487.904
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1329.4,
+   "worst_bit_um": 1330.048
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft1",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2770.7,
+   "worst_bit_um": 2826.56
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft2",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2256.8,
+   "worst_bit_um": 2472.72
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft3",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1721.8,
+   "worst_bit_um": 1722.944
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft4",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2708.6,
+   "worst_bit_um": 2708.544
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft5",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1135.5,
+   "worst_bit_um": 1135.488
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft6",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1328.2,
+   "worst_bit_um": 1328.192
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft7",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft8",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft9",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.9,
+   "worst_bit_um": 1438.912
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft10",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft11",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.552
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft12",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1439.616
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft13",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1438.8,
+   "worst_bit_um": 1438.848
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft15",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1800.1,
+   "worst_bit_um": 1800.576
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft16",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1800.1,
+   "worst_bit_um": 1800.96
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft18",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1914.6,
+   "worst_bit_um": 1914.624
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft19",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.6,
+   "worst_bit_um": 1387.584
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft21",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1676.7,
+   "worst_bit_um": 1734.4
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft22",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1764.9,
+   "worst_bit_um": 1793.152
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft24",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2607.2,
+   "worst_bit_um": 2613.744
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft25",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2622.8,
+   "worst_bit_um": 2629.296
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft26",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2638.3,
+   "worst_bit_um": 2644.992
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft27",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2653.9,
+   "worst_bit_um": 2660.4
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft28",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2663.4,
+   "worst_bit_um": 2663.424
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft29",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2673.0,
+   "worst_bit_um": 2679.616
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft30",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2688.5,
+   "worst_bit_um": 2695.056
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft31",
+   "stations": [
+    4,
+    8
+   ],
+   "route_um": 2893.2,
+   "worst_bit_um": 2893.184
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.8,
+   "worst_bit_um": 1278.784
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.4,
+   "worst_bit_um": 1278.4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.6,
+   "worst_bit_um": 1278.96
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1279.3,
+   "worst_bit_um": 1279.808
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft4",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1279.3,
+   "worst_bit_um": 1280.0
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft5",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1279.3,
+   "worst_bit_um": 1279.872
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft6",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1279.4,
+   "worst_bit_um": 1279.424
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft7",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1279.9,
+   "worst_bit_um": 1280.496
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft9",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1178.9,
+   "worst_bit_um": 1178.944
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft10",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.4,
+   "worst_bit_um": 1280.448
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft11",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1280.4,
+   "worst_bit_um": 1280.448
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft12",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1179.9,
+   "worst_bit_um": 1179.904
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft13",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1180.1,
+   "worst_bit_um": 1180.512
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft14",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1180.5,
+   "worst_bit_um": 1180.48
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft15",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1180.1,
+   "worst_bit_um": 1181.184
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft16",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1179.6,
+   "worst_bit_um": 1180.224
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft17",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1179.3,
+   "worst_bit_um": 1180.16
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft18",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 1178.9,
+   "worst_bit_um": 1178.88
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft19",
+   "stations": [
+    2,
+    3
+   ],
+   "route_um": 909.4,
+   "worst_bit_um": 1010.112
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.3,
+   "worst_bit_um": 1278.784
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.7,
+   "worst_bit_um": 1277.808
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.5,
+   "worst_bit_um": 1277.472
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.4,
+   "worst_bit_um": 1277.568
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft4",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.4,
+   "worst_bit_um": 1277.952
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft5",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.3,
+   "worst_bit_um": 1277.952
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft6",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.3,
+   "worst_bit_um": 1277.952
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft7",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.5,
+   "worst_bit_um": 1278.336
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft8",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1277.0,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft9",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1276.0,
+   "worst_bit_um": 1275.968
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft10",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1276.9,
+   "worst_bit_um": 1276.896
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.0,
+   "worst_bit_um": 1554.624
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1553.9,
+   "worst_bit_um": 1553.92
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft13",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1381.8,
+   "worst_bit_um": 1382.592
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft14",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1381.8,
+   "worst_bit_um": 1381.824
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft15",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1381.9,
+   "worst_bit_um": 1382.4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft16",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1381.9,
+   "worst_bit_um": 1382.848
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft17",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1382.0,
+   "worst_bit_um": 1381.968
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft18",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1382.6,
+   "worst_bit_um": 1382.64
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft19",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1383.4,
+   "worst_bit_um": 1384.256
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft20",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1384.7,
+   "worst_bit_um": 1384.704
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft21",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1385.5,
+   "worst_bit_um": 1385.52
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft22",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1384.9,
+   "worst_bit_um": 1384.848
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft23",
+   "stations": [
+    1,
+    2
+   ],
+   "route_um": 631.4,
+   "worst_bit_um": 638.464
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft24",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1700.8,
+   "worst_bit_um": 1700.8
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft2",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1278.7,
+   "worst_bit_um": 1278.72
+  },
+  {
+   "type": "kv3_pc_v1",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pc_v1",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pc_v2",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.832
+  },
+  {
+   "type": "kv3_pc_v2",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1523.0,
+   "worst_bit_um": 1523.008
+  },
+  {
+   "type": "kv3_pc_v3",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1524.1,
+   "worst_bit_um": 1524.816
+  },
+  {
+   "type": "kv3_pc_v3",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.7,
+   "worst_bit_um": 1520.736
+  },
+  {
+   "type": "kv3_phy_v1",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft0",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2878.6,
+   "worst_bit_um": 3082.464
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft1",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2466.2,
+   "worst_bit_um": 2466.192
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft2",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1935.8,
+   "worst_bit_um": 1938.816
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft3",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2182.1,
+   "worst_bit_um": 2182.08
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft4",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1887.2,
+   "worst_bit_um": 1887.552
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft5",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2060.4,
+   "worst_bit_um": 2061.76
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.7,
+   "worst_bit_um": 1537.728
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.92
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.872
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.7,
+   "worst_bit_um": 1537.68
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1547.4,
+   "worst_bit_um": 1547.456
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1547.0,
+   "worst_bit_um": 1546.992
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1546.6,
+   "worst_bit_um": 1546.56
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1546.6,
+   "worst_bit_um": 1546.624
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft0",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2826.0,
+   "worst_bit_um": 3029.472
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft5",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2414.3,
+   "worst_bit_um": 2414.352
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft6",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2044.2,
+   "worst_bit_um": 2047.232
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft7",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2483.1,
+   "worst_bit_um": 2483.136
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft8",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2846.9,
+   "worst_bit_um": 2847.232
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.2,
+   "worst_bit_um": 1528.224
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.2,
+   "worst_bit_um": 1528.192
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.3,
+   "worst_bit_um": 1529.28
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.4,
+   "worst_bit_um": 1530.384
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.3,
+   "worst_bit_um": 1530.368
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.4,
+   "worst_bit_um": 1530.384
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.3,
+   "worst_bit_um": 1529.28
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.2,
+   "worst_bit_um": 1528.192
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft26",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2112.6,
+   "worst_bit_um": 2113.28
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.928
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.4,
+   "worst_bit_um": 1532.4
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.7,
+   "worst_bit_um": 1531.728
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.5,
+   "worst_bit_um": 1531.536
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.7,
+   "worst_bit_um": 1531.776
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.4,
+   "worst_bit_um": 1532.416
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.5,
+   "worst_bit_um": 1531.456
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.2,
+   "worst_bit_um": 1530.192
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.7,
+   "worst_bit_um": 1530.688
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.3,
+   "worst_bit_um": 1531.264
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.2,
+   "worst_bit_um": 1531.2
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.0,
+   "worst_bit_um": 1531.008
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1538.1,
+   "worst_bit_um": 1538.112
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1538.6,
+   "worst_bit_um": 1538.624
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.92
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.6,
+   "worst_bit_um": 1536.576
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.336
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.32
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.336
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1535.6,
+   "worst_bit_um": 1535.552
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1534.8,
+   "worst_bit_um": 1534.848
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft0",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2789.0,
+   "worst_bit_um": 2992.512
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft5",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2377.6,
+   "worst_bit_um": 2377.632
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft6",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1954.8,
+   "worst_bit_um": 1957.824
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft7",
+   "stations": [
+    5,
+    7
+   ],
+   "route_um": 2572.8,
+   "worst_bit_um": 2572.8
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft8",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2989.9,
+   "worst_bit_um": 2990.208
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.024
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.5,
+   "worst_bit_um": 1528.56
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.9,
+   "worst_bit_um": 1527.936
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.8,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.3,
+   "worst_bit_um": 1528.256
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.9,
+   "worst_bit_um": 1528.896
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.04
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.024
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.5,
+   "worst_bit_um": 1528.56
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.9,
+   "worst_bit_um": 1527.936
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.8,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft41",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.3,
+   "worst_bit_um": 1528.256
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft42",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2149.6,
+   "worst_bit_um": 2150.336
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.44
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.8,
+   "worst_bit_um": 1533.824
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.8,
+   "worst_bit_um": 1533.84
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.2,
+   "worst_bit_um": 1533.216
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.9,
+   "worst_bit_um": 1533.952
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.6,
+   "worst_bit_um": 1533.6
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.0,
+   "worst_bit_um": 1532.992
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.8
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.8
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.9,
+   "worst_bit_um": 1533.952
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.6,
+   "worst_bit_um": 1533.6
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.0,
+   "worst_bit_um": 1532.992
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.0,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.184
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.28
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.7,
+   "worst_bit_um": 1540.704
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.1,
+   "worst_bit_um": 1540.096
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.0,
+   "worst_bit_um": 1539.984
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.0,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.184
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.28
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.7,
+   "worst_bit_um": 1540.704
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.1,
+   "worst_bit_um": 1540.096
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.0,
+   "worst_bit_um": 1539.984
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.1,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft0",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2745.8,
+   "worst_bit_um": 2949.312
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft5",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2334.4,
+   "worst_bit_um": 2334.432
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft6",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2056.2,
+   "worst_bit_um": 2059.2
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft7",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2471.2,
+   "worst_bit_um": 2471.184
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft8",
+   "stations": [
+    5,
+    7
+   ],
+   "route_um": 2743.4,
+   "worst_bit_um": 2743.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.5,
+   "worst_bit_um": 1528.56
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.9,
+   "worst_bit_um": 1527.936
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.8,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.3,
+   "worst_bit_um": 1528.256
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.9,
+   "worst_bit_um": 1528.896
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft41",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.04
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft42",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.024
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft43",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.5,
+   "worst_bit_um": 1528.56
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft44",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.9,
+   "worst_bit_um": 1527.936
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft45",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft46",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft47",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.8,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft48",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.3,
+   "worst_bit_um": 1528.256
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft49",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.9,
+   "worst_bit_um": 1528.896
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft50",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.04
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft51",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1529.0,
+   "worst_bit_um": 1529.024
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft52",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.5,
+   "worst_bit_um": 1528.56
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft53",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.9,
+   "worst_bit_um": 1527.936
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft54",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft55",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.7,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft56",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1527.8,
+   "worst_bit_um": 1527.744
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft57",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1528.3,
+   "worst_bit_um": 1528.256
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft58",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2192.8,
+   "worst_bit_um": 2193.536
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft0",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1624.5,
+   "worst_bit_um": 1624.512
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1613.6,
+   "worst_bit_um": 1613.632
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1613.6,
+   "worst_bit_um": 1613.568
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1613.6,
+   "worst_bit_um": 1613.632
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1613.8,
+   "worst_bit_um": 1613.824
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1614.0,
+   "worst_bit_um": 1614.016
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1614.1,
+   "worst_bit_um": 1614.096
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1613.3,
+   "worst_bit_um": 1613.312
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.6,
+   "worst_bit_um": 1612.608
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.7,
+   "worst_bit_um": 1612.752
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.7,
+   "worst_bit_um": 1612.736
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.5,
+   "worst_bit_um": 1612.56
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.3,
+   "worst_bit_um": 1612.368
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.3,
+   "worst_bit_um": 1612.288
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1612.3,
+   "worst_bit_um": 1612.288
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1611.0,
+   "worst_bit_um": 1611.024
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.2,
+   "worst_bit_um": 1610.24
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.8,
+   "worst_bit_um": 1610.832
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.9,
+   "worst_bit_um": 1610.944
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.8,
+   "worst_bit_um": 1610.752
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.6,
+   "worst_bit_um": 1610.592
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.5,
+   "worst_bit_um": 1610.56
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1610.5,
+   "worst_bit_um": 1610.496
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1609.2,
+   "worst_bit_um": 1609.216
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1608.0,
+   "worst_bit_um": 1607.952
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1608.4,
+   "worst_bit_um": 1608.448
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1609.0,
+   "worst_bit_um": 1609.024
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1609.0,
+   "worst_bit_um": 1608.96
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1608.8,
+   "worst_bit_um": 1608.768
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1599.0,
+   "worst_bit_um": 1599.072
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1599.0,
+   "worst_bit_um": 1599.04
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1598.8,
+   "worst_bit_um": 1598.784
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1598.6,
+   "worst_bit_um": 1598.592
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1598.6,
+   "worst_bit_um": 1598.592
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1599.1,
+   "worst_bit_um": 1599.104
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1598.4,
+   "worst_bit_um": 1598.4
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1597.3,
+   "worst_bit_um": 1597.248
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1597.3,
+   "worst_bit_um": 1597.248
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1597.2,
+   "worst_bit_um": 1597.248
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1597.0,
+   "worst_bit_um": 1597.056
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1596.8,
+   "worst_bit_um": 1596.816
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft41",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1596.8,
+   "worst_bit_um": 1596.8
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft42",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1596.8,
+   "worst_bit_um": 1596.816
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft43",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1596.0,
+   "worst_bit_um": 1596.032
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft44",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.3,
+   "worst_bit_um": 1595.328
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft45",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.5,
+   "worst_bit_um": 1595.472
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft46",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.5,
+   "worst_bit_um": 1595.456
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft47",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.3,
+   "worst_bit_um": 1595.28
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft48",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.1,
+   "worst_bit_um": 1595.088
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft49",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.0,
+   "worst_bit_um": 1595.008
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft50",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1595.0,
+   "worst_bit_um": 1595.008
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft51",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1593.8,
+   "worst_bit_um": 1593.744
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft52",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1592.9,
+   "worst_bit_um": 1592.96
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft53",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1593.5,
+   "worst_bit_um": 1593.552
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft54",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1593.7,
+   "worst_bit_um": 1593.664
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft55",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1593.5,
+   "worst_bit_um": 1593.472
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft56",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1593.3,
+   "worst_bit_um": 1593.312
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft0",
+   "stations": [
+    5,
+    8
+   ],
+   "route_um": 2878.6,
+   "worst_bit_um": 3082.464
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft1",
+   "stations": [
+    4,
+    7
+   ],
+   "route_um": 2466.2,
+   "worst_bit_um": 2466.192
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft2",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1935.8,
+   "worst_bit_um": 1938.816
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft3",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2182.1,
+   "worst_bit_um": 2182.08
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft4",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1887.2,
+   "worst_bit_um": 1887.552
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft5",
+   "stations": [
+    4,
+    6
+   ],
+   "route_um": 2060.4,
+   "worst_bit_um": 2061.76
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.7,
+   "worst_bit_um": 1537.728
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.92
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.872
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.7,
+   "worst_bit_um": 1537.68
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1547.4,
+   "worst_bit_um": 1547.456
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1547.0,
+   "worst_bit_um": 1546.992
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1546.6,
+   "worst_bit_um": 1546.56
+  },
+  {
+   "type": "kv3_pv_v9",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1546.6,
+   "worst_bit_um": 1546.624
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.928
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.4,
+   "worst_bit_um": 1532.4
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.7,
+   "worst_bit_um": 1531.728
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.5,
+   "worst_bit_um": 1531.536
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.7,
+   "worst_bit_um": 1531.776
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.4,
+   "worst_bit_um": 1532.416
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.5,
+   "worst_bit_um": 1531.456
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.2,
+   "worst_bit_um": 1530.192
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1530.7,
+   "worst_bit_um": 1530.688
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.3,
+   "worst_bit_um": 1531.264
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.2,
+   "worst_bit_um": 1531.2
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1531.0,
+   "worst_bit_um": 1531.008
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1538.1,
+   "worst_bit_um": 1538.112
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1538.6,
+   "worst_bit_um": 1538.624
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.9,
+   "worst_bit_um": 1537.92
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.8,
+   "worst_bit_um": 1536.768
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.6,
+   "worst_bit_um": 1536.576
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.336
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.32
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1536.3,
+   "worst_bit_um": 1536.336
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1535.6,
+   "worst_bit_um": 1535.552
+  },
+  {
+   "type": "kv3_pv_v10",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1534.8,
+   "worst_bit_um": 1534.848
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft0",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.44
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.8,
+   "worst_bit_um": 1533.824
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.8,
+   "worst_bit_um": 1533.84
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.2,
+   "worst_bit_um": 1533.216
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.9,
+   "worst_bit_um": 1533.952
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.6,
+   "worst_bit_um": 1533.6
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.0,
+   "worst_bit_um": 1532.992
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.8
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.8,
+   "worst_bit_um": 1532.8
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.4,
+   "worst_bit_um": 1533.376
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft17",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.9,
+   "worst_bit_um": 1533.952
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft18",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.6,
+   "worst_bit_um": 1533.6
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1533.0,
+   "worst_bit_um": 1532.992
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1532.9,
+   "worst_bit_um": 1532.88
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft21",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft22",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.0,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft23",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.184
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft24",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft25",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.28
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft26",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft27",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.7,
+   "worst_bit_um": 1540.704
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft28",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.1,
+   "worst_bit_um": 1540.096
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.0,
+   "worst_bit_um": 1539.984
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.0,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.184
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.3,
+   "worst_bit_um": 1541.28
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.2,
+   "worst_bit_um": 1541.248
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.7,
+   "worst_bit_um": 1540.704
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.1,
+   "worst_bit_um": 1540.096
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.0,
+   "worst_bit_um": 1539.984
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1540.5,
+   "worst_bit_um": 1540.48
+  },
+  {
+   "type": "kv3_pv_v11",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1541.1,
+   "worst_bit_um": 1541.056
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft0",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1624.5,
+   "worst_bit_um": 1624.512
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft1",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.5,
+   "worst_bit_um": 1554.496
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.4,
+   "worst_bit_um": 1554.432
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft3",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1553.2,
+   "worst_bit_um": 1553.152
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft4",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1552.2,
+   "worst_bit_um": 1552.192
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft5",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1569.8,
+   "worst_bit_um": 1569.792
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft6",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1569.8,
+   "worst_bit_um": 1569.792
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft7",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1570.1,
+   "worst_bit_um": 1570.112
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft8",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1570.5,
+   "worst_bit_um": 1570.512
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft9",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.9,
+   "worst_bit_um": 1587.904
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft10",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.9,
+   "worst_bit_um": 1587.904
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft11",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1586.6,
+   "worst_bit_um": 1586.64
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft12",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1585.3,
+   "worst_bit_um": 1585.344
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft13",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1602.6,
+   "worst_bit_um": 1602.576
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft14",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1602.5,
+   "worst_bit_um": 1602.56
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft15",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1602.4,
+   "worst_bit_um": 1602.384
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft16",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1602.7,
+   "worst_bit_um": 1602.688
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft17",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1620.5,
+   "worst_bit_um": 1620.544
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft18",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1620.7,
+   "worst_bit_um": 1620.672
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft19",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1619.4,
+   "worst_bit_um": 1619.392
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft20",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1618.1,
+   "worst_bit_um": 1618.128
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft21",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1635.4,
+   "worst_bit_um": 1635.408
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft22",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1635.3,
+   "worst_bit_um": 1635.328
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft23",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1635.1,
+   "worst_bit_um": 1635.136
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft24",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1635.0,
+   "worst_bit_um": 1634.976
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft25",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1652.7,
+   "worst_bit_um": 1652.672
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft26",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1653.3,
+   "worst_bit_um": 1653.312
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft27",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1652.2,
+   "worst_bit_um": 1652.16
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft28",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1650.9,
+   "worst_bit_um": 1650.88
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft29",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1539.6,
+   "worst_bit_um": 1539.648
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft30",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1539.6,
+   "worst_bit_um": 1539.648
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft31",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1538.3,
+   "worst_bit_um": 1538.304
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft32",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1537.0,
+   "worst_bit_um": 1537.024
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft33",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.3,
+   "worst_bit_um": 1554.336
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft34",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1554.8,
+   "worst_bit_um": 1554.816
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft35",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.2,
+   "worst_bit_um": 1555.2
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft36",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1555.1,
+   "worst_bit_um": 1555.152
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft37",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1572.4,
+   "worst_bit_um": 1572.416
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft38",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1572.4,
+   "worst_bit_um": 1572.432
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft39",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1571.1,
+   "worst_bit_um": 1571.136
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft40",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1569.8,
+   "worst_bit_um": 1569.792
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft41",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.1,
+   "worst_bit_um": 1587.072
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft42",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.1,
+   "worst_bit_um": 1587.072
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft43",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.4,
+   "worst_bit_um": 1587.392
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft44",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1587.8,
+   "worst_bit_um": 1587.792
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft45",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1605.2,
+   "worst_bit_um": 1605.184
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft46",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1605.2,
+   "worst_bit_um": 1605.184
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft47",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1603.9,
+   "worst_bit_um": 1603.92
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft48",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1602.6,
+   "worst_bit_um": 1602.624
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft49",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1619.8,
+   "worst_bit_um": 1619.856
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft50",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1619.8,
+   "worst_bit_um": 1619.84
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft51",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1619.7,
+   "worst_bit_um": 1619.664
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft52",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1620.0,
+   "worst_bit_um": 1619.968
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft53",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1637.8,
+   "worst_bit_um": 1637.824
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft54",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1638.0,
+   "worst_bit_um": 1637.952
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft55",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1636.7,
+   "worst_bit_um": 1636.672
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft56",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 1635.4,
+   "worst_bit_um": 1635.408
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft57",
+   "stations": [
+    4,
+    5
+   ],
+   "route_um": 1900.8,
+   "worst_bit_um": 1900.8
+  },
+  {
+   "type": "kv3_sys_c",
+   "slot": "ft1",
+   "stations": [
+    3,
+    5
+   ],
+   "route_um": 2009.8,
+   "worst_bit_um": 2010.496
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "slot": "ft0",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.456
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "slot": "ft1",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.5,
+   "worst_bit_um": 1387.776
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "slot": "ft2",
+   "stations": [
+    3,
+    4
+   ],
+   "route_um": 1520.6,
+   "worst_bit_um": 1520.64
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "slot": "ft3",
+   "stations": [
+    2,
+    4
+   ],
+   "route_um": 1387.4,
+   "worst_bit_um": 1388.096
+  }
+ ],
+ "internal": [
+  {
+   "type": "kv3_hub_Ei",
+   "conn": "bus:i_dcal_flt",
+   "stations": [
+    3,
+    5
+   ],
+   "max_hop_um": 371.1,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "conn": "bus:i_hp_fault_N_q",
+   "stations": [
+    2,
+    3
+   ],
+   "max_hop_um": 378.4,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:o_astk_EN__g_phys_fault_u_fault_q",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 355.4,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:i_ahub_am_ES",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 356.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:o_astk_ES__u_strip_u_strip_u_ctl_ap",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 355.4,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:i_kvs_attn_acal_EN",
+   "stations": [
+    3,
+    5
+   ],
+   "max_hop_um": 400.3,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:i_kvs_attn_acal_EN",
+   "stations": [
+    3,
+    5
+   ],
+   "max_hop_um": 324.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:o_astk_ES__g_phys_fault_u_fault_q",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 346.3,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:i_ahub_am_EN",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 367.0,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:o_astk_EN__u_strip_u_strip_u_ctl_ap",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 389.6,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:i_kvs_attn_acal_ES",
+   "stations": [
+    1,
+    3
+   ],
+   "max_hop_um": 327.4,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "conn": "bus:o_kvs_attn_acal_EN",
+   "stations": [
+    2,
+    4
+   ],
+   "max_hop_um": 393.6,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:o_astk_WN__g_phys_fault_u_fault_q",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 381.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:i_ahub_am_WS",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 381.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:o_astk_WN__u_strip_u_strip_u_ctl_ap",
+   "stations": [
+    3,
+    6
+   ],
+   "max_hop_um": 378.8,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:i_kvs_attn_acal_WN",
+   "stations": [
+    3,
+    5
+   ],
+   "max_hop_um": 370.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:i_kvs_attn_acal_WN",
+   "stations": [
+    3,
+    5
+   ],
+   "max_hop_um": 281.0,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:o_astk_WS__g_phys_fault_u_fault_q",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 346.3,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:i_ahub_am_WN",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 367.0,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:o_astk_WS__u_strip_u_strip_u_ctl_ap",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 385.9,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:i_kvs_attn_acal_WS",
+   "stations": [
+    1,
+    2
+   ],
+   "max_hop_um": 378.1,
+   "in_core": 0
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "conn": "bus:o_kvs_attn_acal_WN",
+   "stations": [
+    2,
+    4
+   ],
+   "max_hop_um": 358.5,
+   "in_core": 0
+  }
+ ],
+ "internal_depth": {
+  "kv3_hub_Ei:i_dcal_flt": [
+   3,
+   5
+  ],
+  "kv3_hub_Ei:i_hp_fault_N_q": [
+   2,
+   3
+  ],
+  "kv3_hub_Eo:o_astk_EN__g_phys_fault_u_fault_q": [
+   3,
+   6
+  ],
+  "kv3_hub_Eo:i_ahub_am_ES": [
+   3,
+   6
+  ],
+  "kv3_hub_Eo:o_astk_ES__u_strip_u_strip_u_ctl_ap": [
+   3,
+   6
+  ],
+  "kv3_hub_Eo:i_kvs_attn_acal_EN": [
+   3,
+   5
+  ],
+  "kv3_hub_Eo:o_astk_ES__g_phys_fault_u_fault_q": [
+   1,
+   2
+  ],
+  "kv3_hub_Eo:i_ahub_am_EN": [
+   1,
+   2
+  ],
+  "kv3_hub_Eo:o_astk_EN__u_strip_u_strip_u_ctl_ap": [
+   1,
+   2
+  ],
+  "kv3_hub_Eo:i_kvs_attn_acal_ES": [
+   1,
+   3
+  ],
+  "kv3_hub_Eo:o_kvs_attn_acal_EN": [
+   2,
+   4
+  ],
+  "kv3_hub_Wo:o_astk_WN__g_phys_fault_u_fault_q": [
+   3,
+   6
+  ],
+  "kv3_hub_Wo:i_ahub_am_WS": [
+   3,
+   6
+  ],
+  "kv3_hub_Wo:o_astk_WN__u_strip_u_strip_u_ctl_ap": [
+   3,
+   6
+  ],
+  "kv3_hub_Wo:i_kvs_attn_acal_WN": [
+   3,
+   5
+  ],
+  "kv3_hub_Wo:o_astk_WS__g_phys_fault_u_fault_q": [
+   1,
+   2
+  ],
+  "kv3_hub_Wo:i_ahub_am_WN": [
+   1,
+   2
+  ],
+  "kv3_hub_Wo:o_astk_WS__u_strip_u_strip_u_ctl_ap": [
+   1,
+   2
+  ],
+  "kv3_hub_Wo:i_kvs_attn_acal_WS": [
+   1,
+   2
+  ],
+  "kv3_hub_Wo:o_kvs_attn_acal_WN": [
+   2,
+   4
+  ]
+ },
+ "internal_lanes": {
+  "L0": 1,
+  "L1": 3,
+  "L2": 1,
+  "L3": 3,
+  "L5": 3,
+  "L80": 1,
+  "L89": 1,
+  "L164": 3,
+  "L173": 3,
+  "L248": 3,
+  "L257": 1,
+  "L332": 1,
+  "L357": 2,
+  "L758": 1,
+  "L1391": 2,
+  "L1392": 2,
+  "L1400": 2,
+  "L1409": 2,
+  "L1410": 2,
+  "L1418": 1
+ },
+ "phy_reset_tap": {
+  "kv3_phy": {
+   "old": [
+    432.0,
+    760.32
+   ],
+   "new": [
+    842.4,
+    760.32
+   ]
+  },
+  "kv3_phy_v1": {
+   "old": [
+    432.0,
+    760.32
+   ],
+   "new": [
+    842.4,
+    760.32
+   ]
+  }
+ }
+}

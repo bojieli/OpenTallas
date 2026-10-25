@@ -1,0 +1,1477 @@
+{
+ "what": "ASAP7 GRT-stage wire-RC calibrated to routed OpenRCX (lane FLOW 2026-10-25)",
+ "file": "tools/die_plan/setRC_rcx_asap7.tcl",
+ "basis": "est = estimate_parasitics -global_routing on 5_1_grt.odb (stored GRT routes); rcx = 6_final.odb + 6_final.spef; same libs/SDC as signoff; clock-pin arrival_max_rise, source latency 0; long nets = 150 longest routed signal nets, driver->sink delay",
+ "per_layer_fit": {
+  "R": "RCX unit R and via R == stock setRC within 0.5% on all layers and runs -> kept stock",
+  "C_clock_fF_per_um": {
+   "ve_m_m5": {
+    "M3": 0.2,
+    "M4": 0.117,
+    "M5": 0.101
+   },
+   "rr_h0_c": {
+    "M2": 0.169,
+    "M3": 0.127,
+    "M4": 0.12,
+    "M5": 0.105
+   },
+   "argmax_r2": {
+    "M2": 0.121,
+    "M3": 0.126,
+    "M4": 0.133,
+    "M5": 0.075,
+    "M6": 0.132,
+    "M7": 0.087
+   },
+   "ve_s_m0": {
+    "M2": 0.157,
+    "M3": 0.126,
+    "M4": 0.114,
+    "M5": 0.089
+   },
+   "vmr_cqb": {
+    "M2": 0.167,
+    "M3": 0.19,
+    "M4": 0.102,
+    "M5": 0.13
+   }
+  },
+  "C_signal_fF_per_um": {
+   "ve_m_m5": {
+    "M2": 0.205,
+    "M3": 0.14,
+    "M4": 0.207,
+    "M5": 0.112
+   },
+   "rr_h0_c": {
+    "M2": 0.169,
+    "M3": 0.139,
+    "M4": 0.118,
+    "M5": 0.129
+   },
+   "argmax_r2": {
+    "M2": 0.174,
+    "M3": 0.12,
+    "M4": 0.14,
+    "M5": 0.125,
+    "M6": 0.12,
+    "M7": 0.132
+   },
+   "ve_s_m0": {
+    "M2": 0.162,
+    "M3": 0.134,
+    "M4": 0.122,
+    "M5": 0.088
+   },
+   "vmr_cqb": {
+    "M2": 0.183,
+    "M3": 0.157,
+    "M4": 0.181,
+    "M5": 0.163
+   }
+  },
+  "C_stock_fF_per_um": {
+   "M2": 0.175,
+   "M3": 0.156,
+   "M4": 0.178,
+   "M5": 0.164,
+   "M6": 0.187,
+   "M7": 0.163
+  }
+ },
+ "chosen_C_fF_per_um": {
+  "M2": 0.1675,
+  "M3": 0.1315,
+  "M4": 0.1275,
+  "M5": 0.098,
+  "M6": 0.1305,
+  "M7": 0.0925,
+  "M8": "stock",
+  "M9": "stock"
+ },
+ "candidates_note": "calA (signal-weighted), calB (clock-weighted), calC (compromise) evaluated; chosen = (calB+calC)/2",
+ "runs": {
+  "ve_m_m5": {
+   "role": "fit",
+   "die": "S81",
+   "layers": "M2-M5",
+   "run": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_ve_m_k_m5",
+   "results": {
+    "TT": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": 33.1,
+       "mean_abs": 33.1,
+       "p95_abs": 36.8,
+       "max_abs": 39.1,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -1.0,
+       "mean_rel": 0.021
+      },
+      "hold_wns_ps_est": [
+       -13.4,
+       154
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -22.4,
+       "mean_abs": 22.4,
+       "p95_abs": 27.8,
+       "max_abs": 32.3,
+       "std": 2.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -17.9,
+       "mean_rel": -0.507
+      },
+      "hold_wns_ps_est": [
+       17.8,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": 4.1,
+       "mean_abs": 4.3,
+       "p95_abs": 7.6,
+       "max_abs": 10.6,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -7.5,
+       "mean_rel": -0.192
+      },
+      "hold_wns_ps_est": [
+       12.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -5.3,
+       "mean_abs": 5.3,
+       "p95_abs": 10.2,
+       "max_abs": 14.3,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.8,
+       "mean_rel": -0.267
+      },
+      "hold_wns_ps_est": [
+       18.2,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -0.5,
+       "mean_abs": 2.1,
+       "p95_abs": 5.4,
+       "max_abs": 9.5,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -8.5,
+       "mean_rel": -0.226
+      },
+      "hold_wns_ps_est": [
+       16.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -2.8,
+       "mean_abs": 3.0,
+       "p95_abs": 7.8,
+       "max_abs": 11.8,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.2,
+       "mean_rel": -0.246
+      },
+      "hold_wns_ps_est": [
+       17.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.7,
+       0
+      ]
+     }
+    },
+    "FF": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": 26.8,
+       "mean_abs": 26.8,
+       "p95_abs": 30.1,
+       "max_abs": 32.5,
+       "std": 2.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -1.0,
+       "mean_rel": 0.02
+      },
+      "hold_wns_ps_est": [
+       5.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -22.0,
+       "mean_abs": 22.0,
+       "p95_abs": 26.9,
+       "max_abs": 31.7,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -17.5,
+       "mean_rel": -0.505
+      },
+      "hold_wns_ps_est": [
+       2.3,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": 3.0,
+       "mean_abs": 3.3,
+       "p95_abs": 6.2,
+       "max_abs": 9.0,
+       "std": 2.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -7.3,
+       "mean_rel": -0.19
+      },
+      "hold_wns_ps_est": [
+       4.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -4.7,
+       "mean_abs": 4.7,
+       "p95_abs": 9.1,
+       "max_abs": 12.8,
+       "std": 2.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.5,
+       "mean_rel": -0.264
+      },
+      "hold_wns_ps_est": [
+       2.6,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -0.8,
+       "mean_abs": 1.9,
+       "p95_abs": 5.2,
+       "max_abs": 8.9,
+       "std": 2.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -8.2,
+       "mean_rel": -0.223
+      },
+      "hold_wns_ps_est": [
+       3.5,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 25502,
+       "mean": -2.7,
+       "mean_abs": 2.9,
+       "p95_abs": 7.2,
+       "max_abs": 10.8,
+       "std": 2.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -8.9,
+       "mean_rel": -0.243
+      },
+      "hold_wns_ps_est": [
+       3.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -5.9,
+       2
+      ]
+     }
+    }
+   }
+  },
+  "rr_h0_c": {
+   "role": "fit",
+   "die": "S81",
+   "layers": "M2-M5",
+   "run": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h0_c",
+   "results": {
+    "TT": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 24.2,
+       "mean_abs": 24.2,
+       "p95_abs": 29.2,
+       "max_abs": 31.6,
+       "std": 2.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -2.4,
+       "mean_rel": -0.085
+      },
+      "hold_wns_ps_est": [
+       10.7,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": -17.2,
+       "mean_abs": 17.2,
+       "p95_abs": 21.7,
+       "max_abs": 25.5,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -13.5,
+       "mean_rel": -0.518
+      },
+      "hold_wns_ps_est": [
+       18.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 8.2,
+       "mean_abs": 8.2,
+       "p95_abs": 12.8,
+       "max_abs": 15.3,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -3.7,
+       "mean_rel": -0.134
+      },
+      "hold_wns_ps_est": [
+       19.8,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 1.9,
+       "mean_abs": 2.6,
+       "p95_abs": 6.3,
+       "max_abs": 8.7,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.9,
+       "mean_rel": -0.179
+      },
+      "hold_wns_ps_est": [
+       19.2,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 5.2,
+       "mean_abs": 5.2,
+       "p95_abs": 9.7,
+       "max_abs": 12.2,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.1,
+       "mean_rel": -0.148
+      },
+      "hold_wns_ps_est": [
+       19.7,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 3.5,
+       "mean_abs": 3.7,
+       "p95_abs": 8.0,
+       "max_abs": 10.5,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.5,
+       "mean_rel": -0.164
+      },
+      "hold_wns_ps_est": [
+       19.5,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       15.4,
+       0
+      ]
+     }
+    },
+    "FF": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 20.2,
+       "mean_abs": 20.2,
+       "p95_abs": 24.7,
+       "max_abs": 27.1,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -2.5,
+       "mean_rel": -0.087
+      },
+      "hold_wns_ps_est": [
+       5.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": -17.3,
+       "mean_abs": 17.3,
+       "p95_abs": 21.8,
+       "max_abs": 25.7,
+       "std": 2.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -13.6,
+       "mean_rel": -0.513
+      },
+      "hold_wns_ps_est": [
+       3.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 6.9,
+       "mean_abs": 6.9,
+       "p95_abs": 11.2,
+       "max_abs": 13.6,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -3.7,
+       "mean_rel": -0.134
+      },
+      "hold_wns_ps_est": [
+       3.5,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 1.6,
+       "mean_abs": 2.4,
+       "p95_abs": 5.8,
+       "max_abs": 8.2,
+       "std": 2.4
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.9,
+       "mean_rel": -0.178
+      },
+      "hold_wns_ps_est": [
+       2.6,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 4.4,
+       "mean_abs": 4.4,
+       "p95_abs": 8.6,
+       "max_abs": 11.0,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.1,
+       "mean_rel": -0.148
+      },
+      "hold_wns_ps_est": [
+       3.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 18533,
+       "mean": 3.0,
+       "mean_abs": 3.3,
+       "p95_abs": 7.2,
+       "max_abs": 9.6,
+       "std": 2.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.5,
+       "mean_rel": -0.163
+      },
+      "hold_wns_ps_est": [
+       2.8,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -0.1,
+       1
+      ]
+     }
+    }
+   }
+  },
+  "argmax_r2": {
+   "role": "fit",
+   "die": "HBM",
+   "layers": "M2-M7",
+   "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-face/argmax_route_base",
+   "results": {
+    "TT": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": 20.2,
+       "mean_abs": 20.2,
+       "p95_abs": 22.9,
+       "max_abs": 26.9,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.0,
+       "mean_rel": -0.167
+      },
+      "hold_wns_ps_est": [
+       1.6,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -10.8,
+       "mean_abs": 10.8,
+       "p95_abs": 14.7,
+       "max_abs": 18.0,
+       "std": 2.1
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -19.9,
+       "mean_rel": -0.505
+      },
+      "hold_wns_ps_est": [
+       10.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -0.0,
+       "mean_abs": 1.4,
+       "p95_abs": 3.6,
+       "max_abs": 6.6,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.4,
+       "mean_rel": -0.189
+      },
+      "hold_wns_ps_est": [
+       11.4,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -3.7,
+       "mean_abs": 3.7,
+       "p95_abs": 7.2,
+       "max_abs": 10.0,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -10.2,
+       "mean_rel": -0.213
+      },
+      "hold_wns_ps_est": [
+       11.3,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -1.9,
+       "mean_abs": 2.1,
+       "p95_abs": 5.4,
+       "max_abs": 8.2,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.7,
+       "mean_rel": -0.197
+      },
+      "hold_wns_ps_est": [
+       11.4,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -2.8,
+       "mean_abs": 2.9,
+       "p95_abs": 6.3,
+       "max_abs": 9.1,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.9,
+       "mean_rel": -0.205
+      },
+      "hold_wns_ps_est": [
+       11.3,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       4.8,
+       0
+      ]
+     }
+    },
+    "FF": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": 14.9,
+       "mean_abs": 14.9,
+       "p95_abs": 17.6,
+       "max_abs": 22.1,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.4,
+       "mean_rel": -0.169
+      },
+      "hold_wns_ps_est": [
+       -1.7,
+       35
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -10.5,
+       "mean_abs": 10.5,
+       "p95_abs": 14.4,
+       "max_abs": 17.7,
+       "std": 2.1
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -20.5,
+       "mean_rel": -0.5
+      },
+      "hold_wns_ps_est": [
+       -29.6,
+       504
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": 0.2,
+       "mean_abs": 1.4,
+       "p95_abs": 3.5,
+       "max_abs": 7.2,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -9.8,
+       "mean_rel": -0.19
+      },
+      "hold_wns_ps_est": [
+       -18.2,
+       508
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -2.7,
+       "mean_abs": 2.7,
+       "p95_abs": 6.1,
+       "max_abs": 9.1,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -10.6,
+       "mean_rel": -0.212
+      },
+      "hold_wns_ps_est": [
+       -21.7,
+       513
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -1.3,
+       "mean_abs": 1.7,
+       "p95_abs": 4.7,
+       "max_abs": 7.7,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -10.1,
+       "mean_rel": -0.197
+      },
+      "hold_wns_ps_est": [
+       -20.0,
+       508
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 7357,
+       "mean": -2.0,
+       "mean_abs": 2.1,
+       "p95_abs": 5.4,
+       "max_abs": 8.4,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -10.3,
+       "mean_rel": -0.205
+      },
+      "hold_wns_ps_est": [
+       -20.9,
+       510
+      ],
+      "hold_wns_ps_rcx": [
+       -18.2,
+       758
+      ]
+     }
+    }
+   }
+  },
+  "ve_s_m0": {
+   "role": "holdout",
+   "die": "S81",
+   "layers": "M2-M5",
+   "run": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_ve_s_k_m0",
+   "results": {
+    "TT": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": 22.6,
+       "mean_abs": 22.6,
+       "p95_abs": 25.6,
+       "max_abs": 28.3,
+       "std": 1.9
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -3.0,
+       "mean_rel": -0.076
+      },
+      "hold_wns_ps_est": [
+       -8.9,
+       245
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -19.1,
+       "mean_abs": 19.1,
+       "p95_abs": 22.4,
+       "max_abs": 26.8,
+       "std": 1.9
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -14.6,
+       "mean_rel": -0.543
+      },
+      "hold_wns_ps_est": [
+       17.3,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": 3.9,
+       "mean_abs": 3.9,
+       "p95_abs": 6.7,
+       "max_abs": 9.7,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.1,
+       "mean_rel": -0.138
+      },
+      "hold_wns_ps_est": [
+       10.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -3.1,
+       "mean_abs": 3.1,
+       "p95_abs": 6.2,
+       "max_abs": 9.0,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -5.7,
+       "mean_rel": -0.204
+      },
+      "hold_wns_ps_est": [
+       16.6,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": 0.5,
+       "mean_abs": 1.5,
+       "p95_abs": 3.6,
+       "max_abs": 6.4,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.6,
+       "mean_rel": -0.162
+      },
+      "hold_wns_ps_est": [
+       13.3,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -1.3,
+       "mean_abs": 1.8,
+       "p95_abs": 4.4,
+       "max_abs": 7.2,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -5.2,
+       "mean_rel": -0.183
+      },
+      "hold_wns_ps_est": [
+       14.9,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       8.0,
+       0
+      ]
+     }
+    },
+    "FF": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": 17.6,
+       "mean_abs": 17.6,
+       "p95_abs": 20.5,
+       "max_abs": 23.4,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -3.0,
+       "mean_rel": -0.08
+      },
+      "hold_wns_ps_est": [
+       5.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -19.2,
+       "mean_abs": 19.2,
+       "p95_abs": 22.2,
+       "max_abs": 27.2,
+       "std": 1.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -14.4,
+       "mean_rel": -0.541
+      },
+      "hold_wns_ps_est": [
+       -17.0,
+       100
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": 2.3,
+       "mean_abs": 2.5,
+       "p95_abs": 5.0,
+       "max_abs": 8.0,
+       "std": 1.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.1,
+       "mean_rel": -0.141
+      },
+      "hold_wns_ps_est": [
+       3.4,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -3.4,
+       "mean_abs": 3.4,
+       "p95_abs": 6.3,
+       "max_abs": 8.9,
+       "std": 1.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -5.7,
+       "mean_rel": -0.206
+      },
+      "hold_wns_ps_est": [
+       -2.1,
+       11
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -0.4,
+       "mean_abs": 1.4,
+       "p95_abs": 3.4,
+       "max_abs": 6.0,
+       "std": 1.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -4.7,
+       "mean_rel": -0.164
+      },
+      "hold_wns_ps_est": [
+       1.0,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 30810,
+       "mean": -1.9,
+       "mean_abs": 2.1,
+       "p95_abs": 4.8,
+       "max_abs": 7.5,
+       "std": 1.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -5.2,
+       "mean_rel": -0.185
+      },
+      "hold_wns_ps_est": [
+       -0.6,
+       2
+      ],
+      "hold_wns_ps_rcx": [
+       -2.3,
+       16
+      ]
+     }
+    }
+   }
+  },
+  "vmr_cqb": {
+   "role": "holdout",
+   "die": "QC",
+   "layers": "M2-M5",
+   "run": "intel1:/srv/opentallas-scratch2/claude/codex-qc-cores/vmr_cqb",
+   "results": {
+    "TT": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 25.3,
+       "mean_abs": 25.3,
+       "p95_abs": 34.6,
+       "max_abs": 45.2,
+       "std": 6.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -17.1,
+       "mean_rel": -0.234
+      },
+      "hold_wns_ps_est": [
+       -35.8,
+       1252
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": -16.1,
+       "mean_abs": 16.1,
+       "p95_abs": 31.7,
+       "max_abs": 35.0,
+       "std": 8.8
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -40.1,
+       "mean_rel": -0.623
+      },
+      "hold_wns_ps_est": [
+       0.7,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 9.3,
+       "mean_abs": 9.6,
+       "p95_abs": 18.1,
+       "max_abs": 25.0,
+       "std": 6.2
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -25.3,
+       "mean_rel": -0.342
+      },
+      "hold_wns_ps_est": [
+       -22.8,
+       1045
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 2.8,
+       "mean_abs": 5.9,
+       "p95_abs": 11.7,
+       "max_abs": 17.1,
+       "std": 6.4
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -28.6,
+       "mean_rel": -0.401
+      },
+      "hold_wns_ps_est": [
+       -16.1,
+       843
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 6.2,
+       "mean_abs": 7.3,
+       "p95_abs": 15.1,
+       "max_abs": 21.3,
+       "std": 6.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -26.7,
+       "mean_rel": -0.366
+      },
+      "hold_wns_ps_est": [
+       -19.8,
+       987
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 4.5,
+       "mean_abs": 6.5,
+       "p95_abs": 13.4,
+       "max_abs": 19.2,
+       "std": 6.3
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -27.6,
+       "mean_rel": -0.383
+      },
+      "hold_wns_ps_est": [
+       -18.0,
+       958
+      ],
+      "hold_wns_ps_rcx": [
+       -18.9,
+       507
+      ]
+     }
+    },
+    "FF": {
+     "stock_setRC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 20.6,
+       "mean_abs": 20.6,
+       "p95_abs": 28.8,
+       "max_abs": 37.3,
+       "std": 5.5
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -16.4,
+       "mean_rel": -0.232
+      },
+      "hold_wns_ps_est": [
+       1.1,
+       0
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     },
+     "uniform_x0.665_RC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": -17.0,
+       "mean_abs": 17.0,
+       "p95_abs": 31.5,
+       "max_abs": 34.3,
+       "std": 8.1
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -38.8,
+       "mean_rel": -0.619
+      },
+      "hold_wns_ps_est": [
+       -43.1,
+       329
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     },
+     "calA": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 7.2,
+       "mean_abs": 7.7,
+       "p95_abs": 15.3,
+       "max_abs": 20.8,
+       "std": 5.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -24.2,
+       "mean_rel": -0.338
+      },
+      "hold_wns_ps_est": [
+       -5.9,
+       48
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     },
+     "calB": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 1.9,
+       "mean_abs": 5.1,
+       "p95_abs": 10.1,
+       "max_abs": 14.3,
+       "std": 5.7
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -27.4,
+       "mean_rel": -0.396
+      },
+      "hold_wns_ps_est": [
+       -13.8,
+       155
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     },
+     "calC": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 4.7,
+       "mean_abs": 6.0,
+       "p95_abs": 12.7,
+       "max_abs": 17.7,
+       "std": 5.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -25.5,
+       "mean_rel": -0.362
+      },
+      "hold_wns_ps_est": [
+       -9.3,
+       93
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     },
+     "setRC_rcx_asap7": {
+      "clock_arrival_est_minus_rcx_ps": {
+       "n": 3713,
+       "mean": 3.3,
+       "mean_abs": 5.4,
+       "p95_abs": 11.3,
+       "max_abs": 16.0,
+       "std": 5.6
+      },
+      "long_signal_net_delay_est_minus_rcx": {
+       "mean_ps": -26.5,
+       "mean_rel": -0.379
+      },
+      "hold_wns_ps_est": [
+       -11.5,
+       125
+      ],
+      "hold_wns_ps_rcx": [
+       -13.2,
+       162
+      ]
+     }
+    }
+   }
+  }
+ },
+ "holdout_note": "per-layer C tables (calA/B/C) derived from fit runs only; the final B/C midpoint was picked after seeing all 5 runs' calB/calC errors, so ve_s_m0/vmr_cqb are held out of the C fit but not of the final interpolation step"
+}

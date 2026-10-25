@@ -29,7 +29,7 @@ module ot_s81sl_vq #(
     input  wire          rst_n,
     input  wire          y_v,          // normed y from vn
     input  wire [2:0]    y_i,
-    input  wire [255:0]  y,
+    input  wire [127:0]  y,             // packed BF16 from vn (OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):): unpacked at the input flop
     input  wire          u_v,          // SU results to quantise from vs (SW act, QB z): same 8-lane sub-beat stream
     input  wire [2:0]    u_i,
     input  wire [255:0]  u,
@@ -46,14 +46,14 @@ module ot_s81sl_vq #(
     output reg           xf_v,
     output reg           xf_s,
     output reg  [275:0]  xf,
-    output reg           fault
+    (* keep *) output reg fault          // keep: never merged with its internal copy fault_s
 );
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_q = rsv[1];
     reg yv_c, uv_c; reg [2:0] yi_c, ui_c; reg [255:0] y_c, u_c; reg [3:0] sid_c; reg [2:0] k_c; reg mq, mb, mcol; reg [7:0] mi;
     always @(posedge clk or negedge rs_c) if (!rs_c) begin yv_c <= 1'b0; uv_c <= 1'b0; end else begin yv_c <= y_v; uv_c <= u_v; end
-    always @(posedge clk) begin yi_c <= y_i; y_c <= y; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
+    always @(posedge clk) begin yi_c <= y_i; y_c <= {y[127:112], 16'd0, y[111:96], 16'd0, y[95:80], 16'd0, y[79:64], 16'd0, y[63:48], 16'd0, y[47:32], 16'd0, y[31:16], 16'd0, y[15:0], 16'd0}; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
     // S81-NATIVE3 (10-17, NATIVE-2 audit: um_v 229.0 / m_v 228.9 / y_v 192.0 ps capture): the mode command lands in
     // pin flops (mv_c/umv_c + their q/b/i fields) and the mode-register mux and the collision check read only flops.
     // The mode registers load one edge later than in the closed view (b6d9d4515); every read of mq/mb/mi happens while
@@ -78,8 +78,27 @@ module ot_s81sl_vq #(
     wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
     // block assembly: 4 sub-beats of 8 FP32 words -> 32 words; BF16 copy of all 64
     reg [1023:0] blk; reg bv, bbk; reg [2:0] nexp; reg ord_f;
-    reg [1023:0] bf;
     integer l, j;
+    reg [1023:0] bf;
+    // S81-CORES2/RV (2026-10-25, GEOM PASS-COND 04:45; f5b TT -58.8/298 = yv_c -> bf load-enable broadcast over the
+    // whole 1024-flop bf array): the bf load is registered once more, from the pin flops: 8 per-group load enables
+    // bf_en[j] = (sv_ && si_ == j) (distinct functions, one 128-flop group each, placed with its group) and the BF16 half
+    // of sd_ (bf_d, 128 b), so no pin flop fans out into bf and each enable flop drives 128 loads.  bf is loaded one edge
+    // later than in the closed RTL; it is read only while the vector's XB beat is sent (>= 18 + 20 edges after the last
+    // sub-beat, the next vector's sub-beats come after that send), so xf / fault are cycle-identical
+    // (tools/s81_slice/vq_pinreg_eq.sh vs b6d9d4515; mutant OT_VQ_MUT_BFQ must FAIL).  Pin flops keep one load per pin.
+    reg [7:0] bf_en; reg [127:0] bf_d; integer jb, lb, jw;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) bf_en <= 8'd0;
+        else for (jb = 0; jb < 8; jb = jb + 1)
+`ifdef OT_VQ_MUT_BFQ
+            bf_en[jb] <= sv_ && si_ == (jb ^ 1);      // mutant: groups steered to the wrong slot (must FAIL)
+`else
+            bf_en[jb] <= sv_ && si_ == jb;
+`endif
+    always @(posedge clk) for (lb = 0; lb < 8; lb = lb + 1) bf_d[lb * 16 +: 16] <= sd_[lb * 32 + 16 +: 16];
+    always @(posedge clk)
+        for (jw = 0; jw < 8; jw = jw + 1) if (bf_en[jw]) bf[128 * jw +: 128] <= bf_d;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin bv <= 1'b0; nexp <= 3'd0; ord_f <= 1'b0; end
         else begin
@@ -87,11 +106,28 @@ module ot_s81sl_vq #(
             if (sv_) begin nexp <= si_ + 3'd1; if (si_ != nexp) ord_f <= 1'b1; end
         end
     always @(posedge clk) bbk <= si_[2];
+    // S81-CORES3/RT (2026-10-25, vq_bfq GRT-RC TT estimate -219.9 on yv_c -> si_ decode -> load enable of 256 blk flops x 4,
+    // the same broadcast class as bf): the blk write is staged once, from the pin flops: 4 per-quarter write enables
+    // blk_en[j] = (sv_ && si_[1:0] == j) and the sub-beat blk_d = sd_, and blk takes the staged write one edge later.
+    // Every reader sees blk_x = blk with the staged write forwarded (blk_en[j] ? blk_d : blk quarter j), which equals the
+    // closed RTL's blk on every cycle: 0 cycles (tools/s81_slice/vq_pinreg_eq.sh; mutant OT_VQ_MUT_BLKF drops the forward
+    // and must FAIL).  The pin flops now load 4 + 256 flops instead of 1024 enables.
+    reg [3:0] blk_en; (* keep *) reg [255:0] blk_d; integer jq;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) blk_en <= 4'd0;
+        else for (jq = 0; jq < 4; jq = jq + 1) blk_en[jq] <= sv_ && si_[1:0] == jq;
+    always @(posedge clk) blk_d <= sd_;
     always @(posedge clk)
-        if (sv_) begin
-            for (j = 0; j < 4; j = j + 1) if (si_[1:0] == j) blk[256 * j +: 256] <= sd_;
-            for (j = 0; j < 8; j = j + 1) if (si_ == j) for (l = 0; l < 8; l = l + 1) bf[(8 * j + l) * 16 +: 16] <= sd_[l * 32 + 16 +: 16];
-        end
+        for (j = 0; j < 4; j = j + 1) if (blk_en[j]) blk[256 * j +: 256] <= blk_d;
+    wire [1023:0] blk_x;
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_blkx
+`ifdef OT_VQ_MUT_BLKF
+        assign blk_x[256 * gq +: 256] = blk[256 * gq +: 256];                          // mutant: no forward (must FAIL)
+`else
+        assign blk_x[256 * gq +: 256] = blk_en[gq] ? blk_d : blk[256 * gq +: 256];
+`endif
+    end endgenerate
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
     wire vo, af; wire [255:0] q; wire signed [9:0] e; wire [511:0] qy;
@@ -102,23 +138,45 @@ module ot_s81sl_vq #(
             // cycle t + 11 is wp(t + 11) - 11 = wp(t) (registered read: rd_out in cycle t + 12; rows 11 apart, never
             // the row being written); the control rides a 12-deep flop line, so xr loads blk's update of cycle t at
             // the end of cycle t + 12.
-            reg  [3:0] wp;
-            always @(posedge clk or negedge rs_q) if (!rs_q) wp <= 4'd0; else wp <= wp + 4'd1;
-`ifdef OT_VQ_MUT_XPTR
-            wire [3:0] rp = wp - 4'd10;     // mutant: one cycle short (the bench must catch it)
+            // S81-VQFIX (2026-10-25): the macro's write port and both addresses land in flops AT the macro (kit route
+            // ot_s81sl_vq_lfp NOT SIGNED TT -55.87: yv_c -> sd_ mux -> wd_in was 2 x ~120 ps wires + 384 ps slew at the
+            // macro pin).  Event t is written one edge later, at the end of cycle t + 1 (wd_m = sd_(t), wa_m = wp(t)),
+            // and the read address is registered too (ra_m in cycle c = wp(c - 1) - 10 = wp(c) - 11): the row read in
+            // cycle t + 11 is still wp(t), written 10 cycles before and 6 cycles before it is overwritten (t + 17), and
+            // never the row being written (wa_m = wp - 1, ra_m = wp - 11).  rd_out, ce and xr are unchanged: 0 cycles.
+            // S81-CORES3/RT (2026-10-25, F6 census of vq_bfq: rd_out -> xr mux -> 1024 xr flops 69-80 um from the macro): the
+            // read data lands in a 256-flop capture register AT the macro (rd_q) and the row is read one cycle earlier
+            // (ra_m in cycle c = wp(c) - 10: row wp(t) read in cycle t + 10, 8 cycles after its write, never the row being
+            // written), so xr loads rd_q on the same edge it loaded rd before: ce / xr unchanged, 0 cycles.
+            reg  [3:0] wp, wa_m, ra_m;
+            reg  [255:0] wd_m;
+            always @(posedge clk or negedge rs_q)
+                if (!rs_q) begin wp <= 4'd0; wa_m <= 4'd15; ra_m <= 4'd6; end
+                else begin
+                    wp <= wp + 4'd1;
+`ifdef OT_VQ_MUT_WREG
+                    wa_m <= wp + 4'd1;      // mutant: write address not aligned with the registered data (must FAIL)
 `else
-            wire [3:0] rp = wp - 4'd11;
+                    wa_m <= wp;
 `endif
-            wire [255:0] rd;
-            ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, rp}), .rd_out(rd),
-                .w_ce_in(1'b1), .w_addr_in({3'd0, wp}), .wd_in(sd_), .w_mask_in({256{1'b1}}),
+`ifdef OT_VQ_MUT_RDQ
+                    ra_m <= wp - 4'd8;      // mutant OT_VQ_MUT_RDQ (own name: the ref RTL also reads OT_VQ_MUT_XPTR): one row late, must FAIL
+`else
+                    ra_m <= wp - 4'd9;
+`endif
+                end
+            always @(posedge clk) wd_m <= sd_;
+            wire [255:0] rd; reg [255:0] rd_q;
+            always @(posedge clk) rd_q <= rd;
+            ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, ra_m}), .rd_out(rd),
+                .w_ce_in(1'b1), .w_addr_in({3'd0, wa_m}), .wd_in(wd_m), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             wire [2:0] ce;
             ot_hdc_delay #(.W(3), .D(12), .RESET(1)) u_xc (.clk(clk), .rst_n(rs_q), .d({sv_, si_[1:0]}), .q(ce));
             reg [1023:0] xr;
             integer jr;
             always @(posedge clk)
-                if (ce[2]) for (jr = 0; jr < 4; jr = jr + 1) if (ce[1:0] == jr) xr[256 * jr +: 256] <= rd;
+                if (ce[2]) for (jr = 0; jr < 4; jr = jr + 1) if (ce[1:0] == jr) xr[256 * jr +: 256] <= rd_q;
             assign xr_w = xr;
         end else begin : g_xnr
             assign xr_w = {1024{1'b0}};
@@ -126,9 +184,9 @@ module ot_s81sl_vq #(
     endgenerate
     generate
         if (AQ_XMEM == 2) begin : g_aqx
-            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
+            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk_x), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
         end else begin : g_aq
-            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk_x), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
         end
     endgenerate
     // block index rides the quantiser latency
@@ -141,14 +199,18 @@ module ot_s81sl_vq #(
     wire [7:0] gidx = mi;                                            // the vector's global beat index (command)
     // the beat being sent: header {idx, src sid, hops 1, kind, v} + payload
     assign xb_full = (st >= 6'd20) ? {59'd0, bf, gidx, sid_c, 5'd1, 3'd2, 1'b1} : {551'd0, xqd, gidx, sid_c, 5'd1, 3'd1, 1'b1};
+    // S81-CORES2/RV: the sticky term feeds back from an internal copy (fault_s), so the fault output flop drives only
+    // its port (face_guard: one load per output pin flop); same value every edge.
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
     always @(posedge clk or negedge rs_q)
-        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault <= 1'b0; end
+        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault <= 1'b0; fault_s <= 1'b0; end
         else begin
             if (vo && blo) begin run <= 1'b1; st <= 6'd0; end
             else if (run) begin st <= st + 6'd1; if (st == 6'd39) run <= 1'b0; end
             xf_v <= run && ((mq && st[5:2] == {1'b0, k_c}) || (mb && st[5:2] == 4'd5 + {1'b0, k_c}));
             xf_s <= run && ((mq && st == {1'b0, k_c, 2'b00}) || (mb && st == 6'd20 + {1'b0, k_c, 2'b00}));
-            fault <= fault | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
+            fault <= fault_n; fault_s <= fault_n;
         end
     always @(posedge clk) begin
         if (vo && !blo) begin q0 <= q; e0 <= e; end

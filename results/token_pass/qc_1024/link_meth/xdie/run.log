@@ -1,0 +1,347 @@
+    IMAGE_BIND /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/xdie/fx/img_bound/d2d_cal_image.svh mode=bind law==image seg0+TXDP: True C_TX:eq C_RX:eq K_TX:eq K_RX:eq TXDP_C:True TXDP_K:True
+cur_bound_image expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+    IMAGE_BIND /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/xdie/fx/img_bound/d2d_cal_image.svh mode=bind law==image seg0+TXDP: True C_TX:eq C_RX:eq K_TX:eq K_RX:eq TXDP_C:True TXDP_K:True
+cur_bound_image_mut_result_bit expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 30873 layer 5 rel 2466: RESULT beat != golden at the compute consumer
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=9 layers=35
+    XQ_FAIL errors=1
+    XQ_ERR cyc 30873 layer 5 rel 2466: RESULT beat != golden at the compute consumer
+    IMAGE_BIND /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/xdie/fx/img_bound/d2d_cal_image.svh mode=bind law==image seg0+TXDP: True C_TX:eq C_RX:eq K_TX:eq K_RX:eq TXDP_C:True TXDP_K:True
+cur_bound_image_sfm3 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+    IMAGE_BIND /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/xdie/fx/img_bound/d2d_cal_image.svh mode=bind law==image seg0+TXDP: True C_TX:eq C_RX:eq K_TX:eq K_RX:eq TXDP_C:True TXDP_K:True
+cur_bound_image_t8192 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 8192: pvfin beat0 at root age 1744 = PV 909 + max(P0 756, P1 756, R 818) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+    IMAGE_BIND /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr/xdie/fx/img_bound/d2d_cal_image.svh mode=bind law==image seg0+TXDP: True C_TX:eq C_RX:eq K_TX:eq K_RX:eq TXDP_C:True TXDP_K:True
+cur_bound_image_tile_sd0 expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1785 (RETIRE_STATIC 1 STATUS_DELAY 0)
+    XQ_ERR cyc 2621 layer 1 rel 2438: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 2621 rel 2438 age 1785: ctl local 0 guard 0 record 0 slot 1 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1785
+    XQ_ERR cyc 2870 layer 1 rel 2687: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2887 layer 1 rel 2704: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2887 rel 2704: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=-2491 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=1095
+    XQ_ERR cyc 2621 layer 1 rel 2438: KV producer/consumer fault
+    XQ_ERR cyc 2870 layer 1 rel 2687: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2887 layer 1 rel 2704: compute producer/consumer fault
+cur_c_rx_codec1 expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 2635 layer 1 rel 2452: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 1 end_fault 0 cause 00000100 | KV fault 0 abort 0 end_fault 0 cause 00000000
+    XQ_ERR cyc 2640 layer 1 rel 2457: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2640 rel 2457: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7896 layer 2 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 7896 rel 657 age 4: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 14292 layer 2 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=-2438 K2C_r0_issue_to_land=-2407 K2C_r_first_issue_to_last_land=-2407 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=0 K2C_status_issue_to_land=-2653
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=1062
+    XQ_ERR cyc 2635 layer 1 rel 2452: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2640 layer 1 rel 2457: compute producer/consumer fault
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+cur_kseam_d22bu_bound expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 2581 layer 1 rel 2398: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2592 layer 1 rel 2409: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 2592 rel 2409 age 1777: ctl local 0 guard 0 record 0 slot 1 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 2600 layer 1 rel 2417: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2600 rel 2417: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7238 layer 1 rel 7055: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 7238 layer 1 rel 7055: an exchange event never happened
+    XQ_ERR cyc 14296 layer 2 rel 7055: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 14296 layer 2 rel 7055: an exchange event never happened
+    XQ_ERR cyc 14296 layer 2 rel 7055: latency differs between layers (not static)
+    XQ_ERR cyc 14296 layer 2 rel 7055: an exchange event never happened
+    XQ_ERR cyc 14296 layer 2 rel 7055: latency differs between layers (not static)
+    XQ_E C2K_cmd_issue_to_land=34 C2K_q31_issue_to_land=35 C2K_q_first_issue_to_last_land=67 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=-2386 K2C_r_first_issue_to_last_land=-2386 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=-638 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=10 period=7058 stages C 2,2,2,3,2,2 K 13,13,9,9,9,11,11 MUT=0 layers=35
+    XQ_FAIL errors=996
+    XQ_ERR cyc 2581 layer 1 rel 2398: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2592 layer 1 rel 2409: KV producer/consumer fault
+    XQ_ERR cyc 2600 layer 1 rel 2417: compute producer/consumer fault
+cur_kseam_d22bu_route_r expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=34 C2K_q31_issue_to_land=35 C2K_q_first_issue_to_last_land=67 K2C_r31_issue_to_land=33 K2C_r0_issue_to_land=33 K2C_r_first_issue_to_last_land=64 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1846 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=29
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=10 period=7058 stages C 2,2,2,3,2,2 K 13,13,9,9,9,11,11 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+cur_mut_kseam_rx_torn expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 839 layer 1 rel 656: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 839 rel 656 age 3: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 0 P1 0 PV 0 R 0 | tx_first 1751 end 1998
+    XQ_ERR cyc 2624 layer 1 rel 2441: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2641 layer 1 rel 2458: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2641 rel 2458: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_E C2K_cmd_issue_to_land=-604 C2K_q31_issue_to_land=-636 C2K_q_first_issue_to_last_land=-604 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=0 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=864
+    XQ_ERR cyc 839 layer 1 rel 656: KV producer/consumer fault
+    XQ_ERR cyc 2624 layer 1 rel 2441: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2641 layer 1 rel 2458: compute producer/consumer fault
+cur_mut_kv_run_late expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 840 layer 1 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 840 rel 657 age 3: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 0 P1 0 PV 0 R 0 | tx_first 1751 end 1998
+    XQ_ERR cyc 2624 layer 1 rel 2441: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2641 layer 1 rel 2458: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2641 rel 2458: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 14292 layer 2 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_E C2K_cmd_issue_to_land=-604 C2K_q31_issue_to_land=-636 C2K_q_first_issue_to_last_land=-604 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=0 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=1 layers=35
+    XQ_FAIL errors=864
+    XQ_ERR cyc 840 layer 1 rel 657: KV producer/consumer fault
+    XQ_ERR cyc 2624 layer 1 rel 2441: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2641 layer 1 rel 2458: compute producer/consumer fault
+cur_mut_no_base expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 183 layer 1 rel 1: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 1 abort 0 end_fault 1 cause 00000000
+    XQ_ERR cyc 839 layer 1 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 839 rel 657 age 4: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 0 P1 0 PV 0 R 0 | tx_first 1751 end 1998
+    XQ_ERR cyc 2640 layer 1 rel 2458: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2640 rel 2458: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7235 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7235 layer 1 rel 7053: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=-604 C2K_q31_issue_to_land=-636 C2K_q_first_issue_to_last_land=-604 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=-641 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=0 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=798
+    XQ_ERR cyc 183 layer 1 rel 1: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 839 layer 1 rel 657: KV producer/consumer fault
+    XQ_ERR cyc 2640 layer 1 rel 2458: compute producer/consumer fault
+cur_mut_phy_bit expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 14916 layer 3 rel 621: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 00000001
+    XQ_ERR cyc 14952 layer 3 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 14952 rel 657 age 4: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 16753 layer 3 rel 2458: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 16753 rel 2458: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 21348 layer 3 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_ERR cyc 21348 layer 3 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_ERR cyc 21348 layer 3 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_ERR cyc 21348 layer 3 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_ERR cyc 21348 layer 3 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_ERR cyc 21348 layer 3 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 21348 layer 3 rel 7053: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=2 layers=35
+    XQ_FAIL errors=1148
+    XQ_ERR cyc 14916 layer 3 rel 621: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 14952 layer 3 rel 657: KV producer/consumer fault
+    XQ_ERR cyc 16753 layer 3 rel 2458: compute producer/consumer fault
+cur_mut_result_bit expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 30873 layer 5 rel 2466: RESULT beat != golden at the compute consumer
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=9 layers=35
+    XQ_FAIL errors=1
+    XQ_ERR cyc 30873 layer 5 rel 2466: RESULT beat != golden at the compute consumer
+cur_mut_status_done expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 24052 layer 4 rel 2701: STATUS word at the compute consumer != namespace {0,1,0,0,1}
+    XQ_ERR cyc 24061 layer 4 rel 2710: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 24061 rel 2710: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 0 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0000) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 28404 layer 4 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 28404 layer 4 rel 7053: an exchange event never happened
+    XQ_ERR cyc 28404 layer 4 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 29016 layer 5 rel 609: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 1 end_fault 0 cause 10000000 | KV fault 0 abort 0 end_fault 0 cause 00000000
+    XQ_ERR cyc 29064 layer 5 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 29064 rel 657 age 4: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 35460 layer 5 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 35460 layer 5 rel 7053: an exchange event never happened
+    XQ_ERR cyc 35460 layer 5 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 35460 layer 5 rel 7053: an exchange event never happened
+    XQ_ERR cyc 35460 layer 5 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 35460 layer 5 rel 7053: an exchange event never happened
+    XQ_ERR cyc 35460 layer 5 rel 7053: latency differs between layers (not static)
+    XQ_ERR cyc 35460 layer 5 rel 7053: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=8 layers=35
+    XQ_FAIL errors=1092
+    XQ_ERR cyc 24052 layer 4 rel 2701: STATUS word at the compute consumer != namespace {0,1,0,0,1}
+    XQ_ERR cyc 24061 layer 4 rel 2710: compute producer/consumer fault
+    XQ_ERR cyc 28404 layer 4 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+cur_mut_txdp_c_off1 expect=FAIL got=FAIL -> OK
+    XQ_ERR cyc 791 layer 1 rel 608: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 1 abort 0 end_fault 1 cause 00000000 | KV fault 0 abort 0 end_fault 0 cause 00000000
+    XQ_ERR cyc 797 layer 1 rel 614: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 797 rel 614: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0101) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 840 layer 1 rel 657: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 840 rel 657 age 4: ctl local 0 guard 0 record 1 slot 0 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 0 P1 0 PV 0 R 0 | tx_first 1751 end 1998
+    XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=-604 C2K_q31_issue_to_land=0 C2K_q_first_issue_to_last_land=-604 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=0 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=0 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=699
+    XQ_ERR cyc 791 layer 1 rel 608: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 797 layer 1 rel 614: compute producer/consumer fault
+    XQ_ERR cyc 840 layer 1 rel 657: KV producer/consumer fault
+cur_no_status_tail expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 2621 layer 1 rel 2438: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 2621 rel 2438 age 1785: ctl local 0 guard 0 record 0 slot 1 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 2657 layer 1 rel 2474: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2672 layer 1 rel 2489: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2672 rel 2489: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7023 layer 1 rel 6840: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7023 layer 1 rel 6840: an exchange event never happened
+    XQ_ERR cyc 7023 layer 1 rel 6840: an exchange event never happened
+    XQ_ERR cyc 7023 layer 1 rel 6840: an exchange event never happened
+    XQ_ERR cyc 7023 layer 1 rel 6840: an exchange event never happened
+    XQ_ERR cyc 13866 layer 2 rel 6840: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 13866 layer 2 rel 6840: an exchange event never happened
+    XQ_ERR cyc 13866 layer 2 rel 6840: latency differs between layers (not static)
+    XQ_ERR cyc 13866 layer 2 rel 6840: an exchange event never happened
+    XQ_ERR cyc 13866 layer 2 rel 6840: latency differs between layers (not static)
+    XQ_ERR cyc 13866 layer 2 rel 6840: an exchange event never happened
+    XQ_ERR cyc 13866 layer 2 rel 6840: latency differs between layers (not static)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=-2438 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=-2407 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=1062
+    XQ_ERR cyc 2621 layer 1 rel 2438: KV producer/consumer fault
+    XQ_ERR cyc 2657 layer 1 rel 2474: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2672 layer 1 rel 2489: compute producer/consumer fault
+cur_old_k22_image expect=FAIL got=FAIL -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_ERR cyc 2587 layer 1 rel 2404: KV producer/consumer fault
+    XQ_CAUSE kvs_attn_r17+pvfin cyc 2587 rel 2404 age 1751: ctl local 0 guard 0 record 0 slot 1 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+    XQ_ERR cyc 2623 layer 1 rel 2440: D2D end fault / epoch abort in a normal layer
+    XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 0 abort 1 end_fault 0 cause 10000000
+    XQ_ERR cyc 2640 layer 1 rel 2457: compute producer/consumer fault
+    XQ_CAUSE native59 cyc 2640 rel 2457: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+    XQ_ERR cyc 7022 layer 1 rel 6839: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 7022 layer 1 rel 6839: an exchange event never happened
+    XQ_ERR cyc 13864 layer 2 rel 6839: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+    XQ_ERR cyc 13864 layer 2 rel 6839: an exchange event never happened
+    XQ_ERR cyc 13864 layer 2 rel 6839: latency differs between layers (not static)
+    XQ_ERR cyc 13864 layer 2 rel 6839: an exchange event never happened
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=0 K2C_r0_issue_to_land=0 K2C_r_first_issue_to_last_land=0 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=-659 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=7 period=6842 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_FAIL errors=963
+    XQ_ERR cyc 2587 layer 1 rel 2404: KV producer/consumer fault
+    XQ_ERR cyc 2623 layer 1 rel 2440: D2D end fault / epoch abort in a normal layer
+    XQ_ERR cyc 2640 layer 1 rel 2457: compute producer/consumer fault
+cur_pair expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+cur_pair_l0 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=-214 period=6796 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+cur_pair_phy9 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=59 C2K_q31_issue_to_land=60 C2K_q_first_issue_to_last_land=92 K2C_r31_issue_to_land=57 K2C_r0_issue_to_land=57 K2C_r_first_issue_to_last_land=88 KVN_k3_issue_to_land=24 roundtrip_cmd_issue_to_r31_land=1895 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=53
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=9 TXL=6 X=16 period=7064 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+cur_pair_t8192 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 8192: pvfin beat0 at root age 1744 = PV 909 + max(P0 756, P1 756, R 818) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+cur_shift_only_sd0 expect=PASS got=PASS -> OK
+    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1785 (RETIRE_STATIC 1 STATUS_DELAY 0)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=14 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault
+RUN_RC 0

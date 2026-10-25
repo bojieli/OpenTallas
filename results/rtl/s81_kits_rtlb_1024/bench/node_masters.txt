@@ -1,0 +1,16 @@
+== LLfd pass: NODE_STATIC_GATE PASS dsfd_node_LLfd 5 runs (win 2, leaf a/b 1/1, fault chain 1)
+== LLfd mut_fiunreg: NODE_STATIC_GATE MUTANT mut_fiunreg REJECTED 4/5
+== LLfd mut_fault: NODE_STATIC_GATE MUTANT mut_fault REJECTED 5/5
+== LLfd mut_window: NODE_STATIC_GATE MUTANT mut_window REJECTED 5/5
+== LLfu pass: NODE_STATIC_GATE PASS dsfd_node_LLfu 5 runs (win 2, leaf a/b 1/1, fault chain 1)
+== LLfu mut_fiunreg: NODE_STATIC_GATE MUTANT mut_fiunreg REJECTED 4/5
+== LLfu mut_fault: NODE_STATIC_GATE MUTANT mut_fault REJECTED 5/5
+== LLfu mut_window: NODE_STATIC_GATE MUTANT mut_window REJECTED 5/5
+== NNfd pass: NODE_STATIC_GATE PASS dsfd_node_NNfd 5 runs (win 2, leaf a/b 0/0, fault chain 1)
+== NNfd mut_fiunreg: NODE_STATIC_GATE MUTANT mut_fiunreg REJECTED 4/5
+== NNfd mut_fault: NODE_STATIC_GATE MUTANT mut_fault REJECTED 5/5
+== NNfd mut_window: NODE_STATIC_GATE MUTANT mut_window REJECTED 5/5
+== NNfu pass: NODE_STATIC_GATE PASS dsfd_node_NNfu 5 runs (win 2, leaf a/b 0/0, fault chain 1)
+== NNfu mut_fiunreg: NODE_STATIC_GATE MUTANT mut_fiunreg REJECTED 4/5
+== NNfu mut_fault: NODE_STATIC_GATE MUTANT mut_fault REJECTED 5/5
+== NNfu mut_window: NODE_STATIC_GATE MUTANT mut_window REJECTED 5/5

@@ -172,14 +172,14 @@ def load_ages(path=None, need_tile=False):
 # ------------------------------------------------------------------------------------------------ x beats
 def x_edges(expected_x, shift=0, n=N):
     """{slice m: [stream reference edges of every x word at m]} from a vec family's expected x words (edge_e5 at slice
-    N-1; the word left its owner s at edge_e5 - 2 (N-1-s) and reaches m 2 |m - s| later)"""
+    N-1; the word left its owner s at edge_e5 - D.ST_HOP (N-1-s) and reaches m D.ST_HOP |m - s| later; 2 slice2 / 4 s8)"""
     out = {m: [] for m in range(n)}
     ea = set()
     for w in expected_x:
         s, e5 = w['slice'], w['edge_e5'] + shift
-        e_s = e5 - 2 * (n - 1 - s)
+        e_s = e5 - D.ST_HOP * (n - 1 - s)
         for m in range(n):
-            out[m].append(e_s + 2 * abs(m - s))
+            out[m].append(e_s + D.ST_HOP * abs(m - s))
         ea.update(range(w['eaddr'], w['eaddr'] + 64))
     return {m: sorted(v) for m, v in out.items()}, ea
 

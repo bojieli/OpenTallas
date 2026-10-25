@@ -1,0 +1,173 @@
+{
+ "top": "cp1_reach405L_top",
+ "mode": "flat",
+ "reduce": false,
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "spine": "branch",
+ "instances": {
+  "fW0_p1_b0": "s81p_col_h10_r0_p1__t1",
+  "fW0_p1_b1": "s81p_col_h10_r1__t1"
+ },
+ "parts": {
+  "s81p_col_h10_r0_p1__t1": "parts/col_h10_r0_p1__t1",
+  "s81p_col_h10_r1__t1": "parts/col_h10_r1__t1"
+ },
+ "abstracts": {},
+ "corners": {
+  "TT": {
+   "seams": {
+    "fW0_p1_b0->fW0_p1_b1/frame_int_i1": {
+     "max": {
+      "paths": 1265,
+      "worst": 434.457,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "258.81",
+      "capture": "235.57",
+      "start": "fW0_p1_b0/u_bout_frame_int_o0/q[509]$_DFF_P_/CLK",
+      "end": "fW0_p1_b1/u_bin_frame_int_i1/q[509]$_DFF_P_/D"
+     },
+     "min": {
+      "paths": 1265,
+      "worst": 148.852,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "281.60",
+      "capture": "252.61",
+      "start": "fW0_p1_b0/u_bout_frame_int_o0/q[817]$_DFF_P_/CLK",
+      "end": "fW0_p1_b1/u_bin_frame_int_i1/q[817]$_DFF_P_/D"
+     }
+    },
+    "fW0_p1_b1->fW0_p1_b0/frame_int_i0": {
+     "max": {
+      "paths": 268,
+      "worst": 449.601,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "230.42",
+      "capture": "259.43",
+      "start": "fW0_p1_b1/u_bout_frame_int_o1/q[23]$_DFF_P_/CLK",
+      "end": "fW0_p1_b0/u_bin_frame_int_i0/q[23]$_DFF_P_/D"
+     },
+     "min": {
+      "paths": 268,
+      "worst": 188.24,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "242.24",
+      "capture": "250.18",
+      "start": "fW0_p1_b1/u_bout_frame_int_o1/q[169]$_DFF_P_/CLK",
+      "end": "fW0_p1_b0/u_bin_frame_int_i0/q[169]$_DFF_P_/D"
+     }
+    }
+   },
+   "ffspread": {
+    "fW0_p1_b0": {
+     "n": 1533,
+     "min": 236.58,
+     "max": 284.82,
+     "spread": 48.24
+    },
+    "fW0_p1_b1": {
+     "n": 1533,
+     "min": 224.48,
+     "max": 258.29,
+     "spread": 33.81
+    }
+   },
+   "wns_ps": 169.362,
+   "whs_ps": 6.392,
+   "sta_seconds": 36.198,
+   "exit": 0,
+   "seconds": 36.4,
+   "peak_rss_gb": 1.22,
+   "gates": "setup + spread"
+  },
+  "FF": {
+   "seams": {
+    "fW0_p1_b0->fW0_p1_b1/frame_int_i1": {
+     "max": {
+      "paths": 1265,
+      "worst": 526.104,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "204.37",
+      "capture": "176.42",
+      "start": "fW0_p1_b0/u_bout_frame_int_o0/q[386]$_DFF_P_/CLK",
+      "end": "fW0_p1_b1/u_bin_frame_int_i1/q[386]$_DFF_P_/D"
+     },
+     "min": {
+      "paths": 1265,
+      "worst": 104.933,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "226.49",
+      "capture": "198.31",
+      "start": "fW0_p1_b0/u_bout_frame_int_o0/q[866]$_DFF_P_/CLK",
+      "end": "fW0_p1_b1/u_bin_frame_int_i1/q[866]$_DFF_P_/D"
+     }
+    },
+    "fW0_p1_b1->fW0_p1_b0/frame_int_i0": {
+     "max": {
+      "paths": 268,
+      "worst": 552.323,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "178.18",
+      "capture": "209.53",
+      "start": "fW0_p1_b1/u_bout_frame_int_o1/q[23]$_DFF_P_/CLK",
+      "end": "fW0_p1_b0/u_bin_frame_int_i0/q[23]$_DFF_P_/D"
+     },
+     "min": {
+      "paths": 268,
+      "worst": 117.996,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "179.62",
+      "capture": "208.14",
+      "start": "fW0_p1_b1/u_bout_frame_int_o1/q[75]$_DFF_P_/CLK",
+      "end": "fW0_p1_b0/u_bin_frame_int_i0/q[75]$_DFF_P_/D"
+     }
+    }
+   },
+   "ffspread": {
+    "fW0_p1_b0": {
+     "n": 1533,
+     "min": 186.75,
+     "max": 233.19,
+     "spread": 46.44
+    },
+    "fW0_p1_b1": {
+     "n": 1533,
+     "min": 173.77,
+     "max": 206.04,
+     "spread": 32.27
+    }
+   },
+   "wns_ps": 252.379,
+   "whs_ps": -3.297,
+   "sta_seconds": 34.834,
+   "exit": 0,
+   "seconds": 35.1,
+   "peak_rss_gb": 1.22,
+   "gates": "hold + spread"
+  }
+ },
+ "seam_groups": 2,
+ "seam_bits": 1533,
+ "verdict": {
+  "setup_TT": 434.457,
+  "setup_TT_neg_endpoints": 0,
+  "hold_TT": 148.852,
+  "hold_TT_neg_endpoints": 0,
+  "ffspread_TT": 48.24,
+  "setup_FF": 526.104,
+  "setup_FF_neg_endpoints": 0,
+  "hold_FF": 104.933,
+  "hold_FF_neg_endpoints": 0,
+  "ffspread_FF": 46.44,
+  "status": "PASS"
+ }
+}

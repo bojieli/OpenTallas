@@ -8,6 +8,9 @@ def=""
 case "$mode" in
  pass) ;;
  base_control) def=-DOT_SSTN_BASE_CONTROL_MUT ;;
+ base_status_unreg) def=-DOT_SSTN_BASE_STATUS_UNREG_MUT ;;
+ base_data_1flop) def=-DOT_SSTN_BASE_DATA_1FLOP_MUT ;;
+ payload_1flop) def=-DOT_SSTN_PAYLOAD_1FLOP_MUT ;;
  payload_bit) def=-DOT_SSTN_PAYLOAD_BIT_MUT ;;
  payload_reset) def=-DOT_SSTN_PAYLOAD_RESET_MUT ;;
  payload_edge) def=-DOT_SSTN_PAYLOAD_EDGE_MUT ;;

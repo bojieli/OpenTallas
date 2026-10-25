@@ -4,6 +4,7 @@
 // TMUT 1 = mutant (class A: the original gets value MV; head: random predecessor inputs; eo: eo + 1).
 module tb_qkd_astk_ctl_s_p #(parameter integer TMUT = 0, parameter integer V0 = 0, parameter integer MV0 = 0);
     localparam integer Z_STRIDE = 4;
+    localparam integer PORT_REGS = 0;
     reg clk = 0;
     always #5 clk = ~clk;
     reg rstv = 0;
@@ -18,8 +19,10 @@ module tb_qkd_astk_ctl_s_p #(parameter integer TMUT = 0, parameter integer V0 = 
     wire [42:0] r_ap, d_ap;
     wire  r_af, d_af;
     wire [571:0] r_qo, d_qo;
-    qkd_astk_ctl_s #(.Z_STRIDE(Z_STRIDE)) u_ref (.cal(i_cal), .ck(clk), .rst_n(rstv), .st(TMUT ? MV0 : V0), .aq(i_aq), .lt(r_lt), .am(i_am), .ap(r_ap), .af(r_af), .qo(r_qo), .xi(i_xi), .zi(i_zi), .fz(i_fz));
-    qkd_astk_ctl_s_p #(.Z_STRIDE(Z_STRIDE), .ST(V0)) u_dut (.cal(i_cal), .ck(clk), .rst_n(rstv), .aq(i_aq), .lt(d_lt), .am(i_am), .ap(d_ap), .af(d_af), .qo(d_qo), .xi(i_xi), .zi(i_zi), .fz(i_fz));
+    wire [59:0] r_tc_faces, d_tc_faces;
+    wire [571:0] r_qo_face, d_qo_face;
+    qkd_astk_ctl_s #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS)) u_ref (.cal(i_cal), .ck(clk), .rst_n(rstv), .st(TMUT ? MV0 : V0), .aq(i_aq), .lt(r_lt), .am(i_am), .ap(r_ap), .af(r_af), .qo(r_qo), .tc_faces(r_tc_faces), .qo_face(r_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
+    qkd_astk_ctl_s_p #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS), .ST(V0)) u_dut (.cal(i_cal), .ck(clk), .rst_n(rstv), .aq(i_aq), .lt(d_lt), .am(i_am), .ap(d_ap), .af(d_af), .qo(d_qo), .tc_faces(d_tc_faces), .qo_face(d_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
     integer cyc, errs, w;
     task automatic drive;
         begin
@@ -45,6 +48,10 @@ module tb_qkd_astk_ctl_s_p #(parameter integer TMUT = 0, parameter integer V0 = 
                     if (errs <= 5) $display("MISMATCH cyc %0d af ref %h dut %h", cyc, r_af, d_af); end
                 if (r_qo !== d_qo) begin errs = errs + 1;
                     if (errs <= 5) $display("MISMATCH cyc %0d qo ref %h dut %h", cyc, r_qo, d_qo); end
+                if (r_tc_faces !== d_tc_faces) begin errs = errs + 1;
+                    if (errs <= 5) $display("MISMATCH cyc %0d tc_faces ref %h dut %h", cyc, r_tc_faces, d_tc_faces); end
+                if (r_qo_face !== d_qo_face) begin errs = errs + 1;
+                    if (errs <= 5) $display("MISMATCH cyc %0d qo_face ref %h dut %h", cyc, r_qo_face, d_qo_face); end
             end
             rstv = !(cyc < 12 || (cyc >= 800 && cyc < 806) || (cyc >= 1700 && cyc < 1702));
             drive;

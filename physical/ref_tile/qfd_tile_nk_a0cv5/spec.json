@@ -1,0 +1,451 @@
+{
+ "name": "qfd_tile_nk_a0cv5",
+ "top": "qfd_tile_nk_a0c",
+ "kind": "cluster",
+ "clock_port": "ck",
+ "sources": [
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+  "rtl/physical/ot_qwen_rom_tile_die.sv",
+  "rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+  "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/physical/ot_qwen_rom_tile_nk.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_node_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v",
+  "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+  "rtl/physical/a0_core/qfd_tile_nk_a0c.sv",
+  "rtl/physical/bb/ot_qwen_tile_romleaf_bb.v"
+ ],
+ "defines": [
+  "OT_QWEN_LSL_FP1",
+  "OT_A0_CK_TAPS",
+  "OT_A0_CK_TAPS24"
+ ],
+ "params": {
+  "REGROOT_MODE": 9
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+   "at": [
+    22.464,
+    22.176
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+   "at": [
+    22.464,
+    152.352
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+   "at": [
+    22.464,
+    282.528
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+   "at": [
+    22.464,
+    542.88
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+   "at": [
+    22.464,
+    412.704
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "at": [
+    262.656,
+    22.176
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+   "at": [
+    262.656,
+    152.352
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+   "at": [
+    262.656,
+    282.528
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+   "at": [
+    262.656,
+    542.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+   "at": [
+    262.656,
+    412.704
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+   "at": [
+    100.656,
+    673.92
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+   "at": [
+    100.656,
+    834.432
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+   "at": [
+    100.656,
+    994.944
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+   "at": [
+    200.448,
+    834.432
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+   "at": [
+    200.448,
+    994.944
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+   "at": [
+    335.664,
+    673.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+   "at": [
+    335.664,
+    834.432
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+   "at": [
+    335.664,
+    994.944
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+   "at": [
+    22.464,
+    688.656
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "outline": {
+  "w": 457.92,
+  "h": 1157.76,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "n_a",
+   "n_b",
+   "n_y",
+   "t_out"
+  ],
+  "E": [
+   "rst_n",
+   "tap",
+   "tie_hi",
+   "tie_lo",
+   "tile_id"
+  ],
+  "ANY": [
+   "ck",
+   "ck_t1",
+   "ck_t2",
+   "ck_t3",
+   "ck_t4",
+   "ck_t5",
+   "ck_t6",
+   "ck_t7",
+   "ck_t8",
+   "ck_t9",
+   "ck_t10",
+   "ck_t11",
+   "ck_t12",
+   "ck_t13",
+   "ck_t14",
+   "ck_t15",
+   "ck_t16",
+   "ck_t17",
+   "ck_t18",
+   "ck_t19",
+   "ck_t20",
+   "ck_t21",
+   "ck_t22",
+   "ck_t23"
+  ]
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "child_lattice_um": 0.048,
+ "layer_cap": "M7",
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 8
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 35,
+   "extra": "-distance_between_buffers 50"
+  }
+ },
+ "refglob": "*",
+ "inter": [],
+ "structural_change": "QC-P5 10-23 a0 v4 (from v3; COORD A0-clock concern): CLOCK TAP GRID. v2 NK measured 1,133 ps core insertion from one ck pin (probe: 17-level TritonCTS top tree to 48 k-means roots 558 ps + 313 ps balance pads + 115 ps local trees). v4: 20 interior M7 clock tap ports ck + ck_t1..ck_t19 (RTL OT_A0_CK_TAPS, no RTL loads) at equal-sink-count centroids of the v2 placed sinks (~2.2k sinks, <= 265 um reach each; the die spine drops M8 -> M7 onto them); PRE_CTS a0_clock_taps.tcl moves every sink to its nearest tap (die_plan clock_taps.tcl @71e64b85e, cap 3000 sinks), post-CTS tap balance to 250 +/- 40 ps; no k-means top tree. GPL routability-driven mode dropped (v2 NK/NL both diverged at overflow 0.19 with +57-71% routability inflation and reverted; NK legal HPWL 7.52 m vs a0ck 3.87 m without it). Regions, outline, signal pins, RTL body, cycles = v3. QC-P4 10-23 a0 v3 (from v2): v2 initial-GRT probe left hotspot 2 hot (NK 3,417 / NL 5,268 overflow in x220-320 y700-740); dwr/der L9 writer boxes 2x taller (660.6-760.6) and the hub box moved up to y 764.6-829 plus the LSL row-0/1 gap band (y 819.7-829) W and E, so the writers spread and the hub no longer stacks on them. QC-P3 10-23 a0 v2 (from a0ck): L1 ring readers co-located with their writers (regions only; GEOM 11:44 hotspots (230,410)/(220-320,720)), GPL routability-driven. Same RTL, outline, pins, clock. QC-A0 10-23 (FALLBACK: one core clock ck, 48 k-means local roots (clock_split_km.tcl) under one TritonCTS top tree): A0 planned hard core of the Qwen compute variant-B plan (CB quad, 4 cores at (86.4|699.84, 77.76|1382.4), 457.92 x 1157.76, one spine tap per core). Same rpf floorplan, children, regions, request decoders, RTL body and cycles as qfd_tile_nk_romleaf_rpf@fce5d5cb2; the 35/39 clock-entry ports become internal nets of ck (r3 NL setup -169/-425 ps were 100% inter-entry crossings under 210 ps inter-entry uncertainty).",
+ "job": {
+  "owner": "Claude:QC-P5",
+  "branch": "claude/qc-a0v5-1023",
+  "tag": "a0cv5",
+  "purpose": "QC-P5 10-23 a0 v5 (from v4; v4 NK CTS measured per-tap slowest sink 137..384 ps, NL ..357, median 278: the tail = 3k-sink taps + heavy leaf nets (22 sinks, 70 ps leaf cell + 91 ps last wire over 130 um)): 24 taps (cap 2400 sinks), TritonCTS register clustering 16 sinks / 35 um + buffers every 50 um. Regions, outline, signal pins, RTL body, cycles = v4. QC-P5 10-23 a0 v4 (from v3; COORD A0-clock concern): CLOCK TAP GRID. v2 NK measured 1,133 ps core insertion from one ck pin (probe: 17-level TritonCTS top tree to 48 k-means roots 558 ps + 313 ps balance pads + 115 ps local trees). v4: 20 interior M7 clock tap ports ck + ck_t1..ck_t19 (RTL OT_A0_CK_TAPS, no RTL loads) at equal-sink-count centroids of the v2 placed sinks (~2.2k sinks, <= 265 um reach each; the die spine drops M8 -> M7 onto them); PRE_CTS a0_clock_taps.tcl moves every sink to its nearest tap (die_plan clock_taps.tcl @71e64b85e, cap 3000 sinks), post-CTS tap balance to 250 +/- 40 ps; no k-means top tree. GPL routability-driven mode dropped (v2 NK/NL both diverged at overflow 0.19 with +57-71% routability inflation and reverted; NK legal HPWL 7.52 m vs a0ck 3.87 m without it). Regions, outline, signal pins, RTL body, cycles = v3. QC-P4 10-23 a0 v3 (from v2): v2 initial-GRT probe left hotspot 2 hot (NK 3,417 / NL 5,268 overflow in x220-320 y700-740); dwr/der L9 writer boxes 2x taller (660.6-760.6) and the hub box moved up to y 764.6-829 plus the LSL row-0/1 gap band (y 819.7-829) W and E, so the writers spread and the hub no longer stacks on them. QC-P3 10-23 a0 v2 (from a0ck): L1 ring readers co-located with their writers (regions only; GEOM 11:44 hotspots (230,410)/(220-320,720)), GPL routability-driven. Same RTL, outline, pins, clock. QC-A0 10-23 (FALLBACK: one core clock ck, 48 k-means local roots (clock_split_km.tcl) under one TritonCTS top tree): A0 planned hard core of the Qwen compute variant-B plan (CB quad, 4 cores at (86.4|699.84, 77.76|1382.4), 457.92 x 1157.76, one spine tap per core). Same rpf floorplan, children, regions, request decoders, RTL body and cycles as qfd_tile_nk_romleaf_rpf@fce5d5cb2; the 35/39 clock-entry ports become internal nets of ck (r3 NL setup -169/-425 ps were 100% inter-entry crossings under 210 ps inter-entry uncertainty).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+   "rtl/physical/ot_qwen_tile_node.sv",
+   "rtl/physical/ot_qwen_tile_romleaf.sv",
+   "rtl/physical/qfd_tile_nk_rp1.sv",
+   "rtl/physical/qfd_tile_nk_rp2_45.sv",
+   "rtl/test/tb_qwen_a0_rr6.sv",
+   "rtl/test/tb_qwen_a0_rr8.sv",
+   "rtl/test/tb_qwen_romleaf_parent_nk_native.sv",
+   "tools/qwen_a0_safe",
+   "tools/qwen_romleaf",
+   "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
+   "rtl/physical/ot_qw_land4.sv",
+   "rtl/test/tb_qwen_a0_rr9.sv",
+   "rtl/physical/ot_qw_land4_n32.sv",
+   "rtl/physical/ot_qw_land4_n32_select.sv",
+   "rtl/hdc/ot_qwen_rom_tile_w12_land32.sv",
+   "rtl/hdc/ot_qwen_w12_matvec_land32.sv",
+   "tools/qwen_romleaf/rc11",
+   "tools/qwen_romleaf/rc12",
+   "tools/qwen_romleaf/rc13",
+   "tools/qwen_romleaf/rc14_2000",
+   "rtl/physical/a0_rc14_selected_2000",
+   "results/arch/codex_qw_a0_2000_1021",
+   "physical/ref_tile/qw_a0_rc14_children",
+   "tools/qwen_romleaf/rc15_2000",
+   "rtl/physical/a0_rc15_selected_2000",
+   "results/arch/codex_qw_a0_localreq_2000_1021"
+  ],
+  "views_to": "physical/ref_tile/qfd_tile_nk_a0cv5/views",
+  "record_to": "results/rtl/ref_tile/qfd_tile_nk_a0cv5",
+  "benches": [
+   {
+    "name": "parent_native_0",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
+    "pass_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_PASS.log"
+   },
+   {
+    "name": "parent_native_leaf_clock_4",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
+    "fail_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_clock_MUT4_FAIL.log"
+   }
+  ],
+  "cycles_added": 0,
+  "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent."
+ },
+ "slot_change_request": "QC-P5 10-23 v4: core clock = 20 interior M7 tap pins (tools/qwen_romleaf/a0core/qfd_tile_nk_a0c4_pins.tcl), each a die-spine drop at equal arrival (80 per CB quad); the E-face ck pin is gone. QC-A0 10-23: core outline/pins = rpf (plan contents u_t00..u_t11); clock ports ck_* removed, one ck at E (457.824, 668.076). Report to QC-P2: core tap = ck pin, budget measured at gate.",
+ "io_tcl": "tools/qwen_romleaf/a0core/qfd_tile_nk_a0c5_pins.tcl",
+ "pin_hook_before_flops": [
+  "tools/qwen_romleaf/repack/qfd_tile_nk_a0v3_regions.tcl",
+  "tools/qwen_romleaf/repack/qfd_tile_nk_romleaf_rpf_request_decode.tcl"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required."
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "DONT_BUFFER_PORTS": "1",
+  "ENABLE_DPO": "0",
+  "OT_TAP_MAX_SINKS": "2400",
+  "OT_TAP_PITCH_UM": "260"
+ },
+ "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pre_cts_extra": [
+  "tools/qwen_romleaf/a0core/a0_clock_taps.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/qwen_romleaf/rc14_2000/release_placement_reservations.tcl"
+ ],
+ "reroute_reason": "QC-A0 10-23: plan-derived core clock interface (one entry per planned core).",
+ "safe_design_checklist": {
+  "1_pins": "Pin helper and all data/clock/reset landing stages byte-exact original9873; no external pin movement. Every actual child origin43.2um lattice.",
+  "2_reach": "Original per-consumer compact clock-sink placement groups retained during GPL; initial native landing ring spans and fixed hard-child/pin shapes unchanged. Actual reach and postrepair drift measured at gate.",
+  "3_fanout": "Source semantics and connectivity identical9873 full native32 path, canonical helpers from current main; gate repeats exact Liberty census.",
+  "4_depth": "No logical cell/register/datapath/timing constraint change; same REGROOT_MODE9, landed K2/D4 crossings and +6 original t_out price. No new edge.",
+  "5_storage": "19 exact hard children NK/18 NL with original pin contracts and43.2 origins; node binding actual CLOSED NB1 record with exact inherited geometry, original provenance marker retained historically.",
+  "6_floorplan": "Same820.8x907.2 hard layout and actual legal rows. Source FF reservations shape GPL only; opening adjacent repair row capacity fixes illegal wire placements causally at max3.4um displacement/0percentHPWL on actual failedODB.",
+  "7_clock": "ONE core clock entry ck (plan: one spine tap per planned core). Former entries are internal nets: no inter-entry uncertainty, CTS balances all sinks incl. macro clock_tree_path insertion. Boundary TT/FF spread must pass 80 ps; insertion vs plan budget 250+/-40 reported to QC-P2.",
+  "8_reset": "Original two-edge reset landing and max32 relay splitting unchanged; no reset/data contract modification."
+ },
+ "clock": "cts",
+ "sdc_extra": [
+  "tools/qwen_romleaf/a0core/a0_ck_taps.sdc"
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsdv_svc_sx_hrow",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/s81-kits/hrow_r15/dsdv_svc_sx_hrow_c (kits_repin c2 recipe + r15 RTL)",
+ "routed_db": "epyc1:/srv/opentallas-scratch/claude/s81-kits/hrow_r15/dsdv_svc_sx_hrow_c/run/results/asap7/kr_dsdv_svc_sx_hrow_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "pins": 3851,
+ "rtl_change": "registered replicated one-hot role selects (648 kept copies, <=24 mux bits each), sid one-hot AND-OR role lookup; 0 data/boot cycles; eq bench + sx_bench PASS, mutants FAIL (results/s81_kits/hrow_r15/)",
+ "files": {
+  "config.mk": "ff7332f9b28bf922fdac17164135cf39a010f0f84da5556e5bdcb1a0d5383ccb",
+  "constraint.sdc": "8b51061e6daa066c5e20ae304d8214090c93ac52bf9fee433447332f86032be6",
+  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
+  "dsdv_svc_sx_hrow.lef": "d7d1598d50a339bace64a2c41c246ee33dbdc39cf69f879ccbec39e39d1ad0a9",
+  "dsdv_svc_sx_hrow_ff.lib": "d318dd59f048176ae5403de10dfa5ac66f6c429545838c0552967f6f98c5a195",
+  "dsdv_svc_sx_hrow_tt.lib": "838346f35443e4a9658d802f5b715f4c2cbfcc61d6128ca32825a1a9df72bb29",
+  "face_guard.json": "af506b271bf8e0faabf656bc4bd6ad1587ff983d1f02b435f59eecc168b520dd",
+  "freeze.json": "67233c69b820500eeea245a79ca61f7c095f56fcf59168dae6a286a1c1b2771a",
+  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
+  "pin_audit.json": "07337a78479cd955659ca312010d94a2fef97977e4e3dc49ac1acd47699dd0bb",
+  "pins.json": "decf3b25a42a5ec30070174ece3724dc1d617b8476067b6e06e81aff1416cf0c",
+  "signoff.json": "e306df1ac3b9c5475b6971ec22abd288bc99d594b3df164dcb84a0a78427c10c",
+  "tap_balance.tcl": "49c9ecf152891e5f1ed6c3c5fe38ab18fcbe2b1a9b4a0a2db7f2bb33fda45bd7"
+ }
+}

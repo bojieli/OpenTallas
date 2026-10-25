@@ -14,6 +14,19 @@ import schema  # noqa: E402
 EX = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
 
 
+def _one_station(p):
+    """the pre-9.4 tiny geometry (1 station per mid slot, x = 4 cycles, r = 5): latency-only tests (R8 groups, landed,
+    fold) keep their small numbers; G0 hops / stations FAIL on it since ruling 9.3/9.4 (405 um)."""
+    p = copy.deepcopy(p)
+    for s in p["partition_types"]["mid"]["ft_slots"]:
+        s["stations"] = 1
+    p["latency"]["lanes"] = gen.latency_table(schema.Plan(p))
+    return p
+
+
+EX1 = _one_station(EX)
+
+
 def g0(mut=None):
     p = copy.deepcopy(EX)
     if mut:
@@ -37,11 +50,12 @@ def part(p, n):
 
 def test_example_passes():
     R, summ = g0()
-    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "census"], R.items   # census: none
+    # reset: the example plans are reset.release "counted" -> one WARN (OWNER RESET RULE 10-24, reset_tree.py)
+    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "reset", "census"], R.items  # census: none
     R2, _ = check.run(json.loads((HERE / "examples" / "tiny_plan_typegeo.json").read_text()))
-    assert [i["check"] for i in R2.items] == ["census"], R2.items
+    assert [i["check"] for i in R2.items] == ["reset", "census"], R2.items
     assert summ["geometry"]["fill"] == 1.0
-    assert summ["latency"]["x"] == 4
+    assert summ["latency"]["x"] == 8           # 3 stations per mid slot (R3 <= 405 um, ruling 9.4)
 
 
 def test_not_abutted():
@@ -75,20 +89,52 @@ def test_layer_budget():
 
 
 def test_hop_reach():
-    e = errs(lambda p: p["die"].update(reach_um=500.0), "hops")
-    assert any("lane x" in x and "> reach 500" in x for x in e)
-    # two stations in the mid slot halve the hop -> pass at reach 500 once the latency table is regenerated
-    def two(p):
-        p["die"]["reach_um"] = 500.0
+    e = errs(lambda p: p["die"].update(reach_um=250.0), "hops")
+    assert any("lane x" in x and "> reach 250" in x for x in e)
+    # four stations in the mid slot shorten the hop (216 um) -> pass at reach 250 once the latency table is regenerated
+    def four(p):
+        p["die"]["reach_um"] = 250.0
         for s in p["partition_types"]["mid"]["ft_slots"]:
-            s["stations"] = 2
+            s["stations"] = 4
         p["latency"]["lanes"] = gen.latency_table(schema.Plan(p))
-    assert errs(two) == []
+    assert errs(four) == []
+
+
+def test_signal_reach_405_and_station_ceiling():
+    """ruling 9.3/9.4 (2026-10-24): die.reach_um is capped at the 405-um M4-M7 signal reach (WARN), ft stations
+    <= 405 um apart, a plan ft_station_max_um above 405 is an ERROR."""
+    def one(p):
+        p.clear()
+        p.update(copy.deepcopy(EX1))
+        p["die"]["reach_um"] = 1500.0
+    R, _ = g0(one)
+    e = [i["msg"] for i in R.errors()]
+    assert any("lane x" in x and "> reach 405" in x for x in e)
+    assert any("ft_station_max_um 405" in x for x in e)
+    assert any(i["check"] == "hops" and "die.reach_um 1500" in i["msg"] and i["level"] == "WARN" for i in R.items)
+    e = errs(lambda p: p["budgets"].update(ft_station_max_um=750), "stations")
+    assert any("ft_station_max_um 750 > 405" in x for x in e)
+
+
+def test_m89_signals():
+    """ruling 9.3: M8/M9 carry only the die clock spine, reset and PG; any planned signal on them is a G0 ERROR."""
+    assert errs(None, "m89_signals") == []
+    assert any("ft_reserved" in x for x in
+               errs(lambda p: p["die"]["layer_budget"]["die_use"].append("ft_reserved"), "m89_signals"))
+    assert any("lane x: route_layers" in x for x in
+               errs(lambda p: p["lanes"][1].update(route_layers=["M8", "M9"]), "m89_signals"))
+    assert any("port c0" in x for x in errs(lambda p: port(p, "c0").update(layers=["M8"]), "m89_signals"))
+    assert any("face_layers" in x for x in errs(lambda p: p["partition_types"]["mid"].update(
+        face_layers=dict(E=["M4", "M6", "M8"])), "m89_signals"))
+    assert any("ft_budget" in x for x in errs(lambda p: p["partition_types"]["mid"].update(
+        ft_budget=dict(M8=0.6)), "m89_signals"))
+    assert any("partition_signal_max M8" in x for x in errs(lambda p: p["die"]["layer_budget"].update(
+        partition_signal_max="M8"), "m89_signals"))
 
 
 def test_latency_checks():
     assert any("missing from the latency table" in x for x in errs(lambda p: p["latency"]["lanes"].pop("x")))
-    assert any("plan gives 5" in x for x in errs(lambda p: p["latency"]["lanes"]["r"].update(cycles=3)))
+    assert any("plan gives 9" in x for x in errs(lambda p: p["latency"]["lanes"]["r"].update(cycles=3)))
     assert any("no latency table" in x for x in errs(lambda p: p.pop("latency")))
 
 
@@ -113,8 +159,8 @@ def test_gen_latency_and_render():
         p = copy.deepcopy(EX)
         p.pop("latency")
         tab, sv, js = gen.write_latency(p, d)
-        assert "localparam int LAT_X = 4;" in sv.read_text()
-        assert json.loads(js.read_text())["lanes"]["r"]["cycles"] == 5
+        assert "localparam int LAT_X = 8;" in sv.read_text()
+        assert json.loads(js.read_text())["lanes"]["r"]["cycles"] == 9
         R, summ = check.run(copy.deepcopy(EX), png=Path(d) / "p.png")
         assert (Path(d) / "p.png").stat().st_size > 10000
 
@@ -393,7 +439,7 @@ def test_latency_groups_pad_to_slowest():
     """R8 (COORD 10-23, QC xt1 0/64): the lanes of one as-built bus arrive in one cycle; pads are realised as type
     stages at the destination in bus; unequal table cycles in a group or per-type pad conflicts fail G0."""
     import gen_rtl
-    p = copy.deepcopy(EX)
+    p = copy.deepcopy(EX1)
     p["latency_groups"] = [dict(name="xbus", kind="bus", lanes=["x", "cfg23"], source="BINDER2 test")]
     P = schema.Plan(p)
     assert P.lane_latency("cfg23")["cycles"] == 4 and P.lane_latency("cfg23")["pad"] == 2
@@ -408,9 +454,28 @@ def test_latency_groups_pad_to_slowest():
     rtl = gen_rtl.wrapper(schema.Plan(p), "sink", gen_rtl.bus_epochs(schema.Plan(p)))
     assert "u_bin_cfg_i_pad0" in rtl and "u_bin_cfg_i_pad1" in rtl and "u_bin_cfg_i_pad2" not in rtl
     # pads are a TYPE property: pm1 and pm2 (both 'mid') would need different cfg_i pads
-    c = copy.deepcopy(EX)
+    c = copy.deepcopy(EX1)
     c["latency_groups"] = [dict(name="bad", lanes=["x", "cfg12"])]
     assert schema.Plan(c).bus_pads()[1]
+
+
+def test_landed_group_one_depth_and_window():
+    """COORD rule 10-23 (S81-P9-R8EQ): a latency group of kind `landed` (one forwarded-clock landing ring, one K)
+    arrives at ONE group depth; its natural lane spread must stay under the landing window margin (window - 1)."""
+    p = copy.deepcopy(EX1)
+    p["latency_groups"] = [dict(name="xl", kind="landed", window=4, lanes=["x", "cfg23"])]
+    P = schema.Plan(p)
+    assert P.lane_latency("cfg23")["cycles"] == P.lane_latency("x")["cycles"] == 4 and not P.landed_skew()
+    p["latency"]["lanes"] = gen.latency_table(P)
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert [i["msg"] for i in R.errors() if i["check"] == "latency"] == []
+    p["latency_groups"][0]["window"] = 2                       # spread 2 > margin 1
+    assert schema.Plan(p).landed_skew()
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert any("landing window margin" in i["msg"] for i in R.errors())
+    import pytest
+    with pytest.raises(SystemExit):
+        gen.write_latency(p, "/tmp/_landed_test_lat")
 
 
 def test_core_ks_rules(monkeypatch):
@@ -561,8 +626,8 @@ def test_plan_completeness():
     f, _ = fields(core())
     assert f == ["internal_station"]
     assert "track_offset" in fields(core(off=False))[0]
-    good = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52],
-                 regs_um=[[400.0, 110.0], [700.0, 500.0]])]
+    good = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52],      # hops <= 405 (R3, 9.4)
+                 regs_um=[[400.0, 110.0], [650.0, 260.0], [803.52, 410.0]])]
     assert fields(core(st=good))[0] == []
     far = [dict(conn="bus:din", from_um=[0.0, 110.0], to_um=[803.52, 803.52], regs_um=[[700.0, 500.0]])]
     assert fields(core(st=far))[0] == ["internal_station"]          # first hop 1090 um
@@ -595,3 +660,65 @@ def test_core_face_broadcast_station_capture_scope():
             dict(conn='bus:din', capture='u_other.din', from_um=[0,110], to_um=[100,432], regs_um=[[100,432]])]
     assert errs(_face_core(dict(din='E', x='E'), conns=stations), 'core_faces') == []
     assert len(errs(_face_core(dict(din='W', x='E'), conns=stations), 'core_faces')) == 1
+
+
+def test_gen_latency_fold_r8():
+    """COORD 10-24 18:55: gen.py latency --fold-r8 prices the R8 landing pads per lane (cycles = base + r8_pad, largest
+    member pad of the lane); --rebase-bind moves the bind's bound depths onto this plan; --inplace keeps the base."""
+    def m(port, bits, asb, bound, lane):
+        return dict(sink_port=port, sink_bits=bits, source="u_a.o", source_bits=bits, asbuilt_stages=asb,
+                    bound_stages=bound, landed_stages=bound, lane=lane)
+    bg = dict(die="tiny", replica=[], landing=[dict(sink="u_b", sink_part="pb", src_part="pa", members=[
+        m("xi", [[0, 7]], 0, 4, "x"), m("ri", [[0, 3]], 0, 5, "r"), m("q", [[0, 0]], 0, 2, "UNPLANNED")])])
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        plan = d / "plan.json"
+        plan.write_text(json.dumps(EX1))
+        (d / "bg.json").write_text(json.dumps(bg))
+        (d / "bl.json").write_text(json.dumps(dict(buses=[dict(lane="x", plan_cycles=2), dict(lane="r", plan_cycles=5)])))
+        assert gen.main(["latency", str(plan), "--out", str(d / "a"), "--groups", str(d / "bg.json"), "--fold-r8"]) == 0
+        js = json.loads((d / "a" / "tiny_latency.json").read_text())
+        x, r = js["lanes"]["x"], js["lanes"]["r"]
+        assert (x["base"], x["r8_pad"], x["cycles"]) == (4, 1, 5) and (r["base"], r["r8_pad"], r["cycles"]) == (5, 0, 5)
+        assert "localparam int LAT_X = 5;" in (d / "a" / "tiny_lat_pkg.sv").read_text()
+        assert js["r8"]["fold"]["lanes_padded"] == 1 and js["r8"]["fold"]["not_plan_lanes"] == {"UNPLANNED": 3}
+        # rebase: the bind had x at 2 cycles, this plan has 4 -> x bound 6, offset 6 > r 5: r is padded now, x not
+        assert gen.main(["latency", str(plan), "--out", str(d / "b"), "--groups", str(d / "bg.json"), "--fold-r8",
+                         "--rebase-bind", str(d / "bl.json"), "--inplace"]) == 0
+        js = json.loads((d / "b" / "tiny_latency.json").read_text())
+        assert js["lanes"]["x"]["cycles"] == 4 and js["lanes"]["r"]["r8_pad"] == 1 and js["lanes"]["r"]["cycles"] == 6
+        assert js["r8"]["rebase"]["moved"] == 1
+        inpl = json.loads(plan.read_text())["latency"]["lanes"]
+        assert inpl["r"]["cycles"] == 5 and "r8_pad" not in inpl["r"]       # in-plan table stays base (binder, G0)
+
+
+def test_two_beat_lane():
+    """DEC12: a lane carrying word_bits in `beats` beats: port = ceil(word / beats) + beat-index bits, latency
+    word_cycles = cycles + beats - 1, census credit = word_bits."""
+    def mut(word):
+        def m(p):
+            ln = next(x for x in p["lanes"] if x["id"] == "din")
+            ln.update(beats=2, word_bits=word)
+            p["latency"]["lanes"] = gen.latency_table(schema.Plan(p))
+        return m
+    assert not errs(mut(62), "latency")                      # 32 = 31 + 1 beat bit
+    p = copy.deepcopy(EX)
+    mut(62)(p)
+    d = p["latency"]["lanes"]["din"]
+    assert d["beats"] == 2 and d["word_cycles"] == d["cycles"] + 1
+    assert any("need port width 33" in e for e in errs(mut(64), "latency"))
+
+
+def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
+    """check.run must give the Plan its directory: reset_tree.core_reset_targets resolves core pins_file from P.path."""
+    seen = []
+    real = check.S.Plan
+
+    def spy(raw, path=None):
+        P = real(raw, path)
+        seen.append(P)
+        return P
+    monkeypatch.setattr(check.S, "Plan", spy)
+    check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
+    P = seen[-1]  # schema.validate builds its own path-free structural Plan first
+    assert P.path is not None and Path(P.path).parent == tmp_path

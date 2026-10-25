@@ -1,0 +1,36 @@
+{
+  "period_ps": 833.0,
+  "insertion_ps": 290.93,
+  "insertion_tol_ps": 40.0,
+  "clock_ports": [
+    "ck"
+  ],
+  "inputs": [
+    "cr_addr",
+    "cr_re",
+    "rst_n",
+    "tw_addr",
+    "tw_d",
+    "tw_kind",
+    "tw_we"
+  ],
+  "outputs": [
+    "fault",
+    "q"
+  ],
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "time_unit_ps": 1.0,
+  "io_floor_ps": {
+    "cr_addr": 166.60000000000002,
+    "cr_re": 166.60000000000002,
+    "rst_n": 166.60000000000002,
+    "tw_addr": 166.60000000000002,
+    "tw_d": 166.60000000000002,
+    "tw_kind": 166.60000000000002,
+    "tw_we": 166.60000000000002,
+    "fault": 166.60000000000002,
+    "q": 166.60000000000002
+  },
+  "port_latency_ps": {}
+}

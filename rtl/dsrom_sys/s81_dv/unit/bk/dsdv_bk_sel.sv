@@ -44,7 +44,7 @@ module dsdv_bk_sel #(
     output wire          fault
 );
     localparam integer CB = 66, SB = 865, OB = 354;   // = `SELT_CB / `SELT_SB / `SELT_OB (ot_s81ph_sel_tile.sv)
-    wire [514:0] l0, l1, l2, l3; wire [513:0] vd;
+    wire [514:0] l0, l1, l2, l3; wire [366:0] vd;   // packed (bk_g VD_PK)
     wire [V-1:0] vi_s_r, vi_n_r; wire rck_s, rck_n;      // rung relays (+1 cycle per direction); ck_o unused
     dsfd_dvrly_276_SN u_rs (.ck(clk), .rs(rst_n), .i(vi_s), .o(vi_s_r), .ck_o(rck_s));
     dsfd_dvrly_276_NS u_rn (.ck(clk), .rs(rst_n), .i(vi_n), .o(vi_n_r), .ck_o(rck_n));
@@ -53,7 +53,7 @@ module dsdv_bk_sel #(
 `else
     dsdv_bk_g #(.V(V), .MUT(MUT)) u_g (
 `endif
-        .clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
+        .clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
         .vi_s(vi_s_r), .vo_s(vo_s), .vi_n(vi_n_r), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
     wire [4*515-1:0] ln = {l3, l2, l1, l0};
     wire [4*CB-1:0] tc; wire [3:0] tcr; wire [4*SB-1:0] fs; wire [4*OB-1:0] fo;

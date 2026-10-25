@@ -46,13 +46,24 @@ KQ_LEAF = {p: (f"hcollks_SW_p{p}", "b_kq") for p in range(4)}
 KQ_BANK = {b: (f"vmb_SW{b}", "kq") for b in range(8)}
 CAL_LAUNCH = ("calendar_SW", "launch_v")
 RELAY = re.compile(r"(rf|rh)\d+_|l12p_")
-HOP = re.compile(r"\b((?:rf|rh)\d+_\w+?|l12p_\w+?)__(o|b|eb|ck_o)\b")
+HOP = re.compile(r"\b((?:rf|rh)\d+_\w+?|l12p_\w+?)__(o|b|eb|ck_o)\b|\b(codex_r8_\d+)\b")
 
 
 def parse_instances(die_v, names):
     """{instance: (module, {port: expr})} for relay wrappers and the named sink instances."""
     inst, cur, buf = {}, None, []
     for line in Path(die_v).open():
+        # balance_programme_transport emits these complete instances on one line,
+        # with a plain output net rather than the relay's <instance>__o naming.
+        # Index by that output so trace can walk through the corrective stages.
+        pad = re.match(r"\s*ot_codex_prog_r8_pad\s*#\((.*?)\)\s+\w+\s*\((.*)\);\s*$", line)
+        if pad:
+            pp = dict(re.findall(r"\.(\w+)\(([^()]*)\)", pad[2]))
+            depth = re.search(r"\.D\((\d+)\)", pad[1])
+            if depth and re.fullmatch(r"codex_r8_\d+", pp.get("y", "")):
+                pp["_transport_depth"] = depth[1]
+                inst[pp["y"]] = ("ot_codex_prog_r8_pad", pp)
+            continue
         if cur is None:
             m = re.match(r"\s*(\w+)\s*(?:#\(.*?\))?\s+(\w+)\s*\(\s*$", line)
             if m and (RELAY.match(m[2]) or m[2] in names):
@@ -70,9 +81,11 @@ def trace(inst, name, port):
     expr, hops, seen = inst[name][1][port], [], set()
     while True:
         m = HOP.search(expr)
-        if not m or m[1] not in inst:
+        if not m:
             break
-        h = m[1]
+        h = m[1] or m[3]
+        if h not in inst:
+            break
         if h in seen:
             raise ValueError(f"relay loop at {h}")
         seen.add(h)

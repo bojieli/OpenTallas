@@ -37,15 +37,16 @@ module dsdv_gunit_l4 #(
     input  wire          g_v, input wire [3:0] g_i, input wire [4:0] g_acc, input wire [319:0] g_d,
     input  wire          j_v, input wire j_set, input wire j_w, input wire [9:0] j_row, input wire [4:0] j_lm,
     input  wire [15:0]   j_sm,
-    input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
-    output wire          hct_v, output wire [275:0] hct_b,
+    input  wire          cw_v, input wire [7:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): hct5_b / hct_b = packed CTL rows; cwo_a packed {a[9:8], a[5:0]} (L5 reads no a[7:6])
+    output wire          hct_v, output wire [169:0] hct_b,
     output reg           mix_go_s, output reg launch_s, output reg fault,
     // N face (L5)
     output wire [275:0]  rn_o,  input wire [275:0] rn_i,
     output reg           launch, output reg mx_v, output reg [4:0] mx_i, output reg [31:0] mx_y, output reg t_set, output reg t_w, output reg [9:0] t_row,
     output reg  [4:0]    t_lm, output reg [15:0] t_sm,
-    output reg           cwo_v, output reg [9:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
-    input  wire          hct5_v, input wire [275:0] hct5_b, input wire f5,
+    output reg           cwo_v, output reg [7:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
+    input  wire          hct5_v, input wire [169:0] hct5_b, input wire f5,
     // E face (L4r: the r chain)
     output reg           ss_v, output reg [31:0] ss, output reg [31:0] eps_c,
     input  wire          r_v, input wire [31:0] r_y, input wire r_f
@@ -58,7 +59,7 @@ module dsdv_gunit_l4 #(
     // ---------------------------------------------------------------- feedthroughs
     dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(rn_o));
     dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
-    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct5_b, hct5_v}), .q({hct_b, hct_v}));
+    dsdv_gunit_pass #(.W(171)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct5_b, hct5_v}), .q({hct_b, hct_v}));
     dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rq[0]), .d(sid_i), .q(sid_o));
     // ---------------------------------------------------------------- input flops
     reg o_v, wv, f5_q; reg [3:0] o_i; reg [4:0] o_acc; reg [31:0] A32, A8, B8, B16a, B16b, C16a, C16b, C8, D8, D32;
@@ -69,10 +70,14 @@ module dsdv_gunit_l4 #(
     always @(posedge clk) begin
         o_i <= g_i; o_acc <= g_acc;
         {D32, D8, C8, C16b, C16a, B16b, B16a, B8, A8, A32} <= g_d;
-        aj_set <= j_set; aj_w <= j_w; aj_row <= j_row; aj_lm <= j_lm; aj_sm <= j_sm; wa <= cw_a; wd <= cw_d;
+        aj_set <= j_set; aj_w <= j_w; aj_row <= j_row; aj_lm <= j_lm; aj_sm <= j_sm; wa <= {cw_a[7:6], 2'd0, cw_a[5:0]}; wd <= cw_d;
     end
     always @(posedge clk or negedge rq[0]) if (!rq[0]) cwo_v <= 1'b0; else cwo_v <= wv;   // cw feedthrough stage 2
-    always @(posedge clk) begin cwo_a <= wa; cwo_d <= wd; end
+`ifdef OT_RTLC_MUT_L4   // RTLC bench mutant: cwo_a packs a[6] in place of a[0]
+    always @(posedge clk) begin cwo_a <= {wa[9:8], wa[5:1], wa[6]}; cwo_d <= wd; end
+`else
+    always @(posedge clk) begin cwo_a <= {wa[9:8], wa[5:0]}; cwo_d <= wd; end
+`endif
     reg [31:0] eps_t [0:NSET-1];
     always @(posedge clk) if (wv && !wa[9] && wa[5:0] == 6'd62) eps_t[wa[8]] <= wd[255:224];
     // ---------------------------------------------------------------- A: level 1 / level 2 adders
@@ -153,7 +158,10 @@ module dsdv_gunit_l4 #(
     always @(posedge clk or negedge rq[3])
         if (!rq[3]) ss_v <= 1'b0;
         else ss_v <= root_v && root_acc == 5'd24;
-    always @(posedge clk) begin if (root_v) ss <= root; eps_c <= (MUT == 7) ? 32'd0 : eps_t[aj_set]; end
+    // S81-KITS-RTLC 10-24 (raw face_guard, 0 edges): held pin registers (ss, t_*, sticky fault) have kept internal twins
+    // that hold; each pin flop loads twin-next, never its own Q.  cw_a packed {a[9:8], a[5:0]} (a[7:6] read by no leaf).
+    (* keep = "true" *) reg [31:0] ss_k;
+    always @(posedge clk) begin if (root_v) ss_k <= root; ss <= root_v ? root : ss_k; eps_c <= (MUT == 7) ? 32'd0 : eps_t[aj_set]; end
     reg rr_v, f_r; reg [31:0] rr;                       // L4r's r: input flops
     always @(posedge clk or negedge rq[3]) if (!rq[3]) begin rr_v <= 1'b0; f_r <= 1'b0; end else begin rr_v <= r_v; f_r <= r_f; end
     always @(posedge clk) rr <= r_y;
@@ -161,25 +169,31 @@ module dsdv_gunit_l4 #(
     // ---------------------------------------------------------------- mix phase: 24 multiplies, then the tail launch
     reg m_on; reg [4:0] m_i; reg mm_v; reg [4:0] mm_i; reg [31:0] mm_a; reg mix_go;
     (* keep = "true" *) reg launch_k;                   // internal twin of the launch output flop (-> launch_s)
+    (* keep = "true" *) reg tk_set, tk_w; (* keep = "true" *) reg [9:0] tk_row; (* keep = "true" *) reg [4:0] tk_lm;
+    (* keep = "true" *) reg [15:0] tk_sm; (* keep = "true" *) reg fault_k;
+    wire ld_t = !m_on && rdone == {NACC{1'b1}} && r_ok;     // the mix start (rdone / r_ok are 0 in reset)
+    always @(posedge clk)
+        {t_set, t_w, t_row, t_lm, t_sm} <= ld_t ? {aj_set, aj_w, aj_row, aj_lm, aj_sm} : {tk_set, tk_w, tk_row, tk_lm, tk_sm};
     wire [31:0] my; wire f_mul; wire [LM:0] vm; wire [4:0] mi;
     always @(posedge clk or negedge rq[3])
         if (!rq[3]) begin
             rdone <= 25'd0; r_ok <= 1'b0; m_on <= 1'b0; mm_v <= 1'b0; mix_go <= 1'b0; mix_go_s <= 1'b0;
-            launch <= 1'b0; launch_k <= 1'b0; launch_s <= 1'b0; fault <= 1'b0;
+            launch <= 1'b0; launch_k <= 1'b0; launch_s <= 1'b0; fault <= 1'b0; fault_k <= 1'b0;
         end else begin
             mix_go <= 1'b0; launch <= 1'b0; launch_k <= 1'b0;
             if (root_v) rdone <= rdone | (25'd1 << root_acc);
             if (rr_v) begin r_ok <= 1'b1; r <= rr; end
             if (!m_on && rdone == {NACC{1'b1}} && r_ok) begin
                 m_on <= 1'b1; m_i <= 5'd0; mix_go <= 1'b1; rdone <= 25'd0; r_ok <= 1'b0;
-                t_set <= aj_set; t_w <= aj_w; t_row <= aj_row; t_lm <= aj_lm; t_sm <= aj_sm;
+                tk_set <= aj_set; tk_w <= aj_w; tk_row <= aj_row; tk_lm <= aj_lm; tk_sm <= aj_sm;
             end
             if (m_on) begin m_i <= m_i + 5'd1; if (m_i == 5'd23) m_on <= 1'b0; end
             mm_v <= m_on; mm_i <= m_i;
             if (vm[LM] && mi == 5'd23) begin launch <= 1'b1; launch_k <= 1'b1; end
             mix_go_s <= mix_go; launch_s <= launch_k;
             if (f1 | f2 | f3 | f4 | f5a | f6 | f7 | f8 | (|t_f) | f_r | f_mul | f5_q
-                | (root_v && rdone[root_acc]) | (mix_go && !aj_v) | (qs[DQ - 2] && q_on && q_i != 5'd19)) fault <= 1'b1;
+                | (root_v && rdone[root_acc]) | (mix_go && !aj_v) | (qs[DQ - 2] && q_on && q_i != 5'd19)) begin fault_k <= 1'b1; fault <= 1'b1; end
+            else fault <= fault_k;
         end
     always @(posedge clk) mm_a <= proj[m_i];
     ot_hdc_qmul_lat #(.LAT(LM)) u_mul (clk, rq[3], mm_v, mm_a, r, my, f_mul);

@@ -282,3 +282,64 @@ def test_tcl_hooks_complete():
     tb = (HERE / "tap_balance.tcl").read_text()
     assert "OT_CORE_LAT" in tb and "OT_TAP_CORE" in tb and "^clk(_t[0-9]+|_c[0-9]+)?$" in tb
     assert "OT_CORE_TAPS" in (HERE / "clock_taps.tcl").read_text()
+
+
+def test_reach_leaf_out_bits_distinct():
+    """CLOCK-RESET/cp1 10-25 (reach405R r1: 1230 frame_int_o0 pin registers fed by 384 Yosys-merged leaf flops, one flop
+    -> 3-4 face flops 166-254 um apart, D-pin slew 400-436 ps): a narrow in bus folded into a wide out bus gives every
+    out bit its own non-constant XOR term set, so no output pin register shares a source register."""
+    import pair
+    import re
+    ins = [("i0", 384)]
+    outs = [("o0", 1230), ("o1", 268)]
+    geo = {"i0": (300, 1226), "o0": (140, 1226), "o1": (310, 0)}
+    v, _ = pair.proof_leaf("m", ins, outs, (), geo=geo, hop_um=364.5)
+    seen = set()
+    for ln in v.splitlines():
+        if "_s0 <= {" not in ln:
+            continue
+        body = ln.split("<= {", 1)[1].rsplit("}", 1)[0]
+        for term in body.split(", "):
+            ts = frozenset(re.findall(r"q\[(\d+)\]", term))
+            assert ts and ts not in seen      # non-constant, never a duplicate (across out buses too)
+            seen.add(ts)
+    assert len(seen) == 1230 + 268
+
+
+def test_reach_leaf_no_cross_face_paths():
+    """CP1-R10 (reach405 r1 12:2x: the legacy all-bus XOR fold made 1-1.4 mm unpipelined face -> leaf paths, TT -241.76,
+    1234 slew violations): the reach leaf feeds every out bus from its nearest in bus(es) only, pipelined per hop."""
+    import pair
+    ins = [("a_i", 8), ("b_i", 4)]
+    outs = [("a_o", 6), ("b_o", 3)]
+    geo = {"a_i": (0, 0), "a_o": (0, 100), "b_i": (1000, 0), "b_o": (1000, 50)}
+    plan = pair.reach_plan(ins, outs, geo, 364.5)
+    assert plan == {"a_o": [("a_i", 100, 0)], "b_o": [("b_i", 50, 0)]}
+    far = {"a_i": (0, 0), "a_o": (2000, 0), "b_i": (0, 10), "b_o": (2000, 10)}
+    p2 = pair.reach_plan(ins, outs, far, 364.5)
+    assert p2["a_o"][0][2] == 2 and p2["b_o"][0][2] == 2       # ceil(2000 / 364.5) = 6 hops -> 2 stages
+    v, _ = pair.proof_leaf("m", ins, outs, (), geo=geo, hop_um=364.5)
+    # a_o only reads q bits of a_i (cat = {a_i, b_i}: a_i = q[11:4], b_i = q[3:0])
+    import re
+    line = [ln for ln in v.splitlines() if "f_a_o_a_i_s0 <=" in ln][0]
+    assert all(int(m) >= 4 for m in re.findall(r"q\[(\d+)\]", line))
+    line = [ln for ln in v.splitlines() if "f_b_o_b_i_s0 <=" in ln][0]
+    assert all(int(m) < 4 for m in re.findall(r"q\[(\d+)\]", line))
+    v2, _ = pair.proof_leaf("m", ins, outs, (), geo=far, hop_um=364.5)
+    assert "f_a_o_a_i_s2 <= f_a_o_a_i_s1" in v2 and "a_o <= f_a_o_a_i_s2" in v2
+    # every in bit is read by some out fold (no dead input)
+    used = {int(m) for ln in v.splitlines() if "_s0 <=" in ln for m in re.findall(r"q\[(\d+)\]", ln)}
+    assert used == set(range(12))
+
+
+def test_reach_leaf_default_and_leaves_only(tmp_path):
+    import pair
+    raw = json.loads((HERE / "examples" / "s81_pair" / "s81_pair_plan.json").read_text())
+    P = S.Plan(raw)
+    a, b = list(P.parts)[:2]
+    plan, leaves = pair.extract(raw, [a, b])
+    assert "pipeline stage(s)" in leaves
+    plan2, leaves2 = pair.extract(raw, [a, b], leaf="fold")
+    assert "pipeline stage(s)" not in leaves2
+    txt = pair.leaves_for(plan)
+    assert "pipeline stage(s)" in txt and txt.count("_proof_leaf (") == len(plan["partition_types"])

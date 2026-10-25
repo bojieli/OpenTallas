@@ -42,6 +42,12 @@ def test_inserts_and_sites(tmp_path):
     tcl = (kd / "istations.tcl").read_text()
     assert "is_place {*u_ist_i_a_0[./]*} 3 0 ist:i_a" in tcl
     assert "is_place {*u_c0[./]*} 12 22 cell:c0" in tcl
+    # re-application with more planned stations extends the chain after the last one (in bus)
+    plan["partition_types"]["t"]["internal_stations"][0]["regs_um"].append([8, 0])
+    pf.write_text(json.dumps(plan))
     r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
                        capture_output=True, text=True)
-    assert r.returncode != 0 and "already inserted" in r.stderr
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_part_bound.sv").read_text()
+    assert "u_ist_i_a_2 (.clk(clk), .rst_n(rst_n), .d(i_a_is1_q)" in sv
+    assert ".a(i_a_is2_q[0])" in sv and sv.count("u_ist_i_a_1 (") == 1 and ".q(i_a_is1_q)" in sv

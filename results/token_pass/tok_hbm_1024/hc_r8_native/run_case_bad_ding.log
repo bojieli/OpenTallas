@@ -1,0 +1,4 @@
+HC_ENG_FAULT t=34 seq=0 ev=0 ps=0 qf=0011 core=0 mix=0 tbl=0 tail=0 tfl=0
+[285000] %Fatal: tb_hbm_hc_eng4_static.sv:136: Assertion failed in tb_hbm_hc_eng4_static: engine fault
+%Error: rtl/test/tb_hbm_hc_eng4_static.sv:136: Verilog $stop
+Aborting...

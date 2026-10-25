@@ -1,0 +1,1 @@
+Native dsfd_node_LLd view (S81 network node, 43.2x77.76 um, 8.3k cells). Uniform SIGNED: TT setup 17.39 ps, FF hold 5.27 ps; DRV/DRC/antenna PASS/PASS/PASS; sdc_lint/face_guard PASS/PASS; pin audit 195/195. Clock insertion balanced to 250 ps (budget). Source staged in source/. Routed abstract + TT/FF timing models.

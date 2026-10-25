@@ -1,0 +1,513 @@
+{
+ "col_h9_l4_lp_r0": {
+  "xo_o0": {
+   "max": 0,
+   "fields": {
+    "xo_o0": {
+     "bits": "1103:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "ret_o0": {
+   "max": 0,
+   "fields": {
+    "ret_o0": {
+     "bits": "69:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_6_d": {
+     "bits": "282:0",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_7_d": {
+     "bits": "548:283",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_8_d": {
+     "bits": "563:549",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_9_d": {
+     "bits": "1099:564",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_16_d": {
+     "bits": "1165:1100",
+     "max": 0,
+     "min": 0
+    },
+    "lpr_root": {
+     "bits": "1166:1166",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ },
+ "col_h9_l4_lp_r1": {
+  "frame_int_o1": {
+   "max": 3,
+   "fields": {
+    "lpl_0_d": {
+     "bits": "65:0",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_1_d": {
+     "bits": "66:66",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_14_d": {
+     "bits": "132:67",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_15_d": {
+     "bits": "195:133",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_20_d": {
+     "bits": "197:196",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_22_d": {
+     "bits": "260:198",
+     "max": 1,
+     "min": 1
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_5_d": {
+     "bits": "65:0",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_10_d": {
+     "bits": "348:66",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_11_d": {
+     "bits": "614:349",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_12_d": {
+     "bits": "629:615",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_13_d": {
+     "bits": "1165:630",
+     "max": 3,
+     "min": 3
+    },
+    "lpr_root__ft1": {
+     "bits": "1166:1166",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ },
+ "col_h9_l4_lp_r2": {
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_2_d": {
+     "bits": "62:0",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_3_d": {
+     "bits": "125:63",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_4_d": {
+     "bits": "126:126",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_17_d": {
+     "bits": "192:127",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_18_d": {
+     "bits": "255:193",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_19_d": {
+     "bits": "318:256",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_21_d": {
+     "bits": "320:319",
+     "max": 3,
+     "min": 3
+    }
+   }
+  }
+ },
+ "col_h9_l4_lp_r0_nx": {
+  "ret_o0": {
+   "max": 0,
+   "fields": {
+    "ret_o0": {
+     "bits": "69:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_6_d": {
+     "bits": "282:0",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_7_d": {
+     "bits": "548:283",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_8_d": {
+     "bits": "563:549",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_9_d": {
+     "bits": "1099:564",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_16_d": {
+     "bits": "1165:1100",
+     "max": 0,
+     "min": 0
+    },
+    "lpr_root": {
+     "bits": "1166:1166",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ },
+ "col_h10_l4_lp_r0": {
+  "xo_o0": {
+   "max": 0,
+   "fields": {
+    "xo_o0": {
+     "bits": "1103:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "ret_o0": {
+   "max": 0,
+   "fields": {
+    "ret_o0": {
+     "bits": "69:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 4,
+   "fields": {
+    "lpl_0_d": {
+     "bits": "282:0",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_1_d": {
+     "bits": "548:283",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_18_d": {
+     "bits": "563:549",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_20_d": {
+     "bits": "617:564",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_21_d": {
+     "bits": "619:618",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_22_d": {
+     "bits": "621:620",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_24_d": {
+     "bits": "659:622",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_25_d": {
+     "bits": "660:660",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_26_d": {
+     "bits": "726:661",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_32_d": {
+     "bits": "1262:727",
+     "max": 4,
+     "min": 4
+    },
+    "lpr_root": {
+     "bits": "1263:1263",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ },
+ "col_h10_l4_lp_r1": {
+  "frame_int_o1": {
+   "max": 3,
+   "fields": {
+    "lpl_2_d": {
+     "bits": "62:0",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_3_d": {
+     "bits": "125:63",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_4_d": {
+     "bits": "191:126",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_5_d": {
+     "bits": "192:192",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_11_d": {
+     "bits": "258:193",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_12_d": {
+     "bits": "260:259",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_13_d": {
+     "bits": "262:261",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_14_d": {
+     "bits": "264:263",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_23_d": {
+     "bits": "266:265",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_10_d": {
+     "bits": "65:0",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_15_d": {
+     "bits": "348:66",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_16_d": {
+     "bits": "614:349",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_17_d": {
+     "bits": "1150:615",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_19_d": {
+     "bits": "1165:1151",
+     "max": 3,
+     "min": 3
+    },
+    "lpl_27_d": {
+     "bits": "1228:1166",
+     "max": 0,
+     "min": 0
+    },
+    "lpr_root__ft1": {
+     "bits": "1229:1229",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ },
+ "col_h10_l4_lp_r2": {
+  "frame_int_o0": {
+   "max": 3,
+   "fields": {
+    "lpl_6_d": {
+     "bits": "65:0",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_7_d": {
+     "bits": "128:66",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_8_d": {
+     "bits": "191:129",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_9_d": {
+     "bits": "192:192",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_28_d": {
+     "bits": "255:193",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_29_d": {
+     "bits": "318:256",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_30_d": {
+     "bits": "381:319",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_31_d": {
+     "bits": "383:382",
+     "max": 3,
+     "min": 3
+    }
+   }
+  }
+ },
+ "col_h10_l4_lp_r0_nx": {
+  "ret_o0": {
+   "max": 0,
+   "fields": {
+    "ret_o0": {
+     "bits": "69:0",
+     "max": 0,
+     "min": 0
+    }
+   }
+  },
+  "frame_int_o0": {
+   "max": 4,
+   "fields": {
+    "lpl_0_d": {
+     "bits": "282:0",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_1_d": {
+     "bits": "548:283",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_18_d": {
+     "bits": "563:549",
+     "max": 4,
+     "min": 4
+    },
+    "lpl_20_d": {
+     "bits": "617:564",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_21_d": {
+     "bits": "619:618",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_22_d": {
+     "bits": "621:620",
+     "max": 1,
+     "min": 1
+    },
+    "lpl_24_d": {
+     "bits": "659:622",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_25_d": {
+     "bits": "660:660",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_26_d": {
+     "bits": "726:661",
+     "max": 0,
+     "min": 0
+    },
+    "lpl_32_d": {
+     "bits": "1262:727",
+     "max": 4,
+     "min": 4
+    },
+    "lpr_root": {
+     "bits": "1263:1263",
+     "max": 0,
+     "min": 0
+    }
+   }
+  }
+ }
+}

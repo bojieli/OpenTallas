@@ -140,7 +140,7 @@ def main():
                die_v=str(a.die_v), die_v_sha256=hashlib.sha256(a.die_v.read_bytes()).hexdigest(),
                kit=str(a.kit), obj=str(a.obj), idle_run=str(a.idle_run), ks_user=a.ks_user,
                fixture_meta_sha256=hashlib.sha256(a.fixture_meta.read_bytes()).hexdigest(),
-               full_stage=False, full_token=False, global_clock_route_phase_qualified=False,
+               profile='canonical (BK addressed-drain sink, COORD 10-24 18:55)', full_stage=False, full_token=False, global_clock_route_phase_qualified=False,
                verdict='RUNNING', jobs=[], mutants=[])
 
     def save():

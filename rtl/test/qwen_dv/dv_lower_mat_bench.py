@@ -247,9 +247,12 @@ def calibrate(work, seed):
         land = t
         # The ARF-enabled positive vehicle must have one root framer arm per
         # eight-word probe, before its first AR word. ARF=0 ignores the arm.
-        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
-        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         far = land + 10
+        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
+        # TOK-QK/S8B 10-25: the STN lands M.STN_LEAD edges before the first far word (the compiler's rule, after the
+        # near words that run SK ahead).  It used to land 10 before far = inside the near words: the s8 / safe stations
+        # (cfg_schedule_fault: cfg_v landing while rs / nb words land) fault on that; slice2 tolerated it.
+        ev.cmd(far - M.STN_LEAD - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         for j in range(8):
             LB_pair(ev, s, v(), v(), v(), v(), far + j)
         probes[s] = far
@@ -266,7 +269,7 @@ def calibrate(work, seed):
     ev.cmd(t + 2, D.cmd_amax(0, arx=1))
     t += 30
     for s in (0, 5):
-        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1, kc=1))
+        ev.cmd(t + 10 - M.STN_LEAD - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1, kc=1))   # as above
     for j in range(8):
         for s in (0, 5):
             LB_pair(ev, s, v(), v(), v(), v(), t + 10 + j)
@@ -440,6 +443,9 @@ def okey(v):
     return (~v & 0xFFFFFFFF) if v >> 31 else (v | 0x80000000)
 
 
+SLICE_AGES = dict(ages=None)   # --slice-ages: the vehicle's measured slice ages (lm ROOT fields)
+
+
 def run_lm(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
@@ -451,7 +457,7 @@ def run_lm(work, ages, rng, mutant):
     t, _ = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
     row0 = 0
-    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True)
+    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True, slice_ages=SLICE_AGES['ages'])
     lo_e = min(c['edge'] for c in ch.commands())
     base = t + 20 - lo_e
     put_chain(ev, base, ch.commands())
@@ -545,6 +551,7 @@ def main():
     ap.add_argument('--run', choices=sorted(RUNS))
     ap.add_argument('--mutant')
     ap.add_argument('--ages', default=None)
+    ap.add_argument('--slice-ages', default=None, help='slice_ages.json of THIS vehicle (dv_lower_bench.py --calibrate); lm needs it')
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--arf', action='store_true', help='QW-LAYERGAP: expect the framed AR words (build with '
                     'DV_LOWER_VFLAGS=-GARF=1): tag = XC tag on every word, last only on the message\'s last word')
@@ -561,6 +568,8 @@ def main():
         z = np.load(a.fixture)
         FIX.update({k: z[k] for k in z.files})
     ages = M.load_ages(a.ages or M.STN_AGES)
+    if a.slice_ages:
+        SLICE_AGES['ages'] = D.load_ages(a.slice_ages)
     rng = np.random.default_rng(a.seed)
     try:
         ok, n, errs, info = RUNS[a.run](work, ages, rng, a.mutant)

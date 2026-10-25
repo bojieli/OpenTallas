@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tokds.comp_receipt.v1",
+ "bench": "dsdv_idx_tx_i13 rank-aware indexed13 TX helper, REWRITE (SRAM candidate rows, O(1) write-time ordered duplicate check, streaming merge-join; no 1024-way compare)",
+ "stage": "attn.gather: runtime-index selected-row read + V-beat transmit per job (K=512 selected rows per rank, C=1024 candidates); command edge -> JOB_DONE",
+ "op": "attn.gather",
+ "cycles": 554,
+ "replaces": "logic",
+ "verdict": "PASS",
+ "mutant": "CAUGHT",
+ "mutants": {"miss": "CAUGHT (st 0089)", "duplicate": "CAUGHT (st 0029)", "wrongtag": "CAUGHT (st 0089, 80 mismatches)", "wrongq/order/idorder": "CAUGHT (summary_s.json)", "same-bank two-job overlap": "CAUGHT (st 00a9)"},
+ "rtl": "claude/s81-i13r-1025@36364ebdb (RTL e3feef588)",
+ "evidence": "claude/s81-i13r-1025@36364ebdb results/s81_i13r_1025/bench/out/summary_s.json (native ASAP7 SRAM models: cam/skip/twosrc 554, dense 550) + summary_r3.json (R3 random-init flops 552) + bench/multi/summary.json (two-job 174/174 beats 0 mismatch, dones 552 apart from accepts)",
+ "measured": {"issue_to_done": 554, "first_lookup": 33, "first_output": 53, "output_span": 501},
+ "slot_mapping": "same slot as 1a602bbe9 (612): replaces the logic of DAG op attn.gather (old measured 607.5 cyc/instance)",
+ "pending": "554 is PENDING S81 source/synth adoption of the rewrite (S81 lane owns it): no synth fit, no P&R, not on the S81 release netlist yet"
+}

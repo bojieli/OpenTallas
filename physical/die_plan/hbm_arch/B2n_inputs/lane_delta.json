@@ -1,0 +1,349 @@
+{
+ "schema": "opentallas.hbm_b2n.lane_delta.v2",
+ "source": {
+  "file": "results/arch/hbm_arch_1024/b2_delays.json",
+  "branch": "claude/hbm-bind-1024r",
+  "commit": "818651e99 (file last changed 7994e6a60b5894533c8ad92437bc6788a816a170)",
+  "blob": "ed98a2a5004c69a604012d57343fda4431c11181",
+  "plan_measured": "B2n claude/hbm-b2n-1024@160c8579c (lane extract b2_delay_inputs/B2n_lanes.json)",
+  "how": "need = unique RTL source bits per (src part, dst part, kind) from tools/hbm_b2/b2_delays.py over the B2 die top (b2_top.py over b2_bind_wiring.json); reproduced locally (capacity_over 26 / no_lane 7 identical) and broken down per source port"
+ },
+ "rule": "need = RTL bits; the plan's per-lane epoch bit (schema.has_epoch) is extra and NOT counted.  A mirrored bundle (NW pair / NE pair, one bus per replicated type) is sized to max(need NW, need NE).  A bundle may be carried by several lanes on different paths (b2_delays sums their widths; the binder pads to the slowest).  Widths only grow.  b2n.py checks every bundle's capacity after the delta.",
+ "bundles": [
+  {
+   "src": "NW_hub",
+   "dst": "NW_su01",
+   "kind": "data",
+   "need": [
+    2999,
+    2999
+   ],
+   "why": "+1 = subr_Q bridge_rst_n (real RTL reset bit, not the epoch bit)"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su10",
+   "kind": "data",
+   "need": [
+    2999,
+    2999
+   ],
+   "why": "+1 = subr_Q bridge_rst_n"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "kind": "data",
+   "need": [
+    2999,
+    2999
+   ],
+   "why": "+1 = subr_Q bridge_rst_n"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "kind": "data",
+   "need": [
+    2999,
+    2999
+   ],
+   "why": "+1 = subr_Q bridge_rst_n"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b003",
+   "kind": "data",
+   "need": [
+    2335,
+    2335
+   ],
+   "why": "+1 = hcb fb_rst_n_o (hc ring reset forward)"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b010",
+   "kind": "data",
+   "need": [
+    2335,
+    2335
+   ],
+   "why": "+1 = hcb fb_rst_n_o"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b001",
+   "kind": "data",
+   "need": [
+    267,
+    267
+   ],
+   "why": "+1 = hcb fa_rst_n_o"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b012",
+   "kind": "data",
+   "need": [
+    267,
+    267
+   ],
+   "why": "+1 = hcb fa_rst_n_o"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "kind": "data",
+   "need": [
+    267,
+    267
+   ],
+   "why": "+1 = hc_Q rstb_e"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": [
+    3344,
+    3376
+   ],
+   "why": "VM ring cw/ccw 2224 + COLL rings A/B 4 x 280 (+ obs r_d 32 NE->NW)"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "kind": "data",
+   "need": [
+    3749,
+    2709
+   ],
+   "why": "NW 3117 (tkx TKM 2,180 + cfg, VM cr 548, status) + 632 hb_coll_NW / epcal_NW -> ep_S1 relayed through root; NE 2709 (vmb rr4 8 x 257, cfg leaf)"
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": [
+    5916,
+    6286
+   ],
+   "why": "NW 5301 + 615 ep_S1 -> hb_coll_NW relayed through root; NE 6286 (idx index_rr 2,056, link tx 2,180, hc result 768, su_prog, host cfg)"
+  },
+  {
+   "src": "NW_mcb",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": [
+    140,
+    140
+   ],
+   "why": "139 ctl + refcfg_Q pc_rst_n (b2_delays maps this data bit onto ctl lane L82: lane() falls back to the other kind)"
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": [
+    615,
+    615
+   ],
+   "why": "ep_S0 / ep_S3 -> hb_coll_Q rx_pin_flit 612 + rx_pin_v + phy_up + fault (hleaf t_fault)"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "kind": "data",
+   "need": [
+    632,
+    632
+   ],
+   "why": "hb_coll_Q tx_pin_flit 612 + tx_pin_v + epcal_Q payload 19 -> ep_S0 / ep_S3"
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "kind": "data",
+   "need": [
+    615
+   ],
+   "why": "ep_S1 (single centre SerDes) -> root, re-driven to NW_hub inside the root->NW_hub bundle"
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "kind": "data",
+   "need": [
+    632
+   ],
+   "why": "hb_coll_NW tx + epcal_NW -> ep_S1, arriving at root inside the NW_hub->root bundle"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "kind": "data",
+   "need": [
+    9,
+    9
+   ],
+   "why": "cp_svg_NW0 run_arg 8 + run_v -> hb_router_ids; NE mirror (cp_svg_NW4) needs a root sink (OPEN, HBM-BIND)"
+  }
+ ],
+ "widen": [
+  {
+   "lanes": [
+    "L0"
+   ],
+   "width": [
+    2999
+   ]
+  },
+  {
+   "lanes": [
+    "L1"
+   ],
+   "width": [
+    2999
+   ]
+  },
+  {
+   "lanes": [
+    "L2"
+   ],
+   "width": [
+    2999
+   ]
+  },
+  {
+   "lanes": [
+    "L3"
+   ],
+   "width": [
+    2999
+   ]
+  },
+  {
+   "lanes": [
+    "L10"
+   ],
+   "width": [
+    2335
+   ]
+  },
+  {
+   "lanes": [
+    "L11"
+   ],
+   "width": [
+    2335
+   ]
+  },
+  {
+   "lanes": [
+    "L71"
+   ],
+   "width": [
+    267
+   ]
+  },
+  {
+   "lanes": [
+    "L72"
+   ],
+   "width": [
+    267
+   ]
+  },
+  {
+   "lanes": [
+    "L73"
+   ],
+   "width": [
+    267
+   ]
+  },
+  {
+   "lanes": [
+    "L82"
+   ],
+   "width": [
+    140
+   ]
+  },
+  {
+   "lanes": [
+    "L12",
+    "L13"
+   ],
+   "width": [
+    3143,
+    3143
+   ],
+   "why": "upper b-row (hub E face at b102 0.73 -> ~0.90); placed at the high end of each face so the b-row tiles' own lanes keep their windows (q_b011 hcb sum_in core-face check)",
+   "place": "high"
+  },
+  {
+   "lanes": [
+    "L74"
+   ],
+   "width": [
+    1491
+   ],
+   "why": "S path hub-spu1-su30-su31-root, sized to the NW_su30 / NE_su30 vertical cut (<= 0.6 of the M4/M6 tracks)"
+  }
+ ],
+ "new": [
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "kind": "data",
+   "width": 560,
+   "mirror": true,
+   "via": [
+    "NW_spu0",
+    "NW_su10",
+    "NW_su11",
+    "root",
+    "NE_su11",
+    "NE_su10",
+    "NE_spu0"
+   ],
+   "why": "ring bundle second lane (L4 2816 + 560): the hub E face at b100 is full (0.92)"
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "kind": "data",
+   "width": 615,
+   "mirror": true
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "kind": "data",
+   "width": 632,
+   "mirror": true
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "kind": "data",
+   "width": 615,
+   "mirror": false
+  },
+  {
+   "src": "root",
+   "dst": "vsN0",
+   "kind": "data",
+   "width": 632,
+   "mirror": false
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "kind": "data",
+   "width": 9,
+   "mirror": true
+  }
+ ]
+}

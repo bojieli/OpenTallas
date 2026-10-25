@@ -251,10 +251,13 @@ def core(inst, view, cells, x, y, um, orient="R0"):
     def sh(mirrored):
         return round((0.036 - um) % 0.048, 4) if mirrored else 0.012
     track = [sh(orient in ("MY", "R180")), sh(orient in ("MX", "R180"))]
+    # 10-24: the rebuilt element views (tools/s81_head/hd_elemA_rebuild.py, SIGNED kits) live in cores/views_rb and
+    # replace the legacy closed views once present (same pins; 0.192 clk terminal; +1 output stage, reset relay)
+    vd = "views_rb" if (ROOT / f"physical/die_plan/s81_head/cores/views_rb/{cv}/{cv}.lef").exists() else "views"
     return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient=orient,
                 track_offset_um=track, pins_file=f"cores/{view}_pins.json",
-                lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
-                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_tt.lib",
+                lef=f"physical/die_plan/s81_head/cores/{vd}/{cv}/{cv}.lef",
+                lib=f"physical/die_plan/s81_head/cores/{vd}/{cv}/{cv}_tt.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
                      f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed {cv} "
                      "(tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point "
@@ -286,7 +289,7 @@ HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
 T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, params={"CV": "1"},
+                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "3"},
                  bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
                  note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
                       "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
@@ -331,7 +334,8 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
 T("hd_serdes", "ot_s81hd_serdes", (SW, SH), 0,
   contents=[dict(inst="u_phy", module="ot_pdie_serdes", status="reuse",
                  note="same PHY model, slot and bump field as the layer die's serdes partitions")],
-  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops")
+  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate "
+       "VDDPHY domain (die.pg.domains, OWNER 10-24 decision 7) with dedicated bump rows over its window")
 BUS("hd_serdes", "coll_i0", "in", 512, "u_phy.tx")
 BUS("hd_serdes", "coll_o0", "out", 514, "u_phy.rx")
 
@@ -377,6 +381,13 @@ BUS("hd_lep0N", "lepk_o0", "out", 1104)
 BUS("hd_lep0N", "lepf_i0", "in", 1, kind="ctl")
 BUS("hd_lep0N", "unit_i0", "in", 45, kind="ctl")
 BUS("hd_lep0N", "ctrl_o0", "out", 32, kind="ctl")
+# S81-HEAD/ADAPT 10-25 (COORD ruling (3) 03:45, H4 option A on the layer die, claude/s81-h4-1024r): the s_0N_LP content
+# carries the index rank-tree ports tl_i / ca_o / cb_o (ot_s81sl_lep_mu_ab_idx IDX slot mux / demux, 276 b each).  On the
+# head die their partner is the ctl (it stands where bk_sel's dsdv_idx_tx / dsdv_idx_vmux stand on the layer die):
+# 3 registered 276-b lanes, 1 beat a word (results/arch/s81_head_1025/ADAPTER.md).  No tie-off, no open input.
+BUS("hd_lep0N", "tl_i", "in", 276)
+BUS("hd_lep0N", "ca_o", "out", 276)
+BUS("hd_lep0N", "cb_o", "out", 276)
 
 T("hd_ctl", "ot_s81hd_ctl", (FW, FH), MD["blocks"]["ctl"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_ctl", status="rework",
@@ -385,7 +396,8 @@ T("hd_ctl", "ot_s81hd_ctl", (FW, FH), MD["blocks"]["ctl"]["cells"],
 for b, d, wd in (("lepk_i0", "in", 1104), ("lepk_o0", "out", 1104), ("lepf_o0", "out", 1), ("unit_o0", "out", 45),
                  ("ctrl_i0", "in", 32), ("x_o", "out", 565), ("b_i", "in", 565), ("h_tx_o", "out", 276),
                  ("h_rx_i", "in", 276), ("a_tx_o", "out", 64), ("a_rx_i", "in", 64), ("b7_tx_o", "out", 64),
-                 ("b7_rx_i", "in", 64), ("n_tx_o", "out", 64), ("n_rx_i", "in", 64)):
+                 ("b7_rx_i", "in", 64), ("n_tx_o", "out", 64), ("n_rx_i", "in", 64),
+                 ("tl_o", "out", 276), ("ca_i", "in", 276), ("cb_i", "in", 276)):
     BUS("hd_ctl", b, d, wd, kind="ctl" if wd <= 64 and b.startswith(("lepf", "unit", "ctrl")) else "data")
 SLOT("hd_ctl", "w3u", 514, 0)
 SLOT("hd_ctl", "w3d", 512, 0)
@@ -436,7 +448,7 @@ for rp in range(RP):
         P(f"tW{rp}b{j}", "hd_tile", X_SP - (j + 1) * TW, yb, "R0")         # back: W -> E
 
 # =================================================================================================== seeds
-TWIN = (SLOT_E * 2 + G, SLOT_E * 2 + G + 300.0)          # tile chain window (type frame y), upper third of the tile
+TWIN = (SLOT_E + G, SLOT_E + G + 300.0)   # tile chain window (type frame y): 10-24 lowered from the upper third (700..1000) to 354..654 = the A centre row channel + top A row (hd_tile preview review: x_q -> A x pins 600-700 um)
 seed("hd_tile", "o", "E", TWIN[0], hi=TWIN[1])
 seed("hd_tile", "i", "W", TWIN[0], hi=TWIN[1])
 seed("hd_turn_a", "t_i", "W", TWIN[0], hi=TWIN[1])
@@ -482,6 +494,8 @@ for b in ("lepk_o0", "lepk_i0", "coll_o3", "coll_i3"):
     y = seed("hd_lep0N", b, "E", y, per_um=4.5, order="lsb_high" if b.endswith("3") else "lsb_low") + 10.0
 for b in ("lepf_i0", "unit_i0", "ctrl_o0"):
     y = seed("hd_lep0N", b, "E", y, hi=y + 20.0) + 10.0
+for b in ("tl_i", "ca_o", "cb_o"):      # H4 (ADAPT 10-25): same E face, above the control buses
+    y = seed("hd_lep0N", b, "E", y, per_um=4.5) + 10.0
 assert y < FH - 20
 pair_seed("hd_st_n3", "u2_o", "d2_i", "E", Y1)
 pair_seed("hd_st_k5", "u_o", "d_i", "E", Y1)
@@ -532,6 +546,10 @@ PATH("ku", [("lep0N", "lepk_o0"), ("ctl", "lepk_i0")], "LAT_HD_KU")
 PATH("lepf", [("ctl", "lepf_o0"), ("lep0N", "lepf_i0")])
 PATH("unit_lep", [("ctl", "unit_o0"), ("lep0N", "unit_i0")])
 PATH("ctrl_lep", [("lep0N", "ctrl_o0"), ("ctl", "ctrl_i0")])
+# H4 index rank-tree lanes (ADAPT 10-25): ctl tl_o -> lep tl_i, lep ca_o / cb_o -> ctl (abutted k5 | k6 seam)
+PATH("h4_tl", [("ctl", "tl_o"), ("lep0N", "tl_i")], "LAT_HD_H4_TL")
+PATH("h4_ca", [("lep0N", "ca_o"), ("ctl", "ca_i")], "LAT_HD_H4_CA")
+PATH("h4_cb", [("lep0N", "cb_o"), ("ctl", "cb_i")], "LAT_HD_H4_CB")
 # stage circuit: WN0 abutted, WN1 / WN2 via N k3 / k4 (+ k1 / k2), WN3 through the ctl
 PATH("coll_WN0_u", [("lk_WN0", "coll_o0"), ("lep0N", "coll_i0")])
 PATH("coll_WN0_d", [("lep0N", "coll_o0"), ("lk_WN0", "coll_i0")])
@@ -638,21 +656,29 @@ plan = dict(
     note="S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/"
          "s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die "
          "(253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die "
-         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST).",
+         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). "
+         "PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes "
+         "window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the "
+         "VDDPHY domains. Reset (decision 13): reset.release wavefront (tools/die_plan/reset_tree.py).",
     die=dict(name="s81_head", label="DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)", tech="asap7",
-             outline_um=[W, H], period_ps=833, reach_um=1500.0, rep_um=450.0, grid_um=G,
+             outline_um=[W, H], period_ps=833, reach_um=405.0, rep_um=450.0, grid_um=G,   # DEC12: 405-um M4-M7 hop
              layer_budget=dict(partition_signal_max="M7", die_layers=["M8", "M9"],
-                               die_use=["clock_spine", "pg", "ft_reserved"], cut_avail={"M8": 0.6, "M9": 0.6}),
+                               # DEC12 (ruling 9.3): M8/M9 = clock spine, reset, PG only (no ft_reserved)
+                               die_use=["clock_spine", "pg"]),
              pg=dict(partition_pg_max="M7",
                      grid=[dict(layer="M8", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"]),
-                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])]),
+                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])],
+                     # OWNER DECISION 7: die.pg.domains (VDDPHY per SerDes window) are added below from die.io
+                     ),
+
              channels=channels),
     partition_types=types, partitions=parts, ports=ports, lanes=lanes,
     clock=dict(source=dict(part="@die", bus="clk"), insertion_ps=250, common_latency_ps=250, insertion_tol_ps=40,
                neighbour_skew_ps=80, face_xing="budgeted",
                spine=dict(layers=["M8", "M9"], root_um=[lat(W / 2), lat(H / 2)], topology="htree")),
+    # DEC12 batch: OWNER DECISION 13 neighbour wavefront (one root sync per die + registered rst_o relays; reset_tree.py)
     reset=dict(source=dict(part="@die", bus="rst_n"), sync_stages=2, data_reset=False, epoch_bit=True,
-               release="counted"),
+               release="wavefront"),
     census={"none": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the "
                     "bottom-up H10 die chain used a different block split and FAILED STA); census follows the first "
                     "bind (G3)"},
@@ -660,8 +686,66 @@ plan = dict(
                  cut_step_um=250),
     latency=dict(lanes={}),
 )
+# OWNER DECISION 7 (2026-10-24, IR over SerDes windows): die.io = the die_io.py windows (die_io.json, written by
+# `die_io.py plan --out`), and one separate PHY supply per SerDes window (die.pg.domains, same form as HBM B2m
+# physical/die_plan/hbm_arch/b2m.py pg_domains): own net VDDPHY with VSS, dense M8/M9 straps over the window + a one-bump
+# guard ring, dedicated power/ground C4 rows (45-um array) over the PHY macro; the 26 SerDes signal sites stay at the
+# shoreline edge.  check.py rule pg_domain.  TODO TRIAL/PDN: head PSM / IR with the VDDPHY domains.
+import copy  # noqa: E402
+import die_io as DIO  # noqa: E402
+# Same6-lane ot_pdie_serdes placeholder model as S81. Approved reserve policy,
+# not a measured PHY footprint. Source: physical/asap7_v41x_pdie_macros_v2/
+# ot_pdie_serdes/ot_pdie_serdes.json (area562680.012um2; native250.056x2250.216).
+_PHY_MODEL_AREA_UM2 = 562680.012
+_io_old = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+# Re-derive the reserved shoreline zone around actual bus/FT strips. The old
+# whole-partition IO rectangle incorrectly made the digital strip a PHY supply.
+_io = DIO.plan(S.Plan(plan), phy_zone_guard=63.64)
+_old_by_name = {w['name']: w for w in _io_old}
+for w in _io:
+    for field in ('host', 'host_route'):
+        if field in _old_by_name.get(w['name'], {}):
+            w[field] = _old_by_name[w['name']][field]
+    w['basis'] += (f"; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area {_PHY_MODEL_AREA_UM2:g} um2 "
+                   "from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; "
+                   "rect is a reserved PHY/PG zone, not the measured physical body")
+(HERE/'die_io.json').write_text(json.dumps(_io, indent=1)+'\n')
+if _io:
+    plan["die"]["io"] = _io
+    _PHY_GRID = [dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"]),
+                 dict(layer="M9", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"])]
+    _doms = []
+    for w in _io:
+        if w.get("iface") != "serdes":
+            continue
+        x0, y0, x1, y1 = w["rect_um"]
+        g = 63.64
+        _pr = S.Plan(plan).rect(w["part"])
+        _doms.append(dict(name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
+                          rect_um=[round(max(_pr[0], x0 - g), 4), round(max(_pr[1], y0 - g), 4), round(min(_pr[2], x1 + g), 4),
+                                   round(min(_pr[3], y1 + g), 4)],
+                          grid=copy.deepcopy(_PHY_GRID),
+                          bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=45.0, use="power_ground",
+                                     note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal "
+                                          "bumps inside except the window's own 26 SerDes sites"),
+                          note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes "
+                               "window; reserved zone plus63.64um guard clipped to its containing partition; "
+                               "150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 "
+                               "is a labelled assumption, separate from this reserved zone (no measured body outline claim)"))
+    plan["die"]["pg"]["domains"] = _doms
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
+# core-latency contract for the REBUILT views (10-24, S81-HEAD): the element was signed with clk source latency -early
+# (its kit SDC), so its tap is delivered exactly `early` before the common latency; the lib max_clock_tree_path (max
+# over all internal flops, 441 / 435 ps) would over-advance it by ~60 ps and break the boundary timing it was signed
+# with.  MANIFEST.json (tools/s81_head/hd_views_rb.py) carries the kit early.  Request to CLOCK filed 10-24 20:5x.
+for tp in types["hd_tile"]["clock"].get("taps", []):
+    man = ROOT / Path(tp.get("budget_owner", "")).parent / "MANIFEST.json"
+    if "/views_rb/" in tp.get("budget_owner", "") and man.is_file():
+        mf = json.loads(man.read_text())
+        tp["insertion_ps"] = round(250.0 + float(mf["early_core_tap_ps"]), 5)
+        tp["note"] = (f"CP2 early core tap; core-latency contract = signed kit early {mf['early_core_tap_ps']:g} ps "
+                      f"(views_rb MANIFEST; lib max_clock_tree_path {mf['lib_max_clock_tree_path_ps']['tt']:.1f} TT, info)")
 from ft_reach import resize as resize_ft_reach
 resize_ft_reach(plan, reach_um=405.0, margin=REACH / 405.0)
 S.validate  # noqa: B018  (schema import check)

@@ -80,7 +80,7 @@ def ssq_family():
     lw = D.lower()
     cmds = [c for c in lw['commands'] if c['label'].startswith('SSQ')]
     e0 = min(c['edge'] for c in cmds)
-    span = max(c['edge'] for c in cmds) - e0 + lw['ages']['ssq_psum_out'][-1] + 2 * (N - 1) + 61
+    span = max(c['edge'] for c in cmds) - e0 + lw['ages']['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61
     boot = [c for c in lw['commands'] if not c['label'].startswith('SSQ')]
     return lw, cmds, e0, span, boot
 

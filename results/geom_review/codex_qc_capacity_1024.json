@@ -1,0 +1,10 @@
+{
+ "image": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_plan.png",
+ "verdict": "PLAN_ONLY_REVIEWED",
+ "findings": [
+  "Wide slice traffic remains in central strip; endpoints abut.",
+  "Negotiated split buses reduce per-face capacity conflicts; G0C56/56.",
+  "No physical core or die route authorized by this plan-only view. Existing A0 station/macro overlap review remains open."
+ ],
+ "next": "R8/bind after cycle model adoption; physical detail review before routing."
+}

@@ -285,7 +285,7 @@ endmodule
 
 // RA lane FRONT leaf: x -> exp(-|x|) Horner -> u = t / (t + 2) -> u^2 (ot_hdc_v41x_softplus_s up to T_U2, the same
 // units), max(x, 0) carried to T_U2; seam outputs registered.  Flat lane time t = this leaf's input-flop time t.
-module ot_s81_su_rxsf #(parameter integer PCUT = 1) (
+module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) (
     input  wire        clk, rst_in,
     input  wire        i_v,
     input  wire [31:0] i_x,
@@ -306,7 +306,7 @@ module ot_s81_su_rxsf #(parameter integer PCUT = 1) (
     wire [31:0] p_pre, u, u2, u_d, mx_d;
     wire [8:0]  n_pre;
     wire f_exp, f_div, f_u2;
-    ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
+    ot_hdc_v41x_exp_s #(.PCUT(PCUT), .TFTZ(TFTZ)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre), .y(u), .vo(), .fault(f_div));
     ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
@@ -572,17 +572,27 @@ module dsfd_su_t_rxrb (
 endmodule
 module dsfd_su_t_rxsf (
     input wire ck, rst, i_v, input wire [31:0] i_x,
-    output wire o_v, output wire [31:0] o_u, o_u2, o_mx, output wire o_f
+    // OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA): o_u[31] / o_u2[31] (signs of u = t / (t + 2) >= 0 and of u^2: constant
+    // 0, TIELO in the raw netlist) are not pins of this hard core; the receiver rxsb takes [30:0] and re-adds the 0.
+    output wire o_v, output wire [30:0] o_u, o_u2, output wire [31:0] o_mx, output wire o_f
 );
-    ot_s81_su_rxsf #(.PCUT(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(o_u), .o_u2(o_u2),
+    wire [31:0] u_w, u2_w;
+    assign o_u = u_w[30:0]; assign o_u2 = u2_w[30:0];
+    // S81-CORES2/RV 2026-10-25 (GEOM FAIL 04:38, TT -6.19 on u_exp.m_t s2_sh -> y): TFTZ 1 drops t's dead subnormal
+    // encode (shift + round + zero test) from m_t's last stage; 0 cycles, outputs identical (tools/s81_slice/rxsf_ftz_eq.sh).
+    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
         .o_mx(o_mx), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxsb (
-    input wire ck, rst, i_v, input wire [31:0] i_u, i_u2, i_mx, input wire i_f,
-    output wire o_v, output wire [31:0] o_r, output wire o_f
+    // OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA): i_u / i_u2 [30:0]: the sender's sign bits are constant 0 (not pins)
+    input wire ck, rst, i_v, input wire [30:0] i_u, i_u2, input wire [31:0] i_mx, input wire i_f,
+    // OWNER DECISION 8 (2026-10-24): o_r[31] = sign of sqrt (constant 0) is not a pin of this hard core
+    output wire o_v, output wire [30:0] o_r, output wire o_f
 );
-    ot_s81_su_rxsb #(.PCUT(1)) u_b (.clk(ck), .rst_in(rst), .i_v(i_v), .i_u(i_u), .i_u2(i_u2), .i_mx(i_mx), .i_f(i_f),
-        .o_v(o_v), .o_r(o_r), .o_f(o_f));
+    wire [31:0] r_w;
+    assign o_r = r_w[30:0];
+    ot_s81_su_rxsb #(.PCUT(1)) u_b (.clk(ck), .rst_in(rst), .i_v(i_v), .i_u({1'b0, i_u}), .i_u2({1'b0, i_u2}), .i_mx(i_mx),
+        .i_f(i_f), .o_v(o_v), .o_r(r_w), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxqr (
     input wire ck, rst, i_v, input wire [255:0] i_x, input wire [127:0] i_c, i_s,

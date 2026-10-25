@@ -1,0 +1,16 @@
+{
+ "element": "kv3_head_eighth_e4",
+ "kit": "KVG3-CORES core kit kv3_head_eighth_e4__216x216 (plan v3.8x, main c98b74b466; kv41 bound RTL, split equiv PASS)",
+ "verdict": "AUTHOR-REVIEW PASS-COND (route as pathfinding: face_guard data FAIL is RTL-intrinsic) (not an independent GEOM-REVIEW verdict)",
+ "hash": "3198225da4430cfd",
+ "hash_method": "freeze.json kit_hash of the KV core kit (gen_core_kit_kv.py)",
+ "pictures": [
+  "physical/die_plan/qwen_kvsys/cores/harden/review/kv3_head_eighth_e4_216_placed.png",
+  "physical/die_plan/qwen_kvsys/g3/review/part_kv3_hg_v38x.png"
+ ],
+ "reasons": "v3.8x 216x216 slot, 3_place: std fill 41% of the core (was 22-33% at 285.12), 136847 cells / 28394 flops, max 10-um bin 0.63 (no bin > 0.8), buf/inv 9% area; logic spread over the whole core, no empty quadrant; 1308 face flops at their pins (pin->reg p50 6.6 / p90 7.7 / max 12.9 um). Partition (g3/review/part_kv3_hg_v38x.png): 103.68 um gaps to every neighbour head, ectl 95.04 um, 0 pins facing a non-partner core. Routing M2-M7 (recipe; the 285 e0 failed GRT 5555 at M5). face_guard on 1_synth.odb: {'shared': 48, 'feedthrough': 41, 'dropped': 6} ('dropped' = clk_unused member clock pins; 'shared' clk/rst fanout); DATA face fails are RTL-intrinsic: the front leaf passes f_t2 -> f_t3 through combinationally (41 feedthrough) and u_kt gf_in feeds logic before a flop (unregistered) -> signoff face_guard will FAIL; NOT SIGNED-able without an RTL/contract change (NEEDS_RTL)",
+ "fixes": "RTL owner: register f_t2->f_t3 / gf_in at the core boundary or declare them a typed ft contract; route finish + signoff.py; closed only if SIGNED.",
+ "reviewer": "KVG3-CORES (author self-review)",
+ "at": "2026-10-24T13:20:00-07:00",
+ "rule": "BRIEFING: Review before you route (owner 08:05)"
+}

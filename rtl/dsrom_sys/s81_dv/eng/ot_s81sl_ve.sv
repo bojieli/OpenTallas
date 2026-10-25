@@ -53,7 +53,8 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     // reduce stream
     input  wire         r_v,
     input  wire [1:0]   r_c,
-    input  wire [127:0] r_h, r_k, r_w,
+    input  wire [63:0]  r_h,              // packed BF16 h from vs (OWNER DECISION 8): unpacked at the input flop
+    input  wire [127:0] r_k, r_w,
     // beat partials
     output reg          p_v,
     output reg  [1:0]   p_c,
@@ -61,12 +62,13 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     // add stream
     input  wire         a_v,
     input  wire [1:0]   a_c,
-    input  wire [255:0] a_h, a_val,
+    input  wire [127:0] a_h,              // packed BF16 h from vs (OWNER DECISION 8): unpacked at the input flop
+    input  wire [255:0] a_val,
     input  wire [31:0]  a_g,
     output reg          o_v,
     output reg  [1:0]   o_c,
-    output reg  [255:0] o_y,
-    output reg          fault
+    output reg  [127:0] o_y,             // packed BF16: o_y[16 k +: 16] = lane k (low halves were constant 0; OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):)
+    (* keep *) output reg          fault
 );
     // ---------------------------------------------------------------- reset regions (<= 32 reset loads each)
     //  0 top control | 1..4 mul4 lanes | 5,6 chunk_hh | 7,8 chunk_kk | 9,10 chunk_dd | 11..13 trees | 14..17 add8 lane pairs
@@ -85,8 +87,8 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
         if (!rn) begin rv_q <= 1'b0; av_q <= 1'b0; end
         else begin rv_q <= r_v; av_q <= a_v; end
     always @(posedge clk) begin
-        rc_q <= r_c; rh_q <= r_h; rk_q <= r_k; rw_q <= r_w;
-        ac_q <= a_c; ah_q <= a_h; aval_q <= a_val; ag_q <= a_g;
+        rc_q <= r_c; rh_q <= {r_h[63:48], 16'd0, r_h[47:32], 16'd0, r_h[31:16], 16'd0, r_h[15:0], 16'd0}; rk_q <= r_k; rw_q <= r_w;
+        ac_q <= a_c; ah_q <= {a_h[127:112], 16'd0, a_h[111:96], 16'd0, a_h[95:80], 16'd0, a_h[79:64], 16'd0, a_h[63:48], 16'd0, a_h[47:32], 16'd0, a_h[31:16], 16'd0, a_h[15:0], 16'd0}; aval_q <= a_val; ag_q <= a_g;
     end
 
     // input order check: element quad counter (16 a copy), copy must match
@@ -162,11 +164,15 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     always @(posedge clk or negedge rn)
         if (!rn) o_v <= 1'b0;
         else o_v <= yv;
-    always @(posedge clk) begin o_c <= yc; o_y <= yd; end
+    always @(posedge clk) begin o_c <= yc; o_y <= {yd[255:240], yd[223:208], yd[191:176], yd[159:144], yd[127:112], yd[95:80], yd[63:48], yd[31:16]}; end
 
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): sticky state in fault_s, the pin flop fault is an
+    // output-only copy of the same next value (was: fault fed back into its own D).  0 cycles, bit / cycle identical.
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | f_order | mf | (|sf) | (|tf) | f_lock | yf;
     always @(posedge clk or negedge rn)
-        if (!rn) fault <= 1'b0;
-        else if (f_order || mf || (|sf) || (|tf) || f_lock || yf) fault <= 1'b1;
+        if (!rn) begin fault <= 1'b0; fault_s <= 1'b0; end
+        else begin fault <= fault_n; fault_s <= fault_n; end
 endmodule
 
 // Beat tree: 8 chunk sums of one copy arrive in order (at most one a cycle) -> the golden pairwise node
@@ -450,4 +456,208 @@ module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4)(
  wire raw_fault=|f;
  always @(posedge clk or negedge rn)if(!rn)fault<=0;else if(raw_fault)fault<=1;
  ot_s81sl_ve_dly #(.W(2),.D(LM+LA+2)) copy_line(clk,copy,copy,copy_out,);
+endmodule
+
+// =====================================================================================================================
+// S81/RTLSPLIT (2026-10-24, COORD C3 400k-cell cap: ve r5 438.9k cells): ot_s81sl_ve cut into TWO hard cores along the
+// reduce stream, as the plan split (physical/die_plan/s81/cores/leaf/split.py, inputs/core_pins/ot_s81sl_ve_{m,s}.json):
+//   ot_s81sl_ve_m  'multiply' : r / a pin flops + order check, mul4 (h*h, k*k, (h*w)*k), add8 (bf16(h + gate*v)) -> o;
+//                              the three 128-b product quads + their valid (m_v) and pre-pin valid (m_pre) leave through
+//                              OUTPUT FLOPS to ve_s (W face).  Own ot_rst_relay: 9 regions = r5 regions 0, 1..4, 14..17.
+//   ot_s81sl_ve_s  'sum'      : m_* PIN FLOPS (E face), quad pack, chunk8 x3, beat trees x3 -> p.  Own ot_rst_relay:
+//                              10 regions = r5 regions 0, 5..13.
+//   ot_s81sl_ve_sp            : the leaf's u_ve (instances u_m / u_s, the plan's core_conns names) with the ot_s81sl_ve
+//                              ports; fault = fault_m | fault_s (vs ve_fi), the only glue.
+// Cost: +2 cycles on the reduce stream only (m_* output flop + m_* pin flop): p_v / p_c / p_hh / p_kk / p_dd leave
+// exactly 2 edges later than r5 (every ve_s flop sees r5's values 2 edges late: mv, mvpre and the data are delayed alike,
+// so the pack's one-edge-early enable e_lo keeps its lead).  The add stream (a -> o) is r5's, edge for edge.
+// Static schedule (no ready / credit); reset: each relay is r5's (2 sync + 1 tree stage), control state only.
+// fault: ve_m sticky {order, mul4, add8}, ve_s sticky {chunk8, trees, lockstep} (ve_s terms 2 edges after r5's).
+// Every partition pin is registered on both sides (face_guard: pin flop = own flop, fault pin flop = output-only copy).
+// MUT as r5 (bench only): 1 reaches ve_m (mul4 key), 2 / 3 reach ve_s (tree pairs / ring read select).
+// OT_S81SL_SPMUT_MV (bench only): ve_s takes the quad valid from the m_v PIN (one edge ahead of its data).
+// =====================================================================================================================
+module ot_s81sl_ve_m #(parameter integer LM = 5, LA = 4, MUT = 0) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         r_v,
+    input  wire [1:0]   r_c,
+    input  wire [63:0]  r_h,              // packed BF16 h (OWNER DECISION 8): unpacked at the input flop
+    input  wire [127:0] r_k, r_w,
+    input  wire         a_v,
+    input  wire [1:0]   a_c,
+    input  wire [127:0] a_h,
+    input  wire [255:0] a_val,
+    input  wire [31:0]  a_g,
+    output reg          o_v,
+    output reg  [1:0]   o_c,
+    output reg  [127:0] o_y,
+    output reg          m_v,              // product quad valid (r5 mul4 valid_pin)
+    output reg          m_pre,            // its one-edge-early copy (r5 mul4 valid): ve_s's pack enable lead
+    output reg  [127:0] m_hh, m_kk, m_dd,
+    (* keep *) output reg fault
+);
+    // 0 top control | 1..4 mul4 lanes | 5..8 add8 lane pairs
+    localparam integer NR = 9;
+    wire [NR-1:0] rq;
+    ot_rst_relay #(.REGIONS(NR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
+    wire rn = rq[0];
+
+    reg         rv_q, av_q;
+    reg [1:0]   rc_q, ac_q;
+    reg [127:0] rh_q, rk_q, rw_q;
+    reg [255:0] ah_q, aval_q;
+    reg [31:0]  ag_q;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin rv_q <= 1'b0; av_q <= 1'b0; end
+        else begin rv_q <= r_v; av_q <= a_v; end
+    always @(posedge clk) begin
+        rc_q <= r_c; rh_q <= {r_h[63:48], 16'd0, r_h[47:32], 16'd0, r_h[31:16], 16'd0, r_h[15:0], 16'd0}; rk_q <= r_k; rw_q <= r_w;
+        ac_q <= a_c; ah_q <= {a_h[127:112], 16'd0, a_h[111:96], 16'd0, a_h[95:80], 16'd0, a_h[79:64], 16'd0, a_h[63:48], 16'd0, a_h[47:32], 16'd0, a_h[31:16], 16'd0, a_h[15:0], 16'd0}; aval_q <= a_val; ag_q <= a_g;
+    end
+
+    reg [5:0] icnt;
+    reg       f_order;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin icnt <= 6'd0; f_order <= 1'b0; end
+        else if (rv_q) begin
+            icnt <= icnt + 6'd1;
+            if (rc_q != icnt[5:4]) f_order <= 1'b1;
+        end
+
+    wire         mv, mvpre;
+    wire [127:0] mhh, mkk, mdd;
+    wire         mf;
+    ot_s81sl_ve_mul4 #(.LM(LM), .MUT(MUT == 1 ? 1 : 0)) mul (clk, rq[4:1], rv_q, 1'b0, rh_q, rk_q, rw_q,
+                                                              mv, mvpre, mhh, mkk, mdd, mf);
+    // partition output flops toward ve_s (+1 edge)
+    always @(posedge clk or negedge rn)
+        if (!rn) begin m_v <= 1'b0; m_pre <= 1'b0; end
+        else begin m_v <= mv; m_pre <= mvpre; end
+    always @(posedge clk) begin m_hh <= mhh; m_kk <= mkk; m_dd <= mdd; end
+
+    wire         yv;
+    wire [255:0] yd;
+    wire         yf;
+    wire [1:0]   yc;
+    ot_s81sl_ve_add8 #(.LM(LM), .LA(LA)) add (clk, rq[8:5], av_q, 1'b1, ah_q, aval_q, ag_q, ac_q, yv, yd, yf, yc);
+    always @(posedge clk or negedge rn)
+        if (!rn) o_v <= 1'b0;
+        else o_v <= yv;
+    always @(posedge clk) begin o_c <= yc; o_y <= {yd[255:240], yd[223:208], yd[191:176], yd[159:144], yd[127:112], yd[95:80], yd[63:48], yd[31:16]}; end
+
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | f_order | mf | yf;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin fault <= 1'b0; fault_s <= 1'b0; end
+        else begin fault <= fault_n; fault_s <= fault_n; end
+endmodule
+
+module ot_s81sl_ve_s #(parameter integer LM = 5, LA = 4, MUT = 0) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         m_v,
+    input  wire         m_pre,
+    input  wire [127:0] m_hh, m_kk, m_dd,
+    output reg          p_v,
+    output reg  [1:0]   p_c,
+    output reg  [31:0]  p_hh, p_kk, p_dd,
+    (* keep *) output reg fault
+);
+    // 0 top control | 1,2 chunk_hh | 3,4 chunk_kk | 5,6 chunk_dd | 7..9 trees
+    localparam integer NR = 10;
+    wire [NR-1:0] rq;
+    ot_rst_relay #(.REGIONS(NR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
+    wire rn = rq[0];
+
+    // partition pin flops (+1 edge): from here on every flop is r5's, 2 edges late
+    reg         mv_q, mpre_q;
+    reg [127:0] mhh, mkk, mdd;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin mv_q <= 1'b0; mpre_q <= 1'b0; end
+        else begin mv_q <= m_v; mpre_q <= m_pre; end
+    always @(posedge clk) begin mhh <= m_hh; mkk <= m_kk; mdd <= m_dd; end
+`ifdef OT_S81SL_SPMUT_MV
+    wire mv = m_v;                         // NEGATIVE CONTROL: the quad valid from the pin, one edge ahead of its data
+`else
+    wire mv = mv_q;
+`endif
+    wire mvpre = mpre_q;
+
+    reg         half;
+    reg         cv;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin half <= 1'b0; cv <= 1'b0; end
+        else begin
+            cv <= mv && half;
+            if (mv) half <= ~half;
+        end
+    wire e_lo_d = mvpre && !(half ^ mv);
+    (* keep = "true" *) reg [23:0] e_lo;
+    always @(posedge clk) e_lo <= {24{e_lo_d}};
+    reg  [383:0] sbus;
+    wire [383:0] mbus = {mdd, mkk, mhh};
+    genvar g;
+    generate for (g = 0; g < 24; g = g + 1) begin : g_lo
+        always @(posedge clk) if (e_lo[g]) sbus[16*g +: 16] <= mbus[16*g +: 16];
+    end endgenerate
+    reg [255:0] chh, ckk, cdd;
+    always @(posedge clk) begin
+        chh <= {mhh, sbus[127:0]}; ckk <= {mkk, sbus[255:128]}; cdd <= {mdd, sbus[383:256]};
+    end
+
+    wire [2:0]  sv, sf;
+    wire [31:0] shh_s, skk_s, sdd_s;
+    ot_s81sl_ve_chunk8 #(.LA(LA), .MUT(MUT)) chunk_hh (clk, rq[2:1], cv, chh, sv[0], shh_s, sf[0]);
+    ot_s81sl_ve_chunk8 #(.LA(LA), .MUT(MUT)) chunk_kk (clk, rq[4:3], cv, ckk, sv[1], skk_s, sf[1]);
+    ot_s81sl_ve_chunk8 #(.LA(LA), .MUT(MUT)) chunk_dd (clk, rq[6:5], cv, cdd, sv[2], sdd_s, sf[2]);
+
+    wire [2:0]  tv, tf;
+    wire [1:0]  tc0, tc1, tc2;
+    wire [31:0] thh, tkk, tdd;
+    ot_s81sl_ve_tree #(.LA(LA), .MUT(MUT)) tree_hh (clk, rq[7], sv[0], shh_s, tv[0], tc0, thh, tf[0]);
+    ot_s81sl_ve_tree #(.LA(LA), .MUT(MUT)) tree_kk (clk, rq[8], sv[1], skk_s, tv[1], tc1, tkk, tf[1]);
+    ot_s81sl_ve_tree #(.LA(LA), .MUT(MUT)) tree_dd (clk, rq[9], sv[2], sdd_s, tv[2], tc2, tdd, tf[2]);
+
+    always @(posedge clk or negedge rn)
+        if (!rn) p_v <= 1'b0;
+        else p_v <= tv[0];
+    always @(posedge clk) begin p_c <= tc0; p_hh <= thh; p_kk <= tkk; p_dd <= tdd; end
+    wire f_lock = (tv[0] != tv[1]) || (tv[0] != tv[2]) || (sv[0] != sv[1]) || (sv[0] != sv[2]) ||
+                  (tv[0] && ((tc0 != tc1) || (tc0 != tc2)));
+
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | (|sf) | (|tf) | f_lock;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin fault <= 1'b0; fault_s <= 1'b0; end
+        else begin fault <= fault_n; fault_s <= fault_n; end
+endmodule
+
+module ot_s81sl_ve_sp #(parameter integer LM = 5, LA = 4, MUT = 0) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         r_v,
+    input  wire [1:0]   r_c,
+    input  wire [63:0]  r_h,
+    input  wire [127:0] r_k, r_w,
+    output wire         p_v,
+    output wire [1:0]   p_c,
+    output wire [31:0]  p_hh, p_kk, p_dd,
+    input  wire         a_v,
+    input  wire [1:0]   a_c,
+    input  wire [127:0] a_h,
+    input  wire [255:0] a_val,
+    input  wire [31:0]  a_g,
+    output wire         o_v,
+    output wire [1:0]   o_c,
+    output wire [127:0] o_y,
+    output wire         fault
+);
+    wire m_v, m_pre, f_m, f_s; wire [127:0] m_hh, m_kk, m_dd;
+    ot_s81sl_ve_m #(.LM(LM), .LA(LA), .MUT(MUT)) u_m (.clk(clk), .rst_n(rst_n), .r_v(r_v), .r_c(r_c), .r_h(r_h),
+        .r_k(r_k), .r_w(r_w), .a_v(a_v), .a_c(a_c), .a_h(a_h), .a_val(a_val), .a_g(a_g), .o_v(o_v), .o_c(o_c), .o_y(o_y),
+        .m_v(m_v), .m_pre(m_pre), .m_hh(m_hh), .m_kk(m_kk), .m_dd(m_dd), .fault(f_m));
+    ot_s81sl_ve_s #(.LM(LM), .LA(LA), .MUT(MUT)) u_s (.clk(clk), .rst_n(rst_n), .m_v(m_v), .m_pre(m_pre), .m_hh(m_hh),
+        .m_kk(m_kk), .m_dd(m_dd), .p_v(p_v), .p_c(p_c), .p_hh(p_hh), .p_kk(p_kk), .p_dd(p_dd), .fault(f_s));
+    assign fault = f_m | f_s;
 endmodule

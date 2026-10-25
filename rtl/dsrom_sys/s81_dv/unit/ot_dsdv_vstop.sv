@@ -30,11 +30,14 @@ module ot_dsdv_vstop #(
     // JREG 1 (default, every unit): in_* land in the stop's own inject flops.  JREG 0 (S81-NATIVE3 10-17, gunit L2):
     // the caller already registers its inject sources at its pins (in_* are flop outputs, e.g. an OR of two pin-captured
     // CTL rows), so the stop uses them as its inject flops: identical cycle behaviour, no second edge.
-    parameter integer JREG = 1
+    parameter integer JREG = 1,
+    // Opt-in BK drain namespace: consume only the uniquely addressed accepted command.
+    parameter integer BK_DRAIN_SINK = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [7:0]    tap_k,        // strap: kinds delivered (single-beat kinds only)
+    input  wire [7:0]    bk_uid,       // ignored unless BK_DRAIN_SINK=1; captured with rung inputs
     input  wire [7:0]    sink_k,       // strap: kinds removed from the rung (subset of tap_k by convention)
     // rung, S side (toward the S slice) and N side (toward the N slice)
     input  wire [V-1:0]  vi_s,         // northbound arrivals
@@ -62,9 +65,9 @@ module ot_dsdv_vstop #(
 );
     localparam [2:0] K_XQ = 3'd1, K_XB = 3'd2;
     // ---------------------------------------------------------------- input flops
-    reg [V-1:0] is_, in_; reg [7:0] tap_c, sink_c;
+    reg [V-1:0] is_, in_; reg [7:0] tap_c, sink_c, bk_uid_c;
     wire [V-1:0] jn, js; wire jnv, jsv;
-    always @(posedge clk) begin is_ <= vi_s; in_ <= vi_n; tap_c <= tap_k; sink_c <= sink_k; end
+    always @(posedge clk) begin is_ <= vi_s; in_ <= vi_n; tap_c <= tap_k; sink_c <= sink_k; bk_uid_c <= bk_uid; end
     generate
         if (JREG != 0) begin : g_jreg
             reg [V-1:0] jn_q, js_q; reg jnv_q, jsv_q;
@@ -82,7 +85,11 @@ module ot_dsdv_vstop #(
     wire hn = is_[0] && (fr_n == 2'd0 || MUT == 1), hs = in_[0] && (fr_s == 2'd0 || MUT == 1);
     wire [2:0] kn = is_[3:1], ks = in_[3:1];
     wire xn = kn == K_XQ || kn == K_XB, xs = ks == K_XQ || ks == K_XB;
-    wire sn = hn && !xn && sink_c[kn] && MUT != 3, ss = hs && !xs && sink_c[ks] && MUT != 3;
+    wire bk_n = BK_DRAIN_SINK != 0 && hn && kn == 3'd0 && (tap_c[0] || sink_c[0]) && is_[28:21] == bk_uid_c && is_[31:29] == 3'd1;
+    wire bk_s = BK_DRAIN_SINK != 0 && hs && ks == 3'd0 && (tap_c[0] || sink_c[0]) && in_[28:21] == bk_uid_c && in_[31:29] == 3'd1;
+    // A duplicate command remains visible and faults in BK vin; it is not a valid sole acceptance.
+    wire sn = hn && !xn && (sink_c[kn] || (bk_n && !bk_s)) && MUT != 3;
+    wire ss = hs && !xs && (sink_c[ks] || (bk_s && !bk_n)) && MUT != 3;
     wire tn = hn && !xn && (tap_c[kn] || sink_c[kn]), ts = hs && !xs && (tap_c[ks] || sink_c[ks]);
     wire on = (fr_n != 2'd0) || (hn && !sn), os = (fr_s != 2'd0) || (hs && !ss);   // forwarded slot occupied
     wire jxn = jn[0] && (jn[3:1] == K_XQ || jn[3:1] == K_XB) && ij_n == 2'd0;

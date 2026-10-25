@@ -1,0 +1,21 @@
+{
+ "kit": "dsdv_gunit_l3",
+ "top": "dsdv_gunit_l3",
+ "netlist": "dsdv_gunit_l3/run/results/asap7/kl_dsdv_gunit_l3_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 1964,
+ "ok": 1858,
+ "fail_counts": {
+  "shared": 106
+ },
+ "groups": [
+  {
+   "bus": "w_b",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 106,
+   "bits": "[1..8,13..20,38,40..41,189..275]"
+  }
+ ]
+}
