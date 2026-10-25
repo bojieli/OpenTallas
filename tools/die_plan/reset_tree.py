@@ -1186,7 +1186,7 @@ def start_relays(T):
         base = dict(xy=r["xy"], kind=r["kind"], depth=r["depth"], dlab=r["d"], tap=r.get("tap"))
         srl = r["name"].replace("u_rrl", "u_srl", 1)
         if m and int(m.group(1)) not in outs:
-            out.append(dict(base, name=r["name"], d=f"{raw(r['d'])} & {run(r['d'])}", q=r["q"], role="gated"))
+            out.append(dict(base, name=r["name"], d=raw(r["d"]), run=run(r["d"]), q=r["q"], role="gated"))
             if raw(r["q"]) in used:
                 out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
                 out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
@@ -1256,7 +1256,8 @@ def _rtl_lines_start(T, ind, src, start_src):
         if r["q"] not in declared:
             out.append(f"{ind}wire {r['q']};")
             declared.add(r["q"])
-        out.append(f"{ind}ot_dp_rrelay {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+        cell, run = ("ot_dp_rgate", f", .run({r['run']})") if r["role"] == "gated" else ("ot_dp_rrelay", "")
+        out.append(f"{ind}{cell} {r['name']} (.clk(clk), .d({r['d']}){run}, .q({r['q']}));  "
                    f"// {r['role']} {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
     for k in range(len(T.get("outs", []))):
         out.append(f"{ind}assign rst_o_{k} = rr_t{nck + k};  // registered reset out (wavefront) at "
@@ -1357,7 +1358,7 @@ def tcl_text(T):
               "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
               f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
-    edges = " ".join(f"{r['q']} {r['d'].split(' & ')[0]}" for r in rel)
+    edges = " ".join(f"{r['q']} {r['d']}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",

@@ -63,7 +63,26 @@
    },
    "run": "epyc3 ot-run unit oth-ubuntu-3476465-1792928581 exit 0; out epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0N/"
   },
-  "cut_7": "binary still compiling at 05:50 (epyc3 make PID 2488010 -j4, 8.4k/13.4k objects; ~4 h more at current rate)"
+  "cut_7": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2513,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "PASS (strict, proof entry_ec43c, 15/15 ports)"
+   },
+   "mut_in corrupt:xrE_6S_l0:91:14": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 244,
+    "first_fault": 2268,
+    "check": "FAIL = CAUGHT (strict, 2 trace mismatches)"
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "FAIL = CAUGHT (strict, 32 trace mismatches)"
+   },
+   "note": "check tool WIP framing fix cut_7_check_fix.diff; TOK-DS3 06:40"
+  }
  },
  "entry_proof_ec43": {
   "status": "PASS_CUT_COMPONENT",

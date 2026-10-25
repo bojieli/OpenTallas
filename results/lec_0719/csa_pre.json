@@ -1,0 +1,185 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-25T14:23:51+0000",
+ "verdict": "NOT EQUIVALENT",
+ "top": "lec_t1",
+ "netlist": "/work/run/results/asap7/lec_t1/base/1_2_yosys.v",
+ "synth_frontend": "slang",
+ "gold_frontend": "verilog",
+ "implicit_nets": [],
+ "black_boxes": {
+  "lec_bbx": 3
+ },
+ "ports": {
+  "inputs": 65,
+  "outputs": 47
+ },
+ "t_aig_s": 1.6,
+ "t_corr_s": 0.1,
+ "keypoints": {
+  "gold": {
+   "inputs": 80,
+   "flops": 113,
+   "outputs": 0,
+   "ands": 1415
+  },
+  "gate": {
+   "inputs": 75,
+   "flops": 104,
+   "outputs": 0,
+   "ands": 720
+  },
+  "matched": 117,
+  "gold_constant_flops": {
+   "n": 2,
+   "first": [
+    "ff:u_dut.st[2]",
+    "ff:u_dut.st[3]"
+   ]
+  },
+  "paired_flops": {
+   "n": 0,
+   "first": []
+  },
+  "gold_unmatched_live": {
+   "n": 7,
+   "first": [
+    "ff:u_dut.y[24]",
+    "ff:u_dut.y[25]",
+    "ff:u_dut.y[26]",
+    "ff:u_dut.y[27]",
+    "ff:u_dut.y[28]",
+    "ff:u_dut.y[29]",
+    "ff:u_dut.y[30]"
+   ]
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 15,
+  "gate_x_sources": 10,
+  "gold_only_compare": {
+   "n": 9,
+   "first": [
+    "ff:u_dut.st[2]",
+    "ff:u_dut.st[3]",
+    "ff:u_dut.y[24]",
+    "ff:u_dut.y[25]",
+    "ff:u_dut.y[26]",
+    "ff:u_dut.y[27]",
+    "ff:u_dut.y[28]",
+    "ff:u_dut.y[29]",
+    "ff:u_dut.y[30]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.0,
+ "x_dont_care_points": {
+  "n": 16,
+  "first": [
+   "ff:u_dut.mem[0][0]",
+   "ff:u_dut.mem[0][1]",
+   "ff:u_dut.mem[0][2]",
+   "ff:u_dut.mem[0][3]",
+   "ff:u_dut.mem[1][0]",
+   "ff:u_dut.mem[1][1]",
+   "ff:u_dut.mem[1][2]",
+   "ff:u_dut.mem[1][3]",
+   "ff:u_dut.mem[2][0]",
+   "ff:u_dut.mem[2][1]",
+   "ff:u_dut.mem[2][2]",
+   "ff:u_dut.mem[2][3]",
+   "ff:u_dut.mem[3][0]",
+   "ff:u_dut.mem[3][1]",
+   "ff:u_dut.mem[3][2]",
+   "ff:u_dut.mem[3][3]"
+  ]
+ },
+ "counts": {
+  "compare_points": 102,
+  "proved": 95,
+  "differs": 7,
+  "undecided": 0
+ },
+ "failing": [
+  {
+   "point": "po:y[24]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[24]"
+   ]
+  },
+  {
+   "point": "po:y[25]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[25]"
+   ]
+  },
+  {
+   "point": "po:y[26]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[26]"
+   ]
+  },
+  {
+   "point": "po:y[27]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[27]"
+   ]
+  },
+  {
+   "point": "po:y[28]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[28]"
+   ]
+  },
+  {
+   "point": "po:y[29]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[29]"
+   ]
+  },
+  {
+   "point": "po:y[30]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gold_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.y[30]"
+   ]
+  }
+ ],
+ "unproven_points": [],
+ "reason": "7 compare points differ (first: po:y[24], po:y[25], po:y[26], po:y[27], po:y[28], po:y[29], po:y[30]); RTL registers removed by synthesis although not constant: ff:u_dut.y[24], ff:u_dut.y[25], ff:u_dut.y[26], ff:u_dut.y[27], ff:u_dut.y[28], ff:u_dut.y[29], ff:u_dut.y[30]",
+ "t_total_s": 1.9
+}

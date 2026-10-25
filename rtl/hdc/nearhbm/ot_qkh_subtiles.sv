@@ -8,7 +8,13 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkh_lane8 #(
     parameter integer ADD_LAT = 7,
-    parameter integer LTW = 12
+    parameter integer LTW = 12,
+    // KV-CORES 10-25 (COORD ruling 5): LT_COPY = 1 duplicates the LAST flop of the decision-word delay line u_ltd per lane
+    // (g_d[d].g_ltc.u_ltl, bits [8:0] = the lane's P.V tree controls) plus one shared copy of the node-slice bits [LTW-1:9]
+    // (g_ltn.u_ltn): the 8-lane x 32-bit broadcast of lal / lsel (head_eighth e6 TT -12 ps from u_ltd line[39]) becomes
+    // eight short lane nets.  Same D (PLAT) edges, 0 added cycles (u_ltd is one stage shorter).  LT_COPY = 0 (default) is
+    // the unchanged RTL (u_ltd D = PLAT drives every lane).
+    parameter integer LT_COPY = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -61,9 +67,9 @@ module ot_qkh_lane8 #(
     wire [3:0]     kl;                    // kt of levels 1, 2, 3; kl[3] = the level-3 result's valid
     ot_hdc_delay #(.W(3), .D(PLAT), .RESET(1)) u_ctl (.clk(clk), .rst_n(rc), .d(c3[3:1]), .q(kvz_d));
 `ifdef KVD_HMUT
-    ot_hdc_delay #(.W(LTW), .D(PLAT + 1), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
+    ot_hdc_delay #(.W(LTW), .D(PLAT + 1 - (LT_COPY != 0)), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
 `else
-    ot_hdc_delay #(.W(LTW), .D(PLAT), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
+    ot_hdc_delay #(.W(LTW), .D(PLAT - (LT_COPY != 0)), .RESET(1)) u_ltd (.clk(clk), .rst_n(rc), .d(lt3), .q(lt_d));
 `endif
     assign kl[0] = kvz_d[2];
     genvar l, d;
@@ -75,7 +81,12 @@ module ot_qkh_lane8 #(
     // ---- the lanes -------------------------------------------------------------------------------------------------------
     wire [8*32-1:0] p_y, l_y, fb, obw;
     wire [7:0]      p_vo, p_f, l_vo, l_f, b_f;
-    wire [LTW-1:0]  dw = lt_d;
+    wire [LTW-1:9]  dn;                   // node-slice select of the decision word at PLAT
+    generate if (LT_COPY == 0) begin : g_ltn0
+        assign dn = lt_d[LTW-1:9];
+    end else begin : g_ltn
+        ot_hdc_delay #(.W(LTW - 9), .D(1), .RESET(1)) u_ltn (.clk(clk), .rst_n(rc), .d(lt_d[LTW-1:9]), .q(dn));
+    end endgenerate
     generate for (d = 0; d < 8; d = d + 1) begin : g_d
         wire rl = rr[d];      // this lane's reset copy
         // tree role: 0 2 4 6 level 1 (own pair); 1: level 2 (0, 2); 5: level 2 (4, 6); 3: level 3 (1, 5); 7: none
@@ -108,6 +119,12 @@ module ot_qkh_lane8 #(
         assign l_f[d] = l_vo[d] && (err != 2'd0);
         ot_hdc_delay #(.W(32), .D(8 - ADD_LAT)) u_pad (.clk(clk), .rst_n(rl), .d(l_y[32*d +: 32]), .q(fb[32*d +: 32]));
         // the local P.V tree (levels 1-3) of this lane, executing the decision word delayed PLAT
+        wire [8:0]  dw;
+        if (LT_COPY == 0) begin : g_lt0
+            assign dw = lt_d[8:0];
+        end else begin : g_ltc   // this lane's own copy of the last decision-word flop (LT_COPY)
+            ot_hdc_delay #(.W(9), .D(1), .RESET(1)) u_ltl (.clk(clk), .rst_n(rl), .d(lt_d[8:0]), .q(dw));
+        end
         wire        lis = dw[0], lsel = dw[1], lst0 = dw[4], lsty = dw[5], lob = dw[8];
         wire [1:0]  lal = dw[3:2], lsl = dw[7:6];
         reg  [31:0] lp0, lp1, lp2, obr;
@@ -129,9 +146,9 @@ module ot_qkh_lane8 #(
     end endgenerate
     // ---- registered outputs ----------------------------------------------------------------------------------------------
     // node slice (LFB 4): word k of this tile = lane 4k + beat
-    always @(posedge clk) if (dw[9]) begin
-        nb[31:0]  <= obw[32*(0 + dw[11:10]) +: 32];
-        nb[63:32] <= obw[32*(4 + dw[11:10]) +: 32];
+    always @(posedge clk) if (dn[9]) begin
+        nb[31:0]  <= obw[32*(0 + dn[11:10]) +: 32];
+        nb[63:32] <= obw[32*(4 + dn[11:10]) +: 32];
     end
     wire k3v;
     ot_hdc_delay #(.W(1), .D(ADD_LAT), .RESET(1)) u_k3v (.clk(clk), .rst_n(rc), .d(kl[2]), .q(k3v));

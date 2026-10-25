@@ -1,0 +1,23 @@
+{
+ "kit": "dsdv_bksel_c_c",
+ "outline_um": [
+  388.8,
+  172.8
+ ],
+ "regs": 26267,
+ "ck_probe_min_ps": 221.182617,
+ "ck_probe_max_ps": 234.158478,
+ "ck_probe_p50_ps": 227.050888,
+ "ck_probe_spread_ps": 12.975861000000009,
+ "ckbufs": 2273,
+ "macros": 0,
+ "macro_ck_probe_ps": null,
+ "cts_tool": "I 378 (361-402) target 250, 15.9k hold bufs, hold WNS -166 left",
+ "pin_flop_um": {
+  "n": 5513,
+  "p50": 8.289000000000001,
+  "p90": 10.448999999999995,
+  "max": 14.453000000000007,
+  "over20": 0
+ }
+}

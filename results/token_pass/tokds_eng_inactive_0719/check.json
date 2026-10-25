@@ -1,0 +1,31 @@
+{
+ "source_commit": "40a84258c",
+ "cycles_added": 0,
+ "ports_compared_every_cycle": 13,
+ "seeds": [
+  {
+   "seed": 1,
+   "cycles": 3510,
+   "verdict": "PASS",
+   "golden_rows": 144
+  },
+  {
+   "seed": 2,
+   "cycles": 3510,
+   "verdict": "PASS",
+   "golden_rows": 144
+  },
+  {
+   "seed": 3,
+   "cycles": 3510,
+   "verdict": "PASS",
+   "golden_rows": 144
+  }
+ ],
+ "mutant": {
+  "verdict": "CAUGHT",
+  "kind": "corrupted HBM input",
+  "mismatch_lines": 1
+ },
+ "verdict": "PASS"
+}

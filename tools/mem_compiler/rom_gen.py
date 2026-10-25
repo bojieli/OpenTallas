@@ -43,6 +43,7 @@ import ecc  # noqa: E402
 from views import Pin, Timing, blackbox_verilog, macro_outline, write_lef, write_liberty  # noqa: E402
 
 GENERATOR_VERSION = "1.0"
+ROM_MODULE_PARAMS = '#(parameter string VIAMAP = "", parameter string INSTANCE = "") '
 ROOT = asap7.ROOT
 
 
@@ -175,7 +176,7 @@ def behavioural(spec: RomSpec, pins: list[Pin], header: str) -> str:
         "        if (ce_in) rd_out <= word_read(addr_in);",
     ]
     return behav.module_text(spec.name, pins, params, "\n".join(body) + "\n", header, 0, 0,
-                             module_params='#(parameter string VIAMAP = "", parameter string INSTANCE = "") ')
+                             module_params=ROM_MODULE_PARAMS)
 
 
 def analytical_comparison(sheet: dict[str, Any]) -> dict[str, Any]:
@@ -257,7 +258,7 @@ def compile_macro(spec: RomSpec, out_dir: Path | None = None) -> dict[str, Any]:
         for c, t in corners.items():
             (d / f"{spec.name}_{c}.lib").write_text(write_liberty(spec.name, t, pins, w * h, mem, header))
         (d / f"{spec.name}.v").write_text(behavioural(spec, pins, "// " + header))
-        (d / f"{spec.name}_bb.v").write_text(blackbox_verilog(spec.name, pins, header))
+        (d / f"{spec.name}_bb.v").write_text(blackbox_verilog(spec.name, pins, header, module_params=ROM_MODULE_PARAMS))
         files = sorted(p.name for p in d.iterdir() if p.name != f"{spec.name}.json")
         sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
         (d / f"{spec.name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")

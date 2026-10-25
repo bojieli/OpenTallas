@@ -1,0 +1,11 @@
+{
+ "image": "epyc1:/srv/opentallas-scratch2/claude/codex-head0719/review/elemB.png",
+ "viewed": true,
+ "verdict": "PASS-COND",
+ "scope": "CTS and isolated single-FF hold repair smoke only",
+ "findings": [
+  "Two centered ROMs retain broad70-95um side channels and continuous logic bands",
+  "Inter-ROM channel23-27um; no macro wall/slivers",
+  "Whole tile width<405um; F6 pin-locality and postCTS clock proof remain before routing"
+ ]
+}

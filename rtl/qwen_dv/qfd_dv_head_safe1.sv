@@ -94,7 +94,7 @@ endmodule
 
 // safe2 = safe1 with every fixed-age ring (all < 2 kb) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1) (
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -154,13 +154,34 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1) (
     input  wire [31:0]       sy_rsq_y,
     input  wire              sy_rsq_f
 );
-    qfd_dv_safe1_head #(.FLOP(1)) u_h (
+    // S8 memory contract: CROM answers3 edges after VM and1 after BTAB. Match data and
+    // metadata to the slowest reply; physical CROM relay stages remain intact. Opt-in until exact gate.
+    wire [31:0] aligned_va, aligned_vb, aligned_vc; wire [255:0] aligned_wr;
+    generate if (MEMORY_ALIGNMENT == 3) begin : g_memory_alignment
+        reg [95:0] vm_pipe[0:2]; reg [255:0] wr_pipe;
+        always @(posedge clk) begin
+            vm_pipe[0] <= {va_q,vb_q,vc_q}; vm_pipe[1] <= vm_pipe[0]; vm_pipe[2] <= vm_pipe[1];
+            wr_pipe <= wrom_q;
+        end
+`ifdef OT_S8_CROM_ALIGN_MUTANT
+        assign {aligned_va,aligned_vb,aligned_vc} = vm_pipe[1];
+`else
+        assign {aligned_va,aligned_vb,aligned_vc} = vm_pipe[2];
+`endif
+        assign aligned_wr = wr_pipe;
+    end else begin : g_memory_unmodified
+        assign {aligned_va,aligned_vb,aligned_vc,aligned_wr} = {va_q,vb_q,vc_q,wrom_q};
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (MEMORY_ALIGNMENT != 0 && MEMORY_ALIGNMENT != 3) $fatal(1,"S8 memory alignment must be0 or3");
+`endif
+    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
         .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2), .cls(cls), .accept(accept), .i_sfu(i_sfu),
-        .va_re(va_re), .va_addr(va_addr), .va_q(va_q), .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q), .vc_re(vc_re),
-        .vc_addr(vc_addr), .vc_q(vc_q), .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q), .crom_re(crom_re),
+        .va_re(va_re), .va_addr(va_addr), .va_q(aligned_va), .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(aligned_vb), .vc_re(vc_re),
+        .vc_addr(vc_addr), .vc_q(aligned_vc), .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(aligned_wr), .crom_re(crom_re),
         .crom_addr(crom_addr), .crom_q(crom_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
         .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .l_ov(l_ov), .l_out(l_out), .l_red(l_red),
         .l_redsq(l_redsq), .l_raddr(l_raddr), .l_last(l_last), .retire(retire), .l_fault(l_fault),
