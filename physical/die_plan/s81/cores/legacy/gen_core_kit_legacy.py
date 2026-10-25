@@ -230,8 +230,10 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
     if [ \$rc != 0 ]; then echo 'FACE_GUARD RAW FAIL (COORD 00:32: stop before floorplan)'; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard_core.py \$N $TOP '$SKIP' /work/pins.json /work/face_guard.json; rc=\$?; \
     if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; fi; \
+  @LEC_STEP@\
   @REG_FANOUT_STEP@\
   @FF_GRT_STEP@\
+  @GRT_GATE_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = place ]; then P=\$(ls /work/run/results/asap7/*/base/3_place.odb | tail -1); ODB=\$P OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; fi; \
@@ -270,7 +272,9 @@ def run_kit(modern):
     (core_flow); legacy = the pre-10-25 script bit for bit."""
     t = RUN_KIT
     for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
-                 ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP)):
+                 ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP),
+                 ("@LEC_STEP@", "if [ \\$rc = 0 ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
+                 ("@GRT_GATE_STEP@", "if [ \\$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then python3 -I /work/legacy_gate.py /work grt; rc=\\$?; fi; ")):
         t = t.replace("  " + k + "\\\n", "  " + v + "\\\n" if modern else "")
     if not modern:   # the old first step had no rc guard
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
@@ -744,7 +748,7 @@ def main():
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "pair_skew.tcl") \
-            + (("reg_fanout_gate.py",) if modern else ()):
+            + (("reg_fanout_gate.py", "lec.py", "legacy_gate.py", "postcts_gate.tcl") if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     # S81/KITS 10-24: clock-insertion balance to the plan insertion before the CTS repair (the SIGNED c2 / VQ r12
@@ -910,7 +914,7 @@ def main():
                   "insertion_basis": ib["basis"], "rc": core_flow.RC_CAL_FILE} if modern else {}),
               **({"regional_taps": rt} if rt else {}),
               gates=(["rtl_lint (pre-synth)"] if modern else []) + ["sdc_lint (pre-synth)", "face_guard (post-synth)"]
-              + (["reg_fanout (post-synth)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
+              + (["LEC EQUIVALENT (post-synth)", "reg_fanout (post-synth)", "TT/FF insertion (GRT, before route)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
