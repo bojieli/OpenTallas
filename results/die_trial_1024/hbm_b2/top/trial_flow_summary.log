@@ -1,0 +1,102 @@
+OT_T_READ 17
+[ERROR MPL-0041] Couldn't place NE_b001. Found overlap with other macros: NE_b000.
+OT_PLACE_FAIL kit_g NE_b001 MPL-0041
+[ERROR MPL-0041] Couldn't place NE_b011. Found overlap with other macros: NE_b010.
+OT_PLACE_FAIL kit_g NE_b011 MPL-0041
+[ERROR MPL-0041] Couldn't place NE_b101. Found overlap with other macros: NE_b000.
+OT_PLACE_FAIL kit_g NE_b101 MPL-0041
+[ERROR MPL-0041] Couldn't place NE_b103. Found overlap with other macros: NE_b010.
+OT_PLACE_FAIL kit_g NE_b103 MPL-0041
+[ERROR MPL-0041] Couldn't place NE_hub. Found overlap with other macros: NE_b100 NE_b102.
+OT_PLACE_FAIL kit_g NE_hub MPL-0041
+[ERROR MPL-0041] Couldn't place NE_io. Found overlap with other macros: NE_b111 NE_b113.
+OT_PLACE_FAIL kit_g NE_io MPL-0041
+[ERROR MPL-0041] Couldn't place NE_mcb. Found overlap with other macros: NE_mca.
+OT_PLACE_FAIL kit_g NE_mcb MPL-0041
+[ERROR MPL-0034] Cannot place NE_sm0 at (20148.5, 11750.4) (25194.26, 16243.2), outside of the core (0, 0) (25194.24, 18316.8).
+OT_PLACE_FAIL kit_g NE_sm0 MPL-0034
+[ERROR MPL-0034] Cannot place NE_sm2 at (20148.5, 0) (25194.26, 4492.8), outside of the core (0, 0) (25194.24, 18316.8).
+OT_PLACE_FAIL kit_g NE_sm2 MPL-0034
+[ERROR MPL-0041] Couldn't place NE_spt1. Found overlap with other macros: NE_spt0.
+OT_PLACE_FAIL kit_g NE_spt1 MPL-0041
+[ERROR MPL-0034] Cannot place NE_su00 at (22671.4, 10195.2) (25194.28, 11750.4), outside of the core (0, 0) (25194.24, 18316.8).
+OT_PLACE_FAIL kit_g NE_su00 MPL-0034
+[ERROR MPL-0034] Cannot place NE_su20 at (22671.4, 4492.8) (25194.28, 6048), outside of the core (0, 0) (25194.24, 18316.8).
+OT_PLACE_FAIL kit_g NE_su20 MPL-0034
+[ERROR MPL-0041] Couldn't place NW_b001. Found overlap with other macros: NW_b000.
+OT_PLACE_FAIL kit_g NW_b001 MPL-0041
+[ERROR MPL-0041] Couldn't place NW_b011. Found overlap with other macros: NW_b010.
+OT_PLACE_FAIL kit_g NW_b011 MPL-0041
+[ERROR MPL-0041] Couldn't place NW_spt1. Found overlap with other macros: NW_spt0.
+OT_PLACE_FAIL kit_g NW_spt1 MPL-0041
+[ERROR MPL-0041] Couldn't place NW_spt2. Found overlap with other macros: NW_mcb.
+OT_PLACE_FAIL kit_g NW_spt2 MPL-0041
+[ERROR MPL-0041] Couldn't place root. Found overlap with other macros: NW_b003 NW_b013 NW_su11 NW_su31.
+OT_PLACE_FAIL kit_g root MPL-0041
+[ERROR MPL-0041] Couldn't place vsN0. Found overlap with other macros: NW_sm3.
+OT_PLACE_FAIL kit_g vsN0 MPL-0041
+[ERROR MPL-0041] Couldn't place vsN1. Found overlap with other macros: NW_sm3.
+OT_PLACE_FAIL kit_g vsN1 MPL-0041
+[ERROR MPL-0041] Couldn't place vsN2. Found overlap with other macros: NW_sm3.
+OT_PLACE_FAIL kit_g vsN2 MPL-0041
+[ERROR MPL-0041] Couldn't place vsN4. Found overlap with other macros: NW_sm1.
+OT_PLACE_FAIL kit_g vsN4 MPL-0041
+[ERROR MPL-0041] Couldn't place vsN5. Found overlap with other macros: NW_sm1.
+OT_PLACE_FAIL kit_g vsN5 MPL-0041
+[ERROR MPL-0041] Couldn't place vsN6. Found overlap with other macros: NW_sm1 PHY_N.
+OT_PLACE_FAIL kit_g vsN6 MPL-0041
+OT_PLACE_FAILS kit_g 23
+OT_LEGAL kit_g placed 65 unplaced 23 overlaps 0 overlap_um2 0.0000 out_of_die 0 macro_area_um2 337699114.0 die_um2 461477855.2 uncovered_um2 123778741.2 ex 
+[ERROR MPL-0041] Couldn't place NE_mcb. Found overlap with other macros: NE_mca.
+OT_PLACE_FAIL pm_4dp NE_mcb MPL-0041
+[ERROR MPL-0041] Couldn't place NE_su01. Found overlap with other macros: NE_su00.
+OT_PLACE_FAIL pm_4dp NE_su01 MPL-0041
+[ERROR MPL-0041] Couldn't place NE_su21. Found overlap with other macros: NE_su20.
+OT_PLACE_FAIL pm_4dp NE_su21 MPL-0041
+OT_PLACE_FAILS pm_4dp 3
+OT_LEGAL pm_4dp placed 85 unplaced 3 overlaps 0 overlap_um2 0.0000 out_of_die 0 macro_area_um2 446052261.9 die_um2 461477855.2 uncovered_um2 15425593.3 ex 
+OT_LEGAL odb_exact placed 88 unplaced 0 overlaps 0 overlap_um2 0.0000 out_of_die 0 macro_area_um2 461477855.2 die_um2 461477855.2 uncovered_um2 -0.0 ex 
+OT_ORIGIN_MISMATCHES 0
+OT_T_PLACE 17
+[INFO PDN-0500] Runtime: 330.88s
+OT_T_PDN 350
+OT_PG_CHECK_OK VDD
+OT_PG_CHECK_OK VSS
+OT_T_PGCHECK 2979
+OT_KEEPOUTS 7 x 9 layers
+OT_KO_PINS NE_io u_lk_N2 pins 0 taps 0
+OT_KO_PINS NE_spb0 u_lk_S0 pins 0 taps 0
+OT_KO_PINS NW_io u_host_N pins 7 taps 7
+OT_KO_PINS NW_io u_lk_N0 pins 0 taps 0
+OT_KO_PINS NW_spb0 u_lk_S0 pins 0 taps 0
+OT_KO_PINS PHY_N u_phy_Q pins 18734 taps 2
+OT_KO_PINS vsN0 u_lk_S1 pins 0 taps 0
+OT_KO_PINS_TOTAL 18741
+OT_T_KO 2985
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0018] Total wirelength: 788956 um
+[INFO GRT-0014] Routed nets: 2
+OT_GRT_OK
+OT_GCELL X 2624 Y 1908
+OT_T_GRT 3203
+OT_DRT NOT_RUN (skipped in the trial: die nets = clock/reset spine; abutted seams pin-to-pin)
+OT_T_END 3233
+OT_DONE
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 54:00.18
+	Maximum resident set size (kbytes): 41031900
+FLOW_EXIT 0
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4                   0             0            0.00%             0 /  0 /  0
+M5                   0             0            0.00%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+M7                2133           146            6.84%             1 /  1 / 62
+M8           510846698         47088            0.01%             1 /  1 / 142
+M9           510927579         32572            0.01%             0 /  1 / 190
+---------------------------------------------------------------------------------------
+Total        1021776410         79806            0.01%             2 /  3 / 394
+

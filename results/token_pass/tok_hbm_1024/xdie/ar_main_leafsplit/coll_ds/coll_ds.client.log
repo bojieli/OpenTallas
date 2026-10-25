@@ -1,0 +1,52 @@
+Verilator 5.050 2026-07-01 rev v5.050
+XDIE2_CFG LEAF_SPLIT=1 CMP_LS=1
+XDIE2 build ok
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 577 cycles | d1 588 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=558 | d1 first_wr=28 last_rx=549
+XDIE2 SWD=333 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 610 cycles | d1 615 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=591 | d1 first_wr=28 last_rx=576
+XDIE2 SWD=333 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_AR d0 launch->publication 538 cycles | d1 543 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=519 | d1 first_wr=28 last_rx=504
+XDIE2 SWD=333 pub=1/1 ok=1/1 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_ERR d=1 AR payload mismatch (golden-order fold) meta 1ff0100a5/1ff0100a5
+XDIE2_ERR d=1 lane 3 got c22e82fd golden c22e82fc
+XDIE2_ERR d=1 lane 4 got be031447 golden be031448
+XDIE2_ERR d=1 lane 8 got c2afb42e golden c2afb42d
+XDIE2_ERR d=1 lane 10 got c33d307d golden c33d307e
+XDIE2_ERR d=1 lane 11 got 40a1e18d golden 40a1e18c
+XDIE2_ERR d=1 lane 12 got 3d037b38 golden 3d037b3a
+XDIE2_AR d0 launch->publication 538 cycles | d1 532 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=519 | d1 first_wr=28 last_rx=513
+XDIE2 SWD=333 pub=1/1 ok=1/0 rx=2/2 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 FAIL
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_FAULT d=1 rel=504 coll=0 cause=0000 gq=0/0 cp=0 cal=0 ep=0 epcause=000 link=008 abort=1
+XDIE2_AR d0 launch->publication 538 cycles | d1 543 cycles (1.2 GHz; edges from each die's launch)
+XDIE2_XLINK d0 first_wr=28 last_rx=519 | d1 first_wr=28 last_rx=503
+XDIE2 SWD=333 pub=1/1 ok=1/1 rx=2/1 faults=0/2096 sched_fail=0/0 rx_bad=0/0 done=11/11 FAIL
+XDIE2_ARM d=0 rel=7 bank=0 words=2
+XDIE2_ARM d=1 rel=7 bank=0 words=2
+XDIE2_SCHED_FAIL d=1 block bank0 NOT READY at its static release rel=443
+XDIE2_FAULT d=1 rel=446 coll=0 cause=0000 gq=0/0 cp=0 cal=0 ep=1 epcause=040 link=000 abort=0
+XDIE2_ERR d=1 AR payload mismatch (golden-order fold) meta 1ff0100a5/1ff0100a5
+XDIE2_ERR d=1 lane 0 got 40000a02 golden c130282f
+XDIE2_ERR d=1 lane 1 got bf5bcef6 golden 4319aa11
+XDIE2_ERR d=1 lane 2 got 3e465664 golden 442aef96
+XDIE2_ERR d=1 lane 3 got c22e32e2 golden c22e82fc
+XDIE2_ERR d=1 lane 4 got bee45254 golden be031448
+XDIE2_ERR d=1 lane 5 got 40603e10 golden 418dc579
+XDIE2_ERR d=1 lane 6 got c14a025b golden c2be5b7c
+XDIE2_MUTANT m_order REJECTED
+XDIE2_MUTANT m_flip REJECTED
+XDIE2_MUTANT m_early REJECTED
+XDIE2_GATE rc=0

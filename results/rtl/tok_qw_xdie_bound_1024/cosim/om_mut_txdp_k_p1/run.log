@@ -1,0 +1,64 @@
+XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+XQ_K17 layer 1: first att_tx_slot at the tile pins rel 2404 programme age 1751 (tile tx_first 1751)
+XQ_ERR cyc 2623 layer 1 rel 2440: D2D end fault / epoch abort in a normal layer
+XQ_CAUSE d2d: compute fault 0 abort 0 end_fault 0 cause 00000000 | KV fault 1 abort 0 end_fault 1 cause 00000000
+XB_CAUSE KV kvn_f 0 status_f 0 end_fault 1
+XQ_BOOT tx_seen=ffffffff tx_base=1 tx_ok=f tx_poison=0 tx_fault=0 rx_seen=ffffffff rx_base=1 rx_ok=f rx_poison=0 rx_fault=0
+XQ_ERR cyc 2641 layer 1 rel 2458: compute producer/consumer fault
+XQ_CAUSE native59 cyc 2641 rel 2458: context 0 qtag 0 qexport 0 dv 0 formatter 0 x3 0 record 1 (codec cause {rx_rec,tx_rec,rx_time,tx_time}=0010) land 0 visibility 0 vm_addr 0 service 1
+XQ_ERR cyc 2834 layer 1 rel 2651: KV producer/consumer fault
+XQ_CAUSE kvs_attn_r17+pvfin cyc 2834 rel 2651 age 1998: ctl local 0 guard 0 record 0 slot 1 | face result_fault 0 | root lf 0 iof 0 | cal fault 0 | pvfin fault 0 | cal P0 260 P1 260 PV 665 R 1062 | tx_first 1751 end 1998
+XQ_MEAS layer=1 cmd_issue=603 q0_issue=604 q31_issue=635 cmd_land=658 q0_land=660 q31_land=691 r0_issue=2406 r31_issue=2437 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=637 kvn3_issue=640 kvn0_land=657 kvn3_land=660 done=-1 status_land=-1 nq=32/32 nr=32/0 nk=4/4 st=1
+XQ_ERR cyc 7236 layer 1 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+XQ_ERR cyc 7236 layer 1 rel 7053: an exchange event never happened
+XQ_MEAS layer=2 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_ERR cyc 14292 layer 2 rel 7053: per-layer counts (32 Q, 32 RESULT, 4 KVN, 1 status, completion)
+XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+XQ_ERR cyc 14292 layer 2 rel 7053: latency differs between layers (not static)
+XQ_ERR cyc 14292 layer 2 rel 7053: an exchange event never happened
+XQ_MEAS layer=3 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=4 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=5 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=6 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=7 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=8 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=9 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=10 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=11 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=12 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=13 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=14 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=15 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=16 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=17 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=18 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=19 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=20 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=21 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=22 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=23 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=24 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=25 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=26 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=27 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=28 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=29 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=30 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=31 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=32 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=33 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=34 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_MEAS layer=35 cmd_issue=-1 q0_issue=-1 q31_issue=-1 cmd_land=-1 q0_land=-1 q31_land=-1 r0_issue=-1 r31_issue=-1 status_issue=-1 r0_land=-1 r31_land=-1 kvn0_issue=-1 kvn3_issue=-1 kvn0_land=-1 kvn3_land=-1 done=-1 status_land=-1 nq=0/0 nr=0/0 nk=0/0 st=0
+XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=-2438 K2C_r0_issue_to_land=-2407 K2C_r_first_issue_to_last_land=-2407 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=-604 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=0 K2C_status_issue_to_land=0
+XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+XQ_FAIL errors=1029
+- /srv/opentallas-scratch/tok-qw/xdie_bound/run2/cosim/tb_xdie_bound.sv:663: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 206us; walltime 44.320 s; speed 4.651 us/s
+- Verilator: cpu 44.319 s on 1 threads; allocated 10 MB

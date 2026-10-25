@@ -11,7 +11,7 @@ is the single entry point that does it for every die plan on one main sha:
     die_ci.py stage-views --host H --dest DIR [--views ...]   # (localhost) copy registered views to the run host
     die_ci.py render RUN_DIR                                  # re-write the Markdown from the JSON
 
-Per die (DIES below; hbm_arch B2 joins automatically once its die_plan.json is on main), every gate is PASS / FAIL /
+Per die (DIES below; hbm = HBM-ARCH B2l), every gate is PASS / FAIL /
 NOT RUN (<reason>) / N/A (<reason>) / CARRIED (<from sha>):
 
   g0        check.py --completeness, once; G0 = the ERRORs that are not G0C-class (check.py G0C_CHECKS are WARN in
@@ -35,7 +35,8 @@ SS setup is reported for information only), never instead of it; die_ci refuses 
 margins file that would relax anything (check_margins).  Each measured seam is reported twice:
   policy    die_sta.py exactly as DIE-STA runs it (the G4 view);
   margined  the same STA with set_timing_derate (OCV x IR late on cells, OCV early; OCV on nets) inside OpenSTA, minus
-            the per-seam crosstalk margin (OpenSTA has no SI delay).  The sta gate verdict is on the margined slack.
+            the per-seam crosstalk margin (OpenSTA has no SI delay).  INFO only: the sta gate is on the policy slack
+            until the owner rules on the margin values (coordinator 10-24 ~12:40).
 The numbers and their derivation are in tools/die_plan/die_ci_margins.json (`die_ci.py margins --derive` recomputes
 the liberty-derived values from the ASAP7 NLDM libs).
 
@@ -77,16 +78,14 @@ DIES = [
     # G2 memory (GB, docker --memory = --memory-swap): die probe, first part try, part ceiling.  A part probe killed
     # by the cgroup (EXIT 137) is re-run alone at 2x up to the ceiling; the die's ot-run job reserves its peak.
     # HBM q_sfuc / q_su1 hit 137 at 32 GB in the 10-24 nightly -> HBM starts at 64.
-    dict(name="hbm", plans=["physical/die_plan/hbm/die_plan.json"], g2_mem=(64, 64, 128)),
-    # HBM-ARCH B2 redesign: joins when its plan is on main (B2r2 preferred over B2)
-    dict(name="hbm_arch_B2", plans=["physical/die_plan/hbm_arch/B2r2/die_plan.json",
-                                    "physical/die_plan/hbm_arch/B2/die_plan.json"], optional=True),
+    # HBM = the HBM-ARCH B2l plan of record (main 9c5104bfcc50; the d4g fallback physical/die_plan/hbm is superseded,
+    # HBM-ARCH 10-24).  B2l SerDes windows carry `rack_macro` (lk_SW0 ...) for xdie_io.
+    dict(name="hbm", plans=["physical/die_plan/hbm_arch/B2l/die_plan.json"], g2_mem=(64, 64, 128)),
 ]
 RACK = "results/arch/release_rack_1021"
 SYSTEMS = [
     dict(name="s81", conn=f"{RACK}/connections_s81.csv", roles={"H": "s81_head", "S": "s81", "B": "s81"}),
     dict(name="hbm-ds", conn=f"{RACK}/connections_hbm-ds.csv", roles={"D": "hbm"}),
-    dict(name="hbm-ds@B2", conn=f"{RACK}/connections_hbm-ds.csv", roles={"D": "hbm_arch_B2"}),
     dict(name="qwen-rom", conn=f"{RACK}/connections_qwen-rom.csv", roles=None,
          na="rack macros are io_ucie, not lk_ die.io windows (xdie_io.py checks lk_ circuits only)"),
     dict(name="hbm-qwen", conn=f"{RACK}/connections_hbm-qwen.csv", roles=None,
@@ -380,9 +379,11 @@ def plan_seams(P):
     return out
 
 
-def kit_budget(gen_phys):
-    """the kit SDC budget fractions of gen_phys.sdc (IO / ft hop share), the hold padding rule."""
-    return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(gen_phys.FT_HOP_IN_SHARE),
+def kit_budget(gen_phys, P=None):
+    """the kit SDC budget fractions of gen_phys.sdc (IO / ft hop share: the plan's clock.ft_hop_in_share when P is
+    given), the hold padding rule."""
+    sh = gen_phys.ft_hop_in_share(P) if P is not None else gen_phys.FT_HOP_IN_SHARE
+    return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(sh),
                 hold_out_min_ps=float(gen_phys.HOLD_OUT_MIN_PS))
 
 
@@ -672,7 +673,7 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
     gen_phys = _import(repo, "gen_phys")
     raw = json.loads(Path(plan).read_text())
     P = S.Plan(raw)
-    kb = kit_budget(gen_phys)
+    kb = kit_budget(gen_phys, P)
     seams = plan_seams(P)
     have = {}
     missing_views = {}
@@ -694,8 +695,11 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
     si_rows = [si[s["cls"]] for s in rest]
     res = dict(seams=len(seams), measured_ports=len(measured), standin_ports=len(rest),
                standin={c: dict(v, ports=sum(1 for s in rest if s["cls"] == c)) for c, v in si.items()},
-               standin_worst_setup_ps=min((r["setup_ps"] for r in si_rows), default=None),
-               standin_worst_hold_ps=min((r["hold_ps"] for r in si_rows), default=None),
+               # gate view = the agreed policy (TT/FF, 60/25); margined stand-ins are INFO until the owner rules
+               standin_worst_setup_ps=min((r["setup_policy_ps"] for r in si_rows), default=None),
+               standin_worst_hold_ps=min((r["hold_policy_ps"] for r in si_rows), default=None),
+               standin_worst_margined_info_setup_ps=min((r["setup_ps"] for r in si_rows), default=None),
+               standin_worst_margined_info_hold_ps=min((r["hold_ps"] for r in si_rows), default=None),
                views={tn: str(d) for tn, d in have.items()}, views_unavailable=missing_views,
                xtalk=xtalk_ps(margins, float(P.budgets.get("pin_reg_p90_um", 30.0))), derates=derates(margins),
                ir=dict(zip(("factor", "sensitivity", "drop_frac"), ir_factor(margins)),
@@ -748,18 +752,27 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
         return min(v) if v else None
     res["worst"] = {k: worst(k) for k in ("policy_setup_TT", "policy_hold_FF", "final_setup_TT", "final_hold_FF",
                                           "policy_setup_SS_info")}
-    res["neg_groups"] = sum(1 for x in rows if (x["final_setup_TT"] is not None and x["final_setup_TT"] < 0) or
-                            (x["final_hold_FF"] is not None and x["final_hold_FF"] < 0))
-    ran = r["policy"].get("ran") and r["margined"].get("ran")
-    if not ran:
-        res["status"] = "NOT RUN (signoff corners TT setup + FF hold did not both complete; see die_ci_sta.log)"
-    elif res["neg_groups"]:
-        res["status"] = "FAIL"
-    elif rest:
-        res["status"] = f"PARTIAL ({len(measured)}/{len(seams)} seam ports measured, all >= 0 margined; rest stand-in)"
-    else:
-        res["status"] = "PASS"
+    res.update(sta_status(rows, r["policy"].get("ran"), len(measured), len(seams), len(rest)))
     return res
+
+
+def sta_status(rows, policy_ran, n_measured, n_seams, n_rest):
+    """die STA gate.  GATE on the agreed policy only (TT setup / FF hold, 60/25 ps; coordinator 10-24 ~12:40: the
+    margins question is with the owner) -- the margined slack is counted as INFO and never changes the status."""
+    def neg(k1, k2):
+        return sum(1 for x in rows if (x.get(k1) is not None and x[k1] < 0) or (x.get(k2) is not None and x[k2] < 0))
+    out = dict(neg_groups=neg("policy_setup_TT", "policy_hold_FF"),
+               margined_neg_groups_info=neg("final_setup_TT", "final_hold_FF"),
+               gate_basis="policy TT setup / FF hold, 60/25 ps (margined slack = INFO, OWNER? pending)")
+    if not policy_ran:
+        out["status"] = "NOT RUN (signoff corners TT setup + FF hold did not both complete; see die_ci_sta.log)"
+    elif out["neg_groups"]:
+        out["status"] = "FAIL"
+    elif n_rest:
+        out["status"] = f"PARTIAL ({n_measured}/{n_seams} seam ports measured, all >= 0 at TT/FF policy; rest stand-in)"
+    else:
+        out["status"] = "PASS"
+    return out
 
 
 def cmd_sta_child(a):
@@ -964,21 +977,24 @@ def die_md(d):
     row("latency", f"{fmt(lt.get('lanes'))} lanes; table {lt.get('record') or lt.get('reason')}")
     s = g.get("sta", {})
     w = s.get("worst") or {}
-    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam setup@TT "
-               f"{fmt(w.get('final_setup_TT'))} ps (policy {fmt(w.get('policy_setup_TT'))}), hold@FF "
-               f"{fmt(w.get('final_hold_FF'))} ps (policy {fmt(w.get('policy_hold_FF'))}); stand-in worst "
-               f"{fmt(s.get('standin_worst_setup_ps'))} / {fmt(s.get('standin_worst_hold_ps'))} ps")
+    row("sta", f"{fmt(s.get('measured_ports'))}/{fmt(s.get('seams'))} seam ports measured; worst seam (gate, TT/FF "
+               f"policy) setup@TT {fmt(w.get('policy_setup_TT'))} ps, hold@FF {fmt(w.get('policy_hold_FF'))} ps; "
+               f"stand-in {fmt(s.get('standin_worst_setup_ps'))} / {fmt(s.get('standin_worst_hold_ps'))} ps. "
+               f"INFO margined: {fmt(w.get('final_setup_TT'))} / {fmt(w.get('final_hold_FF'))} ps "
+               f"({fmt(s.get('margined_neg_groups_info'))} neg groups), stand-in "
+               f"{fmt(s.get('standin_worst_margined_info_setup_ps'))} / {fmt(s.get('standin_worst_margined_info_hold_ps'))} ps")
     if s.get("xtalk"):
         dr = s.get("derates", {})
-        L += ["", f"Margins on top of policy (833.333 ps, 60/25 ps unc): crosstalk {s['xtalk']['setup_ps']} ps setup / "
+        L += ["", f"INFO margins (not gating until the owner rules) on top of policy (833.333 ps, 60/25 ps unc): crosstalk {s['xtalk']['setup_ps']} ps setup / "
                   f"{s['xtalk']['hold_ps']} ps hold per seam (L {s['xtalk']['seam_len_um']} um); cell derate late "
                   f"{dr.get('cell_late')} (OCV x IR {dr.get('ir_factor')}) / early {dr.get('cell_early')}; IR "
                   f"{(s.get('ir') or {}).get('mode')} (PDNSim: {(s.get('ir') or {}).get('pdnsim')})."]
     if s.get("seam_groups"):
-        L += ["", "| seam group | setup@TT final (policy) | hold@FF final (policy) | setup@SS info |", "|---|---|---|---|"]
-        for r in sorted(s["seam_groups"], key=lambda r: (r["final_setup_TT"] if r["final_setup_TT"] is not None else 1e9))[:10]:
-            L.append(f"| {r['seam']} | {fmt(r['final_setup_TT'])} ({fmt(r['policy_setup_TT'])}) | "
-                     f"{fmt(r['final_hold_FF'])} ({fmt(r['policy_hold_FF'])}) | {fmt(r.get('policy_setup_SS_info'))} |")
+        L += ["", "| seam group | setup@TT (gate) | hold@FF (gate) | INFO margined setup@TT / hold@FF | INFO setup@SS |",
+              "|---|---|---|---|---|"]
+        for r in sorted(s["seam_groups"], key=lambda r: (r["policy_setup_TT"] if r["policy_setup_TT"] is not None else 1e9))[:10]:
+            L.append(f"| {r['seam']} | {fmt(r['policy_setup_TT'])} | {fmt(r['policy_hold_FF'])} | "
+                     f"{fmt(r['final_setup_TT'])} / {fmt(r['final_hold_FF'])} | {fmt(r.get('policy_setup_SS_info'))} |")
     dl = d.get("delta")
     L += [""]
     if dl:
@@ -993,8 +1009,8 @@ def die_md(d):
 def summary_md(run):
     L = [f"# DIE-CI {run['date']} main {run['sha'][:10]} ({run['mode']}) — {run['verdict']}", "",
          f"host {run['host']}, {run['seconds']} s; previous run {run.get('prev_sha') or '-'}", "",
-         "| die | verdict | G0 | G0C | xdie | G2 | census | latency | die STA (worst final setup / hold ps) |",
-         "|---|---|---|---|---|---|---|---|---|"]
+         "| die | verdict | G0 | G0C | xdie | G2 | census | latency | die STA gate (TT setup / FF hold ps) | INFO margined (setup / hold ps) |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
     for n, d in run["dies"].items():
         g = d["gates"]
 
@@ -1003,12 +1019,14 @@ def summary_md(run):
         w = (g.get("sta") or {}).get("worst") or {}
         L.append(f"| {n} | {d['verdict']} | {s('g0')} | {s('g0c')} ({fmt((g.get('g0c') or {}).get('errors'))}) | {s('xdie')} "
                  f"({fmt((g.get('xdie') or {}).get('errors'))}) | {s('g2')} | {s('census')} | {s('latency')} | {s('sta')} "
-                 f"({fmt(w.get('final_setup_TT'))} / {fmt(w.get('final_hold_FF'))}) |")
+                 f"({fmt(w.get('policy_setup_TT'))} / {fmt(w.get('policy_hold_FF'))}) | "
+                 f"{fmt(w.get('final_setup_TT'))} / {fmt(w.get('final_hold_FF'))} |")
     for n in run.get("absent", []):
-        L.append(f"| {n} | NOT PRESENT (plan not on this sha) | | | | | | | |")
+        L.append(f"| {n} | NOT PRESENT (plan not on this sha) | | | | | | | | |")
     L += ["", "Per-die detail: `<die>.md` / `<die>.json`. Gates: G0 and G0C from one check.py --completeness run; xdie "
               "= PLAN-TOOL5 in-die rules + xdie_io.py rack pairing; G2 = g2.py die + 5 worst partitions; die STA = "
-              "die_sta.py ILM sub-top with DIE-CI margins (crosstalk, OCV, IR) on top of the AGENTS.md policy."]
+              "die_sta.py ILM sub-top, GATED at the AGENTS.md policy (TT setup / FF hold, 60/25 ps); DIE-CI margins "
+              "(crosstalk, OCV, IR) are an INFO column until the owner rules on them."]
     return "\n".join(L) + "\n"
 
 

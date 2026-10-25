@@ -1,0 +1,152 @@
+XDIE2_PLANINFO {"0": {"rows": 47, "cal": 261, "rel": 243, "K1": 11, "K2": 7, "gcL": 116, "loops": [[1, 5, 2, [0, 1, 0, 0]]]}, "1": {"rows": 47, "cal": 261, "rel": 243, "K1": 11, "K2": 7, "gcL": 116, "loops": [[1, 5, 2, [0, 1, 0, 0]]]}}
+XDIE3_FIRSTWR 14 14
+XDIE2_ARGS +NR0=47 +NR1=47 +NC0=261 +NC1=261 +NSEC=22 +NF=16 +NPUB=16
+XDIE2_L d=0 edge=10800 ph=0 gc=116
+XDIE2_L d=1 edge=10800 ph=0 gc=116
+XDIE2_ARM d=0 rel=7 bank=0 words=16
+XDIE2_ARM d=1 rel=7 bank=0 words=16
+XDIE3_VMRQ d=0 first rel=13
+XDIE3_VMRQ d=1 first rel=13
+XDIE2_WR d=0 rel=25
+XDIE2_WR d=0 rel=26
+XDIE2_WR d=0 rel=27
+XDIE2_WR d=1 rel=25
+XDIE2_WR d=0 rel=29
+XDIE2_WR d=1 rel=26
+XDIE2_WR d=0 rel=30
+XDIE2_WR d=1 rel=27
+XDIE2_WR d=0 rel=31
+XDIE2_WR d=0 rel=32
+XDIE2_WR d=1 rel=29
+XDIE2_RD d=0 rel=33
+XDIE2_WR d=1 rel=30
+XDIE2_WR d=0 rel=34
+XDIE2_RD d=0 rel=34
+XDIE2_WR d=1 rel=31
+XDIE2_WR d=0 rel=35
+XDIE2_RD d=0 rel=35
+XDIE2_WR d=1 rel=32
+XDIE2_WR d=0 rel=36
+XDIE2_RD d=1 rel=33
+XDIE2_WR d=0 rel=37
+XDIE2_RD d=0 rel=37
+XDIE2_WR d=1 rel=34
+XDIE2_RD d=1 rel=34
+XDIE2_RD d=0 rel=38
+XDIE2_WR d=1 rel=35
+XDIE2_RD d=1 rel=35
+XDIE2_WR d=0 rel=39
+XDIE2_RD d=0 rel=39
+XDIE2_WR d=1 rel=36
+XDIE2_WR d=0 rel=40
+XDIE2_RD d=0 rel=40
+XDIE2_WR d=1 rel=37
+XDIE2_RD d=1 rel=37
+XDIE2_WR d=0 rel=41
+XDIE2_RD d=1 rel=38
+XDIE2_WR d=0 rel=42
+XDIE2_RD d=0 rel=42
+XDIE2_WR d=1 rel=39
+XDIE2_RD d=1 rel=39
+XDIE2_RD d=0 rel=43
+XDIE2_WR d=1 rel=40
+XDIE2_RD d=1 rel=40
+XDIE2_WR d=0 rel=44
+XDIE2_RD d=0 rel=44
+XDIE2_WR d=1 rel=41
+XDIE2_RD d=0 rel=45
+XDIE2_WR d=1 rel=42
+XDIE2_RD d=1 rel=42
+XDIE2_RD d=1 rel=43
+XDIE2_RD d=0 rel=47
+XDIE2_WR d=1 rel=44
+XDIE2_RD d=1 rel=44
+XDIE2_RD d=0 rel=48
+XDIE2_RD d=1 rel=45
+XDIE2_RD d=0 rel=49
+XDIE2_RD d=0 rel=50
+XDIE2_RD d=1 rel=47
+XDIE2_RD d=1 rel=48
+XDIE2_RD d=0 rel=52
+XDIE2_RD d=1 rel=49
+XDIE2_RD d=1 rel=50
+XDIE2_RD d=1 rel=52
+XDIE2_LAND d=1 rel=137
+XDIE2_LAND d=1 rel=138
+XDIE2_LAND d=1 rel=139
+XDIE2_LAND d=0 rel=143
+XDIE2_LAND d=0 rel=144
+XDIE2_LAND d=1 rel=141
+XDIE2_LAND d=0 rel=145
+XDIE2_LAND d=1 rel=142
+XDIE2_LAND d=1 rel=143
+XDIE2_LAND d=0 rel=147
+XDIE2_LAND d=1 rel=144
+XDIE2_LAND d=0 rel=148
+XDIE2_LAND d=0 rel=149
+XDIE2_LAND d=1 rel=146
+XDIE2_LAND d=0 rel=150
+XDIE2_LAND d=1 rel=147
+XDIE2_LAND d=1 rel=148
+XDIE2_LAND d=0 rel=152
+XDIE2_LAND d=1 rel=149
+XDIE2_LAND d=0 rel=153
+XDIE2_LAND d=0 rel=154
+XDIE2_LAND d=1 rel=151
+XDIE2_LAND d=0 rel=155
+XDIE2_LAND d=1 rel=152
+XDIE2_LAND d=1 rel=153
+XDIE2_LAND d=0 rel=157
+XDIE2_LAND d=1 rel=154
+XDIE2_LAND d=0 rel=158
+XDIE2_LAND d=0 rel=159
+XDIE2_LAND d=1 rel=156
+XDIE2_LAND d=0 rel=160
+XDIE2_LAND d=0 rel=162
+XDIE2_RDY d=1 bank=0 rel=160
+XDIE2_RDY d=0 bank=0 rel=166
+XDIE2_REL d=0 rel=250 bank=0 ready=01
+XDIE2_REL d=1 rel=250 bank=0 ready=01
+XDIE2_DONE d=0 cal rel=267
+XDIE2_EX d=0 rel=267 pin=1
+XDIE2_EX d=0 rel=268 pin=1
+XDIE2_EX d=0 rel=269 pin=1
+XDIE2_EX d=0 rel=270 pin=1
+XDIE2_DONE d=1 cal rel=267
+XDIE2_EX d=1 rel=267 pin=1
+XDIE2_EX d=0 rel=271 pin=1
+XDIE2_EX d=1 rel=268 pin=1
+XDIE2_EX d=0 rel=272 pin=1
+XDIE2_EX d=1 rel=269 pin=1
+XDIE2_EX d=0 rel=273 pin=1
+XDIE2_EX d=1 rel=270 pin=1
+XDIE2_EX d=0 rel=274 pin=1
+XDIE2_EX d=1 rel=271 pin=1
+XDIE2_EX d=0 rel=275 pin=1
+XDIE2_EX d=1 rel=272 pin=1
+XDIE2_EX d=0 rel=276 pin=1
+XDIE2_EX d=1 rel=273 pin=1
+XDIE2_EX d=0 rel=277 pin=1
+XDIE2_EX d=1 rel=274 pin=1
+XDIE2_EX d=0 rel=278 pin=1
+XDIE2_EX d=1 rel=275 pin=1
+XDIE2_EX d=0 rel=279 pin=1
+XDIE2_EX d=1 rel=276 pin=1
+XDIE2_EX d=0 rel=280 pin=1
+XDIE2_EX d=1 rel=277 pin=1
+XDIE2_EX d=0 rel=281 pin=1
+XDIE2_EX d=1 rel=278 pin=1
+XDIE2_EX d=0 rel=282 pin=1
+XDIE2_EX d=1 rel=279 pin=1
+XDIE2_EX d=1 rel=280 pin=1
+XDIE2_EX d=1 rel=281 pin=1
+XDIE2_EX d=1 rel=282 pin=1
+XDIE2_DONE d=0 coll rel=290
+XDIE2_DONE d=1 coll rel=290
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=285 first_pub=273 last_pub=288 vm_reqs=16 | d1 first_vm=13 first_wr=25 last_rx=285 first_pub=273 last_pub=288 vm_reqs=16
+XDIE3_E d0 275 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+- /srv/opentallas-scratch/claude/tok-hbm/xdie/r256/main_rows256/src/rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_step.sv:367: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 11us; walltime 4.058 s; speed 2.753 us/s
+- Verilator: cpu 4.057 s on 1 threads; allocated 17 MB

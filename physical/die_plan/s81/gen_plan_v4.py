@@ -1697,7 +1697,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
         "partitions": oparts,
         "ports": oports,
         "lanes": olanes,
-        "clock": {"source": {"part": "@die", "bus": "clk"}, "insertion_ps": 250, "common_latency_ps": 250, "insertion_tol_ps": 40,   # R4 die-wide common latency (COORD G0C)
+        "clock": {"source": {"part": "@die", "bus": "clk"}, "insertion_ps": 250, "common_latency_ps": 250, "insertion_tol_ps": 40, "ft_hop_in_share": 0.16,   # R4 die-wide common latency (COORD G0C)
                   "neighbour_skew_ps": 80, "face_xing": "budgeted",
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(X0 + 11 * PX, 4), round(X0 + 10 * PY, 4)],
                             "topology": "htree"}},
@@ -1710,6 +1710,11 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     "cut_ratio_max": 0.6, "cut_step_um": 250},
     }
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
+    from tools.die_plan.ft_sites import place as place_ft_bits
+    from tools.die_trial.legal_sites import RowAllocator
+    STATS_V4["frame_ft_bit_sites"], _ = place_ft_bits(
+        plan, RowAllocator, types=[n for n in plan["partition_types"] if n.startswith("col_")],
+        reach_um=FT_KIT_REACH_UM, margin=.98)
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)

@@ -79,6 +79,7 @@ def main():
     ap.add_argument('--tail-extra', type=int, default=LS.shift('hc_tail_result'),
                     help='HBM-P5-RTLB 10-23: extra tail result edges (hc_root split twin: +7 = one sink edge); default '
                          'leaf_split_latency hc_tail_result (0 unless OT_HBM_LEAF_SPLIT=1)')
+    ap.add_argument("--t0", type=int, default=None, help="TOK-HBM 10-24: first ingest edge (default 8, raised to ding+1)")
     a = ap.parse_args()
     run = a.run
     run.mkdir(parents=True, exist_ok=True)
@@ -109,7 +110,7 @@ def main():
     def add(t, **f):
         ev.setdefault(t, {}).update(f)
     slot = 1
-    T0 = 8
+    T0 = a.t0 if a.t0 is not None else max(8, a.ding + 1 if a.split else 8)   # TOK-HBM 10-24: ingest fires --ding early; t >= 1
     if a.mode != 'g22':
         # phase A: the weight set (slot 1) from the 4 quadrants, quadrant q rows 6q..6q+5, 480 waves each
         for q in range(4):
