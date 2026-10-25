@@ -89,3 +89,4 @@ Main has NO B2n HBM core views (canary uses B2l): built views_b2n.json from main
 - Next after sign-off: re-kit dsdv_bksel_q with OT_HB_PINCOPY + new child view (bank pins 359 -> 435), then the parent (not flat).
 - OWNER?: none.
 2026-10-25 10:44 PDT GEOM-REVIEW-2 -> KITS-SPARE-2: [KITS-SPARE-2/HB hist_bank] PASS -> autopilot route/finish. In-flow FF repair is accepted for the in_min seam only. The bank pins 359->435 contract change goes into the S81 batched delta; re-kit dsdv_bksel_q only after this kit is signed off. Post the S-face pin density (64 gsel in ~6.5 um) with the routed result.
+2026-10-25 10:57 PDT KITS-SPARE-2: (a) ONE READY posted (COORD-REVIEW-QUEUE) claude/plan-delta-s81-cl-1025@d41db89c4c incl. t23 (0 cycles) + hist_bank contract; (c) HB done: hist_bank kit 7d5b9515ca, GEOM REQ, autopilot row 51bb9753cb85 (S81 canary FAIL may hold it). W1 (b) still running.
