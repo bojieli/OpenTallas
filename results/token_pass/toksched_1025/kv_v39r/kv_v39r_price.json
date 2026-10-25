@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.toksched.kv_v39r_price.v1",
+ "source": "claude/path-kv-rebase-1025@3832299dfb results/arch/kv_plan_0719/rebase1025/lane_cycle_delta_vs_main.json (839 lanes, lat_v39r vs main 183f0b03b9 lat_v39pd)",
+ "model": "lane-class model on the token-path DAG results/arch/token_path_20261009/qwen_rom.json (accepted_cost.solve); clock 1.2 GHz as the DAG record",
+ "per_attention_request": {
+  "d2d_rx_bundle_max": 2,
+  "d2d_rx_lanes": [
+   "L341",
+   "L342",
+   "L343",
+   "L345",
+   "L346",
+   "L351",
+   "L352",
+   "L353",
+   "L355"
+  ],
+  "kvs_attn_tx_max": 4,
+  "kvs_attn_tx_lanes": [
+   "L1427",
+   "L1428"
+  ],
+  "cycles": 6,
+  "requests_per_token": 36
+ },
+ "per_token_embed": {
+  "d2d_rx": 2,
+  "px_hop": 2,
+  "worst_pc_chain": 31,
+  "chains": {
+   "embgw_est:EN": 31,
+   "embgw_est:ES": 28,
+   "embgw_est:WN": 31,
+   "embgw_est:WS": 28,
+   "kvs_emb_px_tep:EN": 31,
+   "kvs_emb_px_tep:ES": 30,
+   "kvs_emb_px_tep:WN": 31,
+   "kvs_emb_px_tep:WS": 30,
+   "kvs_emb_px_tok:EN": 29,
+   "kvs_emb_px_tok:ES": 30,
+   "kvs_emb_px_tok:WN": 31,
+   "kvs_emb_px_tok:WS": 30
+  },
+  "emb_tx_slot": 7,
+  "row_tx": 5,
+  "cycles": 47,
+  "basis": "serial sum, upper bound"
+ },
+ "L663": {
+  "rebased_lane": [
+   {
+    "lane": "L663",
+    "src": "hub_Wi.o_host_fdi",
+    "dst": "io_W3.i_host_fdi",
+    "width": 1044,
+    "main_cycles": 34,
+    "main_base": 34,
+    "main_r8_pad": 0,
+    "new_cycles": 35,
+    "new_base": 35,
+    "new_r8_pad": 0,
+    "delta": 1,
+    "f7ch_base": 35,
+    "unblock_delta": 0
+   }
+  ],
+  "main_plan": "34 -> 42 (claude/path-kv-obst-1025 a9faecc2ab, head-macro station fix)",
+  "token_cycles": 0,
+  "basis": "host FDI (hub_Wi -> io_W3): boot / admission / host IO lane; no host node on the token path DAG; the decode loop (embed -> 36 layers -> LM head) never waits on it"
+ },
+ "interior_unpriced": {
+  "families": {
+   "vport_slg": {
+    "lanes": 193,
+    "max_delta": 8
+   },
+   "pv_rows": {
+    "lanes": 90,
+    "max_delta": 16
+   },
+   "ahub_astk": {
+    "lanes": 94,
+    "max_delta": 7
+   },
+   "seq_hroot_hsl": {
+    "lanes": 109,
+    "max_delta": 5
+   },
+   "acal": {
+    "lanes": 32,
+    "max_delta": 5
+   }
+  },
+  "serial_bound_per_layer": 41,
+  "basis": "hardened equalisation budgets (PV_W, ECTLK RESPONSE_LAT, landed bundles) absorb these only while the new lane cycles stay inside the budget; not checked here"
+ },
+ "priced": {
+  "ar": {
+   "base_cycles": 249431.0,
+   "cycles": 249694.0,
+   "added_cycles": 263.0,
+   "tok_s_before": 4810.9,
+   "tok_s_after": 4805.9,
+   "e2e_loss_pct": 0.105
+  }
+ },
+ "bracket_upper": {
+  "ar": {
+   "base_cycles": 249431.0,
+   "cycles": 251170.0,
+   "added_cycles": 1739.0,
+   "tok_s_before": 4810.9,
+   "tok_s_after": 4777.6,
+   "e2e_loss_pct": 0.692
+  }
+ }
+}
