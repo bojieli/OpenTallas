@@ -20,7 +20,10 @@ def retain(path):
 
 
 def load(path):
-    return json.loads(path.read_text())
+    receipt = json.loads(path.read_text())
+    if not isinstance(receipt, dict):
+        raise ValueError(f'malformed gate receipt: {path}')
+    return receipt
 
 
 def run(kit, stage, netlist=None, execute=subprocess.run):
