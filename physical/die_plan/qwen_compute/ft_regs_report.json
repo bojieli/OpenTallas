@@ -1,0 +1,81 @@
+{
+ "checked": 72,
+ "slots": 53,
+ "stations_in_cores": 65,
+ "long_hops": 42,
+ "unfixed": [],
+ "added_stations": [
+  {
+   "slot": "cbf_q00_s2.serdes_tx_tx_flit",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    613,
+    605,
+    596,
+    588,
+    588
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.serdes_tx_valid_tx_v",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    613,
+    605,
+    605,
+    596,
+    588
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.tx_up_serdes_up",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    570,
+    596,
+    605,
+    613,
+    622
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.serdes_tx_tx_flit",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    622,
+    631,
+    639,
+    648,
+    648
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.serdes_tx_valid_tx_v",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    588,
+    596,
+    622,
+    631,
+    639
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.tx_up_serdes_up",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    631,
+    622,
+    622,
+    613,
+    605
+   ]
+  }
+ ]
+}

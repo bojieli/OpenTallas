@@ -3,8 +3,8 @@
  "partitions": 377,
  "types": 56,
  "types_merged": 135,
- "ports": 3002,
- "lanes": 2015,
+ "ports": 3410,
+ "lanes": 2207,
  "die_um": [
   31216.32,
   25228.8
@@ -848,6 +848,27 @@
    "cells_est": 116000
   }
  ],
+ "a0_core_taps": {
+  "source": "a0_core_taps.json",
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "neighbour_skew_ps": 80,
+  "taps_per_core": {
+   "nk": 38,
+   "nl": 37
+  },
+  "drops_per_quad": {
+   "cbf_q00": 152,
+   "cbf_q00_s2": 152,
+   "cbf_q01": 152,
+   "cbf_q01_s2": 152,
+   "cbf_q11": 152,
+   "cbn_q00": 152,
+   "cbn_q01": 152,
+   "cbn_q11": 152,
+   "cbx_q10": 151
+  }
+ },
  "leaf_params": {
   "tt_ctlm": {
    "ot_qfd_tt_ctlm_static_hr": {
