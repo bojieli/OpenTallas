@@ -104,3 +104,8 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
   ot_rom_4096x266_m8/ot_rom_4096x266_m8.v". The intel2 tree copy has physical/ as symlinks into intel1 paths (cp -as).
   Fix on resume: copy physical/asap7_memory_macros* for real into s8exp/tree (from a main checkout), rerun only the two
   calibrate commands from s8cal2.sh (the binary is reused because it already exists), then stage_stg_die.sh. This is a vehicle setup error, not an RTL FAIL.
+
+## TOK-QK (steward) -- RESUMED 2026-10-24 19:29 PDT
+- 2026-10-24 19:29 PDT TOK-QK: s8exp tree on intel2 had 581 symlinks into intel1 paths -> replaced by real files from main 8a5d1f3dab
+  (git show). Relaunched calibrates (binary reused) + stage_stg_die.sh chained: s8cal3.sh, ot-run unit oth-ubuntu-1531267-1792895121
+  on intel2 (client epyc1 ~/wt/tok-qw-logs/s8cal3.otrun.log). Next: collect stgdie/result.json, commit, recompose.

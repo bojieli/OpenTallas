@@ -98,3 +98,11 @@ CODEX progress: BO1opt-in source mergedmaina2757edd53, variantdefault0; sixrealb
   = clk_clk_phy; u_host already has ck_phy_rx_w=clk_clk_phy/ck_phy_rx_r=clk (qkd_host_phy_cdc5 sits AFTER the adapter).
   Next: kv_host_fdi_cdc.py inserting async FIFOs (rx clk->clk_clk_phy before .phy_rx_*, tx clk_clk_phy->clk after
   .phy_tx_*; valid+data through one delay), fix kvs_link_phy_models.sv model-level CDC, sub-bench + mutant.
+
+## TOK-QK (steward of KV-TOK/TOK-QW/QC-TOK token side) -- RESUMED 2026-10-24 19:29 PDT
+- 2026-10-24 19:29 PDT TOK-QK: forks B/C had NO commits (both @b1131f6fa8). Sub-agents launched: B (controller boot window, claude/kv-tok-b-1024,
+  work epyc2 scratch2/claude/kv-tok/B) and C1+C2 (claude/kv-tok-c-1024, epyc2 scratch2/claude/kv-tok/C). C2 DECISION (lane lead):
+  ONE CDC per direction at the SerDes boundary = async FIFO (gray pointers + 2-flop syncs, valid+data written together);
+  all on-die lanes on core clock; rate/flow absorbed only at the off-die host link (elastic allowed there by owner rule);
+  remove the unsynchronised crossings instead of stacking a second CDC. C1 durable fix in bind.py (+test) for lane KV's rebind.
+- Next (me): kv43 staged tree = kv42 + BO1 hub_Wi + A (+B +C via kv43/apply_{B,C}.sh), fresh hier build via ot-run on epyc2.
