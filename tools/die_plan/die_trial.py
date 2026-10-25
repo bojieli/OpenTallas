@@ -456,30 +456,72 @@ def ft_band_rects(P):
     return out
 
 
-def band_region_adjust(P, share_adj):
+def die_core_rects(P, L, grow):
+    """die-frame rects (grown by `grow` um) of every planned hard core whose abstract OBS covers layer L."""
+    li = int(L[1:])
+    top = int(P.layer_budget["partition_signal_max"][1:])
+    out = []
+    for n, p in P.parts.items():
+        t = P.types[p["type"]]
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        o = p.get("orient", "R0")
+        for x0, y0, x1, y1, tl, _, _ in core_obs(t):
+            if li < 4 or li > min(int(tl[1:]), top):
+                continue
+            if o in ("MY", "R180"):
+                x0, x1 = w - x1, w - x0
+            if o in ("MX", "R180"):
+                y0, y1 = h - y1, h - y0
+            out.append((ox + x0 - grow, oy + y0 - grow, ox + x1 + grow, oy + y1 + grow))
+    return out
+
+
+def _uncovered(W, H, rects):
+    """rectangles covering [0,W]x[0,H] minus the union of rects (slab sweep, vertically merged)."""
+    ys = sorted({0.0, H} | {min(max(r[1], 0.0), H) for r in rects} | {min(max(r[3], 0.0), H) for r in rects})
+    open_ = {}
+    out = []
+    for ya, yb in zip(ys, ys[1:]):
+        if yb - ya < 1e-6:
+            continue
+        cov = sorted((max(r[0], 0.0), min(r[2], W)) for r in rects if r[1] <= ya + 1e-6 and r[3] >= yb - 1e-6)
+        free, x = [], 0.0
+        for a, b in cov + [(W, W)]:
+            if a > x + 1e-6:
+                free.append((round(x, 3), round(a, 3)))
+            x = max(x, b)
+        nxt = {}
+        for iv in free:
+            nxt[iv] = open_.pop(iv, ya)
+        for (a, b), y0 in open_.items():
+            out.append((a, y0, b, ya))
+        open_ = nxt
+    for (a, b), y0 in open_.items():
+        out.append((a, y0, b, H))
+    return out
+
+
+def band_region_adjust(P, share_adj, grow=12.0):
     """GRT region adjustments that model the die_ft_bands: the band layers get global adjustment 0, every die area
     outside a band of that layer gets region adjustment share_adj (= the usual 1 - ft_track_frac; OpenROAD scales the
     unadjusted capacity, checked 10-25 on a 200x200 test: half-die region 0.75 -> 37.6 % reduction), and a band with
-    die_share < 1 gets 1 - die_share.  -> (band layers, [(layer, x0, y0, x1, y1, adjustment)])"""
+    die_share < 1 gets 1 - die_share.  Hard-core OBS areas (grown by about one gcell) are left out: OpenROAD subtracts
+    the adjustment from the original capacity, so on an OBS (capacity 0) edge it underflows to 65480 tracks
+    (GRT-0114, 10-25 B2p_r1_band: M4 derated +246 %).  -> (band layers, [(layer, x0, y0, x1, y1, adjustment)])"""
     rects = ft_band_rects(P)
     by = defaultdict(list)
     for L, x0, y0, x1, y1, ds in rects:
         by[L].append((x0, y0, x1, y1, ds))
     regs = []
     for L, rs in sorted(by.items()):
-        ys = sorted({0.0, P.H} | {r[1] for r in rs} | {r[3] for r in rs})
-        for ya, yb in zip(ys, ys[1:]):
-            if yb - ya < 1e-6:
-                continue
-            cov = sorted((r[0], r[2]) for r in rs if r[1] <= ya + 1e-6 and r[3] >= yb - 1e-6)
-            x = 0.0
-            for a, b in cov + [(P.W, P.W)]:
-                if a > x + 1e-6:
-                    regs.append((L, x, ya, a, yb, share_adj))
-                x = max(x, b)
+        cores = die_core_rects(P, L, grow)
+        for x0, y0, x1, y1 in _uncovered(P.W, P.H, [r[:4] for r in rs] + cores):
+            regs.append((L, x0, y0, x1, y1, share_adj))
         for x0, y0, x1, y1, ds in rs:
             if ds < 1.0:
-                regs.append((L, x0, y0, x1, y1, round(1 - ds, 3)))
+                for a in _uncovered(x1 - x0, y1 - y0, [(c[0] - x0, c[1] - y0, c[2] - x0, c[3] - y0) for c in cores]):
+                    regs.append((L, a[0] + x0, a[1] + y0, a[2] + x0, a[3] + y0, round(1 - ds, 3)))
     return sorted(by), regs
 
 
