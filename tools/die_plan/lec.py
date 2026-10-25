@@ -102,9 +102,16 @@ def parse_config(kit):
     env = {}
     for line in (Path(kit) / "config.mk").read_text().splitlines():
         line = line.split("#", 1)[0].rstrip()
-        m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*[:?+]?=\s*(.*)$", line)
-        if m:
-            env[m[1]] = m[2].strip()
+        m = re.match(r"^\s*(?:override\s+)?(?:export\s+)?([A-Z0-9_]+)\s*([:?+]?)=\s*(.*)$", line)
+        if not m:
+            continue
+        var, op, val = m[1], m[2], m[3].strip()
+        if op == "+" and env.get(var):        # make += appends (HEAD0719 kits: VERILOG_FILES += ot_s81hd_rom_addr_copy.sv)
+            env[var] = f"{env[var]} {val}" if val else env[var]
+        elif op == "?" and var in env:        # make ?= sets only an undefined variable
+            pass
+        else:
+            env[var] = val
     if "DESIGN_NAME" not in env or "VERILOG_FILES" not in env:
         raise LecError(f"{kit}/config.mk: no DESIGN_NAME / VERILOG_FILES")
     return env

@@ -382,3 +382,20 @@ def test_xor_sat_checks_original_cnf_and_negative_control():
     m.onames = ['equal', 'corrupted', 'nonlinear_sat']
     assert lec.xor_sat(m, list(range(3)), []) == {
         'equal': 'proved', 'corrupted': 'differs', 'nonlinear_sat': 'differs'}
+
+def test_parse_config_make_append_and_conditional(tmp_path):
+    # HEAD0719 kits append a file with make +=: reading it as = dropped every other RTL file (gold = 1 file,
+    # UNPROVEN not a valid top-level module on ot_s81hd_elemB_cv).  ?= must not override an earlier value.
+    (tmp_path / "config.mk").write_text(
+        "export DESIGN_NAME = top\n"
+        "export VERILOG_FILES = /work/rtl/a.sv /work/rtl/b.sv  # base list\n"
+        "export VERILOG_FILES += /work/rtl/c.sv\n"
+        "VERILOG_DEFINES ?= -DSYNTHESIS\n"
+        "VERILOG_DEFINES ?= -DOTHER\n"
+        "export SYNTH_BLACKBOXES += ot_rom_bb\n"
+        "override export DESIGN_NAME := top2\n")
+    env = lec.parse_config(tmp_path)
+    assert env["VERILOG_FILES"].split() == ["/work/rtl/a.sv", "/work/rtl/b.sv", "/work/rtl/c.sv"]
+    assert env["VERILOG_DEFINES"] == "-DSYNTHESIS"
+    assert env["SYNTH_BLACKBOXES"] == "ot_rom_bb"
+    assert env["DESIGN_NAME"] == "top2"
