@@ -45,8 +45,12 @@ module tb_kvslice;
         .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
     // die host TX (two halves) -> host board port RX
-    wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
-    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
+    // TOK-QK/C 10-24: the two x6 halves are separate in-order streams on clk_phy (each behind its own CDC FIFO); the board
+    // PHY deskews them by order (ot_fdi_join2 on clk_phy) -- never a same-cycle AND of the halves.
+    wire d2h_v; wire [1042:0] d2h_flit;
+    ot_fdi_join2 #(.WA(522), .WB(521), .DEPTH(16)) u_board_deskew (.clk(ck_phy), .rst_n(por_n),
+        .a_v(dut.sys_SW.u_core.tx_v), .a_d(dut.sys_SW.u_core.tx_flit), .b_v(dut.sys_SE.u_core.tx_v), .b_d(dut.sys_SE.u_core.tx_flit),
+        .o_v(d2h_v), .o_d(d2h_flit));
     reg  [1042:0] d2h_q [0:3]; reg d2h_vq [0:3];
     always @(posedge ck_phy) begin
         d2h_q[0] <= d2h_flit; d2h_vq[0] <= d2h_v;

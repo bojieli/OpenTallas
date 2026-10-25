@@ -28,7 +28,14 @@ parameters), `<die>_bound_top.sv`, `bind_cells.sv` (ot_dp_st boundary flop / sta
 Construction rules:
   * leaves are the original modules, unchanged, with the parameters Yosys derived for the as-built instance;
   * an intra-partition net is wired as the as-built die wired it; transport stages inside one partition are kept as an
-    ot_dp_dly of the same depth (the as-built latency of an intra-partition path is unchanged);
+    ot_dp_dly of the same depth (the as-built latency of an intra-partition path is unchanged) -- EXCEPT after a glue
+    cell re-homed to the sink partition whose every input crosses into it (e.g. the rx_v AND of a split macro's two
+    halves): the as-built stages between that glue and its sink were the cross-die transport the lanes now realise, so
+    they are absorbed (not kept: TOK-QK/C 10-24, C1 -- keeping them landed the KV SerDes valid 4 flits after its data)
+    and the glue's crossing inputs carry them as as-built depth into the sink's landing group (bus_join, below);
+  * split macros (asbuilt.split_bus_join: dissolved substitute modules, e.g. the x12 SerDes bound as two x6 halves): the
+    bits of one as-built port reaching one sink leaf from the halves form ONE landing group (bus_groups member
+    `bus_join`, r8.py bus_key), so R8 lands every half -- and a valid rebuilt from them -- at one added delay;
   * every net crossing a partition boundary becomes a bus pair: out boundary flop in the source partition, in boundary
     flop in the destination (data + one epoch bit, reset-less data).  The as-built stages of that path (relays,
     landings) are removed; old and new stage counts are recorded per bus in bind_latency.json, never hidden;
@@ -769,6 +776,8 @@ class Binder:
         self.clk_dom = defaultdict(set)                      # part -> {domain}
         self.sinks = {}                                      # (ci, port, bit) -> descriptor
         self.reset_age = defaultdict(list)                   # part -> as-built release stages of replaced resets
+        self.glue_absorbed = {}                              # glue ci -> (consumer ci, absorbed as-built stages)
+        self._glue_xin = {}
         cnt = defaultdict(int)
         plan_rw = self.pc.rewired_keys() if self.pc else set()
         for ci, c in enumerate(F.cells):
@@ -799,6 +808,16 @@ class Binder:
                 cnt["source_unmapped"] += 1
                 return ("err", "source cell unmapped")
             if sp == p:
+                if st and self._glue_all_crossing(sci, p):
+                    prev = self.glue_absorbed.get(sci)
+                    if prev is None or prev[1] == st:
+                        # C1 (TOK-QK/C 10-24): transport after a sink-side re-homed glue of crossing inputs = lane
+                        self.glue_absorbed[sci] = (ci, st) if prev is None else prev
+                        cnt["glue_transport_absorbed"] += 1
+                        cnt["intra"] += 1
+                        return ("int", sci, spn, sb, 0)
+                    self.errors.append(f"GLUE_STAGES {self.F.cells[sci].path}: sinks at as-built depths {prev[1]} and "
+                                       f"{st} after one re-homed glue (cannot absorb both)")
                 if st:
                     self.intra_dly[p].add((sci, spn, st))
                     cnt["intra_kept_stages"] += 1
@@ -840,6 +859,47 @@ class Binder:
                 self.errors.append(f"UNDRIVEN {pin}[{i}]" + (f" (only driver {s[1]} removed)" if k == "dropped" else ""))
             return ("err", k)
         return ("err", k)
+
+    def _glue_all_crossing(self, sci, p):
+        """asbuilt.glue_transport (default "absorb"; "keep" = the pre-10-24 behaviour): True for a glue cell in partition p
+        whose every input bit is driven from another partition (a join of crossing lanes re-homed to the sink side)."""
+        if self.ab.get("glue_transport", "absorb") != "absorb" or self.G.kind[sci] != "glue":
+            return False
+        if sci not in self._glue_xin:
+            c, ok, n = self.F.cells[sci], True, 0
+            for pn, bits in c.ports.items():
+                if self.G.dirs[sci].get(pn) != "input":
+                    continue
+                for b in bits:
+                    s = self.G.source(b) if not isinstance(b, str) else ("const",)
+                    n += 1
+                    if s[0] != "pin" or self.cpart.get(s[1]) in (None, p):
+                        ok = False
+            self._glue_xin[sci] = ok and n > 0
+        return self._glue_xin[sci]
+
+    def glue_st(self, ci):
+        """as-built stages absorbed after glue cell ci (0 if none)"""
+        g = getattr(self, "glue_absorbed", {}).get(ci)
+        return g[1] if g else 0
+
+    def bus_join(self, ci, sci):
+        """R8 landing-group key that joins bits beyond (sink leaf, source partition): the effective sink (the consumer of an
+        absorbed glue cell, else the sink) | the split-macro instance the source leaf belongs to.  None = default grouping."""
+        F = self.F
+        if not hasattr(self, "_split_mods"):
+            self._split_mods = set(self.ab.get("split_bus_join", [])) & set(self.ab.get("dissolve", []))
+            self._consumers = {v[0] for v in getattr(self, "glue_absorbed", {}).values()}
+        g = getattr(self, "glue_absorbed", {}).get(ci)
+        eff = g[0] if g else ci
+        sp = F.cells[sci].path
+        root = None
+        for anc, mod in F.dissolved.items():
+            if mod in self._split_mods and sp.startswith(anc + ".") and (root is None or len(anc) > len(root)):
+                root = anc
+        if root is None and g is None and eff not in self._consumers:
+            return None
+        return f"{F.cells[eff].path}|{root or 'part:' + str(self.cpart.get(sci))}"
 
     def _classify(self, p, ci, pn, i, s, cnt):
         if s[0] in ("or", "and"):
@@ -1401,7 +1461,7 @@ class Binder:
             seen.add((ci, pn, i))
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
             src = f"{self.F.cells[d[2]].path}.{d[3]}"
-            if canon(src) != canon(m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
+            if canon(src) != canon(m["source"]) or d[5] + self.glue_st(ci) != m["asbuilt"] or b0 != m["bound"]:
                 st["stale"] += 1
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
@@ -1633,16 +1693,20 @@ class Binder:
             L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
             pad = d[7] if len(d) > 7 else 0
-            land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", d[5], b0, b0 + pad,
-                              L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"))].append((i, d[4]))
-            rep[(d[2], d[3], d[4], d[5])][d[6]].add(b0 + pad)
+            ast = d[5] + self.glue_st(ci)          # + transport absorbed after a re-homed glue sink (C1)
+            land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", ast, b0, b0 + pad,
+                              L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"),
+                              self.bus_join(ci, d[2]))].append((i, d[4]))
+            rep[(d[2], d[3], d[4], ast)][d[6]].add(b0 + pad)
         groups = []
         for (ci, sp), m in sorted(land.items(), key=lambda kv: (F.cells[kv[0][0]].path, kv[0][1])):
             mem = []
-            for (pn, src, st, b0, b1, lane), bl in sorted(m.items()):
+            for (pn, src, st, b0, b1, lane, bj), bl in sorted(m.items(), key=lambda kv: repr(kv[0])):
                 mem.append(dict(sink_port=pn, sink_bits=ranges(x for x, _ in bl), source=src,
                                 source_bits=ranges(y for _, y in bl), asbuilt_stages=st, bound_stages=b0,
                                 landed_stages=b1, lane=lane))
+                if bj:
+                    mem[-1]["bus_join"] = bj
             off = {x["landed_stages"] - x["asbuilt_stages"] for x in mem}
             off0 = {x["bound_stages"] - x["asbuilt_stages"] for x in mem}
             groups.append(dict(sink=F.cells[ci].path, sink_part=self.cpart[ci], src_part=sp,

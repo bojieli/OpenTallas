@@ -587,3 +587,61 @@ def test_param_regen_variant_own_default(tmp_path):
     hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'OLD_ONLY': 1}})\n")
     assert bind.main(['bind',str(pp),'--out',str(out),'--strict'])!=0
     assert any('OLD_ONLY: not a parameter' in e for e in report(out)['errors'])
+
+
+def _glue_die(p):
+    """die_glue.v: the fault bits of A0 / A1 joined by glue of a dissolved parent j0 (mapped to S), then 2 relays"""
+    p["asbuilt"]["netlist"] = ["die_glue.v"]
+    p["asbuilt"]["dissolve"] = ["par", "jn"]
+    p["asbuilt"]["map"]["parts"]["j0"] = "S"
+
+
+def test_glue_transport_absorbed(tmp_path):
+    """TOK-QK/C 10-24 (KV boot C1): the as-built relays after a glue cell re-homed to the sink partition whose every
+    input crosses into it (the KV SerDes rx_v = AND of the two PHY halves) were cross-die transport, now realised by the
+    lanes: the binder must not keep them as an intra ot_dp_dly (that landed the KV valid 4 flits after its data).  They
+    move to the glue's crossing inputs as as-built depth (bus_groups), so R8 lands the join with the same offset as the
+    rest of that bus.  asbuilt.glue_transport = "keep" restores the old (wrong) delay = the mutant this test kills."""
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", _glue_die), out, "elab", "bind", "verify") == 0, \
+        report(out)["errors"][:5]
+    r = report(out)
+    assert r["n_errors"] == 0 and r["proof"]["tied"] == 0 and r["proof"]["undriven"] == 0
+    sinks = json.loads((out / "bind_sinks.json").read_text())
+    flt = sinks["snk.flt[0]"]
+    assert flt[0] == "pin" and flt[2] == 0 and flt[3] is True, flt          # glue -> sink: wire, no kept stages
+    top = "".join(f.read_text() for f in (out / "rtl").glob("bt_ts*.sv"))
+    assert "ot_dp_dly" not in top
+    bg = json.loads((out / "bus_groups.json").read_text())
+    gl = [m for g in bg["landing"] if g["sink"].startswith("j0.") for m in g["members"]]
+    assert gl and {m["asbuilt_stages"] for m in gl} == {2}                  # 0 lane-side + 2 absorbed relays
+    assert {m.get("bus_join", "").split("|")[0] for m in gl} == {"snk"}      # one bus with the consumer leaf
+    assert verify(out)["verdict"] == "PASS"
+
+    def keep(p):
+        _glue_die(p)
+        p["asbuilt"]["glue_transport"] = "keep"
+    out2 = tmp_path / "o2"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", keep), out2, "elab", "bind") == 0
+    s2 = json.loads((out2 / "bind_sinks.json").read_text())
+    assert s2["snk.flt[0]"][2] == 2                                          # the C1 bug: transport kept on top of lanes
+
+
+def test_r8_bus_join_unions_split_halves():
+    """r8 bus_key: members carrying one bind.py bus_join (one as-built port split over two source partitions, the KV
+    SerDes W / E halves) form ONE bus: unequal offsets are an R8 ERROR and the pads equalise them (W +6 as on KV)"""
+    import r8 as R8
+
+    def grp(sink, sp, src, bound, bj):
+        return dict(sink=sink, sink_part="hub", src_part=sp, members=[dict(
+            sink_port="i", sink_bits=[[0, 0]], source=src, source_bits=[[0, 0]], asbuilt_stages=4, bound_stages=bound,
+            landed_stages=bound, lane="l", **({"bus_join": bj} if bj else {}))])
+    raw = dict(partitions=[dict(name=x, type=x) for x in ("hub", "W", "E")])
+    for bj, nerr in (("host|serdes_host", 1), (None, 0)):
+        bg = dict(landing=[grp("host", "W", "serdes_host.u_W.d", 30, bj), grp("host", "E", "serdes_host.u_E.d", 36, bj)],
+                  replica=[])
+        msgs, _ = R8.check(bg, raw)
+        assert sum(1 for s, m in msgs if s == "ERROR" and "unequal" in m) == nerr
+        if bj:
+            mem, _ = R8.solve(bg, raw)
+            assert sorted(x["pad"] for x in mem) == [0, 6]

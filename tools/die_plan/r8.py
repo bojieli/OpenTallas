@@ -97,6 +97,10 @@ def bus_key(g, m, bus):
     # bus_sub (optional, set by a die's bus-group prep, e.g. KV r8_invariant_split.py): pins of one source leaf whose
     # as-built relative offset is NOT the same in every instance of the sink type were never one functional bus
     sub = (m["bus_sub"],) if m.get("bus_sub") else ()
+    if m.get("bus_join"):
+        # bind.py bus_join (TOK-QK/C 10-24): one as-built port split over partitions (split macro halves) and/or a
+        # re-homed glue join of crossing bits with its consumer = ONE bus across source partitions
+        return ("join", m["bus_join"]) + sub
     if bus == "leaf":
         return (g["sink"], g["src_part"], m["source"].rpartition(".")[0]) + sub
     return (g["sink"], g["src_part"]) + sub
