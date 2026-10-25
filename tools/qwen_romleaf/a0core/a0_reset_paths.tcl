@@ -57,6 +57,9 @@ foreach key [lsort -dictionary [dict keys $aw_cells]] {
   if {![dict exists $aw_plan $key]} {error "OT_A0_RESET_PATH no reviewed site for $key"}
   set xy [dict get $aw_plan $key]
   lassign $xy x y
+  # The native pin hook may already have made stage0 FIRM. OpenDB forbids
+  # moving a FIRM instance; release it only while applying its reviewed site.
+  $i setPlacementStatus PLACED
   $i setLocation [expr {int(round($x*$aw_dbu))}] [expr {int(round($y*$aw_dbu))}]
   $i setPlacementStatus FIRM
   dict set aw_positions $key $xy
