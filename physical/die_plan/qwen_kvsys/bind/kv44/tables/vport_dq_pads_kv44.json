@@ -1,0 +1,198 @@
+{
+ "note": "KV-BIND 10-24: re-derive the PV W request-lane pads for kv44 from the KV-P7 kv41 boot compile (image_kv41/\nvport_dq_pads.json) and the RT rule (kv_param_rules_v36 'RT (boot cfg_age)': RT = 9 + max_g(D(vq_g) + D(rs_g)), D = landed\nstages of vport.vq[01]_* -> slg_*.vreq and slg_*.rsp -> vport) measured on the kv41 and kv44 landing records.\nPlan v3.8x lengthened slg <-> vport lanes (+1 on rsp for all 16 ports, +1 on vq for 10), so RT and hence DQ move:\n    L_k = 4 + W_k + RT_k = RL41 - DQu41_k;  L44_k = L_k + dRT_k (+ dW_k, W from pr_t landed bound);  RL44 = max L44\n    DQu44_k = RL44 - L44_k;  pad_k = max(0, DQu44_k - 15)\n    kv_wreq_dq44.py KV41_BG(.gz) KV44_BG VPORT_DQ_PADS_KV41.json OUT.json",
+ "RT_kv41": {
+  "vport_EN_0": 30,
+  "vport_EN_1": 30,
+  "vport_EN_2": 31,
+  "vport_EN_3": 30,
+  "vport_ES_0": 30,
+  "vport_ES_1": 30,
+  "vport_ES_2": 31,
+  "vport_ES_3": 30,
+  "vport_WN_0": 30,
+  "vport_WN_1": 30,
+  "vport_WN_2": 30,
+  "vport_WN_3": 30,
+  "vport_WS_0": 30,
+  "vport_WS_1": 30,
+  "vport_WS_2": 30,
+  "vport_WS_3": 30
+ },
+ "RT_kv44": {
+  "vport_EN_0": 32,
+  "vport_EN_1": 31,
+  "vport_EN_2": 32,
+  "vport_EN_3": 32,
+  "vport_ES_0": 32,
+  "vport_ES_1": 31,
+  "vport_ES_2": 32,
+  "vport_ES_3": 32,
+  "vport_WN_0": 32,
+  "vport_WN_1": 32,
+  "vport_WN_2": 31,
+  "vport_WN_3": 32,
+  "vport_WS_0": 32,
+  "vport_WS_1": 32,
+  "vport_WS_2": 31,
+  "vport_WS_3": 32
+ },
+ "dRT": {
+  "vport_EN_0": 2,
+  "vport_EN_1": 1,
+  "vport_EN_2": 1,
+  "vport_EN_3": 2,
+  "vport_ES_0": 2,
+  "vport_ES_1": 1,
+  "vport_ES_2": 1,
+  "vport_ES_3": 2,
+  "vport_WN_0": 2,
+  "vport_WN_1": 2,
+  "vport_WN_2": 1,
+  "vport_WN_3": 2,
+  "vport_WS_0": 2,
+  "vport_WS_1": 2,
+  "vport_WS_2": 1,
+  "vport_WS_3": 2
+ },
+ "dW": {
+  "vport_EN_0": 0,
+  "vport_EN_1": 0,
+  "vport_EN_2": 0,
+  "vport_EN_3": 0,
+  "vport_ES_0": 0,
+  "vport_ES_1": 0,
+  "vport_ES_2": 0,
+  "vport_ES_3": 0,
+  "vport_WN_0": 0,
+  "vport_WN_1": 0,
+  "vport_WN_2": 0,
+  "vport_WN_3": 0,
+  "vport_WS_0": 0,
+  "vport_WS_1": 0,
+  "vport_WS_2": 0,
+  "vport_WS_3": 0
+ },
+ "partners_kv44": {
+  "vport_EN_0": [
+   "slg_EN_0",
+   "slg_EN_1"
+  ],
+  "vport_EN_1": [
+   "slg_EN_2",
+   "slg_EN_3"
+  ],
+  "vport_EN_2": [
+   "slg_EN_4",
+   "slg_EN_5"
+  ],
+  "vport_EN_3": [
+   "slg_EN_6",
+   "slg_EN_7"
+  ],
+  "vport_ES_0": [
+   "slg_ES_0",
+   "slg_ES_1"
+  ],
+  "vport_ES_1": [
+   "slg_ES_2",
+   "slg_ES_3"
+  ],
+  "vport_ES_2": [
+   "slg_ES_4",
+   "slg_ES_5"
+  ],
+  "vport_ES_3": [
+   "slg_ES_6",
+   "slg_ES_7"
+  ],
+  "vport_WN_0": [
+   "slg_WN_0",
+   "slg_WN_1"
+  ],
+  "vport_WN_1": [
+   "slg_WN_2",
+   "slg_WN_3"
+  ],
+  "vport_WN_2": [
+   "slg_WN_4",
+   "slg_WN_5"
+  ],
+  "vport_WN_3": [
+   "slg_WN_6",
+   "slg_WN_7"
+  ],
+  "vport_WS_0": [
+   "slg_WS_0",
+   "slg_WS_1"
+  ],
+  "vport_WS_1": [
+   "slg_WS_2",
+   "slg_WS_3"
+  ],
+  "vport_WS_2": [
+   "slg_WS_4",
+   "slg_WS_5"
+  ],
+  "vport_WS_3": [
+   "slg_WS_6",
+   "slg_WS_7"
+  ]
+ },
+ "RL41": 63,
+ "RL44": 64,
+ "dq_unpadded_kv44": {
+  "vport_WS_0": 7,
+  "vport_WS_1": 16,
+  "vport_WS_2": 0,
+  "vport_WS_3": 24,
+  "vport_WN_0": 8,
+  "vport_WN_1": 17,
+  "vport_WN_2": 1,
+  "vport_WN_3": 28,
+  "vport_ES_0": 8,
+  "vport_ES_1": 18,
+  "vport_ES_2": 0,
+  "vport_ES_3": 24,
+  "vport_EN_0": 9,
+  "vport_EN_1": 19,
+  "vport_EN_2": 0,
+  "vport_EN_3": 28
+ },
+ "pad_stages": {
+  "vport_WS_0": 0,
+  "vport_WS_1": 1,
+  "vport_WS_2": 0,
+  "vport_WS_3": 9,
+  "vport_WN_0": 0,
+  "vport_WN_1": 2,
+  "vport_WN_2": 0,
+  "vport_WN_3": 13,
+  "vport_ES_0": 0,
+  "vport_ES_1": 3,
+  "vport_ES_2": 0,
+  "vport_ES_3": 9,
+  "vport_EN_0": 0,
+  "vport_EN_1": 4,
+  "vport_EN_2": 0,
+  "vport_EN_3": 13
+ },
+ "pad_flops": 810,
+ "kv42_pad_stages": {
+  "vport_WS_0": 0,
+  "vport_WS_1": 2,
+  "vport_WS_2": 0,
+  "vport_WS_3": 10,
+  "vport_WN_0": 0,
+  "vport_WN_1": 3,
+  "vport_WN_2": 0,
+  "vport_WN_3": 14,
+  "vport_ES_0": 0,
+  "vport_ES_1": 3,
+  "vport_ES_2": 0,
+  "vport_ES_3": 10,
+  "vport_EN_0": 0,
+  "vport_EN_1": 4,
+  "vport_EN_2": 0,
+  "vport_EN_3": 14
+ }
+}

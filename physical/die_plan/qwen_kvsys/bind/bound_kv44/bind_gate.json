@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.die_plan.bind_gate.v1",
+ "die": "qwen_kvsys",
+ "bound": "/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44",
+ "bound_sha": "27c761ffe49a5bc7",
+ "time": "2026-10-24 20:47:46 PDT",
+ "regen": {
+  "verdict": "PASS",
+  "counts": {
+   "OK": 16,
+   "WARN": 3
+  },
+  "json": "/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/regen/constants.json",
+  "sv": "/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/regen/qwen_kvsys_sched_pkg.sv",
+  "sha": "2f9e6b207e75b2f1",
+  "seconds": 4.0,
+  "problems": {}
+ },
+ "smoke": {
+  "command": "/usr/bin/python3 /srv/opentallas-scratch2/claude/kv/kvbind/t38/tools/die_plan/bind_smoke.py --die qwen_kvsys --bound /srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44 --constants /srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/regen/constants.json --work /srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/smoke/work --submit",
+  "verdict": "PENDING",
+  "report": "/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/smoke/smoke_report.json",
+  "constants_sha_match": true
+ },
+ "verdict": "INCOMPLETE",
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44/bus_groups.json KST=34,34,32,32,32,31,31 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)"
+ }
+}

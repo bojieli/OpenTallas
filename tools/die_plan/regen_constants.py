@@ -605,8 +605,12 @@ def kv_vport(o):
         return
     rl = max(v["RT"] + v["W"] for v in out.values())
     dq = {k: rl - (v["RT"] + v["W"]) for k, v in out.items()}
-    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)", group="vport",
-          status="OK" if all(v["RT"] <= 31 for v in out.values()) else "ERROR")
+    # the RT hardware bound of qkd_pv16_vport_b (parameter RT, default 31): a param_regen hook may raise it on this bind
+    # (KV-BIND 10-24 kv44: plan v3.8x RT rule 32 -> bound 32); the boot word must not exceed the bound the bind applied
+    rtb = {int(b) for (i, p), (a, b) in B.applied().items() if p == "RT" and re.search(r"(^|\.)vport_\w+$", i)}
+    rt_max = min(rtb) if rtb else 31
+    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", f"9 + max_g(D(vq_g) + D(rs_g)) (<= RT bound {rt_max})",
+          group="vport", status="OK" if all(v["RT"] <= rt_max for v in out.values()) else "ERROR")
     o.add("VPORT_DQ", dq, "boot", "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)", group="vport",
           status="OK" if max(dq.values()) <= 15 else "WARN",
           note=None if max(dq.values()) <= 15 else f"DQ > 15 on {[k for k, v in dq.items() if v > 15]}: W request pads")

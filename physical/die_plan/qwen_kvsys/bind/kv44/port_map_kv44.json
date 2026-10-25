@@ -1,0 +1,7527 @@
+{
+ "schema": "opentallas.qwen_kv_bound_netlist.v1",
+ "die_v": "../die3/die.v",
+ "die_sha256": "e1fc838f427551c74029425b08d2f4d5835999d0cc6c7c6916448ca098866d0d",
+ "top": "qfd_die",
+ "masters": {
+  "qkd_hbm3e_phy_pc": {
+   "instances": 4,
+   "how": "hard_model",
+   "module": "qkd_hbm3e_phy_pc",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_astk_fault_join": {
+   "instances": 9,
+   "how": "by_name",
+   "module": "qkd_astk_fault_join",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_astk_rly_296_fl": {
+   "instances": 912,
+   "how": "by_name",
+   "module": "qkd_astk_rly_296_fl",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 26448
+  },
+  "qkd_astk_er_owner_st": {
+   "instances": 32,
+   "how": "by_name",
+   "module": "qkd_astk_er_owner_st",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 1316
+  },
+  "qkd_astk_ex_s": {
+   "instances": 128,
+   "how": "by_name",
+   "module": "qkd_astk_ex_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_astk_ep_s": {
+   "instances": 32,
+   "how": "by_name",
+   "module": "qkd_astk_ep_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 416
+  },
+  "qkd_astk_zn": {
+   "instances": 16,
+   "how": "identity",
+   "module": "qkd_astk_zn",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fo"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "tc": {
+     "die_ports": [
+      "tc"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "tc"
+     ]
+    },
+    "zc": {
+     "die_ports": [
+      "zc"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "zc"
+     ]
+    },
+    "zi": {
+     "die_ports": [
+      "zi"
+     ],
+     "die_bits": 138,
+     "rtl_bits": 138,
+     "rtl_ports": [
+      "zi"
+     ]
+    },
+    "zo": {
+     "die_ports": [
+      "zo"
+     ],
+     "die_bits": 138,
+     "rtl_bits": 138,
+     "rtl_ports": [
+      "zo"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 68,
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+   "parameters": {}
+  },
+  "qkd_astk_ctl_s": {
+   "instances": 4,
+   "how": "by_name",
+   "module": "qkd_astk_ctl_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 8
+  },
+  "ot_qkh_head_frontq_native": {
+   "instances": 512,
+   "how": "by_name",
+   "module": "ot_qkh_head_frontq_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 1024
+  },
+  "ot_qkh_lane8": {
+   "instances": 2048,
+   "how": "by_name",
+   "module": "ot_qkh_lane8",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4096
+  },
+  "ot_qkh_head_stin_native": {
+   "instances": 2048,
+   "how": "by_name",
+   "module": "ot_qkh_head_stin_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_head_stk_native": {
+   "instances": 2048,
+   "how": "by_name",
+   "module": "ot_qkh_head_stk_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_ktree_lk": {
+   "instances": 128,
+   "how": "by_name",
+   "module": "ot_qkh_ktree_lk",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_head_score4_native": {
+   "instances": 128,
+   "how": "by_name",
+   "module": "ot_qkh_head_score4_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkh_head_gather_stage": {
+   "instances": 64,
+   "how": "by_name",
+   "module": "qkh_head_gather_stage",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkh_head_sstage": {
+   "instances": 64,
+   "how": "by_name",
+   "module": "qkh_head_sstage",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_ectlk": {
+   "instances": 32,
+   "how": "bound",
+   "module": "qkd_ectl3_kiss_st",
+   "bundles": {
+    "rs": {
+     "die_ports": [
+      "rs"
+     ],
+     "die_bits": 1062,
+     "rtl_bits": 1062,
+     "rtl_ports": [
+      "rsp_valid",
+      "rsp_data",
+      "rsp_t",
+      "rsp_v",
+      "rsp_epoch",
+      "rsp_layer"
+     ]
+    },
+    "ck_a": {
+     "die_ports": [
+      "ck_a",
+      "ck_b",
+      "ck_c"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "si": {
+     "die_ports": [
+      "si"
+     ],
+     "die_bits": 633,
+     "rtl_bits": 633,
+     "rtl_ports": [
+      "si"
+     ]
+    },
+    "so": {
+     "die_ports": [
+      "so"
+     ],
+     "die_bits": 413,
+     "rtl_bits": 413,
+     "rtl_ports": [
+      "so"
+     ]
+    },
+    "t0": {
+     "die_ports": [
+      "t0"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "t0"
+     ]
+    },
+    "e1": {
+     "die_ports": [
+      "e1"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e1"
+     ]
+    },
+    "s1": {
+     "die_ports": [
+      "s1"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s1"
+     ]
+    },
+    "e0": {
+     "die_ports": [
+      "e0"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e0"
+     ]
+    },
+    "s0": {
+     "die_ports": [
+      "s0"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s0"
+     ]
+    },
+    "t1": {
+     "die_ports": [
+      "t1"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "t1"
+     ]
+    },
+    "e2": {
+     "die_ports": [
+      "e2"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e2"
+     ]
+    },
+    "s2": {
+     "die_ports": [
+      "s2"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s2"
+     ]
+    },
+    "e3": {
+     "die_ports": [
+      "e3"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e3"
+     ]
+    },
+    "s3": {
+     "die_ports": [
+      "s3"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s3"
+     ]
+    },
+    "rq": {
+     "die_ports": [
+      "rq"
+     ],
+     "die_bits": 38,
+     "rtl_bits": 38,
+     "rtl_ports": [
+      "req_valid",
+      "req_t",
+      "req_v",
+      "req_epoch",
+      "req_layer"
+     ]
+    },
+    "cfg": {
+     "die_ports": [
+      "cfg"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "cfg"
+     ]
+    },
+    "kg": {
+     "die_ports": [
+      "kg"
+     ],
+     "die_bits": 23,
+     "rtl_bits": 23,
+     "rtl_ports": [
+      "kgo",
+      "epoch",
+      "layer"
+     ]
+    },
+    "kf": {
+     "die_ports": [
+      "kf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+   "parameters": {
+    "RESPONSE_LAT": 80,
+    "QK_ISSUE_AGE": 91,
+    "HXK": 13,
+    "MUT": 0
+   }
+  },
+  "qkd_hgs": {
+   "instances": 320,
+   "how": "bound",
+   "module": "qkh_head_gather_stage",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "ti_a": {
+     "die_ports": [
+      "ti_a"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "ti_a"
+     ]
+    },
+    "e_a": {
+     "die_ports": [
+      "e_a"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e_a"
+     ]
+    },
+    "ti_b": {
+     "die_ports": [
+      "ti_b"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "ti_b"
+     ]
+    },
+    "e_b": {
+     "die_ports": [
+      "e_b"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e_b"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+   "parameters": {}
+  },
+  "qkd_hss": {
+   "instances": 192,
+   "how": "bound",
+   "module": "qkh_head_sstage",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "s_a": {
+     "die_ports": [
+      "s_a"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s_a"
+     ]
+    },
+    "s_b": {
+     "die_ports": [
+      "s_b"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s_b"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+   "parameters": {}
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "instances": 1,
+   "how": "identity",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "bundles": {
+    "clk": {
+     "die_ports": [
+      "clk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "clk"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "tx_up": {
+     "die_ports": [
+      "tx_up"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "tx_up"
+     ]
+    },
+    "tx_v": {
+     "die_ports": [
+      "tx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "tx_v"
+     ]
+    },
+    "tx_flit": {
+     "die_ports": [
+      "tx_flit"
+     ],
+     "die_bits": 583,
+     "rtl_bits": 583,
+     "rtl_ports": [
+      "tx_flit"
+     ]
+    },
+    "rx_v": {
+     "die_ports": [
+      "rx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rx_v"
+     ]
+    },
+    "rx_flit": {
+     "die_ports": [
+      "rx_flit"
+     ],
+     "die_bits": 583,
+     "rtl_bits": 583,
+     "rtl_ports": [
+      "rx_flit"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+   "parameters": {}
+  },
+  "qkd_d2ds": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_d2d_static_sfm",
+   "bundles": {
+    "rec_tx": {
+     "die_ports": [
+      "rec_tx"
+     ],
+     "die_bits": 549,
+     "rtl_bits": 549,
+     "rtl_ports": [
+      "record_tx_observed_v",
+      "record_tx"
+     ]
+    },
+    "rec_rx": {
+     "die_ports": [
+      "rec_rx"
+     ],
+     "die_bits": 552,
+     "rtl_bits": 552,
+     "rtl_ports": [
+      "record_send_kind",
+      "record_witness_slot",
+      "record_rx_v",
+      "record_rx"
+     ]
+    },
+    "att_tx_payload": {
+     "die_ports": [
+      "att_tx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "att_tx_payload"
+     ]
+    },
+    "emb_tx_payload": {
+     "die_ports": [
+      "emb_tx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "emb_tx_payload"
+     ]
+    },
+    "rx_payload": {
+     "die_ports": [
+      "rx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "rx_payload"
+     ]
+    },
+    "ck0": {
+     "die_ports": [
+      "ck0"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "fdi": {
+     "die_ports": [
+      "fdi"
+     ],
+     "die_bits": 1169,
+     "rtl_bits": 1169,
+     "rtl_ports": [
+      "fdi_tx_up",
+      "fdi_tx_v",
+      "fdi_tx_flit",
+      "fdi_rx_v",
+      "fdi_rx_flit"
+     ]
+    },
+    "phy_rst_n": {
+     "die_ports": [
+      "phy_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "phy_rst_n"
+     ]
+    },
+    "svc": {
+     "die_ports": [
+      "svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "transport_fault",
+      "native_links_drained",
+      "native_link_reset_seen",
+      "native_retrained",
+      "abort_drained",
+      "native_kv_drained",
+      "native_vm_drained",
+      "native_collective_drained",
+      "native_host_drained",
+      "native_collective_busy",
+      "native_kv_flush",
+      "native_admit_ready",
+      "crom_fault",
+      "execution_active",
+      "engine_result_v",
+      "engine_result_done",
+      "engine_result_fault",
+      "engine_result_cause",
+      "engine_result_tag",
+      "engine_result_gen",
+      "engine_result_token",
+      "engine_result_value",
+      "engine_result_cycles"
+     ]
+    },
+    "lup": {
+     "die_ports": [
+      "lup"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "link_up"
+     ]
+    },
+    "lrc": {
+     "die_ports": [
+      "lrc"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "host_link_reset_req",
+      "host_recovery_clear"
+     ]
+    },
+    "status_epoch16": {
+     "die_ports": [
+      "status_epoch16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "status_epoch16"
+     ]
+    },
+    "host_drained_local": {
+     "die_ports": [
+      "host_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_drained_local"
+     ]
+    },
+    "lpf": {
+     "die_ports": [
+      "lpf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "fwd_epoch": {
+     "die_ports": [
+      "fwd_epoch"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fwd_epoch"
+     ]
+    },
+    "fwd_link_rst_n": {
+     "die_ports": [
+      "fwd_link_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fwd_link_rst_n"
+     ]
+    },
+    "cal": {
+     "die_ports": [
+      "cal"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "cal_start",
+      "cal_seg"
+     ]
+    },
+    "dcfg": {
+     "die_ports": [
+      "dcfg"
+     ],
+     "die_bits": 40,
+     "rtl_bits": 40,
+     "rtl_ports": [
+      "cfg_tx_we",
+      "cfg_rx_we",
+      "cfg_addr",
+      "cfg_data"
+     ]
+    },
+    "eab": {
+     "die_ports": [
+      "eab"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "epoch_abort"
+     ]
+    },
+    "skw": {
+     "die_ports": [
+      "skw"
+     ],
+     "die_bits": 12,
+     "rtl_bits": 12,
+     "rtl_ports": [
+      "kvn_word_valid",
+      "kvn_word_tag"
+     ]
+    },
+    "kvi": {
+     "die_ports": [
+      "kvi"
+     ],
+     "die_bits": 61,
+     "rtl_bits": 61,
+     "rtl_ports": [
+      "kvn_compiled_identity",
+      "kvn_compiled_generation"
+     ]
+    },
+    "kv_drained_local": {
+     "die_ports": [
+      "kv_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kv_drained_local"
+     ]
+    },
+    "kv_flush_local": {
+     "die_ports": [
+      "kv_flush_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kv_flush_local"
+     ]
+    },
+    "kv_active_local": {
+     "die_ports": [
+      "kv_active_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kv_active_local"
+     ]
+    },
+    "emb_tx_v": {
+     "die_ports": [
+      "emb_tx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "emb_tx_v"
+     ]
+    },
+    "srx": {
+     "die_ports": [
+      "srx"
+     ],
+     "die_bits": 522,
+     "rtl_bits": 522,
+     "rtl_ports": [
+      "att_rx_v",
+      "att_rx_kind",
+      "att_rx_beat",
+      "kvn_word_data"
+     ]
+    },
+    "kvn_word_identity": {
+     "die_ports": [
+      "kvn_word_identity"
+     ],
+     "die_bits": 59,
+     "rtl_bits": 59,
+     "rtl_ports": [
+      "kvn_word_identity"
+     ]
+    },
+    "kvn_word_generation": {
+     "die_ports": [
+      "kvn_word_generation"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "kvn_word_generation"
+     ]
+    },
+    "att_tx_slot": {
+     "die_ports": [
+      "att_tx_slot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "att_tx_slot"
+     ]
+    },
+    "att_tx_kind": {
+     "die_ports": [
+      "att_tx_kind"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "att_tx_kind"
+     ]
+    },
+    "att_tx_beat": {
+     "die_ports": [
+      "att_tx_beat"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "att_tx_beat"
+     ]
+    },
+    "emb_tx_slot": {
+     "die_ports": [
+      "emb_tx_slot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "emb_tx_slot"
+     ]
+    },
+    "rcy": {
+     "die_ports": [
+      "rcy"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "recovery_cycles"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "host_boot_begin": {
+     "die_ports": [
+      "host_boot_begin"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_boot_begin"
+     ]
+    },
+    "att_tx_v": {
+     "die_ports": [
+      "att_tx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "att_tx_v"
+     ]
+    },
+    "serdes_up": {
+     "die_ports": [
+      "serdes_up"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "serdes_up"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+   "parameters": {
+    "NL": 2,
+    "NTX": 3,
+    "TXDP": 50529302,
+    "SAFE_RC": 1,
+    "SRAMV": 2,
+    "FEG": 1
+   }
+  },
+  "qkd_seq_fan_s": {
+   "instances": 4,
+   "how": "by_name",
+   "module": "qkd_seq_fan_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_seq_xs_s": {
+   "instances": 4,
+   "how": "by_name",
+   "module": "qkd_seq_xs_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_seq_core_static_s": {
+   "instances": 1,
+   "how": "by_name",
+   "module": "qkd_seq_core_static_s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_embgw": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_embgw_boot_s",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "hb": {
+     "die_ports": [
+      "hb"
+     ],
+     "die_bits": 284,
+     "rtl_bits": 284,
+     "rtl_ports": [
+      "hb",
+      "hb_cr"
+     ]
+    },
+    "est": {
+     "die_ports": [
+      "est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "est"
+     ]
+    },
+    "bw": {
+     "die_ports": [
+      "bw"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "bw"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+   "parameters": {
+    "BD": 4,
+    "GAP": 1,
+    "HOLD": 64,
+    "ROW0": 24427,
+    "MUT": 0
+   }
+  },
+  "qkd_ckbump": {
+   "instances": 1,
+   "how": "hard_model",
+   "module": "qkd_ckbump",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_pllm": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_pll_analog_model",
+   "bundles": {
+    "pll_hbm_WS": {
+     "die_ports": [
+      "pll_hbm_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_WS"
+     ]
+    },
+    "pll_hbm_WN": {
+     "die_ports": [
+      "pll_hbm_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_WN"
+     ]
+    },
+    "pll_hbm_ES": {
+     "die_ports": [
+      "pll_hbm_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_ES"
+     ]
+    },
+    "pll_hbm_EN": {
+     "die_ports": [
+      "pll_hbm_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_EN"
+     ]
+    },
+    "pll_WS": {
+     "die_ports": [
+      "pll_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_WS"
+     ]
+    },
+    "pll_WN": {
+     "die_ports": [
+      "pll_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_WN"
+     ]
+    },
+    "pll_ES": {
+     "die_ports": [
+      "pll_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_ES"
+     ]
+    },
+    "pll_EN": {
+     "die_ports": [
+      "pll_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_EN"
+     ]
+    },
+    "pll_c": {
+     "die_ports": [
+      "pll_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_c"
+     ]
+    },
+    "pll_fwd": {
+     "die_ports": [
+      "pll_fwd"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_fwd"
+     ]
+    },
+    "locked": {
+     "die_ports": [
+      "locked"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "locked"
+     ]
+    },
+    "pll_host": {
+     "die_ports": [
+      "pll_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_host"
+     ]
+    },
+    "pll_ingest": {
+     "die_ports": [
+      "pll_ingest"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_ingest"
+     ]
+    },
+    "pll_phy": {
+     "die_ports": [
+      "pll_phy"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_phy"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "refclk": "by_design: package reference-clock pad (off-chip signal)",
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+   "parameters": {}
+  },
+  "qkd_ahub": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_ahub_static_dw",
+   "bundles": {
+    "am_WS": {
+     "die_ports": [
+      "am_WS"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am0"
+     ]
+    },
+    "am_WN": {
+     "die_ports": [
+      "am_WN"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am1"
+     ]
+    },
+    "am_ES": {
+     "die_ports": [
+      "am_ES"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am2"
+     ]
+    },
+    "am_EN": {
+     "die_ports": [
+      "am_EN"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am3"
+     ]
+    },
+    "ck_c": {
+     "die_ports": [
+      "ck_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "hf": {
+     "die_ports": [
+      "hf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hf"
+     ]
+    },
+    "hs": {
+     "die_ports": [
+      "hs"
+     ],
+     "die_bits": 165,
+     "rtl_bits": 165,
+     "rtl_ports": [
+      "hs_start",
+      "hs_ep",
+      "hs_layer",
+      "hs_ctx",
+      "hs_cal_lo",
+      "hs_cal_r"
+     ]
+    },
+    "fr": {
+     "die_ports": [
+      "fr"
+     ],
+     "die_bits": 145,
+     "rtl_bits": 145,
+     "rtl_ports": [
+      "fr_valid",
+      "fr_epoch",
+      "fr_rz"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "ap_WS": {
+     "die_ports": [
+      "ap_WS"
+     ],
+     "die_bits": 43,
+     "rtl_bits": 43,
+     "rtl_ports": [
+      "ap0"
+     ]
+    },
+    "ap_WN": {
+     "die_ports": [
+      "ap_WN"
+     ],
+     "die_bits": 43,
+     "rtl_bits": 43,
+     "rtl_ports": [
+      "ap1"
+     ]
+    },
+    "ap_ES": {
+     "die_ports": [
+      "ap_ES"
+     ],
+     "die_bits": 43,
+     "rtl_bits": 43,
+     "rtl_ports": [
+      "ap2"
+     ]
+    },
+    "ap_EN": {
+     "die_ports": [
+      "ap_EN"
+     ],
+     "die_bits": 43,
+     "rtl_bits": 43,
+     "rtl_ports": [
+      "ap3"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+   "parameters": {
+    "Z_IN_STRIDE": 4
+   }
+  },
+  "ot_qfd_serdes_112g_x12_phy": {
+   "instances": 1,
+   "how": "identity",
+   "module": "ot_qfd_serdes_112g_x12_phy",
+   "bundles": {
+    "clk": {
+     "die_ports": [
+      "clk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "clk"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "tx_up": {
+     "die_ports": [
+      "tx_up"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "tx_up"
+     ]
+    },
+    "tx_v": {
+     "die_ports": [
+      "tx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "tx_v"
+     ]
+    },
+    "tx_flit": {
+     "die_ports": [
+      "tx_flit"
+     ],
+     "die_bits": 1043,
+     "rtl_bits": 1043,
+     "rtl_ports": [
+      "tx_flit"
+     ]
+    },
+    "rx_v": {
+     "die_ports": [
+      "rx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rx_v"
+     ]
+    },
+    "rx_flit": {
+     "die_ports": [
+      "rx_flit"
+     ],
+     "die_bits": 1043,
+     "rtl_bits": 1043,
+     "rtl_ports": [
+      "rx_flit"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
+   "parameters": {}
+  },
+  "qkd_host_rt": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_host_root_admission_obsx",
+   "bundles": {
+    "rec_tx": {
+     "die_ports": [
+      "rec_tx"
+     ],
+     "die_bits": 549,
+     "rtl_bits": 549,
+     "rtl_ports": [
+      "record_tx_observed_v",
+      "record_tx"
+     ]
+    },
+    "rec_rx": {
+     "die_ports": [
+      "rec_rx"
+     ],
+     "die_bits": 552,
+     "rtl_bits": 552,
+     "rtl_ports": [
+      "record_send_kind",
+      "record_witness_slot",
+      "record_rx_v",
+      "record_rx"
+     ]
+    },
+    "fdi": {
+     "die_ports": [
+      "fdi"
+     ],
+     "die_bits": 2089,
+     "rtl_bits": 2089,
+     "rtl_ports": [
+      "phy_up",
+      "phy_tx_v",
+      "phy_tx_flit",
+      "phy_rx_v",
+      "phy_rx_flit"
+     ]
+    },
+    "ck_axi": {
+     "die_ports": [
+      "ck_axi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_axi"
+     ]
+    },
+    "ck_bootbarrier": {
+     "die_ports": [
+      "ck_bootbarrier"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_bootbarrier"
+     ]
+    },
+    "ck_coordinator_codec": {
+     "die_ports": [
+      "ck_coordinator_codec"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_codec"
+     ]
+    },
+    "ck_coordinator_lifecycle": {
+     "die_ports": [
+      "ck_coordinator_lifecycle"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_lifecycle"
+     ]
+    },
+    "ck_coordinator_post": {
+     "die_ports": [
+      "ck_coordinator_post"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_post"
+     ]
+    },
+    "ck_csr": {
+     "die_ports": [
+      "ck_csr"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_csr"
+     ]
+    },
+    "ck_ctl": {
+     "die_ports": [
+      "ck_ctl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctl"
+     ]
+    },
+    "ck_ctrl": {
+     "die_ports": [
+      "ck_ctrl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctrl"
+     ]
+    },
+    "ck_dispatch": {
+     "die_ports": [
+      "ck_dispatch"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_dispatch"
+     ]
+    },
+    "ck_fence_core": {
+     "die_ports": [
+      "ck_fence_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_core"
+     ]
+    },
+    "ck_guard": {
+     "die_ports": [
+      "ck_guard"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_guard"
+     ]
+    },
+    "ck_hc": {
+     "die_ports": [
+      "ck_hc"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_hc"
+     ]
+    },
+    "ck_host": {
+     "die_ports": [
+      "ck_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_host"
+     ]
+    },
+    "ck_map": {
+     "die_ports": [
+      "ck_map"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_map"
+     ]
+    },
+    "ck_native": {
+     "die_ports": [
+      "ck_native"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_native"
+     ]
+    },
+    "ck_order": {
+     "die_ports": [
+      "ck_order"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_order"
+     ]
+    },
+    "ck_peer": {
+     "die_ports": [
+      "ck_peer"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_peer"
+     ]
+    },
+    "ck_phy_rx_r": {
+     "die_ports": [
+      "ck_phy_rx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_r"
+     ]
+    },
+    "ck_phy_tx_w": {
+     "die_ports": [
+      "ck_phy_tx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_w"
+     ]
+    },
+    "ck_program_loader": {
+     "die_ports": [
+      "ck_program_loader"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_loader"
+     ]
+    },
+    "ck_program_rx": {
+     "die_ports": [
+      "ck_program_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_rx"
+     ]
+    },
+    "ck_prompt": {
+     "die_ports": [
+      "ck_prompt"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_prompt"
+     ]
+    },
+    "ck_qm_core": {
+     "die_ports": [
+      "ck_qm_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_core"
+     ]
+    },
+    "ck_qm_done_r": {
+     "die_ports": [
+      "ck_qm_done_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_r"
+     ]
+    },
+    "ck_qm_ing_w": {
+     "die_ports": [
+      "ck_qm_ing_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_w"
+     ]
+    },
+    "ck_qm_queue": {
+     "die_ports": [
+      "ck_qm_queue"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_queue"
+     ]
+    },
+    "ck_records": {
+     "die_ports": [
+      "ck_records"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_records"
+     ]
+    },
+    "ck_retire": {
+     "die_ports": [
+      "ck_retire"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_retire"
+     ]
+    },
+    "ck_root_mux": {
+     "die_ports": [
+      "ck_root_mux"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_root_mux"
+     ]
+    },
+    "ck_rst": {
+     "die_ports": [
+      "ck_rst"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rst"
+     ]
+    },
+    "ck_rx": {
+     "die_ports": [
+      "ck_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rx"
+     ]
+    },
+    "ck_sum": {
+     "die_ports": [
+      "ck_sum"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_sum"
+     ]
+    },
+    "ck_tx": {
+     "die_ports": [
+      "ck_tx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_tx"
+     ]
+    },
+    "kst": {
+     "die_ports": [
+      "kst"
+     ],
+     "die_bits": 10,
+     "rtl_bits": 10,
+     "rtl_ports": [
+      "local_kst"
+     ]
+    },
+    "hb": {
+     "die_ports": [
+      "hb"
+     ],
+     "die_bits": 284,
+     "rtl_bits": 284,
+     "rtl_ports": [
+      "hb",
+      "hb_cr"
+     ]
+    },
+    "est": {
+     "die_ports": [
+      "est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "est"
+     ]
+    },
+    "tk": {
+     "die_ports": [
+      "tk"
+     ],
+     "die_bits": 93,
+     "rtl_bits": 93,
+     "rtl_ports": [
+      "local_tk"
+     ]
+    },
+    "svc": {
+     "die_ports": [
+      "svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "transport_fault",
+      "native_links_drained",
+      "native_link_reset_seen",
+      "native_retrained",
+      "abort_drained",
+      "native_kv_drained",
+      "native_vm_drained",
+      "native_collective_drained",
+      "native_host_drained",
+      "native_collective_busy",
+      "native_kv_flush",
+      "native_admit_ready",
+      "crom_fault",
+      "execution_active",
+      "engine_result_v",
+      "engine_result_done",
+      "engine_result_fault",
+      "engine_result_cause",
+      "engine_result_tag",
+      "engine_result_gen",
+      "engine_result_token",
+      "engine_result_value",
+      "engine_result_cycles"
+     ]
+    },
+    "lup": {
+     "die_ports": [
+      "lup"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "link_up"
+     ]
+    },
+    "lrc": {
+     "die_ports": [
+      "lrc"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "host_link_reset_req",
+      "host_recovery_clear"
+     ]
+    },
+    "token_epoch": {
+     "die_ports": [
+      "token_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "token_epoch"
+     ]
+    },
+    "host_drained_local": {
+     "die_ports": [
+      "host_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_interface_idle"
+     ]
+    },
+    "link_physical_fault": {
+     "die_ports": [
+      "link_physical_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_physical_fault"
+     ]
+    },
+    "program_begin_v": {
+     "die_ports": [
+      "program_begin_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "program_begin_v"
+     ]
+    },
+    "pll_locked": {
+     "die_ports": [
+      "pll_locked"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_locked"
+     ]
+    },
+    "ck_fence_host": {
+     "die_ports": [
+      "ck_fence_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_host"
+     ]
+    },
+    "ck_qm_credit": {
+     "die_ports": [
+      "ck_qm_credit"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_credit"
+     ]
+    },
+    "ck_qm_done_w": {
+     "die_ports": [
+      "ck_qm_done_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_w"
+     ]
+    },
+    "ck_qm_host": {
+     "die_ports": [
+      "ck_qm_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_host"
+     ]
+    },
+    "ck_qm_ing_r": {
+     "die_ports": [
+      "ck_qm_ing_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_r"
+     ]
+    },
+    "ck_qm_bank0": {
+     "die_ports": [
+      "ck_qm_bank0",
+      "ck_qm_bank1"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "ck_qm_bank"
+     ]
+    },
+    "ck_qm_ingest": {
+     "die_ports": [
+      "ck_qm_ingest"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ingest"
+     ]
+    },
+    "ck_qm_out": {
+     "die_ports": [
+      "ck_qm_out"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_out"
+     ]
+    },
+    "ck_pad": {
+     "die_ports": [
+      "ck_pad"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_pad"
+     ]
+    },
+    "ck_phy0": {
+     "die_ports": [
+      "ck_phy0",
+      "ck_phy1",
+      "ck_phy2",
+      "ck_phy3",
+      "ck_phy4",
+      "ck_phy5",
+      "ck_phy6",
+      "ck_phy7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_phy"
+     ]
+    },
+    "ck_phy_rx_w": {
+     "die_ports": [
+      "ck_phy_rx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_w"
+     ]
+    },
+    "ck_phy_tx_r": {
+     "die_ports": [
+      "ck_phy_tx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_r"
+     ]
+    },
+    "chf0": {
+     "die_ports": [
+      "chf0",
+      "chf1",
+      "chf2",
+      "chf3"
+     ],
+     "die_bits": 1164,
+     "rtl_bits": 1164,
+     "rtl_ports": [
+      "chain_f"
+     ]
+    },
+    "chc0": {
+     "die_ports": [
+      "chc0",
+      "chc1",
+      "chc2",
+      "chc3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_c"
+     ]
+    },
+    "cha0": {
+     "die_ports": [
+      "cha0",
+      "cha1",
+      "cha2",
+      "cha3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_a"
+     ]
+    },
+    "chx0": {
+     "die_ports": [
+      "chx0",
+      "chx1",
+      "chx2",
+      "chx3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "chain_fault_i"
+     ]
+    },
+    "sak0": {
+     "die_ports": [
+      "sak0",
+      "sak1",
+      "sak2",
+      "sak3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_ack"
+     ]
+    },
+    "sbd0": {
+     "die_ports": [
+      "sbd0",
+      "sbd1",
+      "sbd2",
+      "sbd3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_done"
+     ]
+    },
+    "sbo0": {
+     "die_ports": [
+      "sbo0",
+      "sbo1",
+      "sbo2",
+      "sbo3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_ok"
+     ]
+    },
+    "sbf0": {
+     "die_ports": [
+      "sbf0",
+      "sbf1",
+      "sbf2",
+      "sbf3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_fault"
+     ]
+    },
+    "auth_lp": {
+     "die_ports": [
+      "auth_lp"
+     ],
+     "die_bits": 82,
+     "rtl_bits": 82,
+     "rtl_ports": [
+      "token_epoch_valid",
+      "program_ready",
+      "program_epoch",
+      "program_digest"
+     ]
+    },
+    "cohort_tag": {
+     "die_ports": [
+      "cohort_tag"
+     ],
+     "die_bits": 59,
+     "rtl_bits": 59,
+     "rtl_ports": [
+      "cohort_tag"
+     ]
+    },
+    "cohort_gen": {
+     "die_ports": [
+      "cohort_gen"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "cohort_gen"
+     ]
+    },
+    "boot_pr": {
+     "die_ports": [
+      "boot_pr"
+     ],
+     "die_bits": 143,
+     "rtl_bits": 143,
+     "rtl_ports": [
+      "boot_pr"
+     ]
+    },
+    "boot_image_target": {
+     "die_ports": [
+      "boot_image_target"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "boot_image_target"
+     ]
+    },
+    "boot_image_ready": {
+     "die_ports": [
+      "boot_image_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_image_ready"
+     ]
+    },
+    "boot_image_fault": {
+     "die_ports": [
+      "boot_image_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_image_fault"
+     ]
+    },
+    "boot_image_epoch": {
+     "die_ports": [
+      "boot_image_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "boot_image_epoch"
+     ]
+    },
+    "boot_image_digest": {
+     "die_ports": [
+      "boot_image_digest"
+     ],
+     "die_bits": 64,
+     "rtl_bits": 64,
+     "rtl_ports": [
+      "boot_image_digest"
+     ]
+    },
+    "static_setup_ready": {
+     "die_ports": [
+      "static_setup_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "static_setup_ready"
+     ]
+    },
+    "native_reserved": {
+     "die_ports": [
+      "native_reserved"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "native_reserved"
+     ]
+    },
+    "ownership_valid": {
+     "die_ports": [
+      "ownership_valid"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ownership_valid"
+     ]
+    },
+    "host_launch_quiet": {
+     "die_ports": [
+      "host_launch_quiet"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_launch_quiet"
+     ]
+    },
+    "host_upstream_quiet": {
+     "die_ports": [
+      "host_upstream_quiet"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "host_upstream_quiet"
+     ]
+    },
+    "ctrl_completion_fault": {
+     "die_ports": [
+      "ctrl_completion_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_fault"
+     ]
+    },
+    "odc": {
+     "die_ports": [
+      "odc"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "obs_dcal_adm_done",
+      "obs_dcal_cal_ready",
+      "obs_dcal_running"
+     ]
+    },
+    "odl": {
+     "die_ports": [
+      "odl"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "obs_dcal_layer"
+     ]
+    },
+    "odr": {
+     "die_ports": [
+      "odr"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "obs_d2d_recovery_cycles"
+     ]
+    },
+    "die_rst_n": {
+     "die_ports": [
+      "die_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "die_rst_n"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "link_rst_n": {
+     "die_ports": [
+      "link_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "boot_go": {
+     "die_ports": [
+      "boot_go"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_go"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "die_id": "by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly",
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+   "parameters": {
+    "ENABLE_SERVICE": 1,
+    "ENABLE_NATIVE": 1,
+    "ENABLE_TOKEN": 1,
+    "NL": 2
+   }
+  },
+  "qkd_rlys_296": {
+   "instances": 4514,
+   "how": "relay",
+   "module": "qkd_rlys_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 109328
+  },
+  "qkd_rlys_36": {
+   "instances": 10723,
+   "how": "relay",
+   "module": "qkd_rlys_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 20296
+  },
+  "qkd_rlys_1": {
+   "instances": 6721,
+   "how": "relay",
+   "module": "qkd_rlys_1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_pv_rs_hd_f": {
+   "instances": 2,
+   "how": "by_name",
+   "module": "qkd_pv_rs_hd_f",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlyi_258s": {
+   "instances": 128,
+   "how": "relay",
+   "module": "qkd_rlyi_258s",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qwen_tp8_pv_wide_ctl_tbf": {
+   "instances": 2,
+   "how": "by_name",
+   "module": "ot_qwen_tp8_pv_wide_ctl_tbf",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 2
+  },
+  "ot_qwen_tp8_pv_slice_t": {
+   "instances": 512,
+   "how": "by_name",
+   "module": "ot_qwen_tp8_pv_slice_t",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "instances": 64,
+   "how": "by_name",
+   "module": "ot_qwen_tp8_pv_join_t",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_pv16_vport": {
+   "instances": 16,
+   "how": "bound",
+   "module": "qkd_pv16_vport_b",
+   "bundles": {
+    "i0": {
+     "die_ports": [
+      "i0"
+     ],
+     "die_bits": 1056,
+     "rtl_bits": 1056,
+     "rtl_ports": [
+      "in0_valid",
+      "in0_vflag",
+      "in0_t",
+      "in0_epoch",
+      "in0_d"
+     ]
+    },
+    "i1": {
+     "die_ports": [
+      "i1"
+     ],
+     "die_bits": 1056,
+     "rtl_bits": 1056,
+     "rtl_ports": [
+      "in1_valid",
+      "in1_vflag",
+      "in1_t",
+      "in1_epoch",
+      "in1_d"
+     ]
+    },
+    "vo": {
+     "die_ports": [
+      "vo"
+     ],
+     "die_bits": 1055,
+     "rtl_bits": 1055,
+     "rtl_ports": [
+      "out_valid",
+      "out_t",
+      "out_epoch",
+      "out_v_lo",
+      "out_v_hi"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "vq0": {
+     "die_ports": [
+      "vq0"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "vq0_valid",
+      "vq0_t"
+     ]
+    },
+    "vq1": {
+     "die_ports": [
+      "vq1"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "vq1_valid",
+      "vq1_t"
+     ]
+    },
+    "cfg": {
+     "die_ports": [
+      "cfg"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "cfg_age"
+     ]
+    },
+    "f": {
+     "die_ports": [
+      "f"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "pr": {
+     "die_ports": [
+      "pr"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "pr_valid",
+      "pr_t"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+   "parameters": {
+    "MUT": 0,
+    "DQ": 15,
+    "RT": 31
+   }
+  },
+  "qkd_hslice": {
+   "instances": 64,
+   "how": "bound",
+   "module": "qkd_host_pc_slice_die",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "lpc": {
+     "die_ports": [
+      "lpc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "lpc"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fo"
+     ]
+    },
+    "bgo": {
+     "die_ports": [
+      "bgo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgo"
+     ]
+    },
+    "ci": {
+     "die_ports": [
+      "ci"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ci"
+     ]
+    },
+    "ai": {
+     "die_ports": [
+      "ai"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ai"
+     ]
+    },
+    "fault_i": {
+     "die_ports": [
+      "fault_i"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_i"
+     ]
+    },
+    "ski": {
+     "die_ports": [
+      "ski"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ski"
+     ]
+    },
+    "sdi": {
+     "die_ports": [
+      "sdi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdi"
+     ]
+    },
+    "soi": {
+     "die_ports": [
+      "soi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soi"
+     ]
+    },
+    "sfi": {
+     "die_ports": [
+      "sfi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfi"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "co": {
+     "die_ports": [
+      "co"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "co"
+     ]
+    },
+    "ao": {
+     "die_ports": [
+      "ao"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ao"
+     ]
+    },
+    "fault_o": {
+     "die_ports": [
+      "fault_o"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_o"
+     ]
+    },
+    "sko": {
+     "die_ports": [
+      "sko"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sko"
+     ]
+    },
+    "sdo": {
+     "die_ports": [
+      "sdo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdo"
+     ]
+    },
+    "soo": {
+     "die_ports": [
+      "soo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soo"
+     ]
+    },
+    "sfo": {
+     "die_ports": [
+      "sfo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfo"
+     ]
+    },
+    "land_es": {
+     "die_ports": [
+      "land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "land_es"
+     ]
+    },
+    "land_er": {
+     "die_ports": [
+      "land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "land_er"
+     ]
+    },
+    "ctrl_es": {
+     "die_ports": [
+      "ctrl_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "ctrl_es"
+     ]
+    },
+    "ctrl_er": {
+     "die_ports": [
+      "ctrl_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "ctrl_er"
+     ]
+    },
+    "ctrl_completion_v": {
+     "die_ports": [
+      "ctrl_completion_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_v"
+     ]
+    },
+    "ctrl_completion_we": {
+     "die_ports": [
+      "ctrl_completion_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_we"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "bgi": {
+     "die_ports": [
+      "bgi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgi"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 706,
+   "file": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "parameters": {}
+  },
+  "qkd_hslice_dn": {
+   "instances": 64,
+   "how": "bound",
+   "module": "qkd_host_pc_slice_die",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "lpc": {
+     "die_ports": [
+      "lpc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "lpc"
+     ]
+    },
+    "ci": {
+     "die_ports": [
+      "ci"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ci"
+     ]
+    },
+    "ai": {
+     "die_ports": [
+      "ai"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ai"
+     ]
+    },
+    "fault_i": {
+     "die_ports": [
+      "fault_i"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_i"
+     ]
+    },
+    "ski": {
+     "die_ports": [
+      "ski"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ski"
+     ]
+    },
+    "sdi": {
+     "die_ports": [
+      "sdi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdi"
+     ]
+    },
+    "soi": {
+     "die_ports": [
+      "soi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soi"
+     ]
+    },
+    "sfi": {
+     "die_ports": [
+      "sfi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfi"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "bgi": {
+     "die_ports": [
+      "bgi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgi"
+     ]
+    },
+    "co": {
+     "die_ports": [
+      "co"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "co"
+     ]
+    },
+    "ao": {
+     "die_ports": [
+      "ao"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ao"
+     ]
+    },
+    "fault_o": {
+     "die_ports": [
+      "fault_o"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_o"
+     ]
+    },
+    "sko": {
+     "die_ports": [
+      "sko"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sko"
+     ]
+    },
+    "sdo": {
+     "die_ports": [
+      "sdo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdo"
+     ]
+    },
+    "soo": {
+     "die_ports": [
+      "soo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soo"
+     ]
+    },
+    "sfo": {
+     "die_ports": [
+      "sfo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfo"
+     ]
+    },
+    "land_es": {
+     "die_ports": [
+      "land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "land_es"
+     ]
+    },
+    "land_er": {
+     "die_ports": [
+      "land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "land_er"
+     ]
+    },
+    "ctrl_es": {
+     "die_ports": [
+      "ctrl_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "ctrl_es"
+     ]
+    },
+    "ctrl_er": {
+     "die_ports": [
+      "ctrl_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "ctrl_er"
+     ]
+    },
+    "ctrl_completion_v": {
+     "die_ports": [
+      "ctrl_completion_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_v"
+     ]
+    },
+    "ctrl_completion_we": {
+     "die_ports": [
+      "ctrl_completion_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_we"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fo"
+     ]
+    },
+    "bgo": {
+     "die_ports": [
+      "bgo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgo"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 706,
+   "file": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "parameters": {}
+  },
+  "qkd_fwdbump": {
+   "instances": 2,
+   "how": "hard_model",
+   "module": "qkd_fwdbump",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_dcal": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_d2d_cal_seq_pin_bc4",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "cal": {
+     "die_ports": [
+      "cal"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "cal_start",
+      "cal_seg"
+     ]
+    },
+    "dcfg": {
+     "die_ports": [
+      "dcfg"
+     ],
+     "die_bits": 40,
+     "rtl_bits": 40,
+     "rtl_ports": [
+      "cfg_tx_we",
+      "cfg_rx_we",
+      "cfg_addr",
+      "cfg_data"
+     ]
+    },
+    "hlt": {
+     "die_ports": [
+      "hlt"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "halt"
+     ]
+    },
+    "rld": {
+     "die_ports": [
+      "rld"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "reload"
+     ]
+    },
+    "btx": {
+     "die_ports": [
+      "btx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bcfg_tx_we"
+     ]
+    },
+    "brx": {
+     "die_ports": [
+      "brx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bcfg_rx_we"
+     ]
+    },
+    "bad": {
+     "die_ports": [
+      "bad"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "bcfg_addr"
+     ]
+    },
+    "bdt": {
+     "die_ports": [
+      "bdt"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "bcfg_data"
+     ]
+    },
+    "tks": {
+     "die_ports": [
+      "tks"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "tok_start"
+     ]
+    },
+    "flt": {
+     "die_ports": [
+      "flt"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "dob": {
+     "die_ports": [
+      "dob"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "adm_done",
+      "cal_ready",
+      "running"
+     ]
+    },
+    "lay": {
+     "die_ports": [
+      "lay"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "layer"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "ego": {
+     "die_ports": [
+      "ego"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "epoch_go"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew595_r16.sv",
+   "parameters": {
+    "EP_SKEW": 3,
+    "GO_OFS": 0,
+    "MUT": 0
+   }
+  },
+  "qkd_kvs_pc_h": {
+   "instances": 4,
+   "how": "identity",
+   "module": "qkd_kvs_pc_h",
+   "bundles": {
+    "hck": {
+     "die_ports": [
+      "hck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hck"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "i_grp": {
+     "die_ports": [
+      "i_grp"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "i_grp"
+     ]
+    },
+    "o_grp": {
+     "die_ports": [
+      "o_grp"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "o_grp"
+     ]
+    },
+    "o_next": {
+     "die_ports": [
+      "o_next"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "o_next"
+     ]
+    },
+    "i_next": {
+     "die_ports": [
+      "i_next"
+     ],
+     "die_bits": 780,
+     "rtl_bits": 780,
+     "rtl_ports": [
+      "i_next"
+     ]
+    },
+    "x__est__0_1": {
+     "die_ports": [
+      "x__est__0_1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "x__est__0_1"
+     ]
+    },
+    "pc__pi": {
+     "die_ports": [
+      "pc__pi"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "pc__pi"
+     ]
+    },
+    "pc__po": {
+     "die_ports": [
+      "pc__po"
+     ],
+     "die_bits": 328,
+     "rtl_bits": 328,
+     "rtl_ports": [
+      "pc__po"
+     ]
+    },
+    "pc__front_hbm_data": {
+     "die_ports": [
+      "pc__front_hbm_data"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "pc__front_hbm_data"
+     ]
+    },
+    "pc__return_hbm_data": {
+     "die_ports": [
+      "pc__return_hbm_data"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "pc__return_hbm_data"
+     ]
+    },
+    "pc__land_es": {
+     "die_ports": [
+      "pc__land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "pc__land_es"
+     ]
+    },
+    "pc__land_er": {
+     "die_ports": [
+      "pc__land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "pc__land_er"
+     ]
+    },
+    "pc__hes": {
+     "die_ports": [
+      "pc__hes"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "pc__hes"
+     ]
+    },
+    "pc__her": {
+     "die_ports": [
+      "pc__her"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "pc__her"
+     ]
+    },
+    "pc__hcompletion_v": {
+     "die_ports": [
+      "pc__hcompletion_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__hcompletion_v"
+     ]
+    },
+    "pc__hcompletion_we": {
+     "die_ports": [
+      "pc__hcompletion_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__hcompletion_we"
+     ]
+    },
+    "pc__ki": {
+     "die_ports": [
+      "pc__ki"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "pc__ki"
+     ]
+    },
+    "pc__fi": {
+     "die_ports": [
+      "pc__fi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__fi"
+     ]
+    },
+    "pc__fo": {
+     "die_ports": [
+      "pc__fo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__fo"
+     ]
+    },
+    "pc__pc": {
+     "die_ports": [
+      "pc__pc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "pc__pc"
+     ]
+    },
+    "pc__cfg_stack": {
+     "die_ports": [
+      "pc__cfg_stack"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "pc__cfg_stack"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "hrst_n": {
+     "die_ports": [
+      "hrst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hrst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 32,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_pc": {
+   "instances": 124,
+   "how": "identity",
+   "module": "qkd_kvs_pc",
+   "bundles": {
+    "hck": {
+     "die_ports": [
+      "hck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hck"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "i_grp": {
+     "die_ports": [
+      "i_grp"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "i_grp"
+     ]
+    },
+    "i_prev": {
+     "die_ports": [
+      "i_prev"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_prev"
+     ]
+    },
+    "o_grp": {
+     "die_ports": [
+      "o_grp"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "o_grp"
+     ]
+    },
+    "o_next": {
+     "die_ports": [
+      "o_next"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "o_next"
+     ]
+    },
+    "o_prev": {
+     "die_ports": [
+      "o_prev"
+     ],
+     "die_bits": 780,
+     "rtl_bits": 780,
+     "rtl_ports": [
+      "o_prev"
+     ]
+    },
+    "i_next": {
+     "die_ports": [
+      "i_next"
+     ],
+     "die_bits": 780,
+     "rtl_bits": 780,
+     "rtl_ports": [
+      "i_next"
+     ]
+    },
+    "x__est__0_1": {
+     "die_ports": [
+      "x__est__0_1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "x__est__0_1"
+     ]
+    },
+    "pc__pi": {
+     "die_ports": [
+      "pc__pi"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "pc__pi"
+     ]
+    },
+    "pc__po": {
+     "die_ports": [
+      "pc__po"
+     ],
+     "die_bits": 328,
+     "rtl_bits": 328,
+     "rtl_ports": [
+      "pc__po"
+     ]
+    },
+    "pc__front_hbm_data": {
+     "die_ports": [
+      "pc__front_hbm_data"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "pc__front_hbm_data"
+     ]
+    },
+    "pc__return_hbm_data": {
+     "die_ports": [
+      "pc__return_hbm_data"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "pc__return_hbm_data"
+     ]
+    },
+    "pc__land_es": {
+     "die_ports": [
+      "pc__land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "pc__land_es"
+     ]
+    },
+    "pc__land_er": {
+     "die_ports": [
+      "pc__land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "pc__land_er"
+     ]
+    },
+    "pc__hes": {
+     "die_ports": [
+      "pc__hes"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "pc__hes"
+     ]
+    },
+    "pc__her": {
+     "die_ports": [
+      "pc__her"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "pc__her"
+     ]
+    },
+    "pc__hcompletion_v": {
+     "die_ports": [
+      "pc__hcompletion_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__hcompletion_v"
+     ]
+    },
+    "pc__hcompletion_we": {
+     "die_ports": [
+      "pc__hcompletion_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__hcompletion_we"
+     ]
+    },
+    "pc__ki": {
+     "die_ports": [
+      "pc__ki"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "pc__ki"
+     ]
+    },
+    "pc__ko": {
+     "die_ports": [
+      "pc__ko"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "pc__ko"
+     ]
+    },
+    "pc__fi": {
+     "die_ports": [
+      "pc__fi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__fi"
+     ]
+    },
+    "pc__fo": {
+     "die_ports": [
+      "pc__fo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pc__fo"
+     ]
+    },
+    "pc__pc": {
+     "die_ports": [
+      "pc__pc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "pc__pc"
+     ]
+    },
+    "pc__cfg_stack": {
+     "die_ports": [
+      "pc__cfg_stack"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "pc__cfg_stack"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "hrst_n": {
+     "die_ports": [
+      "hrst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hrst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 868,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_grp_r2c": {
+   "instances": 28,
+   "how": "identity",
+   "module": "qkd_kvs_grp_r2c",
+   "bundles": {
+    "rsp": {
+     "die_ports": [
+      "rsp"
+     ],
+     "die_bits": 1056,
+     "rtl_bits": 1056,
+     "rtl_ports": [
+      "rsp"
+     ]
+    },
+    "krsp": {
+     "die_ports": [
+      "krsp"
+     ],
+     "die_bits": 1062,
+     "rtl_bits": 1062,
+     "rtl_ports": [
+      "krsp"
+     ]
+    },
+    "hck": {
+     "die_ports": [
+      "hck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hck"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "x__est": {
+     "die_ports": [
+      "x__est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "x__est"
+     ]
+    },
+    "o_pc0": {
+     "die_ports": [
+      "o_pc0"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc0"
+     ]
+    },
+    "o_pc1": {
+     "die_ports": [
+      "o_pc1"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc1"
+     ]
+    },
+    "o_pc2": {
+     "die_ports": [
+      "o_pc2"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc2"
+     ]
+    },
+    "o_pc3": {
+     "die_ports": [
+      "o_pc3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc3"
+     ]
+    },
+    "o_dn": {
+     "die_ports": [
+      "o_dn"
+     ],
+     "die_bits": 271,
+     "rtl_bits": 271,
+     "rtl_ports": [
+      "o_dn"
+     ]
+    },
+    "o_ctl": {
+     "die_ports": [
+      "o_ctl"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "o_ctl"
+     ]
+    },
+    "i_pc0": {
+     "die_ports": [
+      "i_pc0"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc0"
+     ]
+    },
+    "i_pc1": {
+     "die_ports": [
+      "i_pc1"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc1"
+     ]
+    },
+    "i_pc2": {
+     "die_ports": [
+      "i_pc2"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc2"
+     ]
+    },
+    "i_pc3": {
+     "die_ports": [
+      "i_pc3"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc3"
+     ]
+    },
+    "i_ctl": {
+     "die_ports": [
+      "i_ctl"
+     ],
+     "die_bits": 271,
+     "rtl_bits": 271,
+     "rtl_ports": [
+      "i_ctl"
+     ]
+    },
+    "i_up": {
+     "die_ports": [
+      "i_up"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_up"
+     ]
+    },
+    "x__tok": {
+     "die_ports": [
+      "x__tok"
+     ],
+     "die_bits": 18,
+     "rtl_bits": 18,
+     "rtl_ports": [
+      "x__tok"
+     ]
+    },
+    "x__tep": {
+     "die_ports": [
+      "x__tep"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "x__tep"
+     ]
+    },
+    "y__est__0_1": {
+     "die_ports": [
+      "y__est__0_1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "y__est__0_1"
+     ]
+    },
+    "afk": {
+     "die_ports": [
+      "afk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "afk"
+     ]
+    },
+    "afu": {
+     "die_ports": [
+      "afu"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "afu"
+     ]
+    },
+    "af__fault": {
+     "die_ports": [
+      "af__fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af__fault"
+     ]
+    },
+    "afv": {
+     "die_ports": [
+      "afv"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "afv"
+     ]
+    },
+    "slg__cfg_stack": {
+     "die_ports": [
+      "slg__cfg_stack"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "slg__cfg_stack"
+     ]
+    },
+    "slg__cfg_group": {
+     "die_ports": [
+      "slg__cfg_group"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "slg__cfg_group"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "hrst_n": {
+     "die_ports": [
+      "hrst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hrst_n"
+     ]
+    },
+    "kreq": {
+     "die_ports": [
+      "kreq"
+     ],
+     "die_bits": 38,
+     "rtl_bits": 38,
+     "rtl_ports": [
+      "kreq"
+     ]
+    },
+    "vreq": {
+     "die_ports": [
+      "vreq"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "vreq"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 140,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2c.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_grp_h_r2c": {
+   "instances": 4,
+   "how": "identity",
+   "module": "qkd_kvs_grp_h_r2c",
+   "bundles": {
+    "rsp": {
+     "die_ports": [
+      "rsp"
+     ],
+     "die_bits": 1056,
+     "rtl_bits": 1056,
+     "rtl_ports": [
+      "rsp"
+     ]
+    },
+    "krsp": {
+     "die_ports": [
+      "krsp"
+     ],
+     "die_bits": 1062,
+     "rtl_bits": 1062,
+     "rtl_ports": [
+      "krsp"
+     ]
+    },
+    "hck": {
+     "die_ports": [
+      "hck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hck"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "x__est": {
+     "die_ports": [
+      "x__est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "x__est"
+     ]
+    },
+    "o_pc0": {
+     "die_ports": [
+      "o_pc0"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc0"
+     ]
+    },
+    "o_pc1": {
+     "die_ports": [
+      "o_pc1"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc1"
+     ]
+    },
+    "o_pc2": {
+     "die_ports": [
+      "o_pc2"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc2"
+     ]
+    },
+    "o_pc3": {
+     "die_ports": [
+      "o_pc3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "o_pc3"
+     ]
+    },
+    "o_ctl": {
+     "die_ports": [
+      "o_ctl"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "o_ctl"
+     ]
+    },
+    "i_pc0": {
+     "die_ports": [
+      "i_pc0"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc0"
+     ]
+    },
+    "i_pc1": {
+     "die_ports": [
+      "i_pc1"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc1"
+     ]
+    },
+    "i_pc2": {
+     "die_ports": [
+      "i_pc2"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc2"
+     ]
+    },
+    "i_pc3": {
+     "die_ports": [
+      "i_pc3"
+     ],
+     "die_bits": 305,
+     "rtl_bits": 305,
+     "rtl_ports": [
+      "i_pc3"
+     ]
+    },
+    "i_ctl": {
+     "die_ports": [
+      "i_ctl"
+     ],
+     "die_bits": 271,
+     "rtl_bits": 271,
+     "rtl_ports": [
+      "i_ctl"
+     ]
+    },
+    "x__tok": {
+     "die_ports": [
+      "x__tok"
+     ],
+     "die_bits": 18,
+     "rtl_bits": 18,
+     "rtl_ports": [
+      "x__tok"
+     ]
+    },
+    "x__tep": {
+     "die_ports": [
+      "x__tep"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "x__tep"
+     ]
+    },
+    "y__est__0_1": {
+     "die_ports": [
+      "y__est__0_1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "y__est__0_1"
+     ]
+    },
+    "afk": {
+     "die_ports": [
+      "afk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "afk"
+     ]
+    },
+    "af__fault": {
+     "die_ports": [
+      "af__fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af__fault"
+     ]
+    },
+    "afv": {
+     "die_ports": [
+      "afv"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "afv"
+     ]
+    },
+    "slg__cfg_stack": {
+     "die_ports": [
+      "slg__cfg_stack"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "slg__cfg_stack"
+     ]
+    },
+    "slg__cfg_group": {
+     "die_ports": [
+      "slg__cfg_group"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "slg__cfg_group"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "hrst_n": {
+     "die_ports": [
+      "hrst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hrst_n"
+     ]
+    },
+    "kreq": {
+     "die_ports": [
+      "kreq"
+     ],
+     "die_bits": 38,
+     "rtl_bits": 38,
+     "rtl_ports": [
+      "kreq"
+     ]
+    },
+    "vreq": {
+     "die_ports": [
+      "vreq"
+     ],
+     "die_bits": 15,
+     "rtl_bits": 15,
+     "rtl_ports": [
+      "vreq"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 20,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_r2c.sv",
+   "parameters": {}
+  },
+  "qkd_ctrl_kc": {
+   "instances": 4,
+   "how": "identity",
+   "module": "qkd_ctrl_kc",
+   "bundles": {
+    "pll_hbm": {
+     "die_ports": [
+      "pll_hbm"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "ko": {
+     "die_ports": [
+      "ko"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "ko"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "kc": {
+     "die_ports": [
+      "kc"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "kc"
+     ]
+    },
+    "kf": {
+     "die_ports": [
+      "kf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kf"
+     ]
+    },
+    "rsi": {
+     "die_ports": [
+      "rsi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rsi"
+     ]
+    },
+    "hrst": {
+     "die_ports": [
+      "hrst"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hrst"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_ctl": {
+   "instances": 1,
+   "how": "identity",
+   "module": "qkd_kvs_ctl",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "d2d__svc": {
+     "die_ports": [
+      "d2d__svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "d2d__svc"
+     ]
+    },
+    "por_n": {
+     "die_ports": [
+      "por_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "por_n"
+     ]
+    },
+    "boot__link_cfg_tx_we": {
+     "die_ports": [
+      "boot__link_cfg_tx_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot__link_cfg_tx_we"
+     ]
+    },
+    "boot__link_cfg_rx_we": {
+     "die_ports": [
+      "boot__link_cfg_rx_we"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot__link_cfg_rx_we"
+     ]
+    },
+    "boot__link_cfg_addr": {
+     "die_ports": [
+      "boot__link_cfg_addr"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "boot__link_cfg_addr"
+     ]
+    },
+    "boot__link_cfg_data": {
+     "die_ports": [
+      "boot__link_cfg_data"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "boot__link_cfg_data"
+     ]
+    },
+    "kvi": {
+     "die_ports": [
+      "kvi"
+     ],
+     "die_bits": 61,
+     "rtl_bits": 61,
+     "rtl_ports": [
+      "kvi"
+     ]
+    },
+    "oobs__kv_drained_local": {
+     "die_ports": [
+      "oobs__kv_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "oobs__kv_drained_local"
+     ]
+    },
+    "oobs__kv_flush_local": {
+     "die_ports": [
+      "oobs__kv_flush_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "oobs__kv_flush_local"
+     ]
+    },
+    "oobs__kv_active_local": {
+     "die_ports": [
+      "oobs__kv_active_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "oobs__kv_active_local"
+     ]
+    },
+    "dcfg__age_vport__0_16": {
+     "die_ports": [
+      "dcfg__age_vport__0_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__0_16"
+     ]
+    },
+    "dcfg__age_vport__16_16": {
+     "die_ports": [
+      "dcfg__age_vport__16_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__16_16"
+     ]
+    },
+    "dcfg__age_vport__32_16": {
+     "die_ports": [
+      "dcfg__age_vport__32_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__32_16"
+     ]
+    },
+    "dcfg__age_vport__48_16": {
+     "die_ports": [
+      "dcfg__age_vport__48_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__48_16"
+     ]
+    },
+    "dcfg__age_vport__64_16": {
+     "die_ports": [
+      "dcfg__age_vport__64_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__64_16"
+     ]
+    },
+    "dcfg__age_vport__80_16": {
+     "die_ports": [
+      "dcfg__age_vport__80_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__80_16"
+     ]
+    },
+    "dcfg__age_vport__96_16": {
+     "die_ports": [
+      "dcfg__age_vport__96_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__96_16"
+     ]
+    },
+    "dcfg__age_vport__112_16": {
+     "die_ports": [
+      "dcfg__age_vport__112_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__112_16"
+     ]
+    },
+    "dcfg__age_vport__128_16": {
+     "die_ports": [
+      "dcfg__age_vport__128_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__128_16"
+     ]
+    },
+    "dcfg__age_vport__144_16": {
+     "die_ports": [
+      "dcfg__age_vport__144_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__144_16"
+     ]
+    },
+    "dcfg__age_vport__160_16": {
+     "die_ports": [
+      "dcfg__age_vport__160_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__160_16"
+     ]
+    },
+    "dcfg__age_vport__176_16": {
+     "die_ports": [
+      "dcfg__age_vport__176_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__176_16"
+     ]
+    },
+    "dcfg__age_vport__192_16": {
+     "die_ports": [
+      "dcfg__age_vport__192_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__192_16"
+     ]
+    },
+    "dcfg__age_vport__208_16": {
+     "die_ports": [
+      "dcfg__age_vport__208_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__208_16"
+     ]
+    },
+    "dcfg__age_vport__224_16": {
+     "die_ports": [
+      "dcfg__age_vport__224_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__224_16"
+     ]
+    },
+    "dcfg__age_vport__240_16": {
+     "die_ports": [
+      "dcfg__age_vport__240_16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_vport__240_16"
+     ]
+    },
+    "o_attn": {
+     "die_ports": [
+      "o_attn"
+     ],
+     "die_bits": 109,
+     "rtl_bits": 109,
+     "rtl_ports": [
+      "o_attn"
+     ]
+    },
+    "o_emb": {
+     "die_ports": [
+      "o_emb"
+     ],
+     "die_bits": 73,
+     "rtl_bits": 73,
+     "rtl_ports": [
+      "o_emb"
+     ]
+    },
+    "o_hroot_WS": {
+     "die_ports": [
+      "o_hroot_WS"
+     ],
+     "die_bits": 1118,
+     "rtl_bits": 1118,
+     "rtl_ports": [
+      "o_hroot_WS"
+     ]
+    },
+    "o_hroot_WN": {
+     "die_ports": [
+      "o_hroot_WN"
+     ],
+     "die_bits": 1118,
+     "rtl_bits": 1118,
+     "rtl_ports": [
+      "o_hroot_WN"
+     ]
+    },
+    "o_hroot_ES": {
+     "die_ports": [
+      "o_hroot_ES"
+     ],
+     "die_bits": 1118,
+     "rtl_bits": 1118,
+     "rtl_ports": [
+      "o_hroot_ES"
+     ]
+    },
+    "o_hroot_EN": {
+     "die_ports": [
+      "o_hroot_EN"
+     ],
+     "die_bits": 1118,
+     "rtl_bits": 1118,
+     "rtl_ports": [
+      "o_hroot_EN"
+     ]
+    },
+    "i_hroot_WS": {
+     "die_ports": [
+      "i_hroot_WS"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_hroot_WS"
+     ]
+    },
+    "i_hroot_WN": {
+     "die_ports": [
+      "i_hroot_WN"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_hroot_WN"
+     ]
+    },
+    "i_hroot_ES": {
+     "die_ports": [
+      "i_hroot_ES"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_hroot_ES"
+     ]
+    },
+    "i_hroot_EN": {
+     "die_ports": [
+      "i_hroot_EN"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_hroot_EN"
+     ]
+    },
+    "embgw__bw": {
+     "die_ports": [
+      "embgw__bw"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "embgw__bw"
+     ]
+    },
+    "d2d__srx": {
+     "die_ports": [
+      "d2d__srx"
+     ],
+     "die_bits": 522,
+     "rtl_bits": 522,
+     "rtl_ports": [
+      "d2d__srx"
+     ]
+    },
+    "st": {
+     "die_ports": [
+      "st"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "st"
+     ]
+    },
+    "auth": {
+     "die_ports": [
+      "auth"
+     ],
+     "die_bits": 82,
+     "rtl_bits": 82,
+     "rtl_ports": [
+      "auth"
+     ]
+    },
+    "cht": {
+     "die_ports": [
+      "cht"
+     ],
+     "die_bits": 59,
+     "rtl_bits": 59,
+     "rtl_ports": [
+      "cht"
+     ]
+    },
+    "chg": {
+     "die_ports": [
+      "chg"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "chg"
+     ]
+    },
+    "lp": {
+     "die_ports": [
+      "lp"
+     ],
+     "die_bits": 21,
+     "rtl_bits": 21,
+     "rtl_ports": [
+      "lp"
+     ]
+    },
+    "dcfg__age_pv": {
+     "die_ports": [
+      "dcfg__age_pv"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "dcfg__age_pv"
+     ]
+    },
+    "boot__boot_pr": {
+     "die_ports": [
+      "boot__boot_pr"
+     ],
+     "die_bits": 143,
+     "rtl_bits": 143,
+     "rtl_ports": [
+      "boot__boot_pr"
+     ]
+    },
+    "boot__boot_image_target": {
+     "die_ports": [
+      "boot__boot_image_target"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "boot__boot_image_target"
+     ]
+    },
+    "boot__boot_image_ready": {
+     "die_ports": [
+      "boot__boot_image_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot__boot_image_ready"
+     ]
+    },
+    "boot__boot_image_fault": {
+     "die_ports": [
+      "boot__boot_image_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot__boot_image_fault"
+     ]
+    },
+    "boot__boot_image_epoch": {
+     "die_ports": [
+      "boot__boot_image_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "boot__boot_image_epoch"
+     ]
+    },
+    "boot__boot_image_digest": {
+     "die_ports": [
+      "boot__boot_image_digest"
+     ],
+     "die_bits": 64,
+     "rtl_bits": 64,
+     "rtl_ports": [
+      "boot__boot_image_digest"
+     ]
+    },
+    "boot__setup_ready": {
+     "die_ports": [
+      "boot__setup_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot__setup_ready"
+     ]
+    },
+    "own__native_reserved": {
+     "die_ports": [
+      "own__native_reserved"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "own__native_reserved"
+     ]
+    },
+    "own__ownership_valid": {
+     "die_ports": [
+      "own__ownership_valid"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "own__ownership_valid"
+     ]
+    },
+    "oobs__host_launch_quiet": {
+     "die_ports": [
+      "oobs__host_launch_quiet"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "oobs__host_launch_quiet"
+     ]
+    },
+    "oobs__host_upstream_quiet": {
+     "die_ports": [
+      "oobs__host_upstream_quiet"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "oobs__host_upstream_quiet"
+     ]
+    },
+    "cf_root__fault": {
+     "die_ports": [
+      "cf_root__fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf_root__fault"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "d2d__skw": {
+     "die_ports": [
+      "d2d__skw"
+     ],
+     "die_bits": 12,
+     "rtl_bits": 12,
+     "rtl_ports": [
+      "d2d__skw"
+     ]
+    },
+    "d2d__kvn_word_identity": {
+     "die_ports": [
+      "d2d__kvn_word_identity"
+     ],
+     "die_bits": 59,
+     "rtl_bits": 59,
+     "rtl_ports": [
+      "d2d__kvn_word_identity"
+     ]
+    },
+    "d2d__kvn_word_generation": {
+     "die_ports": [
+      "d2d__kvn_word_generation"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "d2d__kvn_word_generation"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_emb": {
+   "instances": 1,
+   "how": "identity",
+   "module": "qkd_kvs_emb",
+   "bundles": {
+    "rowtx__emb_tx_payload": {
+     "die_ports": [
+      "rowtx__emb_tx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "rowtx__emb_tx_payload"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "d2d__svc": {
+     "die_ports": [
+      "d2d__svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "d2d__svc"
+     ]
+    },
+    "i_ctl": {
+     "die_ports": [
+      "i_ctl"
+     ],
+     "die_bits": 73,
+     "rtl_bits": 73,
+     "rtl_ports": [
+      "i_ctl"
+     ]
+    },
+    "rowtx__emb_tx_v": {
+     "die_ports": [
+      "rowtx__emb_tx_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rowtx__emb_tx_v"
+     ]
+    },
+    "i_hroot_WS": {
+     "die_ports": [
+      "i_hroot_WS"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_hroot_WS"
+     ]
+    },
+    "i_hroot_WN": {
+     "die_ports": [
+      "i_hroot_WN"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_hroot_WN"
+     ]
+    },
+    "i_hroot_ES": {
+     "die_ports": [
+      "i_hroot_ES"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_hroot_ES"
+     ]
+    },
+    "i_hroot_EN": {
+     "die_ports": [
+      "i_hroot_EN"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_hroot_EN"
+     ]
+    },
+    "px_tok": {
+     "die_ports": [
+      "px_tok"
+     ],
+     "die_bits": 18,
+     "rtl_bits": 18,
+     "rtl_ports": [
+      "px_tok"
+     ]
+    },
+    "px_tep": {
+     "die_ports": [
+      "px_tep"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "px_tep"
+     ]
+    },
+    "d2d__emb_tx_slot": {
+     "die_ports": [
+      "d2d__emb_tx_slot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "d2d__emb_tx_slot"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+   "parameters": {}
+  },
+  "qkd_kvs_attn": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_kvs_attn_fl",
+   "bundles": {
+    "attn__tx_payload": {
+     "die_ports": [
+      "attn__tx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "attn__tx_payload"
+     ]
+    },
+    "acal_WS": {
+     "die_ports": [
+      "acal_WS"
+     ],
+     "die_bits": 48,
+     "rtl_bits": 48,
+     "rtl_ports": [
+      "acal_WS"
+     ]
+    },
+    "acal_WN": {
+     "die_ports": [
+      "acal_WN"
+     ],
+     "die_bits": 48,
+     "rtl_bits": 48,
+     "rtl_ports": [
+      "acal_WN"
+     ]
+    },
+    "acal_ES": {
+     "die_ports": [
+      "acal_ES"
+     ],
+     "die_bits": 48,
+     "rtl_bits": 48,
+     "rtl_ports": [
+      "acal_ES"
+     ]
+    },
+    "acal_EN": {
+     "die_ports": [
+      "acal_EN"
+     ],
+     "die_bits": 48,
+     "rtl_bits": 48,
+     "rtl_ports": [
+      "acal_EN"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "ufh": {
+     "die_ports": [
+      "ufh"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufh"
+     ]
+    },
+    "ufs_WS": {
+     "die_ports": [
+      "ufs_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufs_WS"
+     ]
+    },
+    "ufs_WN": {
+     "die_ports": [
+      "ufs_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufs_WN"
+     ]
+    },
+    "ufs_ES": {
+     "die_ports": [
+      "ufs_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufs_ES"
+     ]
+    },
+    "ufs_EN": {
+     "die_ports": [
+      "ufs_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufs_EN"
+     ]
+    },
+    "i_ctl": {
+     "die_ports": [
+      "i_ctl"
+     ],
+     "die_bits": 109,
+     "rtl_bits": 109,
+     "rtl_ports": [
+      "i_ctl"
+     ]
+    },
+    "attn__tx_valid": {
+     "die_ports": [
+      "attn__tx_valid"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "attn__tx_valid"
+     ]
+    },
+    "pvst": {
+     "die_ports": [
+      "pvst"
+     ],
+     "die_bits": 31,
+     "rtl_bits": 31,
+     "rtl_ports": [
+      "pvst"
+     ]
+    },
+    "pvfst": {
+     "die_ports": [
+      "pvfst"
+     ],
+     "die_bits": 65,
+     "rtl_bits": 65,
+     "rtl_ports": [
+      "pvfst"
+     ]
+    },
+    "fin": {
+     "die_ports": [
+      "fin"
+     ],
+     "die_bits": 534,
+     "rtl_bits": 534,
+     "rtl_ports": [
+      "fin"
+     ]
+    },
+    "ahs": {
+     "die_ports": [
+      "ahs"
+     ],
+     "die_bits": 165,
+     "rtl_bits": 165,
+     "rtl_ports": [
+      "ahs"
+     ]
+    },
+    "prg": {
+     "die_ports": [
+      "prg"
+     ],
+     "die_bits": 537,
+     "rtl_bits": 537,
+     "rtl_ports": [
+      "prg"
+     ]
+    },
+    "arh": {
+     "die_ports": [
+      "arh"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "arh"
+     ]
+    },
+    "ufk_WS": {
+     "die_ports": [
+      "ufk_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufk_WS"
+     ]
+    },
+    "ufk_WN": {
+     "die_ports": [
+      "ufk_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufk_WN"
+     ]
+    },
+    "ufk_ES": {
+     "die_ports": [
+      "ufk_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufk_ES"
+     ]
+    },
+    "ufk_EN": {
+     "die_ports": [
+      "ufk_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufk_EN"
+     ]
+    },
+    "ufp0": {
+     "die_ports": [
+      "ufp0"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufp0"
+     ]
+    },
+    "ufp1": {
+     "die_ports": [
+      "ufp1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ufp1"
+     ]
+    },
+    "uff": {
+     "die_ports": [
+      "uff"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "uff"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "d2d__srx": {
+     "die_ports": [
+      "d2d__srx"
+     ],
+     "die_bits": 522,
+     "rtl_bits": 522,
+     "rtl_ports": [
+      "d2d__srx"
+     ]
+    },
+    "d2d__rx_payload": {
+     "die_ports": [
+      "d2d__rx_payload"
+     ],
+     "die_bits": 548,
+     "rtl_bits": 548,
+     "rtl_ports": [
+      "d2d__rx_payload"
+     ]
+    },
+    "d2d__att_tx_slot": {
+     "die_ports": [
+      "d2d__att_tx_slot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "d2d__att_tx_slot"
+     ]
+    },
+    "d2d__att_tx_kind": {
+     "die_ports": [
+      "d2d__att_tx_kind"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "d2d__att_tx_kind"
+     ]
+    },
+    "d2d__att_tx_beat": {
+     "die_ports": [
+      "d2d__att_tx_beat"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "d2d__att_tx_beat"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+   "parameters": {
+    "RETIRE_STATIC": 1,
+    "STATUS_DELAY": 213
+   }
+  },
+  "qkd_kvs_hroot": {
+   "instances": 4,
+   "how": "identity",
+   "module": "qkd_kvs_hroot",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "i_ctl": {
+     "die_ports": [
+      "i_ctl"
+     ],
+     "die_bits": 1118,
+     "rtl_bits": 1118,
+     "rtl_ports": [
+      "i_ctl"
+     ]
+    },
+    "i_g": {
+     "die_ports": [
+      "i_g"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "i_g"
+     ]
+    },
+    "i_r": {
+     "die_ports": [
+      "i_r"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "i_r"
+     ]
+    },
+    "o_pc": {
+     "die_ports": [
+      "o_pc"
+     ],
+     "die_bits": 780,
+     "rtl_bits": 780,
+     "rtl_ports": [
+      "o_pc"
+     ]
+    },
+    "o_c0": {
+     "die_ports": [
+      "o_c0"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c0"
+     ]
+    },
+    "o_c1": {
+     "die_ports": [
+      "o_c1"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c1"
+     ]
+    },
+    "o_c2": {
+     "die_ports": [
+      "o_c2"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c2"
+     ]
+    },
+    "o_c3": {
+     "die_ports": [
+      "o_c3"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c3"
+     ]
+    },
+    "o_c4": {
+     "die_ports": [
+      "o_c4"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c4"
+     ]
+    },
+    "o_c5": {
+     "die_ports": [
+      "o_c5"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c5"
+     ]
+    },
+    "o_c6": {
+     "die_ports": [
+      "o_c6"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c6"
+     ]
+    },
+    "o_c7": {
+     "die_ports": [
+      "o_c7"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "o_c7"
+     ]
+    },
+    "o_ch0": {
+     "die_ports": [
+      "o_ch0"
+     ],
+     "die_bits": 271,
+     "rtl_bits": 271,
+     "rtl_ports": [
+      "o_ch0"
+     ]
+    },
+    "o_kg": {
+     "die_ports": [
+      "o_kg"
+     ],
+     "die_bits": 23,
+     "rtl_bits": 23,
+     "rtl_ports": [
+      "o_kg"
+     ]
+    },
+    "o_ctl": {
+     "die_ports": [
+      "o_ctl"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "o_ctl"
+     ]
+    },
+    "o_emb": {
+     "die_ports": [
+      "o_emb"
+     ],
+     "die_bits": 299,
+     "rtl_bits": 299,
+     "rtl_ports": [
+      "o_emb"
+     ]
+    },
+    "esh__stack": {
+     "die_ports": [
+      "esh__stack"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "esh__stack"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 8,
+   "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+   "parameters": {}
+  },
+  "qkd_pvfin": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_pv_fin_s",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "fs": {
+     "die_ports": [
+      "fs"
+     ],
+     "die_bits": 65,
+     "rtl_bits": 65,
+     "rtl_ports": [
+      "start",
+      "epoch",
+      "cal"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 534,
+     "rtl_bits": 534,
+     "rtl_ports": [
+      "out_valid",
+      "out_beat",
+      "out_epoch",
+      "out_data"
+     ]
+    },
+    "fr": {
+     "die_ports": [
+      "fr"
+     ],
+     "die_bits": 145,
+     "rtl_bits": 145,
+     "rtl_ports": [
+      "rz_valid",
+      "rz_epoch",
+      "rz"
+     ]
+    },
+    "ff": {
+     "die_ports": [
+      "ff"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "p0": {
+     "die_ports": [
+      "p0"
+     ],
+     "die_bits": 534,
+     "rtl_bits": 534,
+     "rtl_ports": [
+      "p0_valid",
+      "p0_beat",
+      "p0_epoch",
+      "p0_data"
+     ]
+    },
+    "p1": {
+     "die_ports": [
+      "p1"
+     ],
+     "die_bits": 534,
+     "rtl_bits": 534,
+     "rtl_ports": [
+      "p1_valid",
+      "p1_beat",
+      "p1_epoch",
+      "p1_data"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+   "parameters": {
+    "ADD_LAT": 7,
+    "MUL_LAT": 6,
+    "SKEW": 1,
+    "MUT": 0
+   }
+  },
+  "qkd_rlys_528": {
+   "instances": 2232,
+   "how": "relay",
+   "module": "qkd_rlys_528",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh0_36": {
+   "instances": 275,
+   "how": "relay",
+   "module": "qkd_rlysh0_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh_36": {
+   "instances": 9737,
+   "how": "relay",
+   "module": "qkd_rlysh_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh_36": {
+   "instances": 275,
+   "how": "by_name",
+   "module": "qkd_landsh_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh0_528": {
+   "instances": 39,
+   "how": "relay",
+   "module": "qkd_rlysh0_528",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh_528": {
+   "instances": 1091,
+   "how": "relay",
+   "module": "qkd_rlysh_528",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh_528": {
+   "instances": 39,
+   "how": "by_name",
+   "module": "qkd_landsh_528",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh0_296": {
+   "instances": 18,
+   "how": "relay",
+   "module": "qkd_rlysh0_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh_296": {
+   "instances": 270,
+   "how": "relay",
+   "module": "qkd_rlysh_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh_296": {
+   "instances": 18,
+   "how": "by_name",
+   "module": "qkd_landsh_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh0_1": {
+   "instances": 16,
+   "how": "relay",
+   "module": "qkd_rlysh0_1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rlysh_1": {
+   "instances": 550,
+   "how": "relay",
+   "module": "qkd_rlysh_1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh_1": {
+   "instances": 16,
+   "how": "by_name",
+   "module": "qkd_landsh_1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh0_296": {
+   "instances": 2,
+   "how": "by_name",
+   "module": "qkd_landsh0_296",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh0_36": {
+   "instances": 5,
+   "how": "by_name",
+   "module": "qkd_landsh0_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_landsh0_528": {
+   "instances": 1,
+   "how": "by_name",
+   "module": "qkd_landsh0_528",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rst_region": {
+   "instances": 42,
+   "how": "bound",
+   "module": "qkd_rst_region_pr_h273",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "a": {
+     "die_ports": [
+      "a"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "a"
+     ]
+    },
+    "b": {
+     "die_ports": [
+      "b"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "b"
+     ]
+    },
+    "dly": {
+     "die_ports": [
+      "dly"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "dly"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "por_n": "by_design: package POR pad (off-chip signal), async assert, synchronised inside the root"
+   },
+   "constants_folded": 336,
+   "file": "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv",
+   "parameters": {}
+  },
+  "qkd_hp_or2": {
+   "instances": 361,
+   "how": "by_name",
+   "module": "qkd_hp_or2",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_host_rt__kv44_bo1": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_host_root_admission_obsx_bo1",
+   "bundles": {
+    "rec_tx": {
+     "die_ports": [
+      "rec_tx"
+     ],
+     "die_bits": 549,
+     "rtl_bits": 549,
+     "rtl_ports": [
+      "record_tx_observed_v",
+      "record_tx"
+     ]
+    },
+    "rec_rx": {
+     "die_ports": [
+      "rec_rx"
+     ],
+     "die_bits": 552,
+     "rtl_bits": 552,
+     "rtl_ports": [
+      "record_send_kind",
+      "record_witness_slot",
+      "record_rx_v",
+      "record_rx"
+     ]
+    },
+    "fdi": {
+     "die_ports": [
+      "fdi"
+     ],
+     "die_bits": 2089,
+     "rtl_bits": 2089,
+     "rtl_ports": [
+      "phy_up",
+      "phy_tx_v",
+      "phy_tx_flit",
+      "phy_rx_v",
+      "phy_rx_flit"
+     ]
+    },
+    "ck_axi": {
+     "die_ports": [
+      "ck_axi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_axi"
+     ]
+    },
+    "ck_bootbarrier": {
+     "die_ports": [
+      "ck_bootbarrier"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_bootbarrier"
+     ]
+    },
+    "ck_coordinator_codec": {
+     "die_ports": [
+      "ck_coordinator_codec"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_codec"
+     ]
+    },
+    "ck_coordinator_lifecycle": {
+     "die_ports": [
+      "ck_coordinator_lifecycle"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_lifecycle"
+     ]
+    },
+    "ck_coordinator_post": {
+     "die_ports": [
+      "ck_coordinator_post"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_post"
+     ]
+    },
+    "ck_csr": {
+     "die_ports": [
+      "ck_csr"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_csr"
+     ]
+    },
+    "ck_ctl": {
+     "die_ports": [
+      "ck_ctl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctl"
+     ]
+    },
+    "ck_ctrl": {
+     "die_ports": [
+      "ck_ctrl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctrl"
+     ]
+    },
+    "ck_dispatch": {
+     "die_ports": [
+      "ck_dispatch"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_dispatch"
+     ]
+    },
+    "ck_fence_core": {
+     "die_ports": [
+      "ck_fence_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_core"
+     ]
+    },
+    "ck_guard": {
+     "die_ports": [
+      "ck_guard"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_guard"
+     ]
+    },
+    "ck_hc": {
+     "die_ports": [
+      "ck_hc"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_hc"
+     ]
+    },
+    "ck_host": {
+     "die_ports": [
+      "ck_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_host"
+     ]
+    },
+    "ck_map": {
+     "die_ports": [
+      "ck_map"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_map"
+     ]
+    },
+    "ck_native": {
+     "die_ports": [
+      "ck_native"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_native"
+     ]
+    },
+    "ck_order": {
+     "die_ports": [
+      "ck_order"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_order"
+     ]
+    },
+    "ck_peer": {
+     "die_ports": [
+      "ck_peer"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_peer"
+     ]
+    },
+    "ck_phy_rx_r": {
+     "die_ports": [
+      "ck_phy_rx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_r"
+     ]
+    },
+    "ck_phy_tx_w": {
+     "die_ports": [
+      "ck_phy_tx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_w"
+     ]
+    },
+    "ck_program_loader": {
+     "die_ports": [
+      "ck_program_loader"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_loader"
+     ]
+    },
+    "ck_program_rx": {
+     "die_ports": [
+      "ck_program_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_rx"
+     ]
+    },
+    "ck_prompt": {
+     "die_ports": [
+      "ck_prompt"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_prompt"
+     ]
+    },
+    "ck_qm_core": {
+     "die_ports": [
+      "ck_qm_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_core"
+     ]
+    },
+    "ck_qm_done_r": {
+     "die_ports": [
+      "ck_qm_done_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_r"
+     ]
+    },
+    "ck_qm_ing_w": {
+     "die_ports": [
+      "ck_qm_ing_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_w"
+     ]
+    },
+    "ck_qm_queue": {
+     "die_ports": [
+      "ck_qm_queue"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_queue"
+     ]
+    },
+    "ck_records": {
+     "die_ports": [
+      "ck_records"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_records"
+     ]
+    },
+    "ck_retire": {
+     "die_ports": [
+      "ck_retire"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_retire"
+     ]
+    },
+    "ck_root_mux": {
+     "die_ports": [
+      "ck_root_mux"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_root_mux"
+     ]
+    },
+    "ck_rst": {
+     "die_ports": [
+      "ck_rst"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rst"
+     ]
+    },
+    "ck_rx": {
+     "die_ports": [
+      "ck_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rx"
+     ]
+    },
+    "ck_sum": {
+     "die_ports": [
+      "ck_sum"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_sum"
+     ]
+    },
+    "ck_tx": {
+     "die_ports": [
+      "ck_tx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_tx"
+     ]
+    },
+    "kst": {
+     "die_ports": [
+      "kst"
+     ],
+     "die_bits": 10,
+     "rtl_bits": 10,
+     "rtl_ports": [
+      "local_kst"
+     ]
+    },
+    "hb": {
+     "die_ports": [
+      "hb"
+     ],
+     "die_bits": 284,
+     "rtl_bits": 284,
+     "rtl_ports": [
+      "hb",
+      "hb_cr"
+     ]
+    },
+    "est": {
+     "die_ports": [
+      "est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "est"
+     ]
+    },
+    "tk": {
+     "die_ports": [
+      "tk"
+     ],
+     "die_bits": 93,
+     "rtl_bits": 93,
+     "rtl_ports": [
+      "local_tk"
+     ]
+    },
+    "svc": {
+     "die_ports": [
+      "svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "transport_fault",
+      "native_links_drained",
+      "native_link_reset_seen",
+      "native_retrained",
+      "abort_drained",
+      "native_kv_drained",
+      "native_vm_drained",
+      "native_collective_drained",
+      "native_host_drained",
+      "native_collective_busy",
+      "native_kv_flush",
+      "native_admit_ready",
+      "crom_fault",
+      "execution_active",
+      "engine_result_v",
+      "engine_result_done",
+      "engine_result_fault",
+      "engine_result_cause",
+      "engine_result_tag",
+      "engine_result_gen",
+      "engine_result_token",
+      "engine_result_value",
+      "engine_result_cycles"
+     ]
+    },
+    "lup": {
+     "die_ports": [
+      "lup"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "link_up"
+     ]
+    },
+    "lrc": {
+     "die_ports": [
+      "lrc"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "host_link_reset_req",
+      "host_recovery_clear"
+     ]
+    },
+    "token_epoch": {
+     "die_ports": [
+      "token_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "token_epoch"
+     ]
+    },
+    "host_drained_local": {
+     "die_ports": [
+      "host_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_interface_idle"
+     ]
+    },
+    "link_physical_fault": {
+     "die_ports": [
+      "link_physical_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_physical_fault"
+     ]
+    },
+    "program_begin_v": {
+     "die_ports": [
+      "program_begin_v"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "program_begin_v"
+     ]
+    },
+    "pll_locked": {
+     "die_ports": [
+      "pll_locked"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_locked"
+     ]
+    },
+    "ck_fence_host": {
+     "die_ports": [
+      "ck_fence_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_host"
+     ]
+    },
+    "ck_qm_credit": {
+     "die_ports": [
+      "ck_qm_credit"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_credit"
+     ]
+    },
+    "ck_qm_done_w": {
+     "die_ports": [
+      "ck_qm_done_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_w"
+     ]
+    },
+    "ck_qm_host": {
+     "die_ports": [
+      "ck_qm_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_host"
+     ]
+    },
+    "ck_qm_ing_r": {
+     "die_ports": [
+      "ck_qm_ing_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_r"
+     ]
+    },
+    "ck_qm_bank0": {
+     "die_ports": [
+      "ck_qm_bank0",
+      "ck_qm_bank1"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "ck_qm_bank"
+     ]
+    },
+    "ck_qm_ingest": {
+     "die_ports": [
+      "ck_qm_ingest"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ingest"
+     ]
+    },
+    "ck_qm_out": {
+     "die_ports": [
+      "ck_qm_out"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_out"
+     ]
+    },
+    "ck_pad": {
+     "die_ports": [
+      "ck_pad"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_pad"
+     ]
+    },
+    "ck_phy0": {
+     "die_ports": [
+      "ck_phy0",
+      "ck_phy1",
+      "ck_phy2",
+      "ck_phy3",
+      "ck_phy4",
+      "ck_phy5",
+      "ck_phy6",
+      "ck_phy7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_phy"
+     ]
+    },
+    "ck_phy_rx_w": {
+     "die_ports": [
+      "ck_phy_rx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_w"
+     ]
+    },
+    "ck_phy_tx_r": {
+     "die_ports": [
+      "ck_phy_tx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_r"
+     ]
+    },
+    "chf0": {
+     "die_ports": [
+      "chf0",
+      "chf1",
+      "chf2",
+      "chf3"
+     ],
+     "die_bits": 1164,
+     "rtl_bits": 1164,
+     "rtl_ports": [
+      "chain_f"
+     ]
+    },
+    "chc0": {
+     "die_ports": [
+      "chc0",
+      "chc1",
+      "chc2",
+      "chc3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_c"
+     ]
+    },
+    "cha0": {
+     "die_ports": [
+      "cha0",
+      "cha1",
+      "cha2",
+      "cha3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_a"
+     ]
+    },
+    "chx0": {
+     "die_ports": [
+      "chx0",
+      "chx1",
+      "chx2",
+      "chx3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "chain_fault_i"
+     ]
+    },
+    "sak0": {
+     "die_ports": [
+      "sak0",
+      "sak1",
+      "sak2",
+      "sak3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_ack"
+     ]
+    },
+    "sbd0": {
+     "die_ports": [
+      "sbd0",
+      "sbd1",
+      "sbd2",
+      "sbd3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_done"
+     ]
+    },
+    "sbo0": {
+     "die_ports": [
+      "sbo0",
+      "sbo1",
+      "sbo2",
+      "sbo3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_ok"
+     ]
+    },
+    "sbf0": {
+     "die_ports": [
+      "sbf0",
+      "sbf1",
+      "sbf2",
+      "sbf3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_fault"
+     ]
+    },
+    "auth_lp": {
+     "die_ports": [
+      "auth_lp"
+     ],
+     "die_bits": 82,
+     "rtl_bits": 82,
+     "rtl_ports": [
+      "token_epoch_valid",
+      "program_ready",
+      "program_epoch",
+      "program_digest"
+     ]
+    },
+    "cohort_tag": {
+     "die_ports": [
+      "cohort_tag"
+     ],
+     "die_bits": 59,
+     "rtl_bits": 59,
+     "rtl_ports": [
+      "cohort_tag"
+     ]
+    },
+    "cohort_gen": {
+     "die_ports": [
+      "cohort_gen"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "cohort_gen"
+     ]
+    },
+    "boot_pr": {
+     "die_ports": [
+      "boot_pr"
+     ],
+     "die_bits": 143,
+     "rtl_bits": 143,
+     "rtl_ports": [
+      "boot_pr"
+     ]
+    },
+    "boot_image_target": {
+     "die_ports": [
+      "boot_image_target"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "boot_image_target"
+     ]
+    },
+    "boot_image_ready": {
+     "die_ports": [
+      "boot_image_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_image_ready"
+     ]
+    },
+    "boot_image_fault": {
+     "die_ports": [
+      "boot_image_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_image_fault"
+     ]
+    },
+    "boot_image_epoch": {
+     "die_ports": [
+      "boot_image_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "boot_image_epoch"
+     ]
+    },
+    "boot_image_digest": {
+     "die_ports": [
+      "boot_image_digest"
+     ],
+     "die_bits": 64,
+     "rtl_bits": 64,
+     "rtl_ports": [
+      "boot_image_digest"
+     ]
+    },
+    "static_setup_ready": {
+     "die_ports": [
+      "static_setup_ready"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "static_setup_ready"
+     ]
+    },
+    "native_reserved": {
+     "die_ports": [
+      "native_reserved"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "native_reserved"
+     ]
+    },
+    "ownership_valid": {
+     "die_ports": [
+      "ownership_valid"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ownership_valid"
+     ]
+    },
+    "host_launch_quiet": {
+     "die_ports": [
+      "host_launch_quiet"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_launch_quiet"
+     ]
+    },
+    "host_upstream_quiet": {
+     "die_ports": [
+      "host_upstream_quiet"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "host_upstream_quiet"
+     ]
+    },
+    "ctrl_completion_fault": {
+     "die_ports": [
+      "ctrl_completion_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ctrl_completion_fault"
+     ]
+    },
+    "odc": {
+     "die_ports": [
+      "odc"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "obs_dcal_adm_done",
+      "obs_dcal_cal_ready",
+      "obs_dcal_running"
+     ]
+    },
+    "odl": {
+     "die_ports": [
+      "odl"
+     ],
+     "die_bits": 6,
+     "rtl_bits": 6,
+     "rtl_ports": [
+      "obs_dcal_layer"
+     ]
+    },
+    "odr": {
+     "die_ports": [
+      "odr"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "obs_d2d_recovery_cycles"
+     ]
+    },
+    "die_rst_n": {
+     "die_ports": [
+      "die_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "die_rst_n"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "link_rst_n": {
+     "die_ports": [
+      "link_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "boot_go": {
+     "die_ports": [
+      "boot_go"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_go"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "die_id": "by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly",
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv",
+   "parameters": {
+    "ENABLE_SERVICE": 1,
+    "ENABLE_NATIVE": 1,
+    "ENABLE_TOKEN": 1,
+    "NL": 2
+   },
+   "kv44_alias_of": "qkd_host_rt (qkd_host_root_admission_obsx)"
+  }
+ },
+ "hard_model_dirs": {
+  "qkd_hbm3e_phy_pc": {
+   "clk": "input",
+   "pi0": "output",
+   "po0": "input",
+   "fh0": "output",
+   "rh0": "output",
+   "pi1": "output",
+   "po1": "input",
+   "fh1": "output",
+   "rh1": "output",
+   "pi2": "output",
+   "po2": "input",
+   "fh2": "output",
+   "rh2": "output",
+   "pi3": "output",
+   "po3": "input",
+   "fh3": "output",
+   "rh3": "output",
+   "pi4": "output",
+   "po4": "input",
+   "fh4": "output",
+   "rh4": "output",
+   "pi5": "output",
+   "po5": "input",
+   "fh5": "output",
+   "rh5": "output",
+   "pi6": "output",
+   "po6": "input",
+   "fh6": "output",
+   "rh6": "output",
+   "pi7": "output",
+   "po7": "input",
+   "fh7": "output",
+   "rh7": "output",
+   "pi8": "output",
+   "po8": "input",
+   "fh8": "output",
+   "rh8": "output",
+   "pi9": "output",
+   "po9": "input",
+   "fh9": "output",
+   "rh9": "output",
+   "pi10": "output",
+   "po10": "input",
+   "fh10": "output",
+   "rh10": "output",
+   "pi11": "output",
+   "po11": "input",
+   "fh11": "output",
+   "rh11": "output",
+   "pi12": "output",
+   "po12": "input",
+   "fh12": "output",
+   "rh12": "output",
+   "pi13": "output",
+   "po13": "input",
+   "fh13": "output",
+   "rh13": "output",
+   "pi14": "output",
+   "po14": "input",
+   "fh14": "output",
+   "rh14": "output",
+   "pi15": "output",
+   "po15": "input",
+   "fh15": "output",
+   "rh15": "output",
+   "pi16": "output",
+   "po16": "input",
+   "fh16": "output",
+   "rh16": "output",
+   "pi17": "output",
+   "po17": "input",
+   "fh17": "output",
+   "rh17": "output",
+   "pi18": "output",
+   "po18": "input",
+   "fh18": "output",
+   "rh18": "output",
+   "pi19": "output",
+   "po19": "input",
+   "fh19": "output",
+   "rh19": "output",
+   "pi20": "output",
+   "po20": "input",
+   "fh20": "output",
+   "rh20": "output",
+   "pi21": "output",
+   "po21": "input",
+   "fh21": "output",
+   "rh21": "output",
+   "pi22": "output",
+   "po22": "input",
+   "fh22": "output",
+   "rh22": "output",
+   "pi23": "output",
+   "po23": "input",
+   "fh23": "output",
+   "rh23": "output",
+   "pi24": "output",
+   "po24": "input",
+   "fh24": "output",
+   "rh24": "output",
+   "pi25": "output",
+   "po25": "input",
+   "fh25": "output",
+   "rh25": "output",
+   "pi26": "output",
+   "po26": "input",
+   "fh26": "output",
+   "rh26": "output",
+   "pi27": "output",
+   "po27": "input",
+   "fh27": "output",
+   "rh27": "output",
+   "pi28": "output",
+   "po28": "input",
+   "fh28": "output",
+   "rh28": "output",
+   "pi29": "output",
+   "po29": "input",
+   "fh29": "output",
+   "rh29": "output",
+   "pi30": "output",
+   "po30": "input",
+   "fh30": "output",
+   "rh30": "output",
+   "pi31": "output",
+   "po31": "input",
+   "fh31": "output",
+   "rh31": "output",
+   "rst_n": "input"
+  },
+  "qkd_ckbump": {
+   "pll_ck": "input",
+   "rs": "input"
+  },
+  "qkd_fwdbump": {
+   "a": "input"
+  }
+ },
+ "off_chip_inputs": [
+  "die_id",
+  "por_n",
+  "refclk"
+ ],
+ "constant_bits": 9812,
+ "constant_nets_by_class": {
+  "unclassified": 3156,
+  "rtl_literal": 3840,
+  "host_strap": 640,
+  "chain_terminator": 776,
+  "identity_strap": 1064,
+  "reset_delay_strap": 336
+ },
+ "straps": 35,
+ "kv44_note": "alias master qkd_host_rt__kv44_bo1 added by kv44/mk_port_map_kv44.py (substitute_inst host -> obsx_bo1)"
+}

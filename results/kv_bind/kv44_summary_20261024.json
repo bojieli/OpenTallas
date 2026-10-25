@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.kv_bind.summary.v1",
+ "date": "2026-10-24 21:37 PDT",
+ "die": "qwen_kvsys",
+ "plan": "v3.8x md5 4d53a273",
+ "bound_top": "physical/die_plan/qwen_kvsys/bind/bound_kv44/rtl/qwen_kvsys_bound_top.sv",
+ "bound_top_sha256": "98743bb494b4a3f13ee28072846fb8e50554258d9b707813500b9b7131b3d596",
+ "recipe": "physical/die_plan/qwen_kvsys/bind/kv44/asbuilt_kv44.json",
+ "bind": {
+  "errors": 0,
+  "partitions": 160,
+  "types": 86,
+  "crossings": 2545,
+  "crossing_bits": 430558,
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 5190,
+  "plan_driven": 1935
+ },
+ "verify": {
+  "verdict": "PASS",
+  "compared": 3359268,
+  "matched": 3359267,
+  "mismatched": 0,
+  "glue_unmatched": 1,
+  "lint_errors": 0,
+  "lint_runs": 86
+ },
+ "port_bind_strict": "PASS masters=86 instances=160 (all stub/tie/open counts 0)",
+ "bind_gate": {
+  "verdict": "INCOMPLETE",
+  "regen": "PASS OK16 WARN3",
+  "smoke": "PENDING (no KV bound-top vehicle)"
+ },
+ "r8_landed_check": "FAIL identical to kv41 (4 unequal/12 inversions/5 type conflicts, kg-row rule)",
+ "requests": {
+  "R1": "IN",
+  "R2": "IN",
+  "R3": "IN",
+  "R4": "IN (pair1024 = emb1627 profile)",
+  "kv42_wreq": "IN native, 810 flops",
+  "R5_B": "compatible leaf RTL, lint 0 errors on 29 runs, not baked",
+  "R5_C": "NOT IN (C1 bind.py only on kv-tok-c branch; C2 post-bind edit)"
+ },
+ "findings": [
+  "v3.8x RT rule 32 on 12/16 vports > bound 31 -> RT bound raised to 32 via param_regen",
+  "AP_OFS v36 rule stale -> 64'hffd5ffd2ffd5ffd3",
+  "boot image must be recompiled on kv44 (RL 63->64)"
+ ],
+ "reconstruction": "as-built kv_bound netlist rebuilt; v3.6 rebind byte-identical to bound_pv (87/87 files modulo 1 path comment)"
+}

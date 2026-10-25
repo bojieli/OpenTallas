@@ -1,0 +1,260 @@
+{
+ "straps": [
+  [
+   "ot_qkh_head_frontq_native",
+   "hid"
+  ],
+  [
+   "ot_qkh_lane8",
+   "bsel"
+  ],
+  [
+   "ot_qwen_tp8_pv_wide_ctl_tbf",
+   "pair_id"
+  ],
+  [
+   "qkd_astk_ctl_s",
+   "st"
+  ],
+  [
+   "qkd_astk_ep_s",
+   "eo"
+  ],
+  [
+   "qkd_astk_ep_s",
+   "sq"
+  ],
+  [
+   "qkd_astk_er_owner_st",
+   "owner_id"
+  ],
+  [
+   "qkd_astk_er_owner_st",
+   "prev_addr"
+  ],
+  [
+   "qkd_astk_er_owner_st",
+   "prev_data"
+  ],
+  [
+   "qkd_astk_er_owner_st",
+   "prev_fault"
+  ],
+  [
+   "qkd_astk_er_owner_st",
+   "prev_v"
+  ],
+  [
+   "qkd_astk_rly_296_fl",
+   "a"
+  ],
+  [
+   "qkd_astk_zn",
+   "fi"
+  ],
+  [
+   "qkd_astk_zn",
+   "zc"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ai"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ci"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "fault_i"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "lpc"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "sdi"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "sfi"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "ski"
+  ],
+  [
+   "qkd_host_pc_slice_die",
+   "soi"
+  ],
+  [
+   "qkd_kvs_grp_h_r2c",
+   "slg__cfg_group"
+  ],
+  [
+   "qkd_kvs_grp_h_r2c",
+   "slg__cfg_stack"
+  ],
+  [
+   "qkd_kvs_grp_r2c",
+   "slg__cfg_group"
+  ],
+  [
+   "qkd_kvs_grp_r2c",
+   "slg__cfg_stack"
+  ],
+  [
+   "qkd_kvs_hroot",
+   "esh__stack"
+  ],
+  [
+   "qkd_kvs_pc",
+   "pc__cfg_stack"
+  ],
+  [
+   "qkd_kvs_pc",
+   "pc__pc"
+  ],
+  [
+   "qkd_kvs_pc_h",
+   "pc__cfg_stack"
+  ],
+  [
+   "qkd_kvs_pc_h",
+   "pc__fi"
+  ],
+  [
+   "qkd_kvs_pc_h",
+   "pc__pc"
+  ],
+  [
+   "qkd_rlys_296",
+   "a"
+  ],
+  [
+   "qkd_rlys_36",
+   "a"
+  ],
+  [
+   "qkd_rst_region_pr_h273",
+   "dly"
+  ]
+ ],
+ "classes": {
+  "ot_qkh_head_frontq_native:hid": {
+   "rtl_literal": 1024
+  },
+  "ot_qkh_lane8:bsel": {
+   "rtl_literal": 4096
+  },
+  "ot_qwen_tp8_pv_wide_ctl_tbf:pair_id": {
+   "unclassified": 2
+  },
+  "qkd_astk_ctl_s:st": {
+   "unclassified": 8
+  },
+  "qkd_astk_ep_s:eo": {
+   "unclassified": 256
+  },
+  "qkd_astk_ep_s:sq": {
+   "unclassified": 160
+  },
+  "qkd_astk_er_owner_st:owner_id": {
+   "unclassified": 96
+  },
+  "qkd_astk_er_owner_st:prev_addr": {
+   "unclassified": 176
+  },
+  "qkd_astk_er_owner_st:prev_data": {
+   "unclassified": 1024
+  },
+  "qkd_astk_er_owner_st:prev_fault": {
+   "unclassified": 4
+  },
+  "qkd_astk_er_owner_st:prev_v": {
+   "unclassified": 16
+  },
+  "qkd_astk_rly_296_fl:a": {
+   "unclassified": 26448
+  },
+  "qkd_astk_zn:fi": {
+   "unclassified": 4
+  },
+  "qkd_astk_zn:zc": {
+   "unclassified": 64
+  },
+  "qkd_host_pc_slice_die:ai": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:ci": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:fault_i": {
+   "chain_terminator": 4
+  },
+  "qkd_host_pc_slice_die:lpc": {
+   "host_strap": 640
+  },
+  "qkd_host_pc_slice_die:sdi": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:sfi": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:ski": {
+   "chain_terminator": 128
+  },
+  "qkd_host_pc_slice_die:soi": {
+   "chain_terminator": 128
+  },
+  "qkd_kvs_grp_h_r2c:slg__cfg_group": {
+   "identity_strap": 12
+  },
+  "qkd_kvs_grp_h_r2c:slg__cfg_stack": {
+   "identity_strap": 8
+  },
+  "qkd_kvs_grp_r2c:slg__cfg_group": {
+   "identity_strap": 84
+  },
+  "qkd_kvs_grp_r2c:slg__cfg_stack": {
+   "identity_strap": 56
+  },
+  "qkd_kvs_hroot:esh__stack": {
+   "identity_strap": 8
+  },
+  "qkd_kvs_pc:pc__cfg_stack": {
+   "identity_strap": 248
+  },
+  "qkd_kvs_pc:pc__pc": {
+   "identity_strap": 620
+  },
+  "qkd_kvs_pc_h:pc__cfg_stack": {
+   "identity_strap": 8
+  },
+  "qkd_kvs_pc_h:pc__fi": {
+   "chain_terminator": 4
+  },
+  "qkd_kvs_pc_h:pc__pc": {
+   "identity_strap": 20
+  },
+  "qkd_rlys_296:a": {
+   "unclassified": 109328
+  },
+  "qkd_rlys_36:a": {
+   "unclassified": 20296
+  },
+  "qkd_rst_region_pr_h273:dly": {
+   "reset_delay_strap": 336
+  }
+ },
+ "class_reasons": {
+  "rtl_literal": "RTL literal of the expanded controller strip parent (kv_expand)",
+  "kv_expand_strap": "classed strap of an expanded frame (head index / engine-stack cfg)",
+  "host_strap": "per-slice logical-PC strap (kv_die host_ties)",
+  "lane_strap": "write-leaf lane strap (kv_die wq_straps)",
+  "chain_terminator": "PC fault chain terminator (the strip parent assigned 0)",
+  "reset_delay_strap": "reset-region release delay dly = D - d_r (kv_die reset_region_calendar)",
+  "identity_strap": "KVJ-G2 static tile identity strap (landing stack / group, PC index, stack)"
+ }
+}

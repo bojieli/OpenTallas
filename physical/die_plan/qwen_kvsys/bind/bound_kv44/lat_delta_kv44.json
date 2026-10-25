@@ -1,0 +1,743 @@
+{
+ "note": "KV-BIND 10-24: landed-latency deltas of the kv44 bound top vs kv41 (bound_pv) and kv42 (bound_kv42) per landing member\n(sink leaf.port[bits] <- source @ as-built), grouped by (source leaf class, sink port) with bit counts.\n    lat_delta.py KV44_BUS_GROUPS KV41_BUS_GROUPS(.gz) KV42_BUS_GROUPS(.gz) OUT.json",
+ "vs_kv41": {
+  "common": 11901,
+  "changed": 186,
+  "changed_bits": 19026,
+  "removed": 129,
+  "added": 129,
+  "removed_ex": [
+   "d2d_kv.host_boot_begin[[0, 0]]<-host.boot_go@7",
+   "kvpc_EN_0.rst_n[[0, 0]]<-host.die_rst_n@59",
+   "kvpc_EN_1.rst_n[[0, 0]]<-host.die_rst_n@61",
+   "kvpc_EN_10.rst_n[[0, 0]]<-host.die_rst_n@44"
+  ],
+  "added_ex": [
+   "d2d_kv.host_boot_begin[[0, 0]]<-host.d2d_boot_begin@7",
+   "kvpc_EN_0.rst_n[[0, 0]]<-host.hbm_rst_n@62",
+   "kvpc_EN_1.rst_n[[0, 0]]<-host.hbm_rst_n@63",
+   "kvpc_EN_10.rst_n[[0, 0]]<-host.hbm_rst_n@45"
+  ],
+  "added_landed": {
+   "35": 1,
+   "26": 8,
+   "22": 8,
+   "20": 16,
+   "18": 16,
+   "16": 16,
+   "14": 16,
+   "12": 16,
+   "24": 8,
+   "10": 8,
+   "8": 8,
+   "6": 8
+  },
+  "groups": {
+   "ahub.am0 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "ahub.am1 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "ahub.am2 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "ahub.am3 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_EN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_ES": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_WN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_WS": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap0": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap1": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap2": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap3": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "kvs_attn.acal_Q -> astk_Q__u_strip_u_strip_g_ep_n__u_ep.cal_exp": {
+    "members": 32,
+    "bits": 512,
+    "d_bound": {
+     "1": 8,
+     "3": 8,
+     "4": 8,
+     "2": 8
+    },
+    "d_landed": {
+     "1": 8,
+     "3": 8,
+     "4": 8,
+     "2": 8
+    }
+   },
+   "kvs_attn.acal_Q -> astk_Q__u_strip_u_strip_u_ctl.cal": {
+    "members": 6,
+    "bits": 128,
+    "d_bound": {
+     "4": 2,
+     "2": 1,
+     "3": 2,
+     "1": 1
+    },
+    "d_landed": {
+     "4": 3,
+     "3": 3
+    }
+   },
+   "pvw_n__u_ctl.req_t -> vport_Q_n.pr_t": {
+    "members": 8,
+    "bits": 112,
+    "d_bound": {
+     "0": 8
+    },
+    "d_landed": {
+     "3": 1,
+     "9": 2,
+     "2": 1,
+     "4": 1,
+     "13": 2,
+     "1": 1
+    }
+   },
+   "pvw_n__u_ctl.req_valid -> vport_Q_n.pr_valid": {
+    "members": 8,
+    "bits": 8,
+    "d_bound": {
+     "0": 8
+    },
+    "d_landed": {
+     "9": 2,
+     "2": 1,
+     "13": 2,
+     "4": 1,
+     "3": 1,
+     "1": 1
+    }
+   },
+   "seq__g_xs_n__u_xs.q_e -> seq__g_fan_n__u_fan.q": {
+    "members": 2,
+    "bits": 256,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__g_xs_n__u_xs.q_w -> seq__g_fan_n__u_fan.q": {
+    "members": 4,
+    "bits": 512,
+    "d_bound": {
+     "1": 4
+    },
+    "d_landed": {
+     "1": 4
+    }
+   },
+   "seq__u_core.f_aqm_w -> seq__g_fan_n__u_fan.aqm": {
+    "members": 2,
+    "bits": 56,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.f_kc_w -> seq__g_fan_n__u_fan.kc_i": {
+    "members": 2,
+    "bits": 66,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.s_qpop -> seq__g_xs_n__u_xs.qpop": {
+    "members": 2,
+    "bits": 2,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.x_v -> seq__g_xs_n__u_xs.x_v": {
+    "members": 2,
+    "bits": 2,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "slg_Q.af__fault -> kvs_attn.ufk_WN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "slg_Q.af__fault -> kvs_attn.ufk_WS": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_d": {
+    "members": 16,
+    "bits": 16384,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_epoch": {
+    "members": 16,
+    "bits": 256,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_t": {
+    "members": 16,
+    "bits": 224,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_valid": {
+    "members": 16,
+    "bits": 16,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_vflag": {
+    "members": 16,
+    "bits": 16,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "vport_Q.fault -> slg_Q_n.afv": {
+    "members": 4,
+    "bits": 4,
+    "d_bound": {
+     "1": 4
+    },
+    "d_landed": {
+     "1": 4
+    }
+   },
+   "vport_Q.vq0_t -> slg_Q_n.vreq": {
+    "members": 10,
+    "bits": 140,
+    "d_bound": {
+     "1": 10
+    },
+    "d_landed": {
+     "1": 10
+    }
+   },
+   "vport_Q.vq0_valid -> slg_Q_n.vreq": {
+    "members": 10,
+    "bits": 10,
+    "d_bound": {
+     "1": 10
+    },
+    "d_landed": {
+     "1": 10
+    }
+   }
+  }
+ },
+ "vs_kv42": {
+  "common": 11901,
+  "changed": 182,
+  "changed_bits": 18996,
+  "removed": 129,
+  "added": 129,
+  "removed_ex": [
+   "d2d_kv.host_boot_begin[[0, 0]]<-host.boot_go@7",
+   "kvpc_EN_0.rst_n[[0, 0]]<-host.die_rst_n@59",
+   "kvpc_EN_1.rst_n[[0, 0]]<-host.die_rst_n@61",
+   "kvpc_EN_10.rst_n[[0, 0]]<-host.die_rst_n@44"
+  ],
+  "added_ex": [
+   "d2d_kv.host_boot_begin[[0, 0]]<-host.d2d_boot_begin@7",
+   "kvpc_EN_0.rst_n[[0, 0]]<-host.hbm_rst_n@62",
+   "kvpc_EN_1.rst_n[[0, 0]]<-host.hbm_rst_n@63",
+   "kvpc_EN_10.rst_n[[0, 0]]<-host.hbm_rst_n@45"
+  ],
+  "added_landed": {
+   "35": 1,
+   "26": 8,
+   "22": 8,
+   "20": 16,
+   "18": 16,
+   "16": 16,
+   "14": 16,
+   "12": 16,
+   "24": 8,
+   "10": 8,
+   "8": 8,
+   "6": 8
+  },
+  "groups": {
+   "ahub.am0 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "ahub.am1 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "ahub.am2 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "ahub.am3 -> astk_Q__u_strip_u_strip_u_ctl.am": {
+    "members": 1,
+    "bits": 36,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_EN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_ES": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_WN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__g_phys_fault_u_fault.q -> kvs_attn.ufs_WS": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap0": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap1": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap2": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "astk_Q__u_strip_u_strip_u_ctl.ap -> ahub.ap3": {
+    "members": 1,
+    "bits": 43,
+    "d_bound": {
+     "3": 1
+    },
+    "d_landed": {
+     "3": 1
+    }
+   },
+   "kvs_attn.acal_Q -> astk_Q__u_strip_u_strip_g_ep_n__u_ep.cal_exp": {
+    "members": 32,
+    "bits": 512,
+    "d_bound": {
+     "1": 8,
+     "3": 8,
+     "4": 8,
+     "2": 8
+    },
+    "d_landed": {
+     "1": 8,
+     "3": 8,
+     "4": 8,
+     "2": 8
+    }
+   },
+   "kvs_attn.acal_Q -> astk_Q__u_strip_u_strip_u_ctl.cal": {
+    "members": 6,
+    "bits": 128,
+    "d_bound": {
+     "4": 2,
+     "2": 1,
+     "3": 2,
+     "1": 1
+    },
+    "d_landed": {
+     "4": 3,
+     "3": 3
+    }
+   },
+   "pvw_n__u_ctl.req_t -> vport_Q_n.pr_t": {
+    "members": 6,
+    "bits": 84,
+    "d_bound": {
+     "0": 6
+    },
+    "d_landed": {
+     "-1": 6
+    }
+   },
+   "pvw_n__u_ctl.req_valid -> vport_Q_n.pr_valid": {
+    "members": 6,
+    "bits": 6,
+    "d_bound": {
+     "0": 6
+    },
+    "d_landed": {
+     "-1": 6
+    }
+   },
+   "seq__g_xs_n__u_xs.q_e -> seq__g_fan_n__u_fan.q": {
+    "members": 2,
+    "bits": 256,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__g_xs_n__u_xs.q_w -> seq__g_fan_n__u_fan.q": {
+    "members": 4,
+    "bits": 512,
+    "d_bound": {
+     "1": 4
+    },
+    "d_landed": {
+     "1": 4
+    }
+   },
+   "seq__u_core.f_aqm_w -> seq__g_fan_n__u_fan.aqm": {
+    "members": 2,
+    "bits": 56,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.f_kc_w -> seq__g_fan_n__u_fan.kc_i": {
+    "members": 2,
+    "bits": 66,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.s_qpop -> seq__g_xs_n__u_xs.qpop": {
+    "members": 2,
+    "bits": 2,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "seq__u_core.x_v -> seq__g_xs_n__u_xs.x_v": {
+    "members": 2,
+    "bits": 2,
+    "d_bound": {
+     "1": 2
+    },
+    "d_landed": {
+     "1": 2
+    }
+   },
+   "slg_Q.af__fault -> kvs_attn.ufk_WN": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "slg_Q.af__fault -> kvs_attn.ufk_WS": {
+    "members": 1,
+    "bits": 1,
+    "d_bound": {
+     "1": 1
+    },
+    "d_landed": {
+     "1": 1
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_d": {
+    "members": 16,
+    "bits": 16384,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_epoch": {
+    "members": 16,
+    "bits": 256,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_t": {
+    "members": 16,
+    "bits": 224,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_valid": {
+    "members": 16,
+    "bits": 16,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "slg_Q.rsp -> vport_Q_n.in0_vflag": {
+    "members": 16,
+    "bits": 16,
+    "d_bound": {
+     "1": 16
+    },
+    "d_landed": {
+     "1": 16
+    }
+   },
+   "vport_Q.fault -> slg_Q_n.afv": {
+    "members": 4,
+    "bits": 4,
+    "d_bound": {
+     "1": 4
+    },
+    "d_landed": {
+     "1": 4
+    }
+   },
+   "vport_Q.vq0_t -> slg_Q_n.vreq": {
+    "members": 10,
+    "bits": 140,
+    "d_bound": {
+     "1": 10
+    },
+    "d_landed": {
+     "1": 10
+    }
+   },
+   "vport_Q.vq0_valid -> slg_Q_n.vreq": {
+    "members": 10,
+    "bits": 10,
+    "d_bound": {
+     "1": 10
+    },
+    "d_landed": {
+     "1": 10
+    }
+   }
+  }
+ }
+}

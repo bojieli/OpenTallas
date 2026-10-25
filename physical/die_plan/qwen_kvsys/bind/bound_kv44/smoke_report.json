@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.die_plan.bind_smoke.v1",
+ "die": "qwen_kvsys",
+ "bound": "/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44",
+ "verdict": "PENDING",
+ "note": "no runnable KV token-stage bench on a bound top (STEWARD-TOKi kv2 = static audit only); static checks below are recorded, they are NOT the functional gate",
+ "bound_top_sha256": "98743bb494b4a3f13ee28072846fb8e50554258d9b707813500b9b7131b3d596",
+ "static": {
+  "param_regen_changed": 89,
+  "applied": {
+   "RESPONSE_LAT": 12,
+   "QK_ISSUE_AGE": 34,
+   "AP_OFS_WS_WN_ES_EN": [
+    -47,
+    -47,
+    -47,
+    -46
+   ],
+   "FR_OFS": -7,
+   "KVN_A0": 34,
+   "D2D_TXDP_K": "32'h03030443",
+   "TRUNK_D": 43,
+   "FLAG_D": 0,
+   "AP_OFS_kv44": "64'hffd5ffd2ffd5ffd3"
+  },
+  "measured_RT": [
+   12
+  ],
+  "open_blockers": [
+   "row start (o_kg broadcast) per-row skew",
+   "RH a/b stream alignment (pvw result trunk -> RH)"
+  ]
+ },
+ "constants_sha256": "2f9e6b207e75b2f1e0b6ce887bab908e18c6543eea47e3398e541589cfef5c33",
+ "date": "2026-10-24 20:47 PDT"
+}

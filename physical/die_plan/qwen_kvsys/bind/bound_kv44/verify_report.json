@@ -1,0 +1,43 @@
+{
+ "top": "qwen_kvsys_bound_top",
+ "cells": 62409,
+ "leaves_missing": 0,
+ "leaves_missing_examples": [],
+ "counts": {
+  "compared": 3359268,
+  "matched": 3359267,
+  "mismatched": 0,
+  "glue_unmatched": 1,
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_driven": 0,
+  "plan_driven": 1935
+ },
+ "mismatches": [],
+ "tied_examples": [],
+ "graph_errors": [],
+ "lint": {
+  "ran": true,
+  "split": true,
+  "runs": 87,
+  "errors": 0,
+  "warnings": 11369,
+  "first_errors": [],
+  "failed_runs": [],
+  "waived": [],
+  "waivers": [],
+  "closure_files": 271,
+  "closure_missing": []
+ },
+ "asbuilt_proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 5190,
+  "plan_driven": 1935
+ },
+ "asbuilt_errors": 0,
+ "verdict": "PASS"
+}
