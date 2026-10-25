@@ -51,7 +51,7 @@ module ot_s81sl_vn #(
     output reg           y_v,
     output reg  [2:0]    y_i,
     output reg  [255:0]  y,
-    output reg           fault
+    (* keep *) output reg           fault
 );
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
@@ -186,14 +186,20 @@ module ot_s81sl_vn #(
     ot_hdc_delay #(.W(3), .D(LA)) u_ano (.clk(clk), .rst_n(rs_t), .d(a_n), .q(a_no));
 
     // ---------------------------------------------------------------- output flops and the sticky fault
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): the fault state lives in fault_s; the pin flop fault
+    // is an output-only copy loaded with the SAME next value every edge (was: fault fed back into its own D).
+    // 0 cycles, bit / cycle identical.  Both kept so opt_merge cannot fold them.
+    (* keep *) reg fault_s;
+    wire fault_n = go_c ? run                               // a go while the previous norm still issues
+                 : (hr_v_c && run) ? 1'b1                   // a vp h read while the norm issues
+                 : (gf || (avl[LA] && a_f) || (s_v && s_i > 8'd7)) ? 1'b1 : fault_s;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin p_v <= 1'b0; y_v <= 1'b0; fault <= 1'b0; end
+        if (!rs_o) begin p_v <= 1'b0; y_v <= 1'b0; fault <= 1'b0; fault_s <= 1'b0; end
         else begin
             p_v <= avl[LA] && a_no == 3'd6;
             y_v <= gy_v;
-            if (go_c) fault <= run;                         // a go while the previous norm still issues
-            else if (hr_v_c && run) fault <= 1'b1;          // a vp h read while the norm issues
-            else if (gf || (avl[LA] && a_f) || (s_v && s_i > 8'd7)) fault <= 1'b1;
+            fault_s <= fault_n;
+            fault <= fault_n;
         end
     always @(posedge clk) begin p_d <= a_y; y_i <= gy_i[2:0]; y <= gy; end
 endmodule

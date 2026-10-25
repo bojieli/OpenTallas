@@ -66,7 +66,7 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     output reg          o_v,
     output reg  [1:0]   o_c,
     output reg  [255:0] o_y,
-    output reg          fault
+    (* keep *) output reg          fault
 );
     // ---------------------------------------------------------------- reset regions (<= 32 reset loads each)
     //  0 top control | 1..4 mul4 lanes | 5,6 chunk_hh | 7,8 chunk_kk | 9,10 chunk_dd | 11..13 trees | 14..17 add8 lane pairs
@@ -164,9 +164,13 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
         else o_v <= yv;
     always @(posedge clk) begin o_c <= yc; o_y <= yd; end
 
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): sticky state in fault_s, the pin flop fault is an
+    // output-only copy of the same next value (was: fault fed back into its own D).  0 cycles, bit / cycle identical.
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | f_order | mf | (|sf) | (|tf) | f_lock | yf;
     always @(posedge clk or negedge rn)
-        if (!rn) fault <= 1'b0;
-        else if (f_order || mf || (|sf) || (|tf) || f_lock || yf) fault <= 1'b1;
+        if (!rn) begin fault <= 1'b0; fault_s <= 1'b0; end
+        else begin fault <= fault_n; fault_s <= fault_n; end
 endmodule
 
 // Beat tree: 8 chunk sums of one copy arrive in order (at most one a cycle) -> the golden pairwise node

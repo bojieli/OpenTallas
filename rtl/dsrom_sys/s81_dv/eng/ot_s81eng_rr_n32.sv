@@ -23,6 +23,7 @@ module ot_s81eng_xq_n32 #(
     assign id={id_scale_c[7:0],id_code};
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
     always @(posedge ck) begin ic <= o_col; ib <= o_beat; id_code <= o_d[255:0]; end
+    wire [511:0] wl_rd;                 // slang: declared before g_scale_capture uses it (source order only)
     for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
         ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
         ot_s81eng_rr_kq8 u_w(.ck(ck),.d(wl_rd[263:256]),.q(wl_scale_c[8*sc+:8]));
@@ -55,7 +56,6 @@ module ot_s81eng_xq_n32 #(
     // Wait line: read wp-10 one edge earlier; owned raw landing below restores the original total12-edge age.
     reg [5:0] wp;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
-    wire [511:0] wl_rd;
     ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd9), .rd_out(wl_rd),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id_scale_c[7:0], id_code_w}), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
@@ -379,6 +379,7 @@ module ot_s81eng_head_n32 #(
         ot_s81eng_rr_headword #(.W(W)) u_w(.ck(ck),.wsel(wsel),.rsel(rsel),.d(req[12*hg+:W]),.q(rq_word[12*hg+:W]));
     end
     always @(posedge ck) if (win_v) slot <= win_slot;
+    reg run_a, run_b;                   // slang: declared before the run FSM uses them (source order only)
     // row j arrives at t0 + j and is expanded from t0 + 1 + 9 j: always present, no wait, no check needed
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin nw <= 3'd0; rr <= 3'd0; ai <= 4'd0; run <= 1'b0; run_a <= 1'b0; run_b <= 1'b0; rco[0] <= 1'b0; fault <= 1'b0; end
@@ -410,7 +411,7 @@ module ot_s81eng_head_n32 #(
             end
         end
     endfunction
-    reg [33:0] rq_a; reg [3:0] ai_a, ai_b; reg [30:0] at_b; reg [2:0] tg_b; reg run_a, run_b;
+    reg [33:0] rq_a; reg [3:0] ai_a, ai_b; reg [30:0] at_b; reg [2:0] tg_b;
     always @(posedge ck) begin rq_a <= rq_word; ai_a <= ai; end
     always @(posedge ck) begin at_b <= csa31(rq_a[30:0], {27'd0, ai_a}); ai_b <= ai_a; tg_b <= rq_a[33:31]; end
     wire [30:0] pc_c = csa31({1'b0, PCBASE}, {5'd0, at_b[30:5]});
