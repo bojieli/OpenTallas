@@ -328,6 +328,11 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
         bb = " ".join("--blackboxed-module " + n for n in sorted(all_modules - body_modules))
         lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --top {ab.get('_elab_top', ab['top'])} "
                      f"{bb} {dflags} {iflags} " + " ".join(lib + full + tops))
+        # sv-elab specialises structural masters as master$top.instance.
+        # Restore the same source-master metadata native paramod uses, before
+        # selection/blackboxing and the flat-netlist instance identity proof.
+        for name in sorted(all_modules):
+            lines.append(f'setattr -mod -set hdlname "{name}" ={name} ={name}$*')
     elif ab.get("frontend", "native") == "native":
         for f in lib:
             lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
