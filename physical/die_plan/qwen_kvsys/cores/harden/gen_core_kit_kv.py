@@ -325,12 +325,18 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
+    ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
+    if a.kvspc_face_ports:
+        if cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+            raise SystemExit("--kvspc-face-ports only applies to qkd_kvs_pc / qkd_kvs_pc_h_head_p")
+        import kvspc_face_ports as KVSPC
+        cj = KVSPC.core_json_update(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -418,6 +424,14 @@ def main():
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        KVSPC.apply_kit(kd / "rtl", mod)
+        hd = mod.endswith("_h_head_p")
+        (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
+            plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
+            renamed_buses=["pc__land_er[260:259] -> pc__land_er_259"] + (["pc__ki[20:15] -> pc__ki_15", "pc__ki[32:31] -> pc__ki_31"] if hd else []),
+            cycles=dict(kc_ko="n/a (head: no ko)" if hd else "+1 hclk per kc chain station", fi="n/a (head: no fi)" if hd else "+1 upstream-fault edge", other=0),
+            miter="results/kvspc_face_1025"), indent=1) + "\n")
     if a.astk_face_ports:
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
@@ -471,6 +485,8 @@ def main():
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins = json.load(open(plandir / hc["pins_file"]))["pins"]
+    if a.kvspc_face_ports:
+        pins = KVSPC.plan_pins_update(pins, mod.endswith("_h_head_p"))
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
