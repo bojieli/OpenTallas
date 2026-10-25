@@ -493,6 +493,7 @@ def main():
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
+    shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     write_core_contract(kd, cj, clks, rsts)
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
