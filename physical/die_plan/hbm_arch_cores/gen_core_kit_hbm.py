@@ -274,20 +274,38 @@ def clone_output_state(files, top, clone, kd):
         return None
     state, nxt, width, reset = (clone[k] for k in ("state", "next", "width", "reset"))
     wire = "face_clone_" + state
+    # HBM-CORES 2026-10-25 (gq_land NOT SIGNED: TT recovery -99.5 ps, 283 endpoints, all from ONE ot_rst_relay flop
+    # driving the 2248 face clones): reset regions per the relay design standard.  When the block's relay is
+    # REGIONS(1) and `reset` is its region-0 output, the relay is widened so each group of <= per clones has its own
+    # region flop (placed next to its face cluster).  All regions release in the same cycle (replicated relay
+    # stage), so the clones stay cycle-exact; no cycle is added.
+    per = int(clone.get("reset_region_bits", 128))
+    nreg = (width + per - 1) // per if width > per else 0
+    rst_expr = reset
     extra = (f"\n    wire [{width-1}:0] {wire};\n"
              f"    generate for (genvar cp=0;cp<{width};cp=cp+1) begin:g_face_clone_{state}\n"
              f"        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_bout_copy "
-             f"(.clk(clk),.rst_n({reset}),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
+             f"(.clk(clk),.rst_n(@RST@),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
     rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
     matches = 0
     def patch(m):
+        nonlocal rst_expr
         text = m[1]
+        if nreg:
+            mr = re.search(r"wire\s+" + re.escape(reset) + r"\s*=\s*(\w+)\[0\]\s*;", text)
+            if mr:
+                rl = mr[1]
+                text, n1 = re.subn(r"wire\s*\[0:0\]\s*" + re.escape(rl) + r"\s*;", f"wire [{nreg}:0] {rl};", text)
+                text, n2 = re.subn(r"(ot_rst_relay\s*#\(\s*\.REGIONS\()1(\)[^;]*\.rst_n\(\s*" + re.escape(rl) + r"\s*\)\s*\)\s*;)",
+                                   lambda q: q[1] + str(1 + nreg) + q[2], text)
+                if n1 == 1 and n2 == 1:
+                    rst_expr = f"{rl}[1 + cp/{per}]"
         for port in clone["ports"]:
             pattern = r"(assign\s+" + re.escape(port) + r"\s*=\s*)" + re.escape(state) + r"(?=\[)"
             text, n = re.subn(pattern, lambda q: q[1] + wire, text)
             if n != 1:
                 raise ValueError(f"expected one output state assignment for {port}")
-        return text + extra + m[2]
+        return text + extra.replace("@RST@", rst_expr) + m[2]
     for f in files:
         p=Path(f)
         if p.suffix not in (".v", ".sv"):
