@@ -1,0 +1,121 @@
+{
+  "schema": "opentallas.hbm.selected_tkm.source_manifest.v1",
+  "branch": "codex/hbm-token-1309",
+  "production_assembly_ready": false,
+  "production_blockers": [
+    "frozen R2 actual numeric minimum still compiling",
+    "selected static-ID component views proved, new synth/source-vs-netlist LEC pending",
+    "delivered-root new kit synth/LEC and actual timed reset parent wavefront pending",
+    "typed serializer endpoints/raw q3 mapping/root intra legs unresolved"
+  ],
+  "isolated_ready_components": [
+    {
+      "source_commit": "2999de1eaa",
+      "files": [
+        "tools/hbm_coll_static/argmax_rows.py",
+        "tools/hbm_coll_static/test_arg_pr_schedule.py",
+        "results/token_pass/path_hbm_1309/arg_pr/compiler_receipt.json"
+      ],
+      "gate": "4compiled/unrolled source+1 profiles; stale capture rejected; default bytes identical; capacity64 rejected; native caller adoption pending",
+      "dependencies": [
+        "existing static_uop_layout_v4.json",
+        "test baseline5df2380a1e tracked source"
+      ]
+    },
+    {
+      "source_commits": [
+        "5e2702e6b5",
+        "8a7b9364bd"
+      ],
+      "isolate_files": [
+        "rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_return.sv",
+        "tools/hbm_b2/tkm_l74/tb_tkm_return.sv",
+        "results/token_pass/path_hbm_1309/return_gate/"
+      ],
+      "gate": "256edge coherentbusy/data/control PASS plus2mutants",
+      "warning": "whole5e270 also modifies WIP production assembly; isolate listed componentfiles"
+    },
+    {
+      "source_commits": [
+        "8a7b9364bd",
+        "7edbf87187",
+        "9169b040ab",
+        "2489255fb1",
+        "5df2380a1e"
+      ],
+      "files": [
+        "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+        "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+        "tools/hbm_b2/tkm_l74/overlay_root_delivered_reset.py",
+        "tools/hbm_b2/tkm_l74/extract_root_buffer_reset_cut.py",
+        "tools/hbm_b2/tkm_l74/tb_tkm_buffer_reset.sv",
+        "tools/hbm_b2/tkm_l74/tb_root_buffer_reset_cut.sv",
+        "tools/hbm_b2/tkm_l74/run_buffer_reset.sh",
+        "tools/hbm_b2/tkm_l74/run_root_buffer_reset_cut.sh"
+      ],
+      "gate": "defaultoff bufferlocal reset SRAMcold/warm73edges4reads/2mutants +exact8FFflatcut2000edges27resets; not fullroot LEC"
+    },
+    {
+      "source_commits": [
+        "e4df6b30da",
+        "c6da05be0b"
+      ],
+      "files": [
+        "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/strap/",
+        "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/terminal_strap/"
+      ],
+      "gate": "physicalworker deaa633922 component IDs5/17common and31terminal allpointsPASS wrongIDexactonebindingpoint failure",
+      "new_netlist_views": "pending"
+    }
+  ],
+  "production_dependency_chain": {
+    "base": "claude/path-hbm-tok-1025@bea7c655f8",
+    "inherited_narrow_chain": [
+      "0a306276e6",
+      "21e3a5e66c",
+      "11a669e23c",
+      "f7918bdaf9",
+      "8174adcf93",
+      "cb962ca41b",
+      "2e568cd6e4",
+      "bea7c655f8"
+    ],
+    "inherited_scope": "actual root/tile face cut, cb21 root, in-tile FTclr/conv and generator map; avoid merging unrelated lane history",
+    "new_assembly_chain": [
+      "4084b08135",
+      "5e2702e6b5",
+      "c06fb4940e",
+      "bb2a0b042e",
+      "e4df6b30da",
+      "c6da05be0b",
+      "cd7be78752"
+    ],
+    "assembly_files": [
+      "rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_path_ft21.sv",
+      "rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_return.sv",
+      "tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_ft21.sv",
+      "tools/hbm_b2/tkm_l74/run_bound_ft21.sh",
+      "tools/hbm_b2/tkm_l74/model_ft21.json"
+    ],
+    "actual_compile_sources": "run_bound_ft21.sh src array is authoritative; inherited FT canonical tile13line lane delta not yet in fetched main3352ca1664",
+    "new_child_source_dirs": [
+      "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/terminal/",
+      "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/strap/",
+      "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face/terminal_strap/"
+    ]
+  },
+  "build_variants": {
+    "default": "static-ID common+terminal, legacy cb21 root reset view",
+    "STATIC_IDS=0": "explicit old registered-ID replay only",
+    "DELIVERED_ROOT=1": "generate named new root+faces; unadopted until new view gates"
+  },
+  "delivered_root_current_physical_candidate": {
+    "kit": "root_delivered_v2",
+    "kit_hash": "f048a183ea3b4bb6",
+    "canonical_source_sha256": "5cd6679d901745ced7b2b003841087ba65363b9f94344ee13c39564d540142dd",
+    "rst_n_max_ps": 416.5,
+    "rst_n_min_ps": -40,
+    "falsepath": false,
+    "v1_166_6_budget": "superseded constraintonly; do not adopt166.6 without actualparentdriver evidence"
+  }
+}
