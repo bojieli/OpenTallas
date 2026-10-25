@@ -126,7 +126,7 @@ module qkd_host_native_qm_debt #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
-    ot_link_afifo #(.W(514), .AW(HFA), .SYNC(SAMECLK != 0 ? 1 : 2)) u_hx (
+    ot_link_afifo #(.W(514), .AW(HFA), .SAMECLK(SAMECLK != 0 ? 1 : 0)) u_hx (
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
@@ -259,13 +259,13 @@ module qkd_host_native_qm_debt #(
         if (!rn_i) begin hov_s <= 0; rov_s <= 0; end
         else begin hov_s <= {hov_s[0], hx_ovf}; rov_s <= {rov_s[0], rx_ovf}; end
 
-    ot_link_afifo #(.W(AW + 257), .AW(OFA), .SYNC(SAMECLK != 0 ? 1 : 2)) u_ox (
+    ot_link_afifo #(.W(AW + 257), .AW(OFA), .SAMECLK(SAMECLK != 0 ? 1 : 0)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
-    ot_link_afifo #(.W(256), .AW(RFA), .SYNC(SAMECLK != 0 ? 1 : 2)) u_rx (
+    ot_link_afifo #(.W(256), .AW(RFA), .SAMECLK(SAMECLK != 0 ? 1 : 0)) u_rx (
         .wclk(ck), .wrst_n(rn_c), .wr(irv_q), .wdata(ird_q), .wfull(rx_full), .wfreed(rx_freed), .ovf(rx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(rx_pop), .rempty(rx_empty), .rdata(rx_head), .rcount(rx_cnt));
-    ot_link_afifo #(.W(64), .AW(CFA), .SYNC(SAMECLK != 0 ? 1 : 2)) u_cx (
+    ot_link_afifo #(.W(64), .AW(CFA), .SAMECLK(SAMECLK != 0 ? 1 : 0)) u_cx (
         .wclk(clk_i), .wrst_n(rn_i), .wr(cx_wr), .wdata(cx_w), .wfull(cx_full), .wfreed(cx_freed), .ovf(cx_ovf),
         .rclk(clk_h), .rrst_n(rn_h), .rd(cx_pop), .rempty(cx_empty), .rdata(cx_head), .rcount(cx_cnt));
 
