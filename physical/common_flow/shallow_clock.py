@@ -186,9 +186,28 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
             return cid
         build(g['taps'],box,1)
     else: raise ValueError(f'unknown trunk topology {topology}')
-    # cluster points on legal free logic sites (a centre may fall on a macro)
+    # cluster points on legal free logic sites (a centre may fall on a macro).
+    # H-tree: keep the symmetry -- among free sites near the ideal centre pick
+    # the one whose distance from the (already placed) parent is closest to
+    # the nominal level distance, so one snapped quadrant does not force every
+    # sibling leg to be padded to its length.
     probe=FreeSites(g)
-    for cl in clusters: cl['point']=probe.legal(cl['point'],reserve=False)['xy']
+    ideal={cl['id']:list(cl['point']) for cl in clusters}
+    par={}
+    for L in legs: par[L['child'][1]]=L['parent'] if L['child'][0]=='cluster' else None
+    for cl in sorted(clusters,key=lambda c:c['level']):
+        pid=par.get(cl['id'])
+        if topology!='htree' or pid is None:
+            cl['point']=probe.legal(cl['point'],reserve=False)['xy'];continue
+        P=clusters[pid]['point'];I=ideal[cl['id']];dn=_man(ideal[pid],I)
+        r=cl['rect'];hw,hh=(r[2]-r[0])/2,(r[3]-r[1])/2
+        best=None
+        for fx in [i/8 for i in range(-6,7)]:
+            for fy in [i/8 for i in range(-6,7)]:
+                q=probe.legal([I[0]+fx*hw,I[1]+fy*hh],reserve=False)['xy']
+                cost=4*max(0.0,_man(P,q)-dn)+_man(q,I)
+                if best is None or cost<best[0]: best=(cost,q)
+        cl['point']=best[1]
     lead=dict(id=len(legs),level=0,parent=None,child=['cluster',0]); legs.append(lead); clusters[0]['in_leg']=lead['id']
     tapxy={t['name']:t['xy'] for t in g['taps']}
     for L in legs:
@@ -205,7 +224,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     k=0
     for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
-        L['xmax']=max(0.0,(L['n']+1)*rmax_um*u-L['d']) if L['level'] else 0.0
+        L['xmax']=max(0.0,(L['n']+1)*rmax_um*u-L['d']) if L['level'] and L['n'] else 0.0
         # equal-length start: every leg of a level as long as its longest
         dm=max(M['d'] for M in legs if M['level']==L['level'])
         L['x']=min(L['xmax'],float(dm-L['d'])) if L['level'] else 0.0
@@ -263,11 +282,11 @@ def realize(p,g):
             return poly,pts,sum(_man(q,sites.legal(q,reserve=False)['xy']) for q in pts)
         cur=tuple(L.get('dsel') or ((1 if abs(L['A'][0]-L['C'][0])>=abs(L['A'][1]-L['C'][1]) else 0),1 if L['id']%2 else -1))
         poly,_,best=shape(cur)
-        if L['x']>0 and best>2*p['dbu']:
+        if L['x']>0 and best>2*p['dbu'] and (not L.get('dsel') or best>8*p['dbu']):
             for sel in [(a,sd) for a in (0,1) for sd in (1,-1)]:
                 if sel==cur: continue
                 q,_,sc=shape(sel)
-                if sc+5*p['dbu']<best: cur,poly,best=sel,q,sc
+                if sc+8*p['dbu']<best: cur,poly,best=sel,q,sc
         L['dsel']=list(cur)
         L['T']=T; L['seg_um']=T/(L['n']+1)/p['dbu']
         parent=None if L['parent'] is None else last[('cl',L['parent'])]
@@ -343,12 +362,23 @@ def cl_step(p,tap,buf,damp=0.8,k0=0.2,kmin=0.04,kmax=1.5):
         tau=max(v-L['k']*L['x']/u for L,v in vals)
         out=[]
         for L,v in vals:
-            xn=L['x']+damp*(tau-v)/L['k']*u
-            xn=min(L['xmax'],max(0.0,xn))
+            want=L['x']+damp*(tau-v)/L['k']*u
+            xn=min(L['xmax'],max(0.0,want))
+            if want>xn: L['_res']=L['k']*(want-xn)/u
             out.append(v+L['k']*(xn-L['x'])/u); L['x']=xn
         pred[cid]=sum(out)/len(out)
         return pred[cid]
     visit(0)
+    # a clipped leg (no repeater / at its length cap) cannot carry its share:
+    # push the residual into every leg of the child subtree instead
+    def push(cid,r):
+        for j in cl[cid]['legs']:
+            L=legs[j];xn=min(L['xmax'],L['x']+damp*r/L['k']*u)
+            res=r-L['k']*(xn-L['x'])/u;L['x']=xn
+            if res>0.5 and L['child'][0]=='cluster': push(L['child'][1],res)
+    for L in p['legs']:
+        res=L.pop('_res',0)
+        if res>0.5 and L['child'][0]=='cluster': push(L['child'][1],res)
     s=spread(tap)
     if 'best' not in p or max(s)<p['best']['spread']:
         p['best']=dict(iter=len(p['iters'])+1,spread=max(s),nodes=[[n['name'],n['ll'],n['orient']] for n in p['nodes']])
