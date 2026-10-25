@@ -1,6 +1,34 @@
 `timescale 1ns/1ps
 // HBM-P4-SPLIT (2026-10-23): tb_hgi_coll_tkm_static (golden O/R words + timeline) on the core-split twin
-// reg boot_start=0,send_start=0;wire slot0,tf,rf;
+// ot_hgi_coll_tkm_static_p #(PIPE), PLUS a lock-step against the pinned ot_hgi_coll_tkm_static on the same inputs:
+// every write (addr, mask, data) and done/fault of the twin must equal the pinned one exactly 2*PIPE edges later.
+module tb_hbm_tkm_l74;
+ parameter integer KMAX=2048,MUT=0,TP=192,TIE_W_MUT=0,PIPE=1,MUTP=0,LINK_STAGES=3,RETURN_CTL_STAGES=11,RETURN_DATA_STAGES=2,BEAT_WIDTH=2341;
+ localparam integer FORWARD_AGE=LINK_STAGES+3,RETURN_AGE=RETURN_CTL_STAGES,TOTAL_DELAY=FORWARD_AGE+2*PIPE+RETURN_AGE;
+ reg clk=0,rst_n=0,start=0;always #0.4167 clk=~clk;
+ reg[31:0]cfg[0:15],a[0:TP*2048-1],b[0:TP*2048-1],eo[0:2047],er[0:2047],ns[0:TP-1];
+ reg[3:0]slots=0,valids=0;reg[2179:0]flits=0;
+ wire wv,busy,done,fault;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;wire[31:0]cycles;
+ integer G,N,K,PF,NOUT,HASR,OB,RB,GB,errs=0,words=0,elapsed=0,expected,slotmut=0,rotate=0;
+ bit seeno[0:2047],seenr[0:2047];string dir;
+ wire rv,rbusy,rdone,rfault;wire[39:0]ra;wire[15:0]rm;wire[511:0]rd;wire[31:0]rcycles;
+ ot_hgi_coll_tkm_static #(.KMAX(KMAX),.MUT(MUT),.TP(TP),.RANK_W(TIE_W_MUT?7:$clog2(TP)))ref_u(.clk(clk),.rst_n(rst_n),.start(start),.tile_clk({32{clk}}),.buffer_clk(clk),
+ .cfg_n(12'(N)),.cfg_k(13'(K)),.cfg_nout(13'(NOUT)),.cfg_g(8'(G)),.cfg_gbase(8'(GB)),.cfg_pf(16'(PF)),
+ .cfg_obase(40'(OB)),.cfg_rbase(40'(RB)),.cfg_has_r(1'(HASR)),.del_slot(slots),.del_valid(valids),.del_flit(flits),
+ .w_v(rv),.w_addr(ra),.w_mask(rm),.w_data(rd),.busy(rbusy),.done(rdone),.fault(rfault),.stat_cycles(rcycles));
+ // lock-step: the pinned module's outputs delayed 2*PIPE edges must equal the twin's
+ localparam integer DL=TOTAL_DELAY+2;
+ reg[DL*(1+40+16+512+2)-1:0]rq=0;wire[1+40+16+512+2-1:0]rnow={rv,ra,rm,rd,rdone,rfault};
+ wire[1+40+16+512+2-1:0]rdel=(PIPE==0)?rnow:rq[(TOTAL_DELAY-1)*571+:571];
+ integer lerrs=0,lchk=0,lw=0;
+ always @(posedge clk)rq<={rq[(DL-1)*571-1:0],rnow};
+ always @(negedge clk)if(rst_n)begin
+  lchk=lchk+1;if(wv)lw=lw+1;
+  if({wv,wv?wa:40'd0,wv?wm:16'd0,wv?wd:512'd0,done,fault}!=={rdel[570],rdel[570]?rdel[569:530]:40'd0,rdel[570]?rdel[529:514]:16'd0,rdel[570]?rdel[513:2]:512'd0,rdel[1],rdel[0]})begin
+   lerrs=lerrs+1;if(lerrs<6)$display("LOCKSTEP MISMATCH t%0d twin v%0d a%h done%0d f%0d | pinned-2P v%0d a%h done%0d f%0d",lchk,wv,wa,done,fault,rdel[570],rdel[569:530],rdel[1],rdel[0]);
+  end
+ end
+ reg boot_start=0,send_start=0;wire slot0,tf,rf;
  reg[3748:0]tx_word;wire[3748:0]rx_word;wire[32:0]rx_side;
  wire[BEAT_WIDTH-1:0]beat;wire[32:0]side_beat;
  wire[BEAT_WIDTH-1:0]channel_beat;wire[32:0]channel_side;
