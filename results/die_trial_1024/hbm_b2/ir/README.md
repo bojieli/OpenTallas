@@ -14,7 +14,7 @@ Tool: OpenROAD PDNSim (`analyze_power_grid`, openroad/orfs:asap7lock, OpenROAD 2
 | SerDes io, NW_io (u_lk_N0 SerDes + host UCIe) | 60.00 | 85.87 | **145.87** | 145.87 | FAIL | inside SerDes u_lk_N0: VDD (713, 6372), VSS (411, 6329) |
 | S-edge SerDes, NW_spb0 (u_lk_S0) | 61.96 | 140.95 | **202.91** | 146.61 | FAIL | inside u_lk_S0: VSS (5508, 21.6), at the die edge |
 | full die, exact grid (`full_exact`) | | | | | **NOT COMPLETED** | pdngen was still inserting 247,616 load macros after 4 h 10 min (RSS 4.6 GB, single thread); stopped |
-| full die, coarse grid x4 (`full_s4m`) | | | | | **NOT COMPLETED** (still running when this was written) | pdngen passed in 994 s. After that the run sat > 2 h in `check_power_grid VDD` (RSS 150-180 GB, 400 GB cap). A first try under a 120 GB cap (`full_s4`, epyc2) was killed by OOM after pdngen |
+| full die, coarse grid x4 (`full_s4m`) | 286.5 | 593.7 | **880.2** | 880.2 | FAIL, but **not a valid absolute number** (see below) | VDD (24451, 6307), inside the NE_io SerDes; VSS (19786, 259), inside the NE_spb0 SerDes |
 
 \* interior = load tiles at least one per-rail bump pitch (63.64 um) from the die edge. The assumed checkerboard bump
 lattice puts VSS at k x 63.64 and VDD at 31.82 + k x 63.64. Its VSS row/column at x = 0 / y = 0 falls on the die edge
@@ -91,6 +91,26 @@ This is the ir_1012 tile-current method (`tools/hbm_die_ir_window.py`).
 - Load tiles are 172.8 um. Same bumps.
 - It resolves die-scale gradients but not the sub-bump-cell spreading that dominates the exact windows, so it is not a
   substitute for them.
+- **Calibration failed.** In the same rectangles the coarse run reads 5-8x the exact windows (worst VDD + VSS, mV):
+
+  | Rectangle | coarse | exact |
+  |---|---:|---:|
+  | hub | 92 | 12.7 |
+  | SM | 194 | 47.0 |
+  | PHY window | 184 | 29.6 |
+  | NW_io | 785 | 146 |
+  | spb0 | 856 | 203 |
+
+  - With 34.56 um stripe pitch, a 20 um bump touches at most one stripe per layer.
+  - The bump-to-grid spreading resistance therefore goes up, and so does the M7-M8 via resistance per area. Preserving
+    width/pitch does not preserve the effective grid resistance.
+  - `ir_fulldie_coarse_*.png` shows the artefact directly: horizontal bands in the SM rows, a beat between the
+    63.64 um bump rows and the 34.56 um M8 stripes, where only some bump rows land on a stripe.
+  - The coarse full die is good only for the **relative** map. That map agrees with the windows (SerDes >> SM > PHY
+    corridor > hub/spine), and the NE side looks like the NW side (mirror).
+  - No die-scale gradient appears beyond the per-region load, which supports the window method: each bump cell is
+    locally fed.
+  - An exact full die (grid written as DEF special nets) is NOT RUN.
 
 ### Runs
 
@@ -104,7 +124,7 @@ This is the ir_1012 tile-current method (`tools/hbm_die_ir_window.py`).
 | w_spb0 | intel2:.../ir/w_spb0 | 1,862 | 0:41 | 1.3 GB | 6 / 8 / 12 |
 | full_exact | epyc3:.../ir/full_exact | 247,616 | stopped at 4:10:37 in pdngen | 4.6 GB | NOT COMPLETED |
 | full_s4 (120 GB cap) | epyc2:.../ir/full_s4 | 15,476 | 32:20, killed (signal 9, OOM at the cap) | 125.6 GB | 848 / - / - |
-| full_s4m (400 GB cap) | epyc3:.../ir/full_s4m (started 12:14 PDT) | 15,476 | > 2:10 when written, still running | 180 GB so far | 994 / - / - |
+| full_s4m (400 GB cap) | epyc3:.../ir/full_s4m | 15,476 | 5:44:24 | 201.1 GB | 994 / 1066 / 1586 (check_power_grid took most of the remaining ~2.5 h) |
 
 - The pdngen time is superlinear in the number of load macros: 12k loads 5 min, 31k loads 40 min, 247k loads > 4 h
   unfinished.
@@ -123,11 +143,9 @@ python3 tools/die_trial/hbm_b2_render.py power|ir ...       # PNGs
 Files here:
 - `power_map.json`: per partition, IO regions, 436 hard cores, sources.
 - `cases/*.json`: result + runtime per case.
-- PNGs: `power_density.png`, `ir_windows_VDD.png`, `ir_serdes_io_VSS.png`, `ir_serdes_spb0_VSS.png`.
+- PNGs: `power_density.png`, `ir_windows_VDD.png`, `ir_serdes_io_VSS.png`, `ir_serdes_spb0_VSS.png`, `ir_fulldie_coarse_VDD.png`, `ir_fulldie_coarse_VSS.png` (coarse: relative only).
 
-Big outputs (ir_*.rpt, run.log, case.def) stay on the hosts listed; no pdn.odb is written. When full_s4m finishes, the lane owner records it with:
-`rsync -a epyc3:/srv/opentallas-scratch/claude/trial-hbm/ir/full_s4m/ DIR/ && python3 tools/die_trial/hbm_b2_ir.py record --out DIR && python3 tools/die_trial/hbm_b2_render.py ir --power power_map.json --case DIR --case <windows...> --net VDD --out ir_fulldie_VDD.png`.
-The full-die row then replaces NOT COMPLETED.
+Big outputs (ir_*.rpt, run.log, case.def) stay on the hosts listed; no pdn.odb is written.
 
 ## Visual review: what looks wrong
 
