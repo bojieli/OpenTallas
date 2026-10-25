@@ -29,6 +29,11 @@ cp -r "$IN/census" "$IN/cells_evidence.json" "$IN/core_conns.json" "$IN"/l1_core
 python3 "$D/g3/post_v39f.py" "$IN/die_plan.json" "$O/die_plan.json" --side "$O" --report "$O/post_v39f.json"
 # KV-KITS fwd_reach (scope add 10-25): FIRM internal stations (in channels) on tap-tree forward legs > 405 um
 python3 "$D/g3/fwd_stations_v39f.py" "$O/die_plan.json" "$O/die_plan.json" --report "$O/fwd_stations_v39f.json"
+# ASTK 4 -> 1 strap master (owner option B; KV-CORE-RTL kit pins.json): only when ASTK_KIT_PINS is set
+if [ -n "${ASTK_KIT_PINS:-}" ]; then
+  python3 "$D/g3/astk_master_v39f.py" "$O/die_plan.json" "$O/die_plan.json" --kit-pins "$ASTK_KIT_PINS" --cores "$O/cores" \
+    --report "$O/astk_master_v39f.json"
+fi
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O/lat"
 mkdir -p "$O/r8" && cp "$D"/r8/*.py "$O/r8/"
 gzip -dc "$D/r8/kv44_bus_groups.json.gz" > "$O/r8/bg_kv44.json"
