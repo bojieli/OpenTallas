@@ -200,6 +200,217 @@
    "std_fill_old": 0.021,
    "std_fill_new": 0.225,
    "why": "placed2 std fill 0.019, measured insertion 1150 ps: squarer and smaller so the clock reaches the centre"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp*",
+   "views": [
+    "q_su00.u_su_Q0_lane_exp0",
+    "q_su00.u_su_Q0_lane_exp2",
+    "q_su00.u_su_Q0_lane_exp4",
+    "q_su00.u_su_Q0_lane_exp6",
+    "q_su00.u_su_Q0_lane_exp8",
+    "q_su00.u_su_Q0_lane_exp10",
+    "q_su00.u_su_Q0_lane_exp12",
+    "q_su00.u_su_Q0_lane_exp14",
+    "q_su01.u_su_Q0_lane_exp1",
+    "q_su01.u_su_Q0_lane_exp3",
+    "q_su01.u_su_Q0_lane_exp5",
+    "q_su01.u_su_Q0_lane_exp7",
+    "q_su01.u_su_Q0_lane_exp9",
+    "q_su01.u_su_Q0_lane_exp11",
+    "q_su01.u_su_Q0_lane_exp13",
+    "q_su01.u_su_Q0_lane_exp_l",
+    "q_su10.u_su_Q1_lane_exp0",
+    "q_su10.u_su_Q1_lane_exp2",
+    "q_su10.u_su_Q1_lane_exp4",
+    "q_su10.u_su_Q1_lane_exp6",
+    "q_su10.u_su_Q1_lane_exp8",
+    "q_su10.u_su_Q1_lane_exp10",
+    "q_su10.u_su_Q1_lane_exp12",
+    "q_su10.u_su_Q1_lane_exp14",
+    "q_su11.u_su_Q1_lane_exp1",
+    "q_su11.u_su_Q1_lane_exp3",
+    "q_su11.u_su_Q1_lane_exp5",
+    "q_su11.u_su_Q1_lane_exp7",
+    "q_su11.u_su_Q1_lane_exp9",
+    "q_su11.u_su_Q1_lane_exp11",
+    "q_su11.u_su_Q1_lane_exp13",
+    "q_su11.u_su_Q1_lane_exp_l"
+   ],
+   "old_um": [
+    440.64,
+    457.92
+   ],
+   "new_um": [
+    440.64,
+    207.36
+   ],
+   "area_ratio": 0.453,
+   "placed": [
+    "u_su_Q0_lane_exp0",
+    "u_su_Q0_lane_exp2",
+    "u_su_Q0_lane_exp4",
+    "u_su_Q0_lane_exp6",
+    "u_su_Q0_lane_exp8",
+    "u_su_Q0_lane_exp10",
+    "u_su_Q0_lane_exp12",
+    "u_su_Q0_lane_exp14",
+    "u_su_Q0_lane_exp1",
+    "u_su_Q0_lane_exp3",
+    "u_su_Q0_lane_exp5",
+    "u_su_Q0_lane_exp7",
+    "u_su_Q0_lane_exp9",
+    "u_su_Q0_lane_exp11",
+    "u_su_Q0_lane_exp13",
+    "u_su_Q0_lane_exp_l",
+    "u_su_Q1_lane_exp0",
+    "u_su_Q1_lane_exp2",
+    "u_su_Q1_lane_exp4",
+    "u_su_Q1_lane_exp6",
+    "u_su_Q1_lane_exp8",
+    "u_su_Q1_lane_exp10",
+    "u_su_Q1_lane_exp12",
+    "u_su_Q1_lane_exp14",
+    "u_su_Q1_lane_exp1",
+    "u_su_Q1_lane_exp3",
+    "u_su_Q1_lane_exp5",
+    "u_su_Q1_lane_exp7",
+    "u_su_Q1_lane_exp9",
+    "u_su_Q1_lane_exp11",
+    "u_su_Q1_lane_exp13",
+    "u_su_Q1_lane_exp_l"
+   ],
+   "pins_files": [
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp0__440.64x207.36__q_su00_u_su_Q0_lane_exp0.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su00_u_su_Q0_lane_exp2.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su00_u_su_Q0_lane_exp4.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su00_u_su_Q0_lane_exp6.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su00_u_su_Q0_lane_exp8.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su00_u_su_Q0_lane_exp10.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su00_u_su_Q0_lane_exp12.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su00_u_su_Q0_lane_exp14.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su01_u_su_Q0_lane_exp1.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su01_u_su_Q0_lane_exp3.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su01_u_su_Q0_lane_exp5.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su01_u_su_Q0_lane_exp7.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su01_u_su_Q0_lane_exp9.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su01_u_su_Q0_lane_exp11.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su01_u_su_Q0_lane_exp13.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su01_u_su_Q0_lane_exp_l.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp0__440.64x207.36__q_su10_u_su_Q1_lane_exp0.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x207.36__q_su10_u_su_Q1_lane_exp2.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x207.36__q_su10_u_su_Q1_lane_exp4.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x207.36__q_su10_u_su_Q1_lane_exp6.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x207.36__q_su10_u_su_Q1_lane_exp8.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x207.36__q_su10_u_su_Q1_lane_exp10.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x207.36__q_su10_u_su_Q1_lane_exp12.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x207.36__q_su10_u_su_Q1_lane_exp14.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x207.36__q_su11_u_su_Q1_lane_exp1.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x207.36__q_su11_u_su_Q1_lane_exp3.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x207.36__q_su11_u_su_Q1_lane_exp5.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x207.36__q_su11_u_su_Q1_lane_exp7.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x207.36__q_su11_u_su_Q1_lane_exp9.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x207.36__q_su11_u_su_Q1_lane_exp11.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x207.36__q_su11_u_su_Q1_lane_exp13.json",
+    "cores/ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x207.36__q_su11_u_su_Q1_lane_exp_l.json"
+   ],
+   "macros": [
+    [
+     6,
+     94.824,
+     41.064
+    ]
+   ],
+   "std_um2": 24900,
+   "std_fill_old": 0.146,
+   "std_fill_new": 0.411,
+   "why": "GEOM 23:29: std 21.3-24.9k um2 + 6 SRAM in 440.64x457.92 = 13-15% fill; new std fill of free (macro halo 4.32) 35-41%",
+   "macro_placement": [
+    {
+     "k": 0,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      69.12,
+      57.888
+     ],
+     "orient": "R0"
+    },
+    {
+     "k": 1,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      172.8,
+      57.888
+     ],
+     "orient": "R0"
+    },
+    {
+     "k": 2,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      276.48,
+      57.888
+     ],
+     "orient": "R0"
+    },
+    {
+     "k": 3,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      69.12,
+      108.0
+     ],
+     "orient": "R0"
+    },
+    {
+     "k": 4,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      172.8,
+      108.0
+     ],
+     "orient": "R0"
+    },
+    {
+     "k": 5,
+     "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+     "origin_um": [
+      276.48,
+      108.0
+     ],
+     "orient": "R0"
+    }
+   ],
+   "clock_ports": [
+    "clk_bank",
+    "clk_bank_macro[0]",
+    "clk_bank_macro[1]",
+    "clk_bank_macro[2]",
+    "clk_bank_macro[3]",
+    "clk_bank_macro[4]",
+    "clk_bank_macro[5]",
+    "clk_insert[0]",
+    "clk_insert[1]",
+    "clk_insert[2]",
+    "clk_insert[3]",
+    "clk_lane[0]",
+    "clk_lane[1]",
+    "clk_lane[2]",
+    "clk_lane[3]",
+    "clk_lane[4]",
+    "clk_lane[5]",
+    "clk_lane[6]",
+    "clk_lane[7]"
+   ],
+   "reset_ports": [
+    "rst_lane_n",
+    "rst_n"
+   ],
+   "clock_entry": "one early core tap per instance (plan clock.taps kind core, name = inst) beside the clock-pin cluster",
+   "std_um2_range": [
+    21300,
+    24900
+   ]
   }
  ]
 }

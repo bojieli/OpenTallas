@@ -22,6 +22,7 @@ re-derived on the moved partition rects (b2m.clock: same symmetric binary H-tree
 import argparse
 import json
 import math
+import re
 import shutil
 import sys
 from collections import defaultdict
@@ -349,9 +350,14 @@ def core_grow(plan, log, out, path=CORE_GROW):
     the nearest free 8.64-lattice origin to its old centre (8.64 halo to other cores / soft leaves, inside the type),
     its pins_file re-written for the outline (_regrow_pins), its contents box / split bounding box and core clock tap
     re-derived, and every internal station landing on it (or with a register now on a core) re-routed by restation."""
-    D = json.loads(Path(path).read_text())
+    D = path if isinstance(path, dict) else json.loads(Path(path).read_text())
     T = plan["partition_types"]
     rows, fails = [], []
+
+    def gm(g, mod):
+        if "match" in g:
+            return re.match(g["match"], mod) is not None
+        return mod == g["module"] or (g.get("prefix") and mod.startswith(g["module"] + "__"))
 
     def ru(v):
         return round(math.ceil(v / 0.864 - 1e-9) * 0.864, 4)
@@ -360,16 +366,17 @@ def core_grow(plan, log, out, path=CORE_GROW):
         return a[0] < b[2] + m and b[0] < a[2] + m and a[1] < b[3] + m and b[1] < a[3] + m
 
     for g in D["grow"]:
+        if "std_um2" in g and "outline" in g:
+            g["_outline"] = tuple(g["outline"])
         if "std_um2" in g and "_outline" not in g:
             npin = max(len(json.loads((out / hc["pins_file"]).read_text())) for tn in g["types"]
-                       for hc in T[tn]["hard_cores"] if hc["module"] == g["module"])
+                       for hc in T[tn]["hard_cores"] if gm(g, hc["module"]))
             g["_outline"] = reshape_outline(g, npin)
         for tn in g["types"]:
             t = T[tn]
             W, H = t["outline_um"]
             hcs = t["hard_cores"]
-            match = [hc for hc in hcs if hc["module"] == g["module"] or
-                     (g.get("prefix") and hc["module"].startswith(g["module"] + "__"))]
+            match = [hc for hc in hcs if gm(g, hc["module"])]
             insts = {hc["inst"] for hc in hcs}
 
             def box(hc):
@@ -385,10 +392,10 @@ def core_grow(plan, log, out, path=CORE_GROW):
 
             def size(hc):
                 ow, oh = hc["outline_um"]
-                if "outline" in g:
-                    return tuple(g["outline"])
                 if "std_um2" in g:                 # reshape: one outline per module (max pin count of its views)
                     return g["_outline"]
+                if "outline" in g:
+                    return tuple(g["outline"])
                 s_ = math.sqrt(g["area"])
                 return ru(ow * s_), ru(oh * s_)
             sites, placed = {}, []
@@ -503,20 +510,68 @@ def core_grow(plan, log, out, path=CORE_GROW):
             rows.append(f"{tn}: {len(moved)} x {g['module']} -> {nw:g}x{nh:g} ({nre} internal links re-routed)")
     for g in D["grow"]:
         if "_outline" in g:
-            o = [hc for tn in g["types"] for hc in T[tn]["hard_cores"] if hc["module"] == g["module"]]
+            o = [hc for tn in g["types"] for hc in T[tn]["hard_cores"] if gm(g, hc["module"])]
             nw, nh = g["_outline"]
             ow, oh = g["old"]
             halo = 4.32
             mh = sum(n * (a + 2 * halo) * (b + 2 * halo) for n, a, b in g["macros"])
-            OUTLINES.append(dict(module=g["module"], views=[f"{tn}.{hc['inst']}" for tn in g["types"]
-                                                            for hc in T[tn]["hard_cores"] if hc["module"] == g["module"]],
+            OUTLINES.append(dict(module=g.get("module", g.get("match")), views=[f"{tn}.{hc['inst']}" for tn in g["types"]
+                                                            for hc in T[tn]["hard_cores"] if gm(g, hc["module"])],
                                  old_um=[ow, oh], new_um=[nw, nh], area_ratio=round(nw * nh / (ow * oh), 3),
                                  placed=[hc["inst"] for hc in o if list(hc["outline_um"]) == [nw, nh]],
                                  pins_files=[hc["pins_file"] for hc in o], macros=g["macros"], std_um2=g["std_um2"],
                                  std_fill_old=round(g["std_um2"] / (ow * oh - mh), 3),
                                  std_fill_new=round(g["std_um2"] / (nw * nh - mh), 3), why=g.get("why", "")))
-    log.append(f"core outlines ({Path(path).name}): " + "; ".join(rows) +
+    log.append(f"core outlines ({path.get('src', 'exp_lane.json') if isinstance(path, dict) else Path(path).name}): " + "; ".join(rows) +
                (f"; NOT FIT: {'; '.join(fails)}" if fails else ""))
+    return fails
+
+
+EXP_LANE = HERE / "B2n_inputs" / "exp_lane.json"
+
+
+def exp_lane(plan, log, out, path=EXP_LANE):
+    """GEOM 23:29 FAIL (30 pgslice_lg lane_exp* at 13-15% fill) + HBM-CORES2 23:30 request: every lane_exp view gets
+    the 440.64 x 207.36 outline (core_grow, pins same face / order, _regrow_pins), ONE family macro placement (recorded
+    in the core note and b2n_core_outlines.json) and ONE early core tap (kind core) beside its clock-pin cluster
+    (all clock ports are die-clock roots: one entry, core-latency contract, I = measured mean)."""
+    D = json.loads(Path(path).read_text())
+    fails = core_grow(plan, log, out, D)
+    g = D["grow"][0]
+    T = plan["partition_types"]
+    mp = "; ".join(f"k{m['k']} {m['origin_um'][0]:g},{m['origin_um'][1]:g} {m['orient']}" for m in D["macro_placement"])
+    n = 0
+    for tn in g["types"]:
+        t = T[tn]
+        taps = t["clock"].setdefault("taps", [])
+        for hc in t["hard_cores"]:
+            if not re.match(g["match"], hc["module"]) or list(hc["outline_um"]) != list(g["outline"]):
+                continue
+            pins = {q["name"]: q for q in json.loads((out / hc["pins_file"]).read_text())}
+            ck = [pins[c] for c in D["clock_ports"] if c in pins]
+            assert ck, f"{tn}.{hc['inst']}: no clock pin"
+            ox, oy = hc["origin_um"]
+            cx = sum(q["x"] for q in ck) / len(ck)
+            cy = sum(q["y"] for q in ck) / len(ck)
+            taps[:] = [tp for tp in taps if tp["name"].partition(".")[0] != hc["inst"]]
+            x, y = S.tap_clear(t, ox + cx, oy + cy, [tuple(a["xy"]) for a in taps], clear=4.32)
+            r = D["insertion"][f"{tn}.{hc['inst']}"]
+            taps.append(dict(name=hc["inst"], kind="core", xy=[round(x, 4), round(y, 4)],
+                             insertion_ps=round(max(float(r["mean_ps"]), 250.0), 3), budget_owner=hc["module"],
+                             note=f"clock entry: {len(ck)} clock ports ({', '.join(sorted({c.split('[')[0] for c in D['clock_ports']}))}) "
+                                  f"= one die-clock net, one pin cluster; HBM-ELEM measured I {r['mean_ps']} ps "
+                                  f"(max {r['max_ps']}) on the 440.64x457.92 outline, view {r['view']}; re-measure after re-place"))
+            t["clock"]["core_taps"] = "early"
+            hc["note"] += (f" | family MACRO_PLACEMENT (B2n_inputs/exp_lane.json, 6 x {D['macro_placement'][0]['macro']},"
+                           f" core frame): {mp} | reset entry rst_lane_n (clock cluster) + rst_n (S face), partition reset")
+            n += 1
+    for o in OUTLINES:
+        if o["module"] == g["module"]:
+            o.update(macro_placement=D["macro_placement"], clock_ports=D["clock_ports"], reset_ports=D["reset_ports"],
+                     clock_entry="one early core tap per instance (plan clock.taps kind core, name = inst) beside the clock-pin cluster",
+                     std_um2_range=[21300, 24900])
+    log.append(f"exp lanes (GEOM 23:29, {Path(path).name}): {n} lane_exp cores -> {g['outline'][0]:g}x{g['outline'][1]:g}, "
+               f"family macro placement ({len(D['macro_placement'])} SRAM), {n} early core taps")
     return fails
 
 
@@ -547,10 +602,23 @@ def su_grid(plan, log, path=SU_GRID):
         cls = defaultdict(list)
         for h in hcs:
             cls[tuple(h["outline_um"])].append(h)
-        big = max(cls, key=lambda k: (k[0] * k[1] * len(cls[k]), k))
+        multi = [k for k in cls if len(cls[k]) >= 2]   # grid cell = the largest repeated core (shorter ones stack)
+        big = max(multi, key=lambda k: (k[0] * k[1], k)) if multi else max(cls, key=lambda k: (k[0] * k[1] * len(cls[k]), k))
         cw, ch = big
-        main = sorted(cls[big], key=lambda h: (round(h["origin_um"][1] / (ch / 2)), h["origin_um"][0], h["inst"]))
-        side = sorted([h for k, v in cls.items() if k != big for h in v], key=lambda h: h["inst"]) + \
+        # same-width shorter cores stack in one grid cell (exp lanes 207.36 x2 + 8.64 halo in a 457.92 cell)
+        stk = {k: int((ch + LAT + 1e-6) // (math.ceil((k[1] + LAT) / LAT - 1e-9) * LAT)) for k in cls
+               if k != big and abs(k[0] - cw) < 1e-6}
+        stk = {k: v for k, v in stk.items() if v >= 2}
+
+        def okey(h):
+            return (round(h["origin_um"][1] / (ch / 2)), h["origin_um"][0], h["inst"])
+        units = [[h] for h in cls[big]]
+        for k, m in sorted(stk.items()):
+            hs = sorted(cls[k], key=lambda h: h["inst"])
+            hs = sorted(hs, key=lambda h: (int(re.sub(r"\D", "", h["inst"].rsplit("_", 1)[-1]) or 99), h["inst"]))
+            units += [hs[i:i + m] for i in range(0, len(hs), m)]
+        main = sorted(units, key=lambda u: okey(u[0]))
+        side = sorted([h for k, v in cls.items() if k != big and k not in stk for h in v], key=lambda h: h["inst"]) + \
             sorted(softs, key=lambda c: (-c["outline_um"][1], c["inst"]))
         px = math.ceil((cw + LAT) / LAT - 1e-9) * LAT
         py = math.ceil((ch + LAT) / LAT - 1e-9) * LAT
@@ -597,9 +665,12 @@ def su_grid(plan, log, path=SU_GRID):
         gx = bx + (colw + LAT if left and side else 0.0)
         sx = bx if left else bx + gw + LAT
         new = {}
-        for i, h in enumerate(main):
+        for i, u in enumerate(main):
             r, c = divmod(i, C)
-            new[h["inst"]] = (round(gx + c * px, 4), round(y0 + r * py, 4))
+            yy = y0 + r * py
+            for h in u:
+                new[h["inst"]] = (round(gx + c * px, 4), round(yy, 4))
+                yy += math.ceil((h["outline_um"][1] + LAT) / LAT - 1e-9) * LAT
         sy = max(LAT, math.floor((H - sideh) / 2 / LAT) * LAT)
         for o in side:
             new[o["inst"]] = (round(sx + rel[o["inst"]][0], 4), round(sy + rel[o["inst"]][1], 4))
@@ -642,7 +713,8 @@ def su_grid(plan, log, path=SU_GRID):
                 tp["xy"] = [round(x, 4), round(y, 4)]
         if "tap_um" in t.get("clock", {}):
             t["clock"]["tap_um"] = [round(v, 4) for v in S.tap_clear(t, *t["clock"]["tap_um"], clear=4.32)]
-        rows.append(f"{tn} {R}x{C} grid of {len(main)} {cw:g}x{ch:g} + side column {len(side)} "
+        rows.append(f"{tn} {R}x{C} grid of {len(main)} {cw:g}x{ch:g} cells ({sum(len(u) for u in main)} cores, "
+                    f"{sum(len(u) > 1 for u in main)} stacked) + side column {len(side)} "
                     f"({'W' if left else 'E'} of grid) at x {bx:g}..{bx + bw:g} of {W:g} ({nre} internal links re-routed)")
     log.append("SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): " + "; ".join(rows))
 
@@ -1080,7 +1152,7 @@ def main(argv=None):
     touched, pairs = enforce_mirror(plan, log)
     worst = rewindow(plan, log, fixed_ids=touched)
     fix_mirror_pins(plan, pairs, log)
-    grow_fail = core_grow(plan, log, out, CORE_RESHAPE) + core_grow(plan, log, out)
+    grow_fail = core_grow(plan, log, out, CORE_RESHAPE) + core_grow(plan, log, out) + exp_lane(plan, log, out)
     su_grid(plan, log)
     fails = restation(plan, log)
     import b2m as B2M   # noqa: E402  (H-tree + tap assignment re-derived: su10/su30 / spu0/spu1 rects moved)
