@@ -49,6 +49,12 @@ SPEC = {
     "ot_s81sl_eg": dict(size=(259.2, 259.2), keep_faces=True, suffix="_c", dir="cores/eg/lef", move={"clk": "S", "rst_n": "S"},
                         regroup={"W": ["g_v", "g_c", "g", "eps", "scale"]},
                         src_lef="physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef"),
+    # S81-CORES3/RT 10-25 (GEOM NEARMISS-STRUCT 04:38 + CODEX GEOM 06:04 HOLD dsfd_su_t_rxsf): the closed-view pins put
+    # the 96 output pins in 3 short W clusters (10.5 pins/um vs the 10.42 M4 cap; GRT pin access) and ck on the E face
+    # with the 34 inputs.  Faces and face order kept (inputs E from vs, outputs W to rxsb), every face spread evenly over
+    # its length, ck moved to the W data-face pin middle (y ~70: centre of the 96 output pin registers).
+    "dsfd_su_t_rxsf": dict(size=(140.4, 140.4), keep_faces=True, suffix="_c", dir="cores/rx/lef", move={"ck": "W"},
+                           src_lef="physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef"),
     "dsdv_svc_sx_hrow": dict(size=(138.24, 164.16), keep_faces=True, suffix="_c",
                              src_lef="physical/ref_tile/dsdv_svc_sx_hrow/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow.lef"),
 }

@@ -188,18 +188,25 @@ def _bisect(pts, target, radius, blocked=lambda x, y: False, min_sinks=1):
             if acc >= n / 2:
                 break
         pending += [g[k:], g[:k]]
-    return _absorb(_merge(leaves, target, radius, blocked), target, min_sinks)
+    return _absorb(_merge(leaves, target, radius, blocked), target, min_sinks, radius)
 
 
-def _absorb(leaves, target, min_sinks):
-    """a leaf of < min_sinks (stray registers far from any cluster) is no tap of its own: its sinks join the nearest
-    leaf with room (the kit hangs them on that tap's tree; a long, light branch), largest-first deterministic."""
+def _absorb(leaves, target, min_sinks, radius):
+    """Merge light clusters only while every sink stays within the tap radius.
+
+    A remote control bank needs its own spine drop even when it has few sinks;
+    attaching it to a data band creates a long clock arm and delays that band.
+    """
     leaves = sorted(leaves, key=lambda a: (-a[2], round(a[1], 3), round(a[0], 3)))
     keep = [q for q in leaves if q[2] >= min_sinks]
     if not keep:
         return leaves
     for x, y, n, _, g in (q for q in leaves if q[2] < min_sinks):
-        room = [k for k, q in enumerate(keep) if q[2] + n <= target] or list(range(len(keep)))
+        room = [k for k, q in enumerate(keep) if q[2] + n <= target
+                and all(abs(p[0]-q[0])+abs(p[1]-q[1]) <= radius for p in g)]
+        if not room:
+            keep.append((x, y, n, max(abs(p[0]-x)+abs(p[1]-y) for p in g), g))
+            continue
         k = min(room, key=lambda k: (abs(keep[k][0] - x) + abs(keep[k][1] - y), k))
         a = keep[k]
         keep[k] = (a[0], a[1], a[2] + n, max(a[3], max(abs(p[0] - a[0]) + abs(p[1] - a[1]) for p in g)), a[4] + g)
@@ -277,14 +284,15 @@ def density_taps(P, tn):
         return xy
     # refine (capacitated k-medians seeded by the leaves): the kit splits the netlist by NEAREST tap + cap
     # (clock_taps.tcl, mirrored by assign()), so re-centre every tap on the sinks that split gives it, re-legalise,
-    # and drop a tap left with < min_sinks; a few rounds make the plan's clusters the kit's split.
+    # Drop only empty taps. A light, isolated control cluster must keep its tap:
+    # its radius cannot be traded for reaching a preferred minimum sink count.
     xy = place([(q[0], q[1]) for q in leaves])
     for _ in range(int(ck.get("tap_refine_iters", 6))):
         _, _, asg = assign([(None, x, y) for x, y in xy], pts, target, radius)
         groups = [[] for _ in xy]
         for p, j in zip(pts, asg):
             groups[j].append(p)
-        keep = [j for j, g in enumerate(groups) if sum(p[2] for p in g) >= min_sinks] or list(range(len(xy)))
+        keep = [j for j, g in enumerate(groups) if g]
         nxt = place([(_wmedian(groups[j], 0), _wmedian(groups[j], 1)) if groups[j] else xy[j] for j in keep])
         if nxt == xy:
             break

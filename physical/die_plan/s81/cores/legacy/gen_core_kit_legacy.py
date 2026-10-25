@@ -226,10 +226,16 @@ $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/n
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"
 # SIGNOFF (main f942bf2f72): uniform verdict in KIT/signoff/signoff.json; a core is closed only when it says SIGNED.
-if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; } && [ -f "$K/signoff.py" ]; then
+if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
+  if [ ! -f "$K/signoff.py" ]; then
+    echo "SIGNOFF FAIL: missing $K/signoff.py" >&2
+    rc=4
+  else
   SIGNOFF_DOCKER="$DOCKER" python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff \
     --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  rc=$?
   grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+  fi
 fi
 exit $rc
 """

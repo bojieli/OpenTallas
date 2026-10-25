@@ -3,6 +3,7 @@
 import importlib
 import json
 import os
+import re
 import sys
 import tempfile
 import time
@@ -30,7 +31,6 @@ class Base(unittest.TestCase):
         os.environ["AP_QUEUE_FILE"] = str(Path(self.tmp.name) / "queue.tsv")
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
         os.environ["AP_RELEASE_CACHE"] = str(Path(self.tmp.name) / "release_cache.json")
-        os.environ["AP_CANARY_ROOT"] = str(Path(self.tmp.name) / "canary_runs")
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
         self.ap = importlib.reload(autopilot)
@@ -38,8 +38,7 @@ class Base(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_CANARY_ROOT",
-                  "AP_CANARY_HOLD", "AP_CANARY_TOOL"):
+        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES"):
             os.environ.pop(k, None)
 
     def queue(self, *rows):
@@ -164,9 +163,23 @@ class FakeHosts:
         return True
 
 
+class TestCheckpointRetention(Base):
+    def test_pending_delete_waits_for_explicit_owner_resolution(self):
+        j={"id":"x", "path":"/kit", "host":"epyc2", "status":"DONE-STRUCTURAL", "delete_pending":True}
+        self.ap.read_coord=lambda p:""
+        self.ap.hub_procs=lambda p:[]
+        self.ap.rpy=lambda *a,**kw:self.fail("deleted before owner diagnosis")
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.ap.read_coord=lambda p:"x\tDELETE\tresults/geom_review/diagnosis.json\n"
+        self.ap.rpy=lambda *a,**kw:{"deleted":["/kit/run/results"]}
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.assertTrue(j["data_deleted"])
+
+
 class TickBase(Base):
     def setUp(self):
         super().setUp()
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy = self.f.rpy
         self.ap.launch_unit = self.f.launch
@@ -236,7 +249,7 @@ class TestTick(TickBase):
         self.assertEqual(len(rows), 2)                   # header + one row
         self.assertNotIn(path, [c[2]["kit"] for c in self.f.calls if c[1] == self.ap.PROBE_DELETE[:40]])
 
-    def test_near_miss_goes_to_review_no_eco_and_deletes(self):
+    def test_near_miss_keeps_checkpoint_until_diagnosed(self):
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -259,7 +272,7 @@ class TestTick(TickBase):
         self.assertIn("/r/paths.png", rv)
         self.assertIn("/r/paths_ff_hold.txt", rv)
         self.assertEqual(len(self.f.launched), 2)        # the run + the render, never an ECO / re-route
-        self.assertTrue(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
 
     def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
         self.queue(ROW)
@@ -506,6 +519,7 @@ class TestOwnership(TickBase):
         repo = p / "repo"
         os.environ["AP_REPO_FILES"] = str(repo)
         self.ap = importlib.reload(self.ap)                # re-read the env (REPO_FILES)
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
         self.ap.unit_active = lambda u: u in self.f.active
@@ -622,6 +636,106 @@ class TestOwnership(TickBase):
         self.assertIn("OWNERSHIP unavailable", g)
 
 
+class TestDistinctDesigns(unittest.TestCase):
+    """OWNERS items are distinct designs: cores by RTL master + outline + pin table, types by RTL + outline + pins"""
+    @staticmethod
+    def pins(*xy):
+        return json.dumps([{"name": f"p{i}", "layer": "M5", "x": x, "y": y} for i, (x, y) in enumerate(xy)])
+
+    def hbm(self):
+        hc = lambda m, pf: {"inst": "u", "module": m, "outline_um": [10.0, 20.0], "pins_file": pf}
+        plan = {"partition_types": {
+            "q_a": {"module": "pa", "hard_cores": [hc("piece__r0", "cores/r0.json"), hc("piece__r1", "cores/r1.json"),
+                                                   hc("pc_ctrl", "cores/pc_x.json")]},
+            "q_b": {"module": "pb", "hard_cores": [hc("piece__r2", "cores/r2.json"), hc("pc_ctrl", "cores/pc_y.json"),
+                                                   hc("pc_ctrl", "cores/pc_x2.json")]}},
+            "partitions": [{"type": "q_a"}, {"type": "q_a"}, {"type": "q_b"}]}
+        same, other = self.pins((0, 1), (2, 3)), self.pins((0, 1), (2, 4))
+        pins = {"cores/r0.json": same, "cores/r1.json": same, "cores/r2.json": same,
+                "cores/pc_x.json": same, "cores/pc_x2.json": same + " ", "cores/pc_y.json": other}
+        canonical = {"types": {"hcol_h0": {"top": "ot_hidx_score_hcol", "type_ids": {
+            f"piece__r{i}__10x20": {} for i in range(3)}}}}
+        return plan, pins, canonical
+
+    def test_core_replicas_and_multi_table_modules(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        items = O.plan_items("hbm", plan, pins, O.canonical_masters(canonical))
+        cores = {it["item"]: it for it in items if it["kind"] == "core"}
+        piece = cores["piece__r0"]                         # 3 piece modules, one master + table: ONE design
+        self.assertEqual(piece["members"], ["piece__r0", "piece__r1", "piece__r2"])
+        self.assertEqual(piece["replicas"], 5)            # placed: r0 in q_a x2 + r1 in q_a x2 + r2 in q_b x1
+        pc = sorted(k for k in cores if k.startswith("pc_ctrl"))
+        self.assertEqual(len(pc), 2)                       # 2 pin tables (pc_x2 = pc_x content) -> 2 designs
+        self.assertTrue(all(re.fullmatch(r"pc_ctrl_[0-9a-f]{12}", k) for k in pc))
+        self.assertEqual(sorted(cores[k]["replicas"] for k in pc), [1, 3])
+
+    def test_one_signoff_clears_every_replica_but_not_other_tables(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
+        cache = {"plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+                     "piece__r1": ["host:/k/piece__r1/signoff.json"],
+                     "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
+                 "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
+        rows, _, head = O.build(dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical, cache=cache),
+                                now=time.time())
+        st = {r["item"]: r for r in rows if r["die"] == "hbm"}
+        self.assertEqual(st["piece__r0"]["state"], "SIGNED")          # r1 signed -> r0 / r2 replicas cleared
+        self.assertEqual(st["piece__r0"]["replicas"], 5)
+        self.assertIn("3: piece__r0 piece__r1 piece__r2", st["piece__r0"]["members"])
+        self.assertEqual(st[f"pc_ctrl_{sha_y}"]["state"], "SIGNED")   # the table named by the kit dir sha
+        other = [k for k in st if k.startswith("pc_ctrl") and k != f"pc_ctrl_{sha_y}"]
+        self.assertEqual([st[k]["state"] for k in other], ["NEEDS-KIT"])   # module-level record: table unknown
+        self.assertTrue(any("types 2 cores 3" in h for h in head))
+
+    def test_job_of_one_table_routes_only_that_design(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
+        jobs = [{"id": "j1", "status": "RUNNING", "die": "hbm", "type": "pc_ctrl", "lane": "HBM-KITS",
+                 "kit": f"epyc2:/srv/x/pc_ctrl_{sha_y}", "updated": time.time()}]
+        rows, _, _ = O.build(dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical, jobs=jobs))
+        st = {r["item"]: r["state"] for r in rows if r["die"] == "hbm"}
+        self.assertEqual(st[f"pc_ctrl_{sha_y}"], "ROUTING")
+        self.assertEqual(sorted(v for k, v in st.items() if k.startswith("pc_ctrl")), ["NEEDS-KIT", "ROUTING"])
+
+    def test_types_merge_on_identical_rtl_outline_pins_only(self):
+        import ownership as O
+        bus = lambda face: {"name": "a", "dir": "in", "width": 8, "kind": "data", "face": face, "window_um": [0, 5]}
+        t = lambda mod, face="N", w=100.0: {"module": mod, "outline_um": [w, 50.0], "buses": [bus(face)],
+                                             "contents": [{"inst": "u", "module": "core_x", "origin_um": [1, 1]}]}
+        plan = {"partition_types": {"a1": t("m_a1"), "a2": t("m_a2"), "a3": t("m_a3"), "b": t("m_b", face="S"),
+                                    "c": t("m_c", w=90.0)},
+                "partitions": [{"type": "a1"}, {"type": "a2"}, {"type": "a2"}, {"type": "a3"}, {"type": "b"}]}
+        paths = O.bound_rtl_paths("kv", plan)
+        self.assertEqual(sorted(paths), ["a1", "a2", "a3"])
+        self.assertEqual(paths["a1"][0], "physical/die_plan/kv/bind/bound_r8/rtl/m_a1.sv")
+        rtl = lambda mod, pad: f"// gen\nmodule {mod} (input a);\n  dly #({pad}) u();\nendmodule\n"
+        items = O.plan_items("kv", plan, bound={"a1": rtl("m_a1", 2), "a2": rtl("m_a2", 2), "a3": rtl("m_a3", 7)})
+        ty = {it["item"]: it for it in items if it["kind"] == "type"}
+        self.assertEqual(sorted(ty), ["a2", "a3", "b", "c"])   # a1+a2 one design (rep = most instances)
+        self.assertEqual((ty["a2"]["members"], ty["a2"]["replicas"]), (["a1", "a2"], 3))
+        items = O.plan_items("kv", plan)                          # bound RTL unreadable: nothing merges
+        self.assertEqual(len([it for it in items if it["kind"] == "type"]), 5)
+        M = O.Matcher(O.plan_items("kv", plan, bound={"a1": rtl("m_a1", 2), "a2": rtl("m_a2", 2)}))
+        self.assertEqual(M.text("gen/kv/part_a1"), {("kv", "a2")})   # a lane line naming a1 counts for the design
+
+    def test_netlist_key_matches_dedup(self):
+        import ownership as O
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+        try:
+            import dedup
+        except ImportError:
+            self.skipTest("tools/die_plan not present")
+        t = {"outline_um": [10, 20], "hard": True, "reset": {"sync_stages": 2}, "sources": ["b", "a"],
+             "buses": [{"name": "x", "dir": "in", "width": 3, "face": "N", "note": "n"}],
+             "ft_slots": [{"name": "s", "width": 4, "stations": 1, "in_face": "W", "regs_um": [1]}],
+             "contents": [{"inst": "u", "module": "m", "params": {"P": 1}, "origin_um": [0, 0]}],
+             "hard_cores": [{"inst": "h", "module": "c", "origin_um": [1, 1]}]}
+        self.assertEqual(O.netlist_key(t), dedup.netlist_key(t))
+
+
 class TestChainSafety(Base):
     def test_parent_staging_client_and_spill_are_busy(self):
         k = "/srv/opentallas-scratch2/claude/kv/heads/e2/kit"
@@ -654,105 +768,6 @@ class TestReviewIdentity(unittest.TestCase):
                "  t12 PASS-COND route; t18 FAIL pins\n"
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
-
-
-class TestCanaryHold(TickBase):
-    """CANARY HOLD: real tools/flow_canary/canary.py summary over a temp runs root"""
-    def canary(self, name, die, verdict, failing=(), age=0):
-        d = Path(os.environ["AP_CANARY_ROOT"]) / name
-        d.mkdir(parents=True, exist_ok=True)
-        p = d / "canary.json"
-        p.write_text(json.dumps({"die": die, "verdict": verdict, "item": "it", "src": "abc123", "failing": list(failing)}))
-        t = time.time() - age
-        os.utime(p, (t, t))
-        return str(p)
-
-    def log(self):
-        return (Path(self.tmp.name) / "log.txt").read_text()
-
-    def test_fail_holds_with_reason_then_pass_submits(self):
-        p = self.canary("s81_a", "s81", "FAIL", ["route", "signoff"])
-        self.queue(ROW)
-        jobs = self.tick()
-        self.assertEqual(self.f.launched, [])
-        (j,) = jobs.values()
-        self.assertEqual(j["status"], "HELD-CANARY")
-        self.assertEqual(j["hold"], f"HELD canary s81 FAIL route,signoff {p}")
-        self.assertIn(f"HELD canary s81 FAIL route,signoff {p}", self.log())
-        self.tick()                                         # still FAIL: no new log line, nothing launched
-        self.assertEqual(self.log().count("HELD canary"), 1)
-        self.canary("s81_b", "s81", "PASS")                 # newer canary PASS -> submitted on the next tick
-        jobs = self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-        self.assertEqual(list(jobs.values())[0]["status"], "RUNNING")
-        self.assertIn("RELEASE", self.log())
-
-    def test_newest_by_mtime_and_other_die_not_held(self):
-        self.canary("s81_new", "s81", "PASS", age=0)
-        self.canary("s81_old", "s81", "FAIL", ["cts"], age=3600)
-        self.canary("hbm_x", "hbm", "FAIL", ["lint"])
-        self.queue(ROW)
-        self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-
-    def test_core_suffix_maps_to_die(self):
-        self.canary("kvc", "s81_core", "FAIL", ["lec"])
-        self.queue(ROW)
-        self.assertEqual(list(self.tick().values())[0]["status"], "HELD-CANARY")
-
-    def test_no_baseline_submits(self):
-        self.queue(ROW)
-        self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-
-    def test_exempt_row_submits_and_is_logged(self):
-        self.canary("s81_a", "s81", "FAIL", ["route"])
-        self.queue(ROW + ["", "", "", "", "proof of the cts.tcl la_d fix"])
-        jobs = self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-        self.assertEqual(list(jobs.values())[0]["canary_exempt"], "proof of the cts.tcl la_d fix")
-        self.assertIn("CANARY-EXEMPT", self.log())
-        r = list(self.ap.parse_queue("\t".join(ROW + ["", "", "", "", "x"])).values())[0]
-        self.assertIn("canary_exempt needs a reason", r["error"])
-
-    def test_adopt_row_not_held(self):
-        self.canary("s81_a", "s81", "FAIL", ["route"])
-        self.queue(ROW + ["", "", "", "adopt"])
-        self.assertEqual(list(self.tick().values())[0]["status"], "RUNNING")
-
-    def test_config_off_submits(self):
-        self.canary("s81_a", "s81", "FAIL", ["route"])
-        os.environ["AP_CANARY_HOLD"] = "0"
-        self.ap = importlib.reload(self.ap)
-        self.setUp_fakes()
-        self.queue(ROW)
-        self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-
-    def test_summary_error_submits_and_logs(self):
-        self.canary("s81_a", "s81", "FAIL", ["route"])
-        os.environ["AP_CANARY_TOOL"] = str(Path(self.tmp.name) / "missing_canary.py")
-        self.ap = importlib.reload(self.ap)
-        self.setUp_fakes()
-        self.queue(ROW)
-        self.tick()
-        self.assertEqual(len(self.f.launched), 1)
-        self.assertIn("canary summary unavailable", self.log())
-        bad = Path(self.tmp.name) / "bad_canary.py"
-        bad.write_text("import sys; sys.exit('boom')\n")
-        self.ap.CANARY_TOOL = str(bad)
-        summ, err = self.ap.canary_summary()
-        self.assertIsNone(summ)
-        self.assertIn("boom", err)
-
-    def setUp_fakes(self):
-        self.ap.DRY = False
-        self.f = FakeHosts(self.ap)
-        self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
-        self.ap.unit_active = lambda u: u in self.f.active
-        self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
-        self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
-        self.ap.hub_procs = lambda path: []
 
 
 if __name__ == "__main__":

@@ -416,3 +416,25 @@ def test_ff_ref_equal_to_tt_with_far_ff_mean_fails():
     assert h["verdict"] == "FAIL" and "equals the TT value" in h["reason"]
     rec = record(policy=dict(ff_vclk="sdc", insertion_bound=dict(tt=mean + 9.5, ff=mean + 9.5, tol=40.0)))
     assert signoff.evaluate(rec)["checks"]["hold_ff"]["verdict"] == "PASS"
+
+
+def test_bound_ff_core_contract():
+    """FLOW-FIX 10-25: a hard-core kit with a declared FF insertion times FF hold against it (bound-ff), no rebind."""
+    rec = record(policy=dict(ff_vclk="bound-ff", ff_vclk_bound_ps=198.4))
+    rec["corners"]["ff"]["ff_vclk_reference"] = "applied mode bound_ff clock vclk latency_ps 198.400000"
+    h = signoff.evaluate(rec)["checks"]["hold_ff"]
+    assert h["verdict"] == "PASS" and not h.get("reason")
+    rec = record(policy=dict(ff_vclk="bound-ff"))           # declared value missing -> fail closed
+    rec["corners"]["ff"]["ff_vclk_reference"] = "applied mode bound_ff clock vclk latency_ps 198.400000"
+    assert signoff.evaluate(rec)["checks"]["hold_ff"]["reason"].startswith("FAIL_SIGNOFF ff_ref_missing")
+    rec = record(policy=dict(ff_vclk="bound-ff", ff_vclk_bound_ps=198.4))   # bound not applied in the session
+    rec["corners"]["ff"]["ff_vclk_reference"] = "unavailable mode bound_ff vclks 2"
+    assert signoff.evaluate(rec)["checks"]["hold_ff"]["verdict"] == "NOT RUN"
+
+
+def test_bound_ff_session_tcl():
+    t = signoff.session_tcl("ff", [], None, ff_vclk="bound-ff", ff_bound_ps=198.4)
+    assert "set_clock_latency -source 198.400000" in t and "mode bound_ff" in t
+    assert "mode bound_ff" not in signoff.session_tcl("tt", [], None, ff_vclk="bound-ff", ff_bound_ps=198.4)
+    with pytest.raises(ValueError):
+        signoff.session_tcl("ff", [], None, ff_vclk="bound-ff")

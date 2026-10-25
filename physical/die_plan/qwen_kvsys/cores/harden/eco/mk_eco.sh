@@ -27,7 +27,7 @@ rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
 cp $HERE/eco_route.tcl $OUT/
 cp $HERE/../run_kit_kv.sh $HERE/../corners.tcl $HERE/../pin_audit_core.py $OUT/
-cp $SO/tools/die_plan/signoff.py $SO/tools/die_plan/face_guard.py $SO/tools/die_plan/sdc_lint.py $OUT/
+cp $SO/tools/die_plan/signoff.py $SO/tools/die_plan/pair_skew.tcl $SO/tools/die_plan/face_guard.py $SO/tools/die_plan/sdc_lint.py $OUT/
 # macro (SRAM) liberty per corner: the CORNERS=... route reads only <CORNER>_LIB_FILES, so the kit's ADDITIONAL_LIBS
 # (<macro>_tt.lib) must be added per corner (_tt -> TC, _ff -> BC; refuse if the _ff file is missing)
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk)

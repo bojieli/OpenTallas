@@ -147,12 +147,14 @@ def calibrate(work, seed):
     lw = {m: V.lower_vec(m, ages=PLACEHOLDER, consts=consts) for m in ('resid', 'qk', 'silu')}
     imgs = bench_words(lw['resid'])
     vm, P, arr = lw['resid']['vm'], V.PIDX, lw['resid']['slice_map']['cmd_arrival']
+    # A probe needs a real Q receiver; west bound S8 pair heads lack L9 input.
+    qprobe = 1 if D.SLICE_RTL == 's8' else 2
     ev = LB.Events()
     t = boot(ev, imgs)
     for s, base, n in ((1, 'X', 384), (11, 'X', 256), (1, 'T', 384), (11, 'T', 256), (10, 'X', 256),
-                       (2, 'QKV', 128), (8, 'QKV', 128), (10, 'QKV', 128), (3, 'GU', 256)):
+                       (qprobe, 'QKV', 128), (8, 'QKV', 128), (10, 'QKV', 128), (3, 'GU', 256)):
         t = land(ev, t, s, vm[base]['base'], (rng.standard_normal(n) * 0.5).astype(F))
-    for s in (2, 3, 8, 10):
+    for s in (qprobe, 3, 8, 10):
         t = land(ev, t, s, vm['RX']['base'], np.full(16, F(0.75)))
     for w in lw['qk']['crom_table'] + lw['resid']['crom_table']:
         ev.at(t, P_SWI, D.stream_table_word(1, w['dst'], w['eaddr'], int(w['payload'], 16)))
@@ -168,8 +170,8 @@ def calibrate(work, seed):
         t += 1
     t += 40
     probes = [('add', 1, P['res1']), ('add', 11, P['res1']), ('xs', 1, P['xs']), ('xs', 10, P['xs']),
-              ('silu', 3, P['silu']), ('red_vm', 2, BENCH_PIDX['qkr_ps']), ('rs', 2, BENCH_PIDX['rs_dd']),
-              ('qn', 2, BENCH_PIDX['qn_dd']), ('rope_q', 2, P['rlo']), ('rope_k', 8, P['rlo']), ('v', 10, P['qkr']),
+              ('silu', 3, P['silu']), ('red_vm', qprobe, BENCH_PIDX['qkr_ps']), ('rs', qprobe, BENCH_PIDX['rs_dd']),
+              ('qn', qprobe, BENCH_PIDX['qn_dd']), ('rope_q', qprobe, P['rlo']), ('rope_k', 8, P['rlo']), ('v', 10, P['qkr']),
               ('gur', 3, BENCH_PIDX['gur_dd']), ('readback', 1, BENCH_PIDX['readback'])]
     at = []
     for name, s, pidx in probes:
@@ -185,19 +187,19 @@ def calibrate(work, seed):
         if name in ('add', 'red_vm'):
             v = sorted(c - (te + arr[s]) for (m, c), _ in ps.items() if m == s and lo <= c < hi)
         elif name in ('xs', 'silu'):
-            v = sorted(c - te - arr[s] - 2 * (N - 1 - s) for c, (src, _, _) in e5.items() if src == s and lo <= c < hi)
+            v = sorted(c - te - arr[s] - D.ST_HOP * (N - 1 - s) for c, (src, _, _) in e5.items() if src == s and lo <= c < hi)
         else:
             v = sorted(c - te - arr[s] - 2 * s for c, _, _ in dd if lo <= c < hi)
         meas[f'{name}@{s}'] = v
     print('CALIBRATE raw', json.dumps(meas))
     A = dict(schema='opentallas.qwen.dv-slice-vec-ages.v1', add_psum_out=meas['add@1'], xs_out=meas['xs@1'],
-             silu_out=meas['silu@3'], red_vm=(meas['red_vm@2'] or [None])[-1], root_cfg_lead=4,
-             d2d={k: meas[f'{k}@{s}'] for k, s in (('rs', 2), ('qn', 2), ('rope_q', 2), ('rope_k', 8), ('v', 10),
+             silu_out=meas['silu@3'], red_vm=(meas[f'red_vm@{qprobe}'] or [None])[-1], root_cfg_lead=4,
+             d2d={k: meas[f'{k}@{s}'] for k, s in (('rs', qprobe), ('qn', qprobe), ('rope_q', qprobe), ('rope_k', 8), ('v', 10),
                                                     ('gur', 3), ('readback', 1))},
              per_probe=meas,
              source='rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). '
                     'Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); '
-                    'x = edge at the E5 end (S11E) - 2 (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are '
+                    'x = edge at the E5 end (S11E) - ST_HOP (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are '
                     'the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = '
                     'the head SSQ reducer result (PSUM-window variant) age')
     want = dict(add_psum_out=3, xs_out=6, silu_out=2)
@@ -207,7 +209,7 @@ def calibrate(work, seed):
     if meas['add@11'] != meas['add@1'][:2]:
         errs.append(f'add PSUM offsets differ by slice {meas["add@1"]} / {meas["add@11"]}')
     if meas['xs@10'] != meas['xs@1'][:4]:
-        errs.append(f'x stream offsets differ by slice (2-edge stream hop model) {meas["xs@1"]} / {meas["xs@10"]}')
+        errs.append(f'x stream offsets differ by slice ({D.ST_HOP}-edge stream hop model, dv_lower.ST_HOP) {meas["xs@1"]} / {meas["xs@10"]}')
     for k, n in (('rs', 1), ('qn', 16), ('rope_q', 8), ('rope_k', 8), ('v', 16), ('gur', 32), ('readback', 48)):
         if len(A['d2d'][k]) != n:
             errs.append(f'd2d {k}: {len(A["d2d"][k])} words, want {n}')

@@ -4,7 +4,7 @@
     python3 enqueue.py --die s81 --type slice_station__t5 --kit epyc2:/srv/opentallas-scratch2/claude/<lane>/.../<kit> \
         --src claude/<branch>@<sha> --geom PASS --geom-ref "GEOM-REVIEW 2026-10-25 03:33 <record>" \
         --mem 24 --cells 120000 --lane S81 [--goal route|finish] [--runner /abs/run_kit.sh] [--threads 8]
-        [--mode submit|adopt] [--canary-exempt "<reason>"] [--no-commit]
+        [--mode submit|adopt] [--no-commit]
 
 mode submit (default): the autopilot launches the kit through ot-run once it carries a GEOM PASS.  The kit is fresh or
   placed (the GEOM review is done on 3_place): run_kit.sh continues in its run dir.  A kit that already routed, signed
@@ -15,11 +15,8 @@ mode submit (default): the autopilot launches the kit through ot-run once it car
                                                  with PASS/PASS-COND (mixed/unclear verdicts never submit).
 mode adopt: the lane already launched the run by hand; the autopilot only watches it (hub ot-run client + containers +
   logs), then classifies, archives SIGNED / renders + records failures, and deletes failed data.
---canary-exempt "<reason>": submit even while the die's newest flow-canary verdict is FAIL (autopilot CANARY HOLD).
-  Only for ONE fix-proof / diagnostic kit, never a wave; the reason (>= 8 chars) is stored in the row and the
-  submission is logged as CANARY-EXEMPT.  Without it a mode-submit row of a die whose canary FAILs waits as HELD-CANARY.
 --mem is the honest ot-run admission (peak of a comparable run + margin); --cells the expected std cells (<= 400000).
-Commit = ~/coord/bin/coord-commit.sh (serialised push).
+Publication uses a temporary git index and a queue-only remote commit; the shared coord checkout/index is untouched.
 """
 import argparse
 import os
@@ -41,32 +38,35 @@ def main(argv=None):
     ap.add_argument("--runner", default="")
     ap.add_argument("--threads", default="")
     ap.add_argument("--mode", default="", choices=["", "submit", "adopt"])
-    ap.add_argument("--canary-exempt", default="", metavar="REASON")
+    ap.add_argument("--canary-fix", default="", help="explicit corrective kit: newest canary SRC_COMMIT@/abs/run/canary.json")
     ap.add_argument("--no-commit", action="store_true")
     a = ap.parse_args(argv)
-    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_exempt]
+    row = [a.die, a.type, a.kit, a.src, a.geom, a.geom_ref, a.mem, a.cells, a.lane, a.goal, a.runner, a.threads, a.mode, a.canary_fix]
     if any("\t" in x or "\n" in x for x in row):
         sys.exit("enqueue: no tabs/newlines in fields")
     line = "\t".join(row).rstrip("\t")
     (r,) = AP.parse_queue(line).values()
     if r["error"]:
         sys.exit(f"enqueue: REFUSED: {r['error']}")
-    if r["canary_exempt"]:
-        print(f"enqueue: CANARY-EXEMPT row (reason '{r['canary_exempt']}'): submitted even if the {r['die']} canary FAILs")
     if r["geom"].upper() not in AP.GEOM_OK and r["mode"] != "adopt":
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
-    q = COORD / "autopilot" / "queue.tsv"
-    q.parent.mkdir(parents=True, exist_ok=True)
-    new = not q.exists()
-    with open(q, "a") as f:
-        if new:
-            f.write("# AUTOPILOT queue (tools/autopilot/autopilot.py): " + "\t".join(AP.QCOLS) + "\n")
-        f.write(line + "\n")
-    print(f"enqueue: id {r['id']} -> {q}")
     if not a.no_commit:
-        subprocess.run([str(COORD / "bin" / "coord-commit.sh"), f"AUTOPILOT enqueue {a.die}/{a.type} {r['id']}",
-                        "autopilot/queue.tsv"], check=True)
+        from queue_publish import publish
+        try:
+            sha = publish(COORD, line, f"AUTOPILOT enqueue {a.die}/{a.type} {r['id']}")
+        except RuntimeError as e:
+            sys.exit(f"enqueue: NOT SUBMITTED: {e}")
+        print(f"enqueue: id {r['id']} PUBLISHED coord/state@{sha[:12]}; hub tick fetches the exact row")
+    else:
+        q = COORD / "autopilot" / "queue.tsv"
+        q.parent.mkdir(parents=True, exist_ok=True)
+        if q.exists() and any(l.startswith(("<<<<<<< ", "=======", ">>>>>>> ")) for l in q.read_text().splitlines()):
+            sys.exit("enqueue: REFUSED: local draft queue has unresolved merge markers")
+        with open(q, "a") as f:
+            f.write(line + "\n")
+        print(f"enqueue: id {r['id']} DRAFT ONLY (--no-commit): {q}; publish coord/state before the hub can see it",
+              file=sys.stderr)
     return 0
 
 

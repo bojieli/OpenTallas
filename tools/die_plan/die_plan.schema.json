@@ -764,6 +764,17 @@
        "insertion_basis": {
         "type": "string"
        },
+       "keepouts_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0

@@ -35,9 +35,7 @@ def test_face_cover_checks_rst_o(tmp_path):
     r = C.face_cover(tmp_path / "b.v", None)
     assert r["verdict"] == "FAIL" and "shared" in r["fails"]
     import face_guard
-    # the masking this stage was built for; face_guard.SKIP_RE no longer skips rst_o_*/start_o_* (S81 STFG fix), so the
-    # tool gate and the canary must now agree
-    assert face_guard.guard(bad)["verdict"] == "FAIL"
+    assert face_guard.guard(bad)["verdict"] == "FAIL"          # main now checks rst_o as well; keep the independent canary check
 
 
 def _fan(n):

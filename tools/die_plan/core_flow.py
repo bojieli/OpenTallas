@@ -26,7 +26,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 LINT_RC = 8
 
 # first step inside the docker bash -lc string (rc starts at 0 before it)
-LINT_STEP = ("python3 -I /work/rtl_lint.py /work --out /work/rtl_lint.json > /work/rtl_lint.log 2>&1; rc=\\$?; "
+LINT_STEP = ("python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\\$?; "
              "tail -3 /work/rtl_lint.log; if [ \\$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, "
              "missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; ")
 

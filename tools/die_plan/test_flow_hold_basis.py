@@ -196,3 +196,14 @@ def test_postcts_helpers_have_global_scope_inside_orfs_proc(tmp_path):
     (tmp_path / "cts_post.tcl").write_text(old)
     mutant = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert 'no such variable' in mutant.stderr
+
+
+def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
+    # ORFS cts.tcl sources POST_CTS_TCL inside a proc; la_d / la_ck / la_par are read by procs via `global`.
+    t = (HERE / "leaf_affinity.tcl").read_text()
+    first_set = t.index("set la_um")
+    import re
+    m = re.search(r"^global (la_\w+ ?)+$", t, re.M)
+    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par", "la_clock"}
+    decl = m.start()
+    assert decl < first_set

@@ -105,19 +105,21 @@ def parse_lint(log, rc):
 
 
 def lint_via_rtl_lint(kit, image, tool):
-    """FLOW-FIX 10-25: the canary lint = the flow's own tools/die_plan/rtl_lint.py (slang -Wimplicit-net + read_verilog
-    -noautowire with -defer elaboration, so unreachable `$fatal` parameter checks are not false errors), mapped to the
-    canary lint.json fields."""
-    out = kit / "canary_rtl_lint.json"
-    sh(f"python3 -I {shlex.quote(str(tool))} {shlex.quote(str(kit))} --image {image} --out {shlex.quote(str(out))}")
-    rj = jload(out) or {}
-    p = (rj.get("passes") or {}).get(rj.get("frontend") or "verilog") or {}
-    imp = [h["net"] for q in (rj.get("passes") or {}).values() for h in q.get("implicit", [])]
+    """FLOW-FIX 10-25: the canary lint = the flow's own tools/die_plan/rtl_lint.py (main, Codex 63795270e:
+    read_verilog -sv -noautowire, hierarchy -check, proc, check -assert; one liberty view per macro), run in the kit
+    image exactly as gen_phys RUN_KIT runs it, mapped to the canary lint.json fields."""
+    tool = Path(tool).resolve()
+    r = sh(f"docker run --rm -v {shlex.quote(str(kit))}:/work -v {shlex.quote(str(tool.parent))}:/canary_tool:ro {image} "
+           f"bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 -I /canary_tool/{tool.name} /work'")
+    rj = jload(kit / "rtl_lint.json") or {}
+    errs = rj.get("errors") or []
+    imp = [e for e in errs if "implicit" in e.lower()]
+    und = [e for e in errs if "undriven" in e.lower() or "no driver" in e.lower()]
     v = rj.get("verdict", "NOT RUN")
-    return dict(verdict="PASS" if v == "PASS" else "FAIL", rc=p.get("rc"), implicit=imp[:50], n_implicit=len(imp),
-                undriven=p.get("undriven", [])[:50], n_undriven=len(p.get("undriven", [])),
-                multi_driven=p.get("multi_driven", [])[:20], errors=(p.get("errors") or rj.get("why") or [])[:20],
-                why=rj.get("why", [])[:20], rtl_lint=str(out))
+    return dict(verdict="PASS" if v == "PASS" else "FAIL", rc=rj.get("rc", getattr(r, "returncode", None)),
+                implicit=imp[:50], n_implicit=len(imp), undriven=und[:50], n_undriven=len(und), multi_driven=[],
+                errors=errs[:20], why=([] if v == "PASS" else [f"rtl_lint {v}"] + errs[:2]),
+                rtl_lint=str(kit / "rtl_lint.json"))
 
 
 def cmd_lint(a):
@@ -194,7 +196,18 @@ def chk_signoff(so, golden, tol):
               f"setup_tt {s} vs {g.get('setup_tt_wns')}, hold_ff {h} vs {g.get('hold_ff_wns')}", **out)
 
 
-def face_cover(netlist, pins_json, top=None, die_plan_dir=None):
+def configured_clock_ports(sdc):
+    """Only literal ports named by create_clock are additional clock inputs, never arbitrary skip regexes."""
+    out = set()
+    text = sdc.replace("\\\n", " ")
+    for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(?:\{([^}]+)\}|([A-Za-z_][A-Za-z0-9_$]*))\]", text):
+        for word in (m.group(1) or m.group(2)).split():
+            if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", word):
+                out.add(word)
+    return sorted(out)
+
+
+def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=()):
     """re-run tools/die_plan/face_guard.guard with clock/reset-input-only skips: every other port, incl. rst_o_* and
     start_o_*, must have its own face register."""
     if not netlist or not Path(netlist).is_file():
@@ -202,14 +215,21 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None):
     sys.path.insert(0, str(die_plan_dir or (HERE.parent / "die_plan")))
     import face_guard as FG
     pins = jload(pins_json) if pins_json else None
+    skip = CLOCK_ONLY_SKIP_RE
+    if clock_ports:
+        skip = "(?:" + skip + "|^(?:" + "|".join(re.escape(p) for p in clock_ports) + ")$)"
+    # Planned clock/reset pins are excluded from both wanted and present data-bit sets.
+    # Otherwise the guard reports an excluded-but-present clock as a missing data port.
+    if pins is not None:
+        pins = [p for p in pins if not re.match(skip, p["bus"])]
     ftf = Path(pins_json).with_name("ft_stations.txt") if pins_json else None
     ft1 = FG.read_ft1(str(ftf)) if ftf and ftf.is_file() else set()
-    r = FG.guard(read(netlist), top, skip_re=CLOCK_ONLY_SKIP_RE, pins=pins, ft1=ft1)
+    r = FG.guard(read(netlist), top, skip_re=skip, pins=pins, ft1=ft1)
     mods = FG.parse(read(netlist))
     T = mods[r["top"]]
     wave = [p for p in T.ports if re.match(r"^(rst_o_|start_o_)", p)]
     return st(r["verdict"] == "PASS", f"{r['verdict']} checked {r['checked']} ok {r['ok']} fails {r['fail_counts']} "
-              f"(wavefront ports {len(wave)})", checked=r["checked"], wave_ports=wave[:20],
+              f"(wavefront ports {len(wave)})", checked=r["checked"], wave_ports=wave[:20], clock_ports=list(clock_ports),
               fails={k: v[:5] for k, v in r["fails"].items()})
 
 
@@ -312,12 +332,13 @@ def check_run(run, spec=None, die_plan_dir=None):
     fg = jload(kit / "face_guard.json")
     res["face_guard"] = st(None, "no face_guard.json") if not fg else st(fg.get("verdict") == "PASS",
                                                                          f"{fg.get('verdict')} checked {fg.get('checked')}")
+    clock_ports = configured_clock_ports(read(kit / "constraint.sdc"))
     covs = []
     for nl in [ys, str(kit / "1_synth_odb.v") if (kit / "1_synth_odb.v").is_file() else None]:
         if nl:
             try:
                 c = face_cover(nl, kit / "pins.json" if (kit / "pins.json").is_file() else None,
-                               die_plan_dir=die_plan_dir)
+                               die_plan_dir=die_plan_dir, clock_ports=clock_ports)
             except Exception as e:                       # a crash of the cover check is NOT RUN, never a pass
                 c = st(None, f"face_cover error {type(e).__name__}: {e}")
             c["netlist"] = Path(nl).name

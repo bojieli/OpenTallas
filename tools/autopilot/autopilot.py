@@ -28,36 +28,17 @@ Columns (TAB separated; '#' lines are comments):
   mem_gb  honest ot-run --mem (peak of a comparable run + margin) ; cells = expected std cells (<= 400000)
   goal    route (default for run_kit.sh) | finish (default for run_kit_kv.sh / run_kit_hbm.sh)
   runner  path of the run script on the kit host (default: KIT/run_kit*.sh, else KIT/../run_kit*.sh)
-  [threads]  [mode submit|adopt]  [canary_exempt]  (reason: submit despite a FAIL canary of the die, see CANARY HOLD)
 The last row for an id wins (id = sha1(kit|src|goal)); a new src for the same kit is a new job.
 
 Outputs (hub ~/coord/autopilot/, rsynced to rtx-pro): log.txt, state.json, signed.tsv, review.tsv, structural.tsv,
 jobs/<id>/*.log.  Idempotent and restart-safe: one flock per tick, state saved after every transition, every TSV append
 is skipped when the id is already in the file, ot-run clients run in their own transient systemd --user units.
 
-CANARY HOLD (lane FLOW-FIX 2026-10-25; flow-canary rule "mass kit waves of a die start only after that die's canary
-PASSes"): admit_new does NOT submit a new kit run (mode submit) of a die while that die's NEWEST flow-canary verdict is
-FAIL.  Source of truth = `canary.py summary --root ROOT` (tools/flow_canary: newest canary.json per die by mtime).  The
-row stays queued as HELD-CANARY with the reason 'HELD canary <die> FAIL <failing stages> <canary.json>' in state.json +
-log.txt and is submitted on the first tick after the die's newest canary is PASS.  Not held: adopt rows, polling /
-classify / archive / review / delete of runs already live, the one infra resubmit of a launched run, a die with no canary
-verdict yet (no baseline), a die no canary covers (e.g. cp1), and a row with a canary_exempt reason (queue column 14,
-enqueue.py --canary-exempt "<why>": one fix-proof / diagnostic kit; logged as CANARY-EXEMPT).  Canary die keys map to
-the queue's die column; a flow suffix (_core, _cores) is stripped, so qwen_kvsys_core FAIL also holds qwen_kvsys (any FAIL
-of a die's canaries holds the die).  FAIL-OPEN: if the summary is unavailable (tool missing, error, timeout, unparsable)
-the tick logs 'canary summary unavailable' and holds nothing -- the canary is advisory-to-gate, a broken canary tool
-must not stop the chain.  Config (env, as the other AP_* keys; set in the systemd unit / drop-in):
-  AP_CANARY_HOLD  1 (default) | 0 = off
-  AP_CANARY_TOOL  default: <this checkout>/tools/flow_canary/canary.py, else <AP_REPO>/tools/flow_canary/canary.py,
-                  else /srv/opentallas-scratch2/claude/flow-canary/tool/flow_canary/canary.py
-  AP_CANARY_ROOT  default /srv/opentallas-scratch2/claude/flow-canary/runs
-
     autopilot.py tick [--dry-run]      one pass (the timer runs this every 10 min)
     autopilot.py status                table of jobs
     autopilot.py classify HOST:KIT [--since EPOCH]   read-only classification of a kit (debug / dry tests)
 """
 import argparse
-import ast
 import datetime
 import fcntl
 import hashlib
@@ -102,21 +83,13 @@ MAX_NOTRUN = 3                                          # 'NOT RUN' (never admit
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
-QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode",
-         "canary_exempt"]
+QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix"]
 TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane",
     "review.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tpng\tpaths\tlane",
     "structural.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tlane",
 }
 DRY = False
-CANARY_HOLD = os.environ.get("AP_CANARY_HOLD", "1").strip().lower() not in ("0", "off", "no", "false", "")
-CANARY_ROOT = os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs")
-CANARY_TOOL = os.environ.get("AP_CANARY_TOOL") or next(
-    (str(p) for p in (HERE.parent / "flow_canary" / "canary.py", REPO / "tools" / "flow_canary" / "canary.py")
-     if p.is_file()), "/srv/opentallas-scratch2/claude/flow-canary/tool/flow_canary/canary.py")
-CANARY_DIE_SUFFIX_RE = re.compile(r"_(core|cores)$")
-CANARY_LINE_RE = re.compile(r"^(\S+)\s+(\S+)\s+(.*?)\s+src\s+(\S+)\s+failing\s+(\[.*?\])\s+(\S+canary\.json)\s*$")
 
 
 # ------------------------------------------------------------------------------------------------ small helpers
@@ -261,68 +234,7 @@ def validate_row(r):
         return "runner must be an absolute path"
     if r["mode"] not in ("", "submit", "adopt"):
         return "mode must be submit|adopt"
-    if r.get("canary_exempt") and len(r["canary_exempt"]) < 8:
-        return "canary_exempt needs a reason (>= 8 chars: which fix it proves)"
     return ""
-
-
-# ------------------------------------------------------------------------------------------------ canary hold
-def canary_summary():
-    """-> {canary_die: {verdict, item, src, failing, path}} from `canary.py summary` (newest canary.json per die by
-    mtime), or None when the summary is unavailable (the caller then holds nothing: fail-open, see CANARY HOLD)"""
-    if not Path(CANARY_TOOL).is_file():
-        return None, f"tool {CANARY_TOOL} missing"
-    try:
-        r = subprocess.run([sys.executable, "-I", CANARY_TOOL, "summary", "--root", CANARY_ROOT],
-                           capture_output=True, text=True, timeout=120)
-    except (OSError, subprocess.SubprocessError) as e:
-        return None, f"{type(e).__name__}: {e}"
-    if r.returncode != 0:
-        return None, f"rc {r.returncode}: {(r.stderr or r.stdout).strip()[-300:]}"
-    out = {}
-    for line in r.stdout.splitlines():
-        if not line.strip():
-            continue
-        m = CANARY_LINE_RE.match(line.strip())
-        if not m or m.group(2) not in ("PASS", "FAIL"):
-            return None, f"unparsable line: {line.strip()[:200]}"
-        try:
-            failing = [str(x) for x in ast.literal_eval(m.group(5))]
-        except (ValueError, SyntaxError):
-            return None, f"unparsable failing list: {m.group(5)[:200]}"
-        out[m.group(1)] = {"verdict": m.group(2), "item": m.group(3), "src": m.group(4), "failing": failing,
-                           "path": m.group(6)}
-    return out, ""
-
-
-def canary_holds(summary):
-    """{queue die: hold reason} for every die whose newest canary (any of its canaries) is FAIL"""
-    holds = {}
-    for cdie, v in sorted(summary.items()):
-        if v["verdict"] != "FAIL":
-            continue
-        die = CANARY_DIE_SUFFIX_RE.sub("", cdie)
-        why = f"HELD canary {cdie} FAIL {','.join(v['failing']) or '-'} {v['path']}"
-        holds[die] = f"{holds[die]}; {why}" if die in holds else why
-    return holds
-
-
-class CanaryGate:
-    """evaluated lazily, once per tick, only when a submission is about to happen"""
-    def __init__(self):
-        self._holds = None
-
-    def hold(self, die):
-        if not CANARY_HOLD:
-            return ""
-        if self._holds is None:
-            summ, err = canary_summary()
-            if summ is None:
-                log(f"canary summary unavailable ({err}): canary hold not applied this tick (fail-open)")
-                self._holds = {}
-            else:
-                self._holds = canary_holds(summ)
-        return self._holds.get(die, "")
 
 
 # ------------------------------------------------------------------------------------------------ state
@@ -375,7 +287,8 @@ out["config"] = os.path.isfile(os.path.join(K, "config.mk"))
 out["has_run"] = os.path.isdir(os.path.join(K, "run"))
 out["signoff_dirs"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(K, "signoff*")) if os.path.isdir(p))
 B = os.path.join(K, "run", "results", "asap7", "*", "base")
-out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb")))
+out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb"))
+                       if not os.path.basename(p).startswith("5_1_grt"))
 out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
@@ -738,12 +651,17 @@ def submit(st, j, attempt_note=""):
             f"{attempt_note} (src {j['src']}, geom {j['geom']} {j['geom_ref']})")
 
 
+def canary_wave_gate(row):
+    import canary_gate
+    return canary_gate.assess(row, os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs"),
+                              HOME / "OpenTallas", sh)
+
+
 def admit_new(st, rows):
     submitted = 0
-    gate = CanaryGate()
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
-        if j and j.get("status") not in (None, "WAIT-GEOM", "REJECTED", "HELD-CANARY"):
+        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED"):
             continue                                   # already handled; the queue never restarts a job
         if j and j.get("status") == "REJECTED" and j.get("queue_line") == r["line"]:
             continue                                   # re-judged only when the row is re-appended
@@ -765,21 +683,15 @@ def admit_new(st, rows):
             continue
         if r.get("geom_auto") and (not j or j.get("geom_auto") != r["geom_auto"]):
             log(f"GEOM {rid} {r['die']}/{r['type']}: verdict from lanes/GEOM-REVIEW.md -> {r['geom_auto']}")
-        if r["mode"] != "adopt":
-            held = gate.hold(r["die"])
-            if held and not r.get("canary_exempt"):
-                if not j or j.get("status") != "HELD-CANARY" or j.get("hold") != held:
-                    j = st["jobs"].setdefault(rid, {})
-                    j.update({k: v for k, v in r.items() if k not in ("error",)})
-                    j.update(queue_line=r["line"], hold=held)
-                    log(f"{held} -- {rid} {r['die']}/{r['type']} {r['kit']} stays queued")
-                    set_status(st, j, "HELD-CANARY", held)
-                continue
-            if held:
-                r["canary_exempt_used"] = held
-            if j and j.pop("hold", None):
-                log(f"RELEASE {rid} {r['die']}/{r['type']}: " +
-                    (f"canary-exempt ({r['canary_exempt']})" if held else "newest canary of the die is no longer FAIL"))
+        allowed, canary_why = canary_wave_gate(r)
+        if not allowed:
+            j = st["jobs"].setdefault(rid, dict(r))
+            j.update(r)
+            set_status(st, j, "WAIT-CANARY", canary_why)
+            log(f"HOLD {rid} {r['die']}/{r['type']}: {canary_why}")
+            continue
+        if r.get("canary_fix"):
+            log(f"CORRECTIVE {rid} {r['die']}/{r['type']}: {canary_why}")
         if submitted >= MAX_SUBMIT_PER_TICK:
             break
         p = rpy(r["host"], PROBE_KIT, {"kit": r["path"], "runner": r["runner"]}, timeout=120)
@@ -814,9 +726,6 @@ def admit_new(st, rows):
         if j.get("mode") == "adopt":
             adopt(st, j, p)
             continue
-        if r.get("canary_exempt_used"):
-            log(f"CANARY-EXEMPT {rid} {r['die']}/{r['type']} {r['kit']} (lane {r['lane']}): '{r['canary_exempt']}' "
-                f"submitted despite {r['canary_exempt_used']}")
         submit(st, j)
         submitted += 1
 
@@ -1027,31 +936,41 @@ def record_failure(st, j):
         log(f"KEEP {j['id']}: flow exit 0 without signoff.json (sign-off tool problem?) -- data kept for a GOAL=post re-sign")
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
-    # owner rule: failed job data deleted at once (logs, reports, signoff records and the review bundle stay)
-    d = ({"errors": ["live hub client owns kit or its staging ancestor"]} if hub_procs(j["path"]) else
-         rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800))
-    if d.get("error") or d.get("errors"):
-        log(f"DELETE {j['id']} on {host}: {d.get('error') or d.get('errors')}; retry next tick")
-        j["delete_pending"] = True
-    else:
-        j["delete_pending"] = False
-        log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+    # Keep the physical checkpoint until the owning lane has diagnosed the failure.
+    # A signoff/log summary cannot replace the ODB/netlist for structural path analysis.
+    j["delete_pending"] = False
+    log(f"KEEP {j['id']} failed physical checkpoints for owner diagnosis; no automatic bulk deletion")
     set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
 
 
+def failure_resolutions():
+    """Owner releases bulk data only after diagnosis/evidence consumption: id TAB DELETE TAB evidence."""
+    resolved = {}
+    for line in read_coord("autopilot/failure-resolved.tsv").splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        f = line.split("\t", 2)
+        if len(f) == 3 and f[1].strip() == "DELETE" and f[2].strip():
+            resolved[f[0].strip()] = f[2].strip()
+    return resolved
+
+
 def retry_pending(st):
+    released = failure_resolutions()
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             archive(st, j)
-        elif str(j.get("status", "")).startswith("DONE-") and j.get("delete_pending"):
-            host = ssh_host(j.get("probe") or j["host"])
-            if hub_procs(j["path"]):
+        elif str(j.get("status", "")).startswith("DONE-") and not j.get("data_deleted"):
+            if j["id"] not in released or hub_procs(j["path"]):
                 continue
+            host = ssh_host(j.get("probe") or j["host"])
             d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
             if not (d.get("error") or d.get("errors")):
-                j["delete_pending"] = False
-                log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+                j.update(delete_pending=False, data_deleted=not DRY, diagnostic_evidence=released[j["id"]])
+                log(f"DELETED {j['id']} diagnosed failure bulk data on {host}: "
+                    f"{released[j['id']]}: {', '.join(d.get('deleted') or ['nothing left'])}")
                 save_state(st)
+
 
 
 # ------------------------------------------------------------------------------------------------ commands
@@ -1164,6 +1083,32 @@ def read_repo(rel):
     return out if rc == 0 else ""
 
 
+def read_repo_many(rels):
+    """{rel: text} of many origin/main files in one git cat-file --batch ('' / absent when missing)"""
+    rels = sorted(set(rels))
+    if REPO_FILES or not rels:
+        return {r: read_repo(r) for r in rels}
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), "cat-file", "--batch"], capture_output=True, timeout=300,
+                           input="".join(f"origin/main:{x}\n" for x in rels).encode())
+    except subprocess.TimeoutExpired:
+        return {}
+    out, buf, i = {}, r.stdout, 0
+    for rel in rels:
+        nl = buf.find(b"\n", i)
+        if nl < 0:
+            break
+        head = buf[i:nl].split()
+        i = nl + 1
+        if len(head) == 3 and head[1] == b"blob":
+            n = int(head[2])
+            out[rel] = buf[i:i + n].decode(errors="replace")
+            i += n + 1
+        elif len(head) == 3:                             # tree / other object: skip its body
+            i += int(head[2]) + 1
+    return out
+
+
 def list_tree(rel, coord=False):
     """file names under a dir of origin/main (or of origin/coord/state when coord)"""
     base = COORD_FILES if coord else REPO_FILES
@@ -1200,8 +1145,16 @@ def ownership_inputs(st, geom_text, trows):
     plans, proto = {}, {}
     gnames = list_tree("results/proto_1025/geom")
     rnames = list_tree("results/proto_1025/g2")
+    core_pins, bound_rtl = {}, {}
     for die, pdir, pname in OWN.DIES:
         plans[die] = _json(read_repo(f"physical/die_plan/{pdir}/die_plan.json"))
+        pf = {h.get("pins_file") for t in ((plans[die] or {}).get("partition_types") or {}).values()
+              if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
+        texts = read_repo_many(f"physical/die_plan/{pdir}/{f}" for f in pf)
+        core_pins[die] = {f: texts.get(f"physical/die_plan/{pdir}/{f}") for f in pf}
+        cand = OWN.bound_rtl_paths(pdir, plans[die])
+        texts = read_repo_many(c for cs in cand.values() for c in cs)
+        bound_rtl[die] = {k: next((texts[c] for c in cs if texts.get(c)), None) for k, cs in cand.items()}
         proto[die] = {
             "geom": {n: _json(read_repo(f"results/proto_1025/geom/{n}")) for n in gnames
                      if n.endswith(".json") and n.startswith(pname)},
@@ -1217,7 +1170,8 @@ def ownership_inputs(st, geom_text, trows):
             lane_texts[n[:-3]] = read_coord(f"lanes/{n}")
     lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
-                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients())
+                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
+                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)))
 
 
 def status(args):
