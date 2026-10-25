@@ -178,7 +178,9 @@ module ot_s81dv_divc_n32 #(
     output reg         fault
 );
     localparam integer LATENCY = 9;
-    initial if (F != 1 && F != 5) $error("ot_s81dv_divc_n32: F must be 1 or 5");
+    if (F != 1 && F != 5) begin : g_bad_f
+        $error("ot_s81dv_divc_n32: F must be 1 or 5");
+    end
     wire [LATENCY:0] vl;
     wire [0:0] rl;                            // N32: raw rst_n -> local 2-edge leaf (same release edge)
     ot_s81dv_finish_reset2 #(.LEAVES(1)) u_rl (.clk(clk), .rst_n(rst_n), .q(rl));

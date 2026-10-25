@@ -1,0 +1,5 @@
+PASS TMAP exact ALL 34 outputs 99995 cycles
+- tb.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.433 s; speed 2.307 ms/s
+- Verilator: cpu 0.433 s on 1 threads; allocated 7 MB

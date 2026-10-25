@@ -14,7 +14,7 @@ def test_lint_reads_strict_frontend_and_one_macro_view(tmp_path):
     text = rtl_lint.script(tmp_path)
     assert text.count('read_liberty ') == 1 and 'memory_tt.lib' in text
     assert '-DLANES=4' in text
-    assert '-noautowire -I/work/inc /work/demo.sv' in text and 'hierarchy -check -top demo' in text
+    assert '-defer -noautowire -I/work/inc /work/demo.sv' in text and 'hierarchy -check -top demo' in text
     assert 'check -assert' in text
     assert gen_phys.RUN_KIT.index('/work/rtl_lint.py') < gen_phys.RUN_KIT.index('\\$M synth')
 

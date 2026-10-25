@@ -2,7 +2,9 @@
 // Isolated same-edge XQ consumer successor; selected only by OT_S81ENG_RR_N32.
 module ot_s81eng_xq_n32 #(
     parameter integer TXD = 8,
-    parameter integer MUT = 0          // bench negative controls: 1 idx = 4 col + beat (not beat / 2), 2 e0 / e1 swapped
+    parameter integer MUT = 0          // bench negative controls: 1 idx = 4 col + beat (not beat / 2), 2 e0 / e1 swapped,
+                                       // 3 (OT_S81ENG_XQ_OHSEL only) vo_b[137] wrong fragment on select s0,
+                                       // 4 (OT_S81ENG_BF_PREDEC only) element 0 sign taken from code bit 6
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -17,6 +19,51 @@ module ot_s81eng_xq_n32 #(
     wire [127:0] rl;
     wire mul_reset_early_n;
     ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n(mul_reset_early_n));
+`ifdef OT_S81ENG_BF_PREDEC
+    // PATH-S81/ENG3 10-25 (E3 CTS probe: 116 TT EP, wl_code -> bf_dq -129.3, id_code -> u_aq.s0_x -135.4; ~27 levels of
+    // ripple HA/FA inside ot_s81eng_rr_bfraw_byte, local wires, fanout 1-2: pure logic depth).  The bfraw decode is split
+    // across the EXISTING input register (0 added cycles, same ages):
+    //   stage 1 (o_d flop in u_lkp -> kept per-element capture u_p): code-only pre-decode {s, nan, zero, nrm, sig, c-10,
+    //            eb-4}; no scale logic before the register (the scale keeps its 32 kq8 capture copies);
+    //   stage 2 (capture -> u_aq.s0_x): two parallel short adds (U = scale + (c-10) = X+127 -> xb + overflow / normal;
+    //            k = scale + eb - 4 -> flat select of the subnormal shift / RNE forms), then the 5-way select.
+    // The wait line now stores the DECODED bf16 (32 x 16 = the 512-bit width) from a registered copy bfxq of bf_x
+    // written one edge later at the registered address wa_q (same entry), read one edge later (registered address ra_q) into
+    // bf_dq: the 64 wait-line decoders, wl_code, the 32 wl scale copies and the id_code_w write copies are gone.
+    reg         iv; reg [4:0] ic; reg [2:0] ib;
+    always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
+    always @(posedge ck) begin ic <= o_col; ib <= o_beat; end
+    wire [255:0] id_scale_c;
+    wire [639:0] pd;                       // element g: pd[20g +: 20] registered pre-decode of o_d[8g +: 8]
+    for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
+        ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
+        ot_s81eng_rr_bfpre #(.MUT((MUT==4&&sc==0)?1:0)) u_p(.ck(ck),.code(o_d[8*sc+:8]),.q(pd[20*sc+:20]));
+    end
+    wire [511:0] bf_x;
+    genvar g;
+    generate for(g=0;g<32;g=g+1)begin:g_dec
+        for(genvar by=0;by<2;by=by+1)begin:g_byte
+            ot_s81eng_rr_bfpost_byte #(.LO(8*by)) u_x(.pd(pd[20*g+:20]),.scale(id_scale_c[8*g+:8]),.q(bf_x[16*g+8*by+:8]));
+        end
+    end endgenerate
+    wire [1023:0] x, xd;
+    reg [511:0] bf_dq;                     // decoded wait-line read (x 12 edges ago)
+    generate for (g = 0; g < 32; g = g + 1) begin : g_x
+        assign x[32 * g +: 32]  = {bf_x[16 * g +: 16], 16'h0};
+        assign xd[32 * g +: 32] = {bf_dq[16 * g +: 16], 16'h0};
+    end endgenerate
+    reg [5:0] wp;
+    always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
+    // write copy of the decode and the read address, each one edge later than the raw line used them (exact entries and
+    // read order, also across reset pulses of wp)
+    reg [511:0] bfxq; reg [5:0] wa_q, ra_q;
+    always @(posedge ck) begin bfxq <= bf_x; wa_q <= wp; ra_q <= wp - 6'd9; end
+    wire [511:0] wl_rd;
+    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_q), .rd_out(wl_rd),
+        .w_ce_in(1'b1), .w_addr_in(wa_q), .wd_in(bfxq), .w_mask_in({512{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    always @(posedge ck) bf_dq <= wl_rd;
+`else
     // ---------------------------------------------------------------- input flops + decode
     reg         iv; reg [4:0] ic; reg [2:0] ib; wire [263:0] id;
     reg[255:0] id_code; wire[255:0] id_scale_c,wl_scale_c;
@@ -62,6 +109,7 @@ module ot_s81eng_xq_n32 #(
     reg[255:0] wl_code;
     always @(posedge ck)wl_code<=wl_rd[255:0];
     assign wl={wl_scale_c[7:0],wl_code};
+`endif
     // ---------------------------------------------------------------- act-quant (closed vq quantiser)
     wire        qv, af; wire[24:0] qv_pair,qodd_pair,rst_pair_n;
     for(genvar qp=0;qp<25;qp=qp+1)begin:g_prst assign rst_pair_n[qp]=rl[12+qp/5];end wire [255:0] qq; wire signed [9:0] qe; wire [511:0] qy_unused;
@@ -115,12 +163,38 @@ module ot_s81eng_xq_n32 #(
     wire [1103:0] full = {551'd0, cur[531:0], {1'b0, cur[538:532]}, 4'd0, 5'd1, 3'd1, 1'b1};
     // fanout (safe checklist 3): the 552 rung output muxes take their select from 48 KEPT copies of tx and of fc[1:0]
     // (12 bits a copy), registered with the same next state as tx / fc
+`ifdef OT_S81ENG_XQ_OHSEL
+    // PATH-S81/ENG2 10-25 (GEOM 08:08 cond 2b): the payload rung muxes read a REGISTERED one-hot fragment select.
+    // E3 cone was fck flop -> 4 serial BUFx2 fanout levels (24/17/24/24 loads) -> 7-level mux: the indexed part-select
+    // full[276*fck+vbit] synthesises as an arithmetic offset (276*f -> HA/FA) into a log shifter per bit.  Now each of
+    // 96 select copies holds {s1 = tx & f==1, s0 = tx & f==0, pass = !tx}, registered from the SAME next state
+    // (txn, fcn) as the tx/fc copies (0 added cycles), and feeds one AND-OR (AO222) on 5-6 rung bits of one direction.
+    // full[552+v] / full[828+v] are 0 for v >= 1, so fragments 2/3 need no select term on the payload bits; bit 0
+    // (valid) keeps the txk/fck form.  tx/fc copies 0..48 stay for curcap / rv / bit 0; copies 49..95 had only rung
+    // loads and are dropped (NT = 0).
+    wire[48:0] txk;
+    wire[97:0] fck;
+    wire[287:0] osel;                      // copy k: osel[3k] pass, [3k+1] s0, [3k+2] s1; vo_b k 0..47, vo_a 48..95
+    for(genvar cg=0;cg<6;cg=cg+1)begin:g_ctl
+        if(cg<3)begin:g_tf
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(16)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(txk[16*cg+:16]),.fck(fck[32*cg+:32]),.osel(osel[48*cg+:48]));
+        end else if(cg==3)begin:g_t1
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(1)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(txk[48]),.fck(fck[97:96]),.osel(osel[48*cg+:48]));
+        end else begin:g_os
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(0)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(),.fck(),.osel(osel[48*cg+:48]));
+        end
+    end
+`else
     wire[95:0] txk;
     wire[191:0] fck;
     for(genvar cg=0;cg<6;cg=cg+1)begin:g_ctl
         ot_s81eng_rr_ctl16 #(.TXD(TXD)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tx(tx),.tc(tc),.fc(fc),
             .txk(txk[16*cg+:16]),.fck(fck[32*cg+:32]));
     end
+`endif
     reg  [1:0] pa, pb;                     // pass-through train fragments still to come (a -> b, b -> a)
     reg  [275:0] ia, ib_;
     always @(posedge ck) begin ia <= vi_a; ib_ <= vi_b; end
@@ -149,10 +223,21 @@ module ot_s81eng_xq_n32 #(
                 fault <= 1'b1;
         end
     // Payload never resets: validbit0 remains on the original control reset leaf.
+`ifdef OT_S81ENG_XQ_OHSEL
+    // rung bit v (1..275) reads select copy (48 v) / 276 (5-6 bits a copy) of its direction; MUT 3 = bench negative
+    // control (vo_b bit 137 takes fragment 1 on the fragment-0 select)
+    always @(posedge ck)for(integer vbit=1;vbit<276;vbit=vbit+1)begin
+        vo_b[vbit]<=(osel[3*((48*vbit)/276)]&ia[vbit])|(osel[3*((48*vbit)/276)+1]&full[(MUT==3&&vbit==137)?276+vbit:vbit])|
+                    (osel[3*((48*vbit)/276)+2]&full[276+vbit]);
+        vo_a[vbit]<=(osel[3*(48+(48*vbit)/276)]&ib_[vbit])|(osel[3*(48+(48*vbit)/276)+1]&full[vbit])|
+                    (osel[3*(48+(48*vbit)/276)+2]&full[276+vbit]);
+    end
+`else
     always @(posedge ck)for(integer vbit=1;vbit<276;vbit=vbit+1)begin
         vo_b[vbit]<=txk[vbit/6]?full[276*fck[2*(vbit/6)+:2]+vbit]:ia[vbit];
         vo_a[vbit]<=txk[48+vbit/6]?full[276*fck[2*(48+vbit/6)+:2]+vbit]:ib_[vbit];
     end
+`endif
     for(genvar rb=0;rb<8;rb=rb+1)begin:g_rv
         ot_s81eng_rr_rvbyte #(.BANK(rb)) u_b(.ck(ck),.rn(rl[4+rb]),.tx(txk[rb]),.last(train_last),.bw(bw),.mask(rv_setmask[8*rb+:8]),.q(rv[8*rb+:8]));
     end
@@ -181,6 +266,32 @@ endmodule
   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
   assign txk[g]=t;assign fck[2*g+:2]=f;
+ end
+endmodule
+// OT_S81ENG_XQ_OHSEL: ctl16 plus 16 registered one-hot rung selects {s1, s0, pass}; NT (0, 1 or 16) tx/fc copies.
+// Next state is ctl16's exactly; local_tx = !pass[0] (same reset leaf, same next state as ctl16's t[0]).
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_ctlsel16 #(parameter integer TXD=8,parameter integer NT=16)(
+ input wire ck,input wire[15:0] rn,input wire first,input wire[7:0] tc,input wire[6:0] fc,
+ output wire[((NT>0)?NT:1)-1:0] txk,output wire[2*((NT>0)?NT:1)-1:0] fck,output wire[47:0] osel);
+ wire[15:0] p;
+ wire local_tx=!p[0];
+ wire start=first&&!local_tx&&tc==8'(TXD-1);
+ wire txn=start?1'b1:(local_tx&&fc==7'd95)?1'b0:local_tx;
+ wire[1:0] fcn=start?2'd0:local_tx?fc[1:0]+2'd1:fc[1:0];
+ for(genvar g=0;g<16;g=g+1)begin:g_s
+  (* keep=1 *) reg sp;(* keep=1 *) reg s0;(* keep=1 *) reg s1;
+  always @(posedge ck or negedge rn[g])if(!rn[g])begin sp<=1'b1;s0<=1'b0;s1<=1'b0;end
+   else begin sp<=!txn;s0<=txn&&fcn==2'd0;s1<=txn&&fcn==2'd1;end
+  assign p[g]=sp;assign osel[3*g+:3]={s1,s0,sp};
+ end
+ if(NT>0)begin:g_tf
+  for(genvar g=0;g<NT;g=g+1)begin:g_c
+   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
+   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
+   assign txk[g]=t;assign fck[2*g+:2]=f;
+  end
+ end else begin:g_none
+  assign txk=1'b0;assign fck=2'b00;   // NT = 0: no tx/fc copy; the instance leaves both outputs open
  end
 endmodule
 
@@ -244,8 +355,13 @@ module ot_s81eng_token_map_n32 (
     wire[16:0] selected;
     wire[575:0] qb;
     for(genvar b=0;b<8;b=b+1)begin:g_q assign qb[72*b+:72]=q[b];end
+`ifdef OT_S81ENG_TMAP_CPRE
+    localparam integer TMAP_CPRE = 1;
+`else
+    localparam integer TMAP_CPRE = 0;
+`endif
     for(genvar b=0;b<17;b=b+1)begin:g_sel
-        ot_s81eng_token_bit #(.BIT(b)) u_b(.clk(clk),.rst_n(rst_n),.v(in_v),.legal(legal),.tag({in_tok[16:14],in_tok[1:0]}),.qb(qb),.sel(selected[b]),.cid(out_cid[b]));
+        ot_s81eng_token_bit #(.BIT(b), .CAPTURE_FIRST(TMAP_CPRE)) u_b(.clk(clk),.rst_n(rst_n),.v(in_v),.legal(legal),.tag({in_tok[16:14],in_tok[1:0]}),.qb(qb),.sel(selected[b]),.cid(out_cid[b]));
     end
     // S81-ELEM2-ENGRR 10-21: ROM(512 ps clk->q) -> 32-way select -> 17-bit compare -> valid copies was zero-wire -73 ps.
     // The cid range check is an image-integrity fault: it is now taken from the registered out_cid one edge later
@@ -277,7 +393,7 @@ module ot_s81eng_token_map_n32 (
     end
 endmodule
 
-(* keep_hierarchy = 1 *)module ot_s81eng_token_bit #(parameter integer BIT=0)(
+(* keep_hierarchy = 1 *)module ot_s81eng_token_bit #(parameter integer BIT=0, CAPTURE_FIRST=0)(
  input wire clk,rst_n,v,legal,input wire[4:0] tag,input wire[575:0] qb,output reg sel,output reg cid);
  reg pending;reg[4:0] selq;
  always @(posedge clk or negedge rst_n)if(!rst_n)pending<=0;else pending<=v&&legal;
@@ -287,7 +403,31 @@ endmodule
   sel=0;
   for(b=0;b<8;b=b+1)for(l=0;l<4;l=l+1)sel=sel|(qb[72*b+17*l+BIT] && selq==5'(4*b+l));
  end
- always @(posedge clk)if(pending)cid<=sel;
+ // Retiming candidate: capture each bank/word bit beside the ROM before
+ // selecting. The tag is captured on the SAME pending edge. Thus cid(t)
+ // equals the old registered select at t, including hold and reset windows;
+ // only combinational logic crosses the register cut (+0 public cycles).
+ generate if(CAPTURE_FIRST!=0)begin:g_capture_first
+  reg[31:0] bank_words;
+  reg[4:0] bank_word_tag;
+  integer cb,cl;
+  always @(posedge clk)if(pending)begin
+   for(integer rb=0;rb<8;rb=rb+1)for(integer rl=0;rl<4;rl=rl+1)
+    bank_words[4*rb+rl]<=qb[72*rb+17*rl+BIT];
+`ifdef OT_S81ENG_MUT_TMAP_TAG
+   bank_word_tag<=tag;
+`else
+   bank_word_tag<=selq;
+`endif
+  end
+  always @*begin
+   cid=0;
+   for(cb=0;cb<8;cb=cb+1)for(cl=0;cl<4;cl=cl+1)
+    cid=cid|(bank_words[4*cb+cl] && bank_word_tag==5'(4*cb+cl));
+  end
+ end else begin:g_capture_last
+  always @(posedge clk)if(pending)cid<=sel;
+ end endgenerate
 endmodule
 
 module ot_s81eng_win_n32 #(
@@ -470,6 +610,61 @@ endmodule
     assign q=bf16[LO+:8];
 endmodule
 
+// PATH-S81/ENG3 10-25: stage 1 of the split bfraw decode (OT_S81ENG_BF_PREDEC): code-only fields, registered (no scale
+// logic before the register: the scale bits keep their 32 kq8 capture copies).
+// q = {eb-4 (5b signed), sig[3:0], c-10 (5b signed), nrm[2:0], zero, nan, s}; c = eb + p, eb = (e==0 ? 1 : e), so
+// X + 127 = scale + c - 10 and the subnormal shift k = scale + eb - 4 (exactly the bfraw e9/X/k terms).
+// MUT 1 (bench negative control): sign from code[6].
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpre #(parameter integer MUT=0)(input wire ck,input wire[7:0] code,output reg[19:0] q);
+    wire       s = (MUT == 1) ? code[6] : code[7];
+    wire [3:0] e = code[6:3];
+    wire [2:0] m = code[2:0];
+    wire [3:0] sig = (e != 0) ? {1'b1, m} : {1'b0, m};
+    wire [1:0] p = sig[3] ? 2'd3 : sig[2] ? 2'd2 : sig[1] ? 2'd1 : 2'd0;
+    wire [3:0] nrm = sig << (2'd3 - p);
+    wire [4:0] eb = (e == 4'd0) ? 5'd1 : {1'b0, e};
+    wire [4:0] cm10 = eb + {3'd0, p} - 5'd10;    // -9..8
+    wire [4:0] ebm4 = eb - 5'd4;                 // -3..11
+    always @(posedge ck) q <= {ebm4, sig, cm10, nrm[2:0], (sig == 4'd0), (e == 4'hF && m == 3'h7), s};
+endmodule
+// Stage 2: registered pre-decode + registered scale -> bf16 byte LO (same function as ot_s81eng_rr_bfraw_byte).
+// Two independent short adds from the flops: U = scale + (c-10) = X + 127 (xb, overflow / normal classes) and
+// k = scale[4:0] + (eb-4) (subnormal shift, -3..6 whenever the subnormal result is selected, i.e. scale <= 9).  The
+// subnormal result is a flat select on k of sig << k (k >= 0) or the three round-to-nearest-even right shifts, each a
+// 2-level function of the registered sig computed in parallel with the adds (no negate / compare / increment chain).
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpost_byte #(parameter integer LO=0)(input wire[19:0] pd,input wire[7:0] scale,output wire[7:0] q);
+    wire       s = pd[0], nan = pd[1], zero = pd[2];
+    wire [2:0] nrm = pd[5:3];
+    wire [4:0] cm10 = pd[10:6];
+    wire [3:0] sig = pd[14:11];
+    wire [4:0] ebm4 = pd[19:15];
+    wire signed [9:0] u = $signed({2'b00, scale}) + $signed({{5{cm10[4]}}, cm10});   // X + 127, -9..263
+    wire       ovf = (u > 10'sd254);                          // X > 127
+    wire       norm = (u >= 10'sd1);                          // X >= -126
+    wire [4:0] k = scale[4:0] + ebm4;
+    // RNE right shift by 1, 2, 3: q = sig >> r, guard g = sig[r-1], sticky = |sig[r-2:0], up = g & (sticky | q[0])
+    wire [3:0] rd1 = {1'b0, sig[3:1]} + {3'd0, sig[0] & sig[1]};
+    wire [3:0] rd2 = {2'b0, sig[3:2]} + {3'd0, sig[1] & (sig[0] | sig[2])};
+    wire [3:0] rd3 = {3'b0, sig[3]}   + {3'd0, sig[2] & (sig[1] | sig[0] | sig[3])};
+    reg [7:0] sub;
+    always @(*) begin
+        case (k)
+            5'h1D: sub = {4'd0, rd3};                          // k = -3
+            5'h1E: sub = {4'd0, rd2};                          // k = -2
+            5'h1F: sub = {4'd0, rd1};                          // k = -1
+            default: sub = {4'd0, sig} << k[2:0];              // k >= 0 (bfraw form; k <= 6 when selected)
+        endcase
+    end
+    reg [15:0] bf16;
+    always @(*) begin
+        if (nan)       bf16 = {s, 15'h7FC0};
+        else if (zero) bf16 = {s, 15'd0};
+        else if (ovf)  bf16 = {s, 8'hFF, 7'd0};
+        else if (norm) bf16 = {s, u[7:0], nrm, 4'd0};
+        else           bf16 = {s, 7'd0, sub};
+    end
+    assign q = bf16[LO+:8];
+endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_validcap(input wire ck,rn,d,output reg q);
  always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=d;
 endmodule
