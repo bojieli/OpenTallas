@@ -1952,6 +1952,27 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "seam_hold": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sender_ps",
+      "seam_ps"
+     ],
+     "properties": {
+      "sender_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "seam_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
