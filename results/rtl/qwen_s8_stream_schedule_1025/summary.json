@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS",
+  "scope": "smallest representative SiLU stream calendar",
+  "old_wrong_hop": {
+    "verdict": "FAIL",
+    "checks": "1/2",
+    "words": "20/24",
+    "span": 935,
+    "fault_slices": [
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "fixed": {
+    "verdict": "PASS",
+    "checks": "2/2",
+    "words": "24/24",
+    "isa_gold": "1536/1536",
+    "collisions": 0,
+    "status": "clean",
+    "span": 939
+  },
+  "added_schedule_edges_per_layer": 4,
+  "added_hardware_edges": 0,
+  "negative_control": "old2edgeoccupancyFAULT",
+  "xslot_control": "not applicable to SiLU; not credited"
+}
