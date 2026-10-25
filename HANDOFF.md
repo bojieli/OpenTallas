@@ -778,3 +778,4 @@ CODEX: 2026-10-25 14:15 PDT HANDOFF to Claude on explicit RESET: main05f9f5c690 
 2026-10-25 15:56 PDT PATH-HBM: PARKED. 0/16 signed off; plan claude/path-hbm-plan-1025@3dd2905a27 (stack5 G0 0/G0C 24, root cut_v 0.302); kits_chain3 TKMCLK queued; G2 probes live; COORD? 2740 b NW->root unlaned; details lanes/PATH-HBM.md PARKED.
 2026-10-25 16:02 PDT ROOT-MERGE-8: main 2cf25f6d7a -> 1c4498e78d (toksched-1025 ledger, tok-lec-1130 trace pairing); gates same as main; hub ff'd. S81 x2rb still waits for m0/m1.
 2026-10-25 16:12 PDT ROOT-MERGE-8: PARKED. main = 1c4498e78d. Left: s81-x2-1025rb@27000aab69 (waits for PATH-S81 m0/m1; merges clean). No live jobs; worktrees removed.
+2026-10-25 16:16 PDT GEOM-REVIEW-2: PARKED (lanes/GEOM-REVIEW.md). 6 REQs answered this shift; none open. Next ASTK5 kit REQ uses the sender_min basis (COORD 15:57).
