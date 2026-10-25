@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.hbm_b2.beat_link_gate.v1",
+ "by": "HBM-BIND2",
+ "source": "claude/hbm-bind2-1025@92fc0b142",
+ "run": "ssh epyc1 ot-run --mem 4 --threads 2 --dir /srv/opentallas-scratch2/claude/wt/hbm-bind2 -- bash rtl/hbm_accel/die_glue/b2/run_b2_beat_link.sh (intel2, unit oth-ubuntu-2467244-1792923068, exit 0, 2026-10-25 03:11 PDT)",
+ "verdict": "B2_BEAT_LINK_GATE PASS",
+ "shapes": "W/NV/BEATS/LANE 2188/4/3/5 (tkx_del), 320/3/2/5 (host cfg a), 2056/1/2/0 (idx_vm_rr), 8/1/3/1, 100/2/4/3, 1491/1/1/2 (plain pipe)",
+ "mut0": "PASS every shape (603-1151 words, 0 errors; word latency BEATS+1+lane exact, close pair faults tx and rx)",
+ "mutants": "MUT1 beat order, MUT2 early v, MUT3 tx misses close word, MUT4 rx drops last beat: all FAIL on every BEATS>1 shape (1-1792 errors)",
+ "bound": "not bound in the native top: L74 group choice needs the schedule spacing rulings in l74_beats.json"
+}
