@@ -185,3 +185,6 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   this run. Logs suite43d_z/. Root cause -> sub-agent (hub_Wi block bench; hypotheses: kv41 HBM-edge calendar under dfi-core vs C transport vs B window).
   Decision-13 random init (+verilator+rand+reset+2): bench stops PRE-RESET in self-check qkd_kv_ctl_nc32_face.sv:174 ($fatal on negedge when
   E-face copy != original, ungated by reset) -> bench checks must be gated by reset/start (owner 13: datapath flops carry no reset); lane KV FYI.
+- 2026-10-25 01:24 PDT TOK-QK: took KV-G3 asks: (1) recompile KV boot image on bound_kv44 + make the compile reproducible (kv45 on v3.9 next),
+  (2) decision-14 calendar duty check (<= 0.73/PC/cycle at DFI 1:4), (3) R4 dcal profile emb1627 vs ew595 -> sub-agent, branch claude/kv-img-1025,
+  output epyc2 /srv/opentallas-scratch2/claude/kv-tok/img44/. kv43abcd BOOT_FAULT target-1 root cause -> second sub-agent.
