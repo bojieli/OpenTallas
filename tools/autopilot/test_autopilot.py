@@ -163,9 +163,23 @@ class FakeHosts:
         return True
 
 
+class TestCheckpointRetention(Base):
+    def test_pending_delete_waits_for_explicit_owner_resolution(self):
+        j={"id":"x", "path":"/kit", "host":"epyc2", "status":"DONE-STRUCTURAL", "delete_pending":True}
+        self.ap.read_coord=lambda p:""
+        self.ap.hub_procs=lambda p:[]
+        self.ap.rpy=lambda *a,**kw:self.fail("deleted before owner diagnosis")
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.ap.read_coord=lambda p:"x\tDELETE\tresults/geom_review/diagnosis.json\n"
+        self.ap.rpy=lambda *a,**kw:{"deleted":["/kit/run/results"]}
+        self.ap.retry_pending({"jobs":{"x":j}})
+        self.assertTrue(j["data_deleted"])
+
+
 class TickBase(Base):
     def setUp(self):
         super().setUp()
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy = self.f.rpy
         self.ap.launch_unit = self.f.launch
@@ -235,7 +249,7 @@ class TestTick(TickBase):
         self.assertEqual(len(rows), 2)                   # header + one row
         self.assertNotIn(path, [c[2]["kit"] for c in self.f.calls if c[1] == self.ap.PROBE_DELETE[:40]])
 
-    def test_near_miss_goes_to_review_no_eco_and_deletes(self):
+    def test_near_miss_keeps_checkpoint_until_diagnosed(self):
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -258,7 +272,7 @@ class TestTick(TickBase):
         self.assertIn("/r/paths.png", rv)
         self.assertIn("/r/paths_ff_hold.txt", rv)
         self.assertEqual(len(self.f.launched), 2)        # the run + the render, never an ECO / re-route
-        self.assertTrue(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
 
     def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
         self.queue(ROW)
@@ -505,6 +519,7 @@ class TestOwnership(TickBase):
         repo = p / "repo"
         os.environ["AP_REPO_FILES"] = str(repo)
         self.ap = importlib.reload(self.ap)                # re-read the env (REPO_FILES)
+        self.ap.canary_wave_gate = lambda row: (True, "fixture reference PASS")
         self.f = FakeHosts(self.ap)
         self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
         self.ap.unit_active = lambda u: u in self.f.active
