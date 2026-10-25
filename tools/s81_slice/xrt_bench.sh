@@ -2,6 +2,11 @@
 # xrt_bench.sh <outdir> [base|hops|row|porder|nocol|bwide|xhold] [SEED] [HB 0|1] [NC] [raw]  (cwd = repo root)
 # env XR_LAND=1 (default since S81-KITS-RTLC 10-24): FACE_LAND = 1 DUT + OT_XR_LAND_TB tb; XR_LAND=0: FACE_LAND = 0 DUT.
 # Extra modes landpv (+define+OT_S81SL_XRT_MUT_LAND_PV), citwin (+define+OT_S81SL_XRT_MUT_CITWIN) must FAIL.
+# env XR_DSK (TOK-DS NORM-DESKEW 10-25; the masters default to the per-leaf norm deskew PDSK = 15'o01234):
+#   1 (default) = OT_XR_DSK_TB tb (staggered partial sets, xfin +4, 3 more illegal cases); extra mode dsk
+#     (+define+OT_S81SL_XRT_MUT_DSK, leaf 2 one edge too deep) must FAIL.
+#   0 = legacy: +define+OT_S81SL_XRT_NO_DSK (PDSK = 0, the pre-deskew masters) + the aligned-set tb.
+#   2 = evidence only: the aligned-set tb against the default deskew masters; base must FAIL (old schedule now faults).
 # STW-S81-COLLA-XRT 10-21: the existing XR control-plane bench (tb_s81sl_xr.sv, xr_bench.sh flow) against the FFN result
 # transport masters ot_s81sl_xrt1 / ot_s81sl_xrt3 -- the RG-FFN ub_xr.sh recipe (results/rtl/s81_rtlgap_ffn_1021/scripts):
 # tb copy with the module names substituted + the transport legal-program constraint (random send configs keep
@@ -24,7 +29,10 @@ grep -q "ot_s81sl_xrt[13] u (" $O/tb_s81sl_xrt.sv && grep -q "body\[44\] = 1'b0"
 DEF=""; case $M in hops) DEF="+define+OT_S81SL_XR_MUT_HOPS";; row) DEF="+define+OT_S81SL_XR_MUT_ROW";;
   porder) DEF="+define+OT_S81SL_XR_MUT_PORDER";; nocol) DEF="+define+OT_S81SL_XR_MUT_NOCOL";;
   bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; landpv) DEF="+define+OT_S81SL_XRT_MUT_LAND_PV";;
-  citwin) DEF="+define+OT_S81SL_XRT_MUT_CITWIN";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
+  dsk) DEF="+define+OT_S81SL_XRT_MUT_DSK";; citwin) DEF="+define+OT_S81SL_XRT_MUT_CITWIN";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
+case ${XR_DSK:-1} in 1) DEF="$DEF +define+OT_XR_DSK_TB";; 0) DEF="$DEF +define+OT_S81SL_XRT_NO_DSK";; 2) ;;
+  *) echo "BAD_XR_DSK ${XR_DSK}"; exit 2;; esac
+[ "$M" = dsk ] && [ "${XR_DSK:-1}" != 1 ] && { echo "BAD_MODE dsk needs XR_DSK=1"; exit 2; }
 [ "${XR_FOREG:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_FOREG"
 [ "${XR_PDC:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_PDC"   # STW-S81c-COLLA 10-22: pin predecode (XR8)
 # S81-KITS-RTLB 10-24: XR_LAND=1 -> the DUT with FACE_LAND = 1 (lo / p / e leaf-interface landing, +1 cycle) and the tb in
