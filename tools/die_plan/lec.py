@@ -1078,8 +1078,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     a, b = IDXK.match(k), h[0] == "eq" and IDXK.match(h[2])
                     if sd == "gold" and a and b and a.group(1) == b.group(1):
                         strides[a.group(1)][int(b.group(2)) - int(a.group(2))] += 1
+                # a cohort representative (partnered: other gold flops' "eq" partner) pairs too: synthesis may
+                # have merged the whole cohort into a third, name-matched register (kv3_pv_pair: every lane's
+                # u_prod.v3 == the slice's fc[2]; the rep left free made all 32 lane fault registers differ)
                 for k in L.gonly:
-                    if not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
+                    if not k.startswith("ff:") or ("gold", k) in L.hyp:
                         continue
                     s = sv("gold", k)
                     if s in (0, mask) and tried[("gold", k, "c")] < 1:
