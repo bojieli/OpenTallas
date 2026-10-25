@@ -176,6 +176,9 @@ endmodule
 // t_mf = hslot faults with hwin's folded in ([2] |= RX tag / late event, [3] |= window config); it leaves like the
 // other block fault outputs (die status fold owed with them).
 module dsdv_seq_host_mux #(
+    // S81/H23 (10-24, COORD H3): 1 = the on-die SEL_IDS relay (bk_sel's top-k index words -> svc entries, dsdv_sh_selr in
+    // L0); the die master carries it.  Cost: s_hw_w / s_hw_e leave one edge later (host-write path + 1).  0 = as before.
+    parameter integer SELR = 1,
     parameter integer STATIC_KS6 = 0,
     parameter integer STATIC_KS_SPAN = 1259408,
     parameter [31:0] STATIC_KS_GRAPH_TAG = 32'h218d375d
@@ -225,7 +228,7 @@ module dsdv_seq_host_mux #(
         assign issue_host = f_host;
         assign ks_fault = 4'd0;
     end endgenerate
-    dsdv_seq_host_mu #(.NSLOT(47)) u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
+    dsdv_seq_host_mu #(.NSLOT(47), .SELR(SELR)) u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
         .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(issue_host), .t_host(t_host), .f_lf(f_lf), .f_ks(issue_ks),
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
