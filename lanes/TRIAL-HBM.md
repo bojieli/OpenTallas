@@ -48,3 +48,8 @@ RESUMED 12:10 PDT, adopted: codex/trial-hbm-1024 @0404dd4648 (ff), live B2l_fabr
   coarse x4 done (880 mV) but invalid as absolute (5-8x over exact windows; relative map only).
 - Big outputs: intel1:/srv/opentallas-scratch/claude/trial-hbm/top/kit/die (die_top.odb/def), intel2:.../ir/w_*, epyc3:.../ir/full_s4m, full_exact.
 - Next step: exact full-die IR with the grid written as DEF special nets (no pdngen macro grids); plan fixes for F3/F4 (PHY outline, taps out of keep-outs, SerDes at edge); SerDes own supply/dense PG.
+
+## CODEX notes 2026-10-24 21:12 PDT (parked on Claude reset)
+- Collected legacy fab_rep_m8 epyc2 EXIT0: TT+398.87ps, FF-2.52ps (204865 min violations), 1,842,032 buffers, 5h39m18.1GB; diagnostic only, NOT SIGNED, FF seam fix remains open.
+- B2l_fabric_buf12_legal_r4 epyc3 still running hbm-fabric-buf12-3701110, GRT extraiter2/30 asof19:52, preserved. No duplicate run.
+- Own codex/hbm-trial2-1024 checkout; draft specialnets helper at /srv/opentallas-scratch/claude/codex-hbm-trial2/specialnets.py, py_compile only, NOT RUN; writes DEF PG to avoid full-die pdngen bottleneck. Requires small-window syntax/PDNSim comparison and rendered review before any new run. No fleet jobs launched by this takeover. Full details CODEX-LOG handoff.
