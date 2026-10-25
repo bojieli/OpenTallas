@@ -26,7 +26,6 @@ module ot_hgi_coll_tkm_m_tp192__tile5 (
         .tile_ins_v(u_u_g_tiles_5_e86_u_tile_ins_v),
         .tile_ins_b(u_u_g_tiles_5_e86_u_tile_ins_b[343:0]),
         .tile_up_in(u_u_g_tiles_5_e86_u_tile_up_in[343:0]),
-        .tile_tid({1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}),
         .tile_ovf_v(c_tile_ovf_v),
         .tile_ovf_b(c_tile_ovf_b),
         .tile_up_out(c_tile_up_out));

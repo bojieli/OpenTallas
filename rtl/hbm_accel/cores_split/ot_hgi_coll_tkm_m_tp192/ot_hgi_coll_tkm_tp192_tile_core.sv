@@ -3,6 +3,7 @@
 // Members (roles): u_tile = ot_hgi_coll_tkm_tile_e86  (as-built ot_hgi_coll_tkm_tile_e86 at u/u/g_tiles[0].e86.u_tile)
 // Source wiring: rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk)
 // Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.
+// PATH-HBM 10-25: tile_tid port dropped (COORD ruling (4)); build_split_tops recipe tkm_tile must emit the same (open).
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_coll_tkm_tp192_tile_core (
@@ -12,7 +13,6 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     input wire tile_ins_v,
     input wire [343:0] tile_ins_b,
     input wire [343:0] tile_up_in,
-    input wire [5:0] tile_tid,
     output wire tile_ovf_v,
     output wire [343:0] tile_ovf_b,
     output wire [343:0] tile_up_out
@@ -59,7 +59,16 @@ module ot_hgi_coll_tkm_tp192_tile_core (
     assign u_tile__clk_r1 = tile_clk;
     assign u_tile__clk_r2 = tile_clk;
     assign u_tile__clk_r3 = tile_clk;
-    assign u_tile__tid = tile_tid;   // strap (replica constant at the parent)
+    // PATH-HBM 10-25 (COORD ruling (4) 14:44 on deaa633922): tile_tid DROPPED. In this split piece the tile's tau
+    // sub-function (tau_t/tau_l -> tau_o) is unused: tau_o has no port and tau_t/tau_l are already constant, and
+    // tid feeds only that compare (ot_hgi_coll_tkm_tile_rg: tau_o <= (p_tid == p_tt) ? ...), so tid has no
+    // observable load; it joins the constant tau group instead of a per-replica parent strap (no dead pins).
+    assign u_tile__tid[0] = 1'b0;
+    assign u_tile__tid[1] = 1'b0;
+    assign u_tile__tid[2] = 1'b0;
+    assign u_tile__tid[3] = 1'b0;
+    assign u_tile__tid[4] = 1'b0;
+    assign u_tile__tid[5] = 1'b0;
     assign u_tile__clr = tile_clr;
     assign u_tile__conv = tile_conv;
     assign u_tile__tau_t[0] = 1'b0;
