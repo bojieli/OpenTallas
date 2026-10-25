@@ -6,7 +6,7 @@ module ot_qkh_head_frontq_native #(
     // KVG3-CORES 10-24 (COORD ruling 2, face_guard not relaxed): PORT_REGS=1 gives every f_t<k> output bit its own launch
     // flop in RTL (per-port copies of the NRS relay stage, same D, same edge) instead of one relay stage whose 41 shared
     // bits ({cr 16, c0, e 16, qb 6, hid 2}) fan out to all four ports (left to the flow's pin_reg_split in partition
-    // kits).  0 cycles, identical outputs every edge (miter); +123 flops (4 x 233 vs 809).  PORT_REGS=0 = original.
+    // kits).  0 cycles, identical outputs every edge (miter); +124 flops (4 x 233 vs 809, plus fault pin copy).  PORT_REGS=0 = original.
     parameter integer PORT_REGS=0
 )(input wire clk, rst_n,
   input wire [3:0] c_in, input wire [255:0] row_in,
@@ -69,7 +69,25 @@ module ot_qkh_head_frontq_native #(
         assign qv_send=qv2 && qb2[0] && half_valid && pair_tag==qb2[5:1];
         assign qb_send={1'b0,qb2[5:1]};
         assign qd_send={rounded,lower};
-        assign q_pack_fault=pack_fault;
+        // The pin copy uses the sticky state only as its D input, so the output
+        // flop drives no feedback loads. Synchronous reset keeps this distinct
+        // from the async sticky state under synthesis (same sampled value, 0 cycles).
+        // No kept alias wire: a kept Q alias would add a buffer load to the pin.
+        if (PORT_REGS != 0) begin : g_fault_port
+            reg pack_fault_port;
+            always @(posedge clk)
+                if (!rp) pack_fault_port <= 1'b0;
+                else pack_fault_port <= pack_fault ||
+                    (qv2 && ((!qb2[0] && half_valid) ||
+                             (qb2[0] && (!half_valid || pair_tag != qb2[5:1]))));
+`ifdef KVG3_FRONTQ_PFMUT
+            assign q_pack_fault=1'b0;
+`else
+            assign q_pack_fault=pack_fault_port;
+`endif
+        end else begin : g_fault_shared
+            assign q_pack_fault=pack_fault;
+        end
     end else begin : g_qbf16
         assign qv_send=qv2;assign qb_send=qb2;assign qd_send=qd2;assign q_pack_fault=0;
     end endgenerate
