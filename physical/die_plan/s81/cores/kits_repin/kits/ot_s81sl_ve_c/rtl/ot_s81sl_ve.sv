@@ -53,7 +53,8 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     // reduce stream
     input  wire         r_v,
     input  wire [1:0]   r_c,
-    input  wire [127:0] r_h, r_k, r_w,
+    input  wire [63:0]  r_h,              // packed BF16 h from vs (OWNER DECISION 8): unpacked at the input flop
+    input  wire [127:0] r_k, r_w,
     // beat partials
     output reg          p_v,
     output reg  [1:0]   p_c,
@@ -61,7 +62,8 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     // add stream
     input  wire         a_v,
     input  wire [1:0]   a_c,
-    input  wire [255:0] a_h, a_val,
+    input  wire [127:0] a_h,              // packed BF16 h from vs (OWNER DECISION 8): unpacked at the input flop
+    input  wire [255:0] a_val,
     input  wire [31:0]  a_g,
     output reg          o_v,
     output reg  [1:0]   o_c,
@@ -85,8 +87,8 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
         if (!rn) begin rv_q <= 1'b0; av_q <= 1'b0; end
         else begin rv_q <= r_v; av_q <= a_v; end
     always @(posedge clk) begin
-        rc_q <= r_c; rh_q <= r_h; rk_q <= r_k; rw_q <= r_w;
-        ac_q <= a_c; ah_q <= a_h; aval_q <= a_val; ag_q <= a_g;
+        rc_q <= r_c; rh_q <= {r_h[63:48], 16'd0, r_h[47:32], 16'd0, r_h[31:16], 16'd0, r_h[15:0], 16'd0}; rk_q <= r_k; rw_q <= r_w;
+        ac_q <= a_c; ah_q <= {a_h[127:112], 16'd0, a_h[111:96], 16'd0, a_h[95:80], 16'd0, a_h[79:64], 16'd0, a_h[63:48], 16'd0, a_h[47:32], 16'd0, a_h[31:16], 16'd0, a_h[15:0], 16'd0}; aval_q <= a_val; ag_q <= a_g;
     end
 
     // input order check: element quad counter (16 a copy), copy must match

@@ -13,8 +13,7 @@ set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold 12.5000
 set non_clk_in [all_inputs -no_clocks]
 set_input_delay -max 166.6000 -clock vclk $non_clk_in
 set_output_delay -max 166.6000 -clock vclk [all_outputs]
-# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)
-set_input_delay -max 416.5000 -clock vclk [get_ports {rst}]
+# reset rst: wavefront relay -> registered synchronous input, data IO budget (166.6000)
 # seam hold: neighbour face flop launches from the fast end of the insertion window (-tol, no credit)
 set_input_delay -min -40.0000 -clock vclk $non_clk_in
 set_output_delay -min 0.0000 -clock vclk [all_outputs]

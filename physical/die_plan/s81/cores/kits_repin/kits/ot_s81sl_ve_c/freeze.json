@@ -9,8 +9,8 @@
  "ref_tile": "physical/ref_tile/s81sl_ve",
  "spec_sha256": "c0c1852c12f72636c6ebf04449ce5a5ff1e17bd2a5899bdda66292638ffac1d2",
  "pins_file": "inputs/core_pins/ot_s81sl_ve.json",
- "pins_sha256": "7e39ff9acf71fc4b4f362e6b7b922c81de2e983c91502c22aeb459038f7b643d",
- "pins": 1167,
+ "pins_sha256": "b9096ac5cd6c58e5a9f4ba4bb7deeb3c3cb10eb205bb7f80201d98f69731612b",
+ "pins": 975,
  "pins_snapped_to_lef_edge": 13,
  "clocks": [
   "clk"
@@ -28,10 +28,10 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "a3ec0b419a",
+ "repo_rev": "fd893a75be",
  "sdc_lint_sha256": "3b8730b0f96528ecc89969cda35d52798c0f1edc1680f823d5dce2fe8f09cdaf",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [],
  "rtl_patch": null,
- "kit_hash": "437f421e378b0e8b"
+ "kit_hash": "39dbcc385125dae6"
 }

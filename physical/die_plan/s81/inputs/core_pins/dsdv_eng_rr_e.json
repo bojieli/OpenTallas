@@ -1,8 +1,8 @@
 {
 "module": "dsdv_eng_rr_e",
 "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef",
-"pinhash": "a5c124fc303f",
-"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012]); OWNER DECISION 8 10-24: 278 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "d068b7ee94ab",
+"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012]); OWNER DECISION 8 10-24: 278 constant pins dropped (inputs/const_pins_dropped.json); S81-KITS-C3 10-24 repin.py move_only: {'ck': 'S', 'rst_n': 'S'} moved to face middle",
 "pins": [
 {
 "name": "hx_res[0]",
@@ -14316,15 +14316,15 @@
 },
 {
 "name": "rst_n",
-"layer": "M4",
-"x": 0.096,
-"y": 21.708
+"layer": "M3",
+"x": 172.593,
+"y": 0.019
 },
 {
 "name": "ck",
-"layer": "M4",
-"x": 0.096,
-"y": 23.1
+"layer": "M3",
+"x": 172.809,
+"y": 0.019
 },
 {
 "name": "rco[0]",

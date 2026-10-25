@@ -9,9 +9,9 @@
  "ref_tile": "physical/die_plan/s81/cores/eng",
  "spec_sha256": "781d3f247f22b8aa098470b9ed76e7644db4e58618508c4bbff8f9d2deb0da63",
  "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
- "pins_sha256": "6b27b21ca5eabc4adad32926df87aeed6717f2a3304d547738095b476b4f1dbd",
- "pins": 2698,
- "pins_snapped_to_lef_edge": 2698,
+ "pins_sha256": "2f284040e522392a3fed698b3fd2ad2df935e2efe04889e390d36121729b57b7",
+ "pins": 2690,
+ "pins_snapped_to_lef_edge": 2688,
  "clocks": [
   "ck"
  ],
@@ -28,8 +28,8 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "6be7b45a41",
- "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "repo_rev": "fd893a75be",
+ "sdc_lint_sha256": "3b8730b0f96528ecc89969cda35d52798c0f1edc1680f823d5dce2fe8f09cdaf",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [
   "ot_rom_4096x72_m8 17.28 103.68 R0 {*u_win?u_map?m?0??rom}",
@@ -49,5 +49,5 @@
   "ot_sram_1r1w_128x256_m1_r2c2 151.2 388.368 R0 {*u_lkp?u_e?u_row_a}"
  ],
  "rtl_patch": null,
- "kit_hash": "63514695ead5d578"
+ "kit_hash": "812c3bee41bf6e02"
 }

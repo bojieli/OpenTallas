@@ -339,9 +339,9 @@ def sdc(per, ins, tol, clks, rsts, name, half=()):
          "set non_clk_in [all_inputs -no_clocks]\n"
          f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
-    if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+    if rsts:   # OWNER DECISION 13 (reset wavefront, claude/reset-1024 @0a08a66af): the core reset is a SYNCHRONOUS
+        # registered input from the partition's reset relay tree, budgeted like any data pin (no async model, no waiver)
+        s += f"# reset {' '.join(rsts)}: wavefront relay -> registered synchronous input, data IO budget ({io:.4f})\n"
     s += (f"# seam hold: neighbour face flop launches from the fast end of the insertion window (-tol, no credit)\n"
           f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
           f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
@@ -390,7 +390,10 @@ def main():
         # OWNER DECISION 8 packed buses (S81-KITS-RTLA const_pins_dropped.json 'rename' old -> new, same position): a
         # renamed pin's closed-LEF edge rect is the one of its OLD name (new vn y[0] sits where closed y[16] was)
         old_of = {}
-        if json.load(open(S81 / rec["pins_file"])).get("const_rename"):
+        # (only for a closed LEF still carrying the old names; a stub LEF written by drop_const_pins starts with the
+        # '# OT const_rename' marker and already has the new names)
+        if json.load(open(S81 / rec["pins_file"])).get("const_rename") and \
+                not (S81 / rec["stub_lef"]).read_text().startswith("# OT const_rename"):
             ren = json.load(open(S81 / "inputs/const_pins_dropped.json"))["modules"].get(mod, {}).get("rename", {})
             old_of = {nw: od for od, nw in ren.items()}
         for q in pins:

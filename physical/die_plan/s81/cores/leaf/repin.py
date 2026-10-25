@@ -45,6 +45,13 @@ SPEC = {
     # S-face centre (the face of the data clusters; centre-fed clock / reset)
     "ot_s81sl_eg": dict(size=(259.2, 259.2), keep_faces=True, suffix="_c", dir="cores/eg/lef", move={"clk": "S", "rst_n": "S"},
                         src_lef="physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef"),
+    # S81-KITS-C3 10-24 (S81/KITS request): eng E core: rst_n / ck sat at the W-bottom corner (0.1, 21.7 / 23.1) of the
+    # 345.6 x 466.56 core; moved to the S-face middle (S = the data face: hx_res / hx_w to h0 / h1, 1220 of 2690
+    # pins).  move_only: every other pin keeps its exact position (S hx_res / hx_w abut h0 / h1 N in_w / hit_res; a
+    # keep_faces re-spread moved hx_w 160 um and hx_res up to 39.5 um); ck / rst_n take the free M3 tracks (the S face
+    # is all M5) nearest the face middle.  The table is rewritten in place (inputs/core_pins/dsdv_eng_rr_e.json).
+    "dsdv_eng_rr_e": dict(size=(345.6, 466.56), move_only=True, suffix="", dir="cores/eng/lef",
+                          move={"ck": "S", "rst_n": "S"}, src_lef="physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef"),
     "dsdv_svc_sx_hrow": dict(size=(138.24, 164.16), keep_faces=True, suffix="_c",
                              src_lef="physical/ref_tile/dsdv_svc_sx_hrow/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow.lef"),
 }
@@ -65,6 +72,32 @@ def tracks(layer, lo, hi, vertical):
 
 def build(mod, spec):
     src = json.load(open(os.path.join(D, "inputs/core_pins/%s.json" % mod)))
+    if spec.get("move_only"):
+        # only the moved scalar ports change: each goes to the free every-second track (either face layer, no same-layer
+        # pin within 0.2 um) nearest the face middle; every other pin keeps its position
+        W, H = spec["size"]
+        keep = [p for p in src["pins"] if p["name"] not in spec["move"]]
+        pins = [dict(p) for p in keep]
+        for b, face in spec["move"].items():
+            vert = face in "NS"
+            mid = (W if vert else H) / 2.0
+            e_ = {"N": lambda q: H - q["y"], "S": lambda q: q["y"], "E": lambda q: W - q["x"], "W": lambda q: q["x"]}[face]
+            on = [q for q in pins if e_(q) < 0.2]
+            best = None
+            for L in (["M3", "M5"] if vert else ["M4"]):
+                taken = [q["x"] if vert else q["y"] for q in on if q["layer"] == L]
+                for c in tracks(L, 4.32, (W if vert else H) - 4.32, vert)[::2]:
+                    if all(abs(c - u) > 0.2 for u in taken):
+                        k = (abs(c - mid), L, c)
+                        best = min(best, k) if best else k
+            _, L, c = best
+            e = EDGE[L]
+            x, y = {"N": (c, H - e), "S": (c, e), "E": (W - e, c), "W": (e, c)}[face]
+            pins.append(dict(name=b, layer=L, x=round(x, 4), y=round(y, 4)))
+        if len(pins) != len(src["pins"]):
+            raise SystemExit("%s: %d pins of %d" % (mod, len(pins), len(src["pins"])))
+        pins.sort(key=lambda p: p["name"])
+        return pins, src
     names = [p["name"] for p in src["pins"]]
     base = {}
     for n in names:
@@ -164,6 +197,33 @@ def main():
             continue
         pins, src = build(mod, spec)
         W, H = spec["size"]
+        if spec.get("move_only"):
+            # move_only: patch the source table / LEF in place -- only the moved ports' entries and PIN blocks change
+            # (repin's own LEF writer redraws every pin with the repin shapes and its OBS set)
+            import hashlib
+            mv = {q["name"]: q for q in pins if q["name"] in spec["move"]}
+            lp = src["lef"]
+            lt = open(lp).read()
+            for nm, q in mv.items():
+                w, h = RECT[q["layer"]]
+                blk = re.search(r"(?ms)^  PIN %s\s*$.*?^  END %s\s*$" % (re.escape(nm), re.escape(nm)), lt)
+                d = re.search(r"DIRECTION (\S+)", blk.group(0)).group(1)
+                u = (re.search(r"USE (\S+)", blk.group(0)) or re.search("(SIGNAL)", "SIGNAL")).group(1)
+                new = "\n".join(["  PIN %s" % nm, "    DIRECTION %s ;" % d, "    USE %s ;" % u, "    PORT",
+                                 "      LAYER %s ;" % q["layer"],
+                                 "        RECT %.4f %.4f %.4f %.4f ;" % (q["x"] - w / 2, q["y"] - h / 2, q["x"] + w / 2, q["y"] + h / 2),
+                                 "    END", "  END %s" % nm])
+                lt = lt[:blk.start()] + new + lt[blk.end():]
+            open(lp, "w").write(lt)
+            src["pins"] = [mv.get(q["name"], q) for q in src["pins"]]
+            src["pinhash"] = hashlib.sha256(json.dumps(src["pins"], sort_keys=True).encode()).hexdigest()[:12]
+            note = "; S81-KITS-C3 10-24 repin.py move_only: %s moved to face middle" % spec["move"]
+            if note not in src["source"]:
+                src["source"] += note
+            jp = os.path.join(D, "inputs/core_pins/%s%s.json" % (mod, spec.get("suffix", "_lfp")))
+            json.dump(src, open(jp, "w"), indent=0)
+            print("wrote (move_only)", jp, lp, {k: (v["layer"], v["x"], v["y"]) for k, v in mv.items()})
+            continue
         sfx = spec.get("suffix", "_lfp")
         if spec.get("src_lef"):
             dirs = lef_dirs(spec["src_lef"])
