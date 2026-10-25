@@ -250,7 +250,7 @@ def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
     monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)  # neither leftover is resolved by simulation
     monkeypatch.setattr(lec, 'PROVE_JOBS', 2)
     def run(args, **kwargs):
-        script = args[-1]
+        script = Path(args[-1]).read_text() if args[1] == "-f" else args[-1]   # single cones: abc -f script file
         if '&fraig' in script:
             (tmp_path / 'parallel_swept.aig').touch()
             return SimpleNamespace(stdout='Undef calls 2', stderr='')
@@ -272,7 +272,7 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
     monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)
     monkeypatch.setattr(lec, 'PROVE_JOBS', 1)  # mixed statuses in one serial batch
     def run(args, **kwargs):
-        script = args[-1]
+        script = Path(args[-1]).read_text() if args[1] == "-f" else args[-1]   # single cones: abc -f script file
         if '&fraig' in script:
             (tmp_path / 'mixed_swept.aig').touch()
             return SimpleNamespace(stdout='Undef calls 3', stderr='')
@@ -453,3 +453,78 @@ def test_self_holding_merge_mutant_still_differs(tmp_path, monkeypatch):
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert "differs" in set(_sim_prove(m).values())
+
+
+def _seq(tmp_path, name, inputs, latches, nxt_fn):
+    """a sequential AIG: primary `inputs`, `latches` (names); nxt_fn(m, lits) -> next-state literal per latch."""
+    m = lec.Aig()
+    lits = {n: m.add_input(n) for n in list(inputs) + list(latches)}
+    nxt = nxt_fn(m, lits)
+    f = tmp_path / (name + ".aig")
+    m.write(f)
+    _, body = f.read_bytes().split(b"\n", 1)
+    A = len(m.ands) // 2
+    hdr = f"aig {m.ni + A} {len(inputs)} {len(latches)} 0 {A}\n" + "".join(f"{nxt[l]}\n" for l in latches)
+    f.write_bytes(hdr.encode() + body)
+    mp = {"input": {i: [(n, 0)] for i, n in enumerate(inputs)},
+          "latch": {i: [(f"u_dut.{n}$_DFF_P_.lecq", 0)] for i, n in enumerate(latches)}, "output": {}}
+    return lec.read_aig(f), mp
+
+
+def test_merged_self_holding_copy_is_paired_on_its_care_set(tmp_path, monkeypatch):
+    """PATH-KV-PC3 10-25 (ot_qfd_emb_pcport `if (r_v) begin kv_d <= r_d; c1 <= r_d; end`): synthesis merged the
+    load-enable twin kv_d into c1.  D(kv_d) holds kv_d, which c1 does not share, so no plain / cofactor signature
+    pairs them and every compare point fed by kv_d differed (987 points NOT EQUIVALENT).  care_pairs pairs them on
+    the enabled patterns and the induction proves it."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    hold = lambda m, e, d, q: m.AND(m.AND(e, d) ^ 1, m.AND(e ^ 1, q) ^ 1) ^ 1           # e ? d : q
+    g, gm = _seq(tmp_path, "gold", ["d", "e"], ["kv_d", "c1", "o"],
+                 lambda m, l: {"kv_d": hold(m, l["e"], l["d"], l["kv_d"]), "c1": hold(m, l["e"], l["d"], l["c1"]),
+                               "o": m.XOR(l["kv_d"], l["d"])})
+    t, tm = _seq(tmp_path, "gate", ["d", "e"], ["c1", "o"],
+                 lambda m, l: {"c1": hold(m, l["e"], l["d"], l["c1"]), "o": m.XOR(l["c1"], l["d"])})
+    L = lec.Lec(g, gm, t, tm)
+    assert L.gonly == ["ff:u_dut.kv_d"] and not L.tonly
+    before, _ = L.build(with_compare=True, with_hyp=False)
+    assert _sim_prove(before)["ff:u_dut.o"] == "differs"
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp[("gold", "ff:u_dut.kv_d")] == ("eq", "gold", "ff:u_dut.c1", 0)
+    after, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(after).values()) == {"proved"}
+    # a different enable is no copy: never proved
+    g2, gm2 = _seq(tmp_path, "gold2", ["d", "e", "f"], ["kv_d", "c1", "o"],
+                   lambda m, l: {"kv_d": hold(m, l["f"], l["d"], l["kv_d"]), "c1": hold(m, l["e"], l["d"], l["c1"]),
+                                 "o": m.XOR(l["kv_d"], l["d"])})
+    t2, tm2 = _seq(tmp_path, "gate2", ["d", "e", "f"], ["c1", "o"],
+                   lambda m, l: {"c1": hold(m, l["e"], l["d"], l["c1"]), "o": m.XOR(l["c1"], l["d"])})
+    L2 = lec.Lec(g2, gm2, t2, tm2)
+    lec.correspond(L2, tmp_path, 100, [])
+    m2, _ = L2.build(with_compare=True, with_hyp=True)
+    assert _sim_prove(m2)["ff:u_dut.o"] == "differs"
+
+
+def test_kept_register_merged_by_synthesis_fails(tmp_path):
+    """fail-closed kept-register check: a (* keep *) copy (or a keep_hierarchy pin flop) merged into its twin is
+    LEC-equivalent but must FAIL; the intact netlist passes (mutant test)."""
+    keep = tmp_path / "gold.keep"
+    keep.write_text("lec_top/u_dut.cp\n" "lec_top/u_dut.u_pin.q\n" "lec_top/lec_po_x\n")
+    gold_l = ["cp[0]", "cp[1]", "u_pin.q", "plain"]
+    nx = lambda m, l: {n: l["d"] for n in l if n != "d"}
+    g, gm = _seq(tmp_path, "g", ["d"], gold_l, nx)
+    for gate_l, want in ((gold_l, []), (["cp[0]", "u_pin.q"], ["ff:u_dut.cp[1]"]),
+                         (["cp[0]", "cp[1]"], ["ff:u_dut.u_pin.q"])):
+        t, tm = _seq(tmp_path, "t", ["d"], gate_l, nx)
+        L = lec.Lec(g, gm, t, tm)
+        declared, missing, const = lec.kept_registers(L, keep)
+        assert declared == ["ff:u_dut.cp[0]", "ff:u_dut.cp[1]", "ff:u_dut.u_pin.q"] and missing == want and not const
+        if want:                                     # the merged copy, paired by correspondence: still missing
+            L.hyp[("gold", want[0])] = ("eq", "gold", "ff:u_dut.cp[0]", 0)
+            assert lec.kept_registers(L, keep)[1] == want
+            L.hyp[("gold", want[0])] = ("const", 0)  # proved constant: reported, not failed
+            assert lec.kept_registers(L, keep)[1:] == ([], want)
+
+
+def test_gold_script_marks_kept_registers():
+    s = lec.gold_script({"VERILOG_FILES": "a.v", "DESIGN_NAME": "t"}, "/k", "verilog", [], "s.v", "w.v", "f.v", "/o/gold")
+    assert s.index("a:keep %i") < s.index("setattr -mod -unset keep_hierarchy")
+    assert "A:keep_hierarchy" in s and "select -write /o/gold.keep" in s
