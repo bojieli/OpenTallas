@@ -2,7 +2,7 @@
 "schema": "opentallas.die_plan.core_pins.v1",
 "core": "kv3_astk_ES",
 "frame": "core R0, origin (0,0), outline 190.08 x 181.44",
-"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks",
+"source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | KV-PLAN3 v3.9e: am g bit dropped (36 -> 35 b, old 0 -> 0, old 2..35 -> 1..34; KV-CORES RULING 10-25 05:28 (2))",
 "faces": {
 "N": {
 "pins": 572,
@@ -23,7 +23,7 @@
 ]
 },
 "W": {
-"pins": 80,
+"pins": 79,
 "layers": [
 "M4"
 ]
@@ -9706,208 +9706,202 @@
 "name": "u_strip_u_strip_u_ctl__am[1]",
 "layer": "M4",
 "x": 0.096,
-"y": 7.704
+"y": 9.912
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[2]",
 "layer": "M4",
 "x": 0.096,
-"y": 9.912
+"y": 12.12
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[3]",
 "layer": "M4",
 "x": 0.096,
-"y": 12.12
+"y": 14.328
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[4]",
 "layer": "M4",
 "x": 0.096,
-"y": 14.328
+"y": 16.536
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[5]",
 "layer": "M4",
 "x": 0.096,
-"y": 16.536
+"y": 18.744
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[6]",
 "layer": "M4",
 "x": 0.096,
-"y": 18.744
+"y": 21.0
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[7]",
 "layer": "M4",
 "x": 0.096,
-"y": 21.0
+"y": 23.208
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[8]",
 "layer": "M4",
 "x": 0.096,
-"y": 23.208
+"y": 25.416
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[9]",
 "layer": "M4",
 "x": 0.096,
-"y": 25.416
+"y": 27.624
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[10]",
 "layer": "M4",
 "x": 0.096,
-"y": 27.624
+"y": 29.832
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[11]",
 "layer": "M4",
 "x": 0.096,
-"y": 29.832
+"y": 32.04
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[12]",
 "layer": "M4",
 "x": 0.096,
-"y": 32.04
+"y": 34.248
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[13]",
 "layer": "M4",
 "x": 0.096,
-"y": 34.248
+"y": 36.456
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[14]",
 "layer": "M4",
 "x": 0.096,
-"y": 36.456
+"y": 38.712
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[15]",
 "layer": "M4",
 "x": 0.096,
-"y": 38.712
+"y": 40.92
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[16]",
 "layer": "M4",
 "x": 0.096,
-"y": 40.92
+"y": 43.128
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[17]",
 "layer": "M4",
 "x": 0.096,
-"y": 43.128
+"y": 45.336
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[18]",
 "layer": "M4",
 "x": 0.096,
-"y": 45.336
+"y": 47.544
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[19]",
 "layer": "M4",
 "x": 0.096,
-"y": 47.544
+"y": 49.752
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[20]",
 "layer": "M4",
 "x": 0.096,
-"y": 49.752
+"y": 51.96
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[21]",
 "layer": "M4",
 "x": 0.096,
-"y": 51.96
+"y": 54.168
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[22]",
 "layer": "M4",
 "x": 0.096,
-"y": 54.168
+"y": 56.424
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[23]",
 "layer": "M4",
 "x": 0.096,
-"y": 56.424
+"y": 58.632
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[24]",
 "layer": "M4",
 "x": 0.096,
-"y": 58.632
+"y": 60.84
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[25]",
 "layer": "M4",
 "x": 0.096,
-"y": 60.84
+"y": 63.048
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[26]",
 "layer": "M4",
 "x": 0.096,
-"y": 63.048
+"y": 65.256
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[27]",
 "layer": "M4",
 "x": 0.096,
-"y": 65.256
+"y": 67.464
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[28]",
 "layer": "M4",
 "x": 0.096,
-"y": 67.464
+"y": 69.672
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[29]",
 "layer": "M4",
 "x": 0.096,
-"y": 69.672
+"y": 71.88
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[30]",
 "layer": "M4",
 "x": 0.096,
-"y": 71.88
+"y": 74.136
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[31]",
 "layer": "M4",
 "x": 0.096,
-"y": 74.136
+"y": 76.344
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[32]",
 "layer": "M4",
 "x": 0.096,
-"y": 76.344
+"y": 78.552
 },
 {
 "name": "u_strip_u_strip_u_ctl__am[33]",
 "layer": "M4",
 "x": 0.096,
-"y": 78.552
-},
-{
-"name": "u_strip_u_strip_u_ctl__am[34]",
-"layer": "M4",
-"x": 0.096,
 "y": 80.76
 },
 {
-"name": "u_strip_u_strip_u_ctl__am[35]",
+"name": "u_strip_u_strip_u_ctl__am[34]",
 "layer": "M4",
 "x": 0.096,
 "y": 82.968
