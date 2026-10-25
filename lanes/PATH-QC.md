@@ -222,3 +222,9 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - No live jobs.
 - NEXT: (1) vmr_s6i (intel1 path-qc-sramif/vmr_s6i, F6 PASS, keep 13/13, miter PASS) hold m0+3 passes -2.18/8, all pw16_data -> l_w16d (S-face pin reg -> W landing; pre-existing pair, not IF regs): render that pair + tap leaves, structural fix (co-locate / same leaf), then GEOM REQ update + enqueue qfd_dv_s8x_vmr__s6i. (2) RP1 f58 (qfd_dv_s8_crh_rp1, 4th core): same MIF recipe on pcr_addr/pcr_re/w_ce (per-bank regs anchored) -> kit -> add to [PATH-QC-SRAMIF-S7]. (3) Parent/die: instantiate .MIF(1) for u_bt/u_pg/u_va..vc and schedule +1 on bs_q/p_q/q (COORD-REVIEW-QUEUE READY line).
 - OWNER? none.
+2026-10-25 10:29 PDT PATH-QC (park addendum): SRAMIF collected.
+- btab_s7 and prog_s7 pass F6 (<=17.1 um) and the hold gate at margin 0. Autopilot rows 31a67854973e/ddc332d9c2dc wait for GEOM [PATH-QC-SRAMIF-S7].
+- vmr_s6i fails hold -2.18/8 EP on the pre-existing pw16_data->l_w16d pair. Structural fix owed; not enqueued.
+- RP1 f58 owes the same F6 per-SRAM IF recipe (pcr_addr/pcr_re/w_ce). Its route 6d941433bf04 is therefore evidence until the s7-style f59 exists.
+- RTL MIF=1 READY: the parent must set .MIF(1), and the token schedule must add +1 on bs_q/p_q/vmr q.
+- Next agents: one for vmr_s6i + rp1 f59 (SRAMIF recipe), one for PLAN4 collect.
