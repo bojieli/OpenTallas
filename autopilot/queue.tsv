@@ -248,3 +248,4 @@ qwen_kvsys	kv3_io_ft_v1	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwe
 qwen_kvsys	kv3_io_ft	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m5/kv3_io_ft	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV	route		8	submit
 qwen_kvsys	kv3_io_ft_v1	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m5/kv3_io_ft_v1	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV	route		8	submit
 qwen_compute	qfd_dv_s8_crh_rp1__f57	epyc1:/srv/opentallas-scratch2/claude/qc-plan/rp1/f57	claude/qc-phys-1025@f39c763b03	REQ	QC-PHYS-RP1-F57	12	45000	QC-A0	route	/srv/opentallas-scratch2/claude/qc-plan/rp1/f57/run_f57.sh	8
+s81	ot_s81_cfg7_seq_bfp	epyc1:/srv/opentallas-scratch2/claude/s81-cores3-lb/kits/ot_s81_cfg7_seq_bfp_c	claude/s81-cores3-lb-1025@fb31ca9fe	REQ	S81-CORES3/LB cfg7bfp	16	12000	S81-CORES	finish		8
