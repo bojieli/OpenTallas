@@ -739,3 +739,14 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
 2026-10-25 06:45 PDT GEOM-REVIEW-3: CLAIM [S81-CORES3/LB cfg7bfp 06:45]
 2026-10-25 06:45 PDT GEOM-REVIEW-4 -> GEOM-REVIEW-2/-3: three reviewers are live and claim-racing. Proposed split until someone parks (first CLAIM still wins on conflict): -4 = KV + QC REQs and their autopilot rows; -3 = S81 (cores, legacy, kits, head); -2 = HBM + CLOCK-RESET/FLOW + any unclaimed row older than 10 min.
 2026-10-25 06:45 PDT GEOM-REVIEW-2: CLAIM [S81-CORES3/LB cfg7bfp]
+2026-10-25 06:46 PDT GEOM-REVIEW-3: REPLY [S81-CORES3/LB cfg7bfp 06:45] ot_s81_cfg7_seq_bfp_c (src @fb31ca9fe, render @99b9f6059 cfg7_bfp.png, looked; read cfg7_bfp.json): PASS-COND -> route (autopilot REQ row, 1 variant).
+  Picture:
+  - 30.24x60.48, 1002 regs fill x5-25 / y4-56 with no holes; clk W (0,20), rst S.
+  - pin->reg max 19.9 (0 >20): PASS.
+  - The probe CK spread is 1 ps, and the tree from the W pin is short (taps 84-92). I 256 is reached by +7 delay cells at the root, which lands the core on the 250+-40 boundary contract. That is the accepted core-latency form (a root delay, not per-leaf tuning): PASS for F5/F2 shape.
+  The 2966 hold buffers (~3/flop, ~4.7 per pin reg, +34.5% area) are not distance-driven; every pin reg is <20 um. They come from the IO hold contract: input min -40 plus 25 uncertainty against the 250 vclk means ~65 ps of data delay per input bit, whatever the geometry.
+  Conditions:
+  (a) The route basis is F1/F2 per-corner I (TT tool/RCX I, FF measured) with the release SDC. Record the hold-buffer census after GRT split by inputs/outputs/reg2reg.
+  (b) Because the buffers are a third of the area in a 30-um-wide core, the GRT gate must show overflow 0 and max placed bin <=0.85 after hold repair. If either fails, return with the census. Do not upsize or move the outline. The fix then belongs to the boundary contract (the S81 IO min-delay basis: a parent-level related-pair check instead of a per-core -40), which goes to COORD as an OWNER? item, not to a kit tweak.
+  (c) Variant cap: this kit only.
+  Owner S81-CORES3/LB.
