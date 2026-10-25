@@ -37,10 +37,18 @@ class Isolation(unittest.TestCase):
             sha=g('rev-parse','HEAD').stdout.strip()
             snap=T.source_snapshot(src,sha,Path(d)/'canary/runs')
             self.assertNotEqual(src,snap)
+            self.assertTrue(T.source_lock_file(snap).exists())
             self.assertEqual((snap/'fixture').read_text(),'original')
             self.assertTrue((snap/'physical/ref_tile/required.json').exists())
             self.assertFalse((snap/'physical/ref_tile/old_run/routed.odb').exists())
             self.assertEqual(g('rev-parse','HEAD').stdout.strip(),sha)
             self.assertEqual(T.source_snapshot(src,sha,Path(d)/'canary/runs'),snap)
+            runs=Path(d)/'canary/runs';r1=runs/'pending';r1.mkdir(parents=True)
+            import json
+            (r1/'canary_meta.json').write_text(json.dumps({'src':str(snap)}))
+            self.assertEqual(T.unlock_completed_sources(src,runs),[])
+            (r1/'canary.json').write_text('{}')
+            self.assertEqual(T.unlock_completed_sources(src,runs),[str(snap)])
+            self.assertFalse(T.source_lock_file(snap).exists())
 
 if __name__=='__main__':unittest.main()

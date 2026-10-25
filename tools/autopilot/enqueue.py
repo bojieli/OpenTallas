@@ -3,7 +3,7 @@
 
     python3 enqueue.py --die s81 --type slice_station__t5 --kit epyc2:/srv/opentallas-scratch2/claude/<lane>/.../<kit> \
         --src claude/<branch>@<sha> --geom PASS --geom-ref "GEOM-REVIEW 2026-10-25 03:33 <record>" \
-        --mem 24 --cells 120000 --lane S81 [--goal route|finish] [--runner /abs/run_kit.sh] [--threads 8]
+        --mem 24 --cells 120000 --lane S81 [--goal route|finish|cts (explicit CTS-only runner)] [--runner /abs/run_kit.sh] [--threads 8]
         [--mode submit|adopt] [--no-commit]
 
 mode submit (default): the autopilot launches the kit through ot-run once it carries a GEOM PASS.  The kit is fresh or

@@ -263,8 +263,10 @@ def validate_row(r):
         return "cells not a number (expected std cells required)"
     if c > CELL_CAP:
         return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
-    if r["goal"] not in ("", "auto", "route", "finish"):
-        return "goal must be route|finish|auto"
+    if r["goal"] not in ("", "auto", "route", "finish", "cts"):
+        return "goal must be route|finish|auto|cts"
+    if r["goal"] == "cts" and not r["runner"]:
+        return "cts diagnostic goal requires an explicit CTS-only runner"
     if r["threads"] and not r["threads"].isdigit():
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
