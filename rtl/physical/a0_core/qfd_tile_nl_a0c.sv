@@ -73,6 +73,17 @@ module qfd_tile_nl_a0c #(
     input  wire          ck_t38,
     input  wire          ck_t39,
     input  wire          ck_t40,
+`ifdef OT_A0_CK_TAPS48
+    // PATH-QC-NL 10-25 A0 NL v10: core-only taps at the LSL fp1 / bottom ROM-leaf clock pins (ck_t41..ck_t47; with the
+    // moved ck_t1..ck_t3), gen_a0c10_nl_core_clock.py.  No RTL loads.
+    input  wire          ck_t41,
+    input  wire          ck_t42,
+    input  wire          ck_t43,
+    input  wire          ck_t44,
+    input  wire          ck_t45,
+    input  wire          ck_t46,
+    input  wire          ck_t47,
+`endif
 `elsif OT_A0_CK_TAPS38
     input  wire          ck_t37,
 `endif

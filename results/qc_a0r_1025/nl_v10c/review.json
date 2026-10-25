@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "post-CTS geometry reviewed; independent route verdict pending",
+  "image": "nl_c.png",
+  "clock_policy": "833ps TT setup / FF hold60/25; related-pair80ps; no relaxation",
+  "hold_gate": {
+    "verdict": "PASS structural threshold only",
+    "wns_ff_ps": -39.62924448889191,
+    "endpoints": 659,
+    "classes": {
+      "XTAP": 235,
+      "SAMETAP": 163,
+      "IN": 261
+    }
+  },
+  "findings": [
+    "18 hard cores have clock-pin-based tap assignments;8 LSL and bottom2ROM use core-only taps; effective FF insertion around190..220ps in picture.",
+    "Placed data/control hops<=378um; macro channels remain accessible. 10um peak bin0.918 but20um peak0.678 from existing placement analysis.",
+    "Remaining internal holds are short adjacent flop transfers across/same CTS leaves (QLR\u2192mq_wrom aroundy480..620); same-family leaf affinity is omitted by this ref kit and is being diagnosed.",
+    "Five common group pair samples<=46.6ps; exhaustive TT/FF pair census pending, not a signoff claim.",
+    "ck_t11 cap1566 and tree tails onck_t15/18/8 require attention in successor CTS if actual route fails. No route submitted from this review."
+  ],
+  "cycle_change": {
+    "data": 0,
+    "local_boot": "+2 vs legacy reset2, existing reset4 mechanism"
+  }
+}
