@@ -410,6 +410,16 @@ SCHEMA = {
                         "properties": {"name": _name, "face": {"enum": list(FACES)}, "window_um": _win,
                                        "layers": {"type": "array", "items": _layer, "minItems": 1},
                                        "reason": {"type": "string"}}}},
+                    # die-owned FT bands (DIE-FT-HBM 10-25, COORD DIE GRT RULINGS 11:29): a type-frame span (EW: y over
+                    # the full width, NS: x over the full height) where `layers` belong to the die (die_share of their
+                    # tracks) instead of the ft_track_frac share; the ft pins of the type sit inside them. die_trial
+                    # models them with GRT region adjustments; the partition kit keeps its own routing off those layers.
+                    "die_ft_bands": {"type": "array", "items": {
+                        "type": "object", "required": ["dir", "span_um", "layers"], "additionalProperties": False,
+                        "properties": {"dir": {"enum": ["EW", "NS"]}, "span_um": _win,
+                                       "layers": {"type": "array", "items": _layer, "minItems": 1},
+                                       "die_share": {"type": "number", "minimum": 0, "maximum": 1},
+                                       "note": {"type": "string"}}}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
