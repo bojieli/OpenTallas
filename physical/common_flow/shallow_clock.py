@@ -140,7 +140,7 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='htree', levels=0):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='bisect', levels=0):
     """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
     pruned where a quadrant has no tap; every tap gets a private leg from its
     H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
@@ -160,8 +160,10 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     if topology=='bisect':
         depth=0
         while leaf_fanout*fanout**depth<len(g['taps']): depth+=1
+        def medoid(pts):
+            c0=cent(pts);return list(min(pts,key=lambda t:(_man(t['xy'],c0),t['name']))['xy'])
         def build(pts,level):
-            cid=len(clusters); clusters.append(dict(id=cid,level=level,point=cent(pts),taps=[t['name'] for t in pts],legs=[]))
+            cid=len(clusters); clusters.append(dict(id=cid,level=level,point=medoid(pts),taps=[t['name'] for t in pts],legs=[]))
             if level<depth:
                 for grp in split(pts,fanout): link(cid,build(grp,level+1),level)
             else: add_taps(cid,pts,level)
@@ -224,7 +226,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, t
     k=0
     for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
-        L['xmax']=max(0.0,(L['n']+1)*rmax_um*u-L['d']) if L['level'] and L['n'] else 0.0
+        L['xmax']=max(0.0,2*rmax_um*u-2*L['d']/(L['n']+1)) if L['level'] and L['n'] else 0.0
         # equal-length start: every leg of a level as long as its longest
         dm=max(M['d'] for M in legs if M['level']==L['level'])
         L['x']=min(L['xmax'],float(dm-L['d'])) if L['level'] else 0.0
@@ -267,35 +269,61 @@ def along(poly,s):
     return list(poly[-1])
 
 
+def ellipse_pick(sites,B,C,R,prev,core,rmax,u,rays=20):
+    """Free site q with |B-q|+|q-C| ~= R (an L1 ellipse around B,C), both
+    halves <= rmax, nearest to the previous choice (continuity)."""
+    M=[(B[0]+C[0])/2,(B[1]+C[1])/2]
+    def f(q): return _man(B,q)+_man(q,C)
+    cands=[]
+    if R<=_man(B,C)+1: cands.append(M)
+    else:
+        for k in range(rays):
+            th=2*math.pi*k/rays;dv=(math.cos(th),math.sin(th))
+            lo,hi=0.0,R
+            def at(t): return [min(max(M[0]+t*dv[0],core[0]),core[2]),min(max(M[1]+t*dv[1],core[1]),core[3])]
+            if f(at(hi))<R: continue
+            for _ in range(30):
+                mid=(lo+hi)/2
+                if f(at(mid))<R: lo=mid
+                else: hi=mid
+            cands.append(at(hi))
+        if not cands: cands.append(M)
+    best=None
+    for q in cands:
+        s=sites.legal(q,reserve=False)['xy']
+        over=max(0.0,max(_man(B,s),_man(s,C))-rmax*u)
+        cost=abs(f(s)-R)+4*over+(0.25*_man(s,prev) if prev else 0)
+        if best is None or cost<best[0]: best=(cost,s)
+    return best[1]
+
+
 def realize(p,g):
-    """Legal free-site positions for every leg buffer; top-down order."""
+    """Legal free-site positions for every leg buffer; top-down order.  The
+    first n-1 repeaters sit on the direct L-path; the last one is the leg's
+    length knob: a free site on the L1 ellipse of the requested length."""
     sites=FreeSites(g); nodes=[]; edges=[]
-    last={}
+    last={}; u=p['dbu']
     for L in sorted(p['legs'],key=lambda L:(L['level'],L['id'])):
-        T=L['d']+L['x']
-        # detour shape: the one whose repeaters land on free logic sites (not
-        # pushed off a macro, which would make the leg length unresponsive);
-        # sticky unless another shape is clearly better
-        def shape(sel):
-            poly=leg_path(L['A'],L['C'],T,p['core'],sel[1],sel[0])
-            pts=[along(poly,T*i/(L['n']+1)) for i in range(1,L['n']+1)]
-            return poly,pts,sum(_man(q,sites.legal(q,reserve=False)['xy']) for q in pts)
-        cur=tuple(L.get('dsel') or ((1 if abs(L['A'][0]-L['C'][0])>=abs(L['A'][1]-L['C'][1]) else 0),1 if L['id']%2 else -1))
-        poly,_,best=shape(cur)
-        if L['x']>0 and best>2*p['dbu'] and (not L.get('dsel') or best>8*p['dbu']):
-            for sel in [(a,sd) for a in (0,1) for sd in (1,-1)]:
-                if sel==cur: continue
-                q,_,sc=shape(sel)
-                if sc+8*p['dbu']<best: cur,poly,best=sel,q,sc
-        L['dsel']=list(cur)
-        L['T']=T; L['seg_um']=T/(L['n']+1)/p['dbu']
+        n=L['n'];A,C=L['A'],L['C'];d=L['d']
+        poly=leg_path(A,C,d,p['core'])
         parent=None if L['parent'] is None else last[('cl',L['parent'])]
+        pos=[]
         for i,nm in enumerate(L['bufs']):
-            xy=L['A'] if i==0 else along(poly,T*i/(L['n']+1))
+            if i==0: xy=A
+            elif i<n: xy=along(poly,d*i/(n+1))
+            else:
+                B=pos[-1]
+                done=sum(_man(a,b) for a,b in zip(pos,pos[1:]))
+                R=max(_man(B,C),L['d']+L['x']-done)
+                xy=ellipse_pick(sites,B,C,R,L.get('qprev'),p['core'],p['rmax_um'],u)
             node=dict(name=nm,parent=parent,depth=L['level'],leg=L['id'],**sites.legal(xy))
+            pos.append(node['xy'])
             nodes.append(node)
             if parent: edges.append([parent,nm])
             parent=nm
+        if n: L['qprev']=pos[-1]
+        L['T']=sum(_man(a,b) for a,b in zip(pos,pos[1:]))+_man(pos[-1],C)
+        L['seg_um']=max(_man(a,b) for a,b in zip(pos,pos[1:]+[C]))/u
         if L['child'][0]=='cluster': last[('cl',L['child'][1])]=parent
         else: edges.append([parent,L['child'][1]])
     p['nodes']=nodes; p['edges']=edges
@@ -486,7 +514,7 @@ def main():
         return
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
-                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','htree'),
+                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','bisect'),
                     levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')))
     else:
         p=plan(g)
