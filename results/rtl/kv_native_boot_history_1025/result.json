@@ -1,0 +1,18 @@
+{
+  "status": "NATIVE833_PCPART_BOOT_PASS_NOT_WHOLE_DIE_G5",
+  "run": "epyc1:/srv/opentallas-scratch2/claude/codex-kv-native-0719",
+  "unit": "oth-ubuntu-2003930-1792938383",
+  "source_patch": "65f5373a3b",
+  "bind": "prior native r6 snapshot; current v3.9f TYPE_SPLIT and START not adopted",
+  "clock_ps": 833,
+  "phy_RL": 29,
+  "phy_WL": 7,
+  "compiled_modules": 404,
+  "random_initialization": true,
+  "slices_done_ok": 4,
+  "slice_faults": 0,
+  "all_ok_cycle": 493,
+  "final_cycle": 6000,
+  "controller_faults": {"raw":0,"observer":0,"control":0,"command":0,"early":0},
+  "note": "Checker initialization guard is simulation-only; synthesized preprocessing is byte-identical. Separate 32-word FIFO and postreset write/read Gray mutants qualify guard. Native snapshot contains prior common833/WL7 staged RTL; this record does not claim whole-die token, G3 or G4 closure."
+}

@@ -1,0 +1,107 @@
+PCB HCK half 0.512 ns phase 0.000 ns (unused: single clock)
+PCB cyc 0 PC0 rv_q raw_out 43 raw_nom 1
+PCB cyc 0 slice1 boot_pc state 1
+PCB cyc 0 slice3 boot_pc state 5
+PCB cyc 0 boot_pc state 3 (own 1 merge_rs 1) done 1 ok 0 cause 13
+PCB cyc 0 slice_es 1 merge_hq 0 merge_es 1 po0_col 0 her_credit 1 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 0 controller es[0] (static word in)
+PCB cyc 1 slice1 boot_pc state 5
+PCB cyc 1 sdo 0101 soo 0011 sfo 0000
+PCB cyc 1 boot_pc state 0 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 1 slice_es 0 merge_hq 1 merge_es 1 po0_col 0 her_credit 0 her_rd 1 her_fault 0 merge_fault 0
+PCB cyc 1 controller es[0] (static word in)
+PCB cyc 2 slice1 boot_pc state 0
+PCB cyc 2 slice3 boot_pc state 0
+PCB cyc 2 sdo 0011 soo 1101 sfo 0111
+PCB cyc 3 sdo 0000 soo 0000 sfo 0000
+PCB cyc 27 sdo 0000 soo 0000 sfo 0000
+PCB cyc 280 boot_go pulse (kvpc reset =        hbm_rst_n)
+PCB cyc 282 slice3 boot_pc state 1
+PCB cyc 283 slice3 boot_pc state 2
+PCB cyc 286 slice1 boot_pc state 1
+PCB cyc 287 slice1 boot_pc state 2
+PCB cyc 288 boot_pc state 1 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 289 boot_pc state 2 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 291 slice_es 1 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 292 slice_es 0 merge_hq 1 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 293 slice_es 0 merge_hq 0 merge_es 1 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 293 controller es[0] (static word in)
+PCB cyc 316 boot column (no reservation) we 1
+PCB cyc 318 PHY col pc0 we 1 bank 3 col 2
+PCB cyc 318 slice_es 0 merge_hq 0 merge_es 0 po0_col 1 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 323 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 1 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 325 slice1 boot_pc state 3
+PCB cyc 326 slice1 boot_pc state 4
+PCB cyc 326 boot_pc state 3 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 327 boot_pc state 4 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 329 slice_es 1 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 330 slice_es 0 merge_hq 1 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 331 slice_es 0 merge_hq 0 merge_es 1 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 331 controller es[0] (static word in)
+PCB cyc 333 slice3 boot_pc state 3
+PCB cyc 334 slice3 boot_pc state 4
+PCB cyc 340 boot column (no reservation) we 0
+PCB cyc 342 PHY col pc0 we 0 bank 3 col 2
+PCB cyc 342 slice_es 0 merge_hq 0 merge_es 0 po0_col 1 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 347 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 1 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 372 PC1 rv_q raw_out 1 raw_nom 0
+PCB cyc 373 PC0 rv_q raw_out 1 raw_nom 0
+PCB cyc 377 PC2 rv_q raw_out 1 raw_nom 0
+PCB cyc 380 PC3 rv_q raw_out 1 raw_nom 0
+PCB cyc 382 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 1 her_fault 0 merge_fault 0
+PCB cyc 384 slice1 boot_pc state 1
+PCB cyc 385 slice1 boot_pc state 2
+PCB cyc 385 boot_pc state 1 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 386 boot_pc state 2 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 388 slice_es 1 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 389 slice_es 0 merge_hq 1 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 390 slice_es 0 merge_hq 0 merge_es 1 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 390 controller es[0] (static word in)
+PCB cyc 392 slice3 boot_pc state 1
+PCB cyc 393 slice3 boot_pc state 2
+PCB cyc 414 boot column (no reservation) we 1
+PCB cyc 416 PHY col pc0 we 1 bank 3 col 2
+PCB cyc 416 slice_es 0 merge_hq 0 merge_es 0 po0_col 1 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 421 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 1 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 423 slice1 boot_pc state 3
+PCB cyc 424 slice1 boot_pc state 4
+PCB cyc 424 boot_pc state 3 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 425 boot_pc state 4 (own 1 merge_rs 1) done 0 ok 0 cause 0
+PCB cyc 427 slice_es 1 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 428 slice_es 0 merge_hq 1 merge_es 0 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 429 slice_es 0 merge_hq 0 merge_es 1 po0_col 0 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 429 controller es[0] (static word in)
+PCB cyc 431 slice3 boot_pc state 3
+PCB cyc 432 slice3 boot_pc state 4
+PCB cyc 438 boot column (no reservation) we 0
+PCB cyc 440 PHY col pc0 we 0 bank 3 col 2
+PCB cyc 440 slice_es 0 merge_hq 0 merge_es 0 po0_col 1 her_credit 0 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 445 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 1 her_rd 0 her_fault 0 merge_fault 0
+PCB cyc 470 PC1 rv_q raw_out 1 raw_nom 0
+PCB cyc 471 PC0 rv_q raw_out 1 raw_nom 0
+PCB cyc 475 PC2 rv_q raw_out 1 raw_nom 0
+PCB cyc 478 PC3 rv_q raw_out 1 raw_nom 0
+PCB cyc 480 slice_es 0 merge_hq 0 merge_es 0 po0_col 0 her_credit 0 her_rd 1 her_fault 0 merge_fault 0
+PCB cyc 482 slice1 boot_pc state 5
+PCB cyc 483 boot_pc state 5 (own 1 merge_rs 1) done 1 ok 1 cause 0
+PCB cyc 489 sdo 0010 soo 0010 sfo 0000
+PCB cyc 490 slice3 boot_pc state 5
+PCB cyc 492 sdo 0111 soo 0111 sfo 0000
+PCB cyc 493 sdo 1111 soo 1111 sfo 0000
+PCB END cyc 6000 sdo 1111 soo 1111 sfo 0000
+- /srv/opentallas-scratch2/claude/codex-kv-native-0719/tb_native_pcpart.sv:156: Verilog $finish
+PCB CAL controller_es 6 reserved_static_col 0 reserved_write_col 1 reserved_rd 1 cal_go 3 cal_seal 0
+PCB BOOTWIN boot_win 1 boot_columns 4
+PCB PC0 phy_pi_valid 2 controller_rv 3
+PCB PC1 phy_pi_valid 3 controller_rv 2
+PCB PC2 phy_pi_valid 3 controller_rv 2
+PCB PC3 phy_pi_valid 3 controller_rv 2
+PCB PC0 c_v 4 boot_columns 4 boot_win 1 hgo 1 fo 0 f_raw 0 obs 0 ctl 0 f_cmd 0 f_early 0 f_ecdc 0
+PCB PC1 c_v 4 boot_columns 4 boot_win 1 hgo 1 fo 0 f_raw 0 obs 0 ctl 0 f_cmd 0 f_early 0 f_ecdc 0
+PCB PC2 c_v 6 boot_columns 5 boot_win 1 hgo 1 fo 0 f_raw 0 obs 0 ctl 0 f_cmd 0 f_early 0 f_ecdc 0
+PCB PC3 c_v 5 boot_columns 5 boot_win 1 hgo 1 fo 0 f_raw 0 obs 0 ctl 0 f_cmd 0 f_early 0 f_ecdc 0
+PCB FAULTS pc0 fo 0 f_raw 0 obs 0 ctl 0 f_cmd 0 f_early 0
+HBM_PHY  reads 9 writes 9 unwritten_reads 1
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.430 s; speed 11.625 us/s
+- Verilator: cpu 0.430 s on 1 threads; allocated 8 MB
