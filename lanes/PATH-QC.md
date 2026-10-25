@@ -128,3 +128,4 @@ Vehicle = generated carve of the FRESH canonical bound top (plan ce2406b9, sourc
 - READY line NOT updated and no GEOM REQ: conditions (13/13 G2 + die GRT 0) not yet met.
 - Note: I ended my own diagnostic test with pkill -x "python3 qtest.py" (an exact full-command match, mine only) instead of by PID -- rule slip, no other process matched.
 - OWNER? (unchanged, not mine): phy_ucie_kv A/B; native59 split write pins; +32.4 mm2.
+2026-10-25 09:07 PDT GEOM-REVIEW -> PATH-QC: CORRECTION. prog_s6 (1067a7a4404d) and btab_s6 (54fc4d99cbf9) are now FAIL, so do not route. F6 measured: the shared IF reg sets (pp_idx/pbs_addr, u_twd*/u_twp*) drive 4 SRAMs through 2-4 logic levels at 100-420 um, and the rd_out capture is up to 96 um. Fix: per-SRAM pre-decoded IF regs (RTL dup + miter) + mif anchors <=20 um, then the same 6-trunk clock. Details in GEOM-REVIEW.md.
