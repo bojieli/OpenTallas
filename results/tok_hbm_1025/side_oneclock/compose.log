@@ -1,0 +1,5 @@
+SIDE_ONECLOCK PASS checks=5996 mutant_diffs=5986 II=1 added_cycles RSQRT12 SQRT0 SPSQRT36 EGATE16
+- rtl/test/hbm_accel/generic/tb_hbm_side_oneclock.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.344 s; speed 4.474 us/s
+- Verilator: cpu 1.344 s on 1 threads; allocated 17 MB
