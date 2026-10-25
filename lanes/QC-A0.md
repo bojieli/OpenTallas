@@ -319,3 +319,8 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   Seam-aligned clock tree default on claude/trial-qk-1024@b02efc651 (not merged; READY after the re-plan trial).
 - 2026-10-25 01:37 PDT QC: LAUNCHED sub-agent: constants regen + xt1 both-cluster (nominal/mutant/schedule gate) + tp8/xdie/ovl4u link passes on the
   re-plan bind bind_meth_cb16 (branch claude/qc-tok-meth-1024). Re-plan die trial (seam tree) launches when a sub-agent slot frees.
+- 2026-10-25 01:51 PDT QC: COORD 01:00 (ft over hard cores) self-check of qc-meth@a281ceb5ce: 12 core-holding types carry ft slots (su_l0/l1 cover 0.66,
+  su_c 0.43, cb* 0.66); every declared station (regs_um, ft_regs off-core pass) lies OUTSIDE core outlines (0 inside). Slots without
+  regs_um (su_l0 cws3, su_c x_su_l0_sc/x_su_l0_stm, cbx_q10 a22) leave station sites to the kit -> must land in channels. Vertical ft
+  over su_l0/l1 columns rides the 69-um W channel + M7 over cores (M6/M7 only per dec. 12); PROTO sweep requested on qc-meth before
+  merge to measure it (types not CLEAN get re-planned before kits).

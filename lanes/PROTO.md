@@ -284,3 +284,5 @@ Already known from ELEM-HBM's runs: dma_back_static_vp4_banks_cp MPL-0065 (cells
 - Limits: skeleton only (no partition logic: B2m/KV have no bound RTL); stations placed per bit at the planned point (wide bundles cluster -> local overflow overstated); GRT adjust 0.5.
 - OWNER?: none.
 2026-10-25 00:59 PDT PROTO: B2m late results: q_su10 STRUCTURAL (GRT overflow 3.03M, hot bbox 83% of outline, 16 ft slots hop > 405 um worst L37x4 862 um, TT -499 ps); root killed at its 85 GB cap during GRT congestion rounds (RSS 89 GB) = STRUCTURAL (O) by the same signature. Still live: q_b112 (epyc2), q_su01 (intel1). Dirs of q_su10/root deleted.
+- 2026-10-25 01:51 PDT REQUEST from QC: sweep qwen_compute re-plan claude/qc-meth-1024@a281ceb5ce (READY, dec-17 batch) -- ft over core fields
+  (su_l0/l1, su_c, cb*) against M6/M7 tracks; QC re-plans any type that is not CLEAN before kits.
