@@ -1,27 +1,31 @@
 {
  "req": "S81/LEAFPLAN3 leaf template (GEOM 03:33 LEAFPLAN2 FAIL fix)",
- "author_verdict": "FAIL (not adoptable yet): G0C core_faces 12 ports/type face away (vn wl/n_* -> stores E of vn; vsw o_* S face -> vs above; rxsb); 396 ft stations added in 38 types; PROTO G2 gate not run",
+ "author_verdict": "PASS-COND plan / FAIL for kits: G0, G0C and the face rule clean, uniform core-core depths; but S-bus types (e.g. t8) keep the template on the far side of the bus with bus legs over ve; ft corridors not reserved (384 ft stations added, 38 types); PROTO G2 gate running",
  "template": "4x4 hcpl block (pitch 129.6, rows = lanes 4k..4k+3 bit order) abutting abutted vn_a/vn_b W face; vq/stores, ve_s|ve_m, vs, vsw, rxsb/rxsf E; same relative arrangement in all 72 types (translation + bus-face MX only)",
  "depth_table": {
-  "vn->lanes hq_v/hq_d (broadcast)": 2,
-  "lanes->vn hw_*/hr_* (gather)": 2,
-  "vn_a/b wl_*,n_go,n_pre -> stores": 1,
-  "vs<->rxsb ra_ri/ra_vi/ra_fi, rxsb o_f": 1,
-  "vs<->vsw sw_ri, vsw o_v": 1,
-  "all other core-core": 0,
-  "bus->core": "per type (window position), 1-4"
+  "vn->lanes hq_* (M one site at the vn_a/vn_b junction, then S_l/S_u)": 2,
+  "lanes->vn hw_*/hr_* gather (S then M)": 2,
+  "vn_b n_pre -> store b0": 1,
+  "vs x_* <-> stores": 1,
+  "vn y <-> vq / vq y <-> vn": 1,
+  "vq u <-> vs": 1,
+  "vs ra_ri <- rxsb": 1,
+  "rxsf o_mx -> rxsb": 1,
+  "vs sw_ri <- vsw": 1,
+  "vn_a <-> vn_b c_s, vs->vsw sw_*, ve, others": 0,
+  "bus->core": "per type 1-4 (dn-bus vn W-face ports end in the lane/vn channel)"
  },
  "leafplan3": {
   "types": 72,
-  "station_bits": 401449,
-  "station_bits_core_core": 279903,
-  "station_bits_per_link_sum": 2617217,
-  "core_core_cycles": 1296,
-  "crossings": 471,
-  "max_hop_um": 405.0,
+  "station_bits": 520519,
+  "station_bits_core_core": 360216,
+  "station_bits_per_link_sum": 2709639,
+  "core_core_cycles": 1512,
+  "crossings": 5310,
+  "max_hop_um": 404.94,
   "overcore_fail_types": [],
   "overcore_worst": 0.0,
-  "cut_worst": 0.672
+  "cut_worst": 0.6881
  },
  "main": {
   "types": 72,
@@ -35,7 +39,8 @@
   "overcore_worst": 0.138,
   "cut_worst": 0.2877
  },
- "g0": "130 errors (core_faces)",
- "g0c": "562 errors, 106/178 types clean (main 178/178)",
- "schema": "PASS"
+ "g0": "PASS 0 errors (after re-pricing 128 die lanes: +384 cycles net from the re-sited leaf ft stations, lat_delta.json)",
+ "g0c": "G0C PASS: 0 errors, 1266 warnings; 178 types / 399 partitions (22 in near-duplicate groups); worst cut {'ratio': 0.1423, 'at': 'horizontal@18750'}, worst partition segment {'ratio': 0.3922, 'at': 'hor",
+ "schema": "PASS",
+ "rev": "r2"
 }
