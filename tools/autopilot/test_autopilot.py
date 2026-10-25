@@ -620,5 +620,23 @@ class TestOwnership(TickBase):
         self.assertIn("OWNERSHIP unavailable", g)
 
 
+class TestReviewIdentity(unittest.TestCase):
+    def test_batches_never_share_clearance(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [PROTO-KITS/S81-178 B1] t12 @0123456789ab\n" \
+               "2026-10-25 05:21 GEOM REQ [PROTO-KITS/S81-178 B2] t25 @0123456789ab\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [PROTO-KITS/S81-178 B2] PASS-COND route t25 @0123456789ab\n"
+        self.assertIsNone(L.geom_verdicts(text, "PROTO-KITS/S81-178 B1", "slice_station__t12", "0123456789ab"))
+        self.assertEqual(L.geom_verdicts(text, "PROTO-KITS/S81-178 B2", "slice_station__t25", "0123456789ab")[0], "PASS-COND")
+
+    def test_continuation_verdict_names_are_retained(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [BATCH B1] t12 t18\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [BATCH B1] reviewed:\n" \
+               "  t12 PASS-COND route; t18 FAIL pins\n"
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
+
+
 if __name__ == "__main__":
     unittest.main()
