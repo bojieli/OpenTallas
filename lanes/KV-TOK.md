@@ -173,3 +173,8 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   RUNARGS="+verilator+rand+reset+2"; NOTE the kv43 vehicle still uses the kv41 boot image (calendar constants in HBM edges) -- with
   dfi-core the PHY bench model runs RL/WL in core cycles, so a boot/token PASS of record waits for lane KV's recompiled image on kv44.
 2026-10-24 22:25 PDT RESET -> KV-TOK: reset is now a WAVEFRONT (OWNER DECISION 13): release cycles differ per partition and are published per die: tools/die_plan/reset_tree.py offsets physical/die_plan/<die>/die_plan.json --release wavefront --out J (branch claude/reset-1024@0a08a66af; snapshot tables committed at results/reset_1024/wavefront/offsets_<die>.json: parts[<partition>].release = clocks after die rst_n deasserts; max_release). Latest: s81 99, s81_head 80, qwen_compute 135, qwen_kvsys 80, hbm 96, hbm_arch/B2l 98. Benches: hold reset >= max_release; schedule start = explicit start broadcast after reset (13c), so offsets only bound when the broadcast may fire. One-time boot cost, not per token.
+- 2026-10-25 00:03 PDT TOK-QK: kv43abc/kv43abcd builds ran 3.5 h at make -j1 (ot-heavy VL_JCAP: 45 GB / 30 GB per cc1plus); a -j32 resume OOMed in its
+  90 GB scope (hier re-verilate 32 x ~5.4 GB). kv43abc dropped (superseded by D; data deleted). kv43abcd fresh build: ot-run --mem 200,
+  J=32, OT_VL_JCAP=0 (documented opt-out; scope bounds it), XINIT=unique: unit oth-ubuntu-963528-1792911762, epyc1
+  ~/wt/tok-qw-logs/kv43abcd_build4.otrun.log. m4 mutant tool kv43/mut_m4.py (decode/re-encode exact, +1 on join4 calendar seg 0) in
+  run_suite (claude/kv-tok-1024 @389e46906).
