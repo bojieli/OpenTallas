@@ -41,8 +41,10 @@ def validate_parent_id_straps(descriptor, inputs=None):
 
 
 def type_parent_id_straps(partition_type):
-    """Declarations keyed by exact bound local leaf name (descriptor inst).
+    """Declarations keyed by exact bound local leaf name.
 
+    The descriptor's inst is the default. parent_id_leaf may explicitly map a
+    physical name such as u_t00 to its bound local name u_t[0][0]. No guessing.
     A hard-core/content pair describing the same instance must agree. Matching
     by a suffix or by module name would accidentally bless unrelated replicas.
     """
@@ -51,9 +53,9 @@ def type_parent_id_straps(partition_type):
         ids = validate_parent_id_straps(d)
         if not ids:
             continue
-        inst = d.get('inst')
+        inst = d.get('parent_id_leaf', d.get('inst'))
         if not isinstance(inst, str) or not inst:
-            raise ValueError('parent_id_straps requires an explicit descriptor inst')
+            raise ValueError('parent_id_straps requires an explicit bound local leaf name')
         if inst in out and out[inst] != ids:
             raise ValueError(f'parent_id_straps: conflicting declaration for {inst}')
         out[inst] = ids

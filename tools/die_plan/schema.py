@@ -296,7 +296,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
-                                       "parent_id_straps": _parent_id_straps,
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -315,7 +315,7 @@ SCHEMA = {
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
-                                       "parent_id_straps": _parent_id_straps,
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
