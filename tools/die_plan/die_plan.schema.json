@@ -249,6 +249,18 @@
        },
        "rack_macro": {
         "type": "string"
+       },
+       "bump_exclude_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "minItems": 1
        }
       }
      }
@@ -463,8 +475,32 @@
            },
            "note": {
             "type": "string"
+           },
+           "exclude_um": {
+            "type": "array",
+            "items": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 4,
+             "maxItems": 4
+            },
+            "minItems": 1
            }
           }
+         },
+         "esd_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "minItems": 1
          },
          "note": {
           "type": "string"
