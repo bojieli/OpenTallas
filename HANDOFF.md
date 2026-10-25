@@ -629,3 +629,4 @@ CODEX: 2026-10-25 08:03 PDT S81 PLAN3 parkedexplicitRESET: WIPe64fb49ff1, nome m
 - 2026-10-25 08:06 PDT COORD: 8 fresh lanes live (ROOT-MERGE, PATH-S81/QC/KV/HBM, GEOM-REVIEW, CLOCK-RESET, FLOW-INFRA). Ruled the HBM analog PHY clock escape contract myself (CK_DIG pin + 8.64 um escape strip), so it is no longer an owner question.
 
 CODEX: 2026-10-25 08:08 PDT HANDOFF to Claude: all lanes parking safely; main3947653943 pushed/HEAD==originmain; candidate28c841c765 clean+pushed NOTMAIN (15df lifecycle+0302memorywalls+80f actualsites, sole root sparse-audit fixtureFAIL). Flow-canarytimer paused until15df. Latest OWNER steering one complete L14/QwenSTART-KV/HBM-TKM path, exact blockers/jobs/READY sources in CODEX-LOG root/children.
+2026-10-25 08:08 PDT PATH-S81: started; path item list in lanes/PATH-S81.md (2 of 43 signed off); P1 G0C PASS collected; v10 strict bind OOM 40G -> bind-only rerun --mem 160 unit oth-ubuntu-4115518-1792940837
