@@ -488,7 +488,7 @@ def transform_offchip(dag, comps, log, direct=True):
 VSW_LR_CYCLES = 1  # current ot_s81sl_vsw LR=1; one added output edge, owner 10-25 11:59
 
 
-def transform_current_profile(dag, comps, log):
+def transform_current_profile(dag, comps, log, hcore_profile=None):
     # Included in both final composition and the calendar's pre-release input;
     # dv_mu_calendar_phys does not add this hardware pipeline edge itself.
     for n in dag['nodes']:
@@ -497,6 +497,10 @@ def transform_current_profile(dag, comps, log):
             cl.append(comp(VSW_LR_CYCLES, PRICED, 'logic',
                            'vsw LR=1 input register: +1 output edge (owner 10-25 11:59)'))
             log['release']['vsw.LR1'] += VSW_LR_CYCLES * bool(n.get('critical'))
+        if hcore_profile and re.fullmatch(r'attn\.(?:scores|pv)(?:\.r\d+)?', op):
+            g = hcore_profile['load_guard_cycles']
+            cl.append(comp(g, PRICED, 'logic', 'qualified native hcore conservative load-readiness guard'))
+            log['release']['hcore.' + op] += g * bool(n.get('critical'))
 
 
 def transform_release(dag, comps, log, attn='G4'):
@@ -680,7 +684,7 @@ def compose(wl, opts, layer_rx=None, receipts=None):
         transform_release(dag, comps, log, opts.get('attn', 'G4'))
     if receipts:
         transform_components(dag, comps, receipts, log)
-    transform_current_profile(dag, comps, log)
+    transform_current_profile(dag, comps, log, opts.get("hcore_profile"))
     if layer_rx:
         transform_layers(dag, comps, extra, layer_rx, log)
     apply_hooks(dag, comps, hooks, ops)
@@ -833,12 +837,18 @@ def summarize(r, top=40):
 
 
 # ---------------------------------------------------------------------------------------------- calendar
-def calendar(res, layer_rx_extra=None, attn='G4'):
+def calendar(res, layer_rx_extra=None, attn='G4', hcore_profile=None):
     """dv_mu_calendar_phys --release241 --alap on THESE node cycles (switched off-chip legs; the tool applies direct
     cabling + G4 + idx + eng itself, so the inputs are the pre-offchip, pre-release node cycles)."""
     K = load(ROOT / 'tools/s81_dv/dv_mu_calendar_phys.py', 'dv_mu_calendar_phys_tokds')
     K.REL.update(K.REL241)
     K.REL['attn'] = attn
+    if hcore_profile and K.ATTN.get(attn):
+        # The calendar overwrites these nodes with the selected attention
+        # variant, so its overwrite must carry the same readiness edge.
+        K.ATTN = copy.deepcopy(K.ATTN)
+        for op in ('attn.scores', 'attn.pv'):
+            K.ATTN[attn][op] += hcore_profile['load_guard_cycles']
 
     def composed(_mode='record'):
         r, dags = {}, {}
@@ -858,14 +868,14 @@ def calendar(res, layer_rx_extra=None, attn='G4'):
 
 
 # ---------------------------------------------------------------------------------------------- build / outputs
-def build(layer_path=None, comp_dir=None, attn='G4'):
+def build(layer_path=None, comp_dir=None, attn='G4', hcore_profile=None):
     layer_rx, layer_rej = load_layer_cycles(layer_path)
     receipts, comp_rej = load_components(comp_dir)
-    res = {wl: compose(wl, dict(attn=attn), layer_rx, receipts) for wl in ('ar', 'mtp')}
+    res = {wl: compose(wl, dict(attn=attn, hcore_profile=hcore_profile), layer_rx, receipts) for wl in ('ar', 'mtp')}
     # calendar inputs: same transforms except off-chip direct + release node terms (the calendar applies them)
-    cal_in = {wl: compose(wl, dict(attn=attn, offchip=False, release=False, regrade=False), layer_rx, receipts)
+    cal_in = {wl: compose(wl, dict(attn=attn, offchip=False, release=False, regrade=False, hcore_profile=hcore_profile), layer_rx, receipts)
               for wl in ('ar', 'mtp')}
-    recs = calendar(cal_in, attn=attn)
+    recs = calendar(cal_in, attn=attn, hcore_profile=hcore_profile)
     lat, dig = lane_table()
     r8 = json.loads(LAT_R8.read_text())
     r8f = lat.get('r8', {})
@@ -1249,6 +1259,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--layer-cycles')
     ap.add_argument('--components')
+    ap.add_argument('--hcore-profile-manifest', help='qualified selected native hcore cohort; price query/P readiness guards')
     ap.add_argument('--attn', default='G4', choices=sorted(ATTN))
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
@@ -1263,7 +1274,14 @@ def main(argv=None):
         lane_table.cache_clear()
     if a.selftest:
         return 0 if selftest() else 1
-    c1, cal = build(a.layer_cycles, a.components, a.attn)
+    hcore_profile = None
+    if a.hcore_profile_manifest:
+        H = load(ROOT / 'tools/s81_dv/layer_prog/hcore_schedule.py', 'hcore_schedule_price')
+        hcore_profile = H.load_profile(a.hcore_profile_manifest)
+    c1, cal = build(a.layer_cycles, a.components, a.attn, hcore_profile=hcore_profile)
+    if hcore_profile:
+        c1['inputs']['hcore_profile'] = hcore_profile
+        c1['inputs']['boot_readiness_extra_cycles'] = hcore_profile['reset_guard_cycles']
     if a.compare:
         c1['compare'] = {n: compare(Path(d), c1, cal) for n, d in (x.split('=', 1) for x in a.compare)}
     out = Path(a.out)

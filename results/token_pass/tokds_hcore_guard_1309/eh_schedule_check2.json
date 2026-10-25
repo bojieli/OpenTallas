@@ -1,0 +1,136 @@
+{
+ "verdict": "PASS",
+ "scope": "static readiness/calendar contract with scores->exp readiness shifted one edge; not component qualification or current bound token",
+ "schedules": [
+  {
+   "T": 32,
+   "ppath": false,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 128,
+   "ppath": false,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 256,
+   "ppath": false,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 500,
+   "ppath": false,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 32,
+   "ppath": false,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 128,
+   "ppath": false,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 256,
+   "ppath": false,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 500,
+   "ppath": false,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 32,
+   "ppath": true,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 128,
+   "ppath": true,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 256,
+   "ppath": true,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 500,
+   "ppath": true,
+   "allq": false,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 32,
+   "ppath": true,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 128,
+   "ppath": true,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 256,
+   "ppath": true,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  },
+  {
+   "T": 500,
+   "ppath": true,
+   "allq": true,
+   "go_added": 1,
+   "po_added": 1,
+   "pv_done_added": 2
+  }
+ ],
+ "negative_controls_caught": 35,
+ "actual_bound_layer": "NOT RUN"
+}

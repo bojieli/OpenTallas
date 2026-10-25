@@ -213,8 +213,9 @@ def f32bits(x):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, hcore_profile=None):
         import rtl_hdc_v41x_attn_campaign as C
+        self.hcore_profile = hcore_profile
         self.C, V = C, C.V
         fx = Path(fx)
         self.meta = json.loads((fx / 'meta.json').read_text())
@@ -332,6 +333,8 @@ class Job:
         """t_q0: the CFG word's cycle (own row ready), t_q: q_rope done, t_exp: P (exp) ready -- all at the q pins.
         Returns {frame: first word cycle} and the job's derived cycles."""
         T = self.T
+        profile = getattr(self, "hcore_profile", None)
+        guard = profile["load_guard_cycles"] if profile else 0
         n = -(-T // 2)
         t = t_q0
         at, words, fw = {}, [], {}
@@ -340,7 +343,8 @@ class Job:
             if name.startswith('ATTN_Q') and name.endswith('0'):
                 t = max(t, t_q)
             if name == 'GO':
-                go = max(t, go_min)
+                go_without_guard = max(t, go_min)
+                go = go_without_guard + guard
                 pio = 0
                 if PPATH:
                     # on-die P: PIO after the SM's last e row (measured), the PV frame reaches the owners P_ARR after
@@ -354,6 +358,8 @@ class Job:
                 else:
                     pvs = max(-(-5 * T // 4) + PVS0, t_exp - go)
                     po = pvs + -(-n // 2) + -(-n // 250) + 4
+                po_without_guard = po
+                po += guard
                 pvo = po + 8 * -(-T // 32) + KPV
                 ws = [hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32))]
                 self.pio = pio
@@ -376,9 +382,16 @@ class Job:
         s_j = j_pin - max(j_age_w, j_age_e)
         pv_first = self.go + self.pvo + PV_LAT
         npv = 2 * NPVQ if self.allq else NPVQ           # ALLQ: 8 tiles a half, both entries in parallel
-        return dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
+        rec = dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
                     po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + npv - 1, npv=npv, allq=self.allq,
                     done=pv_first + npv - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
+        if profile:
+            from layer_prog.hcore_schedule import validate_schedule
+            rec['hcore_readiness'] = dict(profile_sha256=profile['profile_sha256'],
+                                           go_without_guard=go_without_guard, po_without_guard=po_without_guard,
+                                           query_guard_cycles=guard, p_guard_cycles=guard)
+            validate_schedule(rec, profile)
+        return rec
 
     # ------------------------------------------------------------------ HBM window image (the 127 rows before pos)
     def hbm_image(self):
@@ -566,9 +579,9 @@ def sot_booking_for(job, s):
     return rec
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, hcore_profile=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, hcore_profile=hcore_profile)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
@@ -661,11 +674,13 @@ def lower(die, op, ctx):
         return dict(base, status='GAP', gap=dict(module='lower_svc', port='fixtures',
                                                  missing='no fixture dir (--fixtures): q / P / own row are runtime data'))
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
-           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True))
+           json.dumps(ctx.get('svc_sot_booking'), sort_keys=True),
+           json.dumps(ctx.get('hcore_profile'), sort_keys=True))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
-                                owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'))
+                                owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'),
+                                hcore_profile=ctx.get('hcore_profile'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
@@ -681,6 +696,7 @@ def lower(die, op, ctx):
                               j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']),
                               source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
                               source_owner_qualification='SOURCE ABI ONLY; stamp/transpose consumer binding pending', frames=s['at'], go=s['go'],
+                              **(dict(hcore_readiness=s['hcore_readiness']) if 'hcore_readiness' in s else {}),
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
                               done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),
                               q_words=len(s['words']), q_image=f'prog/svc/{ctx.get("layer")}/qwd.hex',

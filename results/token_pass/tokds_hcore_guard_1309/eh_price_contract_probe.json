@@ -1,0 +1,19 @@
+{
+ "scope": "Prospective static contract price only; selected timed-reset cohort admission and actual bound token NOT RUN",
+ "source_cohort_admitted": false,
+ "boot_extra_cycles": 2,
+ "workloads": {
+  "ar": {
+   "dag_added_cycles": 80.0,
+   "map_added_cycles": 80.0,
+   "old_tok_s": 784.9,
+   "new_tok_s": 784.8
+  },
+  "mtp": {
+   "dag_added_cycles": 48.0,
+   "map_added_cycles": 90.0,
+   "old_tok_s": 2749.3,
+   "new_tok_s": 2749.2
+  }
+ }
+}
