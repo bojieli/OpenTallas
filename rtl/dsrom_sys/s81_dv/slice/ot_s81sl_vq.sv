@@ -144,10 +144,14 @@ module ot_s81sl_vq #(
             // and the read address is registered too (ra_m in cycle c = wp(c - 1) - 10 = wp(c) - 11): the row read in
             // cycle t + 11 is still wp(t), written 10 cycles before and 6 cycles before it is overwritten (t + 17), and
             // never the row being written (wa_m = wp - 1, ra_m = wp - 11).  rd_out, ce and xr are unchanged: 0 cycles.
+            // S81-CORES3/RT (2026-10-25, F6 census of vq_bfq: rd_out -> xr mux -> 1024 xr flops 69-80 um from the macro): the
+            // read data lands in a 256-flop capture register AT the macro (rd_q) and the row is read one cycle earlier
+            // (ra_m in cycle c = wp(c) - 10: row wp(t) read in cycle t + 10, 8 cycles after its write, never the row being
+            // written), so xr loads rd_q on the same edge it loaded rd before: ce / xr unchanged, 0 cycles.
             reg  [3:0] wp, wa_m, ra_m;
             reg  [255:0] wd_m;
             always @(posedge clk or negedge rs_q)
-                if (!rs_q) begin wp <= 4'd0; wa_m <= 4'd15; ra_m <= 4'd5; end
+                if (!rs_q) begin wp <= 4'd0; wa_m <= 4'd15; ra_m <= 4'd6; end
                 else begin
                     wp <= wp + 4'd1;
 `ifdef OT_VQ_MUT_WREG
@@ -156,13 +160,14 @@ module ot_s81sl_vq #(
                     wa_m <= wp;
 `endif
 `ifdef OT_VQ_MUT_XPTR
-                    ra_m <= wp - 4'd9;      // mutant: one cycle short (the bench must catch it)
+                    ra_m <= wp - 4'd8;      // mutant: one cycle short (the bench must catch it)
 `else
-                    ra_m <= wp - 4'd10;
+                    ra_m <= wp - 4'd9;
 `endif
                 end
             always @(posedge clk) wd_m <= sd_;
-            wire [255:0] rd;
+            wire [255:0] rd; reg [255:0] rd_q;
+            always @(posedge clk) rd_q <= rd;
             ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, ra_m}), .rd_out(rd),
                 .w_ce_in(1'b1), .w_addr_in({3'd0, wa_m}), .wd_in(wd_m), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
@@ -171,7 +176,7 @@ module ot_s81sl_vq #(
             reg [1023:0] xr;
             integer jr;
             always @(posedge clk)
-                if (ce[2]) for (jr = 0; jr < 4; jr = jr + 1) if (ce[1:0] == jr) xr[256 * jr +: 256] <= rd;
+                if (ce[2]) for (jr = 0; jr < 4; jr = jr + 1) if (ce[1:0] == jr) xr[256 * jr +: 256] <= rd_q;
             assign xr_w = xr;
         end else begin : g_xnr
             assign xr_w = {1024{1'b0}};
