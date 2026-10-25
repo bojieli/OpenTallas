@@ -804,7 +804,7 @@ module ot_s81sl_lep_core #(
         end
       end else begin:g_shared assign ring_meta_regions[4*rh+:4]={4{rhd[rh*(H+1)]}};end
     end endgenerate
-    wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4];
+    wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4]; // selrange-ok: ring_meta_regions[8+:4] exists at NL=4; NL=2/AB_EN=0 ties relp[1]=0, so rpb=0 selects low flags; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
     assign li0_r = lir[0]; assign li1_r = lir[1];
     generate if (NL == 4) begin : g_rxb
         assign li2_r = lir[2]; assign li3_r = lir[3];
