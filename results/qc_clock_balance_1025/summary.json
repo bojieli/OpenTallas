@@ -1,0 +1,31 @@
+{
+  "candidate": "epyc1:/srv/opentallas-scratch2/claude/codex-qc-clock/vmr_leaf",
+  "checkpoint": "run/results/asap7/kq_qfd_dv_s8x_vmr_rw60/base/5_1_grt.odb",
+  "source": "qc-cores/kits3/qfd_dv_s8x_vmr_rw60 stable 3_place snapshot",
+  "clock_buffers_added": 670,
+  "rtl_changed": false,
+  "added_cycles": 0,
+  "period_ps": 833,
+  "unc_setup_ps": 60,
+  "unc_hold_ps": 25,
+  "grt_overflow": 0,
+  "pair_skew_ps": {
+    "tt": {
+      "setup": 45.51,
+      "hold": 58.81
+    },
+    "ff": {
+      "setup": 41.62,
+      "hold": 60.75
+    }
+  },
+  "pairs_per_corner": 24339,
+  "verify_ps": 0,
+  "method": "Independent single-corner global_route from the placed GRT checkpoint, then estimate_parasitics -global_routing and exhaustive CPPR pair metric. NOT guides-only parasitics.",
+  "verdict": "CLOCK PROTOTYPE PASS; NOT SIGNED",
+  "remaining": [
+    "Current IO vclk250 is diagnostic; bind measured TT/FF pin-register insertion under9.7 before core timing verdict.",
+    "Detailed route, extracted TT setup/FF hold/DRV/face_guard signoff remain.",
+    "Prior terminal-only clock attempt missed mixed CTS nets; prior guides-only STA had no wire parasitics and is not used."
+  ]
+}
