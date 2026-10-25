@@ -448,20 +448,26 @@ def lanes_only(a, key):
     txt, e['ports'] = apply_lanes(open(f).read(), e['ports'], ln)
     open(f, 'w').write(txt)
     json.dump(tops, open(a.out, 'w'), indent=1)
-    cf = os.path.join(HERE, 'canonical_ports_split.json'); C = json.load(open(cf)); ct = C['types'][key]
-    have = {p[0] for p in ct['ports']}
-    if not all(q[0] in have for q in lp):
-        _, ct['ports'] = apply_lanes(ln['marker'], ct['ports'], ln)
-        ct['elab_bits'] = [ct['elab_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
-                           ct['elab_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
-    for tid, t in ct['type_ids'].items():
-        if all(q[0] in t['cut_pins'] for q in lp):
+    cf = os.environ.get('OT_CANON', os.path.join(HERE, 'canonical_ports_split.json')); C = json.load(open(cf))
+    # every functional type built on this top (tkm_tile and the master-ID views tkm_tile_idpin /
+    # tkm_tile_terminal_idpin: same RTL file, straps / ties differ) gets the lane ports
+    for ft, ct in sorted(C['types'].items()):
+        if ct.get('file') != e['file']:
             continue
-        t['cut_pins'].update({q[0]: {q[0]: q[2]} for q in lp})
-        t['cut_bits'] = [t['cut_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
-                         t['cut_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
-        t['plan_lanes'] = [q[0] for q in lp]
-    print(key, 'lanes', [q[0] for q in lp], 'ports', len(ct['ports']), 'elab_bits', ct['elab_bits'], 'type_ids', len(ct['type_ids']))
+        have = {p[0] for p in ct['ports']}
+        if not all(q[0] in have for q in lp):
+            _, ct['ports'] = apply_lanes(ln['marker'], ct['ports'], ln)
+            ct['elab_bits'] = [ct['elab_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
+                               ct['elab_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
+        for tid, t in ct['type_ids'].items():
+            if all(q[0] in t['cut_pins'] for q in lp):
+                continue
+            t['cut_pins'].update({q[0]: {q[0]: q[2]} for q in lp})
+            t['cut_bits'] = [t['cut_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
+                             t['cut_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
+            t['plan_lanes'] = [q[0] for q in lp]
+        print(ft, 'lanes', [q[0] for q in lp], 'ports', len(ct['ports']), 'elab_bits', ct['elab_bits'],
+              'type_ids', len(ct['type_ids']))
     json.dump(C, open(cf, 'w'), indent=1, sort_keys=True)
 
 
