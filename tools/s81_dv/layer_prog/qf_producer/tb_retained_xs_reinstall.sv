@@ -23,7 +23,7 @@ ot_s81sl_rly #(.W(257),.D(4)) up_lo(.clk(clk),.d({lo_v,lo_d}),.q({lov,lod}));
 wire s_v;wire[159:0]s_d;wire x_rv,x_qv,x_wv;wire[9:0]x_ra,x_wa;wire[7:0]x_wm;wire[255:0]x_qd,x_wd;
 wire u_v,um_v,um_q,um_b;wire[2:0]u_i;wire[255:0]u;wire[7:0]um_i;
 wire swv_,swvi,swfi;wire[255:0]swd_;wire[31:0]sww,swl;wire[63:0]swri;
-wire rav,ravi,rafi,rfv,rff;wire[31:0]rax,rari,rfu,rfu2,rfmx;
+wire rav,ravi,rafi,rfv,rff;wire[31:0]rax,rfu,rfu2,rfmx;wire[30:0]rari;
 wire mv,mq,mb;wire[7:0]mi;
     ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),

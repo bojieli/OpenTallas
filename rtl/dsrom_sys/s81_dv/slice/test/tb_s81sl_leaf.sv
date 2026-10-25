@@ -87,7 +87,7 @@ module tb_s81sl_leaf #(parameter integer MUT = 0, parameter integer BEAT = 37, p
                        $display("SLVS mut=%0d err SW=%0d QB=%0d RA=%0d RB=%0d QR=%0d MOE=%0d checked_pairs SW=%0d RA=%0d RB=%0d QR=%0d MOE=%0d xq=%0d fault=vp%b/vs%b/vq%b",
                                 MUT, err[8], err[9], err[10], err[11], err[12], err[13], nck[8], nck[10], nck[11], nck[12], nck[13],
                                 nxq, fp, fs, fq);
-                       if (f_lf == 1'b0 && err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 2 && !fp && !fs && !fq &&
+                       if (f_lf == 1'b0 && err[8] + err[9] + err[10] + err[11] + err[12] + err[13] == 0 && nxq == 3 && !fp && !fs && !fq &&
                            nck[8] > 0 && nck[10] > 0 && nck[11] > 0 && nck[12] > 0 && nck[13] > 0) $display("PASS"); else $display("FAIL");
                        $finish;
                    end

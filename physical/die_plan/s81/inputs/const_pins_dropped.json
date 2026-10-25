@@ -1,0 +1,38 @@
+{
+ "note": "OWNER DECISION 8 (2026-10-24): constant output pins are dropped from the plan (no face_guard constant class). Each entry: the pins removed from the hard core and why; the RTL ports were narrowed to match.",
+ "modules": {
+  "ot_dsrom_su_hcpost_lane_pr": {
+   "pins": [
+    "o[0]",
+    "o[1]",
+    "o[2]",
+    "o[3]",
+    "o[4]",
+    "o[5]",
+    "o[6]",
+    "o[7]",
+    "o[8]",
+    "o[9]",
+    "o[10]",
+    "o[11]",
+    "o[12]",
+    "o[13]",
+    "o[14]",
+    "o[15]"
+   ],
+   "why": "BF16 result o <= {hi, 16'd0}: o[15:0] constant 0 (rtl/hdc/v41x/ot_dsrom_su_hcpost.sv); port narrowed to o[31:16]; vp reads lo[31:16] only"
+  },
+  "dsfd_su_t_rxsb": {
+   "pins": [
+    "o_r[31]"
+   ],
+   "why": "o_r = sqrt(sp) >= 0: sign bit constant 0; port narrowed to o_r[30:0]"
+  },
+  "ot_s81sl_vs": {
+   "pins": [
+    "ra_ri[31]"
+   ],
+   "why": "receiver of rxsb o_r[31]; port narrowed to ra_ri[30:0], vs uses {1'b0, ra_ri}; applies to both tables of module ot_s81sl_vs (ot_s81sl_vs.json and the re-pinned ot_s81sl_vs_lfp.json + its stub LEF)"
+  }
+ }
+}
