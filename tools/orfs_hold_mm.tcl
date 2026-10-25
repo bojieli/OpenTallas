@@ -319,9 +319,28 @@ proc ot_hold_stop {rt_args} {
   catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
   return 1
 }
+# Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
+# -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
+# cannot interrupt a single call that adds hundreds of thousands of buffers.
+# Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+proc ot_hold_structural_gate {} {
+  lassign [ot_hold_stats] w t n
+  if {$w >= -100.0 && $n <= 2000} { return }
+  set stage [ot_hold_stage]
+  set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  puts $msg
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh $msg; close $fh
+  }
+  return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
+}
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
-    if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
+    if {[lsearch -exact $rt_args -setup] < 0} {
+      ot_hold_structural_gate
+      set rt_args [ot_hm_guard $rt_args]
+    }
     return [log_cmd repair_timing {*}$rt_args]
   }
   set hm 0.0
@@ -330,6 +349,7 @@ proc ot_repair_timing {rt_args} {
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
   log_cmd repair_timing {*}$rt_args -setup
+  ot_hold_structural_gate
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
   if {[ot_hold_stop $rt_args]} { return }
