@@ -15,3 +15,4 @@ rxsf (dsfd_su_t_rxsf): re-pin inputs/core_pins/dsfd_su_t_rxsf_c.json + cores/rx/
   (was 3 clusters at 10.5/um), E 34 pins 6.3-134.1, ck at W 70.19 (was E 92.89). Measured on the old ftz kit post-CTS (placement RC):
   CK spread 7.7 ps, W band 200.7-204.3 vs E 198.5-203.7, pin-reg max 10.7 um -> the E clock entry caused no band skew; the remaining
   cause is pin density. Kit epyc2:/srv/opentallas-scratch2/claude/s81-cores3-rt/kits/dsfd_su_t_rxsf_w (CTS running).
+rxsf_w post-CTS (epyc2 kit dsfd_su_t_rxsf_w, 06:57): face_guard PASS (synth + odb), CTS FF -16.39/378 (pre-repair; old ftz -21.57/370); CK 196.0-205.4 (placement RC, spread 9.4); bands W 198.5-203.1, mid 196.3-205.4, E 196.3-201.3; pin-reg W max 6.4 / E max 6.7 um (old 10.7). rxsf_w_postcts.png.
