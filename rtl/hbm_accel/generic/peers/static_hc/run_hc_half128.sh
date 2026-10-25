@@ -19,7 +19,7 @@ src=($H/tb_hbm_hc_half128.sv $H/ot_hbm_hc_qcen_static.sv $H/ot_hbm_hc_bankq_stat
  rtl/hdc/ot_hdc_delay.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
-printf '`verilator_config\nhier_block -module "ot_hdc_v41x_hcp_lanes"\nhier_block -module "ot_hbm_hc_bank_static"\n' > "$out/hier.vlt"
+printf '`verilator_config\nhier_block -module "ot_hbm_hc_bank_static"\n' > "$out/hier.vlt"   # bank only: nested lanes hier under 2 bank variants clashes in Verilator 5.050
 "$vl" --binary --timing --hierarchical -j ${HC_BUILD_JOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN \
   --x-assign unique --x-initial unique --top-module tb_hbm_hc_half128 -GMUT=$mut +define+OT_FP_DATA_NORST \
   -Mdir "$out/obj" -o Vhalf "$out/hier.vlt" "${src[@]}" > "$out/build.log" 2>&1 || { tail -20 "$out/build.log"; echo "HC_HALF128 MUT=$mut BUILD FAIL"; exit 3; }

@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.hbm_b2.native_hc.v1",
+ "branch_base": "e90185671",
+ "recorded": "2026-10-25 by lane HBM (HBM-HC sub-agent stalled after the gates finished; results read from epyc3 /srv/opentallas-scratch2/claude/hbm-hc/r1)",
+ "gates": {
+  "HC_W_DEFAULT_EQ_GATE": {
+   "verdict": "PASS",
+   "detail": "W64 lockstep vs fc76a2c42 originals + scoped term, 20000 cyc, 0 mismatches; mutants qcen-swap 6645 / term-flip 19938 / bank 8429 mismatches = caught (HBM-HC 23:59 lane line)"
+  },
+  "HC_HALF128_MUT0": {
+   "verdict": "PASS",
+   "detail": "W128 half vs 2 x W64 quarters + 7th fp32 add, 3000 sums, 0 mismatches, 0 faults, x-initial unique (HBM-HC 23:59 lane line)"
+  },
+  "HC_HALF128_mutants": {
+   "MUT1": {
+    "line": "HC_HALF128 MUT=1 tasks=3000 sums_checked=3000 (zero 14) mismatches=2544 faults=0 FAIL",
+    "caught": true
+   },
+   "MUT3": {
+    "line": "HC_HALF128 MUT=3 tasks=3000 sums_checked=3000 (zero 14) mismatches=2986 faults=0 FAIL",
+    "caught": true
+   },
+   "MUT4": {
+    "line": "HC_HALF128 MUT=4 tasks=3000 sums_checked=3000 (zero 14) mismatches=1406 faults=0 FAIL",
+    "caught": true
+   },
+   "MUT5": {
+    "line": "HC_HALF128 MUT=5 tasks=3000 sums_checked=3000 (zero 14) mismatches=1380 faults=0 FAIL",
+    "caught": true
+   },
+   "MUT6": {
+    "line": "HC_HALF128 MUT=6 tasks=3000 sums_checked=3000 (zero 14) mismatches=2986 faults=0 FAIL",
+    "caught": true
+   },
+   "MUT7": {
+    "line": "HC_HALF128 MUT=7 tasks=3000 sums_checked=3000 (zero 14) mismatches=3927 faults=0 FAIL",
+    "caught": true
+   }
+  },
+  "all_mutants_caught": true
+ },
+ "bind": "tools/hbm_b2/run_hc_half_bind.sh: b2_top + strict port-bind with hc_half_items fragment: 0 new FAIL, 0 HC FAIL",
+ "verilator": "5.050 (hier_block bank only; nested lanes hier under 2 bank variants clashes)"
+}
