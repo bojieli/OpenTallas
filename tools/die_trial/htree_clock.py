@@ -69,7 +69,7 @@ def plan_taps(P, cache=None):
     out = []
     for n, p in sorted(P.parts.items()):
         t = P.ptype(n)
-        if t.get("hard"):
+        if t.get("hard") and not t.get("hard_cores"):
             # A hard macro's clock terminal is fixed by its physical view.  It
             # may be inside a domain keepout: that forbids standard cells, not
             # the macro's own terminal.  Never turn it into a legalized grid.
