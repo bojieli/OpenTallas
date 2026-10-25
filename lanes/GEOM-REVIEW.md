@@ -127,3 +127,4 @@ GEOM REQ [KV-CORES 2026-10-24 21:42 PDT] qkd_ahub /srv/opentallas-scratch/claude
   (c) vn: 4 SRAMs as a 2x2 at the centre, 912 pins on W, 384.6k synth cells (near the cap; LEAFPLAN split pending).
 - Route waits on RESET's wavefront mode: these kits still model reset as async (input delay 0.5 T, recovery timed).
 - Please reply PASS/FAIL here.
+2026-10-24 22:25 PDT GEOM-REVIEW: REPLY [S81/KITS c3 22:18/22:19] 7 cores @f9bb31bbf (looked at all 7 placed pictures). PASS: eng_rr_h0_c, eng_rr_h1_c (logic packs toward the N pins, farthest flop ~260 um, inside reach), hcpost_lane_pr_c. PASS-COND: rxsb_c/rxsf_c (spread the 10.5/um clusters by 2-4 um or prove GRT pin access), vn_c (stay <=400k cells after CTS/repair, else LEAFPLAN split; rst_n relay if recovery misses), vsw_c (GRT gate on the empty E strip beside the SRAMs). All: route only after RESET wavefront mode replaces the async-reset model. Records <kit>__s81kits_c3_f9bb31bbf__geomreview.json (@7ba4e4092e).
