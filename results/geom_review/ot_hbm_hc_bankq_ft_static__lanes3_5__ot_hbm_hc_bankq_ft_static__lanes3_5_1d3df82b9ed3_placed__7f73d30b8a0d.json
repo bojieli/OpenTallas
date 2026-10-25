@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_hc_bankq_ft_static__lanes3_5",
+ "view": "ot_hbm_hc_bankq_ft_static__lanes3_5@1d3df82b9ed3",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3, B2r2 pins 1d3df82b9ed3, plan 24990bd5dd78)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "7f73d30b8a0d5bf9",
+ "reasons": "placed+CTS probe (SPLIT2 wrapper proven exact): fill 42% of free, 0 bins > 0.8, max bin 0.52-0.53, pin->reg p90 7.7-8.0 um, 33357 flops spread uniformly, pins on W/E (+S) faces with face flops at the faces, face_guard PASS 2717/2717, CTS I = 326-362 ps (1 tree, spread 20-25 ps). lanes3_5@1d3df8 has two small empty pockets (upper middle) - benign.",
+ "fixes": "route under the core clock contract (vclk = measured I); GRT 0 / DRC 0 / TT setup + FF hold >= 0 at 60/25; CTS+route pictures before merge",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/review_cores/ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3.placed_cts.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T22:07:18-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
