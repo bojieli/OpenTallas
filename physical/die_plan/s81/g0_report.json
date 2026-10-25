@@ -1,21 +1,21 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-dec12/final2/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/wt/s81-xdie3/physical/die_plan/s81/die_plan.json",
  "verdict": "PASS",
- "mode": "G0",
+ "mode": "G0C",
  "errors": 0,
- "warnings": 1270,
+ "warnings": 1263,
  "summary": {
   "die": "s81",
   "partitions": 400,
   "types": {
-   "types": 180,
+   "types": 177,
    "partitions": 400,
-   "singleton_types": 156,
+   "singleton_types": 150,
    "max_instances": 60,
    "near_duplicate_groups": 14,
-   "near_duplicate_types": 33,
-   "mergeable_saving": 19
+   "near_duplicate_types": 30,
+   "mergeable_saving": 16
   },
   "ports": 2218,
   "lanes": 853,
@@ -28,7 +28,7 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-dec12/final2/cells_est.json"
+    "/srv/opentallas-scratch2/claude/wt/s81-xdie3/physical/die_plan/s81/cells_est.json"
    ],
    "no_cells": []
   },
@@ -53,8 +53,8 @@
    "internal_station": 0
   },
   "g0c": {
-   "types": 180,
-   "clean": 180,
+   "types": 177,
+   "clean": 177,
    "die_level": {},
    "g3_eligible": [
     "bk_col__t1",
@@ -177,7 +177,6 @@
     "seqhost__t1",
     "serdes__t1",
     "serdes__t10",
-    "serdes__t11",
     "serdes__t12",
     "serdes__t13",
     "serdes__t14",
@@ -186,8 +185,6 @@
     "serdes__t4",
     "serdes__t5",
     "serdes__t6",
-    "serdes__t7",
-    "serdes__t8",
     "serdes__t9",
     "slice_station__t10",
     "slice_station__t11",
@@ -305,13 +302,13 @@
   },
   "worst_hops": [
    {
-    "lane": "attn__s_4S_C__svc_11",
-    "hop_um": 392.2,
+    "lane": "coll__lk_WS0__s_0S_LP",
+    "hop_um": 394.0,
     "reach_um": 405.0
    },
    {
-    "lane": "coll__s_0S_LP__lk_WS0",
-    "hop_um": 390.5,
+    "lane": "attn__s_4S_C__svc_11",
+    "hop_um": 392.2,
     "reach_um": 405.0
    },
    {
@@ -325,8 +322,13 @@
     "reach_um": 405.0
    },
    {
-    "lane": "coll__s_0S_LP__lk_WS1",
-    "hop_um": 382.9,
+    "lane": "coll__s_0S_LP__lk_WS0",
+    "hop_um": 382.6,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll__lk_WS2__s_0S_LP",
+    "hop_um": 381.5,
     "reach_um": 405.0
    },
    {
@@ -347,11 +349,6 @@
    {
     "lane": "coll__lk_EN3__s_7N_LP",
     "hop_um": 379.6,
-    "reach_um": 405.0
-   },
-   {
-    "lane": "ctrl__s_0N_LP__seqhost",
-    "hop_um": 379.4,
     "reach_um": 405.0
    }
   ],
@@ -1595,53 +1592,53 @@
    "horizontal": [
     {
      "at_um": 250,
-     "bits": 1028,
+     "bits": 514,
      "tracks": 263025,
-     "ratio": 0.0039,
-     "m89_only_ratio": 0.0026,
+     "ratio": 0.002,
+     "m89_only_ratio": 0.0013,
      "worst_part": "s_7S_x10",
      "worst_part_ratio": 0.0391,
      "worst_part_bits": 514
     },
     {
      "at_um": 500,
-     "bits": 5816,
+     "bits": 4276,
      "tracks": 263025,
-     "ratio": 0.0221,
-     "m89_only_ratio": 0.0146,
+     "ratio": 0.0163,
+     "m89_only_ratio": 0.0107,
      "worst_part": "s_7S_x10",
      "worst_part_ratio": 0.1171,
      "worst_part_bits": 1540
     },
     {
      "at_um": 750,
-     "bits": 10106,
+     "bits": 7540,
      "tracks": 263025,
-     "ratio": 0.0384,
-     "m89_only_ratio": 0.0253,
-     "worst_part": "lk_WS3",
-     "worst_part_ratio": 0.234,
-     "worst_part_bits": 3078
+     "ratio": 0.0287,
+     "m89_only_ratio": 0.0189,
+     "worst_part": "iqf",
+     "worst_part_ratio": 0.1892,
+     "worst_part_bits": 2488
     },
     {
      "at_um": 1000,
-     "bits": 10106,
+     "bits": 8566,
      "tracks": 263025,
-     "ratio": 0.0384,
-     "m89_only_ratio": 0.0253,
-     "worst_part": "lk_WS3",
-     "worst_part_ratio": 0.234,
-     "worst_part_bits": 3078
+     "ratio": 0.0326,
+     "m89_only_ratio": 0.0214,
+     "worst_part": "iqf",
+     "worst_part_ratio": 0.1892,
+     "worst_part_bits": 2488
     },
     {
      "at_um": 1250,
-     "bits": 10106,
+     "bits": 9592,
      "tracks": 263025,
-     "ratio": 0.0384,
-     "m89_only_ratio": 0.0253,
+     "ratio": 0.0365,
+     "m89_only_ratio": 0.024,
      "worst_part": "lk_WS3",
-     "worst_part_ratio": 0.234,
-     "worst_part_bits": 3078
+     "worst_part_ratio": 0.195,
+     "worst_part_bits": 2564
     },
     {
      "at_um": 1500,
@@ -3210,9 +3207,9 @@
    "coll__s_0N_LP__lk_WN0": 22,
    "coll__lk_WN2__s_0N_LP": 36,
    "coll__lk_WN0__s_0N_LP": 20,
-   "coll__lk_WS1__s_0S_LP": 41,
+   "coll__lk_WS1__s_0S_LP": 38,
    "coll__s_0N_LP__lk_WN2": 37,
-   "coll__s_0S_LP__lk_WS1": 41,
+   "coll__s_0S_LP__lk_WS1": 39,
    "xring__s_0S_C__s_1S_C": 2,
    "xring__s_7S_C__s_6S_C": 2,
    "attn__s_4S_C__svc_11": 19,
@@ -3226,11 +3223,11 @@
    "xtier__seqhost__bk_sel": 73,
    "xtier__bk_sel__seqhost": 73,
    "coll__s_7S_LP__lk_ES0": 34,
-   "coll__s_0S_LP__lk_WS0": 32,
+   "coll__s_0S_LP__lk_WS0": 31,
    "coll__lk_ES0__s_7S_LP": 33,
    "coll__lk_ES1__s_7S_LP": 42,
    "coll__s_7S_LP__lk_ES1": 42,
-   "coll__lk_WS0__s_0S_LP": 32,
+   "coll__lk_WS0__s_0S_LP": 30,
    "coll__s_7N_LP__lk_EN0": 20,
    "coll__lk_EN0__s_7N_LP": 19,
    "unit__seqhost__svc_5": 7,
@@ -3416,7 +3413,7 @@
    "coll__s_7N_LP__lk_EN3": 38,
    "coll__lk_EN3__s_7N_LP": 37,
    "coll__s_0S_LP__lk_WS2": 49,
-   "coll__lk_WS2__s_0S_LP": 49,
+   "coll__lk_WS2__s_0S_LP": 48,
    "coll__s_0S_LP__lk_WS3": 26,
    "coll__lk_WS3__s_0S_LP": 26,
    "sid_seqhost__s_7S_C": 31,
@@ -5851,16 +5848,16 @@
    },
    "worst": [
     {
+     "lane": "coll__lk_WS0__s_0S_LP",
+     "hop_um": 394.0,
+     "reach_um": 405.0,
+     "frac": 0.973
+    },
+    {
      "lane": "attn__s_4S_C__svc_11",
      "hop_um": 392.2,
      "reach_um": 405.0,
      "frac": 0.968
-    },
-    {
-     "lane": "coll__s_0S_LP__lk_WS0",
-     "hop_um": 390.5,
-     "reach_um": 405.0,
-     "frac": 0.964
     },
     {
      "lane": "unit__seqhost__s_7N_LP",
@@ -5875,10 +5872,16 @@
      "frac": 0.951
     },
     {
-     "lane": "coll__s_0S_LP__lk_WS1",
-     "hop_um": 382.9,
+     "lane": "coll__s_0S_LP__lk_WS0",
+     "hop_um": 382.6,
      "reach_um": 405.0,
      "frac": 0.945
+    },
+    {
+     "lane": "coll__lk_WS2__s_0S_LP",
+     "hop_um": 381.5,
+     "reach_um": 405.0,
+     "frac": 0.942
     },
     {
      "lane": "rt_W3_in_1",
@@ -5901,12 +5904,6 @@
     {
      "lane": "coll__lk_EN3__s_7N_LP",
      "hop_um": 379.6,
-     "reach_um": 405.0,
-     "frac": 0.937
-    },
-    {
-     "lane": "ctrl__s_0N_LP__seqhost",
-     "hop_um": 379.4,
      "reach_um": 405.0,
      "frac": 0.937
     }
@@ -6241,7 +6238,7 @@
      }
     }
    ],
-   "total_types": 180
+   "total_types": 177
   },
   "xdie_counts": {
    "hard_cores": 0,
@@ -6317,24 +6314,23 @@
     }
    ],
    "dropped_bits": 0
-  },
-  "png": "/srv/opentallas-scratch2/claude/s81-dec12/final2/g0/die_plan.png"
+  }
  },
  "findings": [
   {
    "level": "WARN",
    "check": "types",
-   "msg": "near-duplicate types ['serdes__t3', 'serdes__t7', 'serdes__t9'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   "msg": "near-duplicate types ['serdes__t3', 'serdes__t9'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
    "check": "types",
-   "msg": "near-duplicate types ['serdes__t1', 'serdes__t10', 'serdes__t5', 'serdes__t8'] (4): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   "msg": "near-duplicate types ['serdes__t1', 'serdes__t10', 'serdes__t5'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
    "check": "types",
-   "msg": "near-duplicate types ['serdes__t11', 'serdes__t14', 'serdes__t2', 'serdes__t6'] (4): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   "msg": "near-duplicate types ['serdes__t14', 'serdes__t2', 'serdes__t6'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
@@ -7450,6 +7446,18 @@
   {
    "level": "WARN",
    "check": "geometry",
+   "msg": "type serdes__t12 slot ft3: crossing ~1948 um > 4 station(s) x reach 405 (see hops)",
+   "type": "serdes__t12"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type serdes__t12 slot ft4: crossing ~1948 um > 4 station(s) x reach 405 (see hops)",
+   "type": "serdes__t12"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
    "msg": "type serdes__t13 slot ft0: crossing ~2056 um > 2 station(s) x reach 405 (see hops)",
    "type": "serdes__t13"
   },
@@ -8079,38 +8087,38 @@
   {
    "level": "WARN",
    "check": "clock",
-   "msg": "type serdes__t7: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t7"
+   "msg": "type serdes__t9: farthest boundary point 2056 um from the tap (> 2 hops)",
+   "type": "serdes__t9"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t7: bus coll_i0 has no leaf binding",
-   "type": "serdes__t7"
+   "msg": "type serdes__t9: bus coll_i0 has no leaf binding",
+   "type": "serdes__t9"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t7: bus coll_o0 has no leaf binding",
-   "type": "serdes__t7"
+   "msg": "type serdes__t9: bus coll_o0 has no leaf binding",
+   "type": "serdes__t9"
   },
   {
    "level": "WARN",
    "check": "clock",
-   "msg": "type serdes__t8: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t8"
+   "msg": "type serdes__t10: farthest boundary point 2056 um from the tap (> 2 hops)",
+   "type": "serdes__t10"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t8: bus coll_i0 has no leaf binding",
-   "type": "serdes__t8"
+   "msg": "type serdes__t10: bus coll_i0 has no leaf binding",
+   "type": "serdes__t10"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t8: bus coll_o0 has no leaf binding",
-   "type": "serdes__t8"
+   "msg": "type serdes__t10: bus coll_o0 has no leaf binding",
+   "type": "serdes__t10"
   },
   {
    "level": "WARN",
@@ -8223,56 +8231,20 @@
   {
    "level": "WARN",
    "check": "clock",
-   "msg": "type serdes__t9: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t9"
+   "msg": "type serdes__t14: farthest boundary point 2056 um from the tap (> 2 hops)",
+   "type": "serdes__t14"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t9: bus coll_i0 has no leaf binding",
-   "type": "serdes__t9"
+   "msg": "type serdes__t14: bus coll_i0 has no leaf binding",
+   "type": "serdes__t14"
   },
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type serdes__t9: bus coll_o0 has no leaf binding",
-   "type": "serdes__t9"
-  },
-  {
-   "level": "WARN",
-   "check": "clock",
-   "msg": "type serdes__t10: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t10"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t10: bus coll_i0 has no leaf binding",
-   "type": "serdes__t10"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t10: bus coll_o0 has no leaf binding",
-   "type": "serdes__t10"
-  },
-  {
-   "level": "WARN",
-   "check": "clock",
-   "msg": "type serdes__t11: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t11"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t11: bus coll_i0 has no leaf binding",
-   "type": "serdes__t11"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t11: bus coll_o0 has no leaf binding",
-   "type": "serdes__t11"
+   "msg": "type serdes__t14: bus coll_o0 has no leaf binding",
+   "type": "serdes__t14"
   },
   {
    "level": "WARN",
@@ -8303,24 +8275,6 @@
    "check": "schema",
    "msg": "type serdes__t13: bus coll_o0 has no leaf binding",
    "type": "serdes__t13"
-  },
-  {
-   "level": "WARN",
-   "check": "clock",
-   "msg": "type serdes__t14: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t14"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t14: bus coll_i0 has no leaf binding",
-   "type": "serdes__t14"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t14: bus coll_o0 has no leaf binding",
-   "type": "serdes__t14"
   },
   {
    "level": "WARN",

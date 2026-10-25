@@ -798,7 +798,12 @@ def build(ab):
         side, row, cw = spec[:3]
         nc, nr = (spec[3:] + (2, 1))[:2] if len(spec) > 3 else (2, 1)
         col = cw if side != "E" else mir(cw) - 1
-        orient = "MY" if side == "E" else "R0"
+        # S81-XDIE 10-24 (GEOM condition 1, lk_WS0 PHY off-shore): the W-column S-edge SerDes (lk_WS0..WS3) are MX, so
+        # their face windows (packed from local y 0) sit on the CORE side of the slot and the PHY zone on the die edge,
+        # as the N-edge slots (MY: local y 0 = core side).  The E-column S-edge slots (lk_ES0/ES1, MY) keep their
+        # orient: the same off-shore pattern there predates the reserve pair and their change would rename the in-flight
+        # s_7S station kits (ST405 t23..t28) -> S81 steward decision.
+        orient = "MY" if side == "E" else ("MX" if row == 0 and side == "W" else "R0")
         serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=nc, nr=nr, orient=orient,
                               contents=[C("u_phy", "ot_pdie_serdes", "rework",
                                           note="SerDes PHY model re-aspected into a %.2f x %.2f slot; a strip " % (nc * PX, nr * PY) +
@@ -1133,7 +1138,8 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
     # ---- S81-XDIE 10-24: copy-A/B reserve pair (RELEASE_RACK 2.1): every layer die carries EN2/EN3 (s_7N pair B) and
     #      WS2/WS3 (s_0S pair B); one logic design, wired on the 64 pre/post-group dies.  Same circuit as pair A: per
     #      SerDes a 512-b tx lane LP -> lk (coll) and a 514-b rx lane lk -> LP (coll), ending at the lep LP partition.
-    #      RTL owed: the s_7N / s_0S lep cores expose pair-B coll ports (the s_0N lep already has 4 = pairs A + B). ----
+    #      RTL (S81-XDIE 10-24): s_0S -> ot_s81sl_slice_lepw_mab_mu_72, s_7N -> ot_s81sl_slice_lepe_mab_mu_72 (lep
+    #      ot_s81sl_lep_mu_hab), bind overlay tools/s81_dv/release72/mu72_overlay_xdie.json (tx2/tx3/rx2/rx3). ----
     if not v47:
         for half, names in (("s_7N", ("EN2", "EN3")), ("s_0S", ("WS2", "WS3"))):
             lp = slices[half]["LP"].name
@@ -1164,8 +1170,11 @@ LEAF_CORES = [("vp_a", 36056 + 6 * 50540), ("vp_b", 5 * 50540), ("vp_c", 5 * 505
               ("vn", 375145), ("vs_vsw", 117971 + 120703), ("vq_rx", 46676 + 82916 + 99597)]
 C_CORES = {"xrt1": [("eg", 261681), ("xg_xr", 174928 + 67849), ("xf_cap", 135954 + 22959)],
            "xrt3": [("eg", 261681), ("xg_xr", 174928 + 78456), ("xf_cap", 135954 + 22959)]}
-LP_CELLS = {"dsdv_slice_lepw_mu": 88962 + 4 * 67956 + 4703, "dsdv_slice_lepw_mus": 51741 + 2 * 67956 + 4703,
-            "dsdv_slice_lepe_mu": 67042 + 2 * 67956 + 4703, "dsdv_slice_lepe_nh_mus": 51741 + 2 * 67956 + 4703}
+# S81-XDIE 10-24 (reserve pair on every die): s_0S = the copy-A/B top of s_0N (lepw_mab_mu_72: lep_mu_ab + 4 lanes, same
+# measured count); s_7N = lepe_mab_mu_72 (lep_mu_hab + 4 lanes): ESTIMATE lep_mu_h 67,042 + the measured A/B endpoint delta
+# lep_mu_ab - lep_mu_a 37,221 (no Yosys count of lep_mu_hab yet)
+LP_CELLS = {"dsdv_slice_lepw_mu": 88962 + 4 * 67956 + 4703, "dsdv_slice_lepw_mus": 88962 + 4 * 67956 + 4703,
+            "dsdv_slice_lepe_mu": 67042 + 37221 + 4 * 67956 + 4703, "dsdv_slice_lepe_nh_mus": 51741 + 2 * 67956 + 4703}
 UNIT_CORES = {
     "eng": ([("eng_rr_a", 418942 // 2), ("eng_rr_b", 418942 - 418942 // 2)], "dsdv_eng_rr 418,942 (F ep7 ref_gate "
             "dsdv_eng_rr_b) > cap: 2 planned cores"),
