@@ -8,11 +8,14 @@ The four corner cores kv3_astk_{EN,ES,WN,WS} (kv3_hub_Eo / kv3_hub_Wo) become in
   straps) keeps its kit coordinate), orient = the whole-instance orient (R0/MX/MY/R180) that keeps the most pins on the face
   the old corner table chose (its partner side; ties: smaller mean displacement), straps [strap_corner, 2 b, value EN 2'b11 | ES 2'b10 | WN 2'b01 | WS 2'b00]
   (bit1 = E side, bit0 = N half; the hub ties TIEHI/TIELO next to the pin).
+Hub internal_stations[] to/from a re-oriented core port that lands on another face (ES/WS am + ap: W/E -> N) are
+re-routed to the oriented master pins round the core box (KV-PLAN3 07:2x: re-pin the slots and the ahub side).
 Pins of the old corner tables missing from the master (am g drop qo[571]) are reported, not invented.
     astk_master_v39f.py PLAN_IN PLAN_OUT --kit-pins KIT/pins.json --cores DIR --report R.json
 """
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 
@@ -34,6 +37,88 @@ def face(x, y):
 
 def key(q):
     return q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]"
+
+
+REACH = 405.0
+CLR = 17.28                 # corridor offset off the core box (2 x 8.64 lattice)
+
+
+def hops_on(path, reach=REACH):
+    """regs evenly on the polyline at <= reach"""
+    L = sum(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(path, path[1:]))
+    n = max(0, math.ceil(L / reach - 1e-9) - 1)
+    out = []
+    for i in range(n):
+        t = L * (i + 1) / (n + 1)
+        for p, q in zip(path, path[1:]):
+            d = abs(p[0] - q[0]) + abs(p[1] - q[1])
+            if t <= d + 1e-9:
+                f = 0.0 if d == 0 else t / d
+                out.append([round(p[0] + f * (q[0] - p[0]), 3), round(p[1] + f * (q[1] - p[1]), 3)])
+                break
+            t -= d
+    return out, L
+
+
+def reroute(raw, mk, insts):
+    """internal_stations[] between a hub face and a re-oriented astk core port: the core end moves to the oriented
+    master pins (port centroid on its face), the path leaves the core face by CLR, runs round the core box on the side
+    of the far end, and stations are re-spaced at <= REACH; lanes on that bus get the depth change."""
+    rerouted, depth = [], {}
+    for ins in insts:
+        if ins["orient"] == "R0" or not ins["ports_off_face"]:
+            continue
+        t = raw["partition_types"][ins["type"]]
+        hc = next(h for h in t["hard_cores"] if h["inst"] == ins["inst"])
+        (ox, oy), f = hc["origin_um"], OR[ins["orient"]]
+        x0, y0, x1, y1 = ox, oy, ox + W, oy + H
+        for e in t.get("internal_stations") or []:
+            ends = [(k, str(e.get(k, ""))) for k in ("launch", "capture")]
+            hit = [(k, v.split(".", 1)[1]) for k, v in ends if v.startswith(ins["inst"] + ".")]
+            if not hit:
+                continue
+            side, port = hit[0]
+            pts = [f(*mk[n]) for n in mk if re.sub(r"\[\d+\]$", "", n) == port]
+            if not pts or port not in ins["ports_off_face"]:
+                continue
+            cx, cy = sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)
+            fc = face(cx, cy)
+            pin = (round(cx + ox, 3), round(cy + oy, 3))
+            far = tuple(e["to_um"] if side == "launch" else e["from_um"])
+            out_pt = dict(N=(pin[0], y1 + CLR), S=(pin[0], y0 - CLR), E=(x1 + CLR, pin[1]), W=(x0 - CLR, pin[1]))[fc]
+            if fc in "NS":       # round the core on the far end's x side, then straight to the far end
+                wx = x0 - CLR if far[0] < (x0 + x1) / 2 else x1 + CLR
+                core_side = [pin, out_pt, (wx, out_pt[1]), (wx, far[1])]
+            else:
+                wy = y0 - CLR if far[1] < (y0 + y1) / 2 else y1 + CLR
+                core_side = [pin, out_pt, (out_pt[0], wy), (far[0], wy)]
+            path = core_side + [far]
+            if side == "launch":
+                regs, L = hops_on(path)
+                e["from_um"] = list(pin)
+            else:
+                regs, L = hops_on(path[::-1])
+                e["to_um"] = list(pin)
+            old = len(e["regs_um"])
+            e["regs_um"] = regs
+            e["note"] = (e.get("note", "") + f" | v3.9f ASTK master {ins['orient']}: core end on the {fc} face, path "
+                         f"{L:.0f} um round the core box (+{CLR:g} um), {len(regs)} stations <= {REACH:g} um").lstrip(" |")
+            rerouted.append(dict(type=ins["type"], conn=e.get("conn"), port=f"{ins['inst']}.{port}", face=fc,
+                                 path_um=round(L, 1), stations=[old, len(regs)]))
+            if e.get("conn", "").startswith("bus:") and len(regs) != old:
+                depth[(ins["type"], e["conn"][4:])] = depth.get((ins["type"], e["conn"][4:]), 0) + len(regs) - old
+    ptype = {p["name"]: p["type"] for p in raw["partitions"]}
+    ports = {p["id"]: p for p in raw["ports"]}
+    lanes = {}
+    for ln in raw["lanes"]:
+        d = 0
+        for end in (ports[ln["ports"][0]]["src"], ports[ln["ports"][-1]]["dst"]):
+            d += depth.get((ptype.get(end["part"]), end["bus"]), 0)
+        if d:
+            ln["fixed_cycles"] = int(ln.get("fixed_cycles", 0)) + d
+            ln["note"] = ln.get("note", "") + f" | v3.9f ASTK master re-route {d:+d} internal stations"
+            lanes[ln["id"]] = d
+    return rerouted, lanes
 
 
 def main():
@@ -96,8 +181,12 @@ def main():
                                          pins_missing_in_master=missing,
                                          pins_moved=sum(1 for k in ok if k in mk and
                                                         OR[o](*mk[k]) != ok[k])))
+    rep["rerouted"], rep["lanes"] = reroute(raw, mk, rep["instances"])
     Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+    for r in rep["rerouted"]:
+        print(f"astk_master: re-route {r['type']} {r['conn']} {r['port']} -> {r['face']} face, {r['path_um']} um, "
+              f"stations {r['stations'][0]} -> {r['stations'][1]}")
     for i in rep["instances"]:
         print(f"astk_master: {i['type']}.{i['inst']} {i['corner']} -> kv3_astk {i['orient']} mean disp "
               f"{i['mean_disp_um'][i['orient']]} um, face match {i['face_match'][i['orient']]}, off-face ports "
