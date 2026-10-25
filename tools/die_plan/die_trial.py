@@ -1597,7 +1597,9 @@ def cmd_render(a):
         sc = ax.scatter([t["x"] for t in tree["taps"] if t["inst"] in d], [t["y"] for t in tree["taps"] if t["inst"] in d],
                         c=[d[t["inst"]] for t in tree["taps"] if t["inst"] in d], s=4, cmap="viridis", norm=norm, zorder=5)
         fig.colorbar(sc, ax=ax, fraction=0.03, label=f"tap insertion {a.corner} (ps)")
-        ax.set_title(f"{P.name}: die clock H-tree (M8 red / M9 blue) + partition taps coloured by {a.corner} insertion "
+        topo = "seam-aligned tree (branch-padded; segments drawn parent->child)" \
+            if tree["params"].get("topology") == "seam_bisection" else "H-tree"
+        ax.set_title(f"{P.name}: die clock {topo} (M8 red / M9 blue) + partition taps coloured by {a.corner} insertion "
                      f"({min(ta):.0f}-{max(ta):.0f} ps)", fontsize=9)
         fig.savefig(out / "clock_tree.png", dpi=a.dpi, bbox_inches="tight")
         plt.close(fig)
