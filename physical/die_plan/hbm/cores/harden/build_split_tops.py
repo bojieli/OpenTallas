@@ -139,6 +139,32 @@ PIECES = {
         src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr '
             '(HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9\'h1ff '
             'inside as the master'),
+    # PATH-HBM/Q3 (2026-10-25): NW hub collective ot_hfd_coll_q3_hard_v8x (NLINK 3 + TKM tkx_* + ARGMAX) split twin
+    # ot_hfd_coll_q3_hard_v8x_s: ring_ag + reduce reuse the coll_q2 masters unchanged (*_q3chk = identity check only);
+    # the 3 link engines + the TP192 argmax leave the body as coll_q3_edge; the rest is coll_q3_body (rest_extract).
+    'coll_q3_edge': dict(
+        master='ot_hfd_coll_q3_hard_v8x_s', dir='ot_hfd_coll_q3_hard_v8x', top='ot_hfd_coll_q3_edge_core',
+        pieces=lambda n, m: {f'{m}__edge': (sorted(g.find_paths(n, m, r'coll_link_e$')) + g.find_paths(n, m, r'coll_argmax_m_tp192$'), [])},
+        rtl={'u_link0': ('ot_hgi_coll_link_e', ''), 'u_link1': ('ot_hgi_coll_link_e', ''),
+             'u_link2': ('ot_hgi_coll_link_e', ''), 'u_arg': ('ot_hgi_coll_argmax_m_tp192', '')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) '
+            'u_body.g_link[0..2].u_link (ot_hgi_coll_link_e, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg (clk_arg)'),
+    'coll_q3_vm': dict(
+        master='ot_hfd_coll_q3_hard_v8x_s', dir='ot_hfd_coll_q3_hard_v8x', top='ot_hfd_coll_q3_vm_core',
+        pieces=lambda n, m: {f'{m}__vm': (g.find_paths(n, m, r'coll_vmasm_sliced_v7$') + g.find_paths(n, m, r'coll_static_vmwrite_roots_v6_physical$'), [])},
+        rtl={'u_vmasm': ('ot_hgi_coll_vmasm_sliced_v7', ''), 'u_writer': ('ot_hgi_coll_static_vmwrite_roots_v6_physical', '')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) '
+            'u_body.u_vmasm (VM read assembly, vm_rr face) + u_body.u_writer (VM write roots, vm_kq face): body_core <= ~260k'),
+    'coll_q3_ring_ag_q3chk': dict(
+        master='ot_hfd_coll_q3_hard_v8x_s', dir='q3chk', top='ot_hfd_coll_q2_ring_ag_core', pieces=coll_one(r'coll_ring_ag$', 'ring_ag'),
+        rtl={'u_ring': ('ot_hgi_coll_ring_ag', '#(.SPLIT_CLOCKS(1),.AG(1))')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_ring (clk = clk_ctl = clk_ring[0])'),
+    'coll_q3_reduce_q3chk': dict(
+        master='ot_hfd_coll_q3_hard_v8x_s', dir='q3chk', top='ot_hfd_coll_q2_reduce_core', pieces=coll_one(r'coll_reduce_static_pr$', 'reduce'),
+        rtl={'u_reduce': ('ot_hgi_coll_reduce_static_pr', '')}, straps=[],
+        src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv u_body.u_reduce = ot_hgi_coll_reduce_static_pr '
+            '(HBM-P5 twin: input pin register on every data/control input + fault register); pub_meta[32:24] tied 9\'h1ff '
+            'inside as the master'),
     'pg_lane_full': dict(
         master='ot_hbm_su_static_pgslice_lg__pv0', top='ot_hbm_su_pg_lane_full_core',
         pieces=pg_groups(lambda m, l: l == 'lane_exp0'),
@@ -447,7 +473,7 @@ def main():
                f'// Source wiring: {cfg["src"]}\n'
                f'// Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.\n')
         txt, ports, _ = sc.emit_wrapper(P0, cfg['top'], cfg['rtl'], straps, hdr)
-        d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', re.sub(r'__pv\d+$', '', m))
+        d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', cfg.get('dir') or re.sub(r'__pv\d+$', '', m))
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, cfg['top'] + '.sv'), 'w').write(txt)
         res[key] = dict(master=m, top=cfg['top'], file=os.path.relpath(os.path.join(d, cfg['top'] + '.sv'), REPO),
