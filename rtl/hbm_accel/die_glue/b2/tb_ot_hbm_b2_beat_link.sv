@@ -24,7 +24,7 @@ module tb_b2_beat_link;
     // expected outputs by edge index
     reg [W-1:0] exp_d [0:N+LAT+8]; reg exp_v [0:N+LAT+8];
     integer t, gap, errs = 0, checks = 0, words = 0;
-    function automatic [W-1:0] rnd_w(input integer u); integer j; begin for (j = 0; j < W; j = j + 32) rnd_w[j +: 32] = $random; end endfunction
+    function automatic [W-1:0] rnd_w(input integer u); reg [W+31:0] x; integer j; begin x = 0; for (j = 0; j < W; j = j + 32) x[j +: 32] = $random; rnd_w = x[W-1:0]; end endfunction
     initial begin
         for (t = 0; t <= N + LAT + 8; t = t + 1) exp_v[t] = 0;
         vin = 0; d = 0;
