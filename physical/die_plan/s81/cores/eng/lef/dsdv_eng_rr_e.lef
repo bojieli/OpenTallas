@@ -19365,7 +19365,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 69.024 0.192 69.048 ;
+        RECT 0.000 74.592 0.192 74.616 ;
     END
   END rco[32]
   PIN rco[33]
@@ -19373,7 +19373,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 70.416 0.192 70.440 ;
+        RECT 0.000 75.984 0.192 76.008 ;
     END
   END rco[33]
   PIN rco[34]
@@ -19381,7 +19381,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 71.808 0.192 71.832 ;
+        RECT 0.000 77.376 0.192 77.400 ;
     END
   END rco[34]
   PIN rco[35]
@@ -19389,7 +19389,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 73.200 0.192 73.224 ;
+        RECT 0.000 78.768 0.192 78.792 ;
     END
   END rco[35]
   PIN rco[36]
@@ -19397,7 +19397,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 74.592 0.192 74.616 ;
+        RECT 0.000 80.160 0.192 80.184 ;
     END
   END rco[36]
   PIN rco[37]
@@ -19405,7 +19405,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 75.984 0.192 76.008 ;
+        RECT 0.000 81.552 0.192 81.576 ;
     END
   END rco[37]
   PIN rco[38]
@@ -19413,41 +19413,9 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 77.376 0.192 77.400 ;
-    END
-  END rco[38]
-  PIN rco[39]
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M4 ;
-        RECT 0.000 78.768 0.192 78.792 ;
-    END
-  END rco[39]
-  PIN rco[40]
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M4 ;
-        RECT 0.000 80.160 0.192 80.184 ;
-    END
-  END rco[40]
-  PIN rco[41]
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M4 ;
-        RECT 0.000 81.552 0.192 81.576 ;
-    END
-  END rco[41]
-  PIN rco[42]
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M4 ;
         RECT 0.000 82.944 0.192 82.968 ;
     END
-  END rco[42]
+  END rco[38]
   PIN pci[0]
     DIRECTION INPUT ;
     USE SIGNAL ;

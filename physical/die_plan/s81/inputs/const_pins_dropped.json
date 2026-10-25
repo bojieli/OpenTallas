@@ -1092,13 +1092,24 @@
   },
   "dsdv_eng_rr_e": {
    "pins": [
+    "rco[32]",
+    "rco[33]",
+    "rco[34]",
+    "rco[35]",
     "pci[1]",
     "pci[2]",
     "pci[3]",
     "pci[4]"
    ],
-   "why": "pci[4:1] = response-chain own field, not read by the core (head reads v / tag / d): port narrowed to pci[263:0], new pci[0] = old [0], new pci[263:1] = old [267:5].  Producer u_etap_15.pco[4:1] (dsdv_eng_tap, reused by etap_01..15) keeps the field: the next tap reads own, so only the last tap's copy is unloaded.  rco[35:25] are NOT dropped: their raw-netlist constant was the csa31 slang bug (fixed in ot_s81eng_rr_n32.sv).",
+   "why": "rco[35:32] = request sector bits [29:26] = PCBASE[29:26] (sector = PCBASE + atom[30:5], a 26-b offset; PCBASE[25:0] == 0 checked in the unit wrapper; TIELO in the raw netlist at the kit's PCBASE 0): port narrowed to rco[38:0], new rco[31:0] = old [31:0], new rco[38:32] = old [42:36]; dsdv_eng_rr_split re-inserts PCBASE[29:26].  pci[4:1] = response-chain own field, not read by the core (head reads v / tag / d): port narrowed to pci[263:0], new pci[0] = old [0], new pci[263:1] = old [267:5].  Producer u_etap_15.pco[4:1] (dsdv_eng_tap, reused by etap_01..15) keeps the field: the next tap reads own.  rco[31:25] are NOT dropped: their earlier raw-netlist constant was the csa31 slang bug (fixed in ot_s81eng_rr_n32.sv).",
    "rename": {
+    "rco[36]": "rco[32]",
+    "rco[37]": "rco[33]",
+    "rco[38]": "rco[34]",
+    "rco[39]": "rco[35]",
+    "rco[40]": "rco[36]",
+    "rco[41]": "rco[37]",
+    "rco[42]": "rco[38]",
     "pci[5]": "pci[1]",
     "pci[6]": "pci[2]",
     "pci[7]": "pci[3]",
