@@ -174,6 +174,74 @@
   "note": "die_io.py plan: u_phy"
  },
  {
+  "name": "io_lk_WS2_u_phy",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "lk_WS2",
+  "rect_um": [
+   103.68,
+   103.68,
+   2989.44,
+   1330.56
+  ],
+  "sites": 152,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+  "note": "die_io.py plan: u_phy"
+ },
+ {
+  "name": "io_lk_WS3_u_phy",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "lk_WS3",
+  "rect_um": [
+   8760.96,
+   103.68,
+   10203.84,
+   2557.44
+  ],
+  "sites": 144,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+  "note": "die_io.py plan: u_phy"
+ },
+ {
+  "name": "io_lk_EN2_u_phy",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "lk_EN2",
+  "rect_um": [
+   20304.0,
+   23414.4,
+   23189.76,
+   24641.28
+  ],
+  "sites": 152,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+  "note": "die_io.py plan: u_phy"
+ },
+ {
+  "name": "io_lk_EN3_u_phy",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "lk_EN3",
+  "rect_um": [
+   28961.28,
+   23414.4,
+   31847.04,
+   24641.28
+  ],
+  "sites": 152,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+  "note": "die_io.py plan: u_phy"
+ },
+ {
   "name": "io_phy_hbm_u_phy_hbm",
   "kind": "phy_macro",
   "iface": "hbm_phy",
