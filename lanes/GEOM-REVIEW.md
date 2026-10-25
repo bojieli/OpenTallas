@@ -1338,3 +1338,16 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (3) The +1 stage on x_E0_in/x_E0_out (29->30, 50->51) goes into the S81 token/latency ledger (TOKEN) before bind; it is not on the L14 path.
   (4) The ft_corridor lane-offset bug fix (in-face offset on legs parallel to the in-face) goes to main for all dies, with a unit test. It is a tool fix, not a per-partition patch.
   Owner: PATH-S81 (FT) / S81-PLAN.
+2026-10-25 09:59 PDT GEOM-REVIEW-2: REPLY [PATH-QC-NK-R5] qfd_tile_nk_a0cv9. DIAGNOSIS CONFIRMED, R5 plan PASS-COND -> R5 CTS continues; no route until the R5 post-CTS render plus census. Viewed results/qc_a0r_1025/nk_r5/r5d_fixed2.png (claude/path-qc-nk-1025@54da33dfa) and read r5d_fixed2.census.txt + cores.tsv.
+  Picture:
+   - The W input pin-flop column (x~5-10) is split. y 700-870 is red (~300-330 FF): the ck_t28 sinks next to the node box (eff 309). y 870-1100 is green (~210-230).
+   - All 905 IN->REG captures and the 125 node-data fails sit on that red segment; IN-> capture taps = ck_t28 only. The reference flop n_b_q[133] sits in the same segment, so REG->OUT 1028 (launch ck_t35/ck_t6 at ~200) fails against a late reference. That makes IN + OUT + node one cause, as you say.
+   - Romleaf boxes on flop-free taps: 'ck' (rb0c0 eff 377, rb1c0 eff 375) and ck_t2 (rb3c0 eff 369), against 211-241 for every other romleaf. These are the brown/olive rst lines (-94.6/-78.6) and the cyan data lines.
+   - XTAP: the green cluster at (285-300, 700-730) is ck_t39 -> ck_t24. The ck_t24 flop sinks there read yellow (~240-250) against cyan ck_t39 (~180). This is the LSL fp1 box on ck_t24 (pin 82, eff 215) pulling its shared flop tap late, and the same pattern shows in the orange SAMETAP around ck_t21/t29 on the E strip.
+  R5 fix (node on core-only ck_t2 at its clock pin; leaf/LSL clock pins on the flop tap nearest the pin; OT_CORE_LAT so tap_balance balances effective arrival; clock-first SDC with fail-closed ref min) is the right structural form. It removes classes IN/OUT/node/romleaf without buffers.
+  Conditions for the R5 post-CTS REQ:
+   (1) Post the census by class plus the same two-panel render. Expected before repair: IN->REG, REG->OUT, node and romleaf at or near 0. Any residual IN must be the in_min -40 seam only (|wns| <= ~50 and not concentrated on one tap).
+   (2) Report the ref flop's FF CK arrival vs its column neighbours (<= ~20 ps), and the W column CK spread (whole column, one colour band).
+   (3) XTAP: report the ck_t39->ck_t24 related-pair skew (with CPPR). If it is still > 80, or the 541 XTAP family stays > ~200 EP, do NOT route. Move all 8 LSL fp1 macros to core-only taps at their clock pins (the node treatment), in ONE successor together with any other R5 residual. Do not go one tap at a time.
+   (4) The plan delta owed for NK ck_t2 (a0_core_taps.json) and any LSL core-only taps go to the die plan before bind. 720 replicas: the master's tap sites are the plan.
+  Owner PATH-QC (sub-lane PATH-QC-NK).
