@@ -17,7 +17,8 @@
 //                  link to the parent (the parent's lane L, the parent's tag).
 //   dsdv_idx_qf    query fan-out (every die): tree frame (type 10) from the parent link or the local source ->
 //                  forwarded unchanged to both child links; this die's IDX_S job (type 4, ITS spec picked from the
-//                  frame's spec table by the die uid) into the reader chain head.
+//                  frame's spec table by the die uid) into the reader chain head.  The die uid is a register loaded
+//                  at boot by a CONFIG frame (type 11) on qs (S81/PORTFIX-CFG 10-25; it was a die input).
 // Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
 // 2-flop synchronous release (reset_landing).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -460,18 +461,29 @@ module dsdv_qf_copy #(parameter integer W=1,RESET=1,ID=0)(
  assign q=r;
 endmodule
 
+// S81/PORTFIX-CFG 10-25 (S81 DECISIONS 3 + 4): input uid[7:0] removed, output st[3:0] -> 1-bit sticky fault.
+//   CONFIG frame (type 11, one word, len 0) on qs: [511:508] 11, [491:480] len 0, [7:0] uid; every other bit 0.
+//   It loads the uid register (control state: reset 0, configured flag reset 0) and is CONSUMED here: it never reaches
+//   qr (the reader chain), qc0 or qc1 (a child die must not take its parent's uid); its stage-2 slot leaves qr / qc
+//   idle.  A config frame with len != 0 is a bad frame (fault; its payload words are consumed too).  Accepted on either
+//   input (no qf forwards one, so only the die's own qs can deliver it).
+//   fault (sticky) = OR of the former st conditions {no-entry seen, bad frame, collision} + a tree frame before any
+//   config frame (an unconfigured die would answer as uid 0).
+//   MUT 3 (bench): the config frame leaks to qr / qc;  MUT 4: uid bits [3:0] / [7:4] swapped at the load;  MUT 5: the
+//   no-entry condition dropped from the fault fold.
+// Edges: none added: the uid register feeds the same kept compare copies (one edge later than the register; the
+// config frame precedes the first tree frame by >= 3 edges, the compiler's boot rule).
 module dsdv_idx_qf #(
     parameter integer MUT = 0
 ) (
     input  wire          ck,
     input  wire          rst,
-    input  wire [7:0]    uid,        // die tree uid (die configuration input)
     input  wire [512:0]  qs,         // local frame source (s_3S)
     input  wire [512:0]  ql,         // parent tree link
     output wire [512:0]  qr,         // -> irg_00 qi
     output wire [512:0]  qc0,        // -> child link 0
     output wire [512:0]  qc1,        // -> child link 1
-    output reg  [3:0]    st          // {no-entry seen, bad frame, collision, fault}
+    output reg           fault       // sticky: no-entry seen | bad frame | collision | tree frame before config
 );
     localparam integer NOUT=32;
     localparam integer NJ = 22;      // <=24-bit payload slices
@@ -485,13 +497,15 @@ module dsdv_idx_qf #(
     always @(posedge ck or negedge rs0) if (!rs0) rnk <= 8'd0; else rnk <= 8'hFF;
     // ---- stage 1 (pin flops) and stage 2 (merged source), valid copies ----
     reg          qs_v0, ql_v0, s1_v0, qc0_v, qc1_v;
+    wire         cfw;            // stage-2 word belongs to a config frame (type 11): not forwarded to qc0 / qc1 / qr
     reg  [511:0] qs_d, ql_d, s1_d, qc0_d, qc1_d;
     wire [NJ-1:0] qs_vk, ql_vk;   // independent kept copies; each masks <=24 payload bits
     wire [NOUT+3:0] s1_vk;          // [NJ-1:0] qr rewrite select; [NJ] framing; [NJ+1] counters
     always @(posedge ck or negedge rnk[0])
         if (!rnk[0]) begin qs_v0 <= 1'b0; ql_v0 <= 1'b0; s1_v0 <= 1'b0; qc0_v <= 1'b0; qc1_v <= 1'b0; end
         else begin
-            qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0; qc0_v <= s1_v0; qc1_v <= s1_v0;
+            qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0;
+            qc0_v <= s1_v0 && (!cfw || MUT == 3); qc1_v <= s1_v0 && (!cfw || MUT == 3);   // config frame consumed
 
         end
     wire qs_vctrl,ql_vctrl;
@@ -518,7 +532,9 @@ module dsdv_idx_qf #(
     wire         v  = s1_vk[NOUT];       // framing copy
     wire         vc = s1_vk[NOUT + 1];   // counter copy
     // ---- this die's entry: compare replicated per kept uid copy ----
-    wire [8 * NC - 1:0] mek;      // die configuration, no reset (used only with a valid word)
+    // ---- die uid register (config frame type 11; control state, reset 0) -> the kept compare copies ----
+    reg  [7:0] uid; reg ucfg;
+    wire [8 * NC - 1:0] mek;      // copies of the uid register, no reset (used only with a valid word)
     generate for(genvar k=0;k<NC;k=k+1)begin:g_uidcopy
         dsdv_qf_copy #(.W(8),.RESET(0),.ID(300+k))u(.ck(ck),.rn(rnk[0]),.d(uid),.q(mek[8*k+:8]));
     end endgenerate
@@ -534,28 +550,39 @@ module dsdv_idx_qf #(
     end endgenerate
     wire w_hit_f = |hit[4*(NC-1)+:4];
     // ---- framing ----
-    reg         infr, tree, hit_seen, qr_v;
+    reg         infr, tree, hit_seen, qr_v, cfr;
     reg  [11:0] left;
     reg  [3:0]  nsl;                    // spec words left
-    reg  [3:0]  fl;
+    reg  [3:0]  fl;                     // [0] tree frame before config, [1] collision, [2] bad frame, [3] no entry
     wire        is_tree = d[511:508] == 4'd10;
+    wire        is_cfg  = d[511:508] == 4'd11;
     wire inf_f,inf_c,inf_left,v_left;
+    assign      cfw     = v && (inf_f ? cfr : is_cfg);      // a config frame word at stage 2 (header or payload)
     dsdv_qf_copy #(.W(1),.ID(652))u_inf_left(.ck(ck),.rn(rnk[4]),.d(inf_next),.q(inf_left));
     dsdv_qf_copy #(.W(1),.ID(653))u_v_left(.ck(ck),.rn(rnk[4]),.d(qs_vctrl|ql_vctrl),.q(v_left));
     dsdv_qf_copy #(.W(1),.ID(650))u_inf_f(.ck(ck),.rn(rnk[3]),.d(inf_next),.q(inf_f));
     dsdv_qf_copy #(.W(1),.ID(651))u_inf_c(.ck(ck),.rn(rnk[3]),.d(inf_next),.q(inf_c));
     always @(posedge ck or negedge rnk[3])
-        if (!rnk[3]) begin infr <= 1'b0; tree <= 1'b0; hit_seen <= 1'b0; qr_v <= 1'b0; fl <= 4'd0; st <= 4'd0; end
+        if (!rnk[3]) begin infr <= 1'b0; tree <= 1'b0; hit_seen <= 1'b0; qr_v <= 1'b0; cfr <= 1'b0; fl <= 4'd0; fault <= 1'b0;
+                           uid <= 8'd0; ucfg <= 1'b0; end
         else begin
             qr_v <= 1'b0;
             if (qs_v0 && ql_v0) fl[1] <= 1'b1;
             if (v) begin
                 if (!inf_f) begin                                          // header
                     infr <= d[491:480] != 12'd0;
-                    tree <= is_tree; hit_seen <= 1'b0;
+                    tree <= is_tree; hit_seen <= 1'b0; cfr <= is_cfg;
                     if (is_tree) begin
                         if (d[3:0] == 4'd0 || d[491:480] != 12'(64) + 12'(d[3:0])) fl[2] <= 1'b1;
+                        if (!ucfg) fl[0] <= 1'b1;
+                    end else if (is_cfg) begin                             // config frame: consumed, loads the uid
+                        if (d[491:480] != 12'd0) fl[2] <= 1'b1;
+                        else begin uid <= (MUT == 4) ? {d[3:0], d[7:4]} : d[7:0]; ucfg <= 1'b1; end
+                        if (MUT == 3) qr_v <= 1'b1;
                     end else qr_v <= 1'b1;                                // other frames pass
+                end else if (cfr) begin                                    // payload of a (bad) config frame: consumed
+                    if (left == 12'd1) infr <= 1'b0;
+                    if (MUT == 3) qr_v <= 1'b1;
                 end else begin
                     if (left == 12'd1) infr <= 1'b0;
                     if (tree && nsl != 4'd0) begin                       // spec word
@@ -567,7 +594,7 @@ module dsdv_idx_qf #(
                     end else if (!tree || hit_seen) qr_v <= 1'b1;        // query words (or another frame's payload)
                 end
             end
-            st <= {fl[3], fl[2], fl[1], fl[1] | fl[2]};
+            fault <= (MUT == 5) ? |fl[2:0] : |fl;
         end
     always @(posedge ck or negedge rnk[3])
         if (!rnk[3]) left <= 12'd0;
