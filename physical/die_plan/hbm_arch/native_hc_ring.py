@@ -70,8 +70,12 @@ def apply(plan, out, inputs, log):
                 cores.append(dict(inst=parent["inst"]+"_"+cutname, module=mod,
                     origin_um=[xsites[i//4], round(17.28+(i%4)*ROW_PITCH,4)],
                     outline_um=list(PAIR_WH), orient=orient, track_offset_um=[0.0,0.0], pins_file=pf,
-                    native_connection_key=f"{style}:{cutname}", native_hierarchy=parent["inst"]+"."+cutname,
+                    
                     note="Exact native W128 pair cut; shared RTL master and pin table; control glue remains in parent"))
+            manifest.setdefault("core_instances", []).extend(
+                dict(type=tn, inst=c["inst"], hierarchy=parent["inst"]+"."+cutname,
+                     connection_key=f"{style}:{cutname}")
+                for c, cutname in zip(cores, sorted(mp["pairs"])))
             t["hard_cores"] = cores
             t["clock"]["taps"] = []  # rebuilt from the actual new core terminals below
             t["clock"].pop("core_taps", None)

@@ -273,7 +273,7 @@ def apply_rects(plan, rect, newH, dy, log):
 
 
 # ------------------------------------------------------------------------------------------------ 2. lanes
-def reroute(plan, log, iters=60):
+def reroute(plan, log, iters=60, direct_lanes=()):
     P = S.Plan(plan)
     T = plan["partition_types"]
     R, adj = B._adjacency(P, minc=60.0)
@@ -348,9 +348,12 @@ def reroute(plan, log, iters=60):
             if role.startswith("die"):
                 blk |= {n for n in P.parts if not single(n)}
             # Dijkstra over (node, entry face); state cost includes the in-partition leg length
-            pq = [(md(cen(a), cen(a)) * 0.0, 0, a, None, (a,))]
+            forced = lid in direct_lanes
+            if forced and b not in adj[a]:
+                raise ValueError(f"named direct lane {lid}: {a} and {b} do not abut")
+            pq = [] if forced else [(md(cen(a), cen(a)) * 0.0, 0, a, None, (a,))]
             best = {}
-            got = None
+            got = (a, b) if forced else None
             cnt = 0
             while pq:
                 c, _, n, fi, path = heapq.heappop(pq)
@@ -1490,6 +1493,7 @@ def main(argv=None):
     ap.add_argument("--floorplan", default=str(INP / "floorplan.json"))
     ap.add_argument("--placement-seed", help="existing plan: reuse only exactly matching core-view/bus constraints")
     ap.add_argument("--native-hc-ring", action="store_true", help="candidate: exact W128 pair cuts in a 2x4 bank ring")
+    ap.add_argument("--direct-lanes", default="", help="comma separated named lanes reserved on an actual abutting face")
     a = ap.parse_args(argv)
     src, out = Path(a.src), Path(a.out)
     seed = placement_seed(a.placement_seed) if a.placement_seed else None
@@ -1530,7 +1534,7 @@ def main(argv=None):
         if os.environ.get("B2O_PROGRESS"): print("reroute", flush=True)
         if a.native_hc_ring:
             lane_delta(plan, log, INP / "native_hc_lane_delta.json")
-        routes, we, wt = reroute(plan, log)
+        routes, we, wt = reroute(plan, log, direct_lanes=tuple(x for x in a.direct_lanes.split(",") if x))
         lane_delta(plan, log)
         if a.native_hc_ring:
             lane_delta(plan, log, INP / "native_hc_lane_delta.json")
