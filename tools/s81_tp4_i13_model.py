@@ -7,8 +7,9 @@ def build(k=512, dense_windows=8192, slot=(626.4,561.6)):
     cache_entries=2*k
     cache_bits=2*cache_entries*36
     fifo_words=128
-    fifo_bits=fifo_words*(13*36+13+8)
-    pipeline_bits=16*40+2*13*36+2048
+    fifo_bits=fifo_words*(512+8)
+    idx_fifo_bits=64*(320+16)
+    pipeline_bits=16*40+8*(13*36+13+3)+2048+idx_fifo_bits
     ff=cache_bits+fifo_bits+pipeline_bits
     logic_proxy=cache_entries*(20+16)+24000
     cell_proxy=ff+logic_proxy
@@ -29,7 +30,7 @@ def build(k=512, dense_windows=8192, slot=(626.4,561.6)):
         memory=dict(dense_bits=dense_windows*256, dense_read_bytes_per_cycle=32,
                     dense_write_bytes_per_cycle=32,candidate_cache_bits=cache_bits,
                     cache_entries_per_bank=cache_entries,cache_banks=2,
-                    input_fifo_words=fifo_words,input_fifo_bits=fifo_bits,
+                    input_fifo_words=fifo_words,input_fifo_bits=fifo_bits,idx_fifo_bits=idx_fifo_bits,
                     worst_input_candidates=2*k,lookup_cache_read_bits_per_cycle=cache_entries*36,
                     cache_write_bits_per_cycle=36),
         crossing=dict(inputs=['vi276','vo276'],outputs=['lo276','st16'],

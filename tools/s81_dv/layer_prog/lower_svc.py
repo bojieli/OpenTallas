@@ -214,6 +214,59 @@ def selected_ids_frames(ids, *, first=0, mask=1, tag=0):
     return out
 
 
+
+def ik_row_fixture_frame(fx, kb, *, tag=0, user=USER, mask=1):
+    """Encode the released fixture's actual index key using the existing exact packer.
+
+    Key position is the append index (stored index-key row count), not the token
+    position. Caller inserts this frame in the live service job and counts it in
+    that job's q-frame count, outside rg3 reads of the same PC.
+    """
+    import rtl_v41_fullshape_layer_campaign as LC
+    fx = Path(fx)
+    meta = json.loads((fx / 'meta.json').read_text())
+    ops = json.loads((fx / 'ops.json').read_text())
+    desc = ops['attn.idx.newkey']
+    raw = (fx / 'ops/attn.idx.newkey.bin').read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == desc['sha256']
+    key = np.frombuffer(raw, dtype=np.dtype(desc['dtype'])).reshape(1, 128)
+    packed, scales = LC.pack_fp4_ue8m0(key)
+    codes = np.empty(128, dtype=np.uint8)
+    codes[0::2], codes[1::2] = packed[0] & 15, packed[0] >> 4
+    row_counts = list(meta['state']['rows'].values())
+    assert len(row_counts) == 1, 'index-key source must be selected explicitly if fixture has multiple source layers'
+    position = int(row_counts[0]['index_keys'])
+    return ik_row_frame(codes, scales[0], position, kb, tag=tag, user=user, mask=mask)
+
+
+def runtime_row_frames(ids, codes, scales, *, die_id=0, stack=ST, allq=False, tag=0, user=USER, mask=1):
+    """Encode real selected compressed rows arriving from the other owner dies.
+
+    This is the cross-die producer ABI, not host substitution. codes/scales are
+    stored E2M1/E4M3 bytes of those runtime rows; no arithmetic or re-quantization.
+    Row rank identifies its slot in SEL_IDS; 8 pairs cover512dimensions.
+    """
+    ids = [int(i) for i in ids]
+    c, s = np.asarray(codes), np.asarray(scales)
+    assert c.shape == (len(ids),512) and s.shape == (len(ids),32)
+    assert len(ids) <= 512 and all(0 <= g < 1 << 20 for g in ids)
+    assert np.all((c >= 0) & (c < 16)) and np.all((s >= 0) & (s < 256))
+    assert die_id in range(4) and stack in range(4)
+    words = []
+    for rank, gid in enumerate(ids):
+        own_die, own_stack = (gid >> 4) & 3, (gid >> 6) & 3
+        if own_die == die_id and own_stack == stack:
+            continue
+        for pair in range(8):
+            if not (allq or own_stack == stack or pair // 2 == stack):
+                continue
+            cb = sum(int(v) << (4 * i) for i,v in enumerate(c[rank,64*pair:64*(pair+1)]))
+            sb = sum(int(v) << (8 * i) for i,v in enumerate(s[rank,4*pair:4*(pair+1)]))
+            words.append(rank | gid << 10 | pair << 31 | cb << 34 | sb << 290)
+    return [[hdr(6,len(words[i:i+200]),tag,pos=0,user=user,mask=mask)] + words[i:i+200]
+            for i in range(0,len(words),200)]
+
+
 def cfg_spec(wb=WB, stack=ST, owner=None, tag=0, user=USER, allq=False):
     """Optional source launch identity, disjoint from legacy CFG bits [32:0]; [54] = ALLQ (RTLGAP-SO, dsdv_svc_att
     -DOT_SVC_ALLQ: allq_r <= q_d[54] on every CFG header)"""

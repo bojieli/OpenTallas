@@ -1,0 +1,51 @@
+{
+  "status": "WIP_DEFAULT_OFF_NOT_ADOPTED",
+  "functional_r1": {
+    "k": 512,
+    "dense_lookup": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 0,
+      "fault": 0
+    },
+    "candidate_lookup": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 0,
+      "fault": 0
+    },
+    "first_output": 975,
+    "last_output": 1499,
+    "output_span_cycles": 525,
+    "issue_to_completion": "NOT MEASURED in r1; r2 adds instrumentation",
+    "negative_controls": {
+      "missing_candidate": "FAULT0089",
+      "duplicate_ID": "FAULT00a9",
+      "wrong_tag": "FAULT0089"
+    }
+  },
+  "running_r2": "intel2:/srv/opentallas-scratch2/claude/codex-s81-i13/run_r2.sh via ot-run; includes randomized initial state and command/lookup/return/done measurements",
+  "not_run": [
+    "actual two-source selector composition",
+    "wrong-qslot full composition mutant",
+    "native SRAM model comparison",
+    "actual synthesized cell fit",
+    "floorplan/render/P&R/STA",
+    "G5 adoption"
+  ],
+  "contract": {
+    "I13": 103,
+    "QSHIFT": [
+      108,
+      104
+    ],
+    "LOOKUP": 109,
+    "DST": [
+      101,
+      100
+    ],
+    "LOOP": 102
+  },
+  "source": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tx_i13.sv",
+  "model_proxy_cells": 229216
+}

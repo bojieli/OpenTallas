@@ -669,14 +669,16 @@ def reader_beats(keys, b0, n, k, tag, om, e0, p=READER_P, ik=4):
     return out
 
 
-def tx_payload(lane, ptag, k, hb, otag, dly, r, sm, *, dst=0, loop=False):
+def tx_payload(lane, ptag, k, hb, otag, dly, r, sm, *, dst=0, loop=False, indexed13=False, qshift=0, candidate_lookup=False):
     assert 0 <= dly < 1 << 16 and 1 <= r < 8 and 0 < sm < 1 << 12 and hb % 16 == 0
     assert 0 <= lane < 4 and 1 <= k <= K_MAX and 0 <= hb < 1 << 20
     assert 0 <= ptag < 256 and 0 <= otag < 256
     assert isinstance(dst, int) and dst in range(4), 'DST: 0 tree, 1 TP north, 2 TP south, 3 none'
     assert loop in (False, True), 'LOOP must be a single bit'
+    assert 0 <= qshift <= 19 and (not candidate_lookup or indexed13)
+    assert indexed13 or qshift == 0
     return (TX_UID | TX_OP << 8 | 31 << 16 | (lane & 3) << 21 | (ptag & 0xFF) << 23 | (k & 0x3FF) << 31 |
-            (hb & 0xFFFFF) << 41 | (otag & 0xFF) << 61 | dly << 69 | r << 85 | sm << 88 | dst << 100 | int(loop) << 102)
+            (hb & 0xFFFFF) << 41 | (otag & 0xFF) << 61 | dly << 69 | r << 85 | sm << 88 | dst << 100 | int(loop) << 102 | int(indexed13) << 103 | qshift << 104 | int(candidate_lookup) << 109)
 
 
 
@@ -698,6 +700,36 @@ def selids_relay_beats(ids, first=0, mask=1):
             beat |= pos << (21 + 21 * j)
         out.append(beat)
     return out
+
+
+
+def selids_hostwrite_words(ids, first=0, mask=1):
+    """Actual dsdv_sh_selr class3 words on BOTH existing entry hw lanes."""
+    out = []
+    for relay in selids_relay_beats(ids, first, mask):
+        data = sum(((relay >> (21 + 21 * e)) & ((1 << 21) - 1)) << (32 * e) for e in range(8))
+        address = (relay >> 189) & ((1 << 20) - 1)
+        out.append(3 << 290 | address << 257 | data << 1 | 1)
+    return out
+
+
+def require_tp4_rank_quarters(quarter_positions):
+    """Fail before issue if sender-based quarters would produce descending IDX.
+
+    The existing TX walks selector IDX output in qslot order and requires
+    ascending positions. Sender lane2/lane3 is not a rank partition after a
+    butterfly stage. Do not issue a TP4 job until this invariant is met.
+    """
+    previous = None
+    for q, positions in enumerate(quarter_positions):
+        p = [int(x) for x in positions]
+        assert all(a < b for a, b in zip(p, p[1:])), f'quarter {q} is not strictly ascending'
+        if p and previous is not None and p[0] <= previous:
+            raise ValueError(f'TP4 qslot order descends at quarter {q}: {previous} -> {p[0]}; '
+                             'rank-aware TX header partitioning is required')
+        if p:
+            previous = p[-1]
+    return True
 
 
 def tp4_slot_phases(leg_edges, loop_edges=3, vmux_edges=2):
