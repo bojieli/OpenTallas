@@ -390,24 +390,7 @@ so PAIR_DONE 1
 set so_regs {}
 foreach p [all_registers -clock_pins] { dict set so_regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
 set so_bnd {}
-set so_data {}
-set so_async {}
-foreach p [all_registers -async_pins] { dict set so_async [get_full_name $p] 1 }
-foreach p [all_registers -data_pins] { set n [get_full_name $p]; if {![dict exists $so_async $n]} { dict set so_data $n 1 } }
-if {[llength $so_din]} {
-  foreach p [get_fanout -from $so_din -flat -endpoints_only -trace_arcs all] {
-    set n [get_full_name $p]
-    if {![dict exists $so_data $n]} continue
-    set i [regsub {/[^/]+$} $n {}]
-    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1 }
-  }
-}
-if {[llength [all_outputs]]} {
-  foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
-    set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $so_regs $i]} { dict set so_bnd $i 1 }
-  }
-}
+dict for {inst pin} [ot_cf_pinregs] { dict set so_bnd $inst 1 }
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { set_clock_latency -source 0 $c } }
 set so_ck_err 0
 set so_cf [llength [info commands ot_cf_wire]]

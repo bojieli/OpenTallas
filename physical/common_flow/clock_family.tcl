@@ -142,3 +142,125 @@ proc ot_cf_wire_transition {pin clock transition {scene {}}} {
   if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
   return [lindex $values 0]
 }
+
+# Canonical boundary register membership for signoff, pre-route gate and pad.
+# Async reset/set endpoints do not make every downstream control flop a pin reg.
+proc ot_cf_pinregs {} {
+  set regs {}; set data {}; set async {}; set boundary {}
+  foreach pin [all_registers -clock_pins] {
+    dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin
+  }
+  foreach pin [all_registers -async_pins] { dict set async [get_full_name $pin] 1 }
+  foreach pin [all_registers -data_pins] {
+    set name [get_full_name $pin]
+    if {![dict exists $async $name]} { dict set data $name 1 }
+  }
+  set inputs [all_inputs -no_clocks]
+  if {[llength $inputs]} {
+    foreach pin [get_fanout -from $inputs -flat -endpoints_only -trace_arcs all] {
+      set name [get_full_name $pin]
+      if {![dict exists $data $name]} continue
+      set inst [regsub {/[^/]+$} $name {}]
+      if {[dict exists $regs $inst]} { dict set boundary $inst [dict get $regs $inst] }
+    }
+  }
+  if {[llength [all_outputs]]} {
+    foreach pin [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
+      set inst [regsub {/[^/]+$} [get_full_name $pin] {}]
+      if {[dict exists $regs $inst]} { dict set boundary $inst [dict get $regs $inst] }
+    }
+  }
+  return $boundary
+}
+
+# Leaf groups are actual ODB clock nets, never planned tap/bundle centroids.
+proc ot_cf_pinreg_groups {boundary} {
+  set groups {}
+  dict for {inst pin} $boundary {
+    set term [sta::sta_to_db_pin $pin]
+    if {$term eq "" || $term eq "NULL" || [$term getNet] eq "NULL"} {
+      error "OT_CLOCK_FAMILY: pin-register clock has no physical net: $inst"
+    }
+    dict lappend groups [[$term getNet] getName] [list $term $pin]
+  }
+  return $groups
+}
+
+# Stats map: group -> {mean count ...}. Pure guard also supports Tcl fixtures.
+proc ot_cf_pinreg_limits {stats bound tol {balance 20.0}} {
+  set means {}; set reasons {}
+  dict for {group values} $stats {
+    set mean [lindex $values 0]
+    if {![string is double -strict $mean] || [regexp -nocase {inf|nan} $mean]} {
+      lappend reasons "nonfinite group $group"; continue
+    }
+    lappend means $mean
+  }
+  if {![llength $means] || [llength $means] != [dict size $stats]} {
+    return [dict create verdict FAIL reasons [concat $reasons {missing_pinreg_group_measurement}] min -1 max -1 spread -1]
+  }
+  set means [lsort -real $means]; set lo [lindex $means 0]; set hi [lindex $means end]
+  set spread [expr {$hi-$lo}]
+  if {$spread > $balance+1e-6} { lappend reasons "pinreg group spread $spread exceeds $balance ps" }
+  if {$hi > $bound+$tol+1e-6} { lappend reasons "pinreg group maximum $hi exceeds bound+tol [expr {$bound+$tol}] ps" }
+  return [dict create verdict [expr {[llength $reasons] ? "FAIL" : "PASS"}] reasons $reasons min $lo max $hi spread $spread]
+}
+
+proc ot_cf_pinreg_measure {clock} {
+  set boundary [ot_cf_pinregs]
+  set groups {}; set arrivals {}
+  dict for {net entries} [ot_cf_pinreg_groups $boundary] {
+    set values {}
+    foreach entry $entries {
+      set pin [lindex $entry 1]
+      set clocks [get_property $pin clocks]
+      if {[llength $clocks] != 1} { error "OT_CLOCK_FAMILY: ambiguous pin-register clock [get_full_name $pin]" }
+      set value [ot_cf_wire $pin [lindex $clocks 0]]
+      if {![string is double -strict $value] || [regexp -nocase {inf|nan} $value]} {
+        error "OT_CLOCK_FAMILY: missing finite pin-register arrival on $net"
+      }
+      lappend values $value; lappend arrivals $value
+    }
+    if {[llength $values] != [llength $entries]} { error "OT_CLOCK_FAMILY: incomplete pin-register group $net" }
+    set sorted [lsort -real $values]
+    dict set groups $net [list [expr {[tcl::mathop::+ {*}$values]/[llength $values]}] [llength $values] $entries [lindex $sorted 0] [lindex $sorted end]]
+  }
+  set n [llength $arrivals]
+  if {!$n} { error "OT_CLOCK_FAMILY: no measured boundary pin registers" }
+  set sorted [lsort -real $arrivals]
+  return [dict create n $n mean [expr {[tcl::mathop::+ {*}$arrivals]/$n}] min [lindex $sorted 0] max [lindex $sorted end] groups $groups]
+}
+
+# FF-only callers use this before/after boundary clock padding. It reports actual
+# negative register-to-output-register hold endpoints, with no clock/SDC mutation.
+proc ot_cf_output_hold_census {{margin 5.0}} {
+  set outputs {}; set data {}; set async {}; set starts {}
+  if {![llength [all_outputs]]} { return [dict create status NO_TARGETS n 0 worst_ps 0 tns_ps 0 margin_n 0] }
+  foreach pin [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
+    dict set outputs [regsub {/[^/]+$} [get_full_name $pin] {}] 1
+  }
+  foreach pin [all_registers -async_pins] { dict set async [get_full_name $pin] 1 }
+  foreach pin [all_registers -data_pins] {
+    set name [get_full_name $pin]; set inst [regsub {/[^/]+$} $name {}]
+    if {[dict exists $outputs $inst] && ![dict exists $async $name]} { lappend data $pin }
+  }
+  foreach pin [all_registers -output_pins] {
+    set inst [regsub {/[^/]+$} [get_full_name $pin] {}]
+    if {![dict exists $outputs $inst]} { lappend starts $pin }
+  }
+  if {![llength $starts] || ![llength $data]} { return [dict create status NO_TARGETS n 0 worst_ps 0 tns_ps 0 margin_n 0] }
+  set paths [find_timing_paths -from $starts -to $data -path_delay min -group_path_count 1000000 -endpoint_path_count 1 -slack_max $margin]
+  set endpoints {}; set below {}; set worst 0.0; set tns 0.0
+  foreach path $paths {
+    set slack [get_property $path slack]
+    if {![string is double -strict $slack] || [regexp -nocase {inf|nan} $slack]} { error "OT_CLOCK_FAMILY: output hold census unavailable" }
+    set endpoint [get_full_name [get_property $path endpoint]]
+    if {$slack < $margin} { dict set below $endpoint 1 }
+    if {$slack < 0} {
+      if {![dict exists $endpoints $endpoint] || $slack < [dict get $endpoints $endpoint]} { dict set endpoints $endpoint $slack }
+      set worst [expr {min($worst,$slack)}]
+    }
+  }
+  dict for {endpoint slack} $endpoints { set tns [expr {$tns+$slack}] }
+  return [dict create status MEASURED n [dict size $endpoints] worst_ps $worst tns_ps $tns margin_n [dict size $below]]
+}

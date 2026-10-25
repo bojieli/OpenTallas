@@ -26,6 +26,11 @@ if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && $::env(GLOBAL_ROUTE_ARGS) ne ""} {
     lappend tg_args $a
   }
 }
+# Keep the pre-pass routing basis identical to ORFS's ordinary GRT step.
+set ::ot_grt_res_aware ""
+if {[llength [info commands append_env_var]]} { append_env_var ::ot_grt_res_aware ENABLE_RESISTANCE_AWARE -resistance_aware 0 }
+set tg_args [concat $tg_args $::ot_grt_res_aware]
+puts "OT_TAP_GRT_PRE global_route $tg_args"
 global_route {*}$tg_args
 estimate_parasitics -global_routing
 set ::env(OT_TAP_EST) grt
@@ -33,6 +38,10 @@ set ::env(OT_TAP_TAG) p
 set ::env(OT_TAP_REPORT_ONLY) 0
 source [file join $tg_dir tap_balance.tcl]
 puts "OT_TAP_GRT_PRE rebalance: $::tb_added delay cells on GRT RC (target $::tb_target ps TT)"
+# Keep the actual routed pre-pad clock graph for independent FF census.
+if {[info exists ::env(OT_PINREG_PAD)] && $::env(OT_PINREG_PAD)} {
+  write_db $::env(RESULTS_DIR)/4_pinreg_before.odb
+}
 # PROTOTYPE (OT_PINREG_PAD=1): pad only the pin-register leaf groups to the bound pin-register insertion
 if {[info exists ::env(OT_PINREG_PAD)] && $::env(OT_PINREG_PAD)} { source [file join $tg_dir pinreg_pad.tcl] }
 # measure again on the GRT estimate of the edited tree (report only), so the log shows the residual the gate will see

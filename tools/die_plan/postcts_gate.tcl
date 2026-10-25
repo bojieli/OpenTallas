@@ -10,7 +10,7 @@ set C $::env(OT_CORNER)
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
-    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
+    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE|OT_PINREG_GROUP_GUARD|OT_PINREG_HOLD_CENSUS|OT_TAP_GRT_PRE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
       set ::env($k) $v
     }
   }
@@ -49,45 +49,42 @@ foreach cf [list /work/clock_family.tcl [file join [file dirname [info script]] 
   if {[file exists $cf]} { source $cf; break }
 }
 if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
-set regs {}
-foreach p [all_registers -clock_pins] { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
-set din [all_inputs -no_clocks]
-set bnd {}
-if {[llength $din]} {
-  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
-    set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $regs $i]} { dict set bnd $i 1 }
-  }
+if {![llength [info commands ot_cf_pinregs]]} { error "postcts_gate: canonical pin-register collector missing" }
+set bnd [ot_cf_pinregs]
+set measured [ot_cf_pinreg_measure [get_clocks clk]]
+set n [dict get $measured n]
+set mean [dict get $measured mean]
+set arr [list [dict get $measured min] [dict get $measured max]]
+set limits [ot_cf_pinreg_limits [dict get $measured groups] $bound $tol]
+set strict_groups [expr {([info exists ::env(OT_PINREG_GROUP_GUARD)] && $::env(OT_PINREG_GROUP_GUARD) eq "1") || ([info exists ::env(OT_TAP_GRT_PRE)] && $::env(OT_TAP_GRT_PRE) eq "1")}]
+set census [dict create status NOT_RUN n -1 worst_ps -1 tns_ps -1 margin_n -1]
+if {$C eq "FF" && [info exists ::env(OT_PINREG_HOLD_CENSUS)] && $::env(OT_PINREG_HOLD_CENSUS) eq "1"} {
+  set census [ot_cf_output_hold_census]
+  puts "OT_PINREG_HOLD_CENSUS FF $census"
 }
-if {[llength [all_outputs]]} {
-  foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
-    set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $regs $i]} { dict set bnd $i 1 }
-  }
-}
-set arr {}
-dict for {i u} $bnd {
-  # same measure as the sign-off clock check (clock_family.tcl: active-edge propagated clock arrival)
-  set p [dict get $regs $i]; set a ""
-  if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [get_clocks clk]]} }
-  if {$a eq ""} {
-    if {[catch {set a [get_property $p arrival_max_rise]}]} continue
-    if {[string is double -strict $a] && $a >= $per / 2.0 && $a < $per} { set a [expr {$a - $per / 2.0}] }
-  }
-  if {![string is double -strict $a]} continue
-  lappend arr $a
-}
-set n [llength $arr]
-set mean [expr {$n ? [tcl::mathop::+ {*}$arr] / $n : -1}]
-set arr [lsort -real $arr]
+puts "OT_PINREG_GROUPS $C strict $strict_groups $limits"
 set ws [expr {[sta::worst_slack_cmd max] * 1e12}]
 set hs [expr {[sta::worst_slack_cmd min] * 1e12}]
 set dev [expr {$n ? abs($mean - $bound) : 1e9}]
-set v [expr {$n && $dev <= $tol ? "PASS" : "FAIL"}]
-set fh [open /work/postcts_gate_${c}.json w]
+set v [expr {$n && $dev <= $tol && (!$strict_groups || [dict get $limits verdict] eq "PASS") ? "PASS" : "FAIL"}]
+set tag [expr {[info exists ::env(OT_POSTCTS_TAG)] ? $::env(OT_POSTCTS_TAG) : "postcts_gate"}]
+if {![regexp {^[A-Za-z0-9_]+$} $tag]} { error "postcts_gate: unsafe output tag" }
+set fh [open /work/${tag}_${c}.json w]
 puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\"}" \
   $C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $bound $dev $tol $ws $hs \
   [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v]
 close $fh
+set original [open /work/${tag}_${c}.json r]; set json [read $original]; close $original
+set json [string trimright [string trim $json] "}"]
+append json [format ", \"group_min_ps\": %.4f, \"group_max_ps\": %.4f, \"group_spread_ps\": %.4f, \"hold_census_status\": \"%s\", \"hold_census_n\": %d, \"hold_census_worst_ps\": %.4f, \"hold_census_tns_ps\": %.4f, \"hold_census_margin_n\": %d}\n" [dict get $limits min] [dict get $limits max] [dict get $limits spread] [dict get $census status] [dict get $census n] [dict get $census worst_ps] [dict get $census tns_ps] [dict get $census margin_n]]
+set original [open /work/${tag}_${c}.json w]; puts -nonewline $original $json; close $original
+set detail [open /work/${tag}_${c}.groups.tsv w]
+puts $detail "group\tmean_ps\tn\tmin_ps\tmax_ps"
+dict for {group values} [dict get $measured groups] {
+  puts $detail "$group\t[lindex $values 0]\t[lindex $values 1]\t[lindex $values 3]\t[lindex $values 4]"
+}
+puts $detail "# limits $limits"
+puts $detail "# output_hold $census"
+close $detail
 puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s" \
   $C $ot_pg_mode $n $mean $bound $dev $tol $ws $hs $v]
