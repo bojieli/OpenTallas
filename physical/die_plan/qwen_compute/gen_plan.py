@@ -2978,6 +2978,11 @@ def main():
     ports, lanes = materialize(P)
     merged = merge_types(P)
     bind_leaves(P)
+    # COORD 10-25 11:31 (PATH-QC-PHYB): the die-edge PHY partitions are the bare macro; its registered FDI pins are the
+    # boundary registers (registered_pins + lib on the core, no u_pstn; tools/die_plan/hard_pinreg.py)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import apply_registered_phy
+    apply_registered_phy.apply_types(P.types)
     ft_fracs(P)
     edge_clocks(P)
     chans = [{"rect_um": [0.0, 4648.32, SUB_W, 7603.2],

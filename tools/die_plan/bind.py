@@ -1859,6 +1859,67 @@ class Binder:
             self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
         return self._wavefront_plan
 
+    def reg_hard(self):
+        """REGISTERED-PIN HARD PARTITIONS (COORD 2026-10-25 11:31, PATH-QC-PHYB; tools/die_plan/hard_pinreg.py): a plan
+        type marked hard whose single hard core declares `registered_pins` (+ its lib) is the bare macro, and the
+        macro's registered boundary pins ARE the partition's boundary registers (standard hard-PHY practice).  Such a
+        partition gets NO ot_dp_st station on its side of any crossing; the neighbour keeps its station.  Latency: the
+        macro's pin register takes the station's place in the lane's 2 boundary stages (latency table unchanged; its
+        cycle is inside the macro, so bind_verify's transport trace expects one stage less per registered end).
+        Fails closed: the lib must show setup+hold on every input and clock->q on every output (hard_pinreg.check_lib),
+        every as-built crossing pin must be in the lib, and the partition must hold nothing that needs a flop (the one
+        hard-core leaf only; no ft station, forwarding hop, lane pad, landing pad, kept transport stage, reset spine
+        landing or plan cell).  Data-driven, no names; a plan without the key binds byte-identically.
+        -> {part: dict(type, core, module, libs)}"""
+        if getattr(self, "_reg_hard", None) is not None:
+            return self._reg_hard
+        import hard_pinreg as HP
+        types, errs = HP.registered_types(self.plan)
+        if errs:
+            raise BindError("registered_pins: " + "; ".join(errs[:5]))
+        res = {}
+        if not types:
+            self._reg_hard = res
+            return res
+        F, G = self.F, self.G
+        ptype = {pp["name"]: pp["type"] for pp in self.plan["partitions"]}
+        for p in sorted(self.members):
+            tn = ptype.get(p)
+            if tn not in types:
+                continue
+            e = types[tn]
+            m = self.members[p]
+            if len(m) != 1 or G.kind[m[0]] != "leaf" or (e.get("module") and F.cells[m[0]].module != e["module"]):
+                raise BindError(f"registered_pins {p} ({tn}): the partition must hold exactly the hard core "
+                                f"{e.get('module')}, found {[(F.cells[c].path, G.kind[c]) for c in m][:5]}")
+            ci = m[0]
+            skip = {b["pin"] for b in e.get("bump_ports", [])}
+            ports = {pn: (G.dirs[ci].get(pn), len(bits)) for pn, bits in F.cells[ci].ports.items()}
+            libs = []
+            for lb, f in HP.lib_views(e, (self.base, self.plan_dir)):
+                if f is None:
+                    raise BindError(f"registered_pins {p} ({tn}): lib {lb} not found")
+                ee, s = HP.check_lib(f, F.cells[ci].module, ports, skip)
+                if ee:
+                    raise BindError(f"registered_pins {p} ({tn}): lib check FAIL: {'; '.join(ee[:4])}")
+                libs.append(dict(lib=lb, **s))
+            bad = []
+            if self.ft_bus.get(p):
+                bad.append(f"{len(self.ft_bus[p])} ft slot hop(s)")
+            if self.intra_dly.get(p):
+                bad.append(f"{len(self.intra_dly[p])} kept transport stage(s)")
+            for L in self.out_bus.get(p, []):
+                if L.get("plan") or any(it[0] != "leaf" for it in L["items"]):
+                    bad.append(f"out bus {L['oname']} forwards / plan-cell driven")
+            for L in self.in_bus.get(p, []):
+                if L.get("spine") or lane_pad(L):
+                    bad.append(f"in bus {L['iname']} {'reset spine landing' if L.get('spine') else 'lane pad'}")
+            if bad:
+                raise BindError(f"registered_pins {p} ({tn}): needs flops a bare macro does not have: {bad[:5]}")
+            res[p] = dict(type=tn, core=e["inst"], module=F.cells[ci].module, libs=libs)
+        self._reg_hard = res
+        return res
+
     def bump_pins(self):
         """declared HARD-IP LINE SIDE (B2, PATH-QC-B12 10-25): a plan type's contents[] / hard_cores[] entry may list
         `bump_ports` [{pin, dir, width}] = pins of that hard core that leave the die (its bumps, e.g. a UCIe PHY's
@@ -2040,7 +2101,10 @@ class Binder:
         decl, body = [], []
         P = self.wavefront_plan()
         rtree = None
-        if P is not None:
+        reg = p in self.reg_hard()          # registered-pin hard partition: no flop of ours inside (reg_hard)
+        if reg:
+            body.append("    wire rst_n = arst_n;  // registered-pin hard partition: the delivered reset, no synchroniser")
+        elif P is not None:
             import reset_tree as RT
             ptn = t.get("split_of", tn)
             if P.types[ptn].get("hard"):
@@ -2088,6 +2152,11 @@ class Binder:
                 body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
                 continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
+            if reg:
+                decl.append(f"    wire [{W - 1}:0] {n}_q;")
+                body.append(f"    assign {n}_q = {n}[{W - 1}:0];  // registered hard pin: the macro's input register is "
+                            f"the boundary register (epoch [{W}] unread: no flop here)")
+                continue
             decl.append(f"    wire [{W - 1}:0] {n}_q;\n    wire {n}_eq;")
             pad = lane_pad(L)
             if pad > 0:
@@ -2128,6 +2197,13 @@ class Binder:
             if L.get("plan"):
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
+                continue
+            if reg:
+                if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
+                    raise BindError(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                body.append(f"    assign {n} = {{rst_n, {d}}};  // registered hard pin: the macro's output register is "
+                            f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
                 continue
             if getattr(self, "ptree", None) is not None:
                 obus_tree.append(L)          # PAD_TREE: emitted after the tap helpers exist (below)
@@ -2194,6 +2270,9 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                if reg and len(d) > 7 and (d[7] if PT is None else d[7] - PT[(id(L), j)]):
+                    raise BindError(f"registered_pins {p}: landing pad on {F.cells[ci].path}.{pn}[{i}] needs flops a "
+                                    "bare macro lacks")
                 if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
                     return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
@@ -2290,7 +2369,10 @@ class Binder:
         head = (f"// GENERATED by tools/die_plan/bind.py from die_plan {self.plan['die']['name']} + the as-built die "
                 f"({self.ab['top']}), partition type {tn}.  Do not edit.\n"
                 f"// {len(self.by_type[tn])} instance(s); leaves = the as-built modules unchanged; intra-partition nets as built;\n"
-                "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n"
+                + ("// REGISTERED-PIN HARD PARTITION (bind.py reg_hard): the macro's registered pins are the boundary registers;\n"
+                   "// no station on this side (the neighbour keeps its ot_dp_st); out epoch = the delivered reset level.\n"
+                   if reg else
+                   "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
         return head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
@@ -2413,6 +2495,7 @@ class Binder:
                     if len(open_list) < 50:
                         open_list.append(pin)
         lat = []
+        rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
             bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
@@ -2421,6 +2504,9 @@ class Binder:
                             leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if L["src"] in rh or L["dst"] in rh:
+                # the macro's registered pin is that end's boundary stage (bound_stages unchanged, 1:1)
+                lat[-1]["macro_pin_reg_ends"] = [e for e in ("src", "dst") if L[e] in rh]
             if L["lane"] and bound != L.get("cycles"):
                 self.errors.append(f"LANE_CYCLES {L['lane']}: bound {bound} != latency table {L.get('cycles')}")
         types = {tn: dict(instances=len(ps), module=self.types[tn]["module"],
@@ -2616,6 +2702,11 @@ def cmd_bind(a):
     except BindError as e:
         B.errors.append(f"EMIT {e}")
     rep, lat = B.report()
+    if getattr(B, "_reg_hard", None):
+        rep["registered_pins"] = {p: dict(v, stations_removed=len(B.in_bus.get(p, [])) + len(B.out_bus.get(p, [])),
+                                          station_bits_removed=sum(L["width"] + 1 for L in B.in_bus.get(p, []) +
+                                                                   B.out_bus.get(p, [])))
+                                  for p, v in sorted(B._reg_hard.items())}
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
@@ -3164,6 +3255,10 @@ def _desc_json(B, d, ci_part=None):
         return ["pin", f"{B.F.cells[d[1]].path}.{d[2]}[{d[3]}]", d[4], B.G.kind[d[1]] == "glue"]
     if k == "x":
         st = B.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)
+        # a registered-pin hard end (reg_hard): its boundary stage is the macro's own pin register, inside the leaf,
+        # so the transport trace (bind_verify) sees one ot_dp_st less per such end
+        rh = getattr(B, "_reg_hard", None) or {}
+        st -= (d[1] in rh) + (d[6] in rh)
         return ["pin", f"{B.F.cells[d[2]].path}.{d[3]}[{d[4]}]", st, B.G.kind[d[2]] == "glue"]
     if k in ("or", "and"):
         return [k, sorted(_desc_json(B, x)[1] for x in d[1] if x[0] in ("int", "x"))]

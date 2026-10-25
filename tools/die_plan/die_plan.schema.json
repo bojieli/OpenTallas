@@ -1251,6 +1251,9 @@
         "lib": {
          "type": "string"
         },
+        "registered_pins": {
+         "type": "boolean"
+        },
         "obs_max": {
          "type": "string",
          "pattern": "^M[1-9]$"
@@ -1532,6 +1535,9 @@
         },
         "lib": {
          "type": "string"
+        },
+        "registered_pins": {
+         "type": "boolean"
         },
         "orient": {
          "enum": [
