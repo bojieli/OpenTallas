@@ -16,6 +16,7 @@ python3 "$D/apply_start_broadcast.py" "$O/die_plan.json"
 # PLAN-DELTA/QC 10-25: approved TYPE-REDUCE items on non-PATH types (sle_hc3 -> slw_hc3, E su_lane -> W tables, frozen
 # wavefront reset.in_sites); see results/plan_delta_1025/qc/README.md
 [ "$V" = B ] && python3 "$R/results/plan_delta_1025/qc/delta_qc.py" "$O/die_plan.json"
+python3 "$D/apply_qc_path.py" "$O/die_plan.json"
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O"
 # PLAN-TOOL5 die IO windows (die_io.json sidecar, read by check.py): host link = ucie_kv (d2d_rom <-> KV/system die,
 # which carries the host SerDes); S0-S2 SerDes = collective links; coll UCIe on the W edge in coll_ucie
