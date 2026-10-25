@@ -541,3 +541,35 @@ def test_die_sta_reports_face_flop_spread():
     P = schema.Plan(PAIR)
     t = gen_phys.sta_die_tcl(P)
     assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")
+
+
+def test_part_probe_wavefront_outputs_have_registered_drivers():
+    """The IO script's scalar rst_o pins must exist in the probe netlist."""
+    import copy
+    import re
+    import gen_phys
+    import reset_tree as RT
+    raw = copy.deepcopy(PAIR)
+    raw.setdefault('reset', {})['release'] = 'wavefront'
+    P = schema.Plan(raw)
+    checked = 0
+    for tn in P.types:
+        outs = gen_phys.reset_out_pins(P, tn)
+        if not outs:
+            continue
+        tree = RT.for_type(P, tn)
+        with tempfile.TemporaryDirectory() as d:
+            out = g2.part_probe(P, tn, d)
+            v = (out / 'probe.v').read_text()
+            tcl = (out / 'probe.tcl').read_text()
+            assert v.count('pr_reset_entry_0 (') == 1
+            for j, (nm, _, _) in enumerate(outs):
+                assert f'output {nm}' in v
+                signal = f'pr_reset_rst_n_t{tree["n_clock_taps"] + j}'
+                assert f'assign {nm} = {signal};' in v
+                assert f'.QN({signal})' in v
+            for rl in tree['relays']:
+                assert f'pr_reset_{rl["name"]}' in tcl
+            assert tree['max_hop_um'] <= RT.relay_um(P)
+            checked += len(outs)
+    assert checked
