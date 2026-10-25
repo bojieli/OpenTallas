@@ -1,0 +1,17 @@
+MISMATCH root beat 0 slice 9
+MISMATCH root beat 1 slice 9
+MISMATCH root beat 2 slice 9
+MISMATCH root beat 3 slice 9
+MISMATCH root beat 4 slice 9
+MISMATCH tap slice 8 head 2 beat 0
+MISMATCH tap slice 12 head 1 beat 0
+MISMATCH tap slice 8 head 2 beat 1
+MISMATCH tap slice 12 head 1 beat 1
+MISMATCH tap slice 8 head 2 beat 2
+SX root 600/600 beats (err 600)  taps 9600/9600 (err 9600)  golden 600  fault 0000000000010000
+SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1340
+SX_BENCH FAIL
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_sx.sv:259: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 9.096 s; speed 171.557 ns/s
+- Verilator: cpu 9.096 s on 1 threads; allocated 113 MB

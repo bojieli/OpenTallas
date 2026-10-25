@@ -1,0 +1,21 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: localhost      admits   296 GB (avail 533, reserve 0, fresh 144.3, peak 28, headroom 0, waiters 0/0 GB) load 193/256 running 45 disk 1548 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1853685-1792914743 after 4 s
+LINT dsdv_svc_rs errors=0 warnings=14 27304176 kB 377.66 s
+LINT dsdv_svc_rs_f2b errors=0 warnings=14 27281368 kB 496.60 s
+LINT dsdv_svc_rs_pvso_entry errors=0 warnings=18 27365220 kB 591.54 s
+LINT dsdv_svc_rs_pvso_entry_f2b errors=0 warnings=18 27328500 kB 710.50 s
+LINT dsdv_svc_rs_fv_0110101001_f2b01 errors=0 warnings=7 27299728 kB 527.34 s
+LINT dsdv_svc_rs_fv_4224242442_f2b40 errors=0 warnings=8 27279476 kB 474.47 s
+LINT dsdv_svc_rs_fv_1111101001_f2b11 errors=0 warnings=7 27327828 kB 438.51 s
+LINT dsdv_svc_rs_fv_c66c2c2cc2_f2b44 errors=0 warnings=9 27350784 kB 358.52 s
+LINT dsdv_svc_rs_fv_3333101001_f2b11 errors=0 warnings=7 27349020 kB 350.39 s
+LINT dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0_f2b44 errors=0 warnings=13 27379200 kB 346.12 s
+LINT dsdv_svc_rs_fv_9999101001_f2b11 errors=0 warnings=7 27347348 kB 349.05 s
+LINT dsdv_svc_rs_fv_c66c868448_f2b44 errors=0 warnings=8 27344736 kB 349.42 s
+LINT dsdv_svc_rs_fv_1221101001_f2b10 errors=0 warnings=7 27338584 kB 345.01 s
+LINT dsdv_svc_rs_fv_a44aa42442_f2b04 errors=0 warnings=8 27347040 kB 348.94 s

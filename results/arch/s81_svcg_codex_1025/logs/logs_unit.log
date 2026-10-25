@@ -1,0 +1,14 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: localhost      admits   296 GB (avail 533, reserve 0, fresh 144.3, peak 28, headroom 0, waiters 0/0 GB) load 193/256 running 45 disk 1548 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1853678-1792914743 after 3 s
+base s1: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+base s2: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+base s3: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+mut s1: F2B_UNIT A: sent 3000 recv 1584 (rx err 1584, port err 7484) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +0 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+mut s2: F2B_UNIT A: sent 3000 recv 1547 (rx err 1547, port err 7544) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +0 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+mut s3: F2B_UNIT A: sent 3000 recv 1613 (rx err 1614, port err 7454) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+ot-run: RAN on localhost (unit oth-ubuntu-1853678-1792914743): exit 0

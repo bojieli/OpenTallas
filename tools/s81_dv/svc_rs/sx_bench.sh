@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # S81U-SVC: build + run the dsdv_svc_sx exact bench (16 slices vs the golden engine lane tree).
 # S81U-SVCX4: the split form (8 x dsdv_svc_sx_hrow half-row centre leaves + closed dsfd_dvrly_276 relay stations).
-# Usage (repo root): tools/s81_dv/svc_rs/sx_bench.sh OUTDIR [base|mut1|mut2|mutorder|mutskew|selmut|fmask] [seed...]
+# Usage (repo root): tools/s81_dv/svc_rs/sx_bench.sh OUTDIR [base|mut1|mut2|mutorder|mutskew|selmut|fmask|f2b...] [seed...]
+# S81/SVCG (10-25): f2b = DEC12 2-beat fold gather (FH = sx_fh, f2b leaf offsets, beats >= 2 cycles apart) -- must PASS;
+#   f2bfmask = the same on the role face-masked slices; f2bmut (TX beat order swapped), f2brate (1-cycle beat spacing =
+#   rate violation, sticky fault), f2bskew (one slice a cycle late) -- must FAIL.
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$1; V=${2:-base}; shift 2 || true; SEEDS=${*:-1 2}
@@ -11,6 +14,8 @@ case "$V" in
   base) ;; mut1) DEF=(-DMUT=1);; mut2) DEF=(-DMUT=2);; mutorder) DEF=(-DDSDV_SX_MUT_ORDER);;
   mutskew) DEF=(-DSX_MUT_SKEW);; selmut) DEF=(-DOT_HROW_SEL_MUT);;   # S81-KITS-HROW: one replicated select copy wrong
   fmask) DEF=(-DSX_FMASK);; fmaskmut) DEF=(-DSX_FMASK -DSX_FMASK_MUT);;   # S81-P9-FACE: role-derived face-masked slices
+  f2b) DEF=(-DSX_F2B);; f2bfmask) DEF=(-DSX_F2B -DSX_FMASK);; f2bmut) DEF=(-DSX_F2B -DF2B_MUT=1);;   # S81/SVCG
+  f2brate) DEF=(-DSX_F2B -DSX_F2B_RATE);; f2bskew) DEF=(-DSX_F2B -DSX_MUT_SKEW);;
   *) echo "variant?" >&2; exit 2;;
 esac
 mkdir -p "$O/$V"

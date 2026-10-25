@@ -1,0 +1,28 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: localhost      admits   157 GB (avail 469, reserve 0, fresh 149.5, peak 98.7, headroom 0, waiters 0/0 GB) load 110/256 running 36 disk 1486 GB 
+ot-run: -> localhost
+ot-heavy: request 16G is charged 10G (class 'fg.sh' measured peak 1.4G, n=1+0 proved); the cap stays 16G
+ot-heavy: admitted on tender-ray as oth-ubuntu-2067618-1792915015 after 1 s
+Warning: Replacing memory \sc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \gc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \sc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \gc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \sc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \gc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \sc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \gc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \sc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+Warning: Replacing memory \gc_d with list of registers. See rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv:133
+FACE_GUARD fh11 PASS bits 2136 ok 2136 fails {}
+FACE_GUARD fh44 PASS bits 2136 ok 2136 fails {}
+FACE_GUARD fh01 PASS bits 1068 ok 1068 fails {}
+FACE_GUARD fh40 PASS bits 1068 ok 1068 fails {}
+CELLS fh00 total 381 dff 0 stations 144 | delta vs fh00: cells 0 dff 0 stations 0 (station = 276 b closed macro)
+CELLS fh01 total 3578 dff 2136 stations 136 | delta vs fh00: cells 3197 dff 2136 stations -8 (station = 276 b closed macro)
+CELLS fh40 total 2515 dff 2136 stations 136 | delta vs fh00: cells 2134 dff 2136 stations -8 (station = 276 b closed macro)
+CELLS fh11 total 5712 dff 4272 stations 128 | delta vs fh00: cells 5331 dff 4272 stations -16 (station = 276 b closed macro)
+CELLS fh44 total 5712 dff 4272 stations 128 | delta vs fh00: cells 5331 dff 4272 stations -16 (station = 276 b closed macro)
+ot-run: RAN on localhost (unit oth-ubuntu-2067618-1792915015): exit 0

@@ -1,0 +1,68 @@
+{
+  "scope": "DEC12 fold gather transport, opt-in F2B; default F2B=0 unchanged",
+  "inherited_source_base": "d206dfb22653114b67b39729963b4df2ded15b40",
+  "collected_from": "epyc1:/srv/opentallas-scratch2/claude/s81-svcg",
+  "gates": {
+    "unit": {
+      "seeds": 3,
+      "words_per_seed": 3000,
+      "verdict": "PASS",
+      "mutant_caught": 3
+    },
+    "sx_f2b": {
+      "seeds": 3,
+      "root_words_per_seed": 600,
+      "tap_words_per_seed": 9600,
+      "fold_words_per_seed": 6600,
+      "bit_errors": 0,
+      "faults": 0,
+      "verdict": "PASS"
+    },
+    "sx_f2bfmask": {
+      "seeds": 3,
+      "verdict": "PASS"
+    },
+    "sx_negative_controls": {
+      "swapped_beats": "caught",
+      "rate_violation": "caught",
+      "static_skew": "caught"
+    },
+    "svcik": {
+      "seeds": 3,
+      "mutants_caught": 9,
+      "verdict": "PASS"
+    },
+    "selchain": {
+      "seeds": 3,
+      "mutants_caught": 6,
+      "verdict": "PASS"
+    },
+    "face_guard": {
+      "variants": [
+        "fh01",
+        "fh40",
+        "fh11",
+        "fh44"
+      ],
+      "verdict": "PASS"
+    },
+    "lint": {
+      "completed_variants_at_collection": 14,
+      "errors": 0,
+      "status": "RUNNING remaining variants on original job"
+    },
+    "generated_files_check": "PASS"
+  },
+  "latency": {
+    "fold_hop_added_cycles": 1,
+    "gather_root_cycles_base": 51,
+    "gather_root_cycles_f2b": 54,
+    "max_leaf_launch_offset_base": 15,
+    "max_leaf_launch_offset_f2b": 17
+  },
+  "adoption_requirements": [
+    "Compiler must sustain at most 1 gather word per 2 cycles per directed fold lane; duty confirmation pending TOK-DS.",
+    "Rebind DEC12 plan to F2B face masters before G3; no P&R or sign-off claimed."
+  ],
+  "new_jobs": []
+}

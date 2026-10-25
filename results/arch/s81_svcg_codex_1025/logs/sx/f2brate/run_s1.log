@@ -1,0 +1,22 @@
+F2B MISMATCH lane svc_6 -> svc_7 cyc 28 (rx v 0, tx v(t-3) 1)
+F2B MISMATCH lane svc_5 -> svc_4 cyc 29 (rx v 0, tx v(t-3) 1)
+F2B MISMATCH lane svc_6 -> svc_7 cyc 33 (rx v 0, tx v(t-3) 1)
+F2B MISMATCH lane svc_3 -> svc_2 cyc 34 (rx v 0, tx v(t-3) 1)
+F2B MISMATCH lane svc_5 -> svc_4 cyc 34 (rx v 0, tx v(t-3) 1)
+MISMATCH root beat 1 slice 9
+MISMATCH root beat 2 slice 9
+MISMATCH root beat 3 slice 9
+MISMATCH root beat 4 slice 9
+MISMATCH root beat 5 slice 9
+MISMATCH tap slice 8 head 2 beat 1
+MISMATCH tap slice 12 head 1 beat 1
+MISMATCH tap slice 8 head 2 beat 2
+MISMATCH tap slice 12 head 1 beat 2
+MISMATCH tap slice 1 head 13 beat 1
+SX root 324/600 beats (err 323)  taps 5184/9600 (err 5168)  golden 600  fault 1100111111111111
+SX F2B fold lanes 11 (words 6324, lane err 2760)  t_root 54  last slot 740
+SX_BENCH FAIL
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_sx.sv:259: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 961ns; walltime 5.733 s; speed 167.538 ns/s
+- Verilator: cpu 5.733 s on 1 threads; allocated 113 MB

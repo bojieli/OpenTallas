@@ -1,0 +1,133 @@
+{
+ "generator": "tools/s81_dv/svc_rs/svc_rs_embed.py --fold-extra 1",
+ "nr": 1,
+ "fx": 5,
+ "fold_extra": 1,
+ "contract": "claude/s81-dec12-1024r@d206dfb226 FOLD 2-BEAT CONTRACT (lanes attnh__svc_A__svc_B)",
+ "fold_hops": [
+  {
+   "src": 0,
+   "face": "N",
+   "dst": 1,
+   "lane": "attnh__svc_0__svc_1"
+  },
+  {
+   "src": 2,
+   "face": "N",
+   "dst": 3,
+   "lane": "attnh__svc_2__svc_3"
+  },
+  {
+   "src": 3,
+   "face": "S",
+   "dst": 2,
+   "lane": "attnh__svc_3__svc_2"
+  },
+  {
+   "src": 4,
+   "face": "N",
+   "dst": 5,
+   "lane": "attnh__svc_4__svc_5"
+  },
+  {
+   "src": 5,
+   "face": "S",
+   "dst": 4,
+   "lane": "attnh__svc_5__svc_4"
+  },
+  {
+   "src": 6,
+   "face": "N",
+   "dst": 7,
+   "lane": "attnh__svc_6__svc_7"
+  },
+  {
+   "src": 7,
+   "face": "S",
+   "dst": 6,
+   "lane": "attnh__svc_7__svc_6"
+  },
+  {
+   "src": 9,
+   "face": "S",
+   "dst": 8,
+   "lane": "attnh__svc_9__svc_8"
+  },
+  {
+   "src": 10,
+   "face": "N",
+   "dst": 11,
+   "lane": "attnh__svc_10__svc_11"
+  },
+  {
+   "src": 14,
+   "face": "N",
+   "dst": 15,
+   "lane": "attnh__svc_14__svc_15"
+  },
+  {
+   "src": 15,
+   "face": "S",
+   "dst": 14,
+   "lane": "attnh__svc_15__svc_14"
+  }
+ ],
+ "fh": {
+  "0": "01",
+  "1": "40",
+  "2": "11",
+  "3": "44",
+  "4": "11",
+  "5": "44",
+  "6": "11",
+  "7": "44",
+  "8": "10",
+  "9": "04",
+  "10": "01",
+  "11": "40",
+  "12": "00",
+  "13": "00",
+  "14": "11",
+  "15": "44"
+ },
+ "t_root_cycles": 54,
+ "t_root_cycles_base": 51,
+ "leaf_offsets": {
+  "0": 7,
+  "1": 13,
+  "2": 12,
+  "3": 6,
+  "4": 7,
+  "5": 1,
+  "6": 0,
+  "7": 6,
+  "8": 17,
+  "9": 11,
+  "10": 12,
+  "11": 8,
+  "12": 17,
+  "13": 13,
+  "14": 12,
+  "15": 6
+ },
+ "leaf_offsets_base": {
+  "0": 5,
+  "1": 10,
+  "2": 10,
+  "3": 5,
+  "4": 5,
+  "5": 0,
+  "6": 0,
+  "7": 5,
+  "8": 15,
+  "9": 10,
+  "10": 10,
+  "11": 5,
+  "12": 15,
+  "13": 10,
+  "14": 10,
+  "15": 5
+ },
+ "max_leaf_offset": 17,
+ "max_leaf_offset_base": 15
+}

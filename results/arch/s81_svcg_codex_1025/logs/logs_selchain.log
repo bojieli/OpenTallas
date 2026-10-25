@@ -1,0 +1,28 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/wt/s81-svcg
+ot-run: localhost      admits    43 GB (avail 471, reserve 0, fresh 340.6, peak 22.7, headroom 0, waiters 0/0 GB) load 225/256 running 55 disk 1626 GB 
+ot-run: LOAD SPILL not possible (/srv/opentallas-scratch2/claude/s81-svcg, /srv/opentallas-scratch2/claude/wt total 1357 GB > OT_RUN_SPILL_MAX_GB 40); running on localhost at 1.35 x cores
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1786525-1792914648 after 1 s
+base s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+SELC_JOB0 K 512 words 32 vo_span 123 first_part0_to_last_payload W 203 E 207
+base s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+SELC_JOB0 K 512 words 32 vo_span 117 first_part0_to_last_payload W 197 E 201
+base s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+SELC_JOB0 K 512 words 32 vo_span 149 first_part0_to_last_payload W 229 E 233
+selmut1 s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 123 first_part0_to_last_payload W 203 E 207
+selmut1 s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 117 first_part0_to_last_payload W 197 E 201
+selmut1 s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 149 first_part0_to_last_payload W 229 E 233
+sqmut1 s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 123 first_part0_to_last_payload W 203 E 207
+sqmut1 s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 117 first_part0_to_last_payload W 197 E 201
+sqmut1 s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+SELC_JOB0 K 512 words 32 vo_span 149 first_part0_to_last_payload W 229 E 233
+SELCHAIN_GATE PASS
+ot-run: RAN on localhost (unit oth-ubuntu-1786525-1792914648): exit 0

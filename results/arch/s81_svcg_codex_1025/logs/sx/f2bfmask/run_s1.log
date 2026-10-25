@@ -1,0 +1,7 @@
+SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000
+SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1340
+SX_BENCH PASS
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_sx.sv:259: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 8.927 s; speed 174.813 ns/s
+- Verilator: cpu 8.926 s on 1 threads; allocated 110 MB
