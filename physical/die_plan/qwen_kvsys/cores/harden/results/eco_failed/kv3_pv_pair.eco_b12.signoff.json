@@ -1,0 +1,439 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "hc_kv3_pv_pair__380_16x190_08",
+ "generated": "2026-10-24T22:10:28-07:00",
+ "host": "key-cardinal",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base",
+  "orfs": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run",
+  "design": "hc_kv3_pv_pair__380_16x190_08",
+  "kit": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12",
+  "odb": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/logs/asap7/hc_kv3_pv_pair__380_16x190_08/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/logs/asap7/hc_kv3_pv_pair__380_16x190_08/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/logs/asap7/hc_kv3_pv_pair__380_16x190_08/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/reports/asap7/hc_kv3_pv_pair__380_16x190_08/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/sdc_lint.json",
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "kv3_pv_pair",
+   "cells": 462752.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "s0__clk[0]"
+   ],
+   "inputs": [
+    "s0__bc",
+    "s0__pe2",
+    "s0__pv2",
+    "s0__rst_n",
+    "s1__bc",
+    "s1__clk",
+    "s1__pe2",
+    "s1__pv2",
+    "s1__rst_n"
+   ],
+   "outputs": [
+    "s0__fault",
+    "s0__ts",
+    "s1__fault",
+    "s1__ts"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -119.18,
+   "sdc_wns_min": 19.62,
+   "sdc_tns_max": -19878.36,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 680.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -119.18,
+   "std_wns_min": 19.62,
+   "std_tns_max": -19878.36,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 680.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 12.0,
+   "cap_viol": 0.0,
+   "fanout_max": 33.0,
+   "fanout_worst_net": "clknet_leaf_632_s0__clk[0]_regs",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 29722,
+    "min": 315.79,
+    "mean": 354.62,
+    "max": 373.73,
+    "spread": 57.94
+   },
+   "insertion_pinflops": {
+    "n": 1650,
+    "min": 343.7,
+    "mean": 356.26,
+    "max": 370.82,
+    "spread": 27.12
+   },
+   "ocv5_wns_max": -170.92,
+   "ocv5_wns_min": 0.07,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [
+    "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/macros/ot_sram_1r1w_32x128_m1_tt.lib"
+   ],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "kv3_pv_pair",
+   "cells": 462752.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "s0__clk[0]"
+   ],
+   "inputs": [
+    "s0__bc",
+    "s0__pe2",
+    "s0__pv2",
+    "s0__rst_n",
+    "s1__bc",
+    "s1__clk",
+    "s1__pe2",
+    "s1__pv2",
+    "s1__rst_n"
+   ],
+   "outputs": [
+    "s0__fault",
+    "s0__ts",
+    "s1__fault",
+    "s1__ts"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 123.83,
+   "sdc_wns_min": 3.1,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 123.83,
+   "std_wns_min": 3.1,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 5.0,
+   "cap_viol": 0.0,
+   "fanout_max": 33.0,
+   "fanout_worst_net": "clknet_leaf_632_s0__clk[0]_regs",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 29722,
+    "min": 253.75,
+    "mean": 285.64,
+    "max": 304.74,
+    "spread": 50.99
+   },
+   "insertion_pinflops": {
+    "n": 1650,
+    "min": 276.49,
+    "mean": 287.54,
+    "max": 301.93,
+    "spread": 25.44
+   },
+   "ocv5_wns_max": 84.77,
+   "ocv5_wns_min": -18.06,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [
+    "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/macros/ot_sram_1r1w_32x128_m1_ff.lib"
+   ],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "kv3_pv_pair",
+  "checked": 1648,
+  "ok": 1646,
+  "fail_counts": {
+   "shared": 2
+  },
+  "fails": {
+   "shared": [
+    "s0__fault[0]: net _000662_ has 1 loads besides the port chain",
+    "s1__fault[0]: net _000720_ has 1 loads besides the port chain"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/pins.json",
+  "boundary_context": {
+   "manifest": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/core.json",
+   "controls": [
+    "s0__clk",
+    "s1__clk",
+    "s0__rst_n",
+    "s1__rst_n"
+   ]
+  },
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "FAIL",
+   "wns_ps": -119.18,
+   "tns_ps": -19878.36,
+   "violators": 680.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 3.1,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 3.1,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 12.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 5.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 12.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 5.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 33.0,
+   "worst_net": "clknet_leaf_632_s0__clk[0]_regs"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 1650,
+      "min": 343.7,
+      "mean": 356.26,
+      "max": 370.82,
+      "spread": 27.12
+     },
+     "all": {
+      "n": 29722,
+      "min": 315.79,
+      "mean": 354.62,
+      "max": 373.73,
+      "spread": 57.94
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1650,
+      "min": 276.49,
+      "mean": 287.54,
+      "max": 301.93,
+      "spread": 25.44
+     },
+     "all": {
+      "n": 29722,
+      "min": 253.75,
+      "mean": 285.64,
+      "max": 304.74,
+      "spread": 50.99
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null,
+   "core_latency_contract": "hard_core_latency"
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "kv3_pv_pair",
+   "checked": 1648,
+   "ok": 1646,
+   "fail_counts": {
+    "shared": 2
+   },
+   "fails": {
+    "shared": [
+     "s0__fault[0]: net _000662_ has 1 loads besides the port chain",
+     "s1__fault[0]: net _000720_ has 1 loads besides the port chain"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/pins.json",
+   "boundary_context": {
+    "manifest": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/b12/core.json",
+    "controls": [
+     "s0__clk",
+     "s1__clk",
+     "s0__rst_n",
+     "s1__rst_n"
+    ]
+   },
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "setup_tt: FAIL WNS -119.18 ps, 680 endpoints",
+  "drv: FAIL TT slew 12.0 cap 0.0, FF slew 5.0 cap 0.0",
+  "face_guard: FAIL {'shared': 2}"
+ ],
+ "verdict": "NOT SIGNED",
+ "core_latency": {
+  "contract": {
+   "kind": "hard_core_latency",
+   "ruling": "COORD 10-24",
+   "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+   "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path"
+  },
+  "measured": {
+   "tt": {
+    "n": 1650,
+    "min": 343.7,
+    "mean": 356.26,
+    "max": 370.82,
+    "spread": 27.12
+   },
+   "ff": {
+    "n": 1650,
+    "min": 276.49,
+    "mean": 287.54,
+    "max": 301.93,
+    "spread": 25.44
+   }
+  }
+ }
+}

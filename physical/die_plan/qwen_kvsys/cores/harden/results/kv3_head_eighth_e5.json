@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_head_eighth_e5",
+ "kit": "kv3_head_eighth_e5__216x216",
+ "kit_hash": "532f19991e583f2b",
+ "run": "epyc2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e5/m8",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "pins": 544,
+ "plan_pins": 544,
+ "added_pins": 0,
+ "clocks": [
+  "g_t_10_u_l8__clk"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 359629,
+ "std_util": 0.450642,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 544/544",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 24.26203692098725,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 19.26955824832827,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 211.83482830357488,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 4.306194307244683,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "SIGNED",
+  "reasons": [],
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "SIGNED (signoff.py; pin audit PASS)",
+ "views_status": "signoff",
+ "views": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5",
+ "previous_record": "kv3_head_eighth_e5.prev1.json"
+}

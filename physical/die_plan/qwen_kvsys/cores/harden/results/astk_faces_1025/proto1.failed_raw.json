@@ -1,0 +1,33 @@
+{
+ "verdict": "FAIL",
+ "top": "kv3_astk_WN",
+ "checked": 1690,
+ "ok": 1673,
+ "fail_counts": {
+  "shared": 16,
+  "unregistered": 1
+ },
+ "fails": {
+  "shared": [
+   "u_strip_u_strip_u_ctl__qo[535]: net _098115_ has 8402 loads besides the port chain",
+   "u_strip_u_strip_u_ctl__qo[14]: net u_strip_u_strip_u_ctl__qo[14] has 4 loads besides the port chain",
+   "u_strip_u_strip_u_ctl__qo[13]: net u_strip_u_strip_u_ctl__qo[13] has 4 loads besides the port chain",
+   "u_strip_u_strip_u_ctl__qo[12]: net u_strip_u_strip_u_ctl__qo[12] has 4 loads besides the port chain",
+   "u_strip_u_strip_u_ctl__qo[11]: net u_strip_u_strip_u_ctl__qo[11] has 4 loads besides the port chain"
+  ],
+  "unregistered": [
+   "g_phys_fault_u_fault__b[0]: loads AND2x2_ASAP7_75t_R _195161_"
+  ]
+ },
+ "netlist": "/work/run/results/asap7/hc_kv3_astk_WN__190_08x181_44/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": []
+}
