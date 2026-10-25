@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.lec.seeded.v1",
+ "source": "c8496ae75 / main394765394378 lookup files; aq declaration-order fix included",
+ "verdict": "NOT EQUIVALENT",
+ "design_compare": {
+  "proved": 18974,
+  "differs": 1
+ },
+ "induction_obligations": {
+  "proved": 10008
+ },
+ "seeded_hypotheses": 8127,
+ "remaining": {
+  "ff:u_dut.u_lkp.u_e.q_off[1]": "differs"
+ }
+}

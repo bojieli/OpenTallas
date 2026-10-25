@@ -1,0 +1,25 @@
+loaded_hypotheses 8126 state_constraints 1
+SAT True
+input 5507 ('matched', 'ff:u_dut.u_lkp.u_e.ej[0]') 1
+input 5508 ('matched', 'ff:u_dut.u_lkp.u_e.ej[1]') 0
+input 5509 ('matched', 'ff:u_dut.u_lkp.u_e.ej[2]') 1
+input 8592 ('matched', 'ff:u_dut.u_r.g_leaf[0].q') 1
+input 8593 ('matched', 'ff:u_dut.u_r.g_mid[0].d') 1
+input 8594 ('matched', 'ff:u_dut.u_r.root_r') 1
+input 15586 ('matched', 'pi:rst_n[0]') 1
+input 16442 ('paired', 'ff:u_dut.u_lkp.u_e.roff[0][1]') 0
+input 16443 ('gold_only', 'ff:u_dut.u_lkp.u_e.roff[1][1]') 0
+input 16444 ('gold_only', 'ff:u_dut.u_lkp.u_e.roff[2][1]') 0
+input 16445 ('gold_only', 'ff:u_dut.u_lkp.u_e.roff[3][1]') 0
+input 16446 ('gold_only', 'ff:u_dut.u_lkp.u_e.roff[4][1]') 0
+input 16447 ('gold_only', 'ff:u_dut.u_lkp.u_e.roff[5][1]') 0
+input 16448 ('gold_only', 'ff:u_dut.u_lkp.u_e.st[0]') 1
+input 16449 ('gold_only', 'ff:u_dut.u_lkp.u_e.st[1]') 0
+input 16450 ('gold_only', 'ff:u_dut.u_lkp.u_e.st[2]') 0
+input 18957 ('gate_only', 'ff:u_dut.u_lkp.u_e.baddr#t[1][4]') 0
+input 18958 ('gate_only', 'ff:u_dut.u_lkp.u_e.baddr#t[2][4]') 0
+input 18959 ('gate_only', 'ff:u_dut.u_lkp.u_e.baddr#t[3][4]') 0
+input 18960 ('gate_only', 'ff:u_dut.u_lkp.u_e.baddr#t[4][4]') 0
+input 18961 ('gate_only', 'ff:u_dut.u_lkp.u_e.baddr#t[5][4]') 1
+input 19544 ('gold_x', 'x583') 0
+gold_D False gate_D True miter True
