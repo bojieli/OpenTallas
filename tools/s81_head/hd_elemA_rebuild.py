@@ -83,7 +83,8 @@ def main():
     # (16.5k endpoints, 21.5k hold buffers, 'unable to repair').  The tile delivers this core's clk EARLY (gen_phys
     # core_taps: source latency -early on the tap port), so the kit models exactly that: clk source latency -EARLY,
     # sdc_lint port_latency_ps {clk: -EARLY}; pin-register arrival = tree - EARLY ~ 250 (signoff +-40).
-    ap.add_argument("--early-ps", type=float, default=200.0)
+    # c8: 160 (c7 at 200: TT pin-register mean 214 = network ~414; FF 138 -> output hold -43 vs the fixed 250 vclk)
+    ap.add_argument("--early-ps", type=float, default=160.0)
     ap.add_argument("--elem", choices=["A", "B"], default="A")
     a = ap.parse_args()
     globals().update(ELEMS[a.elem])

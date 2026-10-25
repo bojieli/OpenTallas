@@ -21,14 +21,19 @@ module ot_s81hd_elemA_cv #(parameter INSTANCE = "") (
     output wire fault
 );
     wire nc_hv; wire [31:0] nc_hd; wire [16:0] nc_hr;
+    // OWNER RESET RULE 2026-10-24: the delivered reset is a SYNCHRONOUS signal (die relay chain); one local relay flop
+    // here, then the element's flops use it with normal timed recovery / removal (c7: rst_n port -> 28.7k async pins was
+    // the only TT setup failure, recovery -71 ps).  +1 cycle of reset latency.
+    reg rst_q;
+    always @(posedge clk) rst_q <= rst_n;
     wire m_ov, m_lv, m_done, m_fault; wire [31:0] m_od, m_ld, m_bits, m_key; wire [16:0] m_row;
     // one dedicated output register stage on EVERY output (+1 cycle, uniform; see the header)
-    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_n),
+    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_q),
         .d({m_ov, m_od, m_lv, m_ld, m_done, m_row, m_bits, m_key, m_fault}),
         .q({o_v, o_d, l_v, l_d, done, best_row, best_bits, best_key, fault}));
     ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(9'h1ff), .SPLIT9(1), .INSTANCE(INSTANCE), .IOREG(1),
                     .SAFE(1)) u_m (
-        .clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
+        .clk(clk), .rst_n(rst_q), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
         .l_d(m_ld), .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr),
         .done(m_done), .best_row(m_row), .best_bits(m_bits), .best_key(m_key), .fault(m_fault));
 endmodule
@@ -41,14 +46,19 @@ module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
     output wire fault
 );
     wire nc_hv; wire [31:0] nc_hd; wire [16:0] nc_hr;
+    // OWNER RESET RULE 2026-10-24: the delivered reset is a SYNCHRONOUS signal (die relay chain); one local relay flop
+    // here, then the element's flops use it with normal timed recovery / removal (c7: rst_n port -> 28.7k async pins was
+    // the only TT setup failure, recovery -71 ps).  +1 cycle of reset latency.
+    reg rst_q;
+    always @(posedge clk) rst_q <= rst_n;
     wire m_ov, m_lv, m_done, m_fault; wire [31:0] m_od, m_ld, m_bits, m_key; wire [16:0] m_row;
     // one dedicated output register stage on EVERY output (+1 cycle; the rebuilt elemB macro, ot_s81hd_elemB_rb.sv)
-    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_n),
+    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_q),
         .d({m_ov, m_od, m_lv, m_ld, m_done, m_row, m_bits, m_key, m_fault}),
         .q({o_v, o_d, l_v, l_d, done, best_row, best_bits, best_key, fault}));
     ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(9'h1ff), .SPLIT9(1), .INSTANCE(INSTANCE), .IOREG(1),
                     .SAFE(1)) u_m (
-        .clk(clk), .rst_n(rst_n), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
+        .clk(clk), .rst_n(rst_q), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
         .l_d(m_ld), .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr), .done(m_done), .best_row(m_row),
         .best_bits(m_bits), .best_key(m_key), .fault(m_fault));
 endmodule
