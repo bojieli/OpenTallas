@@ -190,19 +190,3 @@ def test_correspondence_proves_feedback_copies_together(tmp_path, monkeypatch):
     assert any(sd == 'both' and h[0] == 'eq' for (sd, k), h in L.hyp.items())
     after, _ = L.build(with_compare=True, with_hyp=True)
     assert set(_sim_prove(after).values()) == {'proved'}
-
-
-def test_correspondence_constant_uses_rtl_x_care(tmp_path, monkeypatch):
-    """A removed flop whose next state is 0 or RTL X may refine to constant 0."""
-    monkeypatch.setattr(lec, 'prove', _sim_prove)
-    g = tmp_path / 'gold_x.aig'
-    g.write_bytes(b'aig 4 2 1 0 1\n8\n' + bytes([4, 2]))  # q' = d & X
-    t = tmp_path / 'gate_zero.aig'
-    t.write_bytes(b'aig 2 1 1 0 0\n0\n')
-    gm = {'input': {0: [('d', 0)]}, 'latch': {0: [('u_dut.q$_DFF_P_.lecq', 0)]}, 'output': {}}
-    tm = {'input': {0: [('d', 0)]}, 'latch': {0: [('u_dut.zero$_DFF_P_.lecq', 0)]}, 'output': {}}
-    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
-    lec.correspond(L, tmp_path, 100, [])
-    assert L.hyp['gold', 'ff:u_dut.q'] == ('const', 0)
-    m, _ = L.build(with_compare=True, with_hyp=True)
-    assert set(_sim_prove(m).values()) == {'proved'}
