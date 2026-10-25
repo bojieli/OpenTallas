@@ -583,3 +583,5 @@ CODEX: 2026-10-25 07:49 PDT CLOCK emptytapfalseOK FIXREADY e142a8da81:5fixturesP
 2026-10-25 07:52 PDT CODEX: headB exact0cycle ROM-localissuecopies(+24DFF) miter80kchecks+mutantPASS, plannedmacroIFstripsviewed; structural freshplacement epyc1 codex-head0719/elemB_if1 live (unit3494699), actualclosurepending. BroadheadFTwave stopped peroneDSpathpriority.
 CODEX: 2026-10-25 07:58 PDT namedL14engE2reservationREADY70bb1be9ab G0C177/177PASS/exactFT402.133um/0overlap/0cycles; physicalE2NOTSIGNED.
 CODEX: 2026-10-25 07:54 PDT HBM selected NW TKM II8->L74 two-beat->shared actual TP192 compute/return path; common leaf genPASS3387725, one64GBsynthlive. IDadapter51072checks+mutantPASS(cd0/ced/184); L74 directcutPASS but geometryFAIL capturebandcorrecting, returnL12/L13 9cycle skew explicitly owned. No broader kit waves.
+
+2026-10-25 07:55 PDT CODEX: currentmainQC+explicitSTARTcriticalplan READYcodex/qc-start-plan-0719@1c0e347be4,G0C0E56/56,0datacycles, scopedimageviewed; tokensfreshbindnext,7bnotblockingone-path.
