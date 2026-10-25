@@ -737,6 +737,41 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "edge_clocks": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "port",
+          "tap_um"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "port": {
+           "type": "string",
+           "minLength": 1
+          },
+          "tap_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          },
+          "period_mult": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "source": {
+           "type": "string"
+          },
+          "note": {
+           "type": "string"
+          }
+         }
+        }
+       },
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1

@@ -240,6 +240,15 @@ SCHEMA = {
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
+                        # OWNER DEC. 16 / FP32 audit (COORD 10-25): PHY-edge clocks a soft type takes as a bound-only
+                        # port (QC clk_coll / clk_serdes / clk_d2d at the die period, clk_coll_blk = the /6 block
+                        # clock of qfd_ckdiv6).  Each is an interior pin at tap_um and a kit clock (create_clock, period
+                        # period_mult x the die period, synchronous with clk: no exception, no clock group).
+                        "edge_clocks": {"type": "array", "items": {
+                            "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
+                            "properties": {"port": _name, "tap_um": _xy,
+                                           "period_mult": {"type": "integer", "minimum": 1},
+                                           "source": {"type": "string"}, "note": {"type": "string"}}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},
