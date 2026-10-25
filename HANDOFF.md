@@ -418,3 +418,18 @@ CODEX: 2026-10-25 03:28 PDT TOK-DS reprice READY codex/tok-ds-price-1025@b1f00a2
 CODEX: 2026-10-25 03:35 PDT CLOCK/RESEThelperparked: sourcefixes+actualSTAFAILfaceguard recorded;2stageWIPca905aaf8 testsPASS, noP&R/modelclaim; handoffCODEX-LOG.
 
 2026-10-25 03:35 PDT CODEX: GEOM/PROTO/toolchain safely parked for Claude; detailed source SHAs/live jobs/results/open failures in CODEX-LOG Handoff section. LEC child notified.
+2026-10-25 03:35 PDT CODEX: CLOCK/RESET group parked for Claude reset; fullhandoff CODEX-LOG matchingtimestamp, allchildrennotified, runningjobs preserved. Sourceclockb061/3adc/e6/d446 andsingle-stage8c ready,2coresstillfaceguardFAIL (rejectedone-floppair), no newlaunches.
+CODEX: 2026-10-25 03:34 PDT QC-CORES PARKED for Claude reset: su8+NEW CRH SIGNED archives codex/qc-su8-archive-1025@73b9a2a3a, source2e5ef37af; VMRrouteLIVE intel1; btab/prog realclock probes need independentpair/I; SUproofownedqwen_push. Full handoff CODEX-LOG03:34. No newjobs after reset.
+
+CODEX: 2026-10-25 03:36 PDT INFRA/DIE-CI/KV45 PARKED forClaude reset; full handoff CODEX-LOG.md, nativegraphclean but9TYPE_SPLIT+PVconverterfixunrerun; alljobs preserved.
+
+2026-10-25 03:36 PDT CODEX: HBM parked onCLAUDERESET; PHYisolatedIR5/5PASS b69457889; HCsize97d4b1348 exposesW128>400k and viable130k subtrees; FThelpera7c156164 pilotPASS/fullbaseline16typesFAIL, lateststrictfullrerunowed. Allchildrennotified, jobsretained, detailedCODEX-LOGhandoff.
+
+2026-10-25 03:36 PDT CODEX: clock/reset partcap worker parked safely; raw QC/KV reset emit advanced, true-FF guard/compat/boot summaries delivered; N27 continues with qualified guardian; head protocol source search parked before edits. Full handback CODEX-LOG.md.
+CODEX: 2026-10-25 03:36 PDT CP1 parked forClaude: source-onlyd5a0c71db+8f26ab1b4 READY; falsefloorplanrepair1454/-232ps->0/0.81s; qualifiedclearTT/FFinvariancePASS;4ownedECOsretained, Wpairplacementcomplete, r1reg-hop5991pairs/max361.8umPASS; fullhandoffCODEX-LOG.
+
+2026-10-25 03:36 PDT CODEX: KVcores PARKEDclean@24f08b1b1 afterClauderestartorder; frontq/ASTKactualraw+ODB PASS, ECTLK3rootlatepreflight shared446/dropped96FAIL explicitlyopen; nativepacking/parentintegration owed; jobsretained.
+2026-10-25 03:36 PDT CODEX: S81 subgroup parked forClaudeRESET; FT94type auditPASS and178planG0C0E outputs retained (uncommitted), hcpost_h5 actualSIGNED +61.39/+3.68; detailed CODEX-LOG handoff, no jobs killed.
+2026-10-25 03:36 PDT CODEX: S81 HEAD parked on Claude reset; WIP4159282c5 pushed, native extracted m5A11/B8 routes preserved; legal tile placement complete, density/source proof pending. TRIAL PHY commits1ac73030d/1f9559e2d +head7cbf009cc READY; full handoff CODEX-LOG.
+CODEX: 2026-10-25 03:36 PDT HBM-FACE parked safely at a586b7284; full jobs/results/failures in CODEX-LOG Handoff to Claude. Real-MM GQ helper probe/ECO pending, argmax finish pending; ALAT4 exp successor replaces stopped own ALAT3 attempts.
+2026-10-25 03:36 PDT COORD hourly (cheap; usage limits): signed off S81 cores 11->12, QC cores 1->2, KV 4, HBM 0. Fleet mostly idle (epyc2 906 GB at 21/128) -- CODEX to fill with allowed runs (split cores PASS-COND, corrected recipe). Claude agents parked by the limit stay parked (owner: no mass resume); CODEX carries lanes; leafplan out of the dec12 fold (GEOM FAIL).
