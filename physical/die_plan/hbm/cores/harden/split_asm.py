@@ -11,6 +11,10 @@ the excluded member instances.  This script swaps every one of them for the gene
   --mut   K:WRAPPERTOP:PORT:BIT     bench mutant K: wrapper input bit XOR (lockstep_mut == K)  (extra input port)
 Writes module --top (ports = master ports [+ lockstep_mut]).  Unmapped wrapper outputs -> dangling wires;
 unmapped wrapper inputs -> listed (FAIL unless the wrapper ties them itself).
+ALIASES (10-25): the rest_extract parent can connect a remainder OUTPUT port named after an internal net (e.g.
+.u_body..u_fj.u.fault (fault)) to a master port while other parent assigns still read the internal net
+(assign hgi_fault = u_body...u.fault): that net has no driver once the remainder instance is replaced.  Every such
+port net that is read but not driven in the parent gets 'assign <net> = <connection>' (listed as 'alias drives').
 """
 import argparse, re, sys, collections
 
@@ -184,7 +188,24 @@ def main():
             assert len(pb) == len(idx), (xp, wexp)
             for k, i in enumerate(sorted(idx, reverse=True)):
                 srcmap[(nm, i)] = pb[k]
-        repl.append((b[0], b[1], emit(wtop, ports, srcmap, 'u_' + wtop)))
+        alias = []
+        wdir = {p[0]: p[1] for p in ports}
+        if 'lhs_set' not in locals():
+            lhs_set = set(x.strip() for x in re.findall(r'^\s*assign\s+(\\\S+\s|[A-Za-z_][\w$]*)\s*=', ptxt, re.M))
+            rhs_set = set(x.strip() for x in re.findall(r'=\s*(\\\S+\s|[A-Za-z_][\w$]*)\s*;', ptxt))
+        for pm in re.finditer(r'\.(\\\S+\s|[A-Za-z_][\w$]*)\s*\(([^()]*)\)', ux):
+            xp, wexp = pm.group(1).strip(), pm.group(2).strip()
+            pe = b[4].get(xp)
+            if pe is None or not xp.startswith('\\') or xp not in W or pe.strip() == xp:
+                continue
+            if wdir.get(rng(wexp)[0]) != 'output' and wdir.get(wexp[:-6] if wexp.endswith('__full') else '') != 'output':
+                continue
+            xs = xp + ' '
+            if xp in lhs_set or xp not in rhs_set:
+                continue
+            alias.append(f'  assign {xs} = {pe};')
+        print('alias drives:', len(alias), [x.strip() for x in alias[:10]])
+        repl.append((b[0], b[1], emit(wtop, ports, srcmap, 'u_' + wtop) + ('\n' + '\n'.join(alias) if alias else '')))
     for spec in a.piece:
         wf, rest = spec.split(':', 1)
         roles = dict(x.split('=') for x in rest.split(','))
