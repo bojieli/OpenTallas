@@ -339,3 +339,12 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
 - In flight: no HBM partition (G3) routes. Core kits continue.
 - B2l is superseded by B2n (B2l itself not re-planned: B2n carries B2m's fixes).
 - Reset wavefront (decision 13) is on claude/hbm-1024r@f8642a6c5 (needs RESET's tool). It folds into B2n once claude/reset-1024 lands on this base.
+
+2026-10-24 22:58 PDT HBM: HBM-BIND done. claude/hbm-bind-1024r@818651e99 passes every bench and mutant plus gate 5a (delays from the B2n table). 5b/5c FAIL only on the HC root (HBM-HC, exact128 halves).
+- Plan delta from the bind: the RTL needs more than B2n carries.
+  - L4 ring 2816 -> 3344/3376;
+  - hub->root L74 223 -> 3117/2709;
+  - root->hub L12+L13 4267 -> 5301/6286;
+  - no lane yet for spb0/vsN0 <-> hub (615/632 b) or spt0->root (9 b);
+  - many +1-bit lanes, which may be the epoch bit.
+- New sub-agent HBM-PLAN does this as a b2n.py lane-delta step (tool-generated, G0C clean), then the HBM-CORES core grows. B2n READY (160c8579c) stays as the decision-12 baseline; the delta follows as one regeneration.
