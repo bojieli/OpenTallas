@@ -8,7 +8,10 @@ foreach f [lsort [glob -nocomplain $L/asap7sc7p5t_*_LVT_${C}_nldm_*.lib*]] { rea
 foreach f [lsort [glob -nocomplain $L/asap7sc7p5t_*_SLVT_${C}_nldm_*.lib*]] { read_liberty $f }
 foreach f [glob -nocomplain /work/macros/*_${c}.lib] { read_liberty $f }
 read_sdc /work/constraint.sdc
-source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+if {[file exists /work/setRC_rcx.tcl]} { source /work/setRC_rcx.tcl; puts "OT_PROBE RC = kit setRC_rcx.tcl (F2)" } else { source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl }
+# S81-CORES3/SW 10-25: propagate the clock BEFORE estimate_parasitics; estimated with an ideal clock, the clock nets carried
+# no wire RC (arrivals 179-261 TT vs 310-342 by the flow tap measure on the same 4_cts.odb, the trunk/spine part missing)
+set_propagated_clock [get_clocks clk]
 set st $::env(STAGE)
 if {$st eq "rcx"} { read_spef $::env(SPEF) } elseif {$st eq "grt"} {
   if {[catch {estimate_parasitics -global_routing} e]} { puts "OT_PROBE grt-est failed ($e): re-running global_route";

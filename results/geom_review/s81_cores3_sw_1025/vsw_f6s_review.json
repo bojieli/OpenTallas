@@ -1,0 +1,24 @@
+{
+  "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-cores3-sw/vsw_f6s",
+  "design": "ot_s81sl_vsw (LR=1, v_q re-registered at u_l)",
+  "stage": "4_cts.odb (CTS only, no CTS-stage repair); RC = kit setRC_rcx.tcl (F2)",
+  "image": "results/geom_review/s81_cores3_sw_1025/vsw_f6s_postcts_clock.png",
+  "recipe": "2x4 regional taps on a buffered H-tree (OT_RT_NY 2->4: top-right region = N pin band x105-200/y205-220 on tap h3_7), 2 SRAM skew-group taps (F3), F6 macro_if_flops, F4 leaf affinity; SRAMs x 120.528->105.84, E channel 9.29->19.66 um",
+  "tap_means_tt_ps": {"h3_0": 326.3, "h3_1": 333.4, "h3_2": 335.3, "h3_3": 333.2, "h3_4": 321.6, "h3_5": 319.2, "h3_6": 330.0, "h3_7_Nband": 314.6, "mtap0_u_lb": 329.2, "mtap1_u_la": 321.1},
+  "tap_means_ff_ps": {"h3_0": 258.4, "h3_1": 264.0, "h3_2": 265.1, "h3_3": 263.9, "h3_4": 259.7, "h3_5": 258.0, "h3_6": 269.2, "h3_7_Nband": 259.3, "mtap0_u_lb": 264.1, "mtap1_u_la": 257.0},
+  "tap_mean_window_ps": {"tt": 20.7, "ff": 12.2, "rule": 20, "note": "flow log rounds to 'window 20 vs 20'; TT 0.7 ps over"},
+  "within_tap_range_tt_ps_max": 20.4,
+  "insertion_all_regs": {"tt": [309.8, 328.1, 342.3], "ff": [249.7, 261.7, 272.1], "fields": "min p50 max"},
+  "n_band": {"regs": 310, "tap": "ot_rt_h3_7 at (166,215)", "tt": [311.1, 318.0], "ff": [254.1, 262.7], "verdict": "own tap PASS (t22: one long-leaf fan, 380-399)"},
+  "macro_groups": {"u_lb": {"tap": "mtap0", "regs_on_tap": 80, "listed": 146, "clk_vs_regs_ps": "+1 (330 vs 329)", "why_80": "the other 66 listed regs are not u_lb-only: 64 are u_la.cq[32..95] (u_la rd_out capture -> INV -> u_lb wd_in), they are u_la interface regs on mtap1 (one tap per register); mtap0 = 66 u_lb.cq + 7 rp + 7 wp"}, "u_la": {"tap": "mtap1", "regs_on_tap": 210, "clk_vs_regs_ps": "+2 (323 vs 321)"}},
+  "F6": {"if_regs": 290, "pin_to_reg_um_at_place": [9.2, 11.0, 11.1], "dpl_drift_um_max": 2.3, "max_pin_to_reg_um_bound": 13.4, "verdict": "PASS (<=20)"},
+  "pin_regs": {"n": 387, "FIRM at faces, DPL drift p50 0.7 p90 1.4 max 2.4 um": true},
+  "cts_hold_ff_pre_repair": {"wns_ps": -81.85, "violators": 486, "gate": "CTS_HOLD_STOP PASS (>= -100, <= 2000)"},
+  "open": [
+    "tap-mean window TT 20.7 > 20: cause = pad quantum (one BUFx4 into the BUFx24 tap input = ~22 ps, model assumes 13.5) + target hi frozen at it0 (324) while padded taps rose to 335, so h3_7 (N band, 314.6) was never padded; fix in regional_taps_balance.tcl (hi per iteration + a <=10 ps delay unit), not a tweak",
+    "h3_6 region (x108-216, y108-162) is almost all SRAM: tap with 1 sink",
+    "spine L-runs from h2_3 (206,166) to h3_6 (165,110) / h3_7 (166,215) cross u_la/u_lb: route gate must show clock on M5+ over the macros (as vn_a cond c)",
+    "insertion TT 310-342 vs FLOW 250+-40: bind per corner (F1, OT_VCLK)"
+  ],
+  "probe_fix": "ckprobe.tcl estimated parasitics with an ideal clock -> clock nets had no wire RC (179-261 TT on the same odb); now set_propagated_clock first (matches the flow tap measure)"
+}
