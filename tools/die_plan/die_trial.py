@@ -780,14 +780,30 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
     nff = 0
+    # several plan types may share one module name with DIFFERENT pin sets (QC sle_fe_v1/v2/v3, cbf_q00/_s2): one
+    # stand-in per module would bind every instance to the last type's ports and leave the others' seams unconnected
+    # (untimed).  Such types get a per-type stand-in module <module>__<type> and the die top instances are renamed.
+    mods = defaultdict(list)
+    for tn, t in P.types.items():
+        mods[t["module"]].append(tn)
+    uniq = {tn: f"{t['module']}__{sv(tn)}" for tn, t in P.types.items() if len(mods[t["module"]]) > 1}
     for tn, t in sorted(P.types.items()):
-        d = out / "sta" / "parts" / t["module"]
+        mod = uniq.get(tn, t["module"])
+        d = out / "sta" / "parts" / mod
         d.mkdir(parents=True, exist_ok=True)
         v, k = standin_netlist(P, tn)
+        if tn in uniq:
+            v = re.sub(r"^module " + re.escape(t["module"]) + r" \(", f"module {mod} (", v, count=1, flags=re.M)
         (d / "6_final.v").write_text(v)
         nff += k * sum(1 for p in P.parts.values() if p["type"] == tn)
     v = gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {})
     plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln) for ln in v.splitlines() if not ln.startswith("`"))
+    if uniq:
+        inst_mod = {sv(n): uniq[p["type"]] for n, p in P.parts.items() if p["type"] in uniq}
+        plain = re.sub(r"^(\s*)(\S+)(\s+)(\S+)(\s*\()$",
+                       lambda m: m.group(1) + inst_mod.get(m.group(4), m.group(2)) + m.group(3) + m.group(4) + m.group(5)
+                       if m.group(4) in inst_mod else m.group(0), plain, flags=re.M)
+        meta["sta_uniquified_types"] = uniq
     (out / "sta" / "die_top.v").write_text(plain + "\n")
     meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits)
     for x in ("run_grt.sh", "run_clock.sh", "run_psm.sh"):
