@@ -86,6 +86,14 @@ OT_ASSERT = os.environ.get("DV2_OT_ASSERT", "0") == "1"
 DEFINES2 = (["+define+OT_STATION_REGIONAL"] if STATION_REGIONAL else []) + (["+define+OT_ASSERT"] if OT_ASSERT else [])
 if SAFE_STREAM_RESET:
     SRCS2 = [s.replace("rtl/qwen_dv/qfd_dv_stream.sv", "rtl/qwen_dv/qfd_dv_stream_rsafe.sv") for s in SRCS2]
+# TOK-QW 10-24: DV2_S8DIE=1 -> the BOUND compute-die slice row (tb_qfd_dv2 FACE 3, s8die/qfd_dv_slice_die.sv): the s8
+# sources FIRST (Verilator keeps the first declaration of a duplicated module -> the bound children win), then SRCS2.
+# Flags (-GFACE=3 + the s8 defines) come from tools/qwen_tokfunc/s8die_srcs.py S8_FLAGS via --vflags / DV_LOWER_VFLAGS.
+if os.environ.get("DV2_S8DIE", "0") == "1":
+    sys.path.insert(0, str(ROOT / "tools/qwen_tokfunc"))
+    import s8die_srcs as _S8  # noqa: E402
+    _s8 = _S8.s8_files(ROOT)
+    SRCS2 = _s8 + [s for s in SRCS2 if s not in _s8]
 # MU-ADOPT-SLICE 10-19 (environment, default = today): DV2_MU_NU users of the LM-head argmax (qfd_dv_slice2 MU_NU);
 # DV2_FACE 0 master qfd_dv_slice2 / 1 qfd_dv_slice2_w / 2 qfd_dv_slice2_e (tb_dv2_slice port map); DV2_AM_MUT bench-only
 # qfd_dv_amax_mu mutant (+define+OT_DV_AMAX_MUT); DV2_GAP edges between an STN op's last data word and the next op (m).

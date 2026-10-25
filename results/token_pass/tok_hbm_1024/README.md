@@ -32,6 +32,8 @@ native layer qualification.
    vmr/vmw/tree 14/9/13/7 per slice (Codex). Diag: we/bank +26 and all-port advance 50/55/60 -> still FAIL 640/1046.
 2. HC root<->quarter links relayed 8-10 edges each way (unequal per quarter) while hc_eng binds XRD = XRU = 0
    (tools/hbm_die_v16/d4g_layers/l3_vm_hc_coll.py:13 requires the relay layer to set them); HC launch 74-90 edges.
+HC unit gate with the repair (hc_r8_native/): XRD = XRU = 10, RAW0 198, ingest lead 12 -> HC_ENG PASS 24/24 mixes +
+4/4 outs, HC_MIX_CYCLES 1029; wrong-lead mutant CAUGHT.
 Owner: HBM die generator (HBM-ARCH). Candidate repairs (Codex): fixed 61-serial SU command bundle (288-leg miter PASS,
 1,210,724 pad FF, root advance 113 serial / 151 stream) and HC XRD = XRU = 10 (RAW0 198, ingest lead 12).
 

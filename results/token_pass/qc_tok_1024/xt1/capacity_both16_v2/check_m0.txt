@@ -1,0 +1,27 @@
+[near] XT1 FAIL mode=nominal lead=16 gap=4 exact 0/64 {"qkv": {"d_head": 43, "d_clu": 110, "first_rs": 153, "first_final": 209, "last_final": 216, "round_period": null, "exact": "0/8"}, "o": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 8, "last_final": 47, "round_period": [16, 16], "exact": "0/24"}, "gu": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 248, "last_final": 255, "round_period": null, "exact": "0/8"}, "down": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 40, "last_final": 143, "round_period": [48, 48], "exact": "0/24"}}
+  ERR qkv: 1247 rs words, expected 64 (= rounds x k x 8)
+  ERR qkv word 0 (round 0 block 0 j 0) at 352: fault 1 data mismatch
+  ERR qkv word 1 (round 0 block 0 j 1) at 353: fault 1 data mismatch
+  ERR qkv word 2 (round 0 block 0 j 2) at 354: fault 1 data mismatch
+  ERR qkv word 3 (round 0 block 0 j 3) at 355: fault 1 data mismatch
+  ERR qkv word 4 (round 0 block 0 j 4) at 356: fault 1 data mismatch
+  ERR qkv word 5 (round 0 block 0 j 5) at 357: fault 1 data mismatch
+  ERR qkv word 6 (round 0 block 0 j 6) at 358: fault 1 data mismatch
+  ERR qkv word 7 (round 0 block 0 j 7) at 359: fault 1 data mismatch
+  ERR o: 1400 rs words, expected 48 (= rounds x k x 8)
+  ERR o word 0 (round 0 block 0 j 0) at 1696: fault 1 data mismatch
+  ERR o word 1 (round 0 block 0 j 1) at 1697: fault 1 data mismatch
+[far] XT1 FAIL mode=nominal lead=16 gap=4 exact 0/64 {"qkv": {"d_head": 43, "d_clu": 139, "first_rs": 182, "first_final": 238, "last_final": 245, "round_period": null, "exact": "0/8"}, "o": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 8, "last_final": 47, "round_period": [16, 16], "exact": "0/24"}, "gu": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 248, "last_final": 255, "round_period": null, "exact": "0/8"}, "down": {"d_head": 43, "d_clu": -43, "first_rs": 0, "first_final": 40, "last_final": 143, "round_period": [48, 48], "exact": "0/24"}}
+  ERR qkv: 1218 rs words, expected 64 (= rounds x k x 8)
+  ERR qkv word 0 (round 0 block 0 j 0) at 381: fault 1 data mismatch
+  ERR qkv word 1 (round 0 block 0 j 1) at 382: fault 1 data mismatch
+  ERR qkv word 2 (round 0 block 0 j 2) at 383: fault 1 data mismatch
+  ERR qkv word 3 (round 0 block 0 j 3) at 384: fault 1 data mismatch
+  ERR qkv word 4 (round 0 block 0 j 4) at 385: fault 1 data mismatch
+  ERR qkv word 5 (round 0 block 0 j 5) at 386: fault 1 data mismatch
+  ERR qkv word 6 (round 0 block 0 j 6) at 387: fault 1 data mismatch
+  ERR qkv word 7 (round 0 block 0 j 7) at 388: fault 1 data mismatch
+  ERR o: 1400 rs words, expected 48 (= rounds x k x 8)
+  ERR o word 0 (round 0 block 0 j 0) at 1696: fault 1 data mismatch
+  ERR o word 1 (round 0 block 0 j 1) at 1697: fault 1 data mismatch
+RESULT XT1N FAIL mode=nominal near=0/64 far=0/64

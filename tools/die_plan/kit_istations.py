@@ -74,21 +74,25 @@ def main(argv):
         if b is None:
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
         W = b["width"]
-        if re.search(rf"\bu_ist_{re.escape(n)}_\d+\b", txt):
-            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (run on a fresh kit-rtl copy)")
+        prev = sorted(int(m) for m in re.findall(rf"\bu_ist_{re.escape(n)}_(\d+)\b", txt))
+        if prev and (b["dir"] != "in" or prev != list(range(len(prev)))):
+            raise SystemExit(f"kit_istations: {tn} {bus}: stations already inserted (re-application is supported only "
+                             "for an in bus with a complete u_ist_ chain; run on a fresh kit-rtl copy)")
         pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
-        have = len(pads)
+        have = len(pads) + len(prev)
         need = len(regs) - have
         if need < 0:
             raise SystemExit(f"kit_istations: {tn} {bus}: bound module has {have} pad stages > {len(regs)} planned")
-        names = [f"u_b{'in' if b['dir'] == 'in' else 'out'}_{n}_pad{j}" for j in pads]
+        names = [f"u_b{'in' if b['dir'] == 'in' else 'out'}_{n}_pad{j}" for j in pads] + [f"u_ist_{n}_{j}" for j in prev]
         if b["dir"] == "in":
             # the last bound stage on the bus: the pad chain end, else the face register
-            q, eq = (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
+            q, eq = (f"{n}_is{prev[-1]}_q", f"{n}_is{prev[-1]}_eq") if prev else \
+                (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
+            j0 = len(prev)
             if need:
                 decl, body = [], []
                 cq, ceq = q, eq
-                for j in range(need):
+                for j in range(j0, j0 + need):
                     decl.append(f"    wire [{W - 1}:0] {n}_is{j}_q;\n    wire {n}_is{j}_eq;  // kit_istations")
                     body.append(f"    ot_dp_st #(.W({W})) u_ist_{n}_{j} (.clk(clk), .rst_n(rst_n), .d({cq}), .ea({ceq}), "
                                 f".q({n}_is{j}_q), .eq({n}_is{j}_eq));  // kit_istations: FIRM plan station")
@@ -97,7 +101,8 @@ def main(argv):
                 # re-point readers (every use of q / eq outside its driver line and declaration)
                 out = []
                 for ln in txt.splitlines(keepends=True):
-                    if re.search(rf"\b(u_bin_{re.escape(n)}(_pad\d+)?)\s*\(", ln) or re.match(r"^\s*(wire|reg|logic)\b", ln):
+                    if re.search(rf"\b(u_bin_{re.escape(n)}(_pad\d+)?|u_ist_{re.escape(n)}_\d+)\s*\(", ln) or \
+                            re.match(r"^\s*(wire|reg|logic)\b", ln):
                         out.append(ln)
                         continue
                     ln = re.sub(rf"\b{re.escape(q)}\b", cq, ln)
