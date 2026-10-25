@@ -675,8 +675,8 @@ def test_kit_inline_includes(tmp_path):
 
 def test_bump_ports(tmp_path):
     """B2 (PATH-QC-B12 10-25): a hard core's declared line side (contents[].bump_ports) is absent from the as-built die
-    and becomes die-top ports <partition>__<pin>, wired straight to the hard core's pins through partition ports
-    bump_<leaf>__<pin> (no register, no constant); bind_verify proves the line-side input is driven by its die port.
+    and becomes die-top ports <partition>_<pin>, wired straight to the hard core's pins through partition ports
+    bump_<leaf>_<pin> (no register, no constant); bind_verify proves the line-side input is driven by its die port.
     The same plan without the declaration binds byte-identically except for those lines."""
     src = tmp_path / "src"
     src.mkdir()
@@ -711,26 +711,26 @@ def test_bump_ports(tmp_path):
     assert r["n_errors"] == 0 and r["proof"]["unbound"] == 0 and r["proof"]["tied"] == 0
     assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
     assert {(b["die_port"], b["dir"], b["width"], b["leaf"], b["pin"]) for b in r["bump_ports"]} == {
-        ("S__link", "output", 8, "S.u_phy", "link"), ("S__far", "input", 8, "S.u_phy", "far")}
+        ("S_link", "output", 8, "S.u_phy", "link"), ("S_far", "input", 8, "S.u_phy", "far")}
     top = (o1 / "rtl" / "tiny_bound_top.sv").read_text() if (o1 / "rtl" / "tiny_bound_top.sv").exists() else \
         next((o1 / "rtl").glob("*_bound_top.sv")).read_text()
-    assert "output wire [7:0] S__link;" in top and "input  wire [7:0] S__far;" in top
-    assert ".bump_phy__link(S__link)" in top and ".bump_phy__far(S__far)" in top
+    assert "output wire [7:0] S_link;" in top and "input  wire [7:0] S_far;" in top
+    assert ".bump_phy_link(S_link)" in top and ".bump_phy_far(S_far)" in top
     ts = (o1 / "rtl" / "bt_ts.sv").read_text()
-    assert "output wire [7:0] bump_phy__link" in ts and "input  wire [7:0] bump_phy__far" in ts
-    assert re.search(r"lf_phy u_phy \([^;]*\.link\(bump_phy__link\)", ts, re.S)
-    assert re.search(r"lf_phy u_phy \([^;]*\.far\(bump_phy__far\)", ts, re.S)
+    assert "output wire [7:0] bump_phy_link" in ts and "input  wire [7:0] bump_phy_far" in ts
+    assert re.search(r"lf_phy u_phy \([^;]*\.link\(bump_phy_link\)", ts, re.S)
+    assert re.search(r"lf_phy u_phy \([^;]*\.far\(bump_phy_far\)", ts, re.S)
     sinks = json.loads((o1 / "bind_sinks.json").read_text())
-    assert all(sinks[f"phy.far[{i}]"] == ["top", "S__far"] for i in range(8))
+    assert all(sinks[f"phy.far[{i}]"] == ["top", "S_far"] for i in range(8))
     # without the declaration: no die port, and every generated file equals the declared bind minus the bump lines
     assert "bump_ports" not in report(o0)
     for f0 in sorted((o0 / "rtl").glob("*.sv")):
         a = f0.read_text()
         b = (o1 / "rtl" / f0.name).read_text()
-        assert "bump_" not in a and "S__" not in a
+        assert "bump_" not in a and "S_link" not in a and "S_far" not in a
         def strip(t):
-            t = re.sub(r", S__(?:link|far)\b", "", t)
-            return [ln.rstrip(",") for ln in t.splitlines() if not re.search(r"bump_phy__|S__(?:link|far)\b", ln)]
+            t = re.sub(r", S_(?:link|far)\b", "", t)
+            return [ln.rstrip(",") for ln in t.splitlines() if not re.search(r"bump_phy_|S_(?:link|far)\b", ln)]
         assert strip(a) == strip(b), f0.name
 
     # a declared bump pin that the as-built netlist already connects is refused (it is not the line side)

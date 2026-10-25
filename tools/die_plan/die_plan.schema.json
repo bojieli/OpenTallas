@@ -1226,7 +1226,7 @@
         },
         "bump_ports": {
          "type": "array",
-         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>__<pin> (tools/die_plan/bind.py bump_pins)",
+         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)",
          "items": {
           "type": "object",
           "required": [
@@ -1533,7 +1533,7 @@
         },
         "bump_ports": {
          "type": "array",
-         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>__<pin> (tools/die_plan/bind.py bump_pins)",
+         "description": "hard-IP line side (bumps) of this hard core: pins absent from the as-built netlist that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)",
          "items": {
           "type": "object",
           "required": [
