@@ -50,3 +50,11 @@ def test_fixed_port_in_domain_fails_closed():
     P,T,tree=fixture();tree['taps'][0]['xy']=[50,50]
     with pytest.raises(ValueError,match='fixed clock ports'):
         D.route_domain_tree(T,tree,P,clear_um=2,rep_um=20)
+
+
+def test_uniform_type_clock_keepout_is_transformed_per_instance():
+    # A PHY window is wider than its analog core; keep all die clock buffers out
+    # of the reserved region even on rotated copies of a shared partition type.
+    P=SimpleNamespace(parts={'rot':{'type':'t'}},types={'t':{'clock':{'keepouts_um':[[1,2,11,22]]}}},die={})
+    P.to_die=lambda part, xy:(100-xy[1],200+xy[0])
+    assert D.keepouts(P)==[(78,201,98,211,'rot/clock_keepout_0')]

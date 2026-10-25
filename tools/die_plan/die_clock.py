@@ -115,6 +115,10 @@ def keepouts(P):
     out = []
     for n, p in P.parts.items():
         t = P.types[p["type"]]
+        for i, rect in enumerate(t.get("clock", {}).get("keepouts_um", [])):
+            corners = [P.to_die(n, (x, y)) for x in (rect[0], rect[2]) for y in (rect[1], rect[3])]
+            out.append((min(x for x, y in corners), min(y for x, y in corners),
+                        max(x for x, y in corners), max(y for x, y in corners), f"{n}/clock_keepout_{i}"))
         for hc in t.get("hard_cores", []) or []:
             (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
             a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x0 + w, y0 + h))
