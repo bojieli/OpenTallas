@@ -304,7 +304,14 @@ SCHEMA = {
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
-                        "depth": {"type": "integer", "minimum": 1}}},
+                        "depth": {"type": "integer", "minimum": 1},
+                        # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
+                        # released by reset AND run; "bootstrap" = raw delivered wavefront reset (boot/program/PHY
+                        # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
+                        # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
+                        "start_role": {"enum": ["bootstrap", "mission"]},
+                        "core_start_roles": {"type": "object",
+                                             "additionalProperties": {"enum": ["bootstrap", "mission"]}}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
@@ -318,6 +325,7 @@ SCHEMA = {
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
+                                       #   | "start" (bootstrap types: the local registered START tap, active high)
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
                                        "params": {"type": "object",
                                                   "additionalProperties": {"type": ["integer", "string"]}}}}},
@@ -428,6 +436,10 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
+            # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
+            # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
+            "start_port": _name,
             "part_depth": {"type": "integer", "minimum": 1},
             "regions": {"type": "array", "items": {
                 "type": "object", "required": ["name"], "additionalProperties": False,
