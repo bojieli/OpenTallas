@@ -1,0 +1,52 @@
+H	corner	FF_GRT
+H	regs	3446
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5690
+H	pairs	5357
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	5357
+H	max_worst	185.8
+H	max_bounded	0
+H	max_signed	-185.8
+H	max_launch	u_twpd/q[116]$_DFF_P_
+H	max_capture	g_btb[0].u_m
+H	max_crpr	1.62
+H	max_p99_raw	173.94
+H	max_searched	6
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_twpd/q[116]$_DFF_P_	g_btb[0].u_m	-185.80	1.62	187.42
+P	max	u_twpd/q[111]$_DFF_P_	g_btb[0].u_m	-185.76	1.62	187.38
+P	max	u_twpd/q[127]$_DFF_P_	g_btb[0].u_m	-185.54	1.62	187.16
+P	max	u_twpd/q[115]$_DFF_P_	g_btb[0].u_m	-185.50	1.62	187.12
+P	max	u_twpd/q[114]$_DFF_P_	g_btb[0].u_m	-185.48	1.62	187.10
+P	max	u_twpd/q[123]$_DFF_P_	g_btb[0].u_m	-184.25	1.62	185.87
+H	min_n	5357
+H	min_worst	203.83
+H	min_bounded	0
+H	min_signed	203.83
+H	min_launch	g_btb[0].u_m
+H	min_capture	btcap[59]$_DFF_P_
+H	min_crpr	1.62
+H	min_p99_raw	187.81
+H	min_searched	16
+H	min_nopath	0
+H	min_verify	0.000
+P	min	g_btb[0].u_m	btcap[59]$_DFF_P_	203.83	1.62	205.45
+P	min	g_btb[0].u_m	btcap[50]$_DFF_P_	203.81	1.62	205.43
+P	min	g_btb[0].u_m	btcap[222]$_DFF_P_	203.81	1.62	205.43
+P	min	g_btb[0].u_m	btcap[90]$_DFF_P_	203.81	1.62	205.43
+P	min	g_btb[0].u_m	btcap[56]$_DFF_P_	203.79	1.62	205.41
+P	min	g_btb[0].u_m	btcap[49]$_DFF_P_	203.75	1.62	205.37
+P	min	g_btb[0].u_m	btcap[29]$_DFF_P_	203.69	1.62	205.31
+P	min	g_btb[0].u_m	btcap[25]$_DFF_P_	203.69	1.62	205.31
+P	min	g_btb[0].u_m	btcap[16]$_DFF_P_	203.60	1.62	205.22
+P	min	g_btb[0].u_m	btcap[26]$_DFF_P_	203.47	1.62	205.09
+P	min	g_btb[0].u_m	btcap[22]$_DFF_P_	203.44	1.62	205.06
+P	min	g_btb[0].u_m	btcap[68]$_DFF_P_	203.32	1.62	204.94
+P	min	g_btb[0].u_m	btcap[19]$_DFF_P_	203.31	1.62	204.93
+P	min	g_btb[0].u_m	btcap[71]$_DFF_P_	203.00	1.62	204.62
+P	min	g_btb[0].u_m	btcap[24]$_DFF_P_	202.86	1.62	204.48
+P	min	g_btb[0].u_m	btcap[60]$_DFF_P_	202.53	1.62	204.15

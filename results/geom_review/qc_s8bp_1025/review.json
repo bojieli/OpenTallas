@@ -1,0 +1,23 @@
+{
+ "lane": "QC-S8BP", "date": "2026-10-25",
+ "source": "Codex real-clock probes codex/qc-cores-1025@2e5ef37af (south4 pin-register spread d54df8949): intel1 codex-qc-cores/btab_south4_clock, intel2 codex-qc-cores/prog_south4_clock, 5_1_grt.odb",
+ "method": "independent single-corner TT and FF: re-run global_route (M2-M5, adj 0), estimate_parasitics -global_routing, propagated clock, clk source latency 0, pair_skew.tcl (CPPR same_pin); I = mean clock arrival at boundary pin registers (inputs data fan-out endpoints + outputs fan-in startpoints, async excluded). GRT basis only (no RCX yet): GRT clock estimate known 11-45 ps above RCX.",
+ "qfd_dv_s8x_btab": {"pair_TT_setup": 178.08, "pair_TT_hold": 197.2, "pair_FF_setup": 185.8, "pair_FF_hold": 203.83, "worst_pair": "g_btb[0].u_m macro clk vs flops",
+   "I_TT": 599.8, "I_FF": 502.1, "flop_arrival_TT": [552.1, 744.7], "macro_clk_TT": [499.3, 545.2],
+   "hold_WNS_TT_sdc250": -566.38, "hold_WNS_FF_sdc250": -452.33, "hold_note": "1061 port->pin-reg IO hold paths: SDC vclk latency 250 vs I 600; structural (insertion 2.4x budget)", "verdict": "FAIL"},
+ "qfd_dv_s8x_prog": {"pair_TT_setup": 347.0, "pair_TT_hold": 341.74, "pair_FF_setup": 252.64, "pair_FF_hold": 251.19, "worst_pair": "g_prog[*].u_hi macro clk vs pin regs",
+   "I_TT": 892.4, "I_FF": 680.8, "flop_arrival_TT": [728.0, 951.3], "macro_clk_TT": [599.6, 654.6],
+   "hold_WNS_TT_sdc250": -750.40, "hold_WNS_FF_sdc250": -521.67, "setup_WNS_TT": -202.92, "verdict": "FAIL"},
+ "causes": [
+   "C1 root at the sink centroid in the middle of the west strip (btab x81 y192, prog x38 y191) while ck enters at the south face and ~45% of flops are in the south pin-register band: clock goes 190 um north, then back south -> south band latest (prog 900-950 TT)",
+   "C2 CTS macro/register tree split: 9-10 BUFx24 delaybuf latency-balancing chain ahead of the macro tree root plus 3-5 cqb/cqbgrt BUFx4 pad buffers per macro leaf; macros still 60-250 ps EARLY vs flops after GRT RC (placement estimate 370 -> GRT 600 TT)",
+   "C3 unstructured long diagonal clock runs over the SRAMs (M2-M5 only, macros block) to the east macro-edge column and the x252 east pin column: one leaf net per far cluster, +100-200 ps",
+   "C4 insertion 600 (btab) / 890 (prog) ps TT vs SDC 250 and CRH/su8 240-292: the IO hold FAIL is the I contract, but binding I=600-900 is not acceptable; the tree must be rebuilt short"],
+ "fix_request": {
+   "F5": "structured clock: ck port (south face) -> short south trunk -> regional taps: SW band, SE band, W strip low (macro rows 0-1), W strip high (rows 2-3), E column low/high (macro east edges + x252 pin column); taps fed by a balanced spine of repeated buffers routed in the west/east logic channels (never over SRAMs); tap arrival balanced <=20 ps (GRT-RC); per-tap local CTS",
+   "F3/F5 macro": "each SRAM clk pin (SW corner) on its own short leaf from the W tap of its row, latency-matched to the regs that drive wd/addr (W and E edges) and capture rd_out",
+   "F6": "macro interface regs within ~20 um of their macro pins: W-edge regs already in the west strip; E-edge (wd_in hi, w_mask, rr/cr) regs in the x~181 east column -> on the E tap",
+   "F1/F2": "bind I from routed RCX, GRT clock estimate calibrated against RCX before route gate (FF-hold est >= 0)",
+   "no_RTL_change": true, "additional_cycles": 0},
+ "author_verdict": "FAIL (both probes); fix requests PASS to re-run"
+}

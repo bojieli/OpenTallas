@@ -1,0 +1,56 @@
+H	corner	TT_GRT
+H	regs	3446
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5690
+H	pairs	5357
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	5357
+H	max_worst	178.08
+H	max_bounded	0
+H	max_signed	-178.08
+H	max_launch	u_twpd/q[116]$_DFF_P_
+H	max_capture	g_btb[0].u_m
+H	max_crpr	1.89
+H	max_p99_raw	145.68
+H	max_searched	5
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_twpd/q[116]$_DFF_P_	g_btb[0].u_m	-178.08	1.89	179.98
+P	max	u_twpd/q[111]$_DFF_P_	g_btb[0].u_m	-178.05	1.89	179.95
+P	max	u_twpd/q[127]$_DFF_P_	g_btb[0].u_m	-177.84	1.89	179.74
+P	max	u_twpd/q[115]$_DFF_P_	g_btb[0].u_m	-177.80	1.89	179.70
+P	max	u_twpd/q[114]$_DFF_P_	g_btb[0].u_m	-177.78	1.89	179.68
+H	min_n	5357
+H	min_worst	197.2
+H	min_bounded	0
+H	min_signed	197.2
+H	min_launch	g_btb[0].u_m
+H	min_capture	btcap[59]$_DFF_P_
+H	min_crpr	1.89
+H	min_p99_raw	178.50
+H	min_searched	21
+H	min_nopath	0
+H	min_verify	0.000
+P	min	g_btb[0].u_m	btcap[59]$_DFF_P_	197.20	1.89	199.10
+P	min	g_btb[0].u_m	btcap[50]$_DFF_P_	197.19	1.89	199.08
+P	min	g_btb[0].u_m	btcap[222]$_DFF_P_	197.18	1.89	199.08
+P	min	g_btb[0].u_m	btcap[90]$_DFF_P_	197.18	1.89	199.08
+P	min	g_btb[0].u_m	btcap[56]$_DFF_P_	197.16	1.89	199.06
+P	min	g_btb[0].u_m	btcap[49]$_DFF_P_	197.13	1.89	199.02
+P	min	g_btb[0].u_m	btcap[29]$_DFF_P_	197.07	1.89	198.97
+P	min	g_btb[0].u_m	btcap[25]$_DFF_P_	197.07	1.89	198.97
+P	min	g_btb[0].u_m	btcap[16]$_DFF_P_	196.99	1.89	198.88
+P	min	g_btb[0].u_m	btcap[26]$_DFF_P_	196.86	1.89	198.75
+P	min	g_btb[0].u_m	btcap[22]$_DFF_P_	196.83	1.89	198.72
+P	min	g_btb[0].u_m	btcap[68]$_DFF_P_	196.72	1.89	198.61
+P	min	g_btb[0].u_m	btcap[19]$_DFF_P_	196.71	1.89	198.60
+P	min	g_btb[0].u_m	btcap[71]$_DFF_P_	196.41	1.89	198.31
+P	min	g_btb[0].u_m	btcap[24]$_DFF_P_	196.27	1.89	198.17
+P	min	g_btb[0].u_m	btcap[60]$_DFF_P_	195.96	1.89	197.86
+P	min	g_btb[0].u_m	btcap[57]$_DFF_P_	195.62	1.89	197.51
+P	min	g_btb[0].u_m	btcap[28]$_DFF_P_	195.44	1.89	197.34
+P	min	g_btb[0].u_m	btcap[70]$_DFF_P_	195.37	1.89	197.27
+P	min	g_btb[0].u_m	btcap[5]$_DFF_P_	195.34	1.89	197.24
+P	min	g_btb[0].u_m	btcap[112]$_DFF_P_	195.32	1.89	197.21

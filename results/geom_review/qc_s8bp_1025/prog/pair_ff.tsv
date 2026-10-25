@@ -1,0 +1,42 @@
+H	corner	FF_GRT
+H	regs	3295
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5547
+H	pairs	4266
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	4266
+H	max_worst	252.64
+H	max_bounded	0
+H	max_signed	-252.64
+H	max_launch	u_twpa/q[5]$_DFF_P_
+H	max_capture	g_prog[1].u_hi
+H	max_crpr	1.58
+H	max_p99_raw	225.11
+H	max_searched	2
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_twpa/q[5]$_DFF_P_	g_prog[1].u_hi	-252.64	1.58	254.23
+P	max	u_twpa/q[2]$_DFF_P_	g_prog[1].u_hi	-251.94	1.58	253.53
+H	min_n	4266
+H	min_worst	251.19
+H	min_bounded	0
+H	min_signed	251.19
+H	min_launch	g_prog[0].u_hi
+H	min_capture	pcap[276]$_DFF_P_
+H	min_crpr	1.58
+H	min_p99_raw	209.15
+H	min_searched	10
+H	min_nopath	0
+H	min_verify	0.000
+P	min	g_prog[0].u_hi	pcap[276]$_DFF_P_	251.19	1.58	252.77
+P	min	g_prog[0].u_hi	pcap[286]$_DFF_P_	251.15	1.58	252.73
+P	min	g_prog[0].u_hi	pcap[278]$_DFF_P_	251.14	1.58	252.73
+P	min	g_prog[0].u_hi	pcap[266]$_DFF_P_	251.11	1.58	252.70
+P	min	g_prog[0].u_hi	pcap[273]$_DFF_P_	251.09	1.58	252.68
+P	min	g_prog[0].u_hi	pcap[304]$_DFF_P_	251.07	1.58	252.65
+P	min	g_prog[0].u_hi	pcap[272]$_DFF_P_	251.05	1.58	252.63
+P	min	g_prog[0].u_hi	pcap[282]$_DFF_P_	251.04	1.58	252.62
+P	min	g_prog[0].u_hi	pcap[275]$_DFF_P_	251.00	1.58	252.58
+P	min	g_prog[0].u_hi	pcap[274]$_DFF_P_	250.75	1.58	252.33
