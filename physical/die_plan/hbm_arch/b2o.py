@@ -1538,6 +1538,19 @@ def main(argv=None):
     ist_fail = internal_stations(plan, out, soft_with, log)
     fails = B.restation(plan, log)
     fix_cross_hops(plan, log)
+    # decision 12 on the ACTUAL bits (PROTO 10-25: 31 B2n types failed reach 411-620 um on centre-based stations):
+    # every FT slot gets exact per-bit cell sites on channel-safe paths (no route over a hard core); a type whose
+    # bits cannot be sited keeps its centre stations and is listed with its cause (structural, never squeezed)
+    import hbm_bit_stations as HBS  # noqa: E402
+    if os.environ.get("B2O_PROGRESS"): print("actual-bit FT", flush=True)
+    try:
+        ft_rep = HBS.repair(plan, log=lambda m: None)
+    except HBS.RepairFailure as e:
+        ft_rep = e.report
+    (out / "ft_bits_report.json").write_text(json.dumps(ft_rep, indent=1, default=str) + "\n")
+    log.append(f"actual-bit FT: {ft_rep.get(checked, 0)} slots, {len(ft_rep.get(added, []))} grew, "
+               f"{len(ft_rep.get(type_failures, []))} type failures, {len(ft_rep.get(unfixed, []))} unfixed, "
+               f"{len(ft_rep.get(pad_conflicts, []))} pad conflicts (ft_bits_report.json)")
     import b2m as B2M  # noqa: E402
     B2M.clock(plan, out, log)
     for t in T.values():
