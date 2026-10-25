@@ -1123,7 +1123,7 @@
   "u_rsv_\\d+\\.sid",
   "ld_pv_[EW]\\.(k|nw|rb)",
   "u_s_\\w+\\..*\\.(sid|ch_b|chb|k)",
-  "u_rsv_\\d+\\.u\\.u_sx\\.sid",
+  "u_rsv_\\d+(\\.u)+\\.u_sx\\.sid",
   "u_gunit\\.u_l2\\.sid"
  ],
  "strap_note": "as-built declared position straps (cap30 die_port_bind straps_declared: master:port), applied to the leaves that carry them after dissolving the slice parents; PATH-S81/TIES 10-25: the u_rsv_*.sid / u_gunit.sid straps reach their leaves after the svc_rs / gunit parents dissolve (dsdv_svc_sx.sid = slice-id strap selecting its role-ROM row; dsdv_gunit_l2.sid = the gunit slot id flopped onward)",
