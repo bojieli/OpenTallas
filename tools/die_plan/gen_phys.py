@@ -474,7 +474,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 HOLD_FF_MARGIN_DEFAULT = 5.0
 # FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
 # canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
-TAP_GRT_PRE_DEFAULT = False
+TAP_GRT_PRE_DEFAULT = True  # A/B CANDIDATE ONLY (flowcan-cand2), not for merge
 
 
 def _tap_grt_pre(P, t):
