@@ -1037,6 +1037,9 @@
           }
          }
         },
+        "parent_id_leaf": {
+         "type": "string"
+        },
         "orient": {
          "enum": [
           "R0",
@@ -1223,6 +1226,9 @@
            }
           }
          }
+        },
+        "parent_id_leaf": {
+         "type": "string"
         },
         "kit": {
          "type": "string"
