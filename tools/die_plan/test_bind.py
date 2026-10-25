@@ -645,3 +645,29 @@ def test_kit_closure_needed_only_and_strip_dups(tmp_path):
     assert defs["helper"][0].parent == kd / "dedup"                # helper.sv copy without qadd
     assert list(rec.values())[0]["removed"] == ["qadd"]
     assert (r / "helper.sv").read_text().count("module qadd") == 1  # original unchanged
+
+
+def test_kit_inline_includes(tmp_path):
+    """QC-KITS 10-25: a flattened kit cannot open `include "sub/x.svh"`: kit-rtl inlines it (recursively, relative to
+    the including file) into KIT/inline/, and a missing include is a BindError."""
+    src = tmp_path / "src"
+    (src / "sub").mkdir(parents=True)
+    (src / "sub" / "a.svh").write_text('localparam A = 1;\n`include "b.svh"\n')
+    (src / "sub" / "b.svh").write_text("localparam B = 2;\n")
+    top = src / "top.sv"
+    top.write_text('module top;\n  `include "sub/a.svh"\nendmodule\n')
+    plain = src / "plain.sv"
+    plain.write_text("module plain; endmodule\n")
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, rec = bind.kit_inline_includes([top, plain], kd)
+    assert out[1] == plain and out[0] == kd / "inline" / "top.sv"
+    t = out[0].read_text()
+    assert "localparam A = 1;" in t and "localparam B = 2;" in t and "`include \"" not in t.replace("inlined `include", "")
+    assert len(rec[str(out[0])]["includes"]) == 2
+    top.write_text('module top;\n`include "nope.svh"\nendmodule\n')
+    try:
+        bind.kit_inline_includes([top], kd)
+        raise AssertionError("missing include must raise")
+    except bind.BindError:
+        pass
