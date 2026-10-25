@@ -1,0 +1,23 @@
+{
+ "kit": "ot_s81sl_xrt3_c",
+ "outline_um": [
+  570.24,
+  395.28
+ ],
+ "regs": 27019,
+ "ck_probe_min_ps": 330.735779,
+ "ck_probe_max_ps": 337.832275,
+ "ck_probe_p50_ps": 334.153137,
+ "ck_probe_spread_ps": 7.096496000000002,
+ "ckbufs": 3280,
+ "macros": 0,
+ "macro_ck_probe_ps": null,
+ "cts_tool": "I 550 (531-611), 35.7k hold bufs, hold WNS -311 left",
+ "pin_flop_um": {
+  "n": 9122,
+  "p50": 8.198999999999955,
+  "p90": 10.96500000000004,
+  "max": 19.790999999999997,
+  "over20": 0
+ }
+}

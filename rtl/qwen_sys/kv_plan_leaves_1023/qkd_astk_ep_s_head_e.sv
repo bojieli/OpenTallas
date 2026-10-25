@@ -10,7 +10,11 @@
 // eo: port removed; eo = EO_E e + EO_RL (e + e / 2), e = sq[2:0] (qkd_astk_strip_st: 9 e + RL (e + e / 2), RL 3).
 module qkd_astk_ep_s_head_e #(
     parameter integer EO_E = 9,
-    parameter integer EO_RL = 3
+    parameter integer EO_RL = 3,
+    // COORD ruling 2 (10-25; KV-TOK 05:36 g == 0 for every scheduled op): QI_G_PIN=0 drops the ASTK qo copy of the hub's
+    // constant am g bit (old qi[537]) from the port (qi 571 b, old b -> b-1 above 537) and supplies G_CONST instead.
+    parameter integer QI_G_PIN = 1,
+    parameter [0:0] G_CONST = 1'b0
 ) (
     input wire [15:0] cal_exp,
     input wire ck,
@@ -19,7 +23,7 @@ module qkd_astk_ep_s_head_e #(
     input wire [411:0] so,
     input wire sf,
     output wire [632:0] si,
-    input wire [571:0] qi,
+    input wire [570+QI_G_PIN:0] qi,
     output reg [266:0] xo,
     output wire [650:0] zo,
     input wire [521:0] ri,
@@ -45,6 +49,12 @@ module qkd_astk_ep_s_head_e #(
     // ---- pin flops -----------------------------------------------------------------------------------------------------
     (* keep *) reg [424:0] so_q;            // [423:412] unused (no flops)
     (* keep *) reg [571:0] qq;
+    wire [571:0] qi_x;                                 // the legacy 572-b ASTK qo word
+    generate if (QI_G_PIN != 0) begin : g_qi_pin
+        assign qi_x = qi;
+    end else begin : g_qi_const
+        assign qi_x = {qi[570:537], G_CONST, qi[536:0]};
+    end endgenerate
     reg [266:0] xq;   // constant (plan variant): not kept, folded
     reg [650:0] zq;   // constant (plan variant): not kept, folded
     (* keep *) reg [521:0] rq;
@@ -53,12 +63,12 @@ module qkd_astk_ep_s_head_e #(
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin so_q[0] <= 1'b0; so_q[13] <= 1'b0; so_q[424] <= 1'b0; qq[0] <= 1'b0; qq[15] <= 1'b0; qq[536:534] <= 3'd0; xq[10:0] <= 11'd0;
                          zq[1:0] <= 2'b00; rq[0] <= 1'b0; eqc <= 8'd0; end
-        else begin so_q[0] <= so[0]; so_q[13] <= so[13]; so_q[424] <= so_x[424]; qq[0] <= qi[0]; qq[15] <= qi[15]; qq[536:534] <= qi[536:534];
+        else begin so_q[0] <= so[0]; so_q[13] <= so[13]; so_q[424] <= so_x[424]; qq[0] <= qi_x[0]; qq[15] <= qi_x[15]; qq[536:534] <= qi_x[536:534];
                    xq[10:0] <= xi[10:0]; zq[1:0] <= zi[1:0]; rq[0] <= ri[0];
                    eqc <= {xe[103:102], xe[69:68], xe[35:34], xe[1:0]}; end
     always @(posedge ck) begin
         so_q[12:1] <= so[12:1]; so_q[411:14] <= so[411:14];
-        qq[14:1] <= qi[14:1]; qq[533:16] <= qi[533:16]; qq[571:537] <= qi[571:537]; xq[266:11] <= xi[266:11];
+        qq[14:1] <= qi_x[14:1]; qq[533:16] <= qi_x[533:16]; qq[571:537] <= qi_x[571:537]; xq[266:11] <= xi[266:11];
         zq[650:2] <= zi[650:2]; rq[521:1] <= ri[521:1]; eq <= xe;
     end
     wire         start = qq[0];

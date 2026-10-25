@@ -1,0 +1,23 @@
+{
+ "kit": "ot_s81sl_eg_c",
+ "outline_um": [
+  259.2,
+  259.2
+ ],
+ "regs": 33432,
+ "ck_probe_min_ps": 193.259842,
+ "ck_probe_max_ps": 200.79306,
+ "ck_probe_p50_ps": 197.474304,
+ "ck_probe_spread_ps": 7.533218000000005,
+ "ckbufs": 3338,
+ "macros": 0,
+ "macro_ck_probe_ps": null,
+ "cts_tool": "I 308 (298-320), 19.3k hold bufs, hold WNS -83 left",
+ "pin_flop_um": {
+  "n": 201,
+  "p50": 5.510999999999978,
+  "p90": 6.345000000000001,
+  "max": 6.855,
+  "over20": 0
+ }
+}

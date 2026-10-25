@@ -43,6 +43,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import struct
 from pathlib import Path
 
@@ -52,7 +53,25 @@ RELAY = 'results/rtl/qlb_gen_1018/dv2f14bq/relay_stages_compute.json'
 PLAN = 'results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/token_source_plan.json'
 AGES = 'results/rtl/qlb_c4_1018/dv_lower/slice_ages.json'
 NSLICE, VM_EL, PROG_N, BLOCK = 12, 16384, 512, 128
-CMD_HOP, SC_HOP = 2, 2            # slice2: pin register + forwarding register per hop (cmd_o / dn_o)
+CMD_HOP = 2                       # slice2 and s8: cmd pin register + cmd_o register per hop
+# Scalar-chain hop = a property of the slice RTL the commands are compiled for (TOK-QK/S8B 10-25):
+#   'slice2' qfd_dv_slice2 / qfd_dv_scalar2: fdn pin register + dn_o register                                  = 2
+#   's8'     the bound compute-die slice (bound_r8: qfd_dv_s8_flat / s8_ce_w5 / ce_l9h / ce_e5), u_sc = qfd_dv_s5_sc2_leaf
+#            (k79 netlist of qfd_dv_s5_sc2): fdn scu_q pin register + sc2 face-in f_up + qfd_dv_scalar3 dn_o + sc2
+#            face-out dn_o (qfd_dv_s5_sc2 header: every input lands in a face register, every output leaves from one) = 4
+# Selected by DV2_S8DIE=1 (tb_qfd_dv2 FACE 3, dv_bench2) -- never edited per run; dv_lower_bench --calibrate measures it.
+# The bound die's intra-slice partition crossings (bind_latency x_fw_sc / x_sc_fw) are NOT in this hop: they are die
+# terms of the bound top, not of the slice RTL (see results/rtl/tokqw_1024/stages/stg_die).
+SC_HOP_BY_SLICE = {'slice2': 2, 's8': 4}
+SLICE_RTL = 's8' if os.environ.get('DV2_S8DIE', '0') == '1' else 'slice2'
+SC_HOP = SC_HOP_BY_SLICE[SLICE_RTL]
+# x stream (st_up / st_dn) pass hop, same rule:
+#   'slice2' qfd_dv_stream: sw_q pin register + so_e / so_w register                                            = 2
+#   's8'     u_stm = qfd_dv_s6_stm -> qfd_dv_stream_tile (QW-STREAM3): sw_q pin + DP 2 (face root + leaf) + so_e   = 4
+#            (stream_tile header: 'sw_i / se_i: reference inputs delayed DP = 2 edges ... relay outputs on the reference edge')
+# The D2D return chain (ch, 2 edges a hop) and the cmd chain are unchanged in s8 (vec calibrate d2d ages equal for all slices).
+ST_HOP_BY_SLICE = {'slice2': 2, 's8': 4}
+ST_HOP = ST_HOP_BY_SLICE[SLICE_RTL]
 W_VM, W_X, W_D2D, W_SC = 0, 1 << 22, 2 << 22, 3 << 22
 SPLIT_LEVEL = {128: 7, 256: 8, 512: 9}
 
@@ -140,7 +159,10 @@ def ownership(plan=PLAN):
             elif lv == 7:
                 s, pair, mode = t // 2, t % 2, 'L7'
             else:
-                s, pair, mode = 2 * t, None, 'L9 receiver (sender 2t+1)'
+                # Bound west-row pair heads (W5/W3/W1) have no neighbour input.
+                # Their receivers are W4/W2/W0; the mirrored east row receives at E0/E2/E4.
+                s = ((1, 3, 5, 6, 8, 10)[t] if SLICE_RTL == 's8' else 2 * t)
+                pair, mode = None, (f'L9 receiver (sender {s ^ 1})' if SLICE_RTL == 's8' else 'L9 receiver (sender 2t+1)')
             rows.append(dict(block=b, rows=[BLOCK * b, min(BLOCK * (b + 1), m['rows'])], slice=s, round=rnd, pair=pair,
                              mode=mode))
         out[name] = dict(split=m['split'], level=lv, tiles_per_round=T, rounds=m['rounds'], blocks=rows)

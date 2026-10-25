@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "type": "kv3_astk_WN__190.08x181.44",
+ "kit_hash": "56768bdd110bc2db",
+ "variant": "B_face_ports_timing_regs_m8",
+ "stage": "3_place",
+ "kit_dir": "epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/B/kv3_astk_WN__190.08x181.44",
+ "source_commit": "40aa5462a1",
+ "reviewer": "KV-CORES/ASTK-ECTLK (Claude)",
+ "at": "2026-10-25T05:03:41-07:00",
+ "image": "results/geom_review/kv3_astk_WN__kvcores_56768bdd110bc2db.png",
+ "image_viewed": true,
+ "stats": {
+  "type": "kv3_astk_WN__190.08x181.44",
+  "kit_hash": "56768bdd110bc2db",
+  "outline_um": [
+   190.08,
+   181.44
+  ],
+  "cells": 117501,
+  "ffs": 24826,
+  "macros": 0,
+  "std_area_um2": 15416.1,
+  "free_area_um2": 31352.8,
+  "fill_of_free": 0.492,
+  "bufinv_area_share": 0.08,
+  "bins_over_0p8": 0,
+  "max_bin": 0.68,
+  "face_flops": 1690,
+  "pin_reg_um": {
+   "p50": 6.4,
+   "p90": 8.0,
+   "max": 13.1
+  }
+ },
+ "verdict": "PASS",
+ "route_authorized": true,
+ "findings": [
+  "Fill 49% of free, max bin 0.68, 0 bins >0.8; buf/inv 8.0% area: no congestion hot spot.",
+  "1690 face flops form one thin band 4-8 um inside each pin face (pin->reg p90 8.0 um, max 13.1 um); no far pin registers.",
+  "Core logic is one compact block in the middle, no split islands, no long flop streaks across the outline; white margins are only the pin-face channels."
+ ]
+}

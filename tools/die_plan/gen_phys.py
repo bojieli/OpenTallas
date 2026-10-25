@@ -97,54 +97,41 @@ def io_tcl(P, tn, pins):
 RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
 
 
-def _snap_tap(P, x, y):
-    """snap an interior tap pin: across the pin to the top layer's tracks, along it to the layer below's (the pin
-    centre must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255)."""
+def _snap_tap(P, x, y, pg_legal=True):
+    """Interior tap at a crossing of the top two routing layers, clear of both layers' PG access bands.
+
+    Partition stripes are offset from CORE_AREA (CORE_MARGIN_UM); the face-pin band policy also includes the
+    zero-origin phase. Keeping access clear at both phases protects the pin rectangle AND its lower-layer via.
+    Hard partition interfaces retain their declared LEF coordinates (pg_legal=False); their owner fixes the view.
+    """
     top = P.layer_budget["partition_signal_max"]
     L = P.layers[top]
-    Lb = P.layers.get(f"M{int(top[1:]) - 1}", L)
+    below = f"M{int(top[1:]) - 1}"
+    Lb = P.layers.get(below, L)
 
-    def snap(v, LL):
-        return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
-    if L["dir"] == "V":
-        return (_clear_strap(top, snap(x, L), L), snap(y, Lb))
-    return (snap(x, Lb), _clear_strap(top, snap(y, L), L))
+    def snap(v, LL, ln):
+        pitch = LL["pitch_um"]
+        k = round((v - LL["offset_um"]) / pitch)
+        if not pg_legal:
+            return round(LL["offset_um"] + k * pitch, 4)
+        # Band guards already include the stripe pair, pin half-width and at least two routing pitches.
+        def clear(q):
+            return not any(S.pg_blocked(ln, q - origin) for origin in (0.0, CORE_MARGIN_UM))
+        for radius in range(1000):
+            ks = [k] if radius == 0 else [k-radius, k+radius]
+            ok = [round(LL["offset_um"] + j*pitch, 4) for j in ks
+                  if clear(LL["offset_um"] + j*pitch)]
+            if ok:
+                return min(ok, key=lambda q: (abs(q-v), q))
+        raise ValueError(f"no PG-free interior tap track near {v:g} on {ln}")
+    return ((snap(x, L, top), snap(y, Lb, below)) if L["dir"] == "V" else
+            (snap(x, Lb, below), snap(y, L, top)))
 
-
-# kit PDN stripes of the interior-pin layer, as pdngen builds them from PDN (offset = first (VSS) stripe centre from
-# CORE_AREA, VDD one width + spacing later; measured on a kit 2_floorplan.odb: M7 VSS 8.304-8.592, VDD 8.688-8.976,
-# pitch 8.64).  layer: (pitch, offset, width, spacing)
-PDN_PIN_LAYER_STRAPS = dict(M5=(4.32, 2.064, 0.12, 0.072), M7=(8.64, 4.128, 0.288, 0.096))
-STRAP_CLEAR_UM = 0.1    # pin edge -> strap edge (M7 min spacing 0.072 + EOL margin)
-
-
-def _clear_strap(layer, v, L):
-    """S81-HEAD 10-25 (hd_st_m DRC 3: rst_o_1 interior M7 pin snapped between the kit-PDN VSS/VDD M7 straps): move a
-    snapped interior pin coordinate (across the pin layer) to the nearest track whose pin rectangle clears the kit PDN
-    stripe pair of that layer by STRAP_CLEAR_UM.  Interior pins only; face pins and the PDN are unchanged."""
-    if layer not in PDN_PIN_LAYER_STRAPS:
-        return v
-    pitch, off, wid, sp = PDN_PIN_LAYER_STRAPS[layer]
-    lo_rel = CORE_MARGIN_UM + off - wid / 2           # pair start, first period
-    hi_rel = lo_rel + 2 * wid + sp                    # pair end
-    half = LAYER_W.get(layer, 0.04) / 2 + STRAP_CLEAR_UM
-
-    def bad(c):
-        k = math.floor((c - lo_rel + half) / pitch)
-        lo = lo_rel + k * pitch
-        return lo - half < c < lo + (hi_rel - lo_rel) + half
-    if not bad(v):
-        return v
-    for j in range(1, 64):
-        for c in (v - j * L["pitch_um"], v + j * L["pitch_um"]):
-            if not bad(c):
-                return round(c, 4)
-    raise ValueError(f"no {layer} track clears the PDN straps near {v}")
 
 
 def clock_pins(P, tn):
     """every clock tap pin of a type (COORD 10-23 R4 grid, schema.tap_grid), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y in S.tap_grid(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y in S.tap_grid(P, tn)]
 
 
 def tap_points(P, tn):
@@ -159,12 +146,13 @@ def tap_points(P, tn):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
             rs = list(S.tap_clear(t, rs[0], rs[1], cks, clear=4.32))
-    return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
+    return [_snap_tap(P, *ck, pg_legal=not t.get("hard")),
+            _snap_tap(P, *rs, pg_legal=not t.get("hard"))]
 
 
 def core_tap_pins(P, tn):
     """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y, _ in S.core_taps(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
 def core_tap_rows(P, tn):
@@ -564,7 +552,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True))
+    import reset_tree as RT
+    leaf_check = ""
+    if RT.pipelined(P) or RT.wavefront(P):
+        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
+                      "source /work/reset_taps.tcl\nunset rt_postplace\n")
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -597,6 +590,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
+           # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
+           # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
+           "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
            # Owner 00:46: uncertainty is in SDC; repair only 0..5 ps above it.
            "export HOLD_SLACK_MARGIN = 5",
            "export SETUP_SLACK_MARGIN = 0",
@@ -754,6 +750,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
+    shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
@@ -793,7 +790,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
+  if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \

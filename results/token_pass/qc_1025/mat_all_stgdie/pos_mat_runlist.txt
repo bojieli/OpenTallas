@@ -1,0 +1,112 @@
+pos L0_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L0_mat_qkv.npz
+pos L0_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L0_mat_gu.npz
+pos L0_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L0_mat_od.npz
+pos L1_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L1_mat_qkv.npz
+pos L1_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L1_mat_gu.npz
+pos L1_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L1_mat_od.npz
+pos L2_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L2_mat_qkv.npz
+pos L2_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L2_mat_gu.npz
+pos L2_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L2_mat_od.npz
+pos L3_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L3_mat_qkv.npz
+pos L3_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L3_mat_gu.npz
+pos L3_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L3_mat_od.npz
+pos L4_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L4_mat_qkv.npz
+pos L4_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L4_mat_gu.npz
+pos L4_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L4_mat_od.npz
+pos L5_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L5_mat_qkv.npz
+pos L5_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L5_mat_gu.npz
+pos L5_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L5_mat_od.npz
+pos L6_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L6_mat_qkv.npz
+pos L6_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L6_mat_gu.npz
+pos L6_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L6_mat_od.npz
+pos L7_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L7_mat_qkv.npz
+pos L7_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L7_mat_gu.npz
+pos L7_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L7_mat_od.npz
+pos L8_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L8_mat_qkv.npz
+pos L8_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L8_mat_gu.npz
+pos L8_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L8_mat_od.npz
+pos L9_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L9_mat_qkv.npz
+pos L9_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L9_mat_gu.npz
+pos L9_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L9_mat_od.npz
+pos L10_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L10_mat_qkv.npz
+pos L10_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L10_mat_gu.npz
+pos L10_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L10_mat_od.npz
+pos L11_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L11_mat_qkv.npz
+pos L11_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L11_mat_gu.npz
+pos L11_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L11_mat_od.npz
+pos L12_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L12_mat_qkv.npz
+pos L12_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L12_mat_gu.npz
+pos L12_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L12_mat_od.npz
+pos L13_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L13_mat_qkv.npz
+pos L13_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L13_mat_gu.npz
+pos L13_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L13_mat_od.npz
+pos L14_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L14_mat_qkv.npz
+pos L14_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L14_mat_gu.npz
+pos L14_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L14_mat_od.npz
+pos L15_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L15_mat_qkv.npz
+pos L15_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L15_mat_gu.npz
+pos L15_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L15_mat_od.npz
+pos L16_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L16_mat_qkv.npz
+pos L16_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L16_mat_gu.npz
+pos L16_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L16_mat_od.npz
+pos L17_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L17_mat_qkv.npz
+pos L17_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L17_mat_gu.npz
+pos L17_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L17_mat_od.npz
+pos L18_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L18_mat_qkv.npz
+pos L18_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L18_mat_gu.npz
+pos L18_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L18_mat_od.npz
+pos L19_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L19_mat_qkv.npz
+pos L19_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L19_mat_gu.npz
+pos L19_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L19_mat_od.npz
+pos L20_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L20_mat_qkv.npz
+pos L20_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L20_mat_gu.npz
+pos L20_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L20_mat_od.npz
+pos L21_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L21_mat_qkv.npz
+pos L21_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L21_mat_gu.npz
+pos L21_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L21_mat_od.npz
+pos L22_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L22_mat_qkv.npz
+pos L22_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L22_mat_gu.npz
+pos L22_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L22_mat_od.npz
+pos L23_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L23_mat_qkv.npz
+pos L23_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L23_mat_gu.npz
+pos L23_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L23_mat_od.npz
+pos L24_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L24_mat_qkv.npz
+pos L24_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L24_mat_gu.npz
+pos L24_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L24_mat_od.npz
+pos L25_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L25_mat_qkv.npz
+pos L25_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L25_mat_gu.npz
+pos L25_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L25_mat_od.npz
+pos L26_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L26_mat_qkv.npz
+pos L26_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L26_mat_gu.npz
+pos L26_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L26_mat_od.npz
+pos L27_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L27_mat_qkv.npz
+pos L27_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L27_mat_gu.npz
+pos L27_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L27_mat_od.npz
+pos L28_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L28_mat_qkv.npz
+pos L28_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L28_mat_gu.npz
+pos L28_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L28_mat_od.npz
+pos L29_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L29_mat_qkv.npz
+pos L29_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L29_mat_gu.npz
+pos L29_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L29_mat_od.npz
+pos L30_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L30_mat_qkv.npz
+pos L30_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L30_mat_gu.npz
+pos L30_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L30_mat_od.npz
+pos L31_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L31_mat_qkv.npz
+pos L31_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L31_mat_gu.npz
+pos L31_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L31_mat_od.npz
+pos L32_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L32_mat_qkv.npz
+pos L32_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L32_mat_gu.npz
+pos L32_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L32_mat_od.npz
+pos L33_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L33_mat_qkv.npz
+pos L33_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L33_mat_gu.npz
+pos L33_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L33_mat_od.npz
+pos L34_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L34_mat_qkv.npz
+pos L34_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L34_mat_gu.npz
+pos L34_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L34_mat_od.npz
+pos L35_qkv tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run qkv --ages pos/cal_mat/stn_ages.json --fixture fx/L35_mat_qkv.npz
+pos L35_gu tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run gu --ages pos/cal_mat/stn_ages.json --fixture fx/L35_mat_gu.npz
+pos L35_od tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json --fixture fx/L35_mat_od.npz
+pos lm tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run lm --arf --ages pos/cal_mat/stn_ages.json
+pos emb tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run emb --ages pos/cal_mat/stn_ages.json
+pos LGPOS_od_arf tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run od --arf --ages pos/cal_mat/stn_ages.json
+pos LGPOS_lm_arf tree/rtl/test/qwen_dv/dv_lower_mat_bench.py --run lm --arf --ages pos/cal_mat/stn_ages.json

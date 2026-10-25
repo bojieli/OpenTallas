@@ -1057,6 +1057,32 @@ def read_repo(rel):
     return out if rc == 0 else ""
 
 
+def read_repo_many(rels):
+    """{rel: text} of many origin/main files in one git cat-file --batch ('' / absent when missing)"""
+    rels = sorted(set(rels))
+    if REPO_FILES or not rels:
+        return {r: read_repo(r) for r in rels}
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), "cat-file", "--batch"], capture_output=True, timeout=300,
+                           input="".join(f"origin/main:{x}\n" for x in rels).encode())
+    except subprocess.TimeoutExpired:
+        return {}
+    out, buf, i = {}, r.stdout, 0
+    for rel in rels:
+        nl = buf.find(b"\n", i)
+        if nl < 0:
+            break
+        head = buf[i:nl].split()
+        i = nl + 1
+        if len(head) == 3 and head[1] == b"blob":
+            n = int(head[2])
+            out[rel] = buf[i:i + n].decode(errors="replace")
+            i += n + 1
+        elif len(head) == 3:                             # tree / other object: skip its body
+            i += int(head[2]) + 1
+    return out
+
+
 def list_tree(rel, coord=False):
     """file names under a dir of origin/main (or of origin/coord/state when coord)"""
     base = COORD_FILES if coord else REPO_FILES
@@ -1093,8 +1119,16 @@ def ownership_inputs(st, geom_text, trows):
     plans, proto = {}, {}
     gnames = list_tree("results/proto_1025/geom")
     rnames = list_tree("results/proto_1025/g2")
+    core_pins, bound_rtl = {}, {}
     for die, pdir, pname in OWN.DIES:
         plans[die] = _json(read_repo(f"physical/die_plan/{pdir}/die_plan.json"))
+        pf = {h.get("pins_file") for t in ((plans[die] or {}).get("partition_types") or {}).values()
+              if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
+        texts = read_repo_many(f"physical/die_plan/{pdir}/{f}" for f in pf)
+        core_pins[die] = {f: texts.get(f"physical/die_plan/{pdir}/{f}") for f in pf}
+        cand = OWN.bound_rtl_paths(pdir, plans[die])
+        texts = read_repo_many(c for cs in cand.values() for c in cs)
+        bound_rtl[die] = {k: next((texts[c] for c in cs if texts.get(c)), None) for k, cs in cand.items()}
         proto[die] = {
             "geom": {n: _json(read_repo(f"results/proto_1025/geom/{n}")) for n in gnames
                      if n.endswith(".json") and n.startswith(pname)},
@@ -1110,7 +1144,8 @@ def ownership_inputs(st, geom_text, trows):
             lane_texts[n[:-3]] = read_coord(f"lanes/{n}")
     lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
-                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients())
+                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
+                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)))
 
 
 def status(args):

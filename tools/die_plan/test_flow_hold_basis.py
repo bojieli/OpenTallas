@@ -172,3 +172,38 @@ def test_leaf_affinity_tcl_is_report_only_capable_and_bounded():
     t = (HERE / "leaf_affinity.tcl").read_text()
     for k in ("OT_LEAF_AFF_UM", "OT_LEAF_AFF_MAX_GROUP", "OT_LEAF_AFF_REPORT_ONLY", "getSigType", "OT_LEAF_AFF pairs"):
         assert k in t, k
+
+
+def test_postcts_helpers_have_global_scope_inside_orfs_proc(tmp_path):
+    import shutil
+    import subprocess
+    if not shutil.which("tclsh"):
+        import pytest
+        pytest.skip("tclsh unavailable")
+    # Reproduce ORFS sourcing its POST_CTS hook from cts.tcl's procedure.
+    # Real helpers expose state through global procedures (la_succ in F4).
+    (tmp_path / "cts_post.tcl").write_text((HERE / "cts_post.tcl").read_text())
+    for filename, var, value in (("tap_balance.tcl", "tb_state", "balanced"),
+                                 ("leaf_affinity.tcl", "la_d", "data")):
+        (tmp_path / filename).write_text(
+            f"set {var} {value}\nproc read_{var} {{}} {{ global {var}; return ${{{var}}} }}\n")
+    script = f"proc orfs_postcts {{}} {{ source {{{tmp_path / 'cts_post.tcl'}}} }}\norfs_postcts\nputs [read_tb_state]\nputs [read_la_d]\n"
+    result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert result.returncode == 0 and not result.stderr, result.stderr
+    assert result.stdout.splitlines() == ["balanced", "data"]
+    # The former bare-source hook must reproduce the reported missing variable.
+    old = (tmp_path / "cts_post.tcl").read_text().replace("uplevel #0 [list source", "eval [list source")
+    (tmp_path / "cts_post.tcl").write_text(old)
+    mutant = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert 'no such variable' in mutant.stderr
+
+
+def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
+    # ORFS cts.tcl sources POST_CTS_TCL inside a proc; la_d / la_ck / la_par are read by procs via `global`.
+    t = (HERE / "leaf_affinity.tcl").read_text()
+    first_set = t.index("set la_um")
+    import re
+    m = re.search(r"^global (la_\w+ ?){3}$", t, re.M)
+    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par"}
+    decl = m.start()
+    assert decl < first_set

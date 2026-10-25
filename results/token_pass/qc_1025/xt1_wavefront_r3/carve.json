@@ -1,0 +1,273 @@
+{
+ "seeds": [
+  "c_W5_tf_00",
+  "c_W5_tf_01",
+  "c_W5_tf_10",
+  "c_W5_tf_11",
+  "c_W5_tn_00",
+  "c_W5_tn_01",
+  "c_W5_tn_10",
+  "c_W5_tn_11",
+  "sl_W5_ctl",
+  "sl_W5_fe",
+  "sl_W5_fw",
+  "sl_W5_hc0",
+  "sl_W5_hc1",
+  "sl_W5_hc2",
+  "sl_W5_hc3",
+  "sl_W5_sc",
+  "sl_W5_st_a",
+  "sl_W5_st_b",
+  "sl_W5_stm",
+  "sl_W5_su_c",
+  "sl_W5_su_l0",
+  "sl_W5_su_l1"
+ ],
+ "clusters": "both",
+ "clocks": [
+  "clk_core"
+ ],
+ "event_lanes": {
+  "tt_ctlm__cmd_cmd_wi": "x_coll_f4_cmd_cmd_wi_o_sl_W5_fw",
+  "tt_ctlm__hr_hr_wi": "x_coll_f4_hr_hr_wi_o_sl_W5_fw",
+  "tt_ctlm__tl_st_wi": "x_coll_f4_tl_st_wi_o_sl_W5_fw"
+ },
+ "zero_lanes": [
+  {
+   "net": "x_c_W5_bn_00_rsf_o_sl_W5_su_l1",
+   "lane": "c_W5_bf_00__rsf",
+   "width": 515,
+   "readers": [
+    [
+     "sl_W5_su_l1",
+     "rsf_i"
+    ]
+   ]
+  },
+  {
+   "net": "x_c_W5_bn_00_y_o00_sl_W5_su_l1",
+   "lane": "c_W5_bn_00__rsn",
+   "width": 515,
+   "readers": [
+    [
+     "sl_W5_su_l1",
+     "rsn_i"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_dr_o_dr_wi_o_sl_W5_fw",
+   "lane": "native59__dr_o_dr_wi",
+   "width": 521,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "dr_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_out_data_rd_wi_o_sl_W5_fw",
+   "lane": "coll_core__out_data_rd_wi",
+   "width": 513,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "rd_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_out_err_re_wi_o_sl_W5_fw",
+   "lane": "coll_core__out_err_re_wi",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "re_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_out_last_rl_wi_o_sl_W5_fw",
+   "lane": "coll_core__out_last_rl_wi",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "rl_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_out_rank_rr_wi_o_sl_W5_fw",
+   "lane": "coll_core__out_rank_rr_wi",
+   "width": 4,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "rr_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_out_valid_rv_wi_o_sl_W5_fw",
+   "lane": "coll_core__out_valid_rv_wi",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "rv_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_coll_f4_table_req_treq_wi_o_sl_W5_fw",
+   "lane": "tt_ctlm__table_req_treq_wi",
+   "width": 10,
+   "readers": [
+    [
+     "sl_W5_fw",
+     "treq_wi"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_ag_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__ag_wo_ag_ei",
+   "width": 11,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "ag_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_ard_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__ard_wo_ard_ei",
+   "width": 513,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "ard_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_arl_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__arl_wo_arl_ei",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "arl_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_arm_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__arm_wo_arm_ei",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "arm_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_art_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__art_wo_art_ei",
+   "width": 33,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "art_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_arv_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__arv_wo_arv_ei",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "arv_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_dd_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__dd_wo_dd_ei",
+   "width": 549,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "dd_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_flt_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__flte",
+   "width": 2,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "flt_e_i"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_sc_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__sc_wo_sc_ei",
+   "width": 49,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "sc_ei"
+    ]
+   ]
+  },
+  {
+   "net": "x_sl_W4_fw_st_wo_sl_W5_fe",
+   "lane": "sl_W4_fw__st_wo_st_ei",
+   "width": 1088,
+   "readers": [
+    [
+     "sl_W5_fe",
+     "st_ei"
+    ]
+   ]
+  }
+ ],
+ "reset": {
+  "release": "wavefront",
+  "metadata_sha256": "0cac28470a331c8c051a743100e043670ec4f593662072a1153a1f6ce228c58a",
+  "root": "sl_W0_ctl",
+  "latest_partition_release": 128,
+  "latest_published_core_pin_release": 129,
+  "calendar_start_delay": 130,
+  "boundary_prefixes": {
+   "rstw_c_W4_tf_00_rst_o_0": 90,
+   "rstw_c_W4_tn_00_rst_o_0": 83,
+   "rstw_sl_W4_fw_rst_o_1": 75,
+   "rstw_sl_W4_st_b_rst_o_0": 74,
+   "rstw_sl_W4_su_l1_rst_o_0": 72
+  },
+  "scope": "Published reset pin ages at omitted-carrier boundaries; kept partition reset RTL is real. Calendar begins after pin release; whole-die start remains the existing forwarded epoch."
+ },
+ "observe": {
+  "cw_n0": "x_sl_W5_hc0_cw_n0_c_W5_tn_00",
+  "cw_n1": "x_sl_W5_hc1_cw_n1_c_W5_tn_00",
+  "cw_n2": "x_sl_W5_hc2_cw_n2_c_W5_tn_10",
+  "cw_n3": "x_sl_W5_hc3_cw_n3_c_W5_tn_10",
+  "rs": "x_sl_W5_hc0_rsn_o_sl_W5_hc1",
+  "rsc": "x_c_W5_tn_00_y_o00_sl_W5_hc0",
+  "rs_o": "x_sl_W5_hc0_rsf_o_sl_W5_hc1",
+  "rsoc": "x_c_W5_tf_00_y_o00_c_W5_tn_01"
+ },
+ "rom_tiles": 32
+}

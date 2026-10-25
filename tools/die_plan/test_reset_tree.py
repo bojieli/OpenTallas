@@ -230,10 +230,12 @@ def test_gen_phys_kit_gets_reset_tree_tcl():
 def test_interior_pins_clear_kit_pdn_m7_straps():
     """S81-HEAD 10-25: hd_st_m rst_o_1 (1434.272) shorted the kit M7 VDD strap; interior pins clear the strap pair."""
     import gen_phys as G
-    L = dict(dir="V", pitch_um=0.064, offset_um=0.032)
+    import schema as S
+    raw = json.loads((Path(__file__).parent / "examples/tiny_plan.json").read_text())
+    P = S.Plan(raw)
     for v in (8.304, 8.608, 8.976, 1434.272, 17.312, 812.0):
-        c = G._clear_strap("M7", v, L)
+        c, y = G._snap_tap(P, v, 153.376)
         ph = (c - 8.304) % 8.64
         assert 0.672 + 0.116 <= ph + 1e-9 <= 8.64 - 0.116 + 1e-9, (v, c, ph)
         assert abs(c - v) < 1.0
-    assert G._clear_strap("M7", 180.384, L) == 180.384
+        assert G._snap_tap(P, c, y) == (c, y)

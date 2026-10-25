@@ -27,6 +27,9 @@ module dsdv_gunit_l0r #(
     input  wire          go_a, input wire [4:0] go_acc, input wire go_b,
     output reg           r_v, output reg [3:0] r_i, output reg [4:0] r_acc, output reg [319:0] r_d, output reg r_f
 );
+    // Private sticky state; the r_f boundary flop drives only the output pin.
+    // Both capture the same next value, so this adds one FF and zero cycles.
+    (* keep = "true" *) reg fault_hold;
     integer j;
     wire [1:0] rq;
     ot_rst_relay #(.REGIONS(2)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
@@ -52,10 +55,11 @@ module dsdv_gunit_l0r #(
         assign sel[5 * c +: 5] = q;
     end endgenerate
     always @(posedge clk or negedge rq[1])
-        if (!rq[1]) begin a_on <= 1'b0; a_i <= 4'd0; r_v <= 1'b0; r_f <= 1'b0; end
+        if (!rq[1]) begin a_on <= 1'b0; a_i <= 4'd0; r_v <= 1'b0; r_f <= 1'b0; fault_hold <= 1'b0; end
         else begin
-            if (ga) begin a_on <= 1'b1; a_i <= 4'd0; a_acc <= gacc; if (a_on && a_i != 4'd15) r_f <= 1'b1; end
+            if (ga) begin a_on <= 1'b1; a_i <= 4'd0; a_acc <= gacc; if (a_on && a_i != 4'd15) fault_hold <= 1'b1; end
             else if (a_on) begin a_i <= a_i + 4'd1; if (a_i == 4'd15) a_on <= 1'b0; end
+            r_f <= fault_hold || (ga && a_on && a_i != 4'd15);
             r_v <= a_on;
         end
     // word w of group i: slice 4m + s, half k >> 1, word (k & 1) * 3 + o  (m = i[1:0], k = i[3:2])

@@ -1,0 +1,661 @@
+{
+ "schema": "opentallas.kv_cores_1025.hr_cores_rtl.v1",
+ "date": "2026-10-25",
+ "lane": "KV-CORE-RTL/HR",
+ "generator": "physical/die_plan/qwen_kvsys/cores/harden/kv_core_rtl.py --hr-elab (plan face, 16a clocks)",
+ "elab": "epyc1:/home/ubuntu/scratch/kv-g3/wi/hier_pre.json (core_pins_hr.py u_host elaboration)",
+ "out_dir": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl",
+ "cores": [
+  {
+   "module": "qkd_hr_cdc_ch",
+   "insts": [
+    "host__qkd_hr_cdc_ch"
+   ],
+   "members": [
+    "u_done",
+    "u_ing"
+   ],
+   "member_modules": {
+    "u_ing": "ot_qwen_die_cdc_ch",
+    "u_done": "ot_qwen_die_cdc_ch"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [
+    "u_ing",
+    "u_done"
+   ],
+   "pin_bits": 1205,
+   "const_input_bits": 482,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_cdc_ch_pins.json",
+    "plan_pin_bits": 1208,
+    "rtl_pin_bits": 1205,
+    "removed": {
+     "u_done__rclk": "[0]",
+     "u_done__wclk": "[0]",
+     "u_ing__rclk": "[0]",
+     "u_ing__wclk": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 4,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_cdc_ch/qkd_hr_cdc_ch.sv"
+  },
+  {
+   "module": "qkd_hr_cdc_ci",
+   "insts": [
+    "host__qkd_hr_cdc_ci"
+   ],
+   "members": [
+    "u_ox",
+    "u_rx"
+   ],
+   "member_modules": {
+    "u_ox": "ot_link_afifo",
+    "u_rx": "ot_link_afifo"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [
+    "u_ox",
+    "u_rx"
+   ],
+   "pin_bits": 1103,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_cdc_ci_pins.json",
+    "plan_pin_bits": 1106,
+    "rtl_pin_bits": 1103,
+    "removed": {
+     "u_ox__rclk": "[0]",
+     "u_ox__wclk": "[0]",
+     "u_rx__rclk": "[0]",
+     "u_rx__wclk": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 4,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_cdc_ci/qkd_hr_cdc_ci.sv"
+  },
+  {
+   "module": "qkd_hr_cdc_hi",
+   "insts": [
+    "host__qkd_hr_cdc_hi"
+   ],
+   "members": [
+    "u_cx",
+    "u_hx"
+   ],
+   "member_modules": {
+    "u_hx": "ot_link_afifo",
+    "u_cx": "ot_link_afifo"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [
+    "u_hx",
+    "u_cx"
+   ],
+   "pin_bits": 1174,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_cdc_hi_pins.json",
+    "plan_pin_bits": 1177,
+    "rtl_pin_bits": 1174,
+    "removed": {
+     "u_cx__rclk": "[0]",
+     "u_cx__wclk": "[0]",
+     "u_hx__rclk": "[0]",
+     "u_hx__wclk": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 4,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_cdc_hi/qkd_hr_cdc_hi.sv"
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "insts": [
+    "host__qkd_hr_cdc_pc"
+   ],
+   "members": [
+    "u_rx",
+    "u_tx"
+   ],
+   "member_modules": {
+    "u_rx": "ot_qwen_die_cdc_ch",
+    "u_tx": "ot_qwen_die_cdc_ch"
+   },
+   "clocks": [
+    "ck",
+    "ck_phy"
+   ],
+   "sameclk": [],
+   "pin_bits": 2166,
+   "const_input_bits": 18,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_cdc_pc_pins.json",
+    "plan_pin_bits": 2168,
+    "rtl_pin_bits": 2166,
+    "removed": {
+     "u_rx__rclk": "[0]",
+     "u_rx__wclk": "[0]",
+     "u_tx__rclk": "[0]",
+     "u_tx__wclk": "[0]"
+    },
+    "added": {
+     "ck": "[0]",
+     "ck_phy": "[0]"
+    },
+    "n_removed": 4,
+    "n_added": 2,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_cdc_pc/qkd_hr_cdc_pc.sv"
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "insts": [
+    "host__qkd_hr_core_guard"
+   ],
+   "members": [
+    "u_guard",
+    "u_native"
+   ],
+   "member_modules": {
+    "u_guard": "qkd_host_service_guard_mu",
+    "u_native": "qkd_host_native_token_endpoint_cancel_mu"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 1175,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_guard_pins.json",
+    "plan_pin_bits": 1176,
+    "rtl_pin_bits": 1175,
+    "removed": {
+     "u_guard__ck_guard": "[0]",
+     "u_native__ck": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 2,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_guard/qkd_hr_core_guard.sv"
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "insts": [
+    "host__qkd_hr_core_order"
+   ],
+   "members": [
+    "u_chain",
+    "u_dispatch"
+   ],
+   "member_modules": {
+    "u_chain": "qkd_host_ingest_chain_pt",
+    "u_dispatch": "qkd_host_boot_dispatch_debt"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 2282,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_order_pins.json",
+    "plan_pin_bits": 2286,
+    "rtl_pin_bits": 2282,
+    "removed": {
+     "u_chain__ck_map": "[0]",
+     "u_chain__ck_order": "[0]",
+     "u_chain__ck_sum": "[0]",
+     "u_dispatch__ck": "[0]",
+     "u_dispatch__ck_order": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 5,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_order/qkd_hr_core_order.sv"
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "insts": [
+    "host__qkd_hr_core_peer"
+   ],
+   "members": [
+    "u_coordinator",
+    "u_peer",
+    "u_peer_codec",
+    "u_root_mux"
+   ],
+   "member_modules": {
+    "u_peer": "qkd_host_peer_link",
+    "u_peer_codec": "qkd_host_peer_rank_codec",
+    "u_root_mux": "qkd_host_peer_root_mux",
+    "u_coordinator": "qkd_host_tp8_coordinator_mu"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 3844,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_peer_pins.json",
+    "plan_pin_bits": 3849,
+    "rtl_pin_bits": 3844,
+    "removed": {
+     "u_coordinator__ck_codec": "[0]",
+     "u_coordinator__ck_lifecycle": "[0]",
+     "u_coordinator__ck_post": "[0]",
+     "u_peer__ck": "[0]",
+     "u_peer_codec__ck": "[0]",
+     "u_root_mux__ck": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 6,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_peer/qkd_hr_core_peer.sv"
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "insts": [
+    "host__qkd_hr_core_prompt"
+   ],
+   "members": [
+    "u_control",
+    "u_program",
+    "u_program_rx",
+    "u_records"
+   ],
+   "member_modules": {
+    "u_control": "qkd_host_control_prompt_observed",
+    "u_program": "qkd_host_program_loader_target",
+    "u_program_rx": "qkd_host_program_rx_target",
+    "u_records": "qkd_host_record_port_mu"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 5124,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_prompt_pins.json",
+    "plan_pin_bits": 5131,
+    "rtl_pin_bits": 5124,
+    "removed": {
+     "u_control__ck_csr": "[0]",
+     "u_control__ck_ctl": "[0]",
+     "u_control__ck_host": "[0]",
+     "u_control__ck_prompt": "[0]",
+     "u_control__ck_rst": "[0]",
+     "u_program__ck": "[0]",
+     "u_program_rx__ck": "[0]",
+     "u_records__ck": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 8,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_prompt/qkd_hr_core_prompt.sv"
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "insts": [
+    "host__qkd_hr_core_queue"
+   ],
+   "members": [
+    "u_bootbarrier",
+    "u_marker_consumer",
+    "u_queue"
+   ],
+   "member_modules": {
+    "u_queue": "qkd_host_qm_ingress16_service_debt",
+    "u_marker_consumer": "qkd_host_marker_consumer",
+    "u_bootbarrier": "qkd_host_emb_boot_barrier"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 1470,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_queue_pins.json",
+    "plan_pin_bits": 1472,
+    "rtl_pin_bits": 1470,
+    "removed": {
+     "u_bootbarrier__ck": "[0]",
+     "u_marker_consumer__ck": "[0]",
+     "u_queue__ck": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 3,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_queue/qkd_hr_core_queue.sv"
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "insts": [
+    "host__qkd_hr_core_rx"
+   ],
+   "members": [
+    "u_rx"
+   ],
+   "member_modules": {
+    "u_rx": "qkd_host_rx_class_admission"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 2137,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_rx_pins.json",
+    "plan_pin_bits": 2137,
+    "rtl_pin_bits": 2137,
+    "removed": {},
+    "added": {},
+    "n_removed": 0,
+    "n_added": 0,
+    "verdict": "MATCH"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_rx/qkd_hr_core_rx.sv"
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "insts": [
+    "host__qkd_hr_core_tx"
+   ],
+   "members": [
+    "u_axi",
+    "u_ctrl",
+    "u_tx"
+   ],
+   "member_modules": {
+    "u_tx": "qkd_host_tx_class",
+    "u_axi": "qkd_host_axi_packet",
+    "u_ctrl": "qkd_host_ctrl_token_service_packet_collected_mu"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 3770,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_core_tx_pins.json",
+    "plan_pin_bits": 3772,
+    "rtl_pin_bits": 3770,
+    "removed": {
+     "u_axi__ck": "[0]",
+     "u_ctrl__ck": "[0]",
+     "u_tx__ck": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 3,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_core_tx/qkd_hr_core_tx.sv"
+  },
+  {
+   "module": "qkd_hr_host_qm",
+   "insts": [
+    "host__qkd_hr_host_qm"
+   ],
+   "members": [
+    "u_pacer"
+   ],
+   "member_modules": {
+    "u_pacer": "qkd_host_qm_credit_pacer"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 10,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_host_qm_pins.json",
+    "plan_pin_bits": 10,
+    "rtl_pin_bits": 10,
+    "removed": {
+     "clk_h": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 1,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_host_qm/qkd_hr_host_qm.sv"
+  },
+  {
+   "module": "qkd_hr_ingest_eng",
+   "insts": [
+    "host__qkd_hr_ingest_eng"
+   ],
+   "members": [
+    "u_eng"
+   ],
+   "member_modules": {
+    "u_eng": "qkd_host_native_engine"
+   },
+   "clocks": [
+    "ck"
+   ],
+   "sameclk": [],
+   "pin_bits": 1396,
+   "const_input_bits": 1,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_ingest_eng_pins.json",
+    "plan_pin_bits": 1399,
+    "rtl_pin_bits": 1396,
+    "removed": {
+     "clk": "[0]",
+     "clk_bank": "[1:0] 2 bits",
+     "clk_out": "[0]"
+    },
+    "added": {
+     "ck": "[0]"
+    },
+    "n_removed": 4,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_ingest_eng/qkd_hr_ingest_eng.sv"
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "insts": [
+    "host__qkd_hr_phy_adp_0",
+    "host__qkd_hr_phy_adp_1",
+    "host__qkd_hr_phy_adp_2",
+    "host__qkd_hr_phy_adp_3",
+    "host__qkd_hr_phy_adp_4",
+    "host__qkd_hr_phy_adp_5",
+    "host__qkd_hr_phy_adp_6",
+    "host__qkd_hr_phy_adp_7"
+   ],
+   "members": [
+    "g_slice[0].u_slice"
+   ],
+   "member_modules": {
+    "u_slice": "qfd_link_adp128"
+   },
+   "clocks": [
+    "ck_phy"
+   ],
+   "sameclk": [],
+   "pin_bits": 560,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_phy_adp_pins.json",
+    "plan_pin_bits": 560,
+    "rtl_pin_bits": 560,
+    "removed": {
+     "ck": "[0]"
+    },
+    "added": {
+     "ck_phy": "[0]"
+    },
+    "n_removed": 1,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_phy_adp/qkd_hr_phy_adp.sv"
+  },
+  {
+   "module": "qkd_hr_phy_pad",
+   "insts": [
+    "host__qkd_hr_phy_pad"
+   ],
+   "members": [
+    "u_pad"
+   ],
+   "member_modules": {
+    "u_pad": "qkd_host_rx_pad5"
+   },
+   "clocks": [
+    "ck_phy"
+   ],
+   "sameclk": [],
+   "pin_bits": 1577,
+   "const_input_bits": 0,
+   "lint": {
+    "rc": 0,
+    "errors": 0,
+    "first": []
+   },
+   "pins_check": {
+    "pins_file": "cores/qkd_hr_phy_pad_pins.json",
+    "plan_pin_bits": 1577,
+    "rtl_pin_bits": 1577,
+    "removed": {
+     "clk": "[0]"
+    },
+    "added": {
+     "ck_phy": "[0]"
+    },
+    "n_removed": 1,
+    "n_added": 1,
+    "verdict": "RE-PIN NEEDED (KV-PLAN3)"
+   },
+   "rtl": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/rtl/qkd_hr_phy_pad/qkd_hr_phy_pad.sv"
+  }
+ ]
+}

@@ -1,0 +1,143 @@
+{
+  "run": "pc_rep_n44_tt_tns10",
+  "steps": [
+    {
+      "step": "1_1_yosys_canonicalize",
+      "wall_s": 1.4,
+      "cpu_s": 1.4,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 0.08,
+      "msgs": []
+    },
+    {
+      "step": "1_2_yosys",
+      "wall_s": 196.3,
+      "cpu_s": 220.7,
+      "threads_avg": 1.12,
+      "peak_rss_gb": 1.72,
+      "msgs": []
+    },
+    {
+      "step": "1_synth",
+      "wall_s": 77.3,
+      "cpu_s": 77.3,
+      "threads_avg": 1.0,
+      "peak_rss_gb": 7.48,
+      "msgs": []
+    },
+    {
+      "step": "2_1_floorplan",
+      "wall_s": 2249.1,
+      "cpu_s": 4831.4,
+      "threads_avg": 2.15,
+      "peak_rss_gb": 13.85,
+      "msgs": []
+    },
+    {
+      "step": "2_2_floorplan_macro",
+      "wall_s": 40.5,
+      "cpu_s": 37.6,
+      "threads_avg": 0.93,
+      "peak_rss_gb": 5.28,
+      "msgs": []
+    },
+    {
+      "step": "2_3_floorplan_tapcell",
+      "wall_s": 37.3,
+      "cpu_s": 28.2,
+      "threads_avg": 0.76,
+      "peak_rss_gb": 3.62,
+      "msgs": []
+    },
+    {
+      "step": "2_4_floorplan_pdn",
+      "wall_s": 156.8,
+      "cpu_s": 105.0,
+      "threads_avg": 0.67,
+      "peak_rss_gb": 5.47,
+      "msgs": []
+    },
+    {
+      "step": "3_1_place_gp_skip_io",
+      "wall_s": 4275.1,
+      "cpu_s": 4998.0,
+      "threads_avg": 1.17,
+      "peak_rss_gb": 8.98,
+      "msgs": []
+    },
+    {
+      "step": "3_2_place_iop",
+      "wall_s": 36.6,
+      "cpu_s": 36.0,
+      "threads_avg": 0.98,
+      "peak_rss_gb": 5.52,
+      "msgs": []
+    },
+    {
+      "step": "3_3_place_gp",
+      "wall_s": 20003.6,
+      "cpu_s": 27781.6,
+      "threads_avg": 1.39,
+      "peak_rss_gb": 31.4,
+      "msgs": [
+        "GRT-0281"
+      ]
+    },
+    {
+      "step": "3_4_place_resized",
+      "wall_s": 4623.0,
+      "cpu_s": 10085.3,
+      "threads_avg": 2.18,
+      "peak_rss_gb": 18.55,
+      "msgs": []
+    },
+    {
+      "step": "3_5_place_dp",
+      "wall_s": 5514.6,
+      "cpu_s": 10126.1,
+      "threads_avg": 1.84,
+      "peak_rss_gb": 22.97,
+      "msgs": []
+    }
+  ],
+  "metrics": {
+    "1_synth:synth__design__instance__count": 2939416,
+    "1_synth:synth__design__instance__count__stdcell": 2939416,
+    "2_1_floorplan:floorplan__design__instance__count__setup_buffer": 0,
+    "2_1_floorplan:floorplan__timing__setup__tns": 0,
+    "2_1_floorplan:floorplan__timing__hold__tns": 0,
+    "2_1_floorplan:floorplan__timing__setup__ws": 90.2052,
+    "2_1_floorplan:floorplan__timing__hold__ws": 2.50764,
+    "2_1_floorplan:floorplan__design__instance__count": 2984298,
+    "2_1_floorplan:floorplan__design__instance__count__stdcell": 2984298,
+    "2_1_floorplan:floorplan__design__instance__utilization": 0.527847,
+    "3_3_place_gp:globalplace__timing__setup__tns": -417507,
+    "3_3_place_gp:globalplace__timing__hold__tns": 0,
+    "3_3_place_gp:globalplace__timing__setup__ws": -453.855,
+    "3_3_place_gp:globalplace__timing__hold__ws": 3.34922,
+    "3_3_place_gp:globalplace__design__instance__count": 2935250,
+    "3_3_place_gp:globalplace__design__instance__count__stdcell": 2935250,
+    "3_3_place_gp:globalplace__design__instance__utilization": 0.521265,
+    "3_4_place_resized:placeopt__timing__setup__tns": -358521,
+    "3_4_place_resized:placeopt__timing__hold__tns": 0,
+    "3_4_place_resized:placeopt__timing__setup__ws": -441.41,
+    "3_4_place_resized:placeopt__timing__hold__ws": 3.34922,
+    "3_4_place_resized:placeopt__design__instance__count": 2940652,
+    "3_4_place_resized:placeopt__design__instance__count__stdcell": 2940652,
+    "3_4_place_resized:placeopt__design__instance__utilization": 0.522629,
+    "3_5_place_dp:detailedplace__design__violations": 0,
+    "3_5_place_dp:detailedplace__timing__setup__tns": -337808,
+    "3_5_place_dp:detailedplace__timing__hold__tns": 0,
+    "3_5_place_dp:detailedplace__timing__setup__ws": -442.378,
+    "3_5_place_dp:detailedplace__timing__hold__ws": 3.14935,
+    "3_5_place_dp:detailedplace__design__instance__count": 2940652,
+    "3_5_place_dp:detailedplace__design__instance__count__stdcell": 2940652,
+    "3_5_place_dp:detailedplace__design__instance__utilization": 0.522629
+  },
+  "container_samples": {
+    "n": 1573,
+    "peak_mem_gb": 32.9,
+    "max_threads": 47.3
+  },
+  "total_wall": null
+}
