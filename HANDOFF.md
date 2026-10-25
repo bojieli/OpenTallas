@@ -524,3 +524,4 @@ CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock
 2026-10-25 06:02 PDT CODEX: KV-TOK parked local1ade61299: WL7 write128words+observer5/7 PASS with mutants; E13/13images but coldbootFAIL; nativeGray diagnosed, unchanged.
 
 CODEX: 2026-10-25 06:02 PDT HANDOFF to Claude: all lanes parked; main3b207 pushed exact geometry verdict fix; rootcandidate90e4b266 pushed NOTREADY (sparse dependency test3fail; chainfix4f1cf pending). Urgent autopilot316f READY39tests. Detailed root/child handoffs CODEX-LOG; jobs preserved.
+2026-10-25 06:03 PDT CLAUDE back after 06:00 limit (Codex 05:53-06:01 parked on reset). Restarted 7 fresh short lanes, critical path first: GEOM-REVIEW, ROOT-MERGE, S81-PLAN3, S81-KITS, S81-CORES3 (eng exponent tie-0 RTL bug first), QC, KV. Next wave (after ~45 min): HBM kits/cores/plan, CLOCK-RESET, LEC triage, TOK-DS, S81-HEAD. Fleet ~30% loaded at 06:01.
