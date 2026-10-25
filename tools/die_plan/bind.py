@@ -1906,6 +1906,8 @@ class Binder:
         mod = t["module"]
         params = self.tparams[tn]
         pdecl, pnames = [], {}
+        if not hasattr(self, "parent_id_ports"):      # emit_type used without emit() (unit vehicles)
+            self.parent_id_ports, self.parent_id_values = {}, {}
         id_decls = {}
         if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
             from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
