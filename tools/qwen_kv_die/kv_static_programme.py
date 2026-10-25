@@ -183,7 +183,25 @@ K_CMDS = [(-110, dict(command=(256 << 20) | 1, layer_row=True)), (-40, dict(comm
 V_CMDS = [(-400, dict(command=(512 << 33) | (768 << 20) | 1, layer_row=True)), (-300, dict(command=(1 << 31) | 1))]
 # (the V pass keeps the bench's own leads: the K leads -110 / -40 fail the JEDEC core bench at the first V RD;
 #  compile_image refuses any lead that lands on a K RD reservation edge)
-RD_SHAPE_K, RD_SHAPE_V = (8, 2), (8, 3)   # RD reservation bursts the JEDEC core bench sustains (1 RD an edge fails it)
+# Decision 14: the die-clock controller needs K 8-on/3-off to stay below the
+# 0.73-column/cycle DFI budget.  Keep legacy images reproducible; release rebinds
+# select the new shape explicitly and must requalify the resulting controller image.
+def rd_shape_env(name, default):
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        burst, gap = (int(x) for x in raw.split(','))
+    except (TypeError, ValueError):
+        raise ValueError(f'{name}={raw!r}: expected burst,gap') from None
+    # controller calendar Run encoding: burst 1..16, gap 0..255.
+    if not 1 <= burst <= 16 or not 0 <= gap <= 255:
+        raise ValueError(f'{name}={raw!r}: burst must be 1..16, gap 0..255')
+    return burst, gap
+
+
+RD_SHAPE_K = rd_shape_env('OT_KV_RD_SHAPE_K', (8, 2))
+RD_SHAPE_V = rd_shape_env('OT_KV_RD_SHAPE_V', (8, 3))
 CMD_LEAD = 118                  # first K RD reservation at 120: the K layer-row descriptor at 10 and the second command at 80, as the JEDEC bench
 WRITER_STOP_AFTER = 5           # tb_qkd_kv_native_programme: stop 5 edges after the last word (RTL minimum 3)
 FOOTER_WRITER = 0x514b565052473336
