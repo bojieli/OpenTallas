@@ -31,7 +31,7 @@ class Gate(unittest.TestCase):
         self.runref('new');self.assertFalse(self.gate())
     def test_pending_newer_run_with_completed_fail_holds(self):
         self.runref('bad','FAIL');self.runref('new',src='new123456789')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('failed',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('NO-BASELINE',why)
     def test_unbound_result_is_not_completed(self):
         p=self.runref('x');(p/'canary.json').write_text(json.dumps({'verdict':'PASS','src':'other'}));self.assertFalse(self.gate())
     def test_stale_corrective_older_fail_newer_fail_allowed(self):
@@ -40,7 +40,7 @@ class Gate(unittest.TestCase):
     def test_corrective_with_newer_pass_held(self):
         p=self.runref('bad','FAIL');self.runref('good','PASS',src='new123456789')
         self.row['canary_fix']='abc123456789@'+str(p/'canary.json')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('newer PASS',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('newer NO-REGRESSION',why)
     def test_corrective_branch_prefixed_string_resolved_by_path(self):
         p=self.runref('bad','FAIL');self.runref('pend',src='new123456789')
         self.row['canary_fix']='claude/path-qc-sramif-1025@90bf56dfa@'+str(p/'canary.json');self.assertTrue(self.gate())
@@ -70,7 +70,7 @@ class Gate(unittest.TestCase):
     def test_main_pass_does_not_clear_kit_from_different_flow(self):
         self.runref('ref','PASS')
         self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-1]=='kit123456789' else '', '')
-        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from PASS canary',why)
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('differs from released canary',why)
     def test_cp1_uses_s81_reference_but_unknown_die_cannot_bypass(self):
         self.runref('s81_ref','PASS')
         self.row['die']='cp1';self.assertTrue(self.gate())
