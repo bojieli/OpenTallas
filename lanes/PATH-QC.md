@@ -213,3 +213,12 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
   - phy_ucie_kv option A (merge with glue) or B.
   - native59 split write-data faces: accept, or regenerate the macro.
   - (+32.4 mm2 was APPROVED by COORD.)
+
+## PARKED 2026-10-25 10:28 PDT PATH-QC-SRAMIF
+- Branch claude/path-qc-sramif-1025@90bf56dfa (base 8be6d8149): qfd_dv_s5_vm8x.sv parameter MIF (default 0 = main unchanged) on btab/prog/vmr: per-SRAM pre-decoded registered IF (r_ce/r_addr/w_ce/w_addr/wd) + registered capture bank; +1 cycle read/write. Miters + mutants PASS, LEC btab/prog EQUIVALENT, lint clean. Worktree removed.
+- GEOM REQ [PATH-QC-SRAMIF-S7] (one REQ for the family, GEOM-REVIEW.md). F6 PASS all three (max 17.1 um, 0 >20). Renders on branch results/path_qc_sramif_1025/review/.
+- Autopilot rows (--geom REQ, canary 863d61892): btab_s7 31a67854973e (intel1 path-qc-sramif/btab_s7, S6_GRT_GATE PASS +0.02/0), prog_s7 ddc332d9c2dc (intel2 path-qc-sramif/prog_s7, PASS +0.04/0). Hold margin 0 + up to 2 post-DPL repair passes (kit hold_pass.tcl).
+- Superseded: btab_s6 54fc4d99cbf9 resolved NOT-ROUTE/SUPERSEDED (data already gone); prog_s6 1067a7a4404d NOT-ROUTE (COORD row).
+- No live jobs.
+- NEXT: (1) vmr_s6i (intel1 path-qc-sramif/vmr_s6i, F6 PASS, keep 13/13, miter PASS) hold m0+3 passes -2.18/8, all pw16_data -> l_w16d (S-face pin reg -> W landing; pre-existing pair, not IF regs): render that pair + tap leaves, structural fix (co-locate / same leaf), then GEOM REQ update + enqueue qfd_dv_s8x_vmr__s6i. (2) RP1 f58 (qfd_dv_s8_crh_rp1, 4th core): same MIF recipe on pcr_addr/pcr_re/w_ce (per-bank regs anchored) -> kit -> add to [PATH-QC-SRAMIF-S7]. (3) Parent/die: instantiate .MIF(1) for u_bt/u_pg/u_va..vc and schedule +1 on bs_q/p_q/q (COORD-REVIEW-QUEUE READY line).
+- OWNER? none.
