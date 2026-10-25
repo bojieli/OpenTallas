@@ -19,6 +19,9 @@ import ft_sites
 import re
 from tools.die_trial.legal_sites import RowAllocator
 
+SU_HELD = re.compile(r'_su_(l0|l1|c)(_v\d+)?$')
+SU_HOLD_ON = __import__("os").environ.get("QC_SU_HOLD", "0") == "1"
+
 
 def geometry_failures(raw, check_channels=False):
     """Use actual bit faces and explicit cell centres, matching the G2 vehicle."""
@@ -111,10 +114,9 @@ def repair(raw, log=print, only_types=None):
     # 443k strict+bit-ordered) and the slice negotiation is infeasible once their transit is priced physically
     # (QC_NEG_CORE_FT=1, slice W5). Until that re-plan they keep the corridor-mode sites (stations off the cores,
     # legs may cross the cores on M6/M7) so every other type keeps the strict channel-safe result.
-    # QC-SUROW 10-25: with the 1296-um slice rows and 414.72-wide lane cores (gen_plan SU_LANE_CORE) every su_l has a
+    # QC-SUROW 10-25: with the taller slice rows and 414.72-wide lane cores (gen_plan SU_LANE_CORE) every su_l has a
     # 190-um macro-free channel, so the SU row takes the strict channel mode too (QC_SU_HOLD=1 restores the hold).
-    su_types = [t for t in core_types if re.search(r'_su_(l0|l1|c)(_v\d+)?$', t)] \
-        if __import__("os").environ.get("QC_SU_HOLD", "0") == "1" else []
+    su_types = [t for t in core_types if SU_HELD.search(t)] if SU_HOLD_ON else []
     strict_types = [t for t in core_types if t not in su_types]
     for types, strict, mode in ((strict_types, True, 'row-legal-per-bit'),
                                 (su_types, False, 'row-legal-corridor (SU row HELD: slice ft re-plan)')):
@@ -150,7 +152,13 @@ def repair_equalised(raw, log=print):
     report['lane_cycles'] = [dict(lane=lid, before=old_depth[lid], after=after.lane_natural(lid)['cycles'],
                                  added=after.lane_natural(lid)['cycles']-old_depth[lid])
                              for lid in after.lanes if after.lane_natural(lid)['cycles'] != old_depth[lid]]
-    report['unfixed'] = geometry_failures(raw, check_channels=True)
+    fails = geometry_failures(raw, check_channels=True)
+    # SU-row types are HELD (corridor sites, see repair()): reach and station-in-core stay hard failures for them;
+    # only their core-crossing legs are recorded as the held item for the slice ft re-plan.
+    report['held_su_core_crossing'] = [f for f in fails if SU_HOLD_ON and SU_HELD.search(f['type']) and not f.get('reason')
+                                       and f['worst_um'] <= float(raw.get('budgets', {}).get('ft_station_max_um', 405.0))
+                                       and not f['stations_in_core']]
+    report['unfixed'] = [f for f in fails if f not in report['held_su_core_crossing']]
     if report['unfixed']:
         raise ValueError(f"actual-bit geometry still fails: {report['unfixed']}")
     return report
