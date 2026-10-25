@@ -209,6 +209,22 @@ def head_port_regs(text, mod, kd):
     return text
 
 
+def head_lane_ltcopy(text, mod, kd):
+    """COORD ruling 5 (10-25): ot_qkh_lane8 LT_COPY=1 -- per-lane copy of the last decision-word flop (u_ltd line[39]
+    lal / lsel broadcast to 8 lanes x 32 bits = e6 TT -12 ps); 0 cycles, +9x8+3-12 = +63 FF per lane8; the shared leaf
+    default (LT_COPY=0) stays bit-identical for the signed odd heads."""
+    rx = re.compile(r"(ot_qkh_lane8 #\()(?![^)]*LT_COPY)")
+    text, n = rx.subn(r"\1.LT_COPY(1), ", text)
+    if n < 1:
+        raise SystemExit(f"{mod}: --head-lane-ltcopy found no parameterised ot_qkh_lane8 instance")
+    (kd / "head_lane_ltcopy_delta.json").write_text(json.dumps(dict(
+        lane8_lt_copy=n, extra_flops_estimate=63 * n, added_cycles=0,
+        source="COORD ruling 5 (KV-CORES RULINGS 2026-10-25 05:28): structural fix of the e6 216 TT -12 ps "
+               "u_l8.u_ltd line[39] broadcast; rtl/hdc/nearhbm/ot_qkh_subtiles.sv LT_COPY",
+        note="default LT_COPY=0 = unchanged leaf (odd heads e1/e3/e5/e7 signed)"), indent=1) + "\n")
+    return text
+
+
 def preserve_head_relays(path):
     """Retain existing physical command-relay FFs, including unused command fields; no logic/cycle change."""
     if Path(path).name != "ot_qwen_nearhbm_head_hs.sv":
@@ -303,6 +319,9 @@ def main():
     ap.add_argument("--head-port-regs", action="store_true",
                     help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
                          "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
+    ap.add_argument("--head-lane-ltcopy", action="store_true",
+                    help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
+                         "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
@@ -323,6 +342,10 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
+    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
+        raise SystemExit("--head-lane-ltcopy only applies to the even head_eighth cores (e0/e2/e4/e6)")
+    if a.head_lane_ltcopy and not a.head_port_regs:
+        raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
@@ -360,6 +383,8 @@ def main():
             dst.write_text(transform(dst.read_text()))
         if a.head_port_regs and dst.stem == mod:
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
+        if a.head_lane_ltcopy and dst.stem == mod:
+            dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
         if a.ectlk_three_taps and dst.stem == mod:
             text = dst.read_text()
             old = ".ck({ck[0], ck[0], ck[0]})"
@@ -489,6 +514,9 @@ def main():
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     shutil.copyfile(Path(a.tool) / "face_guard.py", kd / "face_guard.py")
+    # COORD ruling 4 (10-25): the platform adder map honours DONT_USE for every kit (HAxp5 -> generic logic; run_kit_kv.sh
+    # generates /work/adder_map_dontuse.v from the image platform map before synth and FAILs a netlist with a DONT_USE cell)
+    shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
@@ -551,6 +579,7 @@ def main():
            *(["export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
               "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"] if rec.get("face_flops", True) else []),
            "export CORNER = TC",
+           "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
     if rec.get("synth_memory_max_bits"):
