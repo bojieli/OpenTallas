@@ -308,6 +308,15 @@ def main():
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
+    # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
+    # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
+    # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_kv.sh)
+    ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
+    ap.add_argument("--io-tt-ps", type=float, default=None,
+                    help="bound TT pin-register insertion (ps, measured); default: plan clock common latency")
+    ap.add_argument("--io-ff-ps", type=float, default=None,
+                    help="bound FF pin-register insertion (ps, measured); default: plan clock insertion_ff_ps, else 0.81 x TT")
+    ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
     if a.ectlk_three_taps:
@@ -473,14 +482,26 @@ def main():
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid))
-    # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports
     import sys
     sys.path.insert(0, str(a.tool))
     import sdc_lint
+    import core_flow
+    if a.io_tt_ps is not None:
+        ins, tt_basis = float(a.io_tt_ps), "--io-tt-ps (measured)"
+    else:
+        tt_basis = "plan clock common latency"
+    if a.io_ff_ps is not None:
+        ff_b, ff_basis = a.io_ff_ps, "--io-ff-ps (measured)"
+    elif a.io_tt_ps is None and plan["clock"].get("insertion_ff_ps") is not None:
+        ff_b, ff_basis = plan["clock"]["insertion_ff_ps"], "plan clock insertion_ff_ps"
+    else:
+        ff_b, ff_basis = None, None
+    ibind = core_flow.binding(ins, ff_b, tol, basis_tt=tt_basis, basis_ff=ff_basis)
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid))
+    # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports
     ins_ports = [b for b, d in cj["port_decl"].items() if d[0] == "input" and b not in clks]
     outs = [b for b, d in cj["port_decl"].items() if d[0] == "output"]
-    lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
+    lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ibind["ff"], insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={})
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
@@ -561,6 +582,14 @@ def main():
                 *([f"export SYNTH_BLACKBOXES = {' '.join(hard_children['children'])}",
                    "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if hard_children else []),
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"]
+    # FLOW-FIX 10-25: main's flow defaults LAST (a recipe's own PRE/POST_GLOBAL_ROUTE_TCL is chained after / before
+    # main's grt_pre.tcl / grt_post.tcl)
+    own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
+                                                                             "export POST_GLOBAL_ROUTE_TCL = ")))}
+    cfg = [l for l in cfg if not l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ", "export POST_GLOBAL_ROUTE_TCL = "))]
+    cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
+                           grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
+                           grt_post_extra=[v for k, v in own.items() if "POST_" in k])
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

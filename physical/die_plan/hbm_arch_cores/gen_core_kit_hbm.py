@@ -377,6 +377,14 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
+    # FLOW-FIX 2026-10-25 (flow canary F1/F2 + COORD per-corner insertion): main's kit-flow defaults via
+    # tools/die_plan/core_flow.py -- RTL lint before synth, RCX-calibrated RC for place/CTS/GRT, per-corner IO vclk
+    # binding (TT in constraint.sdc, FF in the FF-only GRT hold repair step of run_kit_hbm.sh)
+    ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
+    ap.add_argument("--io-ff-ps", type=float, default=None,
+                    help="bound FF pin-register insertion (ps); default: measured table insertion_ff_mean_ps, else plan "
+                         "clock insertion_ff_ps, else 0.81 x TT")
+    ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -513,7 +521,7 @@ def main():
     # partition logic around the core runs at I in the core's own frame: IO vclk source latency = I (input hold /
     # output setup timed against the real latency, not padded by hold buffers), tap_balance target = I (shorter
     # clock ports padded up to it), sdc_lint / signoff insertion target = I.  Constraints, margins, corners unchanged.
-    contract = None
+    contract, ce_ff = None, None
     if a.core_insertion != "none" and Path(a.core_insertion).is_file():
         ci = json.load(open(a.core_insertion))
         ce = next((x for x in ci["views"] if x["view"] == a.view), None)
@@ -521,11 +529,23 @@ def main():
             contract = dict(file=(str(Path(a.core_insertion).resolve().relative_to(REPO)) if Path(a.core_insertion).resolve().is_relative_to(REPO) else str(a.core_insertion)), sha256=sha(Path(a.core_insertion)),
                             insertion_ps=ce["insertion_mean_ps"], early_tap_ps=ce["early_tap_ps"],
                             measured_kit=ce.get("kit"))
+            ce_ff = ce.get("insertion_ff_mean_ps")
             if ce["insertion_mean_ps"] > common:
                 ins = float(ce["insertion_mean_ps"])
     (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
     sys.path.insert(0, str(TOOL))
     import sdc_lint
+    import core_flow
+    if a.io_ff_ps is not None:
+        ff_b, ff_basis = a.io_ff_ps, "--io-ff-ps"
+    elif ce_ff is not None and contract:
+        ff_b, ff_basis = ce_ff, "measured core insertion table (FF)"
+    elif plan["clock"].get("insertion_ff_ps") is not None and abs(ins - common) < 1e-9:
+        ff_b, ff_basis = plan["clock"]["insertion_ff_ps"], "plan clock insertion_ff_ps"
+    else:
+        ff_b, ff_basis = None, None
+    ibind = core_flow.binding(ins, ff_b, tol, basis_tt=("measured core insertion table" if abs(ins - common) > 1e-9
+                                                         else "plan clock common latency"), basis_ff=ff_basis)
     ports_in = sorted({base(n) for n in names} - {base(c) for c in clks})
     sig_in = [b for b in ports_in if b in pb]  # buses
     # direction from the wrapper / top port list
@@ -540,7 +560,8 @@ def main():
         dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
-    lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
+    lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ibind["ff"], insertion_tol_ps=tol,
+                clock_ports=sorted({base(c) for c in clks}),
                 inputs=[b for b in sig_in if dirs.get(b) == "input"],
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
@@ -627,7 +648,6 @@ def main():
            # ELEM-HBM 10-24 (gq_land RSZ0060): ORFS cts.tcl repairs hold BEFORE the POST_CTS tap_balance, i.e. on an
            # unbalanced tree -> thousands of needless hold buffers; repair after GRT instead, on the balanced tree.
            "export SKIP_CTS_REPAIR_TIMING = 1",
-           "export PRE_GLOBAL_ROUTE_TCL = /work/hold_cap.tcl",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
@@ -693,6 +713,10 @@ def main():
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
+    # FLOW-FIX 10-25: main's flow defaults LAST (override PRE/POST_GLOBAL_ROUTE_TCL: hold_cap.tcl chained after the FF
+    # vclk binding of grt_pre.tcl)
+    cfg += core_flow.apply(kd, ibind, design, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
+                           grt_pre_extra=["/work/hold_cap.tcl"])
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),

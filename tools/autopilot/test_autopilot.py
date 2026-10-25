@@ -30,6 +30,7 @@ class Base(unittest.TestCase):
         os.environ["AP_QUEUE_FILE"] = str(Path(self.tmp.name) / "queue.tsv")
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
         os.environ["AP_RELEASE_CACHE"] = str(Path(self.tmp.name) / "release_cache.json")
+        os.environ["AP_CANARY_ROOT"] = str(Path(self.tmp.name) / "canary_runs")
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
         self.ap = importlib.reload(autopilot)
@@ -37,7 +38,8 @@ class Base(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES"):
+        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES", "AP_CANARY_ROOT",
+                  "AP_CANARY_HOLD", "AP_CANARY_TOOL"):
             os.environ.pop(k, None)
 
     def queue(self, *rows):
@@ -652,6 +654,105 @@ class TestReviewIdentity(unittest.TestCase):
                "  t12 PASS-COND route; t18 FAIL pins\n"
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
         self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
+
+
+class TestCanaryHold(TickBase):
+    """CANARY HOLD: real tools/flow_canary/canary.py summary over a temp runs root"""
+    def canary(self, name, die, verdict, failing=(), age=0):
+        d = Path(os.environ["AP_CANARY_ROOT"]) / name
+        d.mkdir(parents=True, exist_ok=True)
+        p = d / "canary.json"
+        p.write_text(json.dumps({"die": die, "verdict": verdict, "item": "it", "src": "abc123", "failing": list(failing)}))
+        t = time.time() - age
+        os.utime(p, (t, t))
+        return str(p)
+
+    def log(self):
+        return (Path(self.tmp.name) / "log.txt").read_text()
+
+    def test_fail_holds_with_reason_then_pass_submits(self):
+        p = self.canary("s81_a", "s81", "FAIL", ["route", "signoff"])
+        self.queue(ROW)
+        jobs = self.tick()
+        self.assertEqual(self.f.launched, [])
+        (j,) = jobs.values()
+        self.assertEqual(j["status"], "HELD-CANARY")
+        self.assertEqual(j["hold"], f"HELD canary s81 FAIL route,signoff {p}")
+        self.assertIn(f"HELD canary s81 FAIL route,signoff {p}", self.log())
+        self.tick()                                         # still FAIL: no new log line, nothing launched
+        self.assertEqual(self.log().count("HELD canary"), 1)
+        self.canary("s81_b", "s81", "PASS")                 # newer canary PASS -> submitted on the next tick
+        jobs = self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+        self.assertEqual(list(jobs.values())[0]["status"], "RUNNING")
+        self.assertIn("RELEASE", self.log())
+
+    def test_newest_by_mtime_and_other_die_not_held(self):
+        self.canary("s81_new", "s81", "PASS", age=0)
+        self.canary("s81_old", "s81", "FAIL", ["cts"], age=3600)
+        self.canary("hbm_x", "hbm", "FAIL", ["lint"])
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_core_suffix_maps_to_die(self):
+        self.canary("kvc", "s81_core", "FAIL", ["lec"])
+        self.queue(ROW)
+        self.assertEqual(list(self.tick().values())[0]["status"], "HELD-CANARY")
+
+    def test_no_baseline_submits(self):
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_exempt_row_submits_and_is_logged(self):
+        self.canary("s81_a", "s81", "FAIL", ["route"])
+        self.queue(ROW + ["", "", "", "", "proof of the cts.tcl la_d fix"])
+        jobs = self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+        self.assertEqual(list(jobs.values())[0]["canary_exempt"], "proof of the cts.tcl la_d fix")
+        self.assertIn("CANARY-EXEMPT", self.log())
+        r = list(self.ap.parse_queue("\t".join(ROW + ["", "", "", "", "x"])).values())[0]
+        self.assertIn("canary_exempt needs a reason", r["error"])
+
+    def test_adopt_row_not_held(self):
+        self.canary("s81_a", "s81", "FAIL", ["route"])
+        self.queue(ROW + ["", "", "", "adopt"])
+        self.assertEqual(list(self.tick().values())[0]["status"], "RUNNING")
+
+    def test_config_off_submits(self):
+        self.canary("s81_a", "s81", "FAIL", ["route"])
+        os.environ["AP_CANARY_HOLD"] = "0"
+        self.ap = importlib.reload(self.ap)
+        self.setUp_fakes()
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_summary_error_submits_and_logs(self):
+        self.canary("s81_a", "s81", "FAIL", ["route"])
+        os.environ["AP_CANARY_TOOL"] = str(Path(self.tmp.name) / "missing_canary.py")
+        self.ap = importlib.reload(self.ap)
+        self.setUp_fakes()
+        self.queue(ROW)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+        self.assertIn("canary summary unavailable", self.log())
+        bad = Path(self.tmp.name) / "bad_canary.py"
+        bad.write_text("import sys; sys.exit('boom')\n")
+        self.ap.CANARY_TOOL = str(bad)
+        summ, err = self.ap.canary_summary()
+        self.assertIsNone(summ)
+        self.assertIn("boom", err)
+
+    def setUp_fakes(self):
+        self.ap.DRY = False
+        self.f = FakeHosts(self.ap)
+        self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
+        self.ap.unit_active = lambda u: u in self.f.active
+        self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
+        self.ap.sh = lambda cmd, timeout=0, input=None: (0, "", "")
+        self.ap.hub_procs = lambda path: []
 
 
 if __name__ == "__main__":

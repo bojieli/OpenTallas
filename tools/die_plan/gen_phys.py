@@ -717,6 +717,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
+    # FLOW-FIX 10-25 (canary F1): pre-synthesis RTL lint (implicit / undriven nets, missing modules or ports)
+    shutil.copyfile(Path(__file__).with_name("rtl_lint.py"), kd / "rtl_lint.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
@@ -747,21 +749,25 @@ RUN_KIT = r"""#!/bin/bash
 # face_guard: NOT EQUIVALENT stops the kit before floorplan; UNPROVEN / tool error is a warning in lec/lec.json.
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
 # 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25), 7 reg_fanout (FLOW-CANARY 10-25: register > 64 data
-# loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
+# loads on the Yosys netlist = replicas merged by Yosys), 8 RTL lint (FLOW-FIX 10-25: rtl_lint.py before synthesis --
+# implicit nets (read_slang -Wimplicit-net / read_verilog -noautowire), hierarchy -check, undriven / multi-driven
+# nets; the ot_s81eng_aq_n32 ep_next/dm_next class); other non-zero = sdc_lint / face_guard / flow step rc.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
-for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
+for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
-  python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
-  if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
+  python3 -I /work/rtl_lint.py /work --out /work/rtl_lint.json > /work/rtl_lint.log 2>&1; rc=\$?; tail -3 /work/rtl_lint.log; \
+  if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
+  if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
