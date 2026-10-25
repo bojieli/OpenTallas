@@ -381,6 +381,13 @@ BUS("hd_lep0N", "lepk_o0", "out", 1104)
 BUS("hd_lep0N", "lepf_i0", "in", 1, kind="ctl")
 BUS("hd_lep0N", "unit_i0", "in", 45, kind="ctl")
 BUS("hd_lep0N", "ctrl_o0", "out", 32, kind="ctl")
+# S81-HEAD/ADAPT 10-25 (COORD ruling (3) 03:45, H4 option A on the layer die, claude/s81-h4-1024r): the s_0N_LP content
+# carries the index rank-tree ports tl_i / ca_o / cb_o (ot_s81sl_lep_mu_ab_idx IDX slot mux / demux, 276 b each).  On the
+# head die their partner is the ctl (it stands where bk_sel's dsdv_idx_tx / dsdv_idx_vmux stand on the layer die):
+# 3 registered 276-b lanes, 1 beat a word (results/arch/s81_head_1025/ADAPTER.md).  No tie-off, no open input.
+BUS("hd_lep0N", "tl_i", "in", 276)
+BUS("hd_lep0N", "ca_o", "out", 276)
+BUS("hd_lep0N", "cb_o", "out", 276)
 
 T("hd_ctl", "ot_s81hd_ctl", (FW, FH), MD["blocks"]["ctl"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_ctl", status="rework",
@@ -389,7 +396,8 @@ T("hd_ctl", "ot_s81hd_ctl", (FW, FH), MD["blocks"]["ctl"]["cells"],
 for b, d, wd in (("lepk_i0", "in", 1104), ("lepk_o0", "out", 1104), ("lepf_o0", "out", 1), ("unit_o0", "out", 45),
                  ("ctrl_i0", "in", 32), ("x_o", "out", 565), ("b_i", "in", 565), ("h_tx_o", "out", 276),
                  ("h_rx_i", "in", 276), ("a_tx_o", "out", 64), ("a_rx_i", "in", 64), ("b7_tx_o", "out", 64),
-                 ("b7_rx_i", "in", 64), ("n_tx_o", "out", 64), ("n_rx_i", "in", 64)):
+                 ("b7_rx_i", "in", 64), ("n_tx_o", "out", 64), ("n_rx_i", "in", 64),
+                 ("tl_o", "out", 276), ("ca_i", "in", 276), ("cb_i", "in", 276)):
     BUS("hd_ctl", b, d, wd, kind="ctl" if wd <= 64 and b.startswith(("lepf", "unit", "ctrl")) else "data")
 SLOT("hd_ctl", "w3u", 514, 0)
 SLOT("hd_ctl", "w3d", 512, 0)
@@ -486,6 +494,8 @@ for b in ("lepk_o0", "lepk_i0", "coll_o3", "coll_i3"):
     y = seed("hd_lep0N", b, "E", y, per_um=4.5, order="lsb_high" if b.endswith("3") else "lsb_low") + 10.0
 for b in ("lepf_i0", "unit_i0", "ctrl_o0"):
     y = seed("hd_lep0N", b, "E", y, hi=y + 20.0) + 10.0
+for b in ("tl_i", "ca_o", "cb_o"):      # H4 (ADAPT 10-25): same E face, above the control buses
+    y = seed("hd_lep0N", b, "E", y, per_um=4.5) + 10.0
 assert y < FH - 20
 pair_seed("hd_st_n3", "u2_o", "d2_i", "E", Y1)
 pair_seed("hd_st_k5", "u_o", "d_i", "E", Y1)
@@ -536,6 +546,10 @@ PATH("ku", [("lep0N", "lepk_o0"), ("ctl", "lepk_i0")], "LAT_HD_KU")
 PATH("lepf", [("ctl", "lepf_o0"), ("lep0N", "lepf_i0")])
 PATH("unit_lep", [("ctl", "unit_o0"), ("lep0N", "unit_i0")])
 PATH("ctrl_lep", [("lep0N", "ctrl_o0"), ("ctl", "ctrl_i0")])
+# H4 index rank-tree lanes (ADAPT 10-25): ctl tl_o -> lep tl_i, lep ca_o / cb_o -> ctl (abutted k5 | k6 seam)
+PATH("h4_tl", [("ctl", "tl_o"), ("lep0N", "tl_i")], "LAT_HD_H4_TL")
+PATH("h4_ca", [("lep0N", "ca_o"), ("ctl", "ca_i")], "LAT_HD_H4_CA")
+PATH("h4_cb", [("lep0N", "cb_o"), ("ctl", "cb_i")], "LAT_HD_H4_CB")
 # stage circuit: WN0 abutted, WN1 / WN2 via N k3 / k4 (+ k1 / k2), WN3 through the ctl
 PATH("coll_WN0_u", [("lk_WN0", "coll_o0"), ("lep0N", "coll_i0")])
 PATH("coll_WN0_d", [("lep0N", "coll_o0"), ("lk_WN0", "coll_i0")])
@@ -678,7 +692,24 @@ plan = dict(
 # guard ring, dedicated power/ground C4 rows (45-um array) over the PHY macro; the 26 SerDes signal sites stay at the
 # shoreline edge.  check.py rule pg_domain.  TODO TRIAL/PDN: head PSM / IR with the VDDPHY domains.
 import copy  # noqa: E402
-_io = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+import die_io as DIO  # noqa: E402
+# Same6-lane ot_pdie_serdes placeholder model as S81. Approved reserve policy,
+# not a measured PHY footprint. Source: physical/asap7_v41x_pdie_macros_v2/
+# ot_pdie_serdes/ot_pdie_serdes.json (area562680.012um2; native250.056x2250.216).
+_PHY_MODEL_AREA_UM2 = 562680.012
+_io_old = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+# Re-derive the reserved shoreline zone around actual bus/FT strips. The old
+# whole-partition IO rectangle incorrectly made the digital strip a PHY supply.
+_io = DIO.plan(S.Plan(plan), phy_zone_guard=63.64)
+_old_by_name = {w['name']: w for w in _io_old}
+for w in _io:
+    for field in ('host', 'host_route'):
+        if field in _old_by_name.get(w['name'], {}):
+            w[field] = _old_by_name[w['name']][field]
+    w['basis'] += (f"; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area {_PHY_MODEL_AREA_UM2:g} um2 "
+                   "from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; "
+                   "rect is a reserved PHY/PG zone, not the measured physical body")
+(HERE/'die_io.json').write_text(json.dumps(_io, indent=1)+'\n')
 if _io:
     plan["die"]["io"] = _io
     _PHY_GRID = [dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"]),
@@ -689,15 +720,18 @@ if _io:
             continue
         x0, y0, x1, y1 = w["rect_um"]
         g = 63.64
+        _pr = S.Plan(plan).rect(w["part"])
         _doms.append(dict(name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
-                          rect_um=[round(max(0.0, x0 - g), 4), round(max(0.0, y0 - g), 4), round(min(W, x1 + g), 4),
-                                   round(min(H, y1 + g), 4)],
+                          rect_um=[round(max(_pr[0], x0 - g), 4), round(max(_pr[1], y0 - g), 4), round(min(_pr[2], x1 + g), 4),
+                                   round(min(_pr[3], y1 + g), 4)],
                           grid=copy.deepcopy(_PHY_GRID),
                           bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=45.0, use="power_ground",
                                      note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal "
                                           "bumps inside except the window's own 26 SerDes sites"),
                           note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes "
-                               "window; core VDD grid unchanged around it"))
+                               "window; reserved zone plus63.64um guard clipped to its containing partition; "
+                               "150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 "
+                               "is a labelled assumption, separate from this reserved zone (no measured body outline claim)"))
     plan["die"]["pg"]["domains"] = _doms
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)

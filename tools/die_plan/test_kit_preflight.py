@@ -76,3 +76,23 @@ proc sta::time_sta_ui {x} {return $x}
     r=subprocess.run(['tclsh',str(p)],capture_output=True,text=True)
     assert (r.returncode!=0)==failed,r.stdout+r.stderr
     assert ('OT_HOLD_GATE FAIL' if failed else 'OT_HOLD_GATE PASS') in r.stdout
+
+
+def test_stage_only_clock_estimate_keeps_golden_and_core_contract(tmp_path,monkeypatch):
+    import schema
+    raw=json.loads((Path(__file__).parent/'examples/tiny_plan.json').read_text())
+    p=schema.Plan(raw)
+    original=gen_phys.sdc(p,'src',gen_phys.type_pins(p,'src'))
+    kit=gen_phys.write_type_kit(p,'src',tmp_path,[])
+    assert (kit/'constraint.sdc').read_text()==original
+    assert 'set_clock_latency -clock clk' not in original
+    assert 'PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl' in (kit/'config.mk').read_text()
+    assert 'PRE_CTS_TCL = /work/pre_cts.tcl' in (kit/'config.mk').read_text()
+    clear=(kit/'pre_cts.tcl').read_text()
+    assert clear.index('unset_clock_latency -clock clk')<clear.index('source /work/clock_taps.tcl')
+    # Add a dedicated early core tap to the port inventory. Stage-only local
+    # estimates must never capture this pin or clear its source -early contract.
+    monkeypatch.setattr(gen_phys,'core_tap_pins',lambda p,t:[('clk_c0',1,1)])
+    assert 'clk_c0' not in gen_phys.clock_phase_tcl(p,'src')
+    assert 'clk_c0' not in gen_phys.clock_phase_tcl(p,'src',before_cts=True)
+    assert '-source' not in gen_phys.clock_phase_tcl(p,'src',before_cts=True)

@@ -1,0 +1,45 @@
+{
+ "element": "ot_s81sl_leaf (74 types) lane arrangement, LEAFPLAN2 g3 lane-side rule (re-review of the r9 lane-star FAIL 00:05)",
+ "plan": "claude/s81-leafplan-1024r@6b66fea917 (plan epyc1:/srv/opentallas-scratch2/claude/s81-leafplan2/g3)",
+ "stage": "die plan (pre-kit)",
+ "verdict": "FAIL",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T03:45:00-07:00",
+ "reasons": "[2026-10-25 03:45] Looked at t6, t50, t1, t8 renders and computed from the img/*.json bundles. Better than r9: no lane behind the vn hq face (lb 904 -> 0, far50 454 -> 0), station bits 792k -> 611k, G0/G0C 0 errors. But the 00:05 conditions are not met: (1) not a regular array: t6/t50 stack the 16 g_ln in 2 ragged columns 1,130 um tall (y 50-1180) beside vn faces only 164-173 um tall; t1 is a ragged 3-4 column cluster; t8 is a clean 2x8 column but vn_a/vn_b sit at its S end so the far lanes are 1,100+ um away; (2) lane order is not bit order (t8 column N->S reads 5,3,0,9,4,...; t6 0,13,6,12,2,10,9,3) so the hq_d/hw_d/n_pre/wl_d fan-outs cross each other; (3) 183-239 bundles per rendered type are > 405 um (max 742-1217 um), and in t6/t50 the stations (x) pile up in one ~120-um strip (x 300-420) between the lane columns and the vn W face; (4) split halves: t6/t50 put vn_b ~380 um N of vn_a with the stores and vq between, so each half drives its own 16-way broadcast over the whole lane field (two trees) instead of one; t1 abuts them (good). Large empty areas remain (t6/t50 SE ~640x650 um, t1/t8 S half), so the cores can pack tighter around the lane block.",
+ "fixes": "Structural, same as the 00:05 fix, now made a hard rule in the search: (a) stack vn_a/vn_b abutted on their c_s faces (the kit pins already line up: vn_a N c_s and vn_b S c_s both span x 9.6-336.3), giving one 337-um W data face; (b) place the 16 lanes as a 4x4 block (or 2x8 centred on that face, never anchored at one end) abutting the W face, rows in bit order; (c) hq_d/hw_d/n_pre/wl_d as one registered broadcast tree per bus: trunk along the face, one branch per lane row, stations only in the inter-lane channels (>=20 um), every hop <=405 um Manhattan, no crossings; (d) ve/vs/vq/stores on the opposite (E) side, then compact the rest to remove the empty quadrants. Re-render t6/t50/t1/t8 and report per type: max bundle hop after stations, crossings count, station bits, and the cut (bits per um) across the lane block at M7-or-below. Core kits (ve_m/ve_s/vn_a/vn_b) can proceed meanwhile: the arrangement must not change their pin tables.",
+ "images": [
+  "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t6.png",
+  "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t50.png",
+  "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t1.png",
+  "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t8.png"
+ ],
+ "numbers": {
+  "bundles_gt_405_um": {
+   "t1": 183,
+   "t6": 239,
+   "t8": 213,
+   "t30": 207,
+   "t41": 184,
+   "t50": 207
+  },
+  "max_bundle_um": {
+   "t1": 742,
+   "t6": 1217,
+   "t8": 1150,
+   "t30": 1098,
+   "t41": 1044,
+   "t50": 1096
+  },
+  "station_bits_r9_vs_g3": [
+   791740,
+   610874
+  ],
+  "lanes_behind_r9_vs_g3": [
+   904,
+   0
+  ]
+ },
+ "owner_lane": "S81",
+ "rule": "OWNER 10-16 neighbour-only hops / no star hubs; decision 12 (<=405 um); no empty area on link paths; GEOM 00:05 r9 FAIL conditions",
+ "note": "CODEX (02:43, codex/geom-review-only-1025@fda531177) gave PASS-COND for plan adoption. This review is stricter: the 00:05 r9 FAIL conditions (regular array, bit order, no crossings, hops <=405) are not met, so leaf kits/route stay held; G0/G0C-clean plan merge for the lane-side gain is acceptable only as an interim step if the steward needs it, not as the kit basis."
+}

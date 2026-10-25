@@ -110,12 +110,22 @@ module ot_qwen_tp8_pv_slice_t #(parameter integer RESET_PIN=0)(
   .leaf_c({3'd0,leaf_c}),.reduce_issue(red_issue),.reduce_capture(red_capture),.reduce_last(red_last),
   .reduce_dst({4'd0,red_dst}),.tree_sum(tsum),.leaf(raw),.commit(cv),.commit_c(cc),.fault(sf));
  reg[10:0] fc;reg[6:0] tc;
+ // KV-CORES-PAR 10-24 (COORD ruling 22:43 (2), 0 cycles): the sticky fault state (fault_s, feeds its own next state) and
+ // the port register (fault) are two flops loaded with the same next value every edge, so the fault pin is driven by a
+ // flop whose only load is the pin (face_guard "shared": the old single flop also fed the sticky OR).  The port flop
+ // takes the reset synchronously (local_rst_n is itself the registered rst_q): a different cell from the async-clear
+ // fault_s, so yosys opt_merge cannot fold the two back into one (keep on a reg does not stop that: the kept wire
+ // survives flatten as an alias net with its own buffer load off the pin).  Out of reset both equal fault_n every
+ // edge; on reset entry the pin clears one edge after fault_s.
+ reg fault_s;
+ wire fault_n=fault_s||sf||(cv!=(fc[10]||tc[6]));
  always @(posedge clk or negedge local_rst_n)
-  if(!local_rst_n)begin fc<=0;tc<=0;fault<=0;end
+  if(!local_rst_n)begin fc<=0;tc<=0;fault_s<=0;end
   else begin
    fc<={fc[9:0],take};tc<={tc[5:0],red_issue};
-   if(sf||(cv!=(fc[10]||tc[6])))fault<=1;
+   fault_s<=fault_n;
   end
+ always @(posedge clk)fault<=local_rst_n&&fault_n;
  always @(posedge clk)ts<=tsum;
 endmodule
 
@@ -188,10 +198,15 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
  end endgenerate
  wire jexp=jrun&&(jage==J_LAT||jage==J_LAT+1||jage==J_LAT+2||jage==J_LAT+3||jage==2*J_LAT+1||jage==2*J_LAT+3||jage==J_OUT);
  wire bad=(|sf_r)||(jv!={16{jexp}})||(jexp&&(|jerr))||(go_r&&jrun);
+ // Port registers drive only their pins (face_guard): the hold/sticky feedback lives in separate kept copies, so the
+ // output flops y[*]/fault have no internal load. Zero cycle change: y(t+1)=load?jy:y_hold(t) with y_hold(t)==y(t).
+ (* keep = "true", dont_touch = "true" *) reg[511:0] y_hold;
+ (* keep = "true", dont_touch = "true" *) reg fault_hold;
  always @(posedge clk or negedge local_rst_n)begin
-  if(!local_rst_n)begin jrun<=0;jage<=0;y_valid<=0;fault<=0;end
+  if(!local_rst_n)begin jrun<=0;jage<=0;y_valid<=0;fault<=0;fault_hold<=0;end
   else begin
-   if(bad)fault<=1;
+   if(bad)fault_hold<=1;
+   fault<=fault_hold|bad;                           // port copy: same value/edge as the sticky flag, drives only its pin
    y_valid<=jrun&&jage==J_OUT;
    if(go_r)begin jrun<=1;jage<=0;end
    else if(jrun)begin jage<=jage+1'b1;if(jage==J_OUT)jrun<=0;end
@@ -201,7 +216,8 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
   if(jrun&&jage==J_LAT)xr<=jy;                      // L5_0
   if(jrun&&jage==J_LAT+2)xr<=jy;                    // L5_2
   if(jrun&&jage==2*J_LAT+1)yr<=jy;                  // L6_0
-  if(jrun&&jage==J_OUT)y<=jy;
+  if(jrun&&jage==J_OUT)y_hold<=jy;
+  y<=(jrun&&jage==J_OUT)?jy:y_hold;                // port copy: same value/edge as the held result, drives only its pin
  end
 endmodule
 

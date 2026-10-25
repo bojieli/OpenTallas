@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "s81_head",
- "plan_digest": "e7c9fcc84368c088",
+ "plan_digest": "cb494ab9e64d82d7",
  "period_ps": 833,
  "lanes": {
   "chE0_b0": {
@@ -5722,6 +5722,63 @@
     "bus": "ctrl_i0"
    },
    "width": 32
+  },
+  "h4_ca": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_HD_H4_CA",
+   "src": {
+    "part": "lep0N",
+    "bus": "ca_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "ca_i"
+   },
+   "width": 276
+  },
+  "h4_cb": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_HD_H4_CB",
+   "src": {
+    "part": "lep0N",
+    "bus": "cb_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "cb_i"
+   },
+   "width": 276
+  },
+  "h4_tl": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_HD_H4_TL",
+   "src": {
+    "part": "ctl",
+    "bus": "tl_o"
+   },
+   "dst": {
+    "part": "lep0N",
+    "bus": "tl_i"
+   },
+   "width": 276
   },
   "host_rx": {
    "cycles": 38,
