@@ -10,7 +10,9 @@
    "tkm_SW"
   ],
   "drop_instances": [
-   "host_N"
+   "host_N",
+   "hb_idx__xq_S",
+   "hb_idx__xqr"
   ]
  },
  "strap_ports": [
@@ -107,6 +109,19 @@
    "status": "rtl+bench (see b2_native_bind_rtl.json)",
    "what": "host_N (ot_pdie_ucie_col) dropped; ep_N0 -> hfd_ep_static_vc2 (slot {vc,frame,v} 614 b, COLL VC0 calendar priority +1 TX edge, host VC1 4-deep elastic queue on free take slots, RX vc demux); host_ep -> hfd_ep_host_vc (pingpong + pin regs on the ep_N0 host face; host_cp_rxs unchanged). The N0 peer (switch / neighbour) must run the vc2 lane format.",
    "plan": "B2l/B2m: io_NW_io_u_host_N window removed; u_host_ep stays (smaller: no gearbox); ep_N0<->host_ep 612+612+5 b frame faces inside NW_io; root keeps u_host_cp_ingress"
+  },
+  {
+   "id": "R-IDX",
+   "kind": "rtl+wiring",
+   "status": "done (straps 8d607ca2e; delays from b2_delays.json)",
+   "what": "hb_idx__ctl SID 3 / NQ 2 / NL 1: shares vmb_NE*.rq4/rr4 (vm_rq / vm_rr) with op_NE (index_rq / index_rr; op_NE no longer drives the banks), tree_ev {xq_N.y[593] NE, xq_N.y[296] NW}, qfault {qctl_NE, qctl_NW}, selected_v 1 b; hb_idx__selector NL 1 in_line = xq_N.y without the two list valid bits ({NE 296, NW 296} = as-built list 1); hb_idx__link NL 1; hb_argmax SID 3; hb_idx__xq_S and hb_idx__xqr dropped; cq / cr via hb_vms_NW (R-VM) -> NE sector over the two-stop ring; hb_idx__nwsh / op_NW (NW share2) kept",
+   "plan": "root<->NE_hub carries the root share (vm_rq 136 + index_rr 2056 b out, vm_rr 2056 + index_rq 136 b in): see b2_delays.json lane capacity; score chain is one xq node (2 edges) shorter (compiler --score-chain); delay params from b2_delays.json"
+  },
+  {
+   "id": "D-DELAY",
+   "kind": "param",
+   "status": "done (63 params from b2_delays.json)",
+   "what": "every VM bank client / share round-trip param (d4g bank-latency rules), SEL_LAT and the root hub echo (CR_RT / ACK) re-derived from the plan lane latency table; regenerate with tools/hbm_b2/b2_delays.py when the plan changes"
   }
  ],
  "remaster": {
@@ -128,11 +143,11 @@
   },
   "hb_coll_NW": {
    "master": "ot_hfd_coll_q3_hard_v8x",
-   "params": ".NLINK(3), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(81)"
+   "params": ".NLINK(3), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)"
   },
   "hb_coll_NE": {
    "master": "ot_hfd_coll_q2_hard_v8g",
-   "params": ".NLINK(2), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(81)"
+   "params": ".NLINK(2), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)"
   },
   "epcal_NW": {
    "master": "hfd_hgi_vm_calendar_f20_role",
@@ -193,6 +208,150 @@
   "host_ep": {
    "master": "hfd_ep_host_vc",
    "params": ""
+  },
+  "hb_idx__ctl": {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "params": ".VM_RT(30), .CR_RT(98), .SEL_LAT(4), .RSTL(1), .FAN32(1), .SID(2'd3), .NQ(2), .NL(1)"
+  },
+  "hb_idx__selector": {
+   "master": "ot_hbm_idx_selector_static_sel",
+   "params": ".NL(1)"
+  },
+  "hb_idx__link": {
+   "master": "ot_hbm_idx_topk_link_static",
+   "params": ".NL(1)"
+  },
+  "hb_argmax": {
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "params": ".TP(192), .VMX(35), .ACK(111), .SID(2'd3)"
+  },
+  "hb_idx__nwsh": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "hb_idx__op_NE": {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "params": ".VM_RT_EXTRA(61)"
+  },
+  "hb_idx__op_NW": {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "params": ".VM_RT_EXTRA(5)"
+  },
+  "hb_quant_NW__quant_NW0_lg": {
+   "master": "ot_hgi_qdq_lg_port_group_r2",
+   "params": ".BANKS(2), .VM_RT(3)"
+  },
+  "hc_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(29)"
+  },
+  "hc_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(22)"
+  },
+  "hc_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+  },
+  "hc_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(23)"
+  },
+  "hc_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(29)"
+  },
+  "hc_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(22)"
+  },
+  "hc_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+  },
+  "hc_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(23)"
+  },
+  "hcollgi_NE": {
+   "master": "ot_hgi_coll_gq_issue",
+   "params": ".VM_RT(3)"
+  },
+  "hcollgi_NW": {
+   "master": "ot_hgi_coll_gq_issue",
+   "params": ".VM_RT(3)"
+  },
+  "hcollrs_NE": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "hcollrs_NW": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "sfu_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(25)"
+  },
+  "sfu_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(18)"
+  },
+  "sfu_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+  },
+  "sfu_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(19)"
+  },
+  "sfu_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(25)"
+  },
+  "sfu_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(18)"
+  },
+  "sfu_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+  },
+  "sfu_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(19)"
+  },
+  "su_NE0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(0), .READ_RETURN(15), .WRITE_RETURN(21), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(14), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(2), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(0), .READ_RETURN(15), .WRITE_RETURN(21), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(14), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(2), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(15), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
   }
  },
  "rebuild": {
@@ -3100,6 +3259,106 @@
      274,
      547
     ]
+   ],
+   "index_rq": [
+    [
+     "hb_idx__op_NE",
+     "vm_rq",
+     0,
+     135
+    ]
+   ],
+   "vm_rr": [
+    [
+     "vmb_NE0",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE1",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE2",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE3",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE4",
+     "rr4",
+     0,
+     107
+    ],
+    [
+     "vmb_NE4",
+     "rr4",
+     108,
+     256
+    ],
+    [
+     "vmb_NE5",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE6",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE7",
+     "rr4",
+     0,
+     256
+    ]
+   ],
+   "tree_ev": [
+    [
+     "hb_idx__xq_N",
+     "y",
+     296,
+     296
+    ],
+    [
+     "hb_idx__xq_N",
+     "y",
+     593,
+     593
+    ]
+   ],
+   "qfault": [
+    [
+     "hb_idx__qctl_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_idx__qctl_NE",
+     "fault",
+     0,
+     0
+    ]
+   ],
+   "selected_v": [
+    [
+     "hb_idx__selector",
+     "selected_v",
+     0,
+     0
+    ]
    ]
   },
   "str_C": {
@@ -3363,6 +3622,150 @@
      2
     ]
    ]
+  },
+  "hb_idx__op_NE": {
+   "vm_rr": [
+    [
+     "hb_idx__ctl",
+     "index_rr",
+     0,
+     2055
+    ]
+   ]
+  },
+  "vmb_NE0": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     0,
+     16
+    ]
+   ]
+  },
+  "vmb_NE1": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     17,
+     33
+    ]
+   ]
+  },
+  "vmb_NE2": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     34,
+     50
+    ]
+   ]
+  },
+  "vmb_NE3": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     51,
+     67
+    ]
+   ]
+  },
+  "vmb_NE4": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     68,
+     84
+    ]
+   ]
+  },
+  "vmb_NE5": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     85,
+     101
+    ]
+   ]
+  },
+  "vmb_NE6": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     102,
+     118
+    ]
+   ]
+  },
+  "vmb_NE7": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     119,
+     135
+    ]
+   ]
+  },
+  "hb_idx__selector": {
+   "in_line": [
+    [
+     "hb_idx__xq_N",
+     "y",
+     0,
+     295
+    ],
+    [
+     "hb_idx__xq_N",
+     "y",
+     297,
+     592
+    ]
+   ],
+   "clk_q": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "clk_mem": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ]
+  },
+  "hb_idx__link": {
+   "selected_line": [
+    [
+     "hb_idx__selector",
+     "selected_line",
+     0,
+     591
+    ]
+   ]
   }
  },
  "port_map": {},
@@ -3440,6 +3843,10 @@
   "host_ep": {
    "vc_tx_v": 1,
    "vc_tx_frame": 612
+  },
+  "hb_idx__selector": {
+   "selected_v": 1,
+   "selected_line": 592
   }
  },
  "add_ports": {

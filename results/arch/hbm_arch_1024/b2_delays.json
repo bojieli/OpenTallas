@@ -1,0 +1,4245 @@
+{
+ "schema": "opentallas.hbm_b2.delays.v1",
+ "plan_note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard c",
+ "rule": "HBM-BIND (2026-10-24): table-driven B2 transport delays.  The r18h5 as-built delay params (VM_RT, VM_RT_EXTRA,\nBANK_RT, VMX, CR_RT, ACK, SEL_LAT, ...) are placeholders on the B2 die; this tool re-derives them from a die plan's\nlane latency table (die_plan.json latency.lanes) and the B2 die top (tools/hbm_b2/b2_top.py output), so a new plan\n(B2m -> B2n ...) regenerates them with one command:",
+ "bank_latency": {
+  "clients": 131,
+  "checked": 64,
+  "fail": 64,
+  "unequal": 0,
+  "unresolved_landings": 0
+ },
+ "params": {
+  "hb_argmax": {
+   "VMX": 35,
+   "ACK": 111
+  },
+  "hb_coll_NE": {
+   "VM_RT": 3
+  },
+  "hb_coll_NW": {
+   "VM_RT": 3
+  },
+  "hb_idx__ctl": {
+   "VM_RT": 30,
+   "SEL_LAT": 4,
+   "CR_RT": 98
+  },
+  "hb_idx__nwsh": {
+   "BANK_RT": 7
+  },
+  "hb_idx__op_NE": {
+   "VM_RT_EXTRA": 61
+  },
+  "hb_idx__op_NW": {
+   "VM_RT_EXTRA": 5
+  },
+  "hb_quant_NW__quant_NW0_lg": {
+   "VM_RT": 3
+  },
+  "hc_NE0": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 29
+  },
+  "hc_NE1": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 22
+  },
+  "hc_NE2": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 24
+  },
+  "hc_NE3": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 23
+  },
+  "hc_NW0": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 29
+  },
+  "hc_NW1": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 22
+  },
+  "hc_NW2": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 24
+  },
+  "hc_NW3": {
+   "READ_RETURN": 23,
+   "WRITE_RETURN": 23
+  },
+  "hcollgi_NE": {
+   "VM_RT": 3
+  },
+  "hcollgi_NW": {
+   "VM_RT": 3
+  },
+  "hcollrs_NE": {
+   "BANK_RT": 7
+  },
+  "hcollrs_NW": {
+   "BANK_RT": 7
+  },
+  "sfu_NE0": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 25
+  },
+  "sfu_NE1": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 18
+  },
+  "sfu_NE2": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 20
+  },
+  "sfu_NE3": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 19
+  },
+  "sfu_NW0": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 25
+  },
+  "sfu_NW1": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 18
+  },
+  "sfu_NW2": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 20
+  },
+  "sfu_NW3": {
+   "READ_RETURN": 19,
+   "WRITE_RETURN": 19
+  },
+  "su_NE0": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 21
+  },
+  "su_NE1": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 14
+  },
+  "su_NE2": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 16
+  },
+  "su_NE3": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 15
+  },
+  "su_NW0": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 21
+  },
+  "su_NW1": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 14
+  },
+  "su_NW2": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 16
+  },
+  "su_NW3": {
+   "READ_RETURN": 15,
+   "WRITE_RETURN": 15
+  }
+ },
+ "derivations": [
+  {
+   "inst": "hb_dbk_NE",
+   "param": "RR_RT",
+   "have": 80,
+   "want": 8,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_dbk_NE.RR_RT = 80, bank contract + lanes need 8 (budget: pad every bank lane to it: {'vmb_NE0': 72, 'vmb_NE1': 72, 'vmb_NE2': 72, 'vmb_NE3': 72, 'vmb_NE4': 72, 'vmb_NE5': 72, 'vmb_NE6': 72, 'vmb_NE7': 72}) (ref 7 at round trip 6; actual 7 = bank 6 + pin 1 + lanes)"
+   ],
+   "kept": "compiler budget d4g_bank_latency.DMA_RR_RT_BUDGET (compiler dma_min_drain_lag): die pads the lanes up to it"
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "param": "RR_RT",
+   "have": 80,
+   "want": 8,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_dbk_NW.RR_RT = 80, bank contract + lanes need 8 (budget: pad every bank lane to it: {'vmb_NW0': 72, 'vmb_NW1': 72, 'vmb_NW2': 72, 'vmb_NW3': 72, 'vmb_NW4': 72, 'vmb_NW5': 72, 'vmb_NW6': 72, 'vmb_NW7': 72}) (ref 7 at round trip 6; actual 7 = bank 6 + pin 1 + lanes)"
+   ],
+   "kept": "compiler budget d4g_bank_latency.DMA_RR_RT_BUDGET (compiler dma_min_drain_lag): die pads the lanes up to it"
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "VM_RT",
+   "have": 75,
+   "want": 30,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_idx__ctl.VM_RT = 75, bank contract + lanes need 30 (budget: pad every bank lane to it: {'vmb_NE0': 45, 'vmb_NE1': 45, 'vmb_NE2': 45, 'vmb_NE3': 45, 'vmb_NE4': 45, 'vmb_NE5': 45, 'vmb_NE6': 45, 'vmb_NE7': 45}) (ref 0 at round trip 6; actual 36 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "hb_idx__nwsh",
+   "param": "BANK_RT",
+   "have": 54,
+   "want": 7,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_idx__nwsh.BANK_RT = 54, bank contract + lanes need 7 (budget: pad every bank lane to it: {'vmb_NW0': 47, 'vmb_NW1': 47, 'vmb_NW2': 47, 'vmb_NW3': 47, 'vmb_NW4': 47, 'vmb_NW5': 47, 'vmb_NW6': 47, 'vmb_NW7': 47}) (ref 6 at round trip 6; actual 7 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE0.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE0': 23, 'vmb_NE1': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NE0 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 29,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE0.WRITE_RETURN = 43, bank contract + lanes need 29 (budget: pad every bank lane to it: {'vmb_NE0': 14, 'vmb_NE1': 14}) (ref 15 at round trip 11; actual 25 = bank 3 + pin 1 + lanes + taps via sfu_NE0 (padded 21 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE1",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE1.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE2': 23, 'vmb_NE3': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NE1 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE1",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 22,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE1.WRITE_RETURN = 43, bank contract + lanes need 22 (budget: pad every bank lane to it: {'vmb_NE2': 21, 'vmb_NE3': 21}) (ref 15 at round trip 11; actual 18 = bank 3 + pin 1 + lanes + taps via sfu_NE1 (padded 14 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE2.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE4': 23, 'vmb_NE5': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NE2 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 24,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE2.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NE4': 19, 'vmb_NE5': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NE2 (padded 16 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE3",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE3.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE6': 23, 'vmb_NE7': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NE3 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NE3",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NE3.WRITE_RETURN = 43, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NE6': 20, 'vmb_NE7': 20}) (ref 15 at round trip 11; actual 19 = bank 3 + pin 1 + lanes + taps via sfu_NE3 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW0.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW0': 23, 'vmb_NW1': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NW0 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 29,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW0.WRITE_RETURN = 43, bank contract + lanes need 29 (budget: pad every bank lane to it: {'vmb_NW0': 14, 'vmb_NW1': 14}) (ref 15 at round trip 11; actual 25 = bank 3 + pin 1 + lanes + taps via sfu_NW0 (padded 21 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW1",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW1.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW2': 23, 'vmb_NW3': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NW1 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW1",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 22,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW1.WRITE_RETURN = 43, bank contract + lanes need 22 (budget: pad every bank lane to it: {'vmb_NW2': 21, 'vmb_NW3': 21}) (ref 15 at round trip 11; actual 18 = bank 3 + pin 1 + lanes + taps via sfu_NW1 (padded 14 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW2.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW4': 23, 'vmb_NW5': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NW2 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 24,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW2.WRITE_RETURN = 43, bank contract + lanes need 24 (budget: pad every bank lane to it: {'vmb_NW4': 19, 'vmb_NW5': 19}) (ref 15 at round trip 11; actual 20 = bank 3 + pin 1 + lanes + taps via sfu_NW2 (padded 16 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW3",
+   "param": "READ_RETURN",
+   "have": 46,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW3.READ_RETURN = 46, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW6': 23, 'vmb_NW7': 23}) (ref 18 at round trip 14; actual 19 = bank 6 + pin 1 + lanes + taps via sfu_NW3 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hc_NW3",
+   "param": "WRITE_RETURN",
+   "have": 43,
+   "want": 23,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hc_NW3.WRITE_RETURN = 43, bank contract + lanes need 23 (budget: pad every bank lane to it: {'vmb_NW6': 20, 'vmb_NW7': 20}) (ref 15 at round trip 11; actual 19 = bank 3 + pin 1 + lanes + taps via sfu_NW3 (padded 15 + 4))"
+   ]
+  },
+  {
+   "inst": "hcollrs_NE",
+   "param": "BANK_RT",
+   "have": 72,
+   "want": 7,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hcollrs_NE.BANK_RT = 72, bank contract + lanes need 7 (budget: pad every bank lane to it: {'vmb_NE0': 65, 'vmb_NE1': 65, 'vmb_NE2': 65, 'vmb_NE3': 65, 'vmb_NE4': 65, 'vmb_NE5': 65, 'vmb_NE6': 65, 'vmb_NE7': 65}) (ref 6 at round trip 6; actual 7 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "hcollrs_NW",
+   "param": "BANK_RT",
+   "have": 72,
+   "want": 7,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hcollrs_NW.BANK_RT = 72, bank contract + lanes need 7 (budget: pad every bank lane to it: {'vmb_NW0': 65, 'vmb_NW1': 65, 'vmb_NW2': 65, 'vmb_NW3': 65, 'vmb_NW4': 65, 'vmb_NW5': 65, 'vmb_NW6': 65, 'vmb_NW7': 65}) (ref 6 at round trip 6; actual 7 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE0.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE0': 13, 'vmb_NE1': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NE0 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 25,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE0.WRITE_RETURN = 29, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NE0': 4, 'vmb_NE1': 4}) (ref 11 at round trip 7; actual 21 = bank 3 + pin 1 + lanes + taps via su_NE0 (padded 17 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE1",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE1.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE2': 13, 'vmb_NE3': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NE1 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE1",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 18,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE1.WRITE_RETURN = 29, bank contract + lanes need 18 (budget: pad every bank lane to it: {'vmb_NE2': 11, 'vmb_NE3': 11}) (ref 11 at round trip 7; actual 14 = bank 3 + pin 1 + lanes + taps via su_NE1 (padded 10 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE2.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE4': 13, 'vmb_NE5': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NE2 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 20,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE2.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NE4': 9, 'vmb_NE5': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NE2 (padded 12 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE3",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE3.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE6': 13, 'vmb_NE7': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NE3 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NE3",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NE3.WRITE_RETURN = 29, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NE6': 10, 'vmb_NE7': 10}) (ref 11 at round trip 7; actual 15 = bank 3 + pin 1 + lanes + taps via su_NE3 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW0.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW0': 13, 'vmb_NW1': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NW0 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 25,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW0.WRITE_RETURN = 29, bank contract + lanes need 25 (budget: pad every bank lane to it: {'vmb_NW0': 4, 'vmb_NW1': 4}) (ref 11 at round trip 7; actual 21 = bank 3 + pin 1 + lanes + taps via su_NW0 (padded 17 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW1",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW1.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW2': 13, 'vmb_NW3': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NW1 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW1",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 18,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW1.WRITE_RETURN = 29, bank contract + lanes need 18 (budget: pad every bank lane to it: {'vmb_NW2': 11, 'vmb_NW3': 11}) (ref 11 at round trip 7; actual 14 = bank 3 + pin 1 + lanes + taps via su_NW1 (padded 10 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW2.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW4': 13, 'vmb_NW5': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NW2 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 20,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW2.WRITE_RETURN = 29, bank contract + lanes need 20 (budget: pad every bank lane to it: {'vmb_NW4': 9, 'vmb_NW5': 9}) (ref 11 at round trip 7; actual 16 = bank 3 + pin 1 + lanes + taps via su_NW2 (padded 12 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW3",
+   "param": "READ_RETURN",
+   "have": 32,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW3.READ_RETURN = 32, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW6': 13, 'vmb_NW7': 13}) (ref 14 at round trip 10; actual 15 = bank 6 + pin 1 + lanes + taps via su_NW3 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "sfu_NW3",
+   "param": "WRITE_RETURN",
+   "have": 29,
+   "want": 19,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "sfu_NW3.WRITE_RETURN = 29, bank contract + lanes need 19 (budget: pad every bank lane to it: {'vmb_NW6': 10, 'vmb_NW7': 10}) (ref 11 at round trip 7; actual 15 = bank 3 + pin 1 + lanes + taps via su_NW3 (padded 11 + 4))"
+   ]
+  },
+  {
+   "inst": "su_NE0",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE0.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE0': 7, 'vmb_NE1': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE0",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 21,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE0.WRITE_RETURN = 19, bank contract + lanes need 21 (ref 7 at round trip 3; actual 17 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE1",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE1.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE2': 7, 'vmb_NE3': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE1",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 14,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE1.WRITE_RETURN = 19, bank contract + lanes need 14 (budget: pad every bank lane to it: {'vmb_NE2': 5, 'vmb_NE3': 5}) (ref 7 at round trip 3; actual 10 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE2",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE2.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE4': 7, 'vmb_NE5': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE2",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 16,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE2.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NE4': 3, 'vmb_NE5': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE3",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE3.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE6': 7, 'vmb_NE7': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NE3",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NE3.WRITE_RETURN = 19, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NE6': 4, 'vmb_NE7': 4}) (ref 7 at round trip 3; actual 11 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW0",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW0.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW0': 7, 'vmb_NW1': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW0",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 21,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW0.WRITE_RETURN = 19, bank contract + lanes need 21 (ref 7 at round trip 3; actual 17 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW1",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW1.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW2': 7, 'vmb_NW3': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW1",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 14,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW1.WRITE_RETURN = 19, bank contract + lanes need 14 (budget: pad every bank lane to it: {'vmb_NW2': 5, 'vmb_NW3': 5}) (ref 7 at round trip 3; actual 10 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW2",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW2.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW4': 7, 'vmb_NW5': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW2",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 16,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW2.WRITE_RETURN = 19, bank contract + lanes need 16 (budget: pad every bank lane to it: {'vmb_NW4': 3, 'vmb_NW5': 3}) (ref 7 at round trip 3; actual 12 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW3",
+   "param": "READ_RETURN",
+   "have": 22,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW3.READ_RETURN = 22, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW6': 7, 'vmb_NW7': 7}) (ref 10 at round trip 6; actual 11 = bank 6 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "su_NW3",
+   "param": "WRITE_RETURN",
+   "have": 19,
+   "want": 15,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "su_NW3.WRITE_RETURN = 19, bank contract + lanes need 15 (budget: pad every bank lane to it: {'vmb_NW6': 4, 'vmb_NW7': 4}) (ref 7 at round trip 3; actual 11 = bank 3 + pin 1 + lanes)"
+   ]
+  },
+  {
+   "inst": "hb_idx__op_NE",
+   "param": "VM_RT_EXTRA",
+   "have": 171,
+   "want": 61,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_idx__op_NE.VM_RT_EXTRA = 171, need 61 (ref 4 + share hb_idx__ctl excess 30 + face extra 0 + lanes 29 - ref lanes 2)"
+   ]
+  },
+  {
+   "inst": "hb_argmax",
+   "param": "VMX",
+   "have": 89,
+   "want": 35,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_argmax.VMX = 89, need 35 (ref 5 + share hb_idx__ctl excess 30 + face extra 0 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hb_idx__op_NW",
+   "param": "VM_RT_EXTRA",
+   "have": 173,
+   "want": 5,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_idx__op_NW.VM_RT_EXTRA = 173, need 5 (ref 4 + share hb_idx__nwsh excess 1 + face extra 2 + lanes 0 - ref lanes 2)"
+   ]
+  },
+  {
+   "inst": "hb_quant_NW__quant_NW0_lg",
+   "param": "VM_RT",
+   "have": 0,
+   "want": 3,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "share hb_idx__nwsh.b_rq pairs driven by different clients ['hb_quant_NW__quant_NW0_lg', 'hb_quant_NW__quant_NW1_lg', 'hb_quant_NW__quant_NW2_lg', 'hb_quant_NW__quant_NW3_lg']",
+    "hb_quant_NW__quant_NW0_lg.VM_RT = 0, need 3 (ref 0 + share hb_idx__nwsh excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hb_coll_NE",
+   "param": "VM_RT",
+   "have": 81,
+   "want": 3,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_coll_NE.VM_RT = 81, need 3 (ref 0 + share hcollrs_NE excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hcollgi_NE",
+   "param": "VM_RT",
+   "have": 95,
+   "want": 3,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hcollgi_NE.VM_RT = 95, need 3 (ref 0 + share hcollrs_NE excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hb_coll_NW",
+   "param": "VM_RT",
+   "have": 81,
+   "want": 3,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hb_coll_NW.VM_RT = 81, need 3 (ref 0 + share hcollrs_NW excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hcollgi_NW",
+   "param": "VM_RT",
+   "have": 95,
+   "want": 3,
+   "status": "FAIL",
+   "rule": "d4g_bank_latency",
+   "bad": [
+    "hcollgi_NW.VM_RT = 95, need 3 (ref 0 + share hcollrs_NW excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
+   ]
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "SEL_LAT",
+   "have": 40,
+   "want": 4,
+   "formula": "4 + lane(sel_op) + lane(selected_v)"
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "CR_RT",
+   "have": 36,
+   "want": 98,
+   "formula": "0 + 1 (hub pin) + lane(cq) 12 + lane(cr) 17 + remote 68 (SID 3; 16 + LINK 26 + 26)"
+  },
+  {
+   "inst": "hb_argmax",
+   "param": "ACK",
+   "have": 52,
+   "want": 111,
+   "formula": "13 + 1 (hub pin) + lane(cq) 12 + lane(cr) 17 + remote 68 (SID 3; 16 + LINK 26 + 26)"
+  }
+ ],
+ "score_chain": {
+  "edges": {
+   "NW": 9,
+   "NE": 9
+  },
+  "formula": "lane(score -> xq_N) + 2 (xq node) + lane(xq_N -> selector)"
+ },
+ "lane_capacity": [
+  {
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L107m"
+   ],
+   "width": 19,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_b001",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L14m"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L142m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b000",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 2049,
+   "lanes": [
+    "L19m"
+   ],
+   "width": 2049,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b001",
+   "dst": "NE_b002",
+   "kind": "ctl",
+   "need": 11,
+   "lanes": [
+    "L94m"
+   ],
+   "width": 31,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b001",
+   "dst": "NE_b002",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L15m"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b001",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L108m"
+   ],
+   "width": 18,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b001",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L71m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b003",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L85m"
+   ],
+   "width": 78,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b003",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L10m"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L132m"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b002",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L143m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b013",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L92m"
+   ],
+   "width": 40,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b003",
+   "dst": "NE_b013",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L16m"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b000",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L144m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b000",
+   "kind": "data",
+   "need": 2048,
+   "lanes": [
+    "L20m"
+   ],
+   "width": 2048,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b010",
+   "dst": "NE_b011",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L145m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b010",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L86m"
+   ],
+   "width": 78,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b010",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L11m"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b012",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L109m"
+   ],
+   "width": 18,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b012",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L72m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L133m"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b012",
+   "dst": "NE_b011",
+   "kind": "ctl",
+   "need": 11,
+   "lanes": [
+    "L95m"
+   ],
+   "width": 31,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b012",
+   "dst": "NE_b011",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L17m"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_b012",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L93m"
+   ],
+   "width": 40,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_b012",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L18m"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L146m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L137m"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b101",
+   "dst": "root",
+   "kind": "data",
+   "need": 297,
+   "lanes": [
+    "L64m"
+   ],
+   "width": 297,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 49,
+   "lanes": [
+    "L81m"
+   ],
+   "width": 161,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1792,
+   "lanes": [
+    "L23m"
+   ],
+   "width": 1792,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_su31",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L44m"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_su20",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L45m"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_su11",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L46m"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su00",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L47m"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L90m"
+   ],
+   "width": 60,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "kind": "data",
+   "need": 287,
+   "lanes": [
+    "L65m"
+   ],
+   "width": 289,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b002",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L115m"
+   ],
+   "width": 12,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b002",
+   "kind": "data",
+   "need": 781,
+   "lanes": [
+    "L42m"
+   ],
+   "width": 781,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b011",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L116m"
+   ],
+   "width": 12,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b011",
+   "kind": "data",
+   "need": 781,
+   "lanes": [
+    "L43m"
+   ],
+   "width": 781,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b013",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L119m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b013",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L73m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b100",
+   "kind": "ctl",
+   "need": 18,
+   "lanes": [
+    "L91m"
+   ],
+   "width": 54,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b100",
+   "kind": "data",
+   "need": 4968,
+   "lanes": [
+    "L6m",
+    "L7m"
+   ],
+   "width": 4968,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b110",
+   "kind": "data",
+   "need": 2725,
+   "lanes": [
+    "L5m"
+   ],
+   "width": 2725,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "kind": "ctl",
+   "need": 20,
+   "lanes": [
+    "L101m"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "kind": "data",
+   "need": 612,
+   "lanes": [
+    "L51m"
+   ],
+   "width": 612,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_mcb",
+   "kind": "ctl",
+   "need": 154,
+   "lanes": [
+    "L79m"
+   ],
+   "width": 172,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_mcb",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L66m"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm0",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L97m"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm0",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L28m",
+    "L29m"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm1",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L98m"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm1",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L30m",
+    "L31m"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm2",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L99m"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm2",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L32m",
+    "L33m"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm3",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L100m"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_sm3",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L34m",
+    "L35m"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb2",
+   "kind": "ctl",
+   "need": 28,
+   "lanes": [
+    "L83m"
+   ],
+   "width": 99,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb2",
+   "kind": "data",
+   "need": 618,
+   "lanes": [
+    "L49m"
+   ],
+   "width": 618,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spt0",
+   "kind": "ctl",
+   "need": 28,
+   "lanes": [
+    "L84m"
+   ],
+   "width": 99,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spt0",
+   "kind": "data",
+   "need": 618,
+   "lanes": [
+    "L50m"
+   ],
+   "width": 618,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L102m"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L36m"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su01",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L110m"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su01",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L0m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su10",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L111m"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su10",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L1m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L103m"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L37m"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L104m"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L38m"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su21",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L112m"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su21",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L2m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su30",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L113m"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su30",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L3m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L105m"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L39m"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 13,
+   "lanes": [
+    "L96m"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 3376,
+   "lanes": [
+    "L4m"
+   ],
+   "width": 2816,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "PHY_N",
+   "kind": "ctl",
+   "need": 336,
+   "lanes": [
+    "L63m"
+   ],
+   "width": 336,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "PHY_N",
+   "kind": "data",
+   "need": 4912,
+   "lanes": [
+    "L8m",
+    "L9m"
+   ],
+   "width": 4912,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 26,
+   "lanes": [
+    "L89m"
+   ],
+   "width": 66,
+   "status": "OK"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "kind": "data",
+   "need": 2709,
+   "lanes": [
+    "L74m"
+   ],
+   "width": 223,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_io",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L126m"
+   ],
+   "width": 5,
+   "status": "OK"
+  },
+  {
+   "src": "NE_io",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 612,
+   "lanes": [
+    "L52m"
+   ],
+   "width": 612,
+   "status": "OK"
+  },
+  {
+   "src": "NE_io",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L125m"
+   ],
+   "width": 7,
+   "status": "OK"
+  },
+  {
+   "src": "NE_io",
+   "dst": "root",
+   "kind": "data",
+   "need": 11,
+   "lanes": [
+    "L48m"
+   ],
+   "width": 634,
+   "status": "OK"
+  },
+  {
+   "src": "NE_mcb",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 139,
+   "lanes": [
+    "L82m"
+   ],
+   "width": 139,
+   "status": "OK"
+  },
+  {
+   "src": "NE_mcb",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1,
+   "lanes": [],
+   "width": 0,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L120m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L67m"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L121m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L68m"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L122m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L69m"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L123m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L70m"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L138m"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "root",
+   "kind": "data",
+   "need": 11,
+   "lanes": [
+    "L117m"
+   ],
+   "width": 11,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 66,
+   "lanes": [
+    "L87m"
+   ],
+   "width": 68,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1064,
+   "lanes": [
+    "L40m"
+   ],
+   "width": 1064,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NE_sm2",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L75m"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NE_sm3",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L76m"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L139m"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 66,
+   "lanes": [
+    "L88m"
+   ],
+   "width": 68,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1064,
+   "lanes": [
+    "L41m"
+   ],
+   "width": 1064,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NE_sm0",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L77m"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NE_sm1",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L78m"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L140m"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_b113",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L127m"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_b113",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L54m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L134m"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L55m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_su11",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L147m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su01",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L24m"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su10",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L25m"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b112",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L128m"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b112",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L56m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L135m"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L57m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L148m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b111",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L129m"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b111",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L58m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L136m"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L59m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L149m"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su21",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L26m"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su30",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L27m"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b110",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L130m"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b110",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L60m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 4,
+   "lanes": [
+    "L131m"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L61m"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L107"
+   ],
+   "width": 19,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_b001",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L14"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L142"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b000",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 2049,
+   "lanes": [
+    "L19"
+   ],
+   "width": 2049,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b001",
+   "dst": "NW_b002",
+   "kind": "ctl",
+   "need": 11,
+   "lanes": [
+    "L94"
+   ],
+   "width": 31,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b001",
+   "dst": "NW_b002",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L15"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b001",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L108"
+   ],
+   "width": 18,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b001",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L71"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b003",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L85"
+   ],
+   "width": 78,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b003",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L10"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L132"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b002",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L143"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b013",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L92"
+   ],
+   "width": 40,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b003",
+   "dst": "NW_b013",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L16"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b000",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L144"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b000",
+   "kind": "data",
+   "need": 2048,
+   "lanes": [
+    "L20"
+   ],
+   "width": 2048,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b010",
+   "dst": "NW_b011",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L145"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b010",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L86"
+   ],
+   "width": 78,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b010",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L11"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b012",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L109"
+   ],
+   "width": 18,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b012",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L72"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L133"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b012",
+   "dst": "NW_b011",
+   "kind": "ctl",
+   "need": 11,
+   "lanes": [
+    "L95"
+   ],
+   "width": 31,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b012",
+   "dst": "NW_b011",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L17"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_b012",
+   "kind": "ctl",
+   "need": 10,
+   "lanes": [
+    "L93"
+   ],
+   "width": 40,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_b012",
+   "kind": "data",
+   "need": 2068,
+   "lanes": [
+    "L18"
+   ],
+   "width": 2068,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L146"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L137"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b101",
+   "dst": "root",
+   "kind": "data",
+   "need": 297,
+   "lanes": [
+    "L64"
+   ],
+   "width": 297,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 49,
+   "lanes": [
+    "L81"
+   ],
+   "width": 161,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1792,
+   "lanes": [
+    "L23"
+   ],
+   "width": 1792,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_su31",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L44"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_su20",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L45"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_su11",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L46"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su00",
+   "kind": "data",
+   "need": 596,
+   "lanes": [
+    "L47"
+   ],
+   "width": 664,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 3344,
+   "lanes": [
+    "L4"
+   ],
+   "width": 2816,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L90"
+   ],
+   "width": 60,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "kind": "data",
+   "need": 287,
+   "lanes": [
+    "L65"
+   ],
+   "width": 289,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b002",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L115"
+   ],
+   "width": 12,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b002",
+   "kind": "data",
+   "need": 781,
+   "lanes": [
+    "L42"
+   ],
+   "width": 781,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b011",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L116"
+   ],
+   "width": 12,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b011",
+   "kind": "data",
+   "need": 781,
+   "lanes": [
+    "L43"
+   ],
+   "width": 781,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "kind": "ctl",
+   "need": 6,
+   "lanes": [
+    "L119"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L73"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b100",
+   "kind": "ctl",
+   "need": 18,
+   "lanes": [
+    "L91"
+   ],
+   "width": 54,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b100",
+   "kind": "data",
+   "need": 4968,
+   "lanes": [
+    "L6",
+    "L7"
+   ],
+   "width": 4968,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b110",
+   "kind": "data",
+   "need": 2725,
+   "lanes": [
+    "L5"
+   ],
+   "width": 2725,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_io",
+   "kind": "ctl",
+   "need": 20,
+   "lanes": [
+    "L101"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_io",
+   "kind": "data",
+   "need": 612,
+   "lanes": [
+    "L51"
+   ],
+   "width": 612,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_mcb",
+   "kind": "ctl",
+   "need": 154,
+   "lanes": [
+    "L79"
+   ],
+   "width": 172,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_mcb",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L66"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm0",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L97"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm0",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L28",
+    "L29"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm1",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L98"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm1",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L30",
+    "L31"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm2",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L99"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm2",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L32",
+    "L33"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm3",
+   "kind": "ctl",
+   "need": 15,
+   "lanes": [
+    "L100"
+   ],
+   "width": 22,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_sm3",
+   "kind": "data",
+   "need": 3230,
+   "lanes": [
+    "L34",
+    "L35"
+   ],
+   "width": 3230,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb2",
+   "kind": "ctl",
+   "need": 28,
+   "lanes": [
+    "L83"
+   ],
+   "width": 99,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb2",
+   "kind": "data",
+   "need": 618,
+   "lanes": [
+    "L49"
+   ],
+   "width": 618,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spt0",
+   "kind": "ctl",
+   "need": 28,
+   "lanes": [
+    "L84"
+   ],
+   "width": 99,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spt0",
+   "kind": "data",
+   "need": 618,
+   "lanes": [
+    "L50"
+   ],
+   "width": 618,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L102"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L36"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su01",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L110"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su01",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L0"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su10",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L111"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su10",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L1"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L103"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L37"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L104"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L38"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L112"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L2"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "kind": "ctl",
+   "need": 8,
+   "lanes": [
+    "L113"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L3"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L105"
+   ],
+   "width": 21,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "kind": "data",
+   "need": 1182,
+   "lanes": [
+    "L39"
+   ],
+   "width": 1329,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "PHY_N",
+   "kind": "ctl",
+   "need": 336,
+   "lanes": [
+    "L63"
+   ],
+   "width": 336,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "PHY_N",
+   "kind": "data",
+   "need": 4912,
+   "lanes": [
+    "L8",
+    "L9"
+   ],
+   "width": 4912,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 33,
+   "lanes": [
+    "L89"
+   ],
+   "width": 66,
+   "status": "OK"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "kind": "data",
+   "need": 3117,
+   "lanes": [
+    "L74"
+   ],
+   "width": 223,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_io",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L126"
+   ],
+   "width": 5,
+   "status": "OK"
+  },
+  {
+   "src": "NW_io",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 612,
+   "lanes": [
+    "L52"
+   ],
+   "width": 612,
+   "status": "OK"
+  },
+  {
+   "src": "NW_io",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 7,
+   "lanes": [
+    "L125"
+   ],
+   "width": 7,
+   "status": "OK"
+  },
+  {
+   "src": "NW_io",
+   "dst": "root",
+   "kind": "data",
+   "need": 634,
+   "lanes": [
+    "L48"
+   ],
+   "width": 634,
+   "status": "OK"
+  },
+  {
+   "src": "NW_mcb",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 139,
+   "lanes": [
+    "L82"
+   ],
+   "width": 139,
+   "status": "OK"
+  },
+  {
+   "src": "NW_mcb",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1,
+   "lanes": [],
+   "width": 0,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L120"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L67"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L121"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L68"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L122"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L69"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L123"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 268,
+   "lanes": [
+    "L70"
+   ],
+   "width": 268,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L138"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "root",
+   "kind": "data",
+   "need": 11,
+   "lanes": [
+    "L117"
+   ],
+   "width": 11,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb2",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 68,
+   "lanes": [
+    "L87"
+   ],
+   "width": 68,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb2",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1064,
+   "lanes": [
+    "L40"
+   ],
+   "width": 1064,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb2",
+   "dst": "NW_sm2",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L75"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spb2",
+   "dst": "NW_sm3",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L76"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 68,
+   "lanes": [
+    "L88"
+   ],
+   "width": 68,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1064,
+   "lanes": [
+    "L41"
+   ],
+   "width": 1064,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "NW_sm0",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L77"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "NW_sm1",
+   "kind": "data",
+   "need": 173,
+   "lanes": [
+    "L78"
+   ],
+   "width": 173,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_b113",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L127"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_b113",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L54"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L134"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L55"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_su11",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L147"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su01",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L24"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su10",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L25"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b112",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L128"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b112",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L56"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L135"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L57"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L148"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b111",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L129"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b111",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L58"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 3,
+   "lanes": [
+    "L136"
+   ],
+   "width": 3,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L59"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "kind": "ctl",
+   "need": 1,
+   "lanes": [
+    "L149"
+   ],
+   "width": 1,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su21",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L26"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su30",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1719,
+   "lanes": [
+    "L27"
+   ],
+   "width": 1719,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b110",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L130"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b110",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L60"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 4,
+   "lanes": [
+    "L131"
+   ],
+   "width": 4,
+   "status": "OK"
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 514,
+   "lanes": [
+    "L61"
+   ],
+   "width": 514,
+   "status": "OK"
+  },
+  {
+   "src": "PHY_N",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L114m"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "PHY_N",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 4096,
+   "lanes": [
+    "L21m",
+    "L22m"
+   ],
+   "width": 4096,
+   "status": "OK"
+  },
+  {
+   "src": "PHY_N",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 16,
+   "lanes": [
+    "L114"
+   ],
+   "width": 16,
+   "status": "OK"
+  },
+  {
+   "src": "PHY_N",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 4096,
+   "lanes": [
+    "L21",
+    "L22"
+   ],
+   "width": 4096,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NE_b101",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L124m"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NE_b101",
+   "kind": "data",
+   "need": 171,
+   "lanes": [
+    "L80m"
+   ],
+   "width": 171,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "kind": "ctl",
+   "need": 80,
+   "lanes": [
+    "L62m"
+   ],
+   "width": 376,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 6286,
+   "lanes": [
+    "L12m",
+    "L13m"
+   ],
+   "width": 4267,
+   "status": "OVER"
+  },
+  {
+   "src": "root",
+   "dst": "NW_b101",
+   "kind": "ctl",
+   "need": 9,
+   "lanes": [
+    "L124"
+   ],
+   "width": 9,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NW_b101",
+   "kind": "data",
+   "need": 171,
+   "lanes": [
+    "L80"
+   ],
+   "width": 171,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "kind": "ctl",
+   "need": 70,
+   "lanes": [
+    "L62"
+   ],
+   "width": 376,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 5301,
+   "lanes": [
+    "L12",
+    "L13"
+   ],
+   "width": 4267,
+   "status": "OVER"
+  },
+  {
+   "src": "root",
+   "dst": "NW_io",
+   "kind": "ctl",
+   "need": 20,
+   "lanes": [
+    "L106"
+   ],
+   "width": 20,
+   "status": "OK"
+  },
+  {
+   "src": "root",
+   "dst": "NW_io",
+   "kind": "data",
+   "need": 612,
+   "lanes": [
+    "L53"
+   ],
+   "width": 612,
+   "status": "OK"
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "kind": "ctl",
+   "need": 2,
+   "lanes": [
+    "L141"
+   ],
+   "width": 2,
+   "status": "OK"
+  },
+  {
+   "src": "vsN0",
+   "dst": "root",
+   "kind": "data",
+   "need": 11,
+   "lanes": [
+    "L118"
+   ],
+   "width": 11,
+   "status": "OK"
+  }
+ ],
+ "capacity_over": [
+  {
+   "src": "NE_b002",
+   "dst": "NE_b001",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L71m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_b003",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L10m"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b010",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L11m"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_b012",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L72m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b013",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L73m"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su01",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L0m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su10",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L1m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su21",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L2m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su30",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L3m"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 3376,
+   "lanes": [
+    "L4m"
+   ],
+   "width": 2816,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "root",
+   "kind": "data",
+   "need": 2709,
+   "lanes": [
+    "L74m"
+   ],
+   "width": 223,
+   "status": "OVER"
+  },
+  {
+   "src": "NE_mcb",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 1,
+   "lanes": [],
+   "width": 0,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b001",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L71"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_b003",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L10"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b010",
+   "kind": "data",
+   "need": 2335,
+   "lanes": [
+    "L11"
+   ],
+   "width": 2334,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_b012",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L72"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 3344,
+   "lanes": [
+    "L4"
+   ],
+   "width": 2816,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "kind": "data",
+   "need": 267,
+   "lanes": [
+    "L73"
+   ],
+   "width": 266,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su01",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L0"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su10",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L1"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L2"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "kind": "data",
+   "need": 2999,
+   "lanes": [
+    "L3"
+   ],
+   "width": 2998,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "kind": "data",
+   "need": 3117,
+   "lanes": [
+    "L74"
+   ],
+   "width": 223,
+   "status": "OVER"
+  },
+  {
+   "src": "NW_mcb",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 1,
+   "lanes": [],
+   "width": 0,
+   "status": "OVER"
+  },
+  {
+   "src": "root",
+   "dst": "NE_hub",
+   "kind": "data",
+   "need": 6286,
+   "lanes": [
+    "L12m",
+    "L13m"
+   ],
+   "width": 4267,
+   "status": "OVER"
+  },
+  {
+   "src": "root",
+   "dst": "NW_hub",
+   "kind": "data",
+   "need": 5301,
+   "lanes": [
+    "L12",
+    "L13"
+   ],
+   "width": 4267,
+   "status": "OVER"
+  }
+ ],
+ "unmapped_instances": [
+  "hb_ckgen"
+ ],
+ "no_lane": {
+  "NW_spb0->NW_hub data": 615,
+  "vsN0->NW_hub data": 615,
+  "NE_spb0->NE_hub data": 615,
+  "NW_hub->NW_spb0 data": 632,
+  "NW_hub->vsN0 data": 632,
+  "NE_hub->NE_spb0 data": 632,
+  "NW_spt0->root data": 9
+ }
+}
