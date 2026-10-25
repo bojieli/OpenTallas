@@ -588,6 +588,24 @@ def check_clock_reset(P, R):
                       type=tn)
 
 
+def check_reset(P, R):
+    """OWNER RESET RULE 2026-10-24 (reset_tree.py): pipelined plans -- every type's equal-depth relay tree builds with
+    hops <= reset.relay_um under the plan contract part_depth, the die region trees reach every partition; counted
+    plans -- one WARN (the rule is not met yet).  Summary: release, K, per region die depth E / release clocks /
+    hosting."""
+    import reset_tree
+    errs, warns, info = reset_tree.check(P)
+    for e in errs:
+        R.err("reset", e)
+    for w in warns:
+        R.warn("reset", w)
+    if info is None:
+        return dict(release=P.reset.get("release", "counted"))
+    return dict(release=info["release"], part_depth_K=info["part_depth_K"], relay_um=info["relay_um"],
+                regions=[{k: v for k, v in r.items() if k not in ("nonuniform_types", "busiest_hosts")}
+                         for r in info["regions"]])
+
+
 # ------------------------------------------------------------------------------------------- taps, hard cores
 def _orient_pt(o, w, h, x, y):
     return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
@@ -1221,6 +1239,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
+    summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
     # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))

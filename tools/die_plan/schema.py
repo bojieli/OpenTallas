@@ -345,7 +345,17 @@ SCHEMA = {
                 "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
-            "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
+            "data_reset": {"const": False}, "epoch_bit": {"const": True},
+            # OWNER RESET RULE 2026-10-24 (BRIEFING decision 2; tools/die_plan/reset_tree.py): "pipelined" = ONE root
+            # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
+            # clock tap; partitions take arst_n as a SYNCHRONOUS input (pin register + equal-depth tree, part_depth K).
+            # "counted" = legacy per-tap asynchronous synchronisers (does not meet the rule; G0 warns).
+            "release": {"enum": ["counted", "pipelined"]}, "relay_um": _pos,
+            "part_depth": {"type": "integer", "minimum": 1},
+            "regions": {"type": "array", "items": {
+                "type": "object", "required": ["name"], "additionalProperties": False,
+                "properties": {"name": _name, "parts": {"type": "array", "items": _name}, "root_um": _xy,
+                               "note": {"type": "string"}}}}}},
         "latency": {"type": "object", "additionalProperties": False, "properties": {
             "lanes": {"type": "object", "additionalProperties": {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,
