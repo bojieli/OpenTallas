@@ -875,19 +875,53 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
             pads[(net, bi)] = pads.get((net, bi), 0.0) + um
             need -= um * sens(net, bi)
             moved += um
-    for node, nd in tree["nodes"].items():
-        m = memo.get(node)
-        if m is None:
-            continue
-        for kid, targets in nd["kids"]:
-            km = memo.get(kid)
-            if km is not None and m - km > 0.05:
-                worst = max(worst, m - km)
-                add(targets, m - km)
-        for p in leaf_taps.get(node, ()):
-            if all(p in ta for ta, _ in arrs) and m - tap_a(p) > 0.05:
-                worst = max(worst, m - tap_a(p))
-                add(tap_pad[p], m - tap_a(p))
+    def removable(targets):
+        return sum(pads.get(tuple(t), 0.0) * sens(*t) for t in targets)
+
+    def rem(targets, dps):
+        """take pad back (longest pad first) until the delay surplus is removed: pads are never a ratchet."""
+        targets = [tuple(t) for t in targets]
+        need = damp * dps
+        while need > 1e-3:
+            t = max(targets, key=lambda t: pads.get(t, 0.0))
+            have = pads.get(t, 0.0)
+            if have <= 1e-6:
+                break
+            um = min(50.0, have, need / sens(*t))
+            pads[t] = have - um
+            if pads[t] <= 1e-6:
+                del pads[t]
+            need -= um * sens(*t)
+    # bottom-up: the level each node's members can all reach (the lowest common level once surplus pad is taken
+    # back), then every member moves to it: kids by their leg pads, taps by their chain pads
+    level = {}
+
+    def members(node):
+        out = [(level[k], targets) for k, targets in tree["nodes"][node]["kids"] if level.get(k) is not None]
+        out += [(tap_a(p), tap_pad[p]) for p in leaf_taps.get(node, ()) if all(p in ta for ta, _ in arrs)]
+        return out
+
+    order = []
+
+    def walk(node):
+        for k, _ in tree["nodes"][node]["kids"]:
+            walk(k)
+        mm = members(node)
+        level[node] = max((v - removable(t) for v, t in mm), default=None) if mm else None
+        if mm:
+            level[node] = max(level[node], min(v for v, _ in mm))
+            order.append(node)
+    walk(tree["root_node"])
+    for node in order:
+        mm = members(node)
+        vals = [v for v, _ in mm]
+        worst = max(worst, max(vals) - min(vals))
+        L = level[node]
+        for v, t in mm:
+            if L - v > 0.05:
+                add(t, L - v)
+            elif v - L > 0.05:
+                rem(t, v - L)
     return worst
 
 
