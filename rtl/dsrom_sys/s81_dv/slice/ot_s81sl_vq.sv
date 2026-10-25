@@ -29,7 +29,7 @@ module ot_s81sl_vq #(
     input  wire          rst_n,
     input  wire          y_v,          // normed y from vn
     input  wire [2:0]    y_i,
-    input  wire [255:0]  y,
+    input  wire [127:0]  y,             // packed BF16 from vn (OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):): unpacked at the input flop
     input  wire          u_v,          // SU results to quantise from vs (SW act, QB z): same 8-lane sub-beat stream
     input  wire [2:0]    u_i,
     input  wire [255:0]  u,
@@ -53,7 +53,7 @@ module ot_s81sl_vq #(
     wire rs_c = rsv[0], rs_q = rsv[1];
     reg yv_c, uv_c; reg [2:0] yi_c, ui_c; reg [255:0] y_c, u_c; reg [3:0] sid_c; reg [2:0] k_c; reg mq, mb, mcol; reg [7:0] mi;
     always @(posedge clk or negedge rs_c) if (!rs_c) begin yv_c <= 1'b0; uv_c <= 1'b0; end else begin yv_c <= y_v; uv_c <= u_v; end
-    always @(posedge clk) begin yi_c <= y_i; y_c <= y; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
+    always @(posedge clk) begin yi_c <= y_i; y_c <= {y[127:112], 16'd0, y[111:96], 16'd0, y[95:80], 16'd0, y[79:64], 16'd0, y[63:48], 16'd0, y[47:32], 16'd0, y[31:16], 16'd0, y[15:0], 16'd0}; ui_c <= u_i; u_c <= u; sid_c <= sid; k_c <= k; end
     // S81-NATIVE3 (10-17, NATIVE-2 audit: um_v 229.0 / m_v 228.9 / y_v 192.0 ps capture): the mode command lands in
     // pin flops (mv_c/umv_c + their q/b/i fields) and the mode-register mux and the collision check read only flops.
     // The mode registers load one edge later than in the closed view (b6d9d4515); every read of mq/mb/mi happens while
