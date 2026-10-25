@@ -74,6 +74,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'layer_prog'))
 
 from xr_timing import inject_cycles, check_run_source
 
@@ -565,6 +566,10 @@ def gen(a):
         print(f'dv_cut_replay: STALE -- {len(st["link_age_diffs"])} lane ages differ from the die build '
               f'(e.g. {st["link_age_diffs"][:3]}); recompile the programme on {a.die_v}')
         return 2
+    # TOK-DS 10-25: LKFRAME events (layer_prog/link_frames.py) state the idle die-link framing stream of an end-slice
+    # link lane from die reset on; they are checked beat by beat in bench cycles (check()), not as programme words
+    lkf = {e['lane']: e['framing'] for e in S['events'] if e.get('kind') == 'LKFRAME'}
+    S = dict(S, events=[e for e in S['events'] if e.get('kind') != 'LKFRAME'])
     words, unenc, offdie, internal_ev = landed_words(S, T, die)
     host = None
     if a.host_boot is not None or a.idle_run:
@@ -740,6 +745,8 @@ def gen(a):
             own = sorted({v for (n, _), v in vref.items() if n == p['net']})
             if own and own[0][0] in cut.out_by_net:
                 vr = dict(valid_ref=dict(port=cut.out_by_net[own[0][0]]['port'], bit=own[0][1]))
+        if p['dir'] == 'output' and lk in lkf:
+            vr = dict(vr, framing=lkf[lk])
         bnd.append(dict(port=p['port'], dir=p['dir'], lane=lk, age=L['age'], K=L['K'], stations=L['stations'],
                         source=src, peers=p['peers'], **vr))
     bnd_insts = {x for b in bnd for x in b['peers']} | cut.insts
@@ -1075,6 +1082,16 @@ def check(a):
             live = lambda c: True
         extra = [c for c, v in ch if v and live(c) and float(c) not in exp]
         strict = b.get('strict', not rp['partial'])
+        fr = b.get('framing')
+        if fr:
+            # the idle link framing stream (layer_prog/link_frames.py): the lane carries exactly the compiled gearbox beats
+            # from its link-up edge (bench cycles = edges after die reset release) to the end of the run
+            import link_frames as LF
+            assert int(fr['base'], 16) == LF.BASE and fr['mp'] == LF.MP and fr['idle_p'] == LF.IDLE_P, fr
+            fw = [(c, v) for c, v in ch if c not in exp]
+            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], rp['ncyc'])
+            miss, extra, strict = miss + fmiss, fextra, True
+            exp = dict(exp, **{('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, rp['ncyc'])))})
         n_bad = len(miss) + (len(extra) if strict else 0)
         bad += n_bad
         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],
