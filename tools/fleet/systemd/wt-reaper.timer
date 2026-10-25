@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the OpenTallas worktree reaper every 30 min
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
