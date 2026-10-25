@@ -76,3 +76,14 @@ def test_sparse_contiguous_port_indices_preserve_abi():
 def test_reject_duplicate_alias_ports_on_real_net():
     f,s=fixture();s['cores'][0]['ports']['clock_alias']=copy.deepcopy(s['cores'][0]['ports']['clk'])
     with pytest.raises(CompositionError):compose(f,Rules(),s,E.Cell)
+
+def test_dissolved_constant_driver_is_preserved():
+    f,s=fixture();f.cells[2].ports['bsel']=[7,7];f.const_drivers[7]=('1','dissolved.literal')
+    del s['cores'][0]['ports']['strap_bsel']
+    sources,_=compose(f,Rules(),s,E.Cell)
+    assert "assign n7 = 1'b1;" in sources[0][1]
+
+def test_hidden_undriven_internal_net_rejected():
+    f,s=fixture();f.cells[2].ports['bsel']=[7,7]
+    del s['cores'][0]['ports']['strap_bsel']
+    with pytest.raises(CompositionError,match='no preserved driver'):compose(f,Rules(),s,E.Cell)

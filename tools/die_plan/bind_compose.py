@@ -83,6 +83,15 @@ def compose(F, rules, spec, Cell):
         for b,(d,_) in netports.items():
             drivers=[k for k,(v,di) in endpoints.items() if v==b and di=='output']
             if len(drivers)!=(1 if d=='output' else 0): raise CompositionError(f'{path}: boundary driver mismatch {b}')
+        for b in nets:
+            drivers=[k for k,(v,di) in endpoints.items() if v==b and di=='output']
+            constant=F.const_drivers.get(b)
+            if len(drivers)>1 or (drivers and constant):
+                raise CompositionError(f'{path}: multiple original internal drivers {b}')
+            if not drivers and b not in netports:
+                if not constant or constant[0] not in ('0','1'):
+                    raise CompositionError(f'{path}: original net has no preserved driver {b}')
+                assigns.append(f"    assign n{b} = 1'b{constant[0]};")
         body=[f'module {mod} (',',\n'.join(declarations),');']
         body += [f'    wire n{b};' for b in sorted(nets)] + assigns
         terminal_record=[]
