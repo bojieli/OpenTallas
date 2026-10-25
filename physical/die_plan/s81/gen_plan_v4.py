@@ -756,12 +756,21 @@ def build(ab):
     serdes = {}
     sd = {"WS0": ("W", 0, 4), "WS1": ("W", 0, 2), "WN0": ("W", 19, 4), "WN1": ("W", 19, 2), "WN2": ("W", 19, 0),
           "WN3": ("C", 19, 6), "ES0": ("E", 0, 4), "ES1": ("E", 0, 2), "EN0": ("E", 19, 4), "EN1": ("E", 19, 2)}
-    for nm, (side, row, cw) in sd.items():
+    # S81-XDIE 10-24 (RELEASE_RACK 2.1, S81-HEAD xdie_io GAP 1): the copy-A/B reserve 6th pair on EVERY layer die (one
+    # logic design; wired on the 64 pre/post-group dies only): E column B = EN2/EN3 (s_7N pair B: copyb_in tx on
+    # pre-group dies) at the N row, W column B = WS2/WS3 (s_0S pair B: copyb_out rx on post-group dies) at the S row.
+    # Free slots: the NW/SE corner cells (were bump/ESD keep-out channels) + the top s_7N station cells (s_7N 8 -> 7
+    # rows, like every other N half) + WS3 re-aspected to a 1 x 2 cell column on the S edge in place of the two
+    # bottom s_0S station cells (s_0S rows 0-11 -> 2-11).  nc, nr default 2, 1.
+    sd.update({"WS2": ("W", 0, 0), "WS3": ("W", 0, 6, 1, 2), "EN2": ("E", 19, 6), "EN3": ("E", 19, 0)})
+    for nm, spec in sd.items():
+        side, row, cw = spec[:3]
+        nc, nr = (spec[3:] + (2, 1))[:2] if len(spec) > 3 else (2, 1)
         col = cw if side != "E" else mir(cw) - 1
         orient = "MY" if side == "E" else "R0"
-        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=2, orient=orient,
+        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=nc, nr=nr, orient=orient,
                               contents=[C("u_phy", "ot_pdie_serdes", "rework",
-                                          note="SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip "
+                                          note="SerDes PHY model re-aspected into a %.2f x %.2f slot; a strip " % (nc * PX, nr * PY) +
                                                "beside it holds the boundary flops and ft stations")],
                               ckey="serdes"))
     # ---- centre: cols 6..15 ----
@@ -822,8 +831,9 @@ def build(ab):
                 r0, nrow = 6, 6          # (10,5) = seqhost, beside the svc band
             if hn in ("s_0S", "s_7S"):
                 r0, nrow = 0, 12
-            if hn == "s_7N":
-                nrow = 8
+            if hn == "s_0S":
+                r0, nrow = 2, 10         # S81-XDIE: (6,0)-(6,1) = lk_WS3
+            # S81-XDIE: s_7N no longer takes the top row (14-15,19) = lk_EN2 (was nrow 8)
             m = blk[hn]["master"]
             lep = ncol == 2
             # inner (centre-side) column carries the normal slice; the outer column of a lep holds LP + stations
@@ -901,7 +911,7 @@ def build(ab):
     chans = [dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 2) * PX, X0 + (r + 1) * PY],
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
-             for c, r in ((0, 0), (20, 0), (20, 19))]
+             for c, r in ((20, 0),)]          # S81-XDIE: (0,0) = lk_WS2, (20,19) = lk_EN3
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -1062,6 +1072,17 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         ps, pd, c = e["src"], e["dst"], e["cls"]
         assert ps in P and pd in P, e
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), e["bits"], cls=c, role=c)
+    # ---- S81-XDIE 10-24: copy-A/B reserve pair (RELEASE_RACK 2.1): every layer die carries EN2/EN3 (s_7N pair B) and
+    #      WS2/WS3 (s_0S pair B); one logic design, wired on the 64 pre/post-group dies.  Same circuit as pair A: per
+    #      SerDes a 512-b tx lane LP -> lk (coll) and a 514-b rx lane lk -> LP (coll), ending at the lep LP partition.
+    #      RTL owed: the s_7N / s_0S lep cores expose pair-B coll ports (the s_0N lep already has 4 = pairs A + B). ----
+    if not v47:
+        for half, names in (("s_7N", ("EN2", "EN3")), ("s_0S", ("WS2", "WS3"))):
+            lp = slices[half]["LP"].name
+            for nm in names:
+                lk = "lk_" + nm
+                L("coll__%s__%s" % (lp, lk), lp, "coll_%s_o" % lk, lk, "coll_%s_i" % lp, 512, cls="coll", role="coll")
+                L("coll__%s__%s" % (lk, lp), lk, "coll_%s_o" % lp, lp, "coll_%s_i" % lk, 514, cls="coll", role="coll")
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1370,12 +1391,17 @@ def route_v48(grid, lanes47, lanes):
             res[lk["id"]] = res47[lk["id"]]
         else:
             todo.append(lk)
-    res.update(route(grid, todo, {}))
+    # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
+    rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
+    res.update(route(grid, [l for l in todo if l not in rsv], {}))
+    res.update(route(grid, rsv, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
 
 ROUTE_V48 = {}
+TYPE_NAMES_OUT = {}
+RESERVE_RE = re.compile(r"lk_(WS[23]|EN[23])\b")
 
 
 def bends(cells):
@@ -1578,7 +1604,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # v4.8: the runs of the lanes v4.8 adds / re-ends (route_v48 rerouted) are placed after every v4.7 run, so the
     # v4.7 windows (and with them the ft station spacing and lane cycles) stay where v4.7 put them
     new48 = set(ROUTE_V48.get("rerouted", ()))
-    runs.sort(key=lambda r: (r["lane"] in new48, -len(r["ports"]), -r["width"], r["role"], r["lane"], r["line"]))
+    # S81-XDIE: the copy-A/B reserve lanes' runs go after every other run (no existing window moves for them)
+    runs.sort(key=lambda r: (r["lane"] in new48, bool(RESERVE_RE.search(r["lane"])), -len(r["ports"]), -r["width"],
+                             r["role"], r["lane"], r["line"]))
     single = []
     for r in runs:
         keys = [pkey[p] for p in r["ports"]]
@@ -1747,12 +1775,41 @@ def emit(parts, lanes, routes, chans, fmap, out):
     types = collections.OrderedDict()
     for p in parts:
         types.setdefault(sigs[p.name][0], []).append(p.name)
+    # S81 10-24 (stable type names): a type whose signature (key) is unchanged keeps the name it has in the reference
+    # name table (S81_TYPE_NAMES, default physical/die_plan/s81/type_names.json: {sig sha1: type name}, written next to
+    # every generated plan); new / changed signatures get the next free number of their base.  Without a reference the
+    # names are the plain first-seen count (as before).  So a plan change that adds or alters a few types does not
+    # renumber every other type (kits, SIGNED views and lane records stay keyed to the same names).
+    import hashlib
+    sig = {key: hashlib.sha1(repr(key).encode()).hexdigest() for key in types}
+    ref_f = Path(os.environ.get("S81_TYPE_NAMES", Path(__file__).resolve().parent / "type_names.json"))
+    ref = json.loads(ref_f.read_text()).get("names", {}) if ref_f.is_file() else {}
     tname = {}
     cnt = collections.Counter()
-    for key in types:
-        base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
-        cnt[base] += 1
-        tname[key] = "%s__t%d" % (base, cnt[base])
+    if not ref:
+        for key in types:
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            cnt[base] += 1
+            tname[key] = "%s__t%d" % (base, cnt[base])
+    else:
+        used = set()
+        for key in types:
+            nm = ref.get(sig[key])
+            if nm and nm not in used:
+                tname[key] = nm
+                used.add(nm)
+        top = collections.Counter()
+        for nm in list(ref.values()) + list(used):
+            b_, n_ = nm.rsplit("__t", 1)
+            top[b_] = max(top[b_], int(n_))
+        for key in types:
+            if key in tname:
+                continue
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            top[base] += 1
+            tname[key] = "%s__t%d" % (base, top[base])
+    TYPE_NAMES_OUT.update(names={sig[k]: tname[k] for k in types}, ref=ref_f.name if ref else None,
+                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types))
     out_types, busname, ptype = {}, {}, {}
 
     def fsort(e):
@@ -1866,7 +1923,18 @@ def emit(parts, lanes, routes, chans, fmap, out):
                                  "die_use": ["clock_spine", "pg", "ft_reserved"], "cut_avail": {"M8": 0.6, "M9": 0.6}},
                 "pg": {"partition_pg_max": "M7", "grid": [
                     {"layer": "M8", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]},
-                    {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}]},
+                    {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}],
+                    # OWNER DECISION 7 (2026-10-24): trial IR over the SerDes windows 235-270 mV (interior 30 mV) ->
+                    # the SerDes PHY partitions get their own supply (VDD_PHY, isolated from the core VDD grid at the
+                    # partition boundary) fed by dedicated C4 bump rows over each PHY window (2 rows at the 150-um
+                    # SerDes bump pitch); the core VDD/VSS M8/M9 grid stays continuous around them
+                    "supplies": [{"name": "VDD_PHY", "nets": ["VDD_PHY", "VSS"],
+                                  "parts": sorted(p_["name"] for p_ in oparts if p_["name"].startswith("lk_")),
+                                  "bumps": {"rows": 2, "pitch_um": 150.0, "over": "io_window",
+                                            "note": "dedicated VDD_PHY/VSS bump rows over every SerDes PHY window"},
+                                  "note": "VDD_PHY feeds the u_phy PHY macro of each listed partition (its io window); the "
+                                          "partition strip with boundary flops and ft stations stays on core VDD",
+                                  "basis": "TRIAL-S81 10-24 IR: SerDes windows 235/270 mV FAIL on the shared grid"}]},
                 "channels": chans + [
                     {"rect_um": [0, 0, round(DIE_W, 4), X0], "reason": "seal ring"},
                     {"rect_um": [0, round(DIE_H - X0, 4), round(DIE_W, 4), round(DIE_H, 4)], "reason": "seal ring"},
@@ -1908,6 +1976,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
+    json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "

@@ -1807,6 +1807,38 @@
   "basis": "hard PHY model (no std cells counted)",
   "max_core": 0
  },
+ "lk_WS2": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_WS3": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_EN2": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_EN3": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
  "phy_hbm": {
   "cells": 0,
   "glue": 0,
@@ -7377,12 +7409,12 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_x06": {
-  "cells": 5000,
-  "glue": 5000,
+ "s_0S_LP": {
+  "cells": 192356,
+  "glue": 192356,
   "cores": [],
   "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
+  "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
   "max_core": 0
  },
  "s_0S_x07": {
@@ -7393,12 +7425,12 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_LP": {
-  "cells": 192356,
-  "glue": 192356,
+ "s_0S_x08": {
+  "cells": 5000,
+  "glue": 5000,
   "cores": [],
   "n_cores": 0,
-  "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
+  "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
  "s_0S_x09": {
@@ -7409,23 +7441,7 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_x010": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "s_0S_x011": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "s_0S_x15": {
+ "s_0S_x13": {
   "cells": 5000,
   "glue": 5000,
   "cores": [],
@@ -11173,14 +11189,6 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_7N_x07": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
  "s_7N_x10": {
   "cells": 5000,
   "glue": 5000,
@@ -11230,14 +11238,6 @@
   "max_core": 0
  },
  "s_7N_x16": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "s_7N_x17": {
   "cells": 5000,
   "glue": 5000,
   "cores": [],
