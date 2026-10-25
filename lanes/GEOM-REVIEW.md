@@ -1682,3 +1682,22 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
 2026-10-25 12:16 PDT GEOM REQ [DIE-FT-HBM] die FT bands on HBM B2p_r1 (R1-302.4 + bands, epyc1:/srv/opentallas-scratch2/claude/die-ft-hbm/plans/B2p_r1_band, renders epyc1:/srv/opentallas-scratch2/claude/die-ft-hbm/r_r1_band_{full,su,w,e}.png; orange = die-owned M4/M6 EW band, green = die-owned M5/M7 NS stripe, red = ft E/W seam window). Please rule on: (1) band sizes are larger than the 550 um ask, because the 6 pins/um face budget forces wide windows: hub row b0xx 256-1960 um (b010 459-2419), SU row 1200 um (b100/b101/su21/su30 353-1555); (2) NS stripes cover the whole width of su21, b100 and b101 (and 0-1252 of su31), so those blocks give up M5/M7 over that area (their hard cores are OBS M1-M5 anyway). The option is a higher in-band pin density (more than 6/um, pins on M4+M6 both) to shrink the bands. (3) 14 chains are kept as planned with small jogs between anchors (L12/L48/L53/L117/L138/L139 (+m), 9-480 um; L36 anchor window taken). (4) su30: in the R1 lineage the su30 ft are N->E turns at the NE corner plus W->E, so the 'N-face pins in half the face' of B2n does not exist; the E face is now spread over y 4880-6060. Static cut <=0.50 on all banded types. Die GRT it5 results to follow.
 2026-10-25 12:17 PDT GEOM-REVIEW: CLAIM [DIE-FT-HBM] (HBM split).
 2026-10-25 12:18 PDT GEOM-REVIEW-2: CLAIM [PATH-QC-SRAMIF-S7] qfd_dv_s8x_vmr__s6j 12:14 + [PATH-QC-N59 12:15]
+2026-10-25 12:18 PDT GEOM-REVIEW: REPLY [DIE-FT-HBM] B2p_r1_band: FAIL (plan geometry; do not kit on these bands). I viewed r_r1_band_{full,su,w,e}.png and read plans/B2p_r1_band/die_ft_band_report.json.
+  (1) Band size: NO.
+    - The bands are not bands. They are near whole-partition reservations: b010 EW 459-2419 of a 2419 height; b100/b110/su21/su30 EW 353-1555 of 1555; b101 249-1555.
+    - Their size comes from the 6 pins/um face budget, not from track need.
+    - Over hard cores (OBS M1-M5), the M4 half of an M4/M6 band and the M5 half of an M5/M7 stripe add no die capacity. So the real capacity is M6/M7 only, while the blocks still lose those layers for their own glue.
+    Fix: take your offered option.
+    - In-band pin density ~12/um, pins on M4+M6 on alternating tracks. This is the same order as the KV hub_Wi 12.2/um face budget that GEOM-REVIEW-2 passed 10:02.
+    - Size each band from bits / (usable M6 (+M4 only outside core OBS) tracks x <=0.55 use). The target is the 550 um ask.
+  (2) NS stripes over the full width of su21 / b100 / b101 (and 0-1252 of su31): NO.
+    - These blocks route their inter-core glue in the channels between the hard cores. With M3 under core OBS, M5/M7 are their only vertical layers.
+    - A full-width M5/M7 die stripe recreates the 10-22 die vertical starvation pattern, this time inside the partition.
+    Fix: confine each NS stripe to the minimum track-sized width, placed over a core row gap or channel. Better still, run it on M7 only, over cores, with no M5 claim.
+  (3) The 14 chains kept as planned with jogs 9-480 um: a jog up to ~50 um inside a channel is OK. Anything longer needs a station at the knee and a Manhattan reach audit (max hop <=405, station-to-station, jogs included).
+  (4) su30 E-face spread y 4880-6060 (N->E turns at the NE corner): accepted. This lineage has no "half N face", and the E face is spread along the face, so that is fine.
+  Also owed with the successor, and the gate for any band plan:
+    - A station-site audit: every FT station sits on placeable std-cell sites (channel or partition glue area), never over a hard core. su21 is ~1550 wide and almost all hard core, so show where its stations land within 405.
+    - die GRT it5 overflow + per-layer use inside the bands.
+    - Static cut <=0.50 kept.
+  Next REQ: one successor plan with (1)+(2)+(3) plus the station audit and the GRT it5 numbers. Owner: DIE-FT-HBM (PATH-HBM informed).
