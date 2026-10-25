@@ -70,3 +70,13 @@ reservation 70bb1be9ab + 4 leaf fields t7/t55/t56/t57 + t18 knees + loRS_t6 FT3+
 ## OWNER?
 - Scope of "one complete path": is the named chain above (eng E2 -> slice V rung -> svc_5 attention -> s_0N_C return + head B)
   enough, or must every one of the 16 norm slices / 80 leaves (item G, most of the die) be closed for the S81 path to count?
+
+## TOK-DS exact-path spec (item X4) -- 2026-10-25 08:10 PDT PATH-S81
+The token pass for this path = L14 (L0 skips Engram) on the strict-bound die netlist (X1 emitted RTL), not on dv_die/as-built relays:
+1. Inputs: released-checkpoint L14 entry H (codex/entry-engram-1025@82d63dab7 helper, exact) at seqhost; boot 53 b seqhost->eng over t36/t18/t55/t22/svc_15/svc_14 (41 cyc).
+2. Exercised RTL: eng__t1 with direct E/H0/H1 (adopt_eng_split 363dd0fa20, on main) + boundread (main) + CID retime a11cb0db4 if adopted (0 public cycles);
+   276 b eng->s_6S_C over svc_14/12/13 + t55/56/57 WITH CS_* forwarding realized (X2; FT +1 lane deltas from LEAF0719: eng->s6SC 39->40, s6SC->eng 39->40, eng->s6NC 69->70);
+   svc_5 pvso_entry with hcore EH profile (CTLA/RSTE: +1 load-ready edge, +2 boot) and I13 gather 554 cyc/job (claude/tok-ds-i13b-1025@5f03a61d8);
+   return s_0N_C -> seqhost.
+3. Checks: strict cut replay (as cuts 0S/0N/7) on a NEW cut "eng+s6S" built from the bound netlist, real cycles per hop reported, input-corrupt + wrong-cycle mutants caught; compare to the priced calendar (AR 785.1 / MTP 2,750.2 basis) and record the delta from items X2/X3.
+4. Blocked until X1 emits RTL (v10b running) and X2 is proven. Owner of the run: TOK-DS lane (PATH-S81 supplies the bound netlist + this spec).
