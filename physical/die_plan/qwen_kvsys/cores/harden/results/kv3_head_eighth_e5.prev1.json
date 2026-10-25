@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "kv3_head_eighth_e5",
+ "kit": "kv3_head_eighth_e5__216x216",
+ "kit_hash": "532f19991e583f2b",
+ "run": "epyc1:/srv/opentallas-scratch/claude/kv-g3/cores/kits38x/kv3_head_eighth_e5__216x216",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "pins": 544,
+ "plan_pins": 544,
+ "added_pins": 0,
+ "clocks": [
+  "g_t_10_u_l8__clk"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "FAIL",
+ "synth_cells": null,
+ "instances": 345388,
+ "std_util": 0.432026,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 544/544",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 15.908496805723546,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 6.662836975457566,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 169.5960600960256,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": -6.562556080357596,
+   "hold_ws_ps": -6.562556080357596,
+   "hold_tns_ps": -296.0207368845147,
+   "hold_viol_endpoints": 298
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -6.56 ps, 298 endpoints",
+   "drv: FAIL TT slew 114.0 cap 0.0, FF slew 115.0 cap 1.0"
+  ],
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
+ },
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 544/544, TT setup WS 15.908496805723546, FF hold WS -6.562556080357596)",
+ "views_status": "abstract_only (not SIGNED)",
+ "views": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5"
+}

@@ -237,6 +237,8 @@ def main(argv=None):
           '        rst_n = 1\'b1;',
           '        repeat (NCYC) @(posedge ck);',
           '        @(negedge ck);',
+          '        #0.001; // let final-edge trace/check monitors finish before closing their files',
+          '        if (ftr != 0) $fdisplay(ftr, "TRACE_END %0d", cyc);',
           '        $system("date +DV_SLICE_T1=%s.%N");',
           '        if (have_ov) begin $display("TB_DV_SLICE checks left unrun from cycle %0.1f", oc); n_bad = n_bad + 1; end',
           '        if (have_ev) begin $display("TB_DV_SLICE replay events left unapplied from cycle %0.1f", ec); n_bad = n_bad + 1; end',

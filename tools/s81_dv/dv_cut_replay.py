@@ -34,6 +34,9 @@ partial -- dv_layer_record never counts a partial replay as a layer measurement)
        selects the checked bits (data the cut cannot reproduce -- engine values without the HBM image, fixture rows --
        is masked and named in the event's data_masked); a consumer cut is driven with the full value.  valid_bit names
        the lane's valid bit: the strict check counts extra words on it only (data lanes may hold stale bits).
+       `width` (TOK-DS-GAPS 10-24) limits the word to the low bits of its ports (an xfin NX flit is one 276-b lane word
+       on a 1,104-b line port): bundle age and checked bits are those of the lanes under the width.  A CTL event with
+       `payload186` (layer-entry target-5 row writes) is driven as the seq_host line beat of that payload (no template).
   Not cut words: boundary 'offdie' events (beyond the die's elastic link layer: the end-slice RD beats leave through
        the reliable link lanes, bench_vpx checks them) and dir 'internal' events (inside one instance: the vs command
        rides the CTL beat of its calendar row, `ctl_at`) are listed apart and do not make a replay partial.
@@ -51,7 +54,7 @@ edge k; cycles are layer cycles + --t0.
 
   dv_cut_replay.py ages    --die-v die.v.gz [--prog DIR] [--out ages.json]
   dv_cut_replay.py gen     --die-v die.v.gz --prog DIR --cut CUTDIR --out DIR [--t0 100] [--trace PDIR=RUN ...]
-                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> |
+                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>[:<sid>]] | shift-kind:<KIND>:<n> |
                             expect-shift:<KIND>:<n>] [--lane-age] [--allow-stale]
   dv_cut_replay.py check   --replay DIR --run RUN [--out check.json]      (trace vs every encoded word, no extras)
   dv_cut_replay.py compose --cut NAME=REPLAY_DIR:RUN_DIR ... --out compose.json   (cross-cut lane consistency)
@@ -71,6 +74,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'layer_prog'))
 
 from xr_timing import inject_cycles, check_run_source
 
@@ -251,8 +255,13 @@ class Cut:
 # ================================================================================================= programme -> words
 def ctl_beat(T, ev, die, inst):
     """the template beat as <inst> receives it on its line face (hops / src rewritten as ot_s81sl_rstop delivers it)"""
-    ti = int(ev['payload'].split()[1].rstrip(';'))
-    beat = int(T[ti]['beat'], 16)
+    if ev.get('payload186') is not None:
+        # TOK-DS-GAPS 10-24: an explicit-payload CTL beat (layer-entry target-5 row writes, layer_prog/norm_nx.py): not a
+        # calendar template; the line beat is the seq_host packer's (dv_layer_compile.ctl_line_beat, src 4, hops 0)
+        ti, beat = None, 1 | 4 << 9 | int(ev['payload186'], 16) << 21
+    else:
+        ti = int(ev['payload'].split()[1].rstrip(';'))
+        beat = int(T[ti]['beat'], 16)
     if (beat >> 4) & 0x1F:
         raise ValueError(f'template {ti} carries hops {(beat >> 4) & 0x1F}: only line-default (0) beats are modelled')
     if ev['port'] == 'vi':
@@ -380,6 +389,11 @@ def event_words(e, die):
         if not b:
             raise ValueError(f'event {e["kind"]} {e["tag"]}: no port {e["inst"]}.{p} in the die build')
         pb += b
+    if e.get('width') is not None:
+        # TOK-DS-GAPS 10-24: a word narrower than its port bundle (an xfin NX flit = one 276-b lane word on a 1,104-b
+        # line port) occupies only the low `width` bits: it is whole when ITS lanes land (the receiving rstop reads
+        # nothing above), so the bundle age and the checked bits are those of the lanes under the width
+        pb = pb[:int(e['width'])]
     vb = e.get('valid_bit')
     out = []
     if e['dir'] == 'in':
@@ -527,6 +541,10 @@ def gen(a):
         print(f'dv_cut_replay: STALE -- {len(st["link_age_diffs"])} lane ages differ from the die build '
               f'(e.g. {st["link_age_diffs"][:3]}); recompile the programme on {a.die_v}')
         return 2
+    # TOK-DS 10-25: LKFRAME events (layer_prog/link_frames.py) state the idle die-link framing stream of an end-slice
+    # link lane from die reset on; they are checked beat by beat in bench cycles (check()), not as programme words
+    lkf = {e['lane']: e['framing'] for e in S['events'] if e.get('kind') == 'LKFRAME'}
+    S = dict(S, events=[e for e in S['events'] if e.get('kind') != 'LKFRAME'])
     words, unenc, offdie, internal_ev = landed_words(S, T, die)
     host = None
     if a.host_boot is not None or a.idle_run:
@@ -544,7 +562,11 @@ def gen(a):
     rec_in, rec_out, internal, outside = [], [], 0, 0
     pgap, gap_lanes = set(), set()
     if mut and mut['kind'] == 'corrupt':
-        firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and
+        # optional 4th field: only words of a payload186 CTL beat whose slice mask holds that sid (a line broadcast
+        # carries every slice's entry writes past the cut; the first one may be for a slice outside it)
+        sel = (lambda w: True) if mut.get('sid') is None else \
+            (lambda w: (int(w['event'].get('payload186') or '0', 16) >> mut['sid']) & 1 == 1)
+        firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and sel(w) and
                   any(die.by_out.get(n) == mut['link'] for n, _ in w['bits'])]
         if not firsts:
             raise SystemExit(f'mutant {a.mutant}: no scheduled word enters the cut on {mut["link"]}')
@@ -698,6 +720,8 @@ def gen(a):
             own = sorted({v for (n, _), v in vref.items() if n == p['net']})
             if own and own[0][0] in cut.out_by_net:
                 vr = dict(valid_ref=dict(port=cut.out_by_net[own[0][0]]['port'], bit=own[0][1]))
+        if p['dir'] == 'output' and lk in lkf:
+            vr = dict(vr, framing=lkf[lk])
         bnd.append(dict(port=p['port'], dir=p['dir'], lane=lk, age=L['age'], K=L['K'], stations=L['stations'],
                         source=src, peers=p['peers'], **vr))
     bnd_insts = {x for b in bnd for x in b['peers']} | cut.insts
@@ -953,11 +977,12 @@ def parse_mutant(s):
     f = s.split(':')
     if f[0] == 'shift' and len(f) == 3:
         return dict(kind='shift', link=f[1], n=int(f[2]))
-    if f[0] == 'corrupt' and len(f) in (2, 3):
-        return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) == 3 else None)
+    if f[0] == 'corrupt' and len(f) in (2, 3, 4):
+        return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) >= 3 else None,
+                    sid=int(f[3]) if len(f) == 4 else None)
     if f[0] in ('shift-kind', 'expect-shift') and len(f) == 3:
         return dict(kind=f[0], ev=f[1], n=int(f[2]))
-    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
+    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>[:<sid>]] | shift-kind:<KIND>:<n> | '
                      f'expect-shift:<KIND>:<n>')
 
 
@@ -1005,6 +1030,21 @@ def value_at(changes, c):
     return v
 
 
+def framing_trace_end(run, ncyc):
+    """Exclusive observed end; older TBs raced trace close at the last negedge."""
+    path = Path(run) / 'trace.txt'
+    ends = [int(line.split()[1]) for line in path.read_text().splitlines()
+            if line.startswith('TRACE_END ')]
+    if ends:
+        if ends != [ncyc - 1]:
+            raise ValueError('trace completion edge differs from requested run: ' + str(ends))
+        return ncyc, False
+    # Legacy initial $finish and trace monitor share the final negedge. Only
+    # edges through NCYC-2 are guaranteed observed. Any recorded final word is
+    # still checked explicitly below; only an absent final change is unknown.
+    return ncyc - 1, True
+
+
 def check(a):
     rp = json.loads((Path(a.replay) / 'replay.json').read_text())
     xrt_proof = check_run_source(rp.get('timing_contract'), a.run,
@@ -1031,6 +1071,20 @@ def check(a):
             live = lambda c: True
         extra = [c for c, v in ch if v and live(c) and float(c) not in exp]
         strict = b.get('strict', not rp['partial'])
+        fr = b.get('framing')
+        if fr:
+            # the idle link framing stream (layer_prog/link_frames.py): the lane carries exactly the compiled gearbox beats
+            # from its link-up edge (bench cycles = edges after die reset release) to the end of the run
+            import link_frames as LF
+            assert int(fr['base'], 16) == LF.BASE and fr['mp'] == LF.MP and fr['idle_p'] == LF.IDLE_P, fr
+            fw = [(c, v) for c, v in ch if c not in exp]
+            fend, legacy_tail = framing_trace_end(a.run, rp['ncyc'])
+            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], fend)
+            if legacy_tail:
+                fextra += [c for c, v in fw if c >= fend and
+                           (c != fend or v != LF.beat(c - b['age'] - fr['g0']))]
+            miss, extra, strict = miss + fmiss, fextra, True
+            exp.update({('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, fend)))})
         n_bad = len(miss) + (len(extra) if strict else 0)
         bad += n_bad
         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],

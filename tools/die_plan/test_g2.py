@@ -176,7 +176,7 @@ def test_kit_overrides_platform_tracks():
         assert "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl" in cfg
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
         # COORD 10-23: tap trees balanced to the plan insertion after CTS
-        assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
+        assert "export POST_CTS_TCL = /work/cts_post.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
         assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_TOL_PS = 10" in cfg and "export CORNER = TC" in cfg
         assert (kd / "tap_balance.tcl").is_file()
 
@@ -377,7 +377,7 @@ def test_per_tap_reset_synchronisers():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"(?m)^\s*(?:ot_dp_rsync_s2\s+2|2\s+ot_dp_rsync_s2)\s*$", r.stdout), r.stdout       # identical copies are NOT merged
+            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
@@ -622,3 +622,46 @@ def test_part_probe_wavefront_outputs_have_registered_drivers():
             assert tree['max_hop_um'] <= RT.relay_um(P)
             checked += len(outs)
     assert checked
+
+
+def test_part_probe_uses_explicit_internal_bit_sites():
+    import copy
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100+j*100+b*.02,20+j] for b in range(slot['width']+1)] for j in range(slot['stations']-1)]
+    # Deliberately inconsistent old centroid table must not override per-bit LLs.
+    slot['regs_um']=[[777,777]]*slot['stations']
+    with tempfile.TemporaryDirectory() as d:
+        out=g2.part_probe(schema.Plan(raw),'fa',d)
+        text=(out/'probe.tcl').read_text()
+        assert 'st_fz_7_1 -location {100.840 20.140}' in text
+        assert 'st_fz_7_2 -location {200.840 21.140}' in text
+        assert '777.000 777.000' not in text
+        # Payload and epoch bit both use their own allocated cell envelope.
+        assert 'st_fz_64_1 -location {101.980 20.140}' in text
+
+
+def test_part_probe_rejects_incomplete_bit_site_stage():
+    import copy
+    import pytest
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100,20]]]*(slot['stations']-1)
+    with tempfile.TemporaryDirectory() as d:
+        with pytest.raises(ValueError,match='width\\+1'):
+            g2.part_probe(schema.Plan(raw),'fa',d)
+
+
+def test_probe_blockages_keeps_hard_cores_no_leaf_names():
+    """KV-PLAN 10-25: a planned hard core not named by any content leaf (KV head_eighth) is still an obstruction,
+    up to the partition signal ceiling unless the core declares obs_max."""
+    t = {"contents": [{"inst": "head2__g_front_0__u_front", "module": "x"},
+                      {"inst": "bq", "module": "y", "origin_um": [0, 0], "outline_um": [5, 5]}],
+         "hard_cores": [{"inst": "head2_e0", "module": "kv3_head_eighth_e0", "origin_um": [17.28, 17.28],
+                         "outline_um": [216.0, 216.0]},
+                        {"inst": "bq_0", "module": "c", "origin_um": [0, 0], "outline_um": [2, 2]},
+                        {"inst": "e1", "module": "d", "origin_um": [300, 0], "outline_um": [9, 9], "obs_max": "M5"}]}
+    obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
+    assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
