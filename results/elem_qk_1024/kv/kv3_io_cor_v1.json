@@ -1,0 +1,20 @@
+{
+ "type": "kv3_io_cor_v1",
+ "verdict": "FAIL",
+ "run": "intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_io_cor_v1",
+ "note": "g3g kit (main 24b2da3433+ tooling); run_kit 6_report OOM (RCX peak at container cap) -> signoff.py tt,ff run separately on 6_final.odb+spef; DRC 0, antenna 0, face_guard yosys+odb PASS",
+ "tt_setup_wns_ps": -128.7,
+ "tt_setup_viol": 2286,
+ "ff_hold_wns_ps": -27.77,
+ "ff_hold_viol": 1308,
+ "spread_tt_ff_ps": [
+  89.41,
+  78.75
+ ],
+ "slew_viol_tt": 3231,
+ "drc": 0,
+ "pin_audit": "PASS 6106/6106",
+ "review": "PASS-COND",
+ "cause": "also TT pin-flop spread 89.4 > 80",
+ "next": "r2 running intel2:.../kvr2/kv3_io_cor_v1"
+}

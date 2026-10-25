@@ -20,5 +20,21 @@
  "face_guard_odb": "PASS",
  "pin_audit": "PASS 2100/2100",
  "cause": "635 um station hops (plan v3.8s 2 stations/slot) left with ~250 um unbuffered segments: RCX slew up to 688 ps (limit 320); worst ft0_o_0/q[7] -> ft0_o_1/q[7] -85 ps. Flow repair_timing inserted no buffers.",
- "next": "kit-local PRE_RESIZE repair_design -max_wire_length 120 (kvg3g_wl) in flight; else plan stations <= 400 um (KV-G3 recipe)."
+ "next": "kit-local PRE_RESIZE repair_design -max_wire_length 120 (kvg3g_wl) in flight; else plan stations <= 400 um (KV-G3 recipe).",
+ "wl_run": {
+  "run": "intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3g_wl/kv3_io_ft_v1",
+  "verdict": "FAIL",
+  "tt_setup_wns_ps": -39.81,
+  "tt_setup_viol": 1050,
+  "ff_hold_wns_ps": 7.6,
+  "spread_tt_ff_ps": [
+   36.23,
+   27.46
+  ],
+  "slew_viol": 0,
+  "drc": 0,
+  "pin_audit": "PASS 2100/2100",
+  "cause": "reg2reg now clean with PRE_RESIZE repair_design -max_wire_length 120; remaining = input port -> face flop (766 ps input budget vs SPEF tap insertion 204..239, plan 250)",
+  "next": "r2 (OT_TAP_TARGET_PS 280, HOLD margin 45, wirelen) intel2:.../kvr2/kv3_io_ft_v1"
+ }
 }

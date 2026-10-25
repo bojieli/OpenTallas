@@ -1,0 +1,9 @@
+{
+ "type": "kv3_sys_c",
+ "verdict": "FAIL",
+ "run": "intel2:/srv/opentallas-scratch2/claude/elem-qk/kvg3h/kv3_sys_c",
+ "review": "PASS-COND (g3h overlay: SRAMs x 950..1210)",
+ "grt_overflow": 109,
+ "cause": "GRT-0116: 109 overflow (M5/M6/M7) at bottom corners of the 780 um UCIe PHY (x 150..250 and 800..850, y~250): W-face pins y 250..500 detour under the PHY; also 17 hops >750 um W-face host legs -> d2d_kv (plan reach)",
+ "next": "pathfinding re-route with -allow_congestion running intel2:.../kvg3h/kv3_sys_c (log run_route.log); real fix: PHY position/halo or plan pin windows below y 250 on W face + stations on host legs (KV-G3)"
+}

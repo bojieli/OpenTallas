@@ -1,0 +1,19 @@
+{
+ "type": "kv3_hroot",
+ "verdict": "FAIL",
+ "run": "intel1:/srv/opentallas-scratch2/claude/elem-qk/kvg3g/kv3_hroot",
+ "note": "g3g kit (main 24b2da3433+ tooling); run_kit 6_report OOM (RCX peak at container cap) -> signoff.py tt,ff run separately on 6_final.odb+spef; DRC 0, antenna 0, face_guard yosys+odb PASS; clk_clk_hbm tied to clk in kit wrapper",
+ "tt_setup_wns_ps": -139.73,
+ "tt_setup_viol": 595,
+ "ff_hold_wns_ps": -11.1,
+ "ff_hold_viol": 236,
+ "spread_tt_ff_ps": [
+  67.38,
+  54.92
+ ],
+ "slew_viol_tt": 2264,
+ "drc": 0,
+ "pin_audit": "PASS 4313/4313",
+ "review": "PASS-COND (u_rly relay not midway, 831 um)",
+ "next": "r2 running intel1:.../kvr2/kv3_hroot; relay placement guide; reset rule conflicts (lane file)"
+}
