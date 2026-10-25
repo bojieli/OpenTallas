@@ -120,24 +120,78 @@ set ca_spot {}
 set ca_out_f [open $::env(RESULTS_DIR)/ot_relay_mid.txt a]
 set ca_log [open $::env(RESULTS_DIR)/ot_chain_anchor.txt w]
 set ca_n 0; set ca_nchain 0; set ca_skip 0; set ca_seen {}
-# one cell at a spot: compact 8-column cluster per 4-um bin, rows stacking upward
+# Legal nearest-row packing. The previous bin-local cluster could overlap another
+# bin's cluster, clip hundreds of cells to the same die-edge x, and move cells
+# into macro halos after checking only the unshifted anchor. Reserve every exact
+# footprint globally, including pre-existing face/relay registers.
+set ca_occ {}
+foreach i [$ca_blk getInsts] {
+  if {[[$i getMaster] isBlock] || [$i getPlacementStatus] ni {FIRM LOCKED COVER}} continue
+  set b [$i getBBox]
+  set lo [expr {int(floor(double([$b yMin]-$ca_y0)/$ca_rh))}]
+  set hi [expr {int(ceil(double([$b yMax]-$ca_y0)/$ca_rh))-1}]
+  for {set row $lo} {$row <= $hi} {incr row} {
+    dict lappend ca_occ $row [list [$b xMin] [$b xMax]]
+  }
+}
+set ca_maxmove 0
+set ca_hop_max 0; set ca_hop_bad 0
 proc ca_put {c x y} {
-  global ca_spot ca_sw ca_rh ca_x0 ca_y0 ca_x1 ca_y1 ca_orient ca_dbu ca_out_f ca_n
-  lassign [ca_near $x $y] x y
-  set key "[expr {$x / (4*$ca_dbu)}],[expr {$y / (4*$ca_dbu)}]"
-  set k [expr {[dict exists $ca_spot $key] ? [dict get $ca_spot $key] : 0}]
-  dict set ca_spot $key [expr {$k + 1}]
-  set pitch [expr {$ca_sw * 24}]
-  set cx [expr {$x + ($k % 8) * $pitch - 4 * $pitch}]
-  set cy [expr {$y + ($k / 8) * $ca_rh}]
-  set cx [expr {$ca_x0 + (($cx - $ca_x0) / $ca_sw) * $ca_sw}]
-  set cy [expr {$ca_y0 + (($cy - $ca_y0) / $ca_rh) * $ca_rh}]
-  set cx [expr {min(max($cx, $ca_x0), $ca_x1 - [[$c getMaster] getWidth])}]
-  set cy [expr {min(max($cy, $ca_y0), $ca_y1 - $ca_rh)}]
-  $c setLocation $cx $cy
+  global ca_occ ca_sw ca_rh ca_x0 ca_y0 ca_x1 ca_y1 ca_orient ca_dbu ca_out_f ca_n ca_mac ca_maxmove ca_prev_xy
+  set w [[$c getMaster] getWidth]
+  set h [[$c getMaster] getHeight]
+  set pad [expr {2*$ca_sw}]
+  set r0 [expr {int(round(double($y-$ca_y0)/$ca_rh))}]
+  set nr [expr {int(($ca_y1-$ca_y0-$h)/$ca_rh)}]
+  set best {}; set cost 1e30
+  for {set d 0} {$d <= $nr} {incr d} {
+    if {$d*$ca_rh > $cost+$ca_rh} break
+    foreach row [expr {$d == 0 ? [list $r0] : [list [expr {$r0-$d}] [expr {$r0+$d}]]}] {
+      if {$row < 0 || $row > $nr} continue
+      set cy [expr {$ca_y0+$row*$ca_rh}]
+      set intervals {}
+      set rend [expr {$row+int(ceil(double($h)/$ca_rh))-1}]
+      for {set rr $row} {$rr <= $rend} {incr rr} {
+        if {[dict exists $ca_occ $rr]} { set intervals [concat $intervals [dict get $ca_occ $rr]] }
+      }
+      foreach m $ca_mac {
+        lassign $m mx0 my0 mx1 my1
+        if {$cy < $my1 && $cy+$h > $my0} { lappend intervals [list $mx0 $mx1] }
+      }
+      lappend intervals [list $ca_x1 $ca_x1]
+      set left $ca_x0
+      foreach it [lsort -integer -index 0 $intervals] {
+        lassign $it a b
+        set right [expr {min($a-$pad,$ca_x1)}]
+        set lo $left; set hi [expr {$right-$w}]
+        # Bound the actual consecutive-register Manhattan hop, including legalisation.
+        if {[info exists ca_prev_xy]} {
+          lassign $ca_prev_xy px py
+          set reach [expr {405*$ca_dbu-abs($cy+$h/2.0-$py)}]
+          set lo [expr {max($lo,$px-$reach-$w/2.0)}]
+          set hi [expr {min($hi,$px+$reach-$w/2.0)}]
+        }
+        if {$hi >= $lo} {
+          set cx [expr {min(max($x,$lo),$hi)}]
+          set cx [expr {$ca_x0+int(ceil(double($cx-$ca_x0)/$ca_sw))*$ca_sw}]
+          if {$cx <= $hi} {
+            set dd [expr {abs($cx-$x)+abs($cy-$y)}]
+            if {$dd < $cost} { set best [list $cx $cy $row $rend]; set cost $dd }
+          }
+        }
+        set left [expr {max($left,$b+$pad)}]
+        if {$left+$w > $ca_x1} break
+      }
+    }
+  }
+  if {$best eq {}} { error "chain_anchor: no legal footprint for [$c getName]" }
+  lassign $best cx cy row rend
+  for {set rr $row} {$rr <= $rend} {incr rr} { dict lappend ca_occ $rr [list $cx [expr {$cx+$w}]] }
   if {[dict exists $ca_orient $cy]} { $c setOrient [dict get $ca_orient $cy] }
+  $c setLocation $cx $cy
   $c setPlacementStatus FIRM
   puts $ca_out_f [$c getName]
+  set ca_maxmove [expr {max($ca_maxmove,$cost)}]
   incr ca_n
 }
 foreach h [$ca_blk getInsts] {
@@ -190,21 +244,38 @@ foreach h [$ca_blk getInsts] {
   }
   set n [llength $chain]
   set k 0
+  set ca_prev_xy $src
   foreach c $chain {
     set f [expr {($k + 0.5) / double($n)}]
     ca_put $c [expr {int($cx + ($bx - $cx) * $f)}] [expr {int($cy + ($by - $cy) * $f)}]
     dict set ca_seen [$c getName] 1
+    set ca_prev_xy [ca_ctr [$c getBBox]]
     incr k
   }
+  set ca_tail_src $ca_prev_xy
   foreach t $tails {
     lassign $t ti tp
     if {[dict exists $ca_seen [$ti getName]]} continue
+    set ca_prev_xy $ca_tail_src
     ca_put $ti {*}$tp
     dict set ca_seen [$ti getName] 1
+  }
+  set prev $src
+  foreach c $chain {
+    set pt [ca_ctr [$c getBBox]]
+    set hop [expr {abs([lindex $pt 0]-[lindex $prev 0])+abs([lindex $pt 1]-[lindex $prev 1])}]
+    set ca_hop_max [expr {max($ca_hop_max,$hop)}]
+    if {$hop > 405*$ca_dbu} { incr ca_hop_bad }
+    set prev $pt
+  }
+  foreach pt $sinks {
+    set hop [expr {abs([lindex $pt 0]-[lindex $prev 0])+abs([lindex $pt 1]-[lindex $prev 1])}]
+    set ca_hop_max [expr {max($ca_hop_max,$hop)}]
+    if {$hop > 405*$ca_dbu} { incr ca_hop_bad }
   }
   incr ca_nchain
   puts $ca_log "[$h getName]\t$n\t[llength $tails]\t[expr {$ax/1000.0}],[expr {$ay/1000.0}]\t[expr {$cx/1000.0}],[expr {$cy/1000.0}]\t[expr {$bx/1000.0}],[expr {$by/1000.0}]"
 }
 close $ca_out_f; close $ca_log
-puts "OT_CHAIN_ANCHOR placed $ca_n flops of $ca_nchain chains FIRM on L paths ($ca_skip heads skipped)"
+puts "OT_CHAIN_ANCHOR placed $ca_n flops of $ca_nchain chains FIRM on L paths ($ca_skip heads skipped), placed max hop [expr {$ca_hop_max/double($ca_dbu)}] um, $ca_hop_bad hops >405 um, maximum legalisation displacement [expr {$ca_maxmove/double($ca_dbu)}] um"
 }

@@ -2,13 +2,20 @@
   "verdict": "PASS-CONDITIONAL",
   "reviewer": "Codex",
   "picture": "results/geom_review/s81_head_img/elemB_rb_c4_final.png",
-  "scope": "Head elemB c8/c9 own warm GRT successors; same ROM sites/pins and macro geometry",
+  "scope": "Head elemB c8/c9 own warm GRT successors; same ROM sites/pins and macro geometry; elemA c12 same warm BC5 recipe; elemA c11 corrected pair-metric signoff, read-only original6_final+SPEF; native extracted-SPEF m5 successors of elemB c8 andelemA c11",
   "findings": [
     "Viewed routed same-geometry elemB picture: two centred ROMs, open W/E bands and inter-ROM channel, modest local density peaks. No macro wall or sliver. Pin locations and clock access retain earlier reviewed repair.",
-    "FF hold c8 residual one internal endpoint -4.79ps; c9 -14.34ps/180 endpoints. Existing hooks repair default TT, insufficient at FF. Warm GRT repair at BC with 5ps margin then TT slew repair; no cycle change."
+    "FF hold c8 residual one internal endpoint -4.79ps; c9 -14.34ps/180 endpoints. Existing hooks repair default TT, insufficient at FF. Warm GRT repair at BC with 5ps margin then TT slew repair; no cycle change.",
+    "Viewed elemA_rb_c8_final.png: same two centred ROM geometry, N clock access clear, ample W/E/S logic bands; BC5 successor keeps macro sites/pins, no cycles added.",
+    "elemA c11 shares the reviewed centred-ROM geometry/pins with c12; own signoff reads original routed DB/SPEF and writes only codex-head3/elemA_c11_resign. No reroute or latency change.",
+    "BC-GRT+5 successor B9 loses20ps atRCX (FF-15.42/163). Adopt KV measured extracted-SPEF m5 recipe, direct parent5_2routeDB+6finalSPEF, TT/FF setup+hold, fanout24/slew20, DRV_LAST+RETIME_LAST; same macroplacement/pins/RTL/SDC/clock."
   ],
   "conditions": [
     "No SIGNED claim until actual current signoff.py says SIGNED",
     "Check FF hold and TT slew after extracted route, clock metric source-latency bug tracked separately"
+  ],
+  "pictures": [
+    "results/geom_review/s81_head_img/elemB_rb_c4_final.png",
+    "results/geom_review/s81_head_img/elemA_rb_c8_final.png"
   ]
 }

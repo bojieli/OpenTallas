@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS-CONDITIONAL",
+  "scope": "PLACE ONLY; hd_tile exact HEAD3 geometry/source, legal chain-anchor v3 checkpoint",
+  "picture": "results/geom_review/codex_head_anchor_1025/anchor_legal_v3.png",
+  "findings": [
+    "Viewed actual fixed-cell map: two A column-pair raw-input chains live in the 53.85um middle channel, B line takes the open W/N band; five hard cores and their halos remain clear.",
+    "0 chain overlaps,0 halo collisions;32,896 flops/768 chains. Actual34,176 sequential connections max396.144um,0 over405. One B root line stage moved65.070um to close initial460.026um leg; no RTL/cycle change.",
+    "v1 FAIL14,484 overlaps from applyingMX orientation aftersetLocation; v2 fixedroworientation,thenFAILone460.026um leg. Failed pictures/counts preserved. Sourcefixed globalfootprint allocation+orientationbeforelocation+consecutivehopbound.",
+    "Clock stillpending: only placement now; replace unSIGNED preview macroviews with signedcoreviews before route, then new placedfullsinkinventory -> density1500 taps+GRTbalance."
+  ],
+  "conditions": [
+    "No route/STA closure credit until SIGNED macroviews and density clock reviewed",
+    "Check actual full placed density/congestion and path RC before route"
+  ],
+  "prior_failures": [
+    {
+      "version": "v1",
+      "verdict": "FAIL",
+      "overlaps": 14484
+    },
+    {
+      "version": "v2",
+      "verdict": "FAIL",
+      "over405": 1,
+      "max_um": 460.026
+    }
+  ]
+}

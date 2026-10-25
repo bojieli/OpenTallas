@@ -303,6 +303,14 @@ T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   sources=HD_SRC,
   note=f"LM-head tile = 1 bundle (128 vocab rows, 10 ROM4096) on bus B 565; {MD['tile']['cells_basis']}",
   hard_cores=tile_cores)
+# Full placed register inventory includes the two A pair skew lines and the B line
+# (37,602 sinks, 10-25 legal-anchor/initial+DP prototype). Coarse six-tap grid
+# cannot honor the owner sink-density/load bound; hard-core clocks keep signed
+# latency compensation independently of these tile-local sink clusters.
+types["hd_tile"]["clock"].update(
+    tap_mode="density", tap_max_sinks=1500, tap_target_sinks=1200,
+    tap_radius_um=200, tap_balance_rc="grt",
+    sink_bins_file="physical/die_plan/s81_head/hd_tile_sink_bins.json")
 BUS("hd_tile", "i", "in", 565, "u_core.i")
 BUS("hd_tile", "o", "out", 565, "u_core.o")
 
