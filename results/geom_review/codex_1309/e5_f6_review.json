@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-10-25 14:09 PDT",
+  "source": "be69",
+  "netlist": "3c0b",
+  "kit": "epyc2:codex-s81-eng-1309/e5_review_probe",
+  "verdict": "PASS placement F6 only; noCTS until clockproof/LEC",
+  "launch_pins": 2145,
+  "max_launch_um": 13.179,
+  "capture_pins": 2414,
+  "max_capture_um": 10.839,
+  "macros": 15,
+  "feedback_exceptions": {
+    "pins": 29,
+    "resolved_single_expected_DFFE": 29,
+    "max_um": 8.499,
+    "logic": "AO21 feedback cone"
+  },
+  "findings": [
+    "All rowA/E/O,winH,8ROM,XQb0/b1/wl macroclasses covered",
+    "IFbars outsidefaces/halos; centralcorridorclear; no newwall"
+  ],
+  "conditions": [
+    "Currentclockplanproof independentreview+LEC/sourcegates beforeCTS",
+    "No GRT/DRT/SIGNED token"
+  ]
+}
