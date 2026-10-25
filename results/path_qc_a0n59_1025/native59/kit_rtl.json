@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.die_plan.kit_rtl.v1",
+ "plan_type": "native59",
+ "plan_module": "qfd_qc_native59_part",
+ "bound_type": "native59",
+ "bound_module": "qfd_qc_native59_part_bound",
+ "variants": [
+  "native59"
+ ],
+ "bind_out": "/srv/opentallas-scratch2/claude/path-qc-a0n59/bind",
+ "instances": [
+  "native59"
+ ],
+ "params": "",
+ "taps": [
+  "clk_t1",
+  "clk_t2",
+  "clk_t3"
+ ],
+ "spare_out_bits": [],
+ "spare_ft_passthrough": [],
+ "narrow_buses": [],
+ "plan_buses_unbound": [],
+ "bound_only_pins": [
+  {
+   "port": "start_i",
+   "dir": "input",
+   "width": 1
+  }
+ ],
+ "defines": [],
+ "files": [
+  "/srv/opentallas-scratch2/claude/path-qc-a0n59/kit_rtl/native59/qfd_qc_native59_part.sv",
+  "/srv/opentallas-scratch2/claude/path-qc-a0n59/kit_rtl/native59/qfd_qc_native59_part_bound.sv",
+  "/srv/opentallas-scratch2/claude/path-qc-a0n59/kit_rtl/native59/kit_cells.sv",
+  "/srv/opentallas-scratch2/claude/path-qc-a0n59/kit_rtl/native59/bind_cells_kit.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/lib/ot_reset_sync.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_svc_obs1.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_static_service_obs1.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_q_export_control.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_mctx_helpers.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_command_context.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-qc-a0n59/rtl/qwen_split/qfd_native59_qbank.sv"
+ ],
+ "packages": [],
+ "sim_files": "kit_rtl_sim.f",
+ "package_inlined": {},
+ "include_inlined": {},
+ "module_dedup": {},
+ "hard_macros": {},
+ "hard_macros_note": "memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys type_macros); kit_rtl_sim.f carries the behavioural models",
+ "kit_rsync": {
+  "taps": 4,
+  "firm_repointed": 112,
+  "firm_nearest": 50,
+  "ste": 16,
+  "converted_from": "reset_tree",
+  "bound_sync_stages": null,
+  "leaf_tap": 2,
+  "reset_tree": {
+   "entry": "relayed",
+   "depth": 3,
+   "own_depth": 3,
+   "relays": 10,
+   "tree_relays": 6,
+   "pad_relays": 4,
+   "max_hop_um": 311.0,
+   "reach_um": 405.0,
+   "root_um": [
+    768.48,
+    388.768
+   ],
+   "sync_stages": 2,
+   "entry_stages": 1,
+   "release_clocks": 4,
+   "outs": 0,
+   "note": "OWNER DECISION 13: one root synchroniser per die + neighbour wavefront (registered reset in / out per partition, relays <= reach, equal depth inside the partition)"
+  },
+  "reset_outs": []
+ }
+}
