@@ -466,14 +466,14 @@ def _xf_search(w, h, xr, fixed, W, H, ftok, gapok):
     return best
 
 
-def xfin_pins(path, size):
+def xfin_pins(path, size, old_outline=None):
     """ot_s81dv_xfin plan pin table resized from its current square outline: E-face pins x += dW, N-face pins y += dH, and every face's
     bus groups re-spread along the longer face (group start scaled, shifts in 0.576-um multiples = whole M4 / M5 tracks;
     a group's internal pitch is kept)."""
     import re
     txt = open(path).read()
     d = json.loads(txt)
-    old = max(max(p["x"] for p in d["pins"]), max(p["y"] for p in d["pins"])) + 0.042
+    old = old_outline if old_outline is not None else max(max(p["x"] for p in d["pins"]), max(p["y"] for p in d["pins"])) + 0.042
     if abs(old - size[0]) < 1e-3 and abs(old - size[1]) < 1e-3:
         return False
     if old > min(size) + 1e-3:
