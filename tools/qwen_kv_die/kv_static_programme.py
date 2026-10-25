@@ -172,7 +172,10 @@ LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages',
     + (['--head-prepare-edges', LINK_HEAD_PREP] if LINK_HEAD_PREP else [])
 #            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
-CORE_U, HBM_U = 625, 768
+CONTROLLER_CORE = os.environ.get('OT_KV_CONTROLLER_CORE', '0') == '1'
+# Equal625/625 values are dimensionless phase ticks, not physical ps.
+# The owner core-clock contract is exactly833.000ps (see kv_params below).
+CORE_U, HBM_U = 625, (625 if CONTROLLER_CORE else 768)
 XU_STRICT = CORE_U + 1          # phase launch: toggle 1 core edge after capture; first HBM edge strictly after it
 LAUNCH_HBM_EDGES = 3            # phase launch: output register first_hbm + 2; front / controller go_q one edge later
 CAL_PIN_EDGES = 2               # qkd_controller_hbm_calendar: event pin edge = captured go + start + 2
@@ -200,12 +203,25 @@ def rd_shape_env(name, default):
     return burst, gap
 
 
-RD_SHAPE_K = rd_shape_env('OT_KV_RD_SHAPE_K', (8, 2))
-RD_SHAPE_V = rd_shape_env('OT_KV_RD_SHAPE_V', (8, 3))
+RD_SHAPE_K = rd_shape_env('OT_KV_RD_SHAPE_K', (8, 3) if CONTROLLER_CORE else (8, 2))
+RD_SHAPE_V = rd_shape_env('OT_KV_RD_SHAPE_V', (8, 6) if CONTROLLER_CORE else (8, 3))
 CMD_LEAD = 118                  # first K RD reservation at 120: the K layer-row descriptor at 10 and the second command at 80, as the JEDEC bench
 WRITER_STOP_AFTER = 5           # tb_qkd_kv_native_programme: stop 5 edges after the last word (RTL minimum 3)
 FOOTER_WRITER = 0x514b565052473336
 OWN_SEAL = 0x514b564d
+
+if CONTROLLER_CORE:
+    # Preserve physical HBM timing; only registered pipeline stages stay in cycles.
+    # The source controller RL is 23 x1024 ps. Native controller rebind must use
+    # the same rounded-up physical limits; this compile remains unqualified.
+    ratio = KC.SOURCED['hbm_ps'] / 833.0
+    KC.SOURCED = dict(KC.SOURCED, core_ps=833.0, hbm_ps=833.0,
+                      rd_landing_nominal_hbm=4 + math.ceil(23 * ratio) + 5,
+                      front_window_hbm=math.ceil(26 * ratio))
+    K_CMDS = [(-math.ceil(-o * ratio), kw) for o, kw in K_CMDS]
+    V_CMDS = [(-math.ceil(-o * ratio), kw) for o, kw in V_CMDS]
+    CMD_LEAD = math.ceil(CMD_LEAD * ratio)
+
 
 
 def sha(p):
@@ -514,7 +530,7 @@ def profile(kind, ages=None):
     from tools.qwen_kv_die import kv_static_die as KSD
     ofs = KSD.ahub_ofs_bound()
     hl = hroot_landing(KSD)
-    return dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
+    pr = dict(kind='die', fr_ofs=ofs['FR_OFS'] if ofs else None, start_relays=L['programme_start']['edges'], att=L['programme_to_attention']['edges'] + fl['i_ctl'],
                 face_land=fl, hroot_landing=hl, cal_deltas=cal_deltas(KSD),
                 rx=L['d2d_to_attention_rx']['edges'], writer=L['programme_to_writer']['edges'], kvn=L['d2d_to_writer']['edges'],
                 groups=L['programme_to_groups']['edges'] + hl['fan'], crossing=True,
@@ -525,11 +541,25 @@ def profile(kind, ages=None):
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
                 f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
                 pv_floor=PV_FLOOR)
+    if CONTROLLER_CORE:
+        # One clock tree; no reset-relative beat origin. SAME_CLOCK RTL retains
+        # the transport pipeline, with its first destination edge one cycle later.
+        pr['phase'] = dict(PH0=0, SAFE_LOW_U=625, SAFE_HIGH_U=625,
+                           META_HOLD_CORE=ages['phase_launch']['META_HOLD_CORE'])
+        pr['controller_core'] = True
+        pr['controller_period_ps'] = 833.0
+        pr['phase_ticks'] = dict(core=625, controller=625, dimensionless=True)
+    return pr
+
 
 
 def kv_params(pr):
+    refresh = KC.refresh_from_table()
+    if CONTROLLER_CORE:
+        refresh = dict(refresh, period_hbm=144,
+                       source=refresh['source'] + ' (833ps: floor to even row-slot period144)')
     return dict(KC.SOURCED, ring_cdc_core_edges=pr['rc'], layer_period_core=6798, write_ready_core=0, front_nblk=10,
-                ring_depth=64, refresh=KC.refresh_from_table(), qk_consume_age=pr['qk_age'], qk_row_latency=pr['qk_row_latency'])
+                ring_depth=64, refresh=refresh, qk_consume_age=pr['qk_age'], qk_row_latency=pr['qk_row_latency'])
 
 
 # ---- attention calendar (the N1 law) ----------------------------------------------------------------------------------
@@ -855,7 +885,7 @@ def phase_align(pr, rel, frame, period, law, lead_k, lead_v):
             best = dict(vgo_advance=a, stage_advance=adv)
     if best is None:
         raise ValueError(f'no launch alignment within {EARLY_MAX} edges holds at token phases {phases[:4]}.. '
-                         f'(token period {period}, mod 768 = {period % HBM_U}): pad the period to a multiple of 768')
+                         f'(token period {period}, phase modulus {HBM_U}, remainder {period % HBM_U})')
     dm = max(best['stage_advance'])
     best.update(token_phases=phases, max_stage_advance=dm, v_ring_room_core=v_room, v_early_used=best['vgo_advance'] + dm + 1,
                 k_ring_peak=m['k_ring_peak_by_early_edges'][dm + k_base], k_ring_peak_unaligned=m['k_ring_peak_by_early_edges'][k_base],
@@ -887,7 +917,8 @@ def phase_legality(pr, launches, period):
         if dt and dt <= ph['META_HOLD_CORE'] and (x['stage'] != y['stage'] or x['root'] == y['root']):
             hold.append(dict(a=f'S{x["stage"]}.{x["root"]}', b=f'S{y["stage"]}.{y["root"]}', edges=dt))
     return dict(assumption=f'first token run start at HBM-beat phase {TOKEN_START_PHASE_U} u (q = PH0 at the reset-release '
-                           'beat); later runs at start + n x token period',
+                           'beat); later runs at start + n x token period' if not CONTROLLER_CORE else
+                           'single common clock; launch phase independent of reset release',
                 token_period_core=period, token_period_mod_768=period % HBM_U, token_phases=len(phases),
                 launches=len(launches), checks=len(launches) * len(phases), outside_window=bad, hold_conflicts=hold,
                 window_u=[ph['SAFE_LOW_U'], ph['SAFE_HIGH_U']], launch_table=table)

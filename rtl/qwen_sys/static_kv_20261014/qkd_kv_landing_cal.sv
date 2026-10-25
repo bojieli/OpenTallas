@@ -32,7 +32,7 @@
 // Faults (sticky, never move a slot): a pass start while a pass is still putting, vgo before the layer's kgo.
 // MUT (bench negative controls): 1 = V sector uses o[7] for the 128 bit, 2 = phase drifts one unit a beat,
 // 3 = K sector = stream index (no order / segment mapping).
-module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0) (
+module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0, parameter integer SAME_CLOCK = 0) (
     input wire ck, rst_n,
     input wire cfg_we, input wire [7:0] cfg_addr, input wire [63:0] cfg_data,
     input wire kgo, input wire vgo,
@@ -68,6 +68,7 @@ module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0
     reg [9:0] q;
     always @(posedge ck or negedge rn)
         if (!rn) q <= 10'(PH0);
+        else if (SAME_CLOCK) q <= 0;
         else q <= (q >= 10'd625) ? q - 10'd625 : q + ((MUT == 2) ? 10'd144 : 10'd143);
     // ---- closed-form stream lengths (latched T of the layer) ----
     reg [13:0] t_l;
@@ -98,16 +99,22 @@ module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0
     reg act, vpass, have_layer;
     reg [8:0] i, n; reg [7:0] nb0; reg kb;
     reg signed [19:0] d;                                // u until put i becomes visible, at the next edge
-    wire [10:0] ta = (q >= xu_c) ? {1'b0, q} : {1'b0, q} + 11'd768;     // A - k0 in u (XU < 768: at most one HBM edge later)
-    wire signed [19:0] t0 = $signed({9'b0, ta}) + $signed({2'b0, h0_c, 9'b0}) + $signed({3'b0, h0_c, 8'b0})
+    wire [10:0] ta = SAME_CLOCK ? ((xu_c == 0) ? 11'd0 : ((xu_c <= 625) ? 11'd625 : 11'd1250))
+                                     : ((q >= xu_c) ? {1'b0, q} : {1'b0, q} + 11'd768);     // A - k0 in u (XU < 768: at most one HBM edge later)
+    wire signed [19:0] t0_ratio = $signed({9'b0, ta}) + $signed({2'b0, h0_c, 9'b0}) + $signed({3'b0, h0_c, 8'b0})
                           + $signed({6'b0, rc_c, 9'b0}) + $signed({9'b0, rc_c, 6'b0}) + $signed({10'b0, rc_c, 5'b0})
                           + $signed({11'b0, rc_c, 4'b0}) + $signed({15'b0, rc_c}) - 20'sd625;
+    wire signed [19:0] t0 = SAME_CLOCK
+        ? $signed({9'b0, ta}) + $signed({12'b0, h0_c}) * 20'sd625
+          + $signed({16'b0, rc_c}) * 20'sd625 - 20'sd625
+        : t0_ratio;
     wire start = kgo_q | vgo_q;
     // ring pacing: put i + 1 starts a paced front block -> GAP more HBM edges (768 u each)
     wire [8:0] pp = vpass ? vp_c : kp_c; wire [3:0] pg = vpass ? vg_c : kg_c;
     wire [8:0] i1 = i + 9'd1;
     wire pace = (i1 >= pp) && (i1[2:0] == pp[2:0]);
-    wire signed [19:0] gapu = $signed({6'b0, pg, 10'b0}) - $signed({8'b0, pg, 8'b0});
+    wire signed [19:0] gapu = SAME_CLOCK ? $signed({16'b0, pg}) * 20'sd625
+        : $signed({6'b0, pg, 10'b0}) - $signed({8'b0, pg, 8'b0});
     wire emit = act && (d <= 0);
     wire [7:0] vo = i[7:0];
     wire [9:0] sec = vpass ? {1'b1, 1'b0, ((MUT == 1) ? vo[7] : vo[3]), ((MUT == 1) ? {vo[3], vo[6:4]} : vo[7:4]), vo[2:0]}
@@ -127,7 +134,7 @@ module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0
                 end else n <= cnt(xv, 1);
             end else if (act) begin
                 if (i == n) act <= 1'b0;
-                else if (emit) begin i <= i + 9'd1; d <= d - 20'sd625 + 20'sd768 + (pace ? gapu : 20'sd0); if (i + 9'd1 == n) act <= 1'b0; end
+                else if (emit) begin i <= i + 9'd1; d <= d - 20'sd625 + (SAME_CLOCK ? 20'sd625 : 20'sd768) + (pace ? gapu : 20'sd0); if (i + 9'd1 == n) act <= 1'b0; end
                 else d <= d - 20'sd625;
             end
             if (kgo_q && vgo_q) fault <= 1'b1;

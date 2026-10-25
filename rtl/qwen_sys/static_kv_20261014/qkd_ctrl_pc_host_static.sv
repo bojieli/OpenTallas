@@ -12,10 +12,11 @@
 // Same ports and parameters as before. Priced edges: native commit observation +1 hclk (pin register); static write
 // data +1 hclk into the port (hidden: its column follows by >= 4 edges); KV read return and write data 0.
 module qkd_ctrl_pc_host_static #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -96,7 +97,7 @@ module qkd_ctrl_pc_host_static #(
     wire [286:0] c_d;
     wire [61:0]  c_context;
     wire [346:0] physical_context;
-    qkd_ctrl_pc_sched #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH),.PINREG(SCHED_PINREG)) u_sched (
+    qkd_ctrl_pc_sched #(.CORE_CLOCK(CORE_CLOCK),.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH),.PINREG(SCHED_PINREG)) u_sched (
         .pll_hbm(pll_hbm), .hrst(hrst), .pc(pc), .ci_c({ci[318:309], ci[52:0]}), .co_c(co_c),
         .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),
@@ -136,10 +137,11 @@ endmodule
 
 // Alternative (flat): the same three modules on TWO HBM clock roots (core / port+ECC), each < 15k sinks.
 module qkd_ctrl_pc_host_static_r2 #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -201,7 +203,7 @@ module qkd_ctrl_pc_host_static_r2 #(
     wire [16:0]  e_sec, l_sec;
     wire [7:0]   e_row, l_row;
     wire [11:0]  co_c;
-    qkd_ctrl_pc_host_static_core #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_core (
+    qkd_ctrl_pc_host_static_core #(.CORE_CLOCK(CORE_CLOCK),.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_core (
         .pll_hbm(pll_hbm), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(pc), .ci_c({ci[318:309], ci[52:0]}), .co_c(co_c),
         .es(es), .er(er), .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),

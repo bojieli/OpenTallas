@@ -4,10 +4,11 @@
 // except: static write data reaches the port +1 hclk (the column follows c_v by >= 4 edges) and the native commit
 // observation leaves +1 hclk through a pin register.
 module qkd_ctrl_pc_host_static_core #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -191,7 +192,7 @@ module qkd_ctrl_pc_host_static_core #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_window(1'b0),.col_boot(), .cmd_credit(cmd_credit),   // KV-TOK B: legacy (ci) controller, not on the static KV die: no boot window
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
@@ -471,10 +472,11 @@ endmodule
 // (u_ctl, tags, raw check, arbiter, W/E pin flops, KV drain), qkd_ctrl_pc_cdc_child, qkd_ctrl_pc_obs_child. The monolith
 // qkd_ctrl_pc_host_static_core above is kept for history / the r2 alternative; qkd_ctrl_pc_host_static binds the children.
 module qkd_ctrl_pc_sched #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -672,7 +674,7 @@ module qkd_ctrl_pc_sched #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_window(1'b0),.col_boot(), .cmd_credit(cmd_credit),   // KV-TOK B: legacy (ci) controller, not on the static KV die: no boot window
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
@@ -981,7 +983,8 @@ endmodule
 // (s_cr) are captured in pin registers before the FIFO write (+1 hclk each); the down-FIFO outputs leave through output
 // registers c_v / c_d / c_context (+1 hclk on the static command into u_ctl). Everything else is the core_s6 logic.
 module qkd_ctrl_pc_cdc_child #(
-    parameter integer WDONE = 17,
+    parameter integer CORE_CLOCK = 0,
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
     parameter integer STRAP_CDC = 0,

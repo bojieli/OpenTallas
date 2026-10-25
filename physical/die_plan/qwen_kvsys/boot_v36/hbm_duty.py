@@ -14,7 +14,7 @@ Duty = columns per controller edge, per PC:
                the sustained column rate of the burst train
   mean_active  columns / (last - first + 1) of the PC's RD span in a layer
   mean_layer   columns / layer period in controller edges (kv_params layer_period_core in core edges -> HBM edges)
-The calendar's controller edge is static_kv_calendar.HBM_PS (as compiled); the 833-ps view rescales by HBM_PS / 833.334
+The calendar's controller edge is static_kv_calendar.HBM_PS (as compiled); the 833-ps view rescales by HBM_PS / 833.000
 (same columns in the same wall time on the die clock).  Limit (KV-G3 2026-10-24 21:42, decision 14): <= 0.73 / PC / cycle.
 """
 import argparse
@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[4]
 sys.path[:0] = [str(ROOT), str(ROOT / 'tools/qwen_kv_die'), str(ROOT / 'tools')]
 LIMIT = 0.73
-DIE_PS = 833.334
+DIE_PS = 833.0
 
 
 def edges(run):
@@ -56,7 +56,7 @@ def main():
     ap.add_argument('--rd-shape-k', help='candidate K burst,gap (for example 8,3); full compile, not a rate-only estimate')
     ap.add_argument('--rd-shape-v', help='candidate V burst,gap')
     ap.add_argument('--hbm-ps', type=float, help='WHAT-IF: compile the calendars with this controller period (decision 14: '
-                    '833.334 = die clock) instead of static_kv_calendar.HBM_PS; the image is not written')
+                    '833.000 = die clock) instead of static_kv_calendar.HBM_PS; the image is not written')
     a = ap.parse_args()
     if a.rd_shape_k:
         os.environ['OT_KV_RD_SHAPE_K'] = a.rd_shape_k
@@ -99,6 +99,7 @@ def main():
     agg = lambda k, f: f(p[k] for p in pcs)
     scale = DIE_PS / hbm_ps
     res = dict(schema='opentallas.kv_hbm_duty.v1', ages=str(a.ages), hbm_ps_compiled=hbm_ps, what_if=bool(a.hbm_ps), core_ps=core_ps,
+               controller_core=P.CONTROLLER_CORE, phase_ticks=dict(core=P.CORE_U, controller=P.HBM_U, dimensionless=True),
                layer_period_hbm_edges=layer_hbm, burst_window=win, rd_shape=dict(K=P.RD_SHAPE_K, V=P.RD_SHAPE_V),
                limit=LIMIT, token_period=r['link']['token_period'] if isinstance(r.get('link'), dict) else None,
                per_compiled_edge={k: dict(max=agg(k, max), mean=agg(k, lambda g: sum(g) / len(pcs)))

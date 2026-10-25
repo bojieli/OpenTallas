@@ -1,0 +1,48 @@
+{
+  "controller_ps": 833.0,
+  "physical_checks": "independent PHY-pin tRCD/tRP/tRAS/tRTP/tCCDL/tRRDS/tRRDL/tFAW/tRFCpb",
+  "scope": "actual PROFILE0/ELASTIC1 controller; compiler fixed K256+V256; PHY only modeled; 36 persistent layer rows/epochs; no host writes/all128PC/native die",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv": "e03edfed2e9c4fb48ae2e49471a0f1693e3ecd56923f5376e8cc4791eda860f9",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "c4fbd6573eec330725810a01f354e60fff68bdb21f8daddb76d627aa088041d4",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "846d987782cbaa8dcf4e3602d5674587240df8e91c96a4b9c295a489faf20cdd",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv": "f9c488f04c142ba00152c1d3cac3210d07f5bbe4a8ea6ee6171d7f61f81a1f84",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv": "7b857785e3b64469b3d6fa74f72c303960b56c6277344fddf530181cd982b78b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "9c785288c6af0374ffa72b6dfc56f80a1bd3adf4254768b911887a959d2db193",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "b1dfa89091e4ed22ba65b8ffd19defdbb968f0fe8e764158c36d737099f74522",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv": "ed7fdbf48dd623a4f91736932aec6c2c5372a1b8cc57706a7b22e17f832a8503",
+    "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv": "b51a8bf496dc40755700d58bd03b492c058dff9529766a771ca94914014f71b7",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+    "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv": "6ac2b1238a57260f604cfdde0e05d85e7b621589d5248c6f200d6a914be5adaa",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09",
+    "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "rtl/test/qwen_static_kv/tb_controller_calendar_core.sv": "08a8189b5b5718d40d3bb5756a9206cb804ff821697bce404e760af4a2af4e90"
+  },
+  "results": [
+    {
+      "jitter": 0,
+      "exit": 0,
+      "output": "PASS core833 native controller +independent physical JEDEC PROFILE0 frames=36 reads=18432 landed=18432 jitter=0\n- /srv/opentallas-scratch2/claude/codex-kv-token-1025/src/rtl/test/qwen_static_kv/tb_controller_calendar_core.sv:83: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 75us; walltime 2.308 s; speed 32.570 us/s\n- Verilator: cpu 2.307 s on 1 threads; allocated 11 MB\n"
+    },
+    {
+      "jitter": 8,
+      "exit": 0,
+      "output": "PASS core833 native controller +independent physical JEDEC PROFILE0 frames=36 reads=18432 landed=18432 jitter=8\n- /srv/opentallas-scratch2/claude/codex-kv-token-1025/src/rtl/test/qwen_static_kv/tb_controller_calendar_core.sv:83: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 75us; walltime 2.201 s; speed 34.148 us/s\n- Verilator: cpu 2.198 s on 1 threads; allocated 11 MB\n"
+    },
+    {
+      "jitter": 16,
+      "exit": 0,
+      "output": "PASS core833 native controller +independent physical JEDEC PROFILE0 frames=36 reads=18432 landed=18432 jitter=16\n- /srv/opentallas-scratch2/claude/codex-kv-token-1025/src/rtl/test/qwen_static_kv/tb_controller_calendar_core.sv:83: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 75us; walltime 2.178 s; speed 34.517 us/s\n- Verilator: cpu 2.177 s on 1 threads; allocated 11 MB\n"
+    }
+  ],
+  "image_sha256": "59dd8f21be06fef895548ae739bb215dc9c711a388f1104824077bdff173285e",
+  "compiler_sha256": {
+    "tools/qwen_static_kv/controller_calendar_image.py": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+    "tools/qwen_static_kv/run_controller_calendar_core.py": "46f5d4605fcf4ae3a1d24d3427e575d780df345b74f22e04418c3d1198a9a3e1"
+  },
+  "binary_sha256": "6269c9719af318d65dd7a91f8d753e8d3f8ab51e6b91f17af0f6d56cd28d2eab",
+  "native_full_layer": false
+}

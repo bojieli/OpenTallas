@@ -16,10 +16,11 @@
 // The ci-ful modules (and their closed views) are unchanged.  Lockstep proof: tools/qwen_kv_die/kvplan_ci_nc_gate.sh
 // (variant vs original with ci held 0, every output every edge, mutants observed).
 module qkd_ctrl_pc_sched_nc #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -133,7 +134,7 @@ module qkd_ctrl_pc_sched_nc #(
     // observer's expected static column (expected_sr) and, for a boot read, the elastic raw-return nominal slot RAW =
     // PHYSICAL_CMD_EDGES 4 + HBM_RL 23 edges after its virtual reservation (qkd_static_kv_return_calendar), i.e. BRAW
     // edges after u_ctl's col_boot register (reservation R -> sched srslot_q R+1 -> u_ctl srslot_q R+2 -> col R+3).
-    localparam integer BRAW = 4 + 23 + 1 - 3;
+    localparam integer BRAW = 4 + (CORE_CLOCK ? 29 : 23) + 1 - 3;
     reg boot_win;
     reg [BRAW-1:0] boot_raw;
     wire col_boot;
@@ -195,7 +196,7 @@ module qkd_ctrl_pc_sched_nc #(
     wire [2:0]  row_op;
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
-    ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+    ot_qkd_static_ctrl_pc_emb #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
         .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_window(boot_win),.col_boot(col_boot), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
@@ -489,10 +490,11 @@ endmodule
 
 // Wires-only controller parent without ci (see the header); hard children u_sched (nc), u_cdc, u_obs, u_port (nc), u_ecc.
 module qkd_ctrl_pc_host_static_nc #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
     parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
     parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
-    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer WDONE = CORE_CLOCK ? 19 : 17,          // write-done edges after the WR column (>= CVL + 4)
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
@@ -568,7 +570,7 @@ module qkd_ctrl_pc_host_static_nc #(
     wire [286:0] c_d;
     wire [61:0]  c_context;
     wire [346:0] physical_context;
-    qkd_ctrl_pc_sched_nc #(.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_sched (
+    qkd_ctrl_pc_sched_nc #(.CORE_CLOCK(CORE_CLOCK),.ROW0(ROW0),.CVL(CVL),.HOFF(HOFF),.WDONE(WDONE),.LATE(LATE),.PROFILE(PROFILE),.EVMUT(EVMUT),.MUT(MUT),.ELASTIC(ELASTIC),.RAW_WD(RAW_WD),.STRAP_CDC(STRAP_CDC),.DRAIN_PIPE(DRAIN_PIPE),.TQD(TQD),.CONTEXT_DESC(CONTEXT_DESC),.STATIC_REFRESH(STATIC_REFRESH)) u_sched (
         .pll_hbm(pll_hbm), .hrst(hrst), .pc(pc),
         .po(po), .pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),
         .static_cmd_owner(static_cmd_owner), .static_cmd(static_cmd), .reserved_rd(reserved_rd),

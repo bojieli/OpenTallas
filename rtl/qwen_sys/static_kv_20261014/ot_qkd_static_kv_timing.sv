@@ -9,6 +9,7 @@
 // Descriptor range [desc_first,desc_n) permits K 0..255 and V 512..767 without
 // reading unused head g=1. Normal acquisition is read-only: SROW/WR_EN/AQ_RD=0.
 module ot_qkd_static_kv_timing #(
+  parameter integer CORE_CLOCK = 0, // optin: timing in exactly833ps controller edges
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
   parameter integer S_STARVE = 8,             // cycles a static head waits before it takes priority
@@ -18,14 +19,15 @@ module ot_qkd_static_kv_timing #(
   parameter integer ENABLE   = 0,
   parameter integer REF_MODE = 1,
   parameter integer PC       = 0,
-  parameter integer T_RCD = 19, T_RP = 16, T_RAS = 28, T_RTP = 6, T_CCDL = 3,
-  parameter integer T_RRDS = 3, T_RRDL = 4, T_FAW = 15, T_RFC = 342, T_RFCPB = 196,
-  parameter integer T_REFI = 3808, T_REFIPB = 118, T_RREFD = 8,
+  parameter integer T_RCD = CORE_CLOCK ? ((19*1024+832)/833) : 19, T_RP = CORE_CLOCK ? ((16*1024+832)/833) : 16, T_RAS = CORE_CLOCK ? ((28*1024+832)/833) : 28, T_RTP = CORE_CLOCK ? ((6*1024+832)/833) : 6, T_CCDL = CORE_CLOCK ? ((3*1024+832)/833) : 3,
+  parameter integer T_RRDS = CORE_CLOCK ? ((3*1024+832)/833) : 3, T_RRDL = CORE_CLOCK ? ((4*1024+832)/833) : 4, T_FAW = CORE_CLOCK ? ((15*1024+832)/833) : 15, T_RFC = CORE_CLOCK ? ((342*1024+832)/833) : 342, T_RFCPB = CORE_CLOCK ? ((196*1024+832)/833) : 196,
+  // Refresh deadlines round DOWN to an even number: each PC owns alternate row slots.
+  parameter integer T_REFI = CORE_CLOCK ? (2*((3808*1024)/(2*833))) : 3808, T_REFIPB = CORE_CLOCK ? (2*((118*1024)/(2*833))) : 118, T_RREFD = CORE_CLOCK ? ((8*1024+832)/833) : 8,
   parameter integer PROFILE = 0, // 0 strict production,1 maximum-legal compiler,2 paced compiler
   parameter integer REF_PHASE = 0,
   parameter integer IDLE0 = 3, IDLE1 = 4, IDLE2 = 2, IDLE3 = 5,
   parameter integer IDLE4 = 1, IDLE5 = 6, IDLE6 = 0, IDLE7 = 7,
-  parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
+  parameter integer WR_EN = 0, WQ = 4, T_RTW = CORE_CLOCK ? ((10*1024+832)/833) : 10, T_WTR = CORE_CLOCK ? ((14*1024+832)/833) : 14, T_WRR = CORE_CLOCK ? ((28*1024+832)/833) : 28, T_RCDW = CORE_CLOCK ? ((10*1024+832)/833) : 10,
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
   parameter integer AQ_STARVE = 64,
@@ -62,6 +64,12 @@ module ot_qkd_static_kv_timing #(
 `ifdef SYNTHESIS
   initial if(PROFILE!=0)$error("Compiler profile cannot be a native physical master");
 `endif
+  // Keep legacy widths exactly; grow counters when the physical timing needs
+  // more833ps cycles (RAS/WRR35, FAW19, WTR18 otherwise truncate).
+  localparam integer RAS_W = ($clog2(T_RAS)>5) ? $clog2(T_RAS) : 5;
+  localparam integer WRR_W = ($clog2(T_WRR)>5) ? $clog2(T_WRR) : 5;
+  localparam integer FAW_W = ($clog2(T_FAW)>4) ? $clog2(T_FAW) : 4;
+  localparam integer WTR_W = ($clog2(T_WTR)>4) ? $clog2(T_WTR) : 4;
   localparam [2:0] PRE=0, ACT=1, RD=2, REFAB=4, PREALL=5, REFPB=6;
   generate if (!ENABLE) begin : off
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
@@ -114,7 +122,7 @@ module ot_qkd_static_kv_timing #(
     // ONE-HOT from push time and wq_rp1 = wq_rp + 1 is a register, so both head candidates are read in parallel and
     // the late wr_ok picks between them last (was: wr_ok -> wq_rp + 1 -> 4:1 read -> 5:32 decode, 18 levels).
     reg [31:0] wq_oh [0:WQ-1]; reg [WQW-1:0] wq_rp1;
-    reg [3:0] rtw_c, wtr_c;
+    reg [3:0] rtw_c; reg [WTR_W-1:0] wtr_c;
     reg [31:0] wopen;                                 // banks opened by a write ACT (precharged after)
     reg c_w;                                          // the registered row command is a write ACT
     wire wq_ne = W && wq_n != 0;
@@ -191,8 +199,8 @@ module ot_qkd_static_kv_timing #(
     wire [31:0] ready_blk_next = (row_fire && c_op == REFPB) ? 32'b0 :
       (REF_MODE && ref_c == RW'(LEAD)) ? (32'b1 << bsel) : blk;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
-      reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
-      reg [4:0] wrr;
+      reg [4:0] rcd; reg [RAS_W-1:0] ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
+      reg [WRR_W-1:0] wrr;
       wire wr_e = (W && wr_ok && hb_oh[b] && !(AQ && hr)) || (s_go && swe && sb_oh[b]);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
@@ -203,8 +211,8 @@ module ot_qkd_static_kv_timing #(
         if (!rst_n) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; aok_zr <= 1'b1; rcd_zr <= 1'b1; wrr <= 0; end
         else begin
           rcd_zr <= act_e ? (T_RCD - 1 == 0) : (rcd <= 5'd1);
-          if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
-          if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
+          if (wr_e) wrr <= WRR_W'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
+          if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= RAS_W'(T_RAS - 1); end
           else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
           if (rd_e) rtp <= 3'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
           if (act_e) aok <= 9'(T_RAS + T_RP - 1);
@@ -250,7 +258,7 @@ module ot_qkd_static_kv_timing #(
     // ---- per-bank-group state ----------------------------------------------------------
     wire [3:0] rrdl_z, ccdl_z, faw_z;
     for (genvar g = 0; g < 4; g = g + 1) begin : bgs
-      reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
+      reg [2:0] rrdl; reg [1:0] ccdl; reg [FAW_W-1:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
       wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
       // FAW slot g takes this ACT if it is the lowest free slot
       wire ccdl_e = (rd_ok && rd_bgoh[g]) || (W && wr_ok && hb[1:0] == 2'(g)) || (s_go && sb[1:0] == 2'(g));
@@ -260,7 +268,7 @@ module ot_qkd_static_kv_timing #(
         else begin
           if (act_g) rrdl <= 3'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
           if (ccdl_e) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
-          if (faw_take) faw <= 4'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
+          if (faw_take) faw <= FAW_W'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
           rrdl_zr <= act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
           ccdl_zr <= ccdl_e ? (T_CCDL - 1 == 0) : (ccdl <= 2'd1);
           faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= 4'd1);
@@ -480,7 +488,7 @@ module ot_qkd_static_kv_timing #(
         if (AQ) begin if (!wq_ne || !hr || wr_ok) hwait <= 0; else if (hwait != 8'hff) hwait <= hwait + 1'b1; end
         if (W) begin
           if (rd_ok || (AQ && wr_ok && hr) || (s_go && !swe)) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
-          if ((wr_ok && !(AQ && hr)) || (s_go && swe)) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
+          if ((wr_ok && !(AQ && hr)) || (s_go && swe)) wtr_c <= WTR_W'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
           if (wr_v && wr_r) begin
             wq_bank[WQW'(wq_rp + wq_n)] <= wr_bank; wq_col[WQW'(wq_rp + wq_n)] <= wr_col;
             wq_oh[WQW'(wq_rp + wq_n)] <= 32'b1 << wr_bank;

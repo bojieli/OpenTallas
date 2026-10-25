@@ -11,7 +11,7 @@
 // user u, layer l = 64 + l + 256*u).  The stage user is the calendar's own per-command epoch: static_epoch[1:0]
 // (static_epoch is registered on the same edge as static_cmd from the epoch latched at the layer go; the MU epoch
 // allocator puts the host step's user in epoch[1:0]).  Combinational, 0 added edges.  MU 0: wires.
-module qkd_static_kv_pc_path_nc #(parameter integer MU = 0) (
+module qkd_static_kv_pc_path_nc #(parameter integer MU = 0, CORE_CLOCK = 0) (
     input wire pll_hbm,
     input wire pll_hbm_port,  // u_ctrl.u_port HBM clock entry (same clock as pll_hbm; separate die entry)
     input wire pll_hbm_ecc,   // u_ctrl.u_ecc HBM clock entry (same clock as pll_hbm; separate die entry)
@@ -97,7 +97,7 @@ module qkd_static_kv_pc_path_nc #(parameter integer MU = 0) (
     wire [281:0] front_co;
     wire [15:0] front_epoch;
     wire front_put;
-    qkd_ctrl_pc_host_static_nc #(.ROW0(64), .CVL(2), .HOFF(3), .WDONE(17), .LATE(4096), .PROFILE(0), .EVMUT(0), .MUT(0), .ELASTIC(1), .RAW_WD(256), .TQD(64)) u_ctrl (
+    qkd_ctrl_pc_host_static_nc #(.CORE_CLOCK(CORE_CLOCK),.ROW0(64), .CVL(2), .HOFF(3), .WDONE(CORE_CLOCK ? 19 : 17), .LATE(4096), .PROFILE(0), .EVMUT(0), .MUT(0), .ELASTIC(1), .RAW_WD(256), .TQD(64)) u_ctrl (
         .pll_hbm(pll_hbm),
         .pll_hbm_port(pll_hbm_port),
         .pll_hbm_ecc(pll_hbm_ecc), .pll_hbm_cdc(pll_hbm_cdc), .pll_hbm_obs(pll_hbm_obs),
@@ -140,7 +140,7 @@ module qkd_static_kv_pc_path_nc #(parameter integer MU = 0) (
         .drain_fault_core(drain_fault_core),
         .drain_fault_hbm(drain_fault_hbm)
     );
-    qkd_controller_hbm_calendar #(.N(16), .ROW0(64), .MUT(0)) u_calendar (
+    qkd_controller_hbm_calendar #(.CORE_CLOCK(CORE_CLOCK),.N(16), .ROW0(64), .MUT(0)) u_calendar (
         .hck(cal_hck),
         .rst_n(cal_rst_n),
         .cfg_we(cal_cfg_we),

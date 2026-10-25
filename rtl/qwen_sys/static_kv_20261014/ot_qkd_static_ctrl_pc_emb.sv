@@ -3,7 +3,7 @@
 // descriptor first-sector metadata. One JEDEC/refresh/bank state machine owns
 // PHY commands for every phase; compiled RD reservations replace read credits.
 // Host static/write queue issue must be included in the same compiled calendar.
-module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
+module ot_qkd_static_ctrl_pc_emb #(parameter integer CORE_CLOCK=0,ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,PULLIN=0,PROFILE=0,CONTEXT_DESC=0,STATIC_REFRESH=0)(   // PULLIN: qwen-1010/b
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
  input wire [9:0] cmd_first, input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
@@ -45,8 +45,8 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  wire pop=live && (malformed || (descriptor_head ? desc_ready : head[31:30]==2 ? wr_ready : 1'b1));
  wire push=(ENABLE!=0) && cmd_v_q && count<8;
  assign phase_idle=core_idle && count==0 && !cmd_v_q && !s_v_q;
- ot_qkd_static_kv_timing #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
-  .REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
+ ot_qkd_static_kv_timing #(.CORE_CLOCK(CORE_CLOCK),.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
+  .REF_PHASE((PHASE+(PC*(CORE_CLOCK ? (2*((118*1024)/(2*833))) : 118))/32)%(CORE_CLOCK ? (2*((118*1024)/(2*833))) : 118)),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
   .clk(clk),.rst_n(rst_n),.desc_v(live && !malformed && descriptor_head),
   .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_static_col(bootwin_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
   .go(live && head[31:30]==1),.next_posted(1'b0),

@@ -1,0 +1,5 @@
+PASS same-clock lockstep70packets all7masks metadata four-cycle latency MUT=0
+- test/tb_static_phase_core.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.002 s; speed 551.990 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
