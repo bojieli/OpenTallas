@@ -1,0 +1,18 @@
+# S81-CORES2/EH 2026-10-25 05:42 PDT tb_s81c_hgrp (rtl/hdc/v41x/test/run_s81c_hgrp.sh OUT GID [DEFINES]) @8775dd9be, verilator v5.032 (docker verilator/verilator:v5.032, epyc1 ot-run), ref ot_hdc_v41x_attn_hgrp_s HG4 PCOLP0 WPRE0 vs 4 x ot_s81c_attn_hcore, every output every cycle
+# DUT: -DOT_S81C_HCORE_CTLA (ld_grp/ld_w2v one cycle ahead, hgrp_s WPRE 2) -DOT_S81C_HCORE_RSTE (entry+relay reset flops, +2 release; bench releases DUT pin 2 cycles early)
+## base_g1
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## ctla_rste_g1
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## ctla_rste_g2
+S81C_HGRP_BENCH PASS gid=2 seed=1 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=2 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH PASS gid=2 seed=3 cycles=20000 mismatches=0 ov=14790 ov_nonzero=14790
+## mut_ctla_g1 (+ -DOT_TB_CTLA_MUT: ld_grp/ld_w2v fed on time = negative control, must FAIL)
+S81C_HGRP_BENCH FAIL gid=1 seed=1 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=1 seed=2 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
+S81C_HGRP_BENCH FAIL gid=1 seed=3 cycles=20000 mismatches=19954 ov=14790 ov_nonzero=14790
