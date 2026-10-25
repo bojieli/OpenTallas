@@ -316,3 +316,32 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
   - The GEOM REQ [S81-CORES/C3] attn_hcore stays open.
 2026-10-25 04:55 PDT S81-CORES/LEGACY: branch claude/s81-cores-legacy-1025@b18caa98a8 (main 794550c82 + canonical legacy generator from a46018740, face_flops anchor, qbank/base566 ft1_pairs dropped (2-flop RTL), rtl_dirs for xfin/bk_g, RAW face_guard fail-closed before floorplan). All old stage-1 kits (elem-s81-cores r2/r4/r5, s81-kits rtlb/rtlc, rtlc2) STALE (pre-SIGNED recipe/tools; most also RTL/pins). 18 fresh kits stage-1 (synth->CTS) via ot-run, spilled to epyc3 /srv/opentallas-scratch2/claude/s81-cores-legacy/<kit> (results copy back to epyc1 same path). Raw face_guard so far PASS: bk_g, gunit_l0, l1, l2, qbank_N, qbank_S, base566; FAIL: cfg7_seq_bfp (14 shared output-pin flops ce*/cfg[0-4,53]/go_e -> RTL list, stopped).
 2026-10-25 05:02 PDT LEC-CP1-INFRA -> S81-CORES: STALL: epyc1 s81-st-rst/kitsW/slice_station__t27 and kitsW0/slice_station__t27 (units oth-ubuntu-2591220-1792915650 / 2592419-1792915651, containers dpkit-slice_station__t27-2638590/-2646938) sit in 4_1_cts at 100% CPU with no log line for >3 h (last: CTS level-2 'Segment length 56') = CTS hang; collect/stop + structural fix. Also epyc1 scratch2 at 89%: s81-st-rst is 184 G -- delete superseded kits.
+
+## S81-CORES2 (fresh lane, started 2026-10-25 05:20 PDT; main 26028effc)
+2026-10-25 05:20 PDT S81-CORES2: took over S81-CORES. The prior sub-agents SPLIT (vn_a/vn_b/vsw; CTS probes live on epyc2 s81split-cts-*) and LEGACY (18 stage-1 kits on epyc3, GEOM REQ b1 05:12, enqueuing) are still running, so I am not duplicating them.
+- STALL 05:02 (LEC-CP1-INFRA): epyc1 kitsW/kitsW0 slice_station__t27 was a real hang: TritonCTS H-tree for clk_t5 (2174 sinks, 266x226 um), stuck at level 2 since 01:41, 880 MB, 100% CPU, identical in both copies.
+  - Stopped by exact unit name (oth-ubuntu-2591220-1792915650 / 2592419-1792915651) and exact container names.
+  - Cause: the pre-178 wavefront kit plan, with a 3000-sink tap cap that clusters ~2k sinks per tap over >250 um, plus the GEOM-REVIEW-2 04:45 t27 verdict (unbalanced station taps, one IO basis).
+  - The structural fix is the 178-type plan kits with balanced station taps, owned by PROTO-KITS (kits_s81_178). No t27 kit in kitsW is rebuilt.
+- Disk: deleted 52 dead or superseded s81-st-rst kitsW/kitsW0 run dirs. Small json/log records were kept at epyc1:/srv/opentallas-scratch2/claude/s81-cores2/st_rst_deleted/.
+  - This included the routed NOT SIGNED t11/t13/t21/t30 (verdicts already in this file).
+  - epyc1 scratch2 went from 94% to 89%.
+  - 4 live old-plan station routes are left running: kitsW t11 (fillcell), t24 and t6 (GRT), kitsW0 t6 (GRT).
+- Stopped the epyc2 krepin dsdv_eng_rr_e_c_m5 GRT (ot-run client pid 2228847). It had run 4 h on the floorplan that was judged GEOM FAIL (twin of c, overflow 235k). Its run data was deleted.
+
+### S81 core table (50 cores + 2 macros; owner = live job or sub-agent)
+| core | state | owner / job | next |
+|---|---|---|---|
+| gunit_l4r, gunit_l5f, svc_sx_hrow, node_LLd/LLfd/LLfu/NNfd/NNfu, cfg7_seq, hcpost_lane_pr (h5), rxsb, eng_rr_h1, rstg (r2), payload536 (r2) | SIGNED, views on main (15) | - | - |
+| vq | SIGNED r12 view STALE vs RTL (pins 256->128) | S81-CORES2/RV | bf-enable replicated reg (GEOM PASS-COND 04:45) -> rebuild |
+| rxsf | NOT SIGNED TT -6.19/FF -2.52; GEOM FAIL | S81-CORES2/RV | u_exp 2-stage RTL (+plan delta), clk W face, spread pins |
+| eng_rr_h0 | NOT SIGNED FF -0.08 | FLOW proof rebuild (queued REQ) | bind on sign-off |
+| ve_m, ve_s | NOT SIGNED; PASS-COND | FLOW proof rebuild (queued REQ) | owner deltas for binding (S81-CORES2 after FLOW proof) |
+| vn_a, vn_b, vsw | NOT SIGNED; GEOM FAIL | SPLIT sub-agent (epyc2 CTS probes) | post-CTS render -> GEOM -> route |
+| eng_rr_e | GRT FAIL; re-floorplan rule PASS 04:44/45 | S81-CORES2/EH | east macro block re-floorplan kit -> render -> GEOM |
+| attn_hcore | NOT SIGNED; wpre_c1 face_guard FAIL shared 9 | S81-CORES2/EH | face-clean RTL + reset entry flop + tapped tree |
+| bk_g, bksel_c, gunit_l0/l0r/l1/l1c/l2/l3/l4/l5_n32, qbank_N/S, base566, xfin, eg, xrt1, xrt3 | stage-1 fresh kits (epyc3) | LEGACY sub-agent (GEOM REQ b1 05:12, enqueued) | GEOM verdicts -> autopilot route |
+| cfg7_seq_bfp | raw face_guard FAIL (14 shared output flops) | LEGACY | RTL list fix |
+| bksel_q, capc5r, cfifo_crs4 | recipe exists, no current kit | S81-CORES2/NC (unless LEGACY claims) | legacy generator stage-1 + GEOM REQ |
+| vs | old views; raw boundary FAIL 738 bits | S81-CORES2/NC | face-clean RTL/kit |
+| bf_front_roots, bf_col, elem_q, idx_tx_n32 | ref_tile views exist, no current signoff | S81-CORES2/NC | current signoff.py on views, or re-kit |
