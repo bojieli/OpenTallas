@@ -1924,17 +1924,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 "pg": {"partition_pg_max": "M7", "grid": [
                     {"layer": "M8", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]},
                     {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}],
-                    # OWNER DECISION 7 (2026-10-24): trial IR over the SerDes windows 235-270 mV (interior 30 mV) ->
-                    # the SerDes PHY partitions get their own supply (VDD_PHY, isolated from the core VDD grid at the
-                    # partition boundary) fed by dedicated C4 bump rows over each PHY window (2 rows at the 150-um
-                    # SerDes bump pitch); the core VDD/VSS M8/M9 grid stays continuous around them
-                    "supplies": [{"name": "VDD_PHY", "nets": ["VDD_PHY", "VSS"],
-                                  "parts": sorted(p_["name"] for p_ in oparts if p_["name"].startswith("lk_")),
-                                  "bumps": {"rows": 2, "pitch_um": 150.0, "over": "io_window",
-                                            "note": "dedicated VDD_PHY/VSS bump rows over every SerDes PHY window"},
-                                  "note": "VDD_PHY feeds the u_phy PHY macro of each listed partition (its io window); the "
-                                          "partition strip with boundary flops and ft stations stays on core VDD",
-                                  "basis": "TRIAL-S81 10-24 IR: SerDes windows 235/270 mV FAIL on the shared grid"}]},
+                    # OWNER DECISION 7 (2026-10-24): die.pg.domains (one VDDPHY supply + dedicated bump rows per
+                    # SerDes window) are added from the die_io.py windows by pg_domains.py (run_v4.sh)
+                    },
                 "channels": chans + [
                     {"rect_um": [0, 0, round(DIE_W, 4), X0], "reason": "seal ring"},
                     {"rect_um": [0, round(DIE_H - X0, 4), round(DIE_W, 4), round(DIE_H, 4)], "reason": "seal ring"},

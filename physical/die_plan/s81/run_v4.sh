@@ -12,5 +12,7 @@ python3 $T/gen.py latency $D/die_plan.json --inplace --out $D/lat
 # S81-XDIE 10-24: die IO windows (die_io.json sidecar); stage dies have no host link (RELEASE_RACK 2.1 S81.HOST): host
 # traffic rides the stage-in pair WN2/WN3 (s_0N pair B) in-band -> s_0N_LP -> seqhost
 python3 $T/die_io.py plan $D/die_plan.json --out $D/die_io.json --in-band-host lk_WN2=coll__lk_WN2__s_0N_LP+ctrl__s_0N_LP__seqhost,lk_WN3=coll__lk_WN3__s_0N_LP+ctrl__s_0N_LP__seqhost
+# OWNER DECISION 7 (10-24): die.io + one VDDPHY supply / bump rows per SerDes window (die.pg.domains)
+python3 $R/physical/die_plan/s81/pg_domains.py $D/die_plan.json $D/die_io.json
 (cd $D && python3 $T/check.py die_plan.json --out $D/g0 ${PNG---png})
 python3 $R/physical/die_plan/s81/census_cov.py $D/die_plan.json $D/instance_map.json $IN/s81_lanes.tsv --out $D/census_cov.json
