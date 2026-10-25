@@ -1,5 +1,5 @@
 {
- "source": "codex/qc-plan-1309@78e74051f7",
+ "source": "QC latest d3d structural raw",
  "before": {
   "tap_um": [
    388.8,
@@ -45,8 +45,7 @@
   "tap_max_sinks": 1000,
   "tap_target_sinks": 800,
   "tap_radius_um": 180.0,
-  "tap_min_sinks": 0,
-  "tap_refine_iters": 6
+  "tap_min_sinks": 1
  },
  "taps": [
   [
@@ -306,5 +305,15 @@
  ],
  "sinks": 9041.0,
  "lane_cycles_added": 0,
- "scope": "clock-only planned geometry; physical CTS/GRT/signoff not run"
+ "scope": "clock-only planned geometry; physical CTS/GRT/signoff not run",
+ "source_raw_sha256": "917e77e249b4850ae5b3cfb4e83a3ebcb3da70be99758e97efda100a0228e244",
+ "canonical_clock_ports": {
+  "schema": 21,
+  "gen_phys": 21,
+  "gen_rtl": 21
+ },
+ "reset_release_clocks": {
+  "before": 6,
+  "after": 6
+ }
 }

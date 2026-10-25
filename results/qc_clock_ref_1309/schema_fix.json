@@ -1,0 +1,17 @@
+{
+ "initial_profile_status": "REJECTED by production schema; original source commit97ee17a6a5 retained in history",
+ "initial_errors": [
+  "tap_min_sinks0 < minimum1",
+  "tap_refine_iters unknown field"
+ ],
+ "fixed_source": "6fadb638c3",
+ "fixed_structure_errors": 0,
+ "canonical_ports": 21,
+ "reset_release_before": 6,
+ "reset_release_after": 6,
+ "max_load": 621,
+ "max_sink_distance_um": 89.2,
+ "tests": 3,
+ "job": "oth-ubuntu-574143-1792960254",
+ "job_exit": 0
+}
