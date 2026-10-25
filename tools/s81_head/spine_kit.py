@@ -1,6 +1,6 @@
 """Build the real normal S81 head-spine kit RTL and smallest station exactness vehicle.
 
-Usage: python3 tools/s81_head/spine_kit.py OUTPUT_DIRECTORY
+Usage: python3 tools/s81_head/spine_kit.py OUTPUT_DIRECTORY [hd_spn|hd_spn_end]
 Then submit OUTPUT_DIRECTORY/run.sh through ot-run. Internal delays come from
 this checkout's plan; no plan fields are edited on disk. End-spine closure and
 physical timing remain separate gates.
@@ -11,15 +11,21 @@ ROOT=Path(__file__).resolve().parents[2]
 os.chdir(ROOT)
 sys.path.insert(0,'tools/die_plan');import gen_rtl as G,schema as S,kit_istations as I
 out=Path(sys.argv[1]).resolve();out.mkdir(parents=True,exist_ok=True)
-p=json.load(open('physical/die_plan/s81_head/die_plan.json'));t=p['partition_types']['hd_spn'];t['sources']=['rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv','rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv']
+tn=sys.argv[2] if len(sys.argv)>2 else 'hd_spn'
+assert tn in ('hd_spn','hd_spn_end')
+p=json.load(open('physical/die_plan/s81_head/die_plan.json'));t=p['partition_types'][tn];t['sources']=['rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv','rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv']
 for c in t['contents']:c['bind']={'ck':'clk','rst_n':'rst_n'}
-P=S.Plan(p);text=G.wrapper(P,'hd_spn',G.bus_epochs(P),str(Path('.').resolve()));mod=t['module'];(out/(mod+'.sv')).write_text(text);(out/'reference.sv').write_text(text.replace('module '+mod+' (','module reference (').replace('endmodule : '+mod,'endmodule : reference'))
+if tn=='hd_spn_end':
+ t['nets']=[{'name':'bottom_seed','width':565}]
+ t['contents'][0]['bind']['o']='net:bottom_seed'
+ t['contents'][1]['bind']['i']='net:bottom_seed'
+P=S.Plan(p);text=G.wrapper(P,tn,G.bus_epochs(P),str(Path('.').resolve()));mod=t['module'];(out/(mod+'.sv')).write_text(text);(out/'reference.sv').write_text(text.replace('module '+mod+' (','module reference (').replace('endmodule : '+mod,'endmodule : reference'))
 (out/'plan.json').write_text(json.dumps(p));(out/'ot_dp_cells.sv').write_text(G.CELLS)
 for f in ['rtl/lib/ot_reset_sync.sv']+t['sources']:shutil.copyfile(f,out/Path(f).name)
 fl=[out/(mod+'.sv'),out/'ot_dp_cells.sv',out/'ot_reset_sync.sv',out/'ot_s81hd_spo.sv',out/'ot_s81hd_spr.sv']
 (out/'kit_rtl.json').write_text(json.dumps({'bound_module':mod,'files':[str(f) for f in fl]}))
 (out/'kit_rtl.f').write_text('\n'.join(str(f) for f in fl)+'\n')
-I.main([str(out/'plan.json'),'hd_spn',str(out)])
+I.main([str(out/'plan.json'),tn,str(out)])
 mut=(out/(mod+'.sv')).read_text();old='.iw(bw_i_is6_q)';assert old in mut;mut=mut.replace(old,'`ifdef HD_SPINE_MUTANT\n        .iw(bw_i_is5_q)\n`else\n        '+old+'\n`endif\n',1);(out/(mod+'.sv')).write_text(mut)
 ports=G.parse_leaf_ports(text,mod);buses={b['name']:b for b in t['buses']};delay={e['conn'][4:]:len(e['regs_um']) for e in t['internal_stations']}
 def ident(n):return n
@@ -76,5 +82,5 @@ for mode in good mutant; do
  tail -5 "run_$mode.log"
  if [ "$mode" = good ]; then [ "$rc" = 0 ] || exit 3; else [ "$rc" != 0 ] && grep -q SPINE_LOCKSTEP_FAIL "run_$mode.log" || exit 4; echo MUTANT_CAUGHT; fi
 done
-''')
+'''.replace('ot_s81hd_spn.sv',mod+'.sv'))
 print(out)

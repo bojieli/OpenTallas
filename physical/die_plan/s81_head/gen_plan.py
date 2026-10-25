@@ -319,14 +319,20 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
                      note="CLOSED s81hd_spr_m4-bb8dd356c")],
       note="spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged "
            "(capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes" + (" (bottom: no level below)" if end else ""))
-    if not end:
-        # Real existing spine leaves: strict header checking needs their source
-        # list and explicit control bindings. Internal station RTL is a separate
-        # G3 blocker; the plan's station metadata alone does not implement it.
-        types[tn]["sources"] = ["rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
-                                 "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"]
-        for child in types[tn]["contents"]:
-            child["bind"] = {"ck": "clk", "rst_n": "rst_n"}
+    # Real existing spine leaves: strict header checking needs their source
+    # list and explicit control bindings. Internal station RTL is realized by
+    # tools/s81_head/spine_kit.py using the plan's registered relay sites.
+    types[tn]["sources"] = ["rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+                             "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"]
+    for child in types[tn]["contents"]:
+        child["bind"] = {"ck": "clk", "rst_n": "rst_n"}
+    if end:
+        # Existing production mini bench closes the bottom with spo.o -> spr.i
+        # (tb_s81hd_mini.sv); go carries the null-best seed. No tie-off or extra
+        # register cycle is introduced by this local connection.
+        types[tn]["nets"] = [dict(name="bottom_seed", width=565)]
+        types[tn]["contents"][0]["bind"]["o"] = "net:bottom_seed"
+        types[tn]["contents"][1]["bind"]["i"] = "net:bottom_seed"
     BUS(tn, "x_i", "in", 565, "u_spo.i")
     BUS(tn, "b_o", "out", 565, "u_spr.o")
     BUS(tn, "xw_o", "out", 565, "u_spo.ow")
