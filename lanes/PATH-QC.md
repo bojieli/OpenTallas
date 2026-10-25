@@ -353,3 +353,13 @@ PARKED. Ownbranch codex/qc-sramif-1309@d965a9aada clean, no merges/pushes. RP1f6
 - vmr_s6h a670475c7977: the 15:22 tick classified COORD's stop as infra-oom (exit 137) and RESUBMITTED attempt 2 -> I stopped unit ap-a670475c7977-a2 + container codex-qccqb-s6h-rt6-969048 (exact names) and commented its 3 queue rows out ("# WITHDRAWN"). Data deletion follows once the tick marks it WITHDRAWN.
 - Signed off now: 3 of 29 (C1 su8_rst3, C2 rp1 f62, C4 prog_s8b).
 2026-10-25 15:31 PDT PATH-QC-A0N59: status at park: native59 WIF kit PLACED (3_place done), CTS running (unit oth-ubuntu-1555290-1792964534); baseline kit still in global placement (unit oth-ubuntu-1941822-1792965067). Next lane: collect both per the PARKED list above.
+
+- 2026-10-25 15:41 PDT PATH-QC-A0N59: native59 WIF kit (kits_wif, -DOT_N59_WIF) post-CTS FF gate (rerun after BC_LIB_FILES fix) = FAIL -151.09 ps / 3714 ep. Census: IN_PORT 2999 (wns -151.09; worst seq_dh_dh_i[1] -> u_bound.u_ft_seq_dh_dh_o_0 FT-station input reg), R2R 680 (-83.43), WIF wd_in 33 (-6.12), w_mask_in 2 (-5.29). So the WIF write path (GEOM cond 1) is NOT the limiter; IN basis (in_min vs input pin-reg/FT-station clock arrival, same reference-min issue as NK/NL) needs structural review. NOT enqueued, no GEOM REQ yet. Tool fix: gen_phys macro kits now export per-corner TC/BC_LIB_FILES (before: hold gate NOT RUN, FAIL_POSTCTS exit 4; main 2cf25f6d7 has same gap) -> claude/path-qc-a0n59-1025@7a154d9005 for ROOT merge.
+
+## PARKED 2026-10-25 15:41 PDT PATH-QC-A0N59
+- branch claude/path-qc-a0n59-1025@7a154d9005 (from codex/root-1309@6c98ad9a6): kit_rsync reset-cell dedupe, gen_phys macro-name escape + TC/BC_LIB_FILES, native59 WIF RTL+miter (EQUIVALENT), evidence results/path_qc_a0n59_1025/.
+- live: epyc1 ot-run unit oth-ubuntu-1941822-1792965067 = native59 baseline kit (/srv/opentallas-scratch2/claude/path-qc-a0n59/kits/native59), in GPL at 15:40; config.mk already patched with BC_LIB_FILES so its gate will run. Collect: hold_gate.log + hclass.sh census vs WIF.
+- NK R6 (ap-14e02be8d1cf-a1, intel2 path-qc-nk2/r6): GRT still iterating (clock NDRs dropped, GRT-0273); autopilot verdict pending; R5 data kept until SIGNED.
+- NL: GEOM REQ [PATH-QC-NL-R2] awaiting verdict (FF -39.75/577; 178/313 R2R = qlr1nw/ne->mq_wrom tap split).
+- next: structural review of native59 IN class (FT-station input regs: in_min basis vs tap arrival) before GEOM REQ [PATH-QC-N59-KIT]; GEOM cond 2 (write-side taps 15-20 ps early) + 3 (p_dd station sites) still open. Enqueue only after the kit job exits.
+- OWNER?: none.
