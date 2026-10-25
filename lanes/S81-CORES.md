@@ -287,3 +287,12 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
 - Station kitsB (st405, 10-24) list t1 t2 t11 t13 t33 t34 = types REMOVED/renumbered in the 178-type plan; t26 t30 t31 changed ft_slots; only t23/t24 (and t8 t12 t14 t17 t18 t19 t20 t22 t25) unchanged in content, but all kitsB predate the wavefront reset -> STALE, not re-collected. Live kitsW wavefront station runs (epyc1 s81-st-rst/kitsW,kitsW0 t6 t11 t24 t27; intel1 kitsW0 t24) left running (not mine).
 - Inherited: 457ac guard fix already on main (439ee0819). 7fd FTHOLD prototype + 2f2a74656 legacy RCX ECO stay held (ECO class barred by owner rule).
 - Sub-agents launched (~90 min each): SPLIT (vn_a/vn_b/ve_m/ve_s/vsw clock-structure fix, F1-F6), C3 (attn_hcore, rxsf, eng_rr_h0/e, vq; eng_rr_h1 view), LEGACY (re-kit wave from main for never-routed cores, stage-1 + GEOM REQ). Context: rtx-pro /srv/opentallas-scratch/claude/s81-cores-1025/SUBAGENT_CONTEXT.md.
+2026-10-25 04:37 PDT S81-CORES: NEARMISS-STRUCT verdicts adopted (claude/nearmiss-struct-1025@cc8be6df9).
+- GEOM FAIL, structural redesign + GEOM REQ:
+  - vn_b_m0 and vsw_c: SPLIT sub-agent.
+  - rxsf_c (split u_exp into 2 stages, clock entry at the west-face middle): C3 sub-agent.
+- GEOM PASS: ve_m_m5, ve_s_m0 and rr_h0_c go to lane FLOW (it rebuilds them as proof of its shared fixes). Dropped from S81-CORES so the work is not duplicated.
+- Station wavefront routes (s81-st-rst kitsW/kitsW0, S81/KITS lane, not rebuilt by me), signoff verdicts so far:
+  - All NOT SIGNED: t11 (TT -4.9/26, FF -1.3/4), t12 (FF -12.0/2), t13 (FF -2.4/1), t17 (FF -4.5/1), t20 (TT -21.0/277, FF -18.3, pair 82.6), t21 (TT -20.5/277, insertion 199 < 210), t30 (FF -11.5/281, pair 86.7 ft0_s2->s3, DRC 3).
+  - The common failure is face_guard FAIL {'shared':1-2} on EVERY station. That is a structural face-sharing issue in gen.py, not timing, and it is flagged to S81/KITS.
+  - The other stations were still in CTS/place at 01:5x with no newer stage, so they look stalled or abandoned. Liveness is for S81/KITS to check.
