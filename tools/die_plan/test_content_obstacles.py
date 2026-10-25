@@ -84,7 +84,15 @@ def test_siting_processes_contents_only_native59(monkeypatch):
 
 
 def test_independent_envelope_audit_uses_physical_contents():
-    sys.path.insert(0,str(HERE.parents[1]/'results/proto_codex_1025/corrected'))
+    import subprocess
+    d=HERE.parents[1]/'results/proto_codex_1025/corrected'
+    if not (d/'audit_one.py').is_file():
+        # absent on disk: skip ONLY when HEAD tracks it (sparse checkout without results/); a deleted tool still fails
+        r=subprocess.run(['git','-C',str(HERE),'ls-tree','--full-tree','--name-only','HEAD','--','results/proto_codex_1025/corrected/audit_one.py'],
+                         capture_output=True,text=True)
+        assert r.returncode==0 and r.stdout.strip(), 'audit_one.py is neither checked out nor tracked in HEAD'
+        pytest.skip('sparse checkout: results/proto_codex_1025/corrected not checked out (tracked in HEAD)')
+    sys.path.insert(0,str(d))
     import audit_one
     t=native59();t['ft_slots'][0].update(stations=2,bit_site_cell_um=[1.404,.27],
         bit_sites_um=[[[79.,60.],[79.,60.27]]])

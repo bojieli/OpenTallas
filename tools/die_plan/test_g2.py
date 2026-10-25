@@ -377,7 +377,10 @@ def test_per_tap_reset_synchronisers():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
+            # identical copies are NOT merged.  Yosys <= 0.9 prints `<cell> <count>`, newer Yosys (0.4x+, the ORFS image
+            # ot-run uses) prints `<count> <cell>`: the old one-format regex made this test fail only under ot-run.
+            n = re.findall(r"(?m)^\s*(?:ot_dp_rsync_s2\s+(\d+)|(\d+)\s+ot_dp_rsync_s2)\s*$", r.stdout)
+            assert n and {int(a or b) for a, b in n} == {2}, r.stdout
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
