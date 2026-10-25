@@ -20,6 +20,8 @@ def main():
     kd, cjp = Path(sys.argv[1]), Path(sys.argv[2])
     cj = json.loads(cjp.read_text())
     fz = json.loads((kd / "freeze.json").read_text())
+    if fz.get("core_json_sha256") and fz["core_json_sha256"] != g.sha(cjp):
+        raise SystemExit(f"retrofit: {cjp} sha256 != kit freeze core_json_sha256 (not the record this kit was built from)")
     clks, rsts = g.core_clocks_resets(cj)
     if fz.get("module") != cj.get("module") or sorted(fz.get("clocks") or []) != sorted(clks):
         raise SystemExit(f"retrofit: kit {fz.get('module')} clocks {fz.get('clocks')} != record {cj.get('module')} {clks}")
