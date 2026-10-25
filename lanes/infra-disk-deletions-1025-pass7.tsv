@@ -1,5 +1,4 @@
 time	host	path	size	reason	deleted_by
-time	epyc1	path	~0G (disk disk_pct_before%->disk_pct_after%)	wt-reaper apply 08:26: clean, pushed (branch), idle >2 h, no live ref	FLOW-INFRA wt-reaper (logged here for the pass; NOT deleted by INFRA-DISK)
 2026-10-25 08:26:29 PDT	epyc1	/srv/opentallas-scratch2/claude/wt/codex-autopilot-safety	~0G (disk 91.7%->91.7%)	wt-reaper apply 08:26: clean, pushed (codex/autopilot-safety-1025), idle >2 h, no live ref	FLOW-INFRA wt-reaper (logged here for the pass; NOT deleted by INFRA-DISK)
 2026-10-25 08:26:33 PDT	epyc1	/srv/opentallas-scratch2/claude/wt/codex-bind178-reset-0559	~0G (disk 91.7%->91.7%)	wt-reaper apply 08:26: clean, pushed (codex/bind178-reset-0559), idle >2 h, no live ref	FLOW-INFRA wt-reaper (logged here for the pass; NOT deleted by INFRA-DISK)
 2026-10-25 08:26:37 PDT	epyc1	/srv/opentallas-scratch2/claude/wt/codex-hbm-token-push	~0G (disk 91.7%->91.7%)	wt-reaper apply 08:26: clean, pushed (codex/hbm-token-push-1025), idle >2 h, no live ref	FLOW-INFRA wt-reaper (logged here for the pass; NOT deleted by INFRA-DISK)
