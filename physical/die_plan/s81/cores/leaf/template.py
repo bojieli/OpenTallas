@@ -89,9 +89,11 @@ def template():
     # below vs: rxsf then rxsb, centred under vs
     rw, rh = sz["u_lf.u_rxsf"]
     rx_x = dn(vsx + vs_w / 2 - rw / 2)
-    rfy = dn(vsy - 13.8 - rh)
-    p["u_lf.u_rxsf"] = (rx_x, rfy)
-    p["u_lf.u_rxsb"] = (rx_x, dn(rfy - 13.8 - rh))
+    rfy = dn(vsy - 13.8 - rh - 25.92)
+    # o_mx leaves rxsf on W and enters rxsb on E: abut the pair in that order.
+    # The former vertical stack required an unrealised o_mx relay class.
+    p["u_lf.u_rxsb"] = (rx_x, rfy)
+    p["u_lf.u_rxsf"] = (rx_x + math.ceil((rw + 13.8) / G) * G, rfy)
     x0 = min(v[0] for v in p.values())
     y0 = min(v[1] for v in p.values())
     p = {k_: (round(v[0] - x0, 4), round(v[1] - y0, 4)) for k_, v in p.items()}
@@ -132,8 +134,12 @@ def place_type(T, p, sz, off, xoff, yoff):
     out = []
     for inst, (x, y) in p.items():
         c = byi[inst]
+        if inst == "u_lf.u_rxsf":
+            c = dict(c, lef="physical/die_plan/s81/cores/leaf/lef/dsfd_su_t_rxsf_north.lef",
+                     pins_file="inputs/core_pins/dsfd_su_t_rxsf_north.json")
         cw, ch = sz[inst]
-        x_, y_ = round(x + xoff, 4), round(y + yoff, 4)
+        x_, y_ = (round(round((v + off_) / G) * G, 4)
+                  for v, off_ in ((x, xoff), (y, yoff)))
         orient, to = "R0", list(V.CORE_TRACK_OFFSET)
         if sbus:
             y_ = math.floor(round((H - (y_ + dy + ch) - dy) / G, 6)) * G

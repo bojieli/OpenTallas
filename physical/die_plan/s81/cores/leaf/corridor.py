@@ -44,20 +44,26 @@ GOF = {i: g for g, l in GROUPS.items() for i in l}
 STREET = 25.92                    # r3: every core-core gap in the template >= 2 x FT_HALO + a station column (3 x 8.64)
 
 
+_TEMPLATE_BASE = TP.template
+_WIDENED_STREET = None
+
+
 def widen_template(street=STREET):
     """r3 streets: lane channels and the template's 13.8-um core gaps widened to `street` (vn_a / vn_b keep their
     17.28 c_s abutment: 0 stations mandatory; rxsf / rxsb keep 13.8: 0 stations mandatory)"""
     import inspect
-    if street is None:
+    global _WIDENED_STREET
+    if street is None or street == _WIDENED_STREET:
         return
     TP.LP = TP.LANE + street
     TP.CH = street
-    src = inspect.getsource(TP.template.__wrapped__ if hasattr(TP.template, "__wrapped__") else TP.template)
+    src = inspect.getsource(_TEMPLATE_BASE.__wrapped__ if hasattr(_TEMPLATE_BASE, "__wrapped__") else _TEMPLATE_BASE)
     src = src.replace("rfy - 13.8 - rh", "rfy - RXGAP - rh").replace("13.8", "STREETX")
     ns = TP.__dict__
     ns["STREETX"] = street
     ns["RXGAP"] = 13.8
     exec(compile(src, "template_r3", "exec"), ns)
+    _WIDENED_STREET = street
 GSEP = 13.8                       # core gap between groups (HC_GAP)
 
 
