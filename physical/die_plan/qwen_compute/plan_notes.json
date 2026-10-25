@@ -1,9 +1,9 @@
 {
  "variant": "B",
  "partitions": 377,
- "types": 71,
- "types_merged": 120,
- "ports": 3065,
+ "types": 69,
+ "types_merged": 122,
+ "ports": 3005,
  "lanes": 1933,
  "unloaded_lanes_dropped": 273,
  "unloaded_lanes_absent": [
@@ -224,7 +224,7 @@
   },
   "sle_ctl": {
    "cells": 253360,
-   "instances": 6,
+   "instances": 12,
    "outline_um": [
     1226.88,
     1339.2
@@ -438,15 +438,6 @@
    ],
    "macros": 0
   },
-  "slw_ctl": {
-   "cells": 253360,
-   "instances": 6,
-   "outline_um": [
-    1226.88,
-    1339.2
-   ],
-   "macros": 0
-  },
   "slw_fe_v1": {
    "cells": 50000,
    "instances": 3,
@@ -458,16 +449,7 @@
   },
   "slw_fe_v2": {
    "cells": 50000,
-   "instances": 2,
-   "outline_um": [
-    622.08,
-    1339.2
-   ],
-   "macros": 0
-  },
-  "slw_fe_v3": {
-   "cells": 50000,
-   "instances": 1,
+   "instances": 3,
    "outline_um": [
     622.08,
     1339.2
@@ -714,7 +696,7 @@
    "cbf_q11.nb_i22": 2,
    "cbn_q00.na_i00": 4,
    "cbn_q00.nb_i00": 7,
-   "cbn_q00.y_o00": 3,
+   "cbn_q00.y_o00": 2,
    "cbn_q01.nb_i12": 4,
    "cbn_q01.y_o12": 2,
    "cbn_q11.na_i22": 2,
@@ -722,7 +704,7 @@
    "cbx_q10.y_o21": 1
   },
   "lanes": 288,
-  "stations": 69
+  "stations": 68
  },
  "internal_bits_absorbed": {
   "bc00": 24768,
@@ -4072,71 +4054,6 @@
     "max_nearest_tap_um": 665.3,
     "glue_taps_over_290ps": []
    },
-   "slw_ctl": {
-    "root_um": [
-     613.44,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       224.64
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       1226.88,
-       446.4
-      ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 449.3
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       665.28
-      ],
-      "region_um": [
-       0.0,
-       446.4,
-       1226.88,
-       892.8
-      ],
-      "reach_um": 841.0,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 8.6
-     },
-     {
-      "name": "glue_02",
-      "kind": "glue",
-      "xy": [
-       613.44,
-       1114.56
-      ],
-      "region_um": [
-       0.0,
-       892.8,
-       1226.88,
-       1339.2
-      ],
-      "reach_um": 838.1,
-      "insertion_ps": 266,
-      "insertion_tol_ps": 40,
-      "from_root_um": 440.6
-     }
-    ],
-    "max_from_root_um": 449.3,
-    "max_nearest_tap_um": 449.3,
-    "glue_taps_over_290ps": []
-   },
    "slw_fe_v1": {
     "root_um": [
      311.04,
@@ -4185,53 +4102,6 @@
     "glue_taps_over_290ps": []
    },
    "slw_fe_v2": {
-    "root_um": [
-     311.04,
-     673.92
-    ],
-    "taps": [
-     {
-      "name": "glue_00",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       336.96
-      ],
-      "region_um": [
-       0.0,
-       0.0,
-       622.08,
-       669.6
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 337.0
-     },
-     {
-      "name": "glue_01",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       1002.24
-      ],
-      "region_um": [
-       0.0,
-       669.6,
-       622.08,
-       1339.2
-      ],
-      "reach_um": 648.0,
-      "insertion_ps": 223,
-      "insertion_tol_ps": 40,
-      "from_root_um": 328.3
-     }
-    ],
-    "max_from_root_um": 337.0,
-    "max_nearest_tap_um": 665.3,
-    "glue_taps_over_290ps": []
-   },
-   "slw_fe_v3": {
     "root_um": [
      311.04,
      673.92

@@ -1,8 +1,8 @@
 {
- "checked": 49,
- "slots": 42,
- "stations_in_cores": 126,
- "long_hops": 105,
+ "checked": 39,
+ "slots": 23,
+ "stations_in_cores": 86,
+ "long_hops": 75,
  "unfixed": [],
  "added_stations": [
   {
@@ -162,16 +162,17 @@
   },
   {
    "slot": "cbn_q00.rsf",
-   "stations_from": 7,
-   "stations_to": 8,
+   "stations_from": 8,
+   "stations_to": 9,
    "routed_hops": [
-    328,
     337,
-    346,
+    337,
     346,
     354,
     363,
     372,
+    380,
+    389,
     380
    ]
   },
@@ -205,27 +206,28 @@
    ]
   },
   {
-   "slot": "sle_su_l1.x_st_b_fe",
-   "stations_from": 4,
-   "stations_to": 5,
-   "routed_hops": [
-    337,
-    346,
-    354,
-    354,
-    363
-   ]
-  },
-  {
-   "slot": "slw_su_c.x_su_l0_stm",
-   "stations_from": 4,
-   "stations_to": 5,
+   "slot": "sle_su_l1.rsf",
+   "stations_from": 5,
+   "stations_to": 6,
    "routed_hops": [
     320,
     311,
     311,
-    311,
-    311
+    320,
+    328,
+    346
+   ]
+  },
+  {
+   "slot": "sle_su_l1.rsn",
+   "stations_from": 4,
+   "stations_to": 5,
+   "routed_hops": [
+    354,
+    346,
+    346,
+    320,
+    147
    ]
   }
  ]
