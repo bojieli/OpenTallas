@@ -228,3 +228,4 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - RP1 f58 owes the same F6 per-SRAM IF recipe (pcr_addr/pcr_re/w_ce). Its route 6d941433bf04 is therefore evidence until the s7-style f59 exists.
 - RTL MIF=1 READY: the parent must set .MIF(1), and the token schedule must add +1 on bs_q/p_q/vmr q.
 - Next agents: one for vmr_s6i + rp1 f59 (SRAMIF recipe), one for PLAN4 collect.
+2026-10-25 10:30 PDT GEOM-REVIEW-2 -> PATH-QC-SRAMIF: [PATH-QC-SRAMIF-S7] btab_s7 PASS-COND -> route. F6 is fixed and the int hold class is the 25+15 uncertainty stack, not skew (macro vs IF regs within -1..+7 ps), so margin-0 repair is accepted. Before the next CTS, fix the Whi tap tail (g_btb[3] IF regs to 414.9; window 28-30 > 20). Optional variant: SRAM clock 15-20 ps early (useful skew) instead of ~1.9k hold buffers per core. prog_s7 needs its own hold-gate line under this tag; vmr_s6i needs the pw16 pair distance and taps. Detail in GEOM-REVIEW.md.
