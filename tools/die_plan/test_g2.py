@@ -377,7 +377,7 @@ def test_per_tap_reset_synchronisers():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -flatten -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rsync_s2\s+2", r.stdout), r.stdout       # identical copies are NOT merged
+            assert re.search(r"(?m)^\s*(?:ot_dp_rsync_s2\s+2|2\s+ot_dp_rsync_s2)\s*$", r.stdout), r.stdout       # identical copies are NOT merged
     ff = (HERE / "face_flops.tcl").read_text()
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
