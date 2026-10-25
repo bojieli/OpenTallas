@@ -68,7 +68,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     wire hw_v_n, hw_hf_n, hr_v_n, hr_hf_n, n_go_n, wl_v_n; wire [2:0] hw_j_n, hr_j_n, wl_i_n; wire [255:0] hw_d_n, wl_d_n;
     wire [127:0] n_pre_n; wire hq_v_n; wire [255:0] hq_d_n; wire y_v_n; wire [2:0] y_i_n; wire [127:0] y_n;
     wire m_v_p, m_q_p, m_b_p; wire [7:0] m_i_p;
-    ot_s81sl_cst #(.W(3 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_cst #(.W(3 + 1 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
         .d({hw_j, hw_hf, hw_d, hr_j, hr_hf, n_pre, wl_i, wl_d}), .dv({hw_v, hr_v, n_go, wl_v}),
         .q({hw_j_n, hw_hf_n, hw_d_n, hr_j_n, hr_hf_n, n_pre_n, wl_i_n, wl_d_n}), .qv({hw_v_n, hr_v_n, n_go_n, wl_v_n}));
     ot_s81sl_cst #(.W(256), .V(1), .D(CS_VNO_D)) u_cst_vno (.clk(clk), .rst_n(rst_n), .d(hq_d_n), .dv(hq_v_n),
