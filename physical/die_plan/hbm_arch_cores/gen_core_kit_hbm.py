@@ -274,20 +274,38 @@ def clone_output_state(files, top, clone, kd):
         return None
     state, nxt, width, reset = (clone[k] for k in ("state", "next", "width", "reset"))
     wire = "face_clone_" + state
+    # HBM-CORES 2026-10-25 (gq_land NOT SIGNED: TT recovery -99.5 ps, 283 endpoints, all from ONE ot_rst_relay flop
+    # driving the 2248 face clones): reset regions per the relay design standard.  When the block's relay is
+    # REGIONS(1) and `reset` is its region-0 output, the relay is widened so each group of <= per clones has its own
+    # region flop (placed next to its face cluster).  All regions release in the same cycle (replicated relay
+    # stage), so the clones stay cycle-exact; no cycle is added.
+    per = int(clone.get("reset_region_bits", 128))
+    nreg = (width + per - 1) // per if width > per else 0
+    rst_expr = reset
     extra = (f"\n    wire [{width-1}:0] {wire};\n"
              f"    generate for (genvar cp=0;cp<{width};cp=cp+1) begin:g_face_clone_{state}\n"
              f"        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_bout_copy "
-             f"(.clk(clk),.rst_n({reset}),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
+             f"(.clk(clk),.rst_n(@RST@),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
     rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
     matches = 0
     def patch(m):
+        nonlocal rst_expr
         text = m[1]
+        if nreg:
+            mr = re.search(r"wire\s+" + re.escape(reset) + r"\s*=\s*(\w+)\[0\]\s*;", text)
+            if mr:
+                rl = mr[1]
+                text, n1 = re.subn(r"wire\s*\[0:0\]\s*" + re.escape(rl) + r"\s*;", f"wire [{nreg}:0] {rl};", text)
+                text, n2 = re.subn(r"(ot_rst_relay\s*#\(\s*\.REGIONS\()1(\)[^;]*\.rst_n\(\s*" + re.escape(rl) + r"\s*\)\s*\)\s*;)",
+                                   lambda q: q[1] + str(1 + nreg) + q[2], text)
+                if n1 == 1 and n2 == 1:
+                    rst_expr = f"{rl}[1 + cp/{per}]"
         for port in clone["ports"]:
             pattern = r"(assign\s+" + re.escape(port) + r"\s*=\s*)" + re.escape(state) + r"(?=\[)"
             text, n = re.subn(pattern, lambda q: q[1] + wire, text)
             if n != 1:
                 raise ValueError(f"expected one output state assignment for {port}")
-        return text + extra + m[2]
+        return text + extra.replace("@RST@", rst_expr) + m[2]
     for f in files:
         p=Path(f)
         if p.suffix not in (".v", ".sv"):
@@ -391,6 +409,13 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
+    ap.add_argument("--clock-taps", default="off", choices=["off", "density"],
+                    help="HBM-CLKSTRUCT 10-25 (owner decision 5 / 10-23 MSCTS): density = structured in-core clock "
+                         "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
+                         "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
+                         "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--clock-tap-sinks", type=int, default=1250)
+    ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -634,6 +659,9 @@ def main():
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
+    if a.clock_taps == "density":
+        for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
+            shutil.copyfile(HERE / f, kd / f)
     (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
     lefs, libs, ttlibs, fflibs = [], [], [], []
     for m in rec.get("macros", []):
@@ -771,6 +799,17 @@ def main():
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
     # so e.g. MACRO_PLACE_HALO=... was silently overridden by the generator default)
+    if a.clock_taps == "density":
+        # HBM-CLKSTRUCT 10-25: the single-root H-tree over a macro-dominated core put its branch points on the SRAMs
+        # (legalised to the macro edges) -> 100-um leaf fans, adjacent flops 212 ps apart (hfd_ep_static 57f33b92eb82).
+        cfg += ["export PRE_CTS_TCL = /work/core_density_taps.tcl",
+                f"export OT_DTAP_TARGET = {a.clock_tap_sinks}",
+                f"export OT_DTAP_DMAX_UM = {a.clock_tap_dmax:g}",
+                "export OT_DTAP_OUT = /work/dtap.txt",
+                "override export POST_CTS_TCL = /work/core_tap_align.tcl",
+                "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
+                f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
+                "-distance_between_buffers 40 -balance_levels"]
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
@@ -786,6 +825,8 @@ def main():
                                plan_pins=len(names) + len(shell["dropped"]))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    if a.clock_taps != "off":
+        fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,
                           wrapper=bool(wrap_rep), face_shell=fz["face_shell"], kit_hash=fz["kit_hash"])))

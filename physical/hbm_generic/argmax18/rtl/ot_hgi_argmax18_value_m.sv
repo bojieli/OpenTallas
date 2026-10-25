@@ -130,23 +130,28 @@ module ot_hgi_argmax18_value_m #(
     reg [31:0] bv_bits [0:LP-1];
     reg [IW-1:0] bi [0:LP-1];
     reg [LP-1:0] bvalid;
+    // HBM-CORES 2026-10-25 (GEOM-REVIEW-2 argmax_r2): bvalid[k] gated every bk/bi/bv_bits enable of lane k through one
+    // BUFx10 net (113 loads, FF slew 460 ps).  The source REGISTER is replicated per field group (bk / bi / bv_bits),
+    // each copy <= 33 loads, kept so synthesis cannot merge them; identical next state -> cycle-exact, 0 cycles.
+    (* keep = 1 *) reg [LP-1:0] bvalid_i;
+    (* keep = 1 *) reg [LP-1:0] bvalid_b;
     reg          fin;
     reg          nan_row, nan_acc;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bvalid <= 0; fin <= 1'b0; nan_acc <= 1'b0; nan_row <= 1'b0;
+            bvalid <= 0; bvalid_i <= 0; bvalid_b <= 0; fin <= 1'b0; nan_acc <= 1'b0; nan_row <= 1'b0;
         end else begin
             fin <= e_v & e_last;
             if (e_v) begin
                 for (k = 0; k < LP; k = k + 1) begin
-                    if (e_m[k] && (!bvalid[k] || e_key[k] > bk[k])) begin
-                        bk[k] <= e_key[k]; bi[k] <= e_base + k; bv_bits[k] <= e_bits[k];
-                    end
+                    if (e_m[k] && (!bvalid[k] || e_key[k] > bk[k])) bk[k] <= e_key[k];
+                    if (e_m[k] && (!bvalid_i[k] || e_key[k] > bk[k])) bi[k] <= e_base + k;
+                    if (e_m[k] && (!bvalid_b[k] || e_key[k] > bk[k])) bv_bits[k] <= e_bits[k];
                 end
                 // a new row starts on the beat after a last beat: lanes restart
                 for (k = 0; k < LP; k = k + 1)
-                    if (e_m[k]) bvalid[k] <= ~e_last;
-                    else if (e_last) bvalid[k] <= 1'b0;
+                    if (e_m[k]) begin bvalid[k] <= ~e_last; bvalid_i[k] <= ~e_last; bvalid_b[k] <= ~e_last; end
+                    else if (e_last) begin bvalid[k] <= 1'b0; bvalid_i[k] <= 1'b0; bvalid_b[k] <= 1'b0; end
                 nan_acc <= e_last ? 1'b0 : (nan_acc | (|e_nan));
                 nan_row <= nan_acc | (|e_nan);
             end
