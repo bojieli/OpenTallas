@@ -1,0 +1,1127 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "date": "2026-10-25 05:05 PDT",
+ "author": "claude HEAD-SPINE (lane S81-HEAD)",
+ "die": "s81_head",
+ "types": [
+  "hd_spn",
+  "hd_spn_end"
+ ],
+ "kits": {
+  "hd_spn": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-missing/spine_physical/hd_spn (place epyc3 unit oth-ubuntu-2384296-1792922985, mirrored)",
+  "hd_spn_end": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-missing/spine_end_physical/hd_spn_end (place epyc1 unit oth-ubuntu-3489931-1792923254)"
+ },
+ "src": "codex/s81-missing-1025 8a2a5db7a (spine binding + planned relays) / f5ccc9519 (end spine loop); plan = s81_head die_plan.json at 8a2a5db7a",
+ "method": "read-only docker probe on epyc1 (openroad/orfs:asap7lock, dump_place.tcl) of 3_place.odb -> analyze_place.py; groups from ot_face_flops.txt tags; hops = Manhattan flop->flop through BUF/INV/HB chains (D and reset pins); taps = nearest clock tap port per flop",
+ "plan_check": {
+  "result": "MATCH: hd_spn/hd_spn_end partition_types, sp0-sp5 partitions and the 78 spine ports are byte-identical (md5) in 8a2a5db7a (kit source), origin/main f67d38299 and head delta claude/s81-head-delta-1025@f5223815f2",
+  "delta_f5223815f2": "changes die.io/die.pg (12 PHY PG domains at y<1181 / y>16375, none overlaps sp0-sp5 x 8069.8-9452.2 y 2557.4-14999), hd_ctl/hd_lep0N types, +3 ports/lanes, latency.lanes; touches no hd_spn/hd_spn_end pin"
+ },
+ "verdict": {
+  "hd_spn": "FAIL (no route)",
+  "hd_spn_end": "FAIL (no route)"
+ },
+ "looked_at": [
+  "hd_spn.place.png",
+  "hd_spn_end.place.png"
+ ],
+ "good": [
+  "face_guard PASS 6156/6156 and 5024/5024; every signal pin has a pin register: in-pin -> reg max 11.9 um, reg -> E/W out pin max 8.1 um",
+  "6 ft slots (hu/hd/au/ad/bu/bd) x 6 stations: per-bit straight vertical lines (lateral spread <= 9.3 um), station hops 343-349 um",
+  "N/S ft out legs 349-356 um (last station -> pin); the next spine's N/S input register sits <= 12 um from its pin -> <= 368 um <= 405",
+  "reset relay tree itself PASS (placed max relay hop 380.7 um); density low everywhere (max 50-um bin 0.16 / 0.11)"
+ ],
+ "causes": [
+  {
+   "id": "C1",
+   "what": "E/W bus internal stations are single-point sites: kit_istations.py puts all 566 (xw_o/xe_o) or 51 (bw_i/be_i) bits of a station at one plan regs_um point, while the face pins span a 300-um window (W/E y 354-654 and 1390-1690). The first/last leg is lateral offset + half the window: u_ist_xw_o_2 -> u_bout_xw_o 520 um (153 bits > 405), u_ist_xe_o_2 -> u_bout_xe_o 473 (91), u_bin_be_i -> u_ist_be_i_0 492 (51), u_bin_bw_i -> u_ist_bw_i_0 463 (51); 413 / 411 reg->reg hops > 405 in total (excluding reset)",
+   "also": "xw_o/xe_o are planned from the spo source (x_o column x 786, y 1777) up to the N edge (y 2073.6), along it, and down the W/E edge to y 1390-1690: ~1.5x the direct horizontal length, and the stations sit on the outline edge; spo r_q/x_q -> u_ist_xw_o_0 up to 444 um. x_o last station -> S out pin 397 um + next spine N input reg 12 um = 409 > 405 (hd_spn)"
+  },
+  {
+   "id": "C2",
+   "what": "Reset leaf: the RTL default rst_n (bound to tap relay u_rrl_27 = rst_n_t9, site 518.4,864 = outline centre) still drives every non-FIRM leaf (u_spo/u_spr control flops at x~940 y 1770-2065) and the internal-station epoch flops (u_ist_*/eq). reset_taps.tcl re-points only face/ft FIRM flops (26+22 / 25+20). Leaf hops up to 2035 um (28 / 25 sinks), violating the reset rule (decision 2, every hop <= 405 um); recovery path ~2 mm on one relay."
+  },
+  {
+   "id": "C3",
+   "what": "Clock load: sinks concentrate in the x 750-1260 band; nearest-tap load clk_t22 3938 / 2810, clk_t23 2353 / 2354, clk_t2 2393 (hd_spn) while 8 W-half taps carry 2-8 sinks (reset relays only). Guidance (WARN), not a gate, but the 1500 cap reassignment (<= 200 um) cannot absorb it; zero/near-zero taps need the hd_turn condition (prune or declare unloaded for tap balance)."
+  },
+  {
+   "id": "C4",
+   "what": "Sign-off basis not yet in the kits: constraint.sdc has one vclk with source latency 250 for both corners (no shared per-corner FF vclk, decision 9.7/5e), and the flow sources plain platforms/asap7/setRC.tcl (no F2 RCX-calibrated SET_RC_TCL / rc_fit)."
+  }
+ ],
+ "fix": [
+  "F-C1 (plan + kit tool, batched head delta): in the s81_head plan route xw_o/xe_o (spo -> W/E out window y 1390-1690) and bw_i/be_i (W/E in window y 354-654 -> spr column) as straight horizontal bands at the window rows, stations every <= 345 um; in tools/die_plan/kit_istations.py emit per-bit sites (bit b of every station at the y of its face pin, i.e. a station column parallel to the window, the same rule as ft_bit_sites.tcl for ft slots) instead of one point per station; last station -> pin <= 345 um; regenerate both kits from the plan. +0 cycles if the station count stays (xw_o 3, xe_o 3, bw_i 7, be_i 5) -- straighter route needs fewer, keep count = plan fixed_cycles",
+  "F-C2 (kit tool): reset_taps.tcl re-points EVERY reset/epoch sink to the nearest tap relay, including istations-FIRM flops and non-FIRM leaf logic (for leaf logic: place u_spo/u_spr in a planned region (plan contents origin) and bind its rst_n to the tap of that region, t22 at 864,1900, or re-point after GPL before CTS); gate: placed reset leaf hop <= 405",
+  "F-C3: with F-C1 the E/W bands spread sinks over the W taps; prune taps with < ~20 sinks or declare them unloaded to the spine; keep tap cap WARN",
+  "F-C4: regenerate kits with the shared per-corner FF vclk (decision 9.7/5e) and the F2 SET_RC_TCL calibration before route"
+ ],
+ "next": "after F-C1..C4: re-place both kits, re-render with analyze_place.py, GEOM REQ, enqueue --geom REQ. No GEOM REQ / autopilot entry for the current 3_place (would route a known FAIL).",
+ "measured": {
+  "hd_spn": {
+   "type": "hd_spn",
+   "outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "cells": 89767,
+   "groups": {
+    "buf": 66847,
+    "comb": 1086,
+    "pin_reg": 5342,
+    "ft_station": 4070,
+    "int_station": 10794,
+    "reset": 136,
+    "logic_ff": 1492
+   },
+   "util": 0.0052,
+   "face_flop_tags_not_found_in_odb": 0,
+   "density_50um": {
+    "max": 0.162,
+    "p99": 0.064,
+    "bins_gt_0.7": 0,
+    "empty_bins_frac": 0.781
+   },
+   "reg_reg": {
+    "n": 18571,
+    "max": 2035.1,
+    "gt405": 413,
+    "gt345": 4397,
+    "worst": [
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_1/eq$_DFF_PN0_",
+      2035.1
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_2/eq$_DFF_PN0_",
+      1816.4
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_0/eq$_DFF_PN0_",
+      1753.7
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xw_o_1/eq$_DFF_PN0_",
+      1599.0
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spr.xv_q$_DFF_PN0_",
+      1537.3
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spo.g_c\\[2\\].ctl_q\\[2\\]$_DFF_PN0_",
+      1527.2
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spo.g_c\\[2\\].ctl_q\\[1\\]$_DFF_PN0_",
+      1524.9
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spo.g_c\\[2\\].ctl_q\\[0\\]$_DFF_PN0_",
+      1524.4
+     ]
+    ]
+   },
+   "reg_reg_max_by_class": {
+    "rrl->ist": 2035.1,
+    "rrl->logic": 1537.3,
+    "ist->W": 520.0,
+    "E->ist": 491.6,
+    "ist->E": 472.9,
+    "W->ist": 463.2,
+    "logic->ist": 444.3,
+    "ist->S": 397.4,
+    "S->ist": 394.7,
+    "rrl->rrl": 381.8,
+    "rentry->rrl": 381.6,
+    "ist->ist": 360.2,
+    "logic->N": 350.9,
+    "st3->st4": 348.7,
+    "st4->st5": 348.6
+   },
+   "pin_reg": {
+    "E/INPUT": {
+     "n": 566,
+     "max": 6.9,
+     "p90": 5.9,
+     "worst": "be_i[517]"
+    },
+    "E/OUTPUT": {
+     "n": 566,
+     "max": 7.8,
+     "p90": 6.5,
+     "worst": "xe_o[484]"
+    },
+    "I/INPUT": {
+     "n": 1,
+     "max": 1.8,
+     "p90": 1.8,
+     "worst": "arst_n"
+    },
+    "I/OUTPUT": {
+     "n": 5,
+     "max": 2.6,
+     "p90": 1.4,
+     "worst": "rst_o_3"
+    },
+    "N/INPUT": {
+     "n": 973,
+     "max": 11.9,
+     "p90": 8.4,
+     "worst": "x_i[498]"
+    },
+    "N/OUTPUT": {
+     "n": 973,
+     "max": 355.9,
+     "p90": 349.6,
+     "worst": "hu_o[208]"
+    },
+    "S/INPUT": {
+     "n": 973,
+     "max": 10.7,
+     "p90": 7.8,
+     "worst": "hu_i[97]"
+    },
+    "S/OUTPUT": {
+     "n": 973,
+     "max": 354.4,
+     "p90": 349.8,
+     "worst": "hd_o[194]"
+    },
+    "W/INPUT": {
+     "n": 566,
+     "max": 7.5,
+     "p90": 5.6,
+     "worst": "bw_i[551]"
+    },
+    "W/OUTPUT": {
+     "n": 566,
+     "max": 7.7,
+     "p90": 6.7,
+     "worst": "xw_o[557]"
+    }
+   },
+   "pins_without_reg": [],
+   "pins_without_reg_n": 0,
+   "face_pins": {
+    "N": {
+     "pins": 1946,
+     "max_per_um_50win": 4.02,
+     "span": [
+      715.4,
+      1257.6
+     ]
+    },
+    "S": {
+     "pins": 1946,
+     "max_per_um_50win": 4.02,
+     "span": [
+      715.4,
+      1257.6
+     ]
+    },
+    "E": {
+     "pins": 1132,
+     "max_per_um_50win": 1.92,
+     "span": [
+      354.8,
+      1690.5
+     ]
+    },
+    "W": {
+     "pins": 1132,
+     "max_per_um_50win": 1.92,
+     "span": [
+      354.8,
+      1690.5
+     ]
+    }
+   },
+   "ft_slot_lateral_spread_um": {
+    "ad": 9.0,
+    "au": 6.5,
+    "bd": 7.4,
+    "bu": 6.6,
+    "hd": 8.8,
+    "hu": 8.2
+   },
+   "ft_slot_stations": {
+    "ad": 6,
+    "au": 6,
+    "bd": 6,
+    "bu": 6,
+    "hd": 6,
+    "hu": 6
+   },
+   "int_stations": {
+    "u_ist_xw_o_0": {
+     "bits": 566,
+     "planned": [
+      456.339,
+      2073.6
+     ],
+     "centroid": [
+      456.2,
+      2067.0
+     ],
+     "max_from_plan": 53.3
+    },
+    "u_ist_xw_o_1": {
+     "bits": 566,
+     "planned": [
+      126.711,
+      2073.6
+     ],
+     "centroid": [
+      126.1,
+      2067.0
+     ],
+     "max_from_plan": 53.7
+    },
+    "u_ist_xw_o_2": {
+     "bits": 566,
+     "planned": [
+      0.0,
+      1870.684
+     ],
+     "centroid": [
+      21.6,
+      1870.6
+     ],
+     "max_from_plan": 55.7
+    },
+    "u_ist_xe_o_0": {
+     "bits": 566,
+     "planned": [
+      1068.211,
+      2073.6
+     ],
+     "centroid": [
+      1067.6,
+      2067.0
+     ],
+     "max_from_plan": 51.8
+    },
+    "u_ist_xe_o_1": {
+     "bits": 566,
+     "planned": [
+      1350.455,
+      2073.6
+     ],
+     "centroid": [
+      1345.2,
+      2066.7
+     ],
+     "max_from_plan": 56.5
+    },
+    "u_ist_xe_o_2": {
+     "bits": 566,
+     "planned": [
+      1382.4,
+      1823.3
+     ],
+     "centroid": [
+      1360.5,
+      1823.1
+     ],
+     "max_from_plan": 54.4
+    },
+    "u_ist_bw_i_0": {
+     "bits": 51,
+     "planned": [
+      313.104,
+      504.256
+     ],
+     "centroid": [
+      311.4,
+      504.3
+     ],
+     "max_from_plan": 12.4
+    },
+    "u_ist_bw_i_1": {
+     "bits": 51,
+     "planned": [
+      626.208,
+      504.256
+     ],
+     "centroid": [
+      624.9,
+      504.2
+     ],
+     "max_from_plan": 11.2
+    },
+    "u_ist_bw_i_2": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      508.079
+     ],
+     "centroid": [
+      934.8,
+      507.8
+     ],
+     "max_from_plan": 11.5
+    },
+    "u_ist_bw_i_3": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      821.183
+     ],
+     "centroid": [
+      935.8,
+      821.0
+     ],
+     "max_from_plan": 10.2
+    },
+    "u_ist_bw_i_4": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1134.287
+     ],
+     "centroid": [
+      935.8,
+      1134.3
+     ],
+     "max_from_plan": 10.1
+    },
+    "u_ist_bw_i_5": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1447.391
+     ],
+     "centroid": [
+      936.2,
+      1447.2
+     ],
+     "max_from_plan": 9.9
+    },
+    "u_ist_bw_i_6": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1760.496
+     ],
+     "centroid": [
+      935.8,
+      1760.3
+     ],
+     "max_from_plan": 9.4
+    },
+    "u_ist_be_i_0": {
+     "bits": 51,
+     "planned": [
+      1046.358,
+      504.256
+     ],
+     "centroid": [
+      1045.7,
+      504.4
+     ],
+     "max_from_plan": 12.0
+    },
+    "u_ist_be_i_1": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      729.431
+     ],
+     "centroid": [
+      936.5,
+      729.4
+     ],
+     "max_from_plan": 10.4
+    },
+    "u_ist_be_i_2": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1065.473
+     ],
+     "centroid": [
+      936.0,
+      1065.4
+     ],
+     "max_from_plan": 10.0
+    },
+    "u_ist_be_i_3": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1401.515
+     ],
+     "centroid": [
+      935.9,
+      1401.3
+     ],
+     "max_from_plan": 10.4
+    },
+    "u_ist_be_i_4": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1737.558
+     ],
+     "centroid": [
+      936.2,
+      1737.4
+     ],
+     "max_from_plan": 9.8
+    },
+    "u_ist_x_o_0": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      1777.371
+     ],
+     "centroid": [
+      784.4,
+      1777.2
+     ],
+     "max_from_plan": 36.1
+    },
+    "u_ist_x_o_1": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      1481.143
+     ],
+     "centroid": [
+      784.9,
+      1481.0
+     ],
+     "max_from_plan": 35.7
+    },
+    "u_ist_x_o_2": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      1184.914
+     ],
+     "centroid": [
+      784.4,
+      1184.8
+     ],
+     "max_from_plan": 36.1
+    },
+    "u_ist_x_o_3": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      888.686
+     ],
+     "centroid": [
+      784.7,
+      888.6
+     ],
+     "max_from_plan": 35.9
+    },
+    "u_ist_x_o_4": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      592.457
+     ],
+     "centroid": [
+      784.8,
+      592.4
+     ],
+     "max_from_plan": 35.9
+    },
+    "u_ist_x_o_5": {
+     "bits": 566,
+     "planned": [
+      785.966,
+      296.229
+     ],
+     "centroid": [
+      785.0,
+      296.2
+     ],
+     "max_from_plan": 34.9
+    },
+    "u_ist_b_i_0": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      296.229
+     ],
+     "centroid": [
+      935.6,
+      296.2
+     ],
+     "max_from_plan": 36.4
+    },
+    "u_ist_b_i_1": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      592.457
+     ],
+     "centroid": [
+      936.0,
+      592.4
+     ],
+     "max_from_plan": 35.5
+    },
+    "u_ist_b_i_2": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      888.686
+     ],
+     "centroid": [
+      935.6,
+      888.6
+     ],
+     "max_from_plan": 35.7
+    },
+    "u_ist_b_i_3": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      1184.914
+     ],
+     "centroid": [
+      935.8,
+      1184.8
+     ],
+     "max_from_plan": 34.9
+    },
+    "u_ist_b_i_4": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      1481.143
+     ],
+     "centroid": [
+      935.9,
+      1481.0
+     ],
+     "max_from_plan": 35.7
+    },
+    "u_ist_b_i_5": {
+     "bits": 565,
+     "planned": [
+      935.49,
+      1777.371
+     ],
+     "centroid": [
+      936.1,
+      1777.2
+     ],
+     "max_from_plan": 34.9
+    }
+   },
+   "clock_taps": {
+    "n": 24,
+    "sinks_max": 3938,
+    "sinks_min_loaded": 2,
+    "zero_sink_taps": [],
+    "over_1500": [
+     "clk_t2",
+     "clk_t22",
+     "clk_t23"
+    ],
+    "leaf_radius_max_um": 345.2,
+    "per_tap": {
+     "clk": 2,
+     "clk_t1": 3,
+     "clk_t10": 1321,
+     "clk_t11": 727,
+     "clk_t12": 3,
+     "clk_t13": 8,
+     "clk_t14": 1336,
+     "clk_t15": 833,
+     "clk_t16": 569,
+     "clk_t17": 6,
+     "clk_t18": 1324,
+     "clk_t19": 1314,
+     "clk_t2": 2393,
+     "clk_t20": 1137,
+     "clk_t21": 587,
+     "clk_t22": 3938,
+     "clk_t23": 2353,
+     "clk_t3": 665,
+     "clk_t4": 619,
+     "clk_t5": 54,
+     "clk_t6": 1269,
+     "clk_t7": 1368,
+     "clk_t8": 2,
+     "clk_t9": 3
+    },
+    "note": "nearest-tap count at 3_place, before clock_taps.tcl capacity reassignment (cap 1500, reassign <= 200 um; WARN only, COORD 10-23)"
+   }
+  },
+  "hd_spn_end": {
+   "type": "hd_spn_end",
+   "outline_um": [
+    1382.4,
+    2073.6
+   ],
+   "cells": 55603,
+   "groups": {
+    "buf": 40635,
+    "comb": 1075,
+    "pin_reg": 4210,
+    "ft_station": 4070,
+    "int_station": 4008,
+    "reset": 113,
+    "logic_ff": 1492
+   },
+   "util": 0.0033,
+   "face_flop_tags_not_found_in_odb": 0,
+   "density_50um": {
+    "max": 0.111,
+    "p99": 0.049,
+    "bins_gt_0.7": 0,
+    "empty_bins_frac": 0.848
+   },
+   "reg_reg": {
+    "n": 11188,
+    "max": 2035.9,
+    "gt405": 411,
+    "gt345": 4024,
+    "worst": [
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_1/eq$_DFF_PN0_",
+      2035.9
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_2/eq$_DFF_PN0_",
+      1816.2
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_ist_xe_o_0/eq$_DFF_PN0_",
+      1753.7
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spr.xv_q$_DFF_PN0_",
+      1675.1
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spo.g_c\\[2\\].ctl_q\\[0\\]$_DFF_PN0_",
+      1617.0
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spr.go_q$_DFF_PN0_",
+      1616.4
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spr.o_rv$_DFF_PN0_",
+      1616.3
+     ],
+     [
+      "u_rrl_27/r$_DFF_P_",
+      "u_spr.s3_v$_DFF_PN0_",
+      1615.2
+     ]
+    ]
+   },
+   "reg_reg_max_by_class": {
+    "rrl->ist": 2035.9,
+    "rrl->logic": 1675.1,
+    "ist->W": 520.8,
+    "E->ist": 491.4,
+    "ist->E": 472.5,
+    "W->ist": 464.6,
+    "logic->ist": 463.9,
+    "rrl->rrl": 381.4,
+    "rentry->rrl": 379.1,
+    "ist->ist": 359.5,
+    "st4->st5": 349.1,
+    "st2->st3": 348.7,
+    "st3->st4": 348.3,
+    "st1->st2": 347.7,
+    "N->st1": 347.4
+   },
+   "pin_reg": {
+    "E/INPUT": {
+     "n": 566,
+     "max": 6.7,
+     "p90": 5.8,
+     "worst": "be_i[519]"
+    },
+    "E/OUTPUT": {
+     "n": 566,
+     "max": 8.0,
+     "p90": 6.5,
+     "worst": "xe_o[427]"
+    },
+    "I/INPUT": {
+     "n": 1,
+     "max": 0.6,
+     "p90": 0.6,
+     "worst": "arst_n"
+    },
+    "I/OUTPUT": {
+     "n": 2,
+     "max": 1.3,
+     "p90": 0.7,
+     "worst": "rst_o_1"
+    },
+    "N/INPUT": {
+     "n": 973,
+     "max": 11.8,
+     "p90": 8.3,
+     "worst": "x_i[89]"
+    },
+    "N/OUTPUT": {
+     "n": 973,
+     "max": 354.6,
+     "p90": 349.4,
+     "worst": "hu_o[176]"
+    },
+    "S/INPUT": {
+     "n": 407,
+     "max": 10.0,
+     "p90": 7.9,
+     "worst": "hu_i[258]"
+    },
+    "S/OUTPUT": {
+     "n": 407,
+     "max": 355.1,
+     "p90": 351.3,
+     "worst": "hd_o[226]"
+    },
+    "W/INPUT": {
+     "n": 566,
+     "max": 7.6,
+     "p90": 5.6,
+     "worst": "bw_i[555]"
+    },
+    "W/OUTPUT": {
+     "n": 566,
+     "max": 8.1,
+     "p90": 6.7,
+     "worst": "xw_o[293]"
+    }
+   },
+   "pins_without_reg": [],
+   "pins_without_reg_n": 0,
+   "face_pins": {
+    "N": {
+     "pins": 1946,
+     "max_per_um_50win": 4.02,
+     "span": [
+      715.4,
+      1257.6
+     ]
+    },
+    "S": {
+     "pins": 814,
+     "max_per_um_50win": 4.0,
+     "span": [
+      1014.5,
+      1257.6
+     ]
+    },
+    "E": {
+     "pins": 1132,
+     "max_per_um_50win": 1.92,
+     "span": [
+      354.8,
+      1690.5
+     ]
+    },
+    "W": {
+     "pins": 1132,
+     "max_per_um_50win": 1.92,
+     "span": [
+      354.8,
+      1690.5
+     ]
+    }
+   },
+   "ft_slot_lateral_spread_um": {
+    "ad": 9.3,
+    "au": 6.3,
+    "bd": 7.3,
+    "bu": 6.6,
+    "hd": 9.2,
+    "hu": 8.4
+   },
+   "ft_slot_stations": {
+    "ad": 6,
+    "au": 6,
+    "bd": 6,
+    "bu": 6,
+    "hd": 6,
+    "hu": 6
+   },
+   "int_stations": {
+    "u_ist_xw_o_0": {
+     "bits": 566,
+     "planned": [
+      456.339,
+      2073.6
+     ],
+     "centroid": [
+      456.3,
+      2067.1
+     ],
+     "max_from_plan": 53.6
+    },
+    "u_ist_xw_o_1": {
+     "bits": 566,
+     "planned": [
+      126.711,
+      2073.6
+     ],
+     "centroid": [
+      126.2,
+      2067.0
+     ],
+     "max_from_plan": 53.0
+    },
+    "u_ist_xw_o_2": {
+     "bits": 566,
+     "planned": [
+      0.0,
+      1870.684
+     ],
+     "centroid": [
+      21.7,
+      1870.6
+     ],
+     "max_from_plan": 56.2
+    },
+    "u_ist_xe_o_0": {
+     "bits": 566,
+     "planned": [
+      1068.211,
+      2073.6
+     ],
+     "centroid": [
+      1067.5,
+      2066.9
+     ],
+     "max_from_plan": 53.4
+    },
+    "u_ist_xe_o_1": {
+     "bits": 566,
+     "planned": [
+      1350.455,
+      2073.6
+     ],
+     "centroid": [
+      1345.2,
+      2066.7
+     ],
+     "max_from_plan": 56.5
+    },
+    "u_ist_xe_o_2": {
+     "bits": 566,
+     "planned": [
+      1382.4,
+      1823.3
+     ],
+     "centroid": [
+      1360.4,
+      1823.1
+     ],
+     "max_from_plan": 54.9
+    },
+    "u_ist_bw_i_0": {
+     "bits": 51,
+     "planned": [
+      313.104,
+      504.256
+     ],
+     "centroid": [
+      311.3,
+      504.3
+     ],
+     "max_from_plan": 12.5
+    },
+    "u_ist_bw_i_1": {
+     "bits": 51,
+     "planned": [
+      626.208,
+      504.256
+     ],
+     "centroid": [
+      624.7,
+      504.3
+     ],
+     "max_from_plan": 12.4
+    },
+    "u_ist_bw_i_2": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      508.079
+     ],
+     "centroid": [
+      934.8,
+      507.8
+     ],
+     "max_from_plan": 11.5
+    },
+    "u_ist_bw_i_3": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      821.183
+     ],
+     "centroid": [
+      935.7,
+      821.1
+     ],
+     "max_from_plan": 10.2
+    },
+    "u_ist_bw_i_4": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1134.287
+     ],
+     "centroid": [
+      935.9,
+      1134.3
+     ],
+     "max_from_plan": 9.8
+    },
+    "u_ist_bw_i_5": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1447.391
+     ],
+     "centroid": [
+      935.9,
+      1447.2
+     ],
+     "max_from_plan": 10.6
+    },
+    "u_ist_bw_i_6": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1760.496
+     ],
+     "centroid": [
+      936.1,
+      1760.2
+     ],
+     "max_from_plan": 10.2
+    },
+    "u_ist_be_i_0": {
+     "bits": 51,
+     "planned": [
+      1046.358,
+      504.256
+     ],
+     "centroid": [
+      1045.4,
+      504.4
+     ],
+     "max_from_plan": 11.8
+    },
+    "u_ist_be_i_1": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      729.431
+     ],
+     "centroid": [
+      936.3,
+      729.2
+     ],
+     "max_from_plan": 10.4
+    },
+    "u_ist_be_i_2": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1065.473
+     ],
+     "centroid": [
+      936.0,
+      1065.4
+     ],
+     "max_from_plan": 10.8
+    },
+    "u_ist_be_i_3": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1401.515
+     ],
+     "centroid": [
+      935.8,
+      1401.3
+     ],
+     "max_from_plan": 10.3
+    },
+    "u_ist_be_i_4": {
+     "bits": 51,
+     "planned": [
+      935.49,
+      1737.558
+     ],
+     "centroid": [
+      936.0,
+      1737.4
+     ],
+     "max_from_plan": 9.8
+    }
+   },
+   "clock_taps": {
+    "n": 24,
+    "sinks_max": 2810,
+    "sinks_min_loaded": 2,
+    "zero_sink_taps": [],
+    "over_1500": [
+     "clk_t22",
+     "clk_t23"
+    ],
+    "leaf_radius_max_um": 345.1,
+    "per_tap": {
+     "clk": 2,
+     "clk_t1": 2,
+     "clk_t10": 186,
+     "clk_t11": 735,
+     "clk_t12": 3,
+     "clk_t13": 7,
+     "clk_t14": 204,
+     "clk_t15": 841,
+     "clk_t16": 569,
+     "clk_t17": 4,
+     "clk_t18": 193,
+     "clk_t19": 1297,
+     "clk_t2": 132,
+     "clk_t20": 1136,
+     "clk_t21": 580,
+     "clk_t22": 2810,
+     "clk_t23": 2354,
+     "clk_t3": 664,
+     "clk_t4": 619,
+     "clk_t5": 53,
+     "clk_t6": 141,
+     "clk_t7": 1357,
+     "clk_t8": 2,
+     "clk_t9": 2
+    },
+    "note": "nearest-tap count at 3_place, before clock_taps.tcl capacity reassignment (cap 1500, reassign <= 200 um; WARN only, COORD 10-23)"
+   }
+  }
+ }
+}
