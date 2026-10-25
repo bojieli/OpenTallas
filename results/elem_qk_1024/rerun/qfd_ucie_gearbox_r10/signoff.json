@@ -1,0 +1,509 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "qfd_ucie_gearbox_r10",
+ "generated": "2026-10-24T18:49:24-07:00",
+ "host": "tender-ray",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base",
+  "orfs": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs",
+  "design": "opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd",
+  "kit": null,
+  "odb": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/src/physical/ref_tile/qfd_ucie_gearbox_r10/signoff.sdc",
+  "sdc_source": "arg",
+  "synth": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/logs/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/logs/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/logs/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/reports/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/5_route_drc.rpt",
+  "pins": null,
+  "sdc_lint_ctx": null,
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "qfd_ucie_six_five",
+   "cells": 217143.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk",
+    "ot_io_fdi",
+    "ot_io_fdirx",
+    "ot_io_blktx",
+    "ot_io_blkrx",
+    "ot_entry_0",
+    "ot_entry_1",
+    "ot_entry_2",
+    "ot_entry_3",
+    "ot_entry_4"
+   ],
+   "vclks": [
+    "core_clk",
+    "ot_io_fdi",
+    "ot_io_fdirx",
+    "ot_io_blktx",
+    "ot_io_blkrx"
+   ],
+   "periods": {
+    "core_clk": 833.333008,
+    "ot_io_fdi": 833.333008,
+    "ot_io_fdirx": 833.333008,
+    "ot_io_blktx": 833.333008,
+    "ot_io_blkrx": 833.333008,
+    "ot_entry_0": 833.333008,
+    "ot_entry_1": 833.333008,
+    "ot_entry_2": 833.333008,
+    "ot_entry_3": 833.333008,
+    "ot_entry_4": 833.333008
+   },
+   "clock_ports": [
+    "blk_rx_ck",
+    "blk_tx_ck",
+    "core_ck",
+    "fdi_ck",
+    "fdi_rx_ck"
+   ],
+   "inputs": [
+    "phy_rx_frame",
+    "phy_rx_valid",
+    "rst_n",
+    "tx_frame",
+    "tx_valid"
+   ],
+   "outputs": [
+    "core_fault",
+    "fdi_fault",
+    "phy_tx_frame",
+    "phy_tx_valid",
+    "rx_frame",
+    "rx_valid"
+   ],
+   "overlay": "skipped vclks 5",
+   "sdc_wns_max": 29.26,
+   "sdc_wns_min": -12.49,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -2141.78,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 646.0,
+   "std_wns_max": 29.26,
+   "std_wns_min": -12.49,
+   "std_tns_max": 0.0,
+   "std_tns_min": -2141.78,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 646.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net7122",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 25528,
+    "min": 179.04,
+    "mean": 206.46,
+    "max": 230.9,
+    "spread": 51.86
+   },
+   "insertion_pinflops": {
+    "n": 3286,
+    "min": 179.25,
+    "mean": 204.71,
+    "max": 230.9,
+    "spread": 51.65
+   },
+   "ocv5_wns_max": -2.79,
+   "ocv5_wns_min": -26.3,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "qfd_ucie_six_five",
+   "cells": 217143.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk",
+    "ot_io_fdi",
+    "ot_io_fdirx",
+    "ot_io_blktx",
+    "ot_io_blkrx",
+    "ot_entry_0",
+    "ot_entry_1",
+    "ot_entry_2",
+    "ot_entry_3",
+    "ot_entry_4"
+   ],
+   "vclks": [
+    "core_clk",
+    "ot_io_fdi",
+    "ot_io_fdirx",
+    "ot_io_blktx",
+    "ot_io_blkrx"
+   ],
+   "periods": {
+    "core_clk": 833.333008,
+    "ot_io_fdi": 833.333008,
+    "ot_io_fdirx": 833.333008,
+    "ot_io_blktx": 833.333008,
+    "ot_io_blkrx": 833.333008,
+    "ot_entry_0": 833.333008,
+    "ot_entry_1": 833.333008,
+    "ot_entry_2": 833.333008,
+    "ot_entry_3": 833.333008,
+    "ot_entry_4": 833.333008
+   },
+   "clock_ports": [
+    "blk_rx_ck",
+    "blk_tx_ck",
+    "core_ck",
+    "fdi_ck",
+    "fdi_rx_ck"
+   ],
+   "inputs": [
+    "phy_rx_frame",
+    "phy_rx_valid",
+    "rst_n",
+    "tx_frame",
+    "tx_valid"
+   ],
+   "outputs": [
+    "core_fault",
+    "fdi_fault",
+    "phy_tx_frame",
+    "phy_tx_valid",
+    "rx_frame",
+    "rx_valid"
+   ],
+   "overlay": "skipped vclks 5",
+   "sdc_wns_max": 68.02,
+   "sdc_wns_min": -25.63,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -19260.41,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 1626.0,
+   "std_wns_max": 68.02,
+   "std_wns_min": -25.63,
+   "std_tns_max": 0.0,
+   "std_tns_min": -19260.41,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 1626.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net7122",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 25528,
+    "min": 145.52,
+    "mean": 170.49,
+    "max": 191.81,
+    "spread": 46.29
+   },
+   "insertion_pinflops": {
+    "n": 3286,
+    "min": 146.86,
+    "mean": 169.08,
+    "max": 191.03,
+    "spread": 44.17
+   },
+   "ocv5_wns_max": 46.1,
+   "ocv5_wns_min": -36.86,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+  "errors": [
+   "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+   "units/relaxation: clock core_clk period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_io_fdi period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_io_fdirx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_io_blktx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_io_blkrx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_entry_0 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_entry_1 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_entry_2 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_entry_3 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "units/relaxation: clock ot_entry_4 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+   "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+   "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+   "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+   "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+   "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+   "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_require_wire 1]",
+   "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_leaf_roots 1]",
+   "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_related_data 1]",
+   "parse (fail-closed): unsupported expression [dict create ] [set ::ot_ce_refs [dict create ]]",
+   "parse (fail-closed): unsupported expression [dict create ] [set ::ot_ce_counts [dict create ]]",
+   "parse (fail-closed): unsupported expression [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{tx_valid} {tx_frame} {rst_n}} outputs {{rx_valid} {rx_frame} {core_fault}}} {fdi} {clock ot_io_fdi io_budget_ps 166.667 inputs {{phy_rx_valid}} outputs {{phy_tx_valid} {phy_tx_frame} {fdi_fault}}} {fdirx} {clock ot_io_fdirx io_budget_ps 166.667 inputs {{phy_rx_frame}} outputs {}} {blktx} {clock ot_io_blktx io_budget_ps 166.667 inputs {} outputs {}} {blkrx} {clock ot_io_blkrx io_budget_ps 166.667 inputs {} outputs {}}] [set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{tx_valid} {tx_frame} {rst_n}} outputs {{rx_valid} {rx_frame} {core_fault}}} {fdi} {clock ot_io_fdi io_budget_ps 166.667 inputs {{phy_rx_valid}} outputs {{phy_tx_valid} {phy_tx_frame} {fdi_fault}}} {fdirx} {clock ot_io_fdirx io_budget_ps 166.667 inputs {{phy_rx_frame}} outputs {}} {blktx} {clock ot_io_blktx io_budget_ps 166.667 inputs {} outputs {}} {blkrx} {clock ot_io_blkrx io_budget_ps 166.667 inputs {} outputs {}}]]",
+   "parse (fail-closed): unsupported expression [dict create {core_ck} {core} {fdi_ck} {fdi} {fdi_rx_ck} {fdirx} {blk_tx_ck} {blktx} {blk_rx_ck} {blkrx}] [set ::ot_ce_source_domains [dict create {core_ck} {core} {fdi_ck} {fdi} {fdi_rx_ck} {fdirx} {blk_tx_ck} {blktx} {blk_rx_ck} {blkrx}]]",
+   "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_explicit_domains 1]",
+   "parse (fail-closed): get_ports {core_ck}: matches no port [set ::ot_ce_cts_roots {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}]",
+   "parse (fail-closed): get_ports {core_ck}: matches no port [set ::ot_ce_ports {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}]",
+   "parse (fail-closed): unbalanced { in: proc ot_ce_constant_net {net seen remaining} { [proc ot_ce_constant_net {net seen remaining} {]",
+   "forbidden / unknown SDC command (fail-closed): if {$remaining <= 0 || $net in {\"\" NULL}} {return 0}",
+   "forbidden / unknown SDC command (fail-closed): foreach port [$net getBTerms] {if {[$port getIoType] ne \"OUTPUT\"} {return 0}}",
+   "forbidden / unknown SDC command (fail-closed): foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}",
+   "forbidden / unknown SDC command (fail-closed): if {[llength $drivers] != 1} {return 0}",
+   "forbidden / unknown SDC command (fail-closed): return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "parse (fail-closed): unbalanced { in: proc ot_ce_constant_iterm {pin seen remaining} { [proc ot_ce_constant_iterm {pin seen remaining} {]",
+   "forbidden / unknown SDC command (fail-closed): if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}",
+   "parse (fail-closed): set: set inst [$pin getInst];set name \"[$inst getName]/[[$pin getMTerm] getName]\" [set inst [$pin getInst];set name \"[$inst getName]/[[$pin getMTerm] getName]\"]",
+   "forbidden / unknown SDC command (fail-closed): if {[dict exists $seen $name]} {return 0}",
+   "forbidden / unknown SDC command (fail-closed): if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}",
+   "forbidden / unknown SDC command (fail-closed): dict set seen $name 1",
+   "parse (fail-closed): unsupported expression [ot_ce_constant_iterm_eval $inst $pin $seen $remaining] [set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]]"
+  ],
+  "n_errors": 494,
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/src/physical/ref_tile/qfd_ucie_gearbox_r10/signoff.sdc",
+  "sdc_source": "arg"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "qfd_ucie_six_five",
+  "checked": 3286,
+  "ok": 3284,
+  "fail_counts": {
+   "shared": 2
+  },
+  "fails": {
+   "shared": [
+    "core_fault: net _14199_ has 1 loads besides the port chain",
+    "fdi_fault: net _14200_ has 1 loads besides the port chain"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/1_2_yosys.v",
+  "pins": null,
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 29.26,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -25.63,
+   "tns_ps": -19260.41,
+   "violators": 1626.0,
+   "sdc_wns_ps": -25.63,
+   "overlay": "skipped vclks 5"
+  },
+  "drv": {
+   "verdict": "PASS",
+   "by_corner": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {}
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 32.0,
+   "worst_net": "net7122"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 3286,
+      "min": 179.25,
+      "mean": 204.71,
+      "max": 230.9,
+      "spread": 51.65
+     },
+     "all": {
+      "n": 25528,
+      "min": 179.04,
+      "mean": 206.46,
+      "max": 230.9,
+      "spread": 51.86
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 3286,
+      "min": 146.86,
+      "mean": 169.08,
+      "max": 191.03,
+      "spread": 44.17
+     },
+     "all": {
+      "n": 25528,
+      "min": 145.52,
+      "mean": 170.49,
+      "max": 191.81,
+      "spread": 46.29
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+   "errors": [
+    "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+    "units/relaxation: clock core_clk period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_io_fdi period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_io_fdirx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_io_blktx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_io_blkrx period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_entry_0 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_entry_1 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_entry_2 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_entry_3 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "units/relaxation: clock ot_entry_4 period 833.333000000 x 1 ps = 833.333 ps, plan period 833 ps",
+    "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+    "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+    "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+    "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+    "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+    "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_require_wire 1]",
+    "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_leaf_roots 1]",
+    "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_related_data 1]",
+    "parse (fail-closed): unsupported expression [dict create ] [set ::ot_ce_refs [dict create ]]",
+    "parse (fail-closed): unsupported expression [dict create ] [set ::ot_ce_counts [dict create ]]",
+    "parse (fail-closed): unsupported expression [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{tx_valid} {tx_frame} {rst_n}} outputs {{rx_valid} {rx_frame} {core_fault}}} {fdi} {clock ot_io_fdi io_budget_ps 166.667 inputs {{phy_rx_valid}} outputs {{phy_tx_valid} {phy_tx_frame} {fdi_fault}}} {fdirx} {clock ot_io_fdirx io_budget_ps 166.667 inputs {{phy_rx_frame}} outputs {}} {blktx} {clock ot_io_blktx io_budget_ps 166.667 inputs {} outputs {}} {blkrx} {clock ot_io_blkrx io_budget_ps 166.667 inputs {} outputs {}}] [set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{tx_valid} {tx_frame} {rst_n}} outputs {{rx_valid} {rx_frame} {core_fault}}} {fdi} {clock ot_io_fdi io_budget_ps 166.667 inputs {{phy_rx_valid}} outputs {{phy_tx_valid} {phy_tx_frame} {fdi_fault}}} {fdirx} {clock ot_io_fdirx io_budget_ps 166.667 inputs {{phy_rx_frame}} outputs {}} {blktx} {clock ot_io_blktx io_budget_ps 166.667 inputs {} outputs {}} {blkrx} {clock ot_io_blkrx io_budget_ps 166.667 inputs {} outputs {}}]]",
+    "parse (fail-closed): unsupported expression [dict create {core_ck} {core} {fdi_ck} {fdi} {fdi_rx_ck} {fdirx} {blk_tx_ck} {blktx} {blk_rx_ck} {blkrx}] [set ::ot_ce_source_domains [dict create {core_ck} {core} {fdi_ck} {fdi} {fdi_rx_ck} {fdirx} {blk_tx_ck} {blktx} {blk_rx_ck} {blkrx}]]",
+    "parse (fail-closed): get_ports 1: matches no port [set ::ot_ce_explicit_domains 1]",
+    "parse (fail-closed): get_ports {core_ck}: matches no port [set ::ot_ce_cts_roots {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}]",
+    "parse (fail-closed): get_ports {core_ck}: matches no port [set ::ot_ce_ports {{core_ck} {fdi_ck} {fdi_rx_ck} {blk_tx_ck} {blk_rx_ck}}]",
+    "parse (fail-closed): unbalanced { in: proc ot_ce_constant_net {net seen remaining} { [proc ot_ce_constant_net {net seen remaining} {]",
+    "forbidden / unknown SDC command (fail-closed): if {$remaining <= 0 || $net in {\"\" NULL}} {return 0}",
+    "forbidden / unknown SDC command (fail-closed): foreach port [$net getBTerms] {if {[$port getIoType] ne \"OUTPUT\"} {return 0}}",
+    "forbidden / unknown SDC command (fail-closed): foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}",
+    "forbidden / unknown SDC command (fail-closed): if {[llength $drivers] != 1} {return 0}",
+    "forbidden / unknown SDC command (fail-closed): return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "parse (fail-closed): unbalanced { in: proc ot_ce_constant_iterm {pin seen remaining} { [proc ot_ce_constant_iterm {pin seen remaining} {]",
+    "forbidden / unknown SDC command (fail-closed): if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}",
+    "parse (fail-closed): set: set inst [$pin getInst];set name \"[$inst getName]/[[$pin getMTerm] getName]\" [set inst [$pin getInst];set name \"[$inst getName]/[[$pin getMTerm] getName]\"]",
+    "forbidden / unknown SDC command (fail-closed): if {[dict exists $seen $name]} {return 0}",
+    "forbidden / unknown SDC command (fail-closed): if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}",
+    "forbidden / unknown SDC command (fail-closed): dict set seen $name 1",
+    "parse (fail-closed): unsupported expression [ot_ce_constant_iterm_eval $inst $pin $seen $remaining] [set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]]"
+   ],
+   "n_errors": 494,
+   "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/src/physical/ref_tile/qfd_ucie_gearbox_r10/signoff.sdc",
+   "sdc_source": "arg"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "qfd_ucie_six_five",
+   "checked": 3286,
+   "ok": 3284,
+   "fail_counts": {
+    "shared": 2
+   },
+   "fails": {
+    "shared": [
+     "core_fault: net _14199_ has 1 loads besides the port chain",
+     "fdi_fault: net _14200_ has 1 loads besides the port chain"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10/routes/qfd_ucie_gearbox_r10_rr_428ab16dd/work/orfs/results/asap7/opentallas_qfd_ucie_six_five_asap7_ref_qfd_ucie_gearbox_r10_rr_428ab16dd/base/1_2_yosys.v",
+   "pins": null,
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "hold_ff: FAIL WNS -25.63 ps, 1626 endpoints",
+  "sdc_lint: FAIL 494 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+  "face_guard: FAIL {'shared': 2}"
+ ],
+ "verdict": "NOT SIGNED"
+}

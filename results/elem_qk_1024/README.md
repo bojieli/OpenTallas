@@ -6,7 +6,9 @@ Each kit re-routed from its CLOSED record's own source commit with the job's own
 (TT setup / FF hold, owner 2026-10-24 08:10).  Author floorplan reviews: results/geom_review/<module>__<kit>__<hash>.json,
 contact sheets review/batch_0*.png.  Per kit: rerun/<kit>/{route_rc,signoff.json}; table rerun_summary.json.
 
-Verdicts (12 routed so far, re-signed with main 24b2da3433): ALL NOT SIGNED.
+Verdicts (32 routed, re-signed with main 24b2da3433; qkd_kvs_ctl route still running): ALL NOT SIGNED.
+Failing checks over 32: sdc_lint 32, face_guard 26, FF hold 13, DRV 6, unconstrained 5, clock 5, TT setup 3
+(TT setup fails: qkd_ctrl_kc -1.13, qfd_dv_stream_t2_1019 -1.88, qfd_dv_lane_h_safe2 -3.74).
 - sdc_lint FAIL on every kit: the ref_tile sign-off SDC is a Tcl program (env-driven measured IO reference, period
   833.333) and the die-plan vocabulary needs one real tap clock + one virtual IO clock with latency, period 833.
   Evaluating it (tools/elem_qk/flatten_sdc.sh: OpenSTA write_sdc on the routed DB) still fails that vocabulary.

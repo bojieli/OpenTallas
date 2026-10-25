@@ -1,0 +1,488 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "qfd_dv_s5_xhead3",
+ "generated": "2026-10-24T18:49:27-07:00",
+ "host": "eternal-dove",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base",
+  "orfs": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs",
+  "design": "opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba",
+  "kit": null,
+  "odb": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/src/physical/ref_tile/qfd_dv_s5_xhead3/signoff.sdc",
+  "sdc_source": "arg",
+  "synth": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/logs/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/logs/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/logs/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/reports/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/5_route_drc.rpt",
+  "pins": null,
+  "sdc_lint_ctx": null,
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "qfd_dv_s5_xhead3",
+   "cells": 411887.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk"
+   ],
+   "vclks": [],
+   "periods": {
+    "core_clk": 833.333008
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "a_d",
+    "cid",
+    "fault_i",
+    "lq",
+    "lq_bad",
+    "lq_v",
+    "rst_n"
+   ],
+   "outputs": [
+    "fault",
+    "l_rst_n",
+    "lc_ep",
+    "lc_v",
+    "lr_ep",
+    "lr_p",
+    "lr_t",
+    "lr_v",
+    "lw_ctl",
+    "lw_d",
+    "lw_ep",
+    "lw_m",
+    "lw_off",
+    "lw_v",
+    "n_d",
+    "s_d"
+   ],
+   "overlay": "skipped vclks 0",
+   "sdc_wns_max": 34.91,
+   "sdc_wns_min": 34.03,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 34.91,
+   "std_wns_min": 34.03,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 2.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net21840",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 12108,
+    "min": 327.23,
+    "mean": 349.08,
+    "max": 391.09,
+    "spread": 63.86
+   },
+   "insertion_pinflops": {
+    "n": 5750,
+    "min": 327.93,
+    "mean": 354.23,
+    "max": 391.09,
+    "spread": 63.16
+   },
+   "ocv5_wns_max": -24.55,
+   "ocv5_wns_min": 14.64,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "qfd_dv_s5_xhead3",
+   "cells": 411887.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk"
+   ],
+   "vclks": [],
+   "periods": {
+    "core_clk": 833.333008
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "a_d",
+    "cid",
+    "fault_i",
+    "lq",
+    "lq_bad",
+    "lq_v",
+    "rst_n"
+   ],
+   "outputs": [
+    "fault",
+    "l_rst_n",
+    "lc_ep",
+    "lc_v",
+    "lr_ep",
+    "lr_p",
+    "lr_t",
+    "lr_v",
+    "lw_ctl",
+    "lw_d",
+    "lw_ep",
+    "lw_m",
+    "lw_off",
+    "lw_v",
+    "n_d",
+    "s_d"
+   ],
+   "overlay": "skipped vclks 0",
+   "sdc_wns_max": 213.8,
+   "sdc_wns_min": 14.05,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 213.8,
+   "std_wns_min": 14.05,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net21840",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 12108,
+    "min": 266.29,
+    "mean": 286.74,
+    "max": 328.59,
+    "spread": 62.3
+   },
+   "insertion_pinflops": {
+    "n": 5750,
+    "min": 267.42,
+    "mean": 291.91,
+    "max": 328.59,
+    "spread": 61.17
+   },
+   "ocv5_wns_max": 167.39,
+   "ocv5_wns_min": -1.35,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+  "errors": [
+   "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+   "units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps",
+   "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+   "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+   "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+   "parse (fail-closed): get_ports die: matches no port [set ::env(OT_IO_HOLD_BUDGET) die]",
+   "parse (fail-closed): get_ports 25: matches no port [set ::env(OT_BH_LAUNCH_MIN_PS) 25]",
+   "parse (fail-closed): get_ports 25: matches no port [set ::env(OT_BH_TILE_HOLD_UNC_PS) 25]",
+   "parse (fail-closed): get_ports 0: matches no port [set ::env(OT_BH_ROUTE_RELIEF_PS) 0]",
+   "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+   "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}] [set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}] [set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}] [set ot_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}] [set ot_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}] [set ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}]]",
+   "forbidden / unknown SDC command (fail-closed): unset_input_delay [all_inputs]",
+   "forbidden / unknown SDC command (fail-closed): unset_output_delay [all_outputs]",
+   "parse (fail-closed): unbalanced { in: proc ot_pf_lib_ins {} { [proc ot_pf_lib_ins {} {]",
+   "parse (fail-closed): unbalanced [ in: set ff [expr {([info exists ::ot_ioref_scene] && $::ot_ioref_scene eq \"BC\") || [set ff [expr {([info exists ::ot_ioref_scene] && $::ot_ioref_scene eq \"BC\") ||]",
+   "forbidden / unknown SDC command (fail-closed): (![catch {llength [get_libs -quiet *FF*]} nf] && $nf && ![catch {llength [get_libs -quiet *TT*]} nt] && !$nt)}]",
+   "forbidden / unknown SDC command (fail-closed): if {[info exists ::ot_pf_libins_c] && [dict exists $::ot_pf_libins_c $ff]} { return [dict get $::ot_pf_libins_c $ff] }",
+   "forbidden / unknown SDC command (fail-closed): if {![info exists ::ot_pf_libins_c]} { set ::ot_pf_libins_c [dict create] }",
+   "parse (fail-closed): unsupported expression [dict create] [set ::ot_pf_libins [dict create]]",
+   "forbidden / unknown SDC command (fail-closed): foreach v {ADDITIONAL_LIBS OT_PF_MACRO_LIBS} { if {[info exists ::env($v)]} { lappend libs {*}$::env($v) } }",
+   "parse (fail-closed): unbalanced { in: foreach lib $libs { [foreach lib $libs {]",
+   "forbidden / unknown SDC command (fail-closed): if {$ff} { regsub {_tt(\\.lib(\\.gz)?)$} $lib {_ff\\1} l2; if {[file readable $l2]} { set lib $l2 } }",
+   "forbidden / unknown SDC command (fail-closed): if {![file readable $lib] || [string match *.gz $lib]} continue",
+   "forbidden / unknown SDC command (fail-closed): if {[catch {set f [open $lib]; set txt [read $f]; close $f}]} continue",
+   "forbidden / unknown SDC command (fail-closed): if {![regexp {cell\\s*\\(\\s*\"?([A-Za-z0-9_]+)\"?\\s*\\)} $txt -> cell]} continue",
+   "parse (fail-closed): unbalanced { in: foreach chunk [lrange [regexp -all -inline -indices {pin\\s*\\(\\s*\"?[^\")]+\"?\\s*\\)\\s*\\{} $txt] 0 end] { [foreach chunk [lrange [regexp -all -inline -indices {pin\\s*\\(\\s*\"?[^\")]+\"?\\s*\\)\\s*\\{} $txt] 0 end] {]",
+   "parse (fail-closed): unsupported expression [lindex $chunk 0] [set s [lindex $chunk 0]]",
+   "parse (fail-closed): unsupported expression [string range $txt $s [expr {$s + 2000}]] [set body [string range $txt $s [expr {$s + 2000}]]]",
+   "forbidden / unknown SDC command (fail-closed): if {![regexp {^pin\\s*\\(\\s*\"?([^\")]+)\"?\\s*\\)} $body -> pn]} continue",
+   "parse (fail-closed): set: set nxt [string first \"pin(\" $body 4]; if {$nxt > 0} { set body [string range $body 0 $nxt] } [set nxt [string first \"pin(\" $body 4]; if {$nxt > 0} { set body [string range $body 0 $nxt] }]",
+   "parse (fail-closed): set: set mx \"\"; set mn \"\" [set mx \"\"; set mn \"\"]",
+   "parse (fail-closed): unbalanced { in: regexp {max_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mx [regexp {max_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mx]",
+   "parse (fail-closed): unbalanced { in: regexp {min_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mn [regexp {min_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mn]",
+   "forbidden / unknown SDC command (fail-closed): if {$mx eq \"\" && $mn eq \"\"} continue",
+   "forbidden / unknown SDC command (fail-closed): if {$mx eq \"\"} { set mx $mn }"
+  ],
+  "n_errors": 218,
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/src/physical/ref_tile/qfd_dv_s5_xhead3/signoff.sdc",
+  "sdc_source": "arg"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "qfd_dv_s5_xhead3",
+  "checked": 5724,
+  "ok": 5714,
+  "fail_counts": {
+   "shared": 10
+  },
+  "fails": {
+   "shared": [
+    "a_d[478]: 5 loads on a_d[478]",
+    "a_d[477]: 5 loads on a_d[477]",
+    "a_d[476]: 5 loads on a_d[476]",
+    "a_d[475]: 5 loads on a_d[475]",
+    "a_d[474]: 5 loads on a_d[474]"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/1_2_yosys.v",
+  "pins": null,
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 34.91,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 14.05,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 14.05,
+   "overlay": "skipped vclks 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 2.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 2.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 32.0,
+   "worst_net": "net21840"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 5750,
+      "min": 327.93,
+      "mean": 354.23,
+      "max": 391.09,
+      "spread": 63.16
+     },
+     "all": {
+      "n": 12108,
+      "min": 327.23,
+      "mean": 349.08,
+      "max": 391.09,
+      "spread": 63.86
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 5750,
+      "min": 267.42,
+      "mean": 291.91,
+      "max": 328.59,
+      "spread": 61.17
+     },
+     "all": {
+      "n": 12108,
+      "min": 266.29,
+      "mean": 286.74,
+      "max": 328.59,
+      "spread": 62.3
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+   "errors": [
+    "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+    "units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps",
+    "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+    "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+    "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+    "parse (fail-closed): get_ports die: matches no port [set ::env(OT_IO_HOLD_BUDGET) die]",
+    "parse (fail-closed): get_ports 25: matches no port [set ::env(OT_BH_LAUNCH_MIN_PS) 25]",
+    "parse (fail-closed): get_ports 25: matches no port [set ::env(OT_BH_TILE_HOLD_UNC_PS) 25]",
+    "parse (fail-closed): get_ports 0: matches no port [set ::env(OT_BH_ROUTE_RELIEF_PS) 0]",
+    "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+    "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}] [set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}] [set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}] [set ot_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}] [set ot_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}] [set ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}]]",
+    "forbidden / unknown SDC command (fail-closed): unset_input_delay [all_inputs]",
+    "forbidden / unknown SDC command (fail-closed): unset_output_delay [all_outputs]",
+    "parse (fail-closed): unbalanced { in: proc ot_pf_lib_ins {} { [proc ot_pf_lib_ins {} {]",
+    "parse (fail-closed): unbalanced [ in: set ff [expr {([info exists ::ot_ioref_scene] && $::ot_ioref_scene eq \"BC\") || [set ff [expr {([info exists ::ot_ioref_scene] && $::ot_ioref_scene eq \"BC\") ||]",
+    "forbidden / unknown SDC command (fail-closed): (![catch {llength [get_libs -quiet *FF*]} nf] && $nf && ![catch {llength [get_libs -quiet *TT*]} nt] && !$nt)}]",
+    "forbidden / unknown SDC command (fail-closed): if {[info exists ::ot_pf_libins_c] && [dict exists $::ot_pf_libins_c $ff]} { return [dict get $::ot_pf_libins_c $ff] }",
+    "forbidden / unknown SDC command (fail-closed): if {![info exists ::ot_pf_libins_c]} { set ::ot_pf_libins_c [dict create] }",
+    "parse (fail-closed): unsupported expression [dict create] [set ::ot_pf_libins [dict create]]",
+    "forbidden / unknown SDC command (fail-closed): foreach v {ADDITIONAL_LIBS OT_PF_MACRO_LIBS} { if {[info exists ::env($v)]} { lappend libs {*}$::env($v) } }",
+    "parse (fail-closed): unbalanced { in: foreach lib $libs { [foreach lib $libs {]",
+    "forbidden / unknown SDC command (fail-closed): if {$ff} { regsub {_tt(\\.lib(\\.gz)?)$} $lib {_ff\\1} l2; if {[file readable $l2]} { set lib $l2 } }",
+    "forbidden / unknown SDC command (fail-closed): if {![file readable $lib] || [string match *.gz $lib]} continue",
+    "forbidden / unknown SDC command (fail-closed): if {[catch {set f [open $lib]; set txt [read $f]; close $f}]} continue",
+    "forbidden / unknown SDC command (fail-closed): if {![regexp {cell\\s*\\(\\s*\"?([A-Za-z0-9_]+)\"?\\s*\\)} $txt -> cell]} continue",
+    "parse (fail-closed): unbalanced { in: foreach chunk [lrange [regexp -all -inline -indices {pin\\s*\\(\\s*\"?[^\")]+\"?\\s*\\)\\s*\\{} $txt] 0 end] { [foreach chunk [lrange [regexp -all -inline -indices {pin\\s*\\(\\s*\"?[^\")]+\"?\\s*\\)\\s*\\{} $txt] 0 end] {]",
+    "parse (fail-closed): unsupported expression [lindex $chunk 0] [set s [lindex $chunk 0]]",
+    "parse (fail-closed): unsupported expression [string range $txt $s [expr {$s + 2000}]] [set body [string range $txt $s [expr {$s + 2000}]]]",
+    "forbidden / unknown SDC command (fail-closed): if {![regexp {^pin\\s*\\(\\s*\"?([^\")]+)\"?\\s*\\)} $body -> pn]} continue",
+    "parse (fail-closed): set: set nxt [string first \"pin(\" $body 4]; if {$nxt > 0} { set body [string range $body 0 $nxt] } [set nxt [string first \"pin(\" $body 4]; if {$nxt > 0} { set body [string range $body 0 $nxt] }]",
+    "parse (fail-closed): set: set mx \"\"; set mn \"\" [set mx \"\"; set mn \"\"]",
+    "parse (fail-closed): unbalanced { in: regexp {max_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mx [regexp {max_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mx]",
+    "parse (fail-closed): unbalanced { in: regexp {min_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mn [regexp {min_clock_tree_path;\\s*cell_rise\\s*\\(\\s*scalar\\s*\\)\\s*\\{\\s*values\\s*\\(\\s*\"([-0-9.eE]+)\"} $body -> mn]",
+    "forbidden / unknown SDC command (fail-closed): if {$mx eq \"\" && $mn eq \"\"} continue",
+    "forbidden / unknown SDC command (fail-closed): if {$mx eq \"\"} { set mx $mn }"
+   ],
+   "n_errors": 218,
+   "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/src/physical/ref_tile/qfd_dv_s5_xhead3/signoff.sdc",
+   "sdc_source": "arg"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "qfd_dv_s5_xhead3",
+   "checked": 5724,
+   "ok": 5714,
+   "fail_counts": {
+    "shared": 10
+   },
+   "fails": {
+    "shared": [
+     "a_d[478]: 5 loads on a_d[478]",
+     "a_d[477]: 5 loads on a_d[477]",
+     "a_d[476]: 5 loads on a_d[476]",
+     "a_d[475]: 5 loads on a_d[475]",
+     "a_d[474]: 5 loads on a_d[474]"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3/routes/qfd_dv_s5_xhead3_rr_2c3fd91ba/work/orfs/results/asap7/opentallas_qfd_dv_s5_xhead3_asap7_ref_qfd_dv_s5_xhead3_rr_2c3fd91ba/base/1_2_yosys.v",
+   "pins": null,
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "drv: FAIL TT slew 2.0 cap 0.0",
+  "sdc_lint: FAIL 218 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+  "face_guard: FAIL {'shared': 10}"
+ ],
+ "verdict": "NOT SIGNED"
+}

@@ -6,18 +6,53 @@
   "source_commit": "943c399975",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_su_sfu_exp",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "sdc_lint: FAIL 107 errors (first: units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps)"
+  ],
+  "tt_setup_ps": 68.9,
+  "ff_hold_ps": 8.4,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
   "module": "ot_hdc_sfu_rcp_t",
   "kit": "qfd_su_sfu_rcp",
   "source_commit": "943c399975",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qfd_su_sfu_rcp",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_su_sfu_rcp",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -0.11 ps, 1 endpoints",
+   "sdc_lint: FAIL 107 errors (first: units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps)"
+  ],
+  "tt_setup_ps": 73.16,
+  "ff_hold_ps": -0.11,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -26,8 +61,25 @@
   "source_commit": "943c399975",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_su_sfu_rsq",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "sdc_lint: FAIL 107 errors (first: units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps)"
+  ],
+  "tt_setup_ps": 76.79,
+  "ff_hold_ps": 10.47,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -36,8 +88,29 @@
   "source_commit": "e95c9709bd",
   "host": "epyc3",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_lane_h_safe2",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "setup_tt: FAIL WNS -3.74 ps, 2 endpoints",
+   "unconstrained: FAIL unconstrained 121",
+   "clock: FAIL TT pin-flop spread 82.0 ps > 80",
+   "sdc_lint: FAIL 318 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'dropped': 96, 'shared': 136, 'feedthrough': 77}"
+  ],
+  "tt_setup_ps": -3.74,
+  "ff_hold_ps": 9.58,
+  "checks": {
+   "setup_tt": "FAIL",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "FAIL",
+   "clock": "FAIL",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -72,10 +145,30 @@
   "module": "qfd_dv_s5_ctl_repair4_leaf",
   "kit": "qfd_dv_s5_ctl5",
   "source_commit": "041b89783f",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qfd_dv_s5_ctl5",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_ctl5",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 1.0 cap 0.0, FF slew 1.0 cap 0.0",
+   "clock: FAIL TT pin-flop spread 81.5 ps > 80",
+   "sdc_lint: FAIL 286 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'dropped': 36, 'shared': 244}"
+  ],
+  "tt_setup_ps": 24.5,
+  "ff_hold_ps": 8.84,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "FAIL",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -84,18 +177,56 @@
   "source_commit": "aa6039f681",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_su8",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 1.0 cap 0.0, FF slew 1.0 cap 0.0",
+   "sdc_lint: FAIL 212 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 96}"
+  ],
+  "tt_setup_ps": 121.2,
+  "ff_hold_ps": 6.7,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
   "module": "qfd_dv_s5_xhead3",
   "kit": "qfd_dv_s5_xhead3",
   "source_commit": "2c3fd91ba2",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qfd_dv_s5_xhead3",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s5_xhead3",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 2.0 cap 0.0",
+   "sdc_lint: FAIL 218 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 10}"
+  ],
+  "tt_setup_ps": 34.91,
+  "ff_hold_ps": 14.05,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -133,8 +264,26 @@
   "source_commit": "1f80a0746f",
   "host": "epyc3",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_s8_station_tail1_p7b",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "sdc_lint: FAIL 230 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'unregistered': 8, 'shared': 9}"
+  ],
+  "tt_setup_ps": 110.61,
+  "ff_hold_ps": 11.4,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -171,10 +320,30 @@
   "module": "qfd_dv_stream_tile",
   "kit": "qfd_dv_stream_t2_1019",
   "source_commit": "49ac29c7e1",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qfd_dv_stream_t2_1019",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_dv_stream_t2_1019",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "setup_tt: FAIL WNS -1.88 ps, 3 endpoints",
+   "drv: FAIL TT slew 36.0 cap 0.0, FF slew 37.0 cap 0.0",
+   "sdc_lint: FAIL 226 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 30, 'dropped': 16}"
+  ],
+  "tt_setup_ps": -1.88,
+  "ff_hold_ps": 7.92,
+  "checks": {
+   "setup_tt": "FAIL",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_compute",
@@ -183,8 +352,27 @@
   "source_commit": "428ab16dde",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qfd_ucie_gearbox_r10",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -25.63 ps, 1626 endpoints",
+   "sdc_lint: FAIL 494 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 2}"
+  ],
+  "tt_setup_ps": 29.26,
+  "ff_hold_ps": -25.63,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -251,8 +439,26 @@
   "source_commit": "a145510417",
   "host": "epyc3",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkh_r3_stk_1014",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -4.60 ps, 31 endpoints",
+   "sdc_lint: FAIL 111 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])"
+  ],
+  "tt_setup_ps": 321.82,
+  "ff_hold_ps": -4.6,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -287,10 +493,29 @@
   "module": "ot_qwen_tp8_pv_join_t",
   "kit": "qkd_pv_join",
   "source_commit": "708845e84f",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qkd_pv_join",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_pv_join",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -2.83 ps, 7 endpoints",
+   "sdc_lint: FAIL 119 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 513}"
+  ],
+  "tt_setup_ps": 79.29,
+  "ff_hold_ps": -2.83,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -299,8 +524,27 @@
   "source_commit": "708845e84f",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_pv_slice",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "unconstrained: FAIL unconstrained 512",
+   "sdc_lint: FAIL 111 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 1}"
+  ],
+  "tt_setup_ps": 75.65,
+  "ff_hold_ps": 12.5,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "FAIL",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -366,8 +610,27 @@
   "source_commit": "0736c91f98",
   "host": "epyc3",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_embgw",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -5.42 ps, 62 endpoints",
+   "sdc_lint: FAIL 157 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 1149, 'feedthrough': 1, 'const': 1}"
+  ],
+  "tt_setup_ps": 40.04,
+  "ff_hold_ps": -5.42,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -414,10 +677,30 @@
   "module": "qkd_kvs_emb",
   "kit": "qkd_kvs_emb",
   "source_commit": "c84feb9f9d",
-  "host": "epyc2",
-  "run_dir": "/srv/opentallas-scratch2/claude/elem-qk/rerun/qkd_kvs_emb",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_kvs_emb",
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -14.86 ps, 90 endpoints",
+   "clock: FAIL TT pin-flop spread 118.5 ps > 80",
+   "sdc_lint: FAIL 135 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 1}"
+  ],
+  "tt_setup_ps": 52.23,
+  "ff_hold_ps": -14.86,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "FAIL",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -426,8 +709,27 @@
   "source_commit": "da14c0bdf4",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_kvs_hroot_k1",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "drv: FAIL TT slew 3.0 cap 0.0",
+   "sdc_lint: FAIL 196 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'shared': 773}"
+  ],
+  "tt_setup_ps": 61.04,
+  "ff_hold_ps": 11.84,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "FAIL",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -465,8 +767,27 @@
   "source_commit": "64609be8b5",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_rlyi_258s",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -0.11 ps, 1 endpoints",
+   "sdc_lint: FAIL 107 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'unregistered': 516}"
+  ],
+  "tt_setup_ps": 332.59,
+  "ff_hold_ps": -0.11,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -475,8 +796,26 @@
   "source_commit": "62789a1ed1",
   "host": "epyc3",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "sdc_lint: FAIL 147 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'dropped': 5, 'shared': 95, 'merged': 4}"
+  ],
+  "tt_setup_ps": 146.63,
+  "ff_hold_ps": 1.31,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -485,8 +824,26 @@
   "source_commit": "1d16a05691",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_fan_s",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -2.39 ps, 65 endpoints",
+   "sdc_lint: FAIL 115 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])"
+  ],
+  "tt_setup_ps": 324.5,
+  "ff_hold_ps": -2.39,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",
@@ -523,8 +880,27 @@
   "source_commit": "8801fc3451",
   "host": "localhost",
   "run_dir": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkh_head_gather_stage",
-  "route_ok": false,
-  "verdict": "NOT RUN"
+  "route_ok": true,
+  "verdict": "NOT SIGNED",
+  "reasons": [
+   "hold_ff: FAIL WNS -29.52 ps, 1566 endpoints",
+   "sdc_lint: FAIL 107 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+   "face_guard: FAIL {'merged': 3150}"
+  ],
+  "tt_setup_ps": 371.9,
+  "ff_hold_ps": -29.52,
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "FAIL",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "FAIL",
+   "face_guard": "FAIL",
+   "drc": "PASS",
+   "antenna": "PASS"
+  }
  },
  {
   "die": "qwen_kvsys",

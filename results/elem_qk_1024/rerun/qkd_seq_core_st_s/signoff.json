@@ -1,0 +1,514 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "qkd_seq_core_st_s",
+ "generated": "2026-10-24T18:49:33-07:00",
+ "host": "eternal-dove",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base",
+  "orfs": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs",
+  "design": "opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed",
+  "kit": null,
+  "odb": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/src/physical/ref_tile/qkd_seq_core_st_s/signoff.sdc",
+  "sdc_source": "arg",
+  "synth": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/logs/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/logs/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/logs/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/reports/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/5_route_drc.rpt",
+  "pins": null,
+  "sdc_lint_ctx": null,
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "qkd_seq_core_static_s",
+   "cells": 11671.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk"
+   ],
+   "vclks": [],
+   "periods": {
+    "core_clk": 833.333008
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "ar_h",
+    "f_af_e",
+    "f_af_w",
+    "hf",
+    "kvn_word_tag",
+    "kvn_word_valid",
+    "lp_ctx_t",
+    "lp_layer",
+    "lp_run",
+    "prg_q_beat",
+    "prg_q_v",
+    "prg_req_pos",
+    "prg_req_v",
+    "rst_n",
+    "svc_h"
+   ],
+   "outputs": [
+    "f_aqm_e",
+    "f_aqm_w",
+    "f_kc_e",
+    "f_kc_w",
+    "hs",
+    "kst",
+    "s_qpop",
+    "tk",
+    "x_v"
+   ],
+   "overlay": "skipped vclks 0",
+   "sdc_wns_max": 146.63,
+   "sdc_wns_min": 16.41,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 146.63,
+   "std_wns_min": 16.41,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net838",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 886,
+    "min": 98.76,
+    "mean": 106.41,
+    "max": 116.11,
+    "spread": 17.35
+   },
+   "insertion_pinflops": {
+    "n": 375,
+    "min": 102.45,
+    "mean": 107.58,
+    "max": 115.56,
+    "spread": 13.11
+   },
+   "ocv5_wns_max": 112.59,
+   "ocv5_wns_min": 7.25,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "qkd_seq_core_static_s",
+   "cells": 11671.0,
+   "parasitics": "spef",
+   "clocks": [
+    "core_clk"
+   ],
+   "vclks": [],
+   "periods": {
+    "core_clk": 833.333008
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "ar_h",
+    "f_af_e",
+    "f_af_w",
+    "hf",
+    "kvn_word_tag",
+    "kvn_word_valid",
+    "lp_ctx_t",
+    "lp_layer",
+    "lp_run",
+    "prg_q_beat",
+    "prg_q_v",
+    "prg_req_pos",
+    "prg_req_v",
+    "rst_n",
+    "svc_h"
+   ],
+   "outputs": [
+    "f_aqm_e",
+    "f_aqm_w",
+    "f_kc_e",
+    "f_kc_w",
+    "hs",
+    "kst",
+    "s_qpop",
+    "tk",
+    "x_v"
+   ],
+   "overlay": "skipped vclks 0",
+   "sdc_wns_max": 315.6,
+   "sdc_wns_min": 1.31,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 315.6,
+   "std_wns_min": 1.31,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 32.0,
+   "fanout_worst_net": "net838",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 886,
+    "min": 73.85,
+    "mean": 81.56,
+    "max": 91.06,
+    "spread": 17.21
+   },
+   "insertion_pinflops": {
+    "n": 375,
+    "min": 77.88,
+    "mean": 82.77,
+    "max": 90.54,
+    "spread": 12.66
+   },
+   "ocv5_wns_max": 290.65,
+   "ocv5_wns_min": -5.6,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "FAIL",
+  "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+  "errors": [
+   "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+   "units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps",
+   "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+   "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+   "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+   "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+   "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}] [set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}] [set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}] [set ot_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}] [set ot_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}]]",
+   "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}] [set ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}]]",
+   "forbidden / unknown SDC command (fail-closed): unset_input_delay [all_inputs]",
+   "forbidden / unknown SDC command (fail-closed): unset_output_delay [all_outputs]",
+   "parse (fail-closed): unbalanced { in: proc ot_pf_clks {ports} { [proc ot_pf_clks {ports} {]",
+   "parse (fail-closed): set: set seen [dict create]; set out {} [set seen [dict create]; set out {}]",
+   "parse (fail-closed): unbalanced { in: foreach port $ports { [foreach port $ports {]",
+   "parse (fail-closed): unsupported expression [get_nets -quiet [get_full_name $port]] [set nets [get_nets -quiet [get_full_name $port]]]",
+   "parse (fail-closed): unbalanced { in: for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} { [for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} {]",
+   "parse (fail-closed): unbalanced { in: foreach n $nets { [foreach n $nets {]",
+   "parse (fail-closed): unbalanced { in: foreach pin [get_pins -quiet -of_objects $n] { [foreach pin [get_pins -quiet -of_objects $n] {]",
+   "forbidden / unknown SDC command (fail-closed): if {[string first / [get_full_name $pin]] < 0} { continue }",
+   "forbidden / unknown SDC command (fail-closed): if {[get_property $pin direction] ne \"input\"} { continue }",
+   "parse (fail-closed): unsupported expression [get_cells -quiet -of_objects $pin] [set c [get_cells -quiet -of_objects $pin]]",
+   "forbidden / unknown SDC command (fail-closed): if {![llength $c]} { continue }",
+   "parse (fail-closed): unsupported expression [get_full_name $c] [set fn [get_full_name $c]]",
+   "parse (fail-closed): unsupported expression [get_pins -quiet \"$fn/CLK\"] [set ck [get_pins -quiet \"$fn/CLK\"]]",
+   "parse (fail-closed): unbalanced { in: if {[llength $ck]} { [if {[llength $ck]} {]",
+   "forbidden / unknown SDC command (fail-closed): if {[get_property $pin lib_pin_name] ne \"CLK\" && ![dict exists $seen $fn]} { dict set seen $fn 1; lappend out $ck }",
+   "parse (fail-closed): unbalanced { in: } elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} { [} elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} {]",
+   "parse (fail-closed): unbalanced { in: foreach op [get_pins -quiet -of_objects $c] { [foreach op [get_pins -quiet -of_objects $c] {]",
+   "forbidden / unknown SDC command (fail-closed): if {[get_property $op direction] eq \"output\"} { lappend next [get_nets -quiet -of_objects $op] }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): }",
+   "forbidden / unknown SDC command (fail-closed): return $out",
+   "forbidden / unknown SDC command (fail-closed): }"
+  ],
+  "n_errors": 147,
+  "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/src/physical/ref_tile/qkd_seq_core_st_s/signoff.sdc",
+  "sdc_source": "arg"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "qkd_seq_core_static_s",
+  "checked": 387,
+  "ok": 283,
+  "fail_counts": {
+   "dropped": 5,
+   "shared": 95,
+   "merged": 4
+  },
+  "fails": {
+   "dropped": [
+    "kvn_word_tag[7]: no load on kvn_word_tag[7] (register removed)",
+    "kvn_word_tag[6]: no load on kvn_word_tag[6] (register removed)",
+    "kvn_word_tag[5]: no load on kvn_word_tag[5] (register removed)",
+    "kvn_word_tag[4]: no load on kvn_word_tag[4] (register removed)",
+    "kvn_word_tag[3]: no load on kvn_word_tag[3] (register removed)"
+   ],
+   "shared": [
+    "s_qpop: net s_qpop has 1 loads besides the port chain",
+    "f_aqm_w[27]: net hsd[1] has 1 loads besides the port chain",
+    "tk[92]: net _0238_ has 1 loads besides the port chain",
+    "tk[91]: net _0235_ has 1 loads besides the port chain",
+    "tk[90]: net _0224_ has 1 loads besides the port chain"
+   ],
+   "merged": [
+    "svc_h[1]: flop tk[82]$_DFF_P_ also registers ['tk[82]']",
+    "tk[82]: flop tk[82]$_DFF_P_ also registers ['svc_h[1]']",
+    "svc_h[0]: flop tk[83]$_DFF_P_ also registers ['tk[83]']",
+    "tk[83]: flop tk[83]$_DFF_P_ also registers ['svc_h[0]']"
+   ]
+  },
+  "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/1_2_yosys.v",
+  "pins": null,
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 146.63,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 1.31,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 1.31,
+   "overlay": "skipped vclks 0"
+  },
+  "drv": {
+   "verdict": "PASS",
+   "by_corner": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {}
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 32.0,
+   "worst_net": "net838"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 375,
+      "min": 102.45,
+      "mean": 107.58,
+      "max": 115.56,
+      "spread": 13.11
+     },
+     "all": {
+      "n": 886,
+      "min": 98.76,
+      "mean": 106.41,
+      "max": 116.11,
+      "spread": 17.35
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 375,
+      "min": 77.88,
+      "mean": 82.77,
+      "max": 90.54,
+      "spread": 12.66
+     },
+     "all": {
+      "n": 886,
+      "min": 73.85,
+      "mean": 81.56,
+      "max": 91.06,
+      "spread": 17.21
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": null
+  },
+  "sdc_lint": {
+   "verdict": "FAIL",
+   "mode": "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)",
+   "errors": [
+    "parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0]",
+    "units/relaxation: clock core_clk period 833.333 x 1 ps = 833.333 ps, plan period 833 ps",
+    "forbidden / unknown SDC command (fail-closed): set_propagated_clock [all_clocks]",
+    "parse (fail-closed): get_ports 90: matches no port [set ::env(OT_IO_SKEW) 90]",
+    "parse (fail-closed): get_ports 50: matches no port [set ::env(OT_IO_HOLD_SKEW) 50]",
+    "parse (fail-closed): get_ports none_*: matches no port [set ::env(OT_IO_INTER) {none_*}]",
+    "parse (fail-closed): get_ports 150: matches no port [set ::env(OT_IO_SKEW_INTER) 150]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}] [set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 90}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}] [set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}] [set ot_ib [expr {[info exists ::env(OT_IO_IN_BUDGET_PS)] ? $::env(OT_IO_IN_BUDGET_PS) : 166.667}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}] [set ot_ob [expr {[info exists ::env(OT_IO_OUT_BUDGET_PS)] ? $::env(OT_IO_OUT_BUDGET_PS) : 166.667}]]",
+    "parse (fail-closed): unsupported expression [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}] [set ot_glob [expr {[info exists ::env(OT_REF_GLOB)] ? $::env(OT_REF_GLOB) : \"*go_q*\"}]]",
+    "forbidden / unknown SDC command (fail-closed): unset_input_delay [all_inputs]",
+    "forbidden / unknown SDC command (fail-closed): unset_output_delay [all_outputs]",
+    "parse (fail-closed): unbalanced { in: proc ot_pf_clks {ports} { [proc ot_pf_clks {ports} {]",
+    "parse (fail-closed): set: set seen [dict create]; set out {} [set seen [dict create]; set out {}]",
+    "parse (fail-closed): unbalanced { in: foreach port $ports { [foreach port $ports {]",
+    "parse (fail-closed): unsupported expression [get_nets -quiet [get_full_name $port]] [set nets [get_nets -quiet [get_full_name $port]]]",
+    "parse (fail-closed): unbalanced { in: for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} { [for {set hop 0} {$hop < 3 && [llength $nets]} {incr hop} {]",
+    "parse (fail-closed): unbalanced { in: foreach n $nets { [foreach n $nets {]",
+    "parse (fail-closed): unbalanced { in: foreach pin [get_pins -quiet -of_objects $n] { [foreach pin [get_pins -quiet -of_objects $n] {]",
+    "forbidden / unknown SDC command (fail-closed): if {[string first / [get_full_name $pin]] < 0} { continue }",
+    "forbidden / unknown SDC command (fail-closed): if {[get_property $pin direction] ne \"input\"} { continue }",
+    "parse (fail-closed): unsupported expression [get_cells -quiet -of_objects $pin] [set c [get_cells -quiet -of_objects $pin]]",
+    "forbidden / unknown SDC command (fail-closed): if {![llength $c]} { continue }",
+    "parse (fail-closed): unsupported expression [get_full_name $c] [set fn [get_full_name $c]]",
+    "parse (fail-closed): unsupported expression [get_pins -quiet \"$fn/CLK\"] [set ck [get_pins -quiet \"$fn/CLK\"]]",
+    "parse (fail-closed): unbalanced { in: if {[llength $ck]} { [if {[llength $ck]} {]",
+    "forbidden / unknown SDC command (fail-closed): if {[get_property $pin lib_pin_name] ne \"CLK\" && ![dict exists $seen $fn]} { dict set seen $fn 1; lappend out $ck }",
+    "parse (fail-closed): unbalanced { in: } elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} { [} elseif {[regexp {^(BUF|HB)} [get_property $c ref_name]]} {]",
+    "parse (fail-closed): unbalanced { in: foreach op [get_pins -quiet -of_objects $c] { [foreach op [get_pins -quiet -of_objects $c] {]",
+    "forbidden / unknown SDC command (fail-closed): if {[get_property $op direction] eq \"output\"} { lappend next [get_nets -quiet -of_objects $op] }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): }",
+    "forbidden / unknown SDC command (fail-closed): return $out",
+    "forbidden / unknown SDC command (fail-closed): }"
+   ],
+   "n_errors": 147,
+   "sdc": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/src/physical/ref_tile/qkd_seq_core_st_s/signoff.sdc",
+   "sdc_source": "arg"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "qkd_seq_core_static_s",
+   "checked": 387,
+   "ok": 283,
+   "fail_counts": {
+    "dropped": 5,
+    "shared": 95,
+    "merged": 4
+   },
+   "fails": {
+    "dropped": [
+     "kvn_word_tag[7]: no load on kvn_word_tag[7] (register removed)",
+     "kvn_word_tag[6]: no load on kvn_word_tag[6] (register removed)",
+     "kvn_word_tag[5]: no load on kvn_word_tag[5] (register removed)",
+     "kvn_word_tag[4]: no load on kvn_word_tag[4] (register removed)",
+     "kvn_word_tag[3]: no load on kvn_word_tag[3] (register removed)"
+    ],
+    "shared": [
+     "s_qpop: net s_qpop has 1 loads besides the port chain",
+     "f_aqm_w[27]: net hsd[1] has 1 loads besides the port chain",
+     "tk[92]: net _0238_ has 1 loads besides the port chain",
+     "tk[91]: net _0235_ has 1 loads besides the port chain",
+     "tk[90]: net _0224_ has 1 loads besides the port chain"
+    ],
+    "merged": [
+     "svc_h[1]: flop tk[82]$_DFF_P_ also registers ['tk[82]']",
+     "tk[82]: flop tk[82]$_DFF_P_ also registers ['svc_h[1]']",
+     "svc_h[0]: flop tk[83]$_DFF_P_ also registers ['tk[83]']",
+     "tk[83]: flop tk[83]$_DFF_P_ also registers ['svc_h[0]']"
+    ]
+   },
+   "netlist": "/srv/opentallas-scratch/claude/elem-qk/rerun/qkd_seq_core_st_s/routes/qkd_seq_core_st_s_rr_62789a1ed/work/orfs/results/asap7/opentallas_qkd_seq_core_static_s_asap7_ref_qkd_seq_core_st_s_rr_62789a1ed/base/1_2_yosys.v",
+   "pins": null,
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "sdc_lint: FAIL 147 errors (first: parse (fail-closed): get_ports 0: matches no port [set ::ot_ref_pre_cts 0])",
+  "face_guard: FAIL {'dropped': 5, 'shared': 95, 'merged': 4}"
+ ],
+ "verdict": "NOT SIGNED"
+}
