@@ -34,3 +34,4 @@ Path boundary (Codex): QKV projections are fixture-landed, so the c_W5_* CB (A0)
 | K1 | KV link endpoint sys_c.u_ucie_rom 583b (+PC_EN_0/PHY_EN_0) | PATH-KV owns; native PC boot 4/4 PASS (functional) | coordinate in lanes/PATH-KV.md |
 
 OWNER?: (1) The QKV projection CB tiles (c_W5_bf/bn/tn/tf_xx, A0 NK/NL cores) are excluded from this path cut by Codex (fixture-landed QKV). Should "complete path" include them? Default: excluded for this first path.
+2026-10-25 08:09 PDT PATH-QC: started; f57r4 is routed NOT SIGNED (FF -13.91/12, not 'in DRT'). Sub-lanes live: PATH-QC-RP1 (C2 structural control replica), PATH-QC-SU (C3 vmr_s6h route, C4/C5 prog/btab collect), PATH-QC-TOK (D1 bind verify + xt1 START on fresh bind + exact-path adapter plan), PATH-QC-PLAN (exact W5 membership, PLAN-STRUCTURAL causes, west-strip kit blockers, one per-die delta).
